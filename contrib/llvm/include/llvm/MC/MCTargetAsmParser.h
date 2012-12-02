@@ -224,6 +224,27 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// MatchInstruction - Recognize a series of operands of a parsed instruction
+comment|/// as an actual MCInst.  This returns false on success and returns true on
+comment|/// failure to match.
+comment|///
+comment|/// On failure, the target parser is responsible for emitting a diagnostic
+comment|/// explaining the match failure.
+name|virtual
+name|bool
+name|MatchInstruction
+argument_list|(
+argument|SMLoc IDLoc
+argument_list|,
+argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument_list|,
+argument|SmallVectorImpl<MCInst>&MCInsts
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// MatchAndEmitInstruction - Recognize a series of operands of a parsed
 comment|/// instruction as an actual MCInst and emit it to the specified MCStreamer.
 comment|/// This returns false on success and returns true on failure to match.

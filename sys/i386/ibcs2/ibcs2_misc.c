@@ -1533,8 +1533,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|eofflag
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|u_long
 modifier|*
@@ -1627,15 +1625,6 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -1646,11 +1635,6 @@ name|VDIR
 condition|)
 block|{
 comment|/* XXX  vnode readdir op should do this */
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 name|fdrop
 argument_list|(
 name|fp
@@ -2214,11 +2198,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 name|fdrop
 argument_list|(
 name|fp
@@ -2341,8 +2320,6 @@ decl_stmt|,
 name|eofflag
 decl_stmt|,
 name|size
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 name|u_long
 modifier|*
@@ -2441,15 +2418,6 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -2459,11 +2427,6 @@ operator|!=
 name|VDIR
 condition|)
 block|{
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 name|fdrop
 argument_list|(
 name|fp
@@ -3049,11 +3012,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|fdrop

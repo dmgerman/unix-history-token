@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"gen-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"telldir.h"
 end_include
 
@@ -742,6 +748,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_DIRECTORY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|==

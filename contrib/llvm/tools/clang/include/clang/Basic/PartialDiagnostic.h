@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file implements a partial diagnostic that can be emitted anwyhere
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  in a DiagnosticBuilder stream.
+comment|/// \brief Implements a partial diagnostic that can be emitted anwyhere
 end_comment
 
 begin_comment
-comment|//
+comment|/// in a DiagnosticBuilder stream.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -102,6 +106,19 @@ name|PartialDiagnostic
 block|{
 name|public
 label|:
+enum|enum
+block|{
+comment|// The MaxArguments and MaxFixItHints member enum values from
+comment|// DiagnosticsEngine are private but DiagnosticsEngine declares
+comment|// PartialDiagnostic a friend.  These enum values are redeclared
+comment|// here so that the nested Storage class below can access them.
+name|MaxArguments
+init|=
+name|DiagnosticsEngine
+operator|::
+name|MaxArguments
+block|}
+enum|;
 struct|struct
 name|Storage
 block|{
@@ -117,44 +134,33 @@ name|NumDiagRanges
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|NumFixItHints
-argument_list|(
-literal|0
-argument_list|)
 block|{ }
 expr|enum
 block|{
-comment|/// MaxArguments - The maximum number of arguments we can hold. We
+comment|/// \brief The maximum number of arguments we can hold. We
 comment|/// currently only support up to 10 arguments (%0-%9).
+comment|///
 comment|/// A single diagnostic with more than that almost certainly has to
 comment|/// be simplified anyway.
 name|MaxArguments
 operator|=
-name|DiagnosticsEngine
+name|PartialDiagnostic
 operator|::
 name|MaxArguments
 block|}
 expr_stmt|;
-comment|/// NumDiagArgs - This contains the number of entries in Arguments.
+comment|/// \brief The number of entries in Arguments.
 name|unsigned
 name|char
 name|NumDiagArgs
 decl_stmt|;
-comment|/// NumDiagRanges - This is the number of ranges in the DiagRanges array.
+comment|/// \brief This is the number of ranges in the DiagRanges array.
 name|unsigned
 name|char
 name|NumDiagRanges
 decl_stmt|;
-comment|/// \brief The number of code modifications hints in the
-comment|/// FixItHints array.
-name|unsigned
-name|char
-name|NumFixItHints
-decl_stmt|;
-comment|/// DiagArgumentsKind - This is an array of ArgumentKind::ArgumentKind enum
-comment|/// values, with one for each argument.  This specifies whether the argument
-comment|/// is in DiagArgumentsStr or in DiagArguments.
+comment|/// \brief Specifies for each argument whether it is in DiagArgumentsStr
+comment|/// or in DiagArguments.
 name|unsigned
 name|char
 name|DiagArgumentsKind
@@ -162,7 +168,8 @@ index|[
 name|MaxArguments
 index|]
 decl_stmt|;
-comment|/// DiagArgumentsVal - The values for the various substitution positions.
+comment|/// \brief The values for the various substitution positions.
+comment|///
 comment|/// This is used when the argument is not an std::string. The specific value
 comment|/// is mangled into an intptr_t and the interpretation depends on exactly
 comment|/// what sort of argument kind it is.
@@ -182,31 +189,25 @@ index|[
 name|MaxArguments
 index|]
 expr_stmt|;
-comment|/// DiagRanges - The list of ranges added to this diagnostic.  It currently
-comment|/// only support 10 ranges, could easily be extended if needed.
+comment|/// \brief The list of ranges added to this diagnostic.
+comment|///
+comment|/// It currently only support 10 ranges, could easily be extended if needed.
 name|CharSourceRange
 name|DiagRanges
 index|[
 literal|10
 index|]
 decl_stmt|;
-enum|enum
-block|{
-name|MaxFixItHints
-init|=
-name|DiagnosticsEngine
-operator|::
-name|MaxFixItHints
-block|}
-enum|;
-comment|/// FixItHints - If valid, provides a hint with some code
-comment|/// to insert, remove, or modify at a particular position.
+comment|/// \brief If valid, provides a hint with some code to insert, remove, or
+comment|/// modify at a particular position.
+name|SmallVector
+operator|<
 name|FixItHint
+operator|,
+literal|6
+operator|>
 name|FixItHints
-index|[
-name|MaxFixItHints
-index|]
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 comment|/// \brief An allocator for Storage objects, which uses a small cache to
@@ -286,9 +287,10 @@ literal|0
 expr_stmt|;
 name|Result
 operator|->
-name|NumFixItHints
-operator|=
-literal|0
+name|FixItHints
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 return|return
 name|Result
@@ -337,12 +339,12 @@ label|:
 comment|// NOTE: Sema assumes that PartialDiagnostic is location-invariant
 comment|// in the sense that its bits can be safely memcpy'ed and destructed
 comment|// in the new location.
-comment|/// DiagID - The diagnostic ID.
+comment|/// \brief The diagnostic ID.
 name|mutable
 name|unsigned
 name|DiagID
 decl_stmt|;
-comment|/// DiagStorage - Storage for args and ranges.
+comment|/// \brief Storage for args and ranges.
 name|mutable
 name|Storage
 modifier|*
@@ -418,6 +420,20 @@ operator|!
 name|DiagStorage
 condition|)
 return|return;
+comment|// The hot path for PartialDiagnostic is when we just used it to wrap an ID
+comment|// (typically so we have the flexibility of passing a more complex
+comment|// diagnostic into the callee, but that does not commonly occur).
+comment|//
+comment|// Split this out into a slow function for silly compilers (*cough*) which
+comment|// can't do decent partial inlining.
+name|freeStorageSlow
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|freeStorageSlow
+parameter_list|()
+block|{
 if|if
 condition|(
 name|Allocator
@@ -534,53 +550,51 @@ operator|=
 name|getStorage
 argument_list|()
 expr_stmt|;
-name|assert
-argument_list|(
-name|DiagStorage
-operator|->
-name|NumFixItHints
-operator|<
-name|Storage
-operator|::
-name|MaxFixItHints
-operator|&&
-literal|"Too many code modification hints!"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DiagStorage
-operator|->
-name|NumFixItHints
-operator|>=
-name|Storage
-operator|::
-name|MaxFixItHints
-condition|)
-return|return;
-comment|// Don't crash in release builds
 name|DiagStorage
 operator|->
 name|FixItHints
-index|[
-name|DiagStorage
-operator|->
-name|NumFixItHints
-operator|++
-index|]
-operator|=
+operator|.
+name|push_back
+argument_list|(
 name|Hint
+argument_list|)
 expr_stmt|;
 block|}
 name|public
 label|:
+struct|struct
+name|NullDiagnostic
+block|{}
+struct|;
+comment|/// \brief Create a null partial diagnostic, which cannot carry a payload,
+comment|/// and only exists to be swapped with a real partial diagnostic.
+name|PartialDiagnostic
+argument_list|(
+name|NullDiagnostic
+argument_list|)
+operator|:
+name|DiagID
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|DiagStorage
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Allocator
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 name|PartialDiagnostic
 argument_list|(
 argument|unsigned DiagID
 argument_list|,
 argument|StorageAllocator&Allocator
 argument_list|)
-block|:
+operator|:
 name|DiagID
 argument_list|(
 name|DiagID
@@ -918,6 +932,45 @@ block|{
 name|freeStorage
 argument_list|()
 block|;   }
+name|void
+name|swap
+argument_list|(
+argument|PartialDiagnostic&PD
+argument_list|)
+block|{
+name|std
+operator|::
+name|swap
+argument_list|(
+name|DiagID
+argument_list|,
+name|PD
+operator|.
+name|DiagID
+argument_list|)
+block|;
+name|std
+operator|::
+name|swap
+argument_list|(
+name|DiagStorage
+argument_list|,
+name|PD
+operator|.
+name|DiagStorage
+argument_list|)
+block|;
+name|std
+operator|::
+name|swap
+argument_list|(
+name|Allocator
+argument_list|,
+name|PD
+operator|.
+name|Allocator
+argument_list|)
+block|;   }
 name|unsigned
 name|getDiagID
 argument_list|()
@@ -1192,7 +1245,10 @@ name|e
 init|=
 name|DiagStorage
 operator|->
-name|NumFixItHints
+name|FixItHints
+operator|.
+name|size
+argument_list|()
 init|;
 name|i
 operator|!=
@@ -1212,6 +1268,73 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|EmitToString
+argument_list|(
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Buf
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: It should be possible to render a diagnostic to a string without
+comment|//        messing with the state of the diagnostics engine.
+name|DiagnosticBuilder
+name|DB
+argument_list|(
+name|Diags
+operator|.
+name|Report
+argument_list|(
+name|getDiagID
+argument_list|()
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|Emit
+argument_list|(
+name|DB
+argument_list|)
+expr_stmt|;
+name|DB
+operator|.
+name|FlushCounts
+argument_list|()
+expr_stmt|;
+name|Diagnostic
+argument_list|(
+operator|&
+name|Diags
+argument_list|)
+operator|.
+name|FormatDiagnostic
+argument_list|(
+name|Buf
+argument_list|)
+expr_stmt|;
+name|DB
+operator|.
+name|Clear
+argument_list|()
+expr_stmt|;
+name|Diags
+operator|.
+name|Clear
+argument_list|()
 expr_stmt|;
 block|}
 end_decl_stmt

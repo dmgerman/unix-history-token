@@ -447,7 +447,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AB:HI:LPasd:chklmnrt:x"
+literal|"AB:HI:LPasd:cghklmnrt:x"
 argument_list|)
 operator|)
 operator|!=
@@ -610,6 +610,18 @@ case|:
 name|cflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'g'
+case|:
+name|hflag
+operator|=
+literal|0
+expr_stmt|;
+name|blocksize
+operator|=
+literal|1073741824
 expr_stmt|;
 break|break;
 case|case
@@ -2115,7 +2127,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-Aclnx] [-H | -L | -P] [-h | -k | -m ] "
+literal|"usage: du [-Aclnx] [-H | -L | -P] [-g | -h | -k | -m] "
 literal|"[-a | -s | -d depth] [-B blocksize] [-I mask] "
 literal|"[-t threshold] [file ...]\n"
 argument_list|)

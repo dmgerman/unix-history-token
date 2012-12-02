@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MDBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -94,6 +100,9 @@ name|clang
 block|{
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|LangOptions
@@ -122,12 +131,11 @@ name|ASTContext
 modifier|&
 name|Context
 decl_stmt|;
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|VMContext
-expr_stmt|;
+specifier|const
+name|CodeGenOptions
+modifier|&
+name|CodeGenOpts
+decl_stmt|;
 specifier|const
 name|LangOptions
 modifier|&
@@ -137,6 +145,12 @@ name|MangleContext
 modifier|&
 name|MContext
 decl_stmt|;
+comment|// MDHelper - Helper for creating metadata.
+name|llvm
+operator|::
+name|MDBuilder
+name|MDHelper
+expr_stmt|;
 comment|/// MetadataCache - This maps clang::Types to llvm::MDNodes describing them.
 name|llvm
 operator|::
@@ -183,19 +197,6 @@ operator|*
 name|getChar
 argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
-name|MDNode
-operator|*
-name|getTBAAInfoForNamedType
-argument_list|(
-argument|StringRef NameStr
-argument_list|,
-argument|llvm::MDNode *Parent
-argument_list|,
-argument|bool Readonly = false
-argument_list|)
-expr_stmt|;
 name|public
 label|:
 name|CodeGenTBAA
@@ -209,6 +210,11 @@ operator|::
 name|LLVMContext
 operator|&
 name|VMContext
+argument_list|,
+specifier|const
+name|CodeGenOptions
+operator|&
+name|CGO
 argument_list|,
 specifier|const
 name|LangOptions
@@ -234,6 +240,15 @@ name|getTBAAInfo
 argument_list|(
 argument|QualType QTy
 argument_list|)
+expr_stmt|;
+comment|/// getTBAAInfoForVTablePtr - Get the TBAA MDNode to be used for a
+comment|/// dereference of a vtable pointer.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAInfoForVTablePtr
+argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;

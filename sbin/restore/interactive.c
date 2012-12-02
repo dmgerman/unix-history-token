@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -3195,10 +3201,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%*d "
+literal|"%*ju "
 argument_list|,
 name|precision
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fp
 operator|->
 name|fnum

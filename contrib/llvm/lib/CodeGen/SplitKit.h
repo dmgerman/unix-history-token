@@ -165,15 +165,6 @@ name|TargetInstrInfo
 modifier|&
 name|TII
 decl_stmt|;
-comment|// Sorted slot indexes of using instructions.
-name|SmallVector
-operator|<
-name|SlotIndex
-operator|,
-literal|8
-operator|>
-name|UseSlots
-expr_stmt|;
 comment|/// Additional information about basic blocks where the current variable is
 comment|/// live. Such a block will look like one of these templates:
 comment|///
@@ -246,6 +237,15 @@ name|LiveInterval
 modifier|*
 name|CurLI
 decl_stmt|;
+comment|// Sorted slot indexes of using instructions.
+name|SmallVector
+operator|<
+name|SlotIndex
+operator|,
+literal|8
+operator|>
+name|UseSlots
+expr_stmt|;
 comment|/// LastSplitPoint - Last legal split point in each basic block in the current
 comment|/// function. The first entry is the first terminator, the second entry is the
 comment|/// last valid split point for a variable that is live in to a landing pad
@@ -370,7 +370,7 @@ operator|*
 name|CurLI
 return|;
 block|}
-comment|/// getLastSplitPoint - Return that base index of the last valid split point
+comment|/// getLastSplitPoint - Return the base index of the last valid split point
 comment|/// in the basic block numbered Num.
 name|SlotIndex
 name|getLastSplitPoint
@@ -418,6 +418,16 @@ name|Num
 argument_list|)
 return|;
 block|}
+comment|/// getLastSplitPointIter - Returns the last split point as an iterator.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|getLastSplitPointIter
+argument_list|(
+name|MachineBasicBlock
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/// isOriginalEndpoint - Return true if the original live range was killed or
 comment|/// (re-)defined at Idx. Idx should be the 'def' slot for a normal kill/def,
 comment|/// and 'use' for an early-clobber def.
@@ -431,6 +441,20 @@ name|Idx
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getUseSlots - Return an array of SlotIndexes of instructions using CurLI.
+comment|/// This include both use and def operands, at most one entry per instruction.
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|getUseSlots
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSlots
+return|;
+block|}
 comment|/// getUseBlocks - Return an array of BlockInfo objects for the basic blocks
 comment|/// where CurLI has uses.
 name|ArrayRef

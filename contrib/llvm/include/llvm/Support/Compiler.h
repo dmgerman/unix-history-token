@@ -85,6 +85,196 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/// LLVM_HAS_RVALUE_REFERENCES - Does the compiler provide r-value references?
+end_comment
+
+begin_comment
+comment|/// This implies that<utility> provides the one-argument std::move;  it
+end_comment
+
+begin_comment
+comment|/// does not imply the existence of any other C++ library features.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__has_feature
+argument_list|(
+name|cxx_rvalue_references
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__GXX_EXPERIMENTAL_CXX0X__
+argument_list|)
+expr|\
+operator|||
+name|_MSC_VER
+operator|>=
+literal|1600
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_USE_RVALUE_REFERENCES
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_USE_RVALUE_REFERENCES
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// llvm_move - Expands to ::std::move if the compiler supports
+end_comment
+
+begin_comment
+comment|/// r-value references; otherwise, expands to the argument.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LLVM_USE_RVALUE_REFERENCES
+end_if
+
+begin_define
+define|#
+directive|define
+name|llvm_move
+parameter_list|(
+name|value
+parameter_list|)
+value|(::std::move(value))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|llvm_move
+parameter_list|(
+name|value
+parameter_list|)
+value|(value)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// LLVM_DELETED_FUNCTION - Expands to = delete if the compiler supports it.
+end_comment
+
+begin_comment
+comment|/// Use to mark functions as uncallable. Member functions with this should
+end_comment
+
+begin_comment
+comment|/// be declared private so that some behaivor is kept in C++03 mode.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// class DontCopy {
+end_comment
+
+begin_comment
+comment|/// private:
+end_comment
+
+begin_comment
+comment|///   DontCopy(const DontCopy&) LLVM_DELETED_FUNCTION;
+end_comment
+
+begin_comment
+comment|///   DontCopy&operator =(const DontCopy&) LLVM_DELETED_FUNCTION;
+end_comment
+
+begin_comment
+comment|/// public:
+end_comment
+
+begin_comment
+comment|///   ...
+end_comment
+
+begin_comment
+comment|/// };
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__has_feature
+argument_list|(
+name|cxx_deleted_functions
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__GXX_EXPERIMENTAL_CXX0X__
+argument_list|)
+operator|)
+end_if
+
+begin_comment
+comment|// No version of MSVC currently supports this.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_DELETED_FUNCTION
+value|= delete
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_DELETED_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/// LLVM_LIBRARY_VISIBILITY - If a class marked with this attribute is linked
 end_comment
 
@@ -263,21 +453,33 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
 name|__GNUC__
-end_ifdef
-
-begin_comment
-comment|// aka 'ATTRIBUTE_CONST' but following LLVM Conventions.
-end_comment
+operator|>=
+literal|4
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READNONE
-value|__attribute__((__const__))
+name|LLVM_ATTRIBUTE_WEAK
+value|__attribute__((__weak__))
 end_define
 
 begin_else
@@ -288,7 +490,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READNONE
+name|LLVM_ATTRIBUTE_WEAK
 end_define
 
 begin_endif
@@ -303,13 +505,46 @@ name|__GNUC__
 end_ifdef
 
 begin_comment
-comment|// aka 'ATTRIBUTE_PURE' but following LLVM Conventions.
+comment|// aka 'CONST' but following LLVM Conventions.
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READONLY
+name|LLVM_READNONE
+value|__attribute__((__const__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_READNONE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_comment
+comment|// aka 'PURE' but following LLVM Conventions.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_READONLY
 value|__attribute__((__pure__))
 end_define
 
@@ -321,7 +556,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_READONLY
+name|LLVM_READONLY
 end_define
 
 begin_endif
@@ -542,7 +777,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
-value|__attribute__((always_inline))
+value|inline __attribute__((always_inline))
 end_define
 
 begin_elif
@@ -615,6 +850,43 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_NORETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_EXTENSION - Support compilers where we have a keyword to suppress
+end_comment
+
+begin_comment
+comment|// pedantic diagnostics.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_EXTENSION
+value|__extension__
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_EXTENSION
 end_define
 
 begin_endif

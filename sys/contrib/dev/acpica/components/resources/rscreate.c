@@ -155,6 +155,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 name|AmlBuffer
 argument_list|,
 name|AmlBufferLength
@@ -354,6 +356,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 name|AmlStart
 argument_list|,
 name|AmlBufferLength
@@ -407,7 +411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                        package  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  * NOTE: It is the caller's responsibility to ensure that the start of the  * output buffer is aligned properly (if necessary).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to a package containing one  *                                        of more ACPI_OPERAND_OBJECTs  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT package and creates a  *              linked list of PCI interrupt descriptions  *  * NOTE: It is the caller's responsibility to ensure that the start of the  * output buffer is aligned properly (if necessary).  *  ******************************************************************************/
 end_comment
 
 begin_function

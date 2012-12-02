@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SPUTargetMachine.h - Define TargetMachine for Cell SPU ----*- C++ -*-=//
+comment|//===-- SPUTargetMachine.h - Define TargetMachine for Cell SPU --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -105,15 +105,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|PassManager
-decl_stmt|;
-name|class
-name|GlobalValue
-decl_stmt|;
-name|class
-name|TargetFrameLowering
-decl_stmt|;
 comment|/// SPUTargetMachine
 comment|///
 name|class
@@ -156,9 +147,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 comment|/// Return the subtarget implementation object
@@ -282,26 +277,15 @@ return|;
 block|}
 comment|// Pass Pipeline Configuration
 name|virtual
-name|bool
-name|addInstSelector
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreEmitPass
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
 name|PassManagerBase
 operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
+name|PM
 argument_list|)
-block|;	 }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

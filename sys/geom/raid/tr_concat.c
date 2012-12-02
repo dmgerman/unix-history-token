@@ -266,6 +266,11 @@ name|g_raid_tr_concat_object
 argument_list|)
 block|,
 operator|.
+name|trc_enable
+operator|=
+literal|1
+block|,
+operator|.
 name|trc_priority
 operator|=
 literal|50
@@ -1140,6 +1145,14 @@ name|remain
 operator|-=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+operator|!=
+name|BIO_DELETE
+condition|)
 name|addr
 operator|+=
 name|length
@@ -1657,7 +1670,9 @@ end_function
 begin_expr_stmt
 name|G_RAID_TR_DECLARE
 argument_list|(
-name|g_raid_tr_concat
+name|concat
+argument_list|,
+literal|"CONCAT"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

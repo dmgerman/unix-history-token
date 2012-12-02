@@ -85,7 +85,7 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|raw_ostream
+name|Value
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
@@ -109,11 +109,9 @@ parameter_list|(
 specifier|const
 name|Function
 modifier|*
-name|F
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
-name|OS
 parameter_list|)
 block|{}
 comment|/// emitBasicBlockStartAnnot - This may be implemented to emit a string right
@@ -126,11 +124,9 @@ parameter_list|(
 specifier|const
 name|BasicBlock
 modifier|*
-name|BB
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
-name|OS
 parameter_list|)
 block|{   }
 comment|/// emitBasicBlockEndAnnot - This may be implemented to emit a string right
@@ -142,11 +138,9 @@ parameter_list|(
 specifier|const
 name|BasicBlock
 modifier|*
-name|BB
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
-name|OS
 parameter_list|)
 block|{   }
 comment|/// emitInstructionAnnot - This may be implemented to emit a string right
@@ -158,11 +152,9 @@ parameter_list|(
 specifier|const
 name|Instruction
 modifier|*
-name|I
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
-name|OS
 parameter_list|)
 block|{}
 comment|/// printInfoComment - This may be implemented to emit a comment to the
@@ -174,11 +166,9 @@ parameter_list|(
 specifier|const
 name|Value
 modifier|&
-name|V
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
-name|OS
 parameter_list|)
 block|{}
 block|}

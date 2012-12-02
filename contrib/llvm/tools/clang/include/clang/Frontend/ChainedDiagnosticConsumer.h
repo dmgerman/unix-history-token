@@ -72,16 +72,17 @@ range|:
 name|public
 name|DiagnosticConsumer
 block|{
-name|llvm
-operator|::
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|OwningPtr
 operator|<
 name|DiagnosticConsumer
 operator|>
 name|Primary
 block|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|DiagnosticConsumer
@@ -151,6 +152,21 @@ block|;
 name|Primary
 operator|->
 name|EndSourceFile
+argument_list|()
+block|;   }
+name|virtual
+name|void
+name|finish
+argument_list|()
+block|{
+name|Secondary
+operator|->
+name|finish
+argument_list|()
+block|;
+name|Primary
+operator|->
+name|finish
 argument_list|()
 block|;   }
 name|virtual

@@ -7135,6 +7135,8 @@ name|val
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure PME. 	 */
+if|if
+condition|(
 name|pci_find_cap
 argument_list|(
 name|sc
@@ -7146,7 +7148,10 @@ argument_list|,
 operator|&
 name|pmc
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 name|pmstat
 operator|=
 name|pci_read_config
@@ -7204,6 +7209,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARMRegisterInfo.h"
+file|"ARMBaseRegisterInfo.h"
 end_include
 
 begin_include
@@ -90,9 +90,6 @@ name|ARMSubtarget
 decl_stmt|;
 name|class
 name|ARMBaseInstrInfo
-decl_stmt|;
-name|class
-name|Type
 decl_stmt|;
 name|struct
 name|Thumb1RegisterInfo
@@ -129,6 +126,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)

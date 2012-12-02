@@ -44,11 +44,11 @@ comment|//  the class ProgramStateTrait<>.  ProgramStateTrait<> is used by Progr
 end_comment
 
 begin_comment
-comment|//  to implement set/get methods for mapulating a ProgramState's
+comment|//  to implement set/get methods for manipulating a ProgramState's
 end_comment
 
 begin_comment
-comment|// generic data map.
+comment|//  generic data map.
 end_comment
 
 begin_comment
@@ -992,6 +992,64 @@ operator|)
 operator|(
 name|uintptr_t
 operator|)
+name|d
+return|;
+block|}
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Partial specialization for void*.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|ProgramStatePartialTrait
+operator|<
+name|void
+operator|*
+operator|>
+block|{
+typedef|typedef
+name|void
+modifier|*
+name|data_type
+typedef|;
+specifier|static
+specifier|inline
+name|data_type
+name|MakeData
+argument_list|(
+argument|void *const* p
+argument_list|)
+block|{
+return|return
+name|p
+operator|?
+operator|*
+name|p
+operator|:
+name|data_type
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|void
+operator|*
+name|MakeVoidPtr
+argument_list|(
+argument|data_type d
+argument_list|)
+block|{
+return|return
 name|d
 return|;
 block|}

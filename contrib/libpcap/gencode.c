@@ -148,7 +148,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"IP6_misc.h"
+file|"ip6_misc.h"
 end_include
 
 begin_endif
@@ -318,6 +318,43 @@ include|#
 directive|include
 file|"arcnet.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PF_PACKET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SO_ATTACH_FILTER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/if_packet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/filter.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2612,7 +2649,7 @@ name|xbuf
 init|=
 name|buf
 decl_stmt|;
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|no_optimize
@@ -4129,7 +4166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This is the offset of the beginning of the MAC-layer header from  * the beginning of the link-layer header.  * It's usually 0, except for ATM LANE, where it's the offset, relative  * to the beginning of the raw packet data, of the Ethernet header.  */
+comment|/*  * This is the offset of the beginning of the MAC-layer header from  * the beginning of the link-layer header.  * It's usually 0, except for ATM LANE, where it's the offset, relative  * to the beginning of the raw packet data, of the Ethernet header, and  * for Ethernet with various additional information.  */
 end_comment
 
 begin_decl_stmt
@@ -5069,56 +5106,6 @@ expr_stmt|;
 comment|/* no 802.2 LLC */
 return|return;
 case|case
-name|DLT_LINUX_IRDA
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_DOCSIS
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
 name|DLT_SYMANTEC_FIREWALL
 case|:
 name|off_linktype
@@ -5462,6 +5449,38 @@ literal|1
 expr_stmt|;
 return|return;
 case|case
+name|DLT_JUNIPER_VS
+case|:
+case|case
+name|DLT_JUNIPER_SRX_E2E
+case|:
+case|case
+name|DLT_JUNIPER_FIBRECHANNEL
+case|:
+case|case
+name|DLT_JUNIPER_ATM_CEMIC
+case|:
+name|off_linktype
+operator|=
+literal|8
+expr_stmt|;
+name|off_macpl
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|off_nl
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|off_nl_nosnap
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+case|case
 name|DLT_MTP2
 case|:
 name|off_li
@@ -5593,9 +5612,6 @@ operator|-
 literal|1
 expr_stmt|;
 return|return;
-ifdef|#
-directive|ifdef
-name|DLT_PFSYNC
 case|case
 name|DLT_PFSYNC
 case|:
@@ -5615,308 +5631,6 @@ expr_stmt|;
 name|off_nl_nosnap
 operator|=
 literal|0
-expr_stmt|;
-return|return;
-endif|#
-directive|endif
-case|case
-name|DLT_LINUX_LAPD
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_USB
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_BLUETOOTH_HCI_H4
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_USB_LINUX
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_CAN20B
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_IEEE802_15_4_LINUX
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_IEEE802_16_MAC_CPS_RADIO
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_IEEE802_15_4
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_SITA
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_RAIF1
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_IPMB
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_BLUETOOTH_HCI_H4_WITH_PHDR
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 return|return;
 case|case
@@ -5953,106 +5667,6 @@ expr_stmt|;
 comment|/* step over the kiss length byte */
 return|return;
 case|case
-name|DLT_IEEE802_15_4_NONASK_PHY
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_MPLS
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_USB_LINUX_MMAPPED
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
-name|DLT_CAN_SOCKETCAN
-case|:
-comment|/* 		 * Currently, only raw "link[N:M]" filtering is supported. 		 */
-name|off_linktype
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_macpl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|off_nl_nosnap
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-case|case
 name|DLT_IPNET
 case|:
 name|off_linktype
@@ -6074,6 +5688,99 @@ operator|-
 literal|1
 expr_stmt|;
 return|return;
+case|case
+name|DLT_NETANALYZER
+case|:
+name|off_mac
+operator|=
+literal|4
+expr_stmt|;
+comment|/* MAC header is past 4-byte pseudo-header */
+name|off_linktype
+operator|=
+literal|16
+expr_stmt|;
+comment|/* includes 4-byte pseudo-header */
+name|off_macpl
+operator|=
+literal|18
+expr_stmt|;
+comment|/* pseudo-header+Ethernet header length */
+name|off_nl
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Ethernet II */
+name|off_nl_nosnap
+operator|=
+literal|3
+expr_stmt|;
+comment|/* 802.3+802.2 */
+return|return;
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
+case|:
+name|off_mac
+operator|=
+literal|12
+expr_stmt|;
+comment|/* MAC header is past 4-byte pseudo-header, preamble, and SFD */
+name|off_linktype
+operator|=
+literal|24
+expr_stmt|;
+comment|/* includes 4-byte pseudo-header+preamble+SFD */
+name|off_macpl
+operator|=
+literal|26
+expr_stmt|;
+comment|/* pseudo-header+preamble+SFD+Ethernet header length */
+name|off_nl
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Ethernet II */
+name|off_nl_nosnap
+operator|=
+literal|3
+expr_stmt|;
+comment|/* 802.3+802.2 */
+return|return;
+default|default:
+comment|/* 		 * For values in the range in which we've assigned new 		 * DLT_ values, only raw "link[N:M]" filtering is supported. 		 */
+if|if
+condition|(
+name|linktype
+operator|>=
+name|DLT_MATCHING_MIN
+operator|&&
+name|linktype
+operator|<=
+name|DLT_MATCHING_MAX
+condition|)
+block|{
+name|off_linktype
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|off_macpl
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|off_nl
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|off_nl_nosnap
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
 block|}
 name|bpf_error
 argument_list|(
@@ -9849,6 +9556,12 @@ block|{
 case|case
 name|DLT_EN10MB
 case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
+case|:
 return|return
 name|gen_ether_linktype
 argument_list|(
@@ -10915,6 +10628,18 @@ case|:
 case|case
 name|DLT_JUNIPER_ISM
 case|:
+case|case
+name|DLT_JUNIPER_VS
+case|:
+case|case
+name|DLT_JUNIPER_SRX_E2E
+case|:
+case|case
+name|DLT_JUNIPER_FIBRECHANNEL
+case|:
+case|case
+name|DLT_JUNIPER_ATM_CEMIC
+case|:
 comment|/* just lets verify the magic number for now - 		 * on ATM we may have up to 6 different encapsulations on the wire 		 * and need a lot of heuristics to figure out that the payload 		 * might be; 		 * 		 * FIXME encapsulation specific BPF_ filters 		 */
 return|return
 name|gen_mcmp
@@ -10975,9 +10700,6 @@ argument_list|(
 literal|"ERF link-layer type filtering not implemented"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DLT_PFSYNC
 case|case
 name|DLT_PFSYNC
 case|:
@@ -10986,8 +10708,6 @@ argument_list|(
 literal|"PFSYNC link-layer type filtering not implemented"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|DLT_LINUX_LAPD
 case|:
@@ -11040,6 +10760,9 @@ name|DLT_IEEE802_15_4_LINUX
 case|:
 case|case
 name|DLT_IEEE802_15_4_NONASK_PHY
+case|:
+case|case
+name|DLT_IEEE802_15_4_NOFCS
 case|:
 name|bpf_error
 argument_list|(
@@ -12096,6 +11819,60 @@ expr_stmt|;
 return|return
 name|b1
 return|;
+case|case
+name|Q_ADDR1
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr1' is only supported on 802.11 with 802.11 headers"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR2
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr2' is only supported on 802.11 with 802.11 headers"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR3
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr3' is only supported on 802.11 with 802.11 headers"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR4
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr4' is only supported on 802.11 with 802.11 headers"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_RA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ra' is only supported on 802.11 with 802.11 headers"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_TA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ta' is only supported on 802.11 with 802.11 headers"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -12288,6 +12065,60 @@ expr_stmt|;
 return|return
 name|b1
 return|;
+case|case
+name|Q_ADDR1
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr1' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR2
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr2' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR3
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr3' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR4
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr4' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_RA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ra' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_TA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ta' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -12431,6 +12262,60 @@ expr_stmt|;
 return|return
 name|b1
 return|;
+case|case
+name|Q_ADDR1
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr1' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR2
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr2' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR3
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr3' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR4
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr4' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_RA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ra' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_TA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ta' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -13212,7 +13097,221 @@ expr_stmt|;
 return|return
 name|b0
 return|;
-comment|/* 	 * XXX - add RA, TA, and BSSID keywords? 	 */
+case|case
+name|Q_RA
+case|:
+comment|/* 		 * Not present in management frames; addr1 in other 		 * frames. 		 */
+comment|/* 		 * If the high-order bit of the type value is 0, this 		 * is a management frame. 		 * I.e, check "(link[0]& 0x08)". 		 */
+name|s
+operator|=
+name|gen_load_a
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|)
+expr_stmt|;
+name|b1
+operator|=
+name|new_block
+argument_list|(
+name|JMP
+argument_list|(
+name|BPF_JSET
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|b1
+operator|->
+name|s
+operator|.
+name|k
+operator|=
+literal|0x08
+expr_stmt|;
+name|b1
+operator|->
+name|stmts
+operator|=
+name|s
+expr_stmt|;
+comment|/* 		 * Check addr1. 		 */
+name|b0
+operator|=
+name|gen_bcmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|4
+argument_list|,
+literal|6
+argument_list|,
+name|eaddr
+argument_list|)
+expr_stmt|;
+comment|/* 		 * AND that with the check of addr1. 		 */
+name|gen_and
+argument_list|(
+name|b1
+argument_list|,
+name|b0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|b0
+operator|)
+return|;
+case|case
+name|Q_TA
+case|:
+comment|/* 		 * Not present in management frames; addr2, if present, 		 * in other frames. 		 */
+comment|/* 		 * Not present in CTS or ACK control frames. 		 */
+name|b0
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|,
+name|IEEE80211_FC0_TYPE_CTL
+argument_list|,
+name|IEEE80211_FC0_TYPE_MASK
+argument_list|)
+expr_stmt|;
+name|gen_not
+argument_list|(
+name|b0
+argument_list|)
+expr_stmt|;
+name|b1
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|,
+name|IEEE80211_FC0_SUBTYPE_CTS
+argument_list|,
+name|IEEE80211_FC0_SUBTYPE_MASK
+argument_list|)
+expr_stmt|;
+name|gen_not
+argument_list|(
+name|b1
+argument_list|)
+expr_stmt|;
+name|b2
+operator|=
+name|gen_mcmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|,
+name|IEEE80211_FC0_SUBTYPE_ACK
+argument_list|,
+name|IEEE80211_FC0_SUBTYPE_MASK
+argument_list|)
+expr_stmt|;
+name|gen_not
+argument_list|(
+name|b2
+argument_list|)
+expr_stmt|;
+name|gen_and
+argument_list|(
+name|b1
+argument_list|,
+name|b2
+argument_list|)
+expr_stmt|;
+name|gen_or
+argument_list|(
+name|b0
+argument_list|,
+name|b2
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If the high-order bit of the type value is 0, this 		 * is a management frame. 		 * I.e, check "(link[0]& 0x08)". 		 */
+name|s
+operator|=
+name|gen_load_a
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|0
+argument_list|,
+name|BPF_B
+argument_list|)
+expr_stmt|;
+name|b1
+operator|=
+name|new_block
+argument_list|(
+name|JMP
+argument_list|(
+name|BPF_JSET
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|b1
+operator|->
+name|s
+operator|.
+name|k
+operator|=
+literal|0x08
+expr_stmt|;
+name|b1
+operator|->
+name|stmts
+operator|=
+name|s
+expr_stmt|;
+comment|/* 		 * AND that with the check for frames other than 		 * CTS and ACK frames. 		 */
+name|gen_and
+argument_list|(
+name|b1
+argument_list|,
+name|b2
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Check addr2. 		 */
+name|b1
+operator|=
+name|gen_bcmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+literal|10
+argument_list|,
+literal|6
+argument_list|,
+name|eaddr
+argument_list|)
+expr_stmt|;
+name|gen_and
+argument_list|(
+name|b2
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
+return|return
+name|b1
+return|;
+comment|/* 	 * XXX - add BSSID keyword? 	 */
 case|case
 name|Q_ADDR1
 case|:
@@ -13628,6 +13727,60 @@ expr_stmt|;
 return|return
 name|b1
 return|;
+case|case
+name|Q_ADDR1
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr1' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR2
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr2' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR3
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr3' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR4
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr4' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_RA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ra' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_TA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ta' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -14471,6 +14624,16 @@ name|typestr
 argument_list|)
 expr_stmt|;
 case|case
+name|Q_CARP
+case|:
+name|bpf_error
+argument_list|(
+literal|"'carp' modifier applied to %s"
+argument_list|,
+name|typestr
+argument_list|)
+expr_stmt|;
+case|case
 name|Q_ATALK
 case|:
 name|bpf_error
@@ -14854,6 +15017,16 @@ name|typestr
 argument_list|)
 expr_stmt|;
 case|case
+name|Q_CARP
+case|:
+name|bpf_error
+argument_list|(
+literal|"'carp' modifier applied to %s"
+argument_list|,
+name|typestr
+argument_list|)
+expr_stmt|;
+case|case
 name|Q_ATALK
 case|:
 name|bpf_error
@@ -15138,6 +15311,12 @@ condition|)
 block|{
 case|case
 name|DLT_EN10MB
+case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
 case|:
 name|b0
 operator|=
@@ -15622,6 +15801,30 @@ operator|=
 name|gen_proto
 argument_list|(
 name|IPPROTO_VRRP
+argument_list|,
+name|Q_IP
+argument_list|,
+name|Q_DEFAULT
+argument_list|)
+expr_stmt|;
+break|break;
+ifndef|#
+directive|ifndef
+name|IPPROTO_CARP
+define|#
+directive|define
+name|IPPROTO_CARP
+value|112
+endif|#
+directive|endif
+case|case
+name|Q_CARP
+case|:
+name|b1
+operator|=
+name|gen_proto
+argument_list|(
+name|IPPROTO_CARP
 argument_list|,
 name|Q_IP
 argument_list|,
@@ -16406,7 +16609,7 @@ name|block
 modifier|*
 name|b
 decl_stmt|;
-comment|/* not ip frag */
+comment|/* not IPv4 frag other than the first frag */
 name|s
 operator|=
 name|gen_load_a
@@ -16569,7 +16772,7 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/* ip proto 'proto' */
+comment|/* ip proto 'proto' and not a fragment other than the first fragment */
 name|tmp
 operator|=
 name|gen_cmp
@@ -16901,6 +17104,7 @@ modifier|*
 name|tmp
 decl_stmt|;
 comment|/* ip6 proto 'proto' */
+comment|/* XXX - catch the first fragment of a fragmented packet? */
 name|b0
 operator|=
 name|gen_cmp
@@ -17325,7 +17529,7 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/* ip proto 'proto' */
+comment|/* ip proto 'proto' and not a fragment other than the first fragment */
 name|tmp
 operator|=
 name|gen_cmp
@@ -17798,6 +18002,7 @@ modifier|*
 name|tmp
 decl_stmt|;
 comment|/* ip6 proto 'proto' */
+comment|/* XXX - catch the first fragment of a fragmented packet? */
 name|b0
 operator|=
 name|gen_cmp
@@ -19122,23 +19327,7 @@ name|v6advance
 operator|=
 name|i
 expr_stmt|;
-comment|/* 		 * in short, 		 * A = P[X]; 		 * X = X + (P[X + 1] + 1) * 8; 		 */
-comment|/* A = X */
-name|s
-index|[
-name|i
-index|]
-operator|=
-name|new_stmt
-argument_list|(
-name|BPF_MISC
-operator||
-name|BPF_TXA
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
+comment|/* 		 * in short, 		 * A = P[X + packet head]; 		 * X = X + (P[X + packet head + 1] + 1) * 8; 		 */
 comment|/* A = P[X + packet head] */
 name|s
 index|[
@@ -19195,68 +19384,7 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-comment|/* A = X */
-name|s
-index|[
-name|i
-index|]
-operator|=
-name|new_stmt
-argument_list|(
-name|BPF_MISC
-operator||
-name|BPF_TXA
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-comment|/* A += 1 */
-name|s
-index|[
-name|i
-index|]
-operator|=
-name|new_stmt
-argument_list|(
-name|BPF_ALU
-operator||
-name|BPF_ADD
-operator||
-name|BPF_K
-argument_list|)
-expr_stmt|;
-name|s
-index|[
-name|i
-index|]
-operator|->
-name|s
-operator|.
-name|k
-operator|=
-literal|1
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-comment|/* X = A */
-name|s
-index|[
-name|i
-index|]
-operator|=
-name|new_stmt
-argument_list|(
-name|BPF_MISC
-operator||
-name|BPF_TAX
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-comment|/* A = P[X + packet head]; */
+comment|/* A = P[X + packet head + 1]; */
 name|s
 index|[
 name|i
@@ -19283,6 +19411,8 @@ operator|=
 name|off_macpl
 operator|+
 name|off_nl
+operator|+
+literal|1
 expr_stmt|;
 name|i
 operator|++
@@ -19341,6 +19471,35 @@ operator|.
 name|k
 operator|=
 literal|8
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+comment|/* A += X */
+name|s
+index|[
+name|i
+index|]
+operator|=
+name|new_stmt
+argument_list|(
+name|BPF_ALU
+operator||
+name|BPF_ADD
+operator||
+name|BPF_X
+argument_list|)
+expr_stmt|;
+name|s
+index|[
+name|i
+index|]
+operator|->
+name|s
+operator|.
+name|k
+operator|=
+literal|0
 expr_stmt|;
 name|i
 operator|++
@@ -20225,6 +20384,21 @@ decl_stmt|,
 modifier|*
 name|b1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+ifndef|#
+directive|ifndef
+name|CHASE_CHAIN
+name|struct
+name|block
+modifier|*
+name|b2
+decl_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 if|if
 condition|(
 name|dir
@@ -20640,6 +20814,15 @@ literal|"'vrrp proto' is bogus"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+case|case
+name|Q_CARP
+case|:
+name|bpf_error
+argument_list|(
+literal|"'carp proto' is bogus"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -20656,7 +20839,44 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|CHASE_CHAIN
+comment|/* 		 * Also check for a fragment header before the final 		 * header. 		 */
+name|b2
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_NET
+argument_list|,
+literal|6
+argument_list|,
+name|BPF_B
+argument_list|,
+name|IPPROTO_FRAGMENT
+argument_list|)
+expr_stmt|;
 name|b1
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_NET
+argument_list|,
+literal|40
+argument_list|,
+name|BPF_B
+argument_list|,
+operator|(
+name|bpf_int32
+operator|)
+name|v
+argument_list|)
+expr_stmt|;
+name|gen_and
+argument_list|(
+name|b2
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
+name|b2
 operator|=
 name|gen_cmp
 argument_list|(
@@ -20670,6 +20890,13 @@ operator|(
 name|bpf_int32
 operator|)
 name|v
+argument_list|)
+expr_stmt|;
+name|gen_or
+argument_list|(
+name|b2
+argument_list|,
+name|b1
 argument_list|)
 expr_stmt|;
 else|#
@@ -20960,6 +21187,12 @@ condition|)
 block|{
 case|case
 name|DLT_EN10MB
+case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
 case|:
 name|eaddr
 operator|=
@@ -21815,6 +22048,32 @@ operator|=
 name|IPPROTO_SCTP
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|port
+operator|<
+literal|0
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %d< 0"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port
+operator|>
+literal|65535
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %d> 65535"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|INET6
@@ -22035,6 +22294,58 @@ operator|=
 name|IPPROTO_SCTP
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|port1
+operator|<
+literal|0
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %d< 0"
+argument_list|,
+name|port1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port1
+operator|>
+literal|65535
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %d> 65535"
+argument_list|,
+name|port1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port2
+operator|<
+literal|0
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %d< 0"
+argument_list|,
+name|port2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port2
+operator|>
+literal|65535
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %d> 65535"
+argument_list|,
+name|port2
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|INET6
@@ -22741,6 +23052,19 @@ argument_list|(
 literal|"illegal qualifier of 'port'"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|v
+operator|>
+literal|65535
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %u> 65535"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|INET6
@@ -22853,6 +23177,19 @@ else|else
 name|bpf_error
 argument_list|(
 literal|"illegal qualifier of 'portrange'"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|v
+operator|>
+literal|65535
+condition|)
+name|bpf_error
+argument_list|(
+literal|"illegal port number %u> 65535"
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -23438,6 +23775,12 @@ block|{
 case|case
 name|DLT_EN10MB
 case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
+case|:
 return|return
 name|gen_ehostop
 argument_list|(
@@ -23858,7 +24201,7 @@ argument_list|(
 literal|"radio information not present in capture"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Load into the X register the offset computed into the 		 * register specifed by "index". 		 */
+comment|/* 		 * Load into the X register the offset computed into the 		 * register specified by "index". 		 */
 name|s
 operator|=
 name|xfer_to_x
@@ -23904,7 +24247,7 @@ operator|=
 name|gen_llprefixlen
 argument_list|()
 expr_stmt|;
-comment|/* 		 * If "s" is non-null, it has code to arrange that the 		 * X register contains the length of the prefix preceding 		 * the link-layer header.  Add to it the offset computed 		 * into the register specified by "index", and move that 		 * into the X register.  Otherwise, just load into the X 		 * register the offset computed into the register specifed 		 * by "index". 		 */
+comment|/* 		 * If "s" is non-null, it has code to arrange that the 		 * X register contains the length of the prefix preceding 		 * the link-layer header.  Add to it the offset computed 		 * into the register specified by "index", and move that 		 * into the X register.  Otherwise, just load into the X 		 * register the offset computed into the register specified 		 * by "index". 		 */
 if|if
 condition|(
 name|s
@@ -24035,7 +24378,7 @@ operator|=
 name|gen_off_macpl
 argument_list|()
 expr_stmt|;
-comment|/* 		 * If "s" is non-null, it has code to arrange that the 		 * X register contains the offset of the MAC-layer 		 * payload.  Add to it the offset computed into the 		 * register specified by "index", and move that into 		 * the X register.  Otherwise, just load into the X 		 * register the offset computed into the register specifed 		 * by "index". 		 */
+comment|/* 		 * If "s" is non-null, it has code to arrange that the 		 * X register contains the offset of the MAC-layer 		 * payload.  Add to it the offset computed into the 		 * register specified by "index", and move that into 		 * the X register.  Otherwise, just load into the X 		 * register the offset computed into the register specified 		 * by "index". 		 */
 if|if
 condition|(
 name|s
@@ -24179,6 +24522,9 @@ name|Q_PIM
 case|:
 case|case
 name|Q_VRRP
+case|:
+case|case
+name|Q_CARP
 case|:
 comment|/* 		 * The offset is relative to the beginning of 		 * the transport-layer header. 		 * 		 * Load the X register with the length of the IPv4 header 		 * (plus the offset of the link-layer header, if it's 		 * a variable-length header), in bytes. 		 * 		 * XXX - are there any cases where we want 		 * off_nl_nosnap? 		 * XXX - we should, if we're built with 		 * IPv6 support, generate code to load either 		 * IPv4, IPv6, or both, as appropriate. 		 */
 name|s
@@ -25556,6 +25902,12 @@ return|;
 case|case
 name|DLT_EN10MB
 case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
+case|:
 return|return
 name|gen_ehostop
 argument_list|(
@@ -25909,6 +26261,12 @@ argument_list|)
 return|;
 case|case
 name|DLT_EN10MB
+case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
 case|:
 comment|/* ether[0]& 1 != 0 */
 return|return
@@ -26388,7 +26746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * generate command for inbound/outbound.  It's here so we can  * make it link-type specific.  'dir' = 0 implies "inbound",  * = 1 implies "outbound".  */
+comment|/*  * Filter on inbound (dir == 0) or outbound (dir == 1) traffic.  * Outbound traffic is sent by this machine, while inbound traffic is  * sent by a remote machine (and may include packets destined for a  * unicast or multicast link-layer address we are not subscribing to).  * These are the same definitions implemented by pcap_setdirection().  * Capturing only unicast traffic destined for this host is probably  * better accomplished using a higher-layer filter.  */
 end_comment
 
 begin_function
@@ -26489,12 +26847,7 @@ break|break;
 case|case
 name|DLT_LINUX_SLL
 case|:
-if|if
-condition|(
-name|dir
-condition|)
-block|{
-comment|/* 			 * Match packets sent by this machine. 			 */
+comment|/* match outgoing packets */
 name|b0
 operator|=
 name|gen_cmp
@@ -26508,21 +26861,16 @@ argument_list|,
 name|LINUX_SLL_OUTGOING
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|dir
+condition|)
 block|{
-comment|/* 			 * Match packets sent to this machine. 			 * (No broadcast or multicast packets, or 			 * packets sent to some other machine and 			 * received promiscuously.) 			 * 			 * XXX - packets sent to other machines probably 			 * shouldn't be matched, but what about broadcast 			 * or multicast packets we received? 			 */
-name|b0
-operator|=
-name|gen_cmp
+comment|/* to filter on inbound traffic, invert the match */
+name|gen_not
 argument_list|(
-name|OR_LINK
-argument_list|,
-literal|0
-argument_list|,
-name|BPF_H
-argument_list|,
-name|LINUX_SLL_HOST
+name|b0
 argument_list|)
 expr_stmt|;
 block|}
@@ -26663,6 +27011,18 @@ case|:
 case|case
 name|DLT_JUNIPER_ISM
 case|:
+case|case
+name|DLT_JUNIPER_VS
+case|:
+case|case
+name|DLT_JUNIPER_SRX_E2E
+case|:
+case|case
+name|DLT_JUNIPER_FIBRECHANNEL
+case|:
+case|case
+name|DLT_JUNIPER_ATM_CEMIC
+case|:
 comment|/* juniper flags (including direction) are stored 		 * the byte after the 3-byte magic number */
 if|if
 condition|(
@@ -26707,6 +27067,76 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+comment|/* 		 * If we have packet meta-data indicating a direction, 		 * check it, otherwise give up as this link-layer type 		 * has nothing in the packet data. 		 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PF_PACKET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SO_ATTACH_FILTER
+argument_list|)
+comment|/* 		 * We infer that this is Linux with PF_PACKET support. 		 * If this is a *live* capture, we can look at 		 * special meta-data in the filter expression; 		 * if it's a savefile, we can't. 		 */
+if|if
+condition|(
+name|bpf_pcap
+operator|->
+name|sf
+operator|.
+name|rfile
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* We have a FILE *, so this is a savefile */
+name|bpf_error
+argument_list|(
+literal|"inbound/outbound not supported on linktype %d when reading savefiles"
+argument_list|,
+name|linktype
+argument_list|)
+expr_stmt|;
+name|b0
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+comment|/* match outgoing packets */
+name|b0
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+name|SKF_AD_OFF
+operator|+
+name|SKF_AD_PKTTYPE
+argument_list|,
+name|BPF_H
+argument_list|,
+name|PACKET_OUTGOING
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dir
+condition|)
+block|{
+comment|/* to filter on inbound traffic, invert the match */
+name|gen_not
+argument_list|(
+name|b0
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* defined(PF_PACKET)&& defined(SO_ATTACH_FILTER) */
 name|bpf_error
 argument_list|(
 literal|"inbound/outbound not supported on linktype %d"
@@ -26719,6 +27149,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* NOTREACHED */
+endif|#
+directive|endif
+comment|/* defined(PF_PACKET)&& defined(SO_ATTACH_FILTER) */
 block|}
 return|return
 operator|(
@@ -27764,6 +28197,60 @@ expr_stmt|;
 return|return
 name|b1
 return|;
+case|case
+name|Q_ADDR1
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr1' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR2
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr2' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR3
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr3' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_ADDR4
+case|:
+name|bpf_error
+argument_list|(
+literal|"'addr4' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_RA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ra' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Q_TA
+case|:
+name|bpf_error
+argument_list|(
+literal|"'ta' is only supported on 802.11"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -27821,7 +28308,13 @@ block|{
 case|case
 name|DLT_EN10MB
 case|:
-comment|/* check for VLAN */
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
+case|:
+comment|/* check for VLAN, including QinQ */
 name|b0
 operator|=
 name|gen_cmp
@@ -27837,6 +28330,33 @@ name|bpf_int32
 operator|)
 name|ETHERTYPE_8021Q
 argument_list|)
+expr_stmt|;
+name|b1
+operator|=
+name|gen_cmp
+argument_list|(
+name|OR_LINK
+argument_list|,
+name|off_linktype
+argument_list|,
+name|BPF_H
+argument_list|,
+operator|(
+name|bpf_int32
+operator|)
+name|ETHERTYPE_8021QINQ
+argument_list|)
+expr_stmt|;
+name|gen_or
+argument_list|(
+name|b0
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
+name|b0
+operator|=
+name|b1
 expr_stmt|;
 comment|/* If a specific VLAN is requested, check VLAN id */
 if|if
@@ -27978,6 +28498,12 @@ case|:
 comment|/* fall through */
 case|case
 name|DLT_EN10MB
+case|:
+case|case
+name|DLT_NETANALYZER
+case|:
+case|case
+name|DLT_NETANALYZER_TRANSPARENT
 case|:
 name|b0
 operator|=

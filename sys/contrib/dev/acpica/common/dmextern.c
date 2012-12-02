@@ -253,7 +253,32 @@ decl_stmt|;
 name|ACPI_SIZE
 name|Length
 decl_stmt|;
-comment|/* Search upwards in the parse tree until we reach a namespace node */
+name|UINT32
+name|Index
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* Search upwards in the parse tree until we reach the next namespace node */
+name|Op
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
 while|while
 condition|(
 name|Op
@@ -385,6 +410,20 @@ comment|/*          * If ParentPath is not just a simple '\', increment the leng
 name|Length
 operator|++
 expr_stmt|;
+comment|/* For External() statements, we do not want a leading '\' */
+if|if
+condition|(
+operator|*
+name|ParentPath
+operator|==
+name|AML_ROOT_PREFIX
+condition|)
+block|{
+name|Index
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 name|Fullpath
 operator|=
@@ -404,14 +443,18 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Concatenate parent fullpath and path. For example,      * parent fullpath "\_SB_", Path "^INIT", Fullpath "\_SB_.INIT"      *      * Copy the parent path      */
-name|ACPI_STRCAT
+name|ACPI_STRCPY
 argument_list|(
 name|Fullpath
 argument_list|,
+operator|&
 name|ParentPath
+index|[
+name|Index
+index|]
 argument_list|)
 expr_stmt|;
-comment|/* Add dot separator (don't need dot if parent fullpath is a single "\") */
+comment|/*      * Add dot separator      * (don't need dot if parent fullpath is a single backslash)      */
 if|if
 condition|(
 name|ParentPath
@@ -704,7 +747,29 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Externalize the ACPI path */
+comment|/*      * We don't want External() statements to contain a leading '\'.      * This prevents duplicate external statements of the form:      *      *    External (\ABCD)      *    External (ABCD)      *      * This would cause a compile time error when the disassembled      * output file is recompiled.      */
+if|if
+condition|(
+operator|(
+operator|*
+name|Path
+operator|==
+name|AML_ROOT_PREFIX
+operator|)
+operator|&&
+operator|(
+name|Path
+index|[
+literal|1
+index|]
+operator|)
+condition|)
+block|{
+name|Path
+operator|++
+expr_stmt|;
+block|}
+comment|/* Externalize the ACPI pathname */
 name|Status
 operator|=
 name|AcpiNsExternalizeName
@@ -729,7 +794,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Get the full pathname from root if "Path" has a parent prefix */
+comment|/*      * Get the full pathname from the root if "Path" has one or more      * parent prefixes (^). Note: path will not contain a leading '\'.      */
 if|if
 condition|(
 operator|*
@@ -975,7 +1040,7 @@ name|InternalPath
 operator|=
 name|Path
 expr_stmt|;
-comment|/* Link the new descriptor into the global list, ordered by string length */
+comment|/* Link the new descriptor into the global list, alphabetically ordered */
 name|NextExternal
 operator|=
 name|AcpiGbl_ExternalList
@@ -987,13 +1052,18 @@ condition|)
 block|{
 if|if
 condition|(
+name|AcpiUtStricmp
+argument_list|(
 name|NewExternal
 operator|->
-name|Length
-operator|<=
+name|Path
+argument_list|,
 name|NextExternal
 operator|->
-name|Length
+name|Path
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -1076,7 +1146,7 @@ name|Node
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|MethodDesc
+name|ObjDesc
 decl_stmt|;
 name|ACPI_EXTERNAL_LIST
 modifier|*
@@ -1140,25 +1210,26 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
+else|else
+switch|switch
 condition|(
 name|External
 operator|->
 name|Type
-operator|==
-name|ACPI_TYPE_METHOD
 condition|)
 block|{
+case|case
+name|ACPI_TYPE_METHOD
+case|:
 comment|/* For methods, we need to save the argument count */
-name|MethodDesc
+name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_METHOD
 argument_list|)
 expr_stmt|;
-name|MethodDesc
+name|ObjDesc
 operator|->
 name|Method
 operator|.
@@ -1175,8 +1246,37 @@ name|Node
 operator|->
 name|Object
 operator|=
-name|MethodDesc
+name|ObjDesc
 expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_REGION
+case|:
+comment|/* Regions require a region sub-object */
+name|ObjDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_REGION
+argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Region
+operator|.
+name|Node
+operator|=
+name|Node
+expr_stmt|;
+name|Node
+operator|->
+name|Object
+operator|=
+name|ObjDesc
+expr_stmt|;
+break|break;
+default|default:
+break|break;
 block|}
 name|External
 operator|=

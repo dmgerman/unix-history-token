@@ -958,6 +958,10 @@ name|obuf
 index|[
 name|ctx
 operator|->
+name|obuf_off
+operator|+
+name|ctx
+operator|->
 name|obuf_len
 index|]
 operator|)
@@ -1008,6 +1012,10 @@ name|ctx
 operator|->
 name|obuf
 index|[
+name|ctx
+operator|->
+name|obuf_off
+operator|+
 name|ctx
 operator|->
 name|obuf_len
@@ -1394,9 +1402,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ctx
-operator|->
-name|ibuf_off
+literal|0
 init|;
 name|i
 operator|<
@@ -1412,6 +1418,10 @@ if|if
 condition|(
 name|p1
 index|[
+name|ctx
+operator|->
+name|ibuf_off
+operator|+
 name|i
 index|]
 operator|==
@@ -1975,9 +1985,7 @@ name|ctx
 operator|->
 name|obuf_len
 operator|>
-name|ctx
-operator|->
-name|obuf_off
+literal|0
 condition|)
 block|{
 name|r
@@ -2003,16 +2011,12 @@ argument_list|,
 name|ctx
 operator|->
 name|obuf_len
-operator|-
-name|ctx
-operator|->
-name|obuf_off
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|fprintf(stderr,"FLUSH [%3d] %3d -> %3d\n",ctx->obuf_off,ctx->obuf_len-ctx->obuf_off,r);
+block|fprintf(stderr,"FLUSH [%3d] %3d -> %3d\n",ctx->obuf_off,ctx->obuf_len,r);
 endif|#
 directive|endif
 name|BIO_copy_next_retry
@@ -2038,6 +2042,12 @@ name|ctx
 operator|->
 name|obuf_off
 operator|+=
+name|r
+expr_stmt|;
+name|ctx
+operator|->
+name|obuf_len
+operator|-=
 name|r
 expr_stmt|;
 block|}

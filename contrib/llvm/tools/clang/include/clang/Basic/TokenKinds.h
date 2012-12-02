@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the TokenKind enum and support functions.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::TokenKind enum and support functions.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -66,8 +70,7 @@ block|{
 name|namespace
 name|tok
 block|{
-comment|/// TokenKind - This provides a simple uniform namespace for tokens from all C
-comment|/// languages.
+comment|/// \brief Provides a simple uniform namespace for tokens from all C languages.
 enum|enum
 name|TokenKind
 block|{
@@ -84,8 +87,8 @@ file|"clang/Basic/TokenKinds.def"
 name|NUM_TOKENS
 block|}
 enum|;
-comment|/// PPKeywordKind - This provides a namespace for preprocessor keywords which
-comment|/// start with a '#' at the beginning of the line.
+comment|/// \brief Provides a namespace for preprocessor keywords which start with a
+comment|/// '#' at the beginning of the line.
 enum|enum
 name|PPKeywordKind
 block|{
@@ -102,8 +105,8 @@ file|"clang/Basic/TokenKinds.def"
 name|NUM_PP_KEYWORDS
 block|}
 enum|;
-comment|/// ObjCKeywordKind - This provides a namespace for Objective-C keywords which
-comment|/// start with an '@'.
+comment|/// \brief Provides a namespace for Objective-C keywords which start with
+comment|/// an '@'.
 enum|enum
 name|ObjCKeywordKind
 block|{
@@ -127,8 +130,7 @@ file|"clang/Basic/TokenKinds.def"
 name|NUM_OBJC_KEYWORDS
 block|}
 enum|;
-comment|/// OnOffSwitch - This defines the possible values of an on-off-switch
-comment|/// (C99 6.10.6p2).
+comment|/// \brief Defines the possible values of an on-off-switch (C99 6.10.6p2).
 enum|enum
 name|OnOffSwitch
 block|{

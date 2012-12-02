@@ -1438,6 +1438,17 @@ operator|(
 literal|"MMC"
 operator|)
 return|;
+if|if
+condition|(
+name|type
+operator|&
+name|DT_STOR_NAND
+condition|)
+return|return
+operator|(
+literal|"NAND"
+operator|)
+return|;
 return|return
 operator|(
 literal|"Unknown"

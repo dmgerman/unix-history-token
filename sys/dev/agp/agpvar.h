@@ -279,6 +279,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|AGP_NORMAL_MEMORY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_USER_TYPES
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_USER_MEMORY
+value|(AGP_USER_TYPES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_USER_CACHED_MEMORY
+value|(AGP_USER_TYPES + 1)
+end_define
+
 begin_endif
 endif|#
 directive|endif

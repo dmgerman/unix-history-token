@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- PPCSubtarget.h - Define Subtarget for the PPC -------*- C++ -*--====//
+comment|//===-- PPCSubtarget.h - Define Subtarget for the PPC ----------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -122,6 +122,8 @@ name|DIR_NONE
 block|,
 name|DIR_32
 block|,
+name|DIR_440
+block|,
 name|DIR_601
 block|,
 name|DIR_602
@@ -133,6 +135,12 @@ block|,
 name|DIR_750
 block|,
 name|DIR_970
+block|,
+name|DIR_A2
+block|,
+name|DIR_PWR6
+block|,
+name|DIR_PWR7
 block|,
 name|DIR_64
 block|}
@@ -167,7 +175,7 @@ name|DarwinDirective
 block|;
 comment|/// Used by the ISel to turn in optimizations for POWER4-derived architectures
 name|bool
-name|IsGigaProcessor
+name|HasMFOCRF
 block|;
 name|bool
 name|Has64BitSupport
@@ -186,6 +194,12 @@ name|HasFSQRT
 block|;
 name|bool
 name|HasSTFIWX
+block|;
+name|bool
+name|HasISEL
+block|;
+name|bool
+name|IsBookE
 block|;
 name|bool
 name|HasLazyResolverStubs
@@ -370,12 +384,30 @@ name|HasAltivec
 return|;
 block|}
 name|bool
-name|isGigaProcessor
+name|hasMFOCRF
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsGigaProcessor
+name|HasMFOCRF
+return|;
+block|}
+name|bool
+name|hasISEL
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasISEL
+return|;
+block|}
+name|bool
+name|isBookE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsBookE
 return|;
 block|}
 specifier|const
@@ -402,6 +434,23 @@ name|isMacOSX
 argument_list|()
 return|;
 block|}
+comment|/// isBGP - True if this is a BG/P platform.
+name|bool
+name|isBGP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getVendor
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|BGP
+return|;
+block|}
 name|bool
 name|isDarwinABI
 argument_list|()
@@ -423,8 +472,20 @@ name|isDarwin
 argument_list|()
 return|;
 block|}
-expr|}
+comment|/// enablePostRAScheduler - True at 'More' optimization.
+name|bool
+name|enablePostRAScheduler
+argument_list|(
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|TargetSubtargetInfo::AntiDepBreakMode& Mode
+argument_list|,
+argument|RegClassVector& CriticalPathRCs
+argument_list|)
+specifier|const
 block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

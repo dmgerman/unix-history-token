@@ -478,8 +478,17 @@ operator|.
 name|signature
 operator|==
 name|SIGNATURE
+operator|||
+name|lqr
+operator|.
+name|signature
+operator|==
+name|lcp
+operator|->
+name|want_magic
 condition|)
 block|{
+comment|/* some implementations return the wrong magic */
 comment|/* careful not to update lqm.echo.seq_recv with older values */
 if|if
 condition|(

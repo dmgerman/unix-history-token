@@ -559,7 +559,9 @@ name|flags
 name|__unused
 parameter_list|)
 block|{
-asm|__asm __volatile("eieio; sync" : : : "memory");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -600,6 +602,9 @@ name|res
 operator|=
 operator|*
 name|addr
+expr_stmt|;
+name|powerpc_iomb
+argument_list|()
 expr_stmt|;
 name|CTR4
 argument_list|(
@@ -658,6 +663,9 @@ operator|=
 operator|*
 name|addr
 expr_stmt|;
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -715,6 +723,9 @@ operator|=
 operator|*
 name|addr
 expr_stmt|;
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -771,6 +782,9 @@ name|res
 operator|=
 operator|*
 name|addr
+expr_stmt|;
+name|powerpc_iomb
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -968,7 +982,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1016,7 +1032,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1064,7 +1082,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1112,7 +1132,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1150,7 +1172,9 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -1203,7 +1227,9 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -1256,7 +1282,9 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -1309,7 +1337,9 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1506,7 +1536,9 @@ operator|*
 name|addr
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1555,7 +1587,9 @@ operator|*
 name|addr
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1604,7 +1638,9 @@ operator|*
 name|addr
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1653,7 +1689,9 @@ operator|*
 name|addr
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1697,7 +1735,9 @@ name|d
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1741,7 +1781,9 @@ name|d
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1785,7 +1827,9 @@ name|d
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1829,7 +1873,9 @@ name|d
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1874,7 +1920,9 @@ operator|++
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1919,7 +1967,9 @@ operator|++
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1964,7 +2014,9 @@ operator|++
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2009,7 +2061,9 @@ operator|++
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2051,7 +2105,9 @@ operator|=
 operator|*
 name|addr
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2105,7 +2161,9 @@ name|ofs
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("lhbrx %0, 0, %1" : "=r"(res) : "r"(addr));
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2159,7 +2217,9 @@ name|ofs
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("lwbrx %0, 0, %1" : "=r"(res) : "r"(addr));
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2376,7 +2436,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2426,7 +2488,9 @@ name|s
 operator|++
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2476,7 +2540,9 @@ name|s
 operator|++
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2538,6 +2604,9 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2586,6 +2655,9 @@ name|ofs
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("sthbrx %0, 0, %1" :: "r"(val), "r"(addr));
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2634,6 +2706,9 @@ name|ofs
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("stwbrx %0, 0, %1" :: "r"(val), "r"(addr));
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2853,7 +2928,9 @@ operator|*
 name|addr
 operator|++
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2904,7 +2981,9 @@ name|addr
 operator|++
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2955,7 +3034,9 @@ name|addr
 operator|++
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3024,7 +3105,9 @@ name|d
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3070,7 +3153,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3116,7 +3201,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3184,7 +3271,9 @@ operator|++
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3231,7 +3320,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3278,7 +3369,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

@@ -115,7 +115,7 @@ name|char
 modifier|*
 name|UserArgument
 parameter_list|,
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 modifier|*
 name|Arguments
 parameter_list|)
@@ -198,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSetOutputDestination  *  * PARAMETERS:  OutputFlags         - Current flags word  *  * RETURN:      None  *  * DESCRIPTION: Set the current destination for debugger output.  Also sets  *              the debug output level accordingly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSetOutputDestination  *  * PARAMETERS:  OutputFlags         - Current flags word  *  * RETURN:      None  *  * DESCRIPTION: Set the current destination for debugger output. Also sets  *              the debug output level accordingly.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -342,39 +342,17 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Length
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|AcpiOsPrintf
+name|AcpiUtPrintString
 argument_list|(
-literal|"%c"
-argument_list|,
 name|ObjDesc
 operator|->
 name|String
 operator|.
 name|Pointer
-index|[
-name|i
-index|]
+argument_list|,
+name|ACPI_UINT8_MAX
 argument_list|)
 expr_stmt|;
-block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -421,7 +399,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -651,7 +629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLocalNsLookup  *  * PARAMETERS:  Name            - Name to lookup  *  * RETURN:      Pointer to a namespace node, null on failure  *  * DESCRIPTION: Lookup a name in the ACPI namespace  *  * Note: Currently begins search from the root.  Could be enhanced to use  * the current prefix (scope) node as the search beginning point.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLocalNsLookup  *  * PARAMETERS:  Name            - Name to lookup  *  * RETURN:      Pointer to a namespace node, null on failure  *  * DESCRIPTION: Lookup a name in the ACPI namespace  *  * Note: Currently begins search from the root. Could be enhanced to use  * the current prefix (scope) node as the search beginning point.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -772,12 +750,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUInt32ToHexString  *  * PARAMETERS:  Value           - The value to be converted to string  *              Buffer          - Buffer for result (not less than 11 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert the unsigned 32-bit value to the hexadecimal image  *  * NOTE: It is the caller's responsibility to ensure that the length of buffer  *       is sufficient.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUint32ToHexString  *  * PARAMETERS:  Value           - The value to be converted to string  *              Buffer          - Buffer for result (not less than 11 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert the unsigned 32-bit value to the hexadecimal image  *  * NOTE: It is the caller's responsibility to ensure that the length of buffer  *       is sufficient.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDbUInt32ToHexString
+name|AcpiDbUint32ToHexString
 parameter_list|(
 name|UINT32
 name|Value
@@ -856,7 +834,7 @@ name|ACPI_OBSOLETE_FUNCTIONS
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSecondPassParse  *  * PARAMETERS:  Root            - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Second pass parse of the ACPI tables.  We need to wait until  *              second pass to parse the control methods  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSecondPassParse  *  * PARAMETERS:  Root            - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Second pass parse of the ACPI tables. We need to wait until  *              second pass to parse the control methods  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1150,7 +1128,7 @@ name|AcpiDbgLevel
 operator||=
 name|ACPI_LV_TABLES
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ACPI_TO_POINTER
 argument_list|(

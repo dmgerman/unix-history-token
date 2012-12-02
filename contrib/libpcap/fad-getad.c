@@ -139,6 +139,35 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_NETPACKET_PACKET_H
+end_ifdef
+
+begin_comment
+comment|/* Solaris 11 and later, Linux distributions with newer glibc */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netpacket/packet.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_NETPACKET_PACKET_H */
+end_comment
+
+begin_comment
+comment|/* LynxOS, Linux distributions with older glibc */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__Lynx__
 end_ifdef
 
@@ -156,6 +185,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* __Lynx__ */
+end_comment
 
 begin_comment
 comment|/* Linux */
@@ -178,10 +211,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __Lynx__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE_NETPACKET_PACKET_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AF_PACKET */
+end_comment
 
 begin_comment
 comment|/*  * This is fun.  *  * In older BSD systems, socket addresses were fixed-length, and  * "sizeof (struct sockaddr)" gave the size of the structure.  * All addresses fit within a "struct sockaddr".  *  * In newer BSD systems, the socket address is variable-length, and  * there's an "sa_len" field giving the length of the structure;  * this allows socket addresses to be longer than 2 bytes of family  * and 14 bytes of data.  *  * Some commercial UNIXes use the old BSD scheme, some use the RFC 2553  * variant of the old BSD scheme (with "struct sockaddr_storage" rather  * than "struct sockaddr"), and some use the new BSD scheme.  *  * Some versions of GNU libc use neither scheme, but has an "SA_LEN()"  * macro that determines the size based on the address family.  Other  * versions don't have "SA_LEN()" (as it was in drafts of RFC 2553  * but not in the final version).  On the latter systems, we explicitly  * check the AF_ type to determine the length; we assume that on  * all those systems we have "struct sockaddr_storage".  */

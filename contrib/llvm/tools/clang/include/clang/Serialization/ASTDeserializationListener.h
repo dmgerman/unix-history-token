@@ -86,6 +86,9 @@ name|class
 name|MacroDefinition
 decl_stmt|;
 name|class
+name|Module
+decl_stmt|;
+name|class
 name|ASTDeserializationListener
 block|{
 name|protected
@@ -180,6 +183,32 @@ argument_list|,
 name|MacroDefinition
 operator|*
 name|MD
+argument_list|)
+block|{ }
+comment|/// \brief A macro definition that had previously been deserialized
+comment|/// (and removed via IdentifierRead) has now been made visible.
+name|virtual
+name|void
+name|MacroVisible
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+block|{ }
+comment|/// \brief A module definition was read from the AST file.
+name|virtual
+name|void
+name|ModuleRead
+argument_list|(
+name|serialization
+operator|::
+name|SubmoduleID
+name|ID
+argument_list|,
+name|Module
+operator|*
+name|Mod
 argument_list|)
 block|{ }
 block|}

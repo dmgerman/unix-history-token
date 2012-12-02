@@ -1981,6 +1981,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|addr
 argument_list|)
 argument_list|)
@@ -6969,7 +6970,6 @@ name|control_un
 operator|.
 name|control
 expr_stmt|;
-empty_stmt|;
 name|msg
 operator|.
 name|msg_flags

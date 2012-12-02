@@ -627,9 +627,11 @@ name|dtr_index
 index|]
 operator|.
 name|dtr
-operator|==
+operator|=
 name|dtrh
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|channel

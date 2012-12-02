@@ -84,88 +84,17 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|_telldir
+name|_dirdesc
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/* see telldir.h */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|pthread_mutex
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* structure describing an open directory. */
-end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|_dirdesc
-block|{
-name|int
-name|dd_fd
-decl_stmt|;
-comment|/* file descriptor associated with directory */
-name|long
-name|dd_loc
-decl_stmt|;
-comment|/* offset in current buffer */
-name|long
-name|dd_size
-decl_stmt|;
-comment|/* amount of data returned by getdirentries */
-name|char
-modifier|*
-name|dd_buf
-decl_stmt|;
-comment|/* data buffer */
-name|int
-name|dd_len
-decl_stmt|;
-comment|/* size of data buffer */
-name|long
-name|dd_seek
-decl_stmt|;
-comment|/* magic cookie returned by getdirentries */
-name|long
-name|dd_rewind
-decl_stmt|;
-comment|/* magic cookie for rewinding */
-name|int
-name|dd_flags
-decl_stmt|;
-comment|/* flags for readdir */
-name|struct
-name|pthread_mutex
-modifier|*
-name|dd_lock
-decl_stmt|;
-comment|/* lock */
-name|struct
-name|_telldir
-modifier|*
-name|dd_td
-decl_stmt|;
-comment|/* telldir position recording */
-block|}
 name|DIR
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|dirfd
-parameter_list|(
-name|dirp
-parameter_list|)
-value|((dirp)->dd_fd)
-end_define
 
 begin_comment
 comment|/* flags for opendir2 */
@@ -271,6 +200,16 @@ specifier|const
 name|struct
 name|dirent
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dirfd
+parameter_list|(
+name|DIR
 modifier|*
 parameter_list|)
 function_decl|;

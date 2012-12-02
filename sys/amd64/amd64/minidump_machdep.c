@@ -71,22 +71,11 @@ directive|include
 file|<sys/msgbuf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/watchdog.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -98,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_phys.h>
 end_include
 
 begin_include
@@ -835,16 +830,11 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SW_WATCHDOG
 name|wdog_kern_pat
 argument_list|(
 name|WD_LASTVAL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ptr

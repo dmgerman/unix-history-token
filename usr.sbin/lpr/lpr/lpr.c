@@ -169,6 +169,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -811,11 +817,7 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|signal
@@ -1554,14 +1556,10 @@ argument_list|(
 name|tfname
 argument_list|)
 expr_stmt|;
-name|seteuid
+name|PRIV_START
 argument_list|(
-name|euid
+argument|void
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fchown
 argument_list|(
 name|tfd
@@ -1575,18 +1573,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* owned by daemon for protection */
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 name|card
 argument_list|(
 literal|'H'
 argument_list|,
 name|local_host
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|card
 argument_list|(
 literal|'P'
@@ -1930,12 +1924,15 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u %u"
+literal|"%u %ju"
 argument_list|,
 name|statb
 operator|.
 name|st_dev
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|statb
 operator|.
 name|st_ino
@@ -2052,15 +2049,11 @@ name|f
 condition|)
 block|{
 comment|/* 			 * The user wants the file removed after it is copied 			 * to the spool area, so see if the file can be moved 			 * instead of copy/unlink'ed.  This is much faster and 			 * uses less spool space than copying the file.  This 			 * can be very significant when running services like 			 * samba, pcnfs, CAP, et al. 			 */
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|didlink
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/* 			 * There are several things to check to avoid any 			 * security issues.  Some of these are redundant 			 * under BSD's, but are necessary when lpr is built 			 * under some other OS's (which I do do...) 			 */
 if|if
 condition|(
@@ -2162,20 +2155,16 @@ goto|goto
 name|nohardlink
 goto|;
 comment|/* 			 * If we can access and remove the original file 			 * without special setuid-ness then this method is 			 * safe.  Otherwise, abandon the move and fall back 			 * to the (usual) copy method. 			 */
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 name|ret
-operator|=
+init|=
 name|access
 argument_list|(
 name|dfname
 argument_list|,
 name|R_OK
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ret
@@ -2189,11 +2178,7 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 name|ret
@@ -2229,11 +2214,7 @@ operator||
 name|S_IWGRP
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|format
@@ -2312,11 +2293,7 @@ argument_list|(
 name|dfname
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 comment|/* restore old uid */
 block|}
 comment|/* end: if (f) */
@@ -2407,11 +2384,7 @@ index|]
 operator|--
 expr_stmt|;
 comment|/* 		 * Touch the control file to fix position in the queue. 		 */
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 operator|(
@@ -2540,11 +2513,7 @@ argument_list|(
 name|tfname
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|qflag
@@ -3002,25 +2971,17 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|ret
-operator|=
+init|=
 name|symlink
 argument_list|(
 name|file
 argument_list|,
 name|dfname
 argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 return|return
 operator|(
 name|ret
@@ -3158,13 +3119,9 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/* should block signals */
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|f
-operator|=
+init|=
 name|open
 argument_list|(
 name|n
@@ -3177,7 +3134,7 @@ name|O_CREAT
 argument_list|,
 name|FILMOD
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3239,11 +3196,7 @@ argument_list|)
 expr_stmt|;
 comment|/* cleanup does exit */
 block|}
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 if|if
 condition|(
 operator|++
@@ -3362,11 +3315,7 @@ name|i
 operator|=
 name|inchar
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 name|tfname
@@ -4161,11 +4110,7 @@ operator|->
 name|spool_dir
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 operator|(
@@ -4179,7 +4124,7 @@ name|O_RDWR
 operator||
 name|O_CREAT
 argument_list|,
-literal|0661
+literal|0664
 argument_list|)
 operator|)
 operator|<
@@ -4226,15 +4171,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 name|n
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|(

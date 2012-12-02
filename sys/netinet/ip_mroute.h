@@ -805,11 +805,6 @@ name|u_long
 name|v_bytes_out
 decl_stmt|;
 comment|/* # bytes out on interface	     */
-name|struct
-name|route
-name|v_route
-decl_stmt|;
-comment|/* cached route */
 block|}
 struct|;
 end_struct

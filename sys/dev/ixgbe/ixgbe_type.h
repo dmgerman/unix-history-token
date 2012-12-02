@@ -211,6 +211,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_DEV_ID_82599_SFP_SF2
+value|0x154D
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_82599EN_SFP
 value|0x1557
 end_define
@@ -248,6 +255,13 @@ define|#
 directive|define
 name|IXGBE_DEV_ID_X540T
 value|0x1528
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_X540T1
+value|0x1560
 end_define
 
 begin_comment
@@ -531,6 +545,13 @@ define|#
 directive|define
 name|IXGBE_I2C_DATA_OUT
 value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLOCK_STRETCHING_TIMEOUT
+value|500
 end_define
 
 begin_comment
@@ -5966,6 +5987,13 @@ name|IXGBE_GCR_EXT_SRIOV
 value|(IXGBE_GCR_EXT_MSIX_EN | \ 					 IXGBE_GCR_EXT_VT_MODE_64)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_EXT_VT_MODE_MASK
+value|0x00000003
+end_define
+
 begin_comment
 comment|/* Time Sync Registers */
 end_comment
@@ -6177,6 +6205,28 @@ end_define
 
 begin_comment
 comment|/* Target Time Register 1 High - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CLKTIML
+value|0x08C34
+end_define
+
+begin_comment
+comment|/* Clock Out Time Register Low - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CLKTIMH
+value|0x08C38
+end_define
+
+begin_comment
+comment|/* Clock Out Time Register High - RW */
 end_comment
 
 begin_define
@@ -7818,23 +7868,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_DCA_RXCTRL_DESC_WRO_EN
+name|IXGBE_DCA_RXCTRL_DATA_WRO_EN
 value|(1<< 13)
 end_define
 
 begin_comment
-comment|/* Rx wr Desc Relax Order */
+comment|/* Rx wr data Relax Order */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IXGBE_DCA_RXCTRL_DESC_HSRO_EN
+name|IXGBE_DCA_RXCTRL_HEAD_WRO_EN
 value|(1<< 15)
 end_define
 
 begin_comment
-comment|/* Rx Split Header RO */
+comment|/* Rx wr header RO */
 end_comment
 
 begin_define
@@ -7884,12 +7934,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_DCA_TXCTRL_TX_WB_RO_EN
+name|IXGBE_DCA_TXCTRL_DESC_RRO_EN
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* Tx rd Desc Relax Order */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DCA_TXCTRL_DESC_WRO_EN
 value|(1<< 11)
 end_define
 
 begin_comment
 comment|/* Tx Desc writeback RO bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DCA_TXCTRL_DATA_RRO_EN
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Tx rd data Relax Order */
 end_comment
 
 begin_define
@@ -10104,6 +10176,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EICR_TIMESYNC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Timesync Event */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EICR_GPI_SDP0
 value|0x01000000
 end_define
@@ -10268,6 +10351,17 @@ end_define
 
 begin_comment
 comment|/* MNG Event Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICS_TIMESYNC
+value|IXGBE_EICR_TIMESYNC
+end_define
+
+begin_comment
+comment|/* Timesync Event */
 end_comment
 
 begin_define
@@ -10453,6 +10547,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EIMS_TIMESYNC
+value|IXGBE_EICR_TIMESYNC
+end_define
+
+begin_comment
+comment|/* Timesync Event */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EIMS_GPI_SDP0
 value|IXGBE_EICR_GPI_SDP0
 end_define
@@ -10617,6 +10722,17 @@ end_define
 
 begin_comment
 comment|/* MNG Event Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EIMC_TIMESYNC
+value|IXGBE_EICR_TIMESYNC
+end_define
+
+begin_comment
+comment|/* Timesync Event */
 end_comment
 
 begin_define
@@ -11279,6 +11395,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_ETQF_POOL_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_ETQS_RX_QUEUE
 value|0x007F0000
 end_define
@@ -11616,8 +11739,52 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_ESDP_SDP7
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* SDP7 Data Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP0_DIR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* SDP0 IO direction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP1_DIR
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* SDP1 IO direction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP3_DIR
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* SDP3 IO direction */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_ESDP_SDP4_DIR
-value|0x00000004
+value|0x00001000
 end_define
 
 begin_comment
@@ -11633,6 +11800,50 @@ end_define
 
 begin_comment
 comment|/* SDP5 IO direction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP6_DIR
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* SDP6 IO direction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP7_DIR
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* SDP7 IO direction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP0_NATIVE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* SDP0 IO mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP1_NATIVE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* SDP1 IO mode */
 end_comment
 
 begin_comment
@@ -12976,8 +13187,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_MAX_MSIX_VECTORS_82599
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_PCIE_MSIX_82598_CAPS
 value|0x62
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MAX_MSIX_VECTORS_82598
+value|0x13
 end_define
 
 begin_comment
@@ -13676,6 +13901,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_PCI_LINK_SPEED_8000
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_PCI_HEADER_TYPE_REGISTER
 value|0x0E
 end_define
@@ -14055,6 +14287,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_TSAUXC_EN_CLK
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TSAUXC_SYNCLK
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TSAUXC_SDP0_INT
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_TSYNCTXCTL_VALID
 value|0x00000001
 end_define
@@ -14389,19 +14642,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_MFLCN_RPFCM
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Receive Priority FC Mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXGBE_MFLCN_RPFCE_MASK
-value|0x00000FF0
+value|0x00000FF4
 end_define
 
 begin_comment
@@ -17905,6 +18147,13 @@ name|IXGBE_PHYSICAL_LAYER_SFP_ACTIVE_DA
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_1000BASE_SX
+value|0x4000
+end_define
+
 begin_comment
 comment|/* Flow Control Data Sheet defined values  * Calculation and defines taken from 802.1bb Annex O  */
 end_comment
@@ -17920,7 +18169,7 @@ name|IXGBE_BT2KB
 parameter_list|(
 name|BT
 parameter_list|)
-value|((BT + 1023) / (8 * 1024))
+value|((BT + (8 * 1024 - 1)) / (8 * 1024))
 end_define
 
 begin_define
@@ -18075,20 +18324,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_FILL_RATE
-value|(36 / 25)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_DV_X540
 parameter_list|(
-name|LINK
+name|_max_frame_link
 parameter_list|,
-name|TC
+name|_max_frame_tc
 parameter_list|)
-value|(IXGBE_FILL_RATE * \ 				 (IXGBE_B2BT(LINK) + IXGBE_PFC_D + \ 				 (2 * IXGBE_CABLE_DC) + \ 				 (2 * IXGBE_ID_X540) + \ 				 IXGBE_HD + IXGBE_B2BT(TC)))
+define|\
+value|((36 * \ 			  (IXGBE_B2BT(_max_frame_link) + \ 			   IXGBE_PFC_D + \ 			   (2 * IXGBE_CABLE_DC) + \ 			   (2 * IXGBE_ID_X540) + \ 			   IXGBE_HD) / 25 + 1) + \ 			 2 * IXGBE_B2BT(_max_frame_tc))
 end_define
 
 begin_comment
@@ -18100,11 +18343,12 @@ define|#
 directive|define
 name|IXGBE_DV
 parameter_list|(
-name|LINK
+name|_max_frame_link
 parameter_list|,
-name|TC
+name|_max_frame_tc
 parameter_list|)
-value|(IXGBE_FILL_RATE * \ 				 (IXGBE_B2BT(LINK) + IXGBE_PFC_D + \ 				 (2 * IXGBE_CABLE_DC) + (2 * IXGBE_ID) + \ 				 IXGBE_HD + IXGBE_B2BT(TC)))
+define|\
+value|((36 * \ 			  (IXGBE_B2BT(_max_frame_link) + \ 			   IXGBE_PFC_D + \ 			   (2 * IXGBE_CABLE_DC) + \ 			   (2 * IXGBE_ID) + \ 			   IXGBE_HD) / 25 + 1) + \ 			 2 * IXGBE_B2BT(_max_frame_tc))
 end_define
 
 begin_comment
@@ -18116,9 +18360,10 @@ define|#
 directive|define
 name|IXGBE_LOW_DV_X540
 parameter_list|(
-name|TC
+name|_max_frame_tc
 parameter_list|)
-value|(2 * IXGBE_B2BT(TC) + \ 				(IXGBE_FILL_RATE * IXGBE_PCI_DELAY))
+define|\
+value|(2 * IXGBE_B2BT(_max_frame_tc) + \ 			(36 * IXGBE_PCI_DELAY / 25) + 1)
 end_define
 
 begin_define
@@ -18126,9 +18371,10 @@ define|#
 directive|define
 name|IXGBE_LOW_DV
 parameter_list|(
-name|TC
+name|_max_frame_tc
 parameter_list|)
-value|(2 * IXGBE_LOW_DV_X540(TC))
+define|\
+value|(2 * IXGBE_LOW_DV_X540(_max_frame_tc))
 end_define
 
 begin_comment
@@ -18499,6 +18745,14 @@ name|ixgbe_sfp_type_1g_cu_core1
 init|=
 literal|10
 block|,
+name|ixgbe_sfp_type_1g_sx_core0
+init|=
+literal|11
+block|,
+name|ixgbe_sfp_type_1g_sx_core1
+init|=
+literal|12
+block|,
 name|ixgbe_sfp_type_not_present
 init|=
 literal|0xFFFE
@@ -18643,6 +18897,10 @@ name|ixgbe_bus_speed_5000
 init|=
 literal|5000
 block|,
+name|ixgbe_bus_speed_8000
+init|=
+literal|8000
+block|,
 name|ixgbe_bus_speed_reserved
 block|}
 enum|;
@@ -18759,8 +19017,11 @@ decl_stmt|;
 comment|/* Flow Ctrl High-water */
 name|u32
 name|low_water
+index|[
+name|IXGBE_DCB_MAX_TRAFFIC_CLASS
+index|]
 decl_stmt|;
-comment|/* Flow Control Low-water */
+comment|/* Flow Ctrl Low-water */
 name|u16
 name|pause_time
 decl_stmt|;
@@ -19784,6 +20045,19 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
+name|set_vmdq_san_mac
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
 name|clear_vmdq
 function_decl|)
 parameter_list|(
@@ -19967,8 +20241,6 @@ parameter_list|(
 name|struct
 name|ixgbe_hw
 modifier|*
-parameter_list|,
-name|s32
 parameter_list|)
 function_decl|;
 comment|/* Manageability interface */
@@ -20337,19 +20609,19 @@ name|u32
 name|max_rx_queues
 decl_stmt|;
 name|u32
-name|max_msix_vectors
-decl_stmt|;
-name|bool
-name|msix_vectors_from_pcie
-decl_stmt|;
-name|u32
 name|orig_autoc
 decl_stmt|;
-name|bool
-name|arc_subsystem_valid
+name|u8
+name|san_mac_rar_index
 decl_stmt|;
 name|u32
 name|orig_autoc2
+decl_stmt|;
+name|u16
+name|max_msix_vectors
+decl_stmt|;
+name|bool
+name|arc_subsystem_valid
 decl_stmt|;
 name|bool
 name|orig_link_settings_stored
@@ -20668,6 +20940,9 @@ decl_stmt|;
 name|bool
 name|force_full_reset
 decl_stmt|;
+name|bool
+name|allow_unsupported_sfp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -20894,13 +21169,6 @@ define|#
 directive|define
 name|IXGBE_ERR_FC_NOT_SUPPORTED
 value|-28
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_ERR_FLOW_CONTROL
-value|-29
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====- XCoreMachineFuctionInfo.h - XCore machine function info -*- C++ -*-===//
+comment|//===-- XCoreMachineFuctionInfo.h - XCore machine function info -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -93,8 +93,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|bool
 name|UsesLR
 block|;

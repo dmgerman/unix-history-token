@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMBaseInstrInfo.h - ARM Base Instruction Information ----*- C++ -*-===//
+comment|//===-- ARMBaseInstrInfo.h - ARM Base Instruction Information ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -136,6 +136,12 @@ argument_list|)
 block|;
 name|public
 operator|:
+comment|// Return whether the target has an explicit NOP encoding.
+name|bool
+name|hasNOP
+argument_list|()
+specifier|const
+block|;
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
 name|virtual
@@ -258,36 +264,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
-block|{
-name|int
-name|PIdx
-operator|=
-name|MI
-operator|->
-name|findFirstPredOperandIdx
-argument_list|()
 block|;
-return|return
-name|PIdx
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|MI
-operator|->
-name|getOperand
-argument_list|(
-name|PIdx
-argument_list|)
-operator|.
-name|getImm
-argument_list|()
-operator|!=
-name|ARMCC
-operator|::
-name|AL
-return|;
-block|}
 name|ARMCC
 operator|::
 name|CondCodes
@@ -528,6 +505,16 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|MachineInstr
+operator|*
+name|commuteInstruction
+argument_list|(
+argument|MachineInstr*
+argument_list|,
+argument|bool=false
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|produceSameValue
@@ -647,16 +634,19 @@ operator|==
 literal|1
 return|;
 block|}
-comment|/// AnalyzeCompare - For a comparison instruction, return the source register
-comment|/// in SrcReg and the value it compares against in CmpValue. Return true if
-comment|/// the comparison instruction can be analyzed.
+comment|/// analyzeCompare - For a comparison instruction, return the source registers
+comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
+comment|/// compares against in CmpValue. Return true if the comparison instruction
+comment|/// can be analyzed.
 name|virtual
 name|bool
-name|AnalyzeCompare
+name|analyzeCompare
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&SrcReg2
 argument_list|,
 argument|int&CmpMask
 argument_list|,
@@ -664,21 +654,52 @@ argument|int&CmpValue
 argument_list|)
 specifier|const
 block|;
-comment|/// OptimizeCompareInstr - Convert the instruction to set the zero flag so
-comment|/// that we can remove a "comparison with zero".
+comment|/// optimizeCompareInstr - Convert the instruction to set the zero flag so
+comment|/// that we can remove a "comparison with zero"; Remove a redundant CMP
+comment|/// instruction if the flags can be updated in the same way by an earlier
+comment|/// instruction such as SUB.
 name|virtual
 name|bool
-name|OptimizeCompareInstr
+name|optimizeCompareInstr
 argument_list|(
 argument|MachineInstr *CmpInstr
 argument_list|,
 argument|unsigned SrcReg
+argument_list|,
+argument|unsigned SrcReg2
 argument_list|,
 argument|int CmpMask
 argument_list|,
 argument|int CmpValue
 argument_list|,
 argument|const MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|analyzeSelect
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned&TrueOp
+argument_list|,
+argument|unsigned&FalseOp
+argument_list|,
+argument|bool&Optimizable
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|optimizeSelect
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool
 argument_list|)
 specifier|const
 block|;
@@ -740,6 +761,20 @@ argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|unsigned
+name|getOutputLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *DepMI
+argument_list|)
+specifier|const
+block|;
 comment|/// VFP/NEON execution domains.
 name|std
 operator|::
@@ -766,6 +801,13 @@ specifier|const
 block|;
 name|private
 operator|:
+name|unsigned
+name|getInstBundleLength
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 name|int
 name|getVLDMDefCycle
 argument_list|(
@@ -845,7 +887,7 @@ argument|unsigned UseAlign
 argument_list|)
 specifier|const
 block|;
-name|int
+name|unsigned
 name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
@@ -1232,6 +1274,18 @@ name|int
 name|getMatchingCondBranchOpcode
 argument_list|(
 argument|int Opc
+argument_list|)
+block|;
+comment|/// Determine if MI can be folded into an ARM MOVCC instruction, and return the
+comment|/// opcode of the SSA instruction representing the conditional MI.
+name|unsigned
+name|canFoldARMInstrIntoMOVCC
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|MachineInstr *&MI
+argument_list|,
+argument|const MachineRegisterInfo&MRI
 argument_list|)
 block|;
 comment|/// Map pseudo instructions that imply an 'S' bit onto real opcodes. Whether

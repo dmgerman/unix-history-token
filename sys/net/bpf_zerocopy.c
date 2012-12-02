@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -1898,7 +1904,7 @@ name|bz
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -1955,7 +1961,7 @@ operator|->
 name|bd_hlen
 expr_stmt|;
 block|}
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2119,7 +2125,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * We only allow buffers to be installed once, so atomically check 	 * that no buffers are currently installed and install new buffers. 	 */
-name|BPFD_WLOCK
+name|BPFD_LOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2151,7 +2157,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -2218,7 +2224,7 @@ expr|struct
 name|bpf_zbuf_header
 argument_list|)
 expr_stmt|;
-name|BPFD_WUNLOCK
+name|BPFD_UNLOCK
 argument_list|(
 name|d
 argument_list|)

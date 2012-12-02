@@ -158,11 +158,27 @@ name|struct
 name|pcb_arm32
 name|un_32
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_VFP_SUPPORT
+name|struct
+name|vfp_state
+name|pcb_vfpstate
+decl_stmt|;
+comment|/* VP/NEON state */
+name|u_int
+name|pcb_vfpcpu
+decl_stmt|;
+comment|/* VP/NEON last cpu */
+else|#
+directive|else
 name|struct
 name|fpe_sp_state
 name|pcb_fpstate
 decl_stmt|;
 comment|/* Floating Point state */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -205,16 +221,17 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|savectx
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|pcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

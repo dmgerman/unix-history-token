@@ -375,7 +375,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Do the malloc before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if malloc should block. 	 */
 name|ldep
 operator|=
 name|malloc
@@ -1143,8 +1142,6 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|cred
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|denode
@@ -1161,11 +1158,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|int
@@ -1532,8 +1524,6 @@ argument_list|)
 argument_list|,
 name|cred
 argument_list|,
-name|td
-argument_list|,
 name|length
 argument_list|,
 name|pmp
@@ -1869,8 +1859,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|cred
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2107,15 +2095,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -2224,8 +2203,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NOCRED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|dep
@@ -2299,8 +2276,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

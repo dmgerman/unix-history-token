@@ -4706,31 +4706,20 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|M_WRITABLE
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
+argument_list|)
 operator|||
+name|M_TRAILINGSPACE
+argument_list|(
 name|m
-operator|->
-name|m_data
-operator|+
-name|m
-operator|->
-name|m_len
-operator|+
+argument_list|)
+operator|<
 name|n
 operator|->
 name|m_len
-operator|>=
-operator|&
-name|m
-operator|->
-name|m_dat
-index|[
-name|MLEN
-index|]
 condition|)
 block|{
 comment|/* just join the two chains */
@@ -5092,7 +5081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod and dtom  * will work for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
+comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod will work  * for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
 end_comment
 
 begin_function
@@ -8007,15 +7996,10 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
+name|M_WRITABLE
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_RDONLY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 name|n
 operator|->

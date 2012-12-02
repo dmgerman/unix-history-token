@@ -156,6 +156,32 @@ comment|/* RTC Valid Entry Register */
 end_comment
 
 begin_comment
+comment|/* CR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_CR_UPDTIM
+value|(0x1u<<  0)
+end_define
+
+begin_comment
+comment|/* Request update of time register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_CR_UPDCAL
+value|(0x1u<<  1)
+end_define
+
+begin_comment
+comment|/* Request update of calendar reg. */
+end_comment
+
+begin_comment
 comment|/* TIMR */
 end_comment
 
@@ -357,7 +383,7 @@ begin_define
 define|#
 directive|define
 name|RTC_CALR_DAY_M
-value|0x3f00000UL
+value|0x3f000000UL
 end_define
 
 begin_define
@@ -391,8 +417,115 @@ parameter_list|,
 name|dow
 parameter_list|)
 define|\
-value|((TOBCD((yr) / 100 + 19)<< RTC_CALR_CEN_S) | \ 		 (TOBCD((yr) % 100)<< RTC_CALR_YEAR_S) | \ 		 (TOBCD(mon)<< RTC_CALR_MON_S) | \ 		 (TOBCD(dow)<< RTC_CALR_DOW_S) | \ 		 (TOBCD(day)<< RTC_CALR_DAY_S))
+value|((TOBCD((yr) / 100)<< RTC_CALR_CEN_S) | \ 		 (TOBCD((yr) % 100)<< RTC_CALR_YEAR_S) | \ 		 (TOBCD(mon)<< RTC_CALR_MON_S) | \ 		 (TOBCD(dow)<< RTC_CALR_DOW_S) | \ 		 (TOBCD(day)<< RTC_CALR_DAY_S))
 end_define
+
+begin_comment
+comment|/* SR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_SR_ACKUPD
+value|(0x1u<<  0)
+end_define
+
+begin_comment
+comment|/* Acknowledge for Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_SR_ALARM
+value|(0x1u<<  1)
+end_define
+
+begin_comment
+comment|/* Alarm Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_SR_SECEV
+value|(0x1u<<  2)
+end_define
+
+begin_comment
+comment|/* Second Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_SR_TIMEV
+value|(0x1u<<  3)
+end_define
+
+begin_comment
+comment|/* Time Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_SR_CALEV
+value|(0x1u<<  4)
+end_define
+
+begin_comment
+comment|/* Calendar event */
+end_comment
+
+begin_comment
+comment|/* VER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_VER_NVTIM
+value|(0x1<< 0)
+end_define
+
+begin_comment
+comment|/* Non-valid time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_VER_NVCAL
+value|(0x1<< 1)
+end_define
+
+begin_comment
+comment|/* Non-valid calendar */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_VER_NVTIMALR
+value|(0x1<< 2)
+end_define
+
+begin_comment
+comment|/* Non-valid time alarm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTC_VER_NVCALALR
+value|(0x1<< 3)
+end_define
+
+begin_comment
+comment|/* Non-valid calendar alarm */
+end_comment
 
 begin_endif
 endif|#

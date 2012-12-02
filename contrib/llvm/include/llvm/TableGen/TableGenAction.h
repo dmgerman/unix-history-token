@@ -76,6 +76,11 @@ decl_stmt|;
 name|class
 name|TableGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MBlazeInstrInfo.h - MBlaze Instruction Information -------*- C++ -*-===//
+comment|//===-- MBlazeInstrInfo.h - MBlaze Instruction Information ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MBlazeRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MBlazeRegisterInfo.h"
 end_include
 
 begin_define

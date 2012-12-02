@@ -1197,6 +1197,9 @@ name|mfi_open
 parameter_list|(
 name|int
 name|unit
+parameter_list|,
+name|int
+name|acs
 parameter_list|)
 block|{
 name|char
@@ -1225,7 +1228,7 @@ name|open
 argument_list|(
 name|path
 argument_list|,
-name|O_RDWR
+name|acs
 argument_list|)
 operator|)
 return|;

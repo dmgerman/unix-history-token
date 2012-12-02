@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MipsRelocations.h - Mips Code Relocations ---------------*- C++ -*-===//
+comment|//===-- MipsRelocations.h - Mips Code Relocations ---------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//===---------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//===---------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_ifndef
@@ -79,10 +79,10 @@ block|{
 enum|enum
 name|RelocationType
 block|{
-comment|// reloc_mips_branch - pc relative relocation for branches. The lower 18
+comment|// reloc_mips_pc16 - pc relative relocation for branches. The lower 18
 comment|// bits of the difference between the branch target and the branch
 comment|// instruction, shifted right by 2.
-name|reloc_mips_branch
+name|reloc_mips_pc16
 init|=
 literal|1
 block|,

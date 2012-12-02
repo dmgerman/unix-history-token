@@ -116,6 +116,11 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|peer
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|so
 operator|->
@@ -136,10 +141,6 @@ operator|-
 name|ENOTCONN
 operator|)
 return|;
-if|if
-condition|(
-name|peer
-condition|)
 name|error
 operator|=
 call|(
@@ -158,6 +159,7 @@ argument_list|,
 name|nam
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|error
 operator|=

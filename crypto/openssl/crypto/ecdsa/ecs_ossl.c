@@ -428,6 +428,49 @@ name|k
 argument_list|)
 condition|)
 do|;
+comment|/* We do not want timing information to leak the length of k, 		 * so we compute G*k using an equivalent scalar of fixed 		 * bit-length. */
+if|if
+condition|(
+operator|!
+name|BN_add
+argument_list|(
+name|k
+argument_list|,
+name|k
+argument_list|,
+name|order
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+name|BN_num_bits
+argument_list|(
+name|k
+argument_list|)
+operator|<=
+name|BN_num_bits
+argument_list|(
+name|order
+argument_list|)
+condition|)
+if|if
+condition|(
+operator|!
+name|BN_add
+argument_list|(
+name|k
+argument_list|,
+name|k
+argument_list|,
+name|order
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* compute r the x-coordinate of generator * k */
 if|if
 condition|(
@@ -501,6 +544,9 @@ name|err
 goto|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 comment|/* NID_X9_62_characteristic_two_field */
 block|{
@@ -533,6 +579,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1887,6 +1935,9 @@ name|err
 goto|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 comment|/* NID_X9_62_characteristic_two_field */
 block|{
@@ -1919,6 +1970,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

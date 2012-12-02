@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -76,13 +88,25 @@ block|{
 name|class
 name|IdentifierInfo
 decl_stmt|;
-comment|/// \brief An opaque key that is used to describe the module and can be
-comment|/// interpreted by the module loader itself.
+comment|/// \brief A sequence of identifier/location pairs used to describe a particular
+comment|/// module or submodule, e.g., std.vector.
 typedef|typedef
-name|void
-modifier|*
-name|ModuleKey
-typedef|;
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|IdentifierInfo
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+expr|>
+name|ModuleIdPath
+expr_stmt|;
 comment|/// \brief Abstract interface for a module loader.
 comment|///
 comment|/// This abstract interface describes a module loader, which is responsible
@@ -104,29 +128,41 @@ comment|/// This routine attempts to load the module described by the given
 comment|/// parameters.
 comment|///
 comment|/// \param ImportLoc The location of the 'import' keyword.
-comment|/// \param ModuleName The name of the module to be loaded.
-comment|/// \param ModuleNameLoc The location of the module name.
 comment|///
-comment|/// \returns If successful, a non-NULL module key describing this module.
-comment|/// Otherwise, returns NULL to indicate that the module could not be
-comment|/// loaded.
+comment|/// \param Path The identifiers (and their locations) of the module
+comment|/// "path", e.g., "std.vector" would be split into "std" and "vector".
+comment|///
+comment|/// \param Visibility The visibility provided for the names in the loaded
+comment|/// module.
+comment|///
+comment|/// \param IsInclusionDirective Indicates that this module is being loaded
+comment|/// implicitly, due to the presence of an inclusion directive. Otherwise,
+comment|/// it is being loaded due to an import declaration.
+comment|///
+comment|/// \returns If successful, returns the loaded module. Otherwise, returns
+comment|/// NULL to indicate that the module could not be loaded.
 name|virtual
-name|ModuleKey
+name|Module
+modifier|*
 name|loadModule
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|ImportLoc
-parameter_list|,
-name|IdentifierInfo
-modifier|&
-name|ModuleName
-parameter_list|,
-name|SourceLocation
-name|ModuleNameLoc
-parameter_list|)
+argument_list|,
+name|ModuleIdPath
+name|Path
+argument_list|,
+name|Module
+operator|::
+name|NameVisibilityKind
+name|Visibility
+argument_list|,
+name|bool
+name|IsInclusionDirective
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

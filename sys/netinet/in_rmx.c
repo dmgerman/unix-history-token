@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright 1994, 1995 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *  * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_comment
-comment|/*  * This code does two things necessary for the enhanced TCP metrics to  * function in a useful manner:  *  1) It marks all non-host routes as `cloning', thus ensuring that  *     every actual reference to such a route actually gets turned  *     into a reference to a host route to the specific destination  *     requested.  *  2) When such routes lose all their references, it arranges for them  *     to be deleted in some random collection of circumstances, so that  *     a large quantity of stale routing data is not kept in kernel memory  *     indefinitely.  See in_rtqtimo() below for the exact mechanism.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -97,6 +93,18 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_icmp.h>
 end_include
 
 begin_include
@@ -1407,6 +1415,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|in_setmatchfunc
+parameter_list|(
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh
+parameter_list|,
+name|int
+name|val
+parameter_list|)
+block|{
+name|rnh
+operator|->
+name|rnh_matchaddr
+operator|=
+operator|(
+name|val
+operator|!=
+literal|0
+operator|)
+condition|?
+name|rn_match
+else|:
+name|in_matroute
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1472,11 +1510,12 @@ name|rnh_addaddr
 operator|=
 name|in_addroute
 expr_stmt|;
+name|in_setmatchfunc
+argument_list|(
 name|rnh
-operator|->
-name|rnh_matchaddr
-operator|=
-name|in_matroute
+argument_list|,
+name|V_drop_redirect
+argument_list|)
 expr_stmt|;
 name|rnh
 operator|->

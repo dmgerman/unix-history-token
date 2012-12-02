@@ -42,6 +42,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -212,9 +229,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|AcpiGbl_DebugFile
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not open debug file %s\n"
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"Debug output file %s opened\n"
@@ -233,17 +260,6 @@ name|AcpiGbl_DbOutputToFile
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Could not open debug file %s\n"
-argument_list|,
-name|Name
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -578,7 +594,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|TableHeader
+name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|,
 name|fp
@@ -629,6 +645,42 @@ argument_list|,
 name|FileSize
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+name|Status
+operator|=
+name|FlCheckForAscii
+argument_list|(
+name|fp
+argument_list|,
+name|NULL
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"File appears to be ASCII only, must be binary\n"
+argument_list|,
+name|TableHeader
+operator|.
+name|Length
+argument_list|,
+name|FileSize
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|AE_BAD_HEADER
@@ -641,7 +693,8 @@ name|ACPI_OBSOLETE_CODE
 comment|/* We only support a limited number of table types */
 if|if
 condition|(
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|(
 name|char
@@ -651,12 +704,11 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|DSDT_SIG
-argument_list|,
-literal|4
+name|ACPI_SIG_DSDT
 argument_list|)
 operator|&&
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|(
 name|char
@@ -666,12 +718,11 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|PSDT_SIG
-argument_list|,
-literal|4
+name|ACPI_SIG_PSDT
 argument_list|)
 operator|&&
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_COMPARE_NAME
 argument_list|(
 operator|(
 name|char
@@ -681,9 +732,7 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|SSDT_SIG
-argument_list|,
-literal|4
+name|ACPI_SIG_SSDT
 argument_list|)
 condition|)
 block|{
@@ -1003,7 +1052,7 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
-name|fp
+name|File
 decl_stmt|;
 name|UINT32
 name|TableLength
@@ -1012,7 +1061,7 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 comment|/* Open the file */
-name|fp
+name|File
 operator|=
 name|fopen
 argument_list|(
@@ -1024,7 +1073,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fp
+name|File
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1054,7 +1103,7 @@ name|Status
 operator|=
 name|AcpiDbReadTable
 argument_list|(
-name|fp
+name|File
 argument_list|,
 name|Table
 argument_list|,
@@ -1064,7 +1113,7 @@ argument_list|)
 expr_stmt|;
 name|fclose
 argument_list|(
-name|fp
+name|File
 argument_list|)
 expr_stmt|;
 if|if

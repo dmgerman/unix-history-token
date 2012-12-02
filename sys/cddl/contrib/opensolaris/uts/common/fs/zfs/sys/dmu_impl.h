@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zfs_context.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_ioctl.h>
 end_include
 
 begin_ifdef
@@ -178,6 +184,69 @@ parameter_list|(
 name|stat
 parameter_list|)
 value|XUIOSTAT_INCR(stat, 1)
+comment|/*  * The list of data whose inclusion in a send stream can be pending from  * one call to backup_cb to another.  Multiple calls to dump_free() and  * dump_freeobjects() can be aggregated into a single DRR_FREE or  * DRR_FREEOBJECTS replay record.  */
+typedef|typedef
+enum|enum
+block|{
+name|PENDING_NONE
+block|,
+name|PENDING_FREE
+block|,
+name|PENDING_FREEOBJECTS
+block|}
+name|dmu_pendop_t
+typedef|;
+typedef|typedef
+struct|struct
+name|dmu_sendarg
+block|{
+name|list_node_t
+name|dsa_link
+decl_stmt|;
+name|dmu_replay_record_t
+modifier|*
+name|dsa_drr
+decl_stmt|;
+name|kthread_t
+modifier|*
+name|dsa_td
+decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|dsa_fp
+decl_stmt|;
+name|int
+name|dsa_outfd
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|dsa_proc
+decl_stmt|;
+name|offset_t
+modifier|*
+name|dsa_off
+decl_stmt|;
+name|objset_t
+modifier|*
+name|dsa_os
+decl_stmt|;
+name|zio_cksum_t
+name|dsa_zc
+decl_stmt|;
+name|uint64_t
+name|dsa_toguid
+decl_stmt|;
+name|int
+name|dsa_err
+decl_stmt|;
+name|dmu_pendop_t
+name|dsa_pending_op
+decl_stmt|;
+block|}
+name|dmu_sendarg_t
+typedef|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -335,6 +335,10 @@ name|um_candelete
 decl_stmt|;
 comment|/* devvp supports TRIM */
 name|int
+name|um_writesuspended
+decl_stmt|;
+comment|/* suspension in progress */
+name|int
 function_decl|(
 modifier|*
 name|um_balloc
@@ -398,10 +402,6 @@ name|int
 parameter_list|,
 name|struct
 name|ucred
-modifier|*
-parameter_list|,
-name|struct
-name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -544,10 +544,8 @@ parameter_list|,
 name|cc
 parameter_list|,
 name|dd
-parameter_list|,
-name|ee
 parameter_list|)
-value|VFSTOUFS((aa)->v_mount)->um_truncate(aa, bb, cc, dd, ee)
+value|VFSTOUFS((aa)->v_mount)->um_truncate(aa, bb, cc, dd)
 end_define
 
 begin_define

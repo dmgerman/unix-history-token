@@ -179,19 +179,19 @@ name|AlignType
 range|:
 literal|8
 decl_stmt|;
-comment|//< Alignment type (AlignTypeEnum)
+comment|///< Alignment type (AlignTypeEnum)
 name|unsigned
 name|ABIAlign
 decl_stmt|;
-comment|//< ABI alignment for this type/bitw
+comment|///< ABI alignment for this type/bitw
 name|unsigned
 name|PrefAlign
 decl_stmt|;
-comment|//< Pref. alignment for this type/bitw
+comment|///< Pref. alignment for this type/bitw
 name|uint32_t
 name|TypeBitWidth
 decl_stmt|;
-comment|//< Type bit width
+comment|///< Type bit width
 comment|/// Initializer
 specifier|static
 name|TargetAlignElem
@@ -350,6 +350,12 @@ operator|&
 name|InvalidAlignmentElem
 return|;
 block|}
+comment|/// Initialise a TargetData object with default values, ensure that the
+comment|/// target data pass is registered.
+name|void
+name|init
+argument_list|()
+block|;
 name|public
 operator|:
 comment|/// Default ctor.
@@ -371,11 +377,47 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{
-name|init
+name|std
+operator|::
+name|string
+name|errMsg
+operator|=
+name|parseSpecifier
 argument_list|(
 name|TargetDescription
+argument_list|,
+name|this
 argument_list|)
+block|;
+name|assert
+argument_list|(
+name|errMsg
+operator|==
+literal|""
+operator|&&
+literal|"Invalid target data layout string."
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|errMsg
 block|;   }
+comment|/// Parses a target data specification string. Returns an error message
+comment|/// if the string is malformed, or the empty string on success. Optionally
+comment|/// initialises a TargetData object if passed a non-null pointer.
+specifier|static
+name|std
+operator|::
+name|string
+name|parseSpecifier
+argument_list|(
+argument|StringRef TargetDescription
+argument_list|,
+argument|TargetData* td =
+literal|0
+argument_list|)
+block|;
 comment|/// Initialize target data from properties stored in the module.
 name|explicit
 name|TargetData
@@ -452,13 +494,6 @@ name|TargetData
 argument_list|()
 block|;
 comment|// Not virtual, do not subclass this class
-comment|//! Parse a target data layout string and initialize TargetData alignments.
-name|void
-name|init
-argument_list|(
-argument|StringRef TargetDescription
-argument_list|)
-block|;
 comment|/// Target endianness...
 name|bool
 name|isLittleEndian

@@ -64,13 +64,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCSubtargetInfo
-decl_stmt|;
-name|class
 name|Target
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 specifier|extern
 name|Target

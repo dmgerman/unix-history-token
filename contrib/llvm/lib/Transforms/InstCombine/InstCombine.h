@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IntrinsicInst.h"
 end_include
 
@@ -76,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IRBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/InstVisitor.h"
 end_include
 
@@ -100,6 +100,9 @@ name|CallSite
 decl_stmt|;
 name|class
 name|TargetData
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
 decl_stmt|;
 name|class
 name|DbgDeclareInst
@@ -311,6 +314,10 @@ name|TargetData
 modifier|*
 name|TD
 decl_stmt|;
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+decl_stmt|;
 name|bool
 name|MadeIRChange
 decl_stmt|;
@@ -409,6 +416,16 @@ specifier|const
 block|{
 return|return
 name|TD
+return|;
+block|}
+name|TargetLibraryInfo
+operator|*
+name|getTargetLibraryInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TLI
 return|;
 block|}
 comment|// Visitation implementation - Implement instruction combining for different
@@ -1177,7 +1194,7 @@ parameter_list|)
 function_decl|;
 name|Instruction
 modifier|*
-name|visitMalloc
+name|visitAllocSite
 parameter_list|(
 name|Instruction
 modifier|&
@@ -1775,11 +1792,6 @@ name|Value
 operator|*
 name|V
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Mask
-argument_list|,
 name|APInt
 operator|&
 name|KnownZero
@@ -1801,8 +1813,6 @@ operator|::
 name|ComputeMaskedBits
 argument_list|(
 name|V
-argument_list|,
-name|Mask
 argument_list|,
 name|KnownZero
 argument_list|,

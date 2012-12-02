@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ***************************************************************************************** **        O.S   : FreeBSD **   FILE NAME  : arcmsr.c **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA (ARC11XX/ARC12XX/ARC13XX/ARC16XX/ARC188x) SATA/SAS RAID HOST Adapter **                ARCMSR RAID Host adapter **                [RAID controller:INTEL 331(PCI-X) 341(PCI-EXPRESS) chip set] ****************************************************************************************** ************************************************************************ ** ** Copyright (c) 2004-2010 ARECA Co. Ltd. **        Erich Chen, Taipei Taiwan All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ************************************************************************** ** History ** **        REV#         DATE	            NAME	         DESCRIPTION **     1.00.00.00	03/31/2004		Erich Chen			 First release **     1.20.00.02	11/29/2004		Erich Chen			 bug fix with arcmsr_bus_reset when PHY error **     1.20.00.03	04/19/2005		Erich Chen			 add SATA 24 Ports adapter type support **                                                       clean unused function **     1.20.00.12	09/12/2005		Erich Chen        	 bug fix with abort command handling,  **                                                       firmware version check  **                                                       and firmware update notify for hardware bug fix **                                                       handling if none zero high part physical address  **                                                       of srb resource  **     1.20.00.13	08/18/2006		Erich Chen			 remove pending srb and report busy **                                                       add iop message xfer  **                                                       with scsi pass-through command **                                                       add new device id of sas raid adapters  **                                                       code fit for SPARC64& PPC  **     1.20.00.14	02/05/2007		Erich Chen			 bug fix for incorrect ccb_h.status report **                                                       and cause g_vfs_done() read write error **     1.20.00.15	10/10/2007		Erich Chen			 support new RAID adapter type ARC120x **     1.20.00.16	10/10/2009		Erich Chen			 Bug fix for RAID adapter type ARC120x **                                                       bus_dmamem_alloc() with BUS_DMA_ZERO **     1.20.00.17	07/15/2010		Ching Huang			 Added support ARC1880 **														 report CAM_DEV_NOT_THERE instead of CAM_SEL_TIMEOUT when device failed, **														 prevent cam_periph_error removing all LUN devices of one Target id **														 for any one LUN device failed **     1.20.00.18	10/14/2010		Ching Huang			 Fixed "inquiry data fails comparion at DV1 step" **               	10/25/2010		Ching Huang			 Fixed bad range input in bus_alloc_resource for ADAPTER_TYPE_B **     1.20.00.19	11/11/2010		Ching Huang			 Fixed arcmsr driver prevent arcsas support for Areca SAS HBA ARC13x0 **     1.20.00.20	12/08/2010		Ching Huang			 Avoid calling atomic_set_int function **     1.20.00.21	02/08/2011		Ching Huang			 Implement I/O request timeout **               	02/14/2011		Ching Huang			 Modified pktRequestCount **     1.20.00.21	03/03/2011		Ching Huang			 if a command timeout, then wait its ccb back before free it **     1.20.00.22	07/04/2011		Ching Huang			 Fixed multiple MTX panic ****************************************************************************************** */
+comment|/* ***************************************************************************************** **        O.S   : FreeBSD **   FILE NAME  : arcmsr.c **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA (ARC11XX/ARC12XX/ARC13XX/ARC16XX/ARC188x) SATA/SAS RAID HOST Adapter **                ARCMSR RAID Host adapter **                [RAID controller:INTEL 331(PCI-X) 341(PCI-EXPRESS) chip set] ****************************************************************************************** ************************************************************************ ** ** Copyright (c) 2004-2010 ARECA Co. Ltd. **        Erich Chen, Taipei Taiwan All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ************************************************************************** ** History ** **        REV#         DATE             NAME             DESCRIPTION **     1.00.00.00   03/31/2004      Erich Chen           First release **     1.20.00.02   11/29/2004      Erich Chen           bug fix with arcmsr_bus_reset when PHY error **     1.20.00.03   04/19/2005      Erich Chen           add SATA 24 Ports adapter type support **                                                       clean unused function **     1.20.00.12   09/12/2005      Erich Chen           bug fix with abort command handling,  **                                                       firmware version check  **                                                       and firmware update notify for hardware bug fix **                                                       handling if none zero high part physical address  **                                                       of srb resource  **     1.20.00.13   08/18/2006      Erich Chen           remove pending srb and report busy **                                                       add iop message xfer  **                                                       with scsi pass-through command **                                                       add new device id of sas raid adapters  **                                                       code fit for SPARC64& PPC  **     1.20.00.14   02/05/2007      Erich Chen           bug fix for incorrect ccb_h.status report **                                                       and cause g_vfs_done() read write error **     1.20.00.15   10/10/2007      Erich Chen           support new RAID adapter type ARC120x **     1.20.00.16   10/10/2009      Erich Chen           Bug fix for RAID adapter type ARC120x **                                                       bus_dmamem_alloc() with BUS_DMA_ZERO **     1.20.00.17   07/15/2010      Ching Huang          Added support ARC1880 **                                                       report CAM_DEV_NOT_THERE instead of CAM_SEL_TIMEOUT when device failed, **                                                       prevent cam_periph_error removing all LUN devices of one Target id **                                                       for any one LUN device failed **     1.20.00.18   10/14/2010      Ching Huang          Fixed "inquiry data fails comparion at DV1 step" **                  10/25/2010      Ching Huang          Fixed bad range input in bus_alloc_resource for ADAPTER_TYPE_B **     1.20.00.19   11/11/2010      Ching Huang          Fixed arcmsr driver prevent arcsas support for Areca SAS HBA ARC13x0 **     1.20.00.20   12/08/2010      Ching Huang          Avoid calling atomic_set_int function **     1.20.00.21   02/08/2011      Ching Huang          Implement I/O request timeout **                  02/14/2011      Ching Huang          Modified pktRequestCount **     1.20.00.21   03/03/2011      Ching Huang          if a command timeout, then wait its ccb back before free it **     1.20.00.22   07/04/2011      Ching Huang          Fixed multiple MTX panic **     1.20.00.23   10/28/2011      Ching Huang          Added TIMEOUT_DELAY in case of too many HDDs need to start  **     1.20.00.23   11/08/2011      Ching Huang          Added report device transfer speed  **     1.20.00.23   01/30/2012      Ching Huang          Fixed Request requeued and Retrying command **     1.20.00.24   06/11/2012      Ching Huang          Fixed return sense data condition **     1.20.00.25   08/17/2012      Ching Huang          Fixed hotplug device no function on type A adapter ****************************************************************************************** */
 end_comment
 
 begin_include
@@ -512,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.22 2011-07-04"
+value|"Driver Version 1.20.00.25 2012-08-17"
 end_define
 
 begin_include
@@ -1481,7 +1481,9 @@ name|ENXIO
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_decl_stmt
@@ -2078,7 +2080,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2169,7 +2170,9 @@ condition|)
 do|;
 comment|/*max 20 sec*/
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -2272,7 +2275,9 @@ condition|)
 do|;
 comment|/*max 20 sec*/
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -2364,7 +2369,9 @@ condition|)
 do|;
 comment|/*max 20 sec*/
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -2427,7 +2434,6 @@ operator|!=
 literal|0
 condition|)
 do|;
-return|return;
 block|}
 end_function
 
@@ -2489,7 +2495,6 @@ operator|!=
 literal|0
 condition|)
 do|;
-return|return;
 block|}
 end_function
 
@@ -2562,7 +2567,6 @@ operator|!=
 literal|0
 condition|)
 do|;
-return|return;
 block|}
 end_function
 
@@ -2622,7 +2626,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2806,22 +2809,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|"%s:scsi id=%d lun=%d device lost \n"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|acb
-operator|->
-name|pci_dev
-argument_list|)
-argument_list|,
-name|target_id
-argument_list|,
-name|target_lun
-argument_list|)
-expr_stmt|;
+comment|//	printf("%s:scsi id=%d lun=%d device lost \n", device_get_name(acb->pci_dev), target_id, target_lun);
 break|break;
 default|default:
 break|break;
@@ -2871,12 +2859,11 @@ name|SCSI_STATUS_CHECK_COND
 expr_stmt|;
 if|if
 condition|(
-operator|&
 name|pccb
 operator|->
 name|csio
 operator|.
-name|sense_data
+name|sense_len
 condition|)
 block|{
 name|memset
@@ -2968,7 +2955,6 @@ operator||=
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3017,7 +3003,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3066,7 +3051,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3126,7 +3110,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3186,7 +3169,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3393,7 +3375,6 @@ argument_list|(
 name|pccb
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3644,7 +3625,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d isr got command error done,but got unknow DeviceStatus=0x%x \n"
+literal|"arcmsr%d: scsi id=%d lun=%d isr got command error done,but got unknown DeviceStatus=0x%x \n"
 argument_list|,
 name|acb
 operator|->
@@ -3683,7 +3664,7 @@ name|status
 operator||=
 name|CAM_UNCOR_PARITY
 expr_stmt|;
-comment|/*unknow error or crc error just for retry*/
+comment|/*unknown error or crc error just for retry*/
 name|arcmsr_srb_complete
 argument_list|(
 name|srb
@@ -3694,7 +3675,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -3862,7 +3842,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4324,7 +4303,6 @@ block|}
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4513,7 +4491,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -5058,7 +5035,6 @@ name|arc_cdb_size
 operator|=
 name|arccdbsize
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5406,7 +5382,6 @@ block|}
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5762,7 +5737,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -5986,7 +5960,6 @@ name|acb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6042,7 +6015,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6098,7 +6070,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6165,7 +6136,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6225,7 +6195,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6307,7 +6276,6 @@ operator|->
 name|qbuffer_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6470,7 +6438,6 @@ operator||=
 name|ACB_F_IOPDATA_OVERFLOW
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6641,7 +6608,6 @@ operator||=
 name|ACB_F_MESSAGE_WQBUFFER_CLEARED
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6807,7 +6773,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7653,7 +7618,6 @@ name|acb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7739,7 +7703,6 @@ argument_list|)
 expr_stmt|;
 comment|/* messenger of "driver to iop commands" */
 block|}
-return|return;
 block|}
 end_function
 
@@ -7822,7 +7785,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*drain reply FIFO*/
-return|return;
 block|}
 end_function
 
@@ -7949,7 +7911,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*drain reply FIFO*/
-return|return;
 block|}
 end_function
 
@@ -8066,7 +8027,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/*drain reply FIFO*/
-return|return;
 block|}
 end_function
 
@@ -8086,10 +8046,10 @@ name|acb
 parameter_list|)
 block|{
 name|u_int32_t
-name|outbound_intstatus
+name|outbound_intStatus
 decl_stmt|;
 comment|/* 	********************************************* 	**   check outbound intstatus  	********************************************* 	*/
-name|outbound_intstatus
+name|outbound_intStatus
 operator|=
 name|CHIP_REG_READ32
 argument_list|(
@@ -8107,7 +8067,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|outbound_intstatus
+name|outbound_intStatus
 condition|)
 block|{
 comment|/*it must be share irq*/
@@ -8121,14 +8081,14 @@ literal|0
 argument_list|,
 name|outbound_intstatus
 argument_list|,
-name|outbound_intstatus
+name|outbound_intStatus
 argument_list|)
 expr_stmt|;
 comment|/*clear interrupt*/
 comment|/* MU doorbell interrupts*/
 if|if
 condition|(
-name|outbound_intstatus
+name|outbound_intStatus
 operator|&
 name|ARCMSR_MU_OUTBOUND_DOORBELL_INT
 condition|)
@@ -8142,7 +8102,7 @@ block|}
 comment|/* MU post queue interrupts*/
 if|if
 condition|(
-name|outbound_intstatus
+name|outbound_intStatus
 operator|&
 name|ARCMSR_MU_OUTBOUND_POSTQUEUE_INT
 condition|)
@@ -8155,7 +8115,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|outbound_intstatus
+name|outbound_intStatus
 operator|&
 name|ARCMSR_MU_OUTBOUND_MESSAGE0_INT
 condition|)
@@ -8166,7 +8126,6 @@ name|acb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8300,7 +8259,6 @@ name|acb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8371,7 +8329,6 @@ name|acb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8428,7 +8385,7 @@ default|default:
 name|printf
 argument_list|(
 literal|"arcmsr%d: interrupt service,"
-literal|" unknow adapter type =%d\n"
+literal|" unknown adapter type =%d\n"
 argument_list|,
 name|acb
 operator|->
@@ -8441,7 +8398,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8533,7 +8489,7 @@ name|ACB_ADAPTER_TYPE_A
 case|:
 name|CHIP_REG_WRITE32
 argument_list|(
-name|HBC_MessageUnit
+name|HBA_MessageUnit
 argument_list|,
 literal|0
 argument_list|,
@@ -9566,7 +9522,9 @@ name|qbuffer_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retvalue
+operator|)
 return|;
 block|}
 end_function
@@ -10247,12 +10205,11 @@ expr_stmt|;
 comment|/* has error report sensedata */
 if|if
 condition|(
-operator|&
 name|pccb
 operator|->
 name|csio
 operator|.
-name|sense_data
+name|sense_len
 condition|)
 block|{
 operator|(
@@ -10442,12 +10399,11 @@ block|{
 comment|/* has error report sensedata */
 if|if
 condition|(
-operator|&
 name|pccb
 operator|->
 name|csio
 operator|.
-name|sense_data
+name|sense_len
 condition|)
 block|{
 operator|(
@@ -10879,7 +10835,9 @@ block|}
 name|message_out
 label|:
 return|return
+operator|(
 name|retvalue
+operator|)
 return|;
 block|}
 end_function
@@ -11227,7 +11185,7 @@ condition|(
 name|acb
 operator|->
 name|srboutstandingcount
-operator|>=
+operator|>
 name|ARCMSR_MAX_OUTSTANDING_CMD
 condition|)
 block|{
@@ -11314,11 +11272,19 @@ operator|->
 name|ccb_callout
 argument_list|,
 operator|(
+operator|(
 name|pccb
 operator|->
 name|ccb_h
 operator|.
 name|timeout
+operator|+
+operator|(
+name|ARCMSR_TIMEOUT_DELAY
+operator|*
+literal|1000
+operator|)
+operator|)
 operator|*
 name|hz
 operator|)
@@ -11337,7 +11303,6 @@ operator||=
 name|SRB_FLAG_TIMER_START
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11589,7 +11554,6 @@ operator|&=
 operator|~
 name|ACB_F_BUS_RESET
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12427,6 +12391,67 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAM_NEW_TRAN_CODE
+if|if
+condition|(
+name|acb
+operator|->
+name|adapter_bus_speed
+operator|==
+name|ACB_BUS_SPEED_6G
+condition|)
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|600000
+expr_stmt|;
+else|else
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|300000
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|acb
+operator|->
+name|vendor_device_id
+operator|==
+name|PCIDevVenIDARC1880
+operator|)
+operator|||
+operator|(
+name|acb
+operator|->
+name|vendor_device_id
+operator|==
+name|PCIDevVenIDARC1680
+operator|)
+condition|)
+block|{
+name|cpi
+operator|->
+name|transport
+operator|=
+name|XPORT_SAS
+expr_stmt|;
+name|cpi
+operator|->
+name|transport_version
+operator|=
+literal|0
+expr_stmt|;
+name|cpi
+operator|->
+name|protocol_version
+operator|=
+name|SCSI_REV_SPC2
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cpi
 operator|->
 name|transport
@@ -12441,15 +12466,16 @@ literal|2
 expr_stmt|;
 name|cpi
 operator|->
-name|protocol
-operator|=
-name|PROTO_SCSI
-expr_stmt|;
-name|cpi
-operator|->
 name|protocol_version
 operator|=
 name|SCSI_REV_2
+expr_stmt|;
+block|}
+name|cpi
+operator|->
+name|protocol
+operator|=
+name|PROTO_SCSI
 expr_stmt|;
 endif|#
 directive|endif
@@ -12716,6 +12742,11 @@ name|ccb_trans_settings_spi
 modifier|*
 name|spi
 decl_stmt|;
+name|struct
+name|ccb_trans_settings_sas
+modifier|*
+name|sas
+decl_stmt|;
 name|scsi
 operator|=
 operator|&
@@ -12725,14 +12756,17 @@ name|proto_specific
 operator|.
 name|scsi
 expr_stmt|;
-name|spi
-operator|=
-operator|&
-name|cts
+name|scsi
 operator|->
-name|xport_specific
-operator|.
-name|spi
+name|flags
+operator|=
+name|CTS_SCSI_FLAGS_TAG_ENB
+expr_stmt|;
+name|scsi
+operator|->
+name|valid
+operator|=
+name|CTS_SCSI_VALID_TQ
 expr_stmt|;
 name|cts
 operator|->
@@ -12740,6 +12774,90 @@ name|protocol
 operator|=
 name|PROTO_SCSI
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|acb
+operator|->
+name|vendor_device_id
+operator|==
+name|PCIDevVenIDARC1880
+operator|)
+operator|||
+operator|(
+name|acb
+operator|->
+name|vendor_device_id
+operator|==
+name|PCIDevVenIDARC1680
+operator|)
+condition|)
+block|{
+name|cts
+operator|->
+name|protocol_version
+operator|=
+name|SCSI_REV_SPC2
+expr_stmt|;
+name|cts
+operator|->
+name|transport_version
+operator|=
+literal|0
+expr_stmt|;
+name|cts
+operator|->
+name|transport
+operator|=
+name|XPORT_SAS
+expr_stmt|;
+name|sas
+operator|=
+operator|&
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sas
+expr_stmt|;
+name|sas
+operator|->
+name|valid
+operator|=
+name|CTS_SAS_VALID_SPEED
+expr_stmt|;
+if|if
+condition|(
+name|acb
+operator|->
+name|vendor_device_id
+operator|==
+name|PCIDevVenIDARC1880
+condition|)
+name|sas
+operator|->
+name|bitrate
+operator|=
+literal|600000
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|acb
+operator|->
+name|vendor_device_id
+operator|==
+name|PCIDevVenIDARC1680
+condition|)
+name|sas
+operator|->
+name|bitrate
+operator|=
+literal|300000
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cts
 operator|->
 name|protocol_version
@@ -12748,15 +12866,24 @@ name|SCSI_REV_2
 expr_stmt|;
 name|cts
 operator|->
+name|transport_version
+operator|=
+literal|2
+expr_stmt|;
+name|cts
+operator|->
 name|transport
 operator|=
 name|XPORT_SPI
 expr_stmt|;
+name|spi
+operator|=
+operator|&
 name|cts
 operator|->
-name|transport_version
-operator|=
-literal|2
+name|xport_specific
+operator|.
+name|spi
 expr_stmt|;
 name|spi
 operator|->
@@ -12768,7 +12895,7 @@ name|spi
 operator|->
 name|sync_period
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 name|spi
 operator|->
@@ -12782,12 +12909,6 @@ name|bus_width
 operator|=
 name|MSG_EXT_WDTR_BUS_16_BIT
 expr_stmt|;
-name|scsi
-operator|->
-name|flags
-operator|=
-name|CTS_SCSI_FLAGS_TAG_ENB
-expr_stmt|;
 name|spi
 operator|->
 name|valid
@@ -12800,12 +12921,7 @@ name|CTS_SPI_VALID_SYNC_OFFSET
 operator||
 name|CTS_SPI_VALID_BUS_WIDTH
 expr_stmt|;
-name|scsi
-operator|->
-name|valid
-operator|=
-name|CTS_SCSI_VALID_TQ
-expr_stmt|;
+block|}
 block|}
 else|#
 directive|else
@@ -12824,7 +12940,7 @@ name|cts
 operator|->
 name|sync_period
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 name|cts
 operator|->
@@ -13116,7 +13232,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13171,7 +13286,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13226,7 +13340,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13292,7 +13405,6 @@ name|pci_unit
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13346,7 +13458,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13647,7 +13758,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*drain reply FIFO*/
-return|return;
 block|}
 end_function
 
@@ -13975,7 +14085,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*drain reply FIFO*/
-return|return;
 block|}
 end_function
 
@@ -14272,7 +14381,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*drain reply FIFO*/
-return|return;
 block|}
 end_function
 
@@ -14699,7 +14807,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/*firm_cfg_version,  25, 	  */
-return|return;
 block|}
 end_function
 
@@ -15057,7 +15164,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/*firm_cfg_version,  25, 	  */
-return|return;
 block|}
 end_function
 
@@ -15425,7 +15531,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/*firm_cfg_version,  25, 	  */
-return|return;
 block|}
 end_function
 
@@ -15485,7 +15590,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -15681,7 +15785,6 @@ block|}
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -15823,7 +15926,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -16271,7 +16373,9 @@ block|}
 break|break;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -16343,7 +16447,6 @@ block|}
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -16419,7 +16522,6 @@ name|acb_flags
 operator||=
 name|ACB_F_IOP_INITED
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16635,7 +16737,6 @@ name|long
 operator|)
 name|srb_phyaddr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16715,7 +16816,6 @@ operator|->
 name|parent_dmat
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16752,16 +16852,38 @@ name|j
 decl_stmt|,
 name|max_coherent_size
 decl_stmt|;
-switch|switch
-condition|(
+name|u_int32_t
+name|vendor_dev_id
+decl_stmt|;
+name|vendor_dev_id
+operator|=
 name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|acb
+operator|->
+name|vendor_device_id
+operator|=
+name|vendor_dev_id
+expr_stmt|;
+switch|switch
+condition|(
+name|vendor_dev_id
 condition|)
 block|{
 case|case
 name|PCIDevVenIDARC1880
+case|:
+case|case
+name|PCIDevVenIDARC1882
+case|:
+case|case
+name|PCIDevVenIDARC1213
+case|:
+case|case
+name|PCIDevVenIDARC1223
 case|:
 block|{
 name|acb
@@ -16769,6 +16891,12 @@ operator|->
 name|adapter_type
 operator|=
 name|ACB_ADAPTER_TYPE_C
+expr_stmt|;
+name|acb
+operator|->
+name|adapter_bus_speed
+operator|=
+name|ACB_BUS_SPEED_6G
 expr_stmt|;
 name|max_coherent_size
 operator|=
@@ -16788,6 +16916,12 @@ operator|->
 name|adapter_type
 operator|=
 name|ACB_ADAPTER_TYPE_B
+expr_stmt|;
+name|acb
+operator|->
+name|adapter_bus_speed
+operator|=
+name|ACB_BUS_SPEED_3G
 expr_stmt|;
 name|max_coherent_size
 operator|=
@@ -16866,6 +17000,12 @@ operator|->
 name|adapter_type
 operator|=
 name|ACB_ADAPTER_TYPE_A
+expr_stmt|;
+name|acb
+operator|->
+name|adapter_bus_speed
+operator|=
+name|ACB_BUS_SPEED_3G
 expr_stmt|;
 name|max_coherent_size
 operator|=
@@ -18924,7 +19064,9 @@ name|acb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* ************************************************************************ ************************************************************************ */
@@ -19069,6 +19211,15 @@ expr_stmt|;
 break|break;
 case|case
 name|PCIDevVenIDARC1880
+case|:
+case|case
+name|PCIDevVenIDARC1882
+case|:
+case|case
+name|PCIDevVenIDARC1213
+case|:
+case|case
+name|PCIDevVenIDARC1223
 case|:
 name|type
 operator|=

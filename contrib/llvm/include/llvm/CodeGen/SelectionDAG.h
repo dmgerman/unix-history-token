@@ -242,10 +242,8 @@ argument_list|(
 argument|SDNode *
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"ilist_traits<SDNode> shouldn't see a deleteNode call!"
 argument_list|)
 block|;   }
@@ -547,14 +545,13 @@ begin_enum
 enum|enum
 name|CombineLevel
 block|{
-name|Unrestricted
+name|BeforeLegalizeTypes
 block|,
-comment|// Combine may create illegal operations and illegal types.
-name|NoIllegalTypes
+name|AfterLegalizeTypes
 block|,
-comment|// Combine may create illegal operations but no illegal types.
-name|NoIllegalOperations
-comment|// Combine may only create legal operations and types.
+name|AfterLegalizeVectorOps
+block|,
+name|AfterLegalizeDAG
 block|}
 enum|;
 end_enum
@@ -660,6 +657,11 @@ name|LLVMContext
 modifier|*
 name|Context
 decl_stmt|;
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+expr_stmt|;
 comment|/// EntryNode - The starting token.
 name|SDNode
 name|EntryNode
@@ -730,6 +732,114 @@ name|SDDbgInfo
 modifier|*
 name|DbgInfo
 decl_stmt|;
+name|public
+label|:
+comment|/// DAGUpdateListener - Clients of various APIs that cause global effects on
+comment|/// the DAG can optionally implement this interface.  This allows the clients
+comment|/// to handle the various sorts of updates that happen.
+comment|///
+comment|/// A DAGUpdateListener automatically registers itself with DAG when it is
+comment|/// constructed, and removes itself when destroyed in RAII fashion.
+struct|struct
+name|DAGUpdateListener
+block|{
+name|DAGUpdateListener
+modifier|*
+specifier|const
+name|Next
+decl_stmt|;
+name|SelectionDAG
+modifier|&
+name|DAG
+decl_stmt|;
+name|explicit
+name|DAGUpdateListener
+argument_list|(
+name|SelectionDAG
+operator|&
+name|D
+argument_list|)
+operator|:
+name|Next
+argument_list|(
+name|D
+operator|.
+name|UpdateListeners
+argument_list|)
+operator|,
+name|DAG
+argument_list|(
+argument|D
+argument_list|)
+block|{
+name|DAG
+operator|.
+name|UpdateListeners
+operator|=
+name|this
+block|;     }
+name|virtual
+operator|~
+name|DAGUpdateListener
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|DAG
+operator|.
+name|UpdateListeners
+operator|==
+name|this
+operator|&&
+literal|"DAGUpdateListeners must be destroyed in LIFO order"
+argument_list|)
+block|;
+name|DAG
+operator|.
+name|UpdateListeners
+operator|=
+name|Next
+block|;     }
+comment|/// NodeDeleted - The node N that was deleted and, if E is not null, an
+comment|/// equivalent node E that replaced it.
+name|virtual
+name|void
+name|NodeDeleted
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|SDNode
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
+comment|/// NodeUpdated - The node N that was updated.
+name|virtual
+name|void
+name|NodeUpdated
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+name|private
+label|:
+comment|/// DAGUpdateListener is a friend so it can manipulate the listener stack.
+name|friend
+struct_decl|struct
+name|DAGUpdateListener
+struct_decl|;
+comment|/// UpdateListeners - Linked list of registered DAGUpdateListener instances.
+comment|/// This stack is maintained by DAGUpdateListener RAII.
+name|DAGUpdateListener
+modifier|*
+name|UpdateListeners
+decl_stmt|;
 comment|/// setGraphColorHelper - Implementation of setSubgraphColor.
 comment|/// Return whether we had to truncate the search.
 comment|///
@@ -783,13 +893,19 @@ name|public
 label|:
 name|explicit
 name|SelectionDAG
-parameter_list|(
+argument_list|(
 specifier|const
 name|TargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
+decl_stmt|;
 operator|~
 name|SelectionDAG
 argument_list|()
@@ -1847,6 +1963,27 @@ name|TargetFlags
 argument_list|)
 return|;
 block|}
+name|SDValue
+name|getTargetIndex
+parameter_list|(
+name|int
+name|Index
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|int64_t
+name|Offset
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|// When generating a branch to a BB, we don't in general know enough
 comment|// to provide debug info for the BB at that time, so keep this one around.
 name|SDValue
@@ -1927,6 +2064,15 @@ name|Reg
 parameter_list|,
 name|EVT
 name|VT
+parameter_list|)
+function_decl|;
+name|SDValue
+name|getRegisterMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3676,6 +3822,9 @@ parameter_list|,
 name|bool
 name|isNonTemporal
 parameter_list|,
+name|bool
+name|isInvariant
+parameter_list|,
 name|unsigned
 name|Alignment
 parameter_list|,
@@ -3683,6 +3832,13 @@ specifier|const
 name|MDNode
 modifier|*
 name|TBAAInfo
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Ranges
 init|=
 literal|0
 parameter_list|)
@@ -3791,6 +3947,9 @@ argument_list|,
 name|bool
 name|isNonTemporal
 argument_list|,
+name|bool
+name|isInvariant
+argument_list|,
 name|unsigned
 name|Alignment
 argument_list|,
@@ -3798,6 +3957,13 @@ specifier|const
 name|MDNode
 operator|*
 name|TBAAInfo
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+name|Ranges
 operator|=
 literal|0
 argument_list|)
@@ -4991,50 +5157,6 @@ name|unsigned
 name|O
 parameter_list|)
 function_decl|;
-comment|/// DAGUpdateListener - Clients of various APIs that cause global effects on
-comment|/// the DAG can optionally implement this interface.  This allows the clients
-comment|/// to handle the various sorts of updates that happen.
-name|class
-name|DAGUpdateListener
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|DAGUpdateListener
-argument_list|()
-expr_stmt|;
-comment|/// NodeDeleted - The node N that was deleted and, if E is not null, an
-comment|/// equivalent node E that replaced it.
-name|virtual
-name|void
-name|NodeDeleted
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|,
-name|SDNode
-modifier|*
-name|E
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// NodeUpdated - The node N that was updated.
-name|virtual
-name|void
-name|NodeUpdated
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-block|}
-empty_stmt|;
 comment|/// RemoveDeadNode - Remove the specified node from the system. If any of its
 comment|/// operands then becomes dead, remove them as well. Inform UpdateListener
 comment|/// for each node deleted.
@@ -5044,12 +5166,6 @@ parameter_list|(
 name|SDNode
 modifier|*
 name|N
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// RemoveDeadNodes - This method deletes the unreachable nodes in the
@@ -5064,12 +5180,6 @@ operator|*
 operator|>
 operator|&
 name|DeadNodes
-argument_list|,
-name|DAGUpdateListener
-operator|*
-name|UpdateListener
-operator|=
-literal|0
 argument_list|)
 decl_stmt|;
 comment|/// ReplaceAllUsesWith - Modify anything using 'From' to use 'To' instead.
@@ -5095,12 +5205,6 @@ name|From
 parameter_list|,
 name|SDValue
 name|Op
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -5113,12 +5217,6 @@ parameter_list|,
 name|SDNode
 modifier|*
 name|To
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -5132,12 +5230,6 @@ specifier|const
 name|SDValue
 modifier|*
 name|To
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// ReplaceAllUsesOfValueWith - Replace any uses of From with To, leaving
@@ -5150,12 +5242,6 @@ name|From
 parameter_list|,
 name|SDValue
 name|To
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// ReplaceAllUsesOfValuesWith - Like ReplaceAllUsesOfValueWith, but
@@ -5176,12 +5262,6 @@ name|To
 parameter_list|,
 name|unsigned
 name|Num
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// AssignTopologicalOrder - Topological-sort the AllNodes list and a
@@ -5580,11 +5660,6 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Mask
-argument_list|,
 name|APInt
 operator|&
 name|KnownZero
@@ -5733,10 +5808,6 @@ parameter_list|(
 name|SDNode
 modifier|*
 name|N
-parameter_list|,
-name|DAGUpdateListener
-modifier|*
-name|UpdateListener
 parameter_list|)
 function_decl|;
 name|SDNode
@@ -5796,6 +5867,18 @@ name|void
 modifier|*
 modifier|&
 name|InsertPos
+parameter_list|)
+function_decl|;
+name|SDNode
+modifier|*
+name|UpdadeDebugLocOnMergedSDNode
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|DebugLoc
+name|loc
 parameter_list|)
 function_decl|;
 name|void

@@ -1385,6 +1385,19 @@ name|halHasBBReadWar
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* 	 * Implement the PLL/config changes needed for half/quarter 	 * rates before re-enabling them here. 	 */
+name|pCap
+operator|->
+name|halChanHalfRate
+operator|=
+name|AH_FALSE
+expr_stmt|;
+name|pCap
+operator|->
+name|halChanQuarterRate
+operator|=
+name|AH_FALSE
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

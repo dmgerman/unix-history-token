@@ -31,6 +31,12 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -79,7 +85,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|HelpMessage
+name|FilenameHelp
 parameter_list|(
 name|void
 parameter_list|)
@@ -92,6 +98,18 @@ name|void
 name|Usage
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ACPI_SYSTEM_XFACE
+name|AslSignalHandler
+parameter_list|(
+name|int
+name|Sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:Pr:s|t|T:G^v|w|x:z"
+value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
@@ -214,6 +232,20 @@ argument_list|,
 literal|"Specify additional include directory"
 argument_list|)
 expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<sig>|ALL|*"
+argument_list|,
+literal|"Create table template file for ACPI<Sig>"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display compiler version"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nPreprocessor:\n"
@@ -238,6 +270,13 @@ argument_list|(
 literal|"-P"
 argument_list|,
 literal|"Preprocess only and create preprocessor output file (*.i)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-Pn"
+argument_list|,
+literal|"Disable preprocessor"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -294,16 +333,23 @@ argument_list|,
 literal|"Set warning reporting level"
 argument_list|)
 expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-we"
+argument_list|,
+literal|"Report warnings as errors"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML Output Files:\n"
+literal|"\nAML and Data Output Files:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-sa -sc"
 argument_list|,
-literal|"Create AML in assembler or C source file (*.asm or *.c)"
+literal|"Create assembler or C source file (*.asm or *.c)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -317,7 +363,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-ta -tc -ts"
 argument_list|,
-literal|"Create AML in assembler, C, or ASL hex table (*.hex)"
+literal|"Create assembler, C, or ASL hex table (*.hex)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -407,13 +453,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-T<sig>|ALL|*"
-argument_list|,
-literal|"Create table template file(s) for<Sig>"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-vt"
 argument_list|,
 literal|"Create verbose templates (full disassembly)"
@@ -440,6 +479,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-db"
+argument_list|,
+literal|"Do not translate Buffers to Resource Templates"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-dc [file]"
 argument_list|,
 literal|"Disassemble AML and immediately compile it"
@@ -461,23 +507,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-m"
-argument_list|,
-literal|"Do not translate Buffers to Resource Templates"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-2"
-argument_list|,
-literal|"Emit ACPI 2.0 compatible ASL code"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-g"
 argument_list|,
 literal|"Get ACPI tables and write to files (*.dat)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vt"
+argument_list|,
+literal|"Dump binary table data in hex format within output file"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -489,7 +528,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-h"
 argument_list|,
-literal|"Additional help and compiler debug options"
+literal|"This message"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -497,6 +536,13 @@ argument_list|(
 literal|"-hc"
 argument_list|,
 literal|"Display operators allowed in constant expressions"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hf"
+argument_list|,
+literal|"Display help for output filename generation"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -513,17 +559,64 @@ argument_list|,
 literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nDebug Options:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-bf -bt"
+argument_list|,
+literal|"Create debug file (full or parse tree only) (*.txt)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-f"
+argument_list|,
+literal|"Ignore errors, force creation of AML output file(s)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-n"
+argument_list|,
+literal|"Parse only, no output generation"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ot"
+argument_list|,
+literal|"Display compile times and statistics"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-x<level>"
+argument_list|,
+literal|"Set debug level for trace output"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-z"
+argument_list|,
+literal|"Do not insert new compiler ID for DataTables"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    HelpMessage  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display help message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FilenameHelp  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display help message for output filename generation  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|HelpMessage
+name|FilenameHelp
 parameter_list|(
 name|void
 parameter_list|)
@@ -540,7 +633,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  filename prefix.  The filename prefix is obtained via one of the\n"
+literal|"  filename prefix. The filename prefix is obtained via one of the\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -566,63 +659,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|Options
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nCompiler/Disassembler Debug Options:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-bb -bp -bt"
-argument_list|,
-literal|"Create compiler debug/trace file (*.txt)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|""
-argument_list|,
-literal|"Types: Parse/Tree/Both"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-f"
-argument_list|,
-literal|"Ignore errors, force creation of AML output file(s)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-n"
-argument_list|,
-literal|"Parse only, no output generation"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ot"
-argument_list|,
-literal|"Display compile times"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-x<level>"
-argument_list|,
-literal|"Set debug level for trace output"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-z"
-argument_list|,
-literal|"Do not insert new compiler ID for DataTables"
 argument_list|)
 expr_stmt|;
 block|}
@@ -659,6 +695,95 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AslSignalHandler  *  * PARAMETERS:  Sig                 - Signal that invoked this handler  *  * RETURN:      None  *  * DESCRIPTION: Control-C handler. Delete any intermediate files and any  *              output files that may be left in an indeterminate state.  *  *****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ACPI_SYSTEM_XFACE
+name|AslSignalHandler
+parameter_list|(
+name|int
+name|Sig
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|signal
+argument_list|(
+name|Sig
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Aborting\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* Close all open files */
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* the .i file is same as source file */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_INPUT
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlCloseFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Delete any output files */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_AML_OUTPUT
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlDeleteFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslInitialize  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Initialize compiler globals  *  ******************************************************************************/
 end_comment
 
@@ -688,10 +813,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|AcpiDbgLevel
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -760,6 +881,14 @@ operator|.
 name|Filename
 operator|=
 literal|"STDERR"
+expr_stmt|;
+comment|/* Allocate the line buffer(s) */
+name|Gbl_LineBufferSize
+operator|/=
+literal|2
+expr_stmt|;
+name|UtExpandLineBuffers
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -888,8 +1017,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Must save the current GetOpt globals */
@@ -1070,15 +1201,6 @@ return|;
 block|}
 break|break;
 case|case
-literal|'2'
-case|:
-comment|/* ACPI 2.0 compatibility mode */
-name|Gbl_Acpi2
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 literal|'b'
 case|:
 comment|/* Debug output options */
@@ -1091,24 +1213,7 @@ index|]
 condition|)
 block|{
 case|case
-literal|'b'
-case|:
-name|AslCompilerdebug
-operator|=
-literal|1
-expr_stmt|;
-comment|/* same as yydebug */
-name|DtParserdebug
-operator|=
-literal|1
-expr_stmt|;
-name|PrParserdebug
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
+literal|'f'
 case|:
 name|AslCompilerdebug
 operator|=
@@ -1212,6 +1317,15 @@ operator|=
 name|FALSE
 expr_stmt|;
 name|Gbl_DisassembleAll
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+comment|/* Do not convert buffers to resource descriptors */
+name|AcpiGbl_NoResourceDisassembly
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1332,7 +1446,7 @@ block|{
 case|case
 literal|'^'
 case|:
-name|HelpMessage
+name|Usage
 argument_list|()
 expr_stmt|;
 name|exit
@@ -1344,6 +1458,17 @@ case|case
 literal|'c'
 case|:
 name|UtDisplayConstantOpcodes
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
+literal|'f'
+case|:
+name|FilenameHelp
 argument_list|()
 expr_stmt|;
 name|exit
@@ -1512,10 +1637,41 @@ break|break;
 case|case
 literal|'m'
 case|:
-comment|/* Do not convert buffers to resource descriptors */
-name|AcpiGbl_NoResourceDisassembly
+comment|/* Set line buffer size */
+name|Gbl_LineBufferSize
 operator|=
-name|TRUE
+operator|(
+name|UINT32
+operator|)
+name|strtoul
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_LineBufferSize
+operator|<
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+condition|)
+block|{
+name|Gbl_LineBufferSize
+operator|=
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"Line Buffer Size: %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1611,7 +1767,19 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* Preprocess (plus .i file) only */
+comment|/* Preprocessor options */
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
+comment|/* Proprocess only, emit (.i) file */
 name|Gbl_PreprocessOnly
 operator|=
 name|TRUE
@@ -1620,6 +1788,31 @@ name|Gbl_PreprocessorOutputFlag
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* Disable preprocessor */
+name|Gbl_PreprocessFlag
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -P%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'p'
@@ -1767,7 +1960,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-comment|/* Verbosity settings */
+comment|/* Version and verbosity settings */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1776,6 +1969,22 @@ literal|0
 index|]
 condition|)
 block|{
+case|case
+literal|'^'
+case|:
+name|printf
+argument_list|(
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 case|case
 literal|'a'
 case|:
@@ -1788,10 +1997,23 @@ break|break;
 case|case
 literal|'i'
 case|:
-comment|/* Less verbose error messages */
+comment|/*              * Support for integrated development environment(s).              *              * 1) No compiler signon              * 2) Send stderr messages to stdout              * 3) Less verbose error messages (single line only for each)              * 4) Error/warning messages are formatted appropriately to              *    be recognized by MS Visual Studio              */
 name|Gbl_VerboseErrors
 operator|=
 name|FALSE
+expr_stmt|;
+name|Gbl_DoSignon
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_STDERR
+index|]
+operator|.
+name|Handle
+operator|=
+name|stdout
 expr_stmt|;
 break|break;
 case|case
@@ -1876,6 +2098,14 @@ case|:
 name|Gbl_WarningLevel
 operator|=
 name|ASL_WARNING3
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|Gbl_WarningsAsErrors
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:
@@ -2136,9 +2366,20 @@ decl_stmt|;
 name|int
 name|Index2
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|AslSignalHandler
+argument_list|)
+expr_stmt|;
 name|AcpiGbl_ExternalFileList
 operator|=
 name|NULL
+expr_stmt|;
+name|AcpiDbgLevel
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2158,12 +2399,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Init and command line */
-name|AslInitialize
-argument_list|()
-expr_stmt|;
-name|PrInitializePreprocessor
-argument_list|()
-expr_stmt|;
 name|Index1
 operator|=
 name|Index2
@@ -2174,6 +2409,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+name|AslInitialize
+argument_list|()
+expr_stmt|;
+name|PrInitializePreprocessor
+argument_list|()
 expr_stmt|;
 comment|/* Options that have no additional parameters or pathnames */
 if|if

@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/rdma/ib_verbs.h>
+file|<rdma/ib_verbs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/rdma/iw_cm.h>
+file|<rdma/iw_cm.h>
 end_include
 
 begin_include
@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|MPA_REV
-value|o0
+value|0
 end_define
 
 begin_comment
@@ -112,7 +112,7 @@ name|put_ep
 parameter_list|(
 name|ep
 parameter_list|)
-value|{ \ 	CTR4(KTR_IW_CXGB, "put_ep (via %s:%u) ep %p refcnt %d\n", __FUNCTION__, __LINE__,  \ 	     ep, atomic_load_acq_int(&((ep)->refcount))); \ 	if (refcount_release(&((ep)->refcount)))  \ 		__free_ep(ep); \ }
+value|{ \ 	CTR4(KTR_IW_CXGB, "put_ep (via %s:%u) ep %p refcnt %d", __FUNCTION__, __LINE__,  \ 	     ep, atomic_load_acq_int(&((ep)->refcount))); \ 	if (refcount_release(&((ep)->refcount)))  \ 		__free_ep(ep); \ }
 end_define
 
 begin_define
@@ -122,7 +122,7 @@ name|get_ep
 parameter_list|(
 name|ep
 parameter_list|)
-value|{ \ 	CTR4(KTR_IW_CXGB, "get_ep (via %s:%u) ep %p, refcnt %d\n", __FUNCTION__, __LINE__, \ 	     ep, atomic_load_acq_int(&((ep)->refcount))); \ 	refcount_acquire(&((ep)->refcount));	  \ }
+value|{ \ 	CTR4(KTR_IW_CXGB, "get_ep (via %s:%u) ep %p, refcnt %d", __FUNCTION__, __LINE__, \ 	     ep, atomic_load_acq_int(&((ep)->refcount))); \ 	refcount_acquire(&((ep)->refcount));	  \ }
 end_define
 
 begin_struct
@@ -425,7 +425,7 @@ modifier|*
 name|qp
 decl_stmt|;
 name|struct
-name|t3cdev
+name|toedev
 modifier|*
 name|tdev
 decl_stmt|;
@@ -525,11 +525,6 @@ name|struct
 name|l2t_entry
 modifier|*
 name|l2t
-decl_stmt|;
-name|struct
-name|rtentry
-modifier|*
-name|dst
 decl_stmt|;
 name|struct
 name|mbuf
@@ -876,30 +871,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|iwch_quiesce_tid
-parameter_list|(
-name|struct
-name|iwch_ep
-modifier|*
-name|ep
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|iwch_resume_tid
-parameter_list|(
-name|struct
-name|iwch_ep
-modifier|*
-name|ep
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|__free_ep
 parameter_list|(
@@ -963,6 +934,28 @@ name|void
 name|iwch_cm_term
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iwch_cm_init_cpl
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iwch_cm_term_cpl
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

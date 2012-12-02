@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -46,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-include|SESINC
+file|<cam/scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/scsi/scsi_ses.h>
 end_include
 
 begin_function

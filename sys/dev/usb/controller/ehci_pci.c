@@ -349,14 +349,6 @@ name|device_id
 condition|)
 block|{
 case|case
-literal|0x268c8086
-case|:
-return|return
-operator|(
-literal|"Intel 63XXESB USB 2.0 controller"
-operator|)
-return|;
-case|case
 literal|0x523910b9
 case|:
 return|return
@@ -389,6 +381,30 @@ return|return
 literal|"ATI SB400 USB 2.0 controller"
 return|;
 case|case
+literal|0x43961002
+case|:
+return|return
+operator|(
+literal|"AMD SB7x0/SB8x0/SB9x0 USB 2.0 controller"
+operator|)
+return|;
+case|case
+literal|0x1e268086
+case|:
+return|return
+operator|(
+literal|"Intel Panther Point USB 2.0 controller"
+operator|)
+return|;
+case|case
+literal|0x1e2d8086
+case|:
+return|return
+operator|(
+literal|"Intel Panther Point USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x25ad8086
 case|:
 return|return
@@ -411,6 +427,14 @@ literal|0x265c8086
 case|:
 return|return
 literal|"Intel 82801FB (ICH6) USB 2.0 controller"
+return|;
+case|case
+literal|0x268c8086
+case|:
+return|return
+operator|(
+literal|"Intel 63XXESB USB 2.0 controller"
+operator|)
 return|;
 case|case
 literal|0x27cc8086
@@ -811,6 +835,10 @@ operator|&
 literal|0x20
 condition|)
 return|return;
+name|val
+operator||=
+literal|0x20
+expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|self

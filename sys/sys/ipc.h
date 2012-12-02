@@ -150,6 +150,12 @@ name|defined
 argument_list|(
 name|COMPAT_FREEBSD7
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
 end_if
 
 begin_struct

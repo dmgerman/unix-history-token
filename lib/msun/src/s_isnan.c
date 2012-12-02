@@ -16,20 +16,79 @@ file|"fpmath.h"
 end_include
 
 begin_comment
-comment|/* Provided by libc */
+comment|/* Provided by libc.so */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PIC
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|isnan
+end_undef
+
+begin_function
+name|int
+name|isnan
+parameter_list|(
+name|double
+name|d
+parameter_list|)
+block|{
+name|union
+name|IEEEd2bits
+name|u
+decl_stmt|;
+name|u
+operator|.
+name|d
+operator|=
+name|d
+expr_stmt|;
+return|return
+operator|(
+name|u
+operator|.
+name|bits
+operator|.
+name|exp
+operator|==
+literal|2047
+operator|&&
+operator|(
+name|u
+operator|.
+name|bits
+operator|.
+name|manl
+operator|!=
 literal|0
-end_if
+operator|||
+name|u
+operator|.
+name|bits
+operator|.
+name|manh
+operator|!=
+literal|0
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
-unit|int isnan(double d) { 	union IEEEd2bits u;  	u.d = d; 	return (u.bits.exp == 2047&& (u.bits.manl != 0 || u.bits.manh != 0)); }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !PIC */
+end_comment
 
 begin_function
 name|int

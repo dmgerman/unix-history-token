@@ -105,6 +105,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -292,6 +295,21 @@ operator|.
 name|ah_getTxCompletionRates
 operator|=
 name|ar5211GetTxCompletionRates
+block|,
+operator|.
+name|ah_setTxDescLink
+operator|=
+name|ar5211SetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLink
+operator|=
+name|ar5211GetTxDescLink
+block|,
+operator|.
+name|ah_getTxDescLinkPtr
+operator|=
+name|ar5211GetTxDescLinkPtr
 block|,
 comment|/* RX Functions */
 operator|.
@@ -560,6 +578,28 @@ name|ah_setCoverageClass
 operator|=
 name|ar5211SetCoverageClass
 block|,
+operator|.
+name|ah_get11nExtBusy
+operator|=
+name|ar5211Get11nExtBusy
+block|,
+operator|.
+name|ah_getMibCycleCounts
+operator|=
+name|ar5211GetMibCycleCounts
+block|,
+operator|.
+name|ah_enableDfs
+operator|=
+name|ar5211EnableDfs
+block|,
+operator|.
+name|ah_getDfsThresh
+operator|=
+name|ar5211GetDfsThresh
+block|,
+comment|/* XXX procRadarEvent */
+comment|/* XXX isFastClockEnabled */
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
@@ -2172,6 +2212,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{ }
 end_function
@@ -2326,6 +2369,20 @@ name|halVEOLSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halNumMRRetries
+operator|=
+literal|1
+expr_stmt|;
+comment|/* No hardware MRR support */
+name|pCap
+operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
 name|pCap
 operator|->
 name|halTotalQueues

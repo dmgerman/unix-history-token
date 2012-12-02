@@ -132,7 +132,16 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|npxtrap
+name|npxtrap_x87
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|npxtrap_sse
 parameter_list|(
 name|void
 parameter_list|)

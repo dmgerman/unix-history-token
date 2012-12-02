@@ -6064,6 +6064,8 @@ name|PPP_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|b
 operator|+
 literal|1
@@ -6325,6 +6327,8 @@ name|PPP_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -7341,6 +7345,8 @@ name|PPP_IP
 case|:
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -7355,6 +7361,8 @@ name|PPP_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -7411,6 +7419,8 @@ name|PPP_IP
 case|:
 name|ip_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -7425,6 +7435,8 @@ name|PPP_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -7535,6 +7547,8 @@ name|PPP_IPV6
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -7551,6 +7565,8 @@ name|PPP_MPLS_MCAST
 case|:
 name|mpls_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length

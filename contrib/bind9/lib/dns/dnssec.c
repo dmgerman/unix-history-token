@@ -6168,7 +6168,7 @@ argument_list|)
 expr_stmt|;
 name|RETERR
 argument_list|(
-name|dns_name_totext
+name|dns_name_tofilenametext
 argument_list|(
 name|origin
 argument_list|,

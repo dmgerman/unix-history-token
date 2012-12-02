@@ -229,6 +229,9 @@ case|case
 name|IXGBE_DEV_ID_82599_SFP_EM
 case|:
 case|case
+name|IXGBE_DEV_ID_82599_SFP_SF2
+case|:
+case|case
 name|IXGBE_DEV_ID_82599EN_SFP
 case|:
 case|case
@@ -272,6 +275,9 @@ expr_stmt|;
 break|break;
 case|case
 name|IXGBE_DEV_ID_X540T
+case|:
+case|case
+name|IXGBE_DEV_ID_X540T1
 case|:
 name|hw
 operator|->
@@ -2402,6 +2408,48 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  ixgbe_set_vmdq_san_mac - Associate VMDq index 127 with a receive address  *  @hw: pointer to hardware structure  *  @vmdq: VMDq default pool index  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_set_vmdq_san_mac
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|vmdq
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_vmdq_san_mac
+argument_list|,
+operator|(
+name|hw
+operator|,
+name|vmdq
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  ixgbe_clear_vmdq - Disassociate a VMDq index from a receive address  *  @hw: pointer to hardware structure  *  @rar: receive address register index to disassociate with VMDq index  *  @vmdq: VMDq set or pool index  **/
 end_comment
 
@@ -2842,7 +2890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_fc_enable - Enable flow control  *  @hw: pointer to hardware structure  *  @packetbuf_num: packet buffer number (0-7)  *  *  Configures the flow control settings based on SW configuration.  **/
+comment|/**  *  ixgbe_fc_enable - Enable flow control  *  @hw: pointer to hardware structure  *  *  Configures the flow control settings based on SW configuration.  **/
 end_comment
 
 begin_function
@@ -2853,9 +2901,6 @@ name|struct
 name|ixgbe_hw
 modifier|*
 name|hw
-parameter_list|,
-name|s32
-name|packetbuf_num
 parameter_list|)
 block|{
 return|return
@@ -2873,8 +2918,6 @@ name|fc_enable
 argument_list|,
 operator|(
 name|hw
-operator|,
-name|packetbuf_num
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
@@ -3310,7 +3353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_enable_rx_dma - Enables Rx DMA unit, dependant on device specifics  *  @hw: pointer to hardware structure  *  @regval: bitfield to write to the Rx DMA register  *  *  Enables the Rx DMA unit of the device.  **/
+comment|/**  *  ixgbe_enable_rx_dma - Enables Rx DMA unit, dependent on device specifics  *  @hw: pointer to hardware structure  *  @regval: bitfield to write to the Rx DMA register  *  *  Enables the Rx DMA unit of the device.  **/
 end_comment
 
 begin_function

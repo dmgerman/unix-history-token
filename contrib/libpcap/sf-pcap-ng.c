@@ -2652,9 +2652,12 @@ name|p
 operator|->
 name|linktype
 operator|=
+name|linktype_to_dlt
+argument_list|(
 name|idbp
 operator|->
 name|linktype
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -2743,9 +2746,6 @@ name|bpf_u_int32
 name|interface_id
 init|=
 literal|0xFFFFFFFF
-decl_stmt|;
-name|size_t
-name|pblock_len
 decl_stmt|;
 name|struct
 name|interface_description_block
@@ -2980,14 +2980,6 @@ operator|->
 name|timestamp_low
 expr_stmt|;
 block|}
-name|pblock_len
-operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|epbp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|found
 goto|;
@@ -3095,14 +3087,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* no time stamps */
-name|pblock_len
-operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|spbp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|found
 goto|;
@@ -3249,14 +3233,6 @@ operator|->
 name|timestamp_low
 expr_stmt|;
 block|}
-name|pblock_len
-operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pbp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|found
 goto|;
@@ -3681,7 +3657,7 @@ comment|/* 	 * Is the interface ID an interface we know? 	 */
 if|if
 condition|(
 name|interface_id
-operator|>
+operator|>=
 name|p
 operator|->
 name|sf

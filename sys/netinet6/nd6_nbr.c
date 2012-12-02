@@ -2713,22 +2713,13 @@ name|ND_NEIGHBOR_SOLICIT
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|.
-name|ro_rt
-condition|)
-block|{
-comment|/* we don't cache this route. */
-name|RTFREE
+comment|/* We don't cache this route. */
+name|RO_RTFREE
 argument_list|(
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 name|bad
 label|:
@@ -5012,22 +5003,13 @@ name|ND_NEIGHBOR_ADVERT
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|.
-name|ro_rt
-condition|)
-block|{
-comment|/* we don't cache this route. */
-name|RTFREE
+comment|/* We don't cache this route. */
+name|RO_RTFREE
 argument_list|(
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 name|bad
 label|:
@@ -5898,9 +5880,6 @@ operator|->
 name|dad_vnet
 argument_list|)
 expr_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -5928,12 +5907,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 comment|/* Sanity check */
 if|if
 condition|(
@@ -6275,11 +6248,6 @@ block|}
 block|}
 name|done
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;

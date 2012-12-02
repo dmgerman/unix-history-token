@@ -96,8 +96,6 @@ argument|TargetJITInfo&tji
 argument_list|,
 argument|RTDyldMemoryManager *MemMgr
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
 argument|bool AllocateGVsWithCode
 argument_list|)
 block|;
@@ -113,16 +111,18 @@ name|RTDyldMemoryManager
 operator|*
 name|MemMgr
 block|;
-comment|// FIXME: These may need moved to a separate 'jitstate' member like the
-comment|// non-MC JIT does for multithreading and such. Just keep them here for now.
-name|PassManager
-name|PM
+name|RuntimeDyld
+name|Dyld
+block|;
+comment|// FIXME: Add support for multiple modules
+name|bool
+name|isCompiled
 block|;
 name|Module
 operator|*
 name|M
 block|;
-comment|// FIXME: This really doesn't belong here.
+comment|// FIXME: Move these to a single container which manages JITed objects
 name|SmallVector
 operator|<
 name|char
@@ -134,9 +134,6 @@ block|;
 comment|// Working buffer into which we JIT.
 name|raw_svector_ostream
 name|OS
-block|;
-name|RuntimeDyld
-name|Dyld
 block|;
 name|public
 operator|:
@@ -212,6 +209,7 @@ comment|/// If AbortOnFailure is false and no function with the given name is
 comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
 comment|///
+name|virtual
 name|void
 operator|*
 name|getPointerToNamedFunction
@@ -221,6 +219,28 @@ argument_list|,
 argument|bool AbortOnFailure = true
 argument_list|)
 block|;
+comment|/// mapSectionAddress - map a section to its target address space value.
+comment|/// Map the address of a JIT section as returned from the memory manager
+comment|/// to the address in the target process as the running code will see it.
+comment|/// This is the address which will be used for relocation resolution.
+name|virtual
+name|void
+name|mapSectionAddress
+argument_list|(
+argument|void *LocalAddress
+argument_list|,
+argument|uint64_t TargetAddress
+argument_list|)
+block|{
+name|Dyld
+operator|.
+name|mapSectionAddress
+argument_list|(
+name|LocalAddress
+argument_list|,
+name|TargetAddress
+argument_list|)
+block|;   }
 comment|/// @}
 comment|/// @name (Private) Registration Interfaces
 comment|/// @{
@@ -244,15 +264,27 @@ argument|std::string *ErrorStr
 argument_list|,
 argument|JITMemoryManager *JMM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
 argument|bool GVsWithCode
 argument_list|,
 argument|TargetMachine *TM
 argument_list|)
 block|;
 comment|// @}
-block|}
+name|protected
+operator|:
+comment|/// emitObject -- Generate a JITed object in memory from the specified module
+comment|/// Currently, MCJIT only supports a single module and the module passed to
+comment|/// this function call is expected to be the contained module.  The module
+comment|/// is passed as a parameter here to prepare for multiple module support in
+comment|/// the future.
+name|void
+name|emitObject
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

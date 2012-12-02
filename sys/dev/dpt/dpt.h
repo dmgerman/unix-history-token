@@ -506,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|DPT_CACHE_WRITEBACK
-value|-2
+value|2
 end_define
 
 begin_define
@@ -4170,6 +4170,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 name|dpt_sg_t
 modifier|*
 name|sg_list
@@ -4667,6 +4671,10 @@ name|device_t
 name|dev
 decl_stmt|;
 name|struct
+name|mtx
+name|lock
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|io_res
@@ -4699,12 +4707,6 @@ name|drq_res
 decl_stmt|;
 name|int
 name|drq_rid
-decl_stmt|;
-name|bus_space_tag_t
-name|tag
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
 decl_stmt|;
 name|bus_dma_tag_t
 name|buffer_dmat
@@ -4837,9 +4839,6 @@ argument|dpt_softc
 argument_list|)
 name|links
 expr_stmt|;
-name|int
-name|unit
-decl_stmt|;
 name|int
 name|init_level
 decl_stmt|;
@@ -5415,25 +5414,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_extern
-extern|extern TAILQ_HEAD(dpt_softc_list
-operator|,
-extern|dpt_softc
-end_extern
-
-begin_expr_stmt
-unit|)
-name|dpt_softcs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|dpt_controllers_present
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -92,12 +98,12 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|ObjCPropertyRefExpr
-decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
+name|class
+name|AggValueSlot
+decl_stmt|;
 name|class
 name|CGBitFieldInfo
 decl_stmt|;
@@ -505,11 +511,7 @@ name|BitField
 block|,
 comment|// This is a bitfield l-value, use getBitfield*.
 name|ExtVectorElt
-block|,
 comment|// This is an extended vector subset, use getExtVectorComp
-name|PropertyRef
-comment|// This is an Objective-C property reference, use
-comment|// getPropertyRefExpr
 block|}
 name|LVType
 enum|;
@@ -541,12 +543,6 @@ name|CGBitFieldInfo
 modifier|*
 name|BitFieldInfo
 decl_stmt|;
-comment|// Obj-C property reference expression
-specifier|const
-name|ObjCPropertyRefExpr
-modifier|*
-name|PropertyRefExpr
-decl_stmt|;
 block|}
 union|;
 name|QualType
@@ -556,9 +552,9 @@ comment|// 'const' is unused here
 name|Qualifiers
 name|Quals
 decl_stmt|;
-comment|/// The alignment to use when accessing this lvalue.
-name|unsigned
-name|short
+comment|// The alignment to use when accessing this lvalue.  (For vector elements,
+comment|// this is the alignment of the whole vector.)
+name|int64_t
 name|Alignment
 decl_stmt|;
 comment|// objective-c's ivar
@@ -614,10 +610,8 @@ argument_list|,
 name|Qualifiers
 name|Quals
 argument_list|,
-name|unsigned
+name|CharUnits
 name|Alignment
-operator|=
-literal|0
 argument_list|,
 name|llvm
 operator|::
@@ -645,6 +639,9 @@ operator|->
 name|Alignment
 operator|=
 name|Alignment
+operator|.
+name|getQuantity
+argument_list|()
 expr_stmt|;
 name|assert
 argument_list|(
@@ -653,6 +650,9 @@ operator|->
 name|Alignment
 operator|==
 name|Alignment
+operator|.
+name|getQuantity
+argument_list|()
 operator|&&
 literal|"Alignment exceeds allowed max!"
 argument_list|)
@@ -739,17 +739,6 @@ return|return
 name|LVType
 operator|==
 name|ExtVectorElt
-return|;
-block|}
-name|bool
-name|isPropertyRef
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LVType
-operator|==
-name|PropertyRef
 return|;
 block|}
 name|bool
@@ -1047,14 +1036,34 @@ name|getAddressSpace
 argument_list|()
 return|;
 block|}
-name|unsigned
+name|CharUnits
 name|getAlignment
 argument_list|()
 specifier|const
 block|{
 return|return
+name|CharUnits
+operator|::
+name|fromQuantity
+argument_list|(
 name|Alignment
+argument_list|)
 return|;
+block|}
+name|void
+name|setAlignment
+parameter_list|(
+name|CharUnits
+name|A
+parameter_list|)
+block|{
+name|Alignment
+operator|=
+name|A
+operator|.
+name|getQuantity
+argument_list|()
+expr_stmt|;
 block|}
 comment|// simple lvalue
 name|llvm
@@ -1207,42 +1216,6 @@ operator|*
 name|BitFieldInfo
 return|;
 block|}
-comment|// property ref lvalue
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getPropertyRefBaseAddr
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isPropertyRef
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|V
-return|;
-block|}
-specifier|const
-name|ObjCPropertyRefExpr
-operator|*
-name|getPropertyRefExpr
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isPropertyRef
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|PropertyRefExpr
-return|;
-block|}
 specifier|static
 name|LValue
 name|MakeAddr
@@ -1256,7 +1229,7 @@ argument_list|,
 name|QualType
 name|type
 argument_list|,
-name|unsigned
+name|CharUnits
 name|alignment
 argument_list|,
 name|ASTContext
@@ -1342,6 +1315,9 @@ name|Idx
 argument_list|,
 name|QualType
 name|type
+argument_list|,
+name|CharUnits
+name|Alignment
 argument_list|)
 block|{
 name|LValue
@@ -1375,6 +1351,8 @@ name|type
 operator|.
 name|getQualifiers
 argument_list|()
+argument_list|,
+name|Alignment
 argument_list|)
 expr_stmt|;
 return|return
@@ -1399,6 +1377,9 @@ name|Elts
 argument_list|,
 name|QualType
 name|type
+argument_list|,
+name|CharUnits
+name|Alignment
 argument_list|)
 block|{
 name|LValue
@@ -1432,6 +1413,8 @@ name|type
 operator|.
 name|getQualifiers
 argument_list|()
+argument_list|,
+name|Alignment
 argument_list|)
 expr_stmt|;
 return|return
@@ -1461,6 +1444,9 @@ name|Info
 argument_list|,
 name|QualType
 name|type
+argument_list|,
+name|CharUnits
+name|Alignment
 argument_list|)
 block|{
 name|LValue
@@ -1495,65 +1481,31 @@ name|type
 operator|.
 name|getQualifiers
 argument_list|()
+argument_list|,
+name|Alignment
 argument_list|)
 expr_stmt|;
 return|return
 name|R
 return|;
 block|}
-comment|// FIXME: It is probably bad that we aren't emitting the target when we build
-comment|// the lvalue. However, this complicates the code a bit, and I haven't figured
-comment|// out how to make it go wrong yet.
-specifier|static
-name|LValue
-name|MakePropertyRef
-argument_list|(
+name|RValue
+name|asAggregateRValue
+argument_list|()
 specifier|const
-name|ObjCPropertyRefExpr
-operator|*
-name|E
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Base
-argument_list|)
 block|{
-name|LValue
-name|R
-decl_stmt|;
-name|R
-operator|.
-name|LVType
-operator|=
-name|PropertyRef
-expr_stmt|;
-name|R
-operator|.
-name|V
-operator|=
-name|Base
-expr_stmt|;
-name|R
-operator|.
-name|PropertyRefExpr
-operator|=
-name|E
-expr_stmt|;
-name|R
-operator|.
-name|Initialize
+comment|// FIMXE: Alignment
+return|return
+name|RValue
+operator|::
+name|getAggregate
 argument_list|(
-name|QualType
+name|getAddress
 argument_list|()
 argument_list|,
-name|Qualifiers
+name|isVolatileQualified
 argument_list|()
 argument_list|)
-expr_stmt|;
-return|return
-name|R
 return|;
 block|}
 block|}
@@ -1572,6 +1524,10 @@ expr_stmt|;
 comment|// Qualifiers
 name|Qualifiers
 name|Quals
+decl_stmt|;
+name|unsigned
+name|short
+name|Alignment
 decl_stmt|;
 comment|/// DestructedFlag - This is set to true if some external code is
 comment|/// responsible for setting up a destructor for the slot.  Otherwise
@@ -1655,42 +1611,23 @@ name|AggValueSlot
 name|ignored
 parameter_list|()
 block|{
-name|AggValueSlot
-name|AV
-decl_stmt|;
-name|AV
-operator|.
-name|Addr
-operator|=
+return|return
+name|forAddr
+argument_list|(
 literal|0
-expr_stmt|;
-name|AV
-operator|.
-name|Quals
-operator|=
+argument_list|,
+name|CharUnits
+argument_list|()
+argument_list|,
 name|Qualifiers
 argument_list|()
-expr_stmt|;
-name|AV
-operator|.
-name|DestructedFlag
-operator|=
-name|AV
-operator|.
-name|ObjCGCFlag
-operator|=
-name|AV
-operator|.
-name|ZeroedFlag
-operator|=
-name|AV
-operator|.
-name|AliasedFlag
-operator|=
-name|false
-expr_stmt|;
-return|return
-name|AV
+argument_list|,
+name|IsNotDestructed
+argument_list|,
+name|DoesNotNeedGCBarriers
+argument_list|,
+name|IsNotAliased
+argument_list|)
 return|;
 block|}
 comment|/// forAddr - Make a slot for an aggregate value.
@@ -1712,6 +1649,9 @@ operator|::
 name|Value
 operator|*
 name|addr
+argument_list|,
+name|CharUnits
+name|align
 argument_list|,
 name|Qualifiers
 name|quals
@@ -1739,6 +1679,15 @@ operator|.
 name|Addr
 operator|=
 name|addr
+expr_stmt|;
+name|AV
+operator|.
+name|Alignment
+operator|=
+name|align
+operator|.
+name|getQuantity
+argument_list|()
 expr_stmt|;
 name|AV
 operator|.
@@ -1778,7 +1727,9 @@ specifier|static
 name|AggValueSlot
 name|forLValue
 parameter_list|(
+specifier|const
 name|LValue
+modifier|&
 name|LV
 parameter_list|,
 name|IsDestructed_t
@@ -1802,6 +1753,11 @@ argument_list|(
 name|LV
 operator|.
 name|getAddress
+argument_list|()
+argument_list|,
+name|LV
+operator|.
+name|getAlignment
 argument_list|()
 argument_list|,
 name|LV
@@ -1915,6 +1871,20 @@ operator|==
 literal|0
 return|;
 block|}
+name|CharUnits
+name|getAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CharUnits
+operator|::
+name|fromQuantity
+argument_list|(
+name|Alignment
+argument_list|)
+return|;
+block|}
 name|IsAliased_t
 name|isPotentiallyAliased
 argument_list|()
@@ -1927,6 +1897,7 @@ name|AliasedFlag
 argument_list|)
 return|;
 block|}
+comment|// FIXME: Alignment?
 name|RValue
 name|asRValue
 argument_list|()

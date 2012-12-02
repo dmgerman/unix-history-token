@@ -85,6 +85,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -100,6 +106,9 @@ name|MCInstPrinter
 decl_stmt|;
 name|class
 name|MCExpr
+decl_stmt|;
+name|class
+name|MCInst
 decl_stmt|;
 comment|/// MCOperand - Instances of this class represent operands of the MCInst class.
 comment|/// This is a simple discriminated union.
@@ -122,7 +131,10 @@ name|kFPImmediate
 block|,
 comment|///< Floating-point immediate operand.
 name|kExpr
+block|,
 comment|///< Relocatable immediate operand.
+name|kInst
+comment|///< Sub-instruction operand.
 block|}
 enum|;
 name|unsigned
@@ -144,6 +156,11 @@ specifier|const
 name|MCExpr
 modifier|*
 name|ExprVal
+decl_stmt|;
+specifier|const
+name|MCInst
+modifier|*
+name|InstVal
 decl_stmt|;
 block|}
 union|;
@@ -215,6 +232,17 @@ return|return
 name|Kind
 operator|==
 name|kExpr
+return|;
+block|}
+name|bool
+name|isInst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|kInst
 return|;
 block|}
 comment|/// getReg - Returns the register number.
@@ -371,6 +399,47 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+specifier|const
+name|MCInst
+operator|*
+name|getInst
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isInst
+argument_list|()
+operator|&&
+literal|"This is not a sub-instruction"
+argument_list|)
+block|;
+return|return
+name|InstVal
+return|;
+block|}
+name|void
+name|setInst
+parameter_list|(
+specifier|const
+name|MCInst
+modifier|*
+name|Val
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isInst
+argument_list|()
+operator|&&
+literal|"This is not a sub-instruction"
+argument_list|)
+expr_stmt|;
+name|InstVal
+operator|=
+name|Val
+expr_stmt|;
+block|}
 specifier|static
 name|MCOperand
 name|CreateReg
@@ -481,6 +550,35 @@ return|return
 name|Op
 return|;
 block|}
+specifier|static
+name|MCOperand
+name|CreateInst
+parameter_list|(
+specifier|const
+name|MCInst
+modifier|*
+name|Val
+parameter_list|)
+block|{
+name|MCOperand
+name|Op
+decl_stmt|;
+name|Op
+operator|.
+name|Kind
+operator|=
+name|kInst
+expr_stmt|;
+name|Op
+operator|.
+name|InstVal
+operator|=
+name|Val
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
 name|void
 name|print
 argument_list|(
@@ -502,6 +600,23 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|MCOperand
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
 comment|/// MCInst - Instances of this class represent a single low-level machine
 comment|/// instruction.
 name|class
@@ -509,6 +624,9 @@ name|MCInst
 block|{
 name|unsigned
 name|Opcode
+decl_stmt|;
+name|SMLoc
+name|Loc
 decl_stmt|;
 name|SmallVector
 operator|<
@@ -545,6 +663,27 @@ specifier|const
 block|{
 return|return
 name|Opcode
+return|;
+block|}
+name|void
+name|setLoc
+parameter_list|(
+name|SMLoc
+name|loc
+parameter_list|)
+block|{
+name|Loc
+operator|=
+name|loc
+expr_stmt|;
+block|}
+name|SMLoc
+name|getLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
 return|;
 block|}
 specifier|const

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -223,11 +229,13 @@ name|show_patrol
 parameter_list|(
 name|int
 name|ac
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -272,6 +280,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -794,11 +804,13 @@ name|start_patrol
 parameter_list|(
 name|int
 name|ac
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -811,6 +823,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -909,11 +923,13 @@ name|stop_patrol
 parameter_list|(
 name|int
 name|ac
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -926,6 +942,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1295,6 +1313,8 @@ operator|=
 name|mfi_open
 argument_list|(
 name|mfi_unit
+argument_list|,
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if

@@ -86,8 +86,6 @@ operator|:
 name|unsigned
 name|Act
 block|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|llvm
@@ -95,6 +93,12 @@ operator|::
 name|Module
 operator|>
 name|TheModule
+block|;
+name|llvm
+operator|::
+name|Module
+operator|*
+name|LinkModule
 block|;
 name|llvm
 operator|::
@@ -150,6 +154,19 @@ operator|~
 name|CodeGenAction
 argument_list|()
 block|;
+comment|/// setLinkModule - Set the link module to be used by this action.  If a link
+comment|/// module is not provided, and CodeGenOptions::LinkBitcodeFile is non-empty,
+comment|/// the action will load it from the specified file.
+name|void
+name|setLinkModule
+argument_list|(
+argument|llvm::Module *Mod
+argument_list|)
+block|{
+name|LinkModule
+operator|=
+name|Mod
+block|; }
 comment|/// takeModule - Take the generated LLVM module, for use after the action has
 comment|/// been run. The result may be null on failure.
 name|llvm
@@ -178,6 +195,11 @@ range|:
 name|public
 name|CodeGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmitAssemblyAction
@@ -198,6 +220,11 @@ range|:
 name|public
 name|CodeGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmitBCAction
@@ -218,6 +245,11 @@ range|:
 name|public
 name|CodeGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmitLLVMAction
@@ -238,6 +270,11 @@ range|:
 name|public
 name|CodeGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmitLLVMOnlyAction
@@ -258,6 +295,11 @@ range|:
 name|public
 name|CodeGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmitCodeGenOnlyAction
@@ -278,6 +320,11 @@ range|:
 name|public
 name|CodeGenAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmitObjAction

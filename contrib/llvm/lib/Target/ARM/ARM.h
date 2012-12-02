@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARM.h - Top-level interface for ARM representation---- --*- C++ -*-===//
+comment|//===-- ARM.h - Top-level interface for ARM representation ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,19 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
 end_include
 
 begin_decl_stmt

@@ -24,11 +24,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_DEBUG_OUTPUT    - This switch enables all the debug facilities of the  *                        ACPI subsystem.  This includes the DEBUG_PRINT output  *                        statements.  When disabled, all DEBUG_PRINT  *                        statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                        at the application level.  *  */
+comment|/*  * ACPI_DEBUG_OUTPUT    - This switch enables all the debug facilities of the  *                        ACPI subsystem. This includes the DEBUG_PRINT output  *                        statements. When disabled, all DEBUG_PRINT  *                        statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                        at the application level.  *  */
 end_comment
 
 begin_comment
-comment|/*  * OS name, used for the _OS object.  The _OS object is essentially obsolete,  * but there is a large base of ASL/AML code in existing machines that check  * for the string below.  The use of this string usually guarantees that  * the ASL will execute down the most tested code path.  Also, there is some  * code that will not execute the _OSI method unless _OS matches the string  * below.  Therefore, change this string at your own risk.  */
+comment|/*  * OS name, used for the _OS object. The _OS object is essentially obsolete,  * but there is a large base of ASL/AML code in existing machines that check  * for the string below. The use of this string usually guarantees that  * the ASL will execute down the most tested code path. Also, there is some  * code that will not execute the _OSI method unless _OS matches the string  * below. Therefore, change this string at your own risk.  */
 end_comment
 
 begin_define
@@ -383,7 +383,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* Array sizes.  Used for range checking also */
+comment|/* Array sizes. Used for range checking also */
 end_comment
 
 begin_define

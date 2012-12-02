@@ -130,9 +130,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -150,6 +147,9 @@ block|;
 name|X86ELFWriterInfo
 name|ELFWriterInfo
 block|;
+name|InstrItineraryData
+name|InstrItins
+block|;
 name|public
 operator|:
 name|X86TargetMachine
@@ -162,9 +162,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|,
 argument|bool is64Bit
 argument_list|)
@@ -282,52 +286,41 @@ operator|:
 literal|0
 return|;
 block|}
+name|virtual
+specifier|const
+name|InstrItineraryData
+operator|*
+name|getInstrItineraryData
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|InstrItins
+return|;
+block|}
 comment|// Set up the pass pipeline.
 name|virtual
-name|bool
-name|addInstSelector
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreRegAlloc
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPostRegAlloc
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreEmitPass
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|;
 name|virtual
 name|bool
 name|addCodeEmitter
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|JITCodeEmitter&JCE
+name|JITCodeEmitter
+operator|&
+name|JCE
 argument_list|)
 block|; }
 decl_stmt|;
@@ -339,6 +332,11 @@ range|:
 name|public
 name|X86TargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 specifier|const
 name|TargetData
 name|DataLayout
@@ -368,9 +366,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|virtual
@@ -446,6 +448,11 @@ operator|:
 name|public
 name|X86TargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 specifier|const
 name|TargetData
 name|DataLayout
@@ -475,9 +482,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|virtual

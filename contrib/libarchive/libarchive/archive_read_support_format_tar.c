@@ -2729,8 +2729,12 @@ operator|->
 name|data
 operator|)
 expr_stmt|;
-name|skip_hole
-label|:
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 comment|/* Remove exhausted entries from sparse list. */
 while|while
 condition|(
@@ -2915,11 +2919,14 @@ name|entry_bytes_remaining
 condition|)
 name|bytes_read
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|tar
 operator|->
 name|entry_bytes_remaining
 expr_stmt|;
-comment|/* Don't read more than is available in the 	 * current sparse block. */
+comment|/* Don't read more than is available in the 		 * current sparse block. */
 if|if
 condition|(
 name|tar
@@ -2932,6 +2939,9 @@ name|bytes_read
 condition|)
 name|bytes_read
 operator|=
+operator|(
+name|ssize_t
+operator|)
 name|tar
 operator|->
 name|sparse_list
@@ -2982,20 +2992,20 @@ name|bytes_read
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|tar
 operator|->
 name|sparse_list
 operator|->
 name|hole
 condition|)
-goto|goto
-name|skip_hole
-goto|;
 return|return
 operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+comment|/* Current is hole data and skip this. */
+block|}
 block|}
 end_function
 
@@ -4027,6 +4037,9 @@ expr_stmt|;
 comment|/* 	 * Test the checksum.  Note that POSIX specifies _unsigned_ 	 * bytes for this calculation. 	 */
 name|sum
 operator|=
+operator|(
+name|int
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -4317,6 +4330,9 @@ name|h
 expr_stmt|;
 name|size
 operator|=
+operator|(
+name|size_t
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -5266,6 +5282,9 @@ name|archive_string_ensure
 argument_list|(
 name|as
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 operator|+
 literal|1
@@ -5303,6 +5322,10 @@ comment|/* Read the body into the string. */
 operator|*
 name|unconsumed
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|(
 name|size
 operator|+
@@ -5311,6 +5334,7 @@ operator|)
 operator|&
 operator|~
 literal|511
+argument_list|)
 expr_stmt|;
 name|src
 operator|=
@@ -5350,6 +5374,9 @@ name|s
 argument_list|,
 name|src
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -5366,6 +5393,9 @@ name|as
 operator|->
 name|length
 operator|=
+operator|(
+name|size_t
+operator|)
 name|size
 expr_stmt|;
 return|return
@@ -5476,6 +5506,9 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|mode_t
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -6437,6 +6470,9 @@ name|__archive_read_ahead
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|,
 name|NULL
@@ -6466,12 +6502,19 @@ name|entry
 argument_list|,
 name|data
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
 operator|*
 name|unconsumed
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|(
 name|size
 operator|+
@@ -6480,6 +6523,7 @@ operator|)
 operator|&
 operator|~
 literal|511
+argument_list|)
 expr_stmt|;
 name|tar_flush_unconsumed
 argument_list|(
@@ -7104,6 +7148,9 @@ name|archive_entry_set_rdevmajor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -7123,6 +7170,9 @@ name|archive_entry_set_rdevminor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -8169,6 +8219,22 @@ name|ARCHIVE_OK
 decl_stmt|,
 name|r
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+if|if
+condition|(
+name|value
+operator|==
+name|NULL
+condition|)
+name|value
+operator|=
+literal|""
+expr_stmt|;
+comment|/* Disable compiler warning; do not pass 				 * NULL pointer to strlen().  */
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|key
@@ -8469,6 +8535,9 @@ name|tar
 operator|->
 name|sparse_gnu_major
 operator|=
+operator|(
+name|int
+operator|)
 name|tar_atol10
 argument_list|(
 name|value
@@ -8502,6 +8571,9 @@ name|tar
 operator|->
 name|sparse_gnu_minor
 operator|=
+operator|(
+name|int
+operator|)
 name|tar_atol10
 argument_list|(
 name|value
@@ -8910,6 +8982,9 @@ name|archive_entry_set_rdevmajor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol10
 argument_list|(
 name|value
@@ -8939,6 +9014,9 @@ name|archive_entry_set_rdevminor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol10
 argument_list|(
 name|value
@@ -8989,6 +9067,9 @@ name|archive_entry_set_dev
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol10
 argument_list|(
 name|value
@@ -9047,6 +9128,9 @@ name|archive_entry_set_nlink
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|tar_atol10
 argument_list|(
 name|value
@@ -10070,6 +10154,9 @@ name|archive_entry_set_rdevmajor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -10089,6 +10176,9 @@ name|archive_entry_set_rdevminor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|tar_atol
 argument_list|(
 name|header
@@ -11089,6 +11179,9 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 name|tar_min
 argument_list|(
 operator|*
@@ -11278,6 +11371,9 @@ expr_stmt|;
 comment|/* Parse entries. */
 name|entries
 operator|=
+operator|(
+name|int
+operator|)
 name|gnu_sparse_10_atol
 argument_list|(
 name|a
@@ -11393,11 +11489,16 @@ argument_list|)
 expr_stmt|;
 name|bytes_read
 operator|=
+call|(
+name|ssize_t
+call|)
+argument_list|(
 name|tar
 operator|->
 name|entry_bytes_remaining
 operator|-
 name|remaining
+argument_list|)
 expr_stmt|;
 name|to_skip
 operator|=
@@ -11424,9 +11525,14 @@ operator|)
 return|;
 return|return
 operator|(
+call|(
+name|ssize_t
+call|)
+argument_list|(
 name|bytes_read
 operator|+
 name|to_skip
+argument_list|)
 operator|)
 return|;
 block|}

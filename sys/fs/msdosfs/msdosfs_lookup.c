@@ -263,7 +263,7 @@ name|buf
 modifier|*
 name|bp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|direntry
@@ -2195,8 +2195,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NOCRED
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return

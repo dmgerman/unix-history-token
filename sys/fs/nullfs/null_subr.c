@@ -153,24 +153,6 @@ specifier|static
 name|struct
 name|vnode
 modifier|*
-name|null_hashget
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|vnode
-modifier|*
 name|null_hashins
 parameter_list|(
 name|struct
@@ -278,7 +260,6 @@ comment|/*  * Return a VREF'ed alias for lower vnode if already exists, else 0. 
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|vnode
 modifier|*
@@ -698,8 +679,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * The insmntque1() call below requires the exclusive lock on 	 * the nullfs vnode. 	 */
-name|ASSERT_VOP_ELOCKED
+name|ASSERT_VOP_LOCKED
 argument_list|(
 name|lowervp
 argument_list|,
@@ -715,13 +695,13 @@ operator|>=
 literal|1
 argument_list|,
 operator|(
-literal|"Unreferenced vnode %p\n"
+literal|"Unreferenced vnode %p"
 operator|,
 name|lowervp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Lookup the hash firstly */
+comment|/* Lookup the hash firstly. */
 operator|*
 name|vpp
 operator|=
@@ -751,7 +731,52 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * We do not serialize vnode creation, instead we will check for 	 * duplicates later, when adding new vnode to hash. 	 * Note that duplicate can only appear in hash if the lowervp is 	 * locked LK_SHARED. 	 * 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
+comment|/* 	 * The insmntque1() call below requires the exclusive lock on 	 * the nullfs vnode.  Upgrade the lock now if hash failed to 	 * provide ready to use vnode. 	 */
+if|if
+condition|(
+name|VOP_ISLOCKED
+argument_list|(
+name|lowervp
+argument_list|)
+operator|!=
+name|LK_EXCLUSIVE
+condition|)
+block|{
+name|vn_lock
+argument_list|(
+name|lowervp
+argument_list|,
+name|LK_UPGRADE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|lowervp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|vput
+argument_list|(
+name|lowervp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+block|}
+comment|/* 	 * We do not serialize vnode creation, instead we will check for 	 * duplicates later, when adding new vnode to hash. 	 * Note that duplicate can only appear in hash if the lowervp is 	 * locked LK_SHARED. 	 */
 name|xp
 operator|=
 name|malloc
@@ -838,19 +863,6 @@ operator|=
 name|lowervp
 operator|->
 name|v_vnlock
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_vnlock
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"null_nodeget: Passed a NULL vnlock.\n"
-argument_list|)
 expr_stmt|;
 name|error
 operator|=

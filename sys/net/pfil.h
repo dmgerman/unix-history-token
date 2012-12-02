@@ -186,6 +186,17 @@ begin_comment
 comment|/* key is ifnet pointer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PFIL_FLAG_PRIVATE_LOCK
+value|0x01
+end_define
+
+begin_comment
+comment|/* Personal lock instead of global */
+end_comment
+
 begin_struct
 struct|struct
 name|pfil_head
@@ -220,7 +231,17 @@ else|#
 directive|else
 name|struct
 name|rmlock
+modifier|*
+name|ph_plock
+decl_stmt|;
+comment|/* Pointer to the used lock */
+name|struct
+name|rmlock
 name|ph_lock
+decl_stmt|;
+comment|/* Private lock storage */
+name|int
+name|flags
 decl_stmt|;
 endif|#
 directive|endif
@@ -363,6 +384,95 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rm_priotracker
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* Do not require including rmlock header */
+end_comment
+
+begin_function_decl
+name|int
+name|pfil_try_rlock
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|,
+name|struct
+name|rm_priotracker
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pfil_rlock
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|,
+name|struct
+name|rm_priotracker
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pfil_runlock
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|,
+name|struct
+name|rm_priotracker
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pfil_wlock
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pfil_wunlock
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pfil_wowned
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+name|ph
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|pfil_head_register
@@ -411,12 +521,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|PFIL_LOCK_INIT_REAL
+parameter_list|(
+name|l
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|rm_init_flags(l, "PFil " t " rmlock", RM_RECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_LOCK_DESTROY_REAL
+parameter_list|(
+name|l
+parameter_list|)
+define|\
+value|rm_destroy(l)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PFIL_LOCK_INIT
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|rm_init_flags(&(p)->ph_lock, "PFil hook read/write mutex", RM_RECURSE)
+value|do {			\ 	if ((p)->flags& PFIL_FLAG_PRIVATE_LOCK) {	\ 		PFIL_LOCK_INIT_REAL(&(p)->ph_lock, "private");	\ 		(p)->ph_plock =&(p)->ph_lock;		\ 	} else						\ 		(p)->ph_plock =&V_pfil_lock;		\ } while (0)
 end_define
 
 begin_define
@@ -426,7 +559,19 @@ name|PFIL_LOCK_DESTROY
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_destroy(&(p)->ph_lock)
+value|do {			\ 	if ((p)->flags& PFIL_FLAG_PRIVATE_LOCK)	\ 		PFIL_LOCK_DESTROY_REAL((p)->ph_plock);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_TRY_RLOCK
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|rm_try_rlock((p)->ph_plock, (t))
 end_define
 
 begin_define
@@ -438,7 +583,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|rm_rlock(&(p)->ph_lock, (t))
+value|rm_rlock((p)->ph_plock, (t))
 end_define
 
 begin_define
@@ -448,7 +593,7 @@ name|PFIL_WLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_wlock(&(p)->ph_lock)
+value|rm_wlock((p)->ph_plock)
 end_define
 
 begin_define
@@ -460,7 +605,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|rm_runlock(&(p)->ph_lock, (t))
+value|rm_runlock((p)->ph_plock, (t))
 end_define
 
 begin_define
@@ -470,7 +615,17 @@ name|PFIL_WUNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rm_wunlock(&(p)->ph_lock)
+value|rm_wunlock((p)->ph_plock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_WOWNED
+parameter_list|(
+name|p
+parameter_list|)
+value|rm_wowned((p)->ph_plock)
 end_define
 
 begin_define

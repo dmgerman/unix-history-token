@@ -1071,6 +1071,12 @@ name|DEFAULT_POSITIVE_LIFETIME
 expr_stmt|;
 name|positive_params
 operator|.
+name|confidence_threshold
+operator|=
+name|DEFAULT_POSITIVE_CONF_THRESH
+expr_stmt|;
+name|positive_params
+operator|.
 name|policy
 operator|=
 name|CPT_LRU
@@ -1111,6 +1117,12 @@ operator|.
 name|tv_sec
 operator|=
 name|DEFAULT_NEGATIVE_LIFETIME
+expr_stmt|;
+name|negative_params
+operator|.
+name|confidence_threshold
+operator|=
+name|DEFAULT_NEGATIVE_CONF_THRESH
 expr_stmt|;
 name|negative_params
 operator|.

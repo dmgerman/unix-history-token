@@ -39,5 +39,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SPI_CHIP_SELECT_HIGH
+value|0x1
+end_define
+
+begin_comment
+comment|/* Chip select high (else low) */
+end_comment
+
 end_unit
 

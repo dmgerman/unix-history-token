@@ -90,7 +90,7 @@ block|{
 name|class
 name|Preprocessor
 decl_stmt|;
-comment|/// MacroInfo - Each identifier that is #define'd has an instance of this class
+comment|/// MacroInfo - Each identifier that is \#define'd has an instance of this class
 comment|/// associated with it, used to implement macro expansion.
 name|class
 name|MacroInfo
@@ -107,7 +107,7 @@ name|EndLocation
 decl_stmt|;
 comment|/// Arguments - The list of arguments for a function-like macro.  This can be
 comment|/// empty, for, e.g. "#define X()".  In a C99-style variadic macro, this
-comment|/// includes the __VA_ARGS__ identifier on the list.
+comment|/// includes the \c __VA_ARGS__ identifier on the list.
 name|IdentifierInfo
 modifier|*
 modifier|*
@@ -116,14 +116,14 @@ decl_stmt|;
 name|unsigned
 name|NumArguments
 decl_stmt|;
-comment|/// \brief The location at which this macro was exported from its module.
+comment|/// \brief The location at which this macro was either explicitly exported
+comment|/// from its module or marked as private.
 comment|///
-comment|/// If invalid, this macro has not been explicitly exported.
+comment|/// If invalid, this macro has not been explicitly given any visibility.
 name|SourceLocation
-name|ExportLocation
+name|VisibilityLocation
 decl_stmt|;
-comment|/// ReplacementTokens - This is the list of tokens that the macro is defined
-comment|/// to.
+comment|/// \brief This is the list of tokens that the macro is defined to.
 name|SmallVector
 operator|<
 name|Token
@@ -143,7 +143,7 @@ name|IsDefinitionLengthCached
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsFunctionLike - True if this macro is a function-like macro, false if it
+comment|/// \brief True if this macro is a function-like macro, false if it
 comment|/// is an object-like macro.
 name|bool
 name|IsFunctionLike
@@ -173,7 +173,7 @@ name|IsBuiltinMacro
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsFromAST - True if this macro was loaded from an AST file.
+comment|/// \brief True if this macro was loaded from an AST file.
 name|bool
 name|IsFromAST
 range|:
@@ -190,8 +190,8 @@ label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// State that changes as the macro is used.
 comment|/// IsDisabled - True if we have started an expansion of this macro already.
-comment|/// This disbles recursive expansion, which would be quite bad for things like
-comment|/// #define A A.
+comment|/// This disables recursive expansion, which would be quite bad for things
+comment|/// like \#define A A.
 name|bool
 name|IsDisabled
 range|:
@@ -215,6 +215,12 @@ decl_stmt|;
 comment|/// \brief Must warn if the macro is unused at the end of translation unit.
 name|bool
 name|IsWarnIfUnused
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether the macro has public (when described in a module).
+name|bool
+name|IsPublic
 range|:
 literal|1
 decl_stmt|;
@@ -934,39 +940,43 @@ expr_stmt|;
 block|}
 comment|/// \brief Set the export location for this macro.
 name|void
-name|setExportLocation
+name|setVisibility
 parameter_list|(
+name|bool
+name|Public
+parameter_list|,
 name|SourceLocation
-name|ExportLoc
+name|Loc
 parameter_list|)
 block|{
-name|ExportLocation
+name|VisibilityLocation
 operator|=
-name|ExportLoc
+name|Loc
+expr_stmt|;
+name|IsPublic
+operator|=
+name|Public
 expr_stmt|;
 block|}
-comment|/// \brief Determine whether this macro was explicitly exported from its
+comment|/// \brief Determine whether this macro is part of the public API of its
 comment|/// module.
 name|bool
-name|isExported
+name|isPublic
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ExportLocation
-operator|.
-name|isValid
-argument_list|()
+name|IsPublic
 return|;
 block|}
-comment|/// \brief Determine the location where this macro was explicitly exported
-comment|/// from its module.
+comment|/// \brief Determine the location where this macro was explicitly made
+comment|/// public or private within its module.
 name|SourceLocation
-name|getExportLocation
+name|getVisibilityLocation
 parameter_list|()
 block|{
 return|return
-name|ExportLocation
+name|VisibilityLocation
 return|;
 block|}
 name|private

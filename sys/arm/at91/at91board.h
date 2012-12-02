@@ -32,19 +32,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * These routines are expected to be provided by the board files.  */
-end_comment
-
-begin_function_decl
-name|long
-name|board_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

@@ -162,7 +162,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * Note about bitfields: The UINT8 type is used for bitfields in ACPI tables.  * This is the only type that is even remotely portable. Anything else is not  * portable, so do not use any other bitfield types.  */
+comment|/*  * Note: C bitfields are not used for this reason:  *  * "Bitfields are great and easy to read, but unfortunately the C language  * does not specify the layout of bitfields in memory, which means they are  * essentially useless for dealing with packed data in on-disk formats or  * binary wire protocols." (Or ACPI tables and buffers.) "If you ask me,  * this decision was a design error in C. Ritchie could have picked an order  * and stuck with it." Norman Ramsey.  * See http://stackoverflow.com/a/1053662/41661  */
 end_comment
 
 begin_comment
@@ -246,7 +246,7 @@ comment|/* Length of the boot error region */
 name|UINT64
 name|Address
 decl_stmt|;
-comment|/* Physical addresss of the error region */
+comment|/* Physical address of the error region */
 block|}
 name|ACPI_TABLE_BERT
 typedef|;
@@ -1403,10 +1403,20 @@ name|ACPI_HEST_NOTIFY_NMI
 init|=
 literal|4
 block|,
-name|ACPI_HEST_NOTIFY_RESERVED
+name|ACPI_HEST_NOTIFY_CMCI
 init|=
 literal|5
-comment|/* 5 and greater are reserved */
+block|,
+comment|/* ACPI 5.0 */
+name|ACPI_HEST_NOTIFY_MCE
+init|=
+literal|6
+block|,
+comment|/* ACPI 5.0 */
+name|ACPI_HEST_NOTIFY_RESERVED
+init|=
+literal|7
+comment|/* 7 and greater are reserved */
 block|}
 enum|;
 end_enum

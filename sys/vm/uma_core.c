@@ -479,6 +479,7 @@ begin_struct
 struct|struct
 name|uma_zctor_args
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1320,24 +1321,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|cnt
-operator|.
-name|v_free_count
-operator|<
-name|cnt
-operator|.
-name|v_free_min
-condition|)
 name|bucketdisable
 operator|=
-literal|1
-expr_stmt|;
-else|else
-name|bucketdisable
-operator|=
-literal|0
+name|vm_page_count_min
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4581,6 +4568,21 @@ name|keg
 operator|->
 name|uk_flags
 operator|&
+name|UMA_ZONE_OFFPAGE
+condition|)
+block|{
+name|shsize
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|keg
+operator|->
+name|uk_flags
+operator|&
 name|UMA_ZONE_REFCNT
 condition|)
 block|{
@@ -5063,7 +5065,9 @@ operator|<=
 name|uma_max_ipers
 argument_list|,
 operator|(
-literal|"keg_small_init: keg->uk_ipers too high(%d) increase max_ipers"
+literal|"%s: keg->uk_ipers too high(%d) increase max_ipers"
+operator|,
+name|__func__
 operator|,
 name|keg
 operator|->
@@ -5688,7 +5692,7 @@ directive|ifdef
 name|UMA_DEBUG
 name|printf
 argument_list|(
-literal|"UMA: %s(%p) size %d(%d) flags %d ipers %d ppera %d out %d free %d\n"
+literal|"UMA: %s(%p) size %d(%d) flags %#x ipers %d ppera %d out %d free %d\n"
 argument_list|,
 name|zone
 operator|->
@@ -7491,6 +7495,7 @@ begin_function
 name|uma_zone_t
 name|uma_zcreate
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -8972,6 +8977,11 @@ operator|&
 name|M_NOWAIT
 condition|)
 break|break;
+name|zone
+operator|->
+name|uz_sleeps
+operator|++
+expr_stmt|;
 name|msleep
 argument_list|(
 name|keg
@@ -12837,7 +12847,7 @@ name|slab
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"keg: %s(%p) size %d(%d) flags %d ipers %d ppera %d "
+literal|"keg: %s(%p) size %d(%d) flags %#x ipers %d ppera %d "
 literal|"out %d free %d limit %d\n"
 argument_list|,
 name|keg
@@ -12975,7 +12985,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"zone: %s(%p) size %d flags %d\n"
+literal|"zone: %s(%p) size %d flags %#x\n"
 argument_list|,
 name|zone
 operator|->
@@ -14060,6 +14070,11 @@ argument_list|,
 name|sleeps
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_pager_quit
+condition|)
+return|return;
 block|}
 block|}
 block|}

@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/FrontendAction.h"
+file|"clang/Sema/CodeCompleteOptions.h"
 end_include
 
 begin_include
@@ -83,6 +83,9 @@ block|{
 enum|enum
 name|ActionKind
 block|{
+name|ASTDeclList
+block|,
+comment|///< Parse ASTs and list Decl nodes.
 name|ASTDump
 block|,
 comment|///< Parse ASTs and dump them.
@@ -154,7 +157,7 @@ block|,
 comment|///< -E mode.
 name|RewriteMacros
 block|,
-comment|///< Expand macros but not #includes.
+comment|///< Expand macros but not \#includes.
 name|RewriteObjC
 block|,
 comment|///< ObjC->C Rewriter.
@@ -164,11 +167,101 @@ comment|///< Rewriter playground
 name|RunAnalysis
 block|,
 comment|///< Run one or more source code analyses.
+name|MigrateSource
+block|,
+comment|///< Run migrator.
 name|RunPreprocessorOnly
 comment|///< Just lex, no output.
 block|}
 enum|;
 block|}
+enum|enum
+name|InputKind
+block|{
+name|IK_None
+block|,
+name|IK_Asm
+block|,
+name|IK_C
+block|,
+name|IK_CXX
+block|,
+name|IK_ObjC
+block|,
+name|IK_ObjCXX
+block|,
+name|IK_PreprocessedC
+block|,
+name|IK_PreprocessedCXX
+block|,
+name|IK_PreprocessedObjC
+block|,
+name|IK_PreprocessedObjCXX
+block|,
+name|IK_OpenCL
+block|,
+name|IK_CUDA
+block|,
+name|IK_AST
+block|,
+name|IK_LLVM_IR
+block|}
+enum|;
+comment|/// \brief An input file for the front end.
+struct|struct
+name|FrontendInputFile
+block|{
+comment|/// \brief The file name, or "-" to read from standard input.
+name|std
+operator|::
+name|string
+name|File
+expr_stmt|;
+comment|/// \brief The kind of input, e.g., C source, AST file, LLVM IR.
+name|InputKind
+name|Kind
+decl_stmt|;
+comment|/// \brief Whether we're dealing with a 'system' input (vs. a 'user' input).
+name|bool
+name|IsSystem
+decl_stmt|;
+name|FrontendInputFile
+argument_list|()
+operator|:
+name|Kind
+argument_list|(
+argument|IK_None
+argument_list|)
+block|{ }
+name|FrontendInputFile
+argument_list|(
+argument|StringRef File
+argument_list|,
+argument|InputKind Kind
+argument_list|,
+argument|bool IsSystem = false
+argument_list|)
+operator|:
+name|File
+argument_list|(
+name|File
+operator|.
+name|str
+argument_list|()
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|IsSystem
+argument_list|(
+argument|IsSystem
+argument_list|)
+block|{ }
+block|}
+struct|;
 comment|/// FrontendOptions - Options for controlling the behavior of the frontend.
 name|class
 name|FrontendOptions
@@ -195,27 +288,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Show the -help text.
-name|unsigned
-name|ShowMacrosInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show macros in code completion
-comment|/// results.
-name|unsigned
-name|ShowCodePatternsInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show code patterns in code
-comment|/// completion results.
-name|unsigned
-name|ShowGlobalSymbolsInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show top-level decls in
-comment|/// code completion results.
 name|unsigned
 name|ShowStats
 range|:
@@ -244,12 +316,42 @@ decl_stmt|;
 comment|///< Apply fixes even if there are
 comment|/// unfixable errors.
 name|unsigned
+name|FixOnlyWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|///< Apply fixes only for warnings.
+name|unsigned
+name|FixAndRecompile
+range|:
+literal|1
+decl_stmt|;
+comment|///< Apply fixes and recompile.
+name|unsigned
+name|FixToTemporaries
+range|:
+literal|1
+decl_stmt|;
+comment|///< Apply fixes to temporary files.
+name|unsigned
 name|ARCMTMigrateEmitARCErrors
 range|:
 literal|1
 decl_stmt|;
 comment|/// Emit ARC errors even if the
 comment|/// migrator can fix them
+name|unsigned
+name|SkipFunctionBodies
+range|:
+literal|1
+decl_stmt|;
+comment|///< Skip over function bodies to
+comment|/// speed up parsing in cases you do
+comment|/// not need them (e.g. with code
+comment|/// completion).
+name|CodeCompleteOptions
+name|CodeCompleteOpts
+decl_stmt|;
 enum|enum
 block|{
 name|ARCMT_None
@@ -262,10 +364,30 @@ name|ARCMT_Migrate
 block|}
 name|ARCMTAction
 enum|;
+enum|enum
+block|{
+name|ObjCMT_None
+init|=
+literal|0
+block|,
+comment|/// \brief Enable migration to modern ObjC literals.
+name|ObjCMT_Literals
+init|=
+literal|0x1
+block|,
+comment|/// \brief Enable migration to modern ObjC subscripting.
+name|ObjCMT_Subscripting
+init|=
+literal|0x2
+block|}
+enum|;
+name|unsigned
+name|ObjCMTAction
+decl_stmt|;
 name|std
 operator|::
 name|string
-name|ARCMTMigrateDir
+name|MTMigrateDir
 expr_stmt|;
 name|std
 operator|::
@@ -277,17 +399,8 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|InputKind
-operator|,
-name|std
-operator|::
-name|string
+name|FrontendInputFile
 operator|>
-expr|>
 name|Inputs
 expr_stmt|;
 comment|/// The output file, if any.
@@ -301,6 +414,12 @@ name|std
 operator|::
 name|string
 name|FixItSuffix
+expr_stmt|;
+comment|/// If given, filter dumped AST Decl nodes by this substring.
+name|std
+operator|::
+name|string
+name|ASTDumpFilter
 expr_stmt|;
 comment|/// If given, enable code completion at the provided location.
 name|ParsedSourceLocation
@@ -390,6 +509,13 @@ name|string
 operator|>
 name|LLVMArgs
 expr_stmt|;
+comment|/// \brief File name of the file that will provide record layouts
+comment|/// (in the format produced by -fdump-record-layouts).
+name|std
+operator|::
+name|string
+name|OverrideRecordLayoutsFile
+expr_stmt|;
 name|public
 label|:
 name|FrontendOptions
@@ -417,18 +543,6 @@ name|ShowHelp
 operator|=
 literal|0
 expr_stmt|;
-name|ShowMacrosInCodeCompletion
-operator|=
-literal|0
-expr_stmt|;
-name|ShowCodePatternsInCodeCompletion
-operator|=
-literal|0
-expr_stmt|;
-name|ShowGlobalSymbolsInCodeCompletion
-operator|=
-literal|1
-expr_stmt|;
 name|ShowStats
 operator|=
 literal|0
@@ -448,6 +562,14 @@ expr_stmt|;
 name|ARCMTMigrateEmitARCErrors
 operator|=
 literal|0
+expr_stmt|;
+name|SkipFunctionBodies
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCMTAction
+operator|=
+name|ObjCMT_None
 expr_stmt|;
 block|}
 comment|/// getInputKindForExtension - Return the appropriate input kind for a file

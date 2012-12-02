@@ -165,6 +165,9 @@ name|class
 name|TargetMachine
 decl_stmt|;
 name|class
+name|TargetOptions
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -190,6 +193,9 @@ name|useLoc
 parameter_list|,
 name|bool
 name|useCFI
+parameter_list|,
+name|bool
+name|useDwarfDirectory
 parameter_list|,
 name|MCInstPrinter
 modifier|*
@@ -276,6 +282,11 @@ name|CodeModel
 operator|::
 name|Model
 name|CM
+operator|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
 operator|)
 expr_stmt|;
 typedef|typedef
@@ -355,6 +366,11 @@ operator|,
 name|StringRef
 name|Features
 operator|,
+specifier|const
+name|TargetOptions
+operator|&
+name|Options
+operator|,
 name|Reloc
 operator|::
 name|Model
@@ -364,6 +380,11 @@ name|CodeModel
 operator|::
 name|Model
 name|CM
+operator|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
 operator|)
 expr_stmt|;
 typedef|typedef
@@ -398,6 +419,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -482,6 +506,16 @@ modifier|&
 name|MAI
 parameter_list|,
 specifier|const
+name|MCInstrInfo
+modifier|&
+name|MII
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
@@ -499,6 +533,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|II
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo
@@ -574,6 +613,9 @@ parameter_list|,
 name|bool
 name|useCFI
 parameter_list|,
+name|bool
+name|useDwarfDirectory
+parameter_list|,
 name|MCInstPrinter
 modifier|*
 name|InstPrint
@@ -624,8 +666,8 @@ comment|/// registered.
 name|MCAsmInfoCtorFnTy
 name|MCAsmInfoCtorFn
 decl_stmt|;
-comment|/// MCCodeGenInfoCtorFn - Constructor function for this target's MCCodeGenInfo,
-comment|/// if registered.
+comment|/// MCCodeGenInfoCtorFn - Constructor function for this target's
+comment|/// MCCodeGenInfo, if registered.
 name|MCCodeGenInfoCtorFnTy
 name|MCCodeGenInfoCtorFn
 decl_stmt|;
@@ -935,6 +977,11 @@ name|CodeModel
 operator|::
 name|Model
 name|CM
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
 argument_list|)
 decl|const
 block|{
@@ -954,6 +1001,8 @@ argument_list|,
 name|RM
 argument_list|,
 name|CM
+argument_list|,
+name|OL
 argument_list|)
 return|;
 block|}
@@ -1095,6 +1144,11 @@ argument_list|,
 name|StringRef
 name|Features
 argument_list|,
+specifier|const
+name|TargetOptions
+operator|&
+name|Options
+argument_list|,
 name|Reloc
 operator|::
 name|Model
@@ -1110,6 +1164,15 @@ name|Model
 name|CM
 operator|=
 name|CodeModel
+operator|::
+name|Default
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
+operator|=
+name|CodeGenOpt
 operator|::
 name|Default
 argument_list|)
@@ -1135,9 +1198,13 @@ name|CPU
 argument_list|,
 name|Features
 argument_list|,
+name|Options
+argument_list|,
 name|RM
 argument_list|,
 name|CM
+argument_list|,
+name|OL
 argument_list|)
 return|;
 block|}
@@ -1151,6 +1218,9 @@ name|createMCAsmBackend
 argument_list|(
 name|StringRef
 name|Triple
+argument_list|,
+name|StringRef
+name|CPU
 argument_list|)
 decl|const
 block|{
@@ -1169,6 +1239,8 @@ operator|*
 name|this
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -1320,6 +1392,16 @@ operator|&
 name|MAI
 argument_list|,
 specifier|const
+name|MCInstrInfo
+operator|&
+name|MII
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -1344,6 +1426,10 @@ name|SyntaxVariant
 argument_list|,
 name|MAI
 argument_list|,
+name|MII
+argument_list|,
+name|MRI
+argument_list|,
 name|STI
 argument_list|)
 return|;
@@ -1357,6 +1443,11 @@ specifier|const
 name|MCInstrInfo
 operator|&
 name|II
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
 argument_list|,
 specifier|const
 name|MCSubtargetInfo
@@ -1381,6 +1472,8 @@ return|return
 name|MCCodeEmitterCtorFn
 argument_list|(
 name|II
+argument_list|,
+name|MRI
 argument_list|,
 name|STI
 argument_list|,
@@ -1480,6 +1573,9 @@ argument_list|,
 name|bool
 name|useCFI
 argument_list|,
+name|bool
+name|useDwarfDirectory
+argument_list|,
 name|MCInstPrinter
 operator|*
 name|InstPrint
@@ -1510,6 +1606,8 @@ argument_list|,
 name|useLoc
 argument_list|,
 name|useCFI
+argument_list|,
+name|useDwarfDirectory
 argument_list|,
 name|InstPrint
 argument_list|,
@@ -1794,6 +1892,77 @@ operator|::
 name|string
 operator|&
 name|Triple
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// lookupTarget - Lookup a target based on an architecture name
+end_comment
+
+begin_comment
+comment|/// and a target triple.  If the architecture name is non-empty,
+end_comment
+
+begin_comment
+comment|/// then the lookup is done by architecture.  Otherwise, the target
+end_comment
+
+begin_comment
+comment|/// triple is used.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ArchName - The architecture to use for finding a target.
+end_comment
+
+begin_comment
+comment|/// \param TheTriple - The triple to use for finding a target.  The
+end_comment
+
+begin_comment
+comment|/// triple is updated with canonical architecture name if a lookup
+end_comment
+
+begin_comment
+comment|/// by architecture is done.
+end_comment
+
+begin_comment
+comment|/// \param Error - On failure, an error string describing why no target was
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|Target
+modifier|*
+name|lookupTarget
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ArchName
+argument_list|,
+name|Triple
+operator|&
+name|TheTriple
 argument_list|,
 name|std
 operator|::
@@ -3052,7 +3221,7 @@ name|TargetArchType
 operator|=
 name|Triple
 operator|::
-name|InvalidArch
+name|UnknownArch
 operator|,
 name|bool
 name|HasJIT
@@ -3322,6 +3491,8 @@ argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|{
 return|return
@@ -3993,9 +4164,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|{
 return|return
@@ -4010,9 +4185,13 @@ name|CPU
 argument_list|,
 name|FS
 argument_list|,
+name|Options
+argument_list|,
 name|RM
 argument_list|,
 name|CM
+argument_list|,
+name|OL
 argument_list|)
 return|;
 block|}
@@ -4081,6 +4260,8 @@ argument_list|(
 argument|const Target&T
 argument_list|,
 argument|StringRef Triple
+argument_list|,
+argument|StringRef CPU
 argument_list|)
 block|{
 return|return
@@ -4090,6 +4271,8 @@ argument_list|(
 name|T
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -4407,6 +4590,8 @@ operator|*
 name|Allocator
 argument_list|(
 argument|const MCInstrInfo&II
+argument_list|,
+argument|const MCRegisterInfo&MRI
 argument_list|,
 argument|const MCSubtargetInfo&STI
 argument_list|,

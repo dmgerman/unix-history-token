@@ -109,6 +109,11 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|MachinePassRegistryListener
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|MachinePassRegistryListener
@@ -335,6 +340,13 @@ operator|=
 name|C
 expr_stmt|;
 block|}
+name|void
+name|setDefault
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 name|void
 name|setListener
 parameter_list|(

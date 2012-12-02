@@ -53,9 +53,16 @@ directive|include
 file|"libuserboot.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|USERBOOT_VERSION
+value|USERBOOT_VERSION_3
+end_define
+
 begin_decl_stmt
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|callbacks
 decl_stmt|;
@@ -176,7 +183,7 @@ name|void
 name|loader_main
 parameter_list|(
 name|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 modifier|*
 name|cb
 parameter_list|,
@@ -200,6 +207,11 @@ operator|*
 literal|1024
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|var
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -207,7 +219,7 @@ if|if
 condition|(
 name|version
 operator|!=
-name|USERBOOT_VERSION_1
+name|USERBOOT_VERSION
 condition|)
 name|abort
 argument_list|()
@@ -328,6 +340,39 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* optional */
+comment|/* 	 * Set custom environment variables 	 */
+name|i
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|var
+operator|=
+name|CALLBACK
+argument_list|(
+name|getenv
+argument_list|,
+name|i
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|var
+operator|==
+name|NULL
+condition|)
+break|break;
+name|putenv
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
+block|}
 name|archsw
 operator|.
 name|arch_autoload
@@ -440,7 +485,7 @@ name|d_partition
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Figure out if we are using MBR or GPT - for GPT we 		 * set the partition to 0 since everything is a GPT slice. 		 */
+comment|/* 		 * If we cannot auto-detect the partition type then 		 * access the disk as a raw device. 		 */
 if|if
 condition|(
 name|dev
@@ -455,12 +500,22 @@ operator|&
 name|dev
 argument_list|)
 condition|)
+block|{
+name|dev
+operator|.
+name|d_slice
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|dev
 operator|.
 name|d_partition
 operator|=
-literal|255
+operator|-
+literal|1
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

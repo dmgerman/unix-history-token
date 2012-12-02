@@ -300,11 +300,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct
 struct|struct
@@ -381,10 +381,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __BSD_VISIBLE */
-end_comment
 
 begin_struct
 struct|struct
@@ -510,11 +506,11 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct
 struct|struct

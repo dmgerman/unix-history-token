@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- PPCMCAsmInfo.h - PPC asm properties -----------------*- C++ -*--====//
+comment|//===-- PPCMCAsmInfo.h - PPC asm properties --------------------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -69,12 +69,19 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|struct
+name|class
 name|PPCMCAsmInfoDarwin
 range|:
 name|public
 name|MCAsmInfoDarwin
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|explicit
 name|PPCMCAsmInfoDarwin
 argument_list|(
@@ -82,12 +89,19 @@ argument|bool is64Bit
 argument_list|)
 block|;   }
 decl_stmt|;
-name|struct
+name|class
 name|PPCLinuxMCAsmInfo
 range|:
 name|public
 name|MCAsmInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|explicit
 name|PPCLinuxMCAsmInfo
 argument_list|(

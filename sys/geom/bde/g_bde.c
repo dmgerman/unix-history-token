@@ -182,9 +182,6 @@ name|g_bde_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
@@ -202,21 +199,6 @@ argument_list|)
 expr_stmt|;
 name|g_topology_assert
 argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"g_bde_orphan with error == 0"
-operator|)
-argument_list|)
 expr_stmt|;
 name|gp
 operator|=
@@ -236,14 +218,6 @@ name|flags
 operator||=
 name|G_GEOM_WITHER
 expr_stmt|;
-name|error
-operator|=
-name|cp
-operator|->
-name|provider
-operator|->
-name|error
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pp
@@ -256,7 +230,7 @@ name|g_orphan_provider
 argument_list|(
 name|pp
 argument_list|,
-name|error
+name|ENXIO
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -860,18 +834,13 @@ name|g_new_providerf
 argument_list|(
 name|gp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gp
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * XXX: Disable this for now.  Appearantly UFS no longer 		 * XXX: issues BIO_DELETE requests correctly, with the obvious 		 * XXX: outcome that userdata is trashed. 		 */
-block|pp->flags |= G_PF_CANDELETE;
-endif|#
-directive|endif
 name|pp
 operator|->
 name|stripesize

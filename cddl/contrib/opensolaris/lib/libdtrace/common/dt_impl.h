@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2615,6 +2619,25 @@ function_decl|;
 specifier|extern
 name|int
 name|dt_print_lquantize
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dt_print_llquantize
 parameter_list|(
 name|dtrace_hdl_t
 modifier|*

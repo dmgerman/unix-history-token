@@ -220,6 +220,10 @@ name|PPPOE_RELAY_SID
 init|=
 literal|0x0110
 block|,
+name|PPPOE_MAX_PAYLOAD
+init|=
+literal|0x0120
+block|,
 name|PPPOE_SERVICE_NAME_ERROR
 init|=
 literal|0x0201
@@ -283,6 +287,12 @@ block|{
 name|PPPOE_RELAY_SID
 block|,
 literal|"Relay-Session-ID"
+block|}
+block|,
+block|{
+name|PPPOE_MAX_PAYLOAD
+block|,
+literal|"PPP-Max-Payload"
 block|}
 block|,
 block|{

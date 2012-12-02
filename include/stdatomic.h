@@ -30,7 +30,12 @@ end_include
 begin_if
 if|#
 directive|if
-name|__has_feature
+name|__has_extension
+argument_list|(
+name|c_atomic
+argument_list|)
+operator|||
+name|__has_extension
 argument_list|(
 name|cxx_atomic
 argument_list|)
@@ -137,7 +142,7 @@ name|obj
 parameter_list|,
 name|value
 parameter_list|)
-value|__atomic_init(obj, value)
+value|__c11_atomic_init(obj, value)
 end_define
 
 begin_else
@@ -164,7 +169,7 @@ name|obj
 parameter_list|,
 name|value
 parameter_list|)
-value|do {					\ 	(obj)->__val = (value);						\ } while (0)
+value|((void)((obj)->__val = (value)))
 end_define
 
 begin_endif
@@ -323,19 +328,40 @@ begin_comment
 comment|/*  * 7.17.4 Fences.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__CLANG_ATOMICS
-argument_list|)
-operator|||
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|atomic_thread_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__c11_atomic_thread_fence(order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_signal_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__c11_atomic_signal_fence(order)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__GNUC_ATOMICS
 argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -369,7 +395,7 @@ name|atomic_thread_fence
 parameter_list|(
 name|order
 parameter_list|)
-value|__sync_synchronize()
+value|((void)(order), __sync_synchronize())
 end_define
 
 begin_define
@@ -379,7 +405,7 @@ name|atomic_signal_fence
 parameter_list|(
 name|order
 parameter_list|)
-value|__asm volatile ("" : : : "memory")
+value|__extension__ ({		\ 	(void)(order);							\ 	__asm volatile ("" ::: "memory");				\ 	(void)0;							\ })
 end_define
 
 begin_endif
@@ -398,6 +424,11 @@ name|defined
 argument_list|(
 name|__CLANG_ATOMICS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUC_ATOMICS
+argument_list|)
 end_if
 
 begin_define
@@ -408,27 +439,7 @@ parameter_list|(
 name|obj
 parameter_list|)
 define|\
-value|__atomic_is_lock_free(sizeof(obj))
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__GNUC_ATOMICS
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|atomic_is_lock_free
-parameter_list|(
-name|obj
-parameter_list|)
-define|\
-value|__atomic_is_lock_free(sizeof((obj)->__val))
+value|__atomic_is_lock_free(sizeof((obj)->__val),&(obj)->val)
 end_define
 
 begin_else
@@ -444,7 +455,7 @@ parameter_list|(
 name|obj
 parameter_list|)
 define|\
-value|(sizeof((obj)->__val)<= sizeof(void *))
+value|((void)(obj), sizeof((obj)->__val)<= sizeof(void *))
 end_define
 
 begin_endif
@@ -859,7 +870,7 @@ parameter_list|,
 name|failure
 parameter_list|)
 define|\
-value|__atomic_compare_exchange_strong(object, expected, desired,	\ 	    success, failure)
+value|__c11_atomic_compare_exchange_strong(object, expected, desired,	\ 	    success, failure)
 end_define
 
 begin_define
@@ -878,7 +889,7 @@ parameter_list|,
 name|failure
 parameter_list|)
 define|\
-value|__atomic_compare_exchange_weak(object, expected, desired,	\ 	    success, failure)
+value|__c11_atomic_compare_exchange_weak(object, expected, desired,	\ 	    success, failure)
 end_define
 
 begin_define
@@ -893,7 +904,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_exchange(object, desired, order)
+value|__c11_atomic_exchange(object, desired, order)
 end_define
 
 begin_define
@@ -908,7 +919,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_add(object, operand, order)
+value|__c11_atomic_fetch_add(object, operand, order)
 end_define
 
 begin_define
@@ -923,7 +934,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_and(object, operand, order)
+value|__c11_atomic_fetch_and(object, operand, order)
 end_define
 
 begin_define
@@ -938,7 +949,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_or(object, operand, order)
+value|__c11_atomic_fetch_or(object, operand, order)
 end_define
 
 begin_define
@@ -953,7 +964,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_sub(object, operand, order)
+value|__c11_atomic_fetch_sub(object, operand, order)
 end_define
 
 begin_define
@@ -968,7 +979,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_fetch_xor(object, operand, order)
+value|__c11_atomic_fetch_xor(object, operand, order)
 end_define
 
 begin_define
@@ -981,7 +992,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_load(object, order)
+value|__c11_atomic_load(object, order)
 end_define
 
 begin_define
@@ -996,7 +1007,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__atomic_store(object, desired, order)
+value|__c11_atomic_store(object, desired, order)
 end_define
 
 begin_elif
@@ -1184,7 +1195,7 @@ name|success
 parameter_list|,
 name|failure
 parameter_list|)
-value|({					\ 	__typeof__((object)->__val) __v;				\ 	_Bool __r;							\ 	__v = __sync_val_compare_and_swap(&(object)->__val,		\ 	    *(expected), desired);					\ 	__r = *(expected) == __v;					\ 	*(expected) = __v;						\ 	__r;								\ })
+value|__extension__ ({			\ 	__typeof__(expected) __ep = (expected);				\ 	__typeof__(*__ep) __e = *__ep;					\ 	(void)(success); (void)(failure);				\ 	(*__ep = __sync_val_compare_and_swap(&(object)->__val,		\ 	    __e, desired)) == __e;					\ })
 end_define
 
 begin_define
@@ -1231,7 +1242,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_swap(&(object)->__val, desired)
+value|((void)(order), __sync_swap(&(object)->__val, desired))
 end_define
 
 begin_else
@@ -1240,7 +1251,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * __sync_lock_test_and_set() is only an acquire barrier in theory (although in  * practice it is usually a full barrier) so we need an explicit barrier after  * it.  */
+comment|/*  * __sync_lock_test_and_set() is only an acquire barrier in theory (although in  * practice it is usually a full barrier) so we need an explicit barrier before  * it.  */
 end_comment
 
 begin_define
@@ -1254,7 +1265,8 @@ name|desired
 parameter_list|,
 name|order
 parameter_list|)
-value|({		\ 	__typeof__((object)->__val) __v;				\ 	__v = __sync_lock_test_and_set(&(object)->__val, desired);	\ 	__sync_synchronize();						\ 	__v;								\ })
+define|\
+value|__extension__ ({							\ 	__typeof__(object) __o = (object);				\ 	__typeof__(desired) __d = (desired);				\ 	(void)(order);							\ 	__sync_synchronize();						\ 	__sync_lock_test_and_set(&(__o)->__val, __d);			\ })
 end_define
 
 begin_endif
@@ -1274,7 +1286,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_add(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_add(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1289,7 +1301,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_and(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_and(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1304,7 +1316,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_or(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_or(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1319,7 +1331,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_sub(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_sub(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1334,7 +1346,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_xor(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_xor(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1347,7 +1359,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_add(&(object)->__val, 0)
+value|((void)(order), __sync_fetch_and_add(&(object)->__val, 0))
 end_define
 
 begin_define
@@ -1361,7 +1373,8 @@ name|desired
 parameter_list|,
 name|order
 parameter_list|)
-value|do {		\ 	__sync_synchronize();						\ 	(object)->__val = (desired);					\ 	__sync_synchronize();						\ } while (0)
+define|\
+value|((void)atomic_exchange_explicit(object, desired, order))
 end_define
 
 begin_endif

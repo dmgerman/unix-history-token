@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001 The NetBSD Foundation, Inc.  All rights reserv
 end_comment
 
 begin_comment
-comment|/*  * SA-11x0 GPIO Register   */
+comment|/*  * SA-11x0 GPIO Register  */
 end_comment
 
 begin_define

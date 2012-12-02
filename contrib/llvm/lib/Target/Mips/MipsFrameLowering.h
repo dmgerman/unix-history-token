@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==--- MipsFrameLowering.h - Define frame lowering for Mips --*- C++ -*---===//
+comment|//===-- MipsFrameLowering.h - Define frame lowering for Mips ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -122,35 +122,37 @@ else|:
 literal|8
 argument_list|,
 literal|0
+argument_list|,
+name|sti
+operator|.
+name|hasMips64
+argument_list|()
+condition|?
+literal|16
+else|:
+literal|8
 argument_list|)
 block|,
 name|STI
 argument_list|(
 argument|sti
 argument_list|)
-block|{   }
-name|bool
-name|targetHandlesStackFrameRounding
-argument_list|()
+block|{}
+specifier|static
 specifier|const
-block|;
-comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
-comment|/// the function.
-name|void
-name|emitPrologue
+name|MipsFrameLowering
+operator|*
+name|create
 argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
+name|MipsTargetMachine
+operator|&
+name|TM
 argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
 specifier|const
+name|MipsSubtarget
+operator|&
+name|ST
+argument_list|)
 block|;
 name|bool
 name|hasFP
@@ -158,17 +160,31 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
+comment|/// Create MipsInstrInfo objects.
+specifier|const
+name|MipsFrameLowering
+modifier|*
+name|createMips16FrameLowering
+parameter_list|(
+specifier|const
+name|MipsSubtarget
+modifier|&
+name|ST
+parameter_list|)
+function_decl|;
+specifier|const
+name|MipsFrameLowering
+modifier|*
+name|createMipsSEFrameLowering
+parameter_list|(
+specifier|const
+name|MipsSubtarget
+modifier|&
+name|ST
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

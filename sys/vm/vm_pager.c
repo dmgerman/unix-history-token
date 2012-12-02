@@ -464,7 +464,12 @@ block|,
 comment|/* OBJT_DEAD */
 operator|&
 name|sgpagerops
+block|,
 comment|/* OBJT_SG */
+operator|&
+name|mgtdevicepagerops
+block|,
+comment|/* OBJT_MGTDEVICE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -878,11 +883,6 @@ argument_list|,
 argument|pager_object_list
 argument_list|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|object
@@ -890,7 +890,15 @@ operator|->
 name|handle
 operator|==
 name|handle
-operator|&&
+condition|)
+block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|object
 operator|->
@@ -919,6 +927,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

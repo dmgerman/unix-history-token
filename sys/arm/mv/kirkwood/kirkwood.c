@@ -217,6 +217,17 @@ operator|(
 name|TCLK_200MHZ
 operator|)
 return|;
+if|if
+condition|(
+name|dev
+operator|==
+name|MV_DEV_88F6282
+condition|)
+return|return
+operator|(
+name|TCLK_200MHZ
+operator|)
+return|;
 return|return
 operator|(
 name|TCLK_166MHZ

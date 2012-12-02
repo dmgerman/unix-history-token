@@ -66,6 +66,11 @@ comment|/// demand.
 name|class
 name|Spiller
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual

@@ -5217,6 +5217,9 @@ name|ifnetp
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|item
 operator|->
 name|event_type

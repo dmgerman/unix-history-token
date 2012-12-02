@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MBlazeMachineFunctionInfo.h - Private data ----------------*- C++ -*-=//
+comment|//===-- MBlazeMachineFunctionInfo.h - Private data --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/VectorExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -101,8 +95,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Holds for each function where on the stack the Frame Pointer must be
 comment|/// saved. This is used on Prologue and Epilogue to emit FP save/restore
 name|int

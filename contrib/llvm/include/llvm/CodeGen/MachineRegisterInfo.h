@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineInstrBundle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -103,6 +109,12 @@ comment|/// IsSSA - True when the machine function is in SSA form and virtual
 comment|/// registers have a single def.
 name|bool
 name|IsSSA
+decl_stmt|;
+comment|/// TracksLiveness - True while register liveness is being tracked accurately.
+comment|/// Basic block live-in lists, kill flags, and implicit defs may not be
+comment|/// accurate when after this flag is cleared.
+name|bool
+name|TracksLiveness
 decl_stmt|;
 comment|/// VRegInfo - Information we keep for each virtual register.
 comment|///
@@ -155,13 +167,133 @@ modifier|*
 modifier|*
 name|PhysRegUseDefLists
 decl_stmt|;
+comment|/// getRegUseDefListHead - Return the head pointer for the register use/def
+comment|/// list for the specified virtual or physical register.
+name|MachineOperand
+modifier|*
+modifier|&
+name|getRegUseDefListHead
+parameter_list|(
+name|unsigned
+name|RegNo
+parameter_list|)
+block|{
+if|if
+condition|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|RegNo
+argument_list|)
+condition|)
+return|return
+name|VRegInfo
+index|[
+name|RegNo
+index|]
+operator|.
+name|second
+return|;
+return|return
+name|PhysRegUseDefLists
+index|[
+name|RegNo
+index|]
+return|;
+block|}
+name|MachineOperand
+modifier|*
+name|getRegUseDefListHead
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|RegNo
+argument_list|)
+condition|)
+return|return
+name|VRegInfo
+index|[
+name|RegNo
+index|]
+operator|.
+name|second
+return|;
+return|return
+name|PhysRegUseDefLists
+index|[
+name|RegNo
+index|]
+return|;
+block|}
+comment|/// Get the next element in the use-def chain.
+specifier|static
+name|MachineOperand
+modifier|*
+name|getNextOperandForReg
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|*
+name|MO
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|MO
+operator|&&
+name|MO
+operator|->
+name|isReg
+argument_list|()
+operator|&&
+literal|"This is not a register operand!"
+argument_list|)
+expr_stmt|;
+return|return
+name|MO
+operator|->
+name|Contents
+operator|.
+name|Reg
+operator|.
+name|Next
+return|;
+block|}
 comment|/// UsedPhysRegs - This is a bit vector that is computed and set by the
 comment|/// register allocator, and must be kept up to date by passes that run after
 comment|/// register allocation (though most don't modify this).  This is used
 comment|/// so that the code generator knows which callee save registers to save and
 comment|/// for other target specific uses.
+comment|/// This vector only has bits set for registers explicitly used, not their
+comment|/// aliases.
 name|BitVector
 name|UsedPhysRegs
+decl_stmt|;
+comment|/// UsedPhysRegMask - Additional used physregs, but including aliases.
+name|BitVector
+name|UsedPhysRegMask
+decl_stmt|;
+comment|/// ReservedRegs - This is a bit vector of reserved registers.  The target
+comment|/// may change its mind about which registers should be reserved.  This
+comment|/// vector is the frozen set of reserved registers when register allocation
+comment|/// started.
+name|BitVector
+name|ReservedRegs
+decl_stmt|;
+comment|/// AllocatableRegs - From TRI->getAllocatableSet.
+name|mutable
+name|BitVector
+name|AllocatableRegs
 decl_stmt|;
 comment|/// LiveIns/LiveOuts - Keep track of the physical registers that are
 comment|/// livein/liveout of the function.  Live in values are typically arguments in
@@ -253,9 +385,58 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+comment|/// tracksLiveness - Returns true when tracking register liveness accurately.
+comment|///
+comment|/// While this flag is true, register liveness information in basic block
+comment|/// live-in lists and machine instruction operands is accurate. This means it
+comment|/// can be used to change the code in ways that affect the values in
+comment|/// registers, for example by the register scavenger.
+comment|///
+comment|/// When this flag is false, liveness is no longer reliable.
+name|bool
+name|tracksLiveness
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TracksLiveness
+return|;
+block|}
+comment|/// invalidateLiveness - Indicates that register liveness is no longer being
+comment|/// tracked accurately.
+comment|///
+comment|/// This should be called by late passes that invalidate the liveness
+comment|/// information.
+name|void
+name|invalidateLiveness
+parameter_list|()
+block|{
+name|TracksLiveness
+operator|=
+name|false
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Register Info
 comment|//===--------------------------------------------------------------------===//
+comment|// Strictly for use by MachineInstr.cpp.
+name|void
+name|addRegOperandToUseList
+parameter_list|(
+name|MachineOperand
+modifier|*
+name|MO
+parameter_list|)
+function_decl|;
+comment|// Strictly for use by MachineInstr.cpp.
+name|void
+name|removeRegOperandFromUseList
+parameter_list|(
+name|MachineOperand
+modifier|*
+name|MO
+parameter_list|)
+function_decl|;
 comment|/// reg_begin/reg_end - Provide iteration support to walk over all definitions
 comment|/// and uses of a register within the MachineFunction that corresponds to this
 comment|/// MachineRegisterInfo object.
@@ -270,6 +451,19 @@ operator|,
 name|bool
 name|SkipDebug
 operator|>
+name|class
+name|defusechain_iterator
+expr_stmt|;
+comment|// Make it a friend so it can access getNextOperandForReg().
+name|template
+operator|<
+name|bool
+operator|,
+name|bool
+operator|,
+name|bool
+operator|>
+name|friend
 name|class
 name|defusechain_iterator
 expr_stmt|;
@@ -461,6 +655,42 @@ name|def_end
 argument_list|()
 return|;
 block|}
+comment|/// hasOneDef - Return true if there is exactly one instruction defining the
+comment|/// specified register.
+name|bool
+name|hasOneDef
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+name|def_iterator
+name|DI
+init|=
+name|def_begin
+argument_list|(
+name|RegNo
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|DI
+operator|==
+name|def_end
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+operator|++
+name|DI
+operator|==
+name|def_end
+argument_list|()
+return|;
+block|}
 comment|/// use_iterator/use_begin/use_end - Walk all uses of the specified register.
 typedef|typedef
 name|defusechain_iterator
@@ -532,7 +762,33 @@ name|unsigned
 name|RegNo
 argument_list|)
 decl|const
+block|{
+name|use_iterator
+name|UI
+init|=
+name|use_begin
+argument_list|(
+name|RegNo
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|UI
+operator|==
+name|use_end
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+operator|++
+name|UI
+operator|==
+name|use_end
+argument_list|()
+return|;
+block|}
 comment|/// use_nodbg_iterator/use_nodbg_begin/use_nodbg_end - Walk all uses of the
 comment|/// specified register, skipping those marked as Debug.
 typedef|typedef
@@ -609,6 +865,14 @@ decl_stmt|;
 comment|/// replaceRegWith - Replace all instances of FromReg with ToReg in the
 comment|/// machine function.  This is like llvm-level X->replaceAllUsesWith(Y),
 comment|/// except that it also changes any definitions of the register as well.
+comment|///
+comment|/// Note that it is usually necessary to first constrain ToReg's register
+comment|/// class to match the FromReg constraints using:
+comment|///
+comment|///   constrainRegClass(ToReg, getRegClass(FromReg))
+comment|///
+comment|/// That function will return NULL if the virtual registers have incompatible
+comment|/// constraints.
 name|void
 name|replaceRegWith
 parameter_list|(
@@ -619,80 +883,24 @@ name|unsigned
 name|ToReg
 parameter_list|)
 function_decl|;
-comment|/// getRegUseDefListHead - Return the head pointer for the register use/def
-comment|/// list for the specified virtual or physical register.
-name|MachineOperand
-modifier|*
-modifier|&
-name|getRegUseDefListHead
-parameter_list|(
-name|unsigned
-name|RegNo
-parameter_list|)
-block|{
-if|if
-condition|(
-name|TargetRegisterInfo
-operator|::
-name|isVirtualRegister
-argument_list|(
-name|RegNo
-argument_list|)
-condition|)
-return|return
-name|VRegInfo
-index|[
-name|RegNo
-index|]
-operator|.
-name|second
-return|;
-return|return
-name|PhysRegUseDefLists
-index|[
-name|RegNo
-index|]
-return|;
-block|}
-name|MachineOperand
-modifier|*
-name|getRegUseDefListHead
-argument_list|(
-name|unsigned
-name|RegNo
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|TargetRegisterInfo
-operator|::
-name|isVirtualRegister
-argument_list|(
-name|RegNo
-argument_list|)
-condition|)
-return|return
-name|VRegInfo
-index|[
-name|RegNo
-index|]
-operator|.
-name|second
-return|;
-return|return
-name|PhysRegUseDefLists
-index|[
-name|RegNo
-index|]
-return|;
-block|}
 comment|/// getVRegDef - Return the machine instr that defines the specified virtual
 comment|/// register or null if none is found.  This assumes that the code is in SSA
 comment|/// form, so there should only be one definition.
 name|MachineInstr
 modifier|*
 name|getVRegDef
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getUniqueVRegDef - Return the unique machine instr that defines the
+comment|/// specified virtual register or null if none is found.  If there are
+comment|/// multiple definitions or no definition, return null.
+name|MachineInstr
+modifier|*
+name|getUniqueVRegDef
 argument_list|(
 name|unsigned
 name|Reg
@@ -724,6 +932,22 @@ decl|const
 decl_stmt|;
 endif|#
 directive|endif
+comment|/// isConstantPhysReg - Returns true if PhysReg is unallocatable and constant
+comment|/// throughout the function.  It is safe to move instructions that read such
+comment|/// a physreg.
+name|bool
+name|isConstantPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Virtual Register Info
 comment|//===--------------------------------------------------------------------===//
@@ -833,6 +1057,11 @@ name|size
 argument_list|()
 return|;
 block|}
+comment|/// clearVirtRegs - Remove all virtual registers (after physreg assignment).
+name|void
+name|clearVirtRegs
+parameter_list|()
+function_decl|;
 comment|/// setRegAllocationHint - Specify a register allocation hint for the
 comment|/// specified virtual register.
 name|void
@@ -942,9 +1171,77 @@ decl|const
 block|{
 return|return
 name|UsedPhysRegs
-index|[
+operator|.
+name|test
+argument_list|(
 name|Reg
-index|]
+argument_list|)
+operator|||
+name|UsedPhysRegMask
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+comment|/// isPhysRegOrOverlapUsed - Return true if Reg or any overlapping register
+comment|/// is used in this function.
+name|bool
+name|isPhysRegOrOverlapUsed
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|UsedPhysRegMask
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+for|for
+control|(
+name|MCRegAliasIterator
+name|AI
+argument_list|(
+name|Reg
+argument_list|,
+name|TRI
+argument_list|,
+name|true
+argument_list|)
+init|;
+name|AI
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|AI
+control|)
+if|if
+condition|(
+name|UsedPhysRegs
+operator|.
+name|test
+argument_list|(
+operator|*
+name|AI
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
 return|;
 block|}
 comment|/// setPhysRegUsed - Mark the specified register used in this function.
@@ -957,11 +1254,11 @@ name|Reg
 parameter_list|)
 block|{
 name|UsedPhysRegs
-index|[
+operator|.
+name|set
+argument_list|(
 name|Reg
-index|]
-operator|=
-name|true
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// addPhysRegsUsed - Mark the specified registers used in this function.
@@ -980,6 +1277,25 @@ operator||=
 name|Regs
 expr_stmt|;
 block|}
+comment|/// addPhysRegsUsedFromRegMask - Mark any registers not in RegMask as used.
+comment|/// This corresponds to the bit mask attached to register mask operands.
+name|void
+name|addPhysRegsUsedFromRegMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
+parameter_list|)
+block|{
+name|UsedPhysRegMask
+operator|.
+name|setBitsNotInMask
+argument_list|(
+name|RegMask
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// setPhysRegUnused - Mark the specified register unused in this function.
 comment|/// This should only be called during and after register allocation.
 name|void
@@ -990,23 +1306,80 @@ name|Reg
 parameter_list|)
 block|{
 name|UsedPhysRegs
-index|[
+operator|.
+name|reset
+argument_list|(
 name|Reg
-index|]
-operator|=
-name|false
+argument_list|)
+expr_stmt|;
+name|UsedPhysRegMask
+operator|.
+name|reset
+argument_list|(
+name|Reg
+argument_list|)
 expr_stmt|;
 block|}
-comment|/// closePhysRegsUsed - Expand UsedPhysRegs to its transitive closure over
-comment|/// subregisters. That means that if R is used, so are all subregisters.
+comment|//===--------------------------------------------------------------------===//
+comment|// Reserved Register Info
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// The set of reserved registers must be invariant during register
+comment|// allocation.  For example, the target cannot suddenly decide it needs a
+comment|// frame pointer when the register allocator has already used the frame
+comment|// pointer register for something else.
+comment|//
+comment|// These methods can be used by target hooks like hasFP() to avoid changing
+comment|// the reserved register set during register allocation.
+comment|/// freezeReservedRegs - Called by the register allocator to freeze the set
+comment|/// of reserved registers before allocation begins.
 name|void
-name|closePhysRegsUsed
+name|freezeReservedRegs
 parameter_list|(
 specifier|const
-name|TargetRegisterInfo
+name|MachineFunction
 modifier|&
 parameter_list|)
 function_decl|;
+comment|/// reservedRegsFrozen - Returns true after freezeReservedRegs() was called
+comment|/// to ensure the set of reserved registers stays constant.
+name|bool
+name|reservedRegsFrozen
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|ReservedRegs
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// canReserveReg - Returns true if PhysReg can be used as a reserved
+comment|/// register.  Any register can be reserved before freezeReservedRegs() is
+comment|/// called.
+name|bool
+name|canReserveReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|reservedRegsFrozen
+argument_list|()
+operator|||
+name|ReservedRegs
+operator|.
+name|test
+argument_list|(
+name|PhysReg
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// LiveIn/LiveOut Management
 comment|//===--------------------------------------------------------------------===//
@@ -1213,14 +1586,6 @@ modifier|&
 name|TII
 parameter_list|)
 function_decl|;
-name|private
-label|:
-name|void
-name|HandleVRegListReallocation
-parameter_list|()
-function_decl|;
-name|public
-label|:
 comment|/// defusechain_iterator - This class provides iterator support for machine
 comment|/// operands in the function that use or define a specific register.  If
 comment|/// ReturnUses is true it returns uses of registers, if ReturnDefs is true it
@@ -1446,27 +1811,56 @@ argument_list|)
 block|;
 name|Op
 operator|=
+name|getNextOperandForReg
+argument_list|(
+name|Op
+argument_list|)
+block|;
+comment|// All defs come before the uses, so stop def_iterator early.
+if|if
+condition|(
+operator|!
+name|ReturnUses
+condition|)
+block|{
+if|if
+condition|(
+name|Op
+condition|)
+block|{
+if|if
+condition|(
 name|Op
 operator|->
-name|getNextOperandForReg
+name|isUse
 argument_list|()
-block|;
+condition|)
+name|Op
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|assert
+argument_list|(
+operator|!
+name|Op
+operator|->
+name|isDebug
+argument_list|()
+operator|&&
+literal|"Can't have debug defs"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 comment|// If this is an operand we don't care about, skip it.
 while|while
 condition|(
 name|Op
 operator|&&
 operator|(
-operator|(
-operator|!
-name|ReturnUses
-operator|&&
-name|Op
-operator|->
-name|isUse
-argument_list|()
-operator|)
-operator|||
 operator|(
 operator|!
 name|ReturnDefs
@@ -1489,11 +1883,12 @@ operator|)
 condition|)
 name|Op
 operator|=
-name|Op
-operator|->
 name|getNextOperandForReg
-argument_list|()
+argument_list|(
+name|Op
+argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|*
 name|this
@@ -1559,6 +1954,55 @@ name|Op
 operator|->
 name|getParent
 argument_list|()
+operator|==
+name|MI
+condition|)
+do|;
+return|return
+name|MI
+return|;
+block|}
+name|MachineInstr
+modifier|*
+name|skipBundle
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+return|return
+literal|0
+return|;
+name|MachineInstr
+modifier|*
+name|MI
+init|=
+name|getBundleStart
+argument_list|(
+name|Op
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+decl_stmt|;
+do|do
+operator|++
+operator|*
+name|this
+expr_stmt|;
+do|while
+condition|(
+name|Op
+operator|&&
+name|getBundleStart
+argument_list|(
+name|Op
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
 operator|==
 name|MI
 condition|)
@@ -1660,10 +2104,15 @@ name|getParent
 argument_list|()
 return|;
 block|}
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};    };  }
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

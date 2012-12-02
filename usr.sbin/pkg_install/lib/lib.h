@@ -387,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|PKG_INSTALL_VERSION
-value|20100403
+value|20121109
 end_define
 
 begin_define
@@ -711,6 +711,15 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|warnpkgng
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

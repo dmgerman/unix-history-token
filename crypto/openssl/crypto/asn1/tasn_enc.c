@@ -572,6 +572,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -659,6 +661,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -846,6 +850,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -1068,6 +1074,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -2451,11 +2459,14 @@ decl_stmt|;
 name|int
 name|utype
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|cont
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 name|c
 decl_stmt|;
 name|int

@@ -463,7 +463,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *	v - vnode freelist mutex  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
@@ -527,6 +527,15 @@ name|int
 name|mnt_nvnodelistsize
 decl_stmt|;
 comment|/* (i) # of vnodes */
+name|struct
+name|vnodelst
+name|mnt_activevnodelist
+decl_stmt|;
+comment|/* (v) list of active vnodes */
+name|int
+name|mnt_activevnodelistsize
+decl_stmt|;
+comment|/* (v) # of active vnodes */
 name|int
 name|mnt_writeopcount
 decl_stmt|;
@@ -627,9 +636,211 @@ name|lock
 name|mnt_explock
 decl_stmt|;
 comment|/* vfs_export walkers lock */
+name|TAILQ_ENTRY
+argument_list|(
+argument|mount
+argument_list|)
+name|mnt_upper_link
+expr_stmt|;
+comment|/* (m) we in the all uppers */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|mount
+argument_list|)
+name|mnt_uppers
+expr_stmt|;
+comment|/* (m) upper mounts over us*/
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Definitions for MNT_VNODE_FOREACH_ALL.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_next_all
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_first_all
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__mnt_vnode_markerfree_all
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ALL
+parameter_list|(
+name|vp
+parameter_list|,
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|for (vp = __mnt_vnode_first_all(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_all(&(mvp), (mp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ALL_ABORT
+parameter_list|(
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|do {								\ 		MNT_ILOCK(mp);						\ 		__mnt_vnode_markerfree_all(&(mvp), (mp));		\
+comment|/* MNT_IUNLOCK(mp); -- done in above function */
+value|\ 		mtx_assert(MNT_MTX(mp), MA_NOTOWNED);			\ 	} while (0)
+end_define
+
+begin_comment
+comment|/*  * Definitions for MNT_VNODE_FOREACH_ACTIVE.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_next_active
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|__mnt_vnode_first_active
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__mnt_vnode_markerfree_active
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|mvp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ACTIVE
+parameter_list|(
+name|vp
+parameter_list|,
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|for (vp = __mnt_vnode_first_active(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_active(&(mvp), (mp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_VNODE_FOREACH_ACTIVE_ABORT
+parameter_list|(
+name|mp
+parameter_list|,
+name|mvp
+parameter_list|)
+define|\
+value|do {								\ 		MNT_ILOCK(mp);						\ 		__mnt_vnode_markerfree_active(&(mvp), (mp));		\
+comment|/* MNT_IUNLOCK(mp); -- done in above function */
+value|\ 		mtx_assert(MNT_MTX(mp), MA_NOTOWNED);			\ 	} while (0)
+end_define
+
+begin_comment
+comment|/*  * Definitions for MNT_VNODE_FOREACH.  *  * This interface has been deprecated in favor of MNT_VNODE_FOREACH_ALL.  */
+end_comment
 
 begin_function_decl
 name|struct
@@ -1313,6 +1524,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_NO_IOPF
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Disallow page faults during reads 					   and writes. Filesystem shall properly 					   handle i/o state on EFAULT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_VGONE_UPPER
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_VGONE_WAITER
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_LOOKUP_EXCL_DOTDOT
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNTK_MARKER
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define
@@ -1379,12 +1629,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_MPSAFE
+name|MNTK_UNUSED25
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* Filesystem is MPSAFE. */
+comment|/*  --available-- */
 end_comment
 
 begin_define
@@ -2681,6 +2931,24 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vfs_reclaim_lowervp_t
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|lowervp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsops
@@ -2744,6 +3012,10 @@ decl_stmt|;
 name|vfs_susp_clean_t
 modifier|*
 name|vfs_susp_clean
+decl_stmt|;
+name|vfs_reclaim_lowervp_t
+modifier|*
+name|vfs_reclaim_lowervp
 decl_stmt|;
 block|}
 struct|;
@@ -2936,52 +3208,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|VFS_NEEDSGIANT_
+name|VFS_RECLAIM_LOWERVP
 parameter_list|(
 name|MP
+parameter_list|,
+name|VP
 parameter_list|)
 define|\
-value|((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_NEEDSGIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|__extension__				\ ({									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	VFS_NEEDSGIANT_(_mp);						\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_LOCK_GIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|__extension__				\ ({									\ 	int _locked;							\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp)) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_UNLOCK_GIANT
-parameter_list|(
-name|locked
-parameter_list|)
-value|do					\ {									\ 	if ((locked))							\ 		mtx_unlock(&Giant);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_ASSERT_GIANT
-parameter_list|(
-name|MP
-parameter_list|)
-value|do						\ {									\ 	struct mount *_mp;						\ 	_mp = (MP);							\ 	if (VFS_NEEDSGIANT_(_mp))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+value|({if (*(MP)->mnt_op->vfs_reclaim_lowervp != NULL)	\ 		(*(MP)->mnt_op->vfs_reclaim_lowervp)((MP), (VP)); })
 end_define
 
 begin_define
@@ -3028,8 +3262,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VFS_VERSION_01
+value|0x20121030
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_VERSION
-value|VFS_VERSION_00
+value|VFS_VERSION_01
 end_define
 
 begin_define

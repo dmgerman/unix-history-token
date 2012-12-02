@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the FileSystemStatCache interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the FileSystemStatCache interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -58,6 +62,12 @@ define|#
 directive|define
 name|LLVM_CLANG_FILESYSTEMSTATCACHE_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
 
 begin_include
 include|#
@@ -93,10 +103,13 @@ comment|/// improve performance.
 name|class
 name|FileSystemStatCache
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|protected
 label|:
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|FileSystemStatCache
@@ -115,14 +128,15 @@ name|LookupResult
 block|{
 name|CacheExists
 block|,
-comment|//< We know the file exists and its cached stat data.
+comment|///< We know the file exists and its cached stat data.
 name|CacheMissing
-comment|//< We know that the file doesn't exist.
+comment|///< We know that the file doesn't exist.
 block|}
 expr_stmt|;
-comment|/// FileSystemStatCache::get - Get the 'stat' information for the specified
-comment|/// path, using the cache to accellerate it if possible.  This returns true if
-comment|/// the path does not exist or false if it exists.
+comment|/// \brief Get the 'stat' information for the specified path, using the cache
+comment|/// to accelerate it if possible.
+comment|///
+comment|/// \returns \c true if the path does not exist or \c false if it exists.
 comment|///
 comment|/// If FileDescriptor is non-null, then this lookup should only return success
 comment|/// for files (not directories).  If it is null this lookup should only return

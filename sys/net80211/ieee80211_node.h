@@ -737,7 +737,7 @@ name|struct
 name|ieee80211_tx_ampdu
 name|ni_tx_ampdu
 index|[
-name|WME_NUM_AC
+name|WME_NUM_TID
 index|]
 decl_stmt|;
 name|struct
@@ -2067,6 +2067,24 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_function_decl
+name|int
+name|ieee80211_iterate_nt
+parameter_list|(
+name|struct
+name|ieee80211_node_table
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

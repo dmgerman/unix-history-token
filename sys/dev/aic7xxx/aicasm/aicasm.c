@@ -2149,6 +2149,7 @@ decl_stmt|;
 name|int
 name|func_count
 decl_stmt|;
+name|unsigned
 name|int
 name|skip_addr
 decl_stmt|;

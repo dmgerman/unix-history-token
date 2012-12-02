@@ -228,12 +228,12 @@ define|#
 directive|define
 name|PCI_VDEVICE
 parameter_list|(
-name|vendor
+name|_vendor
 parameter_list|,
-name|device
+name|_device
 parameter_list|)
 define|\
-value|PCI_VENDOR_ID_##vendor, (device), PCI_ANY_ID, PCI_ANY_ID, 0, 0
+value|.vendor = PCI_VENDOR_ID_##_vendor, .device = (_device),	\ 	    .subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID
 end_define
 
 begin_define
@@ -241,12 +241,12 @@ define|#
 directive|define
 name|PCI_DEVICE
 parameter_list|(
-name|vendor
+name|_vendor
 parameter_list|,
-name|device
+name|_device
 parameter_list|)
 define|\
-value|(vendor), (device), PCI_ANY_ID, PCI_ANY_ID, 0, 0
+value|.vendor = (_vendor), .device = (_device),			\ 	    .subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID
 end_define
 
 begin_define
@@ -277,14 +277,14 @@ begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL
-value|PCIR_EXPRESS_DEVICE_CTL
+value|PCIER_DEVICE_CTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKCTL
-value|PCIR_EXPRESS_LINK_CTL
+value|PCIER_LINK_CTL
 end_define
 
 begin_define

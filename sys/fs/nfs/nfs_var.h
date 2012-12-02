@@ -2668,6 +2668,10 @@ begin_function_decl
 name|int
 name|nfsv4_strtouid
 parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
@@ -2705,6 +2709,10 @@ begin_function_decl
 name|int
 name|nfsv4_strtogid
 parameter_list|(
+name|struct
+name|nfsrv_descript
+modifier|*
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
@@ -2839,6 +2847,22 @@ end_function_decl
 begin_comment
 comment|/* nfs_clvfsops.c */
 end_comment
+
+begin_function_decl
+name|void
+name|nfscl_retopts
+parameter_list|(
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* nfs_commonport.c */

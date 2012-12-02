@@ -158,6 +158,7 @@ modifier|*
 name|ssl_cert
 decl_stmt|;
 comment|/* server certificate */
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl_meth

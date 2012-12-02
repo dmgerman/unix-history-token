@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/ARCMigrate/FileRemapper.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
@@ -117,6 +123,37 @@ argument_list|)
 block|; }
 decl_stmt|;
 name|class
+name|MigrateSourceAction
+range|:
+name|public
+name|ASTFrontendAction
+block|{
+name|FileRemapper
+name|Remapper
+block|;
+name|protected
+operator|:
+name|virtual
+name|bool
+name|BeginInvocation
+argument_list|(
+name|CompilerInstance
+operator|&
+name|CI
+argument_list|)
+block|;
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+block|; }
+decl_stmt|;
+name|class
 name|MigrateAction
 range|:
 name|public
@@ -157,6 +194,66 @@ argument_list|,
 argument|StringRef plistOut
 argument_list|,
 argument|bool emitPremigrationARCErrors
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// \brief Migrates to modern ObjC syntax.
+name|class
+name|ObjCMigrateAction
+range|:
+name|public
+name|WrapperFrontendAction
+block|{
+name|std
+operator|::
+name|string
+name|MigrateDir
+block|;
+name|bool
+name|MigrateLiterals
+block|;
+name|bool
+name|MigrateSubscripting
+block|;
+name|FileRemapper
+name|Remapper
+block|;
+name|CompilerInstance
+operator|*
+name|CompInst
+block|;
+name|public
+operator|:
+name|ObjCMigrateAction
+argument_list|(
+argument|FrontendAction *WrappedAction
+argument_list|,
+argument|StringRef migrateDir
+argument_list|,
+argument|bool migrateLiterals
+argument_list|,
+argument|bool migrateSubscripting
+argument_list|)
+block|;
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|BeginInvocation
+argument_list|(
+name|CompilerInstance
+operator|&
+name|CI
 argument_list|)
 block|; }
 decl_stmt|;

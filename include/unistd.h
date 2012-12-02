@@ -323,6 +323,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_POSIX_CPUTIME
+value|200112L
+end_define
+
+begin_define
+define|#
+directive|define
 name|_POSIX_READER_WRITER_LOCKS
 value|200112L
 end_define
@@ -3402,14 +3409,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|pid_t
 name|vfork
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

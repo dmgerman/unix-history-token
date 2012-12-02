@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"XCore.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"XCore.h"
 end_include
 
 begin_decl_stmt
@@ -532,8 +532,6 @@ name|computeMaskedBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|const APInt&Mask
-argument_list|,
 argument|APInt&KnownZero
 argument_list|,
 argument|APInt&KnownOne
@@ -569,25 +567,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)

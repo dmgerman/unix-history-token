@@ -18390,6 +18390,17 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|DW_FORM_flag_present
+case|:
+name|DW_UNSND
+argument_list|(
+name|attr
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|DW_FORM_sdata
 case|:
 name|DW_SND
@@ -27917,6 +27928,17 @@ argument_list|(
 name|gdb_stderr
 argument_list|,
 literal|"flag: FALSE"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_FORM_flag_present
+case|:
+name|fprintf_unfiltered
+argument_list|(
+name|gdb_stderr
+argument_list|,
+literal|"flag: TRUE"
 argument_list|)
 expr_stmt|;
 break|break;

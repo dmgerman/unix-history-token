@@ -1565,7 +1565,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*          * Set result to ONES (TRUE) if Value == 0.  Note:          * ReturnDesc->Integer.Value is initially == 0 (FALSE) from above.          */
+comment|/*          * Set result to ONES (TRUE) if Value == 0. Note:          * ReturnDesc->Integer.Value is initially == 0 (FALSE) from above.          */
 if|if
 condition|(
 operator|!
@@ -1597,7 +1597,7 @@ case|case
 name|AML_INCREMENT_OP
 case|:
 comment|/* Increment (Operand)  */
-comment|/*          * Create a new integer.  Can't just get the base integer and          * increment it because it may be an Arg or Field.          */
+comment|/*          * Create a new integer. Can't just get the base integer and          * increment it because it may be an Arg or Field.          */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -1755,7 +1755,7 @@ case|case
 name|AML_TYPE_OP
 case|:
 comment|/* ObjectType (SourceObject) */
-comment|/*          * Note: The operand is not resolved at this point because we want to          * get the associated object, not its value.  For example, we don't          * want to resolve a FieldUnit to its value, we want the actual          * FieldUnit object.          */
+comment|/*          * Note: The operand is not resolved at this point because we want to          * get the associated object, not its value. For example, we don't          * want to resolve a FieldUnit to its value, we want the actual          * FieldUnit object.          */
 comment|/* Get the type of the base object */
 name|Status
 operator|=
@@ -1848,7 +1848,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*          * The type of the base object must be integer, buffer, string, or          * package.  All others are not supported.          *          * NOTE: Integer is not specifically supported by the ACPI spec,          * but is supported implicitly via implicit operand conversion.          * rather than bother with conversion, we just use the byte width          * global (4 or 8 bytes).          */
+comment|/*          * The type of the base object must be integer, buffer, string, or          * package. All others are not supported.          *          * NOTE: Integer is not specifically supported by the ACPI spec,          * but is supported implicitly via implicit operand conversion.          * rather than bother with conversion, we just use the byte width          * global (4 or 8 bytes).          */
 switch|switch
 condition|(
 name|Type
@@ -2450,7 +2450,7 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*                      * Return the referenced element of the package.  We must                      * add another reference to the referenced object, however.                      */
+comment|/*                      * Return the referenced element of the package. We must                      * add another reference to the referenced object, however.                      */
 name|ReturnDesc
 operator|=
 operator|*

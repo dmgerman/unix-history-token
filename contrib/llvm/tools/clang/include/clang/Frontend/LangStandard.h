@@ -89,7 +89,7 @@ operator|<<
 literal|2
 operator|)
 block|,
-name|C1X
+name|C11
 init|=
 operator|(
 literal|1
@@ -256,9 +256,9 @@ operator|::
 name|C99
 return|;
 block|}
-comment|/// isC1X - Language is a superset of C1X.
+comment|/// isC11 - Language is a superset of C11.
 name|bool
-name|isC1X
+name|isC11
 argument_list|()
 specifier|const
 block|{
@@ -267,7 +267,7 @@ name|Flags
 operator|&
 name|frontend
 operator|::
-name|C1X
+name|C11
 return|;
 block|}
 comment|/// isCPlusPlus - Language is a C++ variant.

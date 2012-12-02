@@ -489,6 +489,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|option_table
@@ -3156,6 +3157,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|cctl_fe_table
@@ -4029,9 +4031,6 @@ modifier|*
 name|combinedopt
 parameter_list|)
 block|{
-name|int
-name|datamove_delay
-decl_stmt|;
 name|struct
 name|ctl_io_delay_info
 name|delay_info
@@ -4061,10 +4060,6 @@ name|int
 name|c
 decl_stmt|;
 name|retval
-operator|=
-literal|0
-expr_stmt|;
-name|datamove_delay
 operator|=
 literal|0
 expr_stmt|;
@@ -5048,6 +5043,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|cctl_err_types
@@ -5108,6 +5104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctladm_opts
 name|cctl_err_patterns
@@ -5232,6 +5229,8 @@ parameter_list|)
 block|{
 name|int
 name|retval
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ctl_error_desc
@@ -17756,8 +17755,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|option_index
-decl_stmt|,
 name|c
 decl_stmt|;
 name|ctladm_cmdfunction
@@ -17810,16 +17807,10 @@ name|fd
 decl_stmt|;
 name|int
 name|retries
-decl_stmt|,
-name|timeout
 decl_stmt|;
 name|int
 name|initid
 decl_stmt|;
-name|option_index
-operator|=
-literal|0
-expr_stmt|;
 name|retval
 operator|=
 literal|0
@@ -17850,10 +17841,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|lun
-operator|=
-literal|0
-expr_stmt|;
-name|timeout
 operator|=
 literal|0
 expr_stmt|;

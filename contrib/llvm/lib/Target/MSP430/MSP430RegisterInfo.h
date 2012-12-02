@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MSP430RegisterInfo.h - MSP430 Register Information Impl --*- C++ -*-===//
+comment|//===-- MSP430RegisterInfo.h - MSP430 Register Information Impl -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -146,29 +146,13 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)
 specifier|const
 block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getMatchingSuperRegClass
-argument_list|(
-argument|const TargetRegisterClass *A
-argument_list|,
-argument|const TargetRegisterClass *B
-argument_list|,
-argument|unsigned Idx
-argument_list|)
-specifier|const
-block|{
-comment|// No sub-classes makes this really easy.
-return|return
-name|A
-return|;
-block|}
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(

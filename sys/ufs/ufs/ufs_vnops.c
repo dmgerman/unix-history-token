@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -392,6 +398,13 @@ begin_decl_stmt
 specifier|static
 name|vop_getattr_t
 name|ufs_getattr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vop_ioctl_t
+name|ufs_ioctl
 decl_stmt|;
 end_decl_stmt
 
@@ -2766,7 +2779,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * If immutable or append, no one can change any of its attributes 	 * except the ones already handled (exec atime and, in some cases 	 * for the superuser, file flags including the immutability flags 	 * themselves). 	 */
+comment|/* 	 * If immutable or append, no one can change any of its attributes 	 * except the ones already handled (in some cases, file flags 	 * including the immutability flags themselves for the superuser). 	 */
 if|if
 condition|(
 name|ip
@@ -2941,8 +2954,6 @@ argument_list|,
 name|IO_NORMAL
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -7145,10 +7156,16 @@ name|i_number
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_rename: ino mismatch %d != %d\n"
+literal|"ufs_rename: ino mismatch %ju != %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fip
 operator|->
 name|i_number
@@ -7380,8 +7397,6 @@ argument_list|,
 name|tcnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -11429,6 +11444,25 @@ endif|#
 directive|endif
 break|break;
 case|case
+name|_PC_MIN_HOLE_SIZE
+case|:
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
+expr_stmt|;
+break|break;
+case|case
 name|_PC_ASYNC_IO
 case|:
 comment|/* _PC_ASYNC_IO should have been handled by upper layers. */
@@ -12620,6 +12654,66 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|ufs_ioctl
+parameter_list|(
+name|struct
+name|vop_ioctl_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|ap
+operator|->
+name|a_command
+condition|)
+block|{
+case|case
+name|FIOSEEKDATA
+case|:
+case|case
+name|FIOSEEKHOLE
+case|:
+return|return
+operator|(
+name|vn_bmap_seekhole
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+name|ap
+operator|->
+name|a_command
+argument_list|,
+operator|(
+name|off_t
+operator|*
+operator|)
+name|ap
+operator|->
+name|a_data
+argument_list|,
+name|ap
+operator|->
+name|a_cred
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|ENOTTY
+operator|)
+return|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/* Global vfs data structures for ufs. */
 end_comment
@@ -12690,6 +12784,11 @@ operator|.
 name|vop_inactive
 operator|=
 name|ufs_inactive
+block|,
+operator|.
+name|vop_ioctl
+operator|=
+name|ufs_ioctl
 block|,
 operator|.
 name|vop_link

@@ -207,11 +207,6 @@ argument_list|,
 name|NumOps
 argument_list|)
 block|,
-name|Parent
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|Linkage
 argument_list|(
 name|linkage
@@ -231,16 +226,17 @@ name|UnnamedAddr
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|Parent
+argument_list|(
+literal|0
+argument_list|)
 block|{
 name|setName
 argument_list|(
 name|Name
 argument_list|)
 block|;   }
-name|Module
-operator|*
-name|Parent
-block|;
 comment|// Note: VC++ treats enums as signed, so an extra bit is required to prevent
 comment|// Linkage and Visibility from turning into negative values.
 name|LinkageTypes
@@ -267,6 +263,11 @@ operator|:
 literal|1
 block|;
 comment|// This value's address is not significant
+name|Module
+operator|*
+name|Parent
+block|;
+comment|// The containing module.
 name|std
 operator|::
 name|string
@@ -700,6 +701,27 @@ operator|==
 name|CommonLinkage
 return|;
 block|}
+comment|/// isDiscardableIfUnused - Whether the definition of this global may be
+comment|/// discarded if it is not used in its compilation unit.
+specifier|static
+name|bool
+name|isDiscardableIfUnused
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
+name|isLinkOnceLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+operator|||
+name|isLocalLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
 comment|/// mayBeOverridden - Whether the definition of this global may be replaced
 comment|/// by something non-equivalent at link time.  For example, if a function has
 comment|/// weak linkage then the code defining it may be replaced by different code.
@@ -982,6 +1004,18 @@ specifier|const
 block|{
 return|return
 name|Linkage
+return|;
+block|}
+name|bool
+name|isDiscardableIfUnused
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDiscardableIfUnused
+argument_list|(
+name|Linkage
+argument_list|)
 return|;
 block|}
 name|bool

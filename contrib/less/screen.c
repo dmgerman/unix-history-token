@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -3377,7 +3377,12 @@ name|n
 expr_stmt|;
 endif|#
 directive|endif
-else|else
+if|if
+condition|(
+name|sc_height
+operator|<=
+literal|0
+condition|)
 name|sc_height
 operator|=
 name|DEF_SC_HEIGHT
@@ -3437,7 +3442,12 @@ name|n
 expr_stmt|;
 endif|#
 directive|endif
-else|else
+if|if
+condition|(
+name|sc_width
+operator|<=
+literal|0
+condition|)
 name|sc_width
 operator|=
 name|DEF_SC_WIDTH

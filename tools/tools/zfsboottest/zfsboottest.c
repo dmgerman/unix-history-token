@@ -337,9 +337,19 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|struct
+name|zfsmount
+name|zfsmnt
+decl_stmt|;
 name|dnode_phys_t
 name|dn
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|uint64_t rootobj;
+endif|#
+directive|endif
 name|spa_t
 modifier|*
 name|spa
@@ -622,7 +632,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|zfs_mount_pool
+name|zfs_spa_init
 argument_list|(
 name|spa
 argument_list|)
@@ -632,7 +642,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't mount pool\n"
+literal|"can't init pool\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -641,6 +651,40 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|if (zfs_get_root(spa,&rootobj)) { 		fprintf(stderr, "can't get root\n"); 		exit(1); 	}  	if (zfs_mount(spa, rootobj,&zfsmnt)) {
+else|#
+directive|else
+if|if
+condition|(
+name|zfs_mount
+argument_list|(
+name|spa
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|zfsmnt
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"can't mount\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
@@ -667,7 +711,8 @@ if|if
 condition|(
 name|zfs_lookup
 argument_list|(
-name|spa
+operator|&
+name|zfsmnt
 argument_list|,
 name|argv
 index|[

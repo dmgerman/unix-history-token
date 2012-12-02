@@ -2613,40 +2613,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|NMBOX
+name|ISP_NMBOX
 parameter_list|(
 name|isp
 parameter_list|)
-define|\
-value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 12 : 6)
+value|((IS_24XX(isp) || IS_23XX(isp))? 32 : (IS_2200(isp) ? 24 : 8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|NMBOX_BMASK
+name|ISP_NMBOX_BMASK
 parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 0xfff : 0x3f)
+value|((IS_24XX(isp) || IS_23XX(isp))? 0xffffffff : (IS_2200(isp)? 0x00ffffff : 0xff))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_MAILBOX
-parameter_list|(
-name|isp
-parameter_list|)
-value|((IS_FC(isp))? 12 : 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAILBOX_STORAGE
-value|12
+value|32
 end_define
 
 begin_comment
@@ -2671,13 +2660,13 @@ block|{
 name|uint16_t
 name|param
 index|[
-name|MAILBOX_STORAGE
+name|MAX_MAILBOX
 index|]
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|ibits
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|obits
 decl_stmt|;
 name|uint32_t

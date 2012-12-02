@@ -241,6 +241,9 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -251,9 +254,6 @@ name|UIToFPInst
 decl_stmt|;
 name|class
 name|UnreachableInst
-decl_stmt|;
-name|class
-name|UnwindInst
 decl_stmt|;
 name|class
 name|VAArgInst
@@ -433,10 +433,12 @@ comment|/// case's target basic block.
 struct|struct
 name|Case
 block|{
+specifier|const
 name|Constant
 modifier|*
 name|Low
 decl_stmt|;
+specifier|const
 name|Constant
 modifier|*
 name|High
@@ -473,11 +475,11 @@ argument_list|)
 block|{ }
 name|Case
 argument_list|(
-argument|Constant* low
+argument|const Constant *low
 argument_list|,
-argument|Constant* high
+argument|const Constant *high
 argument_list|,
-argument|MachineBasicBlock* bb
+argument|MachineBasicBlock *bb
 argument_list|,
 argument|uint32_t extraweight
 argument_list|)
@@ -694,98 +696,6 @@ name|CaseRec
 operator|>
 name|CaseRecVector
 expr_stmt|;
-comment|/// The comparison function for sorting the switch case values in the vector.
-comment|/// WARNING: Case ranges should be disjoint!
-struct|struct
-name|CaseCmp
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|Case
-operator|&
-name|C1
-operator|,
-specifier|const
-name|Case
-operator|&
-name|C2
-operator|)
-block|{
-name|assert
-argument_list|(
-name|isa
-operator|<
-name|ConstantInt
-operator|>
-operator|(
-name|C1
-operator|.
-name|Low
-operator|)
-operator|&&
-name|isa
-operator|<
-name|ConstantInt
-operator|>
-operator|(
-name|C2
-operator|.
-name|High
-operator|)
-argument_list|)
-block|;
-specifier|const
-name|ConstantInt
-operator|*
-name|CI1
-operator|=
-name|cast
-operator|<
-specifier|const
-name|ConstantInt
-operator|>
-operator|(
-name|C1
-operator|.
-name|Low
-operator|)
-block|;
-specifier|const
-name|ConstantInt
-operator|*
-name|CI2
-operator|=
-name|cast
-operator|<
-specifier|const
-name|ConstantInt
-operator|>
-operator|(
-name|C2
-operator|.
-name|High
-operator|)
-block|;
-return|return
-name|CI1
-operator|->
-name|getValue
-argument_list|()
-operator|.
-name|slt
-argument_list|(
-name|CI2
-operator|->
-name|getValue
-argument_list|()
-argument_list|)
-return|;
-block|}
-block|}
-struct|;
 struct|struct
 name|CaseBitsCmp
 block|{
@@ -1251,6 +1161,11 @@ name|AliasAnalysis
 modifier|*
 name|AA
 decl_stmt|;
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|LibInfo
+decl_stmt|;
 comment|/// SwitchCases - Vector of CaseBlock structures used to communicate
 comment|/// SwitchInst code generation information.
 name|std
@@ -1402,6 +1317,11 @@ argument_list|,
 name|AliasAnalysis
 operator|&
 name|aa
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|li
 argument_list|)
 expr_stmt|;
 comment|/// clear - Clear out the current SelectionDAG and the associated
@@ -1415,7 +1335,7 @@ name|clear
 parameter_list|()
 function_decl|;
 comment|/// clearDanglingDebugInfo - Clear the dangling debug information
-comment|/// map. This function is seperated from the clear so that debug
+comment|/// map. This function is separated from the clear so that debug
 comment|/// information that is dangling in a basic block can be properly
 comment|/// resolved in a different basic block. This allows the
 comment|/// SelectionDAG to resolve dangling debug information attached
@@ -1906,16 +1826,19 @@ parameter_list|)
 function_decl|;
 name|uint32_t
 name|getEdgeWeight
-parameter_list|(
+argument_list|(
+specifier|const
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|Src
-parameter_list|,
+argument_list|,
+specifier|const
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|Dst
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|addSuccessorWithWeight
 parameter_list|(
@@ -2023,15 +1946,6 @@ name|visitResume
 parameter_list|(
 specifier|const
 name|ResumeInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitUnwind
-parameter_list|(
-specifier|const
-name|UnwindInst
 modifier|&
 name|I
 parameter_list|)
@@ -2662,6 +2576,18 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
+name|bool
+name|visitUnaryFloatCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|unsigned
+name|Opcode
+parameter_list|)
+function_decl|;
 name|void
 name|visitAtomicLoad
 parameter_list|(
@@ -2833,22 +2759,6 @@ literal|"UserOp2 should not exist at instruction selection time!"
 argument_list|)
 expr_stmt|;
 block|}
-specifier|const
-name|char
-modifier|*
-name|implVisitAluOverflow
-argument_list|(
-specifier|const
-name|CallInst
-operator|&
-name|I
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
-name|Op
-argument_list|)
-decl_stmt|;
 name|void
 name|HandlePHINodesInSuccessorBlocks
 parameter_list|(

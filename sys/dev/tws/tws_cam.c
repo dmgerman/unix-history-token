@@ -3152,7 +3152,7 @@ name|ccb_h
 operator|.
 name|status
 operator||=
-name|CAM_LUN_INVALID
+name|CAM_DEV_NOT_THERE
 expr_stmt|;
 block|}
 else|else
@@ -3174,7 +3174,7 @@ name|ccb_h
 operator|.
 name|status
 operator||=
-name|CAM_TID_INVALID
+name|CAM_SEL_TIMEOUT
 expr_stmt|;
 block|}
 block|}
@@ -5711,6 +5711,11 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|// EINPROGRESS is not a fatal error.
 block|}
 block|}
 else|else
@@ -5789,6 +5794,23 @@ name|tws_cmd_generic
 modifier|*
 name|gcmd
 decl_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|TWS_TRACE
+argument_list|(
+name|sc
+argument_list|,
+literal|"SOMETHING BAD HAPPENED! error = %d\n"
+argument_list|,
+name|error
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -5994,6 +6016,8 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|&
+operator|(
 name|req
 operator|->
 name|cmd_pkt
@@ -6003,6 +6027,7 @@ operator|.
 name|pkt_a
 operator|.
 name|sg_list
+operator|)
 argument_list|,
 name|sgls
 argument_list|)
@@ -7483,32 +7508,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|chan
-condition|)
-block|{
-name|sc
-operator|->
-name|chan
-operator|=
-literal|0
-expr_stmt|;
 name|wakeup_one
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
 name|sc
 operator|->
 name|chan
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

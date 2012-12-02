@@ -1530,81 +1530,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|T
-name|v
-operator|>
-expr|struct
-name|integral_constant
-block|{
-typedef|typedef
-name|T
-name|value_type
-typedef|;
-specifier|static
-specifier|const
-name|value_type
-name|value
-operator|=
-name|v
-expr_stmt|;
-typedef|typedef
-name|integral_constant
-operator|<
-name|T
-operator|,
-name|v
-operator|>
-name|type
-expr_stmt|;
-name|operator
-name|value_type
-parameter_list|()
-block|{
-return|return
-name|value
-return|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_typedef
-typedef|typedef
-name|integral_constant
-operator|<
-name|bool
-operator|,
-name|true
-operator|>
-name|true_type
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|integral_constant
-operator|<
-name|bool
-operator|,
-name|false
-operator|>
-name|false_type
-expr_stmt|;
-end_typedef
-
-begin_comment
 comment|// is_error_code_enum
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1617,13 +1543,7 @@ name|public
 name|false_type
 block|{}
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// is_error_condition_enum
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1636,21 +1556,9 @@ name|public
 name|false_type
 block|{}
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Some error codes are not present on all platforms, so we provide equivalents
-end_comment
-
-begin_comment
 comment|// for them:
-end_comment
-
-begin_comment
 comment|//enum class errc
-end_comment
-
-begin_struct
 struct|struct
 name|errc
 block|{
@@ -2108,9 +2016,6 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2123,9 +2028,6 @@ operator|:
 name|true_type
 block|{ }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2140,31 +2042,16 @@ operator|:
 name|true_type
 block|{ }
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|class
 name|error_condition
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|error_code
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// class error_category
-end_comment
-
-begin_decl_stmt
 name|class
 name|_do_message
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|error_category
 block|{
@@ -2322,13 +2209,7 @@ name|class
 name|_do_message
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|_do_message
 range|:
@@ -2348,48 +2229,27 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 specifier|const
 name|error_category
 modifier|&
 name|generic_category
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|error_category
 modifier|&
 name|system_category
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Get the error_category used for errno values from POSIX functions. This is
-end_comment
-
-begin_comment
 comment|/// the same as the system_category on POSIX systems, but is the same as the
-end_comment
-
-begin_comment
 comment|/// generic_category on Windows.
-end_comment
-
-begin_function_decl
 specifier|const
 name|error_category
 modifier|&
 name|posix_category
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|class
 name|error_condition
 block|{
@@ -2584,13 +2444,7 @@ name|unspecified_bool_true
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_function
 specifier|inline
 name|error_condition
 name|make_error_condition
@@ -2615,9 +2469,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -2668,13 +2519,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// error_code
-end_comment
-
-begin_decl_stmt
 name|class
 name|error_code
 block|{
@@ -2701,13 +2546,23 @@ argument_list|(
 argument|&system_category()
 argument_list|)
 block|{}
+specifier|static
+name|error_code
+name|success
+argument_list|()
+block|{
+return|return
+name|error_code
+argument_list|()
+return|;
+block|}
 name|error_code
 argument_list|(
 argument|int _val
 argument_list|,
 argument|const error_category& _cat
 argument_list|)
-operator|:
+block|:
 name|_val_
 argument_list|(
 name|_val
@@ -2883,13 +2738,7 @@ name|unspecified_bool_true
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_function
 specifier|inline
 name|error_code
 name|make_error_code
@@ -2914,9 +2763,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -2967,9 +2813,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3008,9 +2851,6 @@ name|value
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3059,9 +2899,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3084,9 +2921,6 @@ operator|==
 name|_x
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3125,9 +2959,6 @@ name|value
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3153,9 +2984,6 @@ name|_y
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3181,9 +3009,6 @@ name|_y
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3209,9 +3034,6 @@ name|_y
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -3237,25 +3059,10 @@ name|_y
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Windows errors.
-end_comment
-
-begin_comment
 comment|//  To construct an error_code after an API error:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//      error_code( ::GetLastError(), system_category() )
-end_comment
-
-begin_struct
 struct|struct
 name|windows_error
 block|{
@@ -3560,9 +3367,6 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -3575,9 +3379,6 @@ operator|:
 name|true_type
 block|{ }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -3592,9 +3393,6 @@ operator|:
 name|true_type
 block|{ }
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|inline
 name|error_code
 name|make_error_code
@@ -3619,10 +3417,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

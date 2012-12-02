@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2010 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2005-2011 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -189,7 +189,7 @@ name|char
 modifier|*
 name|iscsi_driver_version
 init|=
-literal|"2.2.4.2"
+literal|"2.3.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,7 +1315,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d/%d /---- free -----/\n"
+literal|"free npdu_alloc=%d, npdu_max=%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -1325,10 +1325,6 @@ name|sc
 operator|->
 name|npdu_max
 argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|0
 expr_stmt|;
 name|uiomove
 argument_list|(
@@ -3980,6 +3976,23 @@ argument_list|,
 literal|"number of active session"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISCSI_INITIATOR_DEBUG
+name|mtx_init
+argument_list|(
+operator|&
+name|iscsi_dbg_mtx
+argument_list|,
+literal|"iscsi_dbg"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"iscsi: version %s\n"
@@ -4101,6 +4114,17 @@ name|isc
 argument_list|)
 expr_stmt|;
 comment|// XXX: check EVENTHANDLER_ ...
+ifdef|#
+directive|ifdef
+name|ISCSI_INITIATOR_DEBUG
+name|mtx_destroy
+argument_list|(
+operator|&
+name|iscsi_dbg_mtx
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|isc

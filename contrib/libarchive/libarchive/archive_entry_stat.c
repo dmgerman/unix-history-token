@@ -200,6 +200,9 @@ name|st
 operator|->
 name|st_gid
 operator|=
+operator|(
+name|gid_t
+operator|)
 name|archive_entry_gid
 argument_list|(
 name|entry
@@ -209,6 +212,9 @@ name|st
 operator|->
 name|st_uid
 operator|=
+operator|(
+name|uid_t
+operator|)
 name|archive_entry_uid
 argument_list|(
 name|entry
@@ -218,6 +224,9 @@ name|st
 operator|->
 name|st_ino
 operator|=
+operator|(
+name|ino_t
+operator|)
 name|archive_entry_ino64
 argument_list|(
 name|entry
@@ -245,6 +254,9 @@ name|st
 operator|->
 name|st_size
 operator|=
+operator|(
+name|off_t
+operator|)
 name|archive_entry_size
 argument_list|(
 name|entry

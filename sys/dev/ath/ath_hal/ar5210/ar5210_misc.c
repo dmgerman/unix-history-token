@@ -2293,13 +2293,6 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
-name|AR_DIAG_SW_DIS_CRYPTO
-value|(AR_DIAG_SW_DIS_ENC | AR_DIAG_SW_DIS_DEC)
-end_define
-
 begin_function
 name|HAL_STATUS
 name|ar5210GetCapability
@@ -2329,17 +2322,17 @@ case|case
 name|HAL_CAP_CIPHER
 case|:
 comment|/* cipher handled in hardware */
+if|#
+directive|if
+literal|0
+block|return (capability == HAL_CIPHER_WEP ? HAL_OK : HAL_ENOTSUPP);
+else|#
+directive|else
 return|return
-operator|(
-name|capability
-operator|==
-name|HAL_CIPHER_WEP
-condition|?
-name|HAL_OK
-else|:
 name|HAL_ENOTSUPP
-operator|)
 return|;
+endif|#
+directive|endif
 default|default:
 return|return
 name|ath_hal_getcapability
@@ -2418,11 +2411,9 @@ expr_stmt|;
 comment|/* ACK+CTS */
 endif|#
 directive|endif
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 name|AH_PRIVATE
 argument_list|(
@@ -2607,6 +2598,120 @@ argument_list|,
 name|resultsize
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return what percentage of the extension channel is busy.  * This is always disabled for AR5210 series NICs.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|ar5210Get11nExtBusy
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * There's no channel survey support for the AR5210.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5210GetMibCycleCounts
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_SURVEY_SAMPLE
+modifier|*
+name|hsample
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AH_FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ar5210EnableDfs
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|ar5210GetDfsThresh
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/*  * Update the diagnostic register.  *  * This merges in the diagnostic register setting with the default  * value, which may or may not involve disabling hardware encryption.  */
+end_comment
+
+begin_function
+name|void
+name|ar5210UpdateDiagReg
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|val
+parameter_list|)
+block|{
+comment|/* Disable all hardware encryption */
+name|val
+operator||=
+name|AR_DIAG_SW_DIS_CRYPTO
+expr_stmt|;
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_DIAG_SW
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

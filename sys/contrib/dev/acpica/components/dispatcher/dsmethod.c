@@ -306,7 +306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              WalkState           - current state, NULL if not yet executing  *                                    a method.  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution.  Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              WalkState           - current state, NULL if not yet executing  *                                    a method.  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution. Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -906,11 +906,13 @@ operator|!
 name|Info
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|Info
 operator|->
@@ -1104,7 +1106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsRestartControlMethod  *  * PARAMETERS:  WalkState           - State for preempted method (caller)  *              ReturnDesc          - Return value from the called method  *  * RETURN:      Status  *  * DESCRIPTION: Restart a method that was preempted by another (nested) method  *              invocation.  Handle the return value (if any) from the callee.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsRestartControlMethod  *  * PARAMETERS:  WalkState           - State for preempted method (caller)  *              ReturnDesc          - Return value from the called method  *  * RETURN:      Status  *  * DESCRIPTION: Restart a method that was preempted by another (nested) method  *              invocation. Handle the return value (if any) from the callee.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1270,7 +1272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsTerminateControlMethod  *  * PARAMETERS:  MethodDesc          - Method object  *              WalkState           - State associated with the method  *  * RETURN:      None  *  * DESCRIPTION: Terminate a control method.  Delete everything that the method  *              created, delete all locals and arguments, and delete the parse  *              tree if requested.  *  * MUTEX:       Interpreter is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsTerminateControlMethod  *  * PARAMETERS:  MethodDesc          - Method object  *              WalkState           - State associated with the method  *  * RETURN:      None  *  * DESCRIPTION: Terminate a control method. Delete everything that the method  *              created, delete all locals and arguments, and delete the parse  *              tree if requested.  *  * MUTEX:       Interpreter is locked  *  ******************************************************************************/
 end_comment
 
 begin_function

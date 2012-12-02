@@ -110,6 +110,24 @@ argument_list|)
 operator|=
 literal|0
 block|;
+name|virtual
+name|void
+name|EmitCFIStartProcImpl
+argument_list|(
+name|MCDwarfFrameInfo
+operator|&
+name|Frame
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitCFIEndProcImpl
+argument_list|(
+name|MCDwarfFrameInfo
+operator|&
+name|Frame
+argument_list|)
+block|;
 name|protected
 operator|:
 name|MCObjectStreamer
@@ -292,7 +310,7 @@ name|Inst
 argument_list|)
 block|;
 name|virtual
-name|void
+name|bool
 name|EmitValueToOffset
 argument_list|(
 argument|const MCExpr *Offset
@@ -330,7 +348,17 @@ argument_list|)
 block|;
 name|virtual
 name|void
-name|Finish
+name|EmitGPRel32Value
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+argument_list|)
+block|;
+name|virtual
+name|void
+name|FinishImpl
 argument_list|()
 block|;
 comment|/// @}

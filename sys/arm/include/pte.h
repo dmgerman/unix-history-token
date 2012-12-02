@@ -19,35 +19,6 @@ directive|define
 name|_MACHINE_PTE_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|PDSHIFT
-value|20
-end_define
-
-begin_comment
-comment|/* LOG2(NBPDR) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBPD
-value|(1<< PDSHIFT)
-end_define
-
-begin_comment
-comment|/* bytes/page dir */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPTEPD
-value|(NBPD / PAGE_SIZE)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -80,28 +51,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|PD_MASK
-value|0xfff00000
-end_define
-
-begin_comment
-comment|/* page directory address bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PT_MASK
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* page table address bits */
-end_comment
 
 begin_define
 define|#
@@ -230,156 +179,6 @@ end_define
 begin_comment
 comment|/* L2 invalid type */
 end_comment
-
-begin_comment
-comment|/* PTE construction macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L2_LPTE
-parameter_list|(
-name|p
-parameter_list|,
-name|a
-parameter_list|,
-name|f
-parameter_list|)
-value|((p) | PT_AP(a) | L2_LPAGE | (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|L2_SPTE
-parameter_list|(
-name|p
-parameter_list|,
-name|a
-parameter_list|,
-name|f
-parameter_list|)
-value|((p) | PT_AP(a) | L2_SPAGE | (f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|L2_PTE
-parameter_list|(
-name|p
-parameter_list|,
-name|a
-parameter_list|)
-value|L2_SPTE((p), (a), PT_CACHEABLE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|L2_PTE_NC
-parameter_list|(
-name|p
-parameter_list|,
-name|a
-parameter_list|)
-value|L2_SPTE((p), (a), PT_B)
-end_define
-
-begin_define
-define|#
-directive|define
-name|L2_PTE_NC_NB
-parameter_list|(
-name|p
-parameter_list|,
-name|a
-parameter_list|)
-value|L2_SPTE((p), (a), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|L1_SECPTE
-parameter_list|(
-name|p
-parameter_list|,
-name|a
-parameter_list|,
-name|f
-parameter_list|)
-value|((p) | ((a)<< AP_SECTION_SHIFT) | (f) \ 				| L1_SECTION | PT_U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|L1_PTE
-parameter_list|(
-name|p
-parameter_list|)
-value|((p) | 0x00 | L1_PAGE | PT_U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|L1_SEC
-parameter_list|(
-name|p
-parameter_list|,
-name|c
-parameter_list|)
-value|L1_SECPTE((p), AP_KRW, (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|L1_SEC_SIZE
-value|(1<< PDSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|L2_LPAGE_SIZE
-value|(NBPG * 16)
-end_define
-
-begin_comment
-comment|/* Domain types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOMAIN_FAULT
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOMAIN_CLIENT
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOMAIN_RESERVED
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOMAIN_MANAGER
-value|0x03
-end_define
 
 begin_comment
 comment|/* L1 and L2 address masks */
@@ -775,6 +574,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L1_S_TEX
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x7)<< 12)
+end_define
+
+begin_comment
+comment|/* Type Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_S_TEX_MASK
+value|(0x7<< 12)
+end_define
+
+begin_comment
+comment|/* Type Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_S_APX
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
 name|L1_SHARED
 value|(1<< 16)
 end_define
@@ -1130,11 +961,64 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L2_AP
+name|L2_SHARED
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L2_APX
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L2_XN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L2_L_TEX_MASK
+value|(0x7<< 12)
+end_define
+
+begin_comment
+comment|/* Type Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2_L_TEX
 parameter_list|(
 name|x
 parameter_list|)
-value|(L2_AP0(x) | L2_AP1(x) | L2_AP2(x) | L2_AP3(x))
+value|(((x)& 0x7)<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L2_S_TEX_MASK
+value|(0x7<< 6)
+end_define
+
+begin_comment
+comment|/* Type Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2_S_TEX
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x7)<< 6)
 end_define
 
 begin_define
@@ -1335,7 +1219,7 @@ comment|/* Xscale core 3 */
 end_comment
 
 begin_comment
-comment|/*  *  * Cache attributes with L2 present, S = 0  * T E X C B   L1 i-cache L1 d-cache L1 DC WP  L2 cacheable write coalesce  * 0 0 0 0 0 	N	  N 		- 	N		N   * 0 0 0 0 1	N	  N		-	N		Y  * 0 0 0 1 0	Y	  Y		WT	N		Y  * 0 0 0 1 1	Y	  Y		WB	Y		Y  * 0 0 1 0 0	N	  N		-	Y		Y  * 0 0 1 0 1	N	  N		-	N		N  * 0 0 1 1 0	Y	  Y		-	-		N  * 0 0 1 1 1	Y	  Y		WT	Y		Y  * 0 1 0 0 0	N	  N		-	N		N  * 0 1 0 0 1	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 0	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 1	N/A	N/A		N/A	N/A		N/A  * 0 1 1 X X	N/A	N/A		N/A	N/A		N/A  * 1 X 0 0 0	N	  N		-	N		Y  * 1 X 0 0 1	Y	  N		WB	N		Y  * 1 X 0 1 0	Y	  N		WT	N		Y  * 1 X 0 1 1	Y	  N		WB	Y		Y  * 1 X 1 0 0	N	  N		-	Y		Y  * 1 X 1 0 1	Y	  Y		WB	Y		Y  * 1 X 1 1 0	Y	  Y		WT	Y		Y  * 1 X 1 1 1	Y	  Y		WB	Y		Y  *  *  *  *   * Cache attributes with L2 present, S = 1  * T E X C B   L1 i-cache L1 d-cache L1 DC WP  L2 cacheable write coalesce  * 0 0 0 0 0 	N	  N 		- 	N		N   * 0 0 0 0 1	N	  N		-	N		Y  * 0 0 0 1 0	Y	  Y		-	N		Y  * 0 0 0 1 1	Y	  Y		WT	Y		Y  * 0 0 1 0 0	N	  N		-	Y		Y  * 0 0 1 0 1	N	  N		-	N		N  * 0 0 1 1 0	Y	  Y		-	-		N  * 0 0 1 1 1	Y	  Y		WT	Y		Y  * 0 1 0 0 0	N	  N		-	N		N  * 0 1 0 0 1	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 0	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 1	N/A	N/A		N/A	N/A		N/A  * 0 1 1 X X	N/A	N/A		N/A	N/A		N/A  * 1 X 0 0 0	N	  N		-	N		Y  * 1 X 0 0 1	Y	  N		-	N		Y  * 1 X 0 1 0	Y	  N		-	N		Y  * 1 X 0 1 1	Y	  N		-	Y		Y  * 1 X 1 0 0	N	  N		-	Y		Y  * 1 X 1 0 1	Y	  Y		WT	Y		Y  * 1 X 1 1 0	Y	  Y		WT	Y		Y  * 1 X 1 1 1	Y	  Y		WT	Y		Y  */
+comment|/*  *  * Cache attributes with L2 present, S = 0  * T E X C B   L1 i-cache L1 d-cache L1 DC WP  L2 cacheable write coalesce  * 0 0 0 0 0 	N	  N 		- 	N		N  * 0 0 0 0 1	N	  N		-	N		Y  * 0 0 0 1 0	Y	  Y		WT	N		Y  * 0 0 0 1 1	Y	  Y		WB	Y		Y  * 0 0 1 0 0	N	  N		-	Y		Y  * 0 0 1 0 1	N	  N		-	N		N  * 0 0 1 1 0	Y	  Y		-	-		N  * 0 0 1 1 1	Y	  Y		WT	Y		Y  * 0 1 0 0 0	N	  N		-	N		N  * 0 1 0 0 1	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 0	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 1	N/A	N/A		N/A	N/A		N/A  * 0 1 1 X X	N/A	N/A		N/A	N/A		N/A  * 1 X 0 0 0	N	  N		-	N		Y  * 1 X 0 0 1	Y	  N		WB	N		Y  * 1 X 0 1 0	Y	  N		WT	N		Y  * 1 X 0 1 1	Y	  N		WB	Y		Y  * 1 X 1 0 0	N	  N		-	Y		Y  * 1 X 1 0 1	Y	  Y		WB	Y		Y  * 1 X 1 1 0	Y	  Y		WT	Y		Y  * 1 X 1 1 1	Y	  Y		WB	Y		Y  *  *  *  *   * Cache attributes with L2 present, S = 1  * T E X C B   L1 i-cache L1 d-cache L1 DC WP  L2 cacheable write coalesce  * 0 0 0 0 0 	N	  N 		- 	N		N  * 0 0 0 0 1	N	  N		-	N		Y  * 0 0 0 1 0	Y	  Y		-	N		Y  * 0 0 0 1 1	Y	  Y		WT	Y		Y  * 0 0 1 0 0	N	  N		-	Y		Y  * 0 0 1 0 1	N	  N		-	N		N  * 0 0 1 1 0	Y	  Y		-	-		N  * 0 0 1 1 1	Y	  Y		WT	Y		Y  * 0 1 0 0 0	N	  N		-	N		N  * 0 1 0 0 1	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 0	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 1	N/A	N/A		N/A	N/A		N/A  * 0 1 1 X X	N/A	N/A		N/A	N/A		N/A  * 1 X 0 0 0	N	  N		-	N		Y  * 1 X 0 0 1	Y	  N		-	N		Y  * 1 X 0 1 0	Y	  N		-	N		Y  * 1 X 0 1 1	Y	  N		-	Y		Y  * 1 X 1 0 0	N	  N		-	Y		Y  * 1 X 1 0 1	Y	  Y		WT	Y		Y  * 1 X 1 1 0	Y	  Y		WT	Y		Y  * 1 X 1 1 1	Y	  Y		WT	Y		Y  */
 end_comment
 
 begin_endif

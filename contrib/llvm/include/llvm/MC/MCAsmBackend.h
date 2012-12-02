@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCFixupKindInfo.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_decl_stmt
@@ -72,13 +72,25 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCELFObjectTargetWriter
+name|MCAsmLayout
 decl_stmt|;
 name|class
-name|MCFixup
+name|MCAssembler
+decl_stmt|;
+name|class
+name|MCELFObjectTargetWriter
+decl_stmt|;
+struct_decl|struct
+name|MCFixupKindInfo
+struct_decl|;
+name|class
+name|MCFragment
 decl_stmt|;
 name|class
 name|MCInst
+decl_stmt|;
+name|class
+name|MCInstFragment
 decl_stmt|;
 name|class
 name|MCObjectWriter
@@ -86,14 +98,9 @@ decl_stmt|;
 name|class
 name|MCSection
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
 name|class
-name|SmallVectorImpl
-expr_stmt|;
+name|MCValue
+decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -161,17 +168,12 @@ name|createELFObjectTargetWriter
 argument_list|()
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"createELFObjectTargetWriter is not supported by asm backend"
+literal|"createELFObjectTargetWriter is not supported by asm "
+literal|"backend"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// hasReliableSymbolDifference - Check whether this target implements
 comment|/// accurate relocations for differences between symbols. If not, differences
 comment|/// between symbols will always be relocatable expressions and any references
@@ -250,13 +252,53 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// processFixupValue - Target hook to adjust the literal value of a fixup
+comment|/// if necessary. IsResolved signals whether the caller believes a relocation
+comment|/// is needed; the target can modify the value. The default does nothing.
+name|virtual
+name|void
+name|processFixupValue
+parameter_list|(
+specifier|const
+name|MCAssembler
+modifier|&
+name|Asm
+parameter_list|,
+specifier|const
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+specifier|const
+name|MCFixup
+modifier|&
+name|Fixup
+parameter_list|,
+specifier|const
+name|MCFragment
+modifier|*
+name|DF
+parameter_list|,
+name|MCValue
+modifier|&
+name|Target
+parameter_list|,
+name|uint64_t
+modifier|&
+name|Value
+parameter_list|,
+name|bool
+modifier|&
+name|IsResolved
+parameter_list|)
+block|{}
 comment|/// @}
-comment|/// ApplyFixup - Apply the \arg Value for given \arg Fixup into the provided
+comment|/// applyFixup - Apply the \arg Value for given \arg Fixup into the provided
 comment|/// data fragment, at the offset specified by the fixup and following the
 comment|/// fixup kind as appropriate.
 name|virtual
 name|void
-name|ApplyFixup
+name|applyFixup
 argument_list|(
 specifier|const
 name|MCFixup
@@ -280,18 +322,46 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Target Relaxation Interfaces
 comment|/// @{
-comment|/// MayNeedRelaxation - Check whether the given instruction may need
+comment|/// mayNeedRelaxation - Check whether the given instruction may need
 comment|/// relaxation.
 comment|///
 comment|/// \param Inst - The instruction to test.
 name|virtual
 name|bool
-name|MayNeedRelaxation
+name|mayNeedRelaxation
 argument_list|(
 specifier|const
 name|MCInst
 operator|&
 name|Inst
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// fixupNeedsRelaxation - Target specific predicate for whether a given
+comment|/// fixup requires the associated instruction to be relaxed.
+name|virtual
+name|bool
+name|fixupNeedsRelaxation
+argument_list|(
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|uint64_t
+name|Value
+argument_list|,
+specifier|const
+name|MCInstFragment
+operator|*
+name|DF
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
 argument_list|)
 decl|const
 init|=
@@ -305,7 +375,7 @@ comment|/// output.
 comment|/// \parm Res [output] - On return, the relaxed instruction.
 name|virtual
 name|void
-name|RelaxInstruction
+name|relaxInstruction
 argument_list|(
 specifier|const
 name|MCInst
@@ -321,14 +391,14 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// @}
-comment|/// WriteNopData - Write an (optimal) nop sequence of Count bytes to the given
+comment|/// writeNopData - Write an (optimal) nop sequence of Count bytes to the given
 comment|/// output. If the target cannot generate such a sequence, it should return an
 comment|/// error.
 comment|///
 comment|/// \return - True on success.
 name|virtual
 name|bool
-name|WriteNopData
+name|writeNopData
 argument_list|(
 name|uint64_t
 name|Count
@@ -341,11 +411,11 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// HandleAssemblerFlag - Handle any target-specific assembler flags.
+comment|/// handleAssemblerFlag - Handle any target-specific assembler flags.
 comment|/// By default, do nothing.
 name|virtual
 name|void
-name|HandleAssemblerFlag
+name|handleAssemblerFlag
 parameter_list|(
 name|MCAssemblerFlag
 name|Flag

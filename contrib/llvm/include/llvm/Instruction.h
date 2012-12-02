@@ -533,9 +533,7 @@ name|MDNode
 modifier|*
 name|getMetadata
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Kind
 argument_list|)
 decl|const
@@ -640,9 +638,7 @@ function_decl|;
 name|void
 name|setMetadata
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Kind
 parameter_list|,
 name|MDNode
@@ -711,9 +707,7 @@ name|MDNode
 modifier|*
 name|getMetadataImpl
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Kind
 argument_list|)
 decl|const
@@ -820,6 +814,63 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
+comment|/// isIdempotent - Return true if the instruction is idempotent:
+comment|///
+comment|///   Idempotent operators satisfy:  x op x === x
+comment|///
+comment|/// In LLVM, the And and Or operators are idempotent.
+comment|///
+name|bool
+name|isIdempotent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isIdempotent
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isIdempotent
+parameter_list|(
+name|unsigned
+name|op
+parameter_list|)
+function_decl|;
+comment|/// isNilpotent - Return true if the instruction is nilpotent:
+comment|///
+comment|///   Nilpotent operators satisfy:  x op x === Id,
+comment|///
+comment|///   where Id is the identity for the operator, i.e. a constant such that
+comment|///     x op Id === x and Id op x === x for all x.
+comment|///
+comment|/// In LLVM, the Xor operator is nilpotent.
+comment|///
+name|bool
+name|isNilpotent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isNilpotent
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isNilpotent
+parameter_list|(
+name|unsigned
+name|op
+parameter_list|)
+function_decl|;
 comment|/// mayWriteToMemory - Return true if this instruction may modify memory.
 comment|///
 name|bool
@@ -876,29 +927,6 @@ name|mayThrow
 argument_list|()
 return|;
 block|}
-comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
-comment|/// have any effects besides calculating the result and does not have
-comment|/// undefined behavior.
-comment|///
-comment|/// This method never returns true for an instruction that returns true for
-comment|/// mayHaveSideEffects; however, this method also does some other checks in
-comment|/// addition. It checks for undefined behavior, like dividing by zero or
-comment|/// loading from an invalid pointer (but not for undefined results, like a
-comment|/// shift with a shift amount larger than the width of the result). It checks
-comment|/// for malloc and alloca because speculatively executing them might cause a
-comment|/// memory leak. It also returns false for instructions related to control
-comment|/// flow, specifically terminators and PHI nodes.
-comment|///
-comment|/// This method only looks at the instruction itself and its operands, so if
-comment|/// this method returns true, it is safe to move the instruction as long as
-comment|/// the correct dominance relationships for the operands and users hold.
-comment|/// However, this method can return true for instructions that read memory;
-comment|/// for such instructions, moving them may change the resulting value.
-name|bool
-name|isSafeToSpeculativelyExecute
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// clone() - Create a copy of 'this' instruction that is identical in all
 comment|/// ways except the following:
 comment|///   * The instruction has no parent
@@ -936,6 +964,27 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// When checking for operation equivalence (using isSameOperationAs) it is
+comment|/// sometimes useful to ignore certain attributes.
+enum|enum
+name|OperationEquivalenceFlags
+block|{
+comment|/// Check for equivalence ignoring load/store alignment.
+name|CompareIgnoringAlignment
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/// Check for equivalence treating a type and a vector of that type
+comment|/// as equivalent.
+name|CompareUsingScalarTypes
+init|=
+literal|1
+operator|<<
+literal|1
+block|}
+enum|;
 comment|/// This function determines if the specified instruction executes the same
 comment|/// operation as the current one. This means that the opcodes, type, operand
 comment|/// types and any other factors affecting the operation must be the same. This
@@ -951,6 +1000,11 @@ specifier|const
 name|Instruction
 operator|*
 name|I
+argument_list|,
+name|unsigned
+name|flags
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;

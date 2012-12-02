@@ -55,6 +55,7 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl2_get_server_method
@@ -186,6 +187,7 @@ end_define
 
 begin_function
 specifier|static
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl2_get_server_method
@@ -1218,6 +1220,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|cp
@@ -1451,21 +1454,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|s
-operator|->
-name|session
-operator|->
-name|key_arg_length
-operator|=
-name|i
-expr_stmt|;
 if|if
 condition|(
-name|s
-operator|->
-name|session
-operator|->
-name|key_arg_length
+name|i
 operator|>
 name|SSL_MAX_KEY_ARG_LENGTH
 condition|)
@@ -1489,6 +1480,14 @@ operator|-
 literal|1
 return|;
 block|}
+name|s
+operator|->
+name|session
+operator|->
+name|key_arg_length
+operator|=
+name|i
+expr_stmt|;
 name|s
 operator|->
 name|state
@@ -1853,6 +1852,10 @@ name|c
 argument_list|,
 operator|&
 name|md
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

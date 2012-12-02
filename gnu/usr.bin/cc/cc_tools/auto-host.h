@@ -818,9 +818,11 @@ directive|ifndef
 name|USED_FOR_TARGET
 end_ifndef
 
-begin_comment
-comment|/* #undef HAVE_AS_REL16 */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_AS_REL16
+end_define
 
 begin_endif
 endif|#

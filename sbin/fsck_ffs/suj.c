@@ -2623,7 +2623,7 @@ condition|(
 name|brec
 operator|->
 name|jb_frags
-operator|!=
+operator|<
 name|frags
 condition|)
 return|return
@@ -2789,7 +2789,7 @@ name|srec
 operator|->
 name|sr_rec
 expr_stmt|;
-comment|/* 		 * If the block overlaps but does not match 		 * exactly it's a new allocation.  If it matches 		 * exactly this record refers to the current 		 * location. 		 */
+comment|/* 		 * If the block overlaps but does not match 		 * exactly this record refers to the current 		 * location. 		 */
 if|if
 condition|(
 name|blk_overlaps
@@ -3190,11 +3190,13 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Freeing %d frags at blk %jd\n"
+literal|"Freeing %d frags at blk %jd mask 0x%x\n"
 argument_list|,
 name|frags
 argument_list|,
 name|bno
+argument_list|,
+name|mask
 argument_list|)
 expr_stmt|;
 name|cg
@@ -4140,10 +4142,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Clearing inode %d from parent %d at offset %jd\n"
+literal|"Clearing inode %ju from parent %ju at offset %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|child
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|,
 name|diroff
@@ -4238,10 +4246,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Inode %d does not exist in %d at %jd"
+literal|"Inode %ju does not exist in %ju at %jd"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|child
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|,
 name|diroff
@@ -4370,8 +4384,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"Directory %d has bad mode %o\n"
+literal|"Directory %ju has bad mode %o\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|,
 operator|*
@@ -4381,8 +4398,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Directory %d zero inode\n"
+literal|"Directory %ju has zero mode\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|)
 expr_stmt|;
@@ -4454,11 +4474,17 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d absent from %d due to offset %jd"
+literal|"ino %ju absent from %ju due to offset %jd"
 literal|" exceeding size %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|child
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|,
 name|diroff
@@ -4504,8 +4530,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Sparse directory %d"
+literal|"Sparse directory %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|)
 expr_stmt|;
@@ -4590,8 +4619,11 @@ name|fs_bsize
 condition|)
 name|err_suj
 argument_list|(
-literal|"Corrupt directory block in dir ino %d\n"
+literal|"Corrupt directory block in dir ino %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|)
 expr_stmt|;
@@ -4609,10 +4641,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d not found in %d, lbn %jd, dpoff %d\n"
+literal|"ino %ju not found in %ju, lbn %jd, dpoff %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|child
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|,
 name|lbn
@@ -4701,14 +4739,23 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d doesn't match dirent ino %d in parent %d\n"
+literal|"ino %ju doesn't match dirent ino %ju in parent %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|child
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dp
 operator|->
 name|d_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|parent
 argument_list|)
 expr_stmt|;
@@ -4854,10 +4901,13 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"blk %jd ino %d lbn %jd(%d) is not indir.\n"
+literal|"blk %jd ino %ju lbn %jd(%d) is not indir.\n"
 argument_list|,
 name|blk
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|lbn
@@ -5638,8 +5688,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d adjusting block count from %jd to %jd\n"
+literal|"ino %ju adjusting block count from %jd to %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|DIP
@@ -5687,11 +5740,10 @@ name|int
 name|frags
 parameter_list|)
 block|{
-name|int
-name|mask
-decl_stmt|;
-name|mask
-operator|=
+name|blk_free
+argument_list|(
+name|blk
+argument_list|,
 name|blk_freemask
 argument_list|(
 name|blk
@@ -5702,25 +5754,6 @@ name|lbn
 argument_list|,
 name|frags
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"blk %jd freemask 0x%X\n"
-argument_list|,
-name|blk
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-name|blk_free
-argument_list|(
-name|blk
-argument_list|,
-name|mask
 argument_list|,
 name|frags
 argument_list|)
@@ -5770,19 +5803,6 @@ argument_list|,
 name|lbn
 argument_list|,
 name|frags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"blk %jd freemask 0x%X\n"
-argument_list|,
-name|blk
-argument_list|,
-name|mask
 argument_list|)
 expr_stmt|;
 name|resid
@@ -6249,10 +6269,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Directory %d removing ino %d name %s\n"
+literal|"Directory %ju removing ino %ju name %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dp
 operator|->
 name|d_ino
@@ -6331,8 +6357,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Truncating and freeing ino %d, nlink %d, mode %o\n"
+literal|"Truncating and freeing ino %ju, nlink %d, mode %o\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|DIP
@@ -6582,8 +6611,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d not enough links to live %d< %d\n"
+literal|"ino %ju not enough links to live %d< %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|nlink
@@ -6787,8 +6819,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Directory %d name not found"
+literal|"Directory %ju name not found"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -6898,8 +6933,11 @@ name|LINK_MAX
 condition|)
 name|err_suj
 argument_list|(
-literal|"ino %d nlink manipulation error, new link %d, old link %d\n"
+literal|"ino %ju nlink manipulation error, new %d, old %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|nlink
@@ -6918,8 +6956,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Adjusting ino %d, nlink %d, old link %d lastmode %o\n"
+literal|"Adjusting ino %ju, nlink %d, old link %d lastmode %o\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|nlink
@@ -6949,8 +6990,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d, zero inode freeing bitmap\n"
+literal|"ino %ju, zero inode freeing bitmap\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -6978,8 +7022,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d, mode %o != %o\n"
+literal|"ino %ju, mode %o != %o\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|mode
@@ -7022,8 +7069,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d not enough links to live %d< %d\n"
+literal|"ino %ju not enough links to live %d< %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|nlink
@@ -7061,8 +7111,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d, link matches, skipping.\n"
+literal|"ino %ju, link matches, skipping.\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -7495,8 +7548,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Truncating ino %d, mode %o to size %jd from size %jd\n"
+literal|"Truncating ino %ju, mode %o to size %jd from size %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|mode
@@ -7848,8 +7904,11 @@ literal|0
 condition|)
 name|err_suj
 argument_list|(
-literal|"Bad blk at ino %d lbn %jd\n"
+literal|"Bad blk at ino %ju lbn %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|visitlbn
@@ -7995,8 +8054,11 @@ literal|0
 condition|)
 name|err_suj
 argument_list|(
-literal|"Block missing from ino %d at lbn %jd\n"
+literal|"Block missing from ino %ju at lbn %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|visitlbn
@@ -8223,13 +8285,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"jrefrec: op %d ino %d, nlink %d, parent %d, "
+literal|"jrefrec: op %d ino %ju, nlink %d, parent %d, "
 literal|"diroff %jd, mode %o, isat %d, isdot %d\n"
 argument_list|,
 name|rrec
 operator|->
 name|jr_op
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rrec
 operator|->
 name|jr_ino
@@ -8294,8 +8359,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %d nlink %d newlinks %d removes %d dotlinks %d\n"
+literal|"ino %ju nlink %d newlinks %d removes %d dotlinks %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|nlink
@@ -8487,7 +8555,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"op %d blk %jd ino %d lbn %jd frags %d isat %d (%d)\n"
+literal|"op %d blk %jd ino %ju lbn %jd frags %d isat %d (%d)\n"
 argument_list|,
 name|brec
 operator|->
@@ -8495,6 +8563,9 @@ name|jb_op
 argument_list|,
 name|blk
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|brec
 operator|->
 name|jb_ino
@@ -8734,6 +8805,64 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sino
+operator|->
+name|si_blkadj
+condition|)
+name|ino_adjblks
+argument_list|(
+name|sino
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cg_adj_blk
+parameter_list|(
+name|struct
+name|suj_cg
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|suj_ino
+modifier|*
+name|sino
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SUJ_HASHSIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|LIST_FOREACH
+argument_list|(
+argument|sino
+argument_list|,
+argument|&sc->sc_inohash[i]
+argument_list|,
+argument|si_next
+argument_list|)
+block|{
 if|if
 condition|(
 name|sino
@@ -9403,8 +9532,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Freeing unlinked ino %d mode %o\n"
+literal|"Freeing unlinked ino %ju mode %o\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|mode
@@ -9427,8 +9559,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Skipping ino %d mode %o with link %d\n"
+literal|"Skipping ino %ju mode %o with link %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|mode
@@ -11168,6 +11303,32 @@ operator|!=
 name|oldseq
 condition|)
 block|{
+name|TAILQ_FOREACH
+argument_list|(
+argument|seg
+argument_list|,
+argument|&allsegs
+argument_list|,
+argument|ss_next
+argument_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%jd, "
+argument_list|,
+name|seg
+operator|->
+name|ss_rec
+operator|.
+name|jsr_seq
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|err_suj
 argument_list|(
 literal|"Journal file sequence mismatch %jd != %jd\n"
@@ -11322,7 +11483,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid link count %d for journal inode %d\n"
+literal|"Invalid link count %d for journal inode %ju\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -11331,6 +11492,9 @@ argument_list|,
 name|di_nlink
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sujino
 argument_list|)
 expr_stmt|;
@@ -11367,7 +11531,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid flags 0x%X for journal inode %d\n"
+literal|"Invalid flags 0x%X for journal inode %ju\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -11376,6 +11540,9 @@ argument_list|,
 name|di_flags
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sujino
 argument_list|)
 expr_stmt|;
@@ -11404,7 +11571,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid mode %o for journal inode %d\n"
+literal|"Invalid mode %o for journal inode %ju\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -11413,6 +11580,9 @@ argument_list|,
 name|di_mode
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sujino
 argument_list|)
 expr_stmt|;
@@ -11433,20 +11603,11 @@ name|di_size
 argument_list|)
 operator|<
 name|SUJ_MIN
-operator|||
-name|DIP
-argument_list|(
-name|ip
-argument_list|,
-name|di_size
-argument_list|)
-operator|>
-name|SUJ_MAX
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid size %jd for journal inode %d\n"
+literal|"Invalid size %jd for journal inode %ju\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -11455,6 +11616,9 @@ argument_list|,
 name|di_size
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sujino
 argument_list|)
 expr_stmt|;
@@ -12929,7 +13093,7 @@ return|;
 comment|/* 	 * Build a list of journal blocks in jblocks before parsing the 	 * available journal blocks in with suj_read(). 	 */
 name|printf
 argument_list|(
-literal|"** Reading %jd byte journal from inode %d.\n"
+literal|"** Reading %jd byte journal from inode %ju.\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -12938,6 +13102,9 @@ argument_list|,
 name|di_size
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sujino
 argument_list|)
 expr_stmt|;
@@ -12978,8 +13145,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Sparse journal inode %d.\n"
+literal|"Sparse journal inode %ju.\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sujino
 argument_list|)
 expr_stmt|;
@@ -13049,6 +13219,11 @@ expr_stmt|;
 name|cg_apply
 argument_list|(
 name|cg_check_blk
+argument_list|)
+expr_stmt|;
+name|cg_apply
+argument_list|(
+name|cg_adj_blk
 argument_list|)
 expr_stmt|;
 name|cg_apply

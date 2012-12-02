@@ -49,7 +49,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* ...fireware. */
+comment|/* ...firmware. */
 end_comment
 
 begin_comment

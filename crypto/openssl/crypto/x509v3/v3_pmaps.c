@@ -47,6 +47,7 @@ name|void
 modifier|*
 name|v2i_POLICY_MAPPINGS
 argument_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 operator|*
 name|method
@@ -74,6 +75,7 @@ argument_list|)
 operator|*
 name|i2v_POLICY_MAPPINGS
 argument_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 operator|*
 name|method
@@ -192,7 +194,7 @@ argument_list|)
 operator|*
 name|i2v_POLICY_MAPPINGS
 argument_list|(
-argument|X509V3_EXT_METHOD *method
+argument|const X509V3_EXT_METHOD *method
 argument_list|,
 argument|void *a
 argument_list|,
@@ -297,6 +299,7 @@ name|void
 modifier|*
 name|v2i_POLICY_MAPPINGS
 argument_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 operator|*
 name|method

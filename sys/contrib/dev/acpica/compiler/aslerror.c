@@ -100,7 +100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log.  The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log. The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,6 +263,11 @@ name|BOOLEAN
 name|PrematureEOF
 init|=
 name|FALSE
+decl_stmt|;
+name|UINT32
+name|Total
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -431,7 +436,7 @@ name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
-literal|"%6s"
+literal|"%-8s"
 argument_list|,
 name|Enode
 operator|->
@@ -470,27 +475,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|Gbl_FileType
-operator|==
-name|ASL_INPUT_TYPE_ASCII_ASL
-condition|)
-name|fprintf
-argument_list|(
-name|OutputFile
-argument_list|,
-literal|" %6u: "
-argument_list|,
-name|PrGetLineNumber
-argument_list|(
-name|Enode
-operator|->
-name|LineNumber
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
 name|fprintf
 argument_list|(
 name|OutputFile
@@ -567,8 +551,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|RActual
+operator|!=
+literal|1
 condition|)
 block|{
 name|fprintf
@@ -587,6 +572,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 name|RActual
@@ -598,8 +584,16 @@ name|SourceByte
 operator|!=
 literal|'\n'
 operator|)
+operator|&&
+operator|(
+name|Total
+operator|<
+literal|256
+operator|)
 condition|)
 block|{
+if|if
+condition|(
 name|fwrite
 argument_list|(
 operator|&
@@ -611,7 +605,17 @@ literal|1
 argument_list|,
 name|OutputFile
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[*** iASL: Write error on output file ***]\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|RActual
 operator|=
 name|fread
@@ -626,6 +630,52 @@ argument_list|,
 name|SourceFile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|RActual
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"[*** iASL: Read error on source code temp file %s ***]"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|Total
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Total
+operator|>=
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"\n[*** iASL: Long input line, an error occurred at column %u ***]"
+argument_list|,
+name|Enode
+operator|->
+name|Column
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -641,6 +691,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/*              * Less verbose version of the error message, enabled via the              * -vi switch. The format is compatible with MS Visual Studio.              */
 name|fprintf
 argument_list|(
 name|OutputFile
@@ -659,50 +710,17 @@ operator|->
 name|LineNumber
 condition|)
 block|{
-if|if
-condition|(
-name|Gbl_FileType
-operator|==
-name|ASL_INPUT_TYPE_ASCII_ASL
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
-literal|"(%u) i:%6u : "
-argument_list|,
-name|PrGetLineNumber
-argument_list|(
-name|Enode
-operator|->
-name|LineNumber
-argument_list|)
+literal|"(%u) : "
 argument_list|,
 name|Enode
 operator|->
 name|LineNumber
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|OutputFile
-argument_list|,
-literal|"(%u) i:%6u : "
-argument_list|,
-name|Enode
-operator|->
-name|LineNumber
-argument_list|,
-name|Enode
-operator|->
-name|LineNumber
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -731,11 +749,16 @@ block|}
 else|else
 block|{
 comment|/* Decode the message ID */
+if|if
+condition|(
+name|Gbl_VerboseErrors
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
-literal|"%s %4.4d - "
+literal|"%s %4.4d -"
 argument_list|,
 name|AslErrorLevel
 index|[
@@ -761,6 +784,41 @@ literal|1000
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+comment|/* IDE case */
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"%s %4.4d:"
+argument_list|,
+name|AslErrorLevelIde
+index|[
+name|Enode
+operator|->
+name|Level
+index|]
+argument_list|,
+name|Enode
+operator|->
+name|MessageId
+operator|+
+operator|(
+operator|(
+name|Enode
+operator|->
+name|Level
+operator|+
+literal|1
+operator|)
+operator|*
+literal|1000
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|MainMessage
 operator|=
 name|AslMessages
@@ -846,6 +904,25 @@ operator|&&
 operator|!
 name|PrematureEOF
 condition|)
+block|{
+if|if
+condition|(
+name|Total
+operator|>=
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"    %s"
+argument_list|,
+name|MainMessage
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|SourceColumn
 operator|=
@@ -937,6 +1014,7 @@ argument_list|,
 name|MainMessage
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -1803,7 +1881,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

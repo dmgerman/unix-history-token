@@ -297,38 +297,43 @@ argument_list|(
 argument|const clang::BaseSubobject&Base
 argument_list|)
 block|{
-return|return
-name|DenseMapInfo
+typedef|typedef
+name|std
+operator|::
+name|pair
 operator|<
 specifier|const
 name|clang
 operator|::
 name|CXXRecordDecl
 operator|*
+operator|,
+name|clang
+operator|::
+name|CharUnits
+operator|>
+name|PairTy
+expr_stmt|;
+return|return
+name|DenseMapInfo
+operator|<
+name|PairTy
 operator|>
 operator|::
 name|getHashValue
+argument_list|(
+name|PairTy
 argument_list|(
 name|Base
 operator|.
 name|getBase
 argument_list|()
-argument_list|)
-operator|^
-name|DenseMapInfo
-operator|<
-name|int64_t
-operator|>
-operator|::
-name|getHashValue
-argument_list|(
+argument_list|,
 name|Base
 operator|.
 name|getBaseOffset
 argument_list|()
-operator|.
-name|getQuantity
-argument_list|()
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -336,9 +341,19 @@ specifier|static
 name|bool
 name|isEqual
 argument_list|(
-argument|const clang::BaseSubobject&LHS
+specifier|const
+name|clang
+operator|::
+name|BaseSubobject
+operator|&
+name|LHS
 argument_list|,
-argument|const clang::BaseSubobject&RHS
+specifier|const
+name|clang
+operator|::
+name|BaseSubobject
+operator|&
+name|RHS
 argument_list|)
 block|{
 return|return
@@ -347,9 +362,18 @@ operator|==
 name|RHS
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// It's OK to treat BaseSubobject as a POD type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -368,10 +392,11 @@ name|value
 operator|=
 name|true
 block|; }
-block|;  }
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

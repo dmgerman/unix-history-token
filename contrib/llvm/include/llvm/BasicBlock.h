@@ -411,45 +411,6 @@ return|return
 name|Parent
 return|;
 block|}
-comment|/// use_back - Specialize the methods defined in Value, as we know that an
-comment|/// BasicBlock can only be used by Users (specifically terminators
-comment|/// and BlockAddress's).
-name|User
-modifier|*
-name|use_back
-parameter_list|()
-block|{
-return|return
-name|cast
-operator|<
-name|User
-operator|>
-operator|(
-operator|*
-name|use_begin
-argument_list|()
-operator|)
-return|;
-block|}
-specifier|const
-name|User
-operator|*
-name|use_back
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|User
-operator|>
-operator|(
-operator|*
-name|use_begin
-argument_list|()
-operator|)
-return|;
-block|}
 comment|/// getTerminator() - If this is a well formed basic block, then this returns
 comment|/// a pointer to the terminator instruction.  If it is not, then you get a
 comment|/// null pointer back.
@@ -991,6 +952,13 @@ modifier|*
 name|getLandingPadInst
 parameter_list|()
 function_decl|;
+specifier|const
+name|LandingPadInst
+operator|*
+name|getLandingPadInst
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 comment|/// AdjustBlockAddressRefCount - BasicBlock stores the number of BlockAddress

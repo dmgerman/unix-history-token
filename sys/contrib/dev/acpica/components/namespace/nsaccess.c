@@ -210,13 +210,7 @@ name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
-operator|||
-operator|(
-operator|!
-name|NewNode
-operator|)
 condition|)
-comment|/* Must be on same line for code converter */
 block|{
 name|ACPI_EXCEPTION
 argument_list|(
@@ -233,6 +227,7 @@ name|Name
 operator|)
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 comment|/*          * Name entered successfully. If entry in PreDefinedNames[] specifies          * an initial value, create the initial value.          */
 if|if

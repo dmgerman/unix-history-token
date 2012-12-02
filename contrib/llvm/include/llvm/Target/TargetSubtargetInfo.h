@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_decl_stmt
@@ -146,6 +146,7 @@ empty_stmt|;
 typedef|typedef
 name|SmallVectorImpl
 operator|<
+specifier|const
 name|TargetRegisterClass
 operator|*
 operator|>

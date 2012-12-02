@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MSP430InstPrinter.h - Convert MSP430 MCInst to assembly syntax ----===//
+comment|//= MSP430InstPrinter.h - Convert MSP430 MCInst to assembly syntax -*- C++ -*-//
 end_comment
 
 begin_comment
@@ -86,11 +86,25 @@ specifier|const
 name|MCAsmInfo
 operator|&
 name|MAI
+argument_list|,
+specifier|const
+name|MCInstrInfo
+operator|&
+name|MII
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
 argument_list|)
 operator|:
 name|MCInstPrinter
 argument_list|(
 argument|MAI
+argument_list|,
+argument|MII
+argument_list|,
+argument|MRI
 argument_list|)
 block|{}
 name|virtual

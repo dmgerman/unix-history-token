@@ -146,6 +146,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|hw_mca_count
 index|[]
@@ -156,6 +157,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|hw_mca_first
 index|[]
@@ -166,6 +168,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|hw_mca_last
 index|[]
@@ -176,11 +179,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|hw_mca_recid
 index|[]
 init|=
-literal|"hw.mca.%lu.%u"
+literal|"hw.mca.%d.%u"
 decl_stmt|;
 end_decl_stmt
 
@@ -801,11 +805,16 @@ name|mca_cpu_cpuid
 modifier|*
 name|cpuid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 name|struct
 name|mca_cpu_psi
 modifier|*
 name|psi
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|,
@@ -1117,6 +1126,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
 name|psi
 operator|=
 operator|(
@@ -1130,6 +1142,8 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* TODO: Dump PSI */
 name|printf
 argument_list|(

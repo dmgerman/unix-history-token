@@ -384,7 +384,7 @@ argument_list|)
 return|;
 block|}
 comment|/// isClobber - Return true if this MemDepResult represents a query that is
-comment|/// a instruction clobber dependency.
+comment|/// an instruction clobber dependency.
 name|bool
 name|isClobber
 argument_list|()
@@ -400,7 +400,7 @@ name|Clobber
 return|;
 block|}
 comment|/// isDef - Return true if this MemDepResult represents a query that is
-comment|/// a instruction definition dependency.
+comment|/// an instruction definition dependency.
 name|bool
 name|isDef
 argument_list|()
@@ -1280,6 +1280,13 @@ begin_decl_stmt
 name|TargetData
 modifier|*
 name|TD
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DominatorTree
+modifier|*
+name|DT
 decl_stmt|;
 end_decl_stmt
 

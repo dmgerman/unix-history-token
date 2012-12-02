@@ -288,6 +288,10 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|unsigned
+name|Idx
+init|=
+literal|0
 init|;
 name|NumEntries
 condition|;
@@ -316,10 +320,8 @@ name|make_pair
 argument_list|(
 name|I
 argument_list|,
-name|Worklist
-operator|.
-name|size
-argument_list|()
+name|Idx
+operator|++
 argument_list|)
 argument_list|)
 expr_stmt|;

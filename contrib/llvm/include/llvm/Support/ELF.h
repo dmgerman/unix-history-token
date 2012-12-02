@@ -1104,11 +1104,11 @@ init|=
 literal|163
 block|,
 comment|// NXP Semiconductors TriMedia architecture family
-name|EM_QDSP6
+name|EM_HEXAGON
 init|=
 literal|164
 block|,
-comment|// QUALCOMM DSP6 Processor
+comment|// Qualcomm Hexagon processor
 name|EM_8051
 init|=
 literal|165
@@ -2444,7 +2444,77 @@ init|=
 literal|0x82
 block|}
 enum|;
+comment|// Mips Specific e_flags
+enum|enum
+block|{
+name|EF_MIPS_NOREORDER
+init|=
+literal|0x00000001
+block|,
+comment|// Don't reorder instructions
+name|EF_MIPS_PIC
+init|=
+literal|0x00000002
+block|,
+comment|// Position independent code
+name|EF_MIPS_CPIC
+init|=
+literal|0x00000004
+block|,
+comment|// Call object with Position independent code
+name|EF_MIPS_ARCH_1
+init|=
+literal|0x00000000
+block|,
+comment|// MIPS1 instruction set
+name|EF_MIPS_ARCH_2
+init|=
+literal|0x10000000
+block|,
+comment|// MIPS2 instruction set
+name|EF_MIPS_ARCH_3
+init|=
+literal|0x20000000
+block|,
+comment|// MIPS3 instruction set
+name|EF_MIPS_ARCH_4
+init|=
+literal|0x30000000
+block|,
+comment|// MIPS4 instruction set
+name|EF_MIPS_ARCH_5
+init|=
+literal|0x40000000
+block|,
+comment|// MIPS5 instruction set
+name|EF_MIPS_ARCH_32
+init|=
+literal|0x50000000
+block|,
+comment|// MIPS32 instruction set per linux not elf.h
+name|EF_MIPS_ARCH_64
+init|=
+literal|0x60000000
+block|,
+comment|// MIPS64 instruction set per linux not elf.h
+name|EF_MIPS_ARCH_32R2
+init|=
+literal|0x70000000
+block|,
+comment|// mips32r2
+name|EF_MIPS_ARCH_64R2
+init|=
+literal|0x80000000
+block|,
+comment|// mips64r2
+name|EF_MIPS_ARCH
+init|=
+literal|0xf0000000
+comment|// Mask for applying EF_MIPS_ARCH_ variant
+block|}
+enum|;
 comment|// ELF Relocation types for Mips
+comment|// .
 enum|enum
 block|{
 name|R_MIPS_NONE
@@ -2484,6 +2554,10 @@ init|=
 literal|8
 block|,
 name|R_MIPS_GOT16
+init|=
+literal|9
+block|,
+name|R_MIPS_GOT
 init|=
 literal|9
 block|,
@@ -2654,6 +2728,355 @@ block|,
 name|R_MIPS_NUM
 init|=
 literal|218
+block|}
+enum|;
+comment|// ELF Relocation types for Hexagon
+comment|// Release 5 ABI - Document: 80-V9418-3 Rev. J
+enum|enum
+block|{
+name|R_HEX_NONE
+init|=
+literal|0
+block|,
+name|R_HEX_B22_PCREL
+init|=
+literal|1
+block|,
+name|R_HEX_B15_PCREL
+init|=
+literal|2
+block|,
+name|R_HEX_B7_PCREL
+init|=
+literal|3
+block|,
+name|R_HEX_LO16
+init|=
+literal|4
+block|,
+name|R_HEX_HI16
+init|=
+literal|5
+block|,
+name|R_HEX_32
+init|=
+literal|6
+block|,
+name|R_HEX_16
+init|=
+literal|7
+block|,
+name|R_HEX_8
+init|=
+literal|8
+block|,
+name|R_HEX_GPREL16_0
+init|=
+literal|9
+block|,
+name|R_HEX_GPREL16_1
+init|=
+literal|10
+block|,
+name|R_HEX_GPREL16_2
+init|=
+literal|11
+block|,
+name|R_HEX_GPREL16_3
+init|=
+literal|12
+block|,
+name|R_HEX_HL16
+init|=
+literal|13
+block|,
+name|R_HEX_B13_PCREL
+init|=
+literal|14
+block|,
+name|R_HEX_B9_PCREL
+init|=
+literal|15
+block|,
+name|R_HEX_B32_PCREL_X
+init|=
+literal|16
+block|,
+name|R_HEX_32_6_X
+init|=
+literal|17
+block|,
+name|R_HEX_B22_PCREL_X
+init|=
+literal|18
+block|,
+name|R_HEX_B15_PCREL_X
+init|=
+literal|19
+block|,
+name|R_HEX_B13_PCREL_X
+init|=
+literal|20
+block|,
+name|R_HEX_B9_PCREL_X
+init|=
+literal|21
+block|,
+name|R_HEX_B7_PCREL_X
+init|=
+literal|22
+block|,
+name|R_HEX_16_X
+init|=
+literal|23
+block|,
+name|R_HEX_12_X
+init|=
+literal|24
+block|,
+name|R_HEX_11_X
+init|=
+literal|25
+block|,
+name|R_HEX_10_X
+init|=
+literal|26
+block|,
+name|R_HEX_9_X
+init|=
+literal|27
+block|,
+name|R_HEX_8_X
+init|=
+literal|28
+block|,
+name|R_HEX_7_X
+init|=
+literal|29
+block|,
+name|R_HEX_6_X
+init|=
+literal|30
+block|,
+name|R_HEX_32_PCREL
+init|=
+literal|31
+block|,
+name|R_HEX_COPY
+init|=
+literal|32
+block|,
+name|R_HEX_GLOB_DAT
+init|=
+literal|33
+block|,
+name|R_HEX_JMP_SLOT
+init|=
+literal|34
+block|,
+name|R_HEX_RELATIVE
+init|=
+literal|35
+block|,
+name|R_HEX_PLT_B22_PCREL
+init|=
+literal|36
+block|,
+name|R_HEX_GOTREL_LO16
+init|=
+literal|37
+block|,
+name|R_HEX_GOTREL_HI16
+init|=
+literal|38
+block|,
+name|R_HEX_GOTREL_32
+init|=
+literal|39
+block|,
+name|R_HEX_GOT_LO16
+init|=
+literal|40
+block|,
+name|R_HEX_GOT_HI16
+init|=
+literal|41
+block|,
+name|R_HEX_GOT_32
+init|=
+literal|42
+block|,
+name|R_HEX_GOT_16
+init|=
+literal|43
+block|,
+name|R_HEX_DTPMOD_32
+init|=
+literal|44
+block|,
+name|R_HEX_DTPREL_LO16
+init|=
+literal|45
+block|,
+name|R_HEX_DTPREL_HI16
+init|=
+literal|46
+block|,
+name|R_HEX_DTPREL_32
+init|=
+literal|47
+block|,
+name|R_HEX_DTPREL_16
+init|=
+literal|48
+block|,
+name|R_HEX_GD_PLT_B22_PCREL
+init|=
+literal|49
+block|,
+name|R_HEX_GD_GOT_LO16
+init|=
+literal|50
+block|,
+name|R_HEX_GD_GOT_HI16
+init|=
+literal|51
+block|,
+name|R_HEX_GD_GOT_32
+init|=
+literal|52
+block|,
+name|R_HEX_GD_GOT_16
+init|=
+literal|53
+block|,
+name|R_HEX_IE_LO16
+init|=
+literal|54
+block|,
+name|R_HEX_IE_HI16
+init|=
+literal|55
+block|,
+name|R_HEX_IE_32
+init|=
+literal|56
+block|,
+name|R_HEX_IE_GOT_LO16
+init|=
+literal|57
+block|,
+name|R_HEX_IE_GOT_HI16
+init|=
+literal|58
+block|,
+name|R_HEX_IE_GOT_32
+init|=
+literal|59
+block|,
+name|R_HEX_IE_GOT_16
+init|=
+literal|60
+block|,
+name|R_HEX_TPREL_LO16
+init|=
+literal|61
+block|,
+name|R_HEX_TPREL_HI16
+init|=
+literal|62
+block|,
+name|R_HEX_TPREL_32
+init|=
+literal|63
+block|,
+name|R_HEX_TPREL_16
+init|=
+literal|64
+block|,
+name|R_HEX_6_PCREL_X
+init|=
+literal|65
+block|,
+name|R_HEX_GOTREL_32_6_X
+init|=
+literal|66
+block|,
+name|R_HEX_GOTREL_16_X
+init|=
+literal|67
+block|,
+name|R_HEX_GOTREL_11_X
+init|=
+literal|68
+block|,
+name|R_HEX_GOT_32_6_X
+init|=
+literal|69
+block|,
+name|R_HEX_GOT_16_X
+init|=
+literal|70
+block|,
+name|R_HEX_GOT_11_X
+init|=
+literal|71
+block|,
+name|R_HEX_DTPREL_32_6_X
+init|=
+literal|72
+block|,
+name|R_HEX_DTPREL_16_X
+init|=
+literal|73
+block|,
+name|R_HEX_DTPREL_11_X
+init|=
+literal|74
+block|,
+name|R_HEX_GD_GOT_32_6_X
+init|=
+literal|75
+block|,
+name|R_HEX_GD_GOT_16_X
+init|=
+literal|76
+block|,
+name|R_HEX_GD_GOT_11_X
+init|=
+literal|77
+block|,
+name|R_HEX_IE_32_6_X
+init|=
+literal|78
+block|,
+name|R_HEX_IE_16_X
+init|=
+literal|79
+block|,
+name|R_HEX_IE_GOT_32_6_X
+init|=
+literal|80
+block|,
+name|R_HEX_IE_GOT_16_X
+init|=
+literal|81
+block|,
+name|R_HEX_IE_GOT_11_X
+init|=
+literal|82
+block|,
+name|R_HEX_TPREL_32_6_X
+init|=
+literal|83
+block|,
+name|R_HEX_TPREL_16_X
+init|=
+literal|84
+block|,
+name|R_HEX_TPREL_11_X
+init|=
+literal|85
 block|}
 enum|;
 comment|// Section header.
@@ -2885,6 +3308,31 @@ init|=
 literal|0x60000000
 block|,
 comment|// Lowest operating system-specific type.
+name|SHT_GNU_ATTRIBUTES
+init|=
+literal|0x6ffffff5
+block|,
+comment|// Object attributes.
+name|SHT_GNU_HASH
+init|=
+literal|0x6ffffff6
+block|,
+comment|// GNU-style hash table.
+name|SHT_GNU_verdef
+init|=
+literal|0x6ffffffd
+block|,
+comment|// GNU version definitions.
+name|SHT_GNU_verneed
+init|=
+literal|0x6ffffffe
+block|,
+comment|// GNU version references.
+name|SHT_GNU_versym
+init|=
+literal|0x6fffffff
+block|,
+comment|// GNU symbol versions table.
 name|SHT_HIOS
 init|=
 literal|0x6fffffff
@@ -3385,6 +3833,11 @@ init|=
 literal|8
 block|,
 comment|// Highest operating system-specific symbol type
+name|STT_GNU_IFUNC
+init|=
+literal|10
+block|,
+comment|// GNU indirect function
 name|STT_LOPROC
 init|=
 literal|13
@@ -3981,6 +4434,16 @@ name|PT_SUNW_UNWIND
 init|=
 literal|0x6464e550
 block|,
+name|PT_GNU_STACK
+init|=
+literal|0x6474e551
+block|,
+comment|// Indicates stack executability.
+name|PT_GNU_RELRO
+init|=
+literal|0x6474e552
+block|,
+comment|// Read-only after relocation.
 name|PT_HIOS
 init|=
 literal|0x6fffffff
@@ -4264,7 +4727,42 @@ comment|// Start of processor specific tags.
 name|DT_HIPROC
 init|=
 literal|0x7FFFFFFF
+block|,
 comment|// End of processor specific tags.
+name|DT_RELACOUNT
+init|=
+literal|0x6FFFFFF9
+block|,
+comment|// ELF32_Rela count.
+name|DT_RELCOUNT
+init|=
+literal|0x6FFFFFFA
+block|,
+comment|// ELF32_Rel count.
+name|DT_FLAGS_1
+init|=
+literal|0X6FFFFFFB
+block|,
+comment|// Flags_1.
+name|DT_VERDEF
+init|=
+literal|0X6FFFFFFC
+block|,
+comment|// The address of the version definition table.
+name|DT_VERDEFNUM
+init|=
+literal|0X6FFFFFFD
+block|,
+comment|// The number of entries in DT_VERDEF.
+name|DT_VERNEED
+init|=
+literal|0X6FFFFFFE
+block|,
+comment|// The address of the version Dependency table.
+name|DT_VERNEEDNUM
+init|=
+literal|0X6FFFFFFF
+comment|// The number of entries in DT_VERNEED.
 block|}
 enum|;
 comment|// DT_FLAGS values.
@@ -4294,6 +4792,158 @@ name|DF_STATIC_TLS
 init|=
 literal|0x10
 comment|// Reject attempts to load dynamically.
+block|}
+enum|;
+comment|// State flags selectable in the `d_un.d_val' element of the DT_FLAGS_1 entry.
+enum|enum
+block|{
+name|DF_1_NOW
+init|=
+literal|0x00000001
+block|,
+comment|// Set RTLD_NOW for this object.
+name|DF_1_GLOBAL
+init|=
+literal|0x00000002
+block|,
+comment|// Set RTLD_GLOBAL for this object.
+name|DF_1_GROUP
+init|=
+literal|0x00000004
+block|,
+comment|// Set RTLD_GROUP for this object.
+name|DF_1_NODELETE
+init|=
+literal|0x00000008
+block|,
+comment|// Set RTLD_NODELETE for this object.
+name|DF_1_LOADFLTR
+init|=
+literal|0x00000010
+block|,
+comment|// Trigger filtee loading at runtime.
+name|DF_1_INITFIRST
+init|=
+literal|0x00000020
+block|,
+comment|// Set RTLD_INITFIRST for this object.
+name|DF_1_NOOPEN
+init|=
+literal|0x00000040
+block|,
+comment|// Set RTLD_NOOPEN for this object.
+name|DF_1_ORIGIN
+init|=
+literal|0x00000080
+block|,
+comment|// $ORIGIN must be handled.
+name|DF_1_DIRECT
+init|=
+literal|0x00000100
+block|,
+comment|// Direct binding enabled.
+name|DF_1_TRANS
+init|=
+literal|0x00000200
+block|,
+name|DF_1_INTERPOSE
+init|=
+literal|0x00000400
+block|,
+comment|// Object is used to interpose.
+name|DF_1_NODEFLIB
+init|=
+literal|0x00000800
+block|,
+comment|// Ignore default lib search path.
+name|DF_1_NODUMP
+init|=
+literal|0x00001000
+block|,
+comment|// Object can't be dldump'ed.
+name|DF_1_CONFALT
+init|=
+literal|0x00002000
+block|,
+comment|// Configuration alternative created.
+name|DF_1_ENDFILTEE
+init|=
+literal|0x00004000
+block|,
+comment|// Filtee terminates filters search.
+name|DF_1_DISPRELDNE
+init|=
+literal|0x00008000
+block|,
+comment|// Disp reloc applied at build time.
+name|DF_1_DISPRELPND
+init|=
+literal|0x00010000
+comment|// Disp reloc applied at run-time.
+block|}
+enum|;
+comment|// ElfXX_VerDef structure version (GNU versioning)
+enum|enum
+block|{
+name|VER_DEF_NONE
+init|=
+literal|0
+block|,
+name|VER_DEF_CURRENT
+init|=
+literal|1
+block|}
+enum|;
+comment|// VerDef Flags (ElfXX_VerDef::vd_flags)
+enum|enum
+block|{
+name|VER_FLG_BASE
+init|=
+literal|0x1
+block|,
+name|VER_FLG_WEAK
+init|=
+literal|0x2
+block|,
+name|VER_FLG_INFO
+init|=
+literal|0x4
+block|}
+enum|;
+comment|// Special constants for the version table. (SHT_GNU_versym/.gnu.version)
+enum|enum
+block|{
+name|VER_NDX_LOCAL
+init|=
+literal|0
+block|,
+comment|// Unversioned local symbol
+name|VER_NDX_GLOBAL
+init|=
+literal|1
+block|,
+comment|// Unversioned global symbol
+name|VERSYM_VERSION
+init|=
+literal|0x7fff
+block|,
+comment|// Version Index mask
+name|VERSYM_HIDDEN
+init|=
+literal|0x8000
+comment|// Hidden bit (non-default version)
+block|}
+enum|;
+comment|// ElfXX_VerNeed structure version (GNU versioning)
+enum|enum
+block|{
+name|VER_NEED_NONE
+init|=
+literal|0
+block|,
+name|VER_NEED_CURRENT
+init|=
+literal|1
 block|}
 enum|;
 block|}

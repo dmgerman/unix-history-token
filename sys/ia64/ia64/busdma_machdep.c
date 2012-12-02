@@ -1234,10 +1234,7 @@ name|newtag
 operator|->
 name|lowaddr
 operator|<
-name|ptoa
-argument_list|(
-name|Maxmem
-argument_list|)
+name|paddr_max
 operator|&&
 operator|(
 name|flags
@@ -1515,10 +1512,7 @@ name|dmat
 operator|->
 name|lowaddr
 operator|<
-name|ptoa
-argument_list|(
-name|Maxmem
-argument_list|)
+name|paddr_max
 condition|)
 block|{
 comment|/* Must bounce */
@@ -1580,10 +1574,10 @@ name|MIN
 argument_list|(
 name|MAX_BPAGES
 argument_list|,
-name|Maxmem
-operator|-
 name|atop
 argument_list|(
+name|paddr_max
+operator|-
 name|dmat
 operator|->
 name|lowaddr
@@ -1915,10 +1909,7 @@ name|dmat
 operator|->
 name|lowaddr
 operator|>=
-name|ptoa
-argument_list|(
-name|Maxmem
-argument_list|)
+name|paddr_max
 condition|)
 block|{
 operator|*
@@ -2071,10 +2062,7 @@ name|dmat
 operator|->
 name|lowaddr
 operator|>=
-name|ptoa
-argument_list|(
-name|Maxmem
-argument_list|)
+name|paddr_max
 condition|)
 name|free
 argument_list|(
@@ -2210,10 +2198,7 @@ name|dmat
 operator|->
 name|lowaddr
 operator|<
-name|ptoa
-argument_list|(
-name|Maxmem
-argument_list|)
+name|paddr_max
 operator|||
 name|dmat
 operator|->

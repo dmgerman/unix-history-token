@@ -141,18 +141,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|timeout_t
+begin_function_decl
+name|void
 name|adw_timeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|adw_unit
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -371,6 +371,14 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|arc_buf_eviction_needed
+parameter_list|(
+name|arc_buf_t
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
@@ -637,6 +645,25 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|illumos
+ifndef|#
+directive|ifndef
+name|_KERNEL
+specifier|extern
+name|boolean_t
+name|arc_watch
+decl_stmt|;
+specifier|extern
+name|int
+name|arc_procfd
+decl_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* illumos */
 ifdef|#
 directive|ifdef
 name|__cplusplus

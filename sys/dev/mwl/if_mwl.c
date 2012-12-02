@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_wlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2117,6 +2123,12 @@ name|ifp
 operator|->
 name|if_l2com
 expr_stmt|;
+comment|/* 	 * Setup the RX free list lock early, so it can be consistently 	 * removed. 	 */
+name|MWL_RXFREE_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* set these up early for if_printf use */
 name|if_initname
 argument_list|(
@@ -3114,6 +3126,11 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
+name|MWL_RXFREE_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|if_free
 argument_list|(
 name|ifp
@@ -3196,6 +3213,11 @@ name|sc_watchdog
 argument_list|)
 expr_stmt|;
 name|mwl_dma_cleanup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|MWL_RXFREE_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -10983,11 +11005,6 @@ name|sc_nrxfree
 operator|++
 expr_stmt|;
 block|}
-name|MWL_RXFREE_INIT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -11137,11 +11154,6 @@ operator|&
 name|sc
 operator|->
 name|sc_rxdma
-argument_list|)
-expr_stmt|;
-name|MWL_RXFREE_DESTROY
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -17765,12 +17777,9 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|,
-name|WME_AC_TO_TID
-argument_list|(
 name|tap
 operator|->
-name|txa_ac
-argument_list|)
+name|txa_tid
 argument_list|,
 name|ni
 operator|->
@@ -17961,13 +17970,13 @@ name|sc
 argument_list|,
 name|MWL_DEBUG_AMPDU
 argument_list|,
-literal|"%s: no BA stream allocated, AC %d\n"
+literal|"%s: no BA stream allocated, TID %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|)
 expr_stmt|;
 name|sc
@@ -18082,7 +18091,7 @@ name|sc
 argument_list|,
 name|MWL_DEBUG_AMPDU
 argument_list|,
-literal|"%s: create failed, error %d, bufsiz %d AC %d "
+literal|"%s: create failed, error %d, bufsiz %d TID %d "
 literal|"htparam 0x%x\n"
 argument_list|,
 name|__func__
@@ -18093,7 +18102,7 @@ name|bufsiz
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|ni
 operator|->
@@ -18118,7 +18127,7 @@ name|bas
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|bas
 operator|->
@@ -18133,7 +18142,7 @@ name|sc
 argument_list|,
 name|MWL_DEBUG_AMPDU
 argument_list|,
-literal|"%s: bastream %p assigned to txq %d AC %d bufsiz %d "
+literal|"%s: bastream %p assigned to txq %d TID %d bufsiz %d "
 literal|"htparam 0x%x\n"
 argument_list|,
 name|__func__
@@ -18148,7 +18157,7 @@ name|txq
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|bufsiz
 argument_list|,

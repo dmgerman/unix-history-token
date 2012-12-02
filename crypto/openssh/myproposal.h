@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.28 2011/08/02 01:22:11 djm Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.29 2012/06/28 05:07:45 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ define|#
 directive|define
 name|SHA2_HMAC_MODES
 define|\
-value|"hmac-sha2-256," \ 	"hmac-sha2-256-96," \ 	"hmac-sha2-512," \ 	"hmac-sha2-512-96,"
+value|"hmac-sha2-256," \ 	"hmac-sha2-512,"
 end_define
 
 begin_else

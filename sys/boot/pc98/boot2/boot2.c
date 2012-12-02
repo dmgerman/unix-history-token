@@ -587,10 +587,10 @@ decl_stmt|;
 name|unsigned
 name|sec
 decl_stmt|;
-name|unsigned
+name|uint8_t
 name|slice
 decl_stmt|;
-name|unsigned
+name|uint8_t
 name|part
 decl_stmt|;
 name|unsigned
@@ -627,8 +627,6 @@ specifier|const
 name|char
 modifier|*
 name|kname
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -636,8 +634,6 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|opts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -692,21 +688,6 @@ name|int
 name|parse
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|xfsread
-parameter_list|(
-name|ino_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -940,7 +921,7 @@ specifier|inline
 name|int
 name|xfsread
 parameter_list|(
-name|ino_t
+name|ufs_ino_t
 name|inode
 parameter_list|,
 name|void
@@ -1804,7 +1785,7 @@ directive|endif
 name|uint8_t
 name|autoboot
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|size_t
@@ -2266,7 +2247,7 @@ decl_stmt|;
 name|caddr_t
 name|p
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|uint32_t
@@ -3097,13 +3078,24 @@ name|ioctrl
 operator|&
 name|IO_SERIAL
 condition|)
+block|{
+if|if
+condition|(
 name|sio_init
 argument_list|(
 literal|115200
 operator|/
 name|comspeed
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|ioctrl
+operator|&=
+operator|~
+name|IO_SERIAL
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3485,9 +3477,10 @@ modifier|*
 name|sec
 decl_stmt|;
 name|unsigned
-name|sl
-decl_stmt|,
 name|i
+decl_stmt|;
+name|uint8_t
+name|sl
 decl_stmt|;
 name|u_char
 modifier|*

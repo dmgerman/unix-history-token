@@ -91,7 +91,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_typedef
@@ -181,7 +181,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_typedef
@@ -351,7 +351,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_typedef
@@ -562,7 +562,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_typedef
@@ -667,6 +667,35 @@ name|__uint64_t
 name|__vm_pindex_t
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__wchar_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|__WCHAR_MIN
+value|__INT_MIN
+end_define
+
+begin_comment
+comment|/* min value for a wchar_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__WCHAR_MAX
+value|__INT_MAX
+end_define
+
+begin_comment
+comment|/* max value for a wchar_t */
+end_comment
 
 begin_comment
 comment|/*  * Unusual type definitions.  */

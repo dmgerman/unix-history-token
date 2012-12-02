@@ -210,9 +210,17 @@ name|friend
 name|class
 name|LiveVariables
 block|;       }
-block|;      struct
+block|;
+name|class
 name|Observer
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 name|virtual
 operator|~
 name|Observer
@@ -253,7 +261,7 @@ name|LiveVariables
 operator|*
 name|computeLiveness
 argument_list|(
-argument|AnalysisContext&analysisContext
+argument|AnalysisDeclContext&analysisContext
 argument_list|,
 argument|bool killAtAssign
 argument_list|)
@@ -332,7 +340,7 @@ name|LiveVariables
 operator|*
 name|create
 argument_list|(
-argument|AnalysisContext&analysisContext
+argument|AnalysisDeclContext&analysisContext
 argument_list|)
 block|{
 return|return
@@ -378,7 +386,7 @@ name|LiveVariables
 operator|*
 name|create
 argument_list|(
-argument|AnalysisContext&analysisContext
+argument|AnalysisDeclContext&analysisContext
 argument_list|)
 block|{
 return|return

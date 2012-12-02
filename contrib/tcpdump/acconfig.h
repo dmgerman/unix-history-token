@@ -30,26 +30,6 @@ name|LIBSMI
 end_undef
 
 begin_comment
-comment|/* define if you have struct __res_state_ext */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_RES_STATE_EXT
-end_undef
-
-begin_comment
-comment|/* define if your struct __res_state has the nsort member */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_NEW_RES_STATE
-end_undef
-
-begin_comment
 comment|/* define if you have the addrinfo function. */
 end_comment
 
@@ -77,36 +57,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_H_ERRNO
-end_undef
-
-begin_comment
-comment|/* define if IN6ADDRSZ is defined (XXX not used!) */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_IN6ADDRSZ
-end_undef
-
-begin_comment
-comment|/* define if INADDRSZ is defined (XXX not used!) */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_INADDRSZ
-end_undef
-
-begin_comment
-comment|/* define if RES_USE_INET6 is defined */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_RES_USE_INET6
 end_undef
 
 begin_comment
@@ -227,16 +177,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_GETRPCBYNUMBER
-end_undef
-
-begin_comment
-comment|/* AIX hack. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_SUN
 end_undef
 
 begin_comment

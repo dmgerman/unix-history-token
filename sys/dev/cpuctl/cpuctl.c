@@ -943,11 +943,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|do_cpuid
+name|cpuid_count
 argument_list|(
 name|data
 operator|->
 name|level
+argument_list|,
+literal|0
 argument_list|,
 name|data
 operator|->

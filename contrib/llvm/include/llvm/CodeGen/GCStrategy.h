@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Registry.h"
 end_include
 
@@ -229,27 +235,32 @@ label|:
 name|unsigned
 name|NeededSafePoints
 decl_stmt|;
-comment|//< Bitmask of required safe points.
+comment|///< Bitmask of required safe points.
 name|bool
 name|CustomReadBarriers
 decl_stmt|;
-comment|//< Default is to insert loads.
+comment|///< Default is to insert loads.
 name|bool
 name|CustomWriteBarriers
 decl_stmt|;
-comment|//< Default is to insert stores.
+comment|///< Default is to insert stores.
 name|bool
 name|CustomRoots
 decl_stmt|;
-comment|//< Default is to pass through to backend.
+comment|///< Default is to pass through to backend.
+name|bool
+name|CustomSafePoints
+decl_stmt|;
+comment|///< Default is to use NeededSafePoints
+comment|///< to find safe points.
 name|bool
 name|InitRoots
 decl_stmt|;
-comment|//< If set, roots are nulled during lowering.
+comment|///< If set, roots are nulled during lowering.
 name|bool
 name|UsesMetadata
 decl_stmt|;
-comment|//< If set, backend must emit metadata tables.
+comment|///< If set, backend must emit metadata tables.
 name|public
 label|:
 name|GCStrategy
@@ -297,6 +308,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CustomSafePoints
+operator|||
 name|NeededSafePoints
 operator|!=
 literal|0
@@ -360,6 +373,18 @@ specifier|const
 block|{
 return|return
 name|CustomRoots
+return|;
+block|}
+comment|/// customSafePoints - By default, the GC analysis will find safe
+comment|///                    points according to NeededSafePoints. If true,
+comment|///                    then findCustomSafePoints must create them.
+name|bool
+name|customSafePoints
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CustomSafePoints
 return|;
 block|}
 comment|/// initializeRoots - If set, gcroot intrinsics should initialize their
@@ -442,6 +467,19 @@ parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|)
+function_decl|;
+name|virtual
+name|bool
+name|findCustomSafePoints
+parameter_list|(
+name|GCFunctionInfo
+modifier|&
+name|FI
+parameter_list|,
+name|MachineFunction
+modifier|&
+name|MF
 parameter_list|)
 function_decl|;
 block|}

@@ -5415,9 +5415,14 @@ name|off
 expr_stmt|;
 name|igmplen
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
+operator|-
+name|off
 expr_stmt|;
 comment|/* 	 * Validate lengths. 	 */
 if|if
@@ -8045,6 +8050,8 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8055,6 +8062,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|igmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip
@@ -8216,14 +8224,7 @@ name|inm_ifma
 operator|->
 name|ifma_ifp
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * Sanity check that netinet's notion of ifp is the 		 * same as net's. 		 */
+comment|/* 	 * Sanity check that netinet's notion of ifp is the 	 * same as net's. 	 */
 name|KASSERT
 argument_list|(
 name|inm
@@ -8239,7 +8240,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|IGMP_LOCK
 argument_list|()
 expr_stmt|;
@@ -13429,15 +13429,21 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|hdrlen
 operator|+
 name|igmpreclen
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

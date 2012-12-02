@@ -1834,7 +1834,6 @@ operator|)
 else|:
 literal|0
 decl_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|extbuf

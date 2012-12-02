@@ -3018,6 +3018,12 @@ argument_list|,
 name|User
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Creating the 'tn' temp file has already updated the 	 * modification time of the spool directory.  Sleep for a 	 * second to ensure that poke_daemon() sets a later 	 * modification time.  Otherwise, this can race with the cron 	 * daemon scanning for updated crontabs. 	 */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|poke_daemon
 argument_list|()
 expr_stmt|;
@@ -3042,10 +3048,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3057,8 +3059,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tvs

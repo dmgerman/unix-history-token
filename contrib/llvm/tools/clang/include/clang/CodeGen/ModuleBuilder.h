@@ -103,6 +103,11 @@ range|:
 name|public
 name|ASTConsumer
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|virtual

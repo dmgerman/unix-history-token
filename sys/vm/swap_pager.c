@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Matthew Dillon,  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *				New Swap System  *				Matthew Dillon  *  * Radix Bitmap 'blists'.  *  *	- The new swapper uses the new radix bitmap code.  This should scale  *	  to arbitrarily small or arbitrarily large swap spaces and an almost  *	  arbitrary degree of fragmentation.  *  * Features:  *  *	- on the fly reallocation of swap during putpages.  The new system  *	  does not try to keep previously allocated swap blocks for dirty  *	  pages.    *  *	- on the fly deallocation of swap  *  *	- No more garbage collection required.  Unnecessarily allocated swap  *	  blocks only exist for dirty vm_page_t's now and these are already  *	  cycled (in a high-load system) by the pager.  We also do on-the-fly  *	  removal of invalidated swap blocks when a page is destroyed  *	  or renamed.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  *	@(#)vm_swap.c	8.5 (Berkeley) 2/17/94  */
+comment|/*-  * Copyright (c) 1998 Matthew Dillon,  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *				New Swap System  *				Matthew Dillon  *  * Radix Bitmap 'blists'.  *  *	- The new swapper uses the new radix bitmap code.  This should scale  *	  to arbitrarily small or arbitrarily large swap spaces and an almost  *	  arbitrary degree of fragmentation.  *  * Features:  *  *	- on the fly reallocation of swap during putpages.  The new system  *	  does not try to keep previously allocated swap blocks for dirty  *	  pages.  *  *	- on the fly deallocation of swap  *  *	- No more garbage collection required.  Unnecessarily allocated swap  *	  blocks only exist for dirty vm_page_t's now and these are already  *	  cycled (in a high-load system) by the pager.  We also do on-the-fly  *	  removal of invalidated swap blocks when a page is destroyed  *	  or renamed.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  *	@(#)vm_swap.c	8.5 (Berkeley) 2/17/94  */
 end_comment
 
 begin_include
@@ -1850,7 +1850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_SIZECHECK() -	update swap_pager_full indication  *	  *	update the swap_pager_almost_full indication and warn when we are  *	about to run out of swap space, using lowat/hiwat hysteresis.  *  *	Clear swap_pager_full ( task killing ) indication when lowat is met.  *  *	No restrictions on call  *	This routine may not block.  */
+comment|/*  * SWP_SIZECHECK() -	update swap_pager_full indication  *  *	update the swap_pager_almost_full indication and warn when we are  *	about to run out of swap space, using lowat/hiwat hysteresis.  *  *	Clear swap_pager_full ( task killing ) indication when lowat is met.  *  *	No restrictions on call  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2010,7 +2010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_INIT() -	initialize the swap pager!  *  *	Expected to be started from system init.  NOTE:  This code is run   *	before much else so be careful what you depend on.  Most of the VM  *	system has yet to be initialized at this point.  */
+comment|/*  * SWAP_PAGER_INIT() -	initialize the swap pager!  *  *	Expected to be started from system init.  NOTE:  This code is run  *	before much else so be careful what you depend on.  Most of the VM  *	system has yet to be initialized at this point.  */
 end_comment
 
 begin_function
@@ -2097,7 +2097,7 @@ name|n
 decl_stmt|,
 name|n2
 decl_stmt|;
-comment|/* 	 * Number of in-transit swap bp operations.  Don't 	 * exhaust the pbufs completely.  Make sure we 	 * initialize workable values (0 will work for hysteresis 	 * but it isn't very efficient). 	 * 	 * The nsw_cluster_max is constrained by the bp->b_pages[] 	 * array (MAXPHYS/PAGE_SIZE) and our locally defined 	 * MAX_PAGEOUT_CLUSTER.   Also be aware that swap ops are 	 * constrained by the swap device interleave stripe size. 	 * 	 * Currently we hardwire nsw_wcount_async to 4.  This limit is  	 * designed to prevent other I/O from having high latencies due to 	 * our pageout I/O.  The value 4 works well for one or two active swap 	 * devices but is probably a little low if you have more.  Even so, 	 * a higher value would probably generate only a limited improvement 	 * with three or four active swap devices since the system does not 	 * typically have to pageout at extreme bandwidths.   We will want 	 * at least 2 per swap devices, and 4 is a pretty good value if you 	 * have one NFS swap device due to the command/ack latency over NFS. 	 * So it all works out pretty well. 	 */
+comment|/* 	 * Number of in-transit swap bp operations.  Don't 	 * exhaust the pbufs completely.  Make sure we 	 * initialize workable values (0 will work for hysteresis 	 * but it isn't very efficient). 	 * 	 * The nsw_cluster_max is constrained by the bp->b_pages[] 	 * array (MAXPHYS/PAGE_SIZE) and our locally defined 	 * MAX_PAGEOUT_CLUSTER.   Also be aware that swap ops are 	 * constrained by the swap device interleave stripe size. 	 * 	 * Currently we hardwire nsw_wcount_async to 4.  This limit is 	 * designed to prevent other I/O from having high latencies due to 	 * our pageout I/O.  The value 4 works well for one or two active swap 	 * devices but is probably a little low if you have more.  Even so, 	 * a higher value would probably generate only a limited improvement 	 * with three or four active swap devices since the system does not 	 * typically have to pageout at extreme bandwidths.   We will want 	 * at least 2 per swap devices, and 4 is a pretty good value if you 	 * have one NFS swap device due to the command/ack latency over NFS. 	 * So it all works out pretty well. 	 */
 name|nsw_cluster_max
 operator|=
 name|min
@@ -2281,7 +2281,7 @@ name|n2
 operator|=
 name|n
 expr_stmt|;
-comment|/* 	 * Initialize our meta-data hash table.  The swapper does not need to 	 * be quite as efficient as the VM system, so we do not use an  	 * oversized hash table. 	 * 	 * 	n: 		size of hash table, must be power of 2 	 *	swhash_mask:	hash table index mask 	 */
+comment|/* 	 * Initialize our meta-data hash table.  The swapper does not need to 	 * be quite as efficient as the VM system, so we do not use an 	 * oversized hash table. 	 * 	 * 	n: 		size of hash table, must be power of 2 	 *	swhash_mask:	hash table index mask 	 */
 for|for
 control|(
 name|n
@@ -2620,7 +2620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_DEALLOC() -	remove swap metadata from object  *  *	The swap backing for the object is destroyed.  The code is   *	designed such that we can reinstantiate it later, but this  *	routine is typically called only when the entire object is  *	about to be destroyed.  *  *	The object must be locked.  */
+comment|/*  * SWAP_PAGER_DEALLOC() -	remove swap metadata from object  *  *	The swap backing for the object is destroyed.  The code is  *	designed such that we can reinstantiate it later, but this  *	routine is typically called only when the entire object is  *	about to be destroyed.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -2683,7 +2683,7 @@ argument_list|,
 literal|"swpdea"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free all remaining metadata.  We only bother to free it from  	 * the swap meta data.  We do not attempt to free swapblk's still 	 * associated with vm_page_t's for this object.  We do not care 	 * if paging is still in progress on some objects. 	 */
+comment|/* 	 * Free all remaining metadata.  We only bother to free it from 	 * the swap meta data.  We do not attempt to free swapblk's still 	 * associated with vm_page_t's for this object.  We do not care 	 * if paging is still in progress on some objects. 	 */
 name|swp_pager_meta_free_all
 argument_list|(
 name|object
@@ -2987,7 +2987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space   *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	This routine may not sleep.  */
+comment|/*  * SWP_PAGER_FREESWAPSPACE() -	free raw swap space  *  *	This routine returns the specified swap blocks back to the bitmap.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -3043,7 +3043,7 @@ name|sw_used
 operator|-=
 name|npages
 expr_stmt|;
-comment|/* 			 * If we are attempting to stop swapping on 			 * this device, we don't want to mark any 			 * blocks free lest they be reused.   			 */
+comment|/* 			 * If we are attempting to stop swapping on 			 * this device, we don't want to mark any 			 * blocks free lest they be reused. 			 */
 if|if
 condition|(
 operator|(
@@ -3098,7 +3098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_FREESPACE() -	frees swap blocks associated with a page  *				range within an object.  *  *	This is a globally accessible routine.  *  *	This routine removes swapblk assignments from swap metadata.  *  *	The external callers of this routine typically have already destroyed   *	or renamed vm_page_t's associated with this range in the object so   *	we should be ok.  */
+comment|/*  * SWAP_PAGER_FREESPACE() -	frees swap blocks associated with a page  *				range within an object.  *  *	This is a globally accessible routine.  *  *	This routine removes swapblk assignments from swap metadata.  *  *	The external callers of this routine typically have already destroyed  *	or renamed vm_page_t's associated with this range in the object so  *	we should be ok.  */
 end_comment
 
 begin_function
@@ -3135,7 +3135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_RESERVE() - reserve swap blocks in object  *  *	Assigns swap blocks to the specified range within the object.  The   *	swap blocks are not zerod.  Any previous swap assignment is destroyed.  *  *	Returns 0 on success, -1 on failure.  */
+comment|/*  * SWAP_PAGER_RESERVE() - reserve swap blocks in object  *  *	Assigns swap blocks to the specified range within the object.  The  *	swap blocks are not zerod.  Any previous swap assignment is destroyed.  *  *	Returns 0 on success, -1 on failure.  */
 end_comment
 
 begin_function
@@ -3284,7 +3284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to sleep.  It may sleep allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.   *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked.  *	Both object locks may temporarily be released.  */
+comment|/*  * SWAP_PAGER_COPY() -  copy blocks from source pager to destination pager  *			and destroy the source.  *  *	Copy any valid swapblks from the source to the destination.  In  *	cases where both the source and destination have a valid swapblk,  *	we keep the destination's.  *  *	This routine is allowed to sleep.  It may sleep allocating metadata  *	indirectly through swp_pager_meta_build() or if paging is still in  *	progress on the source.  *  *	The source object contains no vm_page_t's (which is just as well)  *  *	The source object is of type OBJT_SWAP.  *  *	The source and destination objects must be locked.  *	Both object locks may temporarily be released.  */
 end_comment
 
 begin_function
@@ -3321,7 +3321,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If destroysource is set, we remove the source object from the  	 * swap_pager internal queue now.  	 */
+comment|/* 	 * If destroysource is set, we remove the source object from the 	 * swap_pager internal queue now. 	 */
 if|if
 condition|(
 name|destroysource
@@ -3734,7 +3734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.    *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not sleep.  */
+comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.  *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -3772,7 +3772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_GETPAGES() - bring pages in from swap  *  *	Attempt to retrieve (m, count) pages from backing store, but make  *	sure we retrieve at least m[reqpage].  We try to load in as large  *	a chunk surrounding m[reqpage] as is contiguous in swap and which  *	belongs to the same object.  *  *	The code is designed for asynchronous operation and   *	immediate-notification of 'reqpage' but tends not to be  *	used that way.  Please do not optimize-out this algorithmic  *	feature, I intend to improve on it in the future.  *  *	The parent has a single vm_object_pip_add() reference prior to  *	calling us and we should return with the same.  *  *	The parent has BUSY'd the pages.  We should return with 'm'  *	left busy, but the others adjusted.  */
+comment|/*  * SWAP_PAGER_GETPAGES() - bring pages in from swap  *  *	Attempt to retrieve (m, count) pages from backing store, but make  *	sure we retrieve at least m[reqpage].  We try to load in as large  *	a chunk surrounding m[reqpage] as is contiguous in swap and which  *	belongs to the same object.  *  *	The code is designed for asynchronous operation and  *	immediate-notification of 'reqpage' but tends not to be  *	used that way.  Please do not optimize-out this algorithmic  *	feature, I intend to improve on it in the future.  *  *	The parent has a single vm_object_pip_add() reference prior to  *	calling us and we should return with the same.  *  *	The parent has BUSY'd the pages.  We should return with 'm'  *	left busy, but the others adjusted.  */
 end_comment
 
 begin_function
@@ -3837,7 +3837,7 @@ name|object
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made with the object locked. 	 */
+comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the 	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made with the object locked. 	 */
 name|blk
 operator|=
 name|swp_pager_meta_ctl
@@ -4022,7 +4022,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Return VM_PAGER_FAIL if we have nothing to do.  Return mreq  	 * still busy, but the others unbusied. 	 */
+comment|/* 	 * Return VM_PAGER_FAIL if we have nothing to do.  Return mreq 	 * still busy, but the others unbusied. 	 */
 if|if
 condition|(
 name|blk
@@ -4353,12 +4353,12 @@ name|VM_PAGER_OK
 operator|)
 return|;
 block|}
-comment|/* 	 * A final note: in a low swap situation, we cannot deallocate swap 	 * and mark a page dirty here because the caller is likely to mark 	 * the page clean when we return, causing the page to possibly revert  	 * to all-zero's later. 	 */
+comment|/* 	 * A final note: in a low swap situation, we cannot deallocate swap 	 * and mark a page dirty here because the caller is likely to mark 	 * the page clean when we return, causing the page to possibly revert 	 * to all-zero's later. 	 */
 block|}
 end_function
 
 begin_comment
-comment|/*  *	swap_pager_putpages:   *  *	Assign swap (if necessary) and initiate I/O on the specified pages.  *  *	We support both OBJT_DEFAULT and OBJT_SWAP objects.  DEFAULT objects  *	are automatically converted to SWAP objects.  *  *	In a low memory situation we may block in VOP_STRATEGY(), but the new   *	vm_page reservation system coupled with properly written VFS devices   *	should ensure that no low-memory deadlock occurs.  This is an area  *	which needs work.  *  *	The parent has N vm_object_pip_add() references prior to  *	calling us and will remove references for rtvals[] that are  *	not set to VM_PAGER_PEND.  We need to remove the rest on I/O  *	completion.  *  *	The parent has soft-busy'd the pages it passes us and will unbusy  *	those whos rtvals[] entry is not set to VM_PAGER_PEND on return.  *	We need to unbusy the rest on I/O completion.  */
+comment|/*  *	swap_pager_putpages:  *  *	Assign swap (if necessary) and initiate I/O on the specified pages.  *  *	We support both OBJT_DEFAULT and OBJT_SWAP objects.  DEFAULT objects  *	are automatically converted to SWAP objects.  *  *	In a low memory situation we may block in VOP_STRATEGY(), but the new  *	vm_page reservation system coupled with properly written VFS devices  *	should ensure that no low-memory deadlock occurs.  This is an area  *	which needs work.  *  *	The parent has N vm_object_pip_add() references prior to  *	calling us and will remove references for rtvals[] that are  *	not set to VM_PAGER_PEND.  We need to remove the rest on I/O  *	completion.  *  *	The parent has soft-busy'd the pages it passes us and will unbusy  *	those whos rtvals[] entry is not set to VM_PAGER_PEND on return.  *	We need to unbusy the rest on I/O completion.  */
 end_comment
 
 begin_function
@@ -4453,7 +4453,7 @@ name|sync
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Step 2 	 * 	 * Update nsw parameters from swap_async_max sysctl values.   	 * Do not let the sysop crash the machine with bogus numbers. 	 */
+comment|/* 	 * Step 2 	 * 	 * Update nsw parameters from swap_async_max sysctl values. 	 * Do not let the sysop crash the machine with bogus numbers. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4977,7 +4977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,   *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY   *	unbusy all pages except the 'main' request page.  For WRITE   *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this   *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not sleep.  */
+comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,  *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY  *	unbusy all pages except the 'main' request page.  For WRITE  *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this  *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -5087,7 +5087,7 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * cleanup pages.  If an error occurs writing to swap, we are in 	 * very serious trouble.  If it happens to be a disk error, though, 	 * we may be able to recover by reassigning the swap later on.  So 	 * in this case we remove the m->swapblk assignment for the page  	 * but do not free it in the rlist.  The errornous block(s) are thus 	 * never reallocated as swap.  Redirty the page and continue. 	 */
+comment|/* 	 * cleanup pages.  If an error occurs writing to swap, we are in 	 * very serious trouble.  If it happens to be a disk error, though, 	 * we may be able to recover by reassigning the swap later on.  So 	 * in this case we remove the m->swapblk assignment for the page 	 * but do not free it in the rlist.  The errornous block(s) are thus 	 * never reallocated as swap.  Redirty the page and continue. 	 */
 for|for
 control|(
 name|i
@@ -5130,7 +5130,7 @@ operator|&
 name|BIO_ERROR
 condition|)
 block|{
-comment|/* 			 * If an error occurs I'd love to throw the swapblk 			 * away without freeing it back to swapspace, so it 			 * can never be used again.  But I can't from an  			 * interrupt. 			 */
+comment|/* 			 * If an error occurs I'd love to throw the swapblk 			 * away without freeing it back to swapspace, so it 			 * can never be used again.  But I can't from an 			 * interrupt. 			 */
 if|if
 condition|(
 name|bp
@@ -5140,7 +5140,7 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
-comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and  				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared VPO_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overridden by the original caller of 				 * getpages so don't play cute tricks here. 				 */
+comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and 				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared VPO_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overridden by the original caller of 				 * getpages so don't play cute tricks here. 				 */
 name|m
 operator|->
 name|valid
@@ -5168,7 +5168,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If i == bp->b_pager.pg_reqpage, do not wake  				 * the page up.  The caller needs to. 				 */
+comment|/* 				 * If i == bp->b_pager.pg_reqpage, do not wake 				 * the page up.  The caller needs to. 				 */
 block|}
 else|else
 block|{
@@ -5210,7 +5210,7 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
-comment|/* 			 * NOTE: for reads, m->dirty will probably be  			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by  			 * vm_page_wakeup(). 			 */
+comment|/* 			 * NOTE: for reads, m->dirty will probably be 			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by 			 * vm_page_wakeup(). 			 */
 name|KASSERT
 argument_list|(
 operator|!
@@ -5247,7 +5247,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We have to wake specifically requested pages 			 * up too because we cleared VPO_SWAPINPROG and 			 * could be waiting for it in getpages.  However, 			 * be sure to not unbusy getpages specifically 			 * requested page - getpages expects it to be  			 * left busy. 			 */
+comment|/* 			 * We have to wake specifically requested pages 			 * up too because we cleared VPO_SWAPINPROG and 			 * could be waiting for it in getpages.  However, 			 * be sure to not unbusy getpages specifically 			 * requested page - getpages expects it to be 			 * left busy. 			 */
 if|if
 condition|(
 name|i
@@ -5289,18 +5289,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * For write success, clear the dirty 			 * status, then finish the I/O ( which decrements the  			 * busy count and possibly wakes waiter's up ). 			 */
+comment|/* 			 * For write success, clear the dirty 			 * status, then finish the I/O ( which decrements the 			 * busy count and possibly wakes waiter's up ). 			 */
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|pmap_page_is_write_mapped
+argument_list|(
 name|m
-operator|->
-name|aflags
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
 literal|"swp_pager_async_iodone: page %p is not write"
@@ -5367,7 +5363,7 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * swapdev_strategy() manually sets b_vp and b_bufobj before calling  	 * bstrategy(). Set them back to NULL now we're done with it, or we'll 	 * trigger a KASSERT in relpbuf(). 	 */
+comment|/* 	 * swapdev_strategy() manually sets b_vp and b_bufobj before calling 	 * bstrategy(). Set them back to NULL now we're done with it, or we'll 	 * trigger a KASSERT in relpbuf(). 	 */
 if|if
 condition|(
 name|bp
@@ -5954,7 +5950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/************************************************************************  *				SWAP META DATA 				*  ************************************************************************  *  *	These routines manipulate the swap metadata stored in the   *	OBJT_SWAP object.  *  *	Swap metadata is implemented with a global hash and not directly  *	linked into the object.  Instead the object simply contains  *	appropriate tracking counters.  */
+comment|/************************************************************************  *				SWAP META DATA 				*  ************************************************************************  *  *	These routines manipulate the swap metadata stored in the  *	OBJT_SWAP object.  *  *	Swap metadata is implemented with a global hash and not directly  *	linked into the object.  Instead the object simply contains  *	appropriate tracking counters.  */
 end_comment
 
 begin_comment
@@ -5976,6 +5972,11 @@ name|daddr_t
 name|swapblk
 parameter_list|)
 block|{
+specifier|static
+specifier|volatile
+name|int
+name|exhausted
+decl_stmt|;
 name|struct
 name|swblock
 modifier|*
@@ -6140,9 +6141,22 @@ name|swap_zone
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|exhausted
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"swap zone exhausted, increase kern.maxswzone\n"
+literal|"swap zone exhausted, "
+literal|"increase kern.maxswzone\n"
 argument_list|)
 expr_stmt|;
 name|vm_pageout_oom
@@ -6170,6 +6184,23 @@ goto|goto
 name|retry
 goto|;
 block|}
+if|if
+condition|(
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|exhausted
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"swap zone ok\n"
+argument_list|)
+expr_stmt|;
 name|swap
 operator|->
 name|swb_hnext
@@ -6302,7 +6333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  */
+comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap  *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned  *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  */
 end_comment
 
 begin_function
@@ -6675,7 +6706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_METACTL() -  misc control of swap and vm_page_t meta data.  *  *	This routine is capable of looking up, popping, or freeing  *	swapblk assignments in the swap meta data or in the vm_page_t.  *	The routine typically returns the swapblk being looked-up, or popped,  *	or SWAPBLK_NONE if the block was freed, or SWAPBLK_NONE if the block  *	was invalid.  This routine will automatically free any invalid   *	meta-data swapblks.  *  *	It is not possible to store invalid swapblks in the swap meta data  *	(other then a literal 'SWAPBLK_NONE'), so we don't bother checking.  *  *	When acting on a busy resident page and paging is in progress, we   *	have to wait until paging is complete but otherwise can act on the   *	busy page.  *  *	SWM_FREE	remove and free swap block from metadata  *	SWM_POP		remove from meta data but do not free.. pop it out  */
+comment|/*  * SWP_PAGER_METACTL() -  misc control of swap and vm_page_t meta data.  *  *	This routine is capable of looking up, popping, or freeing  *	swapblk assignments in the swap meta data or in the vm_page_t.  *	The routine typically returns the swapblk being looked-up, or popped,  *	or SWAPBLK_NONE if the block was freed, or SWAPBLK_NONE if the block  *	was invalid.  This routine will automatically free any invalid  *	meta-data swapblks.  *  *	It is not possible to store invalid swapblks in the swap meta data  *	(other then a literal 'SWAPBLK_NONE'), so we don't bother checking.  *  *	When acting on a busy resident page and paging is in progress, we  *	have to wait until paging is complete but otherwise can act on the  *	busy page.  *  *	SWM_FREE	remove and free swap block from metadata  *	SWM_POP		remove from meta data but do not free.. pop it out  */
 end_comment
 
 begin_function
@@ -6717,7 +6748,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The meta data only exists of the object is OBJT_SWAP  	 * and even then might not be allocated yet. 	 */
+comment|/* 	 * The meta data only exists of the object is OBJT_SWAP 	 * and even then might not be allocated yet. 	 */
 if|if
 condition|(
 name|object
@@ -6902,7 +6933,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * MPSAFE  */
+comment|/*  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -7168,6 +7199,77 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Check that the total amount of swap currently configured does not  * exceed half the theoretical maximum.  If it does, print a warning  * message and return -1; otherwise, return 0.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|swapon_check_swzone
+parameter_list|(
+name|unsigned
+name|long
+name|npages
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|maxpages
+decl_stmt|;
+comment|/* absolute maximum we can handle assuming 100% efficiency */
+name|maxpages
+operator|=
+name|uma_zone_get_max
+argument_list|(
+name|swap_zone
+argument_list|)
+operator|*
+name|SWAP_META_PAGES
+expr_stmt|;
+comment|/* recommend using no more than half that amount */
+if|if
+condition|(
+name|npages
+operator|>
+name|maxpages
+operator|/
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"warning: total configured swap (%lu pages) "
+literal|"exceeds maximum recommended amount (%lu pages).\n"
+argument_list|,
+name|npages
+argument_list|,
+name|maxpages
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"warning: increase kern.maxswzone "
+literal|"or reduce amount of swap.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -7211,7 +7313,7 @@ decl_stmt|;
 name|u_long
 name|mblocks
 decl_stmt|;
-comment|/* 	 * nblks is in DEV_BSIZE'd chunks, convert to PAGE_SIZE'd chunks. 	 * First chop nblks off to page-align it, then convert. 	 *  	 * sw->sw_nblks is in page-sized chunks now too. 	 */
+comment|/* 	 * nblks is in DEV_BSIZE'd chunks, convert to PAGE_SIZE'd chunks. 	 * First chop nblks off to page-align it, then convert. 	 * 	 * sw->sw_nblks is in page-sized chunks now too. 	 */
 name|nblks
 operator|&=
 operator|~
@@ -7429,6 +7531,13 @@ operator|)
 name|nblks
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+name|swapon_check_swzone
+argument_list|(
+name|swap_total
+operator|/
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 name|swp_sizecheck
 argument_list|()
@@ -9246,8 +9355,6 @@ operator|&
 name|g_swap_class
 argument_list|,
 literal|"swap"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|cp

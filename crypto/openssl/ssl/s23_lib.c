@@ -40,19 +40,6 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|IMPLEMENT_ssl23_meth_func
-argument_list|(
-argument|sslv23_base_method
-argument_list|,
-argument|ssl_undefined_function
-argument_list|,
-argument|ssl_undefined_function
-argument_list|,
-argument|ssl_bad_method
-argument_list|)
-end_macro
-
 begin_function
 name|int
 name|ssl23_num_ciphers
@@ -78,6 +65,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl23_get_cipher
@@ -139,6 +127,7 @@ comment|/* This function needs to check if the ciphers required are actually  * 
 end_comment
 
 begin_function
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|ssl23_get_cipher_by_char
@@ -150,6 +139,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|cp

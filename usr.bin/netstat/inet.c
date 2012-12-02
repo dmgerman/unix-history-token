@@ -2394,6 +2394,30 @@ literal|"4 "
 else|:
 literal|"  "
 expr_stmt|;
+if|if
+condition|(
+name|istcp
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_TOE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%-3.3s%-2.2s "
+argument_list|,
+literal|"toe"
+argument_list|,
+name|vchar
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%-3.3s%-2.2s "
@@ -5653,9 +5677,6 @@ specifier|static
 name|void
 name|igmp_stats_live_old
 parameter_list|(
-name|u_long
-name|off
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -5917,8 +5938,6 @@ condition|)
 block|{
 name|igmp_stats_live_old
 argument_list|(
-name|off
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;

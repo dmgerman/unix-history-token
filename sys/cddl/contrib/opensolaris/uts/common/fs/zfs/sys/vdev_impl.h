@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -108,6 +108,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|size
+parameter_list|,
+name|uint64_t
+modifier|*
+name|max_size
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -327,6 +331,10 @@ name|uint64_t
 name|vdev_min_asize
 decl_stmt|;
 comment|/* min acceptable asize		*/
+name|uint64_t
+name|vdev_max_asize
+decl_stmt|;
+comment|/* max acceptable asize		*/
 name|uint64_t
 name|vdev_ashift
 decl_stmt|;
@@ -562,6 +570,10 @@ name|vdev_nowritecache
 decl_stmt|;
 comment|/* true if flushwritecache failed */
 name|boolean_t
+name|vdev_notrim
+decl_stmt|;
+comment|/* true if trim failed */
+name|boolean_t
 name|vdev_checkremove
 decl_stmt|;
 comment|/* temporary online test	*/
@@ -623,7 +635,12 @@ name|vdev_aux_t
 name|vdev_label_aux
 decl_stmt|;
 comment|/* on-disk aux state		*/
-comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest fields would be 	 * incorrect. 	 */
+name|struct
+name|trim_map
+modifier|*
+name|vdev_trimmap
+decl_stmt|;
+comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest of the fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock
 decl_stmt|;
@@ -778,6 +795,10 @@ define|#
 directive|define
 name|VDEV_LABELS
 value|4
+define|#
+directive|define
+name|VDEV_BEST_LABEL
+value|VDEV_LABELS
 define|#
 directive|define
 name|VDEV_ALLOC_LOAD

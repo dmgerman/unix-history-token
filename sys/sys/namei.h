@@ -500,28 +500,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MPSAFE
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* namei() must acquire Giant if needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GIANTHELD
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* namei() is holding giant. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AUDITVNODE1
 value|0x04000000
 end_define
@@ -555,23 +533,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PARAMASK
-value|0x1ffffe00
+name|NOCAPCHECK
+value|0x20000000
 end_define
 
 begin_comment
-comment|/* mask of parameter descriptors */
+comment|/* do not perform capability checks */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NDHASGIANT
-parameter_list|(
-name|NDP
-parameter_list|)
-value|(((NDP)->ni_cnd.cn_flags& GIANTHELD) != 0)
+name|PARAMASK
+value|0x3ffffe00
 end_define
+
+begin_comment
+comment|/* mask of parameter descriptors */
+end_comment
 
 begin_comment
 comment|/*  * Initialization of a nameidata structure.  */

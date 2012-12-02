@@ -2419,7 +2419,7 @@ if|if
 condition|(
 name|clock_gettime
 argument_list|(
-name|CLOCK_MONOTONIC
+name|CLOCK_UPTIME
 argument_list|,
 operator|&
 name|tp

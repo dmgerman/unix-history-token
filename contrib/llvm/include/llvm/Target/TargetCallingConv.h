@@ -59,6 +59,24 @@ directive|define
 name|LLVM_TARGET_TARGETCALLINGCONV_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -189,7 +207,7 @@ literal|0xFULL
 operator|<<
 literal|6
 decl_stmt|;
-comment|//< Struct alignment
+comment|///< Struct alignment
 specifier|static
 specifier|const
 name|uint64_t
@@ -238,7 +256,7 @@ literal|0xffffffffULL
 operator|<<
 literal|32
 decl_stmt|;
-comment|//< Struct size
+comment|///< Struct size
 specifier|static
 specifier|const
 name|uint64_t
@@ -253,7 +271,7 @@ name|One
 init|=
 literal|1ULL
 decl_stmt|;
-comment|//< 1 of this type, for shifts
+comment|///< 1 of this type, for shifts
 name|uint64_t
 name|Flags
 decl_stmt|;

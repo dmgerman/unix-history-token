@@ -68,19 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
 end_include
 
 begin_decl_stmt
@@ -125,16 +113,6 @@ operator|>
 name|class
 name|StringMapEntry
 expr_stmt|;
-name|template
-operator|<
-name|typename
-name|ValueTy
-operator|=
-name|Value
-operator|>
-name|class
-name|AssertingVH
-expr_stmt|;
 typedef|typedef
 name|StringMapEntry
 operator|<
@@ -163,6 +141,9 @@ name|MDNode
 decl_stmt|;
 name|class
 name|Type
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 Value Class
@@ -326,7 +307,7 @@ name|getContext
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// All values can potentially be named...
+comment|// All values can potentially be named.
 name|bool
 name|hasName
 argument_list|()
@@ -336,6 +317,10 @@ return|return
 name|Name
 operator|!=
 literal|0
+operator|&&
+name|SubclassID
+operator|!=
+name|MDStringVal
 return|;
 block|}
 name|ValueName
@@ -348,27 +333,24 @@ return|return
 name|Name
 return|;
 block|}
+name|void
+name|setValueName
+parameter_list|(
+name|ValueName
+modifier|*
+name|VN
+parameter_list|)
+block|{
+name|Name
+operator|=
+name|VN
+expr_stmt|;
+block|}
 comment|/// getName() - Return a constant reference to the value's name. This is cheap
 comment|/// and guaranteed to return the same reference as long as the value is not
 comment|/// modified.
-comment|///
-comment|/// This is currently guaranteed to return a StringRef for which data() points
-comment|/// to a valid null terminated string. The use of StringRef.data() is
-comment|/// deprecated here, however, and clients should not rely on it. If such
-comment|/// behavior is needed, clients should use expensive getNameStr(), or switch
-comment|/// to an interface that does not depend on null termination.
 name|StringRef
 name|getName
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getNameStr() - Return the name of the specified value, *constructing a
-comment|/// string* to hold it.  This is guaranteed to construct a string and is very
-comment|/// expensive, clients should use getName() unless necessary.
-name|std
-operator|::
-name|string
-name|getNameStr
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -634,6 +616,12 @@ comment|// This is an instance of ConstantExpr
 name|ConstantAggregateZeroVal
 block|,
 comment|// This is an instance of ConstantAggregateZero
+name|ConstantDataArrayVal
+block|,
+comment|// This is an instance of ConstantDataArray
+name|ConstantDataVectorVal
+block|,
+comment|// This is an instance of ConstantDataVector
 name|ConstantIntVal
 block|,
 comment|// This is an instance of ConstantInt
@@ -789,9 +777,9 @@ name|true
 return|;
 comment|// Values are always values.
 block|}
-comment|/// stripPointerCasts - This method strips off any unneeded pointer
-comment|/// casts from the specified value, returning the original uncasted value.
-comment|/// Note that the returned value has pointer type if the specified value does.
+comment|/// stripPointerCasts - This method strips off any unneeded pointer casts and
+comment|/// all-zero GEPs from the specified value, returning the original uncasted
+comment|/// value. If this is called on a non-pointer value, it returns 'this'.
 name|Value
 modifier|*
 name|stripPointerCasts
@@ -815,6 +803,66 @@ name|this
 operator|)
 operator|->
 name|stripPointerCasts
+argument_list|()
+return|;
+block|}
+comment|/// stripInBoundsConstantOffsets - This method strips off unneeded pointer casts and
+comment|/// all-constant GEPs from the specified value, returning the original
+comment|/// pointer value. If this is called on a non-pointer value, it returns
+comment|/// 'this'.
+name|Value
+modifier|*
+name|stripInBoundsConstantOffsets
+parameter_list|()
+function_decl|;
+specifier|const
+name|Value
+operator|*
+name|stripInBoundsConstantOffsets
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripInBoundsConstantOffsets
+argument_list|()
+return|;
+block|}
+comment|/// stripInBoundsOffsets - This method strips off unneeded pointer casts and
+comment|/// any in-bounds Offsets from the specified value, returning the original
+comment|/// pointer value. If this is called on a non-pointer value, it returns
+comment|/// 'this'.
+name|Value
+modifier|*
+name|stripInBoundsOffsets
+parameter_list|()
+function_decl|;
+specifier|const
+name|Value
+operator|*
+name|stripInBoundsOffsets
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripInBoundsOffsets
 argument_list|()
 return|;
 block|}

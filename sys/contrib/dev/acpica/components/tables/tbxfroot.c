@@ -91,9 +91,6 @@ modifier|*
 name|Rsdp
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
 comment|/*      * The signature and checksum must both be correct      *      * Note: Sometimes there exists more than one RSDP in memory; the valid      * RSDP has a valid checksum, all others have an invalid checksum.      */
 if|if
 condition|(
@@ -190,7 +187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  TableAddress            - Where the table pointer is returned  *  * RETURN:      Status, RSDP physical address  *  * DESCRIPTION: Search lower 1Mbyte of memory for the root system descriptor  *              pointer structure.  If it is found, set *RSDP to point to it.  *  * NOTE1:       The RSDP must be either in the first 1K of the Extended  *              BIOS Data Area or between E0000 and FFFFF (From ACPI Spec.)  *              Only a 32-bit physical address is necessary.  *  * NOTE2:       This function is always available, regardless of the  *              initialization state of the rest of ACPI.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  TableAddress            - Where the table pointer is returned  *  * RETURN:      Status, RSDP physical address  *  * DESCRIPTION: Search lower 1Mbyte of memory for the root system descriptor  *              pointer structure. If it is found, set *RSDP to point to it.  *  * NOTE1:       The RSDP must be either in the first 1K of the Extended  *              BIOS Data Area or between E0000 and FFFFF (From ACPI Spec.)  *              Only a 32-bit physical address is necessary.  *  * NOTE2:       This function is always available, regardless of the  *              initialization state of the rest of ACPI.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -456,7 +453,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* A valid RSDP was not found */
-name|ACPI_ERROR
+name|ACPI_BIOS_ERROR
 argument_list|(
 operator|(
 name|AE_INFO

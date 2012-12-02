@@ -2768,7 +2768,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_dirbad: %s: bad dir ino %lu at offset %ld: %s"
+literal|"ufs_dirbad: %s: bad dir ino %ju at offset %ld: %s"
 argument_list|,
 name|mp
 operator|->
@@ -2777,7 +2777,7 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->
@@ -2797,7 +2797,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s: bad dir ino %lu at offset %ld: %s\n"
+literal|"%s: bad dir ino %ju at offset %ld: %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -2806,7 +2806,7 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->
@@ -4569,8 +4569,6 @@ operator||
 name|IO_SYNC
 argument_list|,
 name|cr
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4885,12 +4883,18 @@ name|i_number
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_dirremove: ip %d does not match dirent ino %d\n"
+literal|"ufs_dirremove: ip %ju does not match dirent ino %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rep
 operator|->
 name|d_ino

@@ -495,6 +495,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|PROC_DIR_NAME
+argument_list|,
+name|cam
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -15299,7 +15315,7 @@ if|if
 condition|(
 name|pCmd
 operator|->
-name|cf_data_in
+name|cf_data_out
 condition|)
 block|{
 name|bus_dmamap_sync

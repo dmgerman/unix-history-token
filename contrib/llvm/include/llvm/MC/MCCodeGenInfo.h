@@ -76,7 +76,7 @@ block|{
 name|class
 name|MCCodeGenInfo
 block|{
-comment|/// RelocationModel - Relocation model: statcic, pic, etc.
+comment|/// RelocationModel - Relocation model: static, pic, etc.
 comment|///
 name|Reloc
 operator|::
@@ -89,6 +89,13 @@ name|CodeModel
 operator|::
 name|Model
 name|CMModel
+expr_stmt|;
+comment|/// OptLevel - Optimization level.
+comment|///
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 expr_stmt|;
 name|public
 label|:
@@ -110,6 +117,15 @@ name|Model
 name|CM
 operator|=
 name|CodeModel
+operator|::
+name|Default
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OL
+operator|=
+name|CodeGenOpt
 operator|::
 name|Default
 argument_list|)
@@ -134,6 +150,17 @@ specifier|const
 block|{
 return|return
 name|CMModel
+return|;
+block|}
+name|CodeGenOpt
+operator|::
+name|Level
+name|getOptLevel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OptLevel
 return|;
 block|}
 block|}

@@ -204,6 +204,10 @@ operator|->
 name|getBufferIdentifier
 argument_list|()
 argument_list|,
+name|SourceMgr
+operator|::
+name|DK_Error
+argument_list|,
 name|ErrMsg
 argument_list|)
 expr_stmt|;
@@ -284,6 +288,10 @@ operator|=
 name|SMDiagnostic
 argument_list|(
 name|Filename
+argument_list|,
+name|SourceMgr
+operator|::
+name|DK_Error
 argument_list|,
 literal|"Could not open input file: "
 operator|+
@@ -395,6 +403,10 @@ operator|->
 name|getBufferIdentifier
 argument_list|()
 argument_list|,
+name|SourceMgr
+operator|::
+name|DK_Error
+argument_list|,
 name|ErrMsg
 argument_list|)
 expr_stmt|;
@@ -472,6 +484,10 @@ operator|=
 name|SMDiagnostic
 argument_list|(
 name|Filename
+argument_list|,
+name|SourceMgr
+operator|::
+name|DK_Error
 argument_list|,
 literal|"Could not open input file: "
 operator|+

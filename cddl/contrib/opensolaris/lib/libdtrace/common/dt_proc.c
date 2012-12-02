@@ -3403,7 +3403,7 @@ name|dpr
 operator|->
 name|dpr_tid
 argument_list|,
-name|SIGUSR1
+name|SIGTHR
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4027,6 +4027,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)

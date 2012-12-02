@@ -151,6 +151,9 @@ block|,
 name|question
 block|,
 comment|// = ?
+name|paste
+block|,
+comment|// #
 comment|// Keywords.
 name|Bit
 block|,
@@ -163,6 +166,8 @@ block|,
 name|Dag
 block|,
 name|Def
+block|,
+name|Foreach
 block|,
 name|Defm
 block|,
@@ -428,6 +433,13 @@ expr_stmt|;
 name|int
 name|getNextChar
 parameter_list|()
+function_decl|;
+name|int
+name|peekNextChar
+parameter_list|(
+name|int
+name|Index
+parameter_list|)
 function_decl|;
 name|void
 name|SkipBCPLComment

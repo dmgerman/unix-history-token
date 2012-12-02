@@ -16,7 +16,7 @@ name|_MACHINE_PROFILE_H_
 end_define
 
 begin_comment
-comment|/*  * Config generates something to tell the compiler to align functions on 32   * byte boundaries.  A strict alignment is good for keeping the tables small.  */
+comment|/*  * Config generates something to tell the compiler to align functions on 32  * byte boundaries.  A strict alignment is good for keeping the tables small.  */
 end_comment
 
 begin_define

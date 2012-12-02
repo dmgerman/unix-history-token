@@ -255,6 +255,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|tmpfs_updateopts
+index|[]
+init|=
+block|{
+literal|"from"
+block|,
+literal|"export"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
@@ -572,7 +590,25 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
-comment|/* 		 * Only support update mounts for NFS export. 		 */
+comment|/* Only support update mounts for certain options. */
+if|if
+condition|(
+name|vfs_filteropt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+name|tmpfs_updateopts
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 if|if
 condition|(
 name|vfs_flagopt
@@ -581,21 +617,34 @@ name|mp
 operator|->
 name|mnt_optnew
 argument_list|,
-literal|"export"
+literal|"ro"
 argument_list|,
 name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+operator|(
+operator|(
+expr|struct
+name|tmpfs_mount
+operator|*
+operator|)
+name|mp
+operator|->
+name|mnt_data
+operator|)
+operator|->
+name|tm_ronly
 condition|)
 return|return
 operator|(
-literal|0
+name|EOPNOTSUPP
 operator|)
 return|;
 return|return
 operator|(
-name|EOPNOTSUPP
+literal|0
 operator|)
 return|;
 block|}
@@ -1052,6 +1101,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|->
+name|tm_ronly
+operator|=
+operator|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+operator|)
+operator|!=
+literal|0
+expr_stmt|;
 comment|/* Allocate the root node. */
 name|error
 operator|=
@@ -1131,8 +1194,11 @@ operator|==
 literal|2
 argument_list|,
 operator|(
-literal|"tmpfs root with invalid ino: %d"
+literal|"tmpfs root with invalid ino: %ju"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|root
 operator|->
 name|tn_id
@@ -1155,12 +1221,6 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator||=
-name|MNTK_MPSAFE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(

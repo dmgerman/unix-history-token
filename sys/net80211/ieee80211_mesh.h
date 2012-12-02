@@ -22,6 +22,13 @@ name|IEEE80211_MESH_DEFAULT_TTL
 value|31
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_MAX_NEIGHBORS
+value|15
+end_define
+
 begin_comment
 comment|/*  * NB: all structures are __packed  so sizeof works on arm, et. al.  */
 end_comment
@@ -203,12 +210,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_FORM_MP
+name|IEEE80211_MESHCONF_FORM_GATE
 value|0x01
 end_define
 
 begin_comment
-comment|/* Connected to Portal */
+comment|/* Connected to Gate */
 end_comment
 
 begin_define
@@ -405,6 +412,20 @@ begin_comment
 comment|/* Peer Link Management */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MPM_BASE_SZ
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MPM_MAX_SZ
+value|(8)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_meshpeer_ie
@@ -416,11 +437,8 @@ comment|/* IEEE80211_ELEMID_MESHPEER */
 name|uint8_t
 name|peer_len
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|peer_proto
-index|[
-literal|4
-index|]
 decl_stmt|;
 comment|/* Peer Management Protocol */
 name|uint16_t
@@ -439,75 +457,27 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/* Mesh Peering Protocol Identifier field value */
+end_comment
+
 begin_enum
 enum|enum
 block|{
-name|IEEE80211_MESH_PEER_LINK_OPEN
+name|IEEE80211_MPPID_MPM
 init|=
 literal|0
 block|,
-name|IEEE80211_MESH_PEER_LINK_CONFIRM
+comment|/* Mesh peering management */
+name|IEEE80211_MPPID_AUTH_MPM
 init|=
 literal|1
 block|,
-name|IEEE80211_MESH_PEER_LINK_CLOSE
-init|=
-literal|2
-block|,
-comment|/* values 3-255 are reserved */
+comment|/* Auth. mesh peering exchange */
+comment|/* 2-65535 reserved */
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* Mesh Peering Management Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_VALUE
-value|0x2a
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO
-value|{ IEEE80211_MESH_PEER_PROTO_OUI, \ 					  IEEE80211_MESH_PEER_PROTO_VALUE }
-end_define
-
-begin_comment
-comment|/* Abbreviated Handshake Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_AH_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_AH_VALUE
-value|0x2b
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESH_PEER_PROTO_AH
-value|{ IEEE80211_MESH_PEER_PROTO_AH_OUI, \ 					  IEEE80211_MESH_PEER_PROTO_AH_VALUE }
-end_define
 
 begin_ifdef
 ifdef|#
@@ -632,17 +602,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Portal (MP) Annoucement */
+comment|/* Gate (GANN) Annoucement */
 end_comment
 
 begin_struct
 struct|struct
-name|ieee80211_meshpann_ie
+name|ieee80211_meshgann_ie
 block|{
 name|uint8_t
 name|pann_ie
 decl_stmt|;
-comment|/* IEEE80211_ELEMID_MESHPANN */
+comment|/* IEEE80211_ELEMID_MESHGANN */
 name|uint8_t
 name|pann_len
 decl_stmt|;
@@ -697,9 +667,9 @@ name|rann_flags
 decl_stmt|;
 define|#
 directive|define
-name|IEEE80211_MESHRANN_FLAGS_PR
+name|IEEE80211_MESHRANN_FLAGS_GATE
 value|0x01
-comment|/* Portal Role */
+comment|/* Mesh Gate */
 name|uint8_t
 name|rann_hopcount
 decl_stmt|;
@@ -782,14 +752,14 @@ name|preq_flags
 decl_stmt|;
 define|#
 directive|define
-name|IEEE80211_MESHPREQ_FLAGS_PR
+name|IEEE80211_MESHPREQ_FLAGS_GATE
 value|0x01
-comment|/* Portal Role */
+comment|/* Mesh Gate */
 define|#
 directive|define
 name|IEEE80211_MESHPREQ_FLAGS_AM
 value|0x02
-comment|/* 0 = ucast / 1 = bcast */
+comment|/* 0 = bcast / 1 = ucast */
 define|#
 directive|define
 name|IEEE80211_MESHPREQ_FLAGS_PP
@@ -846,11 +816,6 @@ directive|define
 name|IEEE80211_MESHPREQ_TFLAGS_TO
 value|0x01
 comment|/* Target Only */
-define|#
-directive|define
-name|IEEE80211_MESHPREQ_TFLAGS_RF
-value|0x02
-comment|/* Reply and Forward */
 define|#
 directive|define
 name|IEEE80211_MESHPREQ_TFLAGS_USN
@@ -1164,22 +1129,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * 802.11s Action Frames  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_ACTION_CAT_MESHPEERING
-value|30
-end_define
-
-begin_comment
-comment|/* XXX Linux */
-end_comment
-
-begin_comment
-comment|/* XXX: these need to be looked into */
+comment|/*  * 802.11s Action Frames  * XXX: these are wrong, and some of them should be  * under MESH category while PROXY is under MULTIHOP category.  */
 end_comment
 
 begin_define
@@ -1210,19 +1160,20 @@ end_comment
 begin_enum
 enum|enum
 block|{
+comment|/* 0 reserved */
 name|IEEE80211_ACTION_MESHPEERING_OPEN
-init|=
-literal|0
-block|,
-name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 init|=
 literal|1
 block|,
-name|IEEE80211_ACTION_MESHPEERING_CLOSE
+name|IEEE80211_ACTION_MESHPEERING_CONFIRM
 init|=
 literal|2
 block|,
-comment|/* 3-255 reserved */
+name|IEEE80211_ACTION_MESHPEERING_CLOSE
+init|=
+literal|3
+block|,
+comment|/* 4-255 reserved */
 block|}
 enum|;
 end_enum
@@ -1290,22 +1241,6 @@ literal|10
 block|,
 comment|/* TBTT Adjustment Response */
 comment|/* 11-255 reserved */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Mesh Portal Annoucement Action codes.  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|IEEE80211_ACTION_MESHPANN
-init|=
-literal|0
-block|,
-comment|/* 1-255 reserved */
 block|}
 enum|;
 end_enum
@@ -1389,48 +1324,6 @@ index|]
 decl_stmt|;
 comment|/* Sequence No. */
 name|uint8_t
-name|mc_addr4
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint8_t
-name|mc_addr5
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ieee80211_meshcntl_ae11
-block|{
-name|uint8_t
-name|mc_flags
-decl_stmt|;
-comment|/* Address Extension 11 */
-name|uint8_t
-name|mc_ttl
-decl_stmt|;
-comment|/* TTL */
-name|uint8_t
-name|mc_seq
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Sequence No. */
-name|uint8_t
-name|mc_addr4
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint8_t
 name|mc_addr5
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1446,6 +1339,40 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_AE_MASK
+value|0x03
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_MESH_AE_00
+init|=
+literal|0
+block|,
+comment|/* MC has no AE subfield */
+name|IEEE80211_MESH_AE_01
+init|=
+literal|1
+block|,
+comment|/* MC contain addr4 */
+name|IEEE80211_MESH_AE_10
+init|=
+literal|2
+block|,
+comment|/* MC contain addr5& addr6 */
+name|IEEE80211_MESH_AE_11
+init|=
+literal|3
+block|,
+comment|/* RESERVED */
+block|}
+enum|;
+end_enum
 
 begin_ifdef
 ifdef|#
@@ -1485,6 +1412,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Basic forwarding information:  * o Destination MAC  * o Next-hop MAC  * o Precursor list (not implemented yet)  * o Path timeout  * The rest is part of the active Mesh path selection protocol.  * XXX: to be moved out later.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_mesh_route
@@ -1495,16 +1426,38 @@ argument|ieee80211_mesh_route
 argument_list|)
 name|rt_next
 expr_stmt|;
-name|int
-name|rt_crtime
+name|struct
+name|ieee80211vap
+modifier|*
+name|rt_vap
 decl_stmt|;
-comment|/* creation time */
+name|struct
+name|mtx
+name|rt_lock
+decl_stmt|;
+comment|/* fine grained route lock */
+name|struct
+name|callout
+name|rt_discovery
+decl_stmt|;
+comment|/* discovery timeout */
+name|int
+name|rt_updtime
+decl_stmt|;
+comment|/* last update time */
 name|uint8_t
 name|rt_dest
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
+name|uint8_t
+name|rt_mesh_gate
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* meshDA */
 name|uint8_t
 name|rt_nexthop
 index|[
@@ -1524,21 +1477,31 @@ name|rt_flags
 decl_stmt|;
 define|#
 directive|define
-name|IEEE80211_MESHRT_FLAGS_VALID
+name|IEEE80211_MESHRT_FLAGS_DISCOVER
 value|0x01
-comment|/* patch discovery complete */
+comment|/* path discovery */
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_VALID
+value|0x02
+comment|/* path discovery complete */
 define|#
 directive|define
 name|IEEE80211_MESHRT_FLAGS_PROXY
-value|0x02
+value|0x04
 comment|/* proxy entry */
 name|uint32_t
 name|rt_lifetime
 decl_stmt|;
+comment|/* route timeout */
 name|uint32_t
 name|rt_lastmseq
 decl_stmt|;
 comment|/* last seq# seen dest */
+name|uint32_t
+name|rt_ext_seq
+decl_stmt|;
+comment|/* proxy seq number */
 name|void
 modifier|*
 name|rt_priv
@@ -1629,6 +1592,29 @@ parameter_list|(
 name|struct
 name|ieee80211_node
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|mpp_senderror
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|,
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|void
@@ -1822,9 +1808,9 @@ value|0x01
 comment|/* accept peers */
 define|#
 directive|define
-name|IEEE80211_MESHFLAGS_PORTAL
+name|IEEE80211_MESHFLAGS_GATE
 value|0x02
-comment|/* mesh portal role */
+comment|/* mesh gate role */
 define|#
 directive|define
 name|IEEE80211_MESHFLAGS_FWD
@@ -1963,6 +1949,20 @@ name|uint8_t
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ieee80211_mesh_rt_update
+parameter_list|(
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+name|rt
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2189,7 +2189,7 @@ operator|&
 operator|(
 name|IEEE80211_MESHFLAGS_AP
 operator||
-name|IEEE80211_MESHFLAGS_PORTAL
+name|IEEE80211_MESHFLAGS_GATE
 operator|)
 operator|)
 operator|!=

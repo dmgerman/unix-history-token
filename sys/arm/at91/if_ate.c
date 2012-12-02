@@ -1158,6 +1158,9 @@ name|is_emacb
 operator|=
 name|at91_is_sam9
 argument_list|()
+operator|||
+name|at91_is_sam9xe
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
@@ -1458,7 +1461,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * XXX: Clear the isolate bit, or we won't get up,  	 * at least on the HL201  	 */
+comment|/* 	 * XXX: Clear the isolate bit, or we won't get up, 	 * at least on the HL201 	 */
 name|ate_miibus_writereg
 argument_list|(
 name|dev
@@ -2837,7 +2840,7 @@ operator|->
 name|rx_desc_phys
 argument_list|)
 expr_stmt|;
-comment|/* 	 * DMA tag and map for the TX descriptors. 	 * XXX Old EMAC (not EMACB) doesn't really need DMA'able 	 * memory. We could just malloc it. gja XXX 	 */
+comment|/* 	 * DMA tag and map for the TX descriptors. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -3075,14 +3078,7 @@ operator|->
 name|tx_desc_phys
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* EMACB: Enable transceiver input clock */
-if|if
-condition|(
-name|sc
-operator|->
-name|is_emacb
-condition|)
 name|WR4
 argument_list|(
 name|sc
@@ -3099,6 +3095,7 @@ operator||
 name|ETHB_UIO_CLKE
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -4832,7 +4829,7 @@ operator|->
 name|rx_buf_size
 argument_list|)
 expr_stmt|;
-comment|/* XXX Performance robbing copy. Could 						 * recieve directly to mbufs if not an 						 * RM9200. XXX  */
+comment|/* XXX Performance robbing copy. Could 						 * recieve directly to mbufs if not an 						 * RM9200. And even then we could likely 						 * copy just the protocol headers. XXX  */
 name|m_append
 argument_list|(
 name|mb
@@ -5265,6 +5262,7 @@ name|ETH_CTL_RE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX need to work around SAM9260 errata 43.2.4.1: 	 * disable the mac, reset tx buffer, enable mac on TUND */
 block|}
 end_function
 
@@ -7159,11 +7157,7 @@ argument_list|,
 name|ate_miibus_writereg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7198,9 +7192,9 @@ name|ate_driver
 argument_list|,
 name|ate_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7216,9 +7210,9 @@ name|miibus_driver
 argument_list|,
 name|miibus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

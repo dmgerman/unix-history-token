@@ -47,7 +47,7 @@ comment|/* Entire module */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacySleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              Flags               - ACPI_EXECUTE_GTS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the legacy FADT PM registers  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacySleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the legacy FADT PM registers  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -56,9 +56,6 @@ name|AcpiHwLegacySleep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_BIT_REGISTER_INFO
@@ -147,44 +144,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|SleepState
-operator|!=
-name|ACPI_STATE_S5
-condition|)
-block|{
-comment|/*          * Disable BM arbitration. This feature is contained within an          * optional register (PM2 Control), so ignore a BAD_ADDRESS          * exception.          */
-name|Status
-operator|=
-name|AcpiWriteBitRegister
-argument_list|(
-name|ACPI_BITREG_ARB_DISABLE
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-operator|&&
-operator|(
-name|Status
-operator|!=
-name|AE_BAD_ADDRESS
-operator|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/*      * 1) Disable/Clear all GPEs      * 2) Enable all wakeup GPEs      */
 name|Status
 operator|=
@@ -225,22 +184,6 @@ block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Optionally execute _GTS (Going To Sleep) */
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_EXECUTE_GTS
-condition|)
-block|{
-name|AcpiHwExecuteSleepMethod
-argument_list|(
-name|METHOD_PATHNAME__GTS
-argument_list|,
-name|SleepState
 argument_list|)
 expr_stmt|;
 block|}
@@ -488,7 +431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - ACPI_EXECUTE_BFS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep.  *              Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep.  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -497,9 +440,6 @@ name|AcpiHwLegacyWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -631,22 +571,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Optionally execute _BFS (Back From Sleep) */
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_EXECUTE_BFS
-condition|)
-block|{
-name|AcpiHwExecuteSleepMethod
-argument_list|(
-name|METHOD_PATHNAME__BFS
-argument_list|,
-name|SleepState
-argument_list|)
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -656,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - Reserved, set to zero  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -665,9 +589,6 @@ name|AcpiHwLegacyWake
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -783,36 +704,6 @@ argument_list|,
 name|ACPI_CLEAR_STATUS
 argument_list|)
 expr_stmt|;
-comment|/*      * Enable BM arbitration. This feature is contained within an      * optional register (PM2 Control), so ignore a BAD_ADDRESS      * exception.      */
-name|Status
-operator|=
-name|AcpiWriteBitRegister
-argument_list|(
-name|ACPI_BITREG_ARB_DISABLE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-operator|&&
-operator|(
-name|Status
-operator|!=
-name|AE_BAD_ADDRESS
-operator|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 name|AcpiHwExecuteSleepMethod
 argument_list|(
 name|METHOD_PATHNAME__SST

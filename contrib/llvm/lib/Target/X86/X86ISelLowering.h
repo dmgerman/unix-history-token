@@ -244,10 +244,6 @@ comment|/// WrapperRIP - Special wrapper used under X86-64 PIC mode for RIP
 comment|/// relative displacements.
 name|WrapperRIP
 block|,
-comment|/// MOVQ2DQ - Copies a 64-bit value from an MMX vector to the low word
-comment|/// of an XMM vector, with the high word zero filled.
-name|MOVQ2DQ
-block|,
 comment|/// MOVDQ2Q - Copies a 64-bit value from the low word of an XMM vector
 comment|/// to an MMX vector.  If you think this is too close to the previous
 comment|/// mnemonic, so do I; blame Intel.
@@ -281,15 +277,24 @@ block|,
 comment|/// ANDNP - Bitwise Logical AND NOT of Packed FP values.
 name|ANDNP
 block|,
-comment|/// PSIGNB/W/D - Copy integer sign.
-name|PSIGNB
+comment|/// PSIGN - Copy integer sign.
+name|PSIGN
 block|,
-name|PSIGNW
-block|,
-name|PSIGND
-block|,
-comment|/// BLEND family of opcodes
+comment|/// BLENDV - Blend where the selector is an XMM.
 name|BLENDV
+block|,
+comment|/// BLENDxx - Blend where the selector is an immediate.
+name|BLENDPW
+block|,
+name|BLENDPS
+block|,
+name|BLENDPD
+block|,
+comment|/// HADD - Integer horizontal add.
+name|HADD
+block|,
+comment|/// HSUB - Integer horizontal sub.
+name|HSUB
 block|,
 comment|/// FHADD - Floating point horizontal add.
 name|FHADD
@@ -313,6 +318,10 @@ block|,
 comment|// TLSADDR - Thread Local Storage.
 name|TLSADDR
 block|,
+comment|// TLSBASEADDR - Thread Local Storage. A call to get the start address
+comment|// of the TLS block for the current module.
+name|TLSBASEADDR
+block|,
 comment|// TLSCALL - Thread Local Storage.  When calling to an OS provided
 comment|// thunk at the address from an earlier relocation.
 name|TLSCALL
@@ -330,33 +339,38 @@ block|,
 comment|// VZEXT_MOVL - Vector move low and zero extend.
 name|VZEXT_MOVL
 block|,
-comment|// VSHL, VSRL - Vector logical left / right shift.
+comment|// VSEXT_MOVL - Vector move low and sign extend.
+name|VSEXT_MOVL
+block|,
+comment|// VFPEXT - Vector FP extend.
+name|VFPEXT
+block|,
+comment|// VSHL, VSRL - 128-bit vector logical left / right shift
+name|VSHLDQ
+block|,
+name|VSRLDQ
+block|,
+comment|// VSHL, VSRL, VSRA - Vector shift elements
 name|VSHL
 block|,
 name|VSRL
 block|,
-comment|// CMPPD, CMPPS - Vector double/float comparison.
-comment|// CMPPD, CMPPS - Vector double/float comparison.
-name|CMPPD
+name|VSRA
 block|,
-name|CMPPS
+comment|// VSHLI, VSRLI, VSRAI - Vector shift elements by immediate
+name|VSHLI
+block|,
+name|VSRLI
+block|,
+name|VSRAI
+block|,
+comment|// CMPP - Vector packed double/float comparison.
+name|CMPP
 block|,
 comment|// PCMP* - Vector integer comparisons.
-name|PCMPEQB
+name|PCMPEQ
 block|,
-name|PCMPEQW
-block|,
-name|PCMPEQD
-block|,
-name|PCMPEQQ
-block|,
-name|PCMPGTB
-block|,
-name|PCMPGTW
-block|,
-name|PCMPGTD
-block|,
-name|PCMPGTQ
+name|PCMPGT
 block|,
 comment|// ADD, SUB, SMUL, etc. - Arithmetic operations with FLAGS results.
 name|ADD
@@ -382,6 +396,15 @@ block|,
 name|ANDN
 block|,
 comment|// ANDN - Bitwise AND NOT with FLAGS results.
+name|BLSI
+block|,
+comment|// BLSI - Extract lowest set isolated bit
+name|BLSMSK
+block|,
+comment|// BLSMSK - Get mask up to lowest set bit
+name|BLSR
+block|,
+comment|// BLSR - Reset lowest set bit
 name|UMUL
 block|,
 comment|// LOW, HI, FLAGS = umul LHS, RHS
@@ -403,13 +426,7 @@ name|PSHUFHW
 block|,
 name|PSHUFLW
 block|,
-name|PSHUFHW_LD
-block|,
-name|PSHUFLW_LD
-block|,
-name|SHUFPD
-block|,
-name|SHUFPS
+name|SHUFP
 block|,
 name|MOVDDUP
 block|,
@@ -417,17 +434,11 @@ name|MOVSHDUP
 block|,
 name|MOVSLDUP
 block|,
-name|MOVSHDUP_LD
-block|,
-name|MOVSLDUP_LD
-block|,
 name|MOVLHPS
 block|,
 name|MOVLHPD
 block|,
 name|MOVHLPS
-block|,
-name|MOVHLPD
 block|,
 name|MOVLPS
 block|,
@@ -437,49 +448,35 @@ name|MOVSD
 block|,
 name|MOVSS
 block|,
-name|UNPCKLPS
+name|UNPCKL
 block|,
-name|UNPCKLPD
+name|UNPCKH
 block|,
-name|VUNPCKLPSY
+name|VPERMILP
 block|,
-name|VUNPCKLPDY
+name|VPERMV
 block|,
-name|UNPCKHPS
+name|VPERMI
 block|,
-name|UNPCKHPD
-block|,
-name|VUNPCKHPSY
-block|,
-name|VUNPCKHPDY
-block|,
-name|PUNPCKLBW
-block|,
-name|PUNPCKLWD
-block|,
-name|PUNPCKLDQ
-block|,
-name|PUNPCKLQDQ
-block|,
-name|PUNPCKHBW
-block|,
-name|PUNPCKHWD
-block|,
-name|PUNPCKHDQ
-block|,
-name|PUNPCKHQDQ
-block|,
-name|VPERMILPS
-block|,
-name|VPERMILPSY
-block|,
-name|VPERMILPD
-block|,
-name|VPERMILPDY
-block|,
-name|VPERM2F128
+name|VPERM2X128
 block|,
 name|VBROADCAST
+block|,
+comment|// PMULUDQ - Vector multiply packed unsigned doubleword integers
+name|PMULUDQ
+block|,
+comment|// FMA nodes
+name|FMADD
+block|,
+name|FNMADD
+block|,
+name|FMSUB
+block|,
+name|FNMSUB
+block|,
+name|FMADDSUB
+block|,
+name|FMSUBADD
 block|,
 comment|// VASTART_SAVE_XMM_REGS - Save xmm argument registers to the stack,
 comment|// according to %al. An operator is needed so that this can be expanded
@@ -494,6 +491,9 @@ comment|// segmented stacks. Check if the current stacklet has enough space, and
 comment|// falls back to heap allocation if not.
 name|SEG_ALLOCA
 block|,
+comment|// WIN_FTOL - Windows's _ftol2 runtime routine to do fptoui.
+name|WIN_FTOL
+block|,
 comment|// Memory barrier
 name|MEMBARRIER
 block|,
@@ -502,6 +502,20 @@ block|,
 name|SFENCE
 block|,
 name|LFENCE
+block|,
+comment|// FNSTSW16r - Store FP status word into i16 register.
+name|FNSTSW16r
+block|,
+comment|// SAHF - Store contents of %ah into %eflags.
+name|SAHF
+block|,
+comment|// RDRAND - Get a random integer and indicate whether it is valid in CF.
+name|RDRAND
+block|,
+comment|// PCMP*STRI
+name|PCMPISTRI
+block|,
+name|PCMPESTRI
 block|,
 comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
 comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
@@ -582,191 +596,6 @@ comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|X86
 block|{
-comment|/// isPSHUFDMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to PSHUFD.
-name|bool
-name|isPSHUFDMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isPSHUFHWMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to PSHUFD.
-name|bool
-name|isPSHUFHWMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isPSHUFLWMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to PSHUFD.
-name|bool
-name|isPSHUFLWMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isSHUFPMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to SHUFP*.
-name|bool
-name|isSHUFPMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isMOVHLPSMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to MOVHLPS.
-name|bool
-name|isMOVHLPSMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isMOVHLPS_v_undef_Mask - Special case of isMOVHLPSMask for canonical form
-comment|/// of vector_shuffle v, v,<2, 3, 2, 3>, i.e. vector_shuffle v, undef,
-comment|///<2, 3, 2, 3>
-name|bool
-name|isMOVHLPS_v_undef_Mask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isMOVLPMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for MOVLP{S|D}.
-name|bool
-name|isMOVLPMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isMOVHPMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for MOVHP{S|D}.
-comment|/// as well as MOVLHPS.
-name|bool
-name|isMOVLHPSMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isUNPCKLMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to UNPCKL.
-name|bool
-name|isUNPCKLMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|,
-name|bool
-name|V2IsSplat
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// isUNPCKHMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to UNPCKH.
-name|bool
-name|isUNPCKHMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|,
-name|bool
-name|V2IsSplat
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// isUNPCKL_v_undef_Mask - Special case of isUNPCKLMask for canonical form
-comment|/// of vector_shuffle v, v,<0, 4, 1, 5>, i.e. vector_shuffle v, undef,
-comment|///<0, 0, 1, 1>
-name|bool
-name|isUNPCKL_v_undef_Mask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isUNPCKH_v_undef_Mask - Special case of isUNPCKHMask for canonical form
-comment|/// of vector_shuffle v, v,<2, 6, 3, 7>, i.e. vector_shuffle v, undef,
-comment|///<2, 2, 3, 3>
-name|bool
-name|isUNPCKH_v_undef_Mask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isMOVLMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to MOVSS,
-comment|/// MOVSD, and MOVD, i.e. setting the lowest element.
-name|bool
-name|isMOVLMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isMOVSHDUPMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to MOVSHDUP.
-name|bool
-name|isMOVSHDUPMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|,
-specifier|const
-name|X86Subtarget
-modifier|*
-name|Subtarget
-parameter_list|)
-function_decl|;
-comment|/// isMOVSLDUPMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to MOVSLDUP.
-name|bool
-name|isMOVSLDUPMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|,
-specifier|const
-name|X86Subtarget
-modifier|*
-name|Subtarget
-parameter_list|)
-function_decl|;
-comment|/// isMOVDDUPMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to MOVDDUP.
-name|bool
-name|isMOVDDUPMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
 comment|/// isVEXTRACTF128Index - Return true if the specified
 comment|/// EXTRACT_SUBVECTOR operand specifies a vector extract that is
 comment|/// suitable for input to VEXTRACTF128.
@@ -783,47 +612,6 @@ comment|/// INSERT_SUBVECTOR operand specifies a subvector insert that is
 comment|/// suitable for input to VINSERTF128.
 name|bool
 name|isVINSERTF128Index
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getShuffleSHUFImmediate - Return the appropriate immediate to shuffle
-comment|/// the specified isShuffleMask VECTOR_SHUFFLE mask with PSHUF* and SHUFP*
-comment|/// instructions.
-name|unsigned
-name|getShuffleSHUFImmediate
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getShufflePSHUFHWImmediate - Return the appropriate immediate to shuffle
-comment|/// the specified VECTOR_SHUFFLE mask with PSHUFHW instruction.
-name|unsigned
-name|getShufflePSHUFHWImmediate
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getShufflePSHUFLWImmediate - Return the appropriate immediate to shuffle
-comment|/// the specified VECTOR_SHUFFLE mask with PSHUFLW instruction.
-name|unsigned
-name|getShufflePSHUFLWImmediate
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getShufflePALIGNRImmediate - Return the appropriate immediate to shuffle
-comment|/// the specified VECTOR_SHUFFLE mask with the PALIGNR instruction.
-name|unsigned
-name|getShufflePALIGNRImmediate
 parameter_list|(
 name|SDNode
 modifier|*
@@ -1010,7 +798,7 @@ comment|/// lowering. If DstAlign is zero that means it's safe to destination
 comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
 comment|/// means there isn't a need to check it against alignment requirement,
 comment|/// probably because the source does not need to be loaded. If
-comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
+comment|/// 'IsZeroVal' is true, that means it's safe to return a
 comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
 comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
 comment|/// constant so it does not need to be loaded.
@@ -1026,7 +814,7 @@ argument|unsigned DstAlign
 argument_list|,
 argument|unsigned SrcAlign
 argument_list|,
-argument|bool NonScalarIntSafe
+argument|bool IsZeroVal
 argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
@@ -1153,8 +941,6 @@ name|void
 name|computeMaskedBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
-argument_list|,
-argument|const APInt&Mask
 argument_list|,
 argument|APInt&KnownZero
 argument_list|,
@@ -1287,6 +1073,30 @@ argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
+comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// icmp immediate, that is the target has icmp instructions which can
+comment|/// compare a register against the immediate without having to materialize
+comment|/// the immediate into a register.
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can
+comment|/// add a register and the immediate without having to materialize
+comment|/// the immediate into a register.
+name|virtual
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
 comment|/// isTruncateFree - Return true if it's free to truncate a value of
 comment|/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
 comment|/// register EAX to i16 by referencing its sub-register AX.
@@ -1338,6 +1148,22 @@ argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
+comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
+comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
+comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
+comment|/// is expanded to mul + add.
+name|virtual
+name|bool
+name|isFMAFasterThanMulAndAdd
+argument_list|(
+argument|EVT
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
 comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 comment|/// from i32 to i8 but not from i32 to i16.
@@ -1461,6 +1287,46 @@ operator|)
 return|;
 comment|// f32 is when SSE1
 block|}
+comment|/// isTargetFTOL - Return true if the target uses the MSVC _ftol2 routine
+comment|/// for fptoui.
+name|bool
+name|isTargetFTOL
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Subtarget
+operator|->
+name|isTargetWindows
+argument_list|()
+operator|&&
+operator|!
+name|Subtarget
+operator|->
+name|is64Bit
+argument_list|()
+return|;
+block|}
+comment|/// isIntegerTypeFTOL - Return true if the MSVC _ftol2 routine should be
+comment|/// used for fptoui to the given type.
+name|bool
+name|isIntegerTypeFTOL
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isTargetFTOL
+argument_list|()
+operator|&&
+name|VT
+operator|==
+name|MVT
+operator|::
+name|i64
+return|;
+block|}
 comment|/// createFastISel - This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
 name|virtual
@@ -1469,6 +1335,8 @@ operator|*
 name|createFastISel
 argument_list|(
 argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
 argument_list|)
 specifier|const
 block|;
@@ -1716,6 +1584,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|bool isSigned
+argument_list|,
+argument|bool isReplace
 argument_list|)
 specifier|const
 block|;
@@ -2101,6 +1971,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerINTRINSIC_W_CHAIN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerRETURNADDR
 argument_list|(
 argument|SDValue Op
@@ -2165,6 +2044,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerCTLZ
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerCTLZ_ZERO_UNDEF
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2280,11 +2168,49 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|PerformTruncateCombine
+argument_list|(
+argument|SDNode* N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 comment|// Utility functions to help LowerVECTOR_SHUFFLE
 name|SDValue
 name|LowerVECTOR_SHUFFLEv8i16
 argument_list|(
 argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVectorBroadcast
+argument_list|(
+argument|SDValue&Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|NormalizeVectorShuffle
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVectorFpExtend
+argument_list|(
+argument|SDValue&Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -2314,25 +2240,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
@@ -2363,6 +2271,8 @@ name|bool
 name|isUsedByReturnOnly
 argument_list|(
 argument|SDNode *N
+argument_list|,
+argument|SDValue&Chain
 argument_list|)
 specifier|const
 block|;
@@ -2399,19 +2309,6 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|LLVMContext&Context
-argument_list|)
-specifier|const
-block|;
-name|void
-name|ReplaceATOMIC_BINARY_64
-argument_list|(
-argument|SDNode *N
-argument_list|,
-argument|SmallVectorImpl<SDValue>&Results
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|unsigned NewOp
 argument_list|)
 specifier|const
 block|;
@@ -2480,9 +2377,9 @@ argument|unsigned notOpc
 argument_list|,
 argument|unsigned EAXreg
 argument_list|,
-argument|TargetRegisterClass *RC
+argument|const TargetRegisterClass *RC
 argument_list|,
-argument|bool invSrc = false
+argument|bool Invert = false
 argument_list|)
 specifier|const
 block|;
@@ -2502,7 +2399,7 @@ argument|unsigned immOpcL
 argument_list|,
 argument|unsigned immOpcH
 argument_list|,
-argument|bool invSrc = false
+argument|bool Invert = false
 argument_list|)
 specifier|const
 block|;
@@ -2622,6 +2519,16 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+block|;
+comment|/// Convert a comparison if required by the subtarget.
+name|SDValue
+name|ConvertCmpIfNecessary
+argument_list|(
+argument|SDValue Cmp
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 name|namespace
@@ -2634,6 +2541,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 block|}

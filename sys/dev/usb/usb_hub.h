@@ -48,27 +48,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following structure defines how many bytes are  * left in an 1ms USB time slot.  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_fs_isoc_schedule
-block|{
-name|uint16_t
-name|total_bytes
-decl_stmt|;
-name|uint8_t
-name|frame_bytes
-decl_stmt|;
-name|uint8_t
-name|frame_slot
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * The following structure defines an USB HUB.  */
 end_comment
 
@@ -76,18 +55,6 @@ begin_struct
 struct|struct
 name|usb_hub
 block|{
-if|#
-directive|if
-name|USB_HAVE_TT_SUPPORT
-name|struct
-name|usb_fs_isoc_schedule
-name|fs_isoc_schedule
-index|[
-name|USB_ISOC_TIME_MAX
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|usb_device
 modifier|*
@@ -161,18 +128,6 @@ name|struct
 name|usb_xfer
 modifier|*
 name|xfer
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usbd_fs_isoc_schedule_init_all
-parameter_list|(
-name|struct
-name|usb_fs_isoc_schedule
-modifier|*
-name|fss
 parameter_list|)
 function_decl|;
 end_function_decl

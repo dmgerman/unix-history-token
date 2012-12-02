@@ -70,6 +70,7 @@ block|{
 name|uint32_t
 name|pll
 decl_stmt|;
+comment|/* 	 * XXX TODO: support half/quarter rates 	 */
 if|if
 condition|(
 name|chan

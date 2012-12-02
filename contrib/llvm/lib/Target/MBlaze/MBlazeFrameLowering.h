@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MBlazeSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 

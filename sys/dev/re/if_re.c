@@ -380,7 +380,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_type
-specifier|const
 name|re_devs
 index|[]
 init|=
@@ -493,7 +492,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_hwrev
-specifier|const
 name|re_hwrevs
 index|[]
 init|=
@@ -6483,7 +6481,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 argument_list|,
 literal|2
 argument_list|)
@@ -6493,7 +6491,7 @@ condition|(
 operator|(
 name|cap
 operator|&
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 operator|)
 operator|!=
 literal|0
@@ -6509,7 +6507,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -6519,7 +6517,7 @@ condition|(
 operator|(
 name|ctl
 operator|&
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 operator|)
 operator|!=
 literal|0
@@ -6528,7 +6526,7 @@ block|{
 name|ctl
 operator|&=
 operator|~
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -6538,7 +6536,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 name|ctl
 argument_list|,
@@ -7369,10 +7367,7 @@ name|as
 argument_list|,
 name|eaddr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eaddr
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -8380,11 +8375,24 @@ name|ifp
 operator|!=
 name|NULL
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|netmap_detach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|if_free
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -9014,17 +9022,6 @@ name|rl_stag
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|netmap_detach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 if|if
 condition|(
 name|sc
@@ -10537,7 +10534,10 @@ name|ifp
 argument_list|)
 operator|->
 name|rx_rings
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|nr_kflags
 operator||=
 name|NKR_PENDINTR
@@ -10551,7 +10551,10 @@ name|ifp
 argument_list|)
 operator|->
 name|rx_rings
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|si
 argument_list|,
 name|PI_NET
@@ -16515,7 +16518,7 @@ name|ifp
 operator|->
 name|if_capabilities
 operator|&
-name|IFCAP_TSO
+name|IFCAP_TSO4
 operator|)
 operator|!=
 literal|0

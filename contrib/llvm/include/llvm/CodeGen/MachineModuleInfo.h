@@ -536,11 +536,11 @@ comment|/// in this module.
 name|bool
 name|DbgInfoAvailable
 block|;
-comment|/// CallsExternalVAFunctionWithFloatingPointArguments - True if this module
-comment|/// calls VarArg function with floating point arguments.  This is used to emit
-comment|/// an undefined reference to fltused on Windows targets.
+comment|/// UsesVAFloatArgument - True if this module calls VarArg function with
+comment|/// floating-point arguments.  This is used to emit an undefined reference
+comment|/// to _fltused on Windows targets.
 name|bool
-name|CallsExternalVAFunctionWithFloatingPointArguments
+name|UsesVAFloatArgument
 block|;
 name|public
 operator|:
@@ -854,25 +854,25 @@ end_function
 
 begin_expr_stmt
 name|bool
-name|callsExternalVAFunctionWithFloatingPointArguments
+name|usesVAFloatArgument
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CallsExternalVAFunctionWithFloatingPointArguments
+name|UsesVAFloatArgument
 return|;
 block|}
 end_expr_stmt
 
 begin_function
 name|void
-name|setCallsExternalVAFunctionWithFloatingPointArguments
+name|setUsesVAFloatArgument
 parameter_list|(
 name|bool
 name|b
 parameter_list|)
 block|{
-name|CallsExternalVAFunctionWithFloatingPointArguments
+name|UsesVAFloatArgument
 operator|=
 name|b
 expr_stmt|;

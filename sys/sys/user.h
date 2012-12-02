@@ -571,10 +571,10 @@ name|u_int
 name|ki_swtime
 decl_stmt|;
 comment|/* Time swapped in or out */
-name|int
-name|ki_spareint1
+name|u_int
+name|ki_cow
 decl_stmt|;
-comment|/* unused (just here for alignment) */
+comment|/* number of copy-on-write faults */
 name|u_int64_t
 name|ki_runtime
 decl_stmt|;
@@ -1702,6 +1702,20 @@ define|#
 directive|define
 name|KVME_FLAG_SUPER
 value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|KVME_FLAG_GROWS_UP
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|KVME_FLAG_GROWS_DOWN
+value|0x00000020
 end_define
 
 begin_if

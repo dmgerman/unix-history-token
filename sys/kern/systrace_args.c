@@ -283,7 +283,7 @@ literal|7
 case|:
 block|{
 name|struct
-name|wait_args
+name|wait4_args
 modifier|*
 name|p
 init|=
@@ -7072,6 +7072,58 @@ operator|*
 name|n_args
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+block|{
+name|struct
+name|clock_getcpuclockid2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* id_t */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|which
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|clock_id
+expr_stmt|;
+comment|/* clockid_t * */
+operator|*
+name|n_args
+operator|=
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -16974,7 +17026,7 @@ name|p
 operator|->
 name|rights
 expr_stmt|;
-comment|/* u_int64_t */
+comment|/* uint64_t */
 operator|*
 name|n_args
 operator|=
@@ -17016,7 +17068,7 @@ name|p
 operator|->
 name|rightsp
 expr_stmt|;
-comment|/* u_int64_t * */
+comment|/* uint64_t * */
 operator|*
 name|n_args
 operator|=
@@ -17789,6 +17841,94 @@ operator|*
 name|n_args
 operator|=
 literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* wait6 */
+case|case
+literal|532
+case|:
+block|{
+name|struct
+name|wait6_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|idtype
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|status
+expr_stmt|;
+comment|/* int * */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|options
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|4
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|wrusage
+expr_stmt|;
+comment|/* struct __wrusage * */
+name|uarg
+index|[
+literal|5
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|info
+expr_stmt|;
+comment|/* siginfo_t * */
+operator|*
+name|n_args
+operator|=
+literal|6
 expr_stmt|;
 break|break;
 block|}
@@ -22833,6 +22973,44 @@ case|:
 name|p
 operator|=
 literal|"struct ffclock_estimate *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"id_t"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"clockid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29891,7 +30069,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int64_t"
+literal|"uint64_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -29921,7 +30099,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int64_t *"
+literal|"uint64_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30467,6 +30645,68 @@ case|:
 name|p
 operator|=
 literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* wait6 */
+case|case
+literal|532
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|p
+operator|=
+literal|"struct __wrusage *"
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|p
+operator|=
+literal|"siginfo_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -33347,6 +33587,25 @@ break|break;
 comment|/* ffclock_getestimate */
 case|case
 literal|243
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
 case|:
 if|if
 condition|(
@@ -37513,6 +37772,25 @@ break|break;
 comment|/* posix_fadvise */
 case|case
 literal|531
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* wait6 */
+case|case
+literal|532
 case|:
 if|if
 condition|(

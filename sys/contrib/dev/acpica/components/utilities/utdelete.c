@@ -305,7 +305,7 @@ case|:
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
-comment|/* Walk the notify handler list for this object */
+comment|/* Walk the address handler list for this object */
 name|HandlerDesc
 operator|=
 name|Object
@@ -842,7 +842,7 @@ modifier|*
 modifier|*
 name|InternalObj
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtDeleteInternalObjectList
 argument_list|)
@@ -874,8 +874,7 @@ argument_list|(
 name|ObjList
 argument_list|)
 expr_stmt|;
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1161,6 +1160,10 @@ name|NextObject
 init|=
 name|NULL
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|PrevObject
+decl_stmt|;
 name|ACPI_GENERIC_STATE
 modifier|*
 name|State
@@ -1168,11 +1171,9 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE_PTR
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtUpdateObjectReference
-argument_list|,
-name|Object
 argument_list|)
 expr_stmt|;
 while|while
@@ -1202,11 +1203,11 @@ name|Object
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/*          * All sub-objects must have their reference count incremented also.          * Different object types have different subobjects.          */
 switch|switch
@@ -1230,29 +1231,61 @@ case|:
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
-comment|/* Update the notify objects for these types (if present) */
-name|AcpiUtUpdateRefCount
-argument_list|(
+comment|/*              * Update the notify objects for these types (if present)              * Two lists, system and device notify handlers.              */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_NUM_NOTIFY_TYPES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|PrevObject
+operator|=
 name|Object
 operator|->
 name|CommonNotify
 operator|.
-name|SystemNotify
-argument_list|,
-name|Action
-argument_list|)
+name|NotifyList
+index|[
+name|i
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|PrevObject
+condition|)
+block|{
+name|NextObject
+operator|=
+name|PrevObject
+operator|->
+name|Notify
+operator|.
+name|Next
+index|[
+name|i
+index|]
 expr_stmt|;
 name|AcpiUtUpdateRefCount
 argument_list|(
-name|Object
-operator|->
-name|CommonNotify
-operator|.
-name|DeviceNotify
+name|PrevObject
 argument_list|,
 name|Action
 argument_list|)
 expr_stmt|;
+name|PrevObject
+operator|=
+name|NextObject
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
@@ -1276,11 +1309,9 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*                  * Push each element onto the stack for later processing.                  * Note: There can be null elements within the package,                  * these are simply ignored                  */
-name|Status
+comment|/*                  * Null package elements are legal and can be simply                  * ignored.                  */
+name|NextObject
 operator|=
-name|AcpiUtCreateUpdateStateAndPush
-argument_list|(
 name|Object
 operator|->
 name|Package
@@ -1289,6 +1320,49 @@ name|Elements
 index|[
 name|i
 index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NextObject
+condition|)
+block|{
+continue|continue;
+block|}
+switch|switch
+condition|(
+name|NextObject
+operator|->
+name|Common
+operator|.
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+case|case
+name|ACPI_TYPE_STRING
+case|:
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+comment|/*                      * For these very simple sub-objects, we can just                      * update the reference count here and continue.                      * Greatly increases performance of this operation.                      */
+name|AcpiUtUpdateRefCount
+argument_list|(
+name|NextObject
+argument_list|,
+name|Action
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/*                      * For complex sub-objects, push them onto the stack                      * for later processing (this eliminates recursion.)                      */
+name|Status
+operator|=
+name|AcpiUtCreateUpdateStateAndPush
+argument_list|(
+name|NextObject
 argument_list|,
 name|Action
 argument_list|,
@@ -1308,7 +1382,13 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
+break|break;
 block|}
+block|}
+name|NextObject
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
@@ -1514,11 +1594,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|ErrorExit
 label|:
 name|ACPI_EXCEPTION
@@ -1552,11 +1632,11 @@ name|State
 argument_list|)
 expr_stmt|;
 block|}
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1573,11 +1653,9 @@ modifier|*
 name|Object
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_TRACE_PTR
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtAddReference
-argument_list|,
-name|Object
 argument_list|)
 expr_stmt|;
 comment|/* Ensure that we have a valid object */
@@ -1590,8 +1668,7 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1621,8 +1698,7 @@ argument_list|,
 name|REF_INCREMENT
 argument_list|)
 expr_stmt|;
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1639,11 +1715,9 @@ modifier|*
 name|Object
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_TRACE_PTR
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtRemoveReference
-argument_list|,
-name|Object
 argument_list|)
 expr_stmt|;
 comment|/*      * Allow a NULL pointer to be passed in, just ignore it. This saves      * each caller from having to check. Also, ignore NS nodes.      *      */
@@ -1662,8 +1736,7 @@ name|ACPI_DESC_TYPE_NAMED
 operator|)
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 comment|/* Ensure that we have a valid object */
 if|if
@@ -1675,8 +1748,7 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1706,8 +1778,7 @@ argument_list|,
 name|REF_DECREMENT
 argument_list|)
 expr_stmt|;
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 end_function
 

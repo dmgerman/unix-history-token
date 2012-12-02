@@ -57,13 +57,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_AUTHCONF
-value|"/etc/auth.conf"
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_BSHELL
 value|"/bin/sh"
 end_define
@@ -355,6 +348,13 @@ define|#
 directive|define
 name|_PATH_UNIX
 value|"don't use _PATH_UNIX"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_UFSSUSPEND
+value|"/dev/ufssuspend"
 end_define
 
 begin_define

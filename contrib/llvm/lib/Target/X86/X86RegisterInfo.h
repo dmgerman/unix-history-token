@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- X86RegisterInfo.h - X86 Register Information Impl --------*- C++ -*-===//
+comment|//===-- X86RegisterInfo.h - X86 Register Information Impl -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -134,6 +134,12 @@ comment|///
 name|unsigned
 name|FramePtr
 block|;
+comment|/// BasePtr - X86 physical register used as a base ptr in complex stack
+comment|/// frames. I.e., when we need a 3rd base, not just SP and FP, due to
+comment|/// variable size stack objects.
+name|unsigned
+name|BasePtr
+block|;
 name|public
 operator|:
 name|X86RegisterInfo
@@ -178,6 +184,14 @@ specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 comment|///
+name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
 comment|/// class A so that each register in it has a sub-register of the
 comment|/// specified sub-register index which is in the specified register class B.
@@ -223,6 +237,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)
@@ -252,12 +268,21 @@ block|;
 comment|/// getCalleeSavedRegs - Return a null-terminated list of all of the
 comment|/// callee-save registers on this target.
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
 argument|const MachineFunction* MF =
 literal|0
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID
 argument_list|)
 specifier|const
 block|;
@@ -267,6 +292,13 @@ comment|/// should be considered unavailable at all times, e.g. SP, RA. This is 
 comment|/// register scavenger to determine what registers are free.
 name|BitVector
 name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasBasePointer
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -334,6 +366,15 @@ specifier|const
 block|{
 return|return
 name|StackPtr
+return|;
+block|}
+name|unsigned
+name|getBaseRegister
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BasePtr
 return|;
 block|}
 comment|// FIXME: Move to FrameInfok

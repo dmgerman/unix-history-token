@@ -382,6 +382,9 @@ goto|goto
 name|err
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|EVP_Digest
 argument_list|(
 name|pk
@@ -402,7 +405,10 @@ argument_list|()
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!

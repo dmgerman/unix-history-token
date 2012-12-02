@@ -27,10 +27,13 @@ modifier|*
 name|data
 decl_stmt|;
 name|int
-name|pnum
+name|slice
 decl_stmt|;
 name|int
-name|ptype
+name|partition
+decl_stmt|;
+name|off_t
+name|offset
 decl_stmt|;
 block|}
 name|disk
@@ -47,20 +50,6 @@ define|#
 directive|define
 name|d_disk
 value|d_kind.disk
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTYPE_BSDLABEL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTYPE_GPT
-value|2
 end_define
 
 begin_comment
@@ -151,6 +140,16 @@ name|devsw
 name|uboot_storage
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+modifier|*
+name|uboot_vm_translate
+parameter_list|(
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ssize_t

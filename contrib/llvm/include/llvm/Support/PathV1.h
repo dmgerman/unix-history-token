@@ -390,26 +390,6 @@ operator|&
 name|short_name
 argument_list|)
 decl_stmt|;
-comment|/// Construct a path to the default LLVM configuration directory. The
-comment|/// implementation must ensure that this is a well-known (same on many
-comment|/// systems) directory in which llvm configuration files exist. For
-comment|/// example, on Unix, the /etc/llvm directory has been selected.
-comment|/// @brief Construct a path to the default LLVM configuration directory
-specifier|static
-name|Path
-name|GetLLVMDefaultConfigDir
-parameter_list|()
-function_decl|;
-comment|/// Construct a path to the LLVM installed configuration directory. The
-comment|/// implementation must ensure that this refers to the "etc" directory of
-comment|/// the LLVM installation. This is the location where configuration files
-comment|/// will be located for a particular installation of LLVM on a machine.
-comment|/// @brief Construct a path to the LLVM installed configuration directory
-specifier|static
-name|Path
-name|GetLLVMConfigDir
-parameter_list|()
-function_decl|;
 comment|/// Construct a path to the current user's home directory. The
 comment|/// implementation must use an operating system specific mechanism for
 comment|/// determining the user's home directory. For example, the environment

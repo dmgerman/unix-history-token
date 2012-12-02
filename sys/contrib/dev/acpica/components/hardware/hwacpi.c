@@ -292,7 +292,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetMode  *  * PARAMETERS:  none  *  * RETURN:      SYS_MODE_ACPI or SYS_MODE_LEGACY  *  * DESCRIPTION: Return current operating state of system.  Determined by  *              querying the SCI_EN bit.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetMode  *  * PARAMETERS:  none  *  * RETURN:      SYS_MODE_ACPI or SYS_MODE_LEGACY  *  * DESCRIPTION: Return current operating state of system. Determined by  *              querying the SCI_EN bit.  *  ******************************************************************************/
 end_comment
 
 begin_function

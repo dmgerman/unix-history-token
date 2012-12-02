@@ -303,7 +303,7 @@ value|a_midmag
 end_define
 
 begin_comment
-comment|/* XXX Hack to work with imgact_{aout,gzip}.c */
+comment|/* Hack for emulators */
 end_comment
 
 begin_comment

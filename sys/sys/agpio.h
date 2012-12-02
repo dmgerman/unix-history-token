@@ -432,6 +432,13 @@ name|AGPIOC_UNBIND
 value|_IOW (AGPIOC_BASE, 9, agp_unbind)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AGPIOC_CHIPSET_FLUSH
+value|_IO (AGPIOC_BASE, 10)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

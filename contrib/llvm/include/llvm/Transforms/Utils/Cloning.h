@@ -196,11 +196,6 @@ comment|/// call instruction.
 name|bool
 name|ContainsCalls
 decl_stmt|;
-comment|/// ContainsUnwinds - This is set to true if the cloned code contains an
-comment|/// unwind instruction.
-name|bool
-name|ContainsUnwinds
-decl_stmt|;
 comment|/// ContainsDynamicAllocas - This is set to true if the cloned code contains
 comment|/// a 'dynamic' alloca.  Dynamic allocas are allocas that are either not in
 comment|/// the entry block or they are in the entry block but are not a constant
@@ -210,20 +205,17 @@ name|ContainsDynamicAllocas
 decl_stmt|;
 name|ClonedCodeInfo
 argument_list|()
-block|{
+operator|:
 name|ContainsCalls
-operator|=
+argument_list|(
 name|false
-expr_stmt|;
-name|ContainsUnwinds
-operator|=
-name|false
-expr_stmt|;
+argument_list|)
+operator|,
 name|ContainsDynamicAllocas
-operator|=
-name|false
-expr_stmt|;
-block|}
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 block|}
 struct|;
 comment|/// CloneBasicBlock - Return a copy of the specified basic block, but without
@@ -358,8 +350,8 @@ block|}
 comment|/// Clone OldFunc into NewFunc, transforming the old arguments into references
 comment|/// to VMap values.  Note that if NewFunc already has basic blocks, the ones
 comment|/// cloned into it will be added to the end of the function.  This function
-comment|/// fills in a list of return instructions, and can optionally append the
-comment|/// specified suffix to all values cloned.
+comment|/// fills in a list of return instructions, and can optionally remap types
+comment|/// and/or append the specified suffix to all values cloned.
 comment|///
 comment|/// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
 comment|/// mappings.
@@ -401,6 +393,12 @@ argument_list|,
 name|ClonedCodeInfo
 operator|*
 name|CodeInfo
+operator|=
+literal|0
+argument_list|,
+name|ValueMapTypeRemapper
+operator|*
+name|TypeMapper
 operator|=
 literal|0
 argument_list|)
@@ -573,6 +571,11 @@ parameter_list|,
 name|InlineFunctionInfo
 modifier|&
 name|IFI
+parameter_list|,
+name|bool
+name|InsertLifetime
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|bool
@@ -585,6 +588,11 @@ parameter_list|,
 name|InlineFunctionInfo
 modifier|&
 name|IFI
+parameter_list|,
+name|bool
+name|InsertLifetime
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|bool
@@ -596,6 +604,11 @@ parameter_list|,
 name|InlineFunctionInfo
 modifier|&
 name|IFI
+parameter_list|,
+name|bool
+name|InsertLifetime
+init|=
+name|true
 parameter_list|)
 function_decl|;
 block|}

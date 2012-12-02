@@ -157,7 +157,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 comment|/* 	 * Assume we have wide enough registers to do it without touching 	 * memory. 	 */
 return|return
 operator|(

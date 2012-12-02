@@ -188,6 +188,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|SRDD10_MAX_LENGTH
+value|0xffff
 name|u_int8_t
 name|control
 decl_stmt|;

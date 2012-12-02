@@ -1700,32 +1700,6 @@ begin_comment
 comment|/* WITNESS */
 end_comment
 
-begin_comment
-comment|/*  * Helper macros to allow developers to add explicit lock order checks  * wherever they please without having to actually grab a lock to do so.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|witness_check
-parameter_list|(
-name|l
-parameter_list|)
-define|\
-value|WITNESS_CHECKORDER(&(l)->lock_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE, NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_check_shared
-parameter_list|(
-name|l
-parameter_list|)
-define|\
-value|WITNESS_CHECKORDER(&(l)->lock_object, 0, LOCK_FILE, LOCK_LINE, NULL)
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -220,7 +220,7 @@ index|[
 name|i
 index|]
 operator|=
-name|EVP_PKEY_encrypt
+name|EVP_PKEY_encrypt_old
 argument_list|(
 name|ek
 index|[
@@ -300,6 +300,12 @@ argument_list|,
 name|outl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+name|i
+operator|=
 name|EVP_EncryptInit_ex
 argument_list|(
 name|ctx

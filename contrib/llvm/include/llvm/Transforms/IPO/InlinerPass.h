@@ -124,6 +124,8 @@ argument_list|(
 argument|char&ID
 argument_list|,
 argument|int Threshold
+argument_list|,
+argument|bool InsertLifetime
 argument_list|)
 block|;
 comment|/// getAnalysisUsage - For this class, we declare that we require and preserve
@@ -197,70 +199,18 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|// getInlineFudgeFactor - Return a> 1.0 factor if the inliner should use a
-comment|// higher threshold to determine if the function call should be inlined.
+comment|/// removeDeadFunctions - Remove dead functions.
 comment|///
-name|virtual
-name|float
-name|getInlineFudgeFactor
-argument_list|(
-argument|CallSite CS
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// resetCachedCostInfo - erase any cached cost data from the derived class.
-comment|/// If the derived class has no such data this can be empty.
-comment|///
-name|virtual
-name|void
-name|resetCachedCostInfo
-argument_list|(
-name|Function
-operator|*
-name|Caller
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// growCachedCostInfo - update the cached cost info for Caller after Callee
-comment|/// has been inlined.
-name|virtual
-name|void
-name|growCachedCostInfo
-argument_list|(
-name|Function
-operator|*
-name|Caller
-argument_list|,
-name|Function
-operator|*
-name|Callee
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// removeDeadFunctions - Remove dead functions that are not included in
-comment|/// DNR (Do Not Remove) list.
+comment|/// This also includes a hack in the form of the 'AlwaysInlineOnly' flag
+comment|/// which restricts it to deleting functions with an 'AlwaysInline'
+comment|/// attribute. This is useful for the InlineAlways pass that only wants to
+comment|/// deal with that subset of the functions.
 name|bool
 name|removeDeadFunctions
 argument_list|(
-name|CallGraph
-operator|&
-name|CG
+argument|CallGraph&CG
 argument_list|,
-name|SmallPtrSet
-operator|<
-specifier|const
-name|Function
-operator|*
-argument_list|,
-literal|16
-operator|>
-operator|*
-name|DNR
-operator|=
-name|NULL
+argument|bool AlwaysInlineOnly = false
 argument_list|)
 block|;
 name|private
@@ -268,6 +218,10 @@ operator|:
 comment|// InlineThreshold - Cache the value here for easy access.
 name|unsigned
 name|InlineThreshold
+block|;
+comment|// InsertLifetime - Insert @llvm.lifetime intrinsics.
+name|bool
+name|InsertLifetime
 block|;
 comment|/// shouldInline - Return true if the inliner should attempt to
 comment|/// inline at the given CallSite.

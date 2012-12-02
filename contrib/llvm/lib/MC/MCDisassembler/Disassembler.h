@@ -118,7 +118,13 @@ name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
 name|MCRegisterInfo
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|Target
@@ -193,6 +199,30 @@ name|MCRegisterInfo
 operator|>
 name|MRI
 expr_stmt|;
+comment|// The subtarget information for the target architecture.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCSubtargetInfo
+operator|>
+name|MSI
+expr_stmt|;
+comment|// The instruction information for the target architecture.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCInstrInfo
+operator|>
+name|MII
+expr_stmt|;
 comment|// The assembly context for creating symbols and MCExprs.
 name|llvm
 operator|::
@@ -258,6 +288,10 @@ argument|const MCAsmInfo *mAI
 argument_list|,
 argument|const MCRegisterInfo *mRI
 argument_list|,
+argument|const MCSubtargetInfo *mSI
+argument_list|,
+argument|const MCInstrInfo *mII
+argument_list|,
 argument|llvm::MCContext *ctx
 argument_list|,
 argument|const MCDisassembler *disAsm
@@ -314,6 +348,20 @@ argument_list|(
 name|mRI
 argument_list|)
 block|;
+name|MSI
+operator|.
+name|reset
+argument_list|(
+name|mSI
+argument_list|)
+block|;
+name|MII
+operator|.
+name|reset
+argument_list|(
+name|mII
+argument_list|)
+block|;
 name|Ctx
 operator|.
 name|reset
@@ -335,6 +383,67 @@ argument_list|(
 name|iP
 argument_list|)
 block|;   }
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getTripleName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TripleName
+return|;
+block|}
+name|void
+operator|*
+name|getDisInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DisInfo
+return|;
+block|}
+name|int
+name|getTagType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TagType
+return|;
+block|}
+name|LLVMOpInfoCallback
+name|getGetOpInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetOpInfo
+return|;
+block|}
+name|LLVMSymbolLookupCallback
+name|getSymbolLookupCallback
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymbolLookUp
+return|;
+block|}
+specifier|const
+name|Target
+operator|*
+name|getTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheTarget
+return|;
+block|}
 specifier|const
 name|MCDisassembler
 operator|*

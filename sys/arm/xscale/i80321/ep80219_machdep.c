@@ -4,7 +4,7 @@ comment|/*	$NetBSD: hpc_machdep.c,v 1.70 2003/09/16 08:18:22 agc Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1994-1998 Mark Brinicombe.  * Copyright (c) 1994 Brini.  * All rights reserved.  *  * This code is derived from software written for Brini by Mark Brinicombe  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Brini.  * 4. The name of the company nor the name of the author may be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY BRINI ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL BRINI OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * RiscBSD kernel project  *  * machdep.c  *  * Machine dependant functions for kernel setup  *  * This file needs a lot of work.   *  * Created      : 17/09/94  */
+comment|/*-  * Copyright (c) 1994-1998 Mark Brinicombe.  * Copyright (c) 1994 Brini.  * All rights reserved.  *  * This code is derived from software written for Brini by Mark Brinicombe  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Brini.  * 4. The name of the company nor the name of the author may be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY BRINI ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL BRINI OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * RiscBSD kernel project  *  * machdep.c  *  * Machine dependant functions for kernel setup  *  * This file needs a lot of work.  *  * Created      : 17/09/94  */
 end_comment
 
 begin_include
@@ -339,31 +339,6 @@ name|NUM_KERNEL_PTS
 value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
-begin_comment
-comment|/* Define various stack sizes in pages */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRQ_STACK_SIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ABT_STACK_SIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|UND_STACK_SIZE
-value|1
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -395,40 +370,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-modifier|*
-name|pcpup
-init|=
-operator|&
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment
@@ -448,12 +389,6 @@ name|dump_avail
 index|[
 literal|4
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|physical_pages
 decl_stmt|;
 end_decl_stmt
 
@@ -506,14 +441,6 @@ name|minidataclean
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|trapframe
-name|proc0_tf
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* #define IQ80321_OBIO_BASE 0xfe800000UL */
 end_comment
@@ -535,7 +462,7 @@ name|ep80219_devmap
 index|[]
 init|=
 block|{
-comment|/*  	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
+comment|/* 	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
 block|{
 name|IQ80321_OBIO_BASE
 block|,
@@ -605,13 +532,10 @@ name|void
 modifier|*
 name|initarm
 parameter_list|(
-name|void
+name|struct
+name|arm_boot_params
 modifier|*
-name|arg
-parameter_list|,
-name|void
-modifier|*
-name|arg2
+name|abp
 parameter_list|)
 block|{
 name|struct
@@ -650,12 +574,14 @@ name|memsize
 decl_stmt|,
 name|memstart
 decl_stmt|;
-name|set_cpufuncs
-argument_list|()
-expr_stmt|;
 name|lastaddr
 operator|=
-name|fake_preload_metadata
+name|parse_boot_param
+argument_list|(
+name|abp
+argument_list|)
+expr_stmt|;
+name|set_cpufuncs
 argument_list|()
 expr_stmt|;
 name|pcpu_init
@@ -679,6 +605,10 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|freemempos
 operator|=
 literal|0xa0200000
@@ -693,7 +623,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_pa, (np));				\ 	(var).pv_va = (var).pv_pa + 0x20000000;
+value|alloc_pages((var).pv_pa, (np));		\ 	(var).pv_va = (var).pv_pa + 0x20000000;
 define|#
 directive|define
 name|alloc_pages
@@ -704,10 +634,6 @@ name|np
 parameter_list|)
 define|\
 value|freemempos -= (np * PAGE_SIZE);		\ 	(var) = freemempos;		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -820,9 +746,6 @@ operator|+
 literal|0x20000000
 expr_stmt|;
 block|}
-name|i
-operator|++
-expr_stmt|;
 block|}
 name|freemem_pt
 operator|=
@@ -1386,43 +1309,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
-name|set_stackptr
+name|set_stackptrs
 argument_list|(
-name|PSR_IRQ32_MODE
-argument_list|,
-name|irqstack
-operator|.
-name|pv_va
-operator|+
-name|IRQ_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_ABT32_MODE
-argument_list|,
-name|abtstack
-operator|.
-name|pv_va
-operator|+
-name|ABT_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_UND32_MODE
-argument_list|,
-name|undstack
-operator|.
-name|pv_va
-operator|+
-name|UND_STACK_SIZE
-operator|*
-name|PAGE_SIZE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
@@ -1483,66 +1372,12 @@ expr_stmt|;
 name|undefined_init
 argument_list|()
 expr_stmt|;
-name|proc_linkup0
+name|init_proc0
 argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-name|thread0
-operator|.
-name|td_kstack
-operator|=
 name|kernelstack
 operator|.
 name|pv_va
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-operator|(
-name|thread0
-operator|.
-name|td_kstack
-operator|+
-name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|->
-name|pcb_flags
-operator|=
-literal|0
-expr_stmt|;
-name|thread0
-operator|.
-name|td_frame
-operator|=
-operator|&
-name|proc0_tf
-expr_stmt|;
-name|pcpup
-operator|->
-name|pc_curpcb
-operator|=
-name|thread0
-operator|.
-name|td_pcb
+argument_list|)
 expr_stmt|;
 comment|/* Enable MMU, I-cache, D-cache, write buffer. */
 name|arm_vector_init
@@ -1558,6 +1393,7 @@ name|afterkern
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * ARM_USE_SMALL_ALLOC uses dump_avail, so it must be filled before 	 * calling pmap_bootstrap. 	 */
 name|dump_avail
 index|[
 literal|0

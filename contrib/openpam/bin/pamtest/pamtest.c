@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pamtest.c 472 2011-11-03 09:46:52Z des $  */
+comment|/*-  * Copyright (c) 2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pamtest.c 595 2012-04-14 14:28:35Z des $  */
 end_comment
 
 begin_ifdef
@@ -971,9 +971,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pamtest [-dksv] %s\n"
+literal|"usage: pamtest %s service command ...\n"
 argument_list|,
-literal|"[-H rhost] [-h host] [-t tty] [-U ruser] [-u user] service"
+literal|"[-dkMPsv] [-H rhost] [-h host] [-t tty] [-U ruser] [-u user]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1124,7 +1124,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dH:h:kst:U:u:v"
+literal|"dH:h:kMPst:U:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -1177,6 +1177,42 @@ case|:
 name|keepatit
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|openpam_set_feature
+argument_list|(
+name|OPENPAM_RESTRICT_MODULE_NAME
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|openpam_set_feature
+argument_list|(
+name|OPENPAM_VERIFY_MODULE_FILE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|openpam_set_feature
+argument_list|(
+name|OPENPAM_RESTRICT_SERVICE_NAME
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|openpam_set_feature
+argument_list|(
+name|OPENPAM_VERIFY_POLICY_FILE
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

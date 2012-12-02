@@ -180,9 +180,16 @@ block|}
 struct|;
 comment|/// An oracle for answering whether two values are equivalent as
 comment|/// operands.
-struct|struct
+name|class
 name|Oracle
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|public
+label|:
 name|virtual
 name|bool
 name|operator
@@ -207,23 +214,14 @@ name|Oracle
 argument_list|()
 block|{}
 block|}
-struct|;
+empty_stmt|;
 name|DifferenceEngine
 argument_list|(
-name|LLVMContext
-operator|&
-name|context
-argument_list|,
 name|Consumer
 operator|&
 name|consumer
 argument_list|)
 operator|:
-name|context
-argument_list|(
-name|context
-argument_list|)
-operator|,
 name|consumer
 argument_list|(
 name|consumer
@@ -331,10 +329,6 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|LLVMContext
-modifier|&
-name|context
-decl_stmt|;
 name|Consumer
 modifier|&
 name|consumer

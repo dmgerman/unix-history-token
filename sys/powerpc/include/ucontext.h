@@ -210,21 +210,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|mc_dar
+name|mc_exc
 value|mc_frame[38]
 end_define
 
 begin_define
 define|#
 directive|define
-name|mc_dsisr
+name|mc_dar
 value|mc_frame[39]
 end_define
 
 begin_define
 define|#
 directive|define
-name|mc_exc
+name|mc_dsisr
 value|mc_frame[40]
 end_define
 

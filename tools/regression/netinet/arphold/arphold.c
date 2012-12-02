@@ -96,9 +96,6 @@ decl_stmt|;
 name|int
 name|maxhold
 decl_stmt|;
-name|int
-name|wait
-decl_stmt|;
 name|size_t
 name|size
 init|=

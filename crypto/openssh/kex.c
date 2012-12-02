@@ -406,7 +406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put algorithm proposal into buffer. */
+comment|/* put algorithm proposal into buffer. */
 end_comment
 
 begin_ifndef

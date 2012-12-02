@@ -167,7 +167,7 @@ argument_list|)
 name|pvo_olink
 expr_stmt|;
 comment|/* Link to overflow entry */
-name|LIST_ENTRY
+name|RB_ENTRY
 argument_list|(
 argument|pvo_entry
 argument_list|)
@@ -211,6 +211,45 @@ argument_list|(
 name|pvo_head
 argument_list|,
 name|pvo_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RB_HEAD
+argument_list|(
+name|pvo_tree
+argument_list|,
+name|pvo_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|int
+name|pvo_vaddr_compare
+parameter_list|(
+name|struct
+name|pvo_entry
+modifier|*
+parameter_list|,
+name|struct
+name|pvo_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|RB_PROTOTYPE
+argument_list|(
+name|pvo_tree
+argument_list|,
+name|pvo_entry
+argument_list|,
+name|pvo_plink
+argument_list|,
+name|pvo_vaddr_compare
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -404,7 +443,7 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 name|struct
-name|pvo_head
+name|pvo_tree
 name|pmap_pvo
 decl_stmt|;
 block|}
@@ -836,6 +875,16 @@ parameter_list|)
 value|mtx_unlock(&(pmap)->pm_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|pmap_page_is_write_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->aflags& PGA_WRITEABLE) != 0)
+end_define
+
 begin_function_decl
 name|void
 name|pmap_bootstrap
@@ -854,7 +903,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
@@ -889,7 +938,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -944,7 +993,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
@@ -956,7 +1005,7 @@ begin_function_decl
 name|int
 name|pmap_dev_direct_mapped
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)

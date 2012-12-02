@@ -32,39 +32,51 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the classes used to store parsed information about
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// declaration-specifiers and declarators.
+comment|/// \brief This file defines the classes used to store parsed information about
 end_comment
 
 begin_comment
-comment|//
+comment|/// declaration-specifiers and declarators.
 end_comment
 
 begin_comment
-comment|//   static const int volatile x, *y, *(*(*z)[10])(const void *x);
+comment|///
 end_comment
 
 begin_comment
-comment|//   ------------------------- -  --  ---------------------------
+comment|/// \verbatim
 end_comment
 
 begin_comment
-comment|//     declaration-specifiers  \  |   /
+comment|///   static const int volatile x, *y, *(*(*z)[10])(const void *x);
 end_comment
 
 begin_comment
-comment|//                            declarators
+comment|///   ------------------------- -  --  ---------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///     declaration-specifiers  \  |   /
+end_comment
+
+begin_comment
+comment|///                            declarators
+end_comment
+
+begin_comment
+comment|/// \endverbatim
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -116,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Lambda.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/OperatorKinds.h"
 end_include
 
@@ -129,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -183,8 +207,9 @@ decl_stmt|;
 struct_decl|struct
 name|TemplateIdAnnotation
 struct_decl|;
-comment|/// CXXScopeSpec - Represents a C++ nested-name-specifier or a global scope
-comment|/// specifier.  These can be in 3 states:
+comment|/// \brief Represents a C++ nested-name-specifier or a global scope specifier.
+comment|///
+comment|/// These can be in 3 states:
 comment|///   1) Not present, identified by isEmpty()
 comment|///   2) Present, identified by isNotEmpty()
 comment|///      2.a) Valid, idenified by isValid()
@@ -472,9 +497,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Retrieve the location of the name in the last qualifier
-comment|/// in this nested name specifier.  For example:
-comment|///   ::foo::bar<0>::
-comment|///          ^~~
+comment|/// in this nested name specifier.
+comment|///
+comment|/// For example, the location of \c bar
+comment|/// in
+comment|/// \verbatim
+comment|///   \::foo::bar<0>::
+comment|///           ^~~
+comment|/// \endverbatim
 name|SourceLocation
 name|getLastQualifierNameLoc
 argument_list|()
@@ -655,16 +685,17 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// DeclSpec - This class captures information about "declaration specifiers",
-comment|/// which encompasses storage-class-specifiers, type-specifiers,
-comment|/// type-qualifiers, and function-specifiers.
+comment|/// \brief Captures information about "declaration specifiers".
+comment|///
+comment|/// "Declaration specifiers" encompasses storage-class-specifiers,
+comment|/// type-specifiers, type-qualifiers, and function-specifiers.
 name|class
 name|DeclSpec
 block|{
 name|public
 label|:
-comment|// storage-class-specifier
-comment|// Note: The order of these enumerators is important for diagnostics.
+comment|/// \brief storage-class-specifier
+comment|/// \note The order of these enumerators is important for diagnostics.
 enum|enum
 name|SCS
 block|{
@@ -837,6 +868,15 @@ init|=
 name|clang
 operator|::
 name|TST_int
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_int128
+init|=
+name|clang
+operator|::
+name|TST_int128
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1782,9 +1822,36 @@ operator|&
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Range
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
 return|;
 block|}
 name|SourceLocation
@@ -1877,8 +1944,7 @@ operator|=
 name|range
 expr_stmt|;
 block|}
-comment|/// getSpecifierName - Turn a type-specifier-type into a string like "_Bool"
-comment|/// or "union".
+comment|/// \brief Turn a type-specifier-type into a string like "_Bool" or "union".
 specifier|static
 specifier|const
 name|char
@@ -2101,7 +2167,7 @@ name|SourceLocation
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// hasTypeSpecifier - Return true if any type-specifier has been found.
+comment|/// \brief Return true if any type-specifier has been found.
 name|bool
 name|hasTypeSpecifier
 argument_list|()
@@ -2137,9 +2203,8 @@ operator|::
 name|TSS_unspecified
 return|;
 block|}
-comment|/// getParsedSpecifiers - Return a bitmask of which flavors of specifiers this
+comment|/// \brief Return a bitmask of which flavors of specifiers this
 comment|/// DeclSpec includes.
-comment|///
 name|unsigned
 name|getParsedSpecifiers
 argument_list|()
@@ -2602,6 +2667,9 @@ specifier|const
 name|LangOptions
 modifier|&
 name|Lang
+parameter_list|,
+name|bool
+name|IsTypeSpec
 parameter_list|)
 function_decl|;
 name|bool
@@ -2763,6 +2831,20 @@ return|return
 name|ConstexprLoc
 return|;
 block|}
+name|void
+name|ClearConstexprSpec
+parameter_list|()
+block|{
+name|Constexpr_specified
+operator|=
+name|false
+expr_stmt|;
+name|ConstexprLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+block|}
 name|AttributePool
 operator|&
 name|getAttributePool
@@ -2776,17 +2858,22 @@ name|getPool
 argument_list|()
 return|;
 block|}
-comment|/// AddAttributes - contatenates two attribute lists.
+comment|/// \brief Concatenates two attribute lists.
+comment|///
 comment|/// The GCC attribute syntax allows for the following:
 comment|///
+comment|/// \code
 comment|/// short __attribute__(( unused, deprecated ))
 comment|/// int __attribute__(( may_alias, aligned(16) )) var;
+comment|/// \endcode
 comment|///
 comment|/// This declares 4 attributes using 2 lists. The following syntax is
 comment|/// also allowed and equivalent to the previous declaration.
 comment|///
+comment|/// \code
 comment|/// short __attribute__((unused)) __attribute__((deprecated))
 comment|/// int __attribute__((may_alias)) __attribute__((aligned(16))) var;
+comment|/// \endcode
 comment|///
 name|void
 name|addAttributes
@@ -2853,7 +2940,7 @@ return|return
 name|Attrs
 return|;
 block|}
-comment|/// TakeAttributes - Return the current attribute list and remove them from
+comment|/// \brief Return the current attribute list and remove them from
 comment|/// the DeclSpec so that it doesn't own them.
 name|ParsedAttributes
 name|takeAttributes
@@ -2993,16 +3080,17 @@ operator|=
 name|quals
 expr_stmt|;
 block|}
-comment|/// isMissingDeclaratorOk - This checks if this DeclSpec can stand alone,
-comment|/// without a Declarator. Only tag declspecs can stand alone.
+comment|/// \brief Checks if this DeclSpec can stand alone, without a Declarator.
+comment|///
+comment|/// Only tag declspecs can stand alone.
 name|bool
 name|isMissingDeclaratorOk
 parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// ObjCDeclSpec - This class captures information about
-comment|/// "declaration specifiers" specific to objective-c
+comment|/// \brief Captures information about "declaration specifiers" specific to
+comment|/// Objective-C.
 name|class
 name|ObjCDeclSpec
 block|{
@@ -3461,20 +3549,30 @@ operator|&&
 literal|"Cannot copy non-identifiers"
 argument_list|)
 block|;   }
-comment|/// \brief Destroy this unqualified-id.
-operator|~
-name|UnqualifiedId
-argument_list|()
-block|{
-name|clear
-argument_list|()
-block|; }
 comment|/// \brief Clear out this unqualified-id, setting it to default (invalid)
 comment|/// state.
 name|void
 name|clear
 argument_list|()
-expr_stmt|;
+block|{
+name|Kind
+operator|=
+name|IK_Identifier
+block|;
+name|Identifier
+operator|=
+literal|0
+block|;
+name|StartLocation
+operator|=
+name|SourceLocation
+argument_list|()
+block|;
+name|EndLocation
+operator|=
+name|SourceLocation
+argument_list|()
+block|;   }
 comment|/// \brief Determine whether this unqualified-id refers to a valid name.
 name|bool
 name|isValid
@@ -3775,6 +3873,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -3785,10 +3884,29 @@ name|EndLocation
 argument_list|)
 return|;
 block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|StartLocation
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|EndLocation
+return|;
+block|}
 block|}
 empty_stmt|;
-comment|/// CachedTokens - A set of tokens that has been cached for later
-comment|/// parsing.
+comment|/// \brief A set of tokens that has been cached for later parsing.
 typedef|typedef
 name|SmallVector
 operator|<
@@ -3798,7 +3916,7 @@ literal|4
 operator|>
 name|CachedTokens
 expr_stmt|;
-comment|/// DeclaratorChunk - One instance of this struct is used for each type in a
+comment|/// \brief One instance of this struct is used for each type in a
 comment|/// declarator that is parsed.
 comment|///
 comment|/// This is intended to be a small value object.
@@ -4026,6 +4144,12 @@ name|isVariadic
 operator|:
 literal|1
 block|;
+comment|/// Can this declaration be a constructor-style initializer?
+name|unsigned
+name|isAmbiguous
+operator|:
+literal|1
+block|;
 comment|/// \brief Whether the ref-qualifier (if any) is an lvalue reference.
 comment|/// Otherwise, it's an rvalue reference.
 name|unsigned
@@ -4052,6 +4176,13 @@ name|DeleteArgInfo
 operator|:
 literal|1
 block|;
+comment|/// HasTrailingReturnType - If this is true, a trailing return type was
+comment|/// specified.
+name|unsigned
+name|HasTrailingReturnType
+operator|:
+literal|1
+block|;
 comment|/// When isVariadic is true, the location of the ellipsis in the source.
 name|unsigned
 name|EllipsisLoc
@@ -4072,13 +4203,24 @@ comment|/// If this is an invalid location, there is no ref-qualifier.
 name|unsigned
 name|RefQualifierLoc
 block|;
+comment|/// \brief The location of the const-qualifier, if any.
+comment|///
+comment|/// If this is an invalid location, there is no const-qualifier.
+name|unsigned
+name|ConstQualifierLoc
+block|;
+comment|/// \brief The location of the volatile-qualifier, if any.
+comment|///
+comment|/// If this is an invalid location, there is no volatile-qualifier.
+name|unsigned
+name|VolatileQualifierLoc
+block|;
 comment|/// \brief The location of the 'mutable' qualifer in a lambda-declarator, if
 comment|/// any.
 name|unsigned
 name|MutableLoc
 block|;
-comment|/// \brief When ExceptionSpecType isn't EST_None or EST_Delayed, the
-comment|/// location of the keyword introducing the spec.
+comment|/// \brief The location of the keyword introducing the spec, if any.
 name|unsigned
 name|ExceptionSpecLoc
 block|;
@@ -4105,15 +4247,14 @@ operator|*
 name|NoexceptExpr
 block|;     }
 block|;
-comment|/// TrailingReturnType - If this isn't null, it's the trailing return type
-comment|/// specified. This is actually a ParsedType, but stored as void* to
-comment|/// allow union storage.
-name|void
-operator|*
+comment|/// \brief If HasTrailingReturnType is true, this is the trailing return
+comment|/// type specified.
+name|UnionParsedType
 name|TrailingReturnType
 block|;
-comment|/// freeArgs - reset the argument list to having zero arguments.  This is
-comment|/// used in various places for error recovery.
+comment|/// \brief Reset the argument list to having zero arguments.
+comment|///
+comment|/// This is used in various places for error recovery.
 name|void
 name|freeArgs
 argument_list|()
@@ -4221,6 +4362,36 @@ name|RefQualifierLoc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Retrieve the location of the ref-qualifier, if any.
+name|SourceLocation
+name|getConstQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|ConstQualifierLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Retrieve the location of the ref-qualifier, if any.
+name|SourceLocation
+name|getVolatileQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|VolatileQualifierLoc
+argument_list|)
+return|;
+block|}
 comment|/// \brief Retrieve the location of the 'mutable' qualifier, if any.
 name|SourceLocation
 name|getMutableLoc
@@ -4280,6 +4451,27 @@ operator|>
 operator|(
 name|ExceptionSpecType
 operator|)
+return|;
+block|}
+comment|/// \brief Determine whether this function declarator had a
+comment|/// trailing-return-type.
+name|bool
+name|hasTrailingReturnType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasTrailingReturnType
+return|;
+block|}
+comment|/// \brief Get the trailing-return-type for this function declarator.
+name|ParsedType
+name|getTrailingReturnType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TrailingReturnType
 return|;
 block|}
 block|}
@@ -4419,12 +4611,6 @@ condition|(
 name|Kind
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown decl type!"
-argument_list|)
-expr_stmt|;
 case|case
 name|DeclaratorChunk
 operator|::
@@ -4499,7 +4685,7 @@ case|:
 return|return;
 block|}
 block|}
-comment|/// getAttrs - If there are attributes applied to this declaratorchunk, return
+comment|/// \brief If there are attributes applied to this declaratorchunk, return
 comment|/// them.
 specifier|const
 name|AttributeList
@@ -4526,8 +4712,7 @@ operator|.
 name|AttrList
 return|;
 block|}
-comment|/// getPointer - Return a DeclaratorChunk for a pointer.
-comment|///
+comment|/// \brief Return a DeclaratorChunk for a pointer.
 specifier|static
 name|DeclaratorChunk
 name|getPointer
@@ -4611,8 +4796,7 @@ return|return
 name|I
 return|;
 block|}
-comment|/// getReference - Return a DeclaratorChunk for a reference.
-comment|///
+comment|/// \brief Return a DeclaratorChunk for a reference.
 specifier|static
 name|DeclaratorChunk
 name|getReference
@@ -4675,8 +4859,7 @@ return|return
 name|I
 return|;
 block|}
-comment|/// getArray - Return a DeclaratorChunk for an array.
-comment|///
+comment|/// \brief Return a DeclaratorChunk for an array.
 specifier|static
 name|DeclaratorChunk
 name|getArray
@@ -4769,6 +4952,8 @@ argument|bool hasProto
 argument_list|,
 argument|bool isVariadic
 argument_list|,
+argument|bool isAmbiguous
+argument_list|,
 argument|SourceLocation EllipsisLoc
 argument_list|,
 argument|ParamInfo *ArgInfo
@@ -4780,6 +4965,10 @@ argument_list|,
 argument|bool RefQualifierIsLvalueRef
 argument_list|,
 argument|SourceLocation RefQualifierLoc
+argument_list|,
+argument|SourceLocation ConstQualifierLoc
+argument_list|,
+argument|SourceLocation VolatileQualifierLoc
 argument_list|,
 argument|SourceLocation MutableLoc
 argument_list|,
@@ -4801,11 +4990,10 @@ argument|SourceLocation LocalRangeEnd
 argument_list|,
 argument|Declarator&TheDeclarator
 argument_list|,
-argument|ParsedType TrailingReturnType =                                                     ParsedType()
+argument|TypeResult TrailingReturnType =                                                     TypeResult()
 argument_list|)
 block|;
-comment|/// getBlockPointer - Return a DeclaratorChunk for a block.
-comment|///
+comment|/// \brief Return a DeclaratorChunk for a block.
 specifier|static
 name|DeclaratorChunk
 name|getBlockPointer
@@ -4905,8 +5093,7 @@ return|return
 name|I
 return|;
 block|}
-comment|/// getParen - Return a DeclaratorChunk for a paren.
-comment|///
+comment|/// \brief Return a DeclaratorChunk for a paren.
 specifier|static
 name|DeclaratorChunk
 name|getParen
@@ -4951,9 +5138,25 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Declarator - Information about one declarator, including the parsed type
-comment|/// information and the identifier.  When the declarator is fully formed, this
-comment|/// is turned into the appropriate Decl object.
+comment|/// \brief Described the kind of function definition (if any) provided for
+comment|/// a function.
+block|enum
+name|FunctionDefinitionKind
+block|{
+name|FDK_Declaration
+block|,
+name|FDK_Definition
+block|,
+name|FDK_Defaulted
+block|,
+name|FDK_Deleted
+block|}
+block|;
+comment|/// \brief Information about one declarator, including the parsed type
+comment|/// information and the identifier.
+comment|///
+comment|/// When the declarator is fully formed, this is turned into the appropriate
+comment|/// Decl object.
 comment|///
 comment|/// Declarators come in two types: normal declarators and abstract declarators.
 comment|/// Abstract declarators are used when parsing types, and don't have an
@@ -5014,14 +5217,20 @@ comment|// Objective-C catch exception-declaration
 name|BlockLiteralContext
 block|,
 comment|// Block literal declarator.
+name|LambdaExprContext
+block|,
+comment|// Lambda-expression declarator.
+name|TrailingReturnContext
+block|,
+comment|// C++11 trailing-type-specifier.
 name|TemplateTypeArgContext
 block|,
 comment|// Template type argument.
 name|AliasDeclContext
 block|,
-comment|// C++0x alias-declaration.
+comment|// C++11 alias-declaration.
 name|AliasTemplateContext
-comment|// C++0x alias-declaration template.
+comment|// C++11 alias-declaration template.
 block|}
 block|;
 name|private
@@ -5040,8 +5249,7 @@ block|;
 name|SourceRange
 name|Range
 block|;
-comment|/// Context - Where we are parsing this declarator.
-comment|///
+comment|/// \brief Where we are parsing this declarator.
 name|TheContext
 name|Context
 block|;
@@ -5069,13 +5277,16 @@ name|GroupingParens
 operator|:
 literal|1
 block|;
-comment|/// FunctionDefinition - Is this Declarator for a function or member defintion
-name|bool
+comment|/// FunctionDefinition - Is this Declarator for a function or member
+comment|/// definition and, if so, what kind?
+comment|///
+comment|/// Actually a FunctionDefinitionKind.
+name|unsigned
 name|FunctionDefinition
 operator|:
-literal|1
+literal|2
 block|;
-comment|// Redeclaration - Is this Declarator is a redeclaration.
+comment|/// \brief Is this Declarator a redeclaration?
 name|bool
 name|Redeclaration
 operator|:
@@ -5085,7 +5296,7 @@ comment|/// Attrs - Attributes.
 name|ParsedAttributes
 name|Attrs
 block|;
-comment|/// AsmLabel - The asm label, if specified.
+comment|/// \brief The asm label, if specified.
 name|Expr
 operator|*
 name|AsmLabel
@@ -5104,11 +5315,16 @@ block|;
 name|bool
 name|InlineParamsUsed
 block|;
-comment|/// Extension - true if the declaration is preceded by __extension__.
+comment|/// \brief true if the declaration is preceded by \c __extension__.
 name|bool
 name|Extension
 operator|:
 literal|1
+block|;
+comment|/// \brief If this is the second or subsequent declarator in this declaration,
+comment|/// the location of the comma before this declarator.
+name|SourceLocation
+name|CommaLoc
 block|;
 comment|/// \brief If provided, the source location of the ellipsis used to describe
 comment|/// this declarator as a parameter pack.
@@ -5165,7 +5381,7 @@ argument_list|)
 block|,
 name|FunctionDefinition
 argument_list|(
-name|false
+name|FDK_Declaration
 argument_list|)
 block|,
 name|Redeclaration
@@ -5315,16 +5531,43 @@ name|ObjCResultContext
 operator|)
 return|;
 block|}
-comment|/// getSourceRange - Get the source range that spans this declarator.
+comment|/// \brief Get the source range that spans this declarator.
 specifier|const
 name|SourceRange
 operator|&
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Range
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
 return|;
 block|}
 name|void
@@ -5445,7 +5688,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// clear - Reset the contents of this Declarator.
+comment|/// \brief Reset the contents of this Declarator.
 name|void
 name|clear
 argument_list|()
@@ -5513,6 +5756,16 @@ block|;
 name|InlineParamsUsed
 operator|=
 name|false
+block|;
+name|CommaLoc
+operator|=
+name|SourceLocation
+argument_list|()
+block|;
+name|EllipsisLoc
+operator|=
+name|SourceLocation
+argument_list|()
 block|;   }
 comment|/// mayOmitIdentifier - Return true if the identifier is either optional or
 comment|/// not allowed.  This is true for typenames, prototypes, and template
@@ -5582,7 +5835,13 @@ case|case
 name|BlockLiteralContext
 case|:
 case|case
+name|LambdaExprContext
+case|:
+case|case
 name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
 case|:
 return|return
 name|true
@@ -5662,7 +5921,13 @@ case|case
 name|BlockLiteralContext
 case|:
 case|case
+name|LambdaExprContext
+case|:
+case|case
 name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
 case|:
 return|return
 name|false
@@ -5689,6 +5954,55 @@ condition|)
 return|return
 name|false
 return|;
+if|if
+condition|(
+name|getDeclSpec
+argument_list|()
+operator|.
+name|getStorageClassSpec
+argument_list|()
+operator|==
+name|DeclSpec
+operator|::
+name|SCS_typedef
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|getDeclSpec
+argument_list|()
+operator|.
+name|getStorageClassSpec
+argument_list|()
+operator|==
+name|DeclSpec
+operator|::
+name|SCS_extern
+operator|&&
+name|Context
+operator|!=
+name|FileContext
+condition|)
+return|return
+name|false
+return|;
+comment|// Special names can't have direct initializers.
+if|if
+condition|(
+name|Name
+operator|.
+name|getKind
+argument_list|()
+operator|!=
+name|UnqualifiedId
+operator|::
+name|IK_Identifier
+condition|)
+return|return
+name|false
+return|;
 switch|switch
 condition|(
 name|Context
@@ -5707,13 +6021,19 @@ return|return
 name|true
 return|;
 case|case
+name|ConditionContext
+case|:
+comment|// This may not be followed by a direct initializer, but it can't be a
+comment|// function declaration either, and we'd prefer to perform a tentative
+comment|// parse in order to produce the right diagnostic.
+return|return
+name|true
+return|;
+case|case
 name|KNRTypeListContext
 case|:
 case|case
 name|MemberContext
-case|:
-case|case
-name|ConditionContext
 case|:
 case|case
 name|PrototypeContext
@@ -5749,7 +6069,13 @@ case|case
 name|BlockLiteralContext
 case|:
 case|case
+name|LambdaExprContext
+case|:
+case|case
 name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
 case|:
 return|return
 name|false
@@ -5970,7 +6296,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// AddInnermostTypeInfo - Add a new innermost chunk to this declarator.
+comment|/// \brief Add a new innermost chunk to this declarator.
 end_comment
 
 begin_function
@@ -5999,11 +6325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// getNumTypeObjects() - Return the number of types applied to this
-end_comment
-
-begin_comment
-comment|/// declarator.
+comment|/// \brief Return the number of types applied to this declarator.
 end_comment
 
 begin_expr_stmt
@@ -6236,12 +6558,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-name|false
-return|;
-end_return
-
 begin_expr_stmt
 unit|}     return
 name|false
@@ -6361,12 +6677,6 @@ literal|"Invalid type chunk"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_return
-return|return
-name|false
-return|;
-end_return
 
 begin_expr_stmt
 unit|}     return
@@ -6831,6 +7141,49 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|isFirstDeclarator
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|CommaLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getCommaLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CommaLoc
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setCommaLoc
+parameter_list|(
+name|SourceLocation
+name|CL
+parameter_list|)
+block|{
+name|CommaLoc
+operator|=
+name|CL
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
 name|hasEllipsis
 argument_list|()
 specifier|const
@@ -6873,9 +7226,9 @@ end_function
 
 begin_function
 name|void
-name|setFunctionDefinition
+name|setFunctionDefinitionKind
 parameter_list|(
-name|bool
+name|FunctionDefinitionKind
 name|Val
 parameter_list|)
 block|{
@@ -6893,6 +7246,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|getFunctionDefinitionKind
+argument_list|()
+operator|!=
+name|FDK_Declaration
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|FunctionDefinitionKind
+name|getFunctionDefinitionKind
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|FunctionDefinitionKind
+operator|)
 name|FunctionDefinition
 return|;
 block|}
@@ -6927,7 +7298,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// FieldDeclarator - This little struct is used to capture information about
+comment|/// \brief This little struct is used to capture information about
 end_comment
 
 begin_comment
@@ -6948,6 +7319,7 @@ decl_stmt|;
 name|explicit
 name|FieldDeclarator
 argument_list|(
+specifier|const
 name|DeclSpec
 operator|&
 name|DS
@@ -6955,21 +7327,24 @@ argument_list|)
 operator|:
 name|D
 argument_list|(
-argument|DS
+name|DS
 argument_list|,
-argument|Declarator::MemberContext
+name|Declarator
+operator|::
+name|MemberContext
 argument_list|)
-block|{
+operator|,
 name|BitfieldSize
-operator|=
+argument_list|(
 literal|0
-block|;   }
+argument_list|)
+block|{ }
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/// VirtSpecifiers - Represents a C++0x virt-specifier-seq.
+comment|/// \brief Represents a C++11 virt-specifier-seq.
 end_comment
 
 begin_decl_stmt
@@ -7101,49 +7476,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// LambdaCaptureDefault - The default, if any, capture method for a
-end_comment
-
-begin_comment
-comment|/// lambda expression.
-end_comment
-
-begin_enum
-enum|enum
-name|LambdaCaptureDefault
-block|{
-name|LCD_None
-block|,
-name|LCD_ByCopy
-block|,
-name|LCD_ByRef
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/// LambdaCaptureKind - The different capture forms in a lambda
-end_comment
-
-begin_comment
-comment|/// introducer: 'this' or a copied or referenced variable.
-end_comment
-
-begin_enum
-enum|enum
-name|LambdaCaptureKind
-block|{
-name|LCK_This
-block|,
-name|LCK_ByCopy
-block|,
-name|LCK_ByRef
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/// LambdaCapture - An individual capture in a lambda introducer.
+comment|/// \brief An individual capture in a lambda introducer.
 end_comment
 
 begin_struct
@@ -7160,6 +7493,9 @@ name|IdentifierInfo
 modifier|*
 name|Id
 decl_stmt|;
+name|SourceLocation
+name|EllipsisLoc
+decl_stmt|;
 name|LambdaCapture
 argument_list|(
 argument|LambdaCaptureKind Kind
@@ -7168,6 +7504,8 @@ argument|SourceLocation Loc
 argument_list|,
 argument|IdentifierInfo* Id =
 literal|0
+argument_list|,
+argument|SourceLocation EllipsisLoc = SourceLocation()
 argument_list|)
 block|:
 name|Kind
@@ -7182,7 +7520,12 @@ argument_list|)
 operator|,
 name|Id
 argument_list|(
-argument|Id
+name|Id
+argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|(
+argument|EllipsisLoc
 argument_list|)
 block|{}
 block|}
@@ -7190,7 +7533,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/// LambdaIntroducer - Represents a complete lambda introducer.
+comment|/// \brief Represents a complete lambda introducer.
 end_comment
 
 begin_struct
@@ -7199,6 +7542,9 @@ name|LambdaIntroducer
 block|{
 name|SourceRange
 name|Range
+decl_stmt|;
+name|SourceLocation
+name|DefaultLoc
 decl_stmt|;
 name|LambdaCaptureDefault
 name|Default
@@ -7221,7 +7567,7 @@ argument_list|(
 argument|LCD_None
 argument_list|)
 block|{}
-comment|/// addCapture - Append a capture in a lambda introducer.
+comment|/// \brief Append a capture in a lambda introducer.
 name|void
 name|addCapture
 argument_list|(
@@ -7231,6 +7577,8 @@ argument|SourceLocation Loc
 argument_list|,
 argument|IdentifierInfo* Id =
 literal|0
+argument_list|,
+argument|SourceLocation EllipsisLoc = SourceLocation()
 argument_list|)
 block|{
 name|Captures
@@ -7244,6 +7592,8 @@ argument_list|,
 name|Loc
 argument_list|,
 name|Id
+argument_list|,
+name|EllipsisLoc
 argument_list|)
 argument_list|)
 block|;   }

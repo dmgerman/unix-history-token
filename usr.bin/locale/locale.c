@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002, 2003 Alexey Zelkin<phantom@FreeBSD.org>  * Al
 end_comment
 
 begin_comment
-comment|/*  * XXX: implement missing era_* (LC_TIME) keywords (require libc&  *	nl_langinfo(3) extensions)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *      localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  */
+comment|/*  * XXX: implement missing era_* (LC_TIME) keywords (require libc&  *	nl_langinfo(3) extensions)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *	localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  */
 end_comment
 
 begin_include
@@ -1779,21 +1779,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|prt_categories
-operator|||
-name|prt_keywords
-operator|)
-operator|&&
-name|argc
-operator|<=
-literal|0
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 comment|/* process '-a' */
 if|if
 condition|(
@@ -1873,13 +1858,20 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* process '-c' and/or '-k' */
+comment|/* process '-c', '-k', or command line arguments. */
 if|if
 condition|(
 name|prt_categories
 operator|||
 name|prt_keywords
 operator|||
+name|argc
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|argc
 operator|>
 literal|0
@@ -1912,6 +1904,49 @@ name|argc
 operator|--
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|uint
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|kwinfo
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|_kwinfo
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|showdetails
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|kwinfo
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -1941,7 +1976,7 @@ name|printf
 argument_list|(
 literal|"Usage: locale [ -a | -m ]\n"
 literal|"       locale -k list [prefix]\n"
-literal|"       locale [ -ck ] keyword ...\n"
+literal|"       locale [ -ck ] [keyword ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2416,7 +2451,7 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-comment|/* make sure that 'POSIX' and 'C' locales are present in the list. 	 * POSIX 1003.1-2001 requires presence of 'POSIX' name only here, but          * we also list 'C' for constistency          */
+comment|/* make sure that 'POSIX' and 'C' locales are present in the list. 	 * POSIX 1003.1-2001 requires presence of 'POSIX' name only here, but 	 * we also list 'C' for constistency 	 */
 if|if
 condition|(
 name|sl_find
@@ -3173,9 +3208,26 @@ condition|(
 name|prt_categories
 condition|)
 block|{
+if|if
+condition|(
+name|prt_keywords
+condition|)
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%-20s "
+argument_list|,
+name|lookup_localecat
+argument_list|(
+name|cat
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-20s\t%s\n"
+argument_list|,
+name|kw
 argument_list|,
 name|lookup_localecat
 argument_list|(

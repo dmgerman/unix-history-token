@@ -169,6 +169,34 @@ name|vector_page
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|arm_boot_params
+block|{
+name|register_t
+name|abp_size
+decl_stmt|;
+comment|/* Size of this structure */
+name|register_t
+name|abp_r0
+decl_stmt|;
+comment|/* r0 from the boot loader */
+name|register_t
+name|abp_r1
+decl_stmt|;
+comment|/* r1 from the boot loader */
+name|register_t
+name|abp_r2
+decl_stmt|;
+comment|/* r2 from the boot loader */
+name|register_t
+name|abp_r3
+decl_stmt|;
+comment|/* r3 from the boot loader */
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|void
 name|arm_vector_init
@@ -203,10 +231,8 @@ name|void
 modifier|*
 name|initarm
 parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
+name|struct
+name|arm_boot_params
 modifier|*
 parameter_list|)
 function_decl|;

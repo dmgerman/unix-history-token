@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMAsmPrinter.h - Print machine code to an ARM .s file ------------===//
+comment|//===-- ARMAsmPrinter.h - Print machine code to an ARM .s file --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -133,6 +133,11 @@ name|MachineConstantPool
 operator|*
 name|MCP
 block|;
+comment|/// InConstantPool - Maintain state when emitting a sequence of constant
+comment|/// pool entries so we can properly mark them as data regions.
+name|bool
+name|InConstantPool
+block|;
 name|public
 operator|:
 name|explicit
@@ -161,7 +166,12 @@ argument_list|)
 block|,
 name|MCP
 argument_list|(
-argument|NULL
+name|NULL
+argument_list|)
+block|,
+name|InConstantPool
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|Subtarget
@@ -275,6 +285,11 @@ block|{}
 comment|// we emit constant pools customly!
 name|virtual
 name|void
+name|EmitFunctionBodyEnd
+argument_list|()
+block|;
+name|virtual
+name|void
 name|EmitFunctionEntryLabel
 argument_list|()
 block|;
@@ -292,6 +307,15 @@ argument_list|(
 name|Module
 operator|&
 name|M
+argument_list|)
+block|;
+name|void
+name|EmitXXStructor
+argument_list|(
+specifier|const
+name|Constant
+operator|*
+name|CV
 argument_list|)
 block|;
 comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
@@ -406,14 +430,10 @@ operator|->
 name|isThumb
 argument_list|()
 condition|?
-name|llvm
-operator|::
 name|ARM
 operator|::
 name|DW_ISA_ARM_thumb
 else|:
-name|llvm
-operator|::
 name|ARM
 operator|::
 name|DW_ISA_ARM_arm

@@ -699,6 +699,9 @@ parameter_list|,
 name|uint8_t
 name|ep_no
 parameter_list|,
+name|uint16_t
+name|stream_id
+parameter_list|,
 name|uint8_t
 name|pre_scale
 parameter_list|)

@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -177,6 +177,9 @@ name|ScalarEvolution
 decl_stmt|;
 name|class
 name|TargetData
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
 decl_stmt|;
 name|class
 name|LLVMContext
@@ -388,6 +391,13 @@ name|isAllOnesValue
 argument_list|()
 specifier|const
 block|;
+comment|/// isNonConstantNegative - Return true if the specified scev is negated,
+comment|/// but not a constant.
+name|bool
+name|isNonConstantNegative
+argument_list|()
+specifier|const
+block|;
 comment|/// print - Print out the internal representation of this scalar to the
 comment|/// specified stream.  This should really only be used for debugging
 comment|/// purposes.
@@ -444,6 +454,8 @@ argument_list|(
 argument|const SCEV&X
 argument_list|,
 argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|unsigned IDHash
 argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
@@ -732,6 +744,12 @@ name|TargetData
 operator|*
 name|TD
 block|;
+comment|/// TLI - The target library information for the target we are targeting.
+comment|///
+name|TargetLibraryInfo
+operator|*
+name|TLI
+block|;
 comment|/// DT - The dominator tree.
 comment|///
 name|DominatorTree
@@ -766,6 +784,14 @@ comment|/// ValueExprMap - This is a cache of the values we have analyzed so far
 comment|///
 name|ValueExprMapType
 name|ValueExprMap
+block|;
+comment|/// Mark predicate values currently being processed by isImpliedCond.
+name|DenseSet
+operator|<
+name|Value
+operator|*
+operator|>
+name|PendingLoopPredicates
 block|;
 comment|/// ExitLimit - Information about the number of loop iterations for
 comment|/// which a loop exit's branch condition evaluates to the not-taken path.
@@ -2610,8 +2636,12 @@ argument|const SCEV *RHS
 argument_list|)
 block|;
 comment|/// getSmallConstantTripCount - Returns the maximum trip count of this loop
-comment|/// as a normal unsigned value, if possible. Returns 0 if the trip count is
-comment|/// unknown or not constant.
+comment|/// as a normal unsigned value. Returns 0 if the trip count is unknown or
+comment|/// not constant. This "trip count" assumes that control exits via
+comment|/// ExitingBlock. More precisely, it is the number of times that control may
+comment|/// reach ExitingBlock before taking the branch. For loops with multiple
+comment|/// exits, it may not be the number times that the loop header executes if
+comment|/// the loop exits prematurely via another branch.
 name|unsigned
 name|getSmallConstantTripCount
 argument_list|(
@@ -2621,14 +2651,15 @@ name|L
 argument_list|,
 name|BasicBlock
 operator|*
-name|ExitBlock
+name|ExitingBlock
 argument_list|)
 block|;
 comment|/// getSmallConstantTripMultiple - Returns the largest constant divisor of
 comment|/// the trip count of this loop as a normal unsigned value, if
 comment|/// possible. This means that the actual trip count is always a multiple of
 comment|/// the returned value (don't forget the trip count could very well be zero
-comment|/// as well!).
+comment|/// as well!). As explained in the comments for getSmallConstantTripCount,
+comment|/// this assumes that control exits the loop via ExitingBlock.
 name|unsigned
 name|getSmallConstantTripMultiple
 argument_list|(
@@ -2638,7 +2669,7 @@ name|L
 argument_list|,
 name|BasicBlock
 operator|*
-name|ExitBlock
+name|ExitingBlock
 argument_list|)
 block|;
 comment|// getExitCount - Get the expression for the number of loop iterations for
@@ -2843,23 +2874,14 @@ comment|///
 name|bool
 name|SimplifyICmpOperands
 argument_list|(
-name|ICmpInst
-operator|::
-name|Predicate
-operator|&
-name|Pred
+argument|ICmpInst::Predicate&Pred
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-operator|&
-name|LHS
+argument|const SCEV *&LHS
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-operator|&
-name|RHS
+argument|const SCEV *&RHS
+argument_list|,
+argument|unsigned Depth =
+literal|0
 argument_list|)
 block|;
 comment|/// getLoopDisposition - Return the "disposition" of the given SCEV with

@@ -131,6 +131,34 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// getPointerToNamedFunction - This method returns the address of the
+comment|/// specified function. As such it is only useful for resolving library
+comment|/// symbols, not code generated symbols.
+comment|///
+comment|/// If AbortOnFailure is false and no function with the given name is
+comment|/// found, this function silently returns a null pointer. Otherwise,
+comment|/// it prints a message to stderr and aborts.
+comment|///
+name|virtual
+name|void
+modifier|*
+name|getPointerToNamedFunction
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+name|bool
+name|AbortOnFailure
+operator|=
+name|true
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Global Offset Table Management
 comment|//===--------------------------------------------------------------------===//
@@ -243,6 +271,50 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|FunctionEnd
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// allocateCodeSection - Allocate a memory block of (at least) the given
+comment|/// size suitable for executable code. The SectionID is a unique identifier
+comment|/// assigned by the JIT and passed through to the memory manager for
+comment|/// the instance class to use if it needs to communicate to the JIT about
+comment|/// a given section after the fact.
+name|virtual
+name|uint8_t
+modifier|*
+name|allocateCodeSection
+parameter_list|(
+name|uintptr_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|,
+name|unsigned
+name|SectionID
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// allocateDataSection - Allocate a memory block of (at least) the given
+comment|/// size suitable for data. The SectionID is a unique identifier
+comment|/// assigned by the JIT and passed through to the memory manager for
+comment|/// the instance class to use if it needs to communicate to the JIT about
+comment|/// a given section after the fact.
+name|virtual
+name|uint8_t
+modifier|*
+name|allocateDataSection
+parameter_list|(
+name|uintptr_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|,
+name|unsigned
+name|SectionID
 parameter_list|)
 init|=
 literal|0

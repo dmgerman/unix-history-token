@@ -76,9 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Type
-decl_stmt|;
-name|class
 name|Module
 decl_stmt|;
 name|class

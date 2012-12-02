@@ -144,6 +144,17 @@ define|\
 value|mtx_assert(IEEE80211_LOCK_OBJ(_ic), MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_UNLOCK_ASSERT
+parameter_list|(
+name|_ic
+parameter_list|)
+define|\
+value|mtx_assert(IEEE80211_LOCK_OBJ(_ic), MA_NOTOWNED)
+end_define
+
 begin_comment
 comment|/*  * Node locking definitions.  */
 end_comment

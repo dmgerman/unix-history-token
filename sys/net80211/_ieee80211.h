@@ -915,6 +915,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_CHAN_DYN
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_DYN) == IEEE80211_CHAN_DYN)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IS_CHAN_GFSK
 parameter_list|(
 name|_c

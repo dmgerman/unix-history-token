@@ -2875,10 +2875,10 @@ name|int
 name|c
 decl_stmt|;
 name|ino_t
-name|inode
-decl_stmt|;
-name|ino_t
 name|maxino
+decl_stmt|;
+name|uintmax_t
+name|inode
 decl_stmt|;
 name|union
 name|dinode
@@ -2946,7 +2946,7 @@ while|while
 condition|(
 name|scanf
 argument_list|(
-literal|"%u"
+literal|"%ju"
 argument_list|,
 operator|&
 name|inode
@@ -2964,7 +2964,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"illegal inode %d"
+literal|"illegal inode %ju"
 argument_list|,
 name|inode
 argument_list|)

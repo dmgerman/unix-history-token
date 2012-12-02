@@ -78,12 +78,21 @@ block|{
 name|LLVMDebugVersion
 init|=
 operator|(
-literal|11
+literal|12
 operator|<<
 literal|16
 operator|)
 block|,
 comment|// Current version of debug information.
+name|LLVMDebugVersion11
+init|=
+operator|(
+literal|11
+operator|<<
+literal|16
+operator|)
+block|,
+comment|// Constant for version 11.
 name|LLVMDebugVersion10
 init|=
 operator|(
@@ -487,6 +496,10 @@ block|,
 name|DW_TAG_lo_user
 init|=
 literal|0x4080
+block|,
+name|DW_TAG_APPLE_property
+init|=
+literal|0x4200
 block|,
 name|DW_TAG_hi_user
 init|=
@@ -1022,6 +1035,10 @@ block|,
 name|DW_AT_APPLE_objc_complete_type
 init|=
 literal|0x3fec
+block|,
+name|DW_AT_APPLE_property
+init|=
+literal|0x3fed
 block|,
 comment|// Attribute form encodings
 name|DW_FORM_addr
@@ -1987,6 +2004,10 @@ block|,
 name|DW_LANG_lo_user
 init|=
 literal|0x8000
+block|,
+name|DW_LANG_Mips_Assembler
+init|=
+literal|0x8001
 block|,
 name|DW_LANG_hi_user
 init|=

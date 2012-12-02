@@ -150,13 +150,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ino_t
-name|inomap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 name|blkbuf
 index|[
@@ -281,7 +274,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|mount
+name|domount
 parameter_list|(
 specifier|const
 name|char
@@ -2136,7 +2129,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mount
+name|domount
 argument_list|(
 name|bootpath_full
 argument_list|,
@@ -2166,7 +2159,7 @@ literal|16
 condition|)
 name|panic
 argument_list|(
-literal|"mount"
+literal|"domount"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2174,7 +2167,7 @@ else|else
 block|{
 if|if
 condition|(
-name|mount
+name|domount
 argument_list|(
 name|bootpath_full
 argument_list|,
@@ -2186,7 +2179,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"mount"
+literal|"domount"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2270,7 +2263,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|mount
+name|domount
 parameter_list|(
 specifier|const
 name|char
@@ -2303,7 +2296,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mount: can't open device\n"
+literal|"domount: can't open device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2332,7 +2325,7 @@ name|quiet
 condition|)
 name|printf
 argument_list|(
-literal|"mount: can't read superblock\n"
+literal|"domount: can't read superblock\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2370,7 +2363,7 @@ decl_stmt|;
 name|caddr_t
 name|p
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|int

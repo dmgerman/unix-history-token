@@ -79,9 +79,6 @@ name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
-name|raw_ostream
-decl_stmt|;
-name|class
 name|LLVMContext
 decl_stmt|;
 comment|/// This function is the main interface to the LLVM Assembly Parser. It parses

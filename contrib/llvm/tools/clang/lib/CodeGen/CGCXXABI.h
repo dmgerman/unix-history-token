@@ -125,7 +125,7 @@ decl_stmt|;
 name|class
 name|CodeGenModule
 decl_stmt|;
-comment|/// Implements C++ ABI-specific code generation functions.
+comment|/// \brief Implements C++ ABI-specific code generation functions.
 name|class
 name|CGCXXABI
 block|{
@@ -135,8 +135,6 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|MangleContext
@@ -173,7 +171,7 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CXXThisDecl
+name|CXXABIThisDecl
 return|;
 block|}
 name|llvm
@@ -189,7 +187,7 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CXXThisValue
+name|CXXABIThisValue
 return|;
 block|}
 name|ImplicitParamDecl
@@ -260,6 +258,29 @@ name|getContext
 argument_list|()
 return|;
 block|}
+name|virtual
+name|bool
+name|requiresArrayCookie
+parameter_list|(
+specifier|const
+name|CXXDeleteExpr
+modifier|*
+name|E
+parameter_list|,
+name|QualType
+name|eltType
+parameter_list|)
+function_decl|;
+name|virtual
+name|bool
+name|requiresArrayCookie
+parameter_list|(
+specifier|const
+name|CXXNewExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -356,8 +377,8 @@ operator|*
 name|MPT
 argument_list|)
 expr_stmt|;
-comment|/// Perform a derived-to-base or base-to-derived member pointer
-comment|/// conversion.
+comment|/// Perform a derived-to-base, base-to-derived, or bitcast member
+comment|/// pointer conversion.
 name|virtual
 name|llvm
 operator|::
@@ -381,8 +402,8 @@ operator|*
 name|Src
 argument_list|)
 expr_stmt|;
-comment|/// Perform a derived-to-base or base-to-derived member pointer
-comment|/// conversion on a constant member pointer.
+comment|/// Perform a derived-to-base, base-to-derived, or bitcast member
+comment|/// pointer conversion on a constant value.
 name|virtual
 name|llvm
 operator|::
@@ -390,16 +411,16 @@ name|Constant
 operator|*
 name|EmitMemberPointerConversion
 argument_list|(
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|C
-argument_list|,
 specifier|const
 name|CastExpr
 operator|*
 name|E
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Src
 argument_list|)
 expr_stmt|;
 comment|/// Return true if the given member pointer can be zero-initialized
@@ -455,6 +476,19 @@ argument_list|,
 argument|CharUnits offset
 argument_list|)
 expr_stmt|;
+comment|/// Create a member pointer for the given member pointer constant.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitMemberPointer
+argument_list|(
+argument|const APValue&MP
+argument_list|,
+argument|QualType MPT
+argument_list|)
+expr_stmt|;
 comment|/// Emit a comparison between two member pointers.  Returns an i1.
 name|virtual
 name|llvm
@@ -498,6 +532,27 @@ operator|*
 name|MPT
 argument_list|)
 expr_stmt|;
+name|protected
+label|:
+comment|/// A utility method for computing the offset required for the given
+comment|/// base-to-derived or derived-to-base member-pointer conversion.
+comment|/// Does not handle virtual conversions (in case we ever fully
+comment|/// support an ABI that allows this).  Returns null if no adjustment
+comment|/// is required.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getMemberPointerAdjustment
+argument_list|(
+specifier|const
+name|CastExpr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
+name|public
+label|:
 comment|/// Build the signature of the given constructor variant by adding
 comment|/// any required parameters.  For convenience, ResTy has been
 comment|/// initialized to 'void', and ArgTys has been initialized with the
@@ -615,17 +670,24 @@ name|QualType
 name|ResultType
 parameter_list|)
 function_decl|;
+comment|/// Gets the pure virtual member call function.
+name|virtual
+name|StringRef
+name|GetPureVirtualCallName
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 comment|/**************************** Array cookies ******************************/
 comment|/// Returns the extra size required in order to store the array
-comment|/// cookie for the given type.  May return 0 to indicate that no
+comment|/// cookie for the given new-expression.  May return 0 to indicate that no
 comment|/// array cookie is required.
 comment|///
 comment|/// Several cases are filtered out before this method is called:
 comment|///   - non-array allocations never need a cookie
-comment|///   - calls to ::operator new(size_t, void*) never need a cookie
+comment|///   - calls to \::operator new(size_t, void*) never need a cookie
 comment|///
-comment|/// \param ElementType - the allocated type of the expression,
-comment|///   i.e. the pointee type of the expression result type
+comment|/// \param expr - the new-expression being allocated.
 name|virtual
 name|CharUnits
 name|GetArrayCookieSize
@@ -641,7 +703,8 @@ comment|///
 comment|/// \param NewPtr - a char* which is the presumed-non-null
 comment|///   return value of the allocation function
 comment|/// \param NumElements - the computed number of elements,
-comment|///   potentially collapsed from the multidimensional array case
+comment|///   potentially collapsed from the multidimensional array case;
+comment|///   always a size_t
 comment|/// \param ElementType - the base element allocated type,
 comment|///   i.e. the allocated type after stripping all array types
 name|virtual
@@ -716,9 +779,49 @@ operator|&
 name|CookieSize
 argument_list|)
 decl_stmt|;
+name|protected
+label|:
+comment|/// Returns the extra size required in order to store the array
+comment|/// cookie for the given type.  Assumes that an array cookie is
+comment|/// required.
+name|virtual
+name|CharUnits
+name|getArrayCookieSizeImpl
+parameter_list|(
+name|QualType
+name|elementType
+parameter_list|)
+function_decl|;
+comment|/// Reads the array cookie for an allocation which is known to have one.
+comment|/// This is called by the standard implementation of ReadArrayCookie.
+comment|///
+comment|/// \param ptr - a pointer to the allocation made for an array, as a char*
+comment|/// \param cookieSize - the computed cookie size of an array
+comment|///
+comment|/// Other parameters are as above.
+comment|///
+comment|/// \return a size_t
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|readArrayCookieImpl
+argument_list|(
+argument|CodeGenFunction&IGF
+argument_list|,
+argument|llvm::Value *ptr
+argument_list|,
+argument|CharUnits cookieSize
+argument_list|)
+expr_stmt|;
+name|public
+label|:
 comment|/*************************** Static local guards ****************************/
 comment|/// Emits the guarded initializer and destructor setup for the given
 comment|/// variable, given that it couldn't be emitted as a constant.
+comment|/// If \p PerformInit is false, the initialization has been folded to a
+comment|/// constant and should not be performed.
 comment|///
 comment|/// The variable may be:
 comment|///   - a static local variable
@@ -741,8 +844,51 @@ operator|::
 name|GlobalVariable
 operator|*
 name|DeclPtr
+argument_list|,
+name|bool
+name|PerformInit
 argument_list|)
 decl_stmt|;
+comment|/// Emit code to force the execution of a destructor during global
+comment|/// teardown.  The default implementation of this uses atexit.
+comment|///
+comment|/// \param dtor - a function taking a single pointer argument
+comment|/// \param addr - a pointer to pass to the destructor function.
+name|virtual
+name|void
+name|registerGlobalDtor
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|dtor
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|addr
+argument_list|)
+decl_stmt|;
+comment|/***************************** Virtual Tables *******************************/
+comment|/// Generates and emits the virtual tables for a class.
+name|virtual
+name|void
+name|EmitVTables
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Class
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of a C++ ABI class.

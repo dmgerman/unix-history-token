@@ -75,6 +75,9 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
 comment|/// isSafeToLoadUnconditionally - Return true if we know that executing a load
 comment|/// from this value cannot trap.  If it is not obviously safe to load from the
 comment|/// specified pointer, we do a quick local scan of the basic block containing
@@ -114,6 +117,10 @@ comment|///
 comment|/// MaxInstsToScan specifies the maximum instructions to scan in the block.
 comment|/// If it is set to 0, it will scan the whole block. You can also optionally
 comment|/// specify an alias analysis implementation, which makes this more precise.
+comment|///
+comment|/// If TBAATag is non-null and a load or store is found, the TBAA tag from the
+comment|/// load or store is recorded there.  If there is no TBAA tag or if no access
+comment|/// is found, it is left unmodified.
 name|Value
 modifier|*
 name|FindAvailableLoadedValue
@@ -140,6 +147,13 @@ argument_list|,
 name|AliasAnalysis
 operator|*
 name|AA
+operator|=
+literal|0
+argument_list|,
+name|MDNode
+operator|*
+operator|*
+name|TBAATag
 operator|=
 literal|0
 argument_list|)

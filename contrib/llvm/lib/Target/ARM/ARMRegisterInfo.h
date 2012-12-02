@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMRegisterInfo.h - ARM Register Information Impl --------*- C++ -*-===//
+comment|//===-- ARMRegisterInfo.h - ARM Register Information Impl -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"ARMBaseRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ARMBaseRegisterInfo.h"
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_decl_stmt
@@ -87,15 +87,17 @@ decl_stmt|;
 name|class
 name|ARMBaseInstrInfo
 decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
 name|struct
 name|ARMRegisterInfo
 range|:
 name|public
 name|ARMBaseRegisterInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|ARMRegisterInfo

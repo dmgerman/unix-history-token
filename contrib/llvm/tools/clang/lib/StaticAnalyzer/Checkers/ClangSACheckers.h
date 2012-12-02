@@ -51,6 +51,12 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Checkers/CommonBugCategories.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef

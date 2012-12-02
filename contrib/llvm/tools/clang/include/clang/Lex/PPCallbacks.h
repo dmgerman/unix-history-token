@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the PPCallbacks interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the PPCallbacks interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -105,9 +109,10 @@ decl_stmt|;
 name|class
 name|MacroInfo
 decl_stmt|;
-comment|/// PPCallbacks - This interface provides a way to observe the actions of the
-comment|/// preprocessor as it does its thing.  Clients can define their hooks here to
-comment|/// implement preprocessor level tools.
+comment|/// \brief This interface provides a way to observe the actions of the
+comment|/// preprocessor as it does its thing.
+comment|///
+comment|/// Clients can define their hooks here to implement preprocessor level tools.
 name|class
 name|PPCallbacks
 block|{
@@ -130,13 +135,10 @@ block|,
 name|RenameFile
 block|}
 enum|;
-comment|/// FileChanged - This callback is invoked whenever a source file is
-comment|/// entered or exited.  The SourceLocation indicates the new location, and
-comment|/// EnteringFile indicates whether this is because we are entering a new
-comment|/// #include'd file (when true) or whether we're exiting one because we ran
-comment|/// off the end (when false).
+comment|/// \brief Callback invoked whenever a source file is entered or exited.
 comment|///
-comment|/// \param PrevFID the file that was exited if \arg Reason is ExitFile.
+comment|/// \param Loc Indicates the new location.
+comment|/// \param PrevFID the file that was exited if \p Reason is ExitFile.
 name|virtual
 name|void
 name|FileChanged
@@ -159,10 +161,13 @@ name|FileID
 argument_list|()
 argument_list|)
 block|{   }
-comment|/// FileSkipped - This callback is invoked whenever a source file is
-comment|/// skipped as the result of header guard optimization.  ParentFile
-comment|/// is the file that #includes the skipped file.  FilenameTok is the
-comment|/// token in ParentFile that indicates the skipped file.
+comment|/// \brief Callback invoked whenever a source file is skipped as the result
+comment|/// of header guard optimization.
+comment|///
+comment|/// \param ParentFile The file that \#included the skipped file.
+comment|///
+comment|/// \param FilenameTok The token in ParentFile that indicates the
+comment|/// skipped file.
 name|virtual
 name|void
 name|FileSkipped
@@ -183,8 +188,39 @@ name|CharacteristicKind
 name|FileType
 argument_list|)
 block|{   }
-comment|/// \brief This callback is invoked whenever an inclusion directive of
-comment|/// any kind (\c #include, \c #import, etc.) has been processed, regardless
+comment|/// \brief Callback invoked whenever an inclusion directive results in a
+comment|/// file-not-found error.
+comment|///
+comment|/// \param FileName The name of the file being included, as written in the
+comment|/// source code.
+comment|///
+comment|/// \param RecoveryPath If this client indicates that it can recover from
+comment|/// this missing file, the client should set this as an additional header
+comment|/// search patch.
+comment|///
+comment|/// \returns true to indicate that the preprocessor should attempt to recover
+comment|/// by adding \p RecoveryPath as a header search path.
+name|virtual
+name|bool
+name|FileNotFound
+argument_list|(
+name|StringRef
+name|FileName
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|RecoveryPath
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Callback invoked whenever an inclusion directive of
+comment|/// any kind (\c \#include, \c \#import, etc.) has been processed, regardless
 comment|/// of whether the inclusion will actually result in an inclusion.
 comment|///
 comment|/// \param HashLoc The location of the '#' that starts the inclusion
@@ -249,14 +285,15 @@ name|StringRef
 name|RelativePath
 parameter_list|)
 block|{   }
-comment|/// EndOfMainFile - This callback is invoked when the end of the main file is
-comment|/// reach, no subsequent callbacks will be made.
+comment|/// \brief Callback invoked when the end of the main file is reached.
+comment|///
+comment|/// No subsequent callbacks will be made.
 name|virtual
 name|void
 name|EndOfMainFile
 parameter_list|()
 block|{   }
-comment|/// Ident - This callback is invoked when a #ident or #sccs directive is read.
+comment|/// \brief Callback invoked when a \#ident or \#sccs directive is read.
 comment|/// \param Loc The location of the directive.
 comment|/// \param str The text of the directive.
 comment|///
@@ -275,9 +312,7 @@ operator|&
 name|str
 argument_list|)
 block|{   }
-comment|/// PragmaComment - This callback is invoked when a #pragma comment directive
-comment|/// is read.
-comment|///
+comment|/// \brief Callback invoked when a \#pragma comment directive is read.
 name|virtual
 name|void
 name|PragmaComment
@@ -298,11 +333,9 @@ operator|&
 name|Str
 argument_list|)
 block|{   }
-comment|/// PragmaMessage - This callback is invoked when a #pragma message directive
-comment|/// is read.
+comment|/// \brief Callback invoked when a \#pragma message directive is read.
 comment|/// \param Loc The location of the message directive.
-comment|/// \param str The text of the message directive.
-comment|///
+comment|/// \param Str The text of the message directive.
 name|virtual
 name|void
 name|PragmaMessage
@@ -314,8 +347,8 @@ name|StringRef
 name|Str
 parameter_list|)
 block|{   }
-comment|/// PragmaDiagnosticPush - This callback is invoked when a
-comment|/// #pragma gcc dianostic push directive is read.
+comment|/// \brief Callback invoked when a \#pragma gcc dianostic push directive
+comment|/// is read.
 name|virtual
 name|void
 name|PragmaDiagnosticPush
@@ -327,8 +360,8 @@ name|StringRef
 name|Namespace
 parameter_list|)
 block|{   }
-comment|/// PragmaDiagnosticPop - This callback is invoked when a
-comment|/// #pragma gcc dianostic pop directive is read.
+comment|/// \brief Callback invoked when a \#pragma gcc dianostic pop directive
+comment|/// is read.
 name|virtual
 name|void
 name|PragmaDiagnosticPop
@@ -340,8 +373,7 @@ name|StringRef
 name|Namespace
 parameter_list|)
 block|{   }
-comment|/// PragmaDiagnostic - This callback is invoked when a
-comment|/// #pragma gcc dianostic directive is read.
+comment|/// \brief Callback invoked when a \#pragma gcc dianostic directive is read.
 name|virtual
 name|void
 name|PragmaDiagnostic
@@ -361,9 +393,8 @@ name|StringRef
 name|Str
 argument_list|)
 block|{   }
-comment|/// MacroExpands - This is called by
-comment|/// Preprocessor::HandleMacroExpandedIdentifier when a macro invocation is
-comment|/// found.
+comment|/// \brief Called by Preprocessor::HandleMacroExpandedIdentifier when a
+comment|/// macro invocation is found.
 name|virtual
 name|void
 name|MacroExpands
@@ -382,7 +413,7 @@ name|SourceRange
 name|Range
 parameter_list|)
 block|{   }
-comment|/// MacroDefined - This hook is called whenever a macro definition is seen.
+comment|/// \brief Hook called whenever a macro definition is seen.
 name|virtual
 name|void
 name|MacroDefined
@@ -398,7 +429,8 @@ modifier|*
 name|MI
 parameter_list|)
 block|{   }
-comment|/// MacroUndefined - This hook is called whenever a macro #undef is seen.
+comment|/// \brief Hook called whenever a macro \#undef is seen.
+comment|///
 comment|/// MI is released immediately following this callback.
 name|virtual
 name|void
@@ -415,7 +447,7 @@ modifier|*
 name|MI
 parameter_list|)
 block|{   }
-comment|/// Defined - This hook is called whenever the 'defined' operator is seen.
+comment|/// \brief Hook called whenever the 'defined' operator is seen.
 name|virtual
 name|void
 name|Defined
@@ -426,9 +458,9 @@ modifier|&
 name|MacroNameTok
 parameter_list|)
 block|{   }
-comment|/// SourceRangeSkipped - This hook is called when a source range is skipped.
+comment|/// \brief Hook called when a source range is skipped.
 comment|/// \param Range The SourceRange that was skipped. The range begins at the
-comment|/// #if/#else directive and ends after the #endif/#else directive.
+comment|/// \#if/\#else directive and ends after the \#endif/\#else directive.
 name|virtual
 name|void
 name|SourceRangeSkipped
@@ -437,75 +469,115 @@ name|SourceRange
 name|Range
 parameter_list|)
 block|{   }
-comment|/// If -- This hook is called whenever an #if is seen.
-comment|/// \param Range The SourceRange of the expression being tested.
+comment|/// \brief Hook called whenever an \#if is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param ConditionRange The SourceRange of the expression being tested.
+comment|///
 comment|// FIXME: better to pass in a list (or tree!) of Tokens.
 name|virtual
 name|void
 name|If
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|SourceRange
-name|Range
+name|ConditionRange
 parameter_list|)
 block|{   }
-comment|/// Elif -- This hook is called whenever an #elif is seen.
-comment|/// \param Range The SourceRange of the expression being tested.
+comment|/// \brief Hook called whenever an \#elif is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param ConditionRange The SourceRange of the expression being tested.
+comment|/// \param IfLoc the source location of the \#if/\#ifdef/\#ifndef directive.
 comment|// FIXME: better to pass in a list (or tree!) of Tokens.
 name|virtual
 name|void
 name|Elif
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|SourceRange
-name|Range
+name|ConditionRange
+parameter_list|,
+name|SourceLocation
+name|IfLoc
 parameter_list|)
 block|{   }
-comment|/// Ifdef -- This hook is called whenever an #ifdef is seen.
-comment|/// \param Loc The location of the token being tested.
-comment|/// \param II Information on the token being tested.
+comment|/// \brief Hook called whenever an \#ifdef is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param MacroNameTok Information on the token being tested.
 name|virtual
 name|void
 name|Ifdef
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
 parameter_list|)
 block|{   }
-comment|/// Ifndef -- This hook is called whenever an #ifndef is seen.
-comment|/// \param Loc The location of the token being tested.
-comment|/// \param II Information on the token being tested.
+comment|/// \brief Hook called whenever an \#ifndef is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param MacroNameTok Information on the token being tested.
 name|virtual
 name|void
 name|Ifndef
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
 parameter_list|)
 block|{   }
-comment|/// Else -- This hook is called whenever an #else is seen.
+comment|/// \brief Hook called whenever an \#else is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param IfLoc the source location of the \#if/\#ifdef/\#ifndef directive.
 name|virtual
 name|void
 name|Else
-parameter_list|()
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
 block|{   }
-comment|/// Endif -- This hook is called whenever an #endif is seen.
+comment|/// \brief Hook called whenever an \#endif is seen.
+comment|/// \param Loc the source location of the directive.
+comment|/// \param IfLoc the source location of the \#if/\#ifdef/\#ifndef directive.
 name|virtual
 name|void
 name|Endif
-parameter_list|()
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
 block|{   }
 block|}
 empty_stmt|;
-comment|/// PPChainedCallbacks - Simple wrapper class for chaining callbacks.
+comment|/// \brief Simple wrapper class for chaining callbacks.
 name|class
 name|PPChainedCallbacks
 range|:
 name|public
 name|PPCallbacks
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|PPCallbacks
 operator|*
 name|First
@@ -618,6 +690,35 @@ argument_list|,
 name|FileType
 argument_list|)
 block|;   }
+name|virtual
+name|bool
+name|FileNotFound
+argument_list|(
+argument|StringRef FileName
+argument_list|,
+argument|SmallVectorImpl<char>&RecoveryPath
+argument_list|)
+block|{
+return|return
+name|First
+operator|->
+name|FileNotFound
+argument_list|(
+name|FileName
+argument_list|,
+name|RecoveryPath
+argument_list|)
+operator|||
+name|Second
+operator|->
+name|FileNotFound
+argument_list|(
+name|FileName
+argument_list|,
+name|RecoveryPath
+argument_list|)
+return|;
+block|}
 name|virtual
 name|void
 name|InclusionDirective
@@ -1005,55 +1106,75 @@ argument_list|(
 name|Range
 argument_list|)
 block|;   }
-comment|/// If -- This hook is called whenever an #if is seen.
+comment|/// \brief Hook called whenever an \#if is seen.
 name|virtual
 name|void
 name|If
 argument_list|(
-argument|SourceRange Range
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceRange ConditionRange
 argument_list|)
 block|{
 name|First
 operator|->
 name|If
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
 argument_list|)
 block|;
 name|Second
 operator|->
 name|If
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
 argument_list|)
 block|;   }
-comment|/// Elif -- This hook is called whenever an #if is seen.
+comment|/// \brief Hook called whenever an \#if is seen.
 name|virtual
 name|void
 name|Elif
 argument_list|(
-argument|SourceRange Range
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceRange ConditionRange
+argument_list|,
+argument|SourceLocation IfLoc
 argument_list|)
 block|{
 name|First
 operator|->
 name|Elif
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
+argument_list|,
+name|IfLoc
 argument_list|)
 block|;
 name|Second
 operator|->
 name|Elif
 argument_list|(
-name|Range
+name|Loc
+argument_list|,
+name|ConditionRange
+argument_list|,
+name|IfLoc
 argument_list|)
 block|;   }
-comment|/// Ifdef -- This hook is called whenever an #ifdef is seen.
+comment|/// \brief Hook called whenever an \#ifdef is seen.
 name|virtual
 name|void
 name|Ifdef
 argument_list|(
+argument|SourceLocation Loc
+argument_list|,
 argument|const Token&MacroNameTok
 argument_list|)
 block|{
@@ -1061,6 +1182,8 @@ name|First
 operator|->
 name|Ifdef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;
@@ -1068,14 +1191,18 @@ name|Second
 operator|->
 name|Ifdef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;   }
-comment|/// Ifndef -- This hook is called whenever an #ifndef is seen.
+comment|/// \brief Hook called whenever an \#ifndef is seen.
 name|virtual
 name|void
 name|Ifndef
 argument_list|(
+argument|SourceLocation Loc
+argument_list|,
 argument|const Token&MacroNameTok
 argument_list|)
 block|{
@@ -1083,6 +1210,8 @@ name|First
 operator|->
 name|Ifndef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;
@@ -1090,44 +1219,69 @@ name|Second
 operator|->
 name|Ifndef
 argument_list|(
+name|Loc
+argument_list|,
 name|MacroNameTok
 argument_list|)
 block|;   }
-comment|/// Else -- This hook is called whenever an #else is seen.
+comment|/// \brief Hook called whenever an \#else is seen.
 name|virtual
 name|void
 name|Else
-argument_list|()
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation IfLoc
+argument_list|)
 block|{
 name|First
 operator|->
 name|Else
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;
 name|Second
 operator|->
 name|Else
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;   }
-comment|/// Endif -- This hook is called whenever an #endif is seen.
+comment|/// \brief Hook called whenever an \#endif is seen.
 name|virtual
 name|void
 name|Endif
-argument_list|()
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation IfLoc
+argument_list|)
 block|{
 name|First
 operator|->
 name|Endif
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;
 name|Second
 operator|->
 name|Endif
-argument_list|()
+argument_list|(
+name|Loc
+argument_list|,
+name|IfLoc
+argument_list|)
 block|;   }
-block|}
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

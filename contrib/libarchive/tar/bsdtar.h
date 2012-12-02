@@ -15,12 +15,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"matching.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -61,30 +55,6 @@ name|names_from_file
 decl_stmt|;
 comment|/* -T file */
 name|int
-name|newer_ctime_filter
-decl_stmt|;
-comment|/* --newer/--newer-than */
-name|time_t
-name|newer_ctime_sec
-decl_stmt|;
-comment|/* --newer/--newer-than */
-name|long
-name|newer_ctime_nsec
-decl_stmt|;
-comment|/* --newer/--newer-than */
-name|int
-name|newer_mtime_filter
-decl_stmt|;
-comment|/* --newer-mtime/--newer-mtime-than */
-name|time_t
-name|newer_mtime_sec
-decl_stmt|;
-comment|/* --newer-mtime */
-name|long
-name|newer_mtime_nsec
-decl_stmt|;
-comment|/* --newer-mtime-than */
-name|int
 name|bytes_per_block
 decl_stmt|;
 comment|/* -b block_size */
@@ -100,6 +70,10 @@ name|int
 name|extract_flags
 decl_stmt|;
 comment|/* Flags for extract operation */
+name|int
+name|readdisk_flags
+decl_stmt|;
+comment|/* Flags for read disk operation */
 name|int
 name|strip_components
 decl_stmt|;
@@ -150,10 +124,6 @@ name|option_chroot
 decl_stmt|;
 comment|/* --chroot */
 name|char
-name|option_dont_traverse_mounts
-decl_stmt|;
-comment|/* --one-file-system */
-name|char
 name|option_fast_read
 decl_stmt|;
 comment|/* --fast-read */
@@ -163,10 +133,6 @@ modifier|*
 name|option_options
 decl_stmt|;
 comment|/* --options */
-name|char
-name|option_honor_nodump
-decl_stmt|;
-comment|/* --nodump */
 name|char
 name|option_interactive
 decl_stmt|;
@@ -207,10 +173,6 @@ name|char
 name|day_first
 decl_stmt|;
 comment|/* show day before month in -tv output */
-name|char
-name|enable_copyfile
-decl_stmt|;
-comment|/* For Mac OS */
 comment|/* Option parser state */
 name|int
 name|getopt_state
@@ -295,8 +257,12 @@ name|size_t
 name|buff_size
 decl_stmt|;
 comment|/* for write.c */
+name|int
+name|first_fs
+decl_stmt|;
+comment|/* for write.c */
 name|struct
-name|lafe_matching
+name|archive
 modifier|*
 name|matching
 decl_stmt|;

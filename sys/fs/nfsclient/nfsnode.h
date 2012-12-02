@@ -285,6 +285,12 @@ modifier|*
 name|n_v4
 decl_stmt|;
 comment|/* extra V4 stuff */
+name|struct
+name|ucred
+modifier|*
+name|n_writecred
+decl_stmt|;
+comment|/* Cred. for putpages */
 block|}
 struct|;
 end_struct

@@ -170,7 +170,16 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fputrap
+name|fputrap_sse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fputrap_x87
 parameter_list|(
 name|void
 parameter_list|)

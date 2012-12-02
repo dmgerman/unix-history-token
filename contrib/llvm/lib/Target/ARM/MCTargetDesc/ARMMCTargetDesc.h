@@ -91,6 +91,9 @@ name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
@@ -117,6 +120,8 @@ name|string
 name|ParseARMTriple
 argument_list|(
 argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
 argument_list|)
 expr_stmt|;
 comment|/// createARMMCSubtargetInfo - Create a ARM MCSubtargetInfo instance.
@@ -147,6 +152,11 @@ modifier|&
 name|MCII
 parameter_list|,
 specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
@@ -167,6 +177,22 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
+comment|/// createARMELFObjectWriter - Construct an ELF Mach-O object writer.
+name|MCObjectWriter
+modifier|*
+name|createARMELFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|uint8_t
+name|OSABI
 parameter_list|)
 function_decl|;
 comment|/// createARMMachObjectWriter - Construct an ARM Mach-O object writer.

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -172,20 +178,15 @@ decl_stmt|;
 comment|/// Whether we should maintain a detailed
 comment|/// record of all macro definitions and
 comment|/// expansions.
-comment|/// \brief Whether we should automatically translate #include or #import
-comment|/// operations into module imports when possible.
 name|unsigned
-name|AutoModuleImport
+name|DetailedRecordConditionalDirectives
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Whether the detailed preprocessing record includes nested macro
-comment|/// expansions.
-name|unsigned
-name|DetailedRecordIncludesNestedMacroExpansions
-range|:
-literal|1
-decl_stmt|;
+comment|/// Whether in the
+comment|/// preprocessing record we should also keep
+comment|/// track of locations of conditional directives
+comment|/// in non-system files.
 comment|/// The implicit PCH included at the start of the translation unit, or empty.
 name|std
 operator|::
@@ -212,6 +213,10 @@ comment|/// \brief When true, disables the use of the stat cache within a
 comment|/// precompiled header or AST file.
 name|bool
 name|DisableStatCache
+decl_stmt|;
+comment|/// \brief When true, a PCH with compiler errors will not be rejected.
+name|bool
+name|AllowPCHWithCompilerErrors
 decl_stmt|;
 comment|/// \brief Dump declarations that are deserialized from PCH, for testing.
 name|bool
@@ -539,14 +544,9 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|AutoModuleImport
+name|DetailedRecordConditionalDirectives
 argument_list|(
 name|false
-argument_list|)
-operator|,
-name|DetailedRecordIncludesNestedMacroExpansions
-argument_list|(
-name|true
 argument_list|)
 operator|,
 name|DisablePCHValidation
@@ -555,6 +555,11 @@ name|false
 argument_list|)
 operator|,
 name|DisableStatCache
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AllowPCHWithCompilerErrors
 argument_list|(
 name|false
 argument_list|)

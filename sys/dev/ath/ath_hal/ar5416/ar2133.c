@@ -563,6 +563,15 @@ name|AR_PHY_CCK_TX_CTRL_JAPAN
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Handle programming the RF synth for odd frequencies in the 	 * 4.9->5GHz range.  This matches the programming from the 	 * later model 802.11abg RF synths. 	 * 	 * This interoperates on the quarter rate channels with the 	 * AR5112 and later RF synths.  Please note that the synthesiser 	 * isn't able to completely accurately represent these frequencies 	 * (as the resolution in this reference is 2.5MHz) and thus it will 	 * be slightly "off centre."  This matches the same slightly 	 * incorrect * centre frequency behaviour that the AR5112 and later 	 * channel selection code has. 	 * 	 * This is disabled because it hasn't been tested for regulatory 	 * compliance and neither have the NICs which would use it. 	 * So if you enable this code, you must first ensure that you've 	 * re-certified the NICs in question beforehand or you will be 	 * violating your local regulatory rules and breaking the law. 	 */
+if|#
+directive|if
+literal|0
+block|} else if (((freq % 5) == 2)&& (freq<= 5435)) { 		freq = freq - 2; 		channelSel = ath_hal_reverseBits( 		    (uint32_t) (((freq - 4800) * 10) / 25 + 1), 8);
+comment|/* XXX what about for Howl/Sowl? */
+block|aModeRefSel = ath_hal_reverseBits(0, 2);
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -737,7 +746,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_UNMASKABLE
 argument_list|,
 literal|"%s: invalid channel %u MHz\n"
 argument_list|,

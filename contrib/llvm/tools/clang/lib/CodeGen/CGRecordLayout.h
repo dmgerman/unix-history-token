@@ -140,12 +140,7 @@ comment|/// Bit width of the memory access to perform.
 name|unsigned
 name|AccessWidth
 decl_stmt|;
-comment|/// The alignment of the memory access, or 0 if the default alignment should
-comment|/// be used.
-comment|//
-comment|// FIXME: Remove use of 0 to encode default, instead have IRgen do the right
-comment|// thing when it generates the code, if avoiding align directives is
-comment|// desired.
+comment|/// The alignment of the memory access, assuming the parent is aligned.
 name|CharUnits
 name|AccessAlignment
 decl_stmt|;

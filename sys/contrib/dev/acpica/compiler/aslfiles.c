@@ -76,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler.  Used for serious  *              I/O errors  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler. Used for serious  *              I/O errors  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -88,7 +88,7 @@ parameter_list|)
 block|{
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 if|if
@@ -96,10 +96,10 @@ condition|(
 name|Gbl_DebugFlag
 condition|)
 block|{
-comment|/* Print error summary to the debug file */
+comment|/* Print error summary to stdout also */
 name|AePrintErrorLog
 argument_list|(
-name|ASL_FILE_STDERR
+name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -200,6 +200,23 @@ argument_list|,
 name|Mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|File
+condition|)
+block|{
+name|FlFileError
+argument_list|(
+name|FileId
+argument_list|,
+name|ASL_MSG_OPEN
+argument_list|)
+expr_stmt|;
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 name|Gbl_Files
 index|[
 name|FileId
@@ -218,23 +235,6 @@ name|Handle
 operator|=
 name|File
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|File
-condition|)
-block|{
-name|FlFileError
-argument_list|(
-name|FileId
-argument_list|,
-name|ASL_MSG_OPEN
-argument_list|)
-expr_stmt|;
-name|AslAbort
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -314,7 +314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlReadFile  *  * PARAMETERS:  FileId              - Index into file info array  *              Buffer              - Where to place the data  *              Length              - Amount to read  *  * RETURN:      Status.  AE_ERROR indicates EOF.  *  * DESCRIPTION: Read data from an open file.  *              NOTE: Aborts compiler on any error.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlReadFile  *  * PARAMETERS:  FileId              - Index into file info array  *              Buffer              - Where to place the data  *              Length              - Amount to read  *  * RETURN:      Status. AE_ERROR indicates EOF.  *  * DESCRIPTION: Read data from an open file.  *              NOTE: Aborts compiler on any error.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -357,7 +357,7 @@ expr_stmt|;
 if|if
 condition|(
 name|Actual
-operator|!=
+operator|<
 name|Length
 condition|)
 block|{
@@ -594,7 +594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCloseFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Close an open file.  Aborts compiler on error  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCloseFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Close an open file. Aborts compiler on error  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -663,6 +663,77 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlDeleteFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Delete a file.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|FlDeleteFile
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|)
+block|{
+name|ASL_FILE_INFO
+modifier|*
+name|Info
+init|=
+operator|&
+name|Gbl_Files
+index|[
+name|FileId
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|Filename
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+name|remove
+argument_list|(
+name|Info
+operator|->
+name|Filename
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (%s file) "
+argument_list|,
+name|Info
+operator|->
+name|Filename
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"Could not delete"
+argument_list|)
+expr_stmt|;
+block|}
+name|Info
+operator|->
+name|Filename
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    FlSetLineNumber  *  * PARAMETERS:  Op        - Parse node for the LINE asl statement  *  * RETURN:      None.  *  * DESCRIPTION: Set the current line number  *  ******************************************************************************/
 end_comment
 
@@ -670,36 +741,69 @@ begin_function
 name|void
 name|FlSetLineNumber
 parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
+name|UINT32
+name|LineNumber
 parameter_list|)
 block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\n#line: New line number %u (old %u)\n"
+argument_list|,
+name|LineNumber
+argument_list|,
+name|Gbl_LogicalLineNumber
+argument_list|)
+expr_stmt|;
 name|Gbl_CurrentLineNumber
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|Op
-operator|->
-name|Asl
-operator|.
-name|Value
-operator|.
-name|Integer
+name|LineNumber
 expr_stmt|;
 name|Gbl_LogicalLineNumber
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|Op
-operator|->
-name|Asl
+name|LineNumber
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlSetFilename  *  * PARAMETERS:  Op        - Parse node for the LINE asl statement  *  * RETURN:      None.  *  * DESCRIPTION: Set the current filename  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|FlSetFilename
+parameter_list|(
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\n#line: New filename %s (old %s)\n"
+argument_list|,
+name|Filename
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
 operator|.
-name|Value
+name|Filename
+argument_list|)
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
 operator|.
-name|Integer
+name|Filename
+operator|=
+name|Filename
 expr_stmt|;
 block|}
 end_function
@@ -876,6 +980,272 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlMergePathnames  *  * PARAMETERS:  PrefixDir       - Prefix directory pathname. Can be NULL or  *                                a zero length string.  *              FilePathname    - The include filename from the source ASL.  *  * RETURN:      Merged pathname string  *  * DESCRIPTION: Merge two pathnames that (probably) have common elements, to  *              arrive at a minimal length string. Merge can occur if the  *              FilePathname is relative to the PrefixDir.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|FlMergePathnames
+parameter_list|(
+name|char
+modifier|*
+name|PrefixDir
+parameter_list|,
+name|char
+modifier|*
+name|FilePathname
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|CommonPath
+decl_stmt|;
+name|char
+modifier|*
+name|Pathname
+decl_stmt|;
+name|char
+modifier|*
+name|LastElement
+decl_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"Include: Prefix path - \"%s\"\n"
+literal|"Include: FilePathname - \"%s\"\n"
+argument_list|,
+name|PrefixDir
+argument_list|,
+name|FilePathname
+argument_list|)
+expr_stmt|;
+comment|/*      * If there is no prefix directory or if the file pathname is absolute,      * just return the original file pathname      */
+if|if
+condition|(
+operator|!
+name|PrefixDir
+operator|||
+operator|(
+operator|!
+operator|*
+name|PrefixDir
+operator|)
+operator|||
+operator|(
+operator|*
+name|FilePathname
+operator|==
+literal|'/'
+operator|)
+operator|||
+operator|(
+name|FilePathname
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+operator|)
+condition|)
+block|{
+name|Pathname
+operator|=
+name|ACPI_ALLOCATE
+argument_list|(
+name|strlen
+argument_list|(
+name|FilePathname
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|Pathname
+argument_list|,
+name|FilePathname
+argument_list|)
+expr_stmt|;
+goto|goto
+name|ConvertBackslashes
+goto|;
+block|}
+comment|/* Need a local copy of the prefix directory path */
+name|CommonPath
+operator|=
+name|ACPI_ALLOCATE
+argument_list|(
+name|strlen
+argument_list|(
+name|PrefixDir
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|CommonPath
+argument_list|,
+name|PrefixDir
+argument_list|)
+expr_stmt|;
+comment|/*      * Walk forward through the file path, and simultaneously backward      * through the prefix directory path until there are no more      * relative references at the start of the file path.      */
+while|while
+condition|(
+operator|*
+name|FilePathname
+operator|&&
+operator|(
+operator|!
+name|strncmp
+argument_list|(
+name|FilePathname
+argument_list|,
+literal|"../"
+argument_list|,
+literal|3
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* Remove last element of the prefix directory path */
+name|LastElement
+operator|=
+name|strrchr
+argument_list|(
+name|CommonPath
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|LastElement
+condition|)
+block|{
+goto|goto
+name|ConcatenatePaths
+goto|;
+block|}
+operator|*
+name|LastElement
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Terminate CommonPath string */
+name|FilePathname
+operator|+=
+literal|3
+expr_stmt|;
+comment|/* Point to next path element */
+block|}
+comment|/*      * Remove the last element of the prefix directory path (it is the same as      * the first element of the file pathname), and build the final merged      * pathname.      */
+name|LastElement
+operator|=
+name|strrchr
+argument_list|(
+name|CommonPath
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LastElement
+condition|)
+block|{
+operator|*
+name|LastElement
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* Build the final merged pathname */
+name|ConcatenatePaths
+label|:
+name|Pathname
+operator|=
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+name|strlen
+argument_list|(
+name|CommonPath
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|FilePathname
+argument_list|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LastElement
+operator|&&
+operator|*
+name|CommonPath
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|Pathname
+argument_list|,
+name|CommonPath
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|Pathname
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+block|}
+name|strcat
+argument_list|(
+name|Pathname
+argument_list|,
+name|FilePathname
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|CommonPath
+argument_list|)
+expr_stmt|;
+comment|/* Convert all backslashes to normal slashes */
+name|ConvertBackslashes
+label|:
+name|UtConvertBackslashes
+argument_list|(
+name|Pathname
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"Include: Merged Pathname - \"%s\"\n"
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Pathname
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    FlOpenIncludeWithPrefix  *  * PARAMETERS:  PrefixDir       - Prefix directory pathname. Can be a zero  *                                length string.  *              Filename        - The include filename from the source ASL.  *  * RETURN:      Valid file descriptor if successful. Null otherwise.  *  * DESCRIPTION: Open an include file and push it on the input file stack.  *  ******************************************************************************/
 end_comment
 
@@ -904,31 +1274,9 @@ decl_stmt|;
 comment|/* Build the full pathname to the file */
 name|Pathname
 operator|=
-name|ACPI_ALLOCATE
-argument_list|(
-name|strlen
+name|FlMergePathnames
 argument_list|(
 name|PrefixDir
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|Filename
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|Pathname
-argument_list|,
-name|PrefixDir
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|Pathname
 argument_list|,
 name|Filename
 argument_list|)
@@ -937,7 +1285,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nAttempt to open include file: path %s\n\n"
+literal|"Include: Opening file - \"%s\"\n\n"
 argument_list|,
 name|Pathname
 argument_list|)
@@ -954,9 +1302,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|IncludeFile
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not open include file %s\n"
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Pathname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Push the include file on the open input file stack */
 name|AslPushInputFileStack
 argument_list|(
@@ -968,17 +1337,6 @@ expr_stmt|;
 return|return
 operator|(
 name|IncludeFile
-operator|)
-return|;
-block|}
-name|ACPI_FREE
-argument_list|(
-name|Pathname
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
@@ -1039,7 +1397,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*      * Flush out the "include ()" statement on this line, start      * the actual include file on the next line      */
-name|ResetCurrentLineBuffer
+name|AslResetCurrentLineBuffer
 argument_list|()
 expr_stmt|;
 name|FlPrintFile
@@ -1250,7 +1608,7 @@ name|ASL_FILE_INPUT
 argument_list|,
 name|InputFilename
 argument_list|,
-literal|"r"
+literal|"rt"
 argument_list|)
 expr_stmt|;
 name|AslCompilerin
@@ -1271,7 +1629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlOpenAmlOutputFile  *  * PARAMETERS:  FilenamePrefix       - The user-specified ASL source file  *  * RETURN:      Status  *  * DESCRIPTION: Create the output filename (*.AML) and open the file.  The file  *              is created in the same directory as the parent input file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlOpenAmlOutputFile  *  * PARAMETERS:  FilenamePrefix       - The user-specified ASL source file  *  * RETURN:      Status  *  * DESCRIPTION: Create the output filename (*.AML) and open the file. The file  *              is created in the same directory as the parent input file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1433,7 +1791,7 @@ name|ASL_FILE_HEX_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -1620,7 +1978,7 @@ name|ASL_FILE_LISTING_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -1634,7 +1992,12 @@ name|ASL_FILE_LISTING_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create the preprocessor output file */
+comment|/* Create the preprocessor output file if preprocessor enabled */
+if|if
+condition|(
+name|Gbl_PreprocessFlag
+condition|)
+block|{
 name|Filename
 operator|=
 name|FlGenerateFilename
@@ -1681,9 +2044,10 @@ name|ASL_FILE_PREPROCESSOR
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+b"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* All done for data table compiler */
 if|if
 condition|(
@@ -1803,7 +2167,7 @@ name|ASL_FILE_ASM_SOURCE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -1870,7 +2234,7 @@ name|ASL_FILE_C_SOURCE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -1944,7 +2308,7 @@ name|ASL_FILE_ASM_INCLUDE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon
@@ -2011,7 +2375,7 @@ name|ASL_FILE_C_INCLUDE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -2085,7 +2449,7 @@ name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
 name|Filename
 argument_list|,
-literal|"w+"
+literal|"w+t"
 argument_list|)
 expr_stmt|;
 name|AslCompilerSignon

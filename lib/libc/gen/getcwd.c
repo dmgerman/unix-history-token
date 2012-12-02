@@ -117,6 +117,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gen-private.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -419,7 +425,7 @@ name|NULL
 condition|?
 name|_fstat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)
@@ -509,7 +515,7 @@ name|dir
 operator|!=
 name|NULL
 condition|?
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)
@@ -519,6 +525,8 @@ argument_list|,
 literal|".."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 expr_stmt|;
 if|if
@@ -557,7 +565,7 @@ operator|)
 operator|||
 name|_fstat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)
@@ -657,7 +665,7 @@ if|if
 condition|(
 name|fstatat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dir
 argument_list|)

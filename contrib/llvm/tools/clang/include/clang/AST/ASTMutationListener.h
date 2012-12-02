@@ -93,6 +93,12 @@ decl_stmt|;
 name|class
 name|ObjCInterfaceDecl
 decl_stmt|;
+name|class
+name|ObjCContainerDecl
+decl_stmt|;
+name|class
+name|ObjCPropertyDecl
+decl_stmt|;
 comment|/// \brief An abstract interface that should be implemented by listeners
 comment|/// that want to be notified when an AST entity gets modified after its
 comment|/// initial creation.
@@ -221,6 +227,36 @@ modifier|*
 name|IFD
 parameter_list|)
 block|{}
+comment|/// \brief A objc class extension redeclared or introduced a property.
+comment|///
+comment|/// \param Prop the property in the class extension
+comment|///
+comment|/// \param OrigProp the property from the original interface that was declared
+comment|/// or null if the property was introduced.
+comment|///
+comment|/// \param ClassExt the class extension.
+name|virtual
+name|void
+name|AddedObjCPropertyInClassExtension
+parameter_list|(
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|Prop
+parameter_list|,
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|OrigProp
+parameter_list|,
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|ClassExt
+parameter_list|)
+block|{}
+comment|// NOTE: If new methods are added they should also be added to
+comment|// MultiplexASTMutationListener.
 block|}
 empty_stmt|;
 block|}

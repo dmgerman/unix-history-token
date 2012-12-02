@@ -2865,7 +2865,8 @@ name|AR9287_AN_RF2G3_OB_PAL_OFF
 argument_list|)
 operator|)
 expr_stmt|;
-name|OS_REG_WRITE
+comment|/* Analog write - requires a 100usec delay */
+name|OS_A_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
@@ -2874,12 +2875,6 @@ argument_list|,
 name|regval
 argument_list|)
 expr_stmt|;
-name|OS_DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-comment|/* analog write */
 name|regval
 operator|=
 name|OS_REG_READ
@@ -2964,7 +2959,7 @@ name|AR9287_AN_RF2G3_OB_PAL_OFF
 argument_list|)
 operator|)
 expr_stmt|;
-name|OS_REG_WRITE
+name|OS_A_REG_WRITE
 argument_list|(
 name|ah
 argument_list|,
@@ -2973,12 +2968,6 @@ argument_list|,
 name|regval
 argument_list|)
 expr_stmt|;
-name|OS_DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-comment|/* analog write */
 name|OS_REG_RMW_FIELD
 argument_list|(
 name|ah

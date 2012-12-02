@@ -77,8 +77,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// UsesLR - Indicates whether LR is used in the current function.
 comment|///
 name|bool

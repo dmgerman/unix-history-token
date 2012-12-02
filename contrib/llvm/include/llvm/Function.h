@@ -567,7 +567,7 @@ name|unsigned
 name|getIntrinsicID
 argument_list|()
 specifier|const
-name|LLVM_ATTRIBUTE_READONLY
+name|LLVM_READONLY
 expr_stmt|;
 name|bool
 name|isIntrinsic
@@ -1645,8 +1645,8 @@ name|dropAllReferences
 parameter_list|()
 function_decl|;
 comment|/// hasAddressTaken - returns true if there are any uses of this function
-comment|/// other than direct calls or invokes to it. Optionally passes back the
-comment|/// offending user for diagnostic purposes.
+comment|/// other than direct calls or invokes to it, or blockaddress expressions.
+comment|/// Optionally passes back an offending user for diagnostic purposes.
 comment|///
 name|bool
 name|hasAddressTaken
@@ -1660,6 +1660,15 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// isDefTriviallyDead - Return true if it is trivially safe to remove
+comment|/// this function definition from the module (because it isn't externally
+comment|/// visible, does not have its address taken, and has no callers).  To make
+comment|/// this more accurate, call removeDeadConstantUsers first.
+name|bool
+name|isDefTriviallyDead
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// callsFunctionThatReturnsTwice - Return true if the function has a call to
 comment|/// setjmp or other function that gcc recognizes as "returning twice".
 name|bool

@@ -155,22 +155,6 @@ begin_comment
 comment|/*  * global variables and related macros  */
 end_comment
 
-begin_enum
-enum|enum
-block|{
-comment|/* encrypt, decrypt, authenticate */
-name|MODE_ENCRYPT
-block|,
-name|MODE_DECRYPT
-block|,
-name|MODE_AUTHENTICATE
-block|}
-name|mode
-init|=
-name|MODE_ENCRYPT
-enum|;
-end_enum
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -178,6 +162,7 @@ name|DES
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|DES_cblock
 name|ivec
 decl_stmt|;
@@ -188,6 +173,7 @@ comment|/* initialization vector */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|DES_cblock
 name|pvec
 decl_stmt|;
@@ -203,6 +189,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 name|bits
 index|[]
@@ -229,6 +216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pflag
 decl_stmt|;
@@ -245,6 +233,7 @@ name|DES
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|DES_key_schedule
 name|schedule
 decl_stmt|;
@@ -260,6 +249,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|des_buf
@@ -274,6 +264,7 @@ comment|/* shared buffer for get_des_char/put_des_char */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|des_ct
 init|=
@@ -286,6 +277,7 @@ comment|/* count for get_des_char/put_des_char */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|des_n
 init|=

@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -140,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -159,12 +159,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -932,7 +926,7 @@ name|memsize
 operator|=
 name|ptoa
 argument_list|(
-name|Maxmem
+name|realmem
 argument_list|)
 operator|>>
 literal|20
@@ -3489,6 +3483,26 @@ end_function
 begin_function
 specifier|static
 name|int
+name|agp_chipset_flush
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AGP_CHIPSET_FLUSH
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|agp_open
 parameter_list|(
 name|struct
@@ -3814,6 +3828,15 @@ name|agp_unbind
 operator|*
 operator|)
 name|data
+argument_list|)
+return|;
+case|case
+name|AGPIOC_CHIPSET_FLUSH
+case|:
+return|return
+name|agp_chipset_flush
+argument_list|(
+name|dev
 argument_list|)
 return|;
 block|}

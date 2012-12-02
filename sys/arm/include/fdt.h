@@ -105,6 +105,24 @@ end_struct
 
 begin_function_decl
 name|int
+name|fdt_localbus_devmap
+parameter_list|(
+name|phandle_t
+parameter_list|,
+name|struct
+name|pmap_devmap
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|fdt_pci_devmap
 parameter_list|(
 name|phandle_t

@@ -4258,7 +4258,9 @@ asm|__asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 endif|#
 directive|endif
 else|else
-asm|__asm __volatile("" : : : "memory");
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 block|}

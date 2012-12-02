@@ -874,11 +874,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* minimum */
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 literal|0
 argument_list|)
@@ -1525,11 +1523,9 @@ name|ah_diagreg
 operator|!=
 literal|0
 condition|)
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 name|AH_PRIVATE
 argument_list|(
@@ -2120,11 +2116,9 @@ return|return
 name|AH_FALSE
 return|;
 comment|/* Disable tx and rx */
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 name|OS_REG_READ
 argument_list|(
@@ -2546,11 +2540,9 @@ name|IEEE80211_CHANSTATE_CWINT
 expr_stmt|;
 block|}
 comment|/* Clear tx and rx disable bit */
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 name|OS_REG_READ
 argument_list|(
@@ -2745,7 +2737,7 @@ name|isBigEndian
 argument_list|()
 condition|)
 block|{
-comment|/* 			 * Set CFG, little-endian for register 			 * and descriptor accesses. 			 */
+comment|/* 			 * Set CFG, little-endian for descriptor accesses. 			 */
 name|mask
 operator|=
 name|INIT_CONFIG_STATUS
@@ -2753,8 +2745,6 @@ operator||
 name|AR_CFG_SWTD
 operator||
 name|AR_CFG_SWRD
-operator||
-name|AR_CFG_SWRG
 expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
@@ -2762,11 +2752,7 @@ name|ah
 argument_list|,
 name|AR_CFG
 argument_list|,
-name|LE_READ_4
-argument_list|(
-operator|&
 name|mask
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARM/ARMFixupKinds.h - ARM Specific Fixup Entries --------*- C++ -*-===//
+comment|//===-- ARMFixupKinds.h - ARM Specific Fixup Entries ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -69,6 +69,10 @@ comment|// fixup_t2_ldst_pcrel_12 - Equivalent to fixup_arm_ldst_pcrel_12, with
 comment|// the 16-bit halfwords reordered.
 name|fixup_t2_ldst_pcrel_12
 block|,
+comment|// fixup_arm_pcrel_10_unscaled - 10-bit PC relative relocation for symbol
+comment|// addresses used in LDRD/LDRH/LDRB/etc. instructions. All bits are encoded.
+name|fixup_arm_pcrel_10_unscaled
+block|,
 comment|// fixup_arm_pcrel_10 - 10-bit PC relative relocation for symbol addresses
 comment|// used in VFP instructions where the lower 2 bits are not encoded
 comment|// (so it's encoded as an 8-bit immediate).
@@ -109,6 +113,24 @@ name|fixup_t2_uncondbranch
 block|,
 comment|// fixup_arm_thumb_br - 12-bit fixup for Thumb B instructions.
 name|fixup_arm_thumb_br
+block|,
+comment|// The following fixups handle the ARM BL instructions. These can be
+comment|// conditionalised; however, the ARM ELF ABI requires a different relocation
+comment|// in that case: R_ARM_JUMP24 instead of R_ARM_CALL. The difference is that
+comment|// R_ARM_CALL is allowed to change the instruction to a BLX inline, which has
+comment|// no conditional version; R_ARM_JUMP24 would have to insert a veneer.
+comment|//
+comment|// MachO does not draw a distinction between the two cases, so it will treat
+comment|// fixup_arm_uncondbl and fixup_arm_condbl as identical fixups.
+comment|// fixup_arm_uncondbl - Fixup for unconditional ARM BL instructions.
+name|fixup_arm_uncondbl
+block|,
+comment|// fixup_arm_condbl - Fixup for ARM BL instructions with nontrivial
+comment|// conditionalisation.
+name|fixup_arm_condbl
+block|,
+comment|// fixup_arm_blx - Fixup for ARM BLX instructions.
+name|fixup_arm_blx
 block|,
 comment|// fixup_arm_thumb_bl - Fixup for Thumb BL instructions.
 name|fixup_arm_thumb_bl

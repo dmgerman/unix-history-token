@@ -293,6 +293,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGINFO
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SIGNAL_REQ_INFO
+value|SIGINFO
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SIGUSR1
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SIGNAL_REQ_INFO
+value|SIGUSR1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|netdissect_options
 name|Gndo
@@ -330,6 +361,28 @@ end_decl_stmt
 begin_comment
 comment|/* list available data link types and exit */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list available time stamp types */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -550,8 +603,23 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+operator|,
+function_decl|format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -575,7 +643,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 end_ifdef
 
 begin_function_decl
@@ -675,51 +743,6 @@ name|packets_captured
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|u_int
-function_decl|(
-modifier|*
-name|if_printer
-function_decl|)
-parameter_list|(
-specifier|const
-name|struct
-name|pcap_pkthdr
-modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int
-function_decl|(
-modifier|*
-name|if_ndo_printer
-function_decl|)
-parameter_list|(
-name|struct
-name|netdissect_options
-modifier|*
-name|ndo
-parameter_list|,
-specifier|const
-name|struct
-name|pcap_pkthdr
-modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|printer
@@ -773,12 +796,6 @@ block|}
 block|,
 endif|#
 directive|endif
-block|{
-name|ether_if_print
-block|,
-name|DLT_EN10MB
-block|}
-block|,
 block|{
 name|token_if_print
 block|,
@@ -1368,6 +1385,12 @@ name|ndo_printers
 index|[]
 init|=
 block|{
+block|{
+name|ether_if_print
+block|,
+name|DLT_EN10MB
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|DLT_IPNET
@@ -1375,6 +1398,61 @@ block|{
 name|ipnet_if_print
 block|,
 name|DLT_IPNET
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_IEEE802_15_4
+block|{
+name|ieee802_15_4_if_print
+block|,
+name|DLT_IEEE802_15_4
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_IEEE802_15_4_NOFCS
+block|{
+name|ieee802_15_4_if_print
+block|,
+name|DLT_IEEE802_15_4_NOFCS
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_PPI
+block|{
+name|ppi_if_print
+block|,
+name|DLT_PPI
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_NETANALYZER
+block|{
+name|netanalyzer_if_print
+block|,
+name|DLT_NETANALYZER
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_NETANALYZER_TRANSPARENT
+block|{
+name|netanalyzer_transparent_if_print
+block|,
+name|DLT_NETANALYZER_TRANSPARENT
 block|}
 block|,
 endif|#
@@ -1389,7 +1467,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|if_printer
 name|lookup_printer
 parameter_list|(
@@ -1436,7 +1513,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|if_ndo_printer
 name|lookup_ndo_printer
 parameter_list|(
@@ -1568,6 +1644,190 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|show_tstamp_types_and_exit
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|device
+parameter_list|,
+name|pcap_t
+modifier|*
+name|pd
+parameter_list|)
+block|{
+name|int
+name|n_tstamp_types
+decl_stmt|;
+name|int
+modifier|*
+name|tstamp_types
+init|=
+literal|0
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|tstamp_type_name
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|n_tstamp_types
+operator|=
+name|pcap_list_tstamp_types
+argument_list|(
+name|pd
+argument_list|,
+operator|&
+name|tstamp_types
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n_tstamp_types
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"%s"
+argument_list|,
+name|pcap_geterr
+argument_list|(
+name|pd
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n_tstamp_types
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Time stamp type cannot be set for %s\n"
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Time stamp types for %s (use option -j to set):\n"
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n_tstamp_types
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|tstamp_type_name
+operator|=
+name|pcap_tstamp_type_val_to_name
+argument_list|(
+name|tstamp_types
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tstamp_type_name
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  %s (%s)\n"
+argument_list|,
+name|tstamp_type_name
+argument_list|,
+name|pcap_tstamp_type_val_to_description
+argument_list|(
+name|tstamp_types
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  %d\n"
+argument_list|,
+name|tstamp_types
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|pcap_free_tstamp_types
+argument_list|(
+name|tstamp_types
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1753,9 +2013,11 @@ argument_list|,
 literal|" (printing not supported)"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|fprintf
 argument_list|(
-literal|'\n'
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1778,7 +2040,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
+name|pcap_free_datalinks
 argument_list|(
 name|dlts
 argument_list|)
@@ -1888,6 +2150,69 @@ end_endif
 
 begin_comment
 comment|/* HAVE_PCAP_CREATE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|j_FLAG
+value|"j:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|j_FLAG_USAGE
+value|" [ -j tstamptype ]"
+end_define
+
+begin_define
+define|#
+directive|define
+name|J_FLAG
+value|"J"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PCAP_ERROR_TSTAMP_TYPE_NOTSUP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|j_FLAG
+end_define
+
+begin_define
+define|#
+directive|define
+name|j_FLAG_USAGE
+end_define
+
+begin_define
+define|#
+directive|define
+name|J_FLAG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCAP_ERROR_TSTAMP_TYPE_NOTSUP */
 end_comment
 
 begin_ifdef
@@ -2559,6 +2884,12 @@ return|;
 endif|#
 directive|endif
 comment|/* WIN32 */
+name|jflag
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* not set */
 name|gndo
 operator|->
 name|ndo_Oflag
@@ -2692,10 +3023,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|opterr
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2703,18 +3030,18 @@ name|op
 operator|=
 name|getopt
 argument_list|(
-name|argc
+argument|argc
 argument_list|,
-name|argv
+argument|argv
 argument_list|,
 literal|"aAb"
-name|B_FLAG
+argument|B_FLAG
 literal|"c:C:d"
-name|D_FLAG
-literal|"eE:fF:G:i:"
-name|I_FLAG
+argument|D_FLAG
+literal|"eE:fF:G:hHi:"
+argument|I_FLAG j_FLAG J_FLAG
 literal|"KlLm:M:nNOpqr:Rs:StT:u"
-name|U_FLAG
+argument|U_FLAG
 literal|"vw:W:xXy:Yz:Z:"
 argument_list|)
 operator|)
@@ -3042,6 +3369,20 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'h'
+case|:
+name|usage
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+operator|++
+name|Hflag
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 if|if
@@ -3183,6 +3524,42 @@ break|break;
 endif|#
 directive|endif
 comment|/* HAVE_PCAP_CREATE */
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+case|case
+literal|'j'
+case|:
+name|jflag
+operator|=
+name|pcap_tstamp_type_name_to_val
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|jflag
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"invalid time stamp type %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'J'
+case|:
+name|Jflag
+operator|++
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'l'
 case|:
@@ -3587,6 +3964,22 @@ condition|)
 name|packettype
 operator|=
 name|PT_AODV
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"carp"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|packettype
+operator|=
+name|PT_CARP
 expr_stmt|;
 else|else
 name|error
@@ -4169,6 +4562,22 @@ argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+if|if
+condition|(
+name|Jflag
+condition|)
+name|show_tstamp_types_and_exit
+argument_list|(
+name|device
+argument_list|,
+name|pd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Is this an interface that supports monitor mode? 		 */
 if|if
 condition|(
@@ -4205,7 +4614,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"%s: pcap_set_snaplen failed: %s"
+literal|"%s: Can't set snapshot length: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -4233,7 +4642,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"%s: pcap_set_promisc failed: %s"
+literal|"%s: Can't set promiscuous mode: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -4265,7 +4674,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"%s: pcap_set_rfmon failed: %s"
+literal|"%s: Can't set monitor mode: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -4327,7 +4736,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"%s: pcap_set_buffer_size failed: %s"
+literal|"%s: Can't set buffer size: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -4338,6 +4747,47 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+if|if
+condition|(
+name|jflag
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|status
+operator|=
+name|pcap_set_tstamp_type
+argument_list|(
+name|pd
+argument_list|,
+name|jflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"%s: Can't set time stamp type: %s"
+argument_list|,
+name|device
+argument_list|,
+name|pcap_statustostr
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|status
 operator|=
 name|pcap_activate
@@ -4901,6 +5351,20 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* WIN32 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FORK
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_VFORK
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -4913,7 +5377,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WIN32 */
 comment|/* Cooperate with nohup(1) */
 ifndef|#
 directive|ifndef
@@ -4943,6 +5406,40 @@ argument_list|,
 name|oldhandler
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* WIN32 */
+ifndef|#
+directive|ifndef
+name|WIN32
+comment|/* 	 * If a user name was specified with "-Z", attempt to switch to 	 * that user's UID.  This would probably be used with sudo, 	 * to allow tcpdump to be run in a special restricted 	 * account (if you just want to allow users to open capture 	 * devices, and can't just give users that permission, 	 * you'd make tcpdump set-UID or set-GID). 	 * 	 * Tcpdump doesn't necessarily write only to one savefile; 	 * the general only way to allow a -Z instance to write to 	 * savefiles as the user under whose UID it's run, rather 	 * than as the user specified with -Z, would thus be to switch 	 * to the original user ID before opening a capture file and 	 * then switch back to the -Z user ID after opening the savefile. 	 * Switching to the -Z user ID only after opening the first 	 * savefile doesn't handle the general case. 	 */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|==
+literal|0
+operator|||
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|username
+operator|||
+name|chroot_dir
+condition|)
+name|droproot
+argument_list|(
+name|username
+argument_list|,
+name|chroot_dir
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* WIN32 */
@@ -5125,6 +5622,20 @@ operator|)
 name|p
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_PCAP_DUMP_FLUSH
+if|if
+condition|(
+name|Uflag
+condition|)
+name|pcap_dump_flush
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -5247,43 +5758,9 @@ operator|&
 name|printinfo
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|WIN32
-comment|/* 	 * We cannot do this earlier, because we want to be able to open 	 * the file (if done) for writing before giving up permissions. 	 */
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|==
-literal|0
-operator|||
-name|geteuid
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|username
-operator|||
-name|chroot_dir
-condition|)
-name|droproot
-argument_list|(
-name|username
-argument_list|,
-name|chroot_dir
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* WIN32 */
 ifdef|#
 directive|ifdef
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 comment|/* 	 * We can't get statistics when reading from a file rather 	 * than capturing from a device. 	 */
 if|if
 condition|(
@@ -5296,7 +5773,7 @@ name|void
 operator|)
 name|setsignal
 argument_list|(
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 argument_list|,
 name|requestinfo
 argument_list|)
@@ -5703,11 +6180,19 @@ begin_comment
 comment|/*   On windows, we do not use a fork, so we do not care less about   waiting a child processes to die  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIN32
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FORK
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_VFORK
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -5733,7 +6218,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* HAVE_FORK&& HAVE_VFORK */
 end_comment
 
 begin_function
@@ -5812,9 +6297,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%u packets captured"
+literal|"%u packet%s captured"
 argument_list|,
 name|packets_captured
+argument_list|,
+name|PLURAL_SUFFIX
+argument_list|(
+name|packets_captured
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5844,11 +6334,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%u packets received by filter"
+literal|"%u packet%s received by filter"
 argument_list|,
 name|stat
 operator|.
 name|ps_recv
+argument_list|,
+name|PLURAL_SUFFIX
+argument_list|(
+name|stat
+operator|.
+name|ps_recv
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5878,11 +6375,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%u packets dropped by kernel"
+literal|"%u packet%s dropped by kernel"
 argument_list|,
 name|stat
 operator|.
 name|ps_drop
+argument_list|,
+name|PLURAL_SUFFIX
+argument_list|(
+name|stat
+operator|.
+name|ps_drop
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5921,11 +6425,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%u packets dropped by interface\n"
+literal|"%u packet%s dropped by interface\n"
 argument_list|,
 name|stat
 operator|.
 name|ps_ifdrop
+argument_list|,
+name|PLURAL_SUFFIX
+argument_list|(
+name|stat
+operator|.
+name|ps_ifdrop
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5944,11 +6455,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIN32
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FORK
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_VFORK
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -5961,11 +6480,23 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_FORK
 if|if
 condition|(
 name|fork
 argument_list|()
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|vfork
+argument_list|()
+condition|)
+endif|#
+directive|endif
 return|return;
 comment|/* 	 * Set to lowest priority so that this doesn't disturb the capture 	 */
 ifdef|#
@@ -6031,6 +6562,23 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FORK
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -6040,7 +6588,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* HAVE_FORK&& HAVE_VFORK */
 end_comment
 
 begin_function
@@ -6058,7 +6606,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"compress_savefile failed. Functionality not implemented under windows\n"
+literal|"compress_savefile failed. Functionality not implemented under your system\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6070,7 +6618,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* HAVE_FORK&& HAVE_VFORK */
 end_comment
 
 begin_function
@@ -7034,7 +7582,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SIGINFO
+name|SIGNAL_REQ_INFO
 end_ifdef
 
 begin_function
@@ -7375,19 +7923,19 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+argument|stderr
 argument_list|,
 literal|"Usage: %s [-aAbd"
-name|D_FLAG
-literal|"ef"
-name|I_FLAG
+argument|D_FLAG
+literal|"efhH"
+argument|I_FLAG J_FLAG
 literal|"KlLnNOpqRStu"
-name|U_FLAG
+argument|U_FLAG
 literal|"vxX]"
-name|B_FLAG_USAGE
+argument|B_FLAG_USAGE
 literal|" [ -c count ]\n"
 argument_list|,
-name|program_name
+argument|program_name
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7407,7 +7955,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\t[ -i interface ] [ -M secret ] [ -r file ]\n"
+literal|"\t\t[ -i interface ]"
+name|j_FLAG_USAGE
+literal|" [ -M secret ]\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7417,7 +7967,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\t[ -s snaplen ] [ -T type ] [ -w file ] [ -W filecount ]\n"
+literal|"\t\t[ -r file ] [ -s snaplen ] [ -T type ] [ -w file ]\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7427,7 +7977,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\t[ -y datalinktype ] [ -z command ] [ -Z user ]\n"
+literal|"\t\t[ -W filecount ] [ -y datalinktype ] [ -z command ]\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7437,7 +7987,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\t[ expression ]\n"
+literal|"\t\t[ -Z user ] [ expression ]\n"
 argument_list|)
 expr_stmt|;
 name|exit

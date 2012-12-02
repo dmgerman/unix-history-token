@@ -44,6 +44,34 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|ix_write_len
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_dev_netmap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ix_write_len
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ix_write_len
+argument_list|,
+literal|0
+argument_list|,
+literal|"write rx len"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|ix_rx_miss
 decl_stmt|,
 name|ix_rx_miss_bufs
@@ -278,7 +306,7 @@ name|int
 name|onoff
 parameter_list|)
 block|{
-comment|/* crc stripping is set in two places: 	 * IXGBE_HLREG0 (left alone by the original driver) 	 * IXGBE_RDRXCTL (set by the original driver in 	 *	ixgbe_setup_hw_rsc() called in init_locked. 	 *	We disable the setting when netmap is compiled in). 	 * When netmap is compiled in we disabling IXGBE_RDRXCTL 	 * modifications of the IXGBE_RDRXCTL_CRCSTRIP bit, and 	 * instead update the state here. 	 */
+comment|/* crc stripping is set in two places: 	 * IXGBE_HLREG0 (modified on init_locked and hw reset) 	 * IXGBE_RDRXCTL (set by the original driver in 	 *	ixgbe_setup_hw_rsc() called in init_locked. 	 *	We disable the setting when netmap is compiled in). 	 * We update the values here, but also in ixgbe.c because 	 * init_locked sometimes is called outside our control. 	 */
 name|uint32_t
 name|hl
 decl_stmt|,
@@ -300,6 +328,25 @@ argument_list|(
 name|hw
 argument_list|,
 name|IXGBE_RDRXCTL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|netmap_verbose
+condition|)
+name|D
+argument_list|(
+literal|"%s read  HLREG 0x%x rxc 0x%x"
+argument_list|,
+name|onoff
+condition|?
+literal|"enter"
+else|:
+literal|"exit"
+argument_list|,
+name|hl
+argument_list|,
+name|rxc
 argument_list|)
 expr_stmt|;
 comment|/* hw requirements ... */
@@ -344,6 +391,25 @@ operator||=
 name|IXGBE_RDRXCTL_CRCSTRIP
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|netmap_verbose
+condition|)
+name|D
+argument_list|(
+literal|"%s write HLREG 0x%x rxc 0x%x"
+argument_list|,
+name|onoff
+condition|?
+literal|"enter"
+else|:
+literal|"exit"
+argument_list|,
+name|hl
+argument_list|,
+name|rxc
+argument_list|)
+expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
@@ -551,7 +617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * Userspace has filled tx slots up to ring->cur (excluded).  * The last unused slot previously known to the kernel was kring->nkr_hwcur,  * and the last interrupt reported kring->nr_hwavail slots available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nkr_hwcur)  * from both avail and nr_hwavail, and set ring->nkr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  *  * do_lock is set iff the function is called from the ioctl handler.  * In this case, grab a lock around the body, and also reclaim transmitted  * buffers irrespective of interrupt mitigation.  */
+comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * ring->cur holds the userspace view of the current ring index.  Userspace  * has filled the tx slots from the previous call's ring->cur up to but not  * including ring->cur for this call.  In this function the kernel updates  * kring->nr_hwcur to ring->cur, thus slots [kring->nr_hwcur, ring->cur) are  * now ready to transmit.  At the last interrupt kring->nr_hwavail slots were  * available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nr_hwcur)  * from both avail and nr_hwavail, and set ring->nr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  *  * do_lock is set iff the function is called from the ioctl handler.  * In this case, grab a lock around the body, and also reclaim transmitted  * buffers irrespective of interrupt mitigation.  */
 end_comment
 
 begin_function
@@ -651,7 +717,7 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* 	 * ixgbe can generate an interrupt on every tx packet, but it 	 * seems very expensive, so we interrupt once every half ring, 	 * or when requested with NS_REPORT 	 */
-name|int
+name|u_int
 name|report_frequency
 init|=
 name|kring
@@ -1582,9 +1648,12 @@ comment|/* XXX apparently the length field in advanced descriptors 		 * does not
 name|int
 name|crclen
 init|=
+name|ix_crcstrip
+condition|?
 literal|0
+else|:
+literal|4
 decl_stmt|;
-comment|// ix_crcstrip ? 0 : 4;
 name|l
 operator|=
 name|rxr
@@ -1671,11 +1740,31 @@ argument_list|)
 operator|-
 name|crclen
 expr_stmt|;
+if|if
+condition|(
+name|ix_write_len
+condition|)
+name|D
+argument_list|(
+literal|"rx[%d] len %d"
+argument_list|,
+name|j
+argument_list|,
+name|ring
+operator|->
+name|slot
+index|[
+name|j
+index|]
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|rxr
 operator|->
-name|ptag
+name|tag
 argument_list|,
 name|rxr
 operator|->
@@ -1684,7 +1773,7 @@ index|[
 name|l
 index|]
 operator|.
-name|pmap
+name|map
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
@@ -1940,11 +2029,11 @@ name|netmap_reload_map
 argument_list|(
 name|rxr
 operator|->
-name|ptag
+name|tag
 argument_list|,
 name|rxbuf
 operator|->
-name|pmap
+name|map
 argument_list|,
 name|addr
 argument_list|)
@@ -1982,11 +2071,11 @@ name|bus_dmamap_sync
 argument_list|(
 name|rxr
 operator|->
-name|ptag
+name|tag
 argument_list|,
 name|rxbuf
 operator|->
-name|pmap
+name|map
 argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)

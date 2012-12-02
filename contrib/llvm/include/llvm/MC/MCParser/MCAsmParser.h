@@ -49,6 +49,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -79,6 +85,9 @@ name|MCTargetAsmParser
 decl_stmt|;
 name|class
 name|SMLoc
+decl_stmt|;
+name|class
+name|SMRange
 decl_stmt|;
 name|class
 name|SourceMgr
@@ -222,6 +231,23 @@ modifier|&
 name|P
 parameter_list|)
 function_decl|;
+name|virtual
+name|unsigned
+name|getAssemblerDialect
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|void
+name|setAssemblerDialect
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|)
+block|{ }
 name|bool
 name|getShowParsedOperands
 argument_list|()
@@ -266,18 +292,31 @@ comment|/// \return The return value is true, if warnings are fatal.
 name|virtual
 name|bool
 name|Warning
-parameter_list|(
+argument_list|(
 name|SMLoc
 name|L
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Msg
-parameter_list|)
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
+operator|=
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+operator|(
+operator|)
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|/// Error - Emit an error at the location \arg L, with the message \arg
 comment|/// Msg.
 comment|///
@@ -286,18 +325,31 @@ comment|/// clients.
 name|virtual
 name|bool
 name|Error
-parameter_list|(
+argument_list|(
 name|SMLoc
 name|L
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Msg
-parameter_list|)
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
+operator|=
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+operator|(
+operator|)
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|/// Lex - Get the next AsmToken in the stream, possibly handling file
 comment|/// inclusion first.
 name|virtual
@@ -319,13 +371,26 @@ function_decl|;
 comment|/// \brief Report an error at the current lexer location.
 name|bool
 name|TokError
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Msg
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
+operator|=
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/// ParseIdentifier - Parse an identifier or string (as a quoted identifier)
 comment|/// and set \arg Res to the identifier contents.
 name|virtual

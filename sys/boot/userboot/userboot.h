@@ -14,6 +14,20 @@ name|USERBOOT_VERSION_1
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|USERBOOT_VERSION_2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|USERBOOT_VERSION_3
+value|3
+end_define
+
 begin_comment
 comment|/*  * Exit codes from the loader  */
 end_comment
@@ -34,7 +48,7 @@ end_define
 
 begin_struct
 struct|struct
-name|loader_callbacks_v1
+name|loader_callbacks
 block|{
 comment|/* 	 * Console i/o 	 */
 comment|/*          * Wait until a key is pressed on the console and then return it          */
@@ -448,6 +462,45 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|highmem
+parameter_list|)
+function_decl|;
+comment|/* 	 * ioctl interface to the disk device 	 */
+name|int
+function_decl|(
+modifier|*
+name|diskioctl
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+comment|/* 	 * Returns an environment variable in the form "name=value". 	 * 	 * If there are no more variables that need to be set in the 	 * loader environment then return NULL. 	 * 	 * 'num' is used as a handle for the callback to identify which 	 * environment variable to return next. It will begin at 0 and 	 * each invocation will add 1 to the previous value of 'num'. 	 */
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|getenv
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|num
 parameter_list|)
 function_decl|;
 block|}

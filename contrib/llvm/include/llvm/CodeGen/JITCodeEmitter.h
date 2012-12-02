@@ -153,6 +153,11 @@ range|:
 name|public
 name|MachineCodeEmitter
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|virtual

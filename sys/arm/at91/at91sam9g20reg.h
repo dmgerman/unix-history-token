@@ -19,24 +19,6 @@ directive|define
 name|AT91SAM9G20REG_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AT91SAM9G20_MASTER_CLOCK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9G20_MASTER_CLOCK
-value|((18432000 * 43)/6)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Chip Specific limits */
 end_comment
@@ -186,7 +168,7 @@ value|0xFF
 end_define
 
 begin_comment
-comment|/*   * Memory map, from datasheet :  * 0x00000000 - 0x0ffffffff : Internal Memories  * 0x10000000 - 0x1ffffffff : Chip Select 0  * 0x20000000 - 0x2ffffffff : Chip Select 1  * 0x30000000 - 0x3ffffffff : Chip Select 2  * 0x40000000 - 0x4ffffffff : Chip Select 3  * 0x50000000 - 0x5ffffffff : Chip Select 4  * 0x60000000 - 0x6ffffffff : Chip Select 5  * 0x70000000 - 0x7ffffffff : Chip Select 6  * 0x80000000 - 0x8ffffffff : Chip Select 7  * 0x90000000 - 0xeffffffff : Undefined (Abort)  * 0xf0000000 - 0xfffffffff : Peripherals  */
+comment|/*  * Memory map, from datasheet :  * 0x00000000 - 0x0ffffffff : Internal Memories  * 0x10000000 - 0x1ffffffff : Chip Select 0  * 0x20000000 - 0x2ffffffff : Chip Select 1  * 0x30000000 - 0x3ffffffff : Chip Select 2  * 0x40000000 - 0x4ffffffff : Chip Select 3  * 0x50000000 - 0x5ffffffff : Chip Select 4  * 0x60000000 - 0x6ffffffff : Chip Select 5  * 0x70000000 - 0x7ffffffff : Chip Select 6  * 0x80000000 - 0x8ffffffff : Chip Select 7  * 0x90000000 - 0xeffffffff : Undefined (Abort)  * 0xf0000000 - 0xfffffffff : Peripherals  */
 end_comment
 
 begin_define
@@ -243,13 +225,6 @@ define|#
 directive|define
 name|AT91_CHIPSELECT_7
 value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9G20_BASE
-value|0xd0000000
 end_define
 
 begin_define
@@ -669,7 +644,7 @@ comment|/* IRQs : */
 end_comment
 
 begin_comment
-comment|/*  * 0: AIC   * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: ADC  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: MMC Interface  * 10: USB device port  * 11: Two-wirte interface  * 12: SPI 0  * 13: SPI 1  * 14: SSC  * 15: - (reserved)  * 16: - (reserved)  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: USB Host port  * 21: EMAC  * 22: ISI  * 23: USART 3  * 24: USART 4  * 25: USART 2  * 26: Timer Counter 3  * 27: Timer Counter 4  * 28: Timer Counter 5  * 29: AIC IRQ0  * 30: AIC IRQ1  * 31: AIC IRQ2  */
+comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: ADC  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: MMC Interface  * 10: USB device port  * 11: Two-wirte interface  * 12: SPI 0  * 13: SPI 1  * 14: SSC  * 15: - (reserved)  * 16: - (reserved)  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: USB Host port  * 21: EMAC  * 22: ISI  * 23: USART 3  * 24: USART 4  * 25: USART 2  * 26: Timer Counter 3  * 27: Timer Counter 4  * 28: Timer Counter 5  * 29: AIC IRQ0  * 30: AIC IRQ1  * 31: AIC IRQ2  */
 end_comment
 
 begin_define
@@ -936,7 +911,7 @@ begin_define
 define|#
 directive|define
 name|AT91SAM9G20_PIT_SIZE
-value|10
+value|0x10
 end_define
 
 begin_define

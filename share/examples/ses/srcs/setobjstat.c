@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -40,7 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-include|SESINC
+file|<cam/scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/scsi/scsi_enc.h>
 end_include
 
 begin_function
@@ -62,7 +80,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ses_objstat
+name|encioc_elm_status_t
 name|obj
 decl_stmt|;
 name|long
@@ -168,7 +186,7 @@ goto|;
 block|}
 name|obj
 operator|.
-name|obj_id
+name|elm_idx
 operator|=
 name|cvt
 expr_stmt|;
@@ -244,7 +262,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|SESIOC_SETOBJSTAT
+name|ENCIOC_SETELMSTAT
 argument_list|,
 operator|(
 name|caddr_t
@@ -258,7 +276,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"SESIOC_SETOBJSTAT"
+literal|"ENCIOC_SETELMSTAT"
 argument_list|)
 expr_stmt|;
 block|}

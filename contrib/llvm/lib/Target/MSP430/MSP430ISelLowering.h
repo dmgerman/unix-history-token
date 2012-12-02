@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- MSP430ISelLowering.h - MSP430 DAG Lowering Interface ------*- C++ -*-==//
+comment|//===-- MSP430ISelLowering.h - MSP430 DAG Lowering Interface ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -491,25 +491,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
@@ -557,11 +539,6 @@ specifier|const
 name|MSP430Subtarget
 operator|&
 name|Subtarget
-block|;
-specifier|const
-name|MSP430TargetMachine
-operator|&
-name|TM
 block|;
 specifier|const
 name|TargetData

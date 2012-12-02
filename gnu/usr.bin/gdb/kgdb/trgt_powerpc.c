@@ -23,6 +23,29 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CROSS_DEBUGGER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/powerpc/include/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/powerpc/include/frame.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -34,6 +57,11 @@ include|#
 directive|include
 file|<machine/frame.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

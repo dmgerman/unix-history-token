@@ -94,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/IntegersSubset.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/IntegersSubsetMapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -2903,7 +2915,6 @@ comment|//===-------------------------------------------------------------------
 comment|// checkGEPType - Simple wrapper function to give a better assertion failure
 comment|// message on bad indexes for a gep instruction.
 comment|//
-specifier|static
 specifier|inline
 name|Type
 operator|*
@@ -3264,6 +3275,17 @@ operator|>
 name|IdxList
 argument_list|)
 block|;
+comment|/// getIndexedType - Returns the address space used by the GEP pointer.
+comment|///
+specifier|static
+name|unsigned
+name|getAddressSpace
+argument_list|(
+name|Value
+operator|*
+name|Ptr
+argument_list|)
+block|;
 specifier|inline
 name|op_iterator
 name|idx_begin
@@ -3344,7 +3366,7 @@ block|{
 return|return
 literal|0U
 return|;
-comment|// get index for modifying correct operand
+comment|// get index for modifying correct operand.
 block|}
 name|unsigned
 name|getPointerAddressSpace
@@ -3367,25 +3389,102 @@ return|;
 block|}
 comment|/// getPointerOperandType - Method to return the pointer operand as a
 comment|/// PointerType.
-name|PointerType
+name|Type
 operator|*
 name|getPointerOperandType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|PointerType
-operator|*
-operator|>
-operator|(
 name|getPointerOperand
 argument_list|()
 operator|->
 name|getType
 argument_list|()
+return|;
+block|}
+comment|/// GetGEPReturnType - Returns the pointer type returned by the GEP
+comment|/// instruction, which may be a vector of pointers.
+specifier|static
+name|Type
+operator|*
+name|getGEPReturnType
+argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|ArrayRef<Value *> IdxList
+argument_list|)
+block|{
+name|Type
+operator|*
+name|PtrTy
+operator|=
+name|PointerType
+operator|::
+name|get
+argument_list|(
+name|checkGEPType
+argument_list|(
+name|getIndexedType
+argument_list|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+name|IdxList
+argument_list|)
+argument_list|)
+argument_list|,
+name|getAddressSpace
+argument_list|(
+name|Ptr
+argument_list|)
+argument_list|)
+block|;
+comment|// Vector GEP
+if|if
+condition|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isVectorTy
+argument_list|()
+condition|)
+block|{
+name|unsigned
+name|NumElem
+init|=
+name|cast
+operator|<
+name|VectorType
+operator|>
+operator|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
 operator|)
+operator|->
+name|getNumElements
+argument_list|()
+decl_stmt|;
+return|return
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|PtrTy
+argument_list|,
+name|NumElem
+argument_list|)
+return|;
+block|}
+comment|// Scalar GEP
+return|return
+name|PtrTy
 return|;
 block|}
 name|unsigned
@@ -3543,7 +3642,7 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|PointerType::get(checkGEPType(                                    getIndexedType(Ptr->getType(), IdxList)),                                  cast<PointerType>(Ptr->getType())                                    ->getAddressSpace())
+argument|getGEPReturnType(Ptr, IdxList)
 argument_list|,
 argument|GetElementPtr
 argument_list|,
@@ -3580,7 +3679,7 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|PointerType::get(checkGEPType(                                    getIndexedType(Ptr->getType(), IdxList)),                                  cast<PointerType>(Ptr->getType())                                    ->getAddressSpace())
+argument|getGEPReturnType(Ptr, IdxList)
 argument_list|,
 argument|GetElementPtr
 argument_list|,
@@ -3727,6 +3826,9 @@ literal|0
 argument_list|)
 operator|->
 name|getType
+argument_list|()
+operator|->
+name|getScalarType
 argument_list|()
 operator|->
 name|isPointerTy
@@ -3932,6 +4034,9 @@ literal|0
 argument_list|)
 operator|->
 name|getType
+argument_list|()
+operator|->
+name|getScalarType
 argument_list|()
 operator|->
 name|isPointerTy
@@ -5241,6 +5346,24 @@ argument_list|,
 argument|Attributes attr
 argument_list|)
 block|;
+comment|/// \brief Return true if this call has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|Attributes N
+argument_list|)
+specifier|const
+block|{
+return|return
+name|paramHasAttr
+argument_list|(
+operator|~
+literal|0
+argument_list|,
+name|N
+argument_list|)
+return|;
+block|}
 comment|/// @brief Determine whether the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr
@@ -5275,11 +5398,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NoInline
@@ -5325,11 +5445,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ReturnsTwice
@@ -5375,11 +5492,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ReadNone
@@ -5428,11 +5542,8 @@ return|return
 name|doesNotAccessMemory
 argument_list|()
 operator|||
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ReadOnly
@@ -5482,11 +5593,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NoReturn
@@ -5532,11 +5640,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NoUnwind
@@ -7339,16 +7444,117 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
+name|Constant
+operator|*
+name|getMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Constant
+operator|*
+operator|>
+operator|(
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/// getMaskValue - Return the index from the shuffle mask for the specified
 comment|/// output result.  This is either -1 if the element is undef or a number less
 comment|/// than 2*numelements.
+specifier|static
+name|int
+name|getMaskValue
+argument_list|(
+argument|Constant *Mask
+argument_list|,
+argument|unsigned i
+argument_list|)
+block|;
 name|int
 name|getMaskValue
 argument_list|(
 argument|unsigned i
 argument_list|)
 specifier|const
+block|{
+return|return
+name|getMaskValue
+argument_list|(
+name|getMask
+argument_list|()
+argument_list|,
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// getShuffleMask - Return the full mask for this instruction, where each
+comment|/// element is the element number and undef's are returned as -1.
+specifier|static
+name|void
+name|getShuffleMask
+argument_list|(
+name|Constant
+operator|*
+name|Mask
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|Result
+argument_list|)
 block|;
+name|void
+name|getShuffleMask
+argument_list|(
+argument|SmallVectorImpl<int>&Result
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getShuffleMask
+argument_list|(
+name|getMask
+argument_list|()
+argument_list|,
+name|Result
+argument_list|)
+return|;
+block|}
+name|SmallVector
+operator|<
+name|int
+block|,
+literal|16
+operator|>
+name|getShuffleMask
+argument_list|()
+specifier|const
+block|{
+name|SmallVector
+operator|<
+name|int
+block|,
+literal|16
+operator|>
+name|Mask
+block|;
+name|getShuffleMask
+argument_list|(
+name|Mask
+argument_list|)
+block|;
+return|return
+name|Mask
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -9615,7 +9821,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// reserveClauses - Grow the size of the operand list to accomodate the new
+comment|/// reserveClauses - Grow the size of the operand list to accommodate the new
 comment|/// number of clauses.
 name|void
 name|reserveClauses
@@ -10577,10 +10783,48 @@ comment|// DO NOT IMPLEMENT
 name|unsigned
 name|ReservedSpace
 block|;
+comment|// Operands format:
 comment|// Operand[0]    = Value to switch on
 comment|// Operand[1]    = Default basic block destination
 comment|// Operand[2n  ] = Value to match
 comment|// Operand[2n+1] = BasicBlock to go to on match
+comment|// Store case values separately from operands list. We needn't User-Use
+comment|// concept here, since it is just a case value, it will always constant,
+comment|// and case value couldn't reused with another instructions/values.
+comment|// Additionally:
+comment|// It allows us to use custom type for case values that is not inherited
+comment|// from Value. Since case value is a complex type that implements
+comment|// the subset of integers, we needn't extract sub-constants within
+comment|// slow getAggregateElement method.
+comment|// For case values we will use std::list to by two reasons:
+comment|// 1. It allows to add/remove cases without whole collection reallocation.
+comment|// 2. In most of cases we needn't random access.
+comment|// Currently case values are also stored in Operands List, but it will moved
+comment|// out in future commits.
+typedef|typedef
+name|std
+operator|::
+name|list
+operator|<
+name|IntegersSubset
+operator|>
+name|Subsets
+expr_stmt|;
+typedef|typedef
+name|Subsets
+operator|::
+name|iterator
+name|SubsetsIt
+expr_stmt|;
+typedef|typedef
+name|Subsets
+operator|::
+name|const_iterator
+name|SubsetsConstIt
+expr_stmt|;
+name|Subsets
+name|TheSubsets
+block|;
 name|SwitchInst
 argument_list|(
 specifier|const
@@ -10665,6 +10909,67 @@ specifier|const
 block|;
 name|public
 operator|:
+comment|// FIXME: Currently there are a lot of unclean template parameters,
+comment|// we need to make refactoring in future.
+comment|// All these parameters are used to implement both iterator and const_iterator
+comment|// without code duplication.
+comment|// SwitchInstTy may be "const SwitchInst" or "SwitchInst"
+comment|// ConstantIntTy may be "const ConstantInt" or "ConstantInt"
+comment|// SubsetsItTy may be SubsetsConstIt or SubsetsIt
+comment|// BasicBlockTy may be "const BasicBlock" or "BasicBlock"
+name|template
+operator|<
+name|class
+name|SwitchInstTy
+block|,
+name|class
+name|ConstantIntTy
+block|,
+name|class
+name|SubsetsItTy
+block|,
+name|class
+name|BasicBlockTy
+operator|>
+name|class
+name|CaseIteratorT
+block|;
+typedef|typedef
+name|CaseIteratorT
+operator|<
+specifier|const
+name|SwitchInst
+operator|,
+specifier|const
+name|ConstantInt
+operator|,
+name|SubsetsConstIt
+operator|,
+specifier|const
+name|BasicBlock
+operator|>
+name|ConstCaseIt
+expr_stmt|;
+name|class
+name|CaseIt
+block|;
+comment|// -2
+specifier|static
+specifier|const
+name|unsigned
+name|DefaultPseudoIndex
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|~
+literal|0L
+operator|-
+literal|1
+operator|)
+block|;
 specifier|static
 name|SwitchInst
 operator|*
@@ -10778,8 +11083,28 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/// getNumCases - return the number of 'cases' in this switch instruction.
-comment|/// Note that case #0 is always the default case.
+name|void
+name|setDefaultDest
+argument_list|(
+argument|BasicBlock *DefaultCase
+argument_list|)
+block|{
+name|setOperand
+argument_list|(
+literal|1
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|DefaultCase
+operator|)
+argument_list|)
+block|;   }
+comment|/// getNumCases - return the number of 'cases' in this switch instruction,
+comment|/// except the default case
 name|unsigned
 name|getNumCases
 argument_list|()
@@ -10790,86 +11115,157 @@ name|getNumOperands
 argument_list|()
 operator|/
 literal|2
+operator|-
+literal|1
 return|;
 block|}
-comment|/// getCaseValue - Return the specified case value.  Note that case #0, the
-comment|/// default destination, does not have a case value.
-name|ConstantInt
-operator|*
-name|getCaseValue
-argument_list|(
-argument|unsigned i
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|i
-operator|&&
-name|i
-operator|<
-name|getNumCases
+comment|/// Returns a read/write iterator that points to the first
+comment|/// case in SwitchInst.
+name|CaseIt
+name|case_begin
 argument_list|()
-operator|&&
-literal|"Illegal case value to get!"
-argument_list|)
-block|;
+block|{
 return|return
-name|getSuccessorValue
+name|CaseIt
 argument_list|(
-name|i
+name|this
+argument_list|,
+literal|0
+argument_list|,
+name|TheSubsets
+operator|.
+name|begin
+argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getCaseValue - Return the specified case value.  Note that case #0, the
-comment|/// default destination, does not have a case value.
-specifier|const
-name|ConstantInt
-operator|*
-name|getCaseValue
-argument_list|(
-argument|unsigned i
-argument_list|)
+comment|/// Returns a read-only iterator that points to the first
+comment|/// case in the SwitchInst.
+name|ConstCaseIt
+name|case_begin
+argument_list|()
 specifier|const
 block|{
-name|assert
+return|return
+name|ConstCaseIt
 argument_list|(
-name|i
-operator|&&
-name|i
-operator|<
+name|this
+argument_list|,
+literal|0
+argument_list|,
+name|TheSubsets
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Returns a read/write iterator that points one past the last
+comment|/// in the SwitchInst.
+name|CaseIt
+name|case_end
+argument_list|()
+block|{
+return|return
+name|CaseIt
+argument_list|(
+name|this
+argument_list|,
 name|getNumCases
 argument_list|()
-operator|&&
-literal|"Illegal case value to get!"
+argument_list|,
+name|TheSubsets
+operator|.
+name|end
+argument_list|()
 argument_list|)
-block|;
+return|;
+block|}
+comment|/// Returns a read-only iterator that points one past the last
+comment|/// in the SwitchInst.
+name|ConstCaseIt
+name|case_end
+argument_list|()
+specifier|const
+block|{
 return|return
-name|getSuccessorValue
+name|ConstCaseIt
 argument_list|(
-name|i
+name|this
+argument_list|,
+name|getNumCases
+argument_list|()
+argument_list|,
+name|TheSubsets
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Returns an iterator that points to the default case.
+comment|/// Note: this iterator allows to resolve successor only. Attempt
+comment|/// to resolve case value causes an assertion.
+comment|/// Also note, that increment and decrement also causes an assertion and
+comment|/// makes iterator invalid.
+name|CaseIt
+name|case_default
+argument_list|()
+block|{
+return|return
+name|CaseIt
+argument_list|(
+name|this
+argument_list|,
+name|DefaultPseudoIndex
+argument_list|,
+name|TheSubsets
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|ConstCaseIt
+name|case_default
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConstCaseIt
+argument_list|(
+name|this
+argument_list|,
+name|DefaultPseudoIndex
+argument_list|,
+name|TheSubsets
+operator|.
+name|end
+argument_list|()
 argument_list|)
 return|;
 block|}
 comment|/// findCaseValue - Search all of the case values for the specified constant.
-comment|/// If it is explicitly handled, return the case number of it, otherwise
-comment|/// return 0 to indicate that it is handled by the default handler.
-name|unsigned
+comment|/// If it is explicitly handled, return the case iterator of it, otherwise
+comment|/// return default case iterator to indicate
+comment|/// that it is handled by the default handler.
+name|CaseIt
 name|findCaseValue
 argument_list|(
 argument|const ConstantInt *C
 argument_list|)
-specifier|const
 block|{
 for|for
 control|(
-name|unsigned
+name|CaseIt
 name|i
 init|=
-literal|1
+name|case_begin
+argument_list|()
 init|,
 name|e
 init|=
-name|getNumCases
+name|case_end
 argument_list|()
 init|;
 name|i
@@ -10881,18 +11277,79 @@ name|i
 control|)
 if|if
 condition|(
-name|getCaseValue
-argument_list|(
 name|i
-argument_list|)
-operator|==
+operator|.
+name|getCaseValueEx
+argument_list|()
+operator|.
+name|isSatisfies
+argument_list|(
+name|IntItem
+operator|::
+name|fromConstantInt
+argument_list|(
 name|C
+argument_list|)
+argument_list|)
 condition|)
 return|return
 name|i
 return|;
 return|return
-literal|0
+name|case_default
+argument_list|()
+return|;
+block|}
+name|ConstCaseIt
+name|findCaseValue
+argument_list|(
+argument|const ConstantInt *C
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+name|ConstCaseIt
+name|i
+init|=
+name|case_begin
+argument_list|()
+init|,
+name|e
+init|=
+name|case_end
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|i
+operator|.
+name|getCaseValueEx
+argument_list|()
+operator|.
+name|isSatisfies
+argument_list|(
+name|IntItem
+operator|::
+name|fromConstantInt
+argument_list|(
+name|C
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|i
+return|;
+return|return
+name|case_default
+argument_list|()
 return|;
 block|}
 comment|/// findCaseDest - Finds the unique case value for a given successor. Returns
@@ -10922,14 +11379,15 @@ name|NULL
 block|;
 for|for
 control|(
-name|unsigned
+name|CaseIt
 name|i
 init|=
-literal|1
+name|case_begin
+argument_list|()
 init|,
 name|e
 init|=
-name|getNumCases
+name|case_end
 argument_list|()
 init|;
 name|i
@@ -10942,10 +11400,10 @@ control|)
 block|{
 if|if
 condition|(
-name|getSuccessor
-argument_list|(
 name|i
-argument_list|)
+operator|.
+name|getCaseSuccessor
+argument_list|()
 operator|==
 name|BB
 condition|)
@@ -10961,10 +11419,10 @@ comment|// Multiple cases lead to BB.
 else|else
 name|CI
 operator|=
-name|getCaseValue
-argument_list|(
 name|i
-argument_list|)
+operator|.
+name|getCaseValue
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -10973,7 +11431,10 @@ name|CI
 return|;
 block|}
 comment|/// addCase - Add an entry to the switch instruction...
-comment|///
+comment|/// @Deprecated
+comment|/// Note:
+comment|/// This action invalidates case_end(). Old case_end() iterator will
+comment|/// point to the added case.
 name|void
 name|addCase
 argument_list|(
@@ -10986,15 +11447,34 @@ operator|*
 name|Dest
 argument_list|)
 block|;
-comment|/// removeCase - This method removes the specified successor from the switch
-comment|/// instruction.  Note that this cannot be used to remove the default
-comment|/// destination (successor #0). Also note that this operation may reorder the
+comment|/// addCase - Add an entry to the switch instruction.
+comment|/// Note:
+comment|/// This action invalidates case_end(). Old case_end() iterator will
+comment|/// point to the added case.
+name|void
+name|addCase
+argument_list|(
+name|IntegersSubset
+operator|&
+name|OnVal
+argument_list|,
+name|BasicBlock
+operator|*
+name|Dest
+argument_list|)
+block|;
+comment|/// removeCase - This method removes the specified case and its successor
+comment|/// from the switch instruction. Note that this operation may reorder the
 comment|/// remaining cases at index idx and above.
-comment|///
+comment|/// Note:
+comment|/// This action invalidates iterators for all cases following the one removed,
+comment|/// including the case_end() iterator.
 name|void
 name|removeCase
 argument_list|(
-argument|unsigned idx
+name|CaseIt
+operator|&
+name|i
 argument_list|)
 block|;
 name|unsigned
@@ -11077,65 +11557,695 @@ operator|)
 name|NewSucc
 argument_list|)
 block|;   }
-comment|// getSuccessorValue - Return the value associated with the specified
-comment|// successor.
-name|ConstantInt
+name|uint16_t
+name|hash
+argument_list|()
+specifier|const
+block|{
+name|uint32_t
+name|NumberOfCases
+operator|=
+operator|(
+name|uint32_t
+operator|)
+name|getNumCases
+argument_list|()
+block|;
+name|uint16_t
+name|Hash
+operator|=
+operator|(
+literal|0xFFFF
+operator|&
+name|NumberOfCases
+operator|)
+operator|^
+operator|(
+name|NumberOfCases
+operator|>>
+literal|16
+operator|)
+block|;
+for|for
+control|(
+name|ConstCaseIt
+name|i
+init|=
+name|case_begin
+argument_list|()
+init|,
+name|e
+init|=
+name|case_end
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|uint32_t
+name|NumItems
+init|=
+operator|(
+name|uint32_t
+operator|)
+name|i
+operator|.
+name|getCaseValueEx
+argument_list|()
+operator|.
+name|getNumItems
+argument_list|()
+decl_stmt|;
+name|Hash
+operator|=
+operator|(
+name|Hash
+operator|<<
+literal|1
+operator|)
+operator|^
+operator|(
+literal|0xFFFF
+operator|&
+name|NumItems
+operator|)
+operator|^
+operator|(
+name|NumItems
+operator|>>
+literal|16
+operator|)
+expr_stmt|;
+block|}
+return|return
+name|Hash
+return|;
+block|}
+comment|// Case iterators definition.
+name|template
+operator|<
+name|class
+name|SwitchInstTy
+block|,
+name|class
+name|ConstantIntTy
+block|,
+name|class
+name|SubsetsItTy
+block|,
+name|class
+name|BasicBlockTy
+operator|>
+name|class
+name|CaseIteratorT
+block|{
+name|protected
+operator|:
+name|SwitchInstTy
 operator|*
-name|getSuccessorValue
+name|SI
+block|;
+name|unsigned
+name|long
+name|Index
+block|;
+name|SubsetsItTy
+name|SubsetIt
+block|;
+comment|/// Initializes case iterator for given SwitchInst and for given
+comment|/// case number.
+name|friend
+name|class
+name|SwitchInst
+block|;
+name|CaseIteratorT
 argument_list|(
-argument|unsigned idx
+argument|SwitchInstTy *SI
+argument_list|,
+argument|unsigned SuccessorIndex
+argument_list|,
+argument|SubsetsItTy CaseValueIt
 argument_list|)
+block|{
+name|this
+operator|->
+name|SI
+operator|=
+name|SI
+block|;
+name|Index
+operator|=
+name|SuccessorIndex
+block|;
+name|this
+operator|->
+name|SubsetIt
+operator|=
+name|CaseValueIt
+block|;     }
+name|public
+operator|:
+typedef|typedef
+name|typename
+name|SubsetsItTy
+operator|::
+name|reference
+name|IntegersSubsetRef
+expr_stmt|;
+typedef|typedef
+name|CaseIteratorT
+operator|<
+name|SwitchInstTy
+operator|,
+name|ConstantIntTy
+operator|,
+name|SubsetsItTy
+operator|,
+name|BasicBlockTy
+operator|>
+name|Self
+expr_stmt|;
+name|CaseIteratorT
+argument_list|(
+argument|SwitchInstTy *SI
+argument_list|,
+argument|unsigned CaseNum
+argument_list|)
+block|{
+name|this
+operator|->
+name|SI
+operator|=
+name|SI
+block|;
+name|Index
+operator|=
+name|CaseNum
+block|;
+name|SubsetIt
+operator|=
+name|SI
+operator|->
+name|TheSubsets
+operator|.
+name|begin
+argument_list|()
+block|;
+name|std
+operator|::
+name|advance
+argument_list|(
+name|SubsetIt
+argument_list|,
+name|CaseNum
+argument_list|)
+block|;         }
+comment|/// Initializes case iterator for given SwitchInst and for given
+comment|/// TerminatorInst's successor index.
+specifier|static
+name|Self
+name|fromSuccessorIndex
+argument_list|(
+argument|SwitchInstTy *SI
+argument_list|,
+argument|unsigned SuccessorIndex
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|SuccessorIndex
+operator|<
+name|SI
+operator|->
+name|getNumSuccessors
+argument_list|()
+operator|&&
+literal|"Successor index # out of range!"
+argument_list|)
+block|;
+return|return
+name|SuccessorIndex
+operator|!=
+literal|0
+condition|?
+name|Self
+argument_list|(
+name|SI
+argument_list|,
+name|SuccessorIndex
+operator|-
+literal|1
+argument_list|)
+else|:
+name|Self
+argument_list|(
+name|SI
+argument_list|,
+name|DefaultPseudoIndex
+argument_list|)
+return|;
+block|}
+comment|/// Resolves case value for current case.
+comment|/// @Deprecated
+name|ConstantIntTy
+operator|*
+name|getCaseValue
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+name|IntegersSubsetRef
+name|CaseRanges
+operator|=
+operator|*
+name|SubsetIt
+block|;
+comment|// FIXME: Currently we work with ConstantInt based cases.
+comment|// So return CaseValue as ConstantInt.
+return|return
+name|CaseRanges
+operator|.
+name|getSingleNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|toConstantInt
+argument_list|()
+return|;
+block|}
+comment|/// Resolves case value for current case.
+name|IntegersSubsetRef
+name|getCaseValueEx
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+return|return
+operator|*
+name|SubsetIt
+return|;
+block|}
+comment|/// Resolves successor for current case.
+name|BasicBlockTy
+operator|*
+name|getCaseSuccessor
+argument_list|()
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|||
+name|Index
+operator|==
+name|DefaultPseudoIndex
+operator|)
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+return|return
+name|SI
+operator|->
+name|getSuccessor
+argument_list|(
+name|getSuccessorIndex
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Returns number of current case.
+name|unsigned
+name|getCaseIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
+return|;
+block|}
+comment|/// Returns TerminatorInst's successor index for current case successor.
+name|unsigned
+name|getSuccessorIndex
+argument_list|()
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|idx
+operator|(
+name|Index
+operator|==
+name|DefaultPseudoIndex
+operator|||
+name|Index
 operator|<
-name|getNumSuccessors
+name|SI
+operator|->
+name|getNumCases
 argument_list|()
+operator|)
 operator|&&
-literal|"Successor # out of range!"
+literal|"Index out the number of cases."
 argument_list|)
 block|;
 return|return
-name|reinterpret_cast
-operator|<
-name|ConstantInt
-operator|*
-operator|>
-operator|(
-name|getOperand
-argument_list|(
-name|idx
-operator|*
-literal|2
-argument_list|)
-operator|)
+name|Index
+operator|!=
+name|DefaultPseudoIndex
+condition|?
+name|Index
+operator|+
+literal|1
+else|:
+literal|0
 return|;
 block|}
-comment|// setSuccessorValue - Updates the value associated with the specified
-comment|// successor.
-name|void
-name|setSuccessorValue
+name|Self
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+comment|// Check index correctness after increment.
+comment|// Note: Index == getNumCases() means end().
+name|assert
 argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|ConstantInt* SuccessorValue
+name|Index
+operator|+
+literal|1
+operator|<=
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
 argument_list|)
+block|;
+operator|++
+name|Index
+block|;
+if|if
+condition|(
+name|Index
+operator|==
+literal|0
+condition|)
+name|SubsetIt
+operator|=
+name|SI
+operator|->
+name|TheSubsets
+operator|.
+name|begin
+argument_list|()
+expr_stmt|;
+else|else
+operator|++
+name|SubsetIt
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|Self
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+name|Self
+name|tmp
+operator|=
+operator|*
+name|this
+block|;
+operator|++
+operator|(
+operator|*
+name|this
+operator|)
+block|;
+return|return
+name|tmp
+return|;
+block|}
+name|Self
+name|operator
+operator|--
+operator|(
+operator|)
+block|{
+comment|// Check index correctness after decrement.
+comment|// Note: Index == getNumCases() means end().
+comment|// Also allow "-1" iterator here. That will became valid after ++.
+name|unsigned
+name|NumCases
+operator|=
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+block|;
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|==
+literal|0
+operator|||
+name|Index
+operator|-
+literal|1
+operator|<=
+name|NumCases
+operator|)
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+operator|--
+name|Index
+block|;
+if|if
+condition|(
+name|Index
+operator|==
+name|NumCases
+condition|)
+block|{
+name|SubsetIt
+operator|=
+name|SI
+operator|->
+name|TheSubsets
+operator|.
+name|end
+argument_list|()
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+if|if
+condition|(
+name|Index
+operator|!=
+operator|-
+literal|1UL
+condition|)
+operator|--
+name|SubsetIt
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|Self
+name|operator
+operator|--
+operator|(
+name|int
+operator|)
+block|{
+name|Self
+name|tmp
+operator|=
+operator|*
+name|this
+block|;
+operator|--
+operator|(
+operator|*
+name|this
+operator|)
+block|;
+return|return
+name|tmp
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Self
+operator|&
+name|RHS
+operator|)
+specifier|const
 block|{
 name|assert
 argument_list|(
-name|idx
-operator|<
-name|getNumSuccessors
-argument_list|()
+name|RHS
+operator|.
+name|SI
+operator|==
+name|SI
 operator|&&
-literal|"Successor # out of range!"
+literal|"Incompatible operators."
 argument_list|)
 block|;
+return|return
+name|RHS
+operator|.
+name|Index
+operator|==
+name|Index
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Self
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|RHS
+operator|.
+name|SI
+operator|==
+name|SI
+operator|&&
+literal|"Incompatible operators."
+argument_list|)
+block|;
+return|return
+name|RHS
+operator|.
+name|Index
+operator|!=
+name|Index
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|CaseIt
+operator|:
+name|public
+name|CaseIteratorT
+operator|<
+name|SwitchInst
+block|,
+name|ConstantInt
+block|,
+name|SubsetsIt
+block|,
+name|BasicBlock
+operator|>
+block|{
+typedef|typedef
+name|CaseIteratorT
+operator|<
+name|SwitchInst
+operator|,
+name|ConstantInt
+operator|,
+name|SubsetsIt
+operator|,
+name|BasicBlock
+operator|>
+name|ParentTy
+expr_stmt|;
+name|protected
+operator|:
+name|friend
+name|class
+name|SwitchInst
+block|;
+name|CaseIt
+argument_list|(
+argument|SwitchInst *SI
+argument_list|,
+argument|unsigned CaseNum
+argument_list|,
+argument|SubsetsIt SubsetIt
+argument_list|)
+operator|:
+name|ParentTy
+argument_list|(
+argument|SI
+argument_list|,
+argument|CaseNum
+argument_list|,
+argument|SubsetIt
+argument_list|)
+block|{}
+name|void
+name|updateCaseValueOperand
+argument_list|(
+argument|IntegersSubset& V
+argument_list|)
+block|{
+name|SI
+operator|->
 name|setOperand
 argument_list|(
-name|idx
+literal|2
+operator|+
+name|Index
 operator|*
 literal|2
 argument_list|,
@@ -11145,10 +12255,143 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|SuccessorValue
+operator|(
+name|Constant
+operator|*
+operator|)
+name|V
 operator|)
 argument_list|)
-block|;   }
+block|;           }
+name|public
+operator|:
+name|CaseIt
+argument_list|(
+argument|SwitchInst *SI
+argument_list|,
+argument|unsigned CaseNum
+argument_list|)
+operator|:
+name|ParentTy
+argument_list|(
+argument|SI
+argument_list|,
+argument|CaseNum
+argument_list|)
+block|{}
+name|CaseIt
+argument_list|(
+specifier|const
+name|ParentTy
+operator|&
+name|Src
+argument_list|)
+operator|:
+name|ParentTy
+argument_list|(
+argument|Src
+argument_list|)
+block|{}
+comment|/// Sets the new value for current case.
+comment|/// @Deprecated.
+name|void
+name|setValue
+argument_list|(
+argument|ConstantInt *V
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+name|IntegersSubsetToBB
+name|Mapping
+block|;
+comment|// FIXME: Currently we work with ConstantInt based cases.
+comment|// So inititalize IntItem container directly from ConstantInt.
+name|Mapping
+operator|.
+name|add
+argument_list|(
+name|IntItem
+operator|::
+name|fromConstantInt
+argument_list|(
+name|V
+argument_list|)
+argument_list|)
+block|;
+operator|*
+name|SubsetIt
+operator|=
+name|Mapping
+operator|.
+name|getCase
+argument_list|()
+block|;
+name|updateCaseValueOperand
+argument_list|(
+operator|*
+name|SubsetIt
+argument_list|)
+block|;     }
+comment|/// Sets the new value for current case.
+name|void
+name|setValueEx
+argument_list|(
+argument|IntegersSubset& V
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+operator|*
+name|SubsetIt
+operator|=
+name|V
+block|;
+name|updateCaseValueOperand
+argument_list|(
+operator|*
+name|SubsetIt
+argument_list|)
+block|;        }
+comment|/// Sets the new successor for current case.
+name|void
+name|setSuccessor
+argument_list|(
+argument|BasicBlock *S
+argument_list|)
+block|{
+name|SI
+operator|->
+name|setSuccessor
+argument_list|(
+name|getSuccessorIndex
+argument_list|()
+argument_list|,
+name|S
+argument_list|)
+block|;           }
+block|}
+block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -11236,7 +12479,7 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -11252,7 +12495,7 @@ operator|<
 literal|2
 operator|>
 block|{ }
-block|;
+expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|SwitchInst
@@ -11267,7 +12510,7 @@ comment|/// IndirectBrInst - Indirect Branch Instruction.
 comment|///
 name|class
 name|IndirectBrInst
-operator|:
+range|:
 name|public
 name|TerminatorInst
 block|{
@@ -11672,7 +12915,7 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -11688,7 +12931,7 @@ operator|<
 literal|1
 operator|>
 block|{ }
-block|;
+expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|IndirectBrInst
@@ -11703,7 +12946,7 @@ comment|/// calling convention of the call.
 comment|///
 name|class
 name|InvokeInst
-operator|:
+range|:
 name|public
 name|TerminatorInst
 block|{
@@ -12043,6 +13286,24 @@ argument_list|,
 argument|Attributes attr
 argument_list|)
 block|;
+comment|/// \brief Return true if this call has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|Attributes N
+argument_list|)
+specifier|const
+block|{
+return|return
+name|paramHasAttr
+argument_list|(
+operator|~
+literal|0
+argument_list|,
+name|N
+argument_list|)
+return|;
+block|}
 comment|/// @brief Determine whether the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr
@@ -12077,11 +13338,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NoInline
@@ -12127,11 +13385,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ReadNone
@@ -12180,11 +13435,8 @@ return|return
 name|doesNotAccessMemory
 argument_list|()
 operator|||
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ReadOnly
@@ -12234,11 +13486,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NoReturn
@@ -12284,11 +13533,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|paramHasAttr
+name|hasFnAttr
 argument_list|(
-operator|~
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NoUnwind
@@ -12721,7 +13967,7 @@ name|D
 argument_list|)
 block|;   }
 block|}
-block|;
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -12735,11 +13981,11 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|InvokeInst
-block|,
+operator|,
 literal|3
 operator|>
 block|{ }
-block|;
+expr_stmt|;
 name|InvokeInst
 operator|::
 name|InvokeInst
@@ -12836,185 +14082,6 @@ argument|InvokeInst
 argument_list|,
 argument|Value
 argument_list|)
-comment|//===----------------------------------------------------------------------===//
-comment|//                              UnwindInst Class
-comment|//===----------------------------------------------------------------------===//
-comment|//===---------------------------------------------------------------------------
-comment|/// UnwindInst - Immediately exit the current function, unwinding the stack
-comment|/// until an invoke instruction is found.
-comment|///
-name|class
-name|UnwindInst
-operator|:
-name|public
-name|TerminatorInst
-block|{
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-name|protected
-operator|:
-name|virtual
-name|UnwindInst
-operator|*
-name|clone_impl
-argument_list|()
-specifier|const
-block|;
-name|public
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|explicit
-name|UnwindInst
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-literal|0
-argument_list|)
-block|;
-name|explicit
-name|UnwindInst
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
-argument_list|)
-block|;
-name|unsigned
-name|getNumSuccessors
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const UnwindInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
-block|{
-return|return
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|Unwind
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|isa
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-operator|&&
-name|classof
-argument_list|(
-name|cast
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-name|virtual
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-block|; }
-block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                              ResumeInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -13236,7 +14303,7 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-block|;
+expr_stmt|;
 name|template
 operator|<
 operator|>
@@ -13250,11 +14317,11 @@ name|public
 name|FixedNumOperandTraits
 operator|<
 name|ResumeInst
-block|,
+operator|,
 literal|1
 operator|>
 block|{ }
-block|;
+expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ResumeInst
@@ -13271,7 +14338,7 @@ comment|/// end of the block cannot be reached.
 comment|///
 name|class
 name|UnreachableInst
-operator|:
+range|:
 name|public
 name|TerminatorInst
 block|{
@@ -13440,14 +14507,14 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 TruncInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// @brief This class represents a truncation of integer types.
 name|class
 name|TruncInst
-operator|:
+range|:
 name|public
 name|CastInst
 block|{

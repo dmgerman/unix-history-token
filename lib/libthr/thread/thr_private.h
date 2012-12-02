@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|SIGCANCEL
-value|32
+value|SIGTHR
 end_define
 
 begin_comment
@@ -2052,6 +2052,14 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_thr_queuefifo
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Garbage thread count. */
 end_comment
@@ -2118,6 +2126,41 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|umutex
+name|_suspend_all_lock
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_suspend_all_waiters
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_suspend_all_cycle
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pthread
+modifier|*
+name|_single_thread
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Function prototype definitions.  */
 end_comment
@@ -2142,7 +2185,6 @@ name|pthread_mutex
 operator|*
 argument_list|,
 name|int
-name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2158,7 +2200,9 @@ operator|*
 argument_list|,
 name|int
 operator|*
-name|count
+argument_list|,
+name|int
+operator|*
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2173,7 +2217,6 @@ name|pthread_mutex
 operator|*
 argument_list|,
 name|int
-name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2189,7 +2232,6 @@ operator|*
 argument_list|,
 name|int
 operator|*
-name|count
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2781,6 +2823,30 @@ name|void
 name|_thr_signal_postfork_child
 argument_list|(
 name|void
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_suspend_all_lock
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_suspend_all_unlock
+argument_list|(
+expr|struct
+name|pthread
+operator|*
 argument_list|)
 name|__hidden
 decl_stmt|;

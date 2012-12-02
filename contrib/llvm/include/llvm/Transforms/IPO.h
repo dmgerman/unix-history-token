@@ -211,6 +211,14 @@ modifier|*
 name|createAlwaysInlinerPass
 parameter_list|()
 function_decl|;
+name|Pass
+modifier|*
+name|createAlwaysInlinerPass
+parameter_list|(
+name|bool
+name|InsertLifetime
+parameter_list|)
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createPruneEHPass - Return a new pass object which transforms invoke
 comment|/// instructions into calls, if the callee can _not_ unwind the stack.

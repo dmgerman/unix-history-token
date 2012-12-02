@@ -98,6 +98,10 @@ name|ELFCORE
 case|case
 name|ET_CORE
 case|:
+name|flags
+operator||=
+name|FLAGS_IS_CORE
+expr_stmt|;
 if|if
 condition|(
 name|dophn_core
@@ -280,6 +284,8 @@ name|elfhdr
 operator|.
 name|e_shentsize
 argument_list|)
+argument_list|,
+name|fsize
 argument_list|,
 operator|&
 name|flags

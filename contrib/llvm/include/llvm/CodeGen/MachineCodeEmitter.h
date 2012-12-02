@@ -83,6 +83,12 @@ directive|include
 file|"llvm/Support/DebugLoc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -135,6 +141,11 @@ comment|///
 name|class
 name|MachineCodeEmitter
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 comment|/// BufferBegin/BufferEnd - Pointers to the start and end of the memory

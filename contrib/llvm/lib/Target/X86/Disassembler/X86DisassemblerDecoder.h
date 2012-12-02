@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===- X86DisassemblerDecoderInternal.h - Disassembler decoder -----*- C -*-==*  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===*  *  * This file is part of the X86 Disassembler.  * It contains the public interface of the instruction decoder.  * Documentation for the disassembler can be found in X86Disassembler.h.  *  *===----------------------------------------------------------------------===*/
+comment|/*===-- X86DisassemblerDecoderInternal.h - Disassembler decoder ---*- C -*-===*  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  *===----------------------------------------------------------------------===*  *  * This file is part of the X86 Disassembler.  * It contains the public interface of the instruction decoder.  * Documentation for the disassembler can be found in X86Disassembler.h.  *  *===----------------------------------------------------------------------===*/
 end_comment
 
 begin_ifndef
@@ -31,12 +31,12 @@ define|#
 directive|define
 name|INSTRUCTION_SPECIFIER_FIELDS
 define|\
-value|const char*             name;
+value|uint16_t operands;
 define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|const InstrUID *instructionIDs;
+value|unsigned instructionIDs;
 include|#
 directive|include
 file|"X86DisassemblerDecoderCommon.h"
@@ -282,7 +282,7 @@ directive|define
 name|ALL_REGS
 define|\
 value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
-comment|/*  * EABase - All possible values of the base field for effective-address   *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
+comment|/*  * EABase - All possible values of the base field for effective-address  *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
 typedef|typedef
 enum|enum
 block|{
@@ -314,7 +314,7 @@ name|EA_max
 block|}
 name|EABase
 typedef|;
-comment|/*   * SIBIndex - All possible values of the SIB index field.  *   Borrows entries from ALL_EA_BASES with the special case that  *   sib is synonymous with NONE.  */
+comment|/*  * SIBIndex - All possible values of the SIB index field.  *   Borrows entries from ALL_EA_BASES with the special case that  *   sib is synonymous with NONE.  * Vector SIB: index can be XMM or YMM.  */
 typedef|typedef
 enum|enum
 block|{
@@ -328,6 +328,8 @@ name|x
 parameter_list|)
 value|SIB_INDEX_##x,
 name|ALL_EA_BASES
+name|REGS_XMM
+name|REGS_YMM
 undef|#
 directive|undef
 name|ENTRY
@@ -583,6 +585,13 @@ decl_stmt|;
 name|uint8_t
 name|immediateSize
 decl_stmt|;
+comment|/* Offsets from the start of the instruction to the pieces of data, which is      needed to find relocation entries for adding symbolic operands */
+name|uint8_t
+name|displacementOffset
+decl_stmt|;
+name|uint8_t
+name|immediateOffset
+decl_stmt|;
 comment|/* opcode state */
 comment|/* The value of the two-byte escape prefix (usually 0x0f) */
 name|uint8_t
@@ -697,6 +706,12 @@ decl_stmt|;
 name|SIBBase
 name|sibBase
 decl_stmt|;
+specifier|const
+name|struct
+name|OperandSpecifier
+modifier|*
+name|operands
+decl_stmt|;
 block|}
 struct|;
 comment|/* decodeInstruction - Decode one instruction and store the decoding results in  *   a buffer provided by the consumer.  * @param insn      - The buffer to store the instruction in.  Allocated by the  *                    consumer.  * @param reader    - The byteReader_t for the bytes to be read.  * @param readerArg - An argument to pass to the reader for storing context  *                    specific to the consumer.  May be NULL.  * @param logger    - The dlog_t to be used in printing status messages from the  *                    disassembler.  May be NULL.  * @param loggerArg - An argument to pass to the logger for storing context  *                    specific to the logger.  May be NULL.  * @param startLoc  - The address (in the reader's address space) of the first  *                    byte in the instruction.  * @param mode      - The mode (16-bit, 32-bit, 64-bit) to decode in.  * @return          - Nonzero if there was an error during decode, 0 otherwise.  */
@@ -722,6 +737,10 @@ name|void
 modifier|*
 name|loggerArg
 parameter_list|,
+name|void
+modifier|*
+name|miiArg
+parameter_list|,
 name|uint64_t
 name|startLoc
 parameter_list|,
@@ -745,6 +764,19 @@ specifier|const
 name|char
 modifier|*
 name|s
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|x86DisassemblerGetInstrName
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|void
+modifier|*
+name|mii
 parameter_list|)
 function_decl|;
 ifdef|#

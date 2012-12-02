@@ -574,21 +574,21 @@ function_decl|;
 comment|/* ---------- For method writers ---------- */
 comment|/* A method contains a number of functions that implement the low level    of the User Interface.  The functions are:  	an opener	This function starts a session, maybe by opening 			a channel to a tty, or by opening a window. 	a writer	This function is called to write a given string, 			maybe to the tty, maybe as a field label in a 			window. 	a flusher	This function is called to flush everything that 			has been output so far.  It can be used to actually 			display a dialog box after it has been built. 	a reader	This function is called to read a given prompt, 			maybe from the tty, maybe from a field in a 			window.  Note that it's called wth all string 			structures, not only the prompt ones, so it must 			check such things itself. 	a closer	This function closes the session, maybe by closing 			the channel to the tty, or closing the window.     All these functions are expected to return:  	0	on error. 	1	on success. 	-1	on out-of-band events, for example if some prompting has 		been canceled (by pressing Ctrl-C, for example).  This is 		only checked when returned by the flusher or the reader.     The way this is used, the opener is first called, then the writer for all    strings, then the flusher, then the reader for all strings and finally the    closer.  Note that if you want to prompt from a terminal or other command    line interface, the best is to have the reader also write the prompts    instead of having the writer do it.  If you want to prompt from a dialog    box, the writer can be used to build up the contents of the box, and the    flusher to actually display the box and run the event loop until all data    has been given, after which the reader only grabs the given data and puts    them back into the UI strings.     All method functions take a UI as argument.  Additionally, the writer and    the reader take a UI_STRING. */
 comment|/* The UI_STRING type is the data structure that contains all the needed info    about a string or a prompt, including test data for a verification prompt. */
-name|DECLARE_STACK_OF
-argument_list|(
-argument|UI_STRING
-argument_list|)
 typedef|typedef
 name|struct
 name|ui_string_st
 name|UI_STRING
 typedef|;
+name|DECLARE_STACK_OF
+argument_list|(
+name|UI_STRING
+argument_list|)
 comment|/* The different types of strings that are currently supported.    This is only needed by method authors. */
-enum|enum
+expr|enum
 name|UI_string_types
 block|{
 name|UIT_NONE
-init|=
+operator|=
 literal|0
 block|,
 name|UIT_PROMPT
@@ -606,7 +606,7 @@ comment|/* Send info to the user */
 name|UIT_ERROR
 comment|/* Send an error message to the user */
 block|}
-enum|;
+expr_stmt|;
 comment|/* Create and manipulate methods */
 name|UI_METHOD
 modifier|*
@@ -729,6 +729,36 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 name|int
+name|UI_method_set_prompt_constructor
+parameter_list|(
+name|UI_METHOD
+modifier|*
+name|method
+parameter_list|,
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|prompt_constructor
+function_decl|)
+parameter_list|(
+name|UI
+modifier|*
+name|ui
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|object_desc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|object_name
+parameter_list|)
+parameter_list|)
+function_decl|;
+name|int
 argument_list|(
 operator|*
 name|UI_method_get_opener
@@ -809,157 +839,165 @@ name|UI
 operator|*
 argument_list|)
 expr_stmt|;
+name|char
+argument_list|*
+operator|(
+operator|*
+name|UI_method_get_prompt_constructor
+argument_list|(
+name|UI_METHOD
+operator|*
+name|method
+argument_list|)
+operator|)
+operator|(
+name|UI
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|;
 comment|/* The following functions are helpers for method writers to access relevant    data from a UI_STRING. */
 comment|/* Return type of the UI_STRING */
-name|enum
+expr|enum
 name|UI_string_types
 name|UI_get_string_type
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return input flags of the UI_STRING */
 name|int
 name|UI_get_input_flags
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return the actual string to output (the prompt, info or error) */
 specifier|const
 name|char
-modifier|*
+operator|*
 name|UI_get0_output_string
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return the optional action string to output (the boolean promtp instruction) */
 specifier|const
 name|char
-modifier|*
+operator|*
 name|UI_get0_action_string
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return the result of a prompt */
 specifier|const
 name|char
-modifier|*
+operator|*
 name|UI_get0_result_string
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return the string to test the result against.  Only useful with verifies. */
 specifier|const
 name|char
-modifier|*
+operator|*
 name|UI_get0_test_string
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return the required minimum size of the result */
 name|int
 name|UI_get_result_minsize
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Return the required maximum size of the result */
 name|int
 name|UI_get_result_maxsize
-parameter_list|(
+argument_list|(
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Set the result of a UI_STRING. */
 name|int
 name|UI_set_result
-parameter_list|(
+argument_list|(
 name|UI
-modifier|*
+operator|*
 name|ui
-parameter_list|,
+argument_list|,
 name|UI_STRING
-modifier|*
+operator|*
 name|uis
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* A couple of popular utility functions */
 name|int
 name|UI_UTIL_read_pw_string
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|length
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|prompt
-parameter_list|,
-name|int
-name|verify
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|char *buf
+argument_list|,
+argument|int length
+argument_list|,
+argument|const char *prompt
+argument_list|,
+argument|int verify
+argument_list|)
+argument_list|;
 name|int
 name|UI_UTIL_read_pw
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|char
-modifier|*
-name|buff
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|prompt
-parameter_list|,
-name|int
-name|verify
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|char *buf
+argument_list|,
+argument|char *buff
+argument_list|,
+argument|int size
+argument_list|,
+argument|const char *prompt
+argument_list|,
+argument|int verify
+argument_list|)
+argument_list|;
 comment|/* BEGIN ERROR CODES */
 comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_UI_strings
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+argument_list|;
 comment|/* Error codes for the UI functions. */
 comment|/* Function codes. */
 define|#

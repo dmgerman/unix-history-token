@@ -389,11 +389,13 @@ condition|)
 block|{
 name|ifindex
 operator|=
+name|LLINDEX
+argument_list|(
+operator|&
 name|psu
 operator|->
 name|sdl
-operator|.
-name|sdl_index
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

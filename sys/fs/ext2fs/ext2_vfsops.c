@@ -487,7 +487,7 @@ name|ext2mount
 modifier|*
 name|ump
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|m_ext2fs
@@ -2449,12 +2449,7 @@ block|}
 block|}
 name|loop
 label|:
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|MNT_VNODE_FOREACH
+name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp
 argument_list|,
@@ -2463,32 +2458,6 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-condition|)
-block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Step 4: invalidate all cached file data. 		 */
 if|if
 condition|(
@@ -2504,7 +2473,7 @@ name|td
 argument_list|)
 condition|)
 block|{
-name|MNT_VNODE_FOREACH_ABORT
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -2591,7 +2560,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_VNODE_FOREACH_ABORT
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -2655,17 +2624,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3573,8 +3532,6 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
-name|MNTK_MPSAFE
-operator||
 name|MNTK_LOOKUP_SHARED
 operator||
 name|MNTK_EXTENDED_SHARED
@@ -4114,7 +4071,7 @@ name|E2FS_MAGIC
 condition|)
 name|panic
 argument_list|(
-literal|"ext2fs_statvfs"
+literal|"ext2fs_statfs"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute the overhead (FS structures) 	 */
@@ -4429,14 +4386,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Write back each (modified) inode. 	 */
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
-name|MNT_VNODE_FOREACH
+name|MNT_VNODE_FOREACH_ALL
 argument_list|(
 argument|vp
 argument_list|,
@@ -4445,11 +4397,6 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -4457,14 +4404,6 @@ operator|->
 name|v_type
 operator|==
 name|VNON
-operator|||
-operator|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-operator|)
 condition|)
 block|{
 name|VI_UNLOCK
@@ -4474,11 +4413,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|ip
 operator|=
 name|VTOI
@@ -4528,11 +4462,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|error
@@ -4555,11 +4484,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -4567,7 +4491,7 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|MNT_VNODE_FOREACH_ABORT_ILOCKED
+name|MNT_VNODE_FOREACH_ALL_ABORT
 argument_list|(
 name|mp
 argument_list|,
@@ -4613,17 +4537,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 block|}
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Force stale file system control information to be flushed. 	 */
 if|if
 condition|(
@@ -4848,7 +4762,6 @@ name|ump
 operator|->
 name|um_dev
 expr_stmt|;
-comment|/* 	 * If this malloc() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ext2_sync() if a sync happens to fire right then, 	 * which will cause a panic because ext2_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
 name|ip
 operator|=
 name|malloc

@@ -196,6 +196,11 @@ range|:
 name|public
 name|BugType
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 specifier|const
 name|std
 operator|::

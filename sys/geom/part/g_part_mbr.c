@@ -682,6 +682,18 @@ name|DOSPTYP_PPCBOOT
 block|,
 name|G_PART_ALIAS_FREEBSD_BOOT
 block|}
+block|,
+block|{
+name|DOSPTYP_VMFS
+block|,
+name|G_PART_ALIAS_VMFS
+block|}
+block|,
+block|{
+name|DOSPTYP_VMKDIAG
+block|,
+name|G_PART_ALIAS_VMKDIAG
+block|}
 block|, }
 struct|;
 end_struct

@@ -130,7 +130,6 @@ name|retminor_name
 operator|==
 name|NULL
 condition|)
-empty_stmt|;
 return|return
 operator|(
 name|ENOMEM

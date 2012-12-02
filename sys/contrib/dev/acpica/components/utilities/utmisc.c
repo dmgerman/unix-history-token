@@ -45,161 +45,68 @@ literal|"utmisc"
 argument_list|)
 end_macro
 
+begin_if
+if|#
+directive|if
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+end_if
+
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateException  *  * PARAMETERS:  Status       - The ACPI_STATUS code to be formatted  *  * RETURN:      A string containing the exception text. NULL if exception is  *              not valid.  *  * DESCRIPTION: This function validates and translates an ACPI exception into  *              an ASCII string.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertBackslashes  *  * PARAMETERS:  Pathname        - File pathname string to be converted  *  * RETURN:      Modifies the input Pathname  *  * DESCRIPTION: Convert all backslashes (0x5C) to forward slashes (0x2F) within  *              the entire input file pathname string.  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|const
+name|void
+name|UtConvertBackslashes
+parameter_list|(
 name|char
 modifier|*
-name|AcpiUtValidateException
-parameter_list|(
-name|ACPI_STATUS
-name|Status
+name|Pathname
 parameter_list|)
 block|{
-name|UINT32
-name|SubStatus
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|Exception
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-comment|/*      * Status is composed of two parts, a "type" and an actual code      */
-name|SubStatus
-operator|=
-operator|(
-name|Status
-operator|&
-operator|~
-name|AE_CODE_MASK
-operator|)
-expr_stmt|;
-switch|switch
-condition|(
-name|Status
-operator|&
-name|AE_CODE_MASK
-condition|)
-block|{
-case|case
-name|AE_CODE_ENVIRONMENTAL
-case|:
 if|if
 condition|(
-name|SubStatus
-operator|<=
-name|AE_CODE_ENV_MAX
+operator|!
+name|Pathname
 condition|)
 block|{
-name|Exception
-operator|=
-name|AcpiGbl_ExceptionNames_Env
-index|[
-name|SubStatus
-index|]
-expr_stmt|;
+return|return;
 block|}
-break|break;
-case|case
-name|AE_CODE_PROGRAMMER
-case|:
+while|while
+condition|(
+operator|*
+name|Pathname
+condition|)
+block|{
 if|if
 condition|(
-name|SubStatus
-operator|<=
-name|AE_CODE_PGM_MAX
+operator|*
+name|Pathname
+operator|==
+literal|'\\'
 condition|)
 block|{
-name|Exception
+operator|*
+name|Pathname
 operator|=
-name|AcpiGbl_ExceptionNames_Pgm
-index|[
-name|SubStatus
-index|]
+literal|'/'
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|AE_CODE_ACPI_TABLES
-case|:
-if|if
-condition|(
-name|SubStatus
-operator|<=
-name|AE_CODE_TBL_MAX
-condition|)
-block|{
-name|Exception
-operator|=
-name|AcpiGbl_ExceptionNames_Tbl
-index|[
-name|SubStatus
-index|]
+name|Pathname
+operator|++
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|AE_CODE_AML
-case|:
-if|if
-condition|(
-name|SubStatus
-operator|<=
-name|AE_CODE_AML_MAX
-condition|)
-block|{
-name|Exception
-operator|=
-name|AcpiGbl_ExceptionNames_Aml
-index|[
-name|SubStatus
-index|]
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|AE_CODE_CONTROL
-case|:
-if|if
-condition|(
-name|SubStatus
-operator|<=
-name|AE_CODE_CTRL_MAX
-condition|)
-block|{
-name|Exception
-operator|=
-name|AcpiGbl_ExceptionNames_Ctrl
-index|[
-name|SubStatus
-index|]
-expr_stmt|;
-block|}
-break|break;
-default|default:
-break|break;
-block|}
-return|return
-operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-specifier|const
-name|char
-argument_list|,
-name|Exception
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtIsPciRootBridge  *  * PARAMETERS:  Id              - The HID/CID in string format  *  * RETURN:      TRUE if the Id is a match for a PCI/PCI-Express Root Bridge  *  * DESCRIPTION: Determine if the input ID is a PCI Root Bridge ID.  *  ******************************************************************************/
@@ -579,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReleaseOwnerId  *  * PARAMETERS:  OwnerIdPtr          - Pointer to a previously allocated OwnerID  *  * RETURN:      None. No error is returned because we are either exiting a  *              control method or unloading a table. Either way, we would  *              ignore any error anyway.  *  * DESCRIPTION: Release a table or method owner ID.  Valid IDs are 1 - 255  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReleaseOwnerId  *  * PARAMETERS:  OwnerIdPtr          - Pointer to a previously allocated OwnerID  *  * RETURN:      None. No error is returned because we are either exiting a  *              control method or unloading a table. Either way, we would  *              ignore any error anyway.  *  * DESCRIPTION: Release a table or method owner ID. Valid IDs are 1 - 255  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1288,7 +1195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSetIntegerWidth  *  * PARAMETERS:  Revision            From DSDT header  *  * RETURN:      None  *  * DESCRIPTION: Set the global integer bit width based upon the revision  *              of the DSDT.  For Revision 1 and 0, Integers are 32 bits.  *              For Revision 2 and above, Integers are 64 bits.  Yes, this  *              makes a difference.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSetIntegerWidth  *  * PARAMETERS:  Revision            From DSDT header  *  * RETURN:      None  *  * DESCRIPTION: Set the global integer bit width based upon the revision  *              of the DSDT. For Revision 1 and 0, Integers are 32 bits.  *              For Revision 2 and above, Integers are 64 bits. Yes, this  *              makes a difference.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1570,7 +1477,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Name            - The name to be examined  *  * RETURN:      TRUE if the name is valid, FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI name.  Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Name            - The name to be examined  *  * RETURN:      TRUE if the name is valid, FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI name. Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1659,9 +1566,20 @@ name|FoundBadChar
 init|=
 name|FALSE
 decl_stmt|;
+name|UINT32
+name|OriginalName
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtRepairName
+argument_list|)
+expr_stmt|;
+name|ACPI_MOVE_NAME
+argument_list|(
+operator|&
+name|OriginalName
+argument_list|,
+name|Name
 argument_list|)
 expr_stmt|;
 comment|/* Check each character in the name */
@@ -1724,7 +1642,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Found bad character(s) in name, repaired: [%4.4s]\n"
+literal|"Invalid character(s) in name (0x%.8X), repaired: [%4.4s]"
+operator|,
+name|OriginalName
 operator|,
 name|Name
 operator|)
@@ -1738,7 +1658,9 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Found bad character(s) in name, repaired: [%4.4s]\n"
+literal|"Invalid character(s) in name (0x%.8X), repaired: [%4.4s]"
+operator|,
+name|OriginalName
 operator|,
 name|Name
 operator|)
@@ -2436,7 +2358,7 @@ index|[
 name|ThisIndex
 index|]
 expr_stmt|;
-comment|/*          * Check for:          * 1) An uninitialized package element.  It is completely          *    legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package.  Packages are handled in else          *    case below.          */
+comment|/*          * Check for:          * 1) An uninitialized package element. It is completely          *    legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package. Packages are handled in else          *    case below.          */
 if|if
 condition|(
 operator|(
@@ -2517,7 +2439,7 @@ operator|.
 name|Count
 condition|)
 block|{
-comment|/*                  * We've handled all of the objects at this level,  This means                  * that we have just completed a package.  That package may                  * have contained one or more packages itself.                  *                  * Delete this state and pop the previous state (package).                  */
+comment|/*                  * We've handled all of the objects at this level,  This means                  * that we have just completed a package. That package may                  * have contained one or more packages itself.                  *                  * Delete this state and pop the previous state (package).                  */
 name|AcpiUtDeleteGenericState
 argument_list|(
 name|State

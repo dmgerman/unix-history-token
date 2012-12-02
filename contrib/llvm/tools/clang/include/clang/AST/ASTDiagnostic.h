@@ -81,10 +81,6 @@ parameter_list|,
 name|SHOWINSYSHEADER
 parameter_list|,
 name|CATEGORY
-parameter_list|,
-name|BRIEF
-parameter_list|,
-name|FULL
 parameter_list|)
 value|ENUM,
 define|#
@@ -158,11 +154,10 @@ name|void
 operator|*
 name|Cookie
 argument_list|,
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|intptr_t
 operator|>
-operator|&
 name|QualTypeVals
 argument_list|)
 decl_stmt|;

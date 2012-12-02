@@ -427,7 +427,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Perform the memory read or write      *      * Note: For machines that do not support non-aligned transfers, the target      * address was checked for alignment above.  We do not attempt to break the      * transfer up into smaller (byte-size) chunks because the AML specifically      * asked for a transfer width that the hardware may require.      */
+comment|/*      * Perform the memory read or write      *      * Note: For machines that do not support non-aligned transfers, the target      * address was checked for alignment above. We do not attempt to break the      * transfer up into smaller (byte-size) chunks because the AML specifically      * asked for a transfer width that the hardware may require.      */
 switch|switch
 condition|(
 name|Function
@@ -525,13 +525,10 @@ case|:
 name|ACPI_SET8
 argument_list|(
 name|LogicalAddrPtr
-argument_list|)
-operator|=
-operator|(
-name|UINT8
-operator|)
+argument_list|,
 operator|*
 name|Value
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -540,13 +537,10 @@ case|:
 name|ACPI_SET16
 argument_list|(
 name|LogicalAddrPtr
-argument_list|)
-operator|=
-operator|(
-name|UINT16
-operator|)
+argument_list|,
 operator|*
 name|Value
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -555,13 +549,10 @@ case|:
 name|ACPI_SET32
 argument_list|(
 name|LogicalAddrPtr
-argument_list|)
-operator|=
-operator|(
-name|UINT32
-operator|)
+argument_list|,
 operator|*
 name|Value
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -570,13 +561,10 @@ case|:
 name|ACPI_SET64
 argument_list|(
 name|LogicalAddrPtr
-argument_list|)
-operator|=
-operator|(
-name|UINT64
-operator|)
+argument_list|,
 operator|*
 name|Value
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

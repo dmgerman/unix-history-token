@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1574,13 +1574,9 @@ operator|&
 name|subdb
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|rw_exit
@@ -1713,15 +1709,11 @@ operator|!
 name|trunc
 condition|)
 continue|continue;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|bp
 operator|->
 name|blk_birth
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2105,13 +2097,9 @@ operator|&
 name|db
 argument_list|)
 expr_stmt|;
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|err
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|rw_exit
@@ -2789,7 +2777,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Our contents should have been freed in dnode_sync() by the 	 * free range record inserted by the caller of dnode_free(). 	 */
-name|ASSERT3U
+name|ASSERT0
 argument_list|(
 name|DN_USED_BYTES
 argument_list|(
@@ -2797,10 +2785,6 @@ name|dn
 operator|->
 name|dn_phys
 argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -3509,14 +3493,15 @@ condition|)
 block|{
 name|ASSERT
 argument_list|(
+name|DMU_OT_IS_VALID
+argument_list|(
 name|dn
 operator|->
 name|dn_next_bonustype
 index|[
 name|txgoff
 index|]
-operator|<
-name|DMU_OT_NUMTYPES
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dnp

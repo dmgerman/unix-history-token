@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMMCExpr.h - ARM specific MC expression classes ------------------===//
+comment|//===-- ARMMCExpr.h - ARM specific MC expression classes --------*- C++ -*-===//
 end_comment
 
 begin_comment

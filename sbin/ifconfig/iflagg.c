@@ -220,6 +220,7 @@ name|rp_portname
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Don't choke if the port is already in this lagg. */
 if|if
 condition|(
 name|ioctl
@@ -231,6 +232,10 @@ argument_list|,
 operator|&
 name|rp
 argument_list|)
+operator|&&
+name|errno
+operator|!=
+name|EEXIST
 condition|)
 name|err
 argument_list|(

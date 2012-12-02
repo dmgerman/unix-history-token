@@ -117,11 +117,11 @@ name|FromVK
 parameter_list|)
 function_decl|;
 comment|/// The list of Hints generated so far.
-name|SmallVector
+name|std
+operator|::
+name|vector
 operator|<
 name|FixItHint
-operator|,
-literal|1
 operator|>
 name|Hints
 expr_stmt|;

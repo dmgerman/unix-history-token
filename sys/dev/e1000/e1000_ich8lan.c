@@ -3231,7 +3231,13 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
-name|e1000_config_collision_dist_generic
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|config_collision_dist
 argument_list|(
 name|hw
 argument_list|)
@@ -12641,7 +12647,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_bus_info_ich8lan - Get/Set the bus type and width  *  @hw: pointer to the HW structure  *  *  ICH8 use the PCI Express bus, but does not contain a PCI Express Capability  *  register, so the the bus width is hard coded.  **/
+comment|/**  *  e1000_get_bus_info_ich8lan - Get/Set the bus type and width  *  @hw: pointer to the HW structure  *  *  ICH8 use the PCI Express bus, but does not contain a PCI Express Capability  *  register, so the bus width is hard coded.  **/
 end_comment
 
 begin_function

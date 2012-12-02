@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/CharUnits.h"
 end_include
 
@@ -82,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclObjC.h"
+file|"clang/AST/ExprObjC.h"
 end_include
 
 begin_include
@@ -169,20 +175,19 @@ name|Offset
 decl_stmt|;
 name|public
 label|:
-name|RegionOffset
-argument_list|(
+comment|// We're using a const instead of an enumeration due to the size required;
+comment|// Visual Studio will only create enumerations of size int, not long long.
+specifier|static
 specifier|const
-name|MemRegion
-operator|*
-name|r
-argument_list|)
+name|int64_t
+name|Symbolic
+init|=
+name|INT64_MAX
+decl_stmt|;
+name|RegionOffset
+argument_list|()
 operator|:
 name|R
-argument_list|(
-name|r
-argument_list|)
-operator|,
-name|Offset
 argument_list|(
 literal|0
 argument_list|)
@@ -215,13 +220,40 @@ return|return
 name|R
 return|;
 block|}
-name|int64_t
-name|getOffset
+name|bool
+name|hasSymbolicOffset
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Offset
+operator|==
+name|Symbolic
+return|;
+block|}
+name|int64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|hasSymbolicOffset
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Offset
+return|;
+block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|R
 return|;
 block|}
 block|}
@@ -258,17 +290,29 @@ name|HeapSpaceRegionKind
 block|,
 name|UnknownSpaceRegionKind
 block|,
-name|NonStaticGlobalSpaceRegionKind
-block|,
 name|StaticGlobalSpaceRegionKind
+block|,
+name|GlobalInternalSpaceRegionKind
+block|,
+name|GlobalSystemSpaceRegionKind
+block|,
+name|GlobalImmutableSpaceRegionKind
+block|,
+name|BEG_NON_STATIC_GLOBAL_MEMSPACES
+operator|=
+name|GlobalInternalSpaceRegionKind
+block|,
+name|END_NON_STATIC_GLOBAL_MEMSPACES
+operator|=
+name|GlobalImmutableSpaceRegionKind
 block|,
 name|BEG_GLOBAL_MEMSPACES
 operator|=
-name|NonStaticGlobalSpaceRegionKind
+name|StaticGlobalSpaceRegionKind
 block|,
 name|END_GLOBAL_MEMSPACES
 operator|=
-name|StaticGlobalSpaceRegionKind
+name|GlobalImmutableSpaceRegionKind
 block|,
 name|BEG_MEMSPACES
 operator|=
@@ -276,7 +320,7 @@ name|GenericMemSpaceRegionKind
 block|,
 name|END_MEMSPACES
 operator|=
-name|StaticGlobalSpaceRegionKind
+name|GlobalImmutableSpaceRegionKind
 block|,
 comment|// Untyped regions.
 name|SymbolicRegionKind
@@ -303,6 +347,8 @@ block|,
 name|CXXThisRegionKind
 block|,
 name|StringRegionKind
+block|,
+name|ObjCStringRegionKind
 block|,
 name|ElementRegionKind
 block|,
@@ -384,13 +430,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-name|std
-operator|::
-name|string
-name|getString
-argument_list|()
-specifier|const
-block|;
 specifier|const
 name|MemSpaceRegion
 operator|*
@@ -409,7 +448,9 @@ specifier|const
 name|MemRegion
 operator|*
 name|StripCasts
-argument_list|()
+argument_list|(
+argument|bool StripBaseCasts = true
+argument_list|)
 specifier|const
 block|;
 name|bool
@@ -438,6 +479,14 @@ name|getAsOffset
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Get a string representation of a region for debug use.
+name|std
+operator|::
+name|string
+name|getString
+argument_list|()
+specifier|const
+block|;
 name|virtual
 name|void
 name|dumpToStream
@@ -449,6 +498,22 @@ block|;
 name|void
 name|dump
 argument_list|()
+specifier|const
+block|;
+comment|/// \brief Returns true if this region can be printed in a user-friendly way.
+name|virtual
+name|bool
+name|canPrintPretty
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Print the region for use in diagnostics.
+name|virtual
+name|void
+name|printPretty
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
 specifier|const
 block|;
 name|Kind
@@ -495,7 +560,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemSpaceRegion - A memory region that represents and "memory space";
+comment|/// MemSpaceRegion - A memory region that represents a "memory space";
 comment|///  for example, the set of global variables, the stack frame, etc.
 name|class
 name|MemSpaceRegion
@@ -599,6 +664,11 @@ operator|:
 name|public
 name|MemSpaceRegion
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|GlobalsSpaceRegion
@@ -644,6 +714,11 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief The region of the static variables within the current CodeTextRegion
+comment|/// scope.
+comment|///
+comment|/// Currently, only the static locals are placed there, so we know that these
+comment|/// variables do not get invalidated by calls to other functions.
 name|class
 name|StaticGlobalSpaceRegion
 operator|:
@@ -728,6 +803,12 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief The region for all the non-static global variables.
+comment|///
+comment|/// This class is further split into subclasses for efficient implementation of
+comment|/// invalidating a set of related global values as is done in
+comment|/// RegionStoreManager::invalidateRegions (instead of finding all the dependent
+comment|/// globals, we invalidate the whole parent region).
 name|class
 name|NonStaticGlobalSpaceRegion
 operator|:
@@ -738,18 +819,75 @@ name|friend
 name|class
 name|MemRegionManager
 block|;
+name|protected
+operator|:
 name|NonStaticGlobalSpaceRegion
 argument_list|(
-name|MemRegionManager
-operator|*
-name|mgr
+argument|MemRegionManager *mgr
+argument_list|,
+argument|Kind k
 argument_list|)
 operator|:
 name|GlobalsSpaceRegion
 argument_list|(
 argument|mgr
 argument_list|,
-argument|NonStaticGlobalSpaceRegionKind
+argument|k
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MemRegion *R
+argument_list|)
+block|{
+name|Kind
+name|k
+operator|=
+name|R
+operator|->
+name|getKind
+argument_list|()
+block|;
+return|return
+name|k
+operator|>=
+name|BEG_NON_STATIC_GLOBAL_MEMSPACES
+operator|&&
+name|k
+operator|<=
+name|END_NON_STATIC_GLOBAL_MEMSPACES
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief The region containing globals which are defined in system/external
+comment|/// headers and are considered modifiable by system calls (ex: errno).
+name|class
+name|GlobalSystemSpaceRegion
+operator|:
+name|public
+name|NonStaticGlobalSpaceRegion
+block|{
+name|friend
+name|class
+name|MemRegionManager
+block|;
+name|GlobalSystemSpaceRegion
+argument_list|(
+name|MemRegionManager
+operator|*
+name|mgr
+argument_list|)
+operator|:
+name|NonStaticGlobalSpaceRegion
+argument_list|(
+argument|mgr
+argument_list|,
+argument|GlobalSystemSpaceRegionKind
 argument_list|)
 block|{}
 name|public
@@ -774,7 +912,117 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|NonStaticGlobalSpaceRegionKind
+name|GlobalSystemSpaceRegionKind
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief The region containing globals which are considered not to be modified
+comment|/// or point to data which could be modified as a result of a function call
+comment|/// (system or internal). Ex: Const global scalars would be modeled as part of
+comment|/// this region. This region also includes most system globals since they have
+comment|/// low chance of being modified.
+name|class
+name|GlobalImmutableSpaceRegion
+operator|:
+name|public
+name|NonStaticGlobalSpaceRegion
+block|{
+name|friend
+name|class
+name|MemRegionManager
+block|;
+name|GlobalImmutableSpaceRegion
+argument_list|(
+name|MemRegionManager
+operator|*
+name|mgr
+argument_list|)
+operator|:
+name|NonStaticGlobalSpaceRegion
+argument_list|(
+argument|mgr
+argument_list|,
+argument|GlobalImmutableSpaceRegionKind
+argument_list|)
+block|{}
+name|public
+operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MemRegion *R
+argument_list|)
+block|{
+return|return
+name|R
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|GlobalImmutableSpaceRegionKind
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief The region containing globals which can be modified by calls to
+comment|/// "internally" defined functions - (for now just) functions other then system
+comment|/// calls.
+name|class
+name|GlobalInternalSpaceRegion
+operator|:
+name|public
+name|NonStaticGlobalSpaceRegion
+block|{
+name|friend
+name|class
+name|MemRegionManager
+block|;
+name|GlobalInternalSpaceRegion
+argument_list|(
+name|MemRegionManager
+operator|*
+name|mgr
+argument_list|)
+operator|:
+name|NonStaticGlobalSpaceRegion
+argument_list|(
+argument|mgr
+argument_list|,
+argument|GlobalInternalSpaceRegionKind
+argument_list|)
+block|{}
+name|public
+operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MemRegion *R
+argument_list|)
+block|{
+return|return
+name|R
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|GlobalInternalSpaceRegionKind
 return|;
 block|}
 expr|}
@@ -785,6 +1033,11 @@ operator|:
 name|public
 name|MemSpaceRegion
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -805,6 +1058,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -829,6 +1089,11 @@ operator|:
 name|public
 name|MemSpaceRegion
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -849,6 +1114,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -964,8 +1236,11 @@ operator|:
 name|public
 name|StackSpaceRegion
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -993,6 +1268,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1019,6 +1301,11 @@ name|StackSpaceRegion
 block|{
 name|private
 operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|friend
 name|class
 name|MemRegionManager
@@ -1046,6 +1333,13 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1072,6 +1366,13 @@ operator|:
 name|public
 name|MemRegion
 block|{
+name|private
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 specifier|const
@@ -1288,6 +1589,13 @@ operator|:
 name|public
 name|SubRegion
 block|{
+name|public
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|TypedRegion
@@ -1374,6 +1682,13 @@ operator|:
 name|public
 name|TypedRegion
 block|{
+name|public
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|TypedValueRegion
@@ -1478,6 +1793,13 @@ else|:
 name|T
 return|;
 block|}
+name|DefinedOrUnknownSVal
+name|getExtent
+argument_list|(
+argument|SValBuilder&svalBuilder
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1511,6 +1833,13 @@ operator|:
 name|public
 name|TypedRegion
 block|{
+name|public
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|CodeTextRegion
@@ -1707,7 +2036,7 @@ name|BlockDecl
 operator|*
 name|BD
 block|;
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
 name|AC
 block|;
@@ -1720,7 +2049,7 @@ argument|const BlockDecl *bd
 argument_list|,
 argument|CanQualType lTy
 argument_list|,
-argument|AnalysisContext *ac
+argument|AnalysisDeclContext *ac
 argument_list|,
 argument|const MemRegion* sreg
 argument_list|)
@@ -1769,9 +2098,9 @@ return|return
 name|BD
 return|;
 block|}
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|()
 specifier|const
 block|{
@@ -1812,7 +2141,7 @@ argument_list|,
 name|CanQualType
 argument_list|,
 specifier|const
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
 argument_list|,
 specifier|const
@@ -1869,6 +2198,10 @@ name|void
 operator|*
 name|ReferencedVars
 block|;
+name|void
+operator|*
+name|OriginalVars
+block|;
 name|BlockDataRegion
 argument_list|(
 specifier|const
@@ -1905,6 +2238,11 @@ name|lc
 argument_list|)
 block|,
 name|ReferencedVars
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|OriginalVars
 argument_list|(
 literal|0
 argument_list|)
@@ -1946,6 +2284,13 @@ specifier|const
 operator|*
 name|R
 block|;
+specifier|const
+name|MemRegion
+operator|*
+specifier|const
+operator|*
+name|OriginalR
+block|;
 name|public
 operator|:
 name|explicit
@@ -1957,11 +2302,23 @@ operator|*
 specifier|const
 operator|*
 name|r
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+specifier|const
+operator|*
+name|originalR
 argument_list|)
 operator|:
 name|R
 argument_list|(
-argument|r
+name|r
+argument_list|)
+block|,
+name|OriginalR
+argument_list|(
+argument|originalR
 argument_list|)
 block|{}
 name|operator
@@ -1976,6 +2333,30 @@ specifier|const
 block|{
 return|return
 name|R
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getCapturedRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|R
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getOriginalRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|OriginalR
 return|;
 block|}
 specifier|const
@@ -2045,6 +2426,9 @@ operator|)
 block|{
 operator|++
 name|R
+block|;
+operator|++
+name|OriginalR
 block|;
 return|return
 operator|*
@@ -2375,6 +2759,145 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// The region associated with an ObjCStringLiteral.
+name|class
+name|ObjCStringRegion
+operator|:
+name|public
+name|TypedValueRegion
+block|{
+name|friend
+name|class
+name|MemRegionManager
+block|;
+specifier|const
+name|ObjCStringLiteral
+operator|*
+name|Str
+block|;
+name|protected
+operator|:
+name|ObjCStringRegion
+argument_list|(
+specifier|const
+name|ObjCStringLiteral
+operator|*
+name|str
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+name|sreg
+argument_list|)
+operator|:
+name|TypedValueRegion
+argument_list|(
+name|sreg
+argument_list|,
+name|ObjCStringRegionKind
+argument_list|)
+block|,
+name|Str
+argument_list|(
+argument|str
+argument_list|)
+block|{}
+specifier|static
+name|void
+name|ProfileRegion
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|ObjCStringLiteral
+operator|*
+name|Str
+argument_list|,
+specifier|const
+name|MemRegion
+operator|*
+name|superRegion
+argument_list|)
+block|;
+name|public
+operator|:
+specifier|const
+name|ObjCStringLiteral
+operator|*
+name|getObjCStringLiteral
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Str
+return|;
+block|}
+name|QualType
+name|getValueType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Str
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+name|bool
+name|isBoundable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|)
+specifier|const
+block|{
+name|ProfileRegion
+argument_list|(
+name|ID
+argument_list|,
+name|Str
+argument_list|,
+name|superRegion
+argument_list|)
+block|;   }
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MemRegion* R
+argument_list|)
+block|{
+return|return
+name|R
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|ObjCStringRegionKind
+return|;
+block|}
+expr|}
+block|;
 comment|/// CompoundLiteralRegion - A memory region representing a compound literal.
 comment|///   Compound literals are essentially temporaries that are stack allocated
 comment|///   or in the global constant pool.
@@ -2578,13 +3101,6 @@ argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
 block|;
-name|DefinedOrUnknownSVal
-name|getExtent
-argument_list|(
-argument|SValBuilder&svalBuilder
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -2739,7 +3255,18 @@ operator|==
 name|VarRegionKind
 return|;
 block|}
-expr|}
+name|bool
+name|canPrintPretty
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPretty
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|; }
 block|;
 comment|/// CXXThisRegion - Represents the region for the implicit 'this' parameter
 comment|///  in a call to a C++ method.  This region doesn't represent the object
@@ -2888,13 +3415,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-name|void
-name|dumpToStream
-argument_list|(
-argument|raw_ostream&os
-argument_list|)
-specifier|const
-block|;
 specifier|const
 name|FieldDecl
 operator|*
@@ -2973,7 +3493,25 @@ operator|==
 name|FieldRegionKind
 return|;
 block|}
-expr|}
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|canPrintPretty
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPretty
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|; }
 block|;
 name|class
 name|ObjCIvarRegion
@@ -2997,40 +3535,28 @@ name|MemRegion
 operator|*
 name|sReg
 argument_list|)
-operator|:
-name|DeclRegion
-argument_list|(
-argument|ivd
-argument_list|,
-argument|sReg
-argument_list|,
-argument|ObjCIvarRegionKind
-argument_list|)
-block|{}
+block|;
 specifier|static
 name|void
 name|ProfileRegion
 argument_list|(
-argument|llvm::FoldingSetNodeID& ID
-argument_list|,
-argument|const ObjCIvarDecl *ivd
-argument_list|,
-argument|const MemRegion* superRegion
-argument_list|)
-block|{
-name|DeclRegion
+name|llvm
 operator|::
-name|ProfileRegion
-argument_list|(
+name|FoldingSetNodeID
+operator|&
 name|ID
 argument_list|,
+specifier|const
+name|ObjCIvarDecl
+operator|*
 name|ivd
 argument_list|,
+specifier|const
+name|MemRegion
+operator|*
 name|superRegion
-argument_list|,
-name|ObjCIvarRegionKind
 argument_list|)
-block|;   }
+block|;
 name|public
 operator|:
 specifier|const
@@ -3039,30 +3565,12 @@ operator|*
 name|getDecl
 argument_list|()
 specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|ObjCIvarDecl
-operator|>
-operator|(
-name|D
-operator|)
-return|;
-block|}
+block|;
 name|QualType
 name|getValueType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getDecl
-argument_list|()
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
+block|;
 name|void
 name|dumpToStream
 argument_list|(
@@ -3164,6 +3672,7 @@ argument_list|()
 specifier|const
 block|; }
 block|;
+comment|/// \brief ElementRegin is used to represent both array elements and casts.
 name|class
 name|ElementRegion
 operator|:
@@ -3614,9 +4123,17 @@ name|MemRegion
 operator|>
 name|Regions
 block|;
-name|NonStaticGlobalSpaceRegion
+name|GlobalInternalSpaceRegion
 operator|*
-name|globals
+name|InternalGlobals
+block|;
+name|GlobalSystemSpaceRegion
+operator|*
+name|SystemGlobals
+block|;
+name|GlobalImmutableSpaceRegion
+operator|*
+name|ImmutableGlobals
 block|;
 name|llvm
 operator|::
@@ -3694,7 +4211,17 @@ argument_list|(
 name|a
 argument_list|)
 block|,
-name|globals
+name|InternalGlobals
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SystemGlobals
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ImmutableGlobals
 argument_list|(
 literal|0
 argument_list|)
@@ -3771,11 +4298,9 @@ name|GlobalsSpaceRegion
 operator|*
 name|getGlobalsRegion
 argument_list|(
-specifier|const
-name|CodeTextRegion
-operator|*
-name|R
-operator|=
+argument|MemRegion::Kind K = MemRegion::GlobalInternalSpaceRegionKind
+argument_list|,
+argument|const CodeTextRegion *R =
 literal|0
 argument_list|)
 block|;
@@ -3844,11 +4369,20 @@ argument_list|,
 argument|const LocationContext *LC
 argument_list|)
 block|;
-comment|/// getSymbolicRegion - Retrieve or create a "symbolic" memory region.
+comment|/// \brief Retrieve or create a "symbolic" memory region.
 specifier|const
 name|SymbolicRegion
 operator|*
 name|getSymbolicRegion
+argument_list|(
+argument|SymbolRef Sym
+argument_list|)
+block|;
+comment|/// \brief Return a unique symbolic region belonging to heap memory space.
+specifier|const
+name|SymbolicRegion
+operator|*
+name|getSymbolicHeapRegion
 argument_list|(
 argument|SymbolRef sym
 argument_list|)
@@ -3860,6 +4394,17 @@ name|getStringRegion
 argument_list|(
 specifier|const
 name|StringLiteral
+operator|*
+name|Str
+argument_list|)
+block|;
+specifier|const
+name|ObjCStringRegion
+operator|*
+name|getObjCStringRegion
+argument_list|(
+specifier|const
+name|ObjCStringLiteral
 operator|*
 name|Str
 argument_list|)
@@ -4086,7 +4631,7 @@ argument|const BlockDecl *BD
 argument_list|,
 argument|CanQualType locTy
 argument_list|,
-argument|AnalysisContext *AC
+argument|AnalysisDeclContext *AC
 argument_list|)
 block|;
 comment|/// getBlockDataRegion - Get the memory region associated with an instance
@@ -4111,23 +4656,6 @@ operator|=
 name|NULL
 argument_list|)
 block|;
-name|bool
-name|isGlobalsRegion
-argument_list|(
-argument|const MemRegion* R
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|R
-argument_list|)
-block|;
-return|return
-name|R
-operator|==
-name|globals
-return|;
-block|}
 name|private
 operator|:
 name|template

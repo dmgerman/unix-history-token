@@ -38,6 +38,13 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|fwdownload
@@ -60,13 +67,18 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
-name|verbose
+name|printerrors
 parameter_list|,
 name|int
 name|retry_count
 parameter_list|,
 name|int
 name|timeout
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*type*/
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -290,7 +302,7 @@ name|void
 name|usage
 parameter_list|(
 name|int
-name|verbose
+name|printlong
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -111,6 +111,12 @@ directive|include
 file|<stringlist.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -134,18 +140,6 @@ directive|define
 name|PROTOMAX
 value|5
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|uniq
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static

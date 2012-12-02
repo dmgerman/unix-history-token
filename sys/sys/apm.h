@@ -121,6 +121,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|APM_ENT_TYPE_FREEBSD_NANDFS
+value|"FreeBSD-nandfs"
+end_define
+
+begin_define
+define|#
+directive|define
 name|APM_ENT_TYPE_FREEBSD_SWAP
 value|"FreeBSD-swap"
 end_define

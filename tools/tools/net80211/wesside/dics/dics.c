@@ -1509,7 +1509,6 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|s_in
 argument_list|)
 argument_list|)

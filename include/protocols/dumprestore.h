@@ -100,6 +100,17 @@ name|CHECKSUM
 value|(int)84446
 end_define
 
+begin_comment
+comment|/*  * Since ino_t size is changing to 64-bits, yet we desire this structure to  * remain compatible with exiting dump formats, we do NOT use ino_t here,  * but rather define a 32-bit type in its place.  At some point, it may be  * necessary to use some of the c_spare[] in order to fully support 64-bit  * inode numbers.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|dump_ino_t
+typedef|;
+end_typedef
+
 begin_union
 union|union
 name|u_spcl
@@ -133,7 +144,7 @@ name|int32_t
 name|c_old_tapea
 decl_stmt|;
 comment|/* logical block of this record */
-name|ino_t
+name|dump_ino_t
 name|c_inumber
 decl_stmt|;
 comment|/* number of inode */

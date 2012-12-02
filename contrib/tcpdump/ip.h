@@ -95,6 +95,7 @@ name|ip_dst
 decl_stmt|;
 comment|/* source and dest address */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -481,6 +482,7 @@ block|}
 name|ipt_timestamp
 union|;
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -639,13 +641,21 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|u_int32_t
-name|ip_finddst
+name|int
+name|nextproto4_cksum
 parameter_list|(
 specifier|const
 name|struct
 name|ip
 modifier|*
+parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

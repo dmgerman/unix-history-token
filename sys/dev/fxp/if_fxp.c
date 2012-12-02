@@ -344,7 +344,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
-specifier|const
 name|fxp_cb_config_template
 index|[]
 init|=
@@ -476,7 +475,6 @@ specifier|static
 specifier|const
 name|struct
 name|fxp_ident
-specifier|const
 name|fxp_ident_table
 index|[]
 init|=
@@ -1806,11 +1804,7 @@ argument_list|,
 name|fxp_miibus_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1842,7 +1836,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|DRIVER_MODULE_ORDERED
 argument_list|(
 name|fxp
 argument_list|,
@@ -1852,9 +1846,11 @@ name|fxp_driver
 argument_list|,
 name|fxp_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1870,9 +1866,9 @@ name|miibus_driver
 argument_list|,
 name|miibus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14755,7 +14751,6 @@ name|u_short
 name|bundle_max_offset
 decl_stmt|;
 block|}
-decl|const
 name|ucode_table
 index|[]
 init|=

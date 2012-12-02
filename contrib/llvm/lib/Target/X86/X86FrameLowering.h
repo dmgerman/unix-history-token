@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- X86TargetFrameLowering.h - Define frame lowering for X86 ---*- C++ -*-===//
+comment|//===-- X86TargetFrameLowering.h - Define frame lowering for X86 -*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -243,6 +243,17 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getFrameIndexReference
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
 argument_list|)
 specifier|const
 block|;

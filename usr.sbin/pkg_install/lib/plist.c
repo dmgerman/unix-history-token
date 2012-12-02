@@ -1278,7 +1278,12 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"corrupted record (pkgdep line without argument), ignoring"
+literal|"corrupted record for package %s (pkgdep line without "
+literal|"argument), ignoring"
+argument_list|,
+name|pkg
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -2051,6 +2056,27 @@ name|p
 operator|->
 name|name
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|->
+name|name
+operator|==
+literal|'/'
+condition|)
+name|strlcpy
+argument_list|(
+name|tmp
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|,
+name|FILENAME_MAX
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|tmp

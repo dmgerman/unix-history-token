@@ -603,6 +603,9 @@ name|md_saved_cspr
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_TP_ADDRESS
 name|td2
 operator|->
 name|td_md
@@ -616,6 +619,22 @@ operator|*
 operator|)
 name|ARM_TP_ADDRESS
 expr_stmt|;
+else|#
+directive|else
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_tp
+operator|=
+operator|(
+name|register_t
+operator|)
+name|get_tls
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -640,7 +659,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{        }
+block|{ }
 end_function
 
 begin_comment
@@ -1080,7 +1099,7 @@ expr_stmt|;
 name|sf_buf_alloc_want
 operator|--
 expr_stmt|;
-comment|/* 		 * If we got a signal, don't risk going back to sleep.  		 */
+comment|/* 		 * If we got a signal, don't risk going back to sleep. 		 */
 if|if
 condition|(
 name|error
@@ -1403,7 +1422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back  * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
@@ -1677,12 +1696,6 @@ modifier|*
 name|tls_base
 parameter_list|)
 block|{
-if|if
-condition|(
-name|td
-operator|!=
-name|curthread
-condition|)
 name|td
 operator|->
 name|td_md
@@ -1694,11 +1707,19 @@ name|register_t
 operator|)
 name|tls_base
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|td
+operator|==
+name|curthread
+condition|)
 block|{
 name|critical_enter
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_TP_ADDRESS
 operator|*
 operator|(
 name|register_t
@@ -1711,6 +1732,19 @@ name|register_t
 operator|)
 name|tls_base
 expr_stmt|;
+else|#
+directive|else
+name|set_tls
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|tls_base
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -2000,7 +2034,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Functions to map and unmap memory non-cached into KVA the kernel won't try   * to allocate. The goal is to provide uncached memory to busdma, to honor  * BUS_DMA_COHERENT.   * We can allocate at most ARM_NOCACHE_KVA_SIZE bytes.   * The allocator is rather dummy, each page is represented by a bit in  * a bitfield, 0 meaning the page is not allocated, 1 meaning it is.  * As soon as it finds enough contiguous pages to satisfy the request,  * it returns the address.  */
+comment|/*  * Functions to map and unmap memory non-cached into KVA the kernel won't try  * to allocate. The goal is to provide uncached memory to busdma, to honor  * BUS_DMA_COHERENT.  * We can allocate at most ARM_NOCACHE_KVA_SIZE bytes.  * The allocator is rather dummy, each page is represented by a bit in  * a bitfield, 0 meaning the page is not allocated, 1 meaning it is.  * As soon as it finds enough contiguous pages to satisfy the request,  * it returns the address.  */
 end_comment
 
 begin_function
@@ -2214,6 +2248,18 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_L2_PIPT
+name|cpu_l2cache_wbinv_range
+argument_list|(
+name|physaddr
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|cpu_l2cache_wbinv_range
 argument_list|(
 name|vaddr
@@ -2221,6 +2267,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pmap_kenter_nocache
 argument_list|(
 name|tomap
@@ -2419,19 +2467,6 @@ name|smallalloc_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_VMSMALLALLOC
-argument_list|,
-literal|"vm_small_alloc"
-argument_list|,
-literal|"VM Small alloc data"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|vm_offset_t
 name|alloc_firstaddr
@@ -2625,7 +2660,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*  	 * We need to use dump_avail and not phys_avail, since we want to 	 * map the whole memory and not just the memory available to the VM 	 * to be able to do a pa => va association for any address. 	 */
+comment|/* 	 * We need to use dump_avail and not phys_avail, since we want to 	 * map the whole memory and not just the memory available to the VM 	 * to be able to do a pa => va association for any address. 	 */
 for|for
 control|(
 name|i
@@ -3040,42 +3075,14 @@ name|ret
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|wait
-operator|&
-operator|(
-name|M_NOWAIT
-operator||
-name|M_USE_RESERVE
-operator|)
-operator|)
-operator|==
-name|M_NOWAIT
-condition|)
 name|pflags
 operator|=
-name|VM_ALLOC_INTERRUPT
-operator||
-name|VM_ALLOC_WIRED
-expr_stmt|;
-else|else
-name|pflags
-operator|=
-name|VM_ALLOC_SYSTEM
-operator||
-name|VM_ALLOC_WIRED
-expr_stmt|;
-if|if
-condition|(
+name|malloc2vm_flags
+argument_list|(
 name|wait
-operator|&
-name|M_ZERO
-condition|)
-name|pflags
-operator||=
-name|VM_ALLOC_ZERO
+argument_list|)
+operator||
+name|VM_ALLOC_WIRED
 expr_stmt|;
 for|for
 control|(

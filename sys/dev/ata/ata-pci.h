@@ -1471,6 +1471,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_JMB362
+value|0x2362197b
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_JMB363
 value|0x2363197b
 end_define

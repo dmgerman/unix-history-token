@@ -176,12 +176,12 @@ name|iov_base
 operator|=
 name|buf
 expr_stmt|;
-do|do
-block|{
 name|wsp
 operator|=
 name|ws
 expr_stmt|;
+do|do
+block|{
 name|nbytes
 operator|=
 name|l
@@ -247,7 +247,7 @@ goto|;
 block|}
 do|while
 condition|(
-name|ws
+name|wsp
 operator|!=
 name|NULL
 condition|)

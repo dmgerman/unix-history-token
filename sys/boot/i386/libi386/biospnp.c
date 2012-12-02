@@ -1057,6 +1057,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 comment|/* BIOS segment last */
 operator|*
 operator|(

@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
 name|MachineBranchProbabilityInfo
 decl_stmt|;
 name|template
@@ -153,7 +156,7 @@ comment|///
 name|BlockFrequency
 name|getBlockFreq
 argument_list|(
-argument|MachineBasicBlock *MBB
+argument|const MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|; }

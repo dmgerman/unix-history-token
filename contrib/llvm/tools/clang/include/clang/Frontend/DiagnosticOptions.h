@@ -133,12 +133,6 @@ literal|1
 decl_stmt|;
 comment|/// Show machine parseable fix-its.
 name|unsigned
-name|ShowNames
-range|:
-literal|1
-decl_stmt|;
-comment|/// Show the diagnostic name
-name|unsigned
 name|ShowOptionNames
 range|:
 literal|1
@@ -196,6 +190,18 @@ comment|/// Check that diagnostics match the expected
 comment|/// diagnostics, indicated by markers in the
 comment|/// input source file.
 name|unsigned
+name|ElideType
+range|:
+literal|1
+decl_stmt|;
+comment|/// Elide identical types in template diffing
+name|unsigned
+name|ShowTemplateTree
+range|:
+literal|1
+decl_stmt|;
+comment|/// Print a template tree when diffing
+name|unsigned
 name|ErrorLimit
 decl_stmt|;
 comment|/// Limit # errors emitted.
@@ -207,6 +213,10 @@ name|unsigned
 name|TemplateBacktraceLimit
 decl_stmt|;
 comment|/// Limit depth of instantiation backtrace.
+name|unsigned
+name|ConstexprBacktraceLimit
+decl_stmt|;
+comment|/// Limit depth of constexpr backtrace.
 comment|/// The distance between tab stops.
 name|unsigned
 name|TabStop
@@ -228,6 +238,10 @@ block|,
 name|DefaultTemplateBacktraceLimit
 init|=
 literal|10
+block|,
+name|DefaultConstexprBacktraceLimit
+init|=
+literal|10
 block|}
 enum|;
 comment|/// Column limit for formatting message diagnostics, or 0 if unused.
@@ -246,6 +260,12 @@ name|std
 operator|::
 name|string
 name|DiagnosticLogFile
+expr_stmt|;
+comment|/// The file to serialize diagnostics to (non-appending).
+name|std
+operator|::
+name|string
+name|DiagnosticSerializationFile
 expr_stmt|;
 comment|/// The list of -W... options used to alter the diagnostic mappings, with the
 comment|/// prefixes removed.
@@ -314,10 +334,6 @@ name|ShowLocation
 operator|=
 literal|1
 expr_stmt|;
-name|ShowNames
-operator|=
-literal|0
-expr_stmt|;
 name|ShowOptionNames
 operator|=
 literal|0
@@ -353,6 +369,10 @@ expr_stmt|;
 name|MacroBacktraceLimit
 operator|=
 name|DefaultMacroBacktraceLimit
+expr_stmt|;
+name|ConstexprBacktraceLimit
+operator|=
+name|DefaultConstexprBacktraceLimit
 expr_stmt|;
 block|}
 block|}

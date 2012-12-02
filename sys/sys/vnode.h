@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rangelock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -321,9 +327,9 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
-name|v_freelist
+name|v_actfreelist
 expr_stmt|;
-comment|/* f vnode freelist */
+comment|/* f vnode active/free lists */
 name|struct
 name|bufobj
 name|v_bufobj
@@ -347,7 +353,12 @@ name|lockf
 modifier|*
 name|v_lockf
 decl_stmt|;
-comment|/* Byte-level lock list */
+comment|/* Byte-level advisory lock list */
+name|struct
+name|rangelock
+name|v_rl
+decl_stmt|;
+comment|/* Byte-range lock */
 block|}
 struct|;
 end_struct
@@ -621,6 +632,17 @@ end_define
 
 begin_comment
 comment|/* This vnode is on the freelist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VI_ACTIVE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* This vnode is on the active list */
 end_comment
 
 begin_define
@@ -2360,6 +2382,13 @@ name|VN_OPEN_NOAUDIT
 value|0x00000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NOCAPCHECK
+value|0x00000002
+end_define
+
 begin_comment
 comment|/*  * Public vnode manipulation functions.  */
 end_comment
@@ -2653,6 +2682,25 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|getnewvnode_reserve
+parameter_list|(
+name|u_int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|getnewvnode_drop_reserve
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3012,17 +3060,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vdestroy
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vflush
 parameter_list|(
@@ -3149,11 +3186,6 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|off_t
 name|length
 parameter_list|,
@@ -3222,11 +3254,30 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vn_bmap_seekhole
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|off_t
+modifier|*
+name|off
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|td
+name|cred
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3377,6 +3428,36 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|,
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vn_open_vnode
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|int
+name|fmode
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|,
 name|struct
 name|file
@@ -3761,6 +3842,85 @@ name|rvp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|vn_io_fault_uiomove
+parameter_list|(
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|xfersize
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_unlock
+parameter_list|(
+name|vp
+parameter_list|,
+name|cookie
+parameter_list|)
+define|\
+value|rangelock_unlock(&(vp)->v_rl, (cookie), VI_MTX(vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_unlock_range
+parameter_list|(
+name|vp
+parameter_list|,
+name|cookie
+parameter_list|,
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+define|\
+value|rangelock_unlock_range(&(vp)->v_rl, (cookie), (start), (end), 	\ 	    VI_MTX(vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_rlock
+parameter_list|(
+name|vp
+parameter_list|,
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+define|\
+value|rangelock_rlock(&(vp)->v_rl, (start), (end), VI_MTX(vp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vn_rangelock_wlock
+parameter_list|(
+name|vp
+parameter_list|,
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+define|\
+value|rangelock_wlock(&(vp)->v_rl, (start), (end), VI_MTX(vp))
+end_define
 
 begin_function_decl
 name|int

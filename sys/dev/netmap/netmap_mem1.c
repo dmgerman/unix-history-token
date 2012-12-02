@@ -1082,7 +1082,7 @@ name|nrx
 init|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|+
 literal|1
 decl_stmt|;
@@ -1092,7 +1092,7 @@ name|ntx
 init|=
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
 decl_stmt|;
@@ -1147,11 +1147,11 @@ operator|)
 operator|&
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_rx_rings
 operator|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 expr_stmt|;
 operator|*
 operator|(
@@ -1164,11 +1164,11 @@ operator|)
 operator|&
 name|nifp
 operator|->
-name|ni_tx_queues
+name|ni_tx_rings
 operator|=
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 expr_stmt|;
 name|strncpy
 argument_list|(

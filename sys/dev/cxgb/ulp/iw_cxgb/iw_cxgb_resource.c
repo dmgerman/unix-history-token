@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+end_ifdef
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -39,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
 end_include
 
 begin_include
@@ -188,19 +194,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/rdma/ib_verbs.h>
+file|<rdma/ib_verbs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/rdma/ib_umem.h>
+file|<rdma/ib_umem.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/rdma/ib_user_verbs.h>
+file|<rdma/ib_user_verbs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/idr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ulp/iw_cxgb/iw_cxgb_ib_intfc.h>
 end_include
 
 begin_include
@@ -1860,6 +1878,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

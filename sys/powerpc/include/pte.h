@@ -709,6 +709,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* BOOKE */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -940,6 +944,15 @@ name|PTE_PA_MASK
 value|PAGE_MASK
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE_E500
+argument_list|)
+end_if
+
 begin_comment
 comment|/* PTE bits assigned to MAS2, MAS3 flags */
 end_comment
@@ -1034,6 +1047,111 @@ directive|define
 name|PTE_MAS3_MASK
 value|((MAS3_UX | MAS3_SX | MAS3_UW	\ 			| MAS3_SW | MAS3_UR | MAS3_SR)<< PTE_MAS3_SHIFT)
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BOOKE_PPC4XX
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PTE_WL1
+value|TLB_WL1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_IL2I
+value|TLB_IL2I
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_IL2D
+value|TLB_IL2D
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_W
+value|TLB_W
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_I
+value|TLB_I
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_M
+value|TLB_M
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_G
+value|TLB_G
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_UX
+value|TLB_UX
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_SX
+value|TLB_SX
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_UW
+value|TLB_UW
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_SW
+value|TLB_SW
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_UR
+value|TLB_UR
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_SR
+value|TLB_SR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Other PTE flags */
@@ -1164,7 +1282,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #elif defined(E500) */
+comment|/* BOOKE_PPC4XX */
 end_comment
 
 begin_endif

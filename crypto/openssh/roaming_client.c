@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_client.c,v 1.3 2010/01/18 01:50:27 dtucker Exp $ */
+comment|/* $OpenBSD: roaming_client.c,v 1.4 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment

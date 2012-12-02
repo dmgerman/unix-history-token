@@ -476,8 +476,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|SHAREDPAGE
 end_define
 
 begin_define
@@ -592,6 +599,46 @@ end_define
 begin_comment
 comment|/* 64KB */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_MAX_AUTOTUNE_MAXUSERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_AUTOTUNE_MAXUSERS
+value|384
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_MAX_AUTOTUNE_NMBCLUSTERS
+end_ifndef
+
+begin_comment
+comment|/* old maxusers max value. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_AUTOTUNE_NMBCLUSTERS
+value|(1024 + VM_MAX_AUTOTUNE_MAXUSERS * 64)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

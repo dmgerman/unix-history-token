@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines AnalysisContext, a class that manages the analysis context
+comment|// This file defines AnalysisDeclContext, a class that manages the analysis
 end_comment
 
 begin_comment
-comment|// data for path sensitive analysis.
+comment|// context data for path sensitive analysis.
 end_comment
 
 begin_comment
@@ -154,6 +154,15 @@ decl_stmt|;
 name|class
 name|StackFrameContext
 decl_stmt|;
+name|class
+name|BlockInvocationContext
+decl_stmt|;
+name|class
+name|AnalysisDeclContextManager
+decl_stmt|;
+name|class
+name|LocationContext
+decl_stmt|;
 name|namespace
 name|idx
 block|{
@@ -162,7 +171,7 @@ name|TranslationUnit
 decl_stmt|;
 block|}
 comment|/// The base class of a hierarchy of objects representing analyses tied
-comment|/// to AnalysisContext.
+comment|/// to AnalysisDeclContext.
 name|class
 name|ManagedAnalysis
 block|{
@@ -185,30 +194,27 @@ comment|//
 comment|// Which returns a fixed pointer address to distinguish classes of
 comment|// analysis objects.  They also need to implement:
 comment|//
-comment|//  static [Derived*] create(AnalysisContext&Ctx);
+comment|//  static [Derived*] create(AnalysisDeclContext&Ctx);
 comment|//
-comment|// which creates the analysis object given an AnalysisContext.
+comment|// which creates the analysis object given an AnalysisDeclContext.
 block|}
 empty_stmt|;
-comment|/// AnalysisContext contains the context data for the function or method under
-comment|/// analysis.
+comment|/// AnalysisDeclContext contains the context data for the function or method
+comment|/// under analysis.
 name|class
-name|AnalysisContext
+name|AnalysisDeclContext
 block|{
+comment|/// Backpoint to the AnalysisManager object that created this
+comment|/// AnalysisDeclContext. This may be null.
+name|AnalysisDeclContextManager
+modifier|*
+name|Manager
+decl_stmt|;
 specifier|const
 name|Decl
 modifier|*
 name|D
 decl_stmt|;
-comment|// TranslationUnit is NULL if we don't have multiple translation units.
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|TU
-expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|CFG
@@ -217,8 +223,6 @@ name|cfg
 operator|,
 name|completeCFG
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|CFGStmtMap
@@ -243,40 +247,30 @@ name|builtCFG
 decl_stmt|,
 name|builtCompleteCFG
 decl_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|LiveVariables
 operator|>
 name|liveness
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|LiveVariables
 operator|>
 name|relaxedLiveness
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|ParentMap
 operator|>
 name|PM
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|PseudoConstantAnalysis
 operator|>
 name|PCA
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|CFGReverseBlockReachabilityAnalysis
@@ -288,7 +282,6 @@ operator|::
 name|BumpPtrAllocator
 name|A
 expr_stmt|;
-comment|// FIXME: remove.
 name|llvm
 operator|::
 name|DenseMap
@@ -309,43 +302,39 @@ name|ManagedAnalyses
 decl_stmt|;
 name|public
 label|:
-name|AnalysisContext
+name|AnalysisDeclContext
 argument_list|(
+name|AnalysisDeclContextManager
+operator|*
+name|Mgr
+argument_list|,
 specifier|const
 name|Decl
 operator|*
-name|d
-argument_list|,
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|tu
+name|D
 argument_list|)
 expr_stmt|;
-name|AnalysisContext
+name|AnalysisDeclContext
 argument_list|(
+name|AnalysisDeclContextManager
+operator|*
+name|Mgr
+argument_list|,
 specifier|const
 name|Decl
 operator|*
-name|d
-argument_list|,
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|tu
+name|D
 argument_list|,
 specifier|const
 name|CFG
 operator|::
 name|BuildOptions
 operator|&
-name|buildOptions
+name|BuildOptions
 argument_list|)
 expr_stmt|;
 operator|~
-name|AnalysisContext
+name|AnalysisDeclContext
 argument_list|()
 expr_stmt|;
 name|ASTContext
@@ -369,18 +358,6 @@ specifier|const
 block|{
 return|return
 name|D
-return|;
-block|}
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|getTranslationUnit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TU
 return|;
 block|}
 comment|/// Return the build options used to construct the CFG.
@@ -506,7 +483,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|dumpCFG
-parameter_list|()
+parameter_list|(
+name|bool
+name|ShowColors
+parameter_list|)
 function_decl|;
 comment|/// \brief Returns true if we have built a CFG for this analysis context.
 comment|/// Note that this doesn't correspond to whether or not a valid CFG exists, it
@@ -555,7 +535,7 @@ name|BD
 argument_list|)
 expr_stmt|;
 comment|/// Return the ImplicitParamDecl* associated with 'self' if this
-comment|/// AnalysisContext wraps an ObjCMethodDecl.  Returns NULL otherwise.
+comment|/// AnalysisDeclContext wraps an ObjCMethodDecl.  Returns NULL otherwise.
 specifier|const
 name|ImplicitParamDecl
 operator|*
@@ -563,6 +543,51 @@ name|getSelfDecl
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|const
+name|StackFrameContext
+modifier|*
+name|getStackFrame
+parameter_list|(
+name|LocationContext
+specifier|const
+modifier|*
+name|Parent
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CFGBlock
+modifier|*
+name|Blk
+parameter_list|,
+name|unsigned
+name|Idx
+parameter_list|)
+function_decl|;
+specifier|const
+name|BlockInvocationContext
+modifier|*
+name|getBlockInvocationContext
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|parent
+parameter_list|,
+specifier|const
+name|BlockDecl
+modifier|*
+name|BD
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ContextData
+parameter_list|)
+function_decl|;
 comment|/// Return the specified analysis object, lazily running the analysis if
 comment|/// necessary.  Return NULL if the analysis could not run.
 name|template
@@ -636,92 +661,9 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
-block|}
-empty_stmt|;
-name|class
-name|AnalysisContextManager
-block|{
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Decl
-operator|*
-operator|,
-name|AnalysisContext
-operator|*
-operator|>
-name|ContextMap
-expr_stmt|;
-name|ContextMap
-name|Contexts
-decl_stmt|;
-name|CFG
-operator|::
-name|BuildOptions
-name|cfgBuildOptions
-expr_stmt|;
-name|public
-label|:
-name|AnalysisContextManager
-argument_list|(
-argument|bool useUnoptimizedCFG = false
-argument_list|,
-argument|bool addImplicitDtors = false
-argument_list|,
-argument|bool addInitializers = false
-argument_list|)
-empty_stmt|;
-operator|~
-name|AnalysisContextManager
-argument_list|()
-expr_stmt|;
-name|AnalysisContext
-modifier|*
-name|getContext
-argument_list|(
-specifier|const
-name|Decl
-operator|*
-name|D
-argument_list|,
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|TU
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-name|bool
-name|getUseUnoptimizedCFG
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|cfgBuildOptions
-operator|.
-name|PruneTriviallyFalseEdges
-return|;
-block|}
-name|CFG
-operator|::
-name|BuildOptions
-operator|&
-name|getCFGBuildOptions
-argument_list|()
-block|{
-return|return
-name|cfgBuildOptions
-return|;
-block|}
-comment|/// Discard all previously created AnalysisContexts.
-name|void
-name|clear
+name|LocationContextManager
+modifier|&
+name|getLocationContextManager
 parameter_list|()
 function_decl|;
 block|}
@@ -751,8 +693,9 @@ operator|:
 name|ContextKind
 name|Kind
 block|;
-comment|// AnalysisContext can't be const since some methods may modify its member.
-name|AnalysisContext
+comment|// AnalysisDeclContext can't be const since some methods may modify its
+comment|// member.
+name|AnalysisDeclContext
 operator|*
 name|Ctx
 block|;
@@ -767,7 +710,7 @@ name|LocationContext
 argument_list|(
 argument|ContextKind k
 argument_list|,
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|)
@@ -803,29 +746,14 @@ return|return
 name|Kind
 return|;
 block|}
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Ctx
-return|;
-block|}
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|getTranslationUnit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Ctx
-operator|->
-name|getTranslationUnit
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -854,7 +782,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|()
 operator|->
 name|getDecl
@@ -868,7 +796,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|()
 operator|->
 name|getCFG
@@ -887,7 +815,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|()
 operator|->
 name|getAnalysis
@@ -905,7 +833,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|()
 operator|->
 name|getParentMap
@@ -931,15 +859,6 @@ name|StackFrameContext
 operator|*
 name|getCurrentStackFrame
 argument_list|()
-specifier|const
-block|;
-specifier|const
-name|StackFrameContext
-operator|*
-name|getStackFrameForDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
 specifier|const
 block|;
 name|virtual
@@ -976,7 +895,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|ContextKind ck
 argument_list|,
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
@@ -1012,7 +931,7 @@ name|LocationContextManager
 block|;
 name|StackFrameContext
 argument_list|(
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
@@ -1100,7 +1019,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
@@ -1173,7 +1092,7 @@ name|LocationContextManager
 block|;
 name|ScopeContext
 argument_list|(
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
 name|ctx
 argument_list|,
@@ -1224,7 +1143,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
@@ -1268,12 +1187,16 @@ operator|:
 name|public
 name|LocationContext
 block|{
-comment|// FIXME: Add back context-sensivity (we don't want libAnalysis to know
-comment|//  about MemRegion).
 specifier|const
 name|BlockDecl
 operator|*
 name|BD
+block|;
+comment|// FIXME: Come up with a more type-safe way to model context-sensitivity.
+specifier|const
+name|void
+operator|*
+name|ContextData
 block|;
 name|friend
 name|class
@@ -1281,7 +1204,7 @@ name|LocationContextManager
 block|;
 name|BlockInvocationContext
 argument_list|(
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
 name|ctx
 argument_list|,
@@ -1294,6 +1217,11 @@ specifier|const
 name|BlockDecl
 operator|*
 name|bd
+argument_list|,
+specifier|const
+name|void
+operator|*
+name|contextData
 argument_list|)
 operator|:
 name|LocationContext
@@ -1307,7 +1235,12 @@ argument_list|)
 block|,
 name|BD
 argument_list|(
-argument|bd
+name|bd
+argument_list|)
+block|,
+name|ContextData
+argument_list|(
+argument|contextData
 argument_list|)
 block|{}
 name|public
@@ -1327,6 +1260,17 @@ return|return
 name|BD
 return|;
 block|}
+specifier|const
+name|void
+operator|*
+name|getContextData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContextData
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -1343,11 +1287,13 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
 argument|const BlockDecl *bd
+argument_list|,
+argument|const void *contextData
 argument_list|)
 block|{
 name|ProfileCommon
@@ -1361,6 +1307,13 @@ argument_list|,
 name|parent
 argument_list|,
 name|bd
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|contextData
 argument_list|)
 block|;   }
 specifier|static
@@ -1403,7 +1356,7 @@ name|StackFrameContext
 operator|*
 name|getStackFrame
 argument_list|(
-argument|AnalysisContext *ctx
+argument|AnalysisDeclContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
@@ -1419,7 +1372,7 @@ name|ScopeContext
 operator|*
 name|getScope
 argument_list|(
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
 name|ctx
 argument_list|,
@@ -1432,6 +1385,31 @@ specifier|const
 name|Stmt
 operator|*
 name|s
+argument_list|)
+block|;
+specifier|const
+name|BlockInvocationContext
+operator|*
+name|getBlockInvocationContext
+argument_list|(
+name|AnalysisDeclContext
+operator|*
+name|ctx
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|parent
+argument_list|,
+specifier|const
+name|BlockDecl
+operator|*
+name|BD
+argument_list|,
+specifier|const
+name|void
+operator|*
+name|ContextData
 argument_list|)
 block|;
 comment|/// Discard all previously created LocationContext objects.
@@ -1454,7 +1432,7 @@ name|LOC
 operator|*
 name|getLocationContext
 argument_list|(
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
 name|ctx
 argument_list|,
@@ -1469,6 +1447,203 @@ operator|*
 name|d
 argument_list|)
 block|; }
+block|;
+name|class
+name|AnalysisDeclContextManager
+block|{
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|AnalysisDeclContext
+operator|*
+operator|>
+name|ContextMap
+expr_stmt|;
+name|ContextMap
+name|Contexts
+block|;
+name|LocationContextManager
+name|LocContexts
+block|;
+name|CFG
+operator|::
+name|BuildOptions
+name|cfgBuildOptions
+block|;
+name|public
+operator|:
+name|AnalysisDeclContextManager
+argument_list|(
+argument|bool useUnoptimizedCFG = false
+argument_list|,
+argument|bool addImplicitDtors = false
+argument_list|,
+argument|bool addInitializers = false
+argument_list|)
+block|;
+operator|~
+name|AnalysisDeclContextManager
+argument_list|()
+block|;
+name|AnalysisDeclContext
+operator|*
+name|getContext
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+block|;
+name|bool
+name|getUseUnoptimizedCFG
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|cfgBuildOptions
+operator|.
+name|PruneTriviallyFalseEdges
+return|;
+block|}
+name|CFG
+operator|::
+name|BuildOptions
+operator|&
+name|getCFGBuildOptions
+argument_list|()
+block|{
+return|return
+name|cfgBuildOptions
+return|;
+block|}
+specifier|const
+name|StackFrameContext
+operator|*
+name|getStackFrame
+argument_list|(
+argument|AnalysisDeclContext *Ctx
+argument_list|,
+argument|LocationContext const *Parent
+argument_list|,
+argument|const Stmt *S
+argument_list|,
+argument|const CFGBlock *Blk
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+block|{
+return|return
+name|LocContexts
+operator|.
+name|getStackFrame
+argument_list|(
+name|Ctx
+argument_list|,
+name|Parent
+argument_list|,
+name|S
+argument_list|,
+name|Blk
+argument_list|,
+name|Idx
+argument_list|)
+return|;
+block|}
+comment|// Get the top level stack frame.
+specifier|const
+name|StackFrameContext
+operator|*
+name|getStackFrame
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|LocContexts
+operator|.
+name|getStackFrame
+argument_list|(
+name|getContext
+argument_list|(
+name|D
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|// Get a stack frame with parent.
+name|StackFrameContext
+specifier|const
+operator|*
+name|getStackFrame
+argument_list|(
+argument|const Decl *D
+argument_list|,
+argument|LocationContext const *Parent
+argument_list|,
+argument|const Stmt *S
+argument_list|,
+argument|const CFGBlock *Blk
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+block|{
+return|return
+name|LocContexts
+operator|.
+name|getStackFrame
+argument_list|(
+name|getContext
+argument_list|(
+name|D
+argument_list|)
+argument_list|,
+name|Parent
+argument_list|,
+name|S
+argument_list|,
+name|Blk
+argument_list|,
+name|Idx
+argument_list|)
+return|;
+block|}
+comment|/// Discard all previously created AnalysisDeclContexts.
+name|void
+name|clear
+argument_list|()
+block|;
+name|private
+operator|:
+name|friend
+name|class
+name|AnalysisDeclContext
+block|;
+name|LocationContextManager
+operator|&
+name|getLocationContextManager
+argument_list|()
+block|{
+return|return
+name|LocContexts
+return|;
+block|}
+expr|}
 block|;  }
 end_decl_stmt
 

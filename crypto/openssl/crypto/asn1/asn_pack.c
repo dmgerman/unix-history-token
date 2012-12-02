@@ -43,49 +43,40 @@ begin_comment
 comment|/* Turn an ASN1 encoded SEQUENCE OF into a STACK of structures */
 end_comment
 
-begin_function
-name|STACK
-modifier|*
+begin_expr_stmt
+name|STACK_OF
+argument_list|(
+name|OPENSSL_BLOCK
+argument_list|)
+operator|*
 name|ASN1_seq_unpack
-parameter_list|(
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-name|d2i_of_void
-modifier|*
-name|d2i
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|free_func
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|const unsigned char *buf
+argument_list|,
+argument|int len
+argument_list|,
+argument|d2i_of_void *d2i
+argument_list|,
+argument|void (*free_func)(OPENSSL_BLOCK)
+argument_list|)
 block|{
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|OPENSSL_BLOCK
+argument_list|)
+operator|*
 name|sk
-decl_stmt|;
+block|;
 specifier|const
 name|unsigned
 name|char
-modifier|*
+operator|*
 name|pbuf
-decl_stmt|;
+block|;
 name|pbuf
 operator|=
 name|buf
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -118,40 +109,46 @@ argument_list|,
 name|ASN1_R_DECODE_ERROR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|sk
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/* Turn a STACK structures into an ASN1 encoded SEQUENCE OF structure in a  * OPENSSL_malloc'ed buffer  */
 end_comment
 
-begin_function
-name|unsigned
+begin_decl_stmt
+unit|unsigned
 name|char
 modifier|*
 name|ASN1_seq_pack
-parameter_list|(
-name|STACK
-modifier|*
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|OPENSSL_BLOCK
+argument_list|)
+operator|*
 name|safes
-parameter_list|,
+argument_list|,
 name|i2d_of_void
-modifier|*
+operator|*
 name|i2d
-parameter_list|,
+argument_list|,
 name|unsigned
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|buf
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|len
-parameter_list|)
+argument_list|)
 block|{
 name|int
 name|safelen
@@ -264,7 +261,7 @@ return|return
 name|safe
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* Extract an ASN1 object from an ASN1_STRING */

@@ -157,16 +157,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Non-MT-safe version.  */
+comment|/*  * Internal (non-MPSAFE) version of fgetwc().  This version takes an  * mbstate_t argument specifying the initial conversion state.  For  * wide streams, this should always be fp->_mbstate.  On return, *nread  * is set to the number of bytes read.  */
 end_comment
 
 begin_function
 name|wint_t
-name|__fgetwc
+name|__fgetwc_mbs
 parameter_list|(
 name|FILE
 modifier|*
 name|fp
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|mbs
+parameter_list|,
+name|int
+modifier|*
+name|nread
 parameter_list|,
 name|locale_t
 name|locale
@@ -201,11 +209,18 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
+operator|*
+name|nread
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|WEOF
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|MB_CUR_MAX
@@ -227,12 +242,22 @@ operator|->
 name|_r
 operator|--
 expr_stmt|;
+operator|*
+name|nread
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|wc
 operator|)
 return|;
 block|}
+operator|*
+name|nread
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 name|nconv
@@ -252,10 +277,7 @@ name|fp
 operator|->
 name|_r
 argument_list|,
-operator|&
-name|fp
-operator|->
-name|_mbstate
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -289,7 +311,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Assume that the only valid representation of 			 * the null wide character is a single null byte. 			 */
 name|fp
 operator|->
 name|_p
@@ -299,6 +320,12 @@ name|fp
 operator|->
 name|_r
 operator|--
+expr_stmt|;
+operator|(
+operator|*
+name|nread
+operator|)
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -319,6 +346,11 @@ name|fp
 operator|->
 name|_r
 operator|-=
+name|nconv
+expr_stmt|;
+operator|*
+name|nread
+operator|+=
 name|nconv
 expr_stmt|;
 return|return

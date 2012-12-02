@@ -360,6 +360,16 @@ begin_comment
 comment|/*  * Sizes of various buffers.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* old sizes for small memory machines */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -458,6 +468,119 @@ end_define
 begin_comment
 comment|/* Max number of custom tab stops */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* more reasonable sizes for modern machines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDBUF_SIZE
+value|2048
+end_define
+
+begin_comment
+comment|/* Buffer for multichar commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNGOT_SIZE
+value|200
+end_define
+
+begin_comment
+comment|/* Max chars to unget() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINEBUF_SIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* Initial max size of line in input file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUTBUF_SIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* Output buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROMPT_SIZE
+value|2048
+end_define
+
+begin_comment
+comment|/* Max size of prompt string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TERMBUF_SIZE
+value|2048
+end_define
+
+begin_comment
+comment|/* Termcap buffer for tgetent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TERMSBUF_SIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* Buffer to hold termcap strings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAGLINE_SIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* Max size of line in tags file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TABSTOP_MAX
+value|128
+end_define
+
+begin_comment
+comment|/* Max number of custom tab stops */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Settings automatically determined by configure.  */
@@ -574,6 +697,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* GNU regex library */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GNU_REGEX */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -583,30 +714,6 @@ directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `gen' library (-lgen). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBGEN */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `intl' library (-lintl). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBINTL */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `PW' library (-lPW). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBPW */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */

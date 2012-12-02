@@ -1,26 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__sctp_lock_bsd_h__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__sctp_lock_bsd_h__
-end_define
-
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/*  * General locking concepts: The goal of our locking is to of course provide  * consistency and yet minimize overhead. We will attempt to use  * non-recursive locks which are supposed to be quite inexpensive. Now in  * order to do this the goal is that most functions are not aware of locking.  * Once we have a TCB we lock it and unlock when we are through. This means  * that the TCB lock is kind-of a "global" lock when working on an  * association. Caution must be used when asserting a TCB_LOCK since if we  * recurse we deadlock.  *  * Most other locks (INP and INFO) attempt to localize the locking i.e. we try  * to contain the lock and unlock within the function that needs to lock it.  * This sometimes mean we do extra locks and unlocks and lose a bit of  * efficency, but if the performance statements about non-recursive locks are  * true this should not be a problem.  One issue that arises with this only  * lock when needed is that if an implicit association setup is done we have  * a problem. If at the time I lookup an association I have NULL in the tcb  * return, by the time I call to create the association some other processor  * could have created it. This is what the CREATE lock on the endpoint.  * Places where we will be implicitly creating the association OR just  * creating an association (the connect call) will assert the CREATE_INP  * lock. This will assure us that during all the lookup of INP and INFO if  * another creator is also locking/looking up we can gate the two to  * synchronize. So the CREATE_INP lock is also another one we must use  * extreme caution in locking to make sure we don't hit a re-entrancy issue.  *  * For non FreeBSD 5.x we provide a bunch of EMPTY lock macros so we can  * blatantly put locks everywhere and they reduce to nothing on  * NetBSD/OpenBSD and FreeBSD 4.x  *  */
-end_comment
-
-begin_comment
-comment|/*  * When working with the global SCTP lists we lock and unlock the INP_INFO  * lock. So when we go to lookup an association we will want to do a  * SCTP_INP_INFO_RLOCK() and then when we want to add a new association to  * the SCTP_BASE_INFO() list's we will do a SCTP_INP_INFO_WLOCK().  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -36,6 +16,26 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NETINET_SCTP_LOCK_BSD_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NETINET_SCTP_LOCK_BSD_H_
+end_define
+
+begin_comment
+comment|/*  * General locking concepts: The goal of our locking is to of course provide  * consistency and yet minimize overhead. We will attempt to use  * non-recursive locks which are supposed to be quite inexpensive. Now in  * order to do this the goal is that most functions are not aware of locking.  * Once we have a TCB we lock it and unlock when we are through. This means  * that the TCB lock is kind-of a "global" lock when working on an  * association. Caution must be used when asserting a TCB_LOCK since if we  * recurse we deadlock.  *  * Most other locks (INP and INFO) attempt to localize the locking i.e. we try  * to contain the lock and unlock within the function that needs to lock it.  * This sometimes mean we do extra locks and unlocks and lose a bit of  * efficency, but if the performance statements about non-recursive locks are  * true this should not be a problem.  One issue that arises with this only  * lock when needed is that if an implicit association setup is done we have  * a problem. If at the time I lookup an association I have NULL in the tcb  * return, by the time I call to create the association some other processor  * could have created it. This is what the CREATE lock on the endpoint.  * Places where we will be implicitly creating the association OR just  * creating an association (the connect call) will assert the CREATE_INP  * lock. This will assure us that during all the lookup of INP and INFO if  * another creator is also locking/looking up we can gate the two to  * synchronize. So the CREATE_INP lock is also another one we must use  * extreme caution in locking to make sure we don't hit a re-entrancy issue.  *  * For non FreeBSD 5.x we provide a bunch of EMPTY lock macros so we can  * blatantly put locks everywhere and they reduce to nothing on  * NetBSD/OpenBSD and FreeBSD 4.x  *  */
+end_comment
+
+begin_comment
+comment|/*  * When working with the global SCTP lists we lock and unlock the INP_INFO  * lock. So when we go to lookup an association we will want to do a  * SCTP_INP_INFO_RLOCK() and then when we want to add a new association to  * the SCTP_BASE_INFO() list's we will do a SCTP_INP_INFO_WLOCK().  */
+end_comment
 
 begin_decl_stmt
 specifier|extern

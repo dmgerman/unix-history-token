@@ -1382,6 +1382,26 @@ operator|!=
 name|LOG_INTERNAL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spa_version
+argument_list|(
+name|spa
+argument_list|)
+operator|<
+name|SPA_VERSION_ZPOOL_HISTORY
+operator|||
+operator|!
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|tx
 operator|=
 name|dmu_tx_create_dd
@@ -1950,7 +1970,7 @@ decl_stmt|;
 name|va_list
 name|adx2
 decl_stmt|;
-comment|/* 	 * If this is part of creating a pool, not everything is 	 * initialized yet, so don't bother logging the internal events. 	 */
+comment|/* 	 * If this is part of creating a pool, not everything is 	 * initialized yet, so don't bother logging the internal events. 	 * Likewise if the pool is not writeable. 	 */
 if|if
 condition|(
 name|tx
@@ -1958,6 +1978,12 @@ operator|->
 name|tx_txg
 operator|==
 name|TXG_INITIAL
+operator|||
+operator|!
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
 condition|)
 return|return;
 name|va_copy

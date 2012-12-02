@@ -36,15 +36,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file forward declares and imports various common LLVM datatypes that
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// clang wants to use unqualified.
+comment|/// \brief Forward declares and imports various common LLVM datatypes that
 end_comment
 
 begin_comment
-comment|//
+comment|/// clang wants to use unqualified.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -98,6 +102,22 @@ name|ArrayRef
 expr_stmt|;
 name|template
 operator|<
+name|class
+name|T
+operator|>
+name|class
+name|OwningPtr
+expr_stmt|;
+name|template
+operator|<
+name|unsigned
+name|InternalLen
+operator|>
+name|class
+name|SmallString
+expr_stmt|;
+name|template
+operator|<
 name|typename
 name|T
 operator|,
@@ -115,6 +135,42 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SaveAndRestore
+expr_stmt|;
+comment|// Reference counting.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|IntrusiveRefCntPtr
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|IntrusiveRefCntPtrInfo
+expr_stmt|;
+name|template
+operator|<
+name|class
+name|Derived
+operator|>
+name|class
+name|RefCountedBase
+expr_stmt|;
+name|class
+name|RefCountedBaseVPTR
+decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -171,12 +227,48 @@ expr_stmt|;
 name|using
 name|llvm
 operator|::
+name|OwningPtr
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|SmallString
+expr_stmt|;
+name|using
+name|llvm
+operator|::
 name|SmallVector
 expr_stmt|;
 name|using
 name|llvm
 operator|::
 name|SmallVectorImpl
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|SaveAndRestore
+expr_stmt|;
+comment|// Reference counting.
+name|using
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|IntrusiveRefCntPtrInfo
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|RefCountedBase
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|RefCountedBaseVPTR
 expr_stmt|;
 name|using
 name|llvm

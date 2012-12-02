@@ -167,6 +167,12 @@ directive|define
 name|AT91RM9200_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATMEL_ENV
+end_define
+
 begin_typedef
 typedef|typedef
 specifier|volatile
@@ -18497,7 +18503,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<at91/at91_pio_rm9200.h>
+file|<at91/at91_pioreg.h>
 end_include
 
 begin_comment

@@ -4777,18 +4777,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ND6_IFF_PREFER_SOURCE
-name|SETFLAG
-argument_list|(
-literal|"prefer_source"
-argument_list|,
-name|ND6_IFF_PREFER_SOURCE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|SETVALUE
 argument_list|(
 literal|"basereachable"
@@ -5196,26 +5184,6 @@ condition|)
 name|printf
 argument_list|(
 literal|"auto_linklocal "
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ND6_IFF_PREFER_SOURCE
-if|if
-condition|(
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-name|ND6_IFF_PREFER_SOURCE
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"prefer_source "
 argument_list|)
 expr_stmt|;
 endif|#

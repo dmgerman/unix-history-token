@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: vi.c,v 1.25 2006/03/06 21:11:56 christos Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: vi.c,v 1.30 2009/02/21 23:31:56 christos Exp $  */
 end_comment
 
 begin_if
@@ -170,6 +170,10 @@ name|el_line
 operator|.
 name|buffer
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -181,6 +185,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|el
@@ -322,9 +327,13 @@ name|el_chared
 operator|.
 name|c_kill
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|k
 operator|->
 name|last
@@ -332,6 +341,7 @@ operator|-
 name|k
 operator|->
 name|buf
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -364,6 +374,9 @@ name|el_errfile
 argument_list|,
 literal|"Paste: \"%.*s\"\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|k
@@ -406,6 +419,9 @@ name|c_insert
 argument_list|(
 name|el
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -446,8 +462,6 @@ operator|->
 name|buf
 argument_list|,
 name|len
-operator|+
-literal|0u
 argument_list|)
 expr_stmt|;
 return|return
@@ -1397,6 +1411,10 @@ name|el_line
 operator|.
 name|buffer
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -1408,6 +1426,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1474,6 +1493,10 @@ name|el_line
 operator|.
 name|cursor
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -1485,6 +1508,7 @@ operator|->
 name|el_line
 operator|.
 name|cursor
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2048,6 +2072,10 @@ name|c_undo
 operator|.
 name|cursor
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -2059,6 +2087,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 expr_stmt|;
 name|el
 operator|->
@@ -2565,6 +2594,10 @@ name|c_delbefore
 argument_list|(
 name|el
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -2576,6 +2609,7 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|el
@@ -3094,7 +3128,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|delta
 decl_stmt|,
 name|i
@@ -3412,6 +3446,10 @@ name|el_line
 operator|.
 name|cursor
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -3423,6 +3461,7 @@ operator|->
 name|el_line
 operator|.
 name|cursor
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3877,8 +3916,11 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-name|int
+name|ssize_t
 name|st
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|char
 name|tempfile
@@ -3944,6 +3986,10 @@ name|fd
 argument_list|,
 name|cp
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -3951,8 +3997,7 @@ operator|.
 name|lastchar
 operator|-
 name|cp
-operator|+
-literal|0u
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|write
@@ -4007,6 +4052,10 @@ literal|"vi"
 argument_list|,
 name|tempfile
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -4024,7 +4073,7 @@ argument_list|(
 name|pid
 argument_list|,
 operator|&
-name|st
+name|status
 argument_list|,
 literal|0
 argument_list|)
@@ -4036,7 +4085,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0ll
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -4049,6 +4101,10 @@ name|fd
 argument_list|,
 name|cp
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|el
 operator|->
 name|el_line
@@ -4056,8 +4112,7 @@ operator|.
 name|limit
 operator|-
 name|cp
-operator|+
-literal|0u
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4294,9 +4349,14 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|wep
 operator|-
 name|wsp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

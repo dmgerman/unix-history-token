@@ -425,7 +425,6 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-empty_stmt|;
 name|u64
 modifier|*
 name|mcaddr
@@ -8901,7 +8900,7 @@ name|dev
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_TSO
+name|IFCAP_TSO4
 operator||
 name|IFCAP_VLAN_HWTSO
 expr_stmt|;

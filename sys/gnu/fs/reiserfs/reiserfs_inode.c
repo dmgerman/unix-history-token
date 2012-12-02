@@ -442,11 +442,6 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|reiserfs_node
 modifier|*
 name|ip
@@ -460,12 +455,6 @@ operator|=
 name|ap
 operator|->
 name|a_vp
-expr_stmt|;
-name|td
-operator|=
-name|ap
-operator|->
-name|a_td
 expr_stmt|;
 name|ip
 operator|=
@@ -512,8 +501,6 @@ expr_stmt|;
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3066,7 +3053,6 @@ name|rmp
 operator|->
 name|rm_dev
 expr_stmt|;
-comment|/* 	 * If this malloc() is performed after the getnewvnode() it might 	 * block, leaving a vnode with a NULL v_data to be found by 	 * reiserfs_sync() if a sync happens to fire right then, which 	 * will cause a panic because reiserfs_sync() blindly dereferences 	 * vp->v_data (as well it should). 	 */
 name|reiserfs_log
 argument_list|(
 name|LOG_DEBUG

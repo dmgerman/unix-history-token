@@ -192,6 +192,9 @@ name|class
 name|MemIntrinsic
 decl_stmt|;
 name|class
+name|DominatorTree
+decl_stmt|;
+name|class
 name|AliasAnalysis
 block|{
 name|protected
@@ -1048,7 +1051,7 @@ operator|)
 return|;
 block|}
 comment|/// doesAccessArgPointees - Return true if functions with the specified
-comment|/// behavior are known to potentially read or write  from objects pointed
+comment|/// behavior are known to potentially read or write from objects pointed
 comment|/// to be their pointer-typed arguments (with arbitrary offsets).
 comment|///
 specifier|static
@@ -1754,6 +1757,66 @@ name|ImmutableCallSite
 name|CS2
 parameter_list|)
 function_decl|;
+comment|/// callCapturesBefore - Return information about whether a particular call
+comment|/// site modifies or reads the specified memory location.
+name|ModRefResult
+name|callCapturesBefore
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|AliasAnalysis
+operator|::
+name|Location
+operator|&
+name|MemLoc
+argument_list|,
+name|DominatorTree
+operator|*
+name|DT
+argument_list|)
+decl_stmt|;
+comment|/// callCapturesBefore - A convenience wrapper.
+name|ModRefResult
+name|callCapturesBefore
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|)
+block|{
+return|return
+name|callCapturesBefore
+argument_list|(
+name|I
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|,
+name|DT
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|/// Higher level methods for querying mod/ref information.
 comment|///
@@ -2129,6 +2192,18 @@ comment|///    NoAlias returns
 comment|///
 name|bool
 name|isIdentifiedObject
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
+comment|/// its definition.  This returns true for allocas, non-extern-weak globals and
+comment|/// byval arguments.
+name|bool
+name|isKnownNonNull
 argument_list|(
 specifier|const
 name|Value

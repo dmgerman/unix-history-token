@@ -105,6 +105,44 @@ name|Large
 block|}
 enum|;
 block|}
+comment|// TLS models.
+name|namespace
+name|TLSModel
+block|{
+enum|enum
+name|Model
+block|{
+name|GeneralDynamic
+block|,
+name|LocalDynamic
+block|,
+name|InitialExec
+block|,
+name|LocalExec
+block|}
+enum|;
+block|}
+comment|// Code generation optimization level.
+name|namespace
+name|CodeGenOpt
+block|{
+enum|enum
+name|Level
+block|{
+name|None
+block|,
+comment|// -O0
+name|Less
+block|,
+comment|// -O1
+name|Default
+block|,
+comment|// -O2, -Os
+name|Aggressive
+comment|// -O3
+block|}
+enum|;
+block|}
 block|}
 end_decl_stmt
 

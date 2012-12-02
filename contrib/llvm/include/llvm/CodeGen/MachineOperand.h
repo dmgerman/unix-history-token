@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Hashing.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -142,6 +148,9 @@ comment|///< Abstract Stack Frame Index
 name|MO_ConstantPoolIndex
 block|,
 comment|///< Address of indexed Constant in Constant Pool
+name|MO_TargetIndex
+block|,
+comment|///< Target-dependent index+offset operand.
 name|MO_JumpTableIndex
 block|,
 comment|///< Address of indexed Jump Table for switch
@@ -154,6 +163,9 @@ comment|///< Address of a global value
 name|MO_BlockAddress
 block|,
 comment|///< Address of a basic block
+name|MO_RegisterMask
+block|,
+comment|///< Mask of preserved registers.
 name|MO_Metadata
 block|,
 comment|///< Metadata reference (for debug info)
@@ -233,6 +245,20 @@ name|IsUndef
 range|:
 literal|1
 decl_stmt|;
+comment|/// IsInternalRead - True if this operand reads a value that was defined
+comment|/// inside the same instruction or bundle.  This flag can be set on both use
+comment|/// and def operands.  On a sub-register def operand, it refers to the part
+comment|/// of the register that isn't written.  On a full-register def operand, it
+comment|/// is a noop.
+comment|///
+comment|/// When this flag is set, the instruction bundle must contain at least one
+comment|/// other def of the register.  If multiple instructions in the bundle define
+comment|/// the register, the meaning is target-defined.
+name|bool
+name|IsInternalRead
+range|:
+literal|1
+decl_stmt|;
 comment|/// IsEarlyClobber - True if this MO_Register 'def' operand is written to
 comment|/// by the MachineInstr before all input registers are read.  This is used to
 comment|/// model the GCC inline asm '&' constraint modifier.
@@ -296,6 +322,12 @@ name|ImmVal
 decl_stmt|;
 comment|// For MO_Immediate.
 specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
+decl_stmt|;
+comment|// For MO_RegisterMask.
+specifier|const
 name|MDNode
 modifier|*
 name|MD
@@ -312,10 +344,9 @@ comment|// For MO_Register.
 comment|// Register number is in SmallContents.RegNo.
 name|MachineOperand
 modifier|*
-modifier|*
 name|Prev
 decl_stmt|;
-comment|// Access list for register.
+comment|// Access list for register. See MRI.
 name|MachineOperand
 modifier|*
 name|Next
@@ -579,6 +610,18 @@ operator|==
 name|MO_ConstantPoolIndex
 return|;
 block|}
+comment|/// isTargetIndex - Tests if this is a MO_TargetIndex operand.
+name|bool
+name|isTargetIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_TargetIndex
+return|;
+block|}
 comment|/// isJTI - Tests if this is a MO_JumpTableIndex operand.
 name|bool
 name|isJTI
@@ -625,6 +668,18 @@ return|return
 name|OpKind
 operator|==
 name|MO_BlockAddress
+return|;
+block|}
+comment|/// isRegMask - Tests if this is a MO_RegisterMask operand.
+name|bool
+name|isRegMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_RegisterMask
 return|;
 block|}
 comment|/// isMetadata - Tests if this is a MO_Metadata operand.
@@ -797,6 +852,23 @@ name|IsUndef
 return|;
 block|}
 name|bool
+name|isInternalRead
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|IsInternalRead
+return|;
+block|}
+name|bool
 name|isEarlyClobber
 argument_list|()
 specifier|const
@@ -834,6 +906,9 @@ comment|/// readsReg - Returns true if this operand reads the previous value of 
 comment|/// register.  A use operand with the<undef> flag set doesn't read its
 comment|/// register.  A sub-register def implicitly reads the other parts of the
 comment|/// register being redefined unless the<undef> flag is set.
+comment|///
+comment|/// This refers to reading the register value from before the current
+comment|/// instruction or bundle. Internal bundle reads are not included.
 name|bool
 name|readsReg
 argument_list|()
@@ -852,6 +927,10 @@ operator|!
 name|isUndef
 argument_list|()
 operator|&&
+operator|!
+name|isInternalRead
+argument_list|()
+operator|&&
 operator|(
 name|isUse
 argument_list|()
@@ -859,30 +938,6 @@ operator|||
 name|getSubReg
 argument_list|()
 operator|)
-return|;
-block|}
-comment|/// getNextOperandForReg - Return the next MachineOperand in the function that
-comment|/// uses or defines this register.
-name|MachineOperand
-operator|*
-name|getNextOperandForReg
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isReg
-argument_list|()
-operator|&&
-literal|"This is not a register operand!"
-argument_list|)
-block|;
-return|return
-name|Contents
-operator|.
-name|Reg
-operator|.
-name|Next
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -964,31 +1019,11 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|assert
+name|setIsDef
 argument_list|(
-name|isReg
-argument_list|()
-operator|&&
-literal|"Wrong MachineOperand accessor"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|Val
-operator|||
-operator|!
-name|isDebug
-argument_list|()
-operator|)
-operator|&&
-literal|"Marking a debug operation as def"
-argument_list|)
-expr_stmt|;
-name|IsDef
-operator|=
 operator|!
 name|Val
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -999,34 +1034,7 @@ name|Val
 init|=
 name|true
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isReg
-argument_list|()
-operator|&&
-literal|"Wrong MachineOperand accessor"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|Val
-operator|||
-operator|!
-name|isDebug
-argument_list|()
-operator|)
-operator|&&
-literal|"Marking a debug operation as def"
-argument_list|)
-expr_stmt|;
-name|IsDef
-operator|=
-name|Val
-expr_stmt|;
-block|}
+function_decl|;
 name|void
 name|setImplicit
 parameter_list|(
@@ -1130,6 +1138,28 @@ literal|"Wrong MachineOperand accessor"
 argument_list|)
 expr_stmt|;
 name|IsUndef
+operator|=
+name|Val
+expr_stmt|;
+block|}
+name|void
+name|setIsInternalRead
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|true
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+expr_stmt|;
+name|IsInternalRead
 operator|=
 name|Val
 expr_stmt|;
@@ -1280,6 +1310,9 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
+name|isTargetIndex
+argument_list|()
+operator|||
 name|isJTI
 argument_list|()
 operator|)
@@ -1386,6 +1419,9 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
+name|isTargetIndex
+argument_list|()
+operator|||
 name|isBlockAddress
 argument_list|()
 operator|)
@@ -1435,6 +1471,99 @@ operator|.
 name|Val
 operator|.
 name|SymbolName
+return|;
+block|}
+comment|/// clobbersPhysReg - Returns true if this RegMask clobbers PhysReg.
+comment|/// It is sometimes necessary to detach the register mask pointer from its
+comment|/// machine operand. This static method can be used for such detached bit
+comment|/// mask pointers.
+specifier|static
+name|bool
+name|clobbersPhysReg
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
+parameter_list|,
+name|unsigned
+name|PhysReg
+parameter_list|)
+block|{
+comment|// See TargetRegisterInfo.h.
+name|assert
+argument_list|(
+name|PhysReg
+operator|<
+operator|(
+literal|1u
+operator|<<
+literal|30
+operator|)
+operator|&&
+literal|"Not a physical register"
+argument_list|)
+expr_stmt|;
+return|return
+operator|!
+operator|(
+name|RegMask
+index|[
+name|PhysReg
+operator|/
+literal|32
+index|]
+operator|&
+operator|(
+literal|1u
+operator|<<
+name|PhysReg
+operator|%
+literal|32
+operator|)
+operator|)
+return|;
+block|}
+comment|/// clobbersPhysReg - Returns true if this RegMask operand clobbers PhysReg.
+name|bool
+name|clobbersPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+name|clobbersPhysReg
+argument_list|(
+name|getRegMask
+argument_list|()
+argument_list|,
+name|PhysReg
+argument_list|)
+return|;
+block|}
+comment|/// getRegMask - Returns a bit mask of registers preserved by this RegMask
+comment|/// operand.
+specifier|const
+name|uint32_t
+operator|*
+name|getRegMask
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isRegMask
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|RegMask
 return|;
 block|}
 specifier|const
@@ -1502,6 +1631,9 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
+name|isTargetIndex
+argument_list|()
+operator|||
 name|isBlockAddress
 argument_list|()
 operator|)
@@ -1546,6 +1678,9 @@ name|isFI
 argument_list|()
 operator|||
 name|isCPI
+argument_list|()
+operator|||
+name|isTargetIndex
 argument_list|()
 operator|||
 name|isJTI
@@ -1604,6 +1739,21 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief MachineOperand hash_value overload.
+comment|///
+comment|/// Note that this includes the same information in the hash that
+comment|/// isIdenticalTo uses for comparison. It is thus suited for use in hash
+comment|/// tables which use that function for equality comparisons only.
+name|friend
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
 comment|/// ChangeToImmediate - Replace this operand with a new immediate operand of
 comment|/// the specified value.  If an operand is known to be an immediate already,
 comment|/// the setImm method should be used.
@@ -1786,6 +1936,11 @@ name|bool
 name|isDebug
 init|=
 name|false
+parameter_list|,
+name|bool
+name|isInternalRead
+init|=
+name|false
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1825,6 +1980,12 @@ operator|.
 name|IsUndef
 operator|=
 name|isUndef
+expr_stmt|;
+name|Op
+operator|.
+name|IsInternalRead
+operator|=
+name|isInternalRead
 expr_stmt|;
 name|Op
 operator|.
@@ -1967,6 +2128,56 @@ argument_list|(
 name|MachineOperand
 operator|::
 name|MO_ConstantPoolIndex
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|setIndex
+argument_list|(
+name|Idx
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setOffset
+argument_list|(
+name|Offset
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreateTargetIndex
+parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|,
+name|int64_t
+name|Offset
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_TargetIndex
 argument_list|)
 decl_stmt|;
 name|Op
@@ -2201,6 +2412,55 @@ return|return
 name|Op
 return|;
 block|}
+comment|/// CreateRegMask - Creates a register mask operand referencing Mask.  The
+comment|/// operand does not take ownership of the memory referenced by Mask, it must
+comment|/// remain valid for the lifetime of the operand.
+comment|///
+comment|/// A RegMask operand represents a set of non-clobbered physical registers on
+comment|/// an instruction that clobbers many registers, typically a call.  The bit
+comment|/// mask has a bit set for each physreg that is preserved by this
+comment|/// instruction, as described in the documentation for
+comment|/// TargetRegisterInfo::getCallPreservedMask().
+comment|///
+comment|/// Any physreg with a 0 bit in the mask is clobbered by the instruction.
+comment|///
+specifier|static
+name|MachineOperand
+name|CreateRegMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|Mask
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Mask
+operator|&&
+literal|"Missing register mask"
+argument_list|)
+expr_stmt|;
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_RegisterMask
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|RegMask
+operator|=
+name|Mask
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
 specifier|static
 name|MachineOperand
 name|CreateMetadata
@@ -2299,23 +2559,6 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// AddRegOperandToRegInfo - Add this register operand to the specified
-comment|/// MachineRegisterInfo.  If it is null, then the next/prev fields should be
-comment|/// explicitly nulled out.
-name|void
-name|AddRegOperandToRegInfo
-parameter_list|(
-name|MachineRegisterInfo
-modifier|*
-name|RegInfo
-parameter_list|)
-function_decl|;
-comment|/// RemoveRegOperandFromRegInfo - Remove this register operand from the
-comment|/// MachineRegisterInfo it is linked with.
-name|void
-name|RemoveRegOperandFromRegInfo
-parameter_list|()
-function_decl|;
 block|}
 empty_stmt|;
 specifier|inline

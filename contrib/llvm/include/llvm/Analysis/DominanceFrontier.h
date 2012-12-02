@@ -817,6 +817,11 @@ range|:
 name|public
 name|DominanceFrontierBase
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 specifier|static

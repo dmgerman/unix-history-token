@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -84,9 +78,6 @@ name|class
 name|MCFragment
 decl_stmt|;
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
 name|MCSymbolData
 decl_stmt|;
 name|class
@@ -94,9 +85,6 @@ name|MCSymbolRefExpr
 decl_stmt|;
 name|class
 name|MCValue
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 comment|/// MCObjectWriter - Defines the object file and target independent interfaces
 comment|/// used by the assembler backend to write native file format object files.
@@ -689,46 +677,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @}
-comment|/// Utility function to encode a SLEB128 value.
-specifier|static
-name|void
-name|EncodeSLEB128
-parameter_list|(
-name|int64_t
-name|Value
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
-function_decl|;
-comment|/// Utility function to encode a ULEB128 value.
-specifier|static
-name|void
-name|EncodeULEB128
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
-function_decl|;
 block|}
 empty_stmt|;
-name|MCObjectWriter
-modifier|*
-name|createWinCOFFObjectWriter
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|bool
-name|is64Bit
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

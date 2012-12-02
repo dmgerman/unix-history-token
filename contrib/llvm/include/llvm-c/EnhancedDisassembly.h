@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCEnhancedDisassembly Enhanced Disassembly  * @ingroup LLVMC  * @deprecated  *  * This module contains an interface to the Enhanced Disassembly (edis)  * library. The edis library is deprecated and will likely disappear in  * the near future. You should use the @ref LLVMCDisassembler interface  * instead.  *  * @{  */
 comment|/*!  @typedef EDByteReaderCallback  Interface to memory from which instructions may be read.  @param byte A pointer whose target should be filled in with the data returned.  @param address The address of the byte to be read.  @param arg An anonymous argument for client use.  @result 0 on success; -1 otherwise.  */
 typedef|typedef
 name|int
@@ -592,6 +593,7 @@ name|EDTokenVisitor_t
 name|visitor
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 endif|#
 directive|endif
 ifdef|#

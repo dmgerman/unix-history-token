@@ -124,6 +124,11 @@ modifier|*
 name|CompletionConsumer
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|SkipFunctionBodies
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Parse the main file known to the preprocessor, producing an
@@ -137,6 +142,11 @@ name|S
 parameter_list|,
 name|bool
 name|PrintStats
+init|=
+name|false
+parameter_list|,
+name|bool
+name|SkipFunctionBodies
 init|=
 name|false
 parameter_list|)

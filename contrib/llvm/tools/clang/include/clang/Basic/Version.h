@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This header defines version macros and version-related utility functions
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// for Clang.
+comment|/// \brief Defines version macros and version-related utility functions
 end_comment
 
 begin_comment
-comment|//
+comment|/// for Clang.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -114,11 +118,7 @@ value|CLANG_MAKE_VERSION_STRING2(X.Y.Z)
 end_define
 
 begin_comment
-comment|/// \brief A string that describes the Clang version number, e.g.,
-end_comment
-
-begin_comment
-comment|/// "1.0".
+comment|/// \brief A string that describes the Clang version number, e.g., "1.0".
 end_comment
 
 begin_define
@@ -126,7 +126,7 @@ define|#
 directive|define
 name|CLANG_VERSION_STRING
 define|\
-value|CLANG_MAKE_VERSION_STRING(CLANG_VERSION_MAJOR,CLANG_VERSION_MINOR,CLANG_VERSION_PATCHLEVEL)
+value|CLANG_MAKE_VERSION_STRING(CLANG_VERSION_MAJOR,CLANG_VERSION_MINOR, \                             CLANG_VERSION_PATCHLEVEL)
 end_define
 
 begin_else
@@ -151,11 +151,7 @@ value|CLANG_MAKE_VERSION_STRING2(X.Y)
 end_define
 
 begin_comment
-comment|/// \brief A string that describes the Clang version number, e.g.,
-end_comment
-
-begin_comment
-comment|/// "1.0".
+comment|/// \brief A string that describes the Clang version number, e.g., "1.0".
 end_comment
 
 begin_define
@@ -184,16 +180,36 @@ name|string
 name|getClangRepositoryPath
 argument_list|()
 expr_stmt|;
+comment|/// \brief Retrieves the repository path from which LLVM was built.
+comment|///
+comment|/// This supports LLVM residing in a separate repository from clang.
+name|std
+operator|::
+name|string
+name|getLLVMRepositoryPath
+argument_list|()
+expr_stmt|;
 comment|/// \brief Retrieves the repository revision number (or identifer) from which
-comment|///  this Clang was built.
+comment|/// this Clang was built.
 name|std
 operator|::
 name|string
 name|getClangRevision
 argument_list|()
 expr_stmt|;
+comment|/// \brief Retrieves the repository revision number (or identifer) from which
+comment|/// LLVM was built.
+comment|///
+comment|/// If Clang and LLVM are in the same repository, this returns the same
+comment|/// string as getClangRevision.
+name|std
+operator|::
+name|string
+name|getLLVMRevision
+argument_list|()
+expr_stmt|;
 comment|/// \brief Retrieves the full repository version that is an amalgamation of
-comment|///  the information in getClangRepositoryPath() and getClangRevision().
+comment|/// the information in getClangRepositoryPath() and getClangRevision().
 name|std
 operator|::
 name|string
@@ -201,8 +217,8 @@ name|getClangFullRepositoryVersion
 argument_list|()
 expr_stmt|;
 comment|/// \brief Retrieves a string representing the complete clang version,
-comment|///   which includes the clang version number, the repository version,
-comment|///   and the vendor tag.
+comment|/// which includes the clang version number, the repository version,
+comment|/// and the vendor tag.
 name|std
 operator|::
 name|string
@@ -210,8 +226,8 @@ name|getClangFullVersion
 argument_list|()
 expr_stmt|;
 comment|/// \brief Retrieves a string representing the complete clang version suitable
-comment|///   for use in the CPP __VERSION__ macro, which includes the clang version
-comment|///   number, the repository version, and the vendor tag.
+comment|/// for use in the CPP __VERSION__ macro, which includes the clang version
+comment|/// number, the repository version, and the vendor tag.
 name|std
 operator|::
 name|string

@@ -116,7 +116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * DATA STRUCTURE:  AslKeywordMapping  *  * DESCRIPTION:     Maps the ParseOpcode to the actual AML opcode.  The parse  *                  opcodes are generated from Bison, and this table must  *                  track any additions to them.  *  * Each entry in the table contains the following items:  *  * AML opcode   - Opcode that is written to the AML file  * Value        - Value of the object to be written (if applicable)  * Flags        - 1) Whether this opcode opens an AML "package".  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DATA STRUCTURE:  AslKeywordMapping  *  * DESCRIPTION:     Maps the ParseOpcode to the actual AML opcode. The parse  *                  opcodes are generated from Bison, and this table must  *                  track any additions to them.  *  * Each entry in the table contains the following items:  *  * AML opcode   - Opcode that is written to the AML file  * Value        - Value of the object to be written (if applicable)  * Flags        - 1) Whether this opcode opens an AML "package".  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1513,18 +1513,6 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* INCLUDE_CSTYLE */
-name|OP_TABLE_ENTRY
-argument_list|(
-name|AML_DEFAULT_ARG_OP
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|,
 comment|/* INCLUDE_END */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1811,18 +1799,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|ACPI_BTYPE_INTEGER
-argument_list|)
-block|,
-comment|/* LINE */
-name|OP_TABLE_ENTRY
-argument_list|(
-name|AML_DEFAULT_ARG_OP
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 block|,
 comment|/* LLESS */
@@ -3057,6 +3033,18 @@ argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_ADR_SPACE_SYSTEM_MEMORY
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* REGIONSPACE_PCC */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|ACPI_ADR_SPACE_PLATFORM_COMM
 argument_list|,
 literal|0
 argument_list|,

@@ -69,6 +69,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|namespace
 name|sys
 block|{

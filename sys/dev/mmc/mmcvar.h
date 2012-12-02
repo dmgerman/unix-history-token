@@ -47,7 +47,7 @@ name|MMC_IVAR_ERASE_SECTOR
 block|,
 name|MMC_IVAR_MAX_DATA
 block|,
-comment|//    MMC_IVAR_,
+name|MMC_IVAR_CARD_ID_STRING
 block|}
 enum|;
 end_enum
@@ -189,6 +189,17 @@ argument_list|,
 argument|MAX_DATA
 argument_list|,
 argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|card_id_string
+argument_list|,
+argument|CARD_ID_STRING
+argument_list|,
+argument|const char *
 argument_list|)
 end_macro
 

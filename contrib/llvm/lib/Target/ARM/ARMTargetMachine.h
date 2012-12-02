@@ -178,9 +178,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|virtual
@@ -222,59 +226,26 @@ return|;
 block|}
 comment|// Pass Pipeline Configuration
 name|virtual
-name|bool
-name|addPreISel
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addInstSelector
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreRegAlloc
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreSched2
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPreEmitPass
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|;
 name|virtual
 name|bool
 name|addCodeEmitter
 argument_list|(
-argument|PassManagerBase&PM
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|JITCodeEmitter&MCE
+name|JITCodeEmitter
+operator|&
+name|MCE
 argument_list|)
 block|; }
 decl_stmt|;
@@ -286,6 +257,11 @@ range|:
 name|public
 name|ARMBaseTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|ARMInstrInfo
 name|InstrInfo
 block|;
@@ -318,9 +294,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|virtual
@@ -436,6 +416,11 @@ operator|:
 name|public
 name|ARMBaseTargetMachine
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|// Either Thumb1InstrInfo or Thumb2InstrInfo.
 name|OwningPtr
 operator|<
@@ -476,9 +461,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 comment|/// returns either Thumb1RegisterInfo or Thumb2RegisterInfo

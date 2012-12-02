@@ -194,12 +194,6 @@ name|getOpcode
 argument_list|()
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown binary operator!"
-argument_list|)
-expr_stmt|;
 case|case
 name|BO_PtrMemD
 case|:
@@ -548,12 +542,6 @@ name|getOpcode
 argument_list|()
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown unary operator!"
-argument_list|)
-expr_stmt|;
 case|case
 name|UO_PostInc
 case|:

@@ -124,6 +124,22 @@ name|NFSSATTR_SIZERDEV
 value|0x8
 end_define
 
+begin_comment
+comment|/* Use this macro for debug printfs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSCL_DEBUG
+parameter_list|(
+name|level
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 		if (nfscl_debuglevel>= (level))			\ 			printf(__VA_ARGS__);				\ 	} while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

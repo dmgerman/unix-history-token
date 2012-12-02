@@ -203,7 +203,7 @@ decl_stmt|;
 name|uint16_t
 name|nendpoint
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|iface_no
 decl_stmt|;
 name|ptr
@@ -242,9 +242,7 @@ literal|0
 expr_stmt|;
 name|iface_no
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFFFF
 expr_stmt|;
 name|ptr
 operator|=
@@ -646,9 +644,7 @@ literal|0
 expr_stmt|;
 name|iface_no
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFFFF
 expr_stmt|;
 name|ptr
 operator|=
@@ -1966,9 +1962,7 @@ name|ps
 operator|->
 name|len
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFFFF
 expr_stmt|;
 block|}
 name|src_len
@@ -2031,9 +2025,7 @@ name|libusb20_me_encode
 argument_list|(
 name|NULL
 argument_list|,
-literal|0
-operator|-
-literal|1
+literal|0xFFFF
 operator|-
 literal|3
 argument_list|,
@@ -2070,16 +2062,11 @@ if|if
 condition|(
 name|src_len
 operator|>
-call|(
-name|uint16_t
-call|)
-argument_list|(
-literal|0
-operator|-
-literal|1
+operator|(
+literal|0xFFFF
 operator|-
 literal|3
-argument_list|)
+operator|)
 condition|)
 comment|/* overflow */
 goto|goto
@@ -2222,9 +2209,7 @@ name|libusb20_me_encode
 argument_list|(
 name|buf
 argument_list|,
-literal|0
-operator|-
-literal|1
+literal|0xFFFF
 operator|-
 literal|3
 argument_list|,

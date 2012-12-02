@@ -13,14 +13,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|uint64_t
 name|cn_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int16_t
+name|uint16_t
 name|wchar
 typedef|;
 end_typedef
@@ -122,13 +122,13 @@ begin_struct
 struct|struct
 name|fixuphdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|fh_magic
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|fh_foff
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|fh_fnum
 decl_stmt|;
 block|}
@@ -146,31 +146,31 @@ begin_struct
 struct|struct
 name|attrhdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|a_type
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reclen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|a_flag
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|a_namelen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|a_nameoff
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reserved1
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|a_compression
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reserved2
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|a_index
 decl_stmt|;
 block|}
@@ -252,16 +252,16 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|a_datalen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|reserved1
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|a_dataoff
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|a_indexed
 decl_stmt|;
 block|}
@@ -275,22 +275,22 @@ decl_stmt|;
 name|cn_t
 name|a_vcnend
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|a_dataoff
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|a_compressalg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reserved1
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|a_allocated
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|a_datalen
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|a_initialized
 decl_stmt|;
 block|}
@@ -321,16 +321,16 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int64_t
+name|uint64_t
 name|t_create
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|t_write
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|t_mftwrite
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|t_access
 decl_stmt|;
 block|}
@@ -384,32 +384,32 @@ begin_struct
 struct|struct
 name|attr_name
 block|{
-name|u_int32_t
+name|uint32_t
 name|n_pnumber
 decl_stmt|;
 comment|/* Parent ntnode */
-name|u_int32_t
+name|uint32_t
 name|reserved
 decl_stmt|;
 name|ntfs_times_t
 name|n_times
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|n_size
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|n_attrsz
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|n_flag
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|n_namelen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|n_nametype
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|n_name
 index|[
 literal|1
@@ -430,39 +430,39 @@ begin_struct
 struct|struct
 name|attr_indexroot
 block|{
-name|u_int32_t
+name|uint32_t
 name|ir_unkn1
 decl_stmt|;
 comment|/* always 0x30 */
-name|u_int32_t
+name|uint32_t
 name|ir_unkn2
 decl_stmt|;
 comment|/* always 0x1 */
-name|u_int32_t
+name|uint32_t
 name|ir_size
 decl_stmt|;
 comment|/* ??? */
-name|u_int32_t
+name|uint32_t
 name|ir_unkn3
 decl_stmt|;
 comment|/* number of cluster */
-name|u_int32_t
+name|uint32_t
 name|ir_unkn4
 decl_stmt|;
 comment|/* always 0x10 */
-name|u_int32_t
+name|uint32_t
 name|ir_datalen
 decl_stmt|;
 comment|/* sizeof simething */
-name|u_int32_t
+name|uint32_t
 name|ir_allocated
 decl_stmt|;
 comment|/* same as above */
-name|u_int16_t
+name|uint16_t
 name|ir_flag
 decl_stmt|;
 comment|/* ?? always 1 */
-name|u_int16_t
+name|uint16_t
 name|ir_unkn7
 decl_stmt|;
 block|}
@@ -473,38 +473,38 @@ begin_struct
 struct|struct
 name|attr_attrlist
 block|{
-name|u_int32_t
+name|uint32_t
 name|al_type
 decl_stmt|;
 comment|/* Attribute type */
-name|u_int16_t
+name|uint16_t
 name|reclen
 decl_stmt|;
 comment|/* length of this entry */
-name|u_int8_t
+name|uint8_t
 name|al_namelen
 decl_stmt|;
 comment|/* Attribute name len */
-name|u_int8_t
+name|uint8_t
 name|al_nameoff
 decl_stmt|;
 comment|/* Name offset from entry start */
-name|u_int64_t
+name|uint64_t
 name|al_vcnstart
 decl_stmt|;
 comment|/* VCN number */
-name|u_int32_t
+name|uint32_t
 name|al_inumber
 decl_stmt|;
 comment|/* Parent ntnode */
-name|u_int32_t
+name|uint32_t
 name|reserved
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|al_index
 decl_stmt|;
 comment|/* Attribute index in MFT record */
-name|u_int16_t
+name|uint16_t
 name|al_name
 index|[
 literal|1
@@ -519,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|NTFS_INDXMAGIC
-value|(u_int32_t)(0x58444E49)
+value|(uint32_t)(0x58444E49)
 end_define
 
 begin_struct
@@ -530,22 +530,22 @@ name|struct
 name|fixuphdr
 name|ia_fixup
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|unknown1
 decl_stmt|;
 name|cn_t
 name|ia_bufcn
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ia_hdrsize
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|unknown2
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ia_inuse
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ia_allocated
 decl_stmt|;
 block|}
@@ -570,44 +570,44 @@ begin_struct
 struct|struct
 name|attr_indexentry
 block|{
-name|u_int32_t
+name|uint32_t
 name|ie_number
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|unknown1
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|reclen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ie_size
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ie_flag
 decl_stmt|;
 comment|/* 1 - has subnodes, 2 - last */
-name|u_int32_t
+name|uint32_t
 name|ie_fpnumber
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|unknown2
 decl_stmt|;
 name|ntfs_times_t
 name|ie_ftimes
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ie_fallocated
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ie_fsize
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ie_fflag
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ie_fnamelen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ie_fnametype
 decl_stmt|;
 name|wchar
@@ -625,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|NTFS_FILEMAGIC
-value|(u_int32_t)(0x454C4946)
+value|(uint32_t)(0x454C4946)
 end_define
 
 begin_define
@@ -650,40 +650,40 @@ name|struct
 name|fixuphdr
 name|fr_fixup
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reserved
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|fr_seqnum
 decl_stmt|;
 comment|/* Sequence number */
-name|u_int16_t
+name|uint16_t
 name|fr_nlink
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|fr_attroff
 decl_stmt|;
 comment|/* offset to attributes */
-name|u_int16_t
+name|uint16_t
 name|fr_flags
 decl_stmt|;
 comment|/* 1-nonresident attr, 2-directory */
-name|u_int32_t
+name|uint32_t
 name|fr_size
 decl_stmt|;
 comment|/* hdr + attributes */
-name|u_int32_t
+name|uint32_t
 name|fr_allocated
 decl_stmt|;
 comment|/* allocated length of record */
-name|u_int64_t
+name|uint64_t
 name|fr_mainrec
 decl_stmt|;
 comment|/* main record */
-name|u_int16_t
+name|uint16_t
 name|fr_attrnum
 decl_stmt|;
 comment|/* maximum attr number + 1 ??? */
@@ -730,22 +730,22 @@ index|[
 name|NTFS_ATTRNAME_MAXLEN
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ad_type
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reserved1
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ad_flag
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ad_minlen
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ad_maxlen
 decl_stmt|;
 comment|/* -1 for nonlimited */
@@ -766,7 +766,7 @@ decl_stmt|;
 name|int
 name|ad_namelen
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ad_type
 decl_stmt|;
 block|}
@@ -791,60 +791,60 @@ begin_struct
 struct|struct
 name|bootfile
 block|{
-name|u_int8_t
+name|uint8_t
 name|reserved1
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* asm jmp near ... */
-name|u_int8_t
+name|uint8_t
 name|bf_sysid
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* 'NTFS    ' */
-name|u_int16_t
+name|uint16_t
 name|bf_bps
 decl_stmt|;
 comment|/* bytes per sector */
-name|u_int8_t
+name|uint8_t
 name|bf_spc
 decl_stmt|;
 comment|/* sectors per cluster */
-name|u_int8_t
+name|uint8_t
 name|reserved2
 index|[
 literal|7
 index|]
 decl_stmt|;
 comment|/* unused (zeroed) */
-name|u_int8_t
+name|uint8_t
 name|bf_media
 decl_stmt|;
 comment|/* media desc. (0xF8) */
-name|u_int8_t
+name|uint8_t
 name|reserved3
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bf_spt
 decl_stmt|;
 comment|/* sectors per track */
-name|u_int16_t
+name|uint16_t
 name|bf_heads
 decl_stmt|;
 comment|/* number of heads */
-name|u_int8_t
+name|uint8_t
 name|reserver4
 index|[
 literal|12
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|bf_spv
 decl_stmt|;
 comment|/* sectors per volume */
@@ -856,16 +856,16 @@ name|cn_t
 name|bf_mftmirrcn
 decl_stmt|;
 comment|/* $MFTMirr cn */
-name|u_int8_t
+name|uint8_t
 name|bf_mftrecsz
 decl_stmt|;
 comment|/* MFT record size (clust) */
 comment|/* 0xF6 inducates 1/4 */
-name|u_int32_t
+name|uint32_t
 name|bf_ibsz
 decl_stmt|;
 comment|/* index buffer size */
-name|u_int32_t
+name|uint32_t
 name|bf_volsn
 decl_stmt|;
 comment|/* volume ser. num. */
@@ -918,7 +918,7 @@ index|[
 name|NTFS_SYSNODESNUM
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ntm_bpmftrec
 decl_stmt|;
 name|uid_t
@@ -965,7 +965,7 @@ modifier|*
 name|ntm_ic_u2l
 decl_stmt|;
 comment|/* Unicode to Local (iconv) */
-name|u_int8_t
+name|uint8_t
 name|ntm_multiplier
 decl_stmt|;
 comment|/* NTFS blockno to DEV_BSIZE sectorno */

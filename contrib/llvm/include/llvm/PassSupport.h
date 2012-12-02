@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Valgrind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -489,7 +495,7 @@ parameter_list|(
 name|function
 parameter_list|)
 define|\
-value|static volatile sys::cas_flag initialized = 0; \   sys::cas_flag old_val = sys::CompareAndSwap(&initialized, 1, 0); \   if (old_val == 0) { \     function(Registry); \     sys::MemoryFence(); \     initialized = 2; \   } else { \     sys::cas_flag tmp = initialized; \     sys::MemoryFence(); \     while (tmp != 2) { \       tmp = initialized; \       sys::MemoryFence(); \     } \   }
+value|static volatile sys::cas_flag initialized = 0; \   sys::cas_flag old_val = sys::CompareAndSwap(&initialized, 1, 0); \   if (old_val == 0) { \     function(Registry); \     sys::MemoryFence(); \     TsanIgnoreWritesBegin(); \     TsanHappensBefore(&initialized); \     initialized = 2; \     TsanIgnoreWritesEnd(); \   } else { \     sys::cas_flag tmp = initialized; \     sys::MemoryFence(); \     while (tmp != 2) { \       tmp = initialized; \       sys::MemoryFence(); \     } \   } \   TsanHappensAfter(&initialized);
 define|#
 directive|define
 name|INITIALIZE_PASS

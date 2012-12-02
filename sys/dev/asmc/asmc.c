@@ -4009,6 +4009,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;

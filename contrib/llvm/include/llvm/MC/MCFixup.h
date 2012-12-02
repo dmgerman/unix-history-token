@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -92,6 +104,30 @@ comment|///< A four-byte pc relative fixup.
 name|FK_PCRel_8
 block|,
 comment|///< A eight-byte pc relative fixup.
+name|FK_GPRel_1
+block|,
+comment|///< A one-byte gp relative fixup.
+name|FK_GPRel_2
+block|,
+comment|///< A two-byte gp relative fixup.
+name|FK_GPRel_4
+block|,
+comment|///< A four-byte gp relative fixup.
+name|FK_GPRel_8
+block|,
+comment|///< A eight-byte gp relative fixup.
+name|FK_SecRel_1
+block|,
+comment|///< A one-byte section relative fixup.
+name|FK_SecRel_2
+block|,
+comment|///< A two-byte section relative fixup.
+name|FK_SecRel_4
+block|,
+comment|///< A four-byte section relative fixup.
+name|FK_SecRel_8
+block|,
+comment|///< A eight-byte section relative fixup.
 name|FirstTargetFixupKind
 init|=
 literal|128
@@ -141,6 +177,10 @@ comment|/// determine how the operand value should be encoded into the instructi
 name|unsigned
 name|Kind
 decl_stmt|;
+comment|/// The source location which gave rise to the fixup, if any.
+name|SMLoc
+name|Loc
+decl_stmt|;
 name|public
 label|:
 specifier|static
@@ -157,6 +197,12 @@ name|Value
 parameter_list|,
 name|MCFixupKind
 name|Kind
+parameter_list|,
+name|SMLoc
+name|Loc
+init|=
+name|SMLoc
+argument_list|()
 parameter_list|)
 block|{
 name|assert
@@ -194,6 +240,12 @@ name|unsigned
 argument_list|(
 name|Kind
 argument_list|)
+expr_stmt|;
+name|FI
+operator|.
+name|Loc
+operator|=
+name|Loc
 expr_stmt|;
 return|return
 name|FI
@@ -262,10 +314,8 @@ name|Size
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Invalid generic fixup size!"
 argument_list|)
 expr_stmt|;
@@ -310,6 +360,15 @@ else|:
 name|FK_Data_8
 return|;
 block|}
+block|}
+name|SMLoc
+name|getLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
 block|}
 block|}
 empty_stmt|;

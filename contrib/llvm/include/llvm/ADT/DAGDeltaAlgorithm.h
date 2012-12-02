@@ -79,6 +79,11 @@ comment|/// should satisfy.
 name|class
 name|DAGDeltaAlgorithm
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 typedef|typedef

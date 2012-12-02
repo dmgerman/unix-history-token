@@ -759,7 +759,7 @@ operator|->
 name|sc_ivkey
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The authentication key is: akey = HMAC_SHA512(Master-Key, 0x11) 	 */
+comment|/* 	 * The authentication key is: akey = HMAC_SHA512(Data-Key, 0x11) 	 */
 if|if
 condition|(
 operator|(
@@ -818,11 +818,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|sc_flags
 operator|&
 name|G_ELI_FLAG_AUTH
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * Precalculate SHA256 for HMAC key generation. 		 * This is expensive operation and we can do it only once now or 		 * for every access to sector, so now will be much better. 		 */

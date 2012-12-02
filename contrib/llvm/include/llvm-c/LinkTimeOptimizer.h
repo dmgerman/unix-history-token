@@ -79,6 +79,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCLinkTimeOptimizer Link Time Optimization  * @ingroup LLVMC  *  * @{  */
 comment|/// This provides a dummy type for pointers to the LTO object.
 typedef|typedef
 name|void
@@ -158,6 +159,7 @@ modifier|*
 name|output_filename
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

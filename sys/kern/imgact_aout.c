@@ -442,6 +442,13 @@ define|\
 value|(AOUT32_USRSTACK - sizeof(struct freebsd32_ps_strings))
 end_define
 
+begin_define
+define|#
+directive|define
+name|AOUT32_MINUSER
+value|FREEBSD32_MINUSER
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -559,7 +566,7 @@ block|,
 operator|.
 name|sv_minuser
 operator|=
-literal|0
+name|AOUT32_MINUSER
 block|,
 operator|.
 name|sv_maxuser
@@ -759,7 +766,7 @@ operator|(
 operator|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 operator|>>
 literal|16
 operator|)
@@ -773,7 +780,7 @@ operator|(
 operator|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 operator|>>
 literal|16
 operator|)
@@ -793,7 +800,7 @@ name|ntohl
 argument_list|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 argument_list|)
 operator|)
 operator|>>
@@ -818,7 +825,7 @@ call|)
 argument_list|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 operator|&
 literal|0xffff
 argument_list|)
@@ -895,7 +902,7 @@ name|ntohl
 argument_list|(
 name|a_out
 operator|->
-name|a_magic
+name|a_midmag
 argument_list|)
 operator|&
 literal|0xffff

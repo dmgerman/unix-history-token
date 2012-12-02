@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterClassInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -106,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/RegisterClassInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
@@ -113,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_include
@@ -239,14 +233,9 @@ name|DefIndices
 expr_stmt|;
 comment|/// KeepRegs - A set of registers which are live and cannot be changed to
 comment|/// break anti-dependencies.
-name|SmallSet
-operator|<
-name|unsigned
-operator|,
-literal|4
-operator|>
+name|BitVector
 name|KeepRegs
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|CriticalAntiDepBreaker

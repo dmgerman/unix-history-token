@@ -94,11 +94,10 @@ name|CompilerInvocation
 modifier|&
 name|CI
 parameter_list|,
-name|StringRef
-name|Filename
-parameter_list|,
-name|InputKind
-name|Kind
+specifier|const
+name|FrontendInputFile
+modifier|&
+name|Input
 parameter_list|,
 name|DiagnosticConsumer
 modifier|*
@@ -127,11 +126,10 @@ name|CompilerInvocation
 modifier|&
 name|origCI
 parameter_list|,
-name|StringRef
-name|Filename
-parameter_list|,
-name|InputKind
-name|Kind
+specifier|const
+name|FrontendInputFile
+modifier|&
+name|Input
 parameter_list|,
 name|DiagnosticConsumer
 modifier|*
@@ -156,11 +154,10 @@ name|CompilerInvocation
 modifier|&
 name|origCI
 parameter_list|,
-name|StringRef
-name|Filename
-parameter_list|,
-name|InputKind
-name|Kind
+specifier|const
+name|FrontendInputFile
+modifier|&
+name|Input
 parameter_list|,
 name|DiagnosticConsumer
 modifier|*
@@ -211,6 +208,44 @@ operator|*
 name|DiagClient
 argument_list|)
 decl_stmt|;
+comment|/// \brief Get the set of file remappings from a list of files with remapping
+comment|/// info.
+comment|///
+comment|/// \returns false if no error is produced, true otherwise.
+name|bool
+name|getFileRemappingsFromFileList
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+operator|&
+name|remap
+argument_list|,
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|remapFiles
+argument_list|,
+name|DiagnosticConsumer
+operator|*
+name|DiagClient
+argument_list|)
+decl_stmt|;
 typedef|typedef
 name|void
 function_decl|(
@@ -230,7 +265,11 @@ operator|<
 name|TransformFn
 operator|>
 name|getAllTransformations
-argument_list|()
+argument_list|(
+argument|LangOptions::GCMode OrigGCMode
+argument_list|,
+argument|bool NoFinalizeRemoval
+argument_list|)
 expr_stmt|;
 name|class
 name|MigrationProcess

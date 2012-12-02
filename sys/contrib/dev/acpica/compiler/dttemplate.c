@@ -463,7 +463,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/*      * Create the "special ACPI tables:      * 1) DSDT/SSDT are AML tables, not data tables      * 2) FACS and RSDP have non-standard headers      */
+comment|/*      * Create the special ACPI tables:      * 1) DSDT/SSDT are AML tables, not data tables      * 2) FACS and RSDP have non-standard headers      */
 name|Status
 operator|=
 name|DtCreateOneTemplate
@@ -594,6 +594,9 @@ name|ACPI_STATUS
 name|Status
 init|=
 name|AE_OK
+decl_stmt|;
+name|ACPI_SIZE
+name|Actual
 decl_stmt|;
 comment|/* New file will have a .asl suffix */
 name|DisasmFilename
@@ -731,7 +734,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Special ACPI tables - DSDT, SSDT, FACS, RSDP */
+comment|/* Special ACPI tables - DSDT, SSDT, FADT, RSDP */
 name|AcpiOsPrintf
 argument_list|(
 literal|" */\n\n"
@@ -747,9 +750,13 @@ name|ACPI_SIG_DSDT
 argument_list|)
 condition|)
 block|{
+name|Actual
+operator|=
 name|fwrite
 argument_list|(
 name|TemplateDsdt
+argument_list|,
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -758,11 +765,38 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-literal|1
-argument_list|,
 name|File
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Actual
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|TemplateDsdt
+argument_list|)
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not write to output file %s\n"
+argument_list|,
+name|DisasmFilename
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_ERROR
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 block|}
 elseif|else
 if|if
@@ -775,9 +809,13 @@ name|ACPI_SIG_SSDT
 argument_list|)
 condition|)
 block|{
+name|Actual
+operator|=
 name|fwrite
 argument_list|(
 name|TemplateSsdt
+argument_list|,
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -786,11 +824,38 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-literal|1
-argument_list|,
 name|File
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Actual
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|TemplateSsdt
+argument_list|)
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not write to output file %s\n"
+argument_list|,
+name|DisasmFilename
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_ERROR
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 block|}
 elseif|else
 if|if
@@ -802,6 +867,7 @@ argument_list|,
 name|ACPI_SIG_FACS
 argument_list|)
 condition|)
+comment|/* FADT */
 block|{
 name|AcpiDmDumpDataTable
 argument_list|(
@@ -847,11 +913,13 @@ argument_list|,
 name|Signature
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|Status
+operator|=
 name|AE_ERROR
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 block|}
 name|fprintf
@@ -865,6 +933,8 @@ argument_list|,
 name|DisasmFilename
 argument_list|)
 expr_stmt|;
+name|Cleanup
+label|:
 name|fclose
 argument_list|(
 name|File

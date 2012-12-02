@@ -374,6 +374,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CPUID_SCHEME
+value|0x000f0000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_VARIANT_MASK
 value|0x00f00000
 end_define
@@ -706,6 +713,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA8R1
+value|0x411fc080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA8R2
+value|0x412fc080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA8R3
+value|0x413fc080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA9R1
+value|0x411fc090
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA9R2
+value|0x412fc090
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_SA110
 value|0x4401a100
 end_define
@@ -738,6 +780,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_ID_MV88FR331
+value|0x56153310
+end_define
+
+begin_comment
+comment|/* Marvell Feroceon 88FR331 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_MV88FR571_VD
 value|0x56155710
 end_define
@@ -745,6 +798,28 @@ end_define
 begin_comment
 comment|/* Marvell Feroceon 88FR571-VD Core (ID from datasheet) */
 end_comment
+
+begin_comment
+comment|/*  * LokiPlus core has also ID set to 0x41159260 and this define cause execution of unsupported  * L2-cache instructions so need to disable it. 0x41159260 is a generic ARM926E-S ID.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_MV_LOKIPLUS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88FR571_41
+value|0x00000000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -755,6 +830,92 @@ end_define
 
 begin_comment
 comment|/* Marvell Feroceon 88FR571-VD Core (actual ID from CPU reg) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88SV581X_V6
+value|0x560F5810
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV581x v6 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88SV581X_V7
+value|0x561F5810
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV581x v7 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88SV584X_V6
+value|0x561F5840
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV584x v6 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88SV584X_V7
+value|0x562F5840
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV584x v7 Core */
+end_comment
+
+begin_comment
+comment|/* Marvell's CPUIDs with ARM ID in implementor field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARM_88SV581X_V6
+value|0x410fb760
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV581x v6 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARM_88SV581X_V7
+value|0x413FC080
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV581x v7 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARM_88SV584X_V6
+value|0x410FB020
+end_define
+
+begin_comment
+comment|/* Marvell Sheeva 88SV584x v6 Core */
 end_comment
 
 begin_define
@@ -1047,6 +1208,73 @@ value|0x00000004
 end_define
 
 begin_comment
+comment|/* CPUID registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR0_ARM_ISA_MASK
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR0_THUMB_MASK
+value|0x000000f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR0_THUMB
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR0_THUMB2
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR0_JAZELLE_MASK
+value|0x00000f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR0_THUMBEE_MASK
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR1_ARMV4_MASK
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR1_SEC_EXT_MASK
+value|0x000000f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_PFR1_MICROCTRL_MASK
+value|0x00000f00
+end_define
+
+begin_comment
 comment|/*  * Post-ARM3 CP15 registers:  *  *	1	Control register  *  *	2	Translation Table Base  *  *	3	Domain Access Control  *  *	4	Reserved  *  *	5	Fault Status  *  *	6	Fault Address  *  *	7	Cache/write-buffer Control  *  *	8	TLB Control  *  *	9	Cache Lockdown  *  *	10	TLB Lockdown  *  *	11	Reserved  *  *	12	Reserved  *  *	13	Process ID (for FCSE)  *  *	14	Reserved  *  *	15	Implementation Dependent  */
 end_comment
 
@@ -1237,6 +1465,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_V6_EXTPAGE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* XP: ARMv6 extended page tables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_L2_ENABLE
 value|0x04000000
 end_define
@@ -1338,13 +1577,13 @@ comment|/* Enable L2 for LLR Cache */
 end_comment
 
 begin_comment
-comment|/* Marvell Feroceon Extra Features Register (CP15 register 1, opcode2 0) */
+comment|/* Marvell Extra Features Register (CP15 register 1, opcode2 0) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FC_DCACHE_REPL_LOCK
+name|MV_DC_REPLACE_LOCK
 value|0x80000000
 end_define
 
@@ -1355,7 +1594,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_DCACHE_STREAM_EN
+name|MV_DC_STREAM_ENABLE
 value|0x20000000
 end_define
 
@@ -1366,7 +1605,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_WR_ALLOC_EN
+name|MV_WA_ENABLE
 value|0x10000000
 end_define
 
@@ -1377,7 +1616,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_L2_PREF_DIS
+name|MV_L2_PREFETCH_DISABLE
 value|0x01000000
 end_define
 
@@ -1388,7 +1627,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_L2_INV_EVICT_LINE
+name|MV_L2_INV_EVICT_ERR
 value|0x00800000
 end_define
 
@@ -1399,18 +1638,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_L2CACHE_EN
+name|MV_L2_ENABLE
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* L2 enable */
+comment|/* L2 Cache enable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FC_ICACHE_REPL_LOCK
+name|MV_IC_REPLACE_LOCK
 value|0x00080000
 end_define
 
@@ -1421,7 +1660,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_GLOB_HIST_REG_EN
+name|MV_BGH_ENABLE
 value|0x00040000
 end_define
 
@@ -1432,7 +1671,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_BRANCH_TARG_BUF_DIS
+name|MV_BTB_DISABLE
 value|0x00020000
 end_define
 
@@ -1443,7 +1682,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FC_L1_PAR_ERR_EN
+name|MV_L1_PARERR_ENABLE
 value|0x00010000
 end_define
 
@@ -1507,6 +1746,16 @@ end_define
 begin_comment
 comment|/* cache type */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CT_FORMAT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 29)
+end_define
 
 begin_define
 define|#
@@ -1615,6 +1864,157 @@ end_define
 begin_comment
 comment|/* size */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CT_ARMV7
+value|0x4
+end_define
+
+begin_comment
+comment|/* ARM v7 Cache type definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_CTYPE_WT
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_CTYPE_WB
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_CTYPE_RA
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_CTYPE_WA
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_xSIZE_LEN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x7)
+end_define
+
+begin_comment
+comment|/* line size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_xSIZE_ASSOC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 3)& 0x3ff)
+end_define
+
+begin_comment
+comment|/* associativity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUV7_CT_xSIZE_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 13)& 0x7fff)
+end_define
+
+begin_comment
+comment|/* num sets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CLIDR_CTYPE
+parameter_list|(
+name|reg
+parameter_list|,
+name|x
+parameter_list|)
+value|(((reg)>> ((x) * 3))& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_CLIDR_LOUIS
+parameter_list|(
+name|reg
+parameter_list|)
+value|(((reg)>> 21)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_CLIDR_LOC
+parameter_list|(
+name|reg
+parameter_list|)
+value|(((reg)>> 24)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_CLIDR_LOUU
+parameter_list|(
+name|reg
+parameter_list|)
+value|(((reg)>> 27)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_ICACHE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_DCACHE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_SEP_CACHE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_UNI_CACHE
+value|4
+end_define
 
 begin_comment
 comment|/* Fault status register definitions */
@@ -1825,6 +2225,12 @@ begin_comment
 comment|/*  * Address of the vector page, low and high versions.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLER__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1839,8 +2245,32 @@ name|ARM_VECTORS_HIGH
 value|0xffff0000U
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_VECTORS_LOW
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_VECTORS_HIGH
+value|0xffff0000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * ARM Instructions  *  *       3 3 2 2 2                                *       1 0 9 8 7                                                     0  *      +-------+-------------------------------------------------------+  *      | cond  |              instruction dependant                    |  *      |c c c c|                                                       |  *      +-------+-------------------------------------------------------+  */
+comment|/*  * ARM Instructions  *  *       3 3 2 2 2  *       1 0 9 8 7                                                     0  *      +-------+-------------------------------------------------------+  *      | cond  |              instruction dependant                    |  *      |c c c c|                                                       |  *      +-------+-------------------------------------------------------+  */
 end_comment
 
 begin_define

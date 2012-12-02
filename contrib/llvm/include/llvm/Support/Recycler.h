@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -251,10 +257,8 @@ argument_list|(
 argument|RecyclerStruct *
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Recycler's ilist_traits shouldn't see a deleteNode call!"
 argument_list|)
 block|;   }

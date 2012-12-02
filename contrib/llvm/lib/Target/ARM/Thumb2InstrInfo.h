@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- Thumb2InstrInfo.h - Thumb-2 Instruction Information ------*- C++ -*-===//
+comment|//===-- Thumb2InstrInfo.h - Thumb-2 Instruction Information -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,19 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARM.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ARMInstrInfo.h"
+file|"ARMBaseInstrInfo.h"
 end_include
 
 begin_include
@@ -112,6 +106,14 @@ name|ARMSubtarget
 operator|&
 name|STI
 argument_list|)
+block|;
+comment|/// getNoopForMachoTarget - Return the noop instruction to use for a noop.
+name|void
+name|getNoopForMachoTarget
+argument_list|(
+argument|MCInst&NopInst
+argument_list|)
+specifier|const
 block|;
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
@@ -190,19 +192,6 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-comment|/// scheduleTwoAddrSource - Schedule the copy / re-mat of the source of the
-comment|/// two-addrss instruction inserted by two-address pass.
-name|void
-name|scheduleTwoAddrSource
-argument_list|(
-argument|MachineInstr *SrcMI
-argument_list|,
-argument|MachineInstr *UseMI
-argument_list|,
-argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
 block|;

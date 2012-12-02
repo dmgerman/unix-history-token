@@ -81,6 +81,12 @@ directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -110,14 +116,15 @@ name|class
 name|LangOptions
 decl_stmt|;
 comment|/// \brief Represents a C++ nested name specifier, such as
-comment|/// "::std::vector<int>::".
+comment|/// "\::std::vector<int>::".
 comment|///
 comment|/// C++ nested name specifiers are the prefixes to qualified
 comment|/// namespaces. For example, "foo::" in "foo::x" is a nested name
 comment|/// specifier. Nested name specifiers are made up of a sequence of
 comment|/// specifiers, each of which can be a namespace, type, identifier
-comment|/// (for dependent names), or the global specifier ('::', must be the
-comment|/// first specifier).
+comment|/// (for dependent names), decltype specifier, or the global specifier ('::').
+comment|/// The last two specifiers can only appear at the start of a
+comment|/// nested-namespace-specifier.
 name|class
 name|NestedNameSpecifier
 range|:
@@ -261,7 +268,8 @@ name|NestedNameSpecifier
 operator|&
 operator|)
 block|;
-comment|// do not implement
+comment|// do not
+comment|// implement
 comment|/// \brief Either find or insert the given nested name specifier
 comment|/// mockup in the given context.
 specifier|static
@@ -540,7 +548,7 @@ comment|/// \brief Whether this nested-name-specifier contains an unexpanded
 end_comment
 
 begin_comment
-comment|/// parameter pack (for C++0x variadic templates).
+comment|/// parameter pack (for C++11 variadic templates).
 end_comment
 
 begin_expr_stmt
@@ -748,18 +756,19 @@ comment|/// \brief Retrieve the source range covering the entirety of this
 comment|/// nested-name-specifier.
 comment|///
 comment|/// For example, if this instance refers to a nested-name-specifier
-comment|/// \c ::std::vector<int>::, the returned source range would cover
+comment|/// \c \::std::vector<int>::, the returned source range would cover
 comment|/// from the initial '::' to the last '::'.
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 comment|/// \brief Retrieve the source range covering just the last part of
 comment|/// this nested-name-specifier, not including the prefix.
 comment|///
 comment|/// For example, if this instance refers to a nested-name-specifier
-comment|/// \c ::std::vector<int>::, the returned source range would cover
+comment|/// \c \::std::vector<int>::, the returned source range would cover
 comment|/// from "vector" to the last '::'.
 name|SourceRange
 name|getLocalSourceRange
@@ -829,7 +838,7 @@ block|}
 comment|/// \brief Return the prefix of this nested-name-specifier.
 comment|///
 comment|/// For example, if this instance refers to a nested-name-specifier
-comment|/// \c ::std::vector<int>::, the prefix is \c ::std::. Note that the
+comment|/// \c \::std::vector<int>::, the prefix is \c \::std::. Note that the
 comment|/// returned prefix may be empty, if this is the first component of
 comment|/// the nested-name-specifier.
 name|NestedNameSpecifierLoc
@@ -1003,7 +1012,27 @@ name|public
 label|:
 name|NestedNameSpecifierLocBuilder
 argument_list|()
-expr_stmt|;
+operator|:
+name|Representation
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Buffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferSize
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferCapacity
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 name|NestedNameSpecifierLocBuilder
 argument_list|(
 specifier|const
@@ -1026,7 +1055,17 @@ decl_stmt|;
 operator|~
 name|NestedNameSpecifierLocBuilder
 argument_list|()
+block|{
+if|if
+condition|(
+name|BufferCapacity
+condition|)
+name|free
+argument_list|(
+name|Buffer
+argument_list|)
 expr_stmt|;
+block|}
 comment|/// \brief Retrieve the representation of the nested-name-specifier.
 name|NestedNameSpecifier
 operator|*
@@ -1202,6 +1241,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|NestedNameSpecifierLoc
@@ -1230,8 +1270,9 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Retrieve a nested-name-specifier with location
-comment|/// information based on the information in this builder.  This loc
-comment|/// will contain references to the builder's internal data and may
+comment|/// information based on the information in this builder.
+comment|///
+comment|/// This loc will contain references to the builder's internal data and may
 comment|/// be invalidated by any change to the builder.
 name|NestedNameSpecifierLoc
 name|getTemporary
@@ -1299,11 +1340,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// Insertion operator for diagnostics.  This allows sending NestedNameSpecifiers
+comment|/// Insertion operator for diagnostics.  This allows sending
 end_comment
 
 begin_comment
-comment|/// into a diagnostic with<<.
+comment|/// NestedNameSpecifiers into a diagnostic with<<.
 end_comment
 
 begin_expr_stmt

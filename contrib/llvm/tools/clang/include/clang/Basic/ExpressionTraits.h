@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- ExpressionTraits.h - C++ Expression Traits Support Enumerations ----*- C++ -*-===//
+comment|//===- ExpressionTraits.h - C++ Expression Traits Support Enums -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines enumerations for expression traits intrinsics.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines enumerations for expression traits intrinsics.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment

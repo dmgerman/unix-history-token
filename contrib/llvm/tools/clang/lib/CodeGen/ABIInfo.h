@@ -109,7 +109,8 @@ comment|/// Direct - Pass the argument directly using the normal converted LLVM
 comment|/// type, or by coercing to another specified type stored in
 comment|/// 'CoerceToType').  If an offset is specified (in UIntData), then the
 comment|/// argument passed is offset by some number of bytes in the memory
-comment|/// representation.
+comment|/// representation. A dummy argument is emitted before the real argument
+comment|/// if the specified type stored in "PaddingType" is not zero.
 name|Direct
 block|,
 comment|/// Extend - Valid only for integer argument types. Same as 'direct'
@@ -150,6 +151,13 @@ name|Type
 operator|*
 name|TypeData
 expr_stmt|;
+name|llvm
+operator|::
+name|Type
+operator|*
+name|PaddingType
+expr_stmt|;
+comment|// Currently allowed only for Direct.
 name|unsigned
 name|UIntData
 decl_stmt|;
@@ -159,19 +167,24 @@ decl_stmt|;
 name|bool
 name|BoolData1
 decl_stmt|;
+name|bool
+name|InReg
+decl_stmt|;
 name|ABIArgInfo
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|llvm::Type *TD=
-literal|0
+argument|llvm::Type *TD
 argument_list|,
-argument|unsigned UI=
-literal|0
+argument|unsigned UI
 argument_list|,
-argument|bool B0 = false
+argument|bool B0
 argument_list|,
-argument|bool B1 = false
+argument|bool B1
+argument_list|,
+argument|bool IR
+argument_list|,
+argument|llvm::Type* P
 argument_list|)
 block|:
 name|TheKind
@@ -182,6 +195,11 @@ operator|,
 name|TypeData
 argument_list|(
 name|TD
+argument_list|)
+operator|,
+name|PaddingType
+argument_list|(
+name|P
 argument_list|)
 operator|,
 name|UIntData
@@ -196,7 +214,12 @@ argument_list|)
 operator|,
 name|BoolData1
 argument_list|(
-argument|B1
+name|B1
+argument_list|)
+operator|,
+name|InReg
+argument_list|(
+argument|IR
 argument_list|)
 block|{}
 name|public
@@ -228,6 +251,9 @@ literal|0
 argument_list|,
 argument|unsigned Offset =
 literal|0
+argument_list|,
+argument|llvm::Type *Padding =
+literal|0
 argument_list|)
 block|{
 return|return
@@ -238,6 +264,44 @@ argument_list|,
 name|T
 argument_list|,
 name|Offset
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|Padding
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ABIArgInfo
+name|getDirectInReg
+argument_list|(
+name|llvm
+operator|::
+name|Type
+operator|*
+name|T
+argument_list|)
+block|{
+return|return
+name|ABIArgInfo
+argument_list|(
+name|Direct
+argument_list|,
+name|T
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -262,6 +326,46 @@ argument_list|,
 name|T
 argument_list|,
 literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ABIArgInfo
+name|getExtendInReg
+argument_list|(
+name|llvm
+operator|::
+name|Type
+operator|*
+name|T
+operator|=
+literal|0
+argument_list|)
+block|{
+return|return
+name|ABIArgInfo
+argument_list|(
+name|Extend
+argument_list|,
+name|T
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -274,6 +378,18 @@ return|return
 name|ABIArgInfo
 argument_list|(
 name|Ignore
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -307,6 +423,47 @@ argument_list|,
 name|ByVal
 argument_list|,
 name|Realign
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ABIArgInfo
+name|getIndirectInReg
+parameter_list|(
+name|unsigned
+name|Alignment
+parameter_list|,
+name|bool
+name|ByVal
+init|=
+name|true
+parameter_list|,
+name|bool
+name|Realign
+init|=
+name|false
+parameter_list|)
+block|{
+return|return
+name|ABIArgInfo
+argument_list|(
+name|Indirect
+argument_list|,
+literal|0
+argument_list|,
+name|Alignment
+argument_list|,
+name|ByVal
+argument_list|,
+name|Realign
+argument_list|,
+name|true
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -319,6 +476,18 @@ return|return
 name|ABIArgInfo
 argument_list|(
 name|Expand
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -428,6 +597,18 @@ name|llvm
 operator|::
 name|Type
 operator|*
+name|getPaddingType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PaddingType
+return|;
+block|}
+name|llvm
+operator|::
+name|Type
+operator|*
 name|getCoerceToType
 argument_list|()
 specifier|const
@@ -466,6 +647,31 @@ name|TypeData
 operator|=
 name|T
 expr_stmt|;
+block|}
+name|bool
+name|getInReg
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isDirect
+argument_list|()
+operator|||
+name|isExtend
+argument_list|()
+operator|||
+name|isIndirect
+argument_list|()
+operator|)
+operator|&&
+literal|"Invalid kind!"
+argument_list|)
+block|;
+return|return
+name|InReg
+return|;
 block|}
 comment|// Indirect accessors
 name|unsigned

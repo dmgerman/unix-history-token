@@ -81,51 +81,9 @@ name|ip6_dst
 decl_stmt|;
 comment|/* destination address */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Pseudo header, used for higher layer checksumming.  */
-end_comment
-
-begin_union
-union|union
-name|ip6_pseudo_hdr
-block|{
-struct|struct
-block|{
-name|struct
-name|in6_addr
-name|ph_src
-decl_stmt|;
-name|struct
-name|in6_addr
-name|ph_dst
-decl_stmt|;
-name|u_int32_t
-name|ph_len
-decl_stmt|;
-name|u_int8_t
-name|ph_zero
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|u_int8_t
-name|ph_nxt
-decl_stmt|;
-block|}
-name|ph
-struct|;
-name|u_int16_t
-name|pa
-index|[
-literal|20
-index|]
-decl_stmt|;
-block|}
-union|;
-end_union
 
 begin_define
 define|#
@@ -240,22 +198,19 @@ begin_struct
 struct|struct
 name|ip6_ext
 block|{
-name|u_char
+name|u_int8_t
 name|ip6e_nxt
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6e_len
 decl_stmt|;
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
 begin_comment
 comment|/* Hop-by-Hop options header */
-end_comment
-
-begin_comment
-comment|/* XXX should we pad it to force alignment on an 8-byte boundary? */
 end_comment
 
 begin_struct
@@ -272,15 +227,12 @@ decl_stmt|;
 comment|/* length in units of 8 octets */
 comment|/* followed by options */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
 begin_comment
 comment|/* Destination options header */
-end_comment
-
-begin_comment
-comment|/* XXX should we pad it to force alignment on an 8-byte boundary? */
 end_comment
 
 begin_struct
@@ -297,6 +249,7 @@ decl_stmt|;
 comment|/* length in units of 8 octets */
 comment|/* followed by options */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -528,6 +481,7 @@ decl_stmt|;
 comment|/* segments left */
 comment|/* followed by routing type specific data */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -575,6 +529,7 @@ index|]
 decl_stmt|;
 comment|/* up to 23 addresses */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -603,6 +558,7 @@ name|ip6f_ident
 decl_stmt|;
 comment|/* identification */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -638,6 +594,31 @@ end_define
 begin_comment
 comment|/* more-fragments flag */
 end_comment
+
+begin_comment
+comment|/* in print-ip6.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|nextproto6_cksum
+parameter_list|(
+specifier|const
+name|struct
+name|ip6_hdr
+modifier|*
+parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

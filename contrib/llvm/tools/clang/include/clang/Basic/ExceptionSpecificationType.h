@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the ExceptionSpecificationType enumeration and various
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// utility functions.
+comment|/// \brief Defines the ExceptionSpecificationType enumeration and various
 end_comment
 
 begin_comment
-comment|//
+comment|/// utility functions.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -67,7 +71,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// \brief The various types of exception specifications that exist in C++0x.
+comment|/// \brief The various types of exception specifications that exist in C++11.
 enum|enum
 name|ExceptionSpecificationType
 block|{
@@ -89,8 +93,11 @@ comment|///< noexcept
 name|EST_ComputedNoexcept
 block|,
 comment|///< noexcept(expression)
-name|EST_Delayed
-comment|///< not known yet
+name|EST_Unevaluated
+block|,
+comment|///< not evaluated yet, for special member function
+name|EST_Uninstantiated
+comment|///< not instantiated yet
 block|}
 enum|;
 specifier|inline
@@ -127,6 +134,58 @@ operator|||
 name|ESpecType
 operator|==
 name|EST_ComputedNoexcept
+return|;
+block|}
+specifier|inline
+name|bool
+name|isUnresolvedExceptionSpec
+parameter_list|(
+name|ExceptionSpecificationType
+name|ESpecType
+parameter_list|)
+block|{
+return|return
+name|ESpecType
+operator|==
+name|EST_Unevaluated
+operator|||
+name|ESpecType
+operator|==
+name|EST_Uninstantiated
+return|;
+block|}
+comment|/// \brief Possible results from evaluation of a noexcept expression.
+enum|enum
+name|CanThrowResult
+block|{
+name|CT_Cannot
+block|,
+name|CT_Dependent
+block|,
+name|CT_Can
+block|}
+enum|;
+specifier|inline
+name|CanThrowResult
+name|mergeCanThrow
+parameter_list|(
+name|CanThrowResult
+name|CT1
+parameter_list|,
+name|CanThrowResult
+name|CT2
+parameter_list|)
+block|{
+comment|// CanThrowResult constants are ordered so that the maximum is the correct
+comment|// merge result.
+return|return
+name|CT1
+operator|>
+name|CT2
+condition|?
+name|CT1
+else|:
+name|CT2
 return|;
 block|}
 block|}

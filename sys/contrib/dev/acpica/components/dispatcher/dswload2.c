@@ -579,6 +579,30 @@ operator|=
 name|ACPI_TYPE_ANY
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+comment|/*              * Allow scope change to root during execution of module-level              * code. Root is typed METHOD during this time.              */
+if|if
+condition|(
+operator|(
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+comment|/*lint -fallthrough */
 default|default:
 comment|/* All other types are an error */
 name|ACPI_ERROR
@@ -603,11 +627,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_OPERAND_TYPE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -1489,11 +1513,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|AcpiExExitInterpreter
 argument_list|()

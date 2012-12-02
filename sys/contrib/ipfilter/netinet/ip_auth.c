@@ -3759,7 +3759,7 @@ comment|/* Function:    fr_auth_waiting                                         
 end_comment
 
 begin_comment
-comment|/* Returns:     int - 0 = no pakcets wiating, 1 = packets waiting.          */
+comment|/* Returns:     int - 0 = no packets waiting, 1 = packets waiting.          */
 end_comment
 
 begin_comment

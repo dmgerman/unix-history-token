@@ -518,11 +518,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|Info
 operator|=
@@ -563,11 +563,11 @@ name|IsBridge
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

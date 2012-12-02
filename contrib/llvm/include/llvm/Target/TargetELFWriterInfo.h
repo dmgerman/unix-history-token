@@ -63,15 +63,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Function
-decl_stmt|;
-name|class
-name|TargetData
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//                          TargetELFWriterInfo
 comment|//===--------------------------------------------------------------------===//
@@ -165,7 +156,12 @@ comment|// SPARC V9
 name|EM_X86_64
 init|=
 literal|62
+block|,
 comment|// AMD64
+name|EM_HEXAGON
+init|=
+literal|164
+comment|// Qualcomm Hexagon
 block|}
 enum|;
 comment|// ELF File classes

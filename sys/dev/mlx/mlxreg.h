@@ -316,7 +316,7 @@ name|idx
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V3_MAILBOX + idx, val)
+value|bus_write_1(sc->mlx_mem, MLX_V3_MAILBOX + idx, val)
 end_define
 
 begin_define
@@ -326,7 +326,7 @@ name|MLX_V3_GET_STATUS_IDENT
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_STATUS_IDENT)
+value|bus_read_1 (sc->mlx_mem, MLX_V3_STATUS_IDENT)
 end_define
 
 begin_define
@@ -336,7 +336,7 @@ name|MLX_V3_GET_STATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_2 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_STATUS)
+value|bus_read_2 (sc->mlx_mem, MLX_V3_STATUS)
 end_define
 
 begin_define
@@ -346,7 +346,7 @@ name|MLX_V3_GET_IDBR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_IDBR)
+value|bus_read_1 (sc->mlx_mem, MLX_V3_IDBR)
 end_define
 
 begin_define
@@ -358,7 +358,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V3_IDBR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V3_IDBR, val)
 end_define
 
 begin_define
@@ -368,7 +368,7 @@ name|MLX_V3_GET_ODBR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_ODBR)
+value|bus_read_1 (sc->mlx_mem, MLX_V3_ODBR)
 end_define
 
 begin_define
@@ -380,7 +380,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V3_ODBR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V3_ODBR, val)
 end_define
 
 begin_define
@@ -392,7 +392,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V3_IER, val)
+value|bus_write_1(sc->mlx_mem, MLX_V3_IER, val)
 end_define
 
 begin_define
@@ -402,7 +402,7 @@ name|MLX_V3_GET_FWERROR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_FWERROR)
+value|bus_read_1 (sc->mlx_mem, MLX_V3_FWERROR)
 end_define
 
 begin_define
@@ -414,7 +414,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V3_FWERROR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V3_FWERROR, val)
 end_define
 
 begin_define
@@ -424,7 +424,7 @@ name|MLX_V3_GET_FWERROR_PARAM1
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_FWERROR_PARAM1)
+value|bus_read_1 (sc->mlx_mem, MLX_V3_FWERROR_PARAM1)
 end_define
 
 begin_define
@@ -434,7 +434,7 @@ name|MLX_V3_GET_FWERROR_PARAM2
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V3_FWERROR_PARAM2)
+value|bus_read_1 (sc->mlx_mem, MLX_V3_FWERROR_PARAM2)
 end_define
 
 begin_define
@@ -581,7 +581,7 @@ name|idx
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V4_MAILBOX + idx, val)
+value|bus_write_1(sc->mlx_mem, MLX_V4_MAILBOX + idx, val)
 end_define
 
 begin_define
@@ -591,7 +591,7 @@ name|MLX_V4_GET_STATUS_IDENT
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_STATUS_IDENT)
+value|bus_read_1 (sc->mlx_mem, MLX_V4_STATUS_IDENT)
 end_define
 
 begin_define
@@ -601,7 +601,7 @@ name|MLX_V4_GET_STATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_2 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_STATUS)
+value|bus_read_2 (sc->mlx_mem, MLX_V4_STATUS)
 end_define
 
 begin_define
@@ -611,7 +611,7 @@ name|MLX_V4_GET_IDBR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_4 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_IDBR)
+value|bus_read_4 (sc->mlx_mem, MLX_V4_IDBR)
 end_define
 
 begin_define
@@ -623,7 +623,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->mlx_btag, sc->mlx_bhandle, MLX_V4_IDBR, val)
+value|bus_write_4(sc->mlx_mem, MLX_V4_IDBR, val)
 end_define
 
 begin_define
@@ -633,7 +633,7 @@ name|MLX_V4_GET_ODBR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_4 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_ODBR)
+value|bus_read_4 (sc->mlx_mem, MLX_V4_ODBR)
 end_define
 
 begin_define
@@ -645,7 +645,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->mlx_btag, sc->mlx_bhandle, MLX_V4_ODBR, val)
+value|bus_write_4(sc->mlx_mem, MLX_V4_ODBR, val)
 end_define
 
 begin_define
@@ -657,7 +657,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->mlx_btag, sc->mlx_bhandle, MLX_V4_IER, val)
+value|bus_write_4(sc->mlx_mem, MLX_V4_IER, val)
 end_define
 
 begin_define
@@ -667,7 +667,7 @@ name|MLX_V4_GET_FWERROR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_FWERROR)
+value|bus_read_1 (sc->mlx_mem, MLX_V4_FWERROR)
 end_define
 
 begin_define
@@ -679,7 +679,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V4_FWERROR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V4_FWERROR, val)
 end_define
 
 begin_define
@@ -689,7 +689,7 @@ name|MLX_V4_GET_FWERROR_PARAM1
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_FWERROR_PARAM1)
+value|bus_read_1 (sc->mlx_mem, MLX_V4_FWERROR_PARAM1)
 end_define
 
 begin_define
@@ -699,7 +699,7 @@ name|MLX_V4_GET_FWERROR_PARAM2
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V4_FWERROR_PARAM2)
+value|bus_read_1 (sc->mlx_mem, MLX_V4_FWERROR_PARAM2)
 end_define
 
 begin_define
@@ -919,7 +919,7 @@ name|idx
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V5_MAILBOX + idx, val)
+value|bus_write_1(sc->mlx_mem, MLX_V5_MAILBOX + idx, val)
 end_define
 
 begin_define
@@ -929,7 +929,7 @@ name|MLX_V5_GET_STATUS_IDENT
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_STATUS_IDENT)
+value|bus_read_1 (sc->mlx_mem, MLX_V5_STATUS_IDENT)
 end_define
 
 begin_define
@@ -939,7 +939,7 @@ name|MLX_V5_GET_STATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_2 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_STATUS)
+value|bus_read_2 (sc->mlx_mem, MLX_V5_STATUS)
 end_define
 
 begin_define
@@ -949,7 +949,7 @@ name|MLX_V5_GET_IDBR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_IDBR)
+value|bus_read_1 (sc->mlx_mem, MLX_V5_IDBR)
 end_define
 
 begin_define
@@ -961,7 +961,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V5_IDBR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V5_IDBR, val)
 end_define
 
 begin_define
@@ -971,7 +971,7 @@ name|MLX_V5_GET_ODBR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_ODBR)
+value|bus_read_1 (sc->mlx_mem, MLX_V5_ODBR)
 end_define
 
 begin_define
@@ -983,7 +983,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V5_ODBR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V5_ODBR, val)
 end_define
 
 begin_define
@@ -995,7 +995,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V5_IER, val)
+value|bus_write_1(sc->mlx_mem, MLX_V5_IER, val)
 end_define
 
 begin_define
@@ -1005,7 +1005,7 @@ name|MLX_V5_GET_FWERROR
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_FWERROR)
+value|bus_read_1 (sc->mlx_mem, MLX_V5_FWERROR)
 end_define
 
 begin_define
@@ -1017,7 +1017,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mlx_btag, sc->mlx_bhandle, MLX_V5_FWERROR, val)
+value|bus_write_1(sc->mlx_mem, MLX_V5_FWERROR, val)
 end_define
 
 begin_define
@@ -1027,7 +1027,7 @@ name|MLX_V5_GET_FWERROR_PARAM1
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_FWERROR_PARAM1)
+value|bus_read_1 (sc->mlx_mem, MLX_V5_FWERROR_PARAM1)
 end_define
 
 begin_define
@@ -1037,7 +1037,7 @@ name|MLX_V5_GET_FWERROR_PARAM2
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_space_read_1 (sc->mlx_btag, sc->mlx_bhandle, MLX_V5_FWERROR_PARAM2)
+value|bus_read_1 (sc->mlx_mem, MLX_V5_FWERROR_PARAM2)
 end_define
 
 begin_define

@@ -93,7 +93,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -260,7 +260,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -522,7 +522,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -609,7 +609,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_comment
@@ -697,39 +697,6 @@ define|#
 directive|define
 name|SIZE_MAX
 value|UINT32_MAX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WCHAR_MIN
-end_ifndef
-
-begin_comment
-comment|/* Also possibly defined in<wchar.h> */
-end_comment
-
-begin_comment
-comment|/* Limits of wchar_t. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WCHAR_MIN
-value|INT32_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|WCHAR_MAX
-value|INT32_MAX
 end_define
 
 begin_endif

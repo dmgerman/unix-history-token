@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -91,159 +97,58 @@ name|public
 label|:
 typedef|typedef
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|iterator
 typedef|;
 typedef|typedef
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|const_iterator
 typedef|;
-name|private
-label|:
-name|unsigned
-name|ID
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|Name
 decl_stmt|;
 specifier|const
-name|unsigned
+name|iterator
+name|RegsBegin
+decl_stmt|;
+specifier|const
+name|uint8_t
+modifier|*
+specifier|const
+name|RegSet
+decl_stmt|;
+specifier|const
+name|uint16_t
+name|RegsSize
+decl_stmt|;
+specifier|const
+name|uint16_t
+name|RegSetSize
+decl_stmt|;
+specifier|const
+name|uint16_t
+name|ID
+decl_stmt|;
+specifier|const
+name|uint16_t
 name|RegSize
 decl_stmt|,
 name|Alignment
 decl_stmt|;
 comment|// Size& Alignment of register in bytes
 specifier|const
-name|int
+name|int8_t
 name|CopyCost
 decl_stmt|;
 specifier|const
 name|bool
 name|Allocatable
 decl_stmt|;
-specifier|const
-name|iterator
-name|RegsBegin
-decl_stmt|,
-name|RegsEnd
-decl_stmt|;
-specifier|const
-name|unsigned
-name|char
-modifier|*
-specifier|const
-name|RegSet
-decl_stmt|;
-specifier|const
-name|unsigned
-name|RegSetSize
-decl_stmt|;
-name|public
-label|:
-name|MCRegisterClass
-argument_list|(
-argument|unsigned id
-argument_list|,
-argument|const char *name
-argument_list|,
-argument|unsigned RS
-argument_list|,
-argument|unsigned Al
-argument_list|,
-argument|int CC
-argument_list|,
-argument|bool Allocable
-argument_list|,
-argument|iterator RB
-argument_list|,
-argument|iterator RE
-argument_list|,
-argument|const unsigned char *Bits
-argument_list|,
-argument|unsigned NumBytes
-argument_list|)
-block|:
-name|ID
-argument_list|(
-name|id
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-name|name
-argument_list|)
-operator|,
-name|RegSize
-argument_list|(
-name|RS
-argument_list|)
-operator|,
-name|Alignment
-argument_list|(
-name|Al
-argument_list|)
-operator|,
-name|CopyCost
-argument_list|(
-name|CC
-argument_list|)
-operator|,
-name|Allocatable
-argument_list|(
-name|Allocable
-argument_list|)
-operator|,
-name|RegsBegin
-argument_list|(
-name|RB
-argument_list|)
-operator|,
-name|RegsEnd
-argument_list|(
-name|RE
-argument_list|)
-operator|,
-name|RegSet
-argument_list|(
-name|Bits
-argument_list|)
-operator|,
-name|RegSetSize
-argument_list|(
-argument|NumBytes
-argument_list|)
-block|{
-for|for
-control|(
-name|iterator
-name|i
-init|=
-name|RegsBegin
-init|;
-name|i
-operator|!=
-name|RegsEnd
-condition|;
-operator|++
-name|i
-control|)
-name|assert
-argument_list|(
-name|contains
-argument_list|(
-operator|*
-name|i
-argument_list|)
-operator|&&
-literal|"Bit field corrupted."
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// getID() - Return the register class ID number.
 comment|///
 name|unsigned
@@ -285,7 +190,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RegsEnd
+name|RegsBegin
+operator|+
+name|RegsSize
 return|;
 block|}
 comment|/// getNumRegs - Return the number of registers in this class.
@@ -296,14 +203,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|RegsEnd
-operator|-
-name|RegsBegin
-argument_list|)
+name|RegsSize
 return|;
 block|}
 comment|/// getRegister - Return the specified register in the class.
@@ -467,30 +367,32 @@ comment|///
 struct|struct
 name|MCRegisterDesc
 block|{
-specifier|const
-name|char
-modifier|*
+name|uint32_t
 name|Name
 decl_stmt|;
 comment|// Printable name for the reg (for debugging)
-specifier|const
-name|unsigned
-modifier|*
+name|uint32_t
 name|Overlaps
 decl_stmt|;
 comment|// Overlapping registers, described above
-specifier|const
-name|unsigned
-modifier|*
+name|uint32_t
 name|SubRegs
 decl_stmt|;
 comment|// Sub-register set, described above
-specifier|const
-name|unsigned
-modifier|*
+name|uint32_t
 name|SuperRegs
 decl_stmt|;
 comment|// Super-register set, described above
+comment|// Offset into MCRI::SubRegIndices of a list of sub-register indices for each
+comment|// sub-register in SubRegs.
+name|uint32_t
+name|SubRegIndices
+decl_stmt|;
+comment|// RegUnits - Points to the list of register units. The low 4 bits holds the
+comment|// Scale, the high bits hold an offset into DiffLists. See MCRegUnitIterator.
+name|uint32_t
+name|RegUnits
+decl_stmt|;
 block|}
 struct|;
 comment|/// MCRegisterInfo base class - We assume that the target defines a static
@@ -516,6 +418,36 @@ name|MCRegisterClass
 modifier|*
 name|regclass_iterator
 typedef|;
+comment|/// DwarfLLVMRegPair - Emitted by tablegen so Dwarf<->LLVM reg mappings can be
+comment|/// performed with a binary search.
+struct|struct
+name|DwarfLLVMRegPair
+block|{
+name|unsigned
+name|FromReg
+decl_stmt|;
+name|unsigned
+name|ToReg
+decl_stmt|;
+name|bool
+name|operator
+operator|<
+operator|(
+name|DwarfLLVMRegPair
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|FromReg
+operator|<
+name|RHS
+operator|.
+name|FromReg
+return|;
+block|}
+block|}
+struct|;
 name|private
 label|:
 specifier|const
@@ -542,41 +474,86 @@ name|unsigned
 name|NumClasses
 decl_stmt|;
 comment|// Number of entries in the array
-name|DenseMap
-operator|<
 name|unsigned
-operator|,
-name|int
-operator|>
+name|NumRegUnits
+decl_stmt|;
+comment|// Number of regunits.
+specifier|const
+name|uint16_t
+argument_list|(
+operator|*
+name|RegUnitRoots
+argument_list|)
+index|[
+literal|2
+index|]
+expr_stmt|;
+comment|// Pointer to regunit root table.
+specifier|const
+name|uint16_t
+modifier|*
+name|DiffLists
+decl_stmt|;
+comment|// Pointer to the difflists array
+specifier|const
+name|char
+modifier|*
+name|RegStrings
+decl_stmt|;
+comment|// Pointer to the string table.
+specifier|const
+name|uint16_t
+modifier|*
+name|SubRegIndices
+decl_stmt|;
+comment|// Pointer to the subreg lookup
+comment|// array.
+name|unsigned
+name|NumSubRegIndices
+decl_stmt|;
+comment|// Number of subreg indices.
+specifier|const
+name|uint16_t
+modifier|*
+name|RegEncodingTable
+decl_stmt|;
+comment|// Pointer to array of register
+comment|// encodings.
+name|unsigned
+name|L2DwarfRegsSize
+decl_stmt|;
+name|unsigned
+name|EHL2DwarfRegsSize
+decl_stmt|;
+name|unsigned
+name|Dwarf2LRegsSize
+decl_stmt|;
+name|unsigned
+name|EHDwarf2LRegsSize
+decl_stmt|;
+specifier|const
+name|DwarfLLVMRegPair
+modifier|*
 name|L2DwarfRegs
-expr_stmt|;
+decl_stmt|;
 comment|// LLVM to Dwarf regs mapping
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|int
-operator|>
+specifier|const
+name|DwarfLLVMRegPair
+modifier|*
 name|EHL2DwarfRegs
-expr_stmt|;
+decl_stmt|;
 comment|// LLVM to Dwarf regs mapping EH
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
+specifier|const
+name|DwarfLLVMRegPair
+modifier|*
 name|Dwarf2LRegs
-expr_stmt|;
+decl_stmt|;
 comment|// Dwarf to LLVM regs mapping
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
+specifier|const
+name|DwarfLLVMRegPair
+modifier|*
 name|EHDwarf2LRegs
-expr_stmt|;
+decl_stmt|;
 comment|// Dwarf to LLVM regs mapping EH
 name|DenseMap
 operator|<
@@ -589,30 +566,213 @@ expr_stmt|;
 comment|// LLVM to SEH regs mapping
 name|public
 label|:
+comment|/// DiffListIterator - Base iterator class that can traverse the
+comment|/// differentially encoded register and regunit lists in DiffLists.
+comment|/// Don't use this class directly, use one of the specialized sub-classes
+comment|/// defined below.
+name|class
+name|DiffListIterator
+block|{
+name|uint16_t
+name|Val
+decl_stmt|;
+specifier|const
+name|uint16_t
+modifier|*
+name|List
+decl_stmt|;
+name|protected
+label|:
+comment|/// Create an invalid iterator. Call init() to point to something useful.
+name|DiffListIterator
+argument_list|()
+operator|:
+name|Val
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|List
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// init - Point the iterator to InitVal, decoding subsequent values from
+comment|/// DiffList. The iterator will initially point to InitVal, sub-classes are
+comment|/// responsible for skipping the seed value if it is not part of the list.
+name|void
+name|init
+argument_list|(
+argument|uint16_t InitVal
+argument_list|,
+argument|const uint16_t *DiffList
+argument_list|)
+block|{
+name|Val
+operator|=
+name|InitVal
+block|;
+name|List
+operator|=
+name|DiffList
+block|;     }
+comment|/// advance - Move to the next list position, return the applied
+comment|/// differential. This function does not detect the end of the list, that
+comment|/// is the caller's responsibility (by checking for a 0 return value).
+name|unsigned
+name|advance
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot move off the end of the list."
+argument_list|)
+block|;
+name|uint16_t
+name|D
+operator|=
+operator|*
+name|List
+operator|++
+block|;
+name|Val
+operator|+=
+name|D
+block|;
+return|return
+name|D
+return|;
+block|}
+name|public
+label|:
+comment|/// isValid - returns true if this iterator is not yet at the end.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|List
+return|;
+block|}
+comment|/// Dereference the iterator to get the value at the current position.
+name|unsigned
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Val
+return|;
+block|}
+comment|/// Pre-increment to move to the next position.
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+comment|// The end of the list is encoded as a 0 differential.
+if|if
+condition|(
+operator|!
+name|advance
+argument_list|()
+condition|)
+name|List
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+comment|// These iterators are allowed to sub-class DiffListIterator and access
+comment|// internal list pointers.
+name|friend
+name|class
+name|MCSubRegIterator
+decl_stmt|;
+name|friend
+name|class
+name|MCSuperRegIterator
+decl_stmt|;
+name|friend
+name|class
+name|MCRegAliasIterator
+decl_stmt|;
+name|friend
+name|class
+name|MCRegUnitIterator
+decl_stmt|;
+name|friend
+name|class
+name|MCRegUnitRootIterator
+decl_stmt|;
 comment|/// InitMCRegisterInfo - Initialize MCRegisterInfo, called by TableGen
 comment|/// auto-generated routines. *DO NOT USE*.
 name|void
 name|InitMCRegisterInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|MCRegisterDesc
-modifier|*
+operator|*
 name|D
-parameter_list|,
+argument_list|,
 name|unsigned
 name|NR
-parameter_list|,
+argument_list|,
 name|unsigned
 name|RA
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCRegisterClass
-modifier|*
+operator|*
 name|C
-parameter_list|,
+argument_list|,
 name|unsigned
 name|NC
-parameter_list|)
+argument_list|,
+specifier|const
+name|uint16_t
+argument_list|(
+operator|*
+name|RURoots
+argument_list|)
+index|[
+literal|2
+index|]
+argument_list|,
+name|unsigned
+name|NRU
+argument_list|,
+specifier|const
+name|uint16_t
+operator|*
+name|DL
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Strings
+argument_list|,
+specifier|const
+name|uint16_t
+operator|*
+name|SubIndices
+argument_list|,
+name|unsigned
+name|NumIndices
+argument_list|,
+specifier|const
+name|uint16_t
+operator|*
+name|RET
+argument_list|)
 block|{
 name|Desc
 operator|=
@@ -630,22 +790,52 @@ name|Classes
 operator|=
 name|C
 expr_stmt|;
+name|DiffLists
+operator|=
+name|DL
+expr_stmt|;
+name|RegStrings
+operator|=
+name|Strings
+expr_stmt|;
 name|NumClasses
 operator|=
 name|NC
 expr_stmt|;
+name|RegUnitRoots
+operator|=
+name|RURoots
+expr_stmt|;
+name|NumRegUnits
+operator|=
+name|NRU
+expr_stmt|;
+name|SubRegIndices
+operator|=
+name|SubIndices
+expr_stmt|;
+name|NumSubRegIndices
+operator|=
+name|NumIndices
+expr_stmt|;
+name|RegEncodingTable
+operator|=
+name|RET
+expr_stmt|;
 block|}
-comment|/// mapLLVMRegToDwarfReg - Used to initialize LLVM register to Dwarf
+comment|/// mapLLVMRegsToDwarfRegs - Used to initialize LLVM register to Dwarf
 comment|/// register number mapping. Called by TableGen auto-generated routines.
 comment|/// *DO NOT USE*.
 name|void
-name|mapLLVMRegToDwarfReg
+name|mapLLVMRegsToDwarfRegs
 parameter_list|(
-name|unsigned
-name|LLVMReg
+specifier|const
+name|DwarfLLVMRegPair
+modifier|*
+name|Map
 parameter_list|,
-name|int
-name|DwarfReg
+name|unsigned
+name|Size
 parameter_list|,
 name|bool
 name|isEH
@@ -655,33 +845,41 @@ if|if
 condition|(
 name|isEH
 condition|)
+block|{
 name|EHL2DwarfRegs
-index|[
-name|LLVMReg
-index|]
 operator|=
-name|DwarfReg
+name|Map
 expr_stmt|;
-else|else
-name|L2DwarfRegs
-index|[
-name|LLVMReg
-index|]
+name|EHL2DwarfRegsSize
 operator|=
-name|DwarfReg
+name|Size
 expr_stmt|;
 block|}
-comment|/// mapDwarfRegToLLVMReg - Used to initialize Dwarf register to LLVM
+else|else
+block|{
+name|L2DwarfRegs
+operator|=
+name|Map
+expr_stmt|;
+name|L2DwarfRegsSize
+operator|=
+name|Size
+expr_stmt|;
+block|}
+block|}
+comment|/// mapDwarfRegsToLLVMRegs - Used to initialize Dwarf register to LLVM
 comment|/// register number mapping. Called by TableGen auto-generated routines.
 comment|/// *DO NOT USE*.
 name|void
-name|mapDwarfRegToLLVMReg
+name|mapDwarfRegsToLLVMRegs
 parameter_list|(
-name|unsigned
-name|DwarfReg
+specifier|const
+name|DwarfLLVMRegPair
+modifier|*
+name|Map
 parameter_list|,
 name|unsigned
-name|LLVMReg
+name|Size
 parameter_list|,
 name|bool
 name|isEH
@@ -691,21 +889,27 @@ if|if
 condition|(
 name|isEH
 condition|)
+block|{
 name|EHDwarf2LRegs
-index|[
-name|DwarfReg
-index|]
 operator|=
-name|LLVMReg
+name|Map
 expr_stmt|;
+name|EHDwarf2LRegsSize
+operator|=
+name|Size
+expr_stmt|;
+block|}
 else|else
+block|{
 name|Dwarf2LRegs
-index|[
-name|DwarfReg
-index|]
 operator|=
-name|LLVMReg
+name|Map
 expr_stmt|;
+name|Dwarf2LRegsSize
+operator|=
+name|Size
+expr_stmt|;
+block|}
 block|}
 comment|/// mapLLVMRegToSEHReg - Used to initialize LLVM register to SEH register
 comment|/// number mapping. By default the SEH register number is just the same
@@ -789,104 +993,52 @@ name|RegNo
 operator|)
 return|;
 block|}
-comment|/// getAliasSet - Return the set of registers aliased by the specified
-comment|/// register, or a null list of there are none.  The list returned is zero
-comment|/// terminated.
-comment|///
-specifier|const
+comment|/// getSubReg - Returns the physical register number of sub-register "Index"
+comment|/// for physical register RegNo. Return zero if the sub-register does not
+comment|/// exist.
 name|unsigned
-modifier|*
-name|getAliasSet
+name|getSubReg
 argument_list|(
 name|unsigned
-name|RegNo
+name|Reg
+argument_list|,
+name|unsigned
+name|Idx
 argument_list|)
 decl|const
-block|{
-comment|// The Overlaps set always begins with Reg itself.
-return|return
-name|get
+decl_stmt|;
+comment|/// getMatchingSuperReg - Return a super-register of the specified register
+comment|/// Reg so its sub-register of index SubIdx is Reg.
+name|unsigned
+name|getMatchingSuperReg
 argument_list|(
-name|RegNo
-argument_list|)
-operator|.
-name|Overlaps
-operator|+
-literal|1
-return|;
-block|}
-comment|/// getOverlaps - Return a list of registers that overlap Reg, including
-comment|/// itself. This is the same as the alias set except Reg is included in the
-comment|/// list.
-comment|/// These are exactly the registers in { x | regsOverlap(x, Reg) }.
-comment|///
+name|unsigned
+name|Reg
+argument_list|,
+name|unsigned
+name|SubIdx
+argument_list|,
 specifier|const
-name|unsigned
-modifier|*
-name|getOverlaps
-argument_list|(
-name|unsigned
-name|RegNo
+name|MCRegisterClass
+operator|*
+name|RC
 argument_list|)
 decl|const
-block|{
-return|return
-name|get
-argument_list|(
-name|RegNo
-argument_list|)
-operator|.
-name|Overlaps
-return|;
-block|}
-comment|/// getSubRegisters - Return the list of registers that are sub-registers of
-comment|/// the specified register, or a null list of there are none. The list
-comment|/// returned is zero terminated and sorted according to super-sub register
-comment|/// relations. e.g. X86::RAX's sub-register list is EAX, AX, AL, AH.
-comment|///
-specifier|const
+decl_stmt|;
+comment|/// getSubRegIndex - For a given register pair, return the sub-register index
+comment|/// if the second register is a sub-register of the first. Return zero
+comment|/// otherwise.
 name|unsigned
-modifier|*
-name|getSubRegisters
+name|getSubRegIndex
 argument_list|(
 name|unsigned
 name|RegNo
+argument_list|,
+name|unsigned
+name|SubRegNo
 argument_list|)
 decl|const
-block|{
-return|return
-name|get
-argument_list|(
-name|RegNo
-argument_list|)
-operator|.
-name|SubRegs
-return|;
-block|}
-comment|/// getSuperRegisters - Return the list of registers that are super-registers
-comment|/// of the specified register, or a null list of there are none. The list
-comment|/// returned is zero terminated and sorted according to super-sub register
-comment|/// relations. e.g. X86::AL's super-register list is AX, EAX, RAX.
-comment|///
-specifier|const
-name|unsigned
-modifier|*
-name|getSuperRegisters
-argument_list|(
-name|unsigned
-name|RegNo
-argument_list|)
-decl|const
-block|{
-return|return
-name|get
-argument_list|(
-name|RegNo
-argument_list|)
-operator|.
-name|SuperRegs
-return|;
-block|}
+decl_stmt|;
 comment|/// getName - Return the human-readable symbolic target-specific name for the
 comment|/// specified physical register.
 specifier|const
@@ -900,6 +1052,8 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|RegStrings
+operator|+
 name|get
 argument_list|(
 name|RegNo
@@ -919,6 +1073,18 @@ return|return
 name|NumRegs
 return|;
 block|}
+comment|/// getNumRegUnits - Return the number of (native) register units in the
+comment|/// target. Register units are numbered from 0 to getNumRegUnits() - 1. They
+comment|/// can be accessed through MCRegUnitIterator defined below.
+name|unsigned
+name|getNumRegUnits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumRegUnits
+return|;
+block|}
 comment|/// getDwarfRegNum - Map a target register to an equivalent dwarf register
 comment|/// number.  Returns -1 if there is no equivalent value.  The second
 comment|/// parameter allows targets to use different numberings for EH info and
@@ -933,60 +1099,7 @@ name|bool
 name|isEH
 argument_list|)
 decl|const
-block|{
-specifier|const
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|int
-operator|>
-operator|&
-name|M
-operator|=
-name|isEH
-condition|?
-name|EHL2DwarfRegs
-else|:
-name|L2DwarfRegs
-expr_stmt|;
-specifier|const
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|int
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
-name|M
-operator|.
-name|find
-argument_list|(
-name|RegNum
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|==
-name|M
-operator|.
-name|end
-argument_list|()
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-return|return
-name|I
-operator|->
-name|second
-return|;
-block|}
+decl_stmt|;
 comment|/// getLLVMRegNum - Map a dwarf register back to a target register.
 comment|///
 name|int
@@ -999,69 +1112,7 @@ name|bool
 name|isEH
 argument_list|)
 decl|const
-block|{
-specifier|const
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
-operator|&
-name|M
-operator|=
-name|isEH
-condition|?
-name|EHDwarf2LRegs
-else|:
-name|Dwarf2LRegs
-expr_stmt|;
-specifier|const
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
-name|M
-operator|.
-name|find
-argument_list|(
-name|RegNum
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|==
-name|M
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Invalid RegNum"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-return|return
-name|I
-operator|->
-name|second
-return|;
-block|}
+decl_stmt|;
 comment|/// getSEHRegNum - Map a target register to an equivalent SEH register
 comment|/// number.  Returns LLVM register number if there is no equivalent value.
 name|int
@@ -1071,46 +1122,7 @@ name|unsigned
 name|RegNum
 argument_list|)
 decl|const
-block|{
-specifier|const
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|int
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
-name|L2SEHRegs
-operator|.
-name|find
-argument_list|(
-name|RegNum
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|==
-name|L2SEHRegs
-operator|.
-name|end
-argument_list|()
-condition|)
-return|return
-operator|(
-name|int
-operator|)
-name|RegNum
-return|;
-return|return
-name|I
-operator|->
-name|second
-return|;
-block|}
+decl_stmt|;
 name|regclass_iterator
 name|regclass_begin
 argument_list|()
@@ -1177,9 +1189,368 @@ name|i
 index|]
 return|;
 block|}
+comment|/// getEncodingValue - Returns the encoding for RegNo
+name|uint16_t
+name|getEncodingValue
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|RegNo
+operator|<
+name|NumRegs
+operator|&&
+literal|"Attempting to get encoding for invalid register number!"
+argument_list|)
+expr_stmt|;
+return|return
+name|RegEncodingTable
+index|[
+name|RegNo
+index|]
+return|;
+block|}
 block|}
 empty_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|//                          Register List Iterators
+comment|//===----------------------------------------------------------------------===//
+comment|// MCRegisterInfo provides lists of super-registers, sub-registers, and
+comment|// aliasing registers. Use these iterator classes to traverse the lists.
+comment|/// MCSubRegIterator enumerates all sub-registers of Reg.
+name|class
+name|MCSubRegIterator
+range|:
+name|public
+name|MCRegisterInfo
+operator|::
+name|DiffListIterator
+block|{
+name|public
+operator|:
+name|MCSubRegIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|)
+block|{
+name|init
+argument_list|(
+name|Reg
+argument_list|,
+name|MCRI
+operator|->
+name|DiffLists
+operator|+
+name|MCRI
+operator|->
+name|get
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|SubRegs
+argument_list|)
+block|;
+operator|++
+operator|*
+name|this
+block|;   }
 block|}
+decl_stmt|;
+comment|/// MCSuperRegIterator enumerates all super-registers of Reg.
+name|class
+name|MCSuperRegIterator
+range|:
+name|public
+name|MCRegisterInfo
+operator|::
+name|DiffListIterator
+block|{
+name|public
+operator|:
+name|MCSuperRegIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|)
+block|{
+name|init
+argument_list|(
+name|Reg
+argument_list|,
+name|MCRI
+operator|->
+name|DiffLists
+operator|+
+name|MCRI
+operator|->
+name|get
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|SuperRegs
+argument_list|)
+block|;
+operator|++
+operator|*
+name|this
+block|;   }
+block|}
+decl_stmt|;
+comment|/// MCRegAliasIterator enumerates all registers aliasing Reg.
+comment|/// If IncludeSelf is set, Reg itself is included in the list.
+name|class
+name|MCRegAliasIterator
+range|:
+name|public
+name|MCRegisterInfo
+operator|::
+name|DiffListIterator
+block|{
+name|public
+operator|:
+name|MCRegAliasIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|,
+argument|bool IncludeSelf
+argument_list|)
+block|{
+name|init
+argument_list|(
+name|Reg
+argument_list|,
+name|MCRI
+operator|->
+name|DiffLists
+operator|+
+name|MCRI
+operator|->
+name|get
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|Overlaps
+argument_list|)
+block|;
+comment|// Initially, the iterator points to Reg itself.
+if|if
+condition|(
+operator|!
+name|IncludeSelf
+condition|)
+operator|++
+operator|*
+name|this
+expr_stmt|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|//                               Register Units
+comment|//===----------------------------------------------------------------------===//
+comment|// Register units are used to compute register aliasing. Every register has at
+comment|// least one register unit, but it can have more. Two registers overlap if and
+comment|// only if they have a common register unit.
+comment|//
+comment|// A target with a complicated sub-register structure will typically have many
+comment|// fewer register units than actual registers. MCRI::getNumRegUnits() returns
+comment|// the number of register units in the target.
+comment|// MCRegUnitIterator enumerates a list of register units for Reg. The list is
+comment|// in ascending numerical order.
+name|class
+name|MCRegUnitIterator
+operator|:
+name|public
+name|MCRegisterInfo
+operator|::
+name|DiffListIterator
+block|{
+name|public
+operator|:
+comment|/// MCRegUnitIterator - Create an iterator that traverses the register units
+comment|/// in Reg.
+name|MCRegUnitIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|)
+block|{
+comment|// Decode the RegUnits MCRegisterDesc field.
+name|unsigned
+name|RU
+operator|=
+name|MCRI
+operator|->
+name|get
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|RegUnits
+block|;
+name|unsigned
+name|Scale
+operator|=
+name|RU
+operator|&
+literal|15
+block|;
+name|unsigned
+name|Offset
+operator|=
+name|RU
+operator|>>
+literal|4
+block|;
+comment|// Initialize the iterator to Reg * Scale, and the List pointer to
+comment|// DiffLists + Offset.
+name|init
+argument_list|(
+name|Reg
+operator|*
+name|Scale
+argument_list|,
+name|MCRI
+operator|->
+name|DiffLists
+operator|+
+name|Offset
+argument_list|)
+block|;
+comment|// That may not be a valid unit, we need to advance by one to get the real
+comment|// unit number. The first differential can be 0 which would normally
+comment|// terminate the list, but since we know every register has at least one
+comment|// unit, we can allow a 0 differential here.
+name|advance
+argument_list|()
+block|;   }
+block|}
+block|;
+comment|// Each register unit has one or two root registers. The complete set of
+comment|// registers containing a register unit is the union of the roots and their
+comment|// super-registers. All registers aliasing Unit can be visited like this:
+comment|//
+comment|//   for (MCRegUnitRootIterator RI(Unit, MCRI); RI.isValid(); ++RI) {
+comment|//     unsigned Root = *RI;
+comment|//     visit(Root);
+comment|//     for (MCSuperRegIterator SI(Root, MCRI); SI.isValid(); ++SI)
+comment|//       visit(*SI);
+comment|//    }
+comment|/// MCRegUnitRootIterator enumerates the root registers of a register unit.
+name|class
+name|MCRegUnitRootIterator
+block|{
+name|uint16_t
+name|Reg0
+block|;
+name|uint16_t
+name|Reg1
+block|;
+name|public
+operator|:
+name|MCRegUnitRootIterator
+argument_list|(
+argument|unsigned RegUnit
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|RegUnit
+operator|<
+name|MCRI
+operator|->
+name|getNumRegUnits
+argument_list|()
+operator|&&
+literal|"Invalid register unit"
+argument_list|)
+block|;
+name|Reg0
+operator|=
+name|MCRI
+operator|->
+name|RegUnitRoots
+index|[
+name|RegUnit
+index|]
+index|[
+literal|0
+index|]
+block|;
+name|Reg1
+operator|=
+name|MCRI
+operator|->
+name|RegUnitRoots
+index|[
+name|RegUnit
+index|]
+index|[
+literal|1
+index|]
+block|;   }
+comment|/// Dereference to get the current root register.
+name|unsigned
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Reg0
+return|;
+block|}
+comment|/// isValid - Check if the iterator is at the end of the list.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Reg0
+return|;
+block|}
+comment|/// Preincrement to move to the next root register.
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot move off the end of the list."
+argument_list|)
+block|;
+name|Reg0
+operator|=
+name|Reg1
+block|;
+name|Reg1
+operator|=
+literal|0
+block|;   }
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

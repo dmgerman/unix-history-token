@@ -178,7 +178,12 @@ comment|// Contained an escaped newline or trigraph.
 name|LeadingEmptyMacro
 init|=
 literal|0x10
+block|,
 comment|// Empty macro exists before this token.
+name|HasUDSuffix
+init|=
+literal|0x20
+comment|// This string or character literal has a ud-suffix.
 block|}
 enum|;
 name|tok
@@ -251,7 +256,7 @@ operator|)
 name|K
 return|;
 block|}
-comment|/// isAnyIdentifier - Return true if this is a raw identifier (when lexing
+comment|/// \brief Return true if this is a raw identifier (when lexing
 comment|/// in raw mode) or a non-keyword identifier (when lexing in non-raw mode).
 name|bool
 name|isAnyIdentifier
@@ -380,7 +385,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getLocation - Return a source location identifier for the specified
+comment|/// \brief Return a source location identifier for the specified
 comment|/// offset in the current file.
 name|SourceLocation
 name|getLocation
@@ -503,8 +508,8 @@ name|getLocation
 argument_list|()
 return|;
 block|}
-comment|/// getAnnotationRange - SourceRange of the group of tokens that this
-comment|/// annotation token represents.
+comment|/// \brief SourceRange of the group of tokens that this annotation token
+comment|/// represents.
 name|SourceRange
 name|getAnnotationRange
 argument_list|()
@@ -566,8 +571,7 @@ name|Kind
 argument_list|)
 return|;
 block|}
-comment|/// startToken - Reset all flags to cleared.
-comment|///
+comment|/// \brief Reset all flags to cleared.
 name|void
 name|startToken
 parameter_list|()
@@ -817,7 +821,7 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-comment|/// setFlag - Set the specified flag.
+comment|/// \brief Set the specified flag.
 name|void
 name|setFlag
 parameter_list|(
@@ -830,7 +834,7 @@ operator||=
 name|Flag
 expr_stmt|;
 block|}
-comment|/// clearFlag - Unset the specified flag.
+comment|/// \brief Unset the specified flag.
 name|void
 name|clearFlag
 parameter_list|(
@@ -844,9 +848,10 @@ operator|~
 name|Flag
 expr_stmt|;
 block|}
-comment|/// getFlags - Return the internal represtation of the flags.
-comment|///  Only intended for low-level operations such as writing tokens to
-comment|//   disk.
+comment|/// \brief Return the internal represtation of the flags.
+comment|///
+comment|/// This is only intended for low-level operations such as writing tokens to
+comment|/// disk.
 name|unsigned
 name|getFlags
 argument_list|()
@@ -856,7 +861,7 @@ return|return
 name|Flags
 return|;
 block|}
-comment|/// setFlagValue - Set a flag to either true or false.
+comment|/// \brief Set a flag to either true or false.
 name|void
 name|setFlagValue
 parameter_list|(
@@ -902,7 +907,7 @@ operator|:
 name|false
 return|;
 block|}
-comment|/// hasLeadingSpace - Return true if this token has whitespace before it.
+comment|/// \brief Return true if this token has whitespace before it.
 comment|///
 name|bool
 name|hasLeadingSpace
@@ -921,7 +926,7 @@ operator|:
 name|false
 return|;
 block|}
-comment|/// isExpandDisabled - Return true if this identifier token should never
+comment|/// \brief Return true if this identifier token should never
 comment|/// be expanded in the future, due to C99 6.10.3.4p2.
 name|bool
 name|isExpandDisabled
@@ -940,7 +945,7 @@ operator|:
 name|false
 return|;
 block|}
-comment|/// isObjCAtKeyword - Return true if we have an ObjC keyword identifier.
+comment|/// \brief Return true if we have an ObjC keyword identifier.
 name|bool
 name|isObjCAtKeyword
 argument_list|(
@@ -951,7 +956,7 @@ name|objcKey
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getObjCKeywordID - Return the ObjC keyword kind.
+comment|/// \brief Return the ObjC keyword kind.
 name|tok
 operator|::
 name|ObjCKeywordKind
@@ -959,9 +964,7 @@ name|getObjCKeywordID
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// needsCleaning - Return true if this token has trigraphs or escaped
-comment|/// newlines in it.
-comment|///
+comment|/// \brief Return true if this token has trigraphs or escaped newlines in it.
 name|bool
 name|needsCleaning
 argument_list|()
@@ -998,6 +1001,25 @@ operator|:
 name|false
 return|;
 block|}
+comment|/// \brief Return true if this token is a string or character literal which
+comment|/// has a ud-suffix.
+name|bool
+name|hasUDSuffix
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|HasUDSuffix
+operator|)
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -1006,7 +1028,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// PPConditionalInfo - Information about the conditional stack (#if directives)
+comment|/// \brief Information about the conditional stack (\#if directives)
 end_comment
 
 begin_comment
@@ -1017,23 +1039,22 @@ begin_struct
 struct|struct
 name|PPConditionalInfo
 block|{
-comment|/// IfLoc - Location where the conditional started.
-comment|///
+comment|/// \brief Location where the conditional started.
 name|SourceLocation
 name|IfLoc
 decl_stmt|;
-comment|/// WasSkipping - True if this was contained in a skipping directive, e.g.
-comment|/// in a "#if 0" block.
+comment|/// \brief True if this was contained in a skipping directive, e.g.,
+comment|/// in a "\#if 0" block.
 name|bool
 name|WasSkipping
 decl_stmt|;
-comment|/// FoundNonSkip - True if we have emitted tokens already, and now we're in
-comment|/// an #else block or something.  Only useful in Skipping blocks.
+comment|/// \brief True if we have emitted tokens already, and now we're in
+comment|/// an \#else block or something.  Only useful in Skipping blocks.
 name|bool
 name|FoundNonSkip
 decl_stmt|;
-comment|/// FoundElse - True if we've seen a #else in this block.  If so,
-comment|/// #elif/#else directives are not allowed.
+comment|/// \brief True if we've seen a \#else in this block.  If so,
+comment|/// \#elif/\#else directives are not allowed.
 name|bool
 name|FoundElse
 decl_stmt|;

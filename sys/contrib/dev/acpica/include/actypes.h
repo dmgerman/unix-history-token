@@ -1271,6 +1271,10 @@ parameter_list|)
 value|ACPI_TO_INTEGER(i)
 end_define
 
+begin_comment
+comment|/* Optimizations for 4-character (32-bit) ACPI_NAME manipulation */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1289,6 +1293,18 @@ parameter_list|)
 value|(*ACPI_CAST_PTR (UINT32, (a)) == *ACPI_CAST_PTR (UINT32, (b)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_MOVE_NAME
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(*ACPI_CAST_PTR (UINT32, (dest)) = *ACPI_CAST_PTR (UINT32, (src)))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1304,6 +1320,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(!ACPI_STRNCMP (ACPI_CAST_PTR (char, (a)), ACPI_CAST_PTR (char, (b)), ACPI_NAME_SIZE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MOVE_NAME
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(ACPI_STRNCPY (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAME_SIZE))
 end_define
 
 begin_endif
@@ -1561,43 +1589,6 @@ directive|define
 name|ACPI_SLEEP_TYPE_INVALID
 value|0xFF
 end_define
-
-begin_comment
-comment|/*  * Sleep/Wake flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_NO_OPTIONAL_METHODS
-value|0x00
-end_define
-
-begin_comment
-comment|/* Do not execute any optional methods */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EXECUTE_GTS
-value|0x01
-end_define
-
-begin_comment
-comment|/* For enter sleep interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EXECUTE_BFS
-value|0x02
-end_define
-
-begin_comment
-comment|/* For leave sleep prep interface */
-end_comment
 
 begin_comment
 comment|/*  * Standard notify values  */
@@ -2314,6 +2305,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NUM_NOTIFY_TYPES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_MAX_SYS_NOTIFY
 value|0x7F
 end_define
@@ -2324,6 +2322,28 @@ directive|define
 name|ACPI_MAX_DEVICE_SPECIFIC_NOTIFY
 value|0xBF
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_HANDLER_LIST
+value|0
+end_define
+
+begin_comment
+comment|/* Used as index, must be SYSTEM_NOTIFY -1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_HANDLER_LIST
+value|1
+end_define
+
+begin_comment
+comment|/* Used as index, must be DEVICE_NOTIFY -1 */
+end_comment
 
 begin_comment
 comment|/* Address Space (Operation Region) Types */
@@ -2409,8 +2429,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_ADR_SPACE_PLATFORM_COMM
+value|(ACPI_ADR_SPACE_TYPE) 10
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NUM_PREDEFINED_REGIONS
-value|10
+value|11
 end_define
 
 begin_comment
@@ -2670,9 +2697,6 @@ function_decl|)
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_typedef
@@ -3526,13 +3550,13 @@ value|16
 end_define
 
 begin_comment
-comment|/* Structures used for device/processor HID, UID, CID */
+comment|/* Structures used for device/processor HID, UID, CID, and SUB */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_device_id
+name|acpi_pnp_device_id
 block|{
 name|UINT32
 name|Length
@@ -3543,14 +3567,14 @@ modifier|*
 name|String
 decl_stmt|;
 block|}
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_device_id_list
+name|acpi_pnp_device_id_list
 block|{
 name|UINT32
 name|Count
@@ -3560,7 +3584,7 @@ name|UINT32
 name|ListSize
 decl_stmt|;
 comment|/* Size of list, including ID strings */
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 name|Ids
 index|[
 literal|1
@@ -3568,7 +3592,7 @@ index|]
 decl_stmt|;
 comment|/* ID array */
 block|}
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 typedef|;
 end_typedef
 
@@ -3627,15 +3651,19 @@ name|UINT64
 name|Address
 decl_stmt|;
 comment|/* _ADR value */
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 name|HardwareId
 decl_stmt|;
 comment|/* _HID value */
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 name|UniqueId
 decl_stmt|;
 comment|/* _UID value */
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID
+name|SubsystemId
+decl_stmt|;
+comment|/* _SUB value */
+name|ACPI_PNP_DEVICE_ID_LIST
 name|CompatibleIdList
 decl_stmt|;
 comment|/* _CID list<must be last> */
@@ -3690,26 +3718,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_VALID_CID
+name|ACPI_VALID_SUB
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_VALID_SXDS
+name|ACPI_VALID_CID
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_VALID_SXWS
+name|ACPI_VALID_SXDS
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_SXWS
+value|0x80
+end_define
+
 begin_comment
-comment|/* Flags for _STA method */
+comment|/* Flags for _STA return value (CurrentStatus above) */
 end_comment
 
 begin_define

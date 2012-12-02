@@ -2444,6 +2444,8 @@ argument_list|,
 name|PCIE_BYTE_SWAP_MEM_LIM
 argument_list|,
 name|bar
+operator||
+literal|0xFFF
 argument_list|)
 expr_stmt|;
 name|bar
@@ -2484,6 +2486,8 @@ argument_list|,
 name|PCIE_BYTE_SWAP_IO_LIM
 argument_list|,
 name|bar
+operator||
+literal|0xFFF
 argument_list|)
 expr_stmt|;
 block|}

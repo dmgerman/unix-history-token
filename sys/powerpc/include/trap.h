@@ -23,7 +23,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|E500
+name|BOOKE
 argument_list|)
 end_elif
 

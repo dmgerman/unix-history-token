@@ -1665,6 +1665,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_macro
+name|ISC_LANG_ENDDECLS
+end_macro
+
 begin_endif
 endif|#
 directive|endif

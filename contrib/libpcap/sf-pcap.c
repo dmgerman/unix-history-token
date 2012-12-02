@@ -874,12 +874,15 @@ name|bufsize
 operator|<=
 literal|0
 condition|)
+block|{
+comment|/* 		 * Bogus snapshot length; use 64KiB as a fallback. 		 */
 name|p
 operator|->
 name|bufsize
 operator|=
-name|BPF_MAXBUFSIZE
+literal|65536
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|buffer

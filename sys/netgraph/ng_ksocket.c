@@ -2408,11 +2408,22 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_KSOCKET
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -4639,17 +4650,10 @@ name|uio
 name|auio
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* so = priv->so; */
 comment|/* XXX could have derived this like so */
 name|KASSERT
@@ -4856,14 +4860,7 @@ name|hook
 operator|==
 name|NULL
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* Read and forward available mbuf's */
 name|auio
 operator|.
@@ -5197,11 +5194,6 @@ operator||=
 name|KSF_EOFSEEN
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

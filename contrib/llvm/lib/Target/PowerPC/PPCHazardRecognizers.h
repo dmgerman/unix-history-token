@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"PPCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ScheduleHazardRecognizer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ScoreboardHazardRecognizer.h"
 end_include
 
 begin_include
@@ -71,16 +83,79 @@ directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"PPCInstrInfo.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// PPCScoreboardHazardRecognizer - This class implements a scoreboard-based
+comment|/// hazard recognizer for generic PPC processors.
+name|class
+name|PPCScoreboardHazardRecognizer
+range|:
+name|public
+name|ScoreboardHazardRecognizer
+block|{
+specifier|const
+name|ScheduleDAG
+operator|*
+name|DAG
+block|;
+name|public
+operator|:
+name|PPCScoreboardHazardRecognizer
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|ScheduleDAG
+operator|*
+name|DAG_
+argument_list|)
+operator|:
+name|ScoreboardHazardRecognizer
+argument_list|(
+name|ItinData
+argument_list|,
+name|DAG_
+argument_list|)
+block|,
+name|DAG
+argument_list|(
+argument|DAG_
+argument_list|)
+block|{}
+name|virtual
+name|HazardType
+name|getHazardType
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|int Stalls
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitInstruction
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|)
+block|;
+name|virtual
+name|void
+name|AdvanceCycle
+argument_list|()
+block|;
+name|virtual
+name|void
+name|Reset
+argument_list|()
+block|; }
+decl_stmt|;
 comment|/// PPCHazardRecognizer970 - This class defines a finite state automata that
 comment|/// models the dispatch logic on the PowerPC 970 (aka G5) processor.  This
 comment|/// promotes good dispatch group formation and implements noop insertion to
@@ -113,18 +188,21 @@ comment|// up to four stores in one dispatch group, hence we track up to 4.
 comment|//
 comment|// This is null if we haven't seen a store yet.  We keep track of both
 comment|// operands of the store here, since we support [r+r] and [r+i] addressing.
-name|SDValue
-name|StorePtr1
-index|[
-literal|4
-index|]
-block|,
-name|StorePtr2
+specifier|const
+name|Value
+operator|*
+name|StoreValue
 index|[
 literal|4
 index|]
 block|;
-name|unsigned
+name|int64_t
+name|StoreOffset
+index|[
+literal|4
+index|]
+block|;
+name|uint64_t
 name|StoreSize
 index|[
 literal|4
@@ -166,6 +244,11 @@ name|void
 name|AdvanceCycle
 argument_list|()
 block|;
+name|virtual
+name|void
+name|Reset
+argument_list|()
+block|;
 name|private
 operator|:
 comment|/// EndDispatchGroup - Called when we are finishing a new dispatch group.
@@ -197,11 +280,11 @@ block|;
 name|bool
 name|isLoadOfStoredAddress
 argument_list|(
-argument|unsigned LoadSize
+argument|uint64_t LoadSize
 argument_list|,
-argument|SDValue Ptr1
+argument|int64_t LoadOffset
 argument_list|,
-argument|SDValue Ptr2
+argument|const Value *LoadValue
 argument_list|)
 specifier|const
 block|; }

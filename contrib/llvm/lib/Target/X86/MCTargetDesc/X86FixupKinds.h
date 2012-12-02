@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86/X86FixupKinds.h - X86 Specific Fixup Entries --------*- C++ -*-===//
+comment|//===-- X86FixupKinds.h - X86 Specific Fixup Entries ------------*- C++ -*-===//
 end_comment
 
 begin_comment

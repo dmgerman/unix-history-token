@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- MipsSubtarget.h - Define Subtarget for the Mips -----*- C++ -*--====//
+comment|//===-- MipsSubtarget.h - Define Subtarget for the Mips ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -102,6 +102,11 @@ range|:
 name|public
 name|MipsGenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 comment|// NOTE: O64 will not be supported.
@@ -193,11 +198,31 @@ comment|// HasBitCount - Count leading '1' and '0' bits.
 name|bool
 name|HasBitCount
 block|;
+comment|// InMips16 -- can process Mips16 instructions
+name|bool
+name|InMips16Mode
+block|;
+comment|// IsAndroid -- target is android
+name|bool
+name|IsAndroid
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
 name|public
 operator|:
+name|virtual
+name|bool
+name|enablePostRAScheduler
+argument_list|(
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|AntiDepBreakMode& Mode
+argument_list|,
+argument|RegClassVector& CriticalPathRCs
+argument_list|)
+specifier|const
+block|;
 comment|/// Only O32 and EABI supported right now.
 name|bool
 name|isABI_EABI
@@ -324,6 +349,19 @@ name|Mips64r2
 return|;
 block|}
 name|bool
+name|hasMips32r2Or64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasMips32r2
+argument_list|()
+operator|||
+name|hasMips64
+argument_list|()
+return|;
+block|}
+name|bool
 name|isLittle
 argument_list|()
 specifier|const
@@ -389,12 +427,41 @@ name|HasVFPU
 return|;
 block|}
 name|bool
+name|inMips16Mode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InMips16Mode
+return|;
+block|}
+name|bool
+name|isAndroid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsAndroid
+return|;
+block|}
+name|bool
 name|isLinux
 argument_list|()
 specifier|const
 block|{
 return|return
 name|IsLinux
+return|;
+block|}
+name|bool
+name|hasStandardEncoding
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|inMips16Mode
+argument_list|()
 return|;
 block|}
 comment|/// Features related to the presence of specific instructions.

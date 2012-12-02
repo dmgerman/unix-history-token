@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: apptype.c,v 1.11 2009/02/04 18:24:32 christos Exp $"
+literal|"@(#)$File: apptype.c,v 1.13 2011/09/07 21:57:15 christos Exp $"
 argument_list|)
 end_macro
 
@@ -309,6 +309,14 @@ argument_list|,
 literal|"cannot write tmp file `%s'"
 argument_list|,
 name|path
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/spr.h>
 end_include
 
@@ -142,7 +148,9 @@ name|ptr
 operator|=
 name|val
 expr_stmt|;
-asm|__asm __volatile("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -258,6 +266,17 @@ name|i
 decl_stmt|,
 name|law_max
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|law_max
 operator|=
 name|law_getmax
@@ -636,14 +655,24 @@ operator|=
 name|ENXIO
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rv
+operator|==
+literal|0
+condition|)
+block|{
 operator|*
 name|trgt_mem
 operator|=
+name|trgt
+expr_stmt|;
 operator|*
 name|trgt_io
 operator|=
 name|trgt
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|rv

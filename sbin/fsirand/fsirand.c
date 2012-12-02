@@ -1532,8 +1532,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"ino %d gen %08x\n"
+literal|"ino %ju gen %08x\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inumber
 argument_list|,
 name|sblock

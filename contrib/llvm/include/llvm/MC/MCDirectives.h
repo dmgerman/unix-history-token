@@ -158,6 +158,25 @@ name|MCAF_Code64
 comment|///< .code64 (X86)
 block|}
 enum|;
+enum|enum
+name|MCDataRegionType
+block|{
+name|MCDR_DataRegion
+block|,
+comment|///< .data_region
+name|MCDR_DataRegionJT8
+block|,
+comment|///< .data_region jt8
+name|MCDR_DataRegionJT16
+block|,
+comment|///< .data_region jt16
+name|MCDR_DataRegionJT32
+block|,
+comment|///< .data_region jt32
+name|MCDR_DataRegionEnd
+comment|///< .end_data_region
+block|}
+enum|;
 block|}
 end_decl_stmt
 

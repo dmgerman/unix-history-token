@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: fsmagic.c,v 1.59 2009/02/03 20:27:51 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.64 2011/08/14 09:03:12 christos Exp $"
 argument_list|)
 end_macro
 
@@ -178,6 +178,12 @@ directive|undef
 name|HAVE_MAJOR
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|S_IFLNK
+end_ifdef
+
 begin_function
 name|private
 name|int
@@ -196,11 +202,6 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|errfmt
-decl_stmt|;
 name|int
 name|mime
 init|=
@@ -222,7 +223,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|"application/x-symlink"
+literal|"inode/symlink"
 argument_list|)
 operator|==
 operator|-
@@ -241,21 +242,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|err
-operator|==
-name|ELOOP
-condition|)
-name|errfmt
-operator|=
-literal|"symbolic link in a loop"
-expr_stmt|;
-else|else
-name|errfmt
-operator|=
-literal|"broken symbolic link to `%s'"
-expr_stmt|;
-if|if
-condition|(
 name|ms
 operator|->
 name|flags
@@ -269,7 +255,7 @@ name|ms
 argument_list|,
 name|err
 argument_list|,
-name|errfmt
+literal|"broken symbolic link to `%s'"
 argument_list|,
 name|buf
 argument_list|)
@@ -285,7 +271,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-name|errfmt
+literal|"broken symbolic link to `%s'"
 argument_list|,
 name|buf
 argument_list|)
@@ -303,6 +289,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|private
@@ -338,7 +329,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|"application/%s"
+literal|"inode/%s"
 argument_list|,
 name|str
 argument_list|)
@@ -447,7 +438,7 @@ operator|+
 literal|4
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|nch
 decl_stmt|;
 name|struct
@@ -567,7 +558,14 @@ return|return
 operator|-
 literal|1
 return|;
+name|ms
+operator|->
+name|event_flags
+operator||=
+name|EVENT_HAD_ERR
+expr_stmt|;
 return|return
+operator|-
 literal|1
 return|;
 block|}
@@ -690,7 +688,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-directory"
+literal|"directory"
 argument_list|)
 operator|==
 operator|-
@@ -754,7 +752,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-character-device"
+literal|"chardevice"
 argument_list|)
 operator|==
 operator|-
@@ -909,7 +907,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-block-device"
+literal|"blockdevice"
 argument_list|)
 operator|==
 operator|-
@@ -1064,7 +1062,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-fifo"
+literal|"fifo"
 argument_list|)
 operator|==
 operator|-
@@ -1116,7 +1114,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-door"
+literal|"door"
 argument_list|)
 operator|==
 operator|-
@@ -1213,7 +1211,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-symlink"
+literal|"symlink"
 argument_list|)
 operator|==
 operator|-
@@ -1549,7 +1547,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-symlink"
+literal|"symlink"
 argument_list|)
 operator|==
 operator|-
@@ -1607,7 +1605,7 @@ name|ms
 argument_list|,
 name|mime
 argument_list|,
-literal|"x-socket"
+literal|"socket"
 argument_list|)
 operator|==
 operator|-

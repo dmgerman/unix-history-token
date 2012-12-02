@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"PPC.h"
 end_include
 
@@ -85,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|"PPCSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
 begin_decl_stmt
@@ -182,9 +182,13 @@ comment|/// registers.
 name|EXTSW_32
 block|,
 comment|/// CALL - A direct function call.
+comment|/// CALL_NOP_SVR4 is a call with the special  NOP which follows 64-bit
+comment|/// SVR4 calls.
 name|CALL_Darwin
 block|,
 name|CALL_SVR4
+block|,
+name|CALL_NOP_SVR4
 block|,
 comment|/// NOP - Special NOP which follows 64-bit SVR4 calls.
 name|NOP
@@ -553,6 +557,15 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|Sched
+operator|::
+name|Preference
+name|getSchedulingPreference
+argument_list|(
+argument|SDNode *N
+argument_list|)
+specifier|const
+block|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 comment|///
 name|virtual
@@ -595,8 +608,6 @@ name|void
 name|computeMaskedBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
-argument_list|,
-argument|const APInt&Mask
 argument_list|,
 argument|APInt&KnownZero
 argument_list|,
@@ -759,7 +770,7 @@ comment|/// lowering. If DstAlign is zero that means it's safe to destination
 comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
 comment|/// means there isn't a need to check it against alignment requirement,
 comment|/// probably because the source does not need to be loaded. If
-comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
+comment|/// 'IsZeroVal' is true, that means it's safe to return a
 comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
 comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
 comment|/// constant so it does not need to be loaded.
@@ -775,11 +786,23 @@ argument|unsigned DstAlign
 argument_list|,
 argument|unsigned SrcAlign
 argument_list|,
-argument|bool NonScalarIntSafe
+argument|bool IsZeroVal
 argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
+comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
+comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
+comment|/// is expanded to mul + add.
+name|virtual
+name|bool
+name|isFMAFasterThanMulAndAdd
+argument_list|(
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -862,6 +885,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerBlockAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalTLSAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1149,25 +1181,7 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|bool&isTailCall
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)

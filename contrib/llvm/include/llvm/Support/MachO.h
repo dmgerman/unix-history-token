@@ -499,6 +499,26 @@ init|=
 literal|0x00000027u
 block|,
 comment|// LC_DYLD_ENVIRONMENT
+name|LoadCommandMain
+init|=
+literal|0x80000028u
+block|,
+comment|// LC_MAIN
+name|LoadCommandDataInCode
+init|=
+literal|0x00000029u
+block|,
+comment|// LC_DATA_IN_CODE
+name|LoadCommandSourceVersion
+init|=
+literal|0x0000002Au
+block|,
+comment|// LC_SOURCE_VERSION
+name|LoadCommandCodeSignDRs
+init|=
+literal|0x0000002Bu
+block|,
+comment|// LC_DYLIB_CODE_SIGN_DRS
 comment|// Constant bits for the "flags" field in llvm::MachO::segment_command
 name|SegmentCommandFlagBitHighVM
 init|=
@@ -971,6 +991,14 @@ init|=
 literal|0xffu
 block|,
 comment|// MAX_SECT
+name|NListDescWeakRef
+init|=
+literal|0x40u
+block|,
+name|NListDescWeakDef
+init|=
+literal|0x80u
+block|,
 comment|// Constant values for the "n_type" field in llvm::MachO::nlist and
 comment|// llvm::MachO::nlist_64 when "(n_type& NlistMaskStab) != 0"
 name|StabGlobalSymbol

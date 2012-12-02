@@ -202,8 +202,6 @@ label|:
 name|StringRef
 name|String
 decl_stmt|;
-name|llvm
-operator|::
 name|SmallString
 operator|<
 literal|256
@@ -229,6 +227,11 @@ begin_decl_stmt
 name|class
 name|MangleContext
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|ASTContext
 modifier|&
 name|Context
@@ -608,6 +611,11 @@ name|BlockDecl
 modifier|*
 name|BD
 parameter_list|,
+specifier|const
+name|NamedDecl
+modifier|*
+name|ID
+parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
@@ -685,6 +693,13 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
+parameter_list|,
+specifier|const
+name|NamedDecl
+modifier|*
+name|ID
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|void

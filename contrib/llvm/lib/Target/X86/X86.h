@@ -98,12 +98,6 @@ name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
-name|MachineCodeEmitter
-decl_stmt|;
-name|class
-name|Target
-decl_stmt|;
-name|class
 name|X86TargetMachine
 decl_stmt|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a
@@ -128,6 +122,14 @@ comment|/// register for PIC on x86-32.
 name|FunctionPass
 modifier|*
 name|createGlobalBaseRegPass
+parameter_list|()
+function_decl|;
+comment|/// createCleanupLocalDynamicTLSPass() - This pass combines multiple accesses
+comment|/// to local-dynamic TLS variables so that the TLS base address for the module
+comment|/// is only fetched once per execution path through the function.
+name|FunctionPass
+modifier|*
+name|createCleanupLocalDynamicTLSPass
 parameter_list|()
 function_decl|;
 comment|/// createX86FloatingPointStackifierPass - This function returns a pass which

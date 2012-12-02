@@ -66,7 +66,7 @@ value|STRINGIFY(x)
 end_define
 
 begin_comment
-comment|/**  * Writes an error message to buffer if cond is false, and returns true  * iff the assertion failed.  Note the implied parameters buffer and  * buflen  */
+comment|/**  * Writes an error message to buffer if cond is false  * Note the implied parameters buffer and  * buflen  */
 end_comment
 
 begin_define
@@ -76,7 +76,7 @@ name|XNB_ASSERT
 parameter_list|(
 name|cond
 parameter_list|)
-value|({						\ 	int passed = (cond);						\ 	char *_buffer = (buffer);					\ 	size_t _buflen = (buflen);					\ 	if (! passed) {							\ 		strlcat(_buffer, __func__, _buflen);			\ 		strlcat(_buffer, ":" TOSTRING(__LINE__) 		\ 		  " Assertion Error: " #cond "\n", _buflen);		\ 	}								\  ! passed; })
+value|({						\ 	int passed = (cond);						\ 	char *_buffer = (buffer);					\ 	size_t _buflen = (buflen);					\ 	if (! passed) {							\ 		strlcat(_buffer, __func__, _buflen);			\ 		strlcat(_buffer, ":" TOSTRING(__LINE__) 		\ 		  " Assertion Error: " #cond "\n", _buflen);		\ 	}								\ 	})
 end_define
 
 begin_comment
@@ -7856,7 +7856,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** xnb_mbufc2pkt on a a two-mbuf chain with short data regions */
+comment|/** xnb_mbufc2pkt on a two-mbuf chain with short data regions */
 end_comment
 
 begin_function
@@ -8085,7 +8085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** xnb_mbufc2pkt on a a mbuf chain with>1 mbuf cluster */
+comment|/** xnb_mbufc2pkt on a mbuf chain with>1 mbuf cluster */
 end_comment
 
 begin_function
@@ -8306,7 +8306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** xnb_mbufc2pkt on a a mbuf chain with>1 mbuf cluster and extra info */
+comment|/** xnb_mbufc2pkt on a mbuf chain with>1 mbuf cluster and extra info */
 end_comment
 
 begin_function

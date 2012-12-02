@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2008 SÃ¸ren Schmidt<sos@FreeBSD.org>  * Copyright (c) 2009 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998 - 2008 SÃ¸ren Schmidt<sos@FreeBSD.org>  * Copyright (c) 2009-2012 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -2201,13 +2201,6 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
-name|struct
-name|ahci_led
-name|leds
-index|[
-literal|3
-index|]
-decl_stmt|;
 name|uint32_t
 name|caps
 decl_stmt|;
@@ -2377,6 +2370,83 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ahci_enclosure
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Device handle */
+name|struct
+name|resource
+modifier|*
+name|r_memc
+decl_stmt|;
+comment|/* Control register */
+name|struct
+name|resource
+modifier|*
+name|r_memt
+decl_stmt|;
+comment|/* Transmit buffer */
+name|struct
+name|resource
+modifier|*
+name|r_memr
+decl_stmt|;
+comment|/* Recieve buffer */
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+decl_stmt|;
+name|struct
+name|cam_path
+modifier|*
+name|path
+decl_stmt|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* state lock */
+name|struct
+name|ahci_led
+name|leds
+index|[
+name|AHCI_MAX_PORTS
+operator|*
+literal|3
+index|]
+decl_stmt|;
+name|uint32_t
+name|capsem
+decl_stmt|;
+comment|/* Controller capabilities */
+name|uint8_t
+name|status
+index|[
+name|AHCI_MAX_PORTS
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* ArrayDev statuses */
+name|int
+name|quirks
+decl_stmt|;
+name|int
+name|channels
+decl_stmt|;
+name|int
+name|ichannels
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* structure describing a AHCI controller */
 end_comment
@@ -2499,11 +2569,6 @@ index|[
 name|AHCI_MAX_PORTS
 index|]
 struct|;
-name|struct
-name|mtx
-name|em_mtx
-decl_stmt|;
-comment|/* EM access lock */
 block|}
 struct|;
 end_struct

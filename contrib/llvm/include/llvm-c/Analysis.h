@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCAnalysis Analysis  * @ingroup LLVMC  *  * @{  */
 typedef|typedef
 enum|enum
 block|{
@@ -89,6 +90,7 @@ name|LLVMValueRef
 name|Fn
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/* $KAME: sctp.h,v 1.18 2005/03/06 16:04:16 itojun Exp $	 */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -892,17 +888,6 @@ define|#
 directive|define
 name|SCTP_GET_ADDR_LEN
 value|0x0000800b
-end_define
-
-begin_comment
-comment|/* temporary workaround for Apple listen() issue, no args used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_LISTEN_FIX
-value|0x0000800c
 end_define
 
 begin_comment
@@ -2121,6 +2106,10 @@ name|SCTP_PCB_FLAGS_RECVSENDFAILEVNT
 value|0x00004000
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2212,6 +2201,27 @@ name|SCTP_PCB_FLAGS_RECVNXTINFO
 value|0x10000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_ASSOC_RESETEVNT
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_RECVNSENDFAILEVNT
+value|0x80000000
+end_define
+
 begin_comment
 comment|/*-  * mobility_features parameters (by micchie).Note  * these features are applied against the  * sctp_mobility_features flags.. not the sctp_features  * flags.  */
 end_comment
@@ -2247,6 +2257,12 @@ end_define
 begin_comment
 comment|/* smallest pmtu allowed when disabling PMTU 				 * discovery */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SCTP_PACKED
+end_undef
 
 begin_include
 include|#
@@ -2494,12 +2510,6 @@ directive|define
 name|SCTP_LOG_TRY_ADVANCE
 value|0x10000000
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_PACKED
-end_undef
 
 begin_endif
 endif|#

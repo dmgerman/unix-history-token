@@ -205,6 +205,27 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|test_ncpus
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"NCPUs: %ld\n"
+argument_list|,
+name|sysconf
+argument_list|(
+name|_SC_NPROCESSORS_CONF
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -226,6 +247,9 @@ name|test_pagesize
 argument_list|()
 expr_stmt|;
 name|test_osreldate
+argument_list|()
+expr_stmt|;
+name|test_ncpus
 argument_list|()
 expr_stmt|;
 return|return

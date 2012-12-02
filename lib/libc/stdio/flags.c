@@ -236,6 +236,9 @@ operator|==
 literal|'x'
 condition|)
 block|{
+name|mode
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -258,6 +261,18 @@ operator||=
 name|O_EXCL
 expr_stmt|;
 block|}
+comment|/* set close-on-exec */
+if|if
+condition|(
+operator|*
+name|mode
+operator|==
+literal|'e'
+condition|)
+name|o
+operator||=
+name|O_CLOEXEC
+expr_stmt|;
 operator|*
 name|optr
 operator|=

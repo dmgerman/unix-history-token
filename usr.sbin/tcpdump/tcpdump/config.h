@@ -40,22 +40,6 @@ comment|/* #undef LIBSMI */
 end_comment
 
 begin_comment
-comment|/* define if you have struct __res_state_ext */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_RES_STATE_EXT */
-end_comment
-
-begin_comment
-comment|/* define if your struct __res_state has the nsort member */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_NEW_RES_STATE */
-end_comment
-
-begin_comment
 comment|/* define if you have the addrinfo function. */
 end_comment
 
@@ -82,39 +66,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_H_ERRNO
-value|1
-end_define
-
-begin_comment
-comment|/* define if IN6ADDRSZ is defined (XXX not used!) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_IN6ADDRSZ
-value|1
-end_define
-
-begin_comment
-comment|/* define if INADDRSZ is defined (XXX not used!) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_INADDRSZ
-value|1
-end_define
-
-begin_comment
-comment|/* define if RES_USE_INET6 is defined */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_RES_USE_INET6
 value|1
 end_define
 
@@ -239,14 +190,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* AIX hack. */
-end_comment
-
-begin_comment
-comment|/* #undef _SUN */
-end_comment
-
-begin_comment
 comment|/* Workaround for missing 64-bit formats */
 end_comment
 
@@ -361,6 +304,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fork' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FORK
 value|1
 end_define
 
@@ -559,6 +513,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `pcap_set_tstamp_type' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PCAP_SET_TSTAMP_TYPE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<pcap/usb.h> header file. */
 end_comment
 
@@ -582,6 +547,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_RPC_RPCENT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<rpc/rpc.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RPC_RPC_H
 value|1
 end_define
 
@@ -805,6 +781,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `vfork' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VFORK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `vfprintf' function. */
 end_comment
 
@@ -940,56 +927,6 @@ name|RETSIGVAL
 end_define
 
 begin_comment
-comment|/* The size of `char', as computed by sizeof. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_CHAR
-end_undef
-
-begin_comment
-comment|/* The size of `int', as computed by sizeof. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_INT
-end_undef
-
-begin_comment
-comment|/* The size of `long', as computed by sizeof. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_LONG
-end_undef
-
-begin_comment
-comment|/* The size of `long long', as computed by sizeof. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_LONG_LONG
-end_undef
-
-begin_comment
-comment|/* The size of `short', as computed by sizeof. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SIZEOF_SHORT
-end_undef
-
-begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
@@ -1025,6 +962,14 @@ end_comment
 
 begin_comment
 comment|/* #undef _HPUX_SOURCE */
+end_comment
+
+begin_comment
+comment|/* define on AIX to get certain functions */
+end_comment
+
+begin_comment
+comment|/* #undef _SUN */
 end_comment
 
 begin_comment

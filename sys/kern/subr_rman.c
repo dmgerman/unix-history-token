@@ -574,6 +574,11 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+name|int
+name|rv
+init|=
+literal|0
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -722,9 +727,15 @@ name|s
 operator|->
 name|r_start
 condition|)
-return|return
+block|{
+name|rv
+operator|=
 name|EBUSY
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Check for any overlap with the next region. */
 name|t
 operator|=
@@ -755,9 +766,15 @@ name|t
 operator|->
 name|r_start
 condition|)
-return|return
+block|{
+name|rv
+operator|=
 name|EBUSY
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 		 * See if this region can be merged with the next region.  If 		 * not, clear the pointer. 		 */
 if|if
 condition|(
@@ -932,6 +949,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|out
+label|:
 name|mtx_unlock
 argument_list|(
 name|rm
@@ -940,7 +959,7 @@ name|rm_mtx
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|rv
 return|;
 block|}
 end_function

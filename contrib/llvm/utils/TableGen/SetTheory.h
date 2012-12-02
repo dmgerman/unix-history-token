@@ -257,9 +257,16 @@ operator|>
 name|RecSet
 expr_stmt|;
 comment|/// Operator - A callback representing a DAG operator.
-struct|struct
+name|class
 name|Operator
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|public
+label|:
 name|virtual
 operator|~
 name|Operator
@@ -286,13 +293,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-struct|;
+empty_stmt|;
 comment|/// Expander - A callback function that can transform a Record representing a
 comment|/// set into a fully expanded list of elements. Expanders provide a way for
 comment|/// users to define named sets that can be used in DAG expressions.
-struct|struct
+name|class
 name|Expander
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|public
+label|:
 name|virtual
 operator|~
 name|Expander
@@ -316,7 +330,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-struct|;
+empty_stmt|;
 name|private
 label|:
 comment|// Map set defs to their fully expanded contents. This serves as a memoization

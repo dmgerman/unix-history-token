@@ -713,9 +713,11 @@ name|unsigned
 name|char
 name|wbuff
 index|[
-literal|1024
+literal|512
 operator|*
-literal|64
+literal|20
+operator|*
+literal|6
 index|]
 decl_stmt|;
 name|size_t
@@ -2537,6 +2539,9 @@ name|a
 argument_list|,
 name|p
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|file
 operator|->
 name|size
@@ -3052,6 +3057,9 @@ name|zip
 operator|->
 name|wbuff
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|bytes
 argument_list|)
 operator|!=
@@ -3088,6 +3096,9 @@ name|zip
 operator|->
 name|wbuff
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bytes
 argument_list|)
 expr_stmt|;
@@ -3148,6 +3159,9 @@ name|entry_bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|zip
 operator|->
 name|entry_bytes_remaining
@@ -3279,6 +3293,9 @@ condition|)
 block|{
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|zip
 operator|->
 name|entry_bytes_remaining
@@ -5931,9 +5948,9 @@ name|int
 name|r
 decl_stmt|;
 name|uint8_t
-name|mask
+name|b
 decl_stmt|,
-name|byte
+name|mask
 decl_stmt|;
 comment|/* 	 * Make Time Bools. 	 */
 if|if
@@ -6122,7 +6139,7 @@ operator|(
 name|r
 operator|)
 return|;
-name|byte
+name|b
 operator|=
 literal|0
 expr_stmt|;
@@ -6160,7 +6177,7 @@ name|flg
 operator|&
 name|flg
 condition|)
-name|byte
+name|b
 operator||=
 name|mask
 expr_stmt|;
@@ -6182,7 +6199,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|&
-name|byte
+name|b
 argument_list|,
 literal|1
 argument_list|,
@@ -6204,7 +6221,7 @@ name|mask
 operator|=
 literal|0x80
 expr_stmt|;
-name|byte
+name|b
 operator|=
 literal|0
 expr_stmt|;
@@ -6224,7 +6241,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|&
-name|byte
+name|b
 argument_list|,
 literal|1
 argument_list|,
@@ -6411,9 +6428,9 @@ name|int
 name|r
 decl_stmt|;
 name|uint8_t
-name|mask
+name|b
 decl_stmt|,
-name|byte
+name|mask
 decl_stmt|;
 comment|/* 	 * Make FilesInfo. 	 */
 name|r
@@ -6601,7 +6618,7 @@ operator|(
 name|r
 operator|)
 return|;
-name|byte
+name|b
 operator|=
 literal|0
 expr_stmt|;
@@ -6639,7 +6656,7 @@ name|size
 operator|==
 literal|0
 condition|)
-name|byte
+name|b
 operator||=
 name|mask
 expr_stmt|;
@@ -6661,7 +6678,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|&
-name|byte
+name|b
 argument_list|,
 literal|1
 argument_list|,
@@ -6683,7 +6700,7 @@ name|mask
 operator|=
 literal|0x80
 expr_stmt|;
-name|byte
+name|b
 operator|=
 literal|0
 expr_stmt|;
@@ -6703,7 +6720,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|&
-name|byte
+name|b
 argument_list|,
 literal|1
 argument_list|,
@@ -6784,7 +6801,7 @@ operator|(
 name|r
 operator|)
 return|;
-name|byte
+name|b
 operator|=
 literal|0
 expr_stmt|;
@@ -6828,7 +6845,7 @@ name|file
 operator|->
 name|dir
 condition|)
-name|byte
+name|b
 operator||=
 name|mask
 expr_stmt|;
@@ -6850,7 +6867,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|&
-name|byte
+name|b
 argument_list|,
 literal|1
 argument_list|,
@@ -6872,7 +6889,7 @@ name|mask
 operator|=
 literal|0x80
 expr_stmt|;
-name|byte
+name|b
 operator|=
 literal|0
 expr_stmt|;
@@ -6892,7 +6909,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|&
-name|byte
+name|b
 argument_list|,
 literal|1
 argument_list|,
@@ -7691,6 +7708,11 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 name|archive_set_error
 argument_list|(
 operator|&
@@ -7747,6 +7769,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 name|archive_set_error
 argument_list|(
 operator|&
@@ -8695,6 +8722,9 @@ name|strm
 operator|->
 name|total_in
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_in
@@ -8719,6 +8749,9 @@ name|strm
 operator|->
 name|total_out
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_out
@@ -8878,6 +8911,9 @@ name|strm
 operator|->
 name|total_in
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_in
@@ -8902,6 +8938,9 @@ name|strm
 operator|->
 name|total_out
 operator|=
+operator|(
+name|uLong
+operator|)
 name|lastrm
 operator|->
 name|total_out
@@ -10057,6 +10096,11 @@ name|level
 argument_list|)
 condition|)
 block|{
+name|free
+argument_list|(
+name|strm
+argument_list|)
+expr_stmt|;
 name|lastrm
 operator|->
 name|real_stream

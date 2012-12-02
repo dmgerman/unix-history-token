@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DIE.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
@@ -75,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DIE.h"
 end_include
 
 begin_include
@@ -139,7 +139,10 @@ name|class
 name|CompileUnit
 decl_stmt|;
 name|class
-name|DbgConcreteScope
+name|ConstantInt
+decl_stmt|;
+name|class
+name|ConstantFP
 decl_stmt|;
 name|class
 name|DbgVariable
@@ -1103,6 +1106,10 @@ name|MachineModuleInfo
 modifier|*
 name|MMI
 decl_stmt|;
+comment|/// DIEValueAllocator - All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attributes used to construct specific Dwarf sections.
 comment|//
@@ -1153,11 +1160,14 @@ operator|*
 operator|>
 name|Abbreviations
 expr_stmt|;
-comment|/// SourceIdMap - Source id map, i.e. pair of directory id and source file
-comment|/// id mapped to a unique id.
+comment|/// SourceIdMap - Source id map, i.e. pair of source filename and directory,
+comment|/// separated by a zero byte, mapped to a unique id.
 name|StringMap
 operator|<
 name|unsigned
+operator|,
+name|BumpPtrAllocator
+operator|&
 operator|>
 name|SourceIdMap
 expr_stmt|;
@@ -1174,20 +1184,15 @@ operator|*
 operator|,
 name|unsigned
 operator|>
-expr|>
+operator|,
+name|BumpPtrAllocator
+operator|&
+operator|>
 name|StringPool
 expr_stmt|;
 name|unsigned
 name|NextStringPoolNumber
 decl_stmt|;
-name|MCSymbol
-modifier|*
-name|getStringPoolEntry
-parameter_list|(
-name|StringRef
-name|Str
-parameter_list|)
-function_decl|;
 comment|/// SectionMap - Provides a unique id per text section.
 comment|///
 name|UniqueVector
@@ -1239,7 +1244,7 @@ operator|>
 expr|>
 name|ScopeVariables
 expr_stmt|;
-comment|/// AbstractVariables - Collection on abstract variables.
+comment|/// AbstractVariables - Collection of abstract variables.
 name|DenseMap
 operator|<
 specifier|const
@@ -1260,7 +1265,7 @@ literal|4
 operator|>
 name|DotDebugLocEntries
 expr_stmt|;
-comment|/// InliendSubprogramDIEs - Collection of subprgram DIEs that are marked
+comment|/// InlinedSubprogramDIEs - Collection of subprogram DIEs that are marked
 comment|/// (at the end of the module) as DW_AT_inline.
 name|SmallPtrSet
 operator|<
@@ -1272,7 +1277,7 @@ operator|>
 name|InlinedSubprogramDIEs
 expr_stmt|;
 comment|/// InlineInfo - Keep track of inlined functions and their location.  This
-comment|/// information is used to populate debug_inlined section.
+comment|/// information is used to populate the debug_inlined section.
 typedef|typedef
 name|std
 operator|::
@@ -1451,10 +1456,6 @@ name|FunctionDebugFrameInfo
 operator|>
 name|DebugFrames
 expr_stmt|;
-comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
-name|BumpPtrAllocator
-name|DIEValueAllocator
-decl_stmt|;
 comment|// Section Symbols: these are assembler temporary labels that are emitted at
 comment|// the beginning of each supported dwarf section.  These are used to form
 comment|// section offsets and are created by EmitSectionLabels.
@@ -1485,6 +1486,11 @@ name|FunctionBeginSym
 decl_stmt|,
 modifier|*
 name|FunctionEndSym
+decl_stmt|;
+comment|// As an optimization, there is no need to emit an entry in the directory
+comment|// table for the same directory as DW_at_comp_dir.
+name|StringRef
+name|CompilationDir
 decl_stmt|;
 name|private
 label|:
@@ -1572,20 +1578,6 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
-name|DIE
-modifier|*
-name|constructVariableDIE
-parameter_list|(
-name|DbgVariable
-modifier|*
-name|DV
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|S
-parameter_list|)
-function_decl|;
 comment|/// constructScopeDIE - Construct a DIE for this scope.
 name|DIE
 modifier|*
@@ -1606,7 +1598,7 @@ name|void
 name|EmitSectionLabels
 parameter_list|()
 function_decl|;
-comment|/// emitDIE - Recusively Emits a debug information entry.
+comment|/// emitDIE - Recursively Emits a debug information entry.
 comment|///
 name|void
 name|emitDIE
@@ -1661,10 +1653,28 @@ name|unsigned
 name|SectionEnd
 parameter_list|)
 function_decl|;
-comment|/// emitDebugPubNames - Emit visible names into a debug pubnames section.
+comment|/// emitAccelNames - Emit visible names into a hashed accelerator table
+comment|/// section.
+name|void
+name|emitAccelNames
+parameter_list|()
+function_decl|;
+comment|/// emitAccelObjC - Emit objective C classes and categories into a hashed
+comment|/// accelerator table section.
+name|void
+name|emitAccelObjC
+parameter_list|()
+function_decl|;
+comment|/// emitAccelNamespace - Emit namespace dies into a hashed accelerator
+comment|/// table.
+name|void
+name|emitAccelNamespaces
+parameter_list|()
+function_decl|;
+comment|/// emitAccelTypes() - Emit type dies into a hashed accelerator table.
 comment|///
 name|void
-name|emitDebugPubNames
+name|emitAccelTypes
 parameter_list|()
 function_decl|;
 comment|/// emitDebugPubTypes - Emit visible types into a debug pubtypes section.
@@ -1717,10 +1727,10 @@ comment|/// 2. offset into __debug_str section for regular function name.
 comment|/// 3. an unsigned LEB128 number indicating the number of distinct inlining
 comment|/// instances for the function.
 comment|///
-comment|/// The rest of the entry consists of a {die_offset, low_pc}  pair for each
+comment|/// The rest of the entry consists of a {die_offset, low_pc} pair for each
 comment|/// inlined instance; the die_offset points to the inlined_subroutine die in
-comment|/// the __debug_info section, and the low_pc is the starting address  for the
-comment|///  inlining instance.
+comment|/// the __debug_info section, and the low_pc is the starting address for the
+comment|/// inlining instance.
 name|void
 name|emitDebugInlineInfo
 parameter_list|()
@@ -1772,8 +1782,8 @@ name|unsigned
 name|Flags
 parameter_list|)
 function_decl|;
-comment|/// identifyScopeMarkers() - Indentify instructions that are marking
-comment|/// beginning of or end of a scope.
+comment|/// identifyScopeMarkers() - Indentify instructions that are marking the
+comment|/// beginning of or ending of a scope.
 name|void
 name|identifyScopeMarkers
 parameter_list|()
@@ -1952,7 +1962,7 @@ name|M
 parameter_list|)
 function_decl|;
 comment|/// collectLegacyDebugInfo - Collect debug info using DebugInfoFinder.
-comment|/// FIXME - Remove this when dragon-egg and llvm-gcc switch to DIBuilder.
+comment|/// FIXME - Remove this when DragonEgg switches to DIBuilder.
 name|bool
 name|collectLegacyDebugInfo
 parameter_list|(
@@ -2032,13 +2042,20 @@ name|StringRef
 name|FullName
 parameter_list|)
 function_decl|;
-comment|/// createSubprogramDIE - Create new DIE using SP.
-name|DIE
+comment|/// getStringPool - returns the entry into the start of the pool.
+name|MCSymbol
 modifier|*
-name|createSubprogramDIE
+name|getStringPool
+parameter_list|()
+function_decl|;
+comment|/// getStringPoolEntry - returns an entry into the string pool with the given
+comment|/// string text.
+name|MCSymbol
+modifier|*
+name|getStringPoolEntry
 parameter_list|(
-name|DISubprogram
-name|SP
+name|StringRef
+name|Str
 parameter_list|)
 function_decl|;
 block|}

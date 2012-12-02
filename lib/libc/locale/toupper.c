@@ -82,7 +82,7 @@ argument_list|)
 operator|->
 name|runes
 operator|->
-name|__maplower_ext
+name|__mapupper_ext
 decl_stmt|;
 name|_RuneEntry
 modifier|*

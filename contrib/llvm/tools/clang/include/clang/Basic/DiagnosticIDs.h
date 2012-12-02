@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the Diagnostic IDs-related interfaces.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the Diagnostic IDs-related interfaces.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -124,9 +128,15 @@ name|DIAG_START_DRIVER
 operator|+
 literal|100
 block|,
-name|DIAG_START_LEX
+name|DIAG_START_SERIALIZATION
 init|=
 name|DIAG_START_FRONTEND
+operator|+
+literal|100
+block|,
+name|DIAG_START_LEX
+init|=
+name|DIAG_START_SERIALIZATION
 operator|+
 literal|120
 block|,
@@ -140,11 +150,17 @@ name|DIAG_START_AST
 init|=
 name|DIAG_START_PARSE
 operator|+
-literal|300
+literal|400
+block|,
+name|DIAG_START_COMMENT
+init|=
+name|DIAG_START_AST
+operator|+
+literal|100
 block|,
 name|DIAG_START_SEMA
 init|=
-name|DIAG_START_AST
+name|DIAG_START_COMMENT
 operator|+
 literal|100
 block|,
@@ -164,7 +180,7 @@ enum|;
 name|class
 name|CustomDiagInfo
 decl_stmt|;
-comment|/// diag::kind - All of the diagnostics that can be emitted by the frontend.
+comment|/// \brief All of the diagnostics that can be emitted by the frontend.
 typedef|typedef
 name|unsigned
 name|kind
@@ -195,10 +211,6 @@ parameter_list|,
 name|NOWERROR
 parameter_list|,
 name|SHOWINSYSHEADER
-parameter_list|,
-name|BRIEF
-parameter_list|,
-name|FULL
 parameter_list|)
 value|ENUM,
 include|#
@@ -223,21 +235,21 @@ name|MAP_IGNORE
 init|=
 literal|1
 block|,
-comment|//< Map this diagnostic to nothing, ignore it.
+comment|///< Map this diagnostic to nothing, ignore it.
 name|MAP_WARNING
 init|=
 literal|2
 block|,
-comment|//< Map this diagnostic to a warning.
+comment|///< Map this diagnostic to a warning.
 name|MAP_ERROR
 init|=
 literal|3
 block|,
-comment|//< Map this diagnostic to an error.
+comment|///< Map this diagnostic to an error.
 name|MAP_FATAL
 init|=
 literal|4
-comment|//< Map this diagnostic to a fatal error.
+comment|///< Map this diagnostic to a fatal error.
 block|}
 enum|;
 block|}
@@ -454,8 +466,6 @@ name|class
 name|DiagnosticIDs
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|DiagnosticIDs
@@ -463,7 +473,7 @@ operator|>
 block|{
 name|public
 operator|:
-comment|/// Level - The level of the diagnostic, after it has been through mapping.
+comment|/// Level The level of the diagnostic, after it has been through mapping.
 expr|enum
 name|Level
 block|{
@@ -480,7 +490,7 @@ block|}
 block|;
 name|private
 operator|:
-comment|/// CustomDiagInfo - Information for uniquing and looking up custom diags.
+comment|/// \brief Information for uniquing and looking up custom diags.
 name|diag
 operator|::
 name|CustomDiagInfo
@@ -496,9 +506,10 @@ operator|~
 name|DiagnosticIDs
 argument_list|()
 block|;
-comment|/// getCustomDiagID - Return an ID for a diagnostic with the specified message
-comment|/// and level.  If this is the first request for this diagnosic, it is
-comment|/// registered and created, otherwise the existing ID is returned.
+comment|/// \brief Return an ID for a diagnostic with the specified message and level.
+comment|///
+comment|/// If this is the first request for this diagnosic, it is registered and
+comment|/// created, otherwise the existing ID is returned.
 name|unsigned
 name|getCustomDiagID
 argument_list|(
@@ -510,8 +521,7 @@ block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Diagnostic classification and reporting interfaces.
 comment|//
-comment|/// getDescription - Given a diagnostic ID, return a description of the
-comment|/// issue.
+comment|/// \brief Given a diagnostic ID, return a description of the issue.
 name|StringRef
 name|getDescription
 argument_list|(
@@ -519,10 +529,11 @@ argument|unsigned DiagID
 argument_list|)
 specifier|const
 block|;
-comment|/// isBuiltinWarningOrExtension - Return true if the unmapped diagnostic level
-comment|/// of the specified diagnostic ID is a Warning or Extension.  This only works
-comment|/// on builtin diagnostics, not custom ones, and is not legal to call on
-comment|/// NOTEs.
+comment|/// \brief Return true if the unmapped diagnostic levelof the specified
+comment|/// diagnostic ID is a Warning or Extension.
+comment|///
+comment|/// This only works on builtin diagnostics, not custom ones, and is not
+comment|/// legal to call on NOTEs.
 specifier|static
 name|bool
 name|isBuiltinWarningOrExtension
@@ -539,8 +550,7 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// \brief Determine whether the given built-in diagnostic ID is a
-comment|/// Note.
+comment|/// \brief Determine whether the given built-in diagnostic ID is a Note.
 specifier|static
 name|bool
 name|isBuiltinNote
@@ -548,9 +558,8 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// isBuiltinExtensionDiag - Determine whether the given built-in diagnostic
-comment|/// ID is for an extension of some sort.
-comment|///
+comment|/// \brief Determine whether the given built-in diagnostic ID is for an
+comment|/// extension of some sort.
 specifier|static
 name|bool
 name|isBuiltinExtensionDiag
@@ -570,10 +579,12 @@ name|ignored
 argument_list|)
 return|;
 block|}
-comment|/// isBuiltinExtensionDiag - Determine whether the given built-in diagnostic
-comment|/// ID is for an extension of some sort.  This also returns EnabledByDefault,
-comment|/// which is set to indicate whether the diagnostic is ignored by default (in
-comment|/// which case -pedantic enables it) or treated as a warning/error by default.
+comment|/// \brief Determine whether the given built-in diagnostic ID is for an
+comment|/// extension of some sort, and whether it is enabled by default.
+comment|///
+comment|/// This also returns EnabledByDefault, which is set to indicate whether the
+comment|/// diagnostic is ignored by default (in which case -pedantic enables it) or
+comment|/// treated as a warning/error by default.
 comment|///
 specifier|static
 name|bool
@@ -584,9 +595,10 @@ argument_list|,
 argument|bool&EnabledByDefault
 argument_list|)
 block|;
-comment|/// getWarningOptionForDiag - Return the lowest-level warning option that
-comment|/// enables the specified diagnostic.  If there is no -Wfoo flag that controls
-comment|/// the diagnostic, this returns null.
+comment|/// \brief Return the lowest-level warning option that enables the specified
+comment|/// diagnostic.
+comment|///
+comment|/// If there is no -Wfoo flag that controls the diagnostic, this returns null.
 specifier|static
 name|StringRef
 name|getWarningOptionForDiag
@@ -594,8 +606,8 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// getCategoryNumberForDiag - Return the category number that a specified
-comment|/// DiagID belongs to, or 0 if no category.
+comment|/// \brief Return the category number that a specified \p DiagID belongs to,
+comment|/// or 0 if no category.
 specifier|static
 name|unsigned
 name|getCategoryNumberForDiag
@@ -603,14 +615,13 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// getNumberOfCategories - Return the number of categories
+comment|/// \brief Return the number of diagnostic categories.
 specifier|static
 name|unsigned
 name|getNumberOfCategories
 argument_list|()
 block|;
-comment|/// getCategoryNameFromID - Given a category ID, return the name of the
-comment|/// category.
+comment|/// \brief Given a category ID, return the name of the category.
 specifier|static
 name|StringRef
 name|getCategoryNameFromID
@@ -618,7 +629,16 @@ argument_list|(
 argument|unsigned CategoryID
 argument_list|)
 block|;
-comment|/// \brief Enumeration describing how the the emission of a diagnostic should
+comment|/// \brief Return true if a given diagnostic falls into an ARC diagnostic
+comment|/// category.
+specifier|static
+name|bool
+name|isARCDiagnostic
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// \brief Enumeration describing how the emission of a diagnostic should
 comment|/// be treated when it occurs during C++ template argument deduction.
 block|enum
 name|SFINAEResponse
@@ -661,137 +681,6 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// getName - Given a diagnostic ID, return its name
-specifier|static
-name|StringRef
-name|getName
-argument_list|(
-argument|unsigned DiagID
-argument_list|)
-block|;
-comment|/// getIdFromName - Given a diagnostic name, return its ID, or 0
-specifier|static
-name|unsigned
-name|getIdFromName
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
-comment|/// getBriefExplanation - Given a diagnostic ID, return a brief explanation
-comment|/// of the issue
-specifier|static
-name|StringRef
-name|getBriefExplanation
-argument_list|(
-argument|unsigned DiagID
-argument_list|)
-block|;
-comment|/// getFullExplanation - Given a diagnostic ID, return a full explanation
-comment|/// of the issue
-specifier|static
-name|StringRef
-name|getFullExplanation
-argument_list|(
-argument|unsigned DiagID
-argument_list|)
-block|;
-comment|/// Iterator class used for traversing all statically declared
-comment|/// diagnostics.
-name|class
-name|diag_iterator
-block|{
-specifier|const
-name|void
-operator|*
-name|impl
-block|;
-name|friend
-name|class
-name|DiagnosticIDs
-block|;
-name|diag_iterator
-argument_list|(
-specifier|const
-name|void
-operator|*
-name|im
-argument_list|)
-operator|:
-name|impl
-argument_list|(
-argument|im
-argument_list|)
-block|{}
-name|public
-operator|:
-name|diag_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|;
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|diag_iterator
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-name|impl
-operator|==
-name|x
-operator|.
-name|impl
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|diag_iterator
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-name|impl
-operator|!=
-name|x
-operator|.
-name|impl
-return|;
-block|}
-name|llvm
-operator|::
-name|StringRef
-name|getDiagName
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getDiagID
-argument_list|()
-specifier|const
-block|;       }
-block|;
-specifier|static
-name|diag_iterator
-name|diags_begin
-argument_list|()
-block|;
-specifier|static
-name|diag_iterator
-name|diags_end
-argument_list|()
-block|;
 comment|/// \brief Get the set of all diagnostic IDs in the group with the given name.
 comment|///
 comment|/// \param Diags [out] - On return, the diagnostics in the group.
@@ -804,6 +693,23 @@ argument_list|,
 argument|llvm::SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Get the set of all diagnostic IDs.
+name|void
+name|getAllDiagnostics
+argument_list|(
+argument|llvm::SmallVectorImpl<diag::kind>&Diags
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the warning option with the closest edit distance to the given
+comment|/// group name.
+specifier|static
+name|StringRef
+name|getNearestWarningOption
+argument_list|(
+argument|StringRef Group
+argument_list|)
 block|;
 name|private
 operator|:
@@ -838,8 +744,8 @@ argument|const DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
 block|;
-comment|/// getDiagnosticLevel - This is an internal implementation helper used when
-comment|/// DiagClass is already known.
+comment|/// \brief An internal implementation helper used when \p DiagClass is
+comment|/// already known.
 name|DiagnosticIDs
 operator|::
 name|Level
@@ -855,15 +761,25 @@ argument|const DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
 block|;
-comment|/// ProcessDiag - This is the method used to report a diagnostic that is
-comment|/// finally fully formed.
+comment|/// \brief Used to report a diagnostic that is finally fully formed.
 comment|///
-comment|/// \returns true if the diagnostic was emitted, false if it was
+comment|/// \returns \c true if the diagnostic was emitted, \c false if it was
 comment|/// suppressed.
 name|bool
 name|ProcessDiag
 argument_list|(
 argument|DiagnosticsEngine&Diag
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Used to emit a diagnostic that is finally fully formed,
+comment|/// ignoring suppression.
+name|void
+name|EmitDiag
+argument_list|(
+argument|DiagnosticsEngine&Diag
+argument_list|,
+argument|Level DiagLevel
 argument_list|)
 specifier|const
 block|;

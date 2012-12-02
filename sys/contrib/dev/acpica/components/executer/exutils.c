@@ -14,7 +14,7 @@ name|__EXUTILS_C__
 end_define
 
 begin_comment
-comment|/*  * DEFINE_AML_GLOBALS is tested in amlcode.h  * to determine whether certain global names should be "defined" or only  * "declared" in the current compilation.  This enhances maintainability  * by enabling a single header file to embody all knowledge of the names  * in question.  *  * Exactly one module of any executable should #define DEFINE_GLOBALS  * before #including the header files which use this convention.  The  * names in question will be defined and initialized in that module,  * and declared as extern in all other modules which #include those  * header files.  */
+comment|/*  * DEFINE_AML_GLOBALS is tested in amlcode.h  * to determine whether certain global names should be "defined" or only  * "declared" in the current compilation. This enhances maintainability  * by enabling a single header file to embody all knowledge of the names  * in question.  *  * Exactly one module of any executable should #define DEFINE_GLOBALS  * before #including the header files which use this convention. The  * names in question will be defined and initialized in that module,  * and declared as extern in all other modules which #include those  * header files.  */
 end_comment
 
 begin_define
@@ -135,7 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in  conjuction with  *              RelinquishInterpreter  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in conjunction with  *              RelinquishInterpreter  *  ******************************************************************************/
 end_comment
 
 begin_function

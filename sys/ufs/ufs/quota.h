@@ -822,7 +822,17 @@ parameter_list|(
 name|struct
 name|mount
 modifier|*
-name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|qsyncvp
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -834,7 +844,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|struct
 name|mount
@@ -852,7 +861,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|struct
 name|mount

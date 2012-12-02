@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -193,6 +193,17 @@ end_define
 
 begin_comment
 comment|/* BAR ctrl reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I350_DTXMXPKTSZ
+value|0x355C
+end_define
+
+begin_comment
+comment|/* Maximum sent packet size reg*/
 end_comment
 
 begin_define
@@ -1189,6 +1200,309 @@ end_define
 begin_comment
 comment|/* Rx Interrupt Absolute Delay Timer - RW */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SRWR
+value|0x12018
+end_define
+
+begin_comment
+comment|/* Shadow Ram Write Register - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLMNGCTL
+value|0x12038
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLMNGDATA
+value|0x1203C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLMNGCNT
+value|0x12040
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLSWCTL
+value|0x12048
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLSWDATA
+value|0x1204C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLSWCNT
+value|0x12050
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLA
+value|0x1201C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_INVM_DATA_REG
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x12120 + 4*(_n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_INVM_SIZE
+value|64
+end_define
+
+begin_comment
+comment|/* Number of INVM Data Registers */
+end_comment
+
+begin_comment
+comment|/* QAV Tx mode control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_TQAVCTRL
+value|0x3570
+end_define
+
+begin_comment
+comment|/* QAV Tx mode control register bitfields masks */
+end_comment
+
+begin_comment
+comment|/* QAV enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_MODE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Fetching arbitration type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_FETCH_ARB
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Fetching timer enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_FETCH_TIMER_ENABLE
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Launch arbitration type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_LAUNCH_ARB
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* Launch timer enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_LAUNCH_TIMER_ENABLE
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* SP waits for SR enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_SP_WAIT_SR
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* Fetching timer correction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_FETCH_TIMER_DELTA_OFFSET
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCTRL_FETCH_TIMER_DELTA
+define|\
+value|(0xFFFF<< E1000_TQAVCTRL_FETCH_TIMER_DELTA_OFFSET)
+end_define
+
+begin_comment
+comment|/* High credit registers where _n can be 0 or 1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_TQAVHC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x300C + 0x40 * (_n))
+end_define
+
+begin_comment
+comment|/* Queues fetch arbitration priority control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_TQAVARBCTRL
+value|0x3574
+end_define
+
+begin_comment
+comment|/* Queues priority masks where _n and _p can be 0-3. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVARBCTRL_QUEUE_PRI
+parameter_list|(
+name|_n
+parameter_list|,
+name|_p
+parameter_list|)
+value|((_p)<< (2 * _n))
+end_define
+
+begin_comment
+comment|/* QAV Tx mode control registers where _n can be 0 or 1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_TQAVCC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x3004 + 0x40 * (_n))
+end_define
+
+begin_comment
+comment|/* QAV Tx mode control register bitfields masks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCC_IDLE_SLOPE
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* Idle slope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCC_KEEP_CREDITS
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* Keep credits opt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TQAVCC_QUEUE_MODE
+value|(1<< 31)
+end_define
+
+begin_comment
+comment|/* SP vs. SR Tx mode */
+end_comment
+
+begin_comment
+comment|/* Good transmitted packets counter registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PQGPTC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010014 + (0x100 * (_n)))
+end_define
+
+begin_comment
+comment|/* Queues packet buffer size masks where _n can be 0-3 and _s 0-63 [kB] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_TXPBS_SIZE
+parameter_list|(
+name|_n
+parameter_list|,
+name|_s
+parameter_list|)
+value|((_s)<< (6 * _n))
+end_define
 
 begin_comment
 comment|/*  * Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  */
@@ -3770,6 +4084,17 @@ begin_comment
 comment|/* Flexible Filter Value Table - RW Array */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_HIBBA
+value|0x8F40
+end_define
+
+begin_comment
+comment|/* Host Interface Buffer Base Address */
+end_comment
+
 begin_comment
 comment|/* Flexible Host Filter Table */
 end_comment
@@ -3781,7 +4106,7 @@ name|E1000_FHFT
 parameter_list|(
 name|_n
 parameter_list|)
-value|(0x09000 + (_n * 0x100))
+value|(0x09000 + ((_n) * 0x100))
 end_define
 
 begin_comment
@@ -3795,7 +4120,7 @@ name|E1000_FHFT_EXT
 parameter_list|(
 name|_n
 parameter_list|)
-value|(0x09A00 + (_n * 0x100))
+value|(0x09A00 + ((_n) * 0x100))
 end_define
 
 begin_define
@@ -5338,39 +5663,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_LTRMINV
-value|0x5BB0
-end_define
-
-begin_comment
-comment|/* LTR Minimum Value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV
-value|0x5BB4
-end_define
-
-begin_comment
-comment|/* LTR Maximum Value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DOBFFCTL
-value|0x3F24
-end_define
-
-begin_comment
-comment|/* DMA OBFF Control Register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_PROXYS
 value|0x5F64
 end_define
@@ -5450,7 +5742,7 @@ comment|/* Thermal Sensor Status */
 end_comment
 
 begin_comment
-comment|/*Energy Efficient Ethernet "EEE" registers */
+comment|/* Energy Efficient Ethernet "EEE" registers */
 end_comment
 
 begin_define
@@ -5565,6 +5857,39 @@ end_define
 
 begin_comment
 comment|/* OS2BMC packets transmitted by host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRMINV
+value|0x5BB0
+end_define
+
+begin_comment
+comment|/* LTR Minimum Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRMAXV
+value|0x5BB4
+end_define
+
+begin_comment
+comment|/* LTR Maximum Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DOBFFCTL
+value|0x3F24
+end_define
+
+begin_comment
+comment|/* DMA OBFF Control Register */
 end_comment
 
 begin_endif

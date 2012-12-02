@@ -1178,8 +1178,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"BAD INODE NUMBER FOR '..' in DIR I=%d (%s)\n"
+literal|"BAD INODE NUMBER FOR '..' in DIR I=%ju (%s)\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inp
 operator|->
 name|i_number
@@ -1202,8 +1205,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"CURRENTLY POINTS TO I=%d (%s), "
+literal|"CURRENTLY POINTS TO I=%ju (%s), "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inp
 operator|->
 name|i_dotdot
@@ -1226,8 +1232,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SHOULD POINT TO I=%d (%s)"
+literal|"SHOULD POINT TO I=%ju (%s)"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inp
 operator|->
 name|i_parent
@@ -2649,10 +2658,13 @@ argument_list|)
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"ZERO LENGTH DIRECTORY %s I=%d"
+literal|"ZERO LENGTH DIRECTORY %s I=%ju"
 argument_list|,
 name|dirname
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dirp
 operator|->
 name|d_ino
@@ -2993,7 +3005,7 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"BAD STATE %d FOR INODE I=%d"
+literal|"BAD STATE %d FOR INODE I=%ju"
 argument_list|,
 name|inoinfo
 argument_list|(
@@ -3004,6 +3016,9 @@ argument_list|)
 operator|->
 name|ino_state
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dirp
 operator|->
 name|d_ino

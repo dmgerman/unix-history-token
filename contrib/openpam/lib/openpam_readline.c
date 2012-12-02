@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_readline.c 473 2011-11-03 10:48:25Z des $  */
+comment|/*-  * Copyright (c) 2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_readline.c 596 2012-04-14 14:52:40Z des $  */
 end_comment
 
 begin_ifdef
@@ -98,32 +98,32 @@ name|line
 operator|=
 name|malloc
 argument_list|(
+name|size
+operator|=
 name|MIN_LINE_LENGTH
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_ERROR
+argument_list|,
+literal|"malloc(): %m"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-name|size
-operator|=
-name|MIN_LINE_LENGTH
-expr_stmt|;
+block|}
 name|len
 operator|=
 literal|0
 expr_stmt|;
-define|#
-directive|define
-name|line_putch
-parameter_list|(
-name|ch
-parameter_list|)
-value|do { \ 	if (len>= size - 1) { \ 		char *tmp = realloc(line, size *= 2); \ 		if (tmp == NULL) \ 			goto fail; \ 		line = tmp; \ 	} \ 	line[len++] = ch; \ 	line[len] = '\0'; \ } while (0)
 for|for
 control|(
 init|;
@@ -230,77 +230,29 @@ block|}
 comment|/* done */
 break|break;
 block|}
-comment|/* whitespace */
-if|if
-condition|(
-name|isspace
-argument_list|(
-name|ch
-argument_list|)
-condition|)
-block|{
-comment|/* ignore leading whitespace */
-comment|/* collapse linear whitespace */
-if|if
-condition|(
-name|len
-operator|>
-literal|0
-operator|&&
-name|line
-index|[
-name|len
-operator|-
-literal|1
-index|]
-operator|!=
-literal|' '
-condition|)
-name|line_putch
-argument_list|(
-literal|' '
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* anything else */
-name|line_putch
+if|if
+condition|(
+name|openpam_straddch
 argument_list|(
+operator|&
+name|line
+argument_list|,
+operator|&
+name|size
+argument_list|,
+operator|&
+name|len
+argument_list|,
 name|ch
 argument_list|)
-expr_stmt|;
-block|}
-comment|/* remove trailing whitespace */
-while|while
-condition|(
-name|len
-operator|>
+operator|!=
 literal|0
-operator|&&
-name|isspace
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|line
-index|[
-name|len
-operator|-
-literal|1
-index|]
-argument_list|)
 condition|)
-operator|--
-name|len
-expr_stmt|;
-name|line
-index|[
-name|len
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|len
@@ -320,6 +272,15 @@ operator|*
 name|lenp
 operator|=
 name|len
+expr_stmt|;
+name|openpam_log
+argument_list|(
+name|PAM_LOG_LIBDEBUG
+argument_list|,
+literal|"returning '%s'"
+argument_list|,
+name|line
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -342,7 +303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * The =openpam_readline function reads a line from a file, and returns it  * in a NUL-terminated buffer allocated with =malloc.  *  * The =openpam_readline function performs a certain amount of processing  * on the data it reads:  *  *  - Comments (introduced by a hash sign) are stripped, as is leading and  *    trailing whitespace.  *  - Any amount of linear whitespace is collapsed to a single space.  *  - Blank lines are ignored.  *  - If a line ends in a backslash, the backslash is stripped and the  *    next line is appended.  *  * If =lineno is not =NULL, the integer variable it points to is  * incremented every time a newline character is read.  *  * If =lenp is not =NULL, the length of the line (not including the  * terminating NUL character) is stored in the variable it points to.  *  * The caller is responsible for releasing the returned buffer by passing  * it to =free.  */
+comment|/**  * DEPRECATED openpam_readlinev  *  * The =openpam_readline function reads a line from a file, and returns it  * in a NUL-terminated buffer allocated with =!malloc.  *  * The =openpam_readline function performs a certain amount of processing  * on the data it reads:  *  *  - Comments (introduced by a hash sign) are stripped.  *  *  - Blank lines are ignored.  *  *  - If a line ends in a backslash, the backslash is stripped and the  *    next line is appended.  *  * If =lineno is not =NULL, the integer variable it points to is  * incremented every time a newline character is read.  *  * If =lenp is not =NULL, the length of the line (not including the  * terminating NUL character) is stored in the variable it points to.  *  * The caller is responsible for releasing the returned buffer by passing  * it to =!free.  *  *>openpam_readlinev  *>openpam_readword  */
 end_comment
 
 end_unit

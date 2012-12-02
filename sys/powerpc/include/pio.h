@@ -19,6 +19,18 @@ begin_comment
 comment|/*  * I/O macros.  */
 end_comment
 
+begin_comment
+comment|/*  * Use sync so that bus space operations cannot sneak out the bottom of  * mutex-protected sections (mutex release does not guarantee completion of  * accesses to caching-inhibited memory on some systems)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|powerpc_iomb
+parameter_list|()
+value|__asm __volatile("sync" : : : "memory")
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -39,9 +51,9 @@ name|a
 operator|=
 name|v
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -65,9 +77,9 @@ name|a
 operator|=
 name|v
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -91,9 +103,9 @@ name|a
 operator|=
 name|v
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -117,9 +129,9 @@ name|a
 operator|=
 name|v
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -141,9 +153,9 @@ block|{
 asm|__asm__
 specifier|volatile
 asm|("sthbrx %0, 0, %1" :: "r"(v), "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -165,9 +177,9 @@ block|{
 asm|__asm__
 specifier|volatile
 asm|("stwbrx %0, 0, %1" :: "r"(v), "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -191,9 +203,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 return|return
 name|_v_
 return|;
@@ -220,9 +232,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 return|return
 name|_v_
 return|;
@@ -249,9 +261,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 return|return
 name|_v_
 return|;
@@ -278,9 +290,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 return|return
 name|_v_
 return|;
@@ -305,9 +317,9 @@ decl_stmt|;
 asm|__asm__
 specifier|volatile
 asm|("lhbrx %0, 0, %1" : "=r"(_v_) : "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 return|return
 name|_v_
 return|;
@@ -332,9 +344,9 @@ decl_stmt|;
 asm|__asm__
 specifier|volatile
 asm|("lwbrx %0, 0, %1" : "=r"(_v_) : "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 return|return
 name|_v_
 return|;
@@ -659,9 +671,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -697,9 +709,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -735,9 +747,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -773,9 +785,9 @@ operator|*
 name|s
 operator|++
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -807,9 +819,9 @@ condition|)
 asm|__asm__
 specifier|volatile
 asm|("sthbrx %0, 0, %1" :: "r"(*s++), "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -841,9 +853,9 @@ condition|)
 asm|__asm__
 specifier|volatile
 asm|("stwbrx %0, 0, %1" :: "r"(*s++), "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -878,9 +890,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -915,9 +927,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -952,9 +964,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -989,9 +1001,9 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1022,9 +1034,9 @@ condition|)
 asm|__asm__
 specifier|volatile
 asm|("lhbrx %0, 0, %1" : "=r"(*d++) : "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1055,9 +1067,9 @@ condition|)
 asm|__asm__
 specifier|volatile
 asm|("lwbrx %0, 0, %1" : "=r"(*d++) : "r"(a));
-asm|__asm__
-specifier|volatile
-asm|("eieio; sync");
+name|powerpc_iomb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

@@ -469,7 +469,7 @@ name|tok2strbuf
 argument_list|(
 name|proto_values
 argument_list|,
-literal|"RRCP-0x%02d"
+literal|"RRCP-0x%02x"
 argument_list|,
 name|rrcp_proto
 argument_list|,
@@ -518,7 +518,7 @@ name|tok2strbuf
 argument_list|(
 name|opcode_values
 argument_list|,
-literal|"unknown opcode (0x%02d)"
+literal|"unknown opcode (0x%02x)"
 argument_list|,
 name|rrcp_opcode
 argument_list|,
@@ -563,14 +563,14 @@ name|ndo
 operator|,
 literal|" addr=0x%04x, data=0x%08x"
 operator|,
-name|EXTRACT_16BITS
+name|EXTRACT_LE_16BITS
 argument_list|(
 name|rrcp
 operator|+
 name|RRCP_REG_ADDR_OFFSET
 argument_list|)
 operator|,
-name|EXTRACT_32BITS
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|rrcp
 operator|+

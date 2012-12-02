@@ -74,7 +74,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|IMPLEMENT_ASN1_FUNCTIONS_const
+name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|CMS_ReceiptRequest
 argument_list|)

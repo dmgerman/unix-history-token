@@ -8,7 +8,7 @@ comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|sio_init
 parameter_list|(
 name|int
@@ -26,7 +26,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|void
+name|int
 name|sio_flush
 parameter_list|(
 name|void

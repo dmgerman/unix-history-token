@@ -51,7 +51,7 @@ define|#
 directive|define
 name|MCOUNT
 define|\
-value|__asm(	"	.text				\n" \ 	"	.align	2			\n" \ 	"	.globl	_mcount			\n" \ 	"	.section \".opd\",\"aw\"	\n" \ 	"	.align	3			\n" \ 	"_mcount:				\n" \ 	"	.quad .L._mcount,.TOC.@tocbase,0\n" \ 	"	.previous			\n" \ 	"	.size   main,24			\n" \ 	"	.type	_mcount,@function	\n" \ 	"	.align	4			\n" \ 	".L._mcount:				\n" \ 	"	stdu	%r1,-(288+128)(%r1)	\n" \ 	"	std	%r3,48(%r1)		\n" \ 	"	std	%r4,56(%r1)		\n" \ 	"	std	%r5,64(%r1)		\n" \ 	"	std	%r6,72(%r1)		\n" \ 	"	std	%r7,80(%r1)		\n" \ 	"	std	%r8,88(%r1)		\n" \ 	"	std	%r9,96(%r1)		\n" \ 	"	std	%r10,104(%r1)		\n" \ 	"	mflr	%r4			\n" \ 	"	std	%r4,112(%r1)		\n" \ 	"	ld	%r3,0(%r1)		\n" \ 	"	ld	%r3,0(%r3)		\n" \ 	"	ld	%r3,16(%r3)		\n" \ 	"	bl	__mcount		\n" \ 	"	nop				\n" \ 	"	ld	%r4,112(%r1)		\n" \ 	"	mtlr	%r4			\n" \ 	"	ld	%r3,48(%r1)		\n" \ 	"	ld	%r4,56(%r1)		\n" \ 	"	ld	%r5,64(%r1)		\n" \ 	"	ld	%r6,72(%r1)		\n" \ 	"	ld	%r7,80(%r1)		\n" \ 	"	ld	%r8,88(%r1)		\n" \ 	"	ld	%r9,96(%r1)		\n" \ 	"	ld	%r10,104(%r1)		\n" \ 	"	addi	%r1,%r1,(288+128)	\n" \ 	"	blr				\n");
+value|__asm(	"	.text				\n" \ 	"	.align	2			\n" \ 	"	.globl	_mcount			\n" \ 	"	.section \".opd\",\"aw\"	\n" \ 	"	.align	3			\n" \ 	"_mcount:				\n" \ 	"	.quad .L._mcount,.TOC.@tocbase,0\n" \ 	"	.previous			\n" \ 	"	.size   _mcount,24		\n" \ 	"	.type	_mcount,@function	\n" \ 	"	.align	4			\n" \ 	".L._mcount:				\n" \ 	"	stdu	%r1,-(288+128)(%r1)	\n" \ 	"	std	%r3,48(%r1)		\n" \ 	"	std	%r4,56(%r1)		\n" \ 	"	std	%r5,64(%r1)		\n" \ 	"	std	%r6,72(%r1)		\n" \ 	"	std	%r7,80(%r1)		\n" \ 	"	std	%r8,88(%r1)		\n" \ 	"	std	%r9,96(%r1)		\n" \ 	"	std	%r10,104(%r1)		\n" \ 	"	mflr	%r4			\n" \ 	"	std	%r4,112(%r1)		\n" \ 	"	ld	%r3,0(%r1)		\n" \ 	"	ld	%r3,0(%r3)		\n" \ 	"	ld	%r3,16(%r3)		\n" \ 	"	bl	__mcount		\n" \ 	"	nop				\n" \ 	"	ld	%r4,112(%r1)		\n" \ 	"	mtlr	%r4			\n" \ 	"	ld	%r3,48(%r1)		\n" \ 	"	ld	%r4,56(%r1)		\n" \ 	"	ld	%r5,64(%r1)		\n" \ 	"	ld	%r6,72(%r1)		\n" \ 	"	ld	%r7,80(%r1)		\n" \ 	"	ld	%r8,88(%r1)		\n" \ 	"	ld	%r9,96(%r1)		\n" \ 	"	ld	%r10,104(%r1)		\n" \ 	"	addi	%r1,%r1,(288+128)	\n" \ 	"	blr				\n");
 end_define
 
 begin_else
@@ -178,11 +178,14 @@ begin_comment
 comment|/* AIM */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|E500
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -220,7 +223,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* E500 */
+comment|/* BOOKE_E500 || BOOKE_PPC4XX */
 end_comment
 
 begin_endif

@@ -92,7 +92,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|AnalysisContext
+name|AnalysisDeclContext
 decl_stmt|;
 name|class
 name|CFGBlock
@@ -122,6 +122,11 @@ block|{
 name|class
 name|Callback
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -164,7 +169,7 @@ decl_stmt|;
 name|void
 name|FindUnreachableCode
 parameter_list|(
-name|AnalysisContext
+name|AnalysisDeclContext
 modifier|&
 name|AC
 parameter_list|,

@@ -26,7 +26,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: vasprintf.c,v 1.7 2009/02/03 20:27:52 christos Exp $"
+literal|"@(#)$File: vasprintf.c,v 1.8 2011/12/08 12:38:24 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -2156,14 +2156,6 @@ name|pseudo_len
 return|;
 name|free_EOF
 label|:
-if|if
-condition|(
-name|s
-operator|->
-name|buffer_base
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|s

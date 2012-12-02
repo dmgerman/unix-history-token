@@ -266,6 +266,22 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ar9287DisablePCIE
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -410,7 +426,7 @@ block|,
 operator|.
 name|maxSpurImmunityLevel
 operator|=
-literal|2
+literal|7
 block|,
 operator|.
 name|cycPwrThr1
@@ -421,6 +437,16 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|8
+block|,
+literal|10
+block|,
+literal|12
+block|,
+literal|14
+block|,
+literal|16
 block|}
 block|,
 operator|.
@@ -661,6 +687,38 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eepromdata
+operator|!=
+name|AH_NULL
+condition|)
+block|{
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_eepromRead
+operator|=
+name|ath_hal_EepromDataRead
+expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_eepromWrite
+operator|=
+name|NULL
+expr_stmt|;
+name|ah
+operator|->
+name|ah_eepromdata
+operator|=
+name|eepromdata
+expr_stmt|;
+block|}
 comment|/* XXX override with 9280 specific state */
 comment|/* override 5416 methods for our needs */
 name|AH5416
@@ -683,6 +741,12 @@ operator|->
 name|ah_configPCIE
 operator|=
 name|ar9287ConfigPCIE
+expr_stmt|;
+name|ah
+operator|->
+name|ah_disablePCIE
+operator|=
+name|ar9287DisablePCIE
 expr_stmt|;
 name|AH5416
 argument_list|(
@@ -1664,6 +1728,9 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|restore
+parameter_list|,
+name|HAL_BOOL
+name|power_off
 parameter_list|)
 block|{
 if|if
@@ -1710,6 +1777,7 @@ argument_list|,
 name|AR_PCIE_PM_CTRL_ENA
 argument_list|)
 expr_stmt|;
+comment|/* Yes, Kiwi uses the Kite PCIe PHY WA */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -1719,8 +1787,22 @@ argument_list|,
 name|AR9285_WA_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/* Yes, Kiwi uses the Kite PCIe PHY WA */
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ar9287DisablePCIE
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+comment|/* XXX TODO */
 block|}
 end_function
 

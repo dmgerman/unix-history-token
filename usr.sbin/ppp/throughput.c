@@ -562,7 +562,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"  overall   %6qu bytes/sec\n"
+literal|"  overall   %6llu bytes/sec\n"
 argument_list|,
 operator|(
 name|t
@@ -581,7 +581,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"  %s %6qu bytes/sec in, %6qu bytes/sec out "
+literal|"  %s %6llu bytes/sec in, %6llu bytes/sec out "
 literal|"(over the last %d secs)\n"
 argument_list|,
 name|t
@@ -621,7 +621,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"  peak      %6qu bytes/sec on %s"
+literal|"  peak      %6llu bytes/sec on %s"
 argument_list|,
 name|t
 operator|->
@@ -1557,7 +1557,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"overall cleared (was %6qu bytes/sec)\n"
+literal|"overall cleared (was %6llu bytes/sec)\n"
 argument_list|,
 operator|(
 name|t
@@ -1616,8 +1616,8 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"current cleared (was %6qu bytes/sec in,"
-literal|" %6qu bytes/sec out)\n"
+literal|"current cleared (was %6llu bytes/sec in,"
+literal|" %6llu bytes/sec out)\n"
 argument_list|,
 name|t
 operator|->
@@ -1701,7 +1701,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"peak    cleared (was %6qu bytes/sec on %s)\n"
+literal|"peak    cleared (was %6llu bytes/sec on %s)\n"
 argument_list|,
 name|t
 operator|->

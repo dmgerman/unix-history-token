@@ -73,34 +73,45 @@ directive|include
 file|"llvm/Support/CommandLine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 extern|extern cl::opt<bool> DisableIVRewrite;
 name|class
+name|CastInst
+decl_stmt|;
+name|class
+name|IVUsers
+decl_stmt|;
+name|class
 name|Loop
-decl_stmt|;
-name|class
-name|LoopInfo
-decl_stmt|;
-name|class
-name|DominatorTree
-decl_stmt|;
-name|class
-name|ScalarEvolution
 decl_stmt|;
 name|class
 name|LPPassManager
 decl_stmt|;
 name|class
-name|IVUsers
+name|PHINode
+decl_stmt|;
+name|class
+name|ScalarEvolution
 decl_stmt|;
 comment|/// Interface for visiting interesting IV users that are recognized but not
 comment|/// simplified by this utility.
 name|class
 name|IVVisitor
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -160,32 +171,6 @@ argument_list|(
 name|Loop
 operator|*
 name|L
-argument_list|,
-name|ScalarEvolution
-operator|*
-name|SE
-argument_list|,
-name|LPPassManager
-operator|*
-name|LPM
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|WeakVH
-operator|>
-operator|&
-name|Dead
-argument_list|)
-decl_stmt|;
-comment|/// simplifyIVUsers - Simplify instructions recorded by the IVUsers pass.
-comment|/// This is a legacy implementation to reproduce the behavior of the
-comment|/// IndVarSimplify pass prior to DisableIVRewrite.
-name|bool
-name|simplifyIVUsers
-argument_list|(
-name|IVUsers
-operator|*
-name|IU
 argument_list|,
 name|ScalarEvolution
 operator|*

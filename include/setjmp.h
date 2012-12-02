@@ -51,14 +51,15 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|_setjmp
-parameter_list|(
+argument_list|(
 name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -97,14 +98,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|setjmp
-parameter_list|(
+argument_list|(
 name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -128,16 +130,17 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|sigsetjmp
-parameter_list|(
+argument_list|(
 name|sigjmp_buf
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

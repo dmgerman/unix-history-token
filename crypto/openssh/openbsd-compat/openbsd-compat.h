@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.51 2010/10/07 10:25:29 djm Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.52 2011/09/23 01:16:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -607,7 +607,7 @@ name|char
 modifier|*
 name|dst
 parameter_list|,
-name|size_t
+name|socklen_t
 name|size
 parameter_list|)
 function_decl|;

@@ -74,6 +74,21 @@ name|__INTEL_COMPILER
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_function
 specifier|static
 name|__inline
@@ -271,6 +286,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -396,6 +416,21 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -406,6 +441,11 @@ parameter_list|)
 define|\
 value|do { \ 		int __tmpsum; \ 		__tmpsum = (int)ntohs(ip->ip_sum) + 256; \ 		ip->ip_sum = htons(__tmpsum + (__tmpsum>> 16)); \ 	} while(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -433,6 +473,21 @@ name|__INTEL_COMPILER
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPVERSION
+argument_list|)
+operator|&&
+operator|(
+name|IPVERSION
+operator|==
+literal|4
+operator|)
+end_if
+
 begin_expr_stmt
 unit|u_int
 name|in_cksum_hdr
@@ -445,6 +500,11 @@ name|ip
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|u_short

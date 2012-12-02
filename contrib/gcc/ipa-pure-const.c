@@ -2120,6 +2120,11 @@ name|pure_const_state
 init|=
 name|IPA_CONST
 decl_stmt|;
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
 name|node
 operator|=
 name|order
@@ -2179,6 +2184,23 @@ name|cgraph_edge
 modifier|*
 name|e
 decl_stmt|;
+name|count
+operator|++
+expr_stmt|;
+comment|/* FIXME!!!  Because of pr33826, we cannot have either 		 immediate or transitive recursive functions marked as 		 pure or const because dce can delete a function that 		 is in reality an infinite loop.  A better solution 		 than just outlawing them is to add another bit the 		 functions to distinguish recursive from non recursive 		 pure and const function.  This would allow the 		 recursive ones to be cse'd but not dce'd.  In this 		 same vein, we could allow functions with loops to 		 also be cse'd but not dce'd.  		 Unfortunately we are late in stage 3, and the fix 		 described above is is not appropriate.  */
+if|if
+condition|(
+name|count
+operator|>
+literal|1
+condition|)
+block|{
+name|pure_const_state
+operator|=
+name|IPA_NEITHER
+expr_stmt|;
+break|break;
+block|}
 for|for
 control|(
 name|e
@@ -2213,6 +2235,20 @@ argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
+comment|/* Check for immediate recursive functions.  See the 		     FIXME above.  */
+if|if
+condition|(
+name|w
+operator|==
+name|y
+condition|)
+block|{
+name|pure_const_state
+operator|=
+name|IPA_NEITHER
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|y

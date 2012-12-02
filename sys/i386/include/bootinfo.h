@@ -109,6 +109,22 @@ name|u_int32_t
 name|bi_modulep
 decl_stmt|;
 comment|/* preloaded modules */
+name|uint32_t
+name|bi_memdesc_version
+decl_stmt|;
+comment|/* EFI memory desc version */
+name|uint64_t
+name|bi_memdesc_size
+decl_stmt|;
+comment|/* sizeof EFI memory desc */
+name|uint64_t
+name|bi_memmap
+decl_stmt|;
+comment|/* pa of EFI memory map */
+name|uint64_t
+name|bi_memmap_size
+decl_stmt|;
+comment|/* size of EFI memory map */
 name|uint64_t
 name|bi_hcdp
 decl_stmt|;
@@ -121,22 +137,6 @@ name|uint64_t
 name|bi_systab
 decl_stmt|;
 comment|/* pa of EFI system table */
-name|uint64_t
-name|bi_memmap
-decl_stmt|;
-comment|/* pa of EFI memory map */
-name|uint64_t
-name|bi_memmap_size
-decl_stmt|;
-comment|/* size of EFI memory map */
-name|uint64_t
-name|bi_memdesc_size
-decl_stmt|;
-comment|/* sizeof EFI memory desc */
-name|uint32_t
-name|bi_memdesc_version
-decl_stmt|;
-comment|/* EFI memory desc version */
 block|}
 struct|;
 end_struct

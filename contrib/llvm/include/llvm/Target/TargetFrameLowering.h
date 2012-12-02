@@ -68,18 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<utility>
 end_include
 
@@ -98,12 +86,6 @@ name|CalleeSavedInfo
 decl_stmt|;
 name|class
 name|MachineFunction
-decl_stmt|;
-name|class
-name|MachineBasicBlock
-decl_stmt|;
-name|class
-name|MachineMove
 decl_stmt|;
 name|class
 name|RegScavenger

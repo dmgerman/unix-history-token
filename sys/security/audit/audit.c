@@ -2561,6 +2561,8 @@ name|audit_canon_path
 argument_list|(
 name|td
 argument_list|,
+name|AT_FDCWD
+argument_list|,
 name|path
 argument_list|,
 operator|*

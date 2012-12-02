@@ -586,6 +586,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|pcb
+modifier|*
+modifier|*
+name|susppcbs
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Variables needed for SMP tlb shootdown. */
 end_comment
@@ -2327,6 +2338,28 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Install an inter-CPU IPI for CPU suspend/resume */
+name|setidt
+argument_list|(
+name|IPI_SUSPEND
+argument_list|,
+name|IDTVEC
+argument_list|(
+name|cpususpend
+argument_list|)
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Set boot_cpu_id if needed. */
 if|if
 condition|(
@@ -3260,7 +3293,7 @@ comment|/*******************************************************************  * 
 end_comment
 
 begin_comment
-comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  */
+comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  * We also do not tell it about the BSP since it tells itself about  * the BSP internally to work with UP kernels and on UP machines.  */
 end_comment
 
 begin_function
@@ -3303,6 +3336,16 @@ name|apic_id
 operator|==
 operator|-
 literal|1
+condition|)
+continue|continue;
+if|if
+condition|(
+name|cpu_info
+index|[
+name|apic_id
+index|]
+operator|.
+name|cpu_bsp
 condition|)
 continue|continue;
 if|if
@@ -4402,120 +4445,13 @@ name|cpus
 operator|=
 name|mp_naps
 expr_stmt|;
-comment|/* 	 * first we do an INIT/RESET IPI this INIT IPI might be run, reseting 	 * and running the target CPU. OR this INIT IPI might be latched (P5 	 * bug), CPU waiting for STARTUP IPI. OR this INIT IPI might be 	 * ignored. 	 */
-comment|/* do an INIT IPI: assert RESET */
-name|lapic_ipi_raw
+name|ipi_startup
 argument_list|(
-name|APIC_DEST_DESTFLD
-operator||
-name|APIC_TRIGMOD_EDGE
-operator||
-name|APIC_LEVEL_ASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_INIT
-argument_list|,
 name|apic_id
-argument_list|)
-expr_stmt|;
-comment|/* wait for pending status end */
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* do an INIT IPI: deassert RESET */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_ALLESELF
-operator||
-name|APIC_TRIGMOD_LEVEL
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_INIT
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* wait for pending status end */
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-comment|/* wait ~10mS */
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
-comment|/* do a STARTUP IPI */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_DESTFLD
-operator||
-name|APIC_TRIGMOD_EDGE
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_STARTUP
-operator||
 name|vector
-argument_list|,
-name|apic_id
 argument_list|)
 expr_stmt|;
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-comment|/* wait ~200uS */
-comment|/* 	 * finally we do a 2nd STARTUP IPI: this 2nd STARTUP IPI should run IF 	 * the previous STARTUP IPI was cancelled by a latched INIT IPI. OR 	 * this STARTUP IPI will be ignored, as only ONE STARTUP IPI is 	 * recognized after hardware RESET or INIT IPI. 	 */
-name|lapic_ipi_raw
-argument_list|(
-name|APIC_DEST_DESTFLD
-operator||
-name|APIC_TRIGMOD_EDGE
-operator||
-name|APIC_LEVEL_DEASSERT
-operator||
-name|APIC_DESTMODE_PHY
-operator||
-name|APIC_DELMODE_STARTUP
-operator||
-name|vector
-argument_list|,
-name|apic_id
-argument_list|)
-expr_stmt|;
-name|lapic_ipi_wait
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-comment|/* wait ~200uS */
 comment|/* Wait up to 5 seconds for it to start. */
 for|for
 control|(
@@ -4908,6 +4844,112 @@ end_endif
 begin_comment
 comment|/* COUNT_XINVLTLB_HITS */
 end_comment
+
+begin_comment
+comment|/*  * Init and startup IPI.  */
+end_comment
+
+begin_function
+name|void
+name|ipi_startup
+parameter_list|(
+name|int
+name|apic_id
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+block|{
+comment|/* 	 * first we do an INIT IPI: this INIT IPI might be run, resetting 	 * and running the target CPU. OR this INIT IPI might be latched (P5 	 * bug), CPU waiting for STARTUP IPI. OR this INIT IPI might be 	 * ignored. 	 */
+name|lapic_ipi_raw
+argument_list|(
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_ASSERT
+operator||
+name|APIC_DESTMODE_PHY
+operator||
+name|APIC_DELMODE_INIT
+argument_list|,
+name|apic_id
+argument_list|)
+expr_stmt|;
+name|lapic_ipi_wait
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+comment|/* wait ~10mS */
+comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
+name|lapic_ipi_raw
+argument_list|(
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_DEASSERT
+operator||
+name|APIC_DESTMODE_PHY
+operator||
+name|APIC_DELMODE_STARTUP
+operator||
+name|vector
+argument_list|,
+name|apic_id
+argument_list|)
+expr_stmt|;
+name|lapic_ipi_wait
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
+comment|/* wait ~200uS */
+comment|/* 	 * finally we do a 2nd STARTUP IPI: this 2nd STARTUP IPI should run IF 	 * the previous STARTUP IPI was cancelled by a latched INIT IPI. OR 	 * this STARTUP IPI will be ignored, as only ONE STARTUP IPI is 	 * recognized after hardware RESET or INIT IPI. 	 */
+name|lapic_ipi_raw
+argument_list|(
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_DEASSERT
+operator||
+name|APIC_DESTMODE_PHY
+operator||
+name|APIC_DELMODE_STARTUP
+operator||
+name|vector
+argument_list|,
+name|apic_id
+argument_list|)
+expr_stmt|;
+name|lapic_ipi_wait
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
+comment|/* wait ~200uS */
+block|}
+end_function
 
 begin_comment
 comment|/*  * Send an IPI to specified CPU handling the bitmap logic.  */
@@ -6121,6 +6163,114 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Handle an IPI_SUSPEND by saving our current context and spinning until we  * are resumed.  */
+end_comment
+
+begin_function
+name|void
+name|cpususpend_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|cpu
+decl_stmt|;
+name|cpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|savectx
+argument_list|(
+name|susppcbs
+index|[
+name|cpu
+index|]
+argument_list|)
+condition|)
+block|{
+name|wbinvd
+argument_list|()
+expr_stmt|;
+name|CPU_SET_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|suspended_cpus
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pmap_init_pat
+argument_list|()
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|switchtime
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|switchticks
+argument_list|,
+name|ticks
+argument_list|)
+expr_stmt|;
+comment|/* Indicate that we are resumed */
+name|CPU_CLR_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|suspended_cpus
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Wait for resume */
+while|while
+condition|(
+operator|!
+name|CPU_ISSET
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|started_cpus
+argument_list|)
+condition|)
+name|ia32_pause
+argument_list|()
+expr_stmt|;
+name|CPU_CLR_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|started_cpus
+argument_list|)
+expr_stmt|;
+comment|/* Resume MCA and local APIC */
+name|mca_resume
+argument_list|()
+expr_stmt|;
+name|lapic_setup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * This is called once the rest of the system is up and running and we're  * ready to let the AP's out of the pen.  */
 end_comment
 
@@ -6282,6 +6432,31 @@ name|buf
 argument_list|,
 operator|&
 name|ipi_invlpg_counts
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"cpu%d:invlcache"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|intrcnt_add
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|ipi_invlcache_counts
 index|[
 name|i
 index|]

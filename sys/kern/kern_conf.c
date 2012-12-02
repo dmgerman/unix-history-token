@@ -1271,12 +1271,6 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-comment|/* XXX: does dead_strategy need this ? */
-operator|.
 name|d_open
 operator|=
 name|dead_open
@@ -5064,9 +5058,13 @@ operator|<
 name|parentpath_len
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"make_dev_physpath_alias: WARNING - Unable to alias %s "
+literal|"WARNING: Unable to alias %s "
 literal|"to %s/%s - path too long\n"
 argument_list|,
 name|pdev
@@ -7223,22 +7221,7 @@ argument_list|)
 expr_stmt|;
 name|SI_FLAG
 argument_list|(
-name|SI_DEVOPEN
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
-name|SI_CONSOPEN
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
 name|SI_DUMPDEV
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
-name|SI_CANDELETE
 argument_list|)
 expr_stmt|;
 name|SI_FLAG

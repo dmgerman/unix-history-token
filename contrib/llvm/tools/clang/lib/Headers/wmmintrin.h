@@ -15,6 +15,12 @@ directive|define
 name|_WMMINTRIN_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<emmintrin.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -23,12 +29,18 @@ name|defined
 argument_list|(
 name|__AES__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__PCLMUL__
+argument_list|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"AES instructions not enabled"
+literal|"AES/PCLMUL instructions not enabled"
 end_error
 
 begin_else
@@ -36,11 +48,11 @@ else|#
 directive|else
 end_else
 
-begin_include
-include|#
-directive|include
-file|<smmintrin.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__AES__
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -232,6 +244,45 @@ end_endif
 
 begin_comment
 comment|/* __AES__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__PCLMUL__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_mm_clmulepi64_si128
+parameter_list|(
+name|__X
+parameter_list|,
+name|__Y
+parameter_list|,
+name|__I
+parameter_list|)
+define|\
+value|((__m128i)__builtin_ia32_pclmulqdq128((__v2di)(__m128i)(__X), \                                         (__v2di)(__m128i)(__Y), (char)(__I)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __PCLMUL__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __AES__ || __PCLMUL__ */
 end_comment
 
 begin_endif

@@ -67,18 +67,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -2274,16 +2262,38 @@ argument_list|(
 name|omask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setgid
 argument_list|(
 name|getgid
 argument_list|()
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setgid failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|getuid
 argument_list|()
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid failed"
 argument_list|)
 expr_stmt|;
 if|if

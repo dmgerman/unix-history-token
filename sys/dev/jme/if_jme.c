@@ -4397,7 +4397,7 @@ name|dev
 argument_list|,
 name|i
 operator|+
-name|PCIR_EXPRESS_DEVICE_CTL
+name|PCIER_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -8975,7 +8975,7 @@ argument_list|,
 operator|&
 name|pmc
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{

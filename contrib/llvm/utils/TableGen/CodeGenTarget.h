@@ -109,6 +109,9 @@ struct_decl|struct
 name|CodeGenRegister
 struct_decl|;
 name|class
+name|CodeGenSchedModels
+decl_stmt|;
+name|class
 name|CodeGenTarget
 decl_stmt|;
 comment|// SelectionDAG node properties.
@@ -252,6 +255,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|mutable
+name|CodeGenSchedModels
+modifier|*
+name|SchedModels
+decl_stmt|;
+name|mutable
 name|std
 operator|::
 name|vector
@@ -270,6 +278,10 @@ name|RecordKeeper
 operator|&
 name|Records
 argument_list|)
+expr_stmt|;
+operator|~
+name|CodeGenTarget
+argument_list|()
 expr_stmt|;
 name|Record
 operator|*
@@ -312,6 +324,26 @@ comment|///
 name|Record
 operator|*
 name|getAsmParser
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getAsmParserVariant - Return the AssmblyParserVariant definition for
+comment|/// this target.
+comment|///
+name|Record
+modifier|*
+name|getAsmParserVariant
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getAsmParserVariantCount - Return the AssmblyParserVariant definition
+comment|/// available for this target.
+comment|///
+name|unsigned
+name|getAsmParserVariantCount
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -509,6 +541,15 @@ name|false
 return|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|CodeGenSchedModels
+operator|&
+name|getSchedModels
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

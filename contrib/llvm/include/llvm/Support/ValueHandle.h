@@ -188,10 +188,19 @@ name|ValueHandleBase
 modifier|*
 name|Next
 decl_stmt|;
+comment|// A subclass may want to store some information along with the value
+comment|// pointer. Allow them to do this by making the value pointer a pointer-int
+comment|// pair. The 'setValPtrInt' and 'getValPtrInt' methods below give them this
+comment|// access.
+name|PointerIntPair
+operator|<
 name|Value
-modifier|*
+operator|*
+operator|,
+literal|2
+operator|>
 name|VP
-decl_stmt|;
+expr_stmt|;
 name|explicit
 name|ValueHandleBase
 parameter_list|(
@@ -224,6 +233,8 @@ operator|,
 name|VP
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 block|{}
 name|ValueHandleBase
@@ -248,6 +259,8 @@ operator|,
 name|VP
 argument_list|(
 argument|V
+argument_list|,
+literal|0
 argument_list|)
 block|{
 if|if
@@ -255,6 +268,9 @@ condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|AddToUseList
@@ -290,6 +306,9 @@ condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -310,6 +329,9 @@ condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
@@ -329,6 +351,9 @@ block|{
 if|if
 condition|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 operator|==
 name|RHS
 condition|)
@@ -340,20 +365,29 @@ condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
 name|VP
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|RHS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|AddToUseList
@@ -377,37 +411,58 @@ block|{
 if|if
 condition|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 operator|==
 name|RHS
 operator|.
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 condition|)
 return|return
 name|RHS
 operator|.
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 return|;
 if|if
 condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
 name|VP
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|RHS
 operator|.
 name|VP
+operator|.
+name|getPointer
+argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -420,6 +475,9 @@ argument_list|)
 expr_stmt|;
 return|return
 name|VP
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -474,6 +532,42 @@ specifier|const
 block|{
 return|return
 name|VP
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setValPtrInt
+parameter_list|(
+name|unsigned
+name|K
+parameter_list|)
+block|{
+name|VP
+operator|.
+name|setInt
+argument_list|(
+name|K
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|unsigned
+name|getValPtrInt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VP
+operator|.
+name|getInt
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -517,7 +611,7 @@ block|}
 end_function
 
 begin_label
-name|private
+name|public
 label|:
 end_label
 
@@ -552,6 +646,11 @@ name|New
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_label
+name|private
+label|:
+end_label
 
 begin_comment
 comment|// Internal implementation details.
@@ -1770,7 +1869,7 @@ name|virtual
 operator|~
 name|CallbackVH
 argument_list|()
-block|;
+block|{}
 name|void
 name|setValPtr
 argument_list|(
@@ -1833,12 +1932,7 @@ name|virtual
 name|void
 name|deleted
 argument_list|()
-block|{
-name|setValPtr
-argument_list|(
-name|NULL
-argument_list|)
-block|;   }
+block|;
 comment|/// Called when this->getValPtr()->replaceAllUsesWith(new_value) is called,
 comment|/// _before_ any of the uses have actually been replaced.  If WeakVH were
 comment|/// implemented as a CallbackVH, it would use this method to call
@@ -1847,13 +1941,22 @@ name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-argument|Value *
+name|Value
+operator|*
 argument_list|)
-block|{}
-expr|}
-block|;
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Specialize simplify_type to allow CallbackVH to participate in
+end_comment
+
+begin_comment
 comment|// dyn_cast, isa, etc.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1861,7 +1964,10 @@ name|From
 operator|>
 expr|struct
 name|simplify_type
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1895,8 +2001,14 @@ name|CVH
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1913,10 +2025,11 @@ specifier|const
 name|CallbackVH
 operator|>
 block|{}
-block|;  }
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

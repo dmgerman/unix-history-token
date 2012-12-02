@@ -125,14 +125,8 @@ block|}
 struct|;
 end_struct
 
-begin_struct_decl
-struct_decl|struct
-name|net_device
-struct_decl|;
-end_struct_decl
-
 begin_comment
-comment|/*  * Structure used to request the adapter net_device owning a given MAC address.  */
+comment|/*  * Structure used to request the ifnet that owns a given MAC address.  */
 end_comment
 
 begin_struct
@@ -140,18 +134,16 @@ struct|struct
 name|iff_mac
 block|{
 name|struct
-name|net_device
+name|ifnet
 modifier|*
 name|dev
 decl_stmt|;
-comment|/* the net_device */
 specifier|const
 name|unsigned
 name|char
 modifier|*
 name|mac_addr
 decl_stmt|;
-comment|/* MAC address to lookup */
 name|u16
 name|vlan_tag
 decl_stmt|;
@@ -207,7 +199,7 @@ name|nports
 decl_stmt|;
 comment|/* number of ports on this adapter */
 name|struct
-name|net_device
+name|ifnet
 modifier|*
 name|lldevs
 index|[

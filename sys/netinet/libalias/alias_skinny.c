@@ -1241,7 +1241,7 @@ name|orig_len
 operator|=
 name|dlen
 expr_stmt|;
-comment|/* 	 * Skinny packets can contain many messages.  We need to loop 	 * through the packet using len to determine message boundaries. 	 * This comes into play big time with port messages being in the 	 * same packet as register messages.  Also, open receive channel 	 * acks are usually buried in a pakcet some 400 bytes long. 	 */
+comment|/* 	 * Skinny packets can contain many messages.  We need to loop 	 * through the packet using len to determine message boundaries. 	 * This comes into play big time with port messages being in the 	 * same packet as register messages.  Also, open receive channel 	 * acks are usually buried in a packet some 400 bytes long. 	 */
 while|while
 condition|(
 name|dlen

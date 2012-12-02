@@ -549,6 +549,29 @@ name|Ver_Entry
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_Sym_Match_Result
+block|{
+specifier|const
+name|Elf_Sym
+modifier|*
+name|sym_out
+decl_stmt|;
+specifier|const
+name|Elf_Sym
+modifier|*
+name|vsymp
+decl_stmt|;
+name|int
+name|vcount
+decl_stmt|;
+block|}
+name|Sym_Match_Result
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -809,12 +832,54 @@ name|unsigned
 name|long
 name|nchains
 decl_stmt|;
-comment|/* Number of chains */
+comment|/* Number of entries in chain array */
+name|Elf32_Word
+name|nbuckets_gnu
+decl_stmt|;
+comment|/* Number of GNU hash buckets*/
+name|Elf32_Word
+name|symndx_gnu
+decl_stmt|;
+comment|/* 1st accessible symbol on dynsym table */
+name|Elf32_Word
+name|maskwords_bm_gnu
+decl_stmt|;
+comment|/* Bloom filter words - 1 (bitmask) */
+name|Elf32_Word
+name|shift2_gnu
+decl_stmt|;
+comment|/* Bloom filter shift count */
+name|Elf32_Word
+name|dynsymcount
+decl_stmt|;
+comment|/* Total entries in dynsym table */
+name|Elf_Addr
+modifier|*
+name|bloom_gnu
+decl_stmt|;
+comment|/* Bloom filter used by GNU hash func */
+specifier|const
+name|Elf_Hashelt
+modifier|*
+name|buckets_gnu
+decl_stmt|;
+comment|/* GNU hash table bucket array */
+specifier|const
+name|Elf_Hashelt
+modifier|*
+name|chain_zero_gnu
+decl_stmt|;
+comment|/* GNU hash table value array (Zeroed) */
 name|char
 modifier|*
 name|rpath
 decl_stmt|;
 comment|/* Search path specified in object */
+name|char
+modifier|*
+name|runpath
+decl_stmt|;
+comment|/* Search path with different priority */
 name|Needed_Entry
 modifier|*
 name|needed
@@ -978,6 +1043,12 @@ literal|1
 decl_stmt|;
 comment|/* Immediately load filtees */
 name|bool
+name|z_nodeflib
+range|:
+literal|1
+decl_stmt|;
+comment|/* Don't search default library path */
+name|bool
 name|ref_nodel
 range|:
 literal|1
@@ -1025,6 +1096,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Object' crt does not call _init/_fini */
+name|bool
+name|valid_hash_sysv
+range|:
+literal|1
+decl_stmt|;
+comment|/* A valid System V hash hash tag is available */
+name|bool
+name|valid_hash_gnu
+range|:
+literal|1
+decl_stmt|;
+comment|/* A valid GNU hash tag is available */
 name|struct
 name|link_map
 name|linkmap
@@ -1255,6 +1338,35 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|fill_search_info_args
+block|{
+name|int
+name|request
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|dl_serinfo
+modifier|*
+name|serinfo
+decl_stmt|;
+name|struct
+name|dl_serpath
+modifier|*
+name|serpath
+decl_stmt|;
+name|char
+modifier|*
+name|strspace
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The pack of arguments and results for the symbol lookup functions.  */
 end_comment
@@ -1272,6 +1384,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|hash
+decl_stmt|;
+name|uint32_t
+name|hash_gnu
 decl_stmt|;
 specifier|const
 name|Ver_Entry

@@ -770,7 +770,7 @@ if|if
 condition|(
 name|size
 operator|>=
-name|PAGE_SIZE
+name|USB_PAGE_SIZE
 condition|)
 block|{
 name|n_dma_pc
@@ -788,7 +788,7 @@ comment|/* compute number of objects per page */
 name|n_obj
 operator|=
 operator|(
-name|PAGE_SIZE
+name|USB_PAGE_SIZE
 operator|/
 name|size
 operator|)
@@ -1535,13 +1535,12 @@ name|mult
 decl_stmt|;
 name|mult
 operator|=
-operator|(
+name|UE_GET_SS_ISO_MULT
+argument_list|(
 name|ecomp
 operator|->
 name|bmAttributes
-operator|&
-literal|3
-operator|)
+argument_list|)
 operator|+
 literal|1
 expr_stmt|;
@@ -3674,6 +3673,7 @@ argument_list|,
 name|setup
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Check that the USB PIPE is valid and that 			 * the endpoint mode is proper. 			 * 			 * Make sure we don't allocate a streams 			 * transfer when such a combination is not 			 * valid. 			 */
 if|if
 condition|(
 operator|(
@@ -3688,6 +3688,48 @@ operator|->
 name|methods
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+operator|(
+name|ep
+operator|->
+name|ep_mode
+operator|!=
+name|USB_EP_MODE_STREAMS
+operator|)
+operator|&&
+operator|(
+name|ep
+operator|->
+name|ep_mode
+operator|!=
+name|USB_EP_MODE_DEFAULT
+operator|)
+operator|)
+operator|||
+operator|(
+name|setup
+operator|->
+name|stream_id
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|setup
+operator|->
+name|stream_id
+operator|>=
+name|USB_MAX_EP_STREAMS
+operator|||
+operator|(
+name|ep
+operator|->
+name|ep_mode
+operator|!=
+name|USB_EP_MODE_STREAMS
+operator|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -3855,6 +3897,15 @@ operator|->
 name|endpoint
 operator|=
 name|ep
+expr_stmt|;
+comment|/* set transfer stream ID */
+name|xfer
+operator|->
+name|stream_id
+operator|=
+name|setup
+operator|->
+name|stream_id
 expr_stmt|;
 name|parm
 operator|.
@@ -5889,6 +5940,11 @@ operator|->
 name|endpoint
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 argument_list|,
 name|xfer
 argument_list|)
@@ -6217,6 +6273,15 @@ argument_list|(
 literal|"enter\n"
 argument_list|)
 expr_stmt|;
+comment|/* the transfer can now be cancelled */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* enter the transfer */
 call|(
 name|ep
@@ -6228,14 +6293,6 @@ call|)
 argument_list|(
 name|xfer
 argument_list|)
-expr_stmt|;
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|1
 expr_stmt|;
 comment|/* check for transfer error */
 if|if
@@ -6271,6 +6328,11 @@ operator|&
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 argument_list|,
 name|xfer
 argument_list|)
@@ -6614,6 +6676,11 @@ condition|(
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 operator|.
 name|curr
 operator|==
@@ -6626,6 +6693,11 @@ operator|&
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 argument_list|,
 name|NULL
 argument_list|)
@@ -8561,6 +8633,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* the transfer can now be cancelled */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* start USB transfer, if no error */
 if|if
 condition|(
@@ -8581,15 +8662,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|1
-expr_stmt|;
-comment|/* check for error */
+comment|/* check for transfer error */
 if|if
 condition|(
 name|xfer
@@ -8913,8 +8986,6 @@ call|)
 argument_list|(
 name|udev
 argument_list|,
-name|NULL
-argument_list|,
 name|ep
 argument_list|,
 operator|&
@@ -9132,6 +9203,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* the transfer can now be cancelled */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|can_cancel_immed
+operator|=
+literal|1
+expr_stmt|;
 comment|/* start USB transfer, if no error */
 if|if
 condition|(
@@ -9152,15 +9232,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|can_cancel_immed
-operator|=
-literal|1
-expr_stmt|;
-comment|/* check for error */
+comment|/* check for transfer error */
 if|if
 condition|(
 name|xfer
@@ -9862,6 +9934,11 @@ condition|(
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 operator|.
 name|curr
 operator|==
@@ -9874,6 +9951,11 @@ operator|&
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 argument_list|,
 name|NULL
 argument_list|)
@@ -9883,8 +9965,15 @@ condition|(
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 operator|.
 name|curr
+operator|!=
+name|NULL
 operator|||
 name|TAILQ_FIRST
 argument_list|(
@@ -9892,9 +9981,16 @@ operator|&
 name|ep
 operator|->
 name|endpoint_q
+index|[
+name|xfer
+operator|->
+name|stream_id
+index|]
 operator|.
 name|head
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* there is another USB transfer waiting */

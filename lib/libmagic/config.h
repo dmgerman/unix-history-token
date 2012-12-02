@@ -53,6 +53,28 @@ comment|/* #undef HAVE_DAYLIGHT */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `daylight', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_DAYLIGHT
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_TZNAME
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -86,6 +108,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `fork' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FORK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
 end_comment
 
@@ -93,6 +126,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getline' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETLINE
 value|1
 end_define
 
@@ -150,6 +194,14 @@ directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `gnurx' library (-lgnurx). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBGNURX */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `z' library (-lz). */
@@ -236,6 +288,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `pid_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PID_T
 value|1
 end_define
 
@@ -361,7 +424,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `st_rdev' is member of `struct stat'. */
+comment|/* Define to 1 if `st_rdev' is a member of `struct stat'. */
 end_comment
 
 begin_define
@@ -372,7 +435,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `tm_gmtoff' is member of `struct tm'. */
+comment|/* Define to 1 if `tm_gmtoff' is a member of `struct tm'. */
 end_comment
 
 begin_define
@@ -383,7 +446,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `tm_zone' is member of `struct tm'. */
+comment|/* Define to 1 if `tm_zone' is a member of `struct tm'. */
 end_comment
 
 begin_define
@@ -633,6 +696,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
+end_define
+
+begin_comment
 comment|/* Define to 1 if `major', `minor', and `makedev' are declared in<mkdev.h>.    */
 end_comment
 
@@ -697,7 +771,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.03"
+value|"file 5.11"
 end_define
 
 begin_comment
@@ -712,6 +786,17 @@ value|"file"
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -719,7 +804,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.03"
+value|"5.11"
 end_define
 
 begin_comment
@@ -753,33 +838,30 @@ comment|/* #undef TM_IN_SYS_TIME */
 end_comment
 
 begin_comment
-comment|/* Version number of package */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"5.03"
-end_define
-
-begin_comment
-comment|/* Number of bits in a file offset, on hosts where this is settable. */
-end_comment
-
-begin_comment
-comment|/* #undef _FILE_OFFSET_BITS */
-end_comment
-
-begin_comment
-comment|/* Enable GNU extensions on systems that have them.  */
+comment|/* Enable extensions on AIX 3, Interix.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__FreeBSD__
+name|_ALL_SOURCE
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALL_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable GNU extensions on systems that have them.  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -799,10 +881,90 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Enable threading extensions on Solaris.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_PTHREAD_SEMANTICS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_PTHREAD_SEMANTICS
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Enable extensions on HP NonStop.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TANDEM_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_TANDEM_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable general extensions on Solaris.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTENSIONS__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__EXTENSIONS__
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"5.11"
+end_define
+
+begin_comment
+comment|/* Number of bits in a file offset, on hosts where this is settable. */
+end_comment
+
+begin_comment
+comment|/* #undef _FILE_OFFSET_BITS */
+end_comment
 
 begin_comment
 comment|/* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2). */
@@ -818,6 +980,30 @@ end_comment
 
 begin_comment
 comment|/* #undef _LARGE_FILES */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if on MINIX. */
+end_comment
+
+begin_comment
+comment|/* #undef _MINIX */
+end_comment
+
+begin_comment
+comment|/* Define to 2 if the system does not provide POSIX.1 features except with    this defined. */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_1_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you need to in order for `stat' and other things to work. */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_SOURCE */
 end_comment
 
 begin_comment
@@ -851,6 +1037,12 @@ end_comment
 begin_comment
 comment|/* #undef size_t */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_FREEBSD_UNUSED_
+end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -1016,6 +1208,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FREEBSD_UNUSED_ */
+end_comment
 
 end_unit
 

@@ -453,9 +453,6 @@ condition|)
 return|return
 name|res
 return|;
-if|#
-directive|if
-name|CVMX_ENABLE_DEBUG_PRINTS
 name|cvmx_dprintf
 argument_list|(
 literal|"SPI%d: Restart %s\n"
@@ -468,8 +465,6 @@ name|mode
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|// Callback to perform SPI4 reset
 name|INVOKE_CB
 argument_list|(
@@ -2656,6 +2651,29 @@ name|len
 operator|=
 literal|64
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OCTEON_VENDOR_RADISYS
+comment|/*      * Incoming packets on the RSYS4GBE have the FCS stripped.      */
+if|if
+condition|(
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|board_type
+operator|==
+name|CVMX_BOARD_TYPE_CUST_RADISYS_RSYS4GBE
+condition|)
+name|gmxx_rxx_frm_min
+operator|.
+name|s
+operator|.
+name|len
+operator|-=
+literal|4
+expr_stmt|;
+endif|#
+directive|endif
 name|cvmx_write_csr
 argument_list|(
 name|CVMX_GMXX_RXX_FRM_MIN

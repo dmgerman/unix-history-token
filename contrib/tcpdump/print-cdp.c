@@ -538,13 +538,10 @@ name|type
 argument_list|,
 name|len
 argument_list|,
+name|PLURAL_SUFFIX
+argument_list|(
 name|len
-operator|>
-literal|1
-condition|?
-literal|"s"
-else|:
-literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* plural */

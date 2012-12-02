@@ -1668,6 +1668,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_MPLS
+value|137
+end_define
+
+begin_comment
+comment|/* MPLS-in-IP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_PFSYNC
 value|240
 end_define
@@ -2753,6 +2764,17 @@ begin_comment
 comment|/* don't fragment packet */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_RECVTOS
+value|68
+end_define
+
+begin_comment
+comment|/* bool; receive IP TOS w/dgram */
+end_comment
+
 begin_comment
 comment|/* IPv4 Source Filter Multicast API [RFC3678] */
 end_comment
@@ -3804,79 +3826,6 @@ name|ifa
 parameter_list|)
 value|((struct in_ifaddr *)(ifa))
 end_define
-
-begin_comment
-comment|/*  * Historically, BSD keeps ip_len and ip_off in host format  * when doing layer 3 processing, and this often requires  * to translate the format back and forth.  * To make the process explicit, we define a couple of macros  * that also take into account the fact that at some point  * we may want to keep those fields always in net format.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|HAVE_NET_IPLEN
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SET_NET_IPLEN
-parameter_list|(
-name|p
-parameter_list|)
-value|do {} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_HOST_IPLEN
-parameter_list|(
-name|p
-parameter_list|)
-value|do {} while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SET_NET_IPLEN
-parameter_list|(
-name|p
-parameter_list|)
-value|do {		\ 	struct ip *h_ip = (p);			\ 	h_ip->ip_len = htons(h_ip->ip_len);	\ 	h_ip->ip_off = htons(h_ip->ip_off);	\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_HOST_IPLEN
-parameter_list|(
-name|p
-parameter_list|)
-value|do {		\ 	struct ip *h_ip = (p);			\ 	h_ip->ip_len = ntohs(h_ip->ip_len);	\ 	h_ip->ip_off = ntohs(h_ip->ip_off);	\ 	} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_NET_IPLEN */
-end_comment
 
 begin_endif
 endif|#

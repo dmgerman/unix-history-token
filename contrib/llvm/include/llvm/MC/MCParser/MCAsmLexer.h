@@ -65,12 +65,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MCAsmLexer
-decl_stmt|;
-name|class
-name|MCInst
-decl_stmt|;
 comment|/// AsmToken - Target independent representation for an assembler token.
 name|class
 name|AsmToken
@@ -175,6 +169,8 @@ block|,
 name|At
 block|}
 enum|;
+name|private
+label|:
 name|TokenKind
 name|Kind
 decl_stmt|;
@@ -255,6 +251,11 @@ return|;
 block|}
 name|SMLoc
 name|getLoc
+argument_list|()
+specifier|const
+expr_stmt|;
+name|SMLoc
+name|getEndLoc
 argument_list|()
 specifier|const
 expr_stmt|;

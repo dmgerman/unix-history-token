@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCObjectWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -107,13 +101,10 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
-name|MCExpr
+name|MCObjectWriter
 decl_stmt|;
 name|class
 name|MCSection
-decl_stmt|;
-name|class
-name|MCSectionData
 decl_stmt|;
 name|class
 name|MCStreamer
@@ -122,10 +113,10 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MCObjectStreamer
+name|SourceMgr
 decl_stmt|;
 name|class
-name|raw_ostream
+name|SMLoc
 decl_stmt|;
 comment|/// MCDwarfFile - Instances of this class represent the name of the dwarf
 comment|/// .file directive and its associated dwarf file number in the MC file,
@@ -673,7 +664,9 @@ comment|//
 comment|// This emits the Dwarf file and the line tables.
 comment|//
 specifier|static
-name|void
+specifier|const
+name|MCSymbol
+modifier|*
 name|Emit
 parameter_list|(
 name|MCStreamer
@@ -739,6 +732,150 @@ function_decl|;
 block|}
 empty_stmt|;
 name|class
+name|MCGenDwarfInfo
+block|{
+name|public
+label|:
+comment|//
+comment|// When generating dwarf for assembly source files this emits the Dwarf
+comment|// sections.
+comment|//
+specifier|static
+name|void
+name|Emit
+parameter_list|(
+name|MCStreamer
+modifier|*
+name|MCOS
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|LineSectionSymbol
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|// When generating dwarf for assembly source files this is the info that is
+comment|// needed to be gathered for each symbol that will have a dwarf label.
+name|class
+name|MCGenDwarfLabelEntry
+block|{
+name|private
+label|:
+comment|// Name of the symbol without a leading underbar, if any.
+name|StringRef
+name|Name
+decl_stmt|;
+comment|// The dwarf file number this symbol is in.
+name|unsigned
+name|FileNumber
+decl_stmt|;
+comment|// The line number this symbol is at.
+name|unsigned
+name|LineNumber
+decl_stmt|;
+comment|// The low_pc for the dwarf label is taken from this symbol.
+name|MCSymbol
+modifier|*
+name|Label
+decl_stmt|;
+name|public
+label|:
+name|MCGenDwarfLabelEntry
+argument_list|(
+argument|StringRef name
+argument_list|,
+argument|unsigned fileNumber
+argument_list|,
+argument|unsigned lineNumber
+argument_list|,
+argument|MCSymbol *label
+argument_list|)
+block|:
+name|Name
+argument_list|(
+name|name
+argument_list|)
+operator|,
+name|FileNumber
+argument_list|(
+name|fileNumber
+argument_list|)
+operator|,
+name|LineNumber
+argument_list|(
+name|lineNumber
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+argument|label
+argument_list|)
+block|{}
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+name|unsigned
+name|getFileNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileNumber
+return|;
+block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LineNumber
+return|;
+block|}
+name|MCSymbol
+operator|*
+name|getLabel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Label
+return|;
+block|}
+comment|// This is called when label is created when we are generating dwarf for
+comment|// assembly source files.
+specifier|static
+name|void
+name|Make
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+name|MCStreamer
+modifier|*
+name|MCOS
+parameter_list|,
+name|SourceMgr
+modifier|&
+name|SrcMgr
+parameter_list|,
+name|SMLoc
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+name|class
 name|MCCFIInstruction
 block|{
 name|public
@@ -748,13 +885,17 @@ name|OpType
 block|{
 name|SameValue
 block|,
-name|Remember
+name|RememberState
 block|,
-name|Restore
+name|RestoreState
 block|,
 name|Move
 block|,
 name|RelMove
+block|,
+name|Escape
+block|,
+name|Restore
 block|}
 enum|;
 name|private
@@ -773,6 +914,14 @@ decl_stmt|;
 name|MachineLocation
 name|Source
 decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|char
+operator|>
+name|Values
+expr_stmt|;
 name|public
 label|:
 name|MCCFIInstruction
@@ -796,11 +945,11 @@ name|assert
 argument_list|(
 name|Op
 operator|==
-name|Remember
+name|RememberState
 operator|||
 name|Op
 operator|==
-name|Restore
+name|RestoreState
 argument_list|)
 block|;     }
 name|MCCFIInstruction
@@ -832,6 +981,10 @@ argument_list|(
 name|Op
 operator|==
 name|SameValue
+operator|||
+name|Op
+operator|==
+name|Restore
 argument_list|)
 block|;     }
 name|MCCFIInstruction
@@ -909,6 +1062,39 @@ operator|==
 name|RelMove
 argument_list|)
 block|;     }
+name|MCCFIInstruction
+argument_list|(
+argument|OpType Op
+argument_list|,
+argument|MCSymbol *L
+argument_list|,
+argument|StringRef Vals
+argument_list|)
+operator|:
+name|Operation
+argument_list|(
+name|Op
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+name|L
+argument_list|)
+operator|,
+name|Values
+argument_list|(
+argument|Vals.begin()
+argument_list|,
+argument|Vals.end()
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Op
+operator|==
+name|Escape
+argument_list|)
+block|;     }
 name|OpType
 name|getOperation
 argument_list|()
@@ -948,6 +1134,28 @@ specifier|const
 block|{
 return|return
 name|Source
+return|;
+block|}
+specifier|const
+name|StringRef
+name|getValues
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StringRef
+argument_list|(
+operator|&
+name|Values
+index|[
+literal|0
+index|]
+argument_list|,
+name|Values
+operator|.
+name|size
+argument_list|()
+argument_list|)
 return|;
 block|}
 block|}
@@ -998,6 +1206,11 @@ name|CompactUnwindEncoding
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|IsSignalFrame
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|MCSymbol
 operator|*
@@ -1038,6 +1251,9 @@ name|LsdaEncoding
 decl_stmt|;
 name|uint32_t
 name|CompactUnwindEncoding
+decl_stmt|;
+name|bool
+name|IsSignalFrame
 decl_stmt|;
 block|}
 struct|;

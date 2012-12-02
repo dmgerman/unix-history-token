@@ -142,6 +142,8 @@ name|FRI
 block|,
 name|FC
 block|,
+name|FRR
+block|,
 name|FormMask
 init|=
 literal|63
@@ -274,10 +276,6 @@ return|return
 name|false
 return|;
 block|}
-return|return
-name|false
-return|;
-comment|// Not reached
 block|}
 comment|/// getMBlazeRegisterNumbering - Given the enum value for some register, e.g.
 comment|/// MBlaze::R0, return the number that it corresponds to (e.g. 0).
@@ -750,10 +748,6 @@ literal|"Unknown register number!"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
-comment|// Not reached
 block|}
 comment|/// getRegisterFromNumbering - Given the enum value for some register, e.g.
 comment|/// MBlaze::R0, return the number that it corresponds to (e.g. 0).
@@ -1034,10 +1028,6 @@ literal|"Unknown register number!"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
-comment|// Not reached
 block|}
 specifier|static
 specifier|inline
@@ -1252,10 +1242,6 @@ literal|"Unknown register number!"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
-comment|// Not reached
 block|}
 block|}
 end_decl_stmt

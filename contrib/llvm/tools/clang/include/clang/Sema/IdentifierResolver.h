@@ -69,6 +69,12 @@ directive|include
 file|"clang/Basic/IdentifierTable.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -86,7 +92,13 @@ name|class
 name|DeclarationName
 decl_stmt|;
 name|class
+name|ExternalPreprocessorSource
+decl_stmt|;
+name|class
 name|NamedDecl
+decl_stmt|;
+name|class
+name|Preprocessor
 decl_stmt|;
 name|class
 name|Scope
@@ -506,7 +518,6 @@ block|}
 block|}
 empty_stmt|;
 comment|/// begin - Returns an iterator for decls with the name 'Name'.
-specifier|static
 name|iterator
 name|begin
 parameter_list|(
@@ -515,7 +526,6 @@ name|Name
 parameter_list|)
 function_decl|;
 comment|/// end - Returns an iterator that has 'finished'.
-specifier|static
 name|iterator
 name|end
 parameter_list|()
@@ -607,31 +617,31 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// \brief Link the declaration into the chain of declarations for
-comment|/// the given identifier.
+comment|/// \brief Try to add the given declaration to the top level scope, if it
+comment|/// (or a redeclaration of it) hasn't already been added.
 comment|///
-comment|/// This is a lower-level routine used by the AST reader to link a
-comment|/// declaration into a specific IdentifierInfo before the
-comment|/// declaration actually has a name.
-name|void
-name|AddDeclToIdentifierChain
+comment|/// \param D The externally-produced declaration to add.
+comment|///
+comment|/// \param Name The name of the externally-produced declaration.
+comment|///
+comment|/// \returns true if the declaration was added, false otherwise.
+name|bool
+name|tryAddTopLevelDecl
 parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|,
 name|NamedDecl
 modifier|*
 name|D
+parameter_list|,
+name|DeclarationName
+name|Name
 parameter_list|)
 function_decl|;
 name|explicit
 name|IdentifierResolver
 parameter_list|(
-specifier|const
-name|LangOptions
+name|Preprocessor
 modifier|&
-name|LangOpt
+name|PP
 parameter_list|)
 function_decl|;
 operator|~
@@ -645,6 +655,10 @@ name|LangOptions
 modifier|&
 name|LangOpt
 decl_stmt|;
+name|Preprocessor
+modifier|&
+name|PP
+decl_stmt|;
 name|class
 name|IdDeclInfoMap
 decl_stmt|;
@@ -652,6 +666,22 @@ name|IdDeclInfoMap
 modifier|*
 name|IdDeclInfos
 decl_stmt|;
+name|void
+name|updatingIdentifier
+parameter_list|(
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|)
+function_decl|;
+name|void
+name|readingIdentifier
+parameter_list|(
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|)
+function_decl|;
 comment|/// FETokenInfo contains a Decl pointer if lower bit == 0.
 specifier|static
 specifier|inline

@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This class defines the interface that one who 'use's a Value must implement.
+comment|// This class defines the interface that one who uses a Value must implement.
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  * Instructions are the largest class of User's.
+comment|//  * Instructions are the largest class of Users.
 end_comment
 
 begin_comment
@@ -78,6 +78,12 @@ define|#
 directive|define
 name|LLVM_USER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
 
 begin_include
 include|#
@@ -129,6 +135,11 @@ operator|>
 name|friend
 expr|struct
 name|HungoffOperandTraits
+block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|protected
 operator|:
@@ -255,10 +266,8 @@ argument_list|,
 argument|unsigned
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Constructor throws?"
 argument_list|)
 block|;   }
@@ -274,10 +283,8 @@ argument_list|,
 argument|bool
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Constructor throws?"
 argument_list|)
 block|;   }

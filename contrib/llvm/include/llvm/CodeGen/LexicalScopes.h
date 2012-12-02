@@ -529,6 +529,11 @@ comment|///
 name|class
 name|LexicalScope
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|LexicalScope
@@ -581,12 +586,16 @@ name|DFSOut
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|IndentLevel
-argument_list|(
-literal|0
-argument_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|IndentLevel
+operator|=
+literal|0
+block|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|Parent
@@ -835,7 +844,7 @@ name|NewScope
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// dominates - Return true if current scope dominsates given lexical scope.
+comment|/// dominates - Return true if current scope dominates given lexical scope.
 name|bool
 name|dominates
 argument_list|(
@@ -993,11 +1002,16 @@ name|DFSOut
 decl_stmt|;
 comment|// In& Out Depth use to determine
 comment|// scope nesting.
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|mutable
 name|unsigned
 name|IndentLevel
 decl_stmt|;
 comment|// Private state for dump()
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 block|}

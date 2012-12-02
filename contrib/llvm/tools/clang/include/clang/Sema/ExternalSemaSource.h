@@ -170,18 +170,8 @@ argument_list|()
 block|{}
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
-comment|///
-comment|/// \returns a pair of Objective-C methods lists containing the
-comment|/// instance and factory methods, respectively, with this selector.
 name|virtual
-name|std
-operator|::
-name|pair
-operator|<
-name|ObjCMethodList
-block|,
-name|ObjCMethodList
-operator|>
+name|void
 name|ReadMethodPool
 argument_list|(
 argument|Selector Sel

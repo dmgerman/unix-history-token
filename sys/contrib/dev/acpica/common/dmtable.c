@@ -615,20 +615,6 @@ literal|"Alert Standard Format table"
 block|}
 block|,
 block|{
-name|ACPI_SIG_BOOT
-block|,
-name|AcpiDmTableInfoBoot
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|TemplateBoot
-block|,
-literal|"Simple Boot Flag Table"
-block|}
-block|,
-block|{
 name|ACPI_SIG_BERT
 block|,
 name|AcpiDmTableInfoBert
@@ -657,6 +643,20 @@ literal|"Boot Graphics Resource Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_BOOT
+block|,
+name|AcpiDmTableInfoBoot
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateBoot
+block|,
+literal|"Simple Boot Flag Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_CPEP
 block|,
 name|NULL
@@ -668,6 +668,34 @@ block|,
 name|TemplateCpep
 block|,
 literal|"Corrected Platform Error Polling table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_CSRT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpCsrt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Core System Resource Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_DBG2
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpDbg2
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Debug Port table type 2"
 block|}
 block|,
 block|{
@@ -751,7 +779,7 @@ name|DtCompileFadt
 block|,
 name|TemplateFadt
 block|,
-literal|"Fixed ACPI Description Table"
+literal|"Fixed ACPI Description Table (FADT)"
 block|}
 block|,
 block|{
@@ -835,7 +863,7 @@ name|DtCompileMadt
 block|,
 name|TemplateMadt
 block|,
-literal|"Multiple APIC Description Table"
+literal|"Multiple APIC Description Table (MADT)"
 block|}
 block|,
 block|{
@@ -1308,6 +1336,51 @@ name|Table
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Gbl_VerboseTemplates
+condition|)
+block|{
+comment|/* Dump the raw table data */
+name|Length
+operator|=
+name|Table
+operator|->
+name|Length
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n/*\n%s: Length %d (0x%X)\n\n"
+argument_list|,
+name|ACPI_RAW_TABLE_DATA_HEADER
+argument_list|,
+name|Length
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
+name|AcpiUtDumpBuffer
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|UINT8
+argument_list|,
+name|Table
+argument_list|)
+argument_list|,
+name|Length
+argument_list|,
+name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS, RSDP, and S3PT.      */
@@ -1541,7 +1614,7 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1553,6 +1626,8 @@ argument_list|,
 name|Length
 argument_list|,
 name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

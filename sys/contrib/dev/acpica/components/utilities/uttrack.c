@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * These procedures are used for tracking memory leaks in the subsystem, and  * they get compiled out when the ACPI_DBG_TRACK_ALLOCATIONS is not set.  *  * Each memory allocation is tracked via a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  AcpiUtAllocate and AcpiUtAllocateZeroed call  * AcpiUtTrackAllocation to add an element to the list; deletion  * occurs in the body of AcpiUtFree.  */
+comment|/*  * These procedures are used for tracking memory leaks in the subsystem, and  * they get compiled out when the ACPI_DBG_TRACK_ALLOCATIONS is not set.  *  * Each memory allocation is tracked via a doubly linked list. Each  * element contains the caller's component, module name, function name, and  * line number. AcpiUtAllocate and AcpiUtAllocateZeroed call  * AcpiUtTrackAllocation to add an element to the list; deletion  * occurs in the body of AcpiUtFree.  */
 end_comment
 
 begin_define
@@ -59,7 +59,7 @@ name|ACPI_DEBUG_MEM_BLOCK
 modifier|*
 name|AcpiUtFindAllocation
 parameter_list|(
-name|void
+name|ACPI_DEBUG_MEM_BLOCK
 modifier|*
 name|Allocation
 parameter_list|)
@@ -678,7 +678,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFindAllocation  *  * PARAMETERS:  Allocation              - Address of allocated memory  *  * RETURN:      A list element if found; NULL otherwise.  *  * DESCRIPTION: Searches for an element in the global allocation tracking list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFindAllocation  *  * PARAMETERS:  Allocation              - Address of allocated memory  *  * RETURN:      Three cases:  *              1) List is empty, NULL is returned.  *              2) Element was found. Returns Allocation parameter.  *              3) Element was not found. Returns position where it should be  *                  inserted into the list.  *  * DESCRIPTION: Searches for an element in the global allocation tracking list.  *              If the element is not found, returns the location within the  *              list where the element should be inserted.  *  *              Note: The list is ordered by larger-to-smaller addresses.  *  *              This global list is used to detect memory leaks in ACPICA as  *              well as other issues such as an attempt to release the same  *              internal object more than once. Although expensive as far  *              as cpu time, this list is much more helpful for finding these  *              types of issues than using memory leak detectors outside of  *              the ACPICA code.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -687,7 +687,7 @@ name|ACPI_DEBUG_MEM_BLOCK
 modifier|*
 name|AcpiUtFindAllocation
 parameter_list|(
-name|void
+name|ACPI_DEBUG_MEM_BLOCK
 modifier|*
 name|Allocation
 parameter_list|)
@@ -696,26 +696,39 @@ name|ACPI_DEBUG_MEM_BLOCK
 modifier|*
 name|Element
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
 name|Element
 operator|=
 name|AcpiGbl_GlobalList
 operator|->
 name|ListHead
 expr_stmt|;
-comment|/* Search for the address. */
-while|while
+if|if
 condition|(
+operator|!
 name|Element
 condition|)
 block|{
-if|if
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/*      * Search for the address.      *      * Note: List is ordered by larger-to-smaller addresses, on the      * assumption that a new allocation usually has a larger address      * than previous allocations.      */
+while|while
 condition|(
 name|Element
-operator|==
+operator|>
 name|Allocation
+condition|)
+block|{
+comment|/* Check for end-of-list */
+if|if
+condition|(
+operator|!
+name|Element
+operator|->
+name|Next
 condition|)
 block|{
 return|return
@@ -731,16 +744,31 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Element
+operator|==
+name|Allocation
+condition|)
+block|{
 return|return
 operator|(
-name|NULL
+name|Element
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|Element
+operator|->
+name|Previous
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTrackAllocation  *  * PARAMETERS:  Allocation          - Address of allocated memory  *              Size                - Size of the allocation  *              AllocType           - MEM_MALLOC or MEM_CALLOC  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None.  *  * DESCRIPTION: Inserts an element into the global allocation tracking list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtTrackAllocation  *  * PARAMETERS:  Allocation          - Address of allocated memory  *              Size                - Size of the allocation  *              AllocType           - MEM_MALLOC or MEM_CALLOC  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Status  *  * DESCRIPTION: Inserts an element into the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -826,7 +854,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Search list for this address to make sure it is not already on the list.      * This will catch several kinds of problems.      */
+comment|/*      * Search the global list for this address to make sure it is not      * already present. This will catch several kinds of problems.      */
 name|Element
 operator|=
 name|AcpiUtFindAllocation
@@ -837,6 +865,8 @@ expr_stmt|;
 if|if
 condition|(
 name|Element
+operator|==
+name|Allocation
 condition|)
 block|{
 name|ACPI_ERROR
@@ -844,20 +874,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"UtTrackAllocation: Allocation already present in list! (%p)"
-operator|,
-name|Allocation
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Element %p Address %p"
-operator|,
-name|Element
+literal|"UtTrackAllocation: Allocation (%p) already present in global list!"
 operator|,
 name|Allocation
 operator|)
@@ -867,7 +884,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Fill in the instance data. */
+comment|/* Fill in the instance data */
 name|Allocation
 operator|->
 name|Size
@@ -917,6 +934,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Element
+condition|)
+block|{
 comment|/* Insert at list head */
 if|if
 condition|(
@@ -962,6 +985,49 @@ name|ListHead
 operator|=
 name|Allocation
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Insert after element */
+name|Allocation
+operator|->
+name|Next
+operator|=
+name|Element
+operator|->
+name|Next
+expr_stmt|;
+name|Allocation
+operator|->
+name|Previous
+operator|=
+name|Element
+expr_stmt|;
+if|if
+condition|(
+name|Element
+operator|->
+name|Next
+condition|)
+block|{
+operator|(
+name|Element
+operator|->
+name|Next
+operator|)
+operator|->
+name|Previous
+operator|=
+name|Allocation
+expr_stmt|;
+block|}
+name|Element
+operator|->
+name|Next
+operator|=
+name|Allocation
+expr_stmt|;
+block|}
 name|UnlockAndExit
 label|:
 name|Status
@@ -980,7 +1046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveAllocation  *  * PARAMETERS:  Allocation          - Address of allocated memory  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:  *  * DESCRIPTION: Deletes an element from the global allocation tracking list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtRemoveAllocation  *  * PARAMETERS:  Allocation          - Address of allocated memory  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Status  *  * DESCRIPTION: Deletes an element from the global allocation tracking list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1011,7 +1077,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtRemoveAllocation
 argument_list|)
@@ -1021,11 +1087,11 @@ condition|(
 name|AcpiGbl_DisableMemTracking
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|MemList
 operator|=
@@ -1052,11 +1118,11 @@ literal|"Empty allocation list, nothing to free!"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|Status
 operator|=
@@ -1073,11 +1139,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Unlink */
 if|if
@@ -1131,6 +1197,24 @@ operator|->
 name|Previous
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ALLOCATIONS
+operator|,
+literal|"Freeing %p, size 0%X\n"
+operator|,
+operator|&
+name|Allocation
+operator|->
+name|UserSpace
+operator|,
+name|Allocation
+operator|->
+name|Size
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Mark the segment as deleted */
 name|ACPI_MEMSET
 argument_list|(
@@ -1146,19 +1230,6 @@ operator|->
 name|Size
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ALLOCATIONS
-operator|,
-literal|"Freeing size 0%X\n"
-operator|,
-name|Allocation
-operator|->
-name|Size
-operator|)
-argument_list|)
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtReleaseMutex
@@ -1166,16 +1237,16 @@ argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpAllocationInfo  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION: Print some info about the outstanding allocations.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpAllocationInfo  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print some info about the outstanding allocations.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1198,7 +1269,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpAllocations  *  * PARAMETERS:  Component           - Component(s) to dump info for.  *              Module              - Module to dump info for.  NULL means all.  *  * RETURN:      None  *  * DESCRIPTION: Print a list of all outstanding allocations.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDumpAllocations  *  * PARAMETERS:  Component           - Component(s) to dump info for.  *              Module              - Module to dump info for. NULL means all.  *  * RETURN:      None  *  * DESCRIPTION: Print a list of all outstanding allocations.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1240,7 +1311,8 @@ condition|(
 name|AcpiGbl_DisableMemTracking
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/*      * Walk the allocation list.      */
 if|if
@@ -1254,7 +1326,8 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|Element
 operator|=
@@ -1406,7 +1479,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_DESC_TYPE_OPERAND
+name|ACPI_OPERAND_OBJECT
 argument_list|)
 condition|)
 block|{
@@ -1427,7 +1500,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_DESC_TYPE_PARSER
+name|ACPI_PARSE_OBJECT
 argument_list|)
 condition|)
 block|{
@@ -1448,7 +1521,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_DESC_TYPE_NAMED
+name|ACPI_NAMESPACE_NODE
 argument_list|)
 condition|)
 block|{

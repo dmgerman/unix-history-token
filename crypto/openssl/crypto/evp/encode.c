@@ -112,6 +112,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|char
 name|data_bin2ascii
@@ -174,6 +175,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|char
 name|data_ascii2bin

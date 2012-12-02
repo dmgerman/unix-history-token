@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|DEF_POINTS
-value|(KTRFAC_SYSCALL | KTRFAC_SYSRET | KTRFAC_NAMEI | \ 		    KTRFAC_GENIO | KTRFAC_PSIG | KTRFAC_USER | \ 		    KTRFAC_STRUCT | KTRFAC_SYSCTL | KTRFAC_CAPFAIL | \ 		    KTRFAC_FAULT | KTRFAC_FAULTEND)
+value|(KTRFAC_SYSCALL | KTRFAC_SYSRET | KTRFAC_NAMEI | \ 		    KTRFAC_GENIO | KTRFAC_PSIG | KTRFAC_USER | \ 		    KTRFAC_STRUCT | KTRFAC_SYSCTL | KTRFAC_CAPFAIL)
 end_define
 
 begin_define
@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|ALL_POINTS
-value|(DEF_POINTS | KTRFAC_CSW | PROC_ABI_POINTS)
+value|(DEF_POINTS | KTRFAC_CSW | PROC_ABI_POINTS | \ 		    KTRFAC_FAULT | KTRFAC_FAULTEND)
 end_define
 
 begin_define

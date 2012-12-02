@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2012, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2012, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -20,13 +20,13 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__sctp_os_bsd_h__
+name|_NETINET_SCTP_OS_BSD_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__sctp_os_bsd_h__
+name|_NETINET_SCTP_OS_BSD_H_
 end_define
 
 begin_comment
@@ -702,6 +702,17 @@ begin_comment
 comment|/* FIX ME: temp */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_PRINTF
+parameter_list|(
+name|params
+modifier|...
+parameter_list|)
+value|printf(params)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -722,7 +733,7 @@ name|params
 modifier|...
 parameter_list|)
 define|\
-value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    printf(params);						\ 	}								\     } while (0);							\ }
+value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    SCTP_PRINTF(params);						\ 	}								\     } while (0);							\ }
 end_define
 
 begin_define
@@ -736,21 +747,6 @@ name|addr
 parameter_list|)
 define|\
 value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    sctp_print_address(addr);					\ 	}								\     } while (0);							\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPDBG_PKT
-parameter_list|(
-name|level
-parameter_list|,
-name|iph
-parameter_list|,
-name|sh
-parameter_list|)
-define|\
-value|{									\     do {								\ 	    if (SCTP_BASE_SYSCTL(sctp_debug_on)& level) {		\ 		    sctp_print_address_pkt(iph, sh);			\ 	    }								\     } while (0);							\ }
 end_define
 
 begin_else
@@ -781,34 +777,10 @@ name|addr
 parameter_list|)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTPDBG_PKT
-parameter_list|(
-name|level
-parameter_list|,
-name|iph
-parameter_list|,
-name|sh
-parameter_list|)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|SCTP_PRINTF
-parameter_list|(
-name|params
-modifier|...
-parameter_list|)
-value|printf(params)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -880,7 +852,8 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                          printf("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     m, inp, stcb, net, file, __LINE__, err);
+define|\
+value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \         	SCTP_PRINTF("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            m, inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_define
@@ -898,7 +871,8 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                           printf("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     inp, stcb, net, file, __LINE__, err);
+define|\
+value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \         	SCTP_PRINTF("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_else
@@ -1630,7 +1604,7 @@ name|SCTP_HEADER_LEN
 parameter_list|(
 name|m
 parameter_list|)
-value|(m->m_pkthdr.len)
+value|((m)->m_pkthdr.len)
 end_define
 
 begin_define
@@ -1731,30 +1705,6 @@ end_define
 begin_comment
 comment|/* This converts any input packet header  * into the chain of data holders, for BSD  * its a NOP.  */
 end_comment
-
-begin_comment
-comment|/* Macro's for getting length from V6/V4 header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_GET_IPV4_LENGTH
-parameter_list|(
-name|iph
-parameter_list|)
-value|(iph->ip_len)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_GET_IPV6_LENGTH
-parameter_list|(
-name|ip6
-parameter_list|)
-value|(ntohs(ip6->ip6_plen))
-end_define
 
 begin_comment
 comment|/* get the v6 hop limit */

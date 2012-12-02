@@ -333,6 +333,8 @@ name|IPH_AF_INET6
 case|:
 name|ip6_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length

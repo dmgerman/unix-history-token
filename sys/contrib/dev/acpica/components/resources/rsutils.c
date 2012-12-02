@@ -260,7 +260,7 @@ name|ItemCount
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/*          * 16-, 32-, and 64-bit cases must use the move macros that perform          * endian conversion and/or accomodate hardware that cannot perform          * misaligned memory transfers          */
+comment|/*          * 16-, 32-, and 64-bit cases must use the move macros that perform          * endian conversion and/or accommodate hardware that cannot perform          * misaligned memory transfers          */
 case|case
 name|ACPI_RSC_MOVE16
 case|:

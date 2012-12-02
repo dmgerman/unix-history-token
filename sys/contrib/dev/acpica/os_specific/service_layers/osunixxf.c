@@ -541,7 +541,7 @@ modifier|*
 name|BytesRead
 parameter_list|)
 block|{
-name|UINT8
+name|int
 name|Temp
 decl_stmt|;
 name|UINT32
@@ -571,14 +571,24 @@ name|AE_BUFFER_OVERFLOW
 operator|)
 return|;
 block|}
-name|scanf
-argument_list|(
-literal|"%1c"
-argument_list|,
-operator|&
+if|if
+condition|(
+operator|(
 name|Temp
-argument_list|)
-expr_stmt|;
+operator|=
+name|getchar
+argument_list|()
+operator|)
+operator|==
+name|EOF
+condition|)
+block|{
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -596,6 +606,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|Temp
 expr_stmt|;
 block|}
@@ -2006,6 +2019,21 @@ end_endif
 begin_comment
 comment|/* ACPI_SINGLE_THREADED */
 end_comment
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWaitEventsComplete  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Wait for all asynchronous events to complete. This  *              implementation does nothing.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiOsWaitEventsComplete
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
 
 end_unit
 

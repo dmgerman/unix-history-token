@@ -145,13 +145,6 @@ directive|include
 file|<net/vnet.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|EPAIRNAME
-value|"epair"
-end_define
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -383,6 +376,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|epairname
+index|[]
+init|=
+literal|"epair"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Netisr realted definitions and sysctl. */
 end_comment
@@ -397,7 +401,7 @@ block|{
 operator|.
 name|nh_name
 operator|=
-name|EPAIRNAME
+name|epairname
 block|,
 operator|.
 name|nh_proto
@@ -762,7 +766,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_EPAIR
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|,
 literal|"Pair of virtual cross-over connected Ethernet-like interfaces"
 argument_list|)
@@ -773,24 +777,8 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|if_clone
+modifier|*
 name|epair_cloner
-init|=
-name|IFC_CLONE_INITIALIZER
-argument_list|(
-name|EPAIRNAME
-argument_list|,
-name|NULL
-argument_list|,
-name|IF_MAXUNIT
-argument_list|,
-name|NULL
-argument_list|,
-name|epair_clone_match
-argument_list|,
-name|epair_clone_create
-argument_list|,
-name|epair_clone_destroy
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2859,13 +2847,13 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|EPAIRNAME
+name|epairname
 argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|EPAIRNAME
+name|epairname
 argument_list|)
 operator|-
 literal|1
@@ -2886,7 +2874,7 @@ name|name
 operator|+
 sizeof|sizeof
 argument_list|(
-name|EPAIRNAME
+name|epairname
 argument_list|)
 operator|-
 literal|1
@@ -2978,7 +2966,7 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* 00:00:00:00:00:00 */
-comment|/* 	 * We are abusing params to create our second interface. 	 * Actually we already created it and called if_clone_createif() 	 * for it to do the official insertion procedure the moment we knew 	 * it cannot fail anymore. So just do attach it here. 	 */
+comment|/* 	 * We are abusing params to create our second interface. 	 * Actually we already created it and called if_clone_create() 	 * for it to do the official insertion procedure the moment we knew 	 * it cannot fail anymore. So just do attach it here. 	 */
 if|if
 condition|(
 name|params
@@ -3459,9 +3447,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|ifc
-operator|->
-name|ifc_name
+name|epairname
 expr_stmt|;
 name|ifp
 operator|->
@@ -3585,13 +3571,14 @@ name|if_transmit
 operator|=
 name|epair_transmit
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|ifp
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
-literal|10UL
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* arbitrary maximum */
@@ -3628,9 +3615,7 @@ name|ifp
 operator|->
 name|if_dname
 operator|=
-name|ifc
-operator|->
-name|ifc_name
+name|epairname
 expr_stmt|;
 name|ifp
 operator|->
@@ -3691,7 +3676,7 @@ name|strlcpy
 argument_list|(
 name|name
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|,
 name|len
 argument_list|)
@@ -3716,7 +3701,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"%s: if_clone_createif() for our 2nd iface failed: %d"
+literal|"%s: if_clone_create() for our 2nd iface failed: %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3743,13 +3728,14 @@ name|if_transmit
 operator|=
 name|epair_transmit
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|ifp
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
-literal|10UL
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* arbitrary maximum */
@@ -4024,24 +4010,23 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
+comment|/* 	 * Get rid of our second half. As the other of the two 	 * interfaces may reside in a different vnet, we need to 	 * switch before freeing them. 	 */
+name|CURVNET_SET_QUIET
+argument_list|(
+name|oifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|oifp
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Wait for all packets to be dispatched to if_input. 	 * The numbers can only go down as the interfaces are 	 * detached so there is no need to use atomics. 	 */
+comment|/* 	 * Wait for all packets to be dispatched to if_input. 	 * The numbers can only go down as the interface is 	 * detached so there is no need to use atomics. 	 */
 name|DPRINTF
 argument_list|(
-literal|"sca refcnt=%u scb refcnt=%u\n"
-argument_list|,
-name|sca
-operator|->
-name|refcount
+literal|"scb refcnt=%u\n"
 argument_list|,
 name|scb
 operator|->
@@ -4050,12 +4035,6 @@ argument_list|)
 expr_stmt|;
 name|EPAIR_REFCOUNT_ASSERT
 argument_list|(
-name|sca
-operator|->
-name|refcount
-operator|==
-literal|1
-operator|&&
 name|scb
 operator|->
 name|refcount
@@ -4063,15 +4042,9 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"%s: ifp=%p sca->refcount!=1: %d || ifp=%p scb->refcount!=1: %d"
+literal|"%s: ifp=%p scb->refcount!=1: %d"
 operator|,
 name|__func__
-operator|,
-name|ifp
-operator|,
-name|sca
-operator|->
-name|refcount
 operator|,
 name|oifp
 operator|,
@@ -4081,7 +4054,6 @@ name|refcount
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get rid of our second half. 	 */
 name|oifp
 operator|->
 name|if_softc
@@ -4110,33 +4082,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finish cleaning up. Free them and release the unit. 	 * As the other of the two interfaces my reside in a different vnet, 	 * we need to switch before freeing them. 	 */
-name|CURVNET_SET_QUIET
-argument_list|(
-name|oifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|if_free
 argument_list|(
 name|oifp
-argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|ifmedia_removeall
-argument_list|(
-operator|&
-name|sca
-operator|->
-name|media
 argument_list|)
 expr_stmt|;
 name|ifmedia_removeall
@@ -4152,6 +4100,58 @@ argument_list|(
 name|scb
 argument_list|,
 name|M_EPAIR
+argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Wait for all packets to be dispatched to if_input. 	 */
+name|DPRINTF
+argument_list|(
+literal|"sca refcnt=%u\n"
+argument_list|,
+name|sca
+operator|->
+name|refcount
+argument_list|)
+expr_stmt|;
+name|EPAIR_REFCOUNT_ASSERT
+argument_list|(
+name|sca
+operator|->
+name|refcount
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s: ifp=%p sca->refcount!=1: %d"
+operator|,
+name|__func__
+operator|,
+name|ifp
+operator|,
+name|sca
+operator|->
+name|refcount
+operator|)
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ifmedia_removeall
+argument_list|(
+operator|&
+name|sca
+operator|->
+name|media
 argument_list|)
 expr_stmt|;
 name|free
@@ -4238,10 +4238,19 @@ operator|&
 name|epair_nh
 argument_list|)
 expr_stmt|;
-name|if_clone_attach
-argument_list|(
-operator|&
 name|epair_cloner
+operator|=
+name|if_clone_advanced
+argument_list|(
+name|epairname
+argument_list|,
+literal|0
+argument_list|,
+name|epair_clone_match
+argument_list|,
+name|epair_clone_create
+argument_list|,
+name|epair_clone_destroy
 argument_list|)
 expr_stmt|;
 if|if
@@ -4252,7 +4261,7 @@ name|printf
 argument_list|(
 literal|"%s initialized.\n"
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4261,7 +4270,6 @@ name|MOD_UNLOAD
 case|:
 name|if_clone_detach
 argument_list|(
-operator|&
 name|epair_cloner
 argument_list|)
 expr_stmt|;
@@ -4282,7 +4290,7 @@ name|printf
 argument_list|(
 literal|"%s unloaded.\n"
 argument_list|,
-name|EPAIRNAME
+name|epairname
 argument_list|)
 expr_stmt|;
 break|break;

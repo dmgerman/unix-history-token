@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -68,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rangelock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -171,6 +189,28 @@ include|#
 directive|include
 file|<sys/eventhandler.h>
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|, , ,
+name|lwp_exit
+argument_list|,
+name|lwp
+operator|-
+name|exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * thread related storage.  */
@@ -373,11 +413,16 @@ operator|=
 name|tid_buffer
 index|[
 name|tid_head
-operator|++
 index|]
 expr_stmt|;
 name|tid_head
-operator|%=
+operator|=
+operator|(
+name|tid_head
+operator|+
+literal|1
+operator|)
+operator|%
 name|TID_BUFFER_SIZE
 expr_stmt|;
 name|mtx_unlock
@@ -433,7 +478,6 @@ operator|=
 name|tid_buffer
 index|[
 name|tid_head
-operator|++
 index|]
 expr_stmt|;
 name|tid_head
@@ -450,13 +494,18 @@ block|}
 name|tid_buffer
 index|[
 name|tid_tail
-operator|++
 index|]
 operator|=
 name|tid
 expr_stmt|;
 name|tid_tail
-operator|%=
+operator|=
+operator|(
+name|tid_tail
+operator|+
+literal|1
+operator|)
+operator|%
 name|TID_BUFFER_SIZE
 expr_stmt|;
 name|mtx_unlock
@@ -742,6 +791,12 @@ operator|=
 name|turnstile_alloc
 argument_list|()
 expr_stmt|;
+name|td
+operator|->
+name|td_rlqe
+operator|=
+name|NULL
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|thread_init
@@ -819,6 +874,13 @@ argument_list|(
 name|thread_fini
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|rlqentry_free
+argument_list|(
+name|td
+operator|->
+name|td_rlqe
 argument_list|)
 expr_stmt|;
 name|turnstile_free
@@ -988,7 +1050,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* leave one number for thread0 */
+comment|/* 	 * pid_max cannot be greater than PID_MAX. 	 * leave one number for thread0. 	 */
 name|tid_unrhdr
 operator|=
 name|new_unrhdr
@@ -2312,19 +2374,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"curthread is NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2729,7 +2778,7 @@ operator|==
 name|SINGLE_EXIT
 condition|)
 block|{
-comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost  to revert to being a non-threaded 		 * process. 		 */
+comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost to revert to being a non-threaded 		 * process. 		 */
 name|p
 operator|->
 name|p_singlethread

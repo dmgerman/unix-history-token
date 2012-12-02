@@ -103,8 +103,10 @@ comment|//
 comment|// typedef  ...iterator nodes_iterator;
 comment|// static nodes_iterator nodes_begin(GraphType *G)
 comment|// static nodes_iterator nodes_end  (GraphType *G)
-comment|//
 comment|//    nodes_iterator/begin/end - Allow iteration over all nodes in the graph
+comment|// static unsigned       size       (GraphType *G)
+comment|//    Return total number of nodes in the graph
+comment|//
 comment|// If anyone tries to use this class without having an appropriate
 comment|// specialization, make an error.  If you get this error, it's because you
 comment|// need to include the appropriate specialization of GraphTraits<> for your

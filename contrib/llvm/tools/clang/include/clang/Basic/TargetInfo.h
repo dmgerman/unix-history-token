@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the TargetInfo interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::TargetInfo interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -170,7 +174,7 @@ struct_decl|struct
 name|Info
 struct_decl|;
 block|}
-comment|/// TargetCXXABI - The types of C++ ABIs for which we can generate code.
+comment|/// \brief The types of C++ ABIs for which we can generate code.
 enum|enum
 name|TargetCXXABI
 block|{
@@ -188,14 +192,12 @@ comment|/// The Visual Studio ABI.  Only scattered official documentation exists
 name|CXXABI_Microsoft
 block|}
 enum|;
-comment|/// TargetInfo - This class exposes information about the current target.
+comment|/// \brief Exposes information about the current target.
 comment|///
 name|class
 name|TargetInfo
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|TargetInfo
@@ -210,6 +212,9 @@ name|protected
 operator|:
 comment|// Target values set by the ctor of the actual target implementation.  Default
 comment|// values are specified by the TargetInfo constructor.
+name|bool
+name|BigEndian
+block|;
 name|bool
 name|TLSSupported
 block|;
@@ -279,9 +284,17 @@ name|LongLongAlign
 block|;
 name|unsigned
 name|char
+name|SuitableAlign
+block|;
+name|unsigned
+name|char
 name|MaxAtomicPromoteWidth
 block|,
 name|MaxAtomicInlineWidth
+block|;
+name|unsigned
+name|short
+name|MaxVectorAlign
 block|;
 specifier|const
 name|char
@@ -348,6 +361,11 @@ name|RealTypeUsesObjCFPRet
 operator|:
 literal|3
 block|;
+name|unsigned
+name|ComplexLongDoubleUsesFP2Ret
+operator|:
+literal|1
+block|;
 comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
 argument_list|(
@@ -361,7 +379,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// CreateTargetInfo - Construct a target for the given options.
+comment|/// \brief Construct a target for the given options.
 comment|///
 comment|/// \param Opts - The options to use to initialize the target. The target may
 comment|/// modify the options to canonicalize the target feature information to match
@@ -421,6 +439,33 @@ block|,
 name|LongDouble
 block|}
 block|;
+comment|/// \brief The different kinds of __builtin_va_list types defined by
+comment|/// the target implementation.
+block|enum
+name|BuiltinVaListKind
+block|{
+comment|/// typedef char* __builtin_va_list;
+name|CharPtrBuiltinVaList
+operator|=
+literal|0
+block|,
+comment|/// typedef void* __builtin_va_list;
+name|VoidPtrBuiltinVaList
+block|,
+comment|/// __builtin_va_list as defined by the PNaCl ABI:
+comment|/// http://www.chromium.org/nativeclient/pnacl/bitcode-abi#TOC-Machine-Types
+name|PNaClABIBuiltinVaList
+block|,
+comment|/// __builtin_va_list as defined by the Power ABI:
+comment|/// https://www.power.org
+comment|///        /resources/downloads/Power-Arch-32-bit-ABI-supp-1.0-Embedded.pdf
+name|PowerABIBuiltinVaList
+block|,
+comment|/// __builtin_va_list as defined by the x86-64 ABI:
+comment|/// http://www.x86-64.org/documentation/abi.pdf
+name|X86_64ABIBuiltinVaList
+block|}
+block|;
 name|protected
 operator|:
 name|IntType
@@ -446,6 +491,15 @@ name|Int64Type
 block|,
 name|SigAtomicType
 block|;
+comment|/// \brief Whether Objective-C's built-in boolean type should be signed char.
+comment|///
+comment|/// Otherwise, when this flag is not set, the normal built-in boolean type is
+comment|/// used.
+name|unsigned
+name|UseSignedCharForObjCBool
+operator|:
+literal|1
+block|;
 comment|/// Control whether the alignment of bit-field types is respected when laying
 comment|/// out structures. If true, then the alignment of the bit-field type will be
 comment|/// used to (a) impact the alignment of the containing structure, and (b)
@@ -456,10 +510,12 @@ name|UseBitFieldTypeAlignment
 operator|:
 literal|1
 block|;
-comment|/// Control whether zero length bitfields (e.g., int : 0;) force alignment of
-comment|/// the next bitfield.  If the alignment of the zero length bitfield is
-comment|/// greater than the member that follows it, `bar', `bar' will be aligned as
-comment|/// the type of the zero-length bitfield.
+comment|/// \brief Whether zero length bitfields (e.g., int : 0;) force alignment of
+comment|/// the next bitfield.
+comment|///
+comment|/// If the alignment of the zero length bitfield is greater than the member
+comment|/// that follows it, `bar', `bar' will be aligned as the type of the
+comment|/// zero-length bitfield.
 name|unsigned
 name|UseZeroLengthBitfieldAlignment
 operator|:
@@ -582,8 +638,9 @@ return|return
 name|SigAtomicType
 return|;
 block|}
-comment|/// getTypeWidth - Return the width (in bits) of the specified integer type
-comment|/// enum. For example, SignedInt -> getIntWidth().
+comment|/// \brief Return the width (in bits) of the specified integer type enum.
+comment|///
+comment|/// For example, SignedInt -> getIntWidth().
 name|unsigned
 name|getTypeWidth
 argument_list|(
@@ -591,8 +648,9 @@ argument|IntType T
 argument_list|)
 specifier|const
 block|;
-comment|/// getTypeAlign - Return the alignment (in bits) of the specified integer
-comment|/// type enum. For example, SignedInt -> getIntAlign().
+comment|/// \brief Return the alignment (in bits) of the specified integer type enum.
+comment|///
+comment|/// For example, SignedInt -> getIntAlign().
 name|unsigned
 name|getTypeAlign
 argument_list|(
@@ -600,8 +658,7 @@ argument|IntType T
 argument_list|)
 specifier|const
 block|;
-comment|/// isTypeSigned - Return whether an integer types is signed. Returns true if
-comment|/// the type is signed; false otherwise.
+comment|/// \brief Returns true if the type is signed; false otherwise.
 specifier|static
 name|bool
 name|isTypeSigned
@@ -609,7 +666,7 @@ argument_list|(
 argument|IntType T
 argument_list|)
 block|;
-comment|/// getPointerWidth - Return the width of pointers on this target, for the
+comment|/// \brief Return the width of pointers on this target, for the
 comment|/// specified address space.
 name|uint64_t
 name|getPointerWidth
@@ -651,8 +708,7 @@ name|AddrSpace
 argument_list|)
 return|;
 block|}
-comment|/// getBoolWidth/Align - Return the size of '_Bool' and C++ 'bool' for this
-comment|/// target, in bits.
+comment|/// \brief Return the size of '_Bool' and C++ 'bool' for this target, in bits.
 name|unsigned
 name|getBoolWidth
 argument_list|()
@@ -662,6 +718,7 @@ return|return
 name|BoolWidth
 return|;
 block|}
+comment|/// \brief Return the alignment of '_Bool' and C++ 'bool' for this target.
 name|unsigned
 name|getBoolAlign
 argument_list|()
@@ -691,8 +748,8 @@ literal|8
 return|;
 block|}
 comment|// FIXME
-comment|/// getShortWidth/Align - Return the size of 'signed short' and
-comment|/// 'unsigned short' for this target, in bits.
+comment|/// \brief Return the size of 'signed short' and 'unsigned short' for this
+comment|/// target, in bits.
 name|unsigned
 name|getShortWidth
 argument_list|()
@@ -703,6 +760,8 @@ literal|16
 return|;
 block|}
 comment|// FIXME
+comment|/// \brief Return the alignment of 'signed short' and 'unsigned short' for
+comment|/// this target.
 name|unsigned
 name|getShortAlign
 argument_list|()
@@ -771,6 +830,17 @@ specifier|const
 block|{
 return|return
 name|LongLongAlign
+return|;
+block|}
+comment|/// \brief Return the alignment that is suitable for storing any
+comment|/// object with a fundamental alignment requirement.
+name|unsigned
+name|getSuitableAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuitableAlign
 return|;
 block|}
 comment|/// getWCharWidth/Align - Return the size of 'wchar_t' for this target, in
@@ -984,6 +1054,17 @@ operator|*
 name|LongDoubleFormat
 return|;
 block|}
+comment|/// \brief Return the value for the C99 FLT_EVAL_METHOD macro.
+name|virtual
+name|unsigned
+name|getFloatEvalMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|// getLargeArrayMinWidth/Align - Return the minimum array size that is
 comment|// 'large' and its alignment.
 name|unsigned
@@ -1004,8 +1085,8 @@ return|return
 name|LargeArrayAlign
 return|;
 block|}
-comment|/// getMaxAtomicPromoteWidth - Return the maximum width lock-free atomic
-comment|/// operation which will ever be supported for the given target
+comment|/// \brief Return the maximum width lock-free atomic operation which will
+comment|/// ever be supported for the given target
 name|unsigned
 name|getMaxAtomicPromoteWidth
 argument_list|()
@@ -1015,9 +1096,8 @@ return|return
 name|MaxAtomicPromoteWidth
 return|;
 block|}
-comment|/// getMaxAtomicInlineWidth - Return the maximum width lock-free atomic
-comment|/// operation which can be inlined given the supported features of the
-comment|/// given target.
+comment|/// \brief Return the maximum width lock-free atomic operation which can be
+comment|/// inlined given the supported features of the given target.
 name|unsigned
 name|getMaxAtomicInlineWidth
 argument_list|()
@@ -1027,8 +1107,17 @@ return|return
 name|MaxAtomicInlineWidth
 return|;
 block|}
-comment|/// getIntMaxTWidth - Return the size of intmax_t and uintmax_t for this
-comment|/// target, in bits.
+comment|/// \brief Return the maximum vector alignment supported for the given target.
+name|unsigned
+name|getMaxVectorAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxVectorAlign
+return|;
+block|}
+comment|/// \brief Return the size of intmax_t and uintmax_t for this target, in bits.
 name|unsigned
 name|getIntMaxTWidth
 argument_list|()
@@ -1041,7 +1130,7 @@ name|IntMaxType
 argument_list|)
 return|;
 block|}
-comment|/// getRegisterWidth - Return the "preferred" register width on this target.
+comment|/// \brief Return the "preferred" register width on this target.
 name|uint64_t
 name|getRegisterWidth
 argument_list|()
@@ -1054,10 +1143,10 @@ return|return
 name|LongWidth
 return|;
 block|}
-comment|/// getUserLabelPrefix - This returns the default value of the
-comment|/// __USER_LABEL_PREFIX__ macro, which is the prefix given to user symbols by
-comment|/// default.  On most platforms this is "_", but it is "" on some, and "." on
-comment|/// others.
+comment|/// \brief Returns the default value of the __USER_LABEL_PREFIX__ macro,
+comment|/// which is the prefix given to user symbols by default.
+comment|///
+comment|/// On most platforms this is "_", but it is "" on some, and "." on others.
 specifier|const
 name|char
 operator|*
@@ -1069,7 +1158,7 @@ return|return
 name|UserLabelPrefix
 return|;
 block|}
-comment|/// MCountName - This returns name of the mcount instrumentation function.
+comment|/// \brief Returns the name of the mcount instrumentation function.
 specifier|const
 name|char
 operator|*
@@ -1081,8 +1170,30 @@ return|return
 name|MCountName
 return|;
 block|}
-comment|/// useBitFieldTypeAlignment() - Check whether the alignment of bit-field
-comment|/// types is respected when laying out structures.
+comment|/// \brief Check if the Objective-C built-in boolean type should be signed
+comment|/// char.
+comment|///
+comment|/// Otherwise, if this returns false, the normal built-in boolean type
+comment|/// should also be used for Objective-C.
+name|bool
+name|useSignedCharForObjCBool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSignedCharForObjCBool
+return|;
+block|}
+name|void
+name|noSignedCharForObjCBool
+argument_list|()
+block|{
+name|UseSignedCharForObjCBool
+operator|=
+name|false
+block|;   }
+comment|/// \brief Check whether the alignment of bit-field types is respected
+comment|/// when laying out structures.
 name|bool
 name|useBitFieldTypeAlignment
 argument_list|()
@@ -1092,8 +1203,8 @@ return|return
 name|UseBitFieldTypeAlignment
 return|;
 block|}
-comment|/// useZeroLengthBitfieldAlignment() - Check whether zero length bitfields
-comment|/// should force alignment of the next member.
+comment|/// \brief Check whether zero length bitfields should force alignment of
+comment|/// the next member.
 name|bool
 name|useZeroLengthBitfieldAlignment
 argument_list|()
@@ -1103,8 +1214,8 @@ return|return
 name|UseZeroLengthBitfieldAlignment
 return|;
 block|}
-comment|/// getZeroLengthBitfieldBoundary() - Get the fixed alignment value in bits
-comment|/// for a member that follows a zero length bitfield.
+comment|/// \brief Get the fixed alignment value in bits for a member that follows
+comment|/// a zero length bitfield.
 name|unsigned
 name|getZeroLengthBitfieldBoundary
 argument_list|()
@@ -1114,8 +1225,7 @@ return|return
 name|ZeroLengthBitfieldBoundary
 return|;
 block|}
-comment|/// hasAlignMac68kSupport - Check whether this target support '#pragma options
-comment|/// align=mac68k'.
+comment|/// \brief Check whether this target support '\#pragma options align=mac68k'.
 name|bool
 name|hasAlignMac68kSupport
 argument_list|()
@@ -1125,7 +1235,8 @@ return|return
 name|HasAlignMac68kSupport
 return|;
 block|}
-comment|/// getTypeName - Return the user string for the specified integer type enum.
+comment|/// \brief Return the user string for the specified integer type enum.
+comment|///
 comment|/// For example, SignedShort -> "short".
 specifier|static
 specifier|const
@@ -1136,8 +1247,9 @@ argument_list|(
 argument|IntType T
 argument_list|)
 block|;
-comment|/// getTypeConstantSuffix - Return the constant suffix for the specified
-comment|/// integer type enum. For example, SignedLong -> "L".
+comment|/// \brief Return the constant suffix for the specified integer type enum.
+comment|///
+comment|/// For example, SignedLong -> "L".
 specifier|static
 specifier|const
 name|char
@@ -1148,7 +1260,7 @@ argument|IntType T
 argument_list|)
 block|;
 comment|/// \brief Check whether the given real type should use the "fpret" flavor of
-comment|/// Obj-C message passing on this target.
+comment|/// Objective-C message passing on this target.
 name|bool
 name|useObjCFPRetForRealType
 argument_list|(
@@ -1166,8 +1278,19 @@ name|T
 operator|)
 return|;
 block|}
+comment|/// \brief Check whether _Complex long double should use the "fp2ret" flavor
+comment|/// of Objective-C message passing on this target.
+name|bool
+name|useObjCFP2RetForComplexLongDouble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ComplexLongDoubleUsesFP2Ret
+return|;
+block|}
 comment|///===---- Other target property query methods --------------------------===//
-comment|/// getTargetDefines - Appends the target-specific #define values for this
+comment|/// \brief Appends the target-specific \#define values for this
 comment|/// target set to the specified buffer.
 name|virtual
 name|void
@@ -1181,7 +1304,7 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// getTargetBuiltins - Return information about target-specific builtins for
+comment|/// Return information about target-specific builtins for
 comment|/// the current primary target, and info about which builtins are non-portable
 comment|/// across the current set of primary and secondary targets.
 name|virtual
@@ -1196,21 +1319,35 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// getVAListDeclaration - Return the declaration to use for
-comment|/// __builtin_va_list, which is target-specific.
+comment|/// The __builtin_clz* and __builtin_ctz* built-in
+comment|/// functions are specified to have undefined results for zero inputs, but
+comment|/// on targets that support these operations in a way that provides
+comment|/// well-defined results for zero without loss of performance, it is a good
+comment|/// idea to avoid optimizing based on that undef behavior.
 name|virtual
+name|bool
+name|isCLZForZeroUndef
+argument_list|()
 specifier|const
-name|char
-operator|*
-name|getVAListDeclaration
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Returns the kind of __builtin_va_list type that should be used
+comment|/// with this target.
+name|virtual
+name|BuiltinVaListKind
+name|getBuiltinVaListKind
 argument_list|()
 specifier|const
 operator|=
 literal|0
 block|;
-comment|/// isValidClobber - Returns whether the passed in string is
-comment|/// a valid clobber in an inline asm statement. This is used by
-comment|/// Sema.
+comment|/// \brief Returns whether the passed in string is a valid clobber in an
+comment|/// inline asm statement.
+comment|///
+comment|/// This is used by Sema.
 name|bool
 name|isValidClobber
 argument_list|(
@@ -1218,9 +1355,10 @@ argument|StringRef Name
 argument_list|)
 specifier|const
 block|;
-comment|/// isValidGCCRegisterName - Returns whether the passed in string
-comment|/// is a valid register name according to GCC. This is used by Sema for
-comment|/// inline asm statements.
+comment|/// \brief Returns whether the passed in string is a valid register name
+comment|/// according to GCC.
+comment|///
+comment|/// This is used by Sema for inline asm statements.
 name|bool
 name|isValidGCCRegisterName
 argument_list|(
@@ -1228,8 +1366,9 @@ argument|StringRef Name
 argument_list|)
 specifier|const
 block|;
-comment|// getNormalizedGCCRegisterName - Returns the "normalized" GCC register name.
-comment|// For example, on x86 it will return "ax" when "eax" is passed in.
+comment|/// \brief Returns the "normalized" GCC register name.
+comment|///
+comment|/// For example, on x86 it will return "ax" when "eax" is passed in.
 name|StringRef
 name|getNormalizedGCCRegisterName
 argument_list|(
@@ -1385,7 +1524,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// hasMatchingInput - Return true if this output operand has a matching
+comment|/// \brief Return true if this output operand has a matching
 comment|/// (tied) input operand.
 name|bool
 name|hasMatchingInput
@@ -1402,9 +1541,11 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// hasTiedOperand() - Return true if this input operand is a matching
-comment|/// constraint that ties it to an output operand.  If this returns true,
-comment|/// then getTiedOperand will indicate which output operand this is tied to.
+comment|/// \brief Return true if this input operand is a matching
+comment|/// constraint that ties it to an output operand.
+comment|///
+comment|/// If this returns true then getTiedOperand will indicate which output
+comment|/// operand this is tied to.
 name|bool
 name|hasTiedOperand
 argument_list|()
@@ -1469,9 +1610,10 @@ name|Flags
 operator||=
 name|CI_HasMatchingInput
 block|; }
-comment|/// setTiedOperand - Indicate that this is an input operand that is tied to
-comment|/// the specified output operand.  Copy over the various constraint
-comment|/// information from the output.
+comment|/// \brief Indicate that this is an input operand that is tied to
+comment|/// the specified output operand.
+comment|///
+comment|/// Copy over the various constraint information from the output.
 name|void
 name|setTiedOperand
 argument_list|(
@@ -1574,7 +1716,7 @@ name|Constraint
 argument_list|)
 return|;
 block|}
-comment|// Returns a string of target-specific clobbers, in LLVM format.
+comment|/// \brief Returns a string of target-specific clobbers, in LLVM format.
 name|virtual
 specifier|const
 name|char
@@ -1585,7 +1727,7 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// getTriple - Return the target triple of the primary target.
+comment|/// \brief Returns the target triple of the primary target.
 specifier|const
 name|llvm
 operator|::
@@ -1645,6 +1787,26 @@ name|unsigned
 name|RegNum
 block|;   }
 block|;
+comment|/// \brief Does this target support "protected" visibility?
+comment|///
+comment|/// Any target which dynamic libraries will naturally support
+comment|/// something like "default" (meaning that the symbol is visible
+comment|/// outside this shared object) and "hidden" (meaning that it isn't)
+comment|/// visibilities, but "protected" is really an ELF-specific concept
+comment|/// with weird semantics designed around the convenience of dynamic
+comment|/// linker implementations.  Which is not to suggest that there's
+comment|/// consistent target-independent semantics for "default" visibility
+comment|/// either; the entire thing is pretty badly mangled.
+name|virtual
+name|bool
+name|hasProtectedVisibility
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|virtual
 name|bool
 name|useGlobalsForAutomaticVariables
@@ -1655,8 +1817,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getCFStringSection - Return the section to use for CFString
-comment|/// literals, or 0 if no special section is used.
+comment|/// \brief Return the section to use for CFString literals, or 0 if no
+comment|/// special section is used.
 name|virtual
 specifier|const
 name|char
@@ -1669,8 +1831,8 @@ return|return
 literal|"__DATA,__cfstring"
 return|;
 block|}
-comment|/// getNSStringSection - Return the section to use for NSString
-comment|/// literals, or 0 if no special section is used.
+comment|/// \brief Return the section to use for NSString literals, or 0 if no
+comment|/// special section is used.
 name|virtual
 specifier|const
 name|char
@@ -1683,8 +1845,8 @@ return|return
 literal|"__OBJC,__cstring_object,regular,no_dead_strip"
 return|;
 block|}
-comment|/// getNSStringNonFragileABISection - Return the section to use for
-comment|/// NSString literals, or 0 if no special section is used (NonFragile ABI).
+comment|/// \brief Return the section to use for NSString literals, or 0 if no
+comment|/// special section is used (NonFragile ABI).
 name|virtual
 specifier|const
 name|char
@@ -1697,10 +1859,11 @@ return|return
 literal|"__DATA, __objc_stringobj, regular, no_dead_strip"
 return|;
 block|}
-comment|/// isValidSectionSpecifier - This is an optional hook that targets can
-comment|/// implement to perform semantic checking on attribute((section("foo")))
-comment|/// specifiers.  In this case, "foo" is passed in to be checked.  If the
-comment|/// section specifier is invalid, the backend should return a non-empty string
+comment|/// \brief An optional hook that targets can implement to perform semantic
+comment|/// checking on attribute((section("foo"))) specifiers.
+comment|///
+comment|/// In this case, "foo" is passed in to be checked.  If the section
+comment|/// specifier is invalid, the backend should return a non-empty string
 comment|/// that indicates the problem.
 comment|///
 comment|/// This hook is a simple quality of implementation feature to catch errors
@@ -1721,7 +1884,8 @@ return|return
 literal|""
 return|;
 block|}
-comment|/// setForcedLangOptions - Set forced language options.
+comment|/// \brief Set forced language options.
+comment|///
 comment|/// Apply changes to the target information with respect to certain
 comment|/// language options which change the target configuration.
 name|virtual
@@ -1733,7 +1897,7 @@ operator|&
 name|Opts
 argument_list|)
 block|;
-comment|/// getDefaultFeatures - Get the default set of target features for the CPU;
+comment|/// \brief Get the default set of target features for the CPU;
 comment|/// this should include all legal feature strings on the target.
 name|virtual
 name|void
@@ -1743,7 +1907,7 @@ argument|llvm::StringMap<bool>&Features
 argument_list|)
 specifier|const
 block|{   }
-comment|/// getABI - Get the ABI in use.
+comment|/// \brief Get the ABI currently in use.
 name|virtual
 specifier|const
 name|char
@@ -1756,7 +1920,7 @@ return|return
 literal|""
 return|;
 block|}
-comment|/// getCXXABI - Get the C++ ABI in use.
+comment|/// \brief Get the C++ ABI currently in use.
 name|virtual
 name|TargetCXXABI
 name|getCXXABI
@@ -1767,9 +1931,9 @@ return|return
 name|CXXABI
 return|;
 block|}
-comment|/// setCPU - Target the specific CPU.
+comment|/// \brief Target the specified CPU.
 comment|///
-comment|/// \return - False on error (invalid CPU name).
+comment|/// \return  False on error (invalid CPU name).
 name|virtual
 name|bool
 name|setCPU
@@ -1781,9 +1945,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// setABI - Use the specific ABI.
+comment|/// \brief Use the specified ABI.
 comment|///
-comment|/// \return - False on error (invalid ABI name).
+comment|/// \return False on error (invalid ABI name).
 name|virtual
 name|bool
 name|setABI
@@ -1795,9 +1959,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// setCXXABI - Use this specific C++ ABI.
+comment|/// \brief Use this specified C++ ABI.
 comment|///
-comment|/// \return - False on error (invalid C++ ABI name).
+comment|/// \return False on error (invalid C++ ABI name).
 name|bool
 name|setCXXABI
 argument_list|(
@@ -1873,9 +2037,9 @@ name|ABI
 argument_list|)
 return|;
 block|}
-comment|/// setCXXABI - Set the C++ ABI to be used by this implementation.
+comment|/// \brief Set the C++ ABI to be used by this implementation.
 comment|///
-comment|/// \return - False on error (ABI not valid on this target)
+comment|/// \return False on error (ABI not valid on this target)
 name|virtual
 name|bool
 name|setCXXABI
@@ -1892,10 +2056,10 @@ return|return
 name|true
 return|;
 block|}
-comment|/// setFeatureEnabled - Enable or disable a specific target feature,
+comment|/// \brief Enable or disable a specific target feature;
 comment|/// the feature name must be valid.
 comment|///
-comment|/// \return - False on error (invalid feature name).
+comment|/// \return False on error (invalid feature name).
 name|virtual
 name|bool
 name|setFeatureEnabled
@@ -1909,11 +2073,7 @@ operator|>
 operator|&
 name|Features
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Name
 argument_list|,
 name|bool
@@ -1925,9 +2085,10 @@ return|return
 name|false
 return|;
 block|}
-comment|/// HandleTargetOptions - Perform initialization based on the user configured
-comment|/// set of features (e.g., +sse4). The list is guaranteed to have at most one
-comment|/// entry per feature.
+comment|/// \brief Perform initialization based on the user configured
+comment|/// set of features (e.g., +sse4).
+comment|///
+comment|/// The list is guaranteed to have at most one entry per feature.
 comment|///
 comment|/// The target may modify the features list, to change which options are
 comment|/// passed onwards to the backend.
@@ -1947,7 +2108,21 @@ operator|&
 name|Features
 argument_list|)
 block|{   }
-comment|// getRegParmMax - Returns maximal number of args passed in registers.
+comment|/// \brief Determine whether the given target has the given feature.
+name|virtual
+name|bool
+name|hasFeature
+argument_list|(
+name|StringRef
+name|Feature
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// \brief Returns maximal number of args passed in registers.
 name|unsigned
 name|getRegParmMax
 argument_list|()
@@ -1966,7 +2141,7 @@ return|return
 name|RegParmMax
 return|;
 block|}
-comment|/// isTLSSupported - Whether the target supports thread-local storage.
+comment|/// \brief Whether the target supports thread-local storage.
 name|bool
 name|isTLSSupported
 argument_list|()
@@ -1976,8 +2151,9 @@ return|return
 name|TLSSupported
 return|;
 block|}
-comment|/// hasNoAsmVariants - Return true if {|} are normal characters in the
-comment|/// asm string.  If this returns false (the default), then {abc|xyz} is syntax
+comment|/// \brief Return true if {|} are normal characters in the asm string.
+comment|///
+comment|/// If this returns false (the default), then {abc|xyz} is syntax
 comment|/// that says that when compiling for asm variant #0, "abc" should be
 comment|/// generated, but when compiling for asm variant #1, "xyz" should be
 comment|/// generated.
@@ -1990,8 +2166,8 @@ return|return
 name|NoAsmVariants
 return|;
 block|}
-comment|/// getEHDataRegisterNumber - Return the register number that
-comment|/// __builtin_eh_return_regno would return with the specified argument.
+comment|/// \brief Return the register number that __builtin_eh_return_regno would
+comment|/// return with the specified argument.
 name|virtual
 name|int
 name|getEHDataRegisterNumber
@@ -2006,8 +2182,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// getStaticInitSectionSpecifier - Return the section to use for C++ static
-comment|/// initialization functions.
+comment|/// \brief Return the section to use for C++ static initialization functions.
 name|virtual
 specifier|const
 name|char
@@ -2054,6 +2229,15 @@ specifier|const
 block|{
 return|return
 name|PlatformMinVersion
+return|;
+block|}
+name|bool
+name|isBigEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BigEndian
 return|;
 block|}
 name|protected

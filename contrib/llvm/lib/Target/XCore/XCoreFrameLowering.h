@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- XCoreFrameLowering.h - Frame info for XCore Target -------*- C++ -*-==//
+comment|//===-- XCoreFrameLowering.h - Frame info for XCore Target ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -88,11 +88,6 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
-specifier|const
-name|XCoreSubtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|XCoreFrameLowering
@@ -160,13 +155,6 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

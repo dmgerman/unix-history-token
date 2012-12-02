@@ -92,6 +92,9 @@ decl_stmt|;
 name|class
 name|VarDecl
 decl_stmt|;
+name|class
+name|FunctionDecl
+decl_stmt|;
 comment|/// ASTConsumer - This is an abstract interface that should be implemented by
 comment|/// clients that read ASTs.  This abstraction layer allows the client to be
 comment|/// independent of the AST producer (e.g. parser vs AST dump file reader, etc).
@@ -135,8 +138,10 @@ comment|/// HandleTopLevelDecl - Handle the specified top-level declaration.  Th
 comment|/// called by the parser to process every top-level Decl*. Note that D can be
 comment|/// the head of a chain of Decls (e.g. for `int a, b` the chain will have two
 comment|/// elements). Use Decl::getNextDeclarator() to walk the chain.
+comment|///
+comment|/// \returns true to continue parsing, or false to abort parsing.
 name|virtual
-name|void
+name|bool
 name|HandleTopLevelDecl
 argument_list|(
 argument|DeclGroupRef D
@@ -177,6 +182,30 @@ modifier|*
 name|D
 parameter_list|)
 block|{}
+comment|/// \brief Invoked when a function is implicitly instantiated.
+comment|/// Note that at this point point it does not have a body, its body is
+comment|/// instantiated at the end of the translation unit and passed to
+comment|/// HandleTopLevelDecl.
+name|virtual
+name|void
+name|HandleCXXImplicitFunctionInstantiation
+parameter_list|(
+name|FunctionDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief Handle the specified top-level declaration that occurred inside
+comment|/// and ObjC container.
+comment|/// The default implementation ignored them.
+name|virtual
+name|void
+name|HandleTopLevelDeclInObjCContainer
+parameter_list|(
+name|DeclGroupRef
+name|D
+parameter_list|)
+function_decl|;
 comment|/// CompleteTentativeDefinition - Callback invoked at the end of a translation
 comment|/// unit to notify the consumer that the given tentative definition should be
 comment|/// completed.
@@ -189,6 +218,17 @@ comment|/// modified by the introduction of an implicit zero initializer.
 name|virtual
 name|void
 name|CompleteTentativeDefinition
+parameter_list|(
+name|VarDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// HandleCXXStaticMemberVarInstantiation - Tell the consumer that this
+comment|// variable has been instantiated.
+name|virtual
+name|void
+name|HandleCXXStaticMemberVarInstantiation
 parameter_list|(
 name|VarDecl
 modifier|*

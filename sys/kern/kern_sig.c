@@ -988,6 +988,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sugid_coredump"
+argument_list|,
+operator|&
+name|sugid_coredump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern
@@ -1004,6 +1015,45 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Allow setuid and setgid processes to dump core"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|capmode_coredump
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.capmode_coredump"
+argument_list|,
+operator|&
+name|capmode_coredump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|capmode_coredump
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|capmode_coredump
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow processes in capability mode to dump core"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1535,7 +1585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a signal's ksiginfo.  * Return:  * 	0	-	signal not found  *	others	-	signal number  */
+comment|/*  * Get a signal's ksiginfo.  * Return:  *	0	-	signal not found  *	others	-	signal number  */
 end_comment
 
 begin_function
@@ -7464,7 +7514,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * Suspend calling thread until signal, providing mask to be set in the  * meantime.   */
+comment|/*  * Suspend calling thread until signal, providing mask to be set in the  * meantime.  */
 end_comment
 
 begin_ifndef
@@ -8436,10 +8486,15 @@ modifier|*
 name|pgrp
 decl_stmt|;
 name|int
-name|nfound
-init|=
-literal|0
+name|err
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|ESRCH
+expr_stmt|;
 if|if
 condition|(
 name|all
@@ -8496,8 +8551,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|p_cansignal
 argument_list|(
 name|td
@@ -8506,13 +8561,14 @@ name|p
 argument_list|,
 name|sig
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
 condition|)
 block|{
-name|nfound
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -8526,7 +8582,22 @@ argument_list|,
 name|ksi
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|err
+expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+name|ESRCH
+condition|)
+name|ret
+operator|=
+name|err
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -8647,8 +8718,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|p_cansignal
 argument_list|(
 name|td
@@ -8657,13 +8728,14 @@ name|p
 argument_list|,
 name|sig
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
 condition|)
 block|{
-name|nfound
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -8677,7 +8749,22 @@ argument_list|,
 name|ksi
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|err
+expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+name|ESRCH
+condition|)
+name|ret
+operator|=
+name|err
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -8692,11 +8779,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|nfound
-condition|?
-literal|0
-else|:
-name|ESRCH
+name|ret
 operator|)
 return|;
 block|}
@@ -8757,6 +8840,29 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * A process in capability mode can send signals only to himself. 	 * The main rationale behind this is that abort(3) is implemented as 	 * kill(getpid(), SIGABRT). 	 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+name|uap
+operator|->
+name|pid
+operator|!=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+condition|)
+return|return
+operator|(
+name|ECAPMODE
+operator|)
+return|;
 name|AUDIT_ARG_SIGNUM
 argument_list|(
 name|uap
@@ -10239,7 +10345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  *   * NB: This function may be entered from the debugger via the "kill" DDB  * command.  There is little that can be done to mitigate the possibly messy  * side effects of this unwise possibility.  */
+comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  *  * NB: This function may be entered from the debugger via the "kill" DDB  * command.  There is little that can be done to mitigate the possibly messy  * side effects of this unwise possibility.  */
 end_comment
 
 begin_function
@@ -11083,6 +11189,22 @@ name|p
 argument_list|)
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+argument_list|,
+operator|(
+literal|"signal to stopped but exiting process"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -11415,7 +11537,11 @@ name|p
 operator|->
 name|p_flag
 operator|&
+operator|(
 name|P_PPWAIT
+operator||
+name|P_WEXIT
+operator|)
 condition|)
 goto|goto
 name|out
@@ -12024,6 +12150,22 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+argument_list|,
+operator|(
+literal|"Stopping exiting process"
+operator|)
+argument_list|)
+expr_stmt|;
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
@@ -12173,6 +12315,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_xthread
+operator|==
+name|td
+condition|)
+name|p
+operator|->
+name|p_xthread
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 operator|!
 operator|(
 name|p
@@ -12182,9 +12338,7 @@ operator|&
 name|P_TRACED
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 name|td
@@ -12823,7 +12977,7 @@ operator|!=
 name|newsig
 condition|)
 block|{
-comment|/* 				 * If parent wants us to take the signal, 				 * then it will leave it in p->p_xstat; 				 * otherwise we just look for signals again. 			 	*/
+comment|/* 				 * If parent wants us to take the signal, 				 * then it will leave it in p->p_xstat; 				 * otherwise we just look for signals again. 				*/
 if|if
 condition|(
 name|newsig
@@ -12835,7 +12989,7 @@ name|sig
 operator|=
 name|newsig
 expr_stmt|;
-comment|/* 				 * Put the new signal into td_sigqueue. If the 				 * signal is being masked, look for other signals. 				 */
+comment|/* 				 * Put the new signal into td_sigqueue. If the 				 * signal is being masked, look for other 				 * signals. 				 */
 name|sigqueue_add
 argument_list|(
 name|queue
@@ -13029,7 +13183,11 @@ name|p
 operator|->
 name|p_flag
 operator|&
+operator|(
 name|P_TRACED
+operator||
+name|P_WEXIT
+operator|)
 operator|||
 operator|(
 name|p
@@ -14632,6 +14790,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_STR
+argument_list|(
+literal|"kern.corefile"
+argument_list|,
+name|corefilename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|corefilename
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
 name|_kern
@@ -15117,8 +15290,18 @@ operator||
 name|S_IWGRP
 decl_stmt|;
 name|int
-name|vfslocked
+name|oflags
+init|=
+literal|0
 decl_stmt|;
+if|if
+condition|(
+name|capmode_coredump
+condition|)
+name|oflags
+operator|=
+name|VN_OPEN_NOCAPCHECK
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -15150,8 +15333,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -15162,7 +15343,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vn_open
+name|vn_open_cred
 argument_list|(
 operator|&
 name|nd
@@ -15171,6 +15352,12 @@ operator|&
 name|flags
 argument_list|,
 name|cmode
+argument_list|,
+name|oflags
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|NULL
 argument_list|)
@@ -15186,9 +15373,7 @@ name|error
 operator|==
 name|EEXIST
 condition|)
-block|{
 continue|continue;
-block|}
 name|log
 argument_list|(
 name|LOG_ERR
@@ -15220,14 +15405,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -15260,11 +15437,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 if|if
@@ -15388,9 +15560,6 @@ decl_stmt|;
 comment|/* name of corefile */
 name|off_t
 name|limit
-decl_stmt|;
-name|int
-name|vfslocked
 decl_stmt|;
 name|int
 name|compress
@@ -15629,8 +15798,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -15662,6 +15829,14 @@ operator||
 name|S_IWUSR
 argument_list|,
 name|VN_OPEN_NOAUDIT
+operator||
+operator|(
+name|capmode_coredump
+condition|?
+name|VN_OPEN_NOCAPCHECK
+else|:
+literal|0
+operator|)
 argument_list|,
 name|cred
 argument_list|,
@@ -15700,14 +15875,6 @@ name|error
 operator|)
 return|;
 block|}
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -15904,11 +16071,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 goto|goto
 name|restart
 goto|;
@@ -15982,14 +16144,19 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|p
 operator|->
 name|p_sysent
 operator|->
 name|sv_coredump
-condition|?
+operator|!=
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
 name|p
 operator|->
 name|p_sysent
@@ -16008,9 +16175,15 @@ name|IMGACT_CORE_COMPRESS
 else|:
 literal|0
 argument_list|)
-else|:
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
 name|ENOSYS
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|locked
@@ -16088,11 +16261,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -16164,9 +16332,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|kern_psignal
+name|tdsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGSYS
 argument_list|)
@@ -16491,7 +16659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * signal knotes are shared with proc knotes, so we apply a mask to   * the hint in order to differentiate them from process hints.  This  * could be avoided by using a signal-specific knote list, but probably  * isn't worth the trouble.  */
+comment|/*  * signal knotes are shared with proc knotes, so we apply a mask to  * the hint in order to differentiate them from process hints.  This  * could be avoided by using a signal-specific knote list, but probably  * isn't worth the trouble.  */
 end_comment
 
 begin_function

@@ -73,14 +73,140 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CAMDEBUG
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_DEBUG_FLAGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_FLAGS
+value|CAM_DEBUG_NONE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_DEBUG_COMPILE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAMDEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_COMPILE
+value|(-1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_COMPILE
+value|(CAM_DEBUG_INFO | CAM_DEBUG_CDB | \ 				 CAM_DEBUG_PERIPH | CAM_DEBUG_PROBE | \ 				 CAM_DEBUG_FLAGS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_DEBUG_BUS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_BUS
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_DEBUG_TARGET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_TARGET
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_DEBUG_LUN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_LUN
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CAM_DEBUG_DELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CAM_DEBUG_DELAY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Path we want to debug */
@@ -131,7 +257,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|((cam_dflags& (flag))				\&& (cam_dpath != NULL)				\&& (xpt_path_comp(cam_dpath, path)>= 0)	\&& (xpt_path_comp(cam_dpath, path)< 2))
+value|(((flag)& (CAM_DEBUG_COMPILE)& cam_dflags)	\&& (cam_dpath != NULL)				\&& (xpt_path_comp(cam_dpath, path)>= 0)	\&& (xpt_path_comp(cam_dpath, path)< 2))
 end_define
 
 begin_define
@@ -146,7 +272,7 @@ parameter_list|,
 name|printfargs
 parameter_list|)
 define|\
-value|if ((cam_dflags& (flag))			\&& (cam_dpath != NULL)				\&& (xpt_path_comp(cam_dpath, path)>= 0)	\&& (xpt_path_comp(cam_dpath, path)< 2)) {	\ 		xpt_print_path(path);			\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
+value|if (((flag)& (CAM_DEBUG_COMPILE)& cam_dflags)	\&& (cam_dpath != NULL)				\&& (xpt_path_comp(cam_dpath, path)>= 0)	\&& (xpt_path_comp(cam_dpath, path)< 2)) {	\ 		xpt_print_path(path);			\ 		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
 end_define
 
 begin_define
@@ -159,7 +285,7 @@ parameter_list|,
 name|printfargs
 parameter_list|)
 define|\
-value|if (cam_dflags& (flag)) {			\ 		printf("cam_debug: ");			\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
+value|if (((flag)& (CAM_DEBUG_COMPILE)& cam_dflags)) {	\ 		printf("cam_debug: ");			\ 		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
 end_define
 
 begin_define
@@ -174,7 +300,7 @@ parameter_list|,
 name|printfargs
 parameter_list|)
 define|\
-value|if (cam_dflags& (flag)) {			\ 		xpt_print(path, "cam_debug: ");		\  		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
+value|if (((flag)& (CAM_DEBUG_COMPILE)& cam_dflags)) {	\ 		xpt_print(path, "cam_debug: ");		\ 		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
 end_define
 
 begin_else
@@ -183,7 +309,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !CAMDEBUG || !_KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_define
@@ -241,7 +367,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CAMDEBUG&& _KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

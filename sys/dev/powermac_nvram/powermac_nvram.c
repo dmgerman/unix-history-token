@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -446,14 +452,13 @@ argument_list|)
 operator|!=
 literal|0
 operator|&&
-name|strcmp
+operator|!
+name|ofw_bus_is_compatible
 argument_list|(
-name|compatible
+name|dev
 argument_list|,
 literal|"nvram,flash"
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 name|ENXIO

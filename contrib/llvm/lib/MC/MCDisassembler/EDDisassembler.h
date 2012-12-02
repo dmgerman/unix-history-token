@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -141,10 +147,13 @@ name|class
 name|MCDisassembler
 decl_stmt|;
 name|class
+name|MCInst
+decl_stmt|;
+name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
-name|MCInst
+name|MCInstrInfo
 decl_stmt|;
 name|class
 name|MCParsedAsmOperand
@@ -242,12 +251,10 @@ struct|struct
 name|CPUKey
 block|{
 comment|/// The architecture type
-name|llvm
+name|std
 operator|::
+name|string
 name|Triple
-operator|::
-name|ArchType
-name|Arch
 expr_stmt|;
 comment|/// The assembly syntax
 name|AssemblySyntax
@@ -267,11 +274,11 @@ specifier|const
 block|{
 return|return
 operator|(
-name|Arch
+name|Triple
 operator|==
 name|key
 operator|.
-name|Arch
+name|Triple
 operator|&&
 name|Syntax
 operator|==
@@ -296,20 +303,20 @@ block|{
 return|return
 operator|(
 operator|(
-name|Arch
+name|Triple
 operator|<
 name|key
 operator|.
-name|Arch
+name|Triple
 operator|)
 operator|||
 operator|(
 operator|(
-name|Arch
+name|Triple
 operator|==
 name|key
 operator|.
-name|Arch
+name|Triple
 operator|)
 operator|&&
 name|Syntax
@@ -337,11 +344,6 @@ operator|*
 operator|>
 name|DisassemblerMap_t
 expr_stmt|;
-comment|/// True if the disassembler registry has been initialized; false if not
-specifier|static
-name|bool
-name|sInitialized
-decl_stmt|;
 comment|/// A map from disassembler specifications to disassemblers.  Populated
 comment|///   lazily.
 specifier|static
@@ -388,12 +390,6 @@ name|AssemblySyntax
 name|syntax
 argument_list|)
 decl_stmt|;
-comment|/// initialize - Initializes the disassembler registry and the LLVM backend
-specifier|static
-name|void
-name|initialize
-parameter_list|()
-function_decl|;
 comment|////////////////////////
 comment|// Per-object members //
 comment|////////////////////////
@@ -412,9 +408,13 @@ name|raw_ostream
 operator|&
 name|ErrorStream
 expr_stmt|;
-comment|/// The architecture/syntax pair for the current architecture
+comment|/// The triple/syntax pair for the current architecture
 name|CPUKey
 name|Key
+decl_stmt|;
+comment|/// The Triple fur the current architecture
+name|Triple
+name|TgtTriple
 decl_stmt|;
 comment|/// The LLVM target corresponding to the disassembler
 specifier|const
@@ -447,6 +447,18 @@ operator|::
 name|MCSubtargetInfo
 operator|>
 name|STI
+expr_stmt|;
+comment|// The instruction information for the target architecture.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCInstrInfo
+operator|>
+name|MII
 expr_stmt|;
 comment|// The register information for the target architecture.
 name|llvm

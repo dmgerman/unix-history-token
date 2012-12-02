@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2006 Sam Leffler, Errno Consulting  * All rights re
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2005, Intel Corporation.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Intel Corporation nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE. */
+comment|/*-  * Copyright (c) 2001-2005, Intel Corporation.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Intel Corporation nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE. */
 end_comment
 
 begin_include
@@ -931,7 +931,7 @@ operator|=
 name|IX_QMGR_Q_PRIORITY_0
 expr_stmt|;
 comment|/* default priority */
-comment|/*  	     * There are two interrupt registers, 32 bits each. One 	     * for the lower queues(0-31) and one for the upper 	     * queues(32-63). Therefore need to mod by 32 i.e the 	     * min upper queue identifier. 	     */
+comment|/* 	     * There are two interrupt registers, 32 bits each. One 	     * for the lower queues(0-31) and one for the upper 	     * queues(32-63). Therefore need to mod by 32 i.e the 	     * min upper queue identifier. 	     */
 name|qi
 operator|->
 name|intRegCheckMask
@@ -1592,7 +1592,7 @@ decl_stmt|;
 name|int
 name|qPtrs
 decl_stmt|;
-comment|/* 		 * Read the status twice because the status may  		 * not be immediately ready after the write operation 		 */
+comment|/* 		 * Read the status twice because the status may 		 * not be immediately ready after the write operation 		 */
 if|if
 condition|(
 operator|(
@@ -1720,7 +1720,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * The queue may be full at the time of the  		     * snapshot. Next access will check  		     * the overflow status again. 		     */
+comment|/* 		     * The queue may be full at the time of the 		     * snapshot. Next access will check 		     * the overflow status again. 		     */
 name|qi
 operator|->
 name|qWriteCount
@@ -1801,7 +1801,7 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reset the current read count : next access to the read function  	 * will force a underflow status check. 	 */
+comment|/* 	 * Reset the current read count : next access to the read function 	 * will force a underflow status check. 	 */
 name|qi
 operator|->
 name|qReadCount
@@ -1963,7 +1963,7 @@ name|p
 operator|=
 name|entry
 expr_stmt|;
-comment|/* 	 * Reset the current read count : next access to the read function  	 * will force a underflow status check. 	 */
+comment|/* 	 * Reset the current read count : next access to the read function 	 * will force a underflow status check. 	 */
 name|qi
 operator|->
 name|qReadCount
@@ -2891,7 +2891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Count the number of leading zero bits in a word,  * and return the same value than the CLZ instruction.  * Note this is similar to the standard ffs function but  * it counts zero's from the MSB instead of the LSB.  *  * word (in)    return value (out)  * 0x80000000   0  * 0x40000000   1  * ,,,          ,,,  * 0x00000002   30  * 0x00000001   31  * 0x00000000   32  *  * The C version of this function is used as a replacement   * for system not providing the equivalent of the CLZ   * assembly language instruction.  *  * Note that this version is big-endian  */
+comment|/*  * Count the number of leading zero bits in a word,  * and return the same value than the CLZ instruction.  * Note this is similar to the standard ffs function but  * it counts zero's from the MSB instead of the LSB.  *  * word (in)    return value (out)  * 0x80000000   0  * 0x40000000   1  * ,,,          ,,,  * 0x00000002   30  * 0x00000001   31  * 0x00000000   32  *  * The C version of this function is used as a replacement  * for system not providing the equivalent of the CLZ  * assembly language instruction.  *  * Note that this version is big-endian  */
 end_comment
 
 begin_function
@@ -3204,7 +3204,7 @@ comment|/*  * Generate the parameters used to check if a Q's status matches  * t
 end_comment
 
 begin_comment
-unit|static void aqm_calc_statuscheck(int qId, IxQMgrSourceId srcSel) { 	struct qmgrInfo *qi =&qinfo[qId]; 	uint32_t shiftVal;         	if (qId< IX_QMGR_MIN_QUEUPP_QID) { 	    switch (srcSel) { 	    case IX_QMGR_Q_SOURCE_ID_E: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_E_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_E_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NE: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_NE_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_NE_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NF: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_NF_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_NF_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_F: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_F_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_F_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_E: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_E_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_NE: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_NE_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_NF: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_NF_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_F: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_F_BIT_MASK; 		break; 	    default:
+unit|static void aqm_calc_statuscheck(int qId, IxQMgrSourceId srcSel) { 	struct qmgrInfo *qi =&qinfo[qId]; 	uint32_t shiftVal;  	if (qId< IX_QMGR_MIN_QUEUPP_QID) { 	    switch (srcSel) { 	    case IX_QMGR_Q_SOURCE_ID_E: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_E_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_E_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NE: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_NE_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_NE_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NF: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_NF_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_NF_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_F: 		qi->statusCheckValue = IX_QMGR_Q_STATUS_F_BIT_MASK; 		qi->statusMask = IX_QMGR_Q_STATUS_F_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_E: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_E_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_NE: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_NE_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_NF: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_NF_BIT_MASK; 		break; 	    case IX_QMGR_Q_SOURCE_ID_NOT_F: 		qi->statusCheckValue = 0; 		qi->statusMask = IX_QMGR_Q_STATUS_F_BIT_MASK; 		break; 	    default:
 comment|/* Should never hit */
 end_comment
 
@@ -3214,7 +3214,7 @@ comment|/* One nibble of status per queue so need to shift the 	     * check val
 end_comment
 
 begin_comment
-unit|shiftVal = (qId % IX_QMGR_QUELOWSTAT_NUM_QUE_PER_WORD) *  		IX_QMGR_QUELOWSTAT_BITS_PER_Q;
+unit|shiftVal = (qId % IX_QMGR_QUELOWSTAT_NUM_QUE_PER_WORD) * 		IX_QMGR_QUELOWSTAT_BITS_PER_Q;
 comment|/* Calculate the which status word to check from the qId, 	     * 8 Qs status per word 	     */
 end_comment
 

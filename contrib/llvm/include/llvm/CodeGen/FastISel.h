@@ -85,6 +85,9 @@ name|class
 name|AllocaInst
 decl_stmt|;
 name|class
+name|Constant
+decl_stmt|;
+name|class
 name|ConstantFP
 decl_stmt|;
 name|class
@@ -92,6 +95,9 @@ name|FunctionLoweringInfo
 decl_stmt|;
 name|class
 name|Instruction
+decl_stmt|;
+name|class
+name|LoadInst
 decl_stmt|;
 name|class
 name|MachineBasicBlock
@@ -118,6 +124,9 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -130,7 +139,10 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
-name|LoadInst
+name|User
+decl_stmt|;
+name|class
+name|Value
 decl_stmt|;
 comment|/// FastISel - This is a fast-path instruction selection class that
 comment|/// generates poor code and doesn't support illegal types or non-trivial
@@ -193,6 +205,11 @@ specifier|const
 name|TargetRegisterInfo
 modifier|&
 name|TRI
+decl_stmt|;
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|LibInfo
 decl_stmt|;
 comment|/// The position of the last instruction for materializing constants
 comment|/// for use in the current block. It resets to EmitStartPt when it
@@ -401,6 +418,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 comment|/// TargetSelectInstruction - This method is called by target-independent
@@ -851,6 +873,39 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
+comment|/// FastEmitInst_rrii - Emit a MachineInstr with two register operands,
+comment|/// two immediates operands, and a result register in the given register
+comment|/// class.
+name|unsigned
+name|FastEmitInst_rrii
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
+parameter_list|,
+name|uint64_t
+name|Imm1
+parameter_list|,
+name|uint64_t
+name|Imm2
+parameter_list|)
+function_decl|;
 comment|/// FastEmitInst_i - Emit a MachineInstr with a single immediate
 comment|/// operand, and a result register in the given register class.
 name|unsigned
@@ -1077,6 +1132,15 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
+name|bool
+name|SelectInsertValue
+parameter_list|(
+specifier|const
+name|User
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
 comment|/// HandlePHINodesInSuccessorBlocks - Handle PHI nodes in successor blocks.
 comment|/// Emit code to ensure constants are copied into registers when needed.
 comment|/// Remember the virtual registers that need to be added to the Machine PHI
@@ -1124,6 +1188,21 @@ operator|*
 name|V
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// removeDeadCode - Remove all dead instructions between the I and E.
+name|void
+name|removeDeadCode
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|E
+argument_list|)
 decl_stmt|;
 block|}
 empty_stmt|;

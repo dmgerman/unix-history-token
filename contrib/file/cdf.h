@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2008 Christos Zoulas  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * Info from: http://sc.openoffice.org/compdocfileformat.pdf   */
+comment|/*  * Parse Composite Document Files, the format used in Microsoft Office  * document files before they switched to zipped XML.  * Info from: http://sc.openoffice.org/compdocfileformat.pdf  *  * N.B. This is the "Composite Document File" format, and not the  * "Compound Document Format", nor the "Channel Definition Format".  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,62 @@ define|#
 directive|define
 name|_H_CDF_
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<winsock2.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|timespec
+value|timeval
+end_define
+
+begin_define
+define|#
+directive|define
+name|tv_nsec
+value|tv_usec
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DJGPP__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|timespec
+value|timeval
+end_define
+
+begin_define
+define|#
+directive|define
+name|tv_nsec
+value|tv_usec
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -153,7 +209,7 @@ name|CDF_SEC_SIZE
 parameter_list|(
 name|h
 parameter_list|)
-value|(1<< (h)->h_sec_size_p2)
+value|((size_t)(1<< (h)->h_sec_size_p2))
 end_define
 
 begin_define
@@ -175,7 +231,7 @@ name|CDF_SHORT_SEC_SIZE
 parameter_list|(
 name|h
 parameter_list|)
-value|(1<< (h)->h_short_sec_size_p2)
+value|((size_t)(1<< (h)->h_short_sec_size_p2))
 end_define
 
 begin_define
@@ -499,6 +555,12 @@ decl_stmt|;
 name|cdf_timestamp_t
 name|_pi_tp
 decl_stmt|;
+name|float
+name|_pi_f
+decl_stmt|;
+name|double
+name|_pi_d
+decl_stmt|;
 struct|struct
 block|{
 name|uint32_t
@@ -539,6 +601,14 @@ define|#
 directive|define
 name|pi_s16
 value|pi_val._pi_s16
+define|#
+directive|define
+name|pi_f
+value|pi_val._pi_f
+define|#
+directive|define
+name|pi_d
+value|pi_val._pi_d
 define|#
 directive|define
 name|pi_tp
@@ -1406,6 +1476,10 @@ specifier|const
 name|cdf_stream_t
 modifier|*
 parameter_list|,
+specifier|const
+name|cdf_header_t
+modifier|*
+parameter_list|,
 name|uint32_t
 parameter_list|,
 name|cdf_property_info_t
@@ -1461,6 +1535,10 @@ name|cdf_unpack_summary_info
 parameter_list|(
 specifier|const
 name|cdf_stream_t
+modifier|*
+parameter_list|,
+specifier|const
+name|cdf_header_t
 modifier|*
 parameter_list|,
 name|cdf_summary_info_header_t
@@ -1543,6 +1621,18 @@ name|uint64_t
 name|cdf_tole8
 parameter_list|(
 name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|cdf_ctime
+parameter_list|(
+specifier|const
+name|time_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

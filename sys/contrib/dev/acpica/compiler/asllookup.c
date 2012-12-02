@@ -951,20 +951,11 @@ break|break;
 case|case
 name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
 case|:
-if|if
-condition|(
-name|Node
-operator|->
-name|Flags
-operator|&
-literal|0x80
-condition|)
-block|{
 name|FlPrintFile
 argument_list|(
 name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
-literal|"   [Field Offset    0x%.4X Bits 0x%.4X Bytes]"
+literal|"   [Field Offset    0x%.4X Bits 0x%.4X Bytes] "
 argument_list|,
 name|Node
 operator|->
@@ -977,6 +968,22 @@ operator|/
 literal|8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Node
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_IS_REFERENCED
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_NAMESPACE_OUTPUT
+argument_list|,
+literal|"Referenced"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -984,11 +991,7 @@ name|FlPrintFile
 argument_list|(
 name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
-literal|"   [Field Offset    0x%.4X Bytes]"
-argument_list|,
-name|Node
-operator|->
-name|Value
+literal|"Name not referenced"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1140,7 +1143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsDisplayNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Walk the namespace an display information about each node  *              in the tree.  Information is written to the optional  *              namespace output file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsDisplayNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Walk the namespace an display information about each node  *              in the tree. Information is written to the optional  *              namespace output file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1680,7 +1683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LkCrossReferenceNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Perform a cross reference check of the parse tree against the  *              namespace.  Every named referenced within the parse tree  *              should be get resolved with a namespace lookup.  If not, the  *              original reference in the ASL code is invalid -- i.e., refers  *              to a non-existent object.  *  * NOTE:  The ASL "External" operator causes the name to be inserted into the  *        namespace so that references to the external name will be resolved  *        correctly here.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LkCrossReferenceNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Perform a cross reference check of the parse tree against the  *              namespace. Every named referenced within the parse tree  *              should be get resolved with a namespace lookup. If not, the  *              original reference in the ASL code is invalid -- i.e., refers  *              to a non-existent object.  *  * NOTE:  The ASL "External" operator causes the name to be inserted into the  *        namespace so that references to the external name will be resolved  *        correctly here.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1722,7 +1725,9 @@ name|WalkState
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 comment|/* Walk the entire parse tree */
@@ -1740,7 +1745,9 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function
@@ -1774,7 +1781,7 @@ block|{
 name|UINT32
 name|FieldEndBitOffset
 decl_stmt|;
-comment|/*      * Check each field unit against the region size.  The entire      * field unit (start offset plus length) must fit within the      * region.      */
+comment|/*      * Check each field unit against the region size. The entire      * field unit (start offset plus length) must fit within the      * region.      */
 name|FieldEndBitOffset
 operator|=
 name|FieldBitOffset
@@ -1802,7 +1809,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * Now check that the field plus AccessWidth doesn't go beyond      * the end-of-region.  Assumes AccessBitWidth is a power of 2      */
+comment|/*      * Now check that the field plus AccessWidth doesn't go beyond      * the end-of-region. Assumes AccessBitWidth is a power of 2      */
 name|FieldEndBitOffset
 operator|=
 name|ACPI_ROUND_UP
@@ -1836,7 +1843,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LkNamespaceLocateBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during cross-reference.  For named  *              object references, attempt to locate the name in the  *              namespace.  *  * NOTE: ASL references to named fields within resource descriptors are  *       resolved to integer values here.  Therefore, this step is an  *       important part of the code generation.  We don't know that the  *       name refers to a resource descriptor until now.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LkNamespaceLocateBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during cross-reference. For named  *              object references, attempt to locate the name in the  *              namespace.  *  * NOTE: ASL references to named fields within resource descriptors are  *       resolved to integer values here. Therefore, this step is an  *       important part of the code generation. We don't know that the  *       name refers to a resource descriptor until now.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1927,7 +1934,7 @@ argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/*      * If this node is the actual declaration of a name      * [such as the XXXX name in "Method (XXXX)"],      * we are not interested in it here.  We only care about names that are      * references to other objects within the namespace and the parent objects      * of name declarations      */
+comment|/*      * If this node is the actual declaration of a name      * [such as the XXXX name in "Method (XXXX)"],      * we are not interested in it here. We only care about names that are      * references to other objects within the namespace and the parent objects      * of name declarations      */
 if|if
 condition|(
 name|Op
@@ -2242,7 +2249,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Lookup the name in the namespace.  Name must exist at this point, or it      * is an invalid reference.      *      * The namespace is also used as a lookup table for references to resource      * descriptors and the fields within them.      */
+comment|/*      * Lookup the name in the namespace. Name must exist at this point, or it      * is an invalid reference.      *      * The namespace is also used as a lookup table for references to resource      * descriptors and the fields within them.      */
 name|Gbl_NsLookupCount
 operator|++
 expr_stmt|;
@@ -2668,7 +2675,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"Tag: %u bit%s, Field: %u bit%s"
+literal|"Size mismatch, Tag: %u bit%s, Field: %u bit%s"
 argument_list|,
 name|TagBitLength
 argument_list|,
@@ -3160,7 +3167,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*          * Offset checking for fields.  If the parent operation region has a          * constant length (known at compile time), we can check fields          * defined in that region against the region length.  This will catch          * fields and field units that cannot possibly fit within the region.          *          * Note: Index fields do not directly reference an operation region,          * thus they are not included in this check.          */
+comment|/*          * Offset checking for fields. If the parent operation region has a          * constant length (known at compile time), we can check fields          * defined in that region against the region length. This will catch          * fields and field units that cannot possibly fit within the region.          *          * Note: Index fields do not directly reference an operation region,          * thus they are not included in this check.          */
 if|if
 condition|(
 name|Op
@@ -3176,7 +3183,7 @@ operator|.
 name|Child
 condition|)
 block|{
-comment|/*              * This is the first child of the field node, which is              * the name of the region.  Get the parse node for the              * region -- which contains the length of the region.              */
+comment|/*              * This is the first child of the field node, which is              * the name of the region. Get the parse node for the              * region -- which contains the length of the region.              */
 name|OwningOp
 operator|=
 name|Node
@@ -3428,7 +3435,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*              * This is one element of the field list.  Check to make sure              * that it does not go beyond the end of the parent operation region.              *              * In the code below:              *    Op->Asl.Parent->Asl.ExtraValue      - Region Length (bits)              *    Op->Asl.ExtraValue                  - Field start offset (bits)              *    Op->Asl.Child->Asl.Value.Integer32  - Field length (bits)              *    Op->Asl.Child->Asl.ExtraValue       - Field access width (bits)              */
+comment|/*              * This is one element of the field list. Check to make sure              * that it does not go beyond the end of the parent operation region.              *              * In the code below:              *    Op->Asl.Parent->Asl.ExtraValue      - Region Length (bits)              *    Op->Asl.ExtraValue                  - Field start offset (bits)              *    Op->Asl.Child->Asl.Value.Integer32  - Field length (bits)              *    Op->Asl.Child->Asl.ExtraValue       - Field access width (bits)              */
 if|if
 condition|(
 name|Op
@@ -3514,7 +3521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LkNamespaceLocateEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during cross reference.  We only  *              need to worry about scope management here.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LkNamespaceLocateEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during cross reference. We only  *              need to worry about scope management here.  *  ******************************************************************************/
 end_comment
 
 begin_function

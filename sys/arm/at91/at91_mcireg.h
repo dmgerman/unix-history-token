@@ -257,6 +257,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MCI_MR_RDPROOF
+value|(0x1u<< 11)
+end_define
+
+begin_comment
+comment|/* (MCI) Read Proof Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCI_MR_WRPROOF
+value|(0x1u<< 12)
+end_define
+
+begin_comment
+comment|/* (MCI) Write Proof Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCI_MR_PDCFBYTE
+value|(0x1u<< 13)
+end_define
+
+begin_comment
+comment|/* (MCI) PDC Force Byte Transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MCI_MR_PDCPADV
 value|(0x1u<< 14)
 end_define

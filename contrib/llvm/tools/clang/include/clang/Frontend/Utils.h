@@ -68,37 +68,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/Diagnostic.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_fd_ostream
+decl_stmt|;
 name|class
 name|Triple
 decl_stmt|;
@@ -166,18 +151,6 @@ decl_stmt|;
 name|class
 name|FrontendOptions
 decl_stmt|;
-comment|/// Normalize \arg File for use in a user defined #include directive (in the
-comment|/// predefines buffer).
-name|std
-operator|::
-name|string
-name|NormalizeDashIncludePath
-argument_list|(
-argument|StringRef File
-argument_list|,
-argument|FileManager&FileMgr
-argument_list|)
-expr_stmt|;
 comment|/// Apply the header search options to get given HeaderSearch object.
 name|void
 name|ApplyHeaderSearchOptions
@@ -277,6 +250,22 @@ modifier|&
 name|Opts
 parameter_list|)
 function_decl|;
+comment|/// AttachDependencyGraphGen - Create a dependency graph generator, and attach
+comment|/// it to the given preprocessor.
+name|void
+name|AttachDependencyGraphGen
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
+name|StringRef
+name|OutputFile
+parameter_list|,
+name|StringRef
+name|SysRoot
+parameter_list|)
+function_decl|;
 comment|/// AttachHeaderIncludeGen - Create a header include list generator, and attach
 comment|/// it to the given preprocessor.
 comment|///
@@ -342,16 +331,12 @@ operator|*
 operator|>
 name|Args
 argument_list|,
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticsEngine
 operator|>
 name|Diags
 operator|=
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticsEngine

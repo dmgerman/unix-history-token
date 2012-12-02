@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- Attr.h - Classes for representing expressions ----------*- C++ -*-===//
+comment|//===--- Attr.h - Classes for representing attributes ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -184,8 +190,6 @@ name|Alignment
 operator|=
 literal|16
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -217,8 +221,6 @@ argument_list|,
 name|size_t
 name|Alignment
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -252,8 +254,6 @@ name|C
 argument_list|,
 name|size_t
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -276,8 +276,6 @@ name|C
 argument_list|,
 name|size_t
 argument_list|)
-name|throw
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -513,6 +511,36 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|bool
+name|isLateParsed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Pretty print this attribute.
+name|virtual
+name|void
+name|printPretty
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -535,6 +563,11 @@ range|:
 name|public
 name|Attr
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|InheritableAttr
@@ -601,6 +634,11 @@ operator|:
 name|public
 name|InheritableAttr
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|InheritableParamAttr
@@ -676,26 +714,28 @@ literal|2
 operator|>
 name|ConstAttrVec
 expr_stmt|;
-comment|/// DestroyAttrs - Destroy the contents of an AttrVec.
-specifier|inline
-name|void
-name|DestroyAttrs
-argument_list|(
-argument|AttrVec& V
-argument_list|,
-argument|ASTContext&C
-argument_list|)
-block|{ }
 comment|/// specific_attr_iterator - Iterates over a subrange of an AttrVec, only
 comment|/// providing attributes that are of a specifc type.
 name|template
 operator|<
 name|typename
 name|SpecificAttr
+block|,
+name|typename
+name|Container
+operator|=
+name|AttrVec
 operator|>
 name|class
 name|specific_attr_iterator
 block|{
+typedef|typedef
+name|typename
+name|Container
+operator|::
+name|const_iterator
+name|Iterator
+expr_stmt|;
 comment|/// Current - The current, underlying iterator.
 comment|/// In order to ensure we don't dereference an invalid iterator unless
 comment|/// specifically requested, we don't necessarily advance this all the
@@ -704,11 +744,9 @@ comment|/// operation is acting on what should be a past-the-end iterator,
 comment|/// then we offer no guarantees, but this way we do not dererence a
 comment|/// past-the-end iterator when we move to a past-the-end position.
 name|mutable
-name|AttrVec
-operator|::
-name|const_iterator
+name|Iterator
 name|Current
-block|;
+decl_stmt|;
 name|void
 name|AdvanceToNext
 argument_list|()
@@ -733,9 +771,10 @@ block|}
 name|void
 name|AdvanceToNext
 argument_list|(
-argument|AttrVec::const_iterator I
+name|Iterator
+name|I
 argument_list|)
-specifier|const
+decl|const
 block|{
 while|while
 condition|(
@@ -758,7 +797,7 @@ name|Current
 expr_stmt|;
 block|}
 name|public
-operator|:
+label|:
 typedef|typedef
 name|SpecificAttr
 modifier|*
@@ -795,7 +834,7 @@ block|{ }
 name|explicit
 name|specific_attr_iterator
 argument_list|(
-argument|AttrVec::const_iterator i
+argument|Iterator i
 argument_list|)
 operator|:
 name|Current
@@ -977,25 +1016,32 @@ unit|};
 name|template
 operator|<
 name|typename
-name|T
+name|SpecificAttr
+operator|,
+name|typename
+name|Container
 operator|>
 specifier|inline
 name|specific_attr_iterator
 operator|<
-name|T
+name|SpecificAttr
+operator|,
+name|Container
 operator|>
 name|specific_attr_begin
 argument_list|(
-argument|const AttrVec& vec
+argument|const Container& container
 argument_list|)
 block|{
 return|return
 name|specific_attr_iterator
 operator|<
-name|T
+name|SpecificAttr
+operator|,
+name|Container
 operator|>
 operator|(
-name|vec
+name|container
 operator|.
 name|begin
 argument_list|()
@@ -1008,25 +1054,32 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|T
+name|SpecificAttr
+operator|,
+name|typename
+name|Container
 operator|>
 specifier|inline
 name|specific_attr_iterator
 operator|<
-name|T
+name|SpecificAttr
+operator|,
+name|Container
 operator|>
 name|specific_attr_end
 argument_list|(
-argument|const AttrVec& vec
+argument|const Container& container
 argument_list|)
 block|{
 return|return
 name|specific_attr_iterator
 operator|<
-name|T
+name|SpecificAttr
+operator|,
+name|Container
 operator|>
 operator|(
-name|vec
+name|container
 operator|.
 name|end
 argument_list|()
@@ -1039,30 +1092,33 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|T
+name|SpecificAttr
+operator|,
+name|typename
+name|Container
 operator|>
 specifier|inline
 name|bool
 name|hasSpecificAttr
 argument_list|(
-argument|const AttrVec& vec
+argument|const Container& container
 argument_list|)
 block|{
 return|return
 name|specific_attr_begin
 operator|<
-name|T
+name|SpecificAttr
 operator|>
 operator|(
-name|vec
+name|container
 operator|)
 operator|!=
 name|specific_attr_end
 operator|<
-name|T
+name|SpecificAttr
 operator|>
 operator|(
-name|vec
+name|container
 operator|)
 return|;
 block|}
@@ -1072,28 +1128,33 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|T
+name|SpecificAttr
+operator|,
+name|typename
+name|Container
 operator|>
 specifier|inline
-name|T
+name|SpecificAttr
 operator|*
 name|getSpecificAttr
 argument_list|(
-argument|const AttrVec& vec
+argument|const Container& container
 argument_list|)
 block|{
 name|specific_attr_iterator
 operator|<
-name|T
+name|SpecificAttr
+block|,
+name|Container
 operator|>
 name|i
 operator|=
 name|specific_attr_begin
 operator|<
-name|T
+name|SpecificAttr
 operator|>
 operator|(
-name|vec
+name|container
 operator|)
 block|;
 if|if
@@ -1102,10 +1163,10 @@ name|i
 operator|!=
 name|specific_attr_end
 operator|<
-name|T
+name|SpecificAttr
 operator|>
 operator|(
-name|vec
+name|container
 operator|)
 condition|)
 return|return

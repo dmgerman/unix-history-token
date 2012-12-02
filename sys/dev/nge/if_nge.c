@@ -290,7 +290,6 @@ specifier|static
 specifier|const
 name|struct
 name|nge_type
-specifier|const
 name|nge_devs
 index|[]
 init|=

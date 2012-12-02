@@ -452,7 +452,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate before getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if zalloc should block. 	 */
 name|np
 operator|=
 name|uma_zalloc
@@ -1075,6 +1074,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|np
+operator|->
+name|n_writecred
+operator|!=
+name|NULL
+condition|)
+name|crfree
+argument_list|(
+name|np
+operator|->
+name|n_writecred
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|np

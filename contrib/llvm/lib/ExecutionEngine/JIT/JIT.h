@@ -223,6 +223,10 @@ modifier|*
 name|JCE
 decl_stmt|;
 comment|// JCE object
+name|JITMemoryManager
+modifier|*
+name|JMM
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -262,8 +266,6 @@ argument_list|,
 argument|TargetJITInfo&tji
 argument_list|,
 argument|JITMemoryManager *JMM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
 argument_list|,
 argument|bool AllocateGVsWithCode
 argument_list|)
@@ -414,13 +416,14 @@ name|ArgValues
 argument_list|)
 decl_stmt|;
 comment|/// getPointerToNamedFunction - This method returns the address of the
-comment|/// specified function by using the dlsym function call.  As such it is only
+comment|/// specified function by using the MemoryManager. As such it is only
 comment|/// useful for resolving library symbols, not code generated symbols.
 comment|///
 comment|/// If AbortOnFailure is false and no function with the given name is
 comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
 comment|///
+name|virtual
 name|void
 modifier|*
 name|getPointerToNamedFunction
@@ -587,11 +590,6 @@ argument_list|,
 name|JITMemoryManager
 operator|*
 name|JMM
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
 argument_list|,
 name|bool
 name|GVsWithCode

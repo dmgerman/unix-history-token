@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -227,7 +233,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|E500
+name|BOOKE_E500
 argument_list|)
 end_if
 
@@ -597,6 +603,47 @@ value|(30)
 end_define
 
 begin_comment
+comment|/*  * These parameters determine the slice behavior for batch work.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_SLICE_DEFAULT_DIVISOR
+value|10
+end_define
+
+begin_comment
+comment|/* ~94 ms, 12 stathz ticks. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_SLICE_MIN_DIVISOR
+value|6
+end_define
+
+begin_comment
+comment|/* DEFAULT/MIN = ~16 ms. */
+end_comment
+
+begin_comment
+comment|/* Flags kept in td_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SLICEEND
+value|TDF_SCHED2
+end_define
+
+begin_comment
+comment|/* Thread time slice is over. */
+end_comment
+
+begin_comment
 comment|/*  * tickincr:		Converts a stathz tick into a hz domain scaled by  *			the shift factor.  Without the shift the error rate  *			due to rounding would be unacceptably high.  * realstathz:		stathz is sometimes 0 and run off of hz.  * sched_slice:		Runtime of each thread before rescheduling.  * preempt_thresh:	Priority threshold for preemption and remote IPIs.  */
 end_comment
 
@@ -612,25 +659,52 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|realstathz
+name|tickincr
+init|=
+literal|8
+operator|<<
+name|SCHED_TICK_SHIFT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
-name|tickincr
+name|realstathz
+init|=
+literal|127
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* reset during boot. */
+end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|sched_slice
 init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reset during boot. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sched_slice_min
+init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* reset during boot. */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -727,9 +801,9 @@ begin_struct
 struct|struct
 name|tdq
 block|{
-comment|/* Ordered to improve efficiency of cpu_search() and switch(). */
+comment|/*  	 * Ordered to improve efficiency of cpu_search() and switch(). 	 * tdq_lock is padded to avoid false sharing with tdq_load and 	 * tdq_cpu_idle. 	 */
 name|struct
-name|mtx
+name|mtx_padalign
 name|tdq_lock
 decl_stmt|;
 comment|/* run queue lock. */
@@ -1098,7 +1172,7 @@ name|TDQ_LOCKPTR
 parameter_list|(
 name|t
 parameter_list|)
-value|(&(t)->tdq_lock)
+value|((struct mtx *)(&(t)->tdq_lock))
 end_define
 
 begin_function_decl
@@ -1597,6 +1671,174 @@ argument_list|,
 name|sched_initticks
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|sched
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|change_pri
+argument_list|,
+name|change
+operator|-
+name|pri
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"uint8_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|dequeue
+argument_list|,
+name|dequeue
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"void *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|enqueue
+argument_list|,
+name|enqueue
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"void *"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|lend_pri
+argument_list|,
+name|lend
+operator|-
+name|pri
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|,
+literal|"uint8_t"
+argument_list|,
+literal|"struct thread *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|load_change
+argument_list|,
+name|load
+operator|-
+name|change
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|off_cpu
+argument_list|,
+name|off
+operator|-
+name|cpu
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|on_cpu
+argument_list|,
+name|on
+operator|-
+name|cpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sched
+argument_list|, , ,
+name|remain_cpu
+argument_list|,
+name|remain
+operator|-
+name|cpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|surrender
+argument_list|,
+name|surrender
+argument_list|,
+literal|"struct thread *"
+argument_list|,
+literal|"struct proc *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2461,6 +2703,25 @@ operator|->
 name|tdq_load
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|load_change
+argument_list|,
+operator|(
+name|int
+operator|)
+name|TDQ_ID
+argument_list|(
+name|tdq
+argument_list|)
+argument_list|,
+name|tdq
+operator|->
+name|tdq_load
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2553,6 +2814,85 @@ operator|->
 name|tdq_load
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|load_change
+argument_list|,
+operator|(
+name|int
+operator|)
+name|TDQ_ID
+argument_list|(
+name|tdq
+argument_list|)
+argument_list|,
+name|tdq
+operator|->
+name|tdq_load
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Bound timeshare latency by decreasing slice size as load increases.  We  * consider the maximum latency as the sum of the threads waiting to run  * aside from curthread and target no more than sched_slice latency but  * no less than sched_slice_min runtime.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|tdq_slice
+parameter_list|(
+name|struct
+name|tdq
+modifier|*
+name|tdq
+parameter_list|)
+block|{
+name|int
+name|load
+decl_stmt|;
+comment|/* 	 * It is safe to use sys_load here because this is called from 	 * contexts where timeshare threads are running and so there 	 * cannot be higher priority load in the system. 	 */
+name|load
+operator|=
+name|tdq
+operator|->
+name|tdq_sysload
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|load
+operator|>=
+name|SCHED_SLICE_MIN_DIVISOR
+condition|)
+return|return
+operator|(
+name|sched_slice_min
+operator|)
+return|;
+if|if
+condition|(
+name|load
+operator|<=
+literal|1
+condition|)
+return|return
+operator|(
+name|sched_slice
+operator|)
+return|;
+return|return
+operator|(
+name|sched_slice
+operator|/
+name|load
+operator|)
+return|;
 block|}
 end_function
 
@@ -4164,9 +4504,6 @@ argument_list|(
 name|low
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cpu
@@ -4182,9 +4519,6 @@ name|cpu
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 name|tdq_unlock_pair
@@ -6338,26 +6672,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * To avoid divide-by-zero, we set realstathz a dummy value 	 * in case which sched_clock() called before sched_initticks(). 	 */
-name|realstathz
-operator|=
-name|hz
-expr_stmt|;
-name|sched_slice
-operator|=
-operator|(
-name|realstathz
-operator|/
-literal|10
-operator|)
-expr_stmt|;
-comment|/* ~100ms */
-name|tickincr
-operator|=
-literal|1
-operator|<<
-name|SCHED_TICK_SHIFT
-expr_stmt|;
 comment|/* Add thread0's load since it's running. */
 name|TDQ_LOCK
 argument_list|(
@@ -6399,7 +6713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine determines the tickincr after stathz and hz are setup.  */
+comment|/*  * This routine determines time constants after stathz and hz are setup.  */
 end_comment
 
 begin_comment
@@ -6429,13 +6743,37 @@ name|hz
 expr_stmt|;
 name|sched_slice
 operator|=
-operator|(
 name|realstathz
 operator|/
-literal|10
-operator|)
+name|SCHED_SLICE_DEFAULT_DIVISOR
 expr_stmt|;
-comment|/* ~100ms */
+name|sched_slice_min
+operator|=
+name|sched_slice
+operator|/
+name|SCHED_SLICE_MIN_DIVISOR
+expr_stmt|;
+name|hogticks
+operator|=
+name|imax
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|2
+operator|*
+name|hz
+operator|*
+name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
 comment|/* 	 * tickincr is shifted out by 10 to avoid rounding errors due to 	 * hz not being evenly divisible by stathz on all platforms. 	 */
 name|incr
 operator|=
@@ -6470,21 +6808,6 @@ name|balance_interval
 operator|=
 name|realstathz
 expr_stmt|;
-comment|/* 	 * Set steal thresh to roughly log2(mp_ncpu) but no greater than 4.  	 * This prevents excess thrashing on large machines and excess idle  	 * on smaller machines. 	 */
-name|steal_thresh
-operator|=
-name|min
-argument_list|(
-name|fls
-argument_list|(
-name|mp_ncpus
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
 name|affinity
 operator|=
 name|SCHED_AFFINITY_DEFAULT
@@ -6499,16 +6822,18 @@ literal|0
 condition|)
 name|sched_idlespinthresh
 operator|=
-name|max
-argument_list|(
-literal|16
-argument_list|,
 literal|2
 operator|*
+name|max
+argument_list|(
+literal|10000
+argument_list|,
+literal|6
+operator|*
 name|hz
+argument_list|)
 operator|/
 name|realstathz
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -7124,7 +7449,7 @@ name|td_sched0
 operator|.
 name|ts_slice
 operator|=
-name|sched_slice
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -7140,16 +7465,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Convert sched_slice to hz */
+comment|/* Convert sched_slice from stathz to hz. */
 return|return
 operator|(
-name|hz
-operator|/
+name|imax
+argument_list|(
+literal|1
+argument_list|,
 operator|(
+name|sched_slice
+operator|*
+name|hz
+operator|+
 name|realstathz
 operator|/
-name|sched_slice
+literal|2
 operator|)
+operator|/
+name|realstathz
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7346,6 +7680,21 @@ name|curthread
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|change_pri
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|prio
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -7353,7 +7702,7 @@ operator|!=
 name|curthread
 operator|&&
 name|prio
-operator|>
+operator|<
 name|td
 operator|->
 name|td_priority
@@ -7388,6 +7737,23 @@ name|sched_tdname
 argument_list|(
 name|td
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|lend_pri
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|prio
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -8020,6 +8386,8 @@ name|srqflag
 decl_stmt|;
 name|int
 name|cpuid
+decl_stmt|,
+name|preempted
 decl_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
@@ -8092,21 +8460,27 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
-if|if
-condition|(
+name|preempted
+operator|=
 operator|!
 operator|(
-name|flags
+name|td
+operator|->
+name|td_flags
 operator|&
-name|SW_PREEMPT
+name|TDF_SLICEEND
 operator|)
-condition|)
+expr_stmt|;
 name|td
 operator|->
 name|td_flags
 operator|&=
 operator|~
+operator|(
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
+operator|)
 expr_stmt|;
 name|td
 operator|->
@@ -8114,6 +8488,14 @@ name|td_owepreempt
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
+condition|)
 name|tdq
 operator|->
 name|tdq_switchcnt
@@ -8169,11 +8551,7 @@ argument_list|)
 expr_stmt|;
 name|srqflag
 operator|=
-operator|(
-name|flags
-operator|&
-name|SW_PREEMPT
-operator|)
+name|preempted
 condition|?
 name|SRQ_OURSELF
 operator||
@@ -8341,6 +8719,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|off_cpu
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|lock_profile_release_lock
 argument_list|(
 operator|&
@@ -8434,6 +8825,13 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|on_cpu
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
@@ -8457,6 +8855,7 @@ endif|#
 directive|endif
 block|}
 else|else
+block|{
 name|thread_unblock_switch
 argument_list|(
 name|td
@@ -8464,6 +8863,14 @@ argument_list|,
 name|mtx
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|remain_cpu
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Assert that all went well and return. 	 */
 name|TDQ_LOCK_ASSERT
 argument_list|(
@@ -8749,12 +9156,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset the slice value after we sleep. */
+comment|/* 	 * Reset the slice value since we slept and advanced the round-robin. 	 */
 name|ts
 operator|->
 name|ts_slice
 operator|=
-name|sched_slice
+literal|0
 expr_stmt|;
 name|sched_add
 argument_list|(
@@ -8869,6 +9276,16 @@ name|td_sched
 modifier|*
 name|ts2
 decl_stmt|;
+name|struct
+name|tdq
+modifier|*
+name|tdq
+decl_stmt|;
+name|tdq
+operator|=
+name|TDQ_SELF
+argument_list|()
+expr_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -8895,8 +9312,7 @@ name|td_lock
 operator|=
 name|TDQ_LOCKPTR
 argument_list|(
-name|TDQ_SELF
-argument_list|()
+name|tdq
 argument_list|)
 expr_stmt|;
 name|child
@@ -8975,13 +9391,18 @@ name|ts
 operator|->
 name|ts_runtime
 expr_stmt|;
+comment|/* Attempt to quickly learn interactivity. */
 name|ts2
 operator|->
 name|ts_slice
 operator|=
-literal|1
+name|tdq_slice
+argument_list|(
+name|tdq
+argument_list|)
+operator|-
+name|sched_slice_min
 expr_stmt|;
-comment|/* Attempt to quickly learn interactivity. */
 ifdef|#
 directive|ifdef
 name|KTR
@@ -9204,6 +9625,19 @@ name|tdq
 modifier|*
 name|tdq
 decl_stmt|;
+name|SDT_PROBE2
+argument_list|(
+name|sched
+argument_list|, , ,
+name|surrender
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
@@ -9563,30 +9997,41 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We used up one time slice. 	 */
+comment|/* 	 * Force a context switch if the current thread has used up a full 	 * time slice (default is 100ms). 	 */
 if|if
 condition|(
-operator|--
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|++
 name|ts
 operator|->
 name|ts_slice
-operator|>
-literal|0
+operator|>=
+name|tdq_slice
+argument_list|(
+name|tdq
+argument_list|)
 condition|)
-return|return;
-comment|/* 	 * We're out of time, force a requeue at userret(). 	 */
+block|{
 name|ts
 operator|->
 name|ts_slice
 operator|=
-name|sched_slice
+literal|0
 expr_stmt|;
 name|td
 operator|->
 name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
+operator||
+name|TDF_SLICEEND
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -10063,6 +10508,25 @@ name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE4
+argument_list|(
+name|sched
+argument_list|, , ,
+name|enqueue
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|NULL
+argument_list|,
+name|flags
+operator|&
+name|SRQ_PREEMPTED
+argument_list|)
+expr_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -10227,6 +10691,21 @@ argument_list|,
 name|td
 operator|->
 name|td_priority
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE3
+argument_list|(
+name|sched
+argument_list|, , ,
+name|dequeue
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tdq
@@ -10936,6 +11415,8 @@ modifier|*
 name|tdq
 decl_stmt|;
 name|int
+name|oldswitchcnt
+decl_stmt|,
 name|switchcnt
 decl_stmt|;
 name|int
@@ -10958,27 +11439,47 @@ operator|=
 name|TDQ_SELF
 argument_list|()
 expr_stmt|;
+name|THREAD_NO_SLEEPING
+argument_list|()
+expr_stmt|;
+name|oldswitchcnt
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
 if|if
 condition|(
-name|tdq_idled
-argument_list|(
 name|tdq
-argument_list|)
-operator|==
-literal|0
+operator|->
+name|tdq_load
 condition|)
-continue|continue;
-endif|#
-directive|endif
+block|{
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|mi_switch
+argument_list|(
+name|SW_VOL
+operator||
+name|SWT_IDLE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 name|switchcnt
 operator|=
 name|tdq
@@ -10989,6 +11490,49 @@ name|tdq
 operator|->
 name|tdq_oldswitchcnt
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|switchcnt
+operator|!=
+name|oldswitchcnt
+condition|)
+block|{
+name|oldswitchcnt
+operator|=
+name|switchcnt
+expr_stmt|;
+if|if
+condition|(
+name|tdq_idled
+argument_list|(
+name|tdq
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+block|}
+name|switchcnt
+operator|=
+name|tdq
+operator|->
+name|tdq_switchcnt
+operator|+
+name|tdq
+operator|->
+name|tdq_oldswitchcnt
+expr_stmt|;
+else|#
+directive|else
+name|oldswitchcnt
+operator|=
+name|switchcnt
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * may require an IPI.  However, don't do any busy 		 * loops while on SMT machines as this simply steals 		 * cycles from cores doing useful work. 		 */
 if|if
 condition|(
@@ -11028,6 +11572,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* If there was context switch during spin, restart it. */
 name|switchcnt
 operator|=
 name|tdq
@@ -11043,74 +11588,62 @@ condition|(
 name|tdq
 operator|->
 name|tdq_load
-operator|==
+operator|!=
 literal|0
+operator|||
+name|switchcnt
+operator|!=
+name|oldswitchcnt
 condition|)
-block|{
+continue|continue;
+comment|/* Run main MD idle handler. */
 name|tdq
 operator|->
 name|tdq_cpu_idle
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|tdq
-operator|->
-name|tdq_load
-operator|==
-literal|0
-condition|)
-block|{
 name|cpu_idle
 argument_list|(
 name|switchcnt
-operator|>
-name|sched_idlespinthresh
 operator|*
 literal|4
+operator|>
+name|sched_idlespinthresh
 argument_list|)
 expr_stmt|;
-name|tdq
-operator|->
-name|tdq_switchcnt
-operator|++
-expr_stmt|;
-block|}
 name|tdq
 operator|->
 name|tdq_cpu_idle
 operator|=
 literal|0
 expr_stmt|;
-block|}
-if|if
-condition|(
+comment|/* 		 * Account thread-less hardware interrupts and 		 * other wakeup reasons equal to context switches. 		 */
+name|switchcnt
+operator|=
 name|tdq
 operator|->
-name|tdq_load
+name|tdq_switchcnt
+operator|+
+name|tdq
+operator|->
+name|tdq_oldswitchcnt
+expr_stmt|;
+if|if
+condition|(
+name|switchcnt
+operator|!=
+name|oldswitchcnt
 condition|)
-block|{
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
+continue|continue;
+name|tdq
+operator|->
+name|tdq_switchcnt
+operator|++
 expr_stmt|;
-name|mi_switch
-argument_list|(
-name|SW_VOL
-operator||
-name|SWT_IDLE
-argument_list|,
-name|NULL
-argument_list|)
+name|oldswitchcnt
+operator|++
 expr_stmt|;
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -11942,6 +12475,127 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_quantum
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|,
+name|new_val
+decl_stmt|,
+name|period
+decl_stmt|;
+name|period
+operator|=
+literal|1000000
+operator|/
+name|realstathz
+expr_stmt|;
+name|new_val
+operator|=
+name|period
+operator|*
+name|sched_slice
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|new_val
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|||
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|new_val
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|sched_slice
+operator|=
+name|imax
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|new_val
+operator|+
+name|period
+operator|/
+literal|2
+operator|)
+operator|/
+name|period
+argument_list|)
+expr_stmt|;
+name|sched_slice_min
+operator|=
+name|sched_slice
+operator|/
+name|SCHED_SLICE_MIN_DIVISOR
+expr_stmt|;
+name|hogticks
+operator|=
+name|imax
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|2
+operator|*
+name|hz
+operator|*
+name|sched_slice
+operator|+
+name|realstathz
+operator|/
+literal|2
+operator|)
+operator|/
+name|realstathz
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -11981,6 +12635,32 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|quantum
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_kern_quantum
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Quantum for timeshare threads in microseconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_sched
@@ -11996,7 +12676,7 @@ name|sched_slice
 argument_list|,
 literal|0
 argument_list|,
-literal|"Slice size for timeshare threads"
+literal|"Quantum for timeshare threads in stathz ticks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12038,7 +12718,7 @@ name|preempt_thresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Min priority for preemption, lower priorities have greater precedence"
+literal|"Maximal (lowest) priority for preemption"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12059,7 +12739,7 @@ name|static_boost
 argument_list|,
 literal|0
 argument_list|,
-literal|"Controls whether static kernel priorities are assigned to sleeping threads."
+literal|"Assign static kernel priorities to sleeping threads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12080,7 +12760,7 @@ name|sched_idlespins
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of times idle will spin waiting for new work."
+literal|"Number of times idle thread will spin waiting for new work"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12101,7 +12781,7 @@ name|sched_idlespinthresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Threshold before we will permit idle spinning."
+literal|"Threshold before we will permit idle thread spinning"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12170,7 +12850,7 @@ name|balance_interval
 argument_list|,
 literal|0
 argument_list|,
-literal|"Average frequency in stathz ticks to run the long-term balancer"
+literal|"Average period in stathz ticks to run the long-term balancer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12212,14 +12892,10 @@ name|steal_thresh
 argument_list|,
 literal|0
 argument_list|,
-literal|"Minimum load on remote cpu before we'll steal"
+literal|"Minimum load on remote CPU before we'll steal"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Retrieve SMP topology */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_PROC

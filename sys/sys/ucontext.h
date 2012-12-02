@@ -158,16 +158,17 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
 name|getcontext
-parameter_list|(
+argument_list|(
 name|ucontext_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|ucontext_t

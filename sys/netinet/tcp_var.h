@@ -559,11 +559,11 @@ name|rfbuf_cnt
 decl_stmt|;
 comment|/* recv buffer autoscaling byte count */
 name|struct
-name|toe_usrreqs
+name|toedev
 modifier|*
-name|t_tu
+name|tod
 decl_stmt|;
-comment|/* offload operations vector */
+comment|/* toedev handling this connection */
 name|int
 name|t_sndrexmitpack
 decl_stmt|;
@@ -2405,6 +2405,16 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|tcp_do_initcwnd10
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|tcp_sendspace
 argument_list|)
 expr_stmt|;
@@ -2497,6 +2507,13 @@ define|#
 directive|define
 name|V_tcp_do_rfc3390
 value|VNET(tcp_do_rfc3390)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_do_initcwnd10
+value|VNET(tcp_do_initcwnd10)
 end_define
 
 begin_define
@@ -2976,6 +2993,8 @@ parameter_list|(
 name|struct
 name|tcpcb
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/CodeCompleteOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -472,7 +478,7 @@ comment|/// This context usually implies that no completions should be added,
 comment|/// unless they come from an appropriate natural-language dictionary.
 name|CCC_NaturalLanguage
 block|,
-comment|/// \brief Code completion for a selector, as in an @selector expression.
+comment|/// \brief Code completion for a selector, as in an \@selector expression.
 name|CCC_SelectorName
 block|,
 comment|/// \brief Code completion within a type-qualifier list.
@@ -760,7 +766,7 @@ block|,
 comment|/// \brief Horizontal whitespace (' ').
 name|CK_HorizontalSpace
 block|,
-comment|/// \brief Verticle whitespace ('\n' or '\r\n', depending on the
+comment|/// \brief Vertical whitespace ('\\n' or '\\r\\n', depending on the
 comment|/// platform).
 name|CK_VerticalSpace
 block|}
@@ -807,6 +813,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{ }
+name|explicit
 name|Chunk
 argument_list|(
 argument|ChunkKind Kind
@@ -900,13 +907,30 @@ comment|/// \brief The priority of this code-completion string.
 name|unsigned
 name|Priority
 range|:
-literal|30
+literal|16
 decl_stmt|;
 comment|/// \brief The availability of this code-completion result.
 name|unsigned
 name|Availability
 range|:
 literal|2
+decl_stmt|;
+comment|/// \brief The kind of the parent context.
+name|unsigned
+name|ParentKind
+range|:
+literal|14
+decl_stmt|;
+comment|/// \brief The name of the parent context.
+name|StringRef
+name|ParentName
+decl_stmt|;
+comment|/// \brief A brief documentation comment attached to the declaration of
+comment|/// entity being completed by this result.
+specifier|const
+name|char
+modifier|*
+name|BriefComment
 decl_stmt|;
 name|CodeCompletionString
 argument_list|(
@@ -940,6 +964,12 @@ argument_list|,
 argument|const char **Annotations
 argument_list|,
 argument|unsigned NumAnnotations
+argument_list|,
+argument|CXCursorKind ParentKind
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|const char *BriefComment
 argument_list|)
 empty_stmt|;
 operator|~
@@ -1087,6 +1117,40 @@ name|AnnotationNr
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Retrieve parent context's cursor kind.
+name|CXCursorKind
+name|getParentContextKind
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|CXCursorKind
+operator|)
+name|ParentKind
+return|;
+block|}
+comment|/// \brief Retrieve the name of the parent context.
+name|StringRef
+name|getParentContextName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParentName
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getBriefComment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BriefComment
+return|;
+block|}
 comment|/// \brief Retrieve a string representation of the code completion string,
 comment|/// which is mainly useful for debugging.
 name|std
@@ -1167,6 +1231,122 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Allocator for a cached set of global code completions.
+name|class
+name|GlobalCodeCompletionAllocator
+operator|:
+name|public
+name|CodeCompletionAllocator
+block|,
+name|public
+name|RefCountedBase
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+block|{  }
+block|;
+name|class
+name|CodeCompletionTUInfo
+block|{
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|DeclContext
+operator|*
+block|,
+name|StringRef
+operator|>
+name|ParentNames
+block|;
+name|IntrusiveRefCntPtr
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+name|AllocatorRef
+block|;
+name|public
+operator|:
+name|explicit
+name|CodeCompletionTUInfo
+argument_list|(
+name|IntrusiveRefCntPtr
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+name|Allocator
+argument_list|)
+operator|:
+name|AllocatorRef
+argument_list|(
+argument|Allocator
+argument_list|)
+block|{ }
+name|IntrusiveRefCntPtr
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+name|getAllocatorRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllocatorRef
+return|;
+block|}
+name|CodeCompletionAllocator
+operator|&
+name|getAllocator
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|AllocatorRef
+argument_list|)
+block|;
+return|return
+operator|*
+name|AllocatorRef
+return|;
+block|}
+name|StringRef
+name|getParentName
+argument_list|(
+name|DeclContext
+operator|*
+name|DC
+argument_list|)
+block|; }
+block|;  }
+comment|// end namespace clang
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|CodeCompletionString
+operator|::
+name|Chunk
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|;   }
+block|; }
+name|namespace
+name|clang
+block|{
 comment|/// \brief A builder class used to construct new code-completion strings.
 name|class
 name|CodeCompletionBuilder
@@ -1185,11 +1365,26 @@ name|CodeCompletionAllocator
 operator|&
 name|Allocator
 block|;
+name|CodeCompletionTUInfo
+operator|&
+name|CCTUInfo
+block|;
 name|unsigned
 name|Priority
 block|;
 name|CXAvailabilityKind
 name|Availability
+block|;
+name|CXCursorKind
+name|ParentKind
+block|;
+name|StringRef
+name|ParentName
+block|;
+specifier|const
+name|char
+operator|*
+name|BriefComment
 block|;
 comment|/// \brief The chunks stored in this string.
 name|SmallVector
@@ -1217,11 +1412,20 @@ argument_list|(
 name|CodeCompletionAllocator
 operator|&
 name|Allocator
+argument_list|,
+name|CodeCompletionTUInfo
+operator|&
+name|CCTUInfo
 argument_list|)
 operator|:
 name|Allocator
 argument_list|(
 name|Allocator
+argument_list|)
+block|,
+name|CCTUInfo
+argument_list|(
+name|CCTUInfo
 argument_list|)
 block|,
 name|Priority
@@ -1231,12 +1435,24 @@ argument_list|)
 block|,
 name|Availability
 argument_list|(
-argument|CXAvailability_Available
+name|CXAvailability_Available
 argument_list|)
-block|{   }
+block|,
+name|ParentKind
+argument_list|(
+name|CXCursor_NotImplemented
+argument_list|)
+block|,
+name|BriefComment
+argument_list|(
+argument|NULL
+argument_list|)
+block|{ }
 name|CodeCompletionBuilder
 argument_list|(
 argument|CodeCompletionAllocator&Allocator
+argument_list|,
+argument|CodeCompletionTUInfo&CCTUInfo
 argument_list|,
 argument|unsigned Priority
 argument_list|,
@@ -1248,6 +1464,11 @@ argument_list|(
 name|Allocator
 argument_list|)
 block|,
+name|CCTUInfo
+argument_list|(
+name|CCTUInfo
+argument_list|)
+block|,
 name|Priority
 argument_list|(
 name|Priority
@@ -1255,7 +1476,17 @@ argument_list|)
 block|,
 name|Availability
 argument_list|(
-argument|Availability
+name|Availability
+argument_list|)
+block|,
+name|ParentKind
+argument_list|(
+name|CXCursor_NotImplemented
+argument_list|)
+block|,
+name|BriefComment
+argument_list|(
+argument|NULL
 argument_list|)
 block|{ }
 comment|/// \brief Retrieve the allocator into which the code completion
@@ -1270,6 +1501,16 @@ return|return
 name|Allocator
 return|;
 block|}
+name|CodeCompletionTUInfo
+operator|&
+name|getCodeCompletionTUInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CCTUInfo
+return|;
+block|}
 comment|/// \brief Take the resulting completion string.
 comment|///
 comment|/// This operation can only be performed once.
@@ -1282,151 +1523,81 @@ comment|/// \brief Add a new typed-text chunk.
 name|void
 name|AddTypedTextChunk
 argument_list|(
-argument|const char *Text
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-argument_list|(
-name|CodeCompletionString
-operator|::
-name|CK_TypedText
-argument_list|,
+specifier|const
+name|char
+operator|*
 name|Text
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// \brief Add a new text chunk.
 name|void
 name|AddTextChunk
 argument_list|(
-argument|const char *Text
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-operator|::
-name|CreateText
-argument_list|(
+specifier|const
+name|char
+operator|*
 name|Text
 argument_list|)
-argument_list|)
-block|;    }
+block|;
 comment|/// \brief Add a new optional chunk.
 name|void
 name|AddOptionalChunk
 argument_list|(
-argument|CodeCompletionString *Optional
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-operator|::
-name|CreateOptional
-argument_list|(
+name|CodeCompletionString
+operator|*
 name|Optional
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// \brief Add a new placeholder chunk.
 name|void
 name|AddPlaceholderChunk
 argument_list|(
-argument|const char *Placeholder
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-operator|::
-name|CreatePlaceholder
-argument_list|(
+specifier|const
+name|char
+operator|*
 name|Placeholder
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// \brief Add a new informative chunk.
 name|void
 name|AddInformativeChunk
 argument_list|(
-argument|const char *Text
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-operator|::
-name|CreateInformative
-argument_list|(
+specifier|const
+name|char
+operator|*
 name|Text
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// \brief Add a new result-type chunk.
 name|void
 name|AddResultTypeChunk
 argument_list|(
-argument|const char *ResultType
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-operator|::
-name|CreateResultType
-argument_list|(
+specifier|const
+name|char
+operator|*
 name|ResultType
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// \brief Add a new current-parameter chunk.
 name|void
 name|AddCurrentParameterChunk
 argument_list|(
-argument|const char *CurrentParameter
-argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|Chunk
-operator|::
-name|CreateCurrentParameter
-argument_list|(
+specifier|const
+name|char
+operator|*
 name|CurrentParameter
 argument_list|)
-argument_list|)
-block|;   }
+block|;
 comment|/// \brief Add a new chunk.
 name|void
 name|AddChunk
 argument_list|(
-argument|Chunk C
+argument|CodeCompletionString::ChunkKind CK
+argument_list|,
+argument|const char *Text =
+literal|""
 argument_list|)
-block|{
-name|Chunks
-operator|.
-name|push_back
-argument_list|(
-name|C
-argument_list|)
-block|; }
+block|;
 name|void
 name|AddAnnotation
 argument_list|(
@@ -1440,122 +1611,154 @@ argument_list|(
 name|A
 argument_list|)
 block|; }
+comment|/// \brief Add the parent context information to this code completion.
+name|void
+name|addParentContext
+argument_list|(
+name|DeclContext
+operator|*
+name|DC
+argument_list|)
+block|;
+name|void
+name|addBriefComment
+argument_list|(
+argument|StringRef Comment
+argument_list|)
+block|;
+name|CXCursorKind
+name|getParentKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParentKind
+return|;
 block|}
-decl_stmt|;
+name|StringRef
+name|getParentName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParentName
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Captures a result of code completion.
 name|class
 name|CodeCompletionResult
 block|{
 name|public
-label|:
+operator|:
 comment|/// \brief Describes the kind of result generated.
-enum|enum
+expr|enum
 name|ResultKind
 block|{
 name|RK_Declaration
-init|=
+operator|=
 literal|0
 block|,
-comment|//< Refers to a declaration
+comment|///< Refers to a declaration
 name|RK_Keyword
 block|,
-comment|//< Refers to a keyword or symbol.
+comment|///< Refers to a keyword or symbol.
 name|RK_Macro
 block|,
-comment|//< Refers to a macro
+comment|///< Refers to a macro
 name|RK_Pattern
-comment|//< Refers to a precomputed pattern.
+comment|///< Refers to a precomputed pattern.
 block|}
-enum|;
-comment|/// \brief The kind of result stored here.
-name|ResultKind
-name|Kind
-decl_stmt|;
-union|union
-block|{
-comment|/// \brief When Kind == RK_Declaration, the declaration we are referring
-comment|/// to.
+block|;
+comment|/// \brief When Kind == RK_Declaration or RK_Pattern, the declaration we are
+comment|/// referring to. In the latter case, the declaration might be NULL.
 name|NamedDecl
-modifier|*
+operator|*
 name|Declaration
-decl_stmt|;
+block|;
+expr|union
+block|{
 comment|/// \brief When Kind == RK_Keyword, the string representing the keyword
 comment|/// or symbol's spelling.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Keyword
-decl_stmt|;
+block|;
 comment|/// \brief When Kind == RK_Pattern, the code-completion string that
 comment|/// describes the completion text to insert.
 name|CodeCompletionString
-modifier|*
+operator|*
 name|Pattern
-decl_stmt|;
+block|;
 comment|/// \brief When Kind == RK_Macro, the identifier that refers to a macro.
 name|IdentifierInfo
-modifier|*
+operator|*
 name|Macro
-decl_stmt|;
-block|}
-union|;
+block|;   }
+block|;
 comment|/// \brief The priority of this particular code-completion result.
 name|unsigned
 name|Priority
-decl_stmt|;
-comment|/// \brief The cursor kind that describes this result.
-name|CXCursorKind
-name|CursorKind
-decl_stmt|;
-comment|/// \brief The availability of this result.
-name|CXAvailabilityKind
-name|Availability
-decl_stmt|;
+block|;
 comment|/// \brief Specifies which parameter (of a function, Objective-C method,
 comment|/// macro, etc.) we should start with when formatting the result.
 name|unsigned
 name|StartParameter
-decl_stmt|;
+block|;
+comment|/// \brief The kind of result stored here.
+name|ResultKind
+name|Kind
+block|;
+comment|/// \brief The cursor kind that describes this result.
+name|CXCursorKind
+name|CursorKind
+block|;
+comment|/// \brief The availability of this result.
+name|CXAvailabilityKind
+name|Availability
+block|;
 comment|/// \brief Whether this result is hidden by another name.
 name|bool
 name|Hidden
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this result was found via lookup into a base class.
 name|bool
 name|QualifierIsInformative
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this declaration is the beginning of a
 comment|/// nested-name-specifier and, therefore, should be followed by '::'.
 name|bool
 name|StartsNestedNameSpecifier
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether all parameters (of a function, Objective-C
 comment|/// method, etc.) should be considered "informative".
 name|bool
 name|AllParametersAreInformative
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether we're completing a declaration of the given entity,
 comment|/// rather than a use of that entity.
 name|bool
 name|DeclaringEntity
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief If the result should have a nested-name-specifier, this is it.
 comment|/// When \c QualifierIsInformative, the nested-name-specifier is
 comment|/// informative rather than required.
 name|NestedNameSpecifier
-modifier|*
+operator|*
 name|Qualifier
-decl_stmt|;
+block|;
 comment|/// \brief Build a result that refers to a declaration.
 name|CodeCompletionResult
 argument_list|(
@@ -1568,17 +1771,12 @@ argument|bool QualifierIsInformative = false
 argument_list|,
 argument|bool Accessible = true
 argument_list|)
-block|:
-name|Kind
-argument_list|(
-name|RK_Declaration
-argument_list|)
-operator|,
+operator|:
 name|Declaration
 argument_list|(
 name|Declaration
 argument_list|)
-operator|,
+block|,
 name|Priority
 argument_list|(
 name|getPriorityFromDecl
@@ -1586,42 +1784,47 @@ argument_list|(
 name|Declaration
 argument_list|)
 argument_list|)
-operator|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-operator|,
+block|,
 name|StartParameter
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
+name|Kind
+argument_list|(
+name|RK_Declaration
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
+argument_list|)
+block|,
 name|Hidden
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|QualifierIsInformative
 argument_list|(
 name|QualifierIsInformative
 argument_list|)
-operator|,
+block|,
 name|StartsNestedNameSpecifier
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|DeclaringEntity
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|Qualifier
 argument_list|(
 argument|Qualifier
@@ -1640,64 +1843,71 @@ argument_list|,
 argument|unsigned Priority = CCP_Keyword
 argument_list|)
 operator|:
-name|Kind
+name|Declaration
 argument_list|(
-name|RK_Keyword
+literal|0
 argument_list|)
-operator|,
+block|,
 name|Keyword
 argument_list|(
 name|Keyword
 argument_list|)
-operator|,
+block|,
 name|Priority
 argument_list|(
 name|Priority
 argument_list|)
-operator|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-operator|,
+block|,
 name|StartParameter
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
+name|Kind
+argument_list|(
+name|RK_Keyword
+argument_list|)
+block|,
+name|CursorKind
+argument_list|(
+name|CXCursor_NotImplemented
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
+argument_list|)
+block|,
 name|Hidden
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|QualifierIsInformative
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|StartsNestedNameSpecifier
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|DeclaringEntity
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{
-name|computeCursorKindAndAvailability
-argument_list|()
-block|;   }
+block|{   }
 comment|/// \brief Build a result that refers to a macro.
 name|CodeCompletionResult
 argument_list|(
@@ -1706,64 +1916,71 @@ argument_list|,
 argument|unsigned Priority = CCP_Macro
 argument_list|)
 operator|:
-name|Kind
+name|Declaration
 argument_list|(
-name|RK_Macro
+literal|0
 argument_list|)
-operator|,
+block|,
 name|Macro
 argument_list|(
 name|Macro
 argument_list|)
-operator|,
+block|,
 name|Priority
 argument_list|(
 name|Priority
 argument_list|)
-operator|,
-name|Availability
-argument_list|(
-name|CXAvailability_Available
-argument_list|)
-operator|,
+block|,
 name|StartParameter
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
+name|Kind
+argument_list|(
+name|RK_Macro
+argument_list|)
+block|,
+name|CursorKind
+argument_list|(
+name|CXCursor_MacroDefinition
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
+argument_list|)
+block|,
 name|Hidden
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|QualifierIsInformative
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|StartsNestedNameSpecifier
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|DeclaringEntity
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{
-name|computeCursorKindAndAvailability
-argument_list|()
-block|;   }
+block|{   }
 comment|/// \brief Build a result that refers to a pattern.
 name|CodeCompletionResult
 argument_list|(
@@ -1774,68 +1991,150 @@ argument_list|,
 argument|CXCursorKind CursorKind = CXCursor_NotImplemented
 argument_list|,
 argument|CXAvailabilityKind Availability = CXAvailability_Available
+argument_list|,
+argument|NamedDecl *D =
+literal|0
 argument_list|)
 operator|:
-name|Kind
+name|Declaration
 argument_list|(
-name|RK_Pattern
+name|D
 argument_list|)
-operator|,
+block|,
 name|Pattern
 argument_list|(
 name|Pattern
 argument_list|)
-operator|,
+block|,
 name|Priority
 argument_list|(
 name|Priority
 argument_list|)
-operator|,
-name|CursorKind
-argument_list|(
-name|CursorKind
-argument_list|)
-operator|,
-name|Availability
-argument_list|(
-name|Availability
-argument_list|)
-operator|,
+block|,
 name|StartParameter
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
+name|Kind
+argument_list|(
+name|RK_Pattern
+argument_list|)
+block|,
+name|CursorKind
+argument_list|(
+name|CursorKind
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|Availability
+argument_list|)
+block|,
 name|Hidden
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|QualifierIsInformative
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|StartsNestedNameSpecifier
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|DeclaringEntity
 argument_list|(
 name|false
 argument_list|)
-operator|,
+block|,
 name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{    }
+block|{   }
+comment|/// \brief Build a result that refers to a pattern with an associated
+comment|/// declaration.
+name|CodeCompletionResult
+argument_list|(
+argument|CodeCompletionString *Pattern
+argument_list|,
+argument|NamedDecl *D
+argument_list|,
+argument|unsigned Priority
+argument_list|)
+operator|:
+name|Declaration
+argument_list|(
+name|D
+argument_list|)
+block|,
+name|Pattern
+argument_list|(
+name|Pattern
+argument_list|)
+block|,
+name|Priority
+argument_list|(
+name|Priority
+argument_list|)
+block|,
+name|StartParameter
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|RK_Pattern
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
+argument_list|)
+block|,
+name|Hidden
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|QualifierIsInformative
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|StartsNestedNameSpecifier
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|AllParametersAreInformative
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|DeclaringEntity
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|Qualifier
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|computeCursorKindAndAvailability
+argument_list|()
+block|;   }
 comment|/// \brief Retrieve the declaration stored in this result.
 name|NamedDecl
 operator|*
@@ -1885,41 +2184,52 @@ comment|///
 comment|/// \param Allocator The allocator that will be used to allocate the
 comment|/// string itself.
 name|CodeCompletionString
-modifier|*
+operator|*
 name|CreateCodeCompletionString
-parameter_list|(
-name|Sema
-modifier|&
-name|S
-parameter_list|,
-name|CodeCompletionAllocator
-modifier|&
-name|Allocator
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|Sema&S
+argument_list|,
+argument|CodeCompletionAllocator&Allocator
+argument_list|,
+argument|CodeCompletionTUInfo&CCTUInfo
+argument_list|,
+argument|bool IncludeBriefComments
+argument_list|)
+block|;
+name|CodeCompletionString
+operator|*
+name|CreateCodeCompletionString
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
+argument|Preprocessor&PP
+argument_list|,
+argument|CodeCompletionAllocator&Allocator
+argument_list|,
+argument|CodeCompletionTUInfo&CCTUInfo
+argument_list|,
+argument|bool IncludeBriefComments
+argument_list|)
+block|;
 comment|/// \brief Determine a base priority for the given declaration.
 specifier|static
 name|unsigned
 name|getPriorityFromDecl
-parameter_list|(
+argument_list|(
 name|NamedDecl
-modifier|*
+operator|*
 name|ND
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|private
-label|:
+operator|:
 name|void
 name|computeCursorKindAndAvailability
-parameter_list|(
-name|bool
-name|Accessible
-init|=
-name|true
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|(
+argument|bool Accessible = true
+argument_list|)
+block|; }
+block|;
 name|bool
 name|operator
 operator|<
@@ -1928,13 +2238,13 @@ specifier|const
 name|CodeCompletionResult
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|CodeCompletionResult
 operator|&
 name|Y
 operator|)
-expr_stmt|;
+block|;
 specifier|inline
 name|bool
 name|operator
@@ -1944,7 +2254,7 @@ specifier|const
 name|CodeCompletionResult
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|CodeCompletionResult
 operator|&
@@ -1966,7 +2276,7 @@ specifier|const
 name|CodeCompletionResult
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|CodeCompletionResult
 operator|&
@@ -1991,7 +2301,7 @@ specifier|const
 name|CodeCompletionResult
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|CodeCompletionResult
 operator|&
@@ -2015,48 +2325,38 @@ operator|(
 name|raw_ostream
 operator|&
 name|OS
-operator|,
+expr|,
 specifier|const
 name|CodeCompletionString
 operator|&
 name|CCS
 operator|)
-expr_stmt|;
+block|;
 comment|/// \brief Abstract interface for a consumer of code-completion
 comment|/// information.
 name|class
 name|CodeCompleteConsumer
 block|{
 name|protected
-label|:
-comment|/// \brief Whether to include macros in the code-completion results.
-name|bool
-name|IncludeMacros
-decl_stmt|;
-comment|/// \brief Whether to include code patterns (such as for loops) within
-comment|/// the completion results.
-name|bool
-name|IncludeCodePatterns
-decl_stmt|;
-comment|/// \brief Whether to include global (top-level) declarations and names in
-comment|/// the completion results.
-name|bool
-name|IncludeGlobals
-decl_stmt|;
+operator|:
+specifier|const
+name|CodeCompleteOptions
+name|CodeCompleteOpts
+block|;
 comment|/// \brief Whether the output format for the code-completion consumer is
 comment|/// binary.
 name|bool
 name|OutputIsBinary
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|class
 name|OverloadCandidate
 block|{
 name|public
-label|:
+operator|:
 comment|/// \brief Describes the type of overload candidate.
-enum|enum
+expr|enum
 name|CandidateKind
 block|{
 comment|/// \brief The candidate is a function declaration.
@@ -2069,38 +2369,37 @@ comment|/// \brief The "candidate" is actually a variable, expression, or block
 comment|/// for which we only have a function prototype.
 name|CK_FunctionType
 block|}
-enum|;
+block|;
 name|private
-label|:
+operator|:
 comment|/// \brief The kind of overload candidate.
 name|CandidateKind
 name|Kind
-decl_stmt|;
-union|union
+block|;
+expr|union
 block|{
 comment|/// \brief The function overload candidate, available when
 comment|/// Kind == CK_Function.
 name|FunctionDecl
-modifier|*
+operator|*
 name|Function
-decl_stmt|;
+block|;
 comment|/// \brief The function template overload candidate, available when
 comment|/// Kind == CK_FunctionTemplate.
 name|FunctionTemplateDecl
-modifier|*
+operator|*
 name|FunctionTemplate
-decl_stmt|;
+block|;
 comment|/// \brief The function type that describes the entity being called,
 comment|/// when Kind == CK_FunctionType.
 specifier|const
 name|FunctionType
-modifier|*
+operator|*
 name|Type
-decl_stmt|;
-block|}
-union|;
+block|;     }
+block|;
 name|public
-label|:
+operator|:
 name|OverloadCandidate
 argument_list|(
 name|FunctionDecl
@@ -2112,7 +2411,7 @@ name|Kind
 argument_list|(
 name|CK_Function
 argument_list|)
-operator|,
+block|,
 name|Function
 argument_list|(
 argument|Function
@@ -2129,7 +2428,7 @@ name|Kind
 argument_list|(
 name|CK_FunctionTemplate
 argument_list|)
-operator|,
+block|,
 name|FunctionTemplate
 argument_list|(
 argument|FunctionTemplateDecl
@@ -2147,7 +2446,7 @@ name|Kind
 argument_list|(
 name|CK_FunctionType
 argument_list|)
-operator|,
+block|,
 name|Type
 argument_list|(
 argument|Type
@@ -2170,7 +2469,7 @@ operator|*
 name|getFunction
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve the function template overload candidate.
 name|FunctionTemplateDecl
 operator|*
@@ -2200,77 +2499,36 @@ operator|*
 name|getFunctionType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Create a new code-completion string that describes the function
 comment|/// signature of this overload candidate.
 name|CodeCompletionString
-modifier|*
+operator|*
 name|CreateSignatureString
 argument_list|(
-name|unsigned
-name|CurrentArg
+argument|unsigned CurrentArg
 argument_list|,
-name|Sema
-operator|&
-name|S
+argument|Sema&S
 argument_list|,
-name|CodeCompletionAllocator
-operator|&
-name|Allocator
+argument|CodeCompletionAllocator&Allocator
+argument_list|,
+argument|CodeCompletionTUInfo&CCTUInfo
 argument_list|)
-decl|const
-decl_stmt|;
-block|}
-empty_stmt|;
-name|CodeCompleteConsumer
-argument_list|()
-operator|:
-name|IncludeMacros
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IncludeCodePatterns
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IncludeGlobals
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|OutputIsBinary
-argument_list|(
-argument|false
-argument_list|)
-block|{ }
+specifier|const
+block|;   }
+block|;
 name|CodeCompleteConsumer
 argument_list|(
-argument|bool IncludeMacros
-argument_list|,
-argument|bool IncludeCodePatterns
-argument_list|,
-argument|bool IncludeGlobals
+argument|const CodeCompleteOptions&CodeCompleteOpts
 argument_list|,
 argument|bool OutputIsBinary
 argument_list|)
 operator|:
-name|IncludeMacros
+name|CodeCompleteOpts
 argument_list|(
-name|IncludeMacros
+name|CodeCompleteOpts
 argument_list|)
-operator|,
-name|IncludeCodePatterns
-argument_list|(
-name|IncludeCodePatterns
-argument_list|)
-operator|,
-name|IncludeGlobals
-argument_list|(
-name|IncludeGlobals
-argument_list|)
-operator|,
+block|,
 name|OutputIsBinary
 argument_list|(
 argument|OutputIsBinary
@@ -2283,6 +2541,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CodeCompleteOpts
+operator|.
 name|IncludeMacros
 return|;
 block|}
@@ -2293,6 +2553,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CodeCompleteOpts
+operator|.
 name|IncludeCodePatterns
 return|;
 block|}
@@ -2303,7 +2565,22 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CodeCompleteOpts
+operator|.
 name|IncludeGlobals
+return|;
+block|}
+comment|/// \brief Whether to include brief documentation comments within the set of
+comment|/// code completions returned.
+name|bool
+name|includeBriefComments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeCompleteOpts
+operator|.
+name|IncludeBriefComments
 return|;
 block|}
 comment|/// \brief Determine whether the output of this consumer is binary.
@@ -2321,28 +2598,22 @@ name|virtual
 operator|~
 name|CodeCompleteConsumer
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// \name Code-completion callbacks
 comment|//@{
 comment|/// \brief Process the finalized code-completion results.
 name|virtual
 name|void
 name|ProcessCodeCompleteResults
-parameter_list|(
-name|Sema
-modifier|&
-name|S
-parameter_list|,
-name|CodeCompletionContext
-name|Context
-parameter_list|,
-name|CodeCompletionResult
-modifier|*
-name|Results
-parameter_list|,
-name|unsigned
-name|NumResults
-parameter_list|)
+argument_list|(
+argument|Sema&S
+argument_list|,
+argument|CodeCompletionContext Context
+argument_list|,
+argument|CodeCompletionResult *Results
+argument_list|,
+argument|unsigned NumResults
+argument_list|)
 block|{ }
 comment|/// \param S the semantic-analyzer object for which code-completion is being
 comment|/// done.
@@ -2355,40 +2626,41 @@ comment|/// \param NumCandidates the number of overload candidates
 name|virtual
 name|void
 name|ProcessOverloadCandidates
-parameter_list|(
-name|Sema
-modifier|&
-name|S
-parameter_list|,
-name|unsigned
-name|CurrentArg
-parameter_list|,
-name|OverloadCandidate
-modifier|*
-name|Candidates
-parameter_list|,
-name|unsigned
-name|NumCandidates
-parameter_list|)
+argument_list|(
+argument|Sema&S
+argument_list|,
+argument|unsigned CurrentArg
+argument_list|,
+argument|OverloadCandidate *Candidates
+argument_list|,
+argument|unsigned NumCandidates
+argument_list|)
 block|{ }
 comment|//@}
 comment|/// \brief Retrieve the allocator that will be used to allocate
 comment|/// code completion strings.
 name|virtual
 name|CodeCompletionAllocator
-modifier|&
+operator|&
 name|getAllocator
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
-block|}
-empty_stmt|;
+block|;
+name|virtual
+name|CodeCompletionTUInfo
+operator|&
+name|getCodeCompletionTUInfo
+argument_list|()
+operator|=
+literal|0
+block|; }
+block|;
 comment|/// \brief A simple code-completion consumer that prints the results it
 comment|/// receives in a simple format.
 name|class
 name|PrintingCodeCompleteConsumer
-range|:
+operator|:
 name|public
 name|CodeCompleteConsumer
 block|{
@@ -2397,8 +2669,8 @@ name|raw_ostream
 operator|&
 name|OS
 block|;
-name|CodeCompletionAllocator
-name|Allocator
+name|CodeCompletionTUInfo
+name|CCTUInfo
 block|;
 name|public
 operator|:
@@ -2406,29 +2678,31 @@ comment|/// \brief Create a new printing code-completion consumer that prints it
 comment|/// results to the given raw output stream.
 name|PrintingCodeCompleteConsumer
 argument_list|(
-argument|bool IncludeMacros
+specifier|const
+name|CodeCompleteOptions
+operator|&
+name|CodeCompleteOpts
 argument_list|,
-argument|bool IncludeCodePatterns
-argument_list|,
-argument|bool IncludeGlobals
-argument_list|,
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 operator|:
 name|CodeCompleteConsumer
 argument_list|(
-name|IncludeMacros
-argument_list|,
-name|IncludeCodePatterns
-argument_list|,
-name|IncludeGlobals
+name|CodeCompleteOpts
 argument_list|,
 name|false
 argument_list|)
 block|,
 name|OS
 argument_list|(
-argument|OS
+name|OS
+argument_list|)
+block|,
+name|CCTUInfo
+argument_list|(
+argument|new GlobalCodeCompletionAllocator
 argument_list|)
 block|{}
 comment|/// \brief Prints the finalized code-completion results.
@@ -2465,11 +2739,24 @@ name|getAllocator
 argument_list|()
 block|{
 return|return
-name|Allocator
+name|CCTUInfo
+operator|.
+name|getAllocator
+argument_list|()
+return|;
+block|}
+name|virtual
+name|CodeCompletionTUInfo
+operator|&
+name|getCodeCompletionTUInfo
+argument_list|()
+block|{
+return|return
+name|CCTUInfo
 return|;
 block|}
 expr|}
-block|;    }
+block|;  }
 end_decl_stmt
 
 begin_comment

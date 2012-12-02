@@ -4,14 +4,46 @@ comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	T
 end_comment
 
 begin_comment
-comment|/*  * This is libpcap's cut-down version of bpf.h; it includes only  * the stuff needed for the code generator and the userland BPF  * interpreter, and the libpcap APIs for setting filters, etc..  *  * "pcap-bpf.c" will include the native OS version, as it deals with  * the OS's BPF implementation.  *  * XXX - should this all just be moved to "pcap.h"?  */
+comment|/*  * This is libpcap's cut-down version of bpf.h; it includes only  * the stuff needed for the code generator and the userland BPF  * interpreter, and the libpcap APIs for setting filters, etc..  *  * "pcap-bpf.c" will include the native OS version, as it deals with  * the OS's BPF implementation.  *  * At least two programs found by Google Code Search explicitly includes  *<pcap/bpf.h> (even though<pcap.h>/<pcap/pcap.h> includes it for you),  * so moving that stuff to<pcap/pcap.h> would break the build for some  * programs.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BPF_MAJOR_VERSION
-end_ifndef
+begin_comment
+comment|/*  * If we've already included<net/bpf.h>, don't re-define this stuff.  * We assume BSD-style multiple-include protection in<net/bpf.h>,  * which is true of all but the oldest versions of FreeBSD and NetBSD,  * or Tru64 UNIX-style multiple-include protection (or, at least,  * Tru64 UNIX 5.x-style; I don't have earlier versions available to check),  * or AIX-style multiple-include protection (or, at least, AIX 5.x-style;  * I don't have earlier versions available to check).  *  * We do not check for BPF_MAJOR_VERSION, as that's defined by  *<linux/filter.h>, which is directly or indirectly included in some  * programs that also include pcap.h, and<linux/filter.h> doesn't  * define stuff we need.  *  * This also provides our own multiple-include protection.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_NET_BPF_H_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_BPF_H_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_H_BPF
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lib_pcap_bpf_h
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|lib_pcap_bpf_h
+end_define
 
 begin_ifdef
 ifdef|#
@@ -55,7 +87,7 @@ name|bpf_u_int32
 typedef|;
 endif|#
 directive|endif
-comment|/*  * Alignment macros.  BPF_WORDALIGN rounds up to the next   * even multiple of BPF_ALIGNMENT.   */
+comment|/*  * Alignment macros.  BPF_WORDALIGN rounds up to the next   * even multiple of BPF_ALIGNMENT.  *  * Tcpdump's print-pflog.c uses this, so we define it here.  */
 ifndef|#
 directive|ifndef
 name|__NetBSD__
@@ -78,14 +110,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)+(BPF_ALIGNMENT-1))&~(BPF_ALIGNMENT-1))
-define|#
-directive|define
-name|BPF_MAXBUFSIZE
-value|0x8000
-define|#
-directive|define
-name|BPF_MINBUFSIZE
-value|32
 comment|/*  * Structure for "pcap_compile()", "pcap_setfilter()", etc..  */
 struct|struct
 name|bpf_program
@@ -100,28 +124,7 @@ name|bf_insns
 decl_stmt|;
 block|}
 struct|;
-comment|/*  * Struct return by BIOCVERSION.  This represents the version number of   * the filter language described by the instruction encodings below.  * bpf understands a program iff kernel_major == filter_major&&  * kernel_minor>= filter_minor, that is, if the value returned by the  * running kernel has the same major number and a minor number equal  * equal to or less than the filter being downloaded.  Otherwise, the  * results are undefined, meaning an error may be returned or packets  * may be accepted haphazardly.  * It has nothing to do with the source code version.  */
-struct|struct
-name|bpf_version
-block|{
-name|u_short
-name|bv_major
-decl_stmt|;
-name|u_short
-name|bv_minor
-decl_stmt|;
-block|}
-struct|;
-comment|/* Current version number of filter architecture. */
-define|#
-directive|define
-name|BPF_MAJOR_VERSION
-value|1
-define|#
-directive|define
-name|BPF_MINOR_VERSION
-value|1
-comment|/*  * Data-link level type codes.  *  * Do *NOT* add new values to this list without asking  * "tcpdump-workers@lists.tcpdump.org" for a value.  Otherwise, you run  * the risk of using a value that's already being used for some other  * purpose, and of having tools that read libpcap-format captures not  * being able to handle captures with your new DLT_ value, with no hope  * that they will ever be changed to do so (as that would destroy their  * ability to read captures using that value for that other purpose).  */
+comment|/*  * Link-layer header type codes.  *  * Do *NOT* add new values to this list without asking  * "tcpdump-workers@lists.tcpdump.org" for a value.  Otherwise, you run  * the risk of using a value that's already being used for some other  * purpose, and of having tools that read libpcap-format captures not  * being able to handle captures with your new DLT_ value, with no hope  * that they will ever be changed to do so (as that would destroy their  * ability to read captures using that value for that other purpose).  *  * See  *  *	http://www.tcpdump.org/linktypes.html  *  * for detailed descriptions of some of these link-layer header types.  */
 comment|/*  * These are the types that are the same on all platforms, and that  * have been defined by<net/bpf.h> for ages.  */
 define|#
 directive|define
@@ -242,7 +245,35 @@ value|16
 comment|/* BSD/OS Point-to-point Protocol */
 endif|#
 directive|endif
-comment|/*  * 17 is used for DLT_OLD_PFLOG in OpenBSD;  *     OBSOLETE: DLT_PFLOG is 117 in OpenBSD now as well. See below.  * 18 is used for DLT_PFSYNC in OpenBSD; don't use it for anything else.  */
+comment|/*  * 17 was used for DLT_PFLOG in OpenBSD; it no longer is.  *  * It was DLT_LANE8023 in SuSE 6.3, so we defined LINKTYPE_PFLOG  * as 117 so that pflog captures would use a link-layer header type  * value that didn't collide with any other values.  On all  * platforms other than OpenBSD, we defined DLT_PFLOG as 117,  * and we mapped between LINKTYPE_PFLOG and DLT_PFLOG.  *  * OpenBSD eventually switched to using 117 for DLT_PFLOG as well.  *  * Don't use 17 for anything else.  */
+comment|/*  * 18 is used for DLT_PFSYNC in OpenBSD, NetBSD, DragonFly BSD and  * Mac OS X; don't use it for anything else.  (FreeBSD uses 121,  * which collides with DLT_HHDLC, even though it doesn't use 18  * for anything and doesn't appear to have ever used it for anything.)  *  * We define it as 18 on those platforms; it is, unfortunately, used  * for DLT_CIP in Suse 6.3, so we don't define it as DLT_PFSYNC  * in general.  As the packet format for it, like that for  * DLT_PFLOG, is not only OS-dependent but OS-version-dependent,  * we don't support printing it in tcpdump except on OSes that  * have the relevant header files, so it's not that useful on  * other platforms.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+define|#
+directive|define
+name|DLT_PFSYNC
+value|18
+endif|#
+directive|endif
 define|#
 directive|define
 name|DLT_ATM_CLIP
@@ -269,7 +300,12 @@ define|#
 directive|define
 name|DLT_SYMANTEC_FIREWALL
 value|99
-comment|/*  * Values between 100 and 103 are used in capture file headers as  * link-layer types corresponding to DLT_ types that differ  * between platforms; don't use those values for new DLT_ new types.  */
+comment|/*  * Values between 100 and 103 are used in capture file headers as  * link-layer header type LINKTYPE_ values corresponding to DLT_ types  * that differ between platforms; don't use those values for new DLT_  * new types.  */
+comment|/*  * Values starting with 104 are used for newly-assigned link-layer  * header type values; for those link-layer header types, the DLT_  * value returned by pcap_datalink() and passed to pcap_open_dead(),  * and the LINKTYPE_ value that appears in capture files, are the  * same.  *  * DLT_MATCHING_MIN is the lowest such value; DLT_MATCHING_MAX is  * the highest such value.  */
+define|#
+directive|define
+name|DLT_MATCHING_MIN
+value|104
 comment|/*  * This value was defined by libpcap 0.5; platforms that have defined  * it with a different value should define it here with that value -  * a link type of 104 in a save file will be mapped to DLT_C_HDLC,  * whatever value that happens to be, so programs will correctly  * handle files with that link type regardless of the value of  * DLT_C_HDLC.  *  * The name DLT_C_HDLC was used by BSD/OS; we use that name for source  * compatibility with programs written for BSD/OS.  *  * libpcap 0.5 defined it as DLT_CHDLC; we define DLT_CHDLC as well,  * for source compatibility with programs written for libpcap 0.5.  */
 define|#
 directive|define
@@ -344,20 +380,7 @@ define|#
 directive|define
 name|DLT_IPFILTER
 value|116
-comment|/*  * OpenBSD DLT_PFLOG; DLT_PFLOG is 17 in OpenBSD, but that's DLT_LANE8023  * in SuSE 6.3, so we can't use 17 for it in capture-file headers.  *  * XXX: is there a conflict with DLT_PFSYNC 18 as well?  */
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-define|#
-directive|define
-name|DLT_OLD_PFLOG
-value|17
-define|#
-directive|define
-name|DLT_PFSYNC
-value|18
-endif|#
-directive|endif
+comment|/*  * OpenBSD DLT_PFLOG.  */
 define|#
 directive|define
 name|DLT_PFLOG
@@ -377,11 +400,22 @@ define|#
 directive|define
 name|DLT_AIRONET_HEADER
 value|120
-comment|/*  * Reserved for Siemens HiPath HDLC.  */
+comment|/*  * Sigh.  *  * This was reserved for Siemens HiPath HDLC on 2002-01-25, as  * requested by Tomas Kukosa.  *  * On 2004-02-25, a FreeBSD checkin to sys/net/bpf.h was made that  * assigned 121 as DLT_PFSYNC.  Its libpcap does DLT_<-> LINKTYPE_  * mapping, so it probably supports capturing on the pfsync device  * but not saving the captured data to a pcap file.  *  * OpenBSD, from which pf came, however, uses 18 for DLT_PFSYNC;  * their libpcap does no DLT_<-> LINKTYPE_ mapping, so it would  * use 18 in pcap files as well.  *  * NetBSD and DragonFly BSD also use 18 for DLT_PFSYNC; their  * libpcaps do DLT_<-> LINKTYPE_ mapping, and neither has an entry  * for DLT_PFSYNC, so it might not be able to write out dump files  * with 18 as the link-layer header type.  (Earlier versions might  * not have done mapping, in which case they'd work the same way  * OpenBSD does.)  *  * Mac OS X defines it as 18, but doesn't appear to use it as of  * Mac OS X 10.7.3.  Its libpcap does DLT_<-> LINKTYPE_ mapping.  *  * We'll define DLT_PFSYNC as 121 on FreeBSD and define it as 18 on  * all other platforms.  We'll define DLT_HHDLC as 121 on everything  * except for FreeBSD; anybody who wants to compile, on FreeBSD, code  * that uses DLT_HHDLC is out of luck.  *  * We'll define LINKTYPE_PFSYNC as 18, *even on FreeBSD*, and map  * it, so that savefiles won't use 121 for PFSYNC - they'll all  * use 18.  Code that uses pcap_datalink() to determine the link-layer  * header type of a savefile won't, when built and run on FreeBSD,  * be able to distinguish between LINKTYPE_PFSYNC and LINKTYPE_HHDLC  * capture files; code that doesn't, such as the code in Wireshark,  * will be able to distinguish between them.  */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+define|#
+directive|define
+name|DLT_PFSYNC
+value|121
+else|#
+directive|else
 define|#
 directive|define
 name|DLT_HHDLC
 value|121
+endif|#
+directive|endif
 comment|/*  * This is for RFC 2625 IP-over-Fibre Channel.  *  * This is not for use with raw Fibre Channel, where the link-layer  * header starts with a Fibre Channel frame header; it's for IP-over-FC,  * where the link-layer header starts with an RFC 2625 Network_Header  * field.  */
 define|#
 directive|define
@@ -581,7 +615,7 @@ define|#
 directive|define
 name|DLT_JUNIPER_MONITOR
 value|164
-comment|/*  * Reserved for BACnet MS/TP.  */
+comment|/*  * BACnet MS/TP frames.  */
 define|#
 directive|define
 name|DLT_BACNET_MS_TP
@@ -736,7 +770,7 @@ define|#
 directive|define
 name|DLT_JUNIPER_ISM
 value|194
-comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing); requested by Mikko Saarnivala<mikko.saarnivala@sensinode.com>.  */
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing); requested by Mikko Saarnivala<mikko.saarnivala@sensinode.com>.  * For this one, we expect the FCS to be present at the end of the frame;  * if the frame has no FCS, DLT_IEEE802_15_4_NOFCS should be used.  */
 define|#
 directive|define
 name|DLT_IEEE802_15_4
@@ -906,6 +940,127 @@ define|#
 directive|define
 name|DLT_IPV6
 value|229
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing), and with no FCS at the end of the frame; requested by  * Jon Smirl<jonsmirl@gmail.com>.  */
+define|#
+directive|define
+name|DLT_IEEE802_15_4_NOFCS
+value|230
+comment|/*  * Raw D-Bus:  *  *	http://www.freedesktop.org/wiki/Software/dbus  *  * messages:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-messages  *  * starting with the endianness flag, followed by the message type, etc.,  * but without the authentication handshake before the message sequence:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#auth-protocol  *  * Requested by Martin Vidner<martin@vidner.net>.  */
+define|#
+directive|define
+name|DLT_DBUS
+value|231
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
+define|#
+directive|define
+name|DLT_JUNIPER_VS
+value|232
+define|#
+directive|define
+name|DLT_JUNIPER_SRX_E2E
+value|233
+define|#
+directive|define
+name|DLT_JUNIPER_FIBRECHANNEL
+value|234
+comment|/*  * DVB-CI (DVB Common Interface for communication between a PC Card  * module and a DVB receiver).  See  *  *	http://www.kaiser.cx/pcap-dvbci.html  *  * for the specification.  *  * Requested by Martin Kaiser<martin@kaiser.cx>.  */
+define|#
+directive|define
+name|DLT_DVB_CI
+value|235
+comment|/*  * Variant of 3GPP TS 27.010 multiplexing protocol (similar to, but  * *not* the same as, 27.010).  Requested by Hans-Christoph Schemmel  *<hans-christoph.schemmel@cinterion.com>.  */
+define|#
+directive|define
+name|DLT_MUX27010
+value|236
+comment|/*  * STANAG 5066 D_PDUs.  Requested by M. Baris Demiray  *<barisdemiray@gmail.com>.  */
+define|#
+directive|define
+name|DLT_STANAG_5066_D_PDU
+value|237
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.  */
+define|#
+directive|define
+name|DLT_JUNIPER_ATM_CEMIC
+value|238
+comment|/*  * NetFilter LOG messages   * (payload of netlink NFNL_SUBSYS_ULOG/NFULNL_MSG_PACKET packets)  *  * Requested by Jakub Zawadzki<darkjames-ws@darkjames.pl>  */
+define|#
+directive|define
+name|DLT_NFLOG
+value|239
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and always  * with the payload including the FCS, as supplied by their  * netANALYZER hardware and software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+define|#
+directive|define
+name|DLT_NETANALYZER
+value|240
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and FCS and  * with the Ethernet header preceded by 7 bytes of preamble and  * 1 byte of SFD, as supplied by their netANALYZER hardware and  * software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+define|#
+directive|define
+name|DLT_NETANALYZER_TRANSPARENT
+value|241
+comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+define|#
+directive|define
+name|DLT_IPOIB
+value|242
+comment|/*  * MPEG-2 transport stream (ISO 13818-1/ITU-T H.222.0).  *  * Requested by Guy Martin<gmsoft@tuxicoman.be>.  */
+define|#
+directive|define
+name|DLT_MPEG_2_TS
+value|243
+comment|/*  * ng4T GmbH's UMTS Iub/Iur-over-ATM and Iub/Iur-over-IP format as  * used by their ng40 protocol tester.  *  * Requested by Jens Grimmer<jens.grimmer@ng4t.com>.  */
+define|#
+directive|define
+name|DLT_NG40
+value|244
+comment|/*  * Pseudo-header giving adapter number and flags, followed by an NFC  * (Near-Field Communications) Logical Link Control Protocol (LLCP) PDU,  * as specified by NFC Forum Logical Link Control Protocol Technical  * Specification LLCP 1.1.  *  * Requested by Mike Wakerly<mikey@google.com>.  */
+define|#
+directive|define
+name|DLT_NFC_LLCP
+value|245
+comment|/*  * 245 is used as LINKTYPE_PFSYNC; do not use it for any other purpose.  *  * DLT_PFSYNC has different values on different platforms, and all of  * them collide with something used elsewhere.  On platforms that  * don't already define it, define it as 245.  */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+define|#
+directive|define
+name|DLT_PFSYNC
+value|246
+endif|#
+directive|endif
+define|#
+directive|define
+name|DLT_MATCHING_MAX
+value|246
+comment|/* highest value in the "matching" range */
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 define|#
 directive|define
@@ -1250,6 +1405,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !defined(_NET_BPF_H_)&& !defined(_BPF_H_)&& !defined(_H_BPF)&& !defined(lib_pcap_bpf_h) */
+end_comment
 
 end_unit
 

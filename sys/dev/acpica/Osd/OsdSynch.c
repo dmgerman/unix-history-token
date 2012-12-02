@@ -919,9 +919,10 @@ block|}
 block|}
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|status
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 name|as
 operator|->
@@ -1885,9 +1886,10 @@ block|}
 block|}
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|status
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 name|am
 operator|->

@@ -88,6 +88,7 @@ index|]
 decl_stmt|;
 comment|/* vendor-specific area */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 
@@ -1116,6 +1117,7 @@ index|]
 decl_stmt|;
 comment|/* currently unused */
 block|}
+name|UNALIGNED
 struct|;
 end_struct
 

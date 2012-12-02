@@ -274,7 +274,6 @@ specifier|static
 specifier|const
 name|struct
 name|wb_type
-specifier|const
 name|wb_devs
 index|[]
 init|=

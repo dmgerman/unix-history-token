@@ -335,6 +335,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
+name|board_id
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* board type to pass to kernel, if set by board_* code */
+end_comment
+
+begin_decl_stmt
+name|unsigned
 name|dsk_start
 decl_stmt|;
 end_decl_stmt
@@ -368,7 +378,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|dsk_meta
 decl_stmt|;
 end_decl_stmt
@@ -389,21 +399,6 @@ name|int
 name|parse
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|xfsread
-parameter_list|(
-name|ino_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -507,7 +502,7 @@ specifier|inline
 name|int
 name|xfsread
 parameter_list|(
-name|ino_t
+name|ufs_ino_t
 name|inode
 parameter_list|,
 name|void
@@ -676,7 +671,7 @@ name|c
 init|=
 literal|0
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|dmadat
@@ -876,7 +871,7 @@ decl_stmt|;
 name|caddr_t
 name|p
 decl_stmt|;
-name|ino_t
+name|ufs_ino_t
 name|ino
 decl_stmt|;
 name|uint32_t
@@ -1143,6 +1138,12 @@ operator|*
 argument_list|)
 argument_list|(
 name|int
+argument_list|,
+name|int
+argument_list|,
+name|int
+argument_list|,
+name|int
 argument_list|)
 operator|)
 name|addr
@@ -1151,6 +1152,12 @@ operator|(
 name|opts
 operator|&
 name|RBX_MASK
+operator|,
+name|board_id
+operator|,
+literal|0
+operator|,
+literal|0
 operator|)
 expr_stmt|;
 block|}

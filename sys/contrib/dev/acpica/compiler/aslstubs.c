@@ -69,7 +69,9 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

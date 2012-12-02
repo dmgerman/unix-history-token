@@ -24,7 +24,7 @@ file|<locale.h>
 end_include
 
 begin_comment
-comment|/*  * The sample tar file was made in LANG=KOI8-R and it contains two  * files the charset of which are different.  * - the filename of first file is stored in BINARY mode.  * - the filename of second file is stored in UTF-8.  *  * Whenever hdrcharset option is specified, we will correctly read the  * filename of sencod file, which is stored in UTF-8 by default.  */
+comment|/*  * The sample tar file was made in LANG=KOI8-R and it contains two  * files the charset of which are different.  * - the filename of first file is stored in BINARY mode.  * - the filename of second file is stored in UTF-8.  *  * Whenever hdrcharset option is specified, we will correctly read the  * filename of second file, which is stored in UTF-8 by default.  */
 end_comment
 
 begin_function

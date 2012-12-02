@@ -3742,7 +3742,7 @@ condition|)
 goto|goto
 name|err_read_i2c_eeprom
 goto|;
-comment|/* ID Module 		  * ========= 		  * 0   SFP_DA_CU 		  * 1   SFP_SR 		  * 2   SFP_LR 		  * 3   SFP_DA_CORE0 - 82599-specific 		  * 4   SFP_DA_CORE1 - 82599-specific 		  * 5   SFP_SR/LR_CORE0 - 82599-specific 		  * 6   SFP_SR/LR_CORE1 - 82599-specific 		  * 7   SFP_act_lmt_DA_CORE0 - 82599-specific 		  * 8   SFP_act_lmt_DA_CORE1 - 82599-specific 		  * 9   SFP_1g_cu_CORE0 - 82599-specific 		  * 10  SFP_1g_cu_CORE1 - 82599-specific 		  */
+comment|/* ID Module 		  * ========= 		  * 0   SFP_DA_CU 		  * 1   SFP_SR 		  * 2   SFP_LR 		  * 3   SFP_DA_CORE0 - 82599-specific 		  * 4   SFP_DA_CORE1 - 82599-specific 		  * 5   SFP_SR/LR_CORE0 - 82599-specific 		  * 6   SFP_SR/LR_CORE1 - 82599-specific 		  * 7   SFP_act_lmt_DA_CORE0 - 82599-specific 		  * 8   SFP_act_lmt_DA_CORE1 - 82599-specific 		  * 9   SFP_1g_cu_CORE0 - 82599-specific 		  * 10  SFP_1g_cu_CORE1 - 82599-specific 		  * 11  SFP_1g_sx_CORE0 - 82599-specific 		  * 12  SFP_1g_sx_CORE1 - 82599-specific 		  */
 if|if
 condition|(
 name|hw
@@ -4000,6 +4000,42 @@ operator|.
 name|sfp_type
 operator|=
 name|ixgbe_sfp_type_1g_cu_core1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|comp_codes_1g
+operator|&
+name|IXGBE_SFF_1GBASESX_CAPABLE
+condition|)
+block|{
+if|if
+condition|(
+name|hw
+operator|->
+name|bus
+operator|.
+name|lan_id
+operator|==
+literal|0
+condition|)
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|=
+name|ixgbe_sfp_type_1g_sx_core0
+expr_stmt|;
+else|else
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|=
+name|ixgbe_sfp_type_1g_sx_core1
 expr_stmt|;
 block|}
 else|else
@@ -4404,6 +4440,22 @@ operator|.
 name|sfp_type
 operator|==
 name|ixgbe_sfp_type_1g_cu_core0
+operator|||
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|==
+name|ixgbe_sfp_type_1g_sx_core0
+operator|||
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|==
+name|ixgbe_sfp_type_1g_sx_core1
 operator|)
 condition|)
 block|{
@@ -4481,6 +4533,26 @@ name|sfp_type
 operator|==
 name|ixgbe_sfp_type_1g_cu_core1
 operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|==
+name|ixgbe_sfp_type_1g_sx_core0
+operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|sfp_type
+operator|==
+name|ixgbe_sfp_type_1g_sx_core1
+operator|)
 operator|)
 condition|)
 block|{
@@ -4496,6 +4568,40 @@ operator|==
 name|ixgbe_phy_sfp_intel
 condition|)
 block|{
+name|status
+operator|=
+name|IXGBE_SUCCESS
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|hw
+operator|->
+name|allow_unsupported_sfp
+operator|==
+name|TRUE
+condition|)
+block|{
+name|EWARN
+argument_list|(
+name|hw
+argument_list|,
+literal|"WARNING: Intel (R) Network "
+literal|"Connections are quality tested "
+literal|"using Intel (R) Ethernet Optics."
+literal|" Using untested modules is not "
+literal|"supported and may cause unstable"
+literal|" operation or damage to the "
+literal|"module or the adapter. Intel "
+literal|"Corporation is not responsible "
+literal|"for any harm caused by using "
+literal|"untested modules.\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|IXGBE_SUCCESS
@@ -4520,6 +4626,7 @@ name|status
 operator|=
 name|IXGBE_ERR_SFP_NOT_SUPPORTED
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -4677,6 +4784,10 @@ operator|||
 name|sfp_type
 operator|==
 name|ixgbe_sfp_type_1g_cu_core0
+operator|||
+name|sfp_type
+operator|==
+name|ixgbe_sfp_type_1g_sx_core0
 condition|)
 name|sfp_type
 operator|=
@@ -4692,6 +4803,10 @@ operator|||
 name|sfp_type
 operator|==
 name|ixgbe_sfp_type_1g_cu_core1
+operator|||
+name|sfp_type
+operator|==
+name|ixgbe_sfp_type_1g_sx_core1
 condition|)
 name|sfp_type
 operator|=
@@ -6275,11 +6390,40 @@ modifier|*
 name|i2cctl
 parameter_list|)
 block|{
+name|u32
+name|i
+init|=
+literal|0
+decl_stmt|;
+name|u32
+name|timeout
+init|=
+name|IXGBE_I2C_CLOCK_STRETCHING_TIMEOUT
+decl_stmt|;
+name|u32
+name|i2cctl_r
+init|=
+literal|0
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_raise_i2c_clk"
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|timeout
+condition|;
+name|i
+operator|++
+control|)
+block|{
 operator|*
 name|i2cctl
 operator||=
@@ -6306,6 +6450,23 @@ argument_list|(
 name|IXGBE_I2C_T_RISE
 argument_list|)
 expr_stmt|;
+name|i2cctl_r
+operator|=
+name|IXGBE_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_I2CCTL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i2cctl_r
+operator|&
+name|IXGBE_I2C_CLK_IN
+condition|)
+break|break;
+block|}
 block|}
 end_function
 
@@ -6624,7 +6785,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_tn_check_overtemp - Checks if an overtemp occured.  *  @hw: pointer to hardware structure  *  *  Checks if the LASI temp alarm status was triggered due to overtemp  **/
+comment|/**  *  ixgbe_tn_check_overtemp - Checks if an overtemp occurred.  *  @hw: pointer to hardware structure  *  *  Checks if the LASI temp alarm status was triggered due to overtemp  **/
 end_comment
 
 begin_function

@@ -157,7 +157,7 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
-comment|/// Matcher - Base class for all the the DAG ISel Matcher representation
+comment|/// Matcher - Base class for all the DAG ISel Matcher representation
 comment|/// nodes.
 name|class
 name|Matcher
@@ -170,6 +170,11 @@ name|Matcher
 operator|>
 name|Next
 expr_stmt|;
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 enum|enum
@@ -4777,6 +4782,11 @@ operator|:
 name|public
 name|EmitNodeMatcherCommon
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|unsigned
 name|FirstResultSlot
 block|;
@@ -4871,6 +4881,11 @@ operator|:
 name|public
 name|EmitNodeMatcherCommon
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 specifier|const
 name|PatternToMatch
 operator|&

@@ -337,17 +337,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BO_NEEDSGIANT
-value|(1<< 2)
-end_define
-
-begin_comment
-comment|/* Require giant for child buffers. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BO_MTX
 parameter_list|(
 name|bo

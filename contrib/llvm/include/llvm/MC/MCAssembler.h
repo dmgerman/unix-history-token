@@ -121,9 +121,6 @@ name|class
 name|MCAssembler
 decl_stmt|;
 name|class
-name|MCBinaryExpr
-decl_stmt|;
-name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -351,6 +348,11 @@ range|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|SmallString
 operator|<
 literal|32
@@ -459,7 +461,7 @@ name|Fixup
 operator|.
 name|getOffset
 argument_list|()
-operator|>
+operator|>=
 name|Fixups
 operator|.
 name|back
@@ -637,6 +639,11 @@ range|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Inst - The instruction this is a fragment for.
 name|MCInst
 name|Inst
@@ -969,6 +976,11 @@ range|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Alignment - The alignment to ensure, in bytes.
 name|unsigned
 name|Alignment
@@ -1137,6 +1149,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Value - Value to use for filling bytes.
 name|int64_t
 name|Value
@@ -1271,6 +1288,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Offset - The offset this fragment should start at.
 specifier|const
 name|MCExpr
@@ -1372,6 +1394,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// Value - The value this fragment should contain.
 specifier|const
 name|MCExpr
@@ -1511,6 +1538,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// LineDelta - the value of the difference between the two line numbers
 comment|/// between two .loc dwarf directives.
 name|int64_t
@@ -1651,6 +1683,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// AddrDelta - The expression for the difference of the two symbols that
 comment|/// make up the address delta between two .cfi_* dwarf directives.
 specifier|const
@@ -2474,6 +2511,37 @@ operator|*
 name|SectionData
 block|; }
 block|;
+comment|// FIXME: Ditto this. Purely so the Streamer and the ObjectWriter can talk
+comment|// to one another.
+block|struct
+name|DataRegionData
+block|{
+comment|// This enum should be kept in sync w/ the mach-o definition in
+comment|// llvm/Object/MachOFormat.h.
+block|enum
+name|KindTy
+block|{
+name|Data
+operator|=
+literal|1
+block|,
+name|JumpTable8
+block|,
+name|JumpTable16
+block|,
+name|JumpTable32
+block|}
+name|Kind
+block|;
+name|MCSymbol
+operator|*
+name|Start
+block|;
+name|MCSymbol
+operator|*
+name|End
+block|; }
+block|;
 name|class
 name|MCAssembler
 block|{
@@ -2560,6 +2628,34 @@ operator|>
 operator|::
 name|iterator
 name|indirect_symbol_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+operator|::
+name|const_iterator
+name|const_data_region_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+operator|::
+name|iterator
+name|data_region_iterator
 expr_stmt|;
 end_typedef
 
@@ -2714,6 +2810,17 @@ name|IndirectSymbols
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+name|DataRegions
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// The set of function symbols for which a .thumb_func directive has
 end_comment
@@ -2838,7 +2945,7 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|EvaluateFixup
+name|evaluateFixup
 argument_list|(
 specifier|const
 name|MCAsmLayout
@@ -2877,7 +2984,7 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|FixupNeedsRelaxation
+name|fixupNeedsRelaxation
 argument_list|(
 specifier|const
 name|MCFixup
@@ -2885,7 +2992,7 @@ operator|&
 name|Fixup
 argument_list|,
 specifier|const
-name|MCFragment
+name|MCInstFragment
 operator|*
 name|DF
 argument_list|,
@@ -2904,7 +3011,7 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|FragmentNeedsRelaxation
+name|fragmentNeedsRelaxation
 argument_list|(
 specifier|const
 name|MCInstFragment
@@ -2921,7 +3028,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
+comment|/// layoutOnce - Perform one layout iteration and return true if any offsets
 end_comment
 
 begin_comment
@@ -2930,7 +3037,7 @@ end_comment
 
 begin_function_decl
 name|bool
-name|LayoutOnce
+name|layoutOnce
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2941,7 +3048,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|LayoutSectionOnce
+name|layoutSectionOnce
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2956,7 +3063,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxInstruction
+name|relaxInstruction
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2971,7 +3078,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxLEB
+name|relaxLEB
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -2986,7 +3093,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxDwarfLineAddr
+name|relaxDwarfLineAddr
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -3001,7 +3108,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|RelaxDwarfCallFrameFragment
+name|relaxDwarfCallFrameFragment
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -3015,12 +3122,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// FinishLayout - Finalize a layout, including fragment lowering.
+comment|/// finishLayout - Finalize a layout, including fragment lowering.
 end_comment
 
 begin_function_decl
 name|void
-name|FinishLayout
+name|finishLayout
 parameter_list|(
 name|MCAsmLayout
 modifier|&
@@ -3031,7 +3138,7 @@ end_function_decl
 
 begin_function_decl
 name|uint64_t
-name|HandleFixup
+name|handleFixup
 parameter_list|(
 specifier|const
 name|MCAsmLayout
@@ -3065,7 +3172,7 @@ end_comment
 
 begin_decl_stmt
 name|uint64_t
-name|ComputeFragmentSize
+name|computeFragmentSize
 argument_list|(
 specifier|const
 name|MCAsmLayout
@@ -3139,7 +3246,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|WriteSectionData
+name|writeSectionData
 argument_list|(
 specifier|const
 name|MCSectionData
@@ -3756,6 +3863,120 @@ specifier|const
 block|{
 return|return
 name|IndirectSymbols
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// @name Data Region List Access
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_comment
+comment|// FIXME: This is a total hack, this should not be here. Once things are
+end_comment
+
+begin_comment
+comment|// factored so that the streamer has direct access to the .o writer, it can
+end_comment
+
+begin_comment
+comment|// disappear.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+operator|&
+name|getDataRegions
+argument_list|()
+block|{
+return|return
+name|DataRegions
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|data_region_iterator
+name|data_region_begin
+parameter_list|()
+block|{
+return|return
+name|DataRegions
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_data_region_iterator
+name|data_region_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataRegions
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|data_region_iterator
+name|data_region_end
+parameter_list|()
+block|{
+return|return
+name|DataRegions
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_data_region_iterator
+name|data_region_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataRegions
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|size_t
+name|data_region_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataRegions
 operator|.
 name|size
 argument_list|()

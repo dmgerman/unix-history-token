@@ -187,9 +187,9 @@ name|ifi_vhid
 decl_stmt|;
 comment|/* carp vhid */
 name|u_char
-name|ifi_spare_char2
+name|ifi_baudrate_pf
 decl_stmt|;
-comment|/* spare byte */
+comment|/* baudrate power factor */
 name|u_char
 name|ifi_datalen
 decl_stmt|;
@@ -614,7 +614,7 @@ name|IF_Kbps
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * 1000)
+value|((uintmax_t)(x) * 1000)
 end_define
 
 begin_comment
@@ -883,6 +883,35 @@ end_define
 begin_comment
 comment|/* netmap mode supported/enabled */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_RXCSUM_IPV6
+value|0x200000
+end_define
+
+begin_comment
+comment|/* can offload checksum on IPv6 RX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TXCSUM_IPV6
+value|0x400000
+end_define
+
+begin_comment
+comment|/* can offload checksum on IPv6 TX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWCSUM_IPV6
+value|(IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6)
+end_define
 
 begin_define
 define|#

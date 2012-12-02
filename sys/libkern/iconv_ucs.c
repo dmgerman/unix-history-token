@@ -2235,17 +2235,6 @@ return|;
 block|}
 if|if
 condition|(
-name|w
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
 name|srclen
 operator|<
 name|w

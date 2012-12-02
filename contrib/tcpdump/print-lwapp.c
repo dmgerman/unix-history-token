@@ -691,8 +691,6 @@ modifier|*
 name|tptr
 decl_stmt|;
 name|int
-name|hexdump
-decl_stmt|,
 name|tlen
 decl_stmt|;
 name|int
@@ -1027,10 +1025,6 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|hexdump
-operator|=
-name|FALSE
-expr_stmt|;
 comment|/* XXX - Decode sub messages for each message */
 switch|switch
 condition|(

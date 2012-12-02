@@ -880,6 +880,24 @@ block|}
 end_function
 
 begin_comment
+comment|/// Reverses the forground and background colors.
+end_comment
+
+begin_function
+name|virtual
+name|raw_ostream
+modifier|&
+name|reverseColor
+parameter_list|()
+block|{
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// This function determines if this stream is connected to a "tty" or
 end_comment
 
@@ -900,6 +918,24 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// This function determines if this stream is displayed and supports colors.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|bool
+name|has_colors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|is_displayed
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1376,15 +1412,27 @@ name|resetColor
 argument_list|()
 block|;
 name|virtual
+name|raw_ostream
+operator|&
+name|reverseColor
+argument_list|()
+block|;
+name|virtual
 name|bool
 name|is_displayed
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|has_colors
 argument_list|()
 specifier|const
 block|;
 comment|/// has_error - Return the value of the flag in this raw_fd_ostream indicating
 comment|/// whether an output error has been encountered.
 comment|/// This doesn't implicitly flush any pending output.  Also, it doesn't
-comment|/// guarantee to detect all errors unless the the stream has been closed.
+comment|/// guarantee to detect all errors unless the stream has been closed.
 name|bool
 name|has_error
 argument_list|()

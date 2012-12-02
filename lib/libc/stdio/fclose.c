@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<spinlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
@@ -234,6 +240,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Mess up if reaccessed. */
+comment|/* 	 * Lock the spinlock used to protect __sglue list walk in 	 * __sfp().  The __sfp() uses fp->_flags == 0 test as an 	 * indication of the unused FILE. 	 * 	 * Taking the lock prevents possible compiler or processor 	 * reordering of the writes performed before the final _flags 	 * cleanup, making sure that we are done with the FILE before 	 * it is considered available. 	 */
+name|STDIO_THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|fp
 operator|->
 name|_flags
@@ -241,6 +251,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Release this FILE for reuse. */
+name|STDIO_THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|FUNLOCKFILE
 argument_list|(
 name|fp

@@ -83,6 +83,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|ObjCRuntime
+decl_stmt|;
 name|namespace
 name|driver
 block|{
@@ -99,16 +102,10 @@ name|class
 name|Driver
 decl_stmt|;
 name|class
-name|HostInfo
-decl_stmt|;
-name|class
 name|InputArgList
 decl_stmt|;
 name|class
 name|JobAction
-decl_stmt|;
-name|class
-name|ObjCRuntime
 decl_stmt|;
 name|class
 name|Tool
@@ -138,12 +135,20 @@ block|,
 name|CST_Libstdcxx
 block|}
 enum|;
+enum|enum
+name|RuntimeLibType
+block|{
+name|RLT_CompilerRT
+block|,
+name|RLT_Libgcc
+block|}
+enum|;
 name|private
 label|:
 specifier|const
-name|HostInfo
+name|Driver
 modifier|&
-name|Host
+name|D
 decl_stmt|;
 specifier|const
 name|llvm
@@ -166,18 +171,79 @@ label|:
 name|ToolChain
 argument_list|(
 specifier|const
-name|HostInfo
+name|Driver
 operator|&
-name|Host
+name|D
 argument_list|,
 specifier|const
 name|llvm
 operator|::
 name|Triple
 operator|&
-name|_Triple
+name|T
 argument_list|)
 expr_stmt|;
+comment|/// \name Utilities for implementing subclasses.
+comment|///@{
+specifier|static
+name|void
+name|addSystemInclude
+parameter_list|(
+specifier|const
+name|ArgList
+modifier|&
+name|DriverArgs
+parameter_list|,
+name|ArgStringList
+modifier|&
+name|CC1Args
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|addExternCSystemInclude
+parameter_list|(
+specifier|const
+name|ArgList
+modifier|&
+name|DriverArgs
+parameter_list|,
+name|ArgStringList
+modifier|&
+name|CC1Args
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|addSystemIncludes
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|DriverArgs
+argument_list|,
+name|ArgStringList
+operator|&
+name|CC1Args
+argument_list|,
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|Paths
+argument_list|)
+decl_stmt|;
+comment|///@}
 name|public
 label|:
 name|virtual
@@ -442,6 +508,17 @@ return|return
 name|true
 return|;
 block|}
+comment|/// IsMathErrnoDefault - Does this tool chain use -fmath-errno by default.
+name|virtual
+name|bool
+name|IsMathErrnoDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// IsObjCDefaultSynthPropertiesDefault - Does this tool chain enable
 comment|/// -fobjc-default-synthesize-properties by default.
 name|virtual
@@ -459,19 +536,6 @@ comment|/// -fobjc-nonfragile-abi by default.
 name|virtual
 name|bool
 name|IsObjCNonFragileABIDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// IsObjCLegacyDispatchDefault - Does this tool chain set
-comment|/// -fobjc-legacy-dispatch by default (this is only used with the non-fragile
-comment|/// ABI).
-name|virtual
-name|bool
-name|IsObjCLegacyDispatchDefault
 argument_list|()
 specifier|const
 block|{
@@ -504,6 +568,19 @@ decl|const
 block|{
 return|return
 literal|0
+return|;
+block|}
+comment|/// GetDefaultRuntimeLibType - Get the default runtime library variant to use.
+name|virtual
+name|RuntimeLibType
+name|GetDefaultRuntimeLibType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ToolChain
+operator|::
+name|RLT_Libgcc
 return|;
 block|}
 comment|/// IsUnwindTablesDefault - Does this tool chain use -funwind-tables
@@ -556,6 +633,17 @@ comment|/// Does this tool chain support Objective-C garbage collection.
 name|virtual
 name|bool
 name|SupportsObjCGC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Does this tool chain support Objective-C ARC.
+name|virtual
+name|bool
+name|SupportsObjCARC
 argument_list|()
 specifier|const
 block|{
@@ -617,17 +705,16 @@ argument|types::ID InputType = types::TY_INVALID
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// configureObjCRuntime - Configure the known properties of the
-comment|/// Objective-C runtime for this platform.
+comment|/// getDefaultObjCRuntime - Return the default Objective-C runtime
+comment|/// for this platform.
 comment|///
 comment|/// FIXME: this really belongs on some sort of DeploymentTarget abstraction
 name|virtual
-name|void
-name|configureObjCRuntime
-argument_list|(
 name|ObjCRuntime
-operator|&
-name|runtime
+name|getDefaultObjCRuntime
+argument_list|(
+name|bool
+name|isNonFragile
 argument_list|)
 decl|const
 decl_stmt|;
@@ -662,6 +749,31 @@ argument_list|,
 name|ArgStringList
 operator|&
 name|CC1Args
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// addClangTargetOptions - Add options that need to be passed to cc1 for
+comment|// this target.
+name|virtual
+name|void
+name|addClangTargetOptions
+argument_list|(
+name|ArgStringList
+operator|&
+name|CC1Args
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// GetRuntimeLibType - Determine the runtime library type to use with the
+comment|// given compilation arguments.
+name|virtual
+name|RuntimeLibType
+name|GetRuntimeLibType
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|)
 decl|const
 decl_stmt|;

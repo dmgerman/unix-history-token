@@ -59,11 +59,19 @@ directive|include
 file|<tcpdump-stdinc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_GETRPCBYNUMBER
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_RPC_RPC_H
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -98,7 +106,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_GETRPCBYNUMBER */
+comment|/* defined(HAVE_GETRPCBYNUMBER)&& defined(HAVE_RPC_RPC_H) */
 end_comment
 
 begin_include
@@ -642,9 +650,17 @@ name|u_int32_t
 name|prog
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_GETRPCBYNUMBER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_RPC_RPC_H
+argument_list|)
 specifier|register
 name|struct
 name|rpcent
@@ -681,9 +697,17 @@ operator|(
 name|buf
 operator|)
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_GETRPCBYNUMBER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_RPC_RPC_H
+argument_list|)
 name|rp
 operator|=
 name|getrpcbynumber
@@ -716,9 +740,17 @@ argument_list|,
 name|prog
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_GETRPCBYNUMBER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_RPC_RPC_H
+argument_list|)
 else|else
 name|strlcpy
 argument_list|(

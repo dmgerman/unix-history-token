@@ -125,7 +125,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Object is intialized and data is valid */
+comment|/* Object is initialized and data is valid */
 end_comment
 
 begin_define
@@ -198,7 +198,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Note: The String and Buffer object must be identical through the Pointer  * and length elements.  There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
+comment|/*  * Note: The String and Buffer object must be identical through the  * pointer and length elements. There is code that depends on this.  *  * Fields common to both Strings and Buffers  */
 end_comment
 
 begin_define
@@ -511,7 +511,7 @@ comment|/* Method modified the namespace */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * Objects that can be notified.  All share a common NotifyInfo area.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Objects that can be notified. All share a common NotifyInfo area.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -523,10 +523,8 @@ define|#
 directive|define
 name|ACPI_COMMON_NOTIFY_INFO
 define|\
-value|union acpi_operand_object       *SystemNotify;
-comment|/* Handler for system notifies */
-value|\     union acpi_operand_object       *DeviceNotify;
-comment|/* Handler for driver notifies */
+value|union acpi_operand_object       *NotifyList[2];
+comment|/* Handlers for system/device notifies */
 value|\     union acpi_operand_object       *Handler;
 end_define
 
@@ -616,7 +614,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/******************************************************************************  *  * Fields.  All share a common header/info field.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Fields. All share a common header/info field.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -782,13 +780,27 @@ modifier|*
 name|Node
 decl_stmt|;
 comment|/* Parent device */
+name|UINT32
+name|HandlerType
+decl_stmt|;
+comment|/* Type: Device/System/Both */
 name|ACPI_NOTIFY_HANDLER
 name|Handler
 decl_stmt|;
+comment|/* Handler address */
 name|void
 modifier|*
 name|Context
 decl_stmt|;
+name|union
+name|acpi_operand_object
+modifier|*
+name|Next
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Device and System handler lists */
 block|}
 name|ACPI_OBJECT_NOTIFY_HANDLER
 typedef|;
@@ -826,7 +838,7 @@ name|acpi_operand_object
 modifier|*
 name|RegionList
 decl_stmt|;
-comment|/* regions using this handler */
+comment|/* Regions using this handler */
 name|union
 name|acpi_operand_object
 modifier|*

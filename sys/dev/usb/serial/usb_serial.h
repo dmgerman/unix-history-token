@@ -83,6 +83,17 @@ name|UCOM_MAXVER
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|UCOM_JITTERBUF_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|usb_device
@@ -349,6 +360,17 @@ name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ucom_free
+function_decl|)
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -504,6 +526,13 @@ decl_stmt|;
 name|int
 name|sc_subunits
 decl_stmt|;
+name|int
+name|sc_refs
+decl_stmt|;
+name|int
+name|sc_flag
+decl_stmt|;
+comment|/* see UCOM_FLAG_XXX */
 name|struct
 name|sysctl_oid
 modifier|*
@@ -571,10 +600,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|struct
-name|cv
-name|sc_cv
-decl_stmt|;
 comment|/* Used to set "UCOM_FLAG_GP_DATA" flag: */
 name|struct
 name|usb_proc_msg
@@ -608,6 +633,12 @@ name|sc_parent
 decl_stmt|;
 name|int
 name|sc_subunit
+decl_stmt|;
+name|uint16_t
+name|sc_jitterbuf_in
+decl_stmt|;
+name|uint16_t
+name|sc_jitterbuf_out
 decl_stmt|;
 name|uint16_t
 name|sc_portno
@@ -650,6 +681,16 @@ directive|define
 name|UCOM_FLAG_CONSOLE
 value|0x80
 comment|/* set if device is a console */
+define|#
+directive|define
+name|UCOM_FLAG_WAIT_REFS
+value|0x0100
+comment|/* set if we must wait for refs */
+define|#
+directive|define
+name|UCOM_FLAG_FREE_UNIT
+value|0x0200
+comment|/* set if we must free the unit */
 name|uint8_t
 name|sc_lsr
 decl_stmt|;
@@ -659,10 +700,6 @@ decl_stmt|;
 name|uint8_t
 name|sc_mcr
 decl_stmt|;
-name|uint8_t
-name|sc_ttyfreed
-decl_stmt|;
-comment|/* set when TTY has been freed */
 comment|/* programmed line state bits */
 name|uint8_t
 name|sc_pls_set
@@ -692,9 +729,58 @@ define|#
 directive|define
 name|UCOM_LS_RING
 value|0x08
+name|uint8_t
+name|sc_jitterbuf
+index|[
+name|UCOM_JITTERBUF_SIZE
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UCOM_MTX_ASSERT
+parameter_list|(
+name|sc
+parameter_list|,
+name|what
+parameter_list|)
+value|mtx_assert((sc)->sc_mtx, what)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCOM_MTX_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock((sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCOM_MTX_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock((sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCOM_UNLOAD_DRAIN
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|SYSUNINIT(var, SI_SUB_KLD - 3, SI_ORDER_ANY, ucom_drain_all, 0)
+end_define
 
 begin_define
 define|#
@@ -833,6 +919,49 @@ name|ucom_cfg_is_gone
 parameter_list|(
 name|struct
 name|ucom_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ucom_drain
+parameter_list|(
+name|struct
+name|ucom_super_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ucom_drain_all
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ucom_ref
+parameter_list|(
+name|struct
+name|ucom_super_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ucom_unref
+parameter_list|(
+name|struct
+name|ucom_super_softc
 modifier|*
 parameter_list|)
 function_decl|;

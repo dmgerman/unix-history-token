@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -112,6 +112,10 @@ name|psize
 parameter_list|,
 name|uint64_t
 modifier|*
+name|max_psize
+parameter_list|,
+name|uint64_t
+modifier|*
 name|ashift
 parameter_list|)
 block|{
@@ -128,8 +132,6 @@ name|vattr
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|vfslocked
 decl_stmt|;
 comment|/* 	 * We must have a pathname, and it must be absolute. 	 */
 if|if
@@ -390,15 +392,6 @@ name|va_mask
 operator|=
 name|AT_SIZE
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -425,11 +418,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 if|if
@@ -492,6 +480,9 @@ name|error
 operator|)
 return|;
 block|}
+operator|*
+name|max_psize
+operator|=
 operator|*
 name|psize
 operator|=

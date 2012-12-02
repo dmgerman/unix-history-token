@@ -81,10 +81,6 @@ parameter_list|,
 name|SHOWINSYSHEADER
 parameter_list|,
 name|CATEGORY
-parameter_list|,
-name|BRIEF
-parameter_list|,
-name|FULL
 parameter_list|)
 value|ENUM,
 define|#

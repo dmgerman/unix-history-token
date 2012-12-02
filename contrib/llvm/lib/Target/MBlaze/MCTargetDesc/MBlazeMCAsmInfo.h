@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- MBlazeMCAsmInfo.h - MBlaze asm properties -----------*- C++ -*--====//
+comment|//===-- MBlazeMCAsmInfo.h - MBlaze asm properties --------------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCAsmInfo.h"
 end_include
 
@@ -84,6 +78,11 @@ range|:
 name|public
 name|MCAsmInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit

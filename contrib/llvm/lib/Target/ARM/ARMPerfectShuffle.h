@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMPerfectShuffle.h - NEON Perfect Shuffle Table ------------------===//
+comment|//===-- ARMPerfectShuffle.h - NEON Perfect Shuffle Table --------*- C++ -*-===//
 end_comment
 
 begin_comment

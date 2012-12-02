@@ -109,13 +109,16 @@ name|namespace
 name|ento
 block|{
 name|class
+name|CallEvent
+decl_stmt|;
+name|class
 name|ProgramState
 decl_stmt|;
 name|class
 name|ProgramStateManager
 decl_stmt|;
 name|class
-name|SubRegionMap
+name|ScanReachableSymbols
 decl_stmt|;
 name|class
 name|StoreManager
@@ -154,7 +157,7 @@ name|StoreManager
 argument_list|()
 block|{}
 comment|/// Return the value bound to specified location in a given state.
-comment|/// \param[in] state The analysis state.
+comment|/// \param[in] store The analysis state.
 comment|/// \param[in] loc The symbolic memory location.
 comment|/// \param[in] T An optional type that provides a hint indicating the
 comment|///   expected type of the returned value.  This is used if the value is
@@ -162,7 +165,7 @@ comment|///   lazily computed.
 comment|/// \return The value bound to the location \c loc.
 name|virtual
 name|SVal
-name|Retrieve
+name|getBinding
 argument_list|(
 argument|Store store
 argument_list|,
@@ -174,12 +177,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/// Return a state with the specified value bound to the given location.
-comment|/// \param[in] state The analysis state.
+comment|/// \param[in] store The analysis state.
 comment|/// \param[in] loc The symbolic memory location.
 comment|/// \param[in] val The value to bind to location \c loc.
-comment|/// \return A pointer to a ProgramState object that contains the same bindings as
-comment|///   \c state with the addition of having the value specified by \c val bound
-comment|///   to the location given for \c loc.
+comment|/// \return A pointer to a ProgramState object that contains the same
+comment|///   bindings as \c state with the addition of having the value specified
+comment|///   by \c val bound to the location given for \c loc.
 name|virtual
 name|StoreRef
 name|Bind
@@ -277,20 +280,6 @@ return|return
 name|MRMgr
 return|;
 block|}
-comment|/// getSubRegionMap - Returns an opaque map object that clients can query
-comment|///  to get the subregions of a given MemRegion object.  It is the
-comment|//   caller's responsibility to 'delete' the returned map.
-name|virtual
-name|SubRegionMap
-modifier|*
-name|getSubRegionMap
-parameter_list|(
-name|Store
-name|store
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 name|virtual
 name|Loc
 name|getLValueVar
@@ -318,30 +307,6 @@ argument_list|(
 name|VD
 argument_list|,
 name|LC
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|virtual
-name|Loc
-name|getLValueString
-parameter_list|(
-specifier|const
-name|StringLiteral
-modifier|*
-name|S
-parameter_list|)
-block|{
-return|return
-name|svalBuilder
-operator|.
-name|makeLoc
-argument_list|(
-name|MRMgr
-operator|.
-name|getStringRegion
-argument_list|(
-name|S
 argument_list|)
 argument_list|)
 return|;
@@ -388,16 +353,7 @@ parameter_list|,
 name|SVal
 name|base
 parameter_list|)
-block|{
-return|return
-name|getLValueFieldOrIvar
-argument_list|(
-name|decl
-argument_list|,
-name|base
-argument_list|)
-return|;
-block|}
+function_decl|;
 name|virtual
 name|SVal
 name|getLValueField
@@ -440,9 +396,7 @@ name|virtual
 name|DefinedOrUnknownSVal
 name|getSizeInElements
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 specifier|const
@@ -472,6 +426,19 @@ init|=
 literal|0
 function_decl|;
 comment|/// Evaluates DerivedToBase casts.
+name|SVal
+name|evalDerivedToBase
+parameter_list|(
+name|SVal
+name|derived
+parameter_list|,
+specifier|const
+name|CastExpr
+modifier|*
+name|Cast
+parameter_list|)
+function_decl|;
+comment|/// Evaluates a derived-to-base cast through a single level of derivation.
 name|virtual
 name|SVal
 name|evalDerivedToBase
@@ -480,78 +447,36 @@ name|SVal
 name|derived
 parameter_list|,
 name|QualType
-name|basePtrType
+name|derivedPtrType
 parameter_list|)
-block|{
-return|return
-name|UnknownVal
-argument_list|()
-return|;
-block|}
-name|class
-name|CastResult
-block|{
-specifier|const
-name|ProgramState
-modifier|*
-name|state
-decl_stmt|;
-specifier|const
-name|MemRegion
-modifier|*
-name|region
-decl_stmt|;
-name|public
-label|:
-specifier|const
-name|ProgramState
-operator|*
-name|getState
-argument_list|()
-specifier|const
-block|{
-return|return
-name|state
-return|;
-block|}
-specifier|const
-name|MemRegion
-operator|*
-name|getRegion
-argument_list|()
-specifier|const
-block|{
-return|return
-name|region
-return|;
-block|}
-name|CastResult
-argument_list|(
-specifier|const
-name|ProgramState
-operator|*
-name|s
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|r
-operator|=
+init|=
 literal|0
-argument_list|)
-operator|:
-name|state
-argument_list|(
-name|s
-argument_list|)
-operator|,
-name|region
-argument_list|(
-argument|r
-argument_list|)
-block|{}
-block|}
-empty_stmt|;
+function_decl|;
+comment|/// \brief Evaluates C++ dynamic_cast cast.
+comment|/// The callback may result in the following 3 scenarios:
+comment|///  - Successful cast (ex: derived is subclass of base).
+comment|///  - Failed cast (ex: derived is definitely not a subclass of base).
+comment|///  - We don't know (base is a symbolic region and we don't have
+comment|///    enough info to determine if the cast will succeed at run time).
+comment|/// The function returns an SVal representing the derived class; it's
+comment|/// valid only if Failed flag is set to false.
+name|virtual
+name|SVal
+name|evalDynamicCast
+parameter_list|(
+name|SVal
+name|base
+parameter_list|,
+name|QualType
+name|derivedPtrType
+parameter_list|,
+name|bool
+modifier|&
+name|Failed
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 specifier|const
 name|ElementRegion
 modifier|*
@@ -697,17 +622,16 @@ comment|///  marking their values as unknown. Depending on the store, this may a
 comment|///  invalidate additional regions that may have changed based on accessing
 comment|///  the given regions. Optionally, invalidates non-static globals as well.
 comment|/// \param[in] store The initial store
-comment|/// \param[in] Begin A pointer to the first region to invalidate.
-comment|/// \param[in] End A pointer just past the last region to invalidate.
+comment|/// \param[in] Regions The regions to invalidate.
 comment|/// \param[in] E The current statement being evaluated. Used to conjure
 comment|///   symbols to mark the values of invalidated regions.
 comment|/// \param[in] Count The current block count. Used to conjure
 comment|///   symbols to mark the values of invalidated regions.
 comment|/// \param[in,out] IS A set to fill with any symbols that are no longer
 comment|///   accessible. Pass \c NULL if this information will not be used.
-comment|/// \param[in] invalidateGlobals If \c true, any non-static global regions
-comment|///   are invalidated as well.
-comment|/// \param[in,out] Regions A vector to fill with any regions being
+comment|/// \param[in] Call The call expression which will be used to determine which
+comment|///   globals should get invalidated.
+comment|/// \param[in,out] Invalidated A vector to fill with any regions being
 comment|///   invalidated. This should include any regions explicitly invalidated
 comment|///   even if they do not currently have bindings. Pass \c NULL if this
 comment|///   information will not be used.
@@ -734,12 +658,19 @@ argument_list|,
 name|unsigned
 name|Count
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|InvalidatedSymbols
 operator|&
 name|IS
 argument_list|,
-name|bool
-name|invalidateGlobals
+specifier|const
+name|CallEvent
+operator|*
+name|Call
 argument_list|,
 name|InvalidatedRegions
 operator|*
@@ -750,20 +681,44 @@ literal|0
 decl_stmt|;
 comment|/// enterStackFrame - Let the StoreManager to do something when execution
 comment|/// engine is about to execute into a callee.
-name|virtual
 name|StoreRef
 name|enterStackFrame
 parameter_list|(
+name|Store
+name|store
+parameter_list|,
 specifier|const
-name|ProgramState
-modifier|*
-name|state
+name|CallEvent
+modifier|&
+name|Call
 parameter_list|,
 specifier|const
 name|StackFrameContext
 modifier|*
-name|frame
+name|CalleeCtx
 parameter_list|)
+function_decl|;
+comment|/// Finds the transitive closure of symbols within the given region.
+comment|///
+comment|/// Returns false if the visitor aborted the scan.
+name|virtual
+name|bool
+name|scanReachableSymbols
+parameter_list|(
+name|Store
+name|S
+parameter_list|,
+specifier|const
+name|MemRegion
+modifier|*
+name|R
+parameter_list|,
+name|ScanReachableSymbols
+modifier|&
+name|Visitor
+parameter_list|)
+init|=
+literal|0
 function_decl|;
 name|virtual
 name|void
@@ -823,81 +778,132 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+name|class
+name|FindUniqueBinding
+range|:
+name|public
+name|BindingsHandler
+block|{
+name|SymbolRef
+name|Sym
+block|;
+specifier|const
+name|MemRegion
+operator|*
+name|Binding
+block|;
+name|bool
+name|First
+block|;
+name|public
+operator|:
+name|FindUniqueBinding
+argument_list|(
+argument|SymbolRef sym
+argument_list|)
+operator|:
+name|Sym
+argument_list|(
+name|sym
+argument_list|)
+block|,
+name|Binding
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|First
+argument_list|(
+argument|true
+argument_list|)
+block|{}
+name|bool
+name|HandleBinding
+argument_list|(
+argument|StoreManager& SMgr
+argument_list|,
+argument|Store store
+argument_list|,
+argument|const MemRegion* R
+argument_list|,
+argument|SVal val
+argument_list|)
+block|;
+name|operator
+name|bool
+argument_list|()
+block|{
+return|return
+name|First
+operator|&&
+name|Binding
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getRegion
+argument_list|()
+block|{
+return|return
+name|Binding
+return|;
+block|}
+expr|}
+block|;
 comment|/// iterBindings - Iterate over the bindings in the Store.
 name|virtual
 name|void
 name|iterBindings
-parameter_list|(
-name|Store
-name|store
-parameter_list|,
-name|BindingsHandler
-modifier|&
-name|f
-parameter_list|)
-init|=
+argument_list|(
+argument|Store store
+argument_list|,
+argument|BindingsHandler& f
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 name|protected
-label|:
+operator|:
 specifier|const
 name|MemRegion
-modifier|*
+operator|*
 name|MakeElementRegion
-parameter_list|(
-specifier|const
-name|MemRegion
-modifier|*
-name|baseRegion
-parameter_list|,
-name|QualType
-name|pointeeTy
-parameter_list|,
-name|uint64_t
-name|index
-init|=
+argument_list|(
+argument|const MemRegion *baseRegion
+argument_list|,
+argument|QualType pointeeTy
+argument_list|,
+argument|uint64_t index =
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// CastRetrievedVal - Used by subclasses of StoreManager to implement
 comment|///  implicit casts that arise from loads from regions that are reinterpreted
 comment|///  as another region.
 name|SVal
 name|CastRetrievedVal
-parameter_list|(
-name|SVal
-name|val
-parameter_list|,
-specifier|const
-name|TypedValueRegion
-modifier|*
-name|region
-parameter_list|,
-name|QualType
-name|castTy
-parameter_list|,
-name|bool
-name|performTestOnly
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|SVal val
+argument_list|,
+argument|const TypedValueRegion *region
+argument_list|,
+argument|QualType castTy
+argument_list|,
+argument|bool performTestOnly = true
+argument_list|)
+block|;
 name|private
-label|:
+operator|:
 name|SVal
 name|getLValueFieldOrIvar
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|decl
-parameter_list|,
-name|SVal
-name|base
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|(
+argument|const Decl *decl
+argument_list|,
+argument|SVal base
+argument_list|)
+block|; }
+decl_stmt|;
 specifier|inline
 name|StoreRef
 operator|::
@@ -1047,66 +1053,6 @@ operator|*
 name|this
 return|;
 block|}
-comment|// FIXME: Do we still need this?
-comment|/// SubRegionMap - An abstract interface that represents a queryable map
-comment|///  between MemRegion objects and their subregions.
-name|class
-name|SubRegionMap
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|SubRegionMap
-argument_list|()
-block|{}
-name|class
-name|Visitor
-block|{
-name|public
-operator|:
-name|virtual
-operator|~
-name|Visitor
-argument_list|()
-block|{}
-name|virtual
-name|bool
-name|Visit
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|Parent
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|SubRegion
-argument_list|)
-operator|=
-literal|0
-block|;   }
-expr_stmt|;
-name|virtual
-name|bool
-name|iterSubRegions
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|region
-argument_list|,
-name|Visitor
-operator|&
-name|V
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-block|}
-empty_stmt|;
 comment|// FIXME: Do we need to pass ProgramStateManager anymore?
 name|StoreManager
 modifier|*

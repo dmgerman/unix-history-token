@@ -102,13 +102,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__collate_load_error
-value|(table->__collate_load_error)
-end_define
-
-begin_define
-define|#
-directive|define
 name|__collate_substitute_nontrivial
 value|(table->__collate_substitute_nontrivial)
 end_define
@@ -133,6 +126,12 @@ directive|define
 name|__collate_chain_pri_table
 value|(table->__collate_chain_pri_table)
 end_define
+
+begin_decl_stmt
+name|int
+name|__collate_load_error
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -354,7 +353,9 @@ modifier|*
 name|encoding
 parameter_list|)
 block|{
-return|return
+name|int
+name|ret
+init|=
 name|__collate_load_tables_l
 argument_list|(
 name|encoding
@@ -362,6 +363,15 @@ argument_list|,
 operator|&
 name|__xlocale_global_collate
 argument_list|)
+decl_stmt|;
+name|__collate_load_error
+operator|=
+name|__xlocale_global_collate
+operator|.
+name|__collate_load_error
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -438,6 +448,8 @@ operator|==
 literal|0
 condition|)
 block|{
+name|table
+operator|->
 name|__collate_load_error
 operator|=
 literal|1
@@ -1095,6 +1107,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|table
+operator|->
 name|__collate_load_error
 operator|=
 literal|0

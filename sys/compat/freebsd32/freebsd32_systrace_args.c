@@ -1054,7 +1054,7 @@ name|p
 operator|->
 name|buf
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|2
@@ -1064,7 +1064,7 @@ name|p
 operator|->
 name|len
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|iarg
 index|[
 literal|3
@@ -1084,7 +1084,7 @@ name|p
 operator|->
 name|from
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|5
@@ -1094,7 +1094,7 @@ name|p
 operator|->
 name|fromlenaddr
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -2043,7 +2043,7 @@ name|p
 operator|->
 name|argv
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -2056,7 +2056,7 @@ name|p
 operator|->
 name|envv
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 operator|*
 name|n_args
 operator|=
@@ -5232,7 +5232,7 @@ name|p
 operator|->
 name|oldlenp
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|4
@@ -5255,7 +5255,7 @@ name|p
 operator|->
 name|newlen
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -6296,6 +6296,58 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+block|{
+name|struct
+name|clock_getcpuclockid2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* id_t */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|which
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|clock_id
+expr_stmt|;
+comment|/* clockid_t * */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
 comment|/* minherit */
 case|case
 literal|250
@@ -7051,7 +7103,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -7061,7 +7113,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -7123,7 +7175,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -7133,7 +7185,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -10157,7 +10209,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -10167,7 +10219,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -13384,7 +13436,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|5
@@ -13394,7 +13446,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13466,7 +13518,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|5
@@ -13476,7 +13528,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13568,7 +13620,7 @@ name|p
 operator|->
 name|pos1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|7
@@ -13578,7 +13630,7 @@ name|p
 operator|->
 name|pos2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13627,7 +13679,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -13637,7 +13689,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|iarg
 index|[
 literal|4
@@ -13699,7 +13751,7 @@ name|p
 operator|->
 name|length1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -13709,7 +13761,7 @@ name|p
 operator|->
 name|length2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13758,7 +13810,7 @@ name|p
 operator|->
 name|length1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -13768,7 +13820,7 @@ name|p
 operator|->
 name|length2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13832,7 +13884,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -13842,7 +13894,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13904,7 +13956,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -13914,7 +13966,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -13996,7 +14048,7 @@ name|p
 operator|->
 name|pos1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|6
@@ -14006,7 +14058,7 @@ name|p
 operator|->
 name|pos2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -14045,7 +14097,7 @@ name|p
 operator|->
 name|offset1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|2
@@ -14055,7 +14107,7 @@ name|p
 operator|->
 name|offset2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|iarg
 index|[
 literal|3
@@ -14107,7 +14159,7 @@ name|p
 operator|->
 name|length1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|2
@@ -14117,7 +14169,7 @@ name|p
 operator|->
 name|length2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -14156,7 +14208,7 @@ name|p
 operator|->
 name|length1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|2
@@ -14166,7 +14218,7 @@ name|p
 operator|->
 name|length2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
@@ -14385,7 +14437,7 @@ name|p
 operator|->
 name|id1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -14395,7 +14447,7 @@ name|p
 operator|->
 name|id2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|iarg
 index|[
 literal|4
@@ -14446,7 +14498,7 @@ name|p
 operator|->
 name|id1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|2
@@ -14456,7 +14508,7 @@ name|p
 operator|->
 name|id2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|iarg
 index|[
 literal|3
@@ -14517,7 +14569,7 @@ name|p
 operator|->
 name|id1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -14527,7 +14579,7 @@ name|p
 operator|->
 name|id2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -14589,7 +14641,7 @@ name|p
 operator|->
 name|id1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -14599,7 +14651,7 @@ name|p
 operator|->
 name|id2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -14671,7 +14723,7 @@ name|p
 operator|->
 name|id1
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|3
@@ -14681,7 +14733,7 @@ name|p
 operator|->
 name|id2
 expr_stmt|;
-comment|/* u_int32_t */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|4
@@ -14942,7 +14994,7 @@ name|p
 operator|->
 name|argv
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -14955,7 +15007,7 @@ name|p
 operator|->
 name|envv
 expr_stmt|;
-comment|/* u_int32_t * */
+comment|/* uint32_t * */
 operator|*
 name|n_args
 operator|=
@@ -16053,7 +16105,7 @@ name|p
 operator|->
 name|rights
 expr_stmt|;
-comment|/* u_int64_t */
+comment|/* uint64_t */
 operator|*
 name|n_args
 operator|=
@@ -16095,7 +16147,7 @@ name|p
 operator|->
 name|rightsp
 expr_stmt|;
-comment|/* u_int64_t * */
+comment|/* uint64_t * */
 operator|*
 name|n_args
 operator|=
@@ -16781,6 +16833,94 @@ operator|->
 name|advice
 expr_stmt|;
 comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|6
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_wait6 */
+case|case
+literal|532
+case|:
+block|{
+name|struct
+name|freebsd32_wait6_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|idtype
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|status
+expr_stmt|;
+comment|/* int * */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|options
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|4
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|wrusage
+expr_stmt|;
+comment|/* struct wrusage32 * */
+name|uarg
+index|[
+literal|5
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|info
+expr_stmt|;
+comment|/* siginfo_t * */
 operator|*
 name|n_args
 operator|=
@@ -17550,7 +17690,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -17558,7 +17698,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -17574,7 +17714,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -17582,7 +17722,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -18239,7 +18379,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -18247,7 +18387,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20538,7 +20678,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -20554,7 +20694,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -21274,6 +21414,44 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"id_t"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"clockid_t *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 comment|/* minherit */
 case|case
 literal|250
@@ -21807,7 +21985,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -21815,7 +21993,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -21861,7 +22039,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -21869,7 +22047,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -24007,7 +24185,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -24015,7 +24193,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26294,7 +26472,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26302,7 +26480,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26356,7 +26534,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26364,7 +26542,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26434,7 +26612,7 @@ literal|6
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26442,7 +26620,7 @@ literal|7
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26480,7 +26658,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26488,7 +26666,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26534,7 +26712,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26542,7 +26720,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26580,7 +26758,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26588,7 +26766,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26636,7 +26814,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26644,7 +26822,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26690,7 +26868,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26698,7 +26876,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26760,7 +26938,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26768,7 +26946,7 @@ literal|6
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26798,7 +26976,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26806,7 +26984,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26844,7 +27022,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26852,7 +27030,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -26882,7 +27060,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -26890,7 +27068,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -27053,7 +27231,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27061,7 +27239,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27101,7 +27279,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27109,7 +27287,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27157,7 +27335,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27165,7 +27343,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27211,7 +27389,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27219,7 +27397,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27273,7 +27451,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27281,7 +27459,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"u_int32_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -27473,7 +27651,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -27481,7 +27659,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"u_int32_t *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28279,7 +28457,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int64_t"
+literal|"uint64_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -28309,7 +28487,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_int64_t *"
+literal|"uint64_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28797,6 +28975,68 @@ case|:
 name|p
 operator|=
 literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_wait6 */
+case|case
+literal|532
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|p
+operator|=
+literal|"struct wrusage32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|p
+operator|=
+literal|"siginfo_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -31432,6 +31672,25 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* minherit */
 case|case
 literal|250
@@ -35349,6 +35608,25 @@ break|break;
 comment|/* freebsd32_posix_fadvise */
 case|case
 literal|531
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_wait6 */
+case|case
+literal|532
 case|:
 if|if
 condition|(

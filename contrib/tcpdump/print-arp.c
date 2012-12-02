@@ -1482,6 +1482,7 @@ name|linkaddr
 operator|=
 name|LINKADDR_FRELAY
 expr_stmt|;
+break|break;
 default|default:
 name|linkaddr
 operator|=

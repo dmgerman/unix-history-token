@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- XCoreMCAsmInfo.h - XCore asm properties -------------*- C++ -*--====//
+comment|//===-- XCoreMCAsmInfo.h - XCore asm properties ----------------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCAsmInfo.h"
 end_include
 
@@ -75,6 +69,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|Target
 decl_stmt|;
@@ -84,6 +81,11 @@ range|:
 name|public
 name|MCAsmInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit

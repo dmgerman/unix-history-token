@@ -341,7 +341,7 @@ argument_list|(
 name|ExLoadTableOp
 argument_list|)
 expr_stmt|;
-comment|/* Validate lengths for the SignatureString, OEMIDString, OEMTableID */
+comment|/* Validate lengths for the Signature, OemId, and OemTableId strings */
 if|if
 condition|(
 operator|(
@@ -511,7 +511,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*          * Find the node referenced by the RootPathString.  This is the          * location within the namespace where the table will be loaded.          */
+comment|/*          * Find the node referenced by the RootPathString. This is the          * location within the namespace where the table will be loaded.          */
 name|Status
 operator|=
 name|AcpiNsGetNode

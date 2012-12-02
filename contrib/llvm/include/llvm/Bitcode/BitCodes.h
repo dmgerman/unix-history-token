@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -390,14 +396,6 @@ condition|(
 name|E
 condition|)
 block|{
-default|default:
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Unknown encoding"
-argument_list|)
-expr_stmt|;
 case|case
 name|Fixed
 case|:
@@ -420,6 +418,11 @@ return|return
 name|false
 return|;
 block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid encoding"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// isChar6 - Return true if this character is legal in the Char6 encoding.
 specifier|static
@@ -563,16 +566,11 @@ condition|)
 return|return
 literal|63
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not a value Char6 character!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 specifier|static
 name|char
@@ -659,19 +657,31 @@ condition|)
 return|return
 literal|'_'
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not a value Char6 character!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|' '
-return|;
 block|}
 block|}
 empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|BitCodeAbbrevOp
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
 comment|/// BitCodeAbbrev - This class represents an abbreviation record.  An
 comment|/// abbreviation allows a complex record that has redundancy to be stored in a
 comment|/// specialized format instead of the fully-general, fully-vbr, format.
@@ -682,7 +692,7 @@ name|SmallVector
 operator|<
 name|BitCodeAbbrevOp
 operator|,
-literal|8
+literal|32
 operator|>
 name|OperandList
 expr_stmt|;

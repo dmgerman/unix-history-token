@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -1643,7 +1643,103 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"\nCopyright (C) 1984-2009 Mark Nudelman\n\n"
+literal|" ("
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|HAVE_GNU_REGEX
+name|putstr
+argument_list|(
+literal|"GNU "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HAVE_POSIX_REGCOMP
+name|putstr
+argument_list|(
+literal|"POSIX "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HAVE_PCRE
+name|putstr
+argument_list|(
+literal|"PCRE "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HAVE_RE_COMP
+name|putstr
+argument_list|(
+literal|"BSD "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HAVE_REGCMP
+name|putstr
+argument_list|(
+literal|"V8 "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HAVE_V8_REGCOMP
+name|putstr
+argument_list|(
+literal|"Spencer V8 "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|HAVE_GNU_REGEX
+operator|&&
+operator|!
+name|HAVE_POSIX_REGCOMP
+operator|&&
+operator|!
+name|HAVE_PCRE
+operator|&&
+operator|!
+name|HAVE_RE_COMP
+operator|&&
+operator|!
+name|HAVE_REGCMP
+operator|&&
+operator|!
+name|HAVE_V8_REGCOMP
+name|putstr
+argument_list|(
+literal|"no "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|putstr
+argument_list|(
+literal|"regular expressions)\n"
+argument_list|)
+expr_stmt|;
+name|putstr
+argument_list|(
+literal|"Copyright (C) 1984-2012 Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr

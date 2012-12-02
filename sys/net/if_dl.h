@@ -76,6 +76,16 @@ parameter_list|)
 value|((caddr_t)((s)->sdl_data + (s)->sdl_nlen))
 end_define
 
+begin_define
+define|#
+directive|define
+name|LLINDEX
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->sdl_index)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

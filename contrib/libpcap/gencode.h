@@ -376,6 +376,13 @@ name|Q_RADIO
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|Q_CARP
+value|41
+end_define
+
 begin_comment
 comment|/* Directional qualifiers. */
 end_comment
@@ -434,6 +441,20 @@ define|#
 directive|define
 name|Q_ADDR4
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_RA
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_TA
+value|10
 end_define
 
 begin_define
@@ -923,11 +944,11 @@ comment|/* branch stmt */
 name|int
 name|mark
 decl_stmt|;
-name|int
+name|u_int
 name|longjt
 decl_stmt|;
 comment|/* jt branch requires long jump */
-name|int
+name|u_int
 name|longjf
 decl_stmt|;
 comment|/* jf branch requires long jump */
@@ -1676,7 +1697,7 @@ name|struct
 name|block
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 parameter_list|)
 function_decl|;

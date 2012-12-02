@@ -313,7 +313,7 @@ comment|/* total packet length */
 name|uint32_t
 name|flowid
 decl_stmt|;
-comment|/* packet's 4-tuple system  					 * flow identifier 					 */
+comment|/* packet's 4-tuple system 					 * flow identifier 					 */
 comment|/* variables for hardware checksum */
 name|int
 name|csum_flags
@@ -1167,17 +1167,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CSUM_IP_FRAGS
-value|0x0008
-end_define
-
-begin_comment
-comment|/* will csum IP fragments */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CSUM_FRAGMENT
 value|0x0010
 end_define
@@ -1206,6 +1195,17 @@ end_define
 
 begin_comment
 comment|/* will csum SCTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP_IPV6
+value|0x0080
+end_define
+
+begin_comment
+comment|/* will csum IPv6/SCTP */
 end_comment
 
 begin_define
@@ -1266,6 +1266,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CSUM_UDP_IPV6
+value|0x2000
+end_define
+
+begin_comment
+comment|/* will csum IPv6/UDP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP_IPV6
+value|0x4000
+end_define
+
+begin_comment
+comment|/* will csum IPv6/TCP */
+end_comment
+
+begin_comment
+comment|/*	CSUM_TSO_IPV6		0x8000		will do IPv6/TSO */
+end_comment
+
+begin_comment
+comment|/*	CSUM_FRAGMENT_IPV6	0x10000		will do IPv6 fragementation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_DELAY_DATA_IPV6
+value|(CSUM_TCP_IPV6 | CSUM_UDP_IPV6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_DATA_VALID_IPV6
+value|CSUM_DATA_VALID
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSUM_DELAY_DATA
 value|(CSUM_TCP | CSUM_UDP)
 end_define
@@ -1278,7 +1322,7 @@ value|(CSUM_IP)
 end_define
 
 begin_comment
-comment|/* XXX add ipv6 here too? */
+comment|/* Only v4, no v6 IP hdr csum */
 end_comment
 
 begin_comment
@@ -1454,7 +1498,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags specifying how an allocation should be made.  *  * The flag to use is as follows:  * - M_DONTWAIT or M_NOWAIT from an interrupt handler to not block allocation.  * - M_WAIT or M_WAITOK from wherever it is safe to block.  *  * M_DONTWAIT/M_NOWAIT means that we will not block the thread explicitly and  * if we cannot allocate immediately we may return NULL, whereas  * M_WAIT/M_WAITOK means that if we cannot allocate resources we  * will block until they are available, and thus never return NULL.  *  * XXX Eventually just phase this out to use M_WAITOK/M_NOWAIT.  */
+comment|/*  * Flags specifying how an allocation should be made.  *  * The flag to use is as follows:  * - M_NOWAIT (M_DONTWAIT) from an interrupt handler to not block allocation.  * - M_WAITOK (M_WAIT) from wherever it is safe to block.  *  * M_DONTWAIT/M_NOWAIT means that we will not block the thread explicitly and  * if we cannot allocate immediately we may return NULL, whereas  * M_WAIT/M_WAITOK means that if we cannot allocate resources we  * will block until they are available, and thus never return NULL.  *  * XXX Eventually just phase this out to use M_WAITOK/M_NOWAIT.  */
 end_comment
 
 begin_define
@@ -1592,6 +1636,13 @@ end_endif
 begin_comment
 comment|/*  * Network buffer allocation API  *  * The rest of it is defined in kern/kern_mbuf.c  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|quad_t
+name|maxmbufmem
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -3279,47 +3330,8 @@ operator|)
 return|;
 end_return
 
-begin_function_decl
-unit|}  extern
-name|void
-function_decl|(
-modifier|*
-name|m_addr_chg_pf_p
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|m_addr_changed
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-if|if
-condition|(
-name|m_addr_chg_pf_p
-condition|)
-name|m_addr_chg_pf_p
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
+unit|}
 comment|/*  * mbuf, cluster, and external object allocation macros (for compatibility  * purposes).  */
 end_comment
 
@@ -3588,7 +3600,7 @@ value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
 
 begin_decl_stmt
-specifier|extern
+unit|extern
 name|int
 name|max_datalen
 decl_stmt|;
@@ -4515,11 +4527,11 @@ begin_define
 define|#
 directive|define
 name|PACKET_TAG_PF
-value|21
+value|(21 | MTAG_PERSISTENT)
 end_define
 
 begin_comment
-comment|/* PF + ALTQ information */
+comment|/* PF/ALTQ information */
 end_comment
 
 begin_define

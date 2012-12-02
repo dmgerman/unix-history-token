@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -178,6 +184,7 @@ name|getBlocks
 argument_list|(
 argument|unsigned Bundle
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Blocks
@@ -227,31 +234,29 @@ comment|/// Specialize WriteGraph, the standard implementation won't work.
 name|raw_ostream
 modifier|&
 name|WriteGraph
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|,
+parameter_list|,
 specifier|const
 name|EdgeBundles
-operator|&
+modifier|&
 name|G
-argument_list|,
+parameter_list|,
 name|bool
 name|ShortNames
-operator|=
+init|=
 name|false
-argument_list|,
+parameter_list|,
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|Twine
+modifier|&
 name|Title
-operator|=
+init|=
 literal|""
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

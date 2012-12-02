@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MipsInstrInfo.h - Mips Instruction Information -----------*- C++ -*-===//
+comment|//===-- MipsInstrInfo.h - Mips Instruction Information ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MipsAnalyzeImmediate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -75,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsRegisterInfo.h"
 end_include
 
 begin_define
@@ -99,197 +105,41 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|Mips
-block|{
-comment|/// GetOppositeBranchOpc - Return the inverse of the specified
-comment|/// opcode, e.g. turning BEQ to BNE.
-name|unsigned
-name|GetOppositeBranchOpc
-parameter_list|(
-name|unsigned
-name|Opc
-parameter_list|)
-function_decl|;
-block|}
-comment|/// MipsII - This namespace holds all of the target specific flags that
-comment|/// instruction info tracks.
-comment|///
-name|namespace
-name|MipsII
-block|{
-comment|/// Target Operand Flag enum.
-enum|enum
-name|TOF
-block|{
-comment|//===------------------------------------------------------------------===//
-comment|// Mips Specific MachineOperand flags.
-name|MO_NO_FLAG
-block|,
-comment|/// MO_GOT - Represents the offset into the global offset table at which
-comment|/// the address the relocation entry symbol resides during execution.
-name|MO_GOT
-block|,
-comment|/// MO_GOT_CALL - Represents the offset into the global offset table at
-comment|/// which the address of a call site relocation entry symbol resides
-comment|/// during execution. This is different from the above since this flag
-comment|/// can only be present in call instructions.
-name|MO_GOT_CALL
-block|,
-comment|/// MO_GPREL - Represents the offset from the current gp value to be used
-comment|/// for the relocatable object file being produced.
-name|MO_GPREL
-block|,
-comment|/// MO_ABS_HI/LO - Represents the hi or low part of an absolute symbol
-comment|/// address.
-name|MO_ABS_HI
-block|,
-name|MO_ABS_LO
-block|,
-comment|/// MO_TLSGD - Represents the offset into the global offset table at which
-comment|// the module ID and TSL block offset reside during execution (General
-comment|// Dynamic TLS).
-name|MO_TLSGD
-block|,
-comment|/// MO_GOTTPREL - Represents the offset from the thread pointer (Initial
-comment|// Exec TLS).
-name|MO_GOTTPREL
-block|,
-comment|/// MO_TPREL_HI/LO - Represents the hi and low part of the offset from
-comment|// the thread pointer (Local Exec TLS).
-name|MO_TPREL_HI
-block|,
-name|MO_TPREL_LO
-block|,
-comment|// N32/64 Flags.
-name|MO_GPOFF_HI
-block|,
-name|MO_GPOFF_LO
-block|,
-name|MO_GOT_DISP
-block|,
-name|MO_GOT_PAGE
-block|,
-name|MO_GOT_OFST
-block|}
-enum|;
-enum|enum
-block|{
-comment|//===------------------------------------------------------------------===//
-comment|// Instruction encodings.  These are the standard/most common forms for
-comment|// Mips instructions.
-comment|//
-comment|// Pseudo - This represents an instruction that is a pseudo instruction
-comment|// or one that has not been implemented yet.  It is illegal to code generate
-comment|// it, but tolerated for intermediate implementation stages.
-name|Pseudo
-init|=
-literal|0
-block|,
-comment|/// FrmR - This form is for instructions of the format R.
-name|FrmR
-init|=
-literal|1
-block|,
-comment|/// FrmI - This form is for instructions of the format I.
-name|FrmI
-init|=
-literal|2
-block|,
-comment|/// FrmJ - This form is for instructions of the format J.
-name|FrmJ
-init|=
-literal|3
-block|,
-comment|/// FrmFR - This form is for instructions of the format FR.
-name|FrmFR
-init|=
-literal|4
-block|,
-comment|/// FrmFI - This form is for instructions of the format FI.
-name|FrmFI
-init|=
-literal|5
-block|,
-comment|/// FrmOther - This form is for instructions that have no specific format.
-name|FrmOther
-init|=
-literal|6
-block|,
-name|FormMask
-init|=
-literal|15
-block|}
-enum|;
-block|}
 name|class
 name|MipsInstrInfo
 range|:
 name|public
 name|MipsGenInstrInfo
 block|{
+name|protected
+operator|:
 name|MipsTargetMachine
 operator|&
 name|TM
 block|;
-name|bool
-name|IsN64
-block|;
-specifier|const
-name|MipsRegisterInfo
-name|RI
+name|unsigned
+name|UncondBrOpc
 block|;
 name|public
 operator|:
 name|explicit
 name|MipsInstrInfo
 argument_list|(
+argument|MipsTargetMachine&TM
+argument_list|,
+argument|unsigned UncondBrOpc
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|MipsInstrInfo
+operator|*
+name|create
+argument_list|(
 name|MipsTargetMachine
 operator|&
 name|TM
 argument_list|)
-block|;
-comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
-comment|/// such, whenever a client has an instance of instruction info, it should
-comment|/// always be able to get register info as well (through this method).
-comment|///
-name|virtual
-specifier|const
-name|MipsRegisterInfo
-operator|&
-name|getRegisterInfo
-argument_list|()
-specifier|const
-block|;
-comment|/// isLoadFromStackSlot - If the specified machine instruction is a direct
-comment|/// load from a stack slot, return the virtual or physical register number of
-comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
-comment|/// not, return 0.  This predicate must return 0 if the instruction has
-comment|/// any side effects other than loading from the stack slot.
-name|virtual
-name|unsigned
-name|isLoadFromStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
-comment|/// store to a stack slot, return the virtual or physical register number of
-comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
-comment|/// not, return 0.  This predicate must return 0 if the instruction has
-comment|/// any side effects other than storing to the stack slot.
-name|virtual
-name|unsigned
-name|isStoreToStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
 block|;
 comment|/// Branch Analysis
 name|virtual
@@ -316,23 +166,6 @@ argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
-name|private
-operator|:
-name|void
-name|BuildCondBr
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock *TBB
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|const SmallVectorImpl<MachineOperand>& Cond
-argument_list|)
-specifier|const
-block|;
-name|public
-operator|:
 name|virtual
 name|unsigned
 name|InsertBranch
@@ -350,58 +183,10 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|void
-name|copyPhysReg
+name|bool
+name|ReverseBranchCondition
 argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool KillSrc
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|storeRegToStackSlot
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|int FrameIndex
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|loadRegFromStackSlot
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|int FrameIndex
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
 block|;
@@ -422,14 +207,6 @@ argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|ReverseBranchCondition
-argument_list|(
-argument|SmallVectorImpl<MachineOperand>&Cond
-argument_list|)
-specifier|const
-block|;
 comment|/// Insert nop instruction when hazard condition is found
 name|virtual
 name|void
@@ -441,18 +218,163 @@ argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 block|;
-comment|/// getGlobalBaseReg - Return a virtual register initialized with the
-comment|/// the global base register value. Output instructions required to
-comment|/// initialize the register in the function entry block, if necessary.
+comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
+comment|/// such, whenever a client has an instance of instruction info, it should
+comment|/// always be able to get register info as well (through this method).
 comment|///
+name|virtual
+specifier|const
+name|MipsRegisterInfo
+operator|&
+name|getRegisterInfo
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
 name|unsigned
-name|getGlobalBaseReg
+name|GetOppositeBranchOpc
 argument_list|(
-argument|MachineFunction *MF
+argument|unsigned Opc
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// Return the number of bytes of code the specified instruction may be.
+name|unsigned
+name|GetInstSizeInBytes
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|protected
+operator|:
+name|bool
+name|isZeroImm
+argument_list|(
+argument|const MachineOperand&op
+argument_list|)
+specifier|const
+block|;
+name|MachineMemOperand
+operator|*
+name|GetMemOperand
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|virtual
+name|unsigned
+name|GetAnalyzableBrOpc
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|void
+name|AnalyzeCondBr
+argument_list|(
+argument|const MachineInstr *Inst
+argument_list|,
+argument|unsigned Opc
+argument_list|,
+argument|MachineBasicBlock *&BB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;
+name|void
+name|BuildCondBr
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>& Cond
 argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
+name|namespace
+name|Mips
+block|{
+comment|/// Emit a series of instructions to load an immediate. All instructions
+comment|/// except for the last one are emitted. The function returns the number of
+comment|/// MachineInstrs generated. The opcode-immediate pair of the last
+comment|/// instruction is returned in LastInst, if it is not 0.
+name|unsigned
+name|loadImmediate
+argument_list|(
+name|int64_t
+name|Imm
+argument_list|,
+name|bool
+name|IsN64
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|&
+name|TII
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|II
+argument_list|,
+name|DebugLoc
+name|DL
+argument_list|,
+name|bool
+name|LastInstrIsADDiu
+argument_list|,
+name|MipsAnalyzeImmediate
+operator|::
+name|Inst
+operator|*
+name|LastInst
+argument_list|)
+decl_stmt|;
+block|}
+comment|/// Create MipsInstrInfo objects.
+specifier|const
+name|MipsInstrInfo
+modifier|*
+name|createMips16InstrInfo
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
+specifier|const
+name|MipsInstrInfo
+modifier|*
+name|createMipsSEInstrInfo
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

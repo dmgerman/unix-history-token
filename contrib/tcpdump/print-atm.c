@@ -998,22 +998,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|caplen
-operator|<
-name|CALL_REF_POS
-operator|+
-literal|3
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"[|atm]"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+comment|/* 		 * The call reference comes before the message type, 		 * so if we know we have the message type, which we 		 * do from the caplen test above, we also know we have 		 * the call reference. 		 */
 name|call_ref
 operator|=
 name|EXTRACT_24BITS

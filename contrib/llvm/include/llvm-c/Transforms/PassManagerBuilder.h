@@ -48,6 +48,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCTransformsPassManagerBuilder Pass manager builder  * @ingroup LLVMCTransforms  *  * @{  */
 comment|/** See llvm::PassManagerBuilder. */
 name|LLVMPassManagerBuilderRef
 name|LLVMPassManagerBuilderCreate
@@ -167,6 +168,7 @@ name|bool
 name|RunInliner
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

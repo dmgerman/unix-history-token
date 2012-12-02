@@ -3248,8 +3248,6 @@ name|IFCAP_HWCSUM
 operator||
 name|IFCAP_TSO4
 operator||
-name|IFCAP_TSO6
-operator||
 name|IFCAP_JUMBO_MTU
 expr_stmt|;
 name|ifp

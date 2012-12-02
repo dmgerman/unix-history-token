@@ -1058,6 +1058,10 @@ name|sim
 operator|=
 name|NULL
 expr_stmt|;
+name|path
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Create a thread to perform all recovery. 	 */
 if|if
 condition|(
@@ -2831,10 +2835,10 @@ ifdef|#
 directive|ifdef
 name|AHD_TARGET_MODE
 case|case
-name|XPT_NOTIFY_ACK
+name|XPT_NOTIFY_ACKNOWLEDGE
 case|:
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 block|{
 name|struct
@@ -5864,7 +5868,7 @@ case|case
 name|XPT_ACCEPT_TARGET_IO
 case|:
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 case|case
 name|XPT_CONT_TARGET_IO
@@ -5950,7 +5954,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|==
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 condition|)
 name|list
 operator|=

@@ -1255,7 +1255,9 @@ name|nhosts
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|NULL
+return|;
 do|do
 name|resolvone
 argument_list|(

@@ -991,6 +991,8 @@ comment|/* Open the library */
 name|dlopen_flags
 operator|=
 name|RTLD_NOW
+operator||
+name|RTLD_GLOBAL
 expr_stmt|;
 ifdef|#
 directive|ifdef

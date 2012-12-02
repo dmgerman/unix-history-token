@@ -865,7 +865,6 @@ specifier|static
 specifier|const
 name|struct
 name|psycho_desc
-specifier|const
 name|psycho_compats
 index|[]
 init|=
@@ -910,7 +909,6 @@ specifier|static
 specifier|const
 name|struct
 name|psycho_desc
-specifier|const
 name|psycho_models
 index|[]
 init|=

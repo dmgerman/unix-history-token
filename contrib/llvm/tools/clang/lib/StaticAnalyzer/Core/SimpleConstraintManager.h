@@ -88,6 +88,10 @@ name|SubEngine
 operator|&
 name|SU
 block|;
+name|BasicValueFactory
+operator|&
+name|BVF
+block|;
 name|public
 operator|:
 name|SimpleConstraintManager
@@ -95,11 +99,20 @@ argument_list|(
 name|SubEngine
 operator|&
 name|subengine
+argument_list|,
+name|BasicValueFactory
+operator|&
+name|BV
 argument_list|)
 operator|:
 name|SU
 argument_list|(
-argument|subengine
+name|subengine
+argument_list|)
+block|,
+name|BVF
+argument_list|(
+argument|BV
 argument_list|)
 block|{}
 name|virtual
@@ -110,55 +123,40 @@ block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Common implementation for the interface provided by ConstraintManager.
 comment|//===------------------------------------------------------------------===//
-name|bool
-name|canReasonAbout
-argument_list|(
-argument|SVal X
-argument_list|)
-specifier|const
-block|;
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assume
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|DefinedSVal Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
 block|;
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assume
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|Loc Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
 block|;
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assume
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|NonLoc Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
 block|;
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymRel
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|const SymExpr *LHS
 argument_list|,
@@ -175,12 +173,10 @@ comment|//===------------------------------------------------------------------=
 comment|// Each of these is of the form "$sym+Adj<> V", where "<>" is the comparison
 comment|// operation for the method being invoked.
 name|virtual
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymNE
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -192,12 +188,10 @@ operator|=
 literal|0
 block|;
 name|virtual
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymEQ
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -209,12 +203,10 @@ operator|=
 literal|0
 block|;
 name|virtual
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymLT
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -226,12 +218,10 @@ operator|=
 literal|0
 block|;
 name|virtual
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymGT
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -243,12 +233,10 @@ operator|=
 literal|0
 block|;
 name|virtual
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymLE
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -260,12 +248,10 @@ operator|=
 literal|0
 block|;
 name|virtual
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeSymGE
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -279,26 +265,49 @@ block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Internal implementation.
 comment|//===------------------------------------------------------------------===//
+name|BasicValueFactory
+operator|&
+name|getBasicVals
+argument_list|()
 specifier|const
-name|ProgramState
-operator|*
+block|{
+return|return
+name|BVF
+return|;
+block|}
+name|bool
+name|canReasonAbout
+argument_list|(
+argument|SVal X
+argument_list|)
+specifier|const
+block|;
+name|ProgramStateRef
 name|assumeAux
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|Loc Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
 block|;
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|assumeAux
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|NonLoc Cond
+argument_list|,
+argument|bool Assumption
+argument_list|)
+block|;
+name|ProgramStateRef
+name|assumeAuxForSymbol
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|SymbolRef Sym
 argument_list|,
 argument|bool Assumption
 argument_list|)

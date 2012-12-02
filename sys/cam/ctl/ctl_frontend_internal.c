@@ -521,6 +521,13 @@ name|fetd_internal_softc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ctl_disable
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|cfi_init
@@ -898,6 +905,14 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+comment|/* If we're disabled, don't initialize */
+if|if
+condition|(
+name|ctl_disable
+operator|!=
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 sizeof|sizeof

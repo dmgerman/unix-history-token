@@ -39,6 +39,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCExecutionEngine Execution Engine  * @ingroup LLVMC  *  * @{  */
 name|void
 name|LLVMLinkInJIT
 parameter_list|(
@@ -441,6 +442,7 @@ name|LLVMValueRef
 name|Global
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -156,12 +156,6 @@ decl_stmt|;
 name|int
 name|acpi_handle_reboot
 decl_stmt|;
-name|bus_dma_tag_t
-name|acpi_waketag
-decl_stmt|;
-name|bus_dmamap_t
-name|acpi_wakemap
-decl_stmt|;
 name|vm_offset_t
 name|acpi_wakeaddr
 decl_stmt|;
@@ -724,17 +718,6 @@ value|(1<< 2)
 end_define
 
 begin_comment
-comment|/*  * Sleep flags.  See actypes.h for available flags.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|acpi_sleep_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
 end_comment
 
@@ -925,6 +908,8 @@ operator|)
 return|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiGetType
 argument_list|(
 name|h
@@ -932,8 +917,7 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2178,6 +2162,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|acpi_wakeup_machdep
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|state
+parameter_list|,
+name|int
+name|sleep_result
+parameter_list|,
+name|int
+name|intr_enabled
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|acpi_table_quirks
 parameter_list|(
 name|int
@@ -2459,7 +2464,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_TASKS
-value|32
+value|MAX(32, MAXCPU * 2)
 end_define
 
 begin_endif
@@ -2499,6 +2504,14 @@ directive|define
 name|KTR_ACPI
 value|KTR_DEV
 end_define
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug_acpi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

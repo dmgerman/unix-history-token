@@ -958,13 +958,13 @@ case|case
 name|DH6OPT_DNS
 case|:
 return|return
-literal|"DNS"
+literal|"DNS-server"
 return|;
 case|case
 name|DH6OPT_DNSNAME
 case|:
 return|return
-literal|"DNS-name"
+literal|"DNS-search-list"
 return|;
 case|case
 name|DH6OPT_IA_PD
@@ -982,7 +982,7 @@ case|case
 name|DH6OPT_NTP_SERVERS
 case|:
 return|return
-literal|"NTP-Server"
+literal|"NTP-server"
 return|;
 case|case
 name|DH6OPT_LIFETIME

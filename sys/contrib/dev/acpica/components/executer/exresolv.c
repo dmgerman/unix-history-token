@@ -303,7 +303,7 @@ operator|=
 operator|*
 name|StackPtr
 expr_stmt|;
-comment|/* This is an ACPI_OPERAND_OBJECT  */
+comment|/* This is an object of type ACPI_OPERAND_OBJECT */
 switch|switch
 condition|(
 name|StackDesc
@@ -717,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveMultiple  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *              Operand             - Starting point for resolution  *              ReturnType          - Where the object type is returned  *              ReturnDesc          - Where the resolved object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Return the base object and type.  Traverse a reference list if  *              necessary to get to the base object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveMultiple  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *              Operand             - Starting point for resolution  *              ReturnType          - Where the object type is returned  *              ReturnDesc          - Where the resolved object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Return the base object and type. Traverse a reference list if  *              necessary to get to the base object.  *  ******************************************************************************/
 end_comment
 
 begin_function

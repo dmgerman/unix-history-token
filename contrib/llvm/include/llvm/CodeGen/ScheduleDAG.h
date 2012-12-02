@@ -40,7 +40,11 @@ comment|// This file implements the ScheduleDAG class, which is used as the comm
 end_comment
 
 begin_comment
-comment|// base class for instruction schedulers.
+comment|// base class for instruction schedulers. This encapsulates the scheduling DAG,
+end_comment
+
+begin_comment
+comment|// which is shared between SelectionDAG and MachineInstr scheduling.
 end_comment
 
 begin_comment
@@ -72,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_include
@@ -377,15 +381,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/// Return true if the specified SDep is equivalent except for latency.
 name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|SDep
-operator|&
-name|Other
-operator|)
+name|overlaps
+argument_list|(
+argument|const SDep&Other
+argument_list|)
 specifier|const
 block|{
 if|if
@@ -395,12 +396,6 @@ operator|!=
 name|Other
 operator|.
 name|Dep
-operator|||
-name|Latency
-operator|!=
-name|Other
-operator|.
-name|Latency
 condition|)
 return|return
 name|false
@@ -480,15 +475,34 @@ operator|.
 name|isArtificial
 return|;
 block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Invalid dependency kind!"
 argument_list|)
 expr_stmt|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SDep
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
 return|return
-name|false
+name|overlaps
+argument_list|(
+name|Other
+argument_list|)
+operator|&&
+name|Latency
+operator|==
+name|Other
+operator|.
+name|Latency
 return|;
 block|}
 name|bool
@@ -840,6 +854,7 @@ name|OrigNode
 decl_stmt|;
 comment|// If not this, the node from which
 comment|// this node was cloned.
+comment|// (SD scheduling only)
 comment|// Preds/Succs - The SUnits before/after us in the graph.
 name|SmallVector
 operator|<
@@ -1045,6 +1060,14 @@ decl_stmt|;
 comment|// Node height.
 name|public
 label|:
+name|unsigned
+name|TopReadyCycle
+decl_stmt|;
+comment|// Cycle relative to start when node is ready.
+name|unsigned
+name|BotReadyCycle
+decl_stmt|;
+comment|// Cycle relative to end when node is ready.
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -1208,6 +1231,16 @@ literal|0
 argument_list|)
 operator|,
 name|Height
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
 argument_list|(
 literal|0
 argument_list|)
@@ -1378,6 +1411,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|CopyDstRC
 argument_list|(
 name|NULL
@@ -1536,6 +1579,16 @@ literal|0
 argument_list|)
 operator|,
 name|Height
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
 argument_list|(
 literal|0
 argument_list|)
@@ -1938,6 +1991,34 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|bool
+name|isTopReady
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumPredsLeft
+operator|==
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isBottomReady
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumSuccsLeft
+operator|==
+literal|0
+return|;
+block|}
+end_expr_stmt
+
 begin_decl_stmt
 name|void
 name|dump
@@ -2037,6 +2118,11 @@ begin_decl_stmt
 name|class
 name|SchedulingPriorityQueue
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|unsigned
 name|CurCycle
 decl_stmt|;
@@ -2261,13 +2347,13 @@ operator|*
 argument_list|)
 decl|const
 block|{}
-comment|/// ScheduledNode - As each node is scheduled, this method is invoked.  This
+comment|/// scheduledNode - As each node is scheduled, this method is invoked.  This
 comment|/// allows the priority function to adjust the priority of related
 comment|/// unscheduled nodes, for example.
 comment|///
 name|virtual
 name|void
-name|ScheduledNode
+name|scheduledNode
 parameter_list|(
 name|SUnit
 modifier|*
@@ -2275,7 +2361,7 @@ parameter_list|)
 block|{}
 name|virtual
 name|void
-name|UnscheduledNode
+name|unscheduledNode
 parameter_list|(
 name|SUnit
 modifier|*
@@ -2315,17 +2401,6 @@ name|ScheduleDAG
 block|{
 name|public
 label|:
-name|MachineBasicBlock
-modifier|*
-name|BB
-decl_stmt|;
-comment|// The block in which to insert instructions
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|InsertPos
-expr_stmt|;
-comment|// The position to insert instructions
 specifier|const
 name|TargetMachine
 modifier|&
@@ -2354,17 +2429,6 @@ modifier|&
 name|MRI
 decl_stmt|;
 comment|// Virtual/real register map
-name|std
-operator|::
-name|vector
-operator|<
-name|SUnit
-operator|*
-operator|>
-name|Sequence
-expr_stmt|;
-comment|// The schedule. Null SUnit*'s
-comment|// represent noop instructions.
 name|std
 operator|::
 name|vector
@@ -2412,6 +2476,11 @@ operator|~
 name|ScheduleDAG
 argument_list|()
 expr_stmt|;
+comment|/// clearDAG - clear the DAG state (between regions).
+name|void
+name|clearDAG
+parameter_list|()
+function_decl|;
 comment|/// getInstrDesc - Return the MCInstrDesc of this SUnit.
 comment|/// Return NULL for SDNodes without a machine opcode.
 specifier|const
@@ -2458,24 +2527,22 @@ comment|/// using 'dot'.
 comment|///
 name|void
 name|viewGraph
-parameter_list|()
-function_decl|;
-comment|/// EmitSchedule - Insert MachineInstrs into the MachineBasicBlock
-comment|/// according to the order specified in Sequence.
-comment|///
-name|virtual
-name|MachineBasicBlock
-modifier|*
-name|EmitSchedule
-parameter_list|()
-init|=
-literal|0
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Title
+parameter_list|)
 function_decl|;
 name|void
-name|dumpSchedule
-argument_list|()
-specifier|const
-expr_stmt|;
+name|viewGraph
+parameter_list|()
+function_decl|;
 name|virtual
 name|void
 name|dumpNode
@@ -2503,6 +2570,17 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// getDAGLabel - Return a label for the region of code covered by the DAG.
+name|virtual
+name|std
+operator|::
+name|string
+name|getDAGName
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// addCustomGraphFeatures - Add custom features for a visualization of
 comment|/// the ScheduleDAG.
 name|virtual
@@ -2521,10 +2599,10 @@ block|{}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-comment|/// VerifySchedule - Verify that all SUnits were scheduled and that
-comment|/// their state is consistent.
-name|void
-name|VerifySchedule
+comment|/// VerifyScheduledDAG - Verify that all SUnits were scheduled and that
+comment|/// their state is consistent. Return the number of scheduled SUnits.
+name|unsigned
+name|VerifyScheduledDAG
 parameter_list|(
 name|bool
 name|isBottomUp
@@ -2534,73 +2612,16 @@ endif|#
 directive|endif
 name|protected
 label|:
-comment|/// Run - perform scheduling.
-comment|///
-name|void
-name|Run
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|bb
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|insertPos
-argument_list|)
-decl_stmt|;
-comment|/// BuildSchedGraph - Build SUnits and set up their Preds and Succs
-comment|/// to form the scheduling dependency graph.
-comment|///
-name|virtual
-name|void
-name|BuildSchedGraph
-parameter_list|(
-name|AliasAnalysis
-modifier|*
-name|AA
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// ComputeLatency - Compute node latency.
 comment|///
 name|virtual
 name|void
-name|ComputeLatency
+name|computeLatency
 parameter_list|(
 name|SUnit
 modifier|*
 name|SU
 parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// ComputeOperandLatency - Override dependence edge latency using
-comment|/// operand use/def information
-comment|///
-name|virtual
-name|void
-name|ComputeOperandLatency
-argument_list|(
-name|SUnit
-operator|*
-argument_list|,
-name|SUnit
-operator|*
-argument_list|,
-name|SDep
-operator|&
-argument_list|)
-decl|const
-block|{ }
-comment|/// Schedule - Order nodes according to selected style, filling
-comment|/// in the Sequence member.
-comment|///
-name|virtual
-name|void
-name|Schedule
-parameter_list|()
 init|=
 literal|0
 function_decl|;
@@ -2609,7 +2630,7 @@ comment|/// a latency value of one.  The default is to return false; schedulers 
 comment|/// override this as needed.
 name|virtual
 name|bool
-name|ForceUnitLatencies
+name|forceUnitLatencies
 argument_list|()
 specifier|const
 block|{
@@ -2617,30 +2638,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// EmitNoop - Emit a noop instruction.
-comment|///
-name|void
-name|EmitNoop
-parameter_list|()
-function_decl|;
-name|void
-name|EmitPhysRegCopy
-argument_list|(
-name|SUnit
-operator|*
-name|SU
-argument_list|,
-name|DenseMap
-operator|<
-name|SUnit
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-name|VRBaseMap
-argument_list|)
-decl_stmt|;
 name|private
 label|:
 comment|// Return the MCInstrDesc of this SDNode or NULL.

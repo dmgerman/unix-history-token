@@ -166,127 +166,96 @@ value|45
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|echo
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|to_log
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|to_stderr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Verbose
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|quiet
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|exit_code
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|report_fp
-init|=
-operator|(
-name|FILE
-operator|*
-operator|)
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|report_file
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|chat_file
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|phone_num
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|phone_num2
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|timeout
 init|=
@@ -305,10 +274,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|have_tty_parameters
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -340,6 +308,7 @@ value|tcsetattr(0, TCSANOW, param)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|saved_tty_parameters
@@ -347,6 +316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|abort_string
@@ -356,12 +326,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|fail_reason
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|,
 name|fail_buffer
 index|[
@@ -371,34 +335,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|n_aborts
-init|=
-literal|0
 decl_stmt|,
 name|abort_next
-init|=
-literal|0
 decl_stmt|,
 name|timeout_next
-init|=
-literal|0
 decl_stmt|,
 name|echo_next
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|clear_abort_next
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|report_string
@@ -409,6 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|report_buffer
 index|[
@@ -418,38 +376,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|n_reports
-init|=
-literal|0
 decl_stmt|,
 name|report_next
-init|=
-literal|0
 decl_stmt|,
 name|report_gathering
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|clear_report_next
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|say_next
-init|=
-literal|0
 decl_stmt|,
 name|hup_next
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1549,15 +1498,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|char
-name|line
-index|[
-literal|1024
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Send a message to syslog and/or stderr.  */
 end_comment
@@ -1574,6 +1514,12 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+name|char
+name|line
+index|[
+literal|1024
+index|]
+decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
@@ -1595,6 +1541,11 @@ argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
@@ -1646,6 +1597,12 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+name|char
+name|line
+index|[
+literal|1024
+index|]
+decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
@@ -1667,6 +1624,11 @@ argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
@@ -1705,10 +1667,9 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|alarmed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

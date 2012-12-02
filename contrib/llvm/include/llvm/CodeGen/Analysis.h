@@ -115,6 +115,9 @@ name|class
 name|SDNode
 decl_stmt|;
 name|class
+name|SDValue
+decl_stmt|;
+name|class
 name|SelectionDAG
 decl_stmt|;
 comment|/// ComputeLinearIndex - Given an LLVM IR aggregate type and a sequence
@@ -263,6 +266,16 @@ argument_list|(
 argument|FCmpInst::Predicate Pred
 argument_list|)
 expr_stmt|;
+comment|/// getFCmpCodeWithoutNaN - Given an ISD condition code comparing floats,
+comment|/// return the equivalent code if we're allowed to assume that NaNs won't occur.
+name|ISD
+operator|::
+name|CondCode
+name|getFCmpCodeWithoutNaN
+argument_list|(
+argument|ISD::CondCode CC
+argument_list|)
+expr_stmt|;
 comment|/// getICmpCondCode - Return the ISD condition code corresponding to
 comment|/// the given LLVM IR integer condition code.
 comment|///
@@ -305,6 +318,10 @@ parameter_list|,
 name|SDNode
 modifier|*
 name|Node
+parameter_list|,
+name|SDValue
+modifier|&
+name|Chain
 parameter_list|,
 specifier|const
 name|TargetLowering

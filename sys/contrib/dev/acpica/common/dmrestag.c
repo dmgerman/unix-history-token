@@ -119,6 +119,10 @@ name|char
 modifier|*
 name|AcpiGetTagPathname
 parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|BufferNode
@@ -2041,10 +2045,6 @@ name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
-name|char
-modifier|*
-name|Pathname
-decl_stmt|;
 name|UINT32
 name|BitIndex
 decl_stmt|;
@@ -2103,6 +2103,15 @@ operator|->
 name|Common
 operator|.
 name|Next
+expr_stmt|;
+comment|/* Major cheat: The Node field is also used for the Tag ptr. Clear it now */
+name|IndexOp
+operator|->
+name|Common
+operator|.
+name|Node
+operator|=
+name|NULL
 expr_stmt|;
 name|OpInfo
 operator|=
@@ -2255,10 +2264,10 @@ block|{
 return|return;
 block|}
 comment|/* Translate the Index to a resource tag pathname */
-name|Pathname
-operator|=
 name|AcpiGetTagPathname
 argument_list|(
+name|IndexOp
+argument_list|,
 name|BufferNode
 argument_list|,
 name|ResourceNode
@@ -2266,31 +2275,6 @@ argument_list|,
 name|BitIndex
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Pathname
-condition|)
-block|{
-comment|/* Complete the conversion of the Index to a symbol */
-name|IndexOp
-operator|->
-name|Common
-operator|.
-name|AmlOpcode
-operator|=
-name|AML_INT_NAMEPATH_OP
-expr_stmt|;
-name|IndexOp
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|String
-operator|=
-name|Pathname
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2393,6 +2377,10 @@ name|char
 modifier|*
 name|AcpiGetTagPathname
 parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|IndexOp
+parameter_list|,
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|BufferNode
@@ -2494,6 +2482,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|NULL
+argument_list|,
 name|Aml
 argument_list|,
 operator|&
@@ -2676,6 +2666,38 @@ expr_stmt|;
 name|ACPI_FREE
 argument_list|(
 name|Pathname
+argument_list|)
+expr_stmt|;
+comment|/* Update the Op with the symbol */
+name|AcpiPsInitOp
+argument_list|(
+name|IndexOp
+argument_list|,
+name|AML_INT_NAMEPATH_OP
+argument_list|)
+expr_stmt|;
+name|IndexOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|String
+operator|=
+name|InternalPath
+expr_stmt|;
+comment|/* We will need the tag later. Cheat by putting it in the Node field */
+name|IndexOp
+operator|->
+name|Common
+operator|.
+name|Node
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
+name|Tag
 argument_list|)
 expr_stmt|;
 return|return
@@ -3169,6 +3191,8 @@ name|ACPI_SUCCESS
 argument_list|(
 name|AcpiDmIsResourceTemplate
 argument_list|(
+name|NULL
+argument_list|,
 name|Op
 argument_list|)
 argument_list|)
@@ -3276,6 +3300,8 @@ expr_stmt|;
 comment|/*      * Insert each resource into the namespace      * NextOp contains the Aml pointer and the Aml length      */
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 operator|(
 name|UINT8
 operator|*

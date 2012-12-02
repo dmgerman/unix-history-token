@@ -154,6 +154,8 @@ name|tv_nsec
 operator|=
 literal|1000000000L
 operator|/
+name|hz
+operator|*
 name|sched_rr_interval
 argument_list|()
 expr_stmt|;

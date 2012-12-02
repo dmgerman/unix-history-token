@@ -58,11 +58,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WIN16
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__LP32__
 argument_list|)
 define|#

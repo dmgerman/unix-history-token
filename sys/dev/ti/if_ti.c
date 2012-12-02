@@ -256,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|TI_CSUM_FEATURES
-value|(CSUM_IP | CSUM_TCP | CSUM_UDP | CSUM_IP_FRAGS)
+value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
 end_define
 
 begin_comment
@@ -314,7 +314,6 @@ specifier|static
 specifier|const
 name|struct
 name|ti_type
-specifier|const
 name|ti_devs
 index|[]
 init|=
@@ -15465,15 +15464,6 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-condition|)
-block|{
-if|if
-condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
 operator|&
 name|CSUM_IP
 condition|)
@@ -15499,32 +15489,6 @@ name|csum_flags
 operator||=
 name|TI_BDFLAG_TCP_UDP_CKSUM
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_LASTFRAG
-condition|)
-name|csum_flags
-operator||=
-name|TI_BDFLAG_IP_FRAG_END
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FRAG
-condition|)
-name|csum_flags
-operator||=
-name|TI_BDFLAG_IP_FRAG
-expr_stmt|;
-block|}
 name|frag
 operator|=
 name|sc

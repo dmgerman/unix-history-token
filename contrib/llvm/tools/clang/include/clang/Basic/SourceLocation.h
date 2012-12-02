@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the SourceLocation class.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::SourceLocation class and associated facilities.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -69,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -122,14 +132,14 @@ block|{
 name|class
 name|SourceManager
 decl_stmt|;
-comment|/// FileID - This is an opaque identifier used by SourceManager which refers to
-comment|/// a source file (MemoryBuffer) along with its #include path and #line data.
+comment|/// \brief An opaque identifier used by SourceManager which refers to a
+comment|/// source file (MemoryBuffer) along with its \#include path and \#line data.
 comment|///
 name|class
 name|FileID
 block|{
-comment|/// ID - Opaque identifier, 0 is "invalid".>0 is this module,<-1 is
-comment|/// something loaded from another module.
+comment|/// \brief A mostly-opaque identifier, where 0 is "invalid",>0 is
+comment|/// this module, and<-1 is something loaded from another module.
 name|int
 name|ID
 decl_stmt|;
@@ -581,10 +591,11 @@ return|return
 name|L
 return|;
 block|}
-comment|/// getRawEncoding - When a SourceLocation itself cannot be used, this returns
-comment|/// an (opaque) 32-bit integer encoding for it.  This should only be passed
-comment|/// to SourceLocation::getFromRawEncoding, it should not be inspected
-comment|/// directly.
+comment|/// \brief When a SourceLocation itself cannot be used, this returns
+comment|/// an (opaque) 32-bit integer encoding for it.
+comment|///
+comment|/// This should only be passed to SourceLocation::getFromRawEncoding, it
+comment|/// should not be inspected directly.
 name|unsigned
 name|getRawEncoding
 argument_list|()
@@ -594,8 +605,10 @@ return|return
 name|ID
 return|;
 block|}
-comment|/// getFromRawEncoding - Turn a raw encoding of a SourceLocation object into
+comment|/// \brief Turn a raw encoding of a SourceLocation object into
 comment|/// a real SourceLocation.
+comment|///
+comment|/// \see getRawEncoding.
 specifier|static
 name|SourceLocation
 name|getFromRawEncoding
@@ -617,10 +630,11 @@ return|return
 name|X
 return|;
 block|}
-comment|/// getPtrEncoding - When a SourceLocation itself cannot be used, this returns
-comment|/// an (opaque) pointer encoding for it.  This should only be passed
-comment|/// to SourceLocation::getFromPtrEncoding, it should not be inspected
-comment|/// directly.
+comment|/// \brief When a SourceLocation itself cannot be used, this returns
+comment|/// an (opaque) pointer encoding for it.
+comment|///
+comment|/// This should only be passed to SourceLocation::getFromPtrEncoding, it
+comment|/// should not be inspected directly.
 name|void
 operator|*
 name|getPtrEncoding
@@ -647,6 +661,7 @@ specifier|static
 name|SourceLocation
 name|getFromPtrEncoding
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|Encoding
@@ -772,7 +787,7 @@ name|getRawEncoding
 argument_list|()
 return|;
 block|}
-comment|/// SourceRange - a trival tuple used to represent a source range.
+comment|/// \brief A trival tuple used to represent a source range.
 name|class
 name|SourceRange
 block|{
@@ -952,7 +967,8 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// CharSourceRange - This class represents a character granular source range.
+comment|/// \brief Represents a character-granular source range.
+comment|///
 comment|/// The underlying SourceRange can either specify the starting/ending character
 comment|/// of the range, or it can specify the start or the range and the start of the
 comment|/// last token of the range (a "token range").  In the token range case, the
@@ -1093,7 +1109,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// isTokenRange - Return true if the end of this range specifies the start of
+comment|/// \brief Return true if the end of this range specifies the start of
 comment|/// the last token.  Return false if the end of this range specifies the last
 comment|/// character in the range.
 name|bool
@@ -1102,6 +1118,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|IsTokenRange
+return|;
+block|}
+name|bool
+name|isCharRange
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
 name|IsTokenRange
 return|;
 block|}
@@ -1195,8 +1221,9 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// FullSourceLoc - A SourceLocation and its associated SourceManager.  Useful
-comment|/// for argument passing to functions that expect both objects.
+comment|/// \brief A SourceLocation and its associated SourceManager.
+comment|///
+comment|/// This is useful for argument passing to functions that expect both objects.
 name|class
 name|FullSourceLoc
 range|:
@@ -1210,7 +1237,7 @@ name|SrcMgr
 block|;
 name|public
 operator|:
-comment|/// Creates a FullSourceLoc where isValid() returns false.
+comment|/// \brief Creates a FullSourceLoc where isValid() returns \c false.
 name|explicit
 name|FullSourceLoc
 argument_list|()
@@ -1238,6 +1265,7 @@ argument_list|(
 argument|&SM
 argument_list|)
 block|{}
+comment|/// \pre This FullSourceLoc has an associated SourceManager.
 specifier|const
 name|SourceManager
 operator|&
@@ -1326,7 +1354,7 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// getBufferData - Return a StringRef to the source buffer data for the
+comment|/// \brief Return a StringRef to the source buffer data for the
 comment|/// specified FileID.
 name|StringRef
 name|getBufferData
@@ -1336,9 +1364,10 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// getDecomposedLoc - Decompose the specified location into a raw FileID +
-comment|/// Offset pair.  The first element is the FileID, the second is the
-comment|/// offset from the start of the buffer of the location.
+comment|/// \brief Decompose the specified location into a raw FileID + Offset pair.
+comment|///
+comment|/// The first element is the FileID, the second is the offset from the
+comment|/// start of the buffer of the location.
 name|std
 operator|::
 name|pair
@@ -1448,21 +1477,15 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Prints information about this FullSourceLoc to stderr. Useful for
-comment|///  debugging.
+comment|/// \brief Prints information about this FullSourceLoc to stderr.
+comment|///
+comment|/// This is useful for debugging.
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|{
-name|SourceLocation
-operator|::
-name|dump
-argument_list|(
-operator|*
-name|SrcMgr
-argument_list|)
-block|; }
+block|;
 name|friend
 specifier|inline
 name|bool
@@ -1528,10 +1551,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// PresumedLoc - This class represents an unpacked "presumed" location which
-comment|/// can be presented to the user.  A 'presumed' location can be modified by
-comment|/// #line and GNU line marker directives and is always the expansion point of
-comment|/// a normal location.
+comment|/// \brief Represents an unpacked "presumed" location which can be presented
+comment|/// to the user.
+comment|///
+comment|/// A 'presumed' location can be modified by \#line and GNU line marker
+comment|/// directives and is always the expansion point of a normal location.
 comment|///
 comment|/// You can get a PresumedLoc from a SourceLocation with SourceManager.
 name|class
@@ -1591,9 +1615,10 @@ argument_list|(
 argument|IL
 argument_list|)
 block|{   }
-comment|/// isInvalid - Return true if this object is invalid or uninitialized. This
-comment|/// occurs when created with invalid source locations or when walking off
-comment|/// the top of a #include stack.
+comment|/// \brief Return true if this object is invalid or uninitialized.
+comment|///
+comment|/// This occurs when created with invalid source locations or when walking
+comment|/// off the top of a \#include stack.
 name|bool
 name|isInvalid
 argument_list|()
@@ -1616,8 +1641,9 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getFilename - Return the presumed filename of this location.  This can be
-comment|/// affected by #line etc.
+comment|/// \brief Return the presumed filename of this location.
+comment|///
+comment|/// This can be affected by \#line etc.
 specifier|const
 name|char
 operator|*
@@ -1629,8 +1655,9 @@ return|return
 name|Filename
 return|;
 block|}
-comment|/// getLine - Return the presumed line number of this location.  This can be
-comment|/// affected by #line etc.
+comment|/// \brief Return the presumed line number of this location.
+comment|///
+comment|/// This can be affected by \#line etc.
 name|unsigned
 name|getLine
 argument_list|()
@@ -1640,8 +1667,9 @@ return|return
 name|Line
 return|;
 block|}
-comment|/// getColumn - Return the presumed column number of this location.  This can
-comment|/// not be affected by #line, but is packaged here for convenience.
+comment|/// \brief Return the presumed column number of this location.
+comment|///
+comment|/// This cannot be affected by \#line, but is packaged here for convenience.
 name|unsigned
 name|getColumn
 argument_list|()
@@ -1651,7 +1679,8 @@ return|return
 name|Col
 return|;
 block|}
-comment|/// getIncludeLoc - Return the presumed include location of this location.
+comment|/// \brief Return the presumed include location of this location.
+comment|///
 comment|/// This can be affected by GNU linemarker directives.
 name|SourceLocation
 name|getIncludeLoc

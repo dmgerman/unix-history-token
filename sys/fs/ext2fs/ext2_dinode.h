@@ -181,6 +181,105 @@ begin_comment
 comment|/* do not update atime */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXT2_INDEX
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* hash-indexed directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_IMAGIC
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* AFS directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_JOURNAL_DATA
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* file data should be journaled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_NOTAIL
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* file tail should not be merged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_DIRSYNC
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* dirsync behaviour */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_TOPDIR
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Top of directory hierarchies*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_HUGE_FILE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Set to each huge file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_EXTENTS
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Inode uses extents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_EOFBLOCKS
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Blocks allocated beyond EOF */
+end_comment
+
 begin_comment
 comment|/*  * Definitions for nanosecond timestamps.  * Ext3 inode versioning, 2006-12-13.  */
 end_comment
@@ -295,18 +394,14 @@ name|uint32_t
 name|e2di_faddr
 decl_stmt|;
 comment|/* 112: fragment address */
-name|uint8_t
-name|e2di_nfrag
-decl_stmt|;
-comment|/* 116: fragment number */
-name|uint8_t
-name|e2di_fsize
-decl_stmt|;
-comment|/* 117: fragment size */
 name|uint16_t
-name|e2di_linux_reserved2
+name|e2di_nblock_high
 decl_stmt|;
-comment|/* 118 */
+comment|/* 116: Blocks count bits 47:32 */
+name|uint16_t
+name|e2di_facl_high
+decl_stmt|;
+comment|/* 118: file ACL bits 47:32 */
 name|uint16_t
 name|e2di_uid_high
 decl_stmt|;

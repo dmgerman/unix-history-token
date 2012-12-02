@@ -244,6 +244,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sched.h>
 end_include
 
@@ -3126,6 +3132,14 @@ end_function
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|rwlock
+name|pvh_global_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|nkpt
 decl_stmt|;
@@ -3405,8 +3419,11 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|rw_wlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -3480,8 +3497,11 @@ block|}
 name|PT_UPDATES_FLUSH
 argument_list|()
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|rw_wunlock
+argument_list|(
+operator|&
+name|pvh_global_lock
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(

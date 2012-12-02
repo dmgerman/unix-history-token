@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====- X86MachineFuctionInfo.h - X86 machine function info -----*- C++ -*-===//
+comment|//===-- X86MachineFuctionInfo.h - X86 machine function info -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -77,6 +77,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// ForceFramePointer - True if the function is required to use of frame
 comment|/// pointer for reasons other than it containing dynamic allocation or
 comment|/// that FP eliminatation is turned off. For example, Cygwin main function
@@ -136,6 +141,10 @@ comment|/// ArgumentStackSize - The number of bytes on stack consumed by the arg
 comment|/// being passed on the stack.
 name|unsigned
 name|ArgumentStackSize
+block|;
+comment|/// NumLocalDynamics - Number of local-dynamic TLS accesses.
+name|unsigned
+name|NumLocalDynamics
 block|;
 name|public
 operator|:
@@ -198,6 +207,11 @@ literal|0
 argument_list|)
 block|,
 name|ArgumentStackSize
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
@@ -266,6 +280,11 @@ literal|0
 argument_list|)
 block|,
 name|ArgumentStackSize
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
@@ -497,6 +516,22 @@ block|{
 name|ArgumentStackSize
 operator|=
 name|size
+block|; }
+name|unsigned
+name|getNumLocalDynamicTLSAccesses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumLocalDynamics
+return|;
+block|}
+name|void
+name|incNumLocalDynamicTLSAccesses
+argument_list|()
+block|{
+operator|++
+name|NumLocalDynamics
 block|; }
 expr|}
 block|;  }

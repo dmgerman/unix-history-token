@@ -321,7 +321,8 @@ name|my_ring
 modifier|*
 name|me
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|what
 parameter_list|)
 block|{
@@ -432,7 +433,7 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"ioctl error %d"
+literal|"ioctl error 0x%lx"
 argument_list|,
 name|what
 argument_list|)
@@ -1647,13 +1648,14 @@ argument_list|,
 name|me
 operator|->
 name|end
-operator|>
+operator|>=
 name|me
 operator|->
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_tx_rings
 condition|?
+comment|// XXX who comes first ?
 literal|"host"
 else|:
 literal|"net"
@@ -1890,6 +1892,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -2430,7 +2440,7 @@ index|]
 operator|.
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_rx_rings
 argument_list|,
 name|me
 index|[
@@ -2453,7 +2463,7 @@ index|]
 operator|.
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_rx_rings
 argument_list|)
 expr_stmt|;
 comment|/* main loop */

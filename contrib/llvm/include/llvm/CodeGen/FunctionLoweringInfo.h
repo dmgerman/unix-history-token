@@ -102,25 +102,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -331,7 +320,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|SmallSet
+name|SmallPtrSet
 operator|<
 specifier|const
 name|Instruction
@@ -341,7 +330,7 @@ literal|8
 operator|>
 name|CatchInfoLost
 expr_stmt|;
-name|SmallSet
+name|SmallPtrSet
 operator|<
 specifier|const
 name|Instruction
@@ -402,11 +391,13 @@ block|}
 struct|;
 comment|/// VisitedBBs - The set of basic blocks visited thus far by instruction
 comment|/// selection.
-name|DenseSet
+name|SmallPtrSet
 operator|<
 specifier|const
 name|BasicBlock
 operator|*
+operator|,
+literal|4
 operator|>
 name|VisitedBBs
 expr_stmt|;
@@ -786,6 +777,24 @@ name|LiveOutRegInfo
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// ComputeUsesVAFloatArgument - Determine if any floating-point values are
+comment|/// being passed to this variadic function, and set the MachineModuleInfo's
+comment|/// usesVAFloatArgument flag if so. This flag is used to emit an undefined
+comment|/// reference to _fltused on Windows, which will link in MSVCRT's
+comment|/// floating-point support.
+name|void
+name|ComputeUsesVAFloatArgument
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|MachineModuleInfo
+modifier|*
+name|MMI
+parameter_list|)
+function_decl|;
 comment|/// AddCatchInfo - Extract the personality and type infos from an eh.selector
 comment|/// call, and add them to the specified machine basic block.
 name|void
@@ -803,30 +812,6 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|MBB
-parameter_list|)
-function_decl|;
-comment|/// CopyCatchInfo - Copy catch information from SuccBB (or one of its
-comment|/// successors) to LPad.
-name|void
-name|CopyCatchInfo
-parameter_list|(
-specifier|const
-name|BasicBlock
-modifier|*
-name|SuccBB
-parameter_list|,
-specifier|const
-name|BasicBlock
-modifier|*
-name|LPad
-parameter_list|,
-name|MachineModuleInfo
-modifier|*
-name|MMI
-parameter_list|,
-name|FunctionLoweringInfo
-modifier|&
-name|FLI
 parameter_list|)
 function_decl|;
 comment|/// AddLandingPadInfo - Extract the exception handling information from the

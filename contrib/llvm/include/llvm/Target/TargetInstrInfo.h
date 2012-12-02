@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/DFAPacketizer.h"
 end_include
 
 begin_include
@@ -95,6 +107,9 @@ name|MDNode
 decl_stmt|;
 name|class
 name|MCInst
+decl_stmt|;
+name|class
+name|MCSchedModel
 decl_stmt|;
 name|class
 name|SDNode
@@ -191,6 +206,8 @@ argument_list|,
 argument|unsigned OpNum
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -474,22 +491,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// scheduleTwoAddrSource - Schedule the copy / re-mat of the source of the
-comment|/// two-addrss instruction inserted by two-address pass.
-name|virtual
-name|void
-name|scheduleTwoAddrSource
-argument_list|(
-argument|MachineInstr *SrcMI
-argument_list|,
-argument|MachineInstr *UseMI
-argument_list|,
-argument|const TargetRegisterInfo&TRI
-argument_list|)
-specifier|const
-block|{
-comment|// Do nothing.
-block|}
 comment|/// duplicate - Create a duplicate of the Orig instruction in MF. This is like
 comment|/// MachineFunction::CloneMachineInstr(), but the target may update operands
 comment|/// that are required to be unique.
@@ -649,17 +650,11 @@ argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement TargetInstrInfo::RemoveBranch!"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// InsertBranch - Insert branch code into the end of the specified
 comment|/// MachineBasicBlock.  The operands to this method are the same as those
 comment|/// returned by AnalyzeBranch.  This is only invoked in cases where
@@ -686,17 +681,11 @@ argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement TargetInstrInfo::InsertBranch!"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// ReplaceTailWithBranchTo - Delete the instruction OldInst and everything
 comment|/// after it, replacing it with an unconditional branch to NewDest. This is
 comment|/// used by the tail merging pass.
@@ -740,7 +729,7 @@ name|isProfitableToIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumCyles
+argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
@@ -794,7 +783,7 @@ name|isProfitableToDupForIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumCyles
+argument|unsigned NumCycles
 argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
@@ -804,6 +793,194 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isProfitableToUnpredicate - Return true if it's profitable to unpredicate
+comment|/// one side of a 'diamond', i.e. two sides of if-else predicated on mutually
+comment|/// exclusive predicates.
+comment|/// e.g.
+comment|///   subeq  r0, r1, #1
+comment|///   addne  r0, r1, #1
+comment|/// =>
+comment|///   sub    r0, r1, #1
+comment|///   addne  r0, r1, #1
+comment|///
+comment|/// This may be profitable is conditional instructions are always executed.
+name|virtual
+name|bool
+name|isProfitableToUnpredicate
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// canInsertSelect - Return true if it is possible to insert a select
+comment|/// instruction that chooses between TrueReg and FalseReg based on the
+comment|/// condition code in Cond.
+comment|///
+comment|/// When successful, also return the latency in cycles from TrueReg,
+comment|/// FalseReg, and Cond to the destination register. The Cond latency should
+comment|/// compensate for a conditional branch being removed. For example, if a
+comment|/// conditional branch has a 3 cycle latency from the condition code read,
+comment|/// and a cmov instruction has a 2 cycle latency from the condition code
+comment|/// read, CondCycles should be returned as -1.
+comment|///
+comment|/// @param MBB         Block where select instruction would be inserted.
+comment|/// @param Cond        Condition returned by AnalyzeBranch.
+comment|/// @param TrueReg     Virtual register to select when Cond is true.
+comment|/// @param FalseReg    Virtual register to select when Cond is false.
+comment|/// @param CondCycles  Latency from Cond+Branch to select output.
+comment|/// @param TrueCycles  Latency from TrueReg to select output.
+comment|/// @param FalseCycles Latency from FalseReg to select output.
+name|virtual
+name|bool
+name|canInsertSelect
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned TrueReg
+argument_list|,
+argument|unsigned FalseReg
+argument_list|,
+argument|int&CondCycles
+argument_list|,
+argument|int&TrueCycles
+argument_list|,
+argument|int&FalseCycles
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// insertSelect - Insert a select instruction into MBB before I that will
+comment|/// copy TrueReg to DstReg when Cond is true, and FalseReg to DstReg when
+comment|/// Cond is false.
+comment|///
+comment|/// This function can only be called after canInsertSelect() returned true.
+comment|/// The condition in Cond comes from AnalyzeBranch, and it can be assumed
+comment|/// that the same flags or registers required by Cond are available at the
+comment|/// insertion point.
+comment|///
+comment|/// @param MBB      Block where select instruction should be inserted.
+comment|/// @param I        Insertion point.
+comment|/// @param DL       Source location for debugging.
+comment|/// @param DstReg   Virtual register to be defined by select instruction.
+comment|/// @param Cond     Condition as computed by AnalyzeBranch.
+comment|/// @param TrueReg  Virtual register to copy when Cond is true.
+comment|/// @param FalseReg Virtual register to copy when Cons is false.
+name|virtual
+name|void
+name|insertSelect
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned TrueReg
+argument_list|,
+argument|unsigned FalseReg
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertSelect!"
+argument_list|)
+block|;   }
+comment|/// analyzeSelect - Analyze the given select instruction, returning true if
+comment|/// it cannot be understood. It is assumed that MI->isSelect() is true.
+comment|///
+comment|/// When successful, return the controlling condition and the operands that
+comment|/// determine the true and false result values.
+comment|///
+comment|///   Result = SELECT Cond, TrueOp, FalseOp
+comment|///
+comment|/// Some targets can optimize select instructions, for example by predicating
+comment|/// the instruction defining one of the operands. Such targets should set
+comment|/// Optimizable.
+comment|///
+comment|/// @param         MI Select instruction to analyze.
+comment|/// @param Cond    Condition controlling the select.
+comment|/// @param TrueOp  Operand number of the value selected when Cond is true.
+comment|/// @param FalseOp Operand number of the value selected when Cond is false.
+comment|/// @param Optimizable Returned as true if MI is optimizable.
+comment|/// @returns False on success.
+name|virtual
+name|bool
+name|analyzeSelect
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned&TrueOp
+argument_list|,
+argument|unsigned&FalseOp
+argument_list|,
+argument|bool&Optimizable
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MI
+operator|&&
+name|MI
+operator|->
+name|isSelect
+argument_list|()
+operator|&&
+literal|"MI must be a select instruction"
+argument_list|)
+block|;
+return|return
+name|true
+return|;
+block|}
+comment|/// optimizeSelect - Given a select instruction that was understood by
+comment|/// analyzeSelect and returned Optimizable = true, attempt to optimize MI by
+comment|/// merging it with one of its operands. Returns NULL on failure.
+comment|///
+comment|/// When successful, returns the new select instruction. The client is
+comment|/// responsible for deleting MI.
+comment|///
+comment|/// If both sides of the select can be optimized, PreferFalse is used to pick
+comment|/// a side.
+comment|///
+comment|/// @param MI          Optimizable select instruction.
+comment|/// @param PreferFalse Try to optimize FalseOp instead of TrueOp.
+comment|/// @returns Optimized instruction or NULL.
+name|virtual
+name|MachineInstr
+operator|*
+name|optimizeSelect
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool PreferFalse = false
+argument_list|)
+specifier|const
+block|{
+comment|// This function must be implemented if Optimizable is ever set.
+name|llvm_unreachable
+argument_list|(
+literal|"Target must implement TargetInstrInfo::optimizeSelect!"
+argument_list|)
+block|;   }
 comment|/// copyPhysReg - Emit instructions to copy a pair of physical registers.
 name|virtual
 name|void
@@ -823,10 +1000,8 @@ argument|bool KillSrc
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Target didn't implement TargetInstrInfo::copyPhysReg!"
 argument_list|)
 block|;   }
@@ -855,11 +1030,10 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::storeRegToStackSlot!"
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::storeRegToStackSlot!"
 argument_list|)
 block|;   }
 comment|/// loadRegFromStackSlot - Load the specified register of the given register
@@ -884,11 +1058,10 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::loadRegFromStackSlot!"
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::loadRegFromStackSlot!"
 argument_list|)
 block|;   }
 comment|/// expandPostRAPseudo - This function is called for all pseudo instructions
@@ -1211,6 +1384,8 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
 comment|/// PredicateInstruction - Convert the instruction into a predicated
 comment|/// instruction. It returns true if the operation was successful.
@@ -1339,6 +1514,22 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// CreateTargetMIHazardRecognizer - Allocate and return a hazard recognizer
+comment|/// to use for this target when scheduling the machine instructions before
+comment|/// register allocation.
+name|virtual
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetMIHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData*
+argument_list|,
+argument|const ScheduleDAG *DAG
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
 comment|/// CreateTargetPostRAHazardRecognizer - Allocate and return a hazard
 comment|/// recognizer to use for this target when scheduling the machine instructions
 comment|/// after register allocation.
@@ -1355,16 +1546,19 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// AnalyzeCompare - For a comparison instruction, return the source register
-comment|/// in SrcReg and the value it compares against in CmpValue. Return true if
-comment|/// the comparison instruction can be analyzed.
+comment|/// analyzeCompare - For a comparison instruction, return the source registers
+comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
+comment|/// compares against in CmpValue. Return true if the comparison instruction
+comment|/// can be analyzed.
 name|virtual
 name|bool
-name|AnalyzeCompare
+name|analyzeCompare
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&SrcReg2
 argument_list|,
 argument|int&Mask
 argument_list|,
@@ -1376,16 +1570,18 @@ return|return
 name|false
 return|;
 block|}
-comment|/// OptimizeCompareInstr - See if the comparison instruction can be converted
+comment|/// optimizeCompareInstr - See if the comparison instruction can be converted
 comment|/// into something more efficient. E.g., on ARM most instructions can set the
 comment|/// flags register, obviating the need for a separate CMP.
 name|virtual
 name|bool
-name|OptimizeCompareInstr
+name|optimizeCompareInstr
 argument_list|(
 argument|MachineInstr *CmpInstr
 argument_list|,
 argument|unsigned SrcReg
+argument_list|,
+argument|unsigned SrcReg2
 argument_list|,
 argument|int Mask
 argument_list|,
@@ -1397,6 +1593,32 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// optimizeLoadInstr - Try to remove the load by folding it to a register
+comment|/// operand at the use. We fold the load instructions if and only if the
+comment|/// def and use are in the same BB. We only look at one load and see
+comment|/// whether it can be folded into MI. FoldAsLoadDefReg is the virtual register
+comment|/// defined by the load we are trying to fold. DefMI returns the machine
+comment|/// instruction that defines FoldAsLoadDefReg, and the function returns
+comment|/// the machine instruction generated due to folding.
+name|virtual
+name|MachineInstr
+operator|*
+name|optimizeLoadInstr
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|const MachineRegisterInfo *MRI
+argument_list|,
+argument|unsigned&FoldAsLoadDefReg
+argument_list|,
+argument|MachineInstr *&DefMI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
 return|;
 block|}
 comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
@@ -1420,7 +1642,9 @@ name|false
 return|;
 block|}
 comment|/// getNumMicroOps - Return the number of u-operations the given machine
-comment|/// instruction will be decoded to on the target cpu.
+comment|/// instruction will be decoded to on the target cpu. The itinerary's
+comment|/// IssueWidth is the number of microops that can be dispatched each
+comment|/// cycle. An instruction with zero microops takes no dispatch resources.
 name|virtual
 name|unsigned
 name|getNumMicroOps
@@ -1430,6 +1654,8 @@ argument_list|,
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
 comment|/// isZeroCost - Return true for pseudo instructions that don't consume any
 comment|/// machine resources in their current form. These are common cases that the
@@ -1450,27 +1676,6 @@ operator|::
 name|COPY
 return|;
 block|}
-comment|/// getOperandLatency - Compute and return the use operand latency of a given
-comment|/// pair of def and use.
-comment|/// In most cases, the static scheduling itinerary was enough to determine the
-comment|/// operand latency. But it may not be possible for instructions with variable
-comment|/// number of defs / uses.
-name|virtual
-name|int
-name|getOperandLatency
-argument_list|(
-argument|const InstrItineraryData *ItinData
-argument_list|,
-argument|const MachineInstr *DefMI
-argument_list|,
-argument|unsigned DefIdx
-argument_list|,
-argument|const MachineInstr *UseMI
-argument_list|,
-argument|unsigned UseIdx
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|int
 name|getOperandLatency
@@ -1486,12 +1691,107 @@ argument_list|,
 argument|unsigned UseIdx
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
+comment|/// getOperandLatency - Compute and return the use operand latency of a given
+comment|/// pair of def and use.
+comment|/// In most cases, the static scheduling itinerary was enough to determine the
+comment|/// operand latency. But it may not be possible for instructions with variable
+comment|/// number of defs / uses.
+comment|///
+comment|/// This is a raw interface to the itinerary that may be directly overriden by
+comment|/// a target. Use computeOperandLatency to get the best estimate of latency.
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// computeOperandLatency - Compute and return the latency of the given data
+comment|/// dependent def and use when the operand indices are already known.
+comment|///
+comment|/// FindMin may be set to get the minimum vs. expected latency.
+name|unsigned
+name|computeOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|,
+argument|bool FindMin = false
+argument_list|)
+specifier|const
+block|;
+comment|/// computeOperandLatency - Compute and return the latency of the given data
+comment|/// dependent def and use. DefMI must be a valid def. UseMI may be NULL for
+comment|/// an unknown use. If the subtarget allows, this may or may not need to call
+comment|/// getOperandLatency().
+comment|///
+comment|/// FindMin may be set to get the minimum vs. expected latency. Minimum
+comment|/// latency is used for scheduling groups, while expected latency is for
+comment|/// instruction cost and critical path.
+name|unsigned
+name|computeOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|bool FindMin
+argument_list|)
+specifier|const
+block|;
+comment|/// getOutputLatency - Compute and return the output dependency latency of a
+comment|/// a given pair of defs which both target the same register. This is usually
+comment|/// one.
+name|virtual
+name|unsigned
+name|getOutputLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *DepMI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|1
+return|;
+block|}
 comment|/// getInstrLatency - Compute the instruction latency of a given instruction.
 comment|/// If the instruction has higher cost when predicated, it's returned via
 comment|/// PredCost.
 name|virtual
-name|int
+name|unsigned
 name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
@@ -1502,6 +1802,8 @@ argument|unsigned *PredCost =
 literal|0
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
 name|virtual
 name|int
@@ -1510,6 +1812,18 @@ argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|SDNode *Node
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// Return the default expected latency for a def based on it's opcode.
+name|unsigned
+name|defaultDefLatency
+argument_list|(
+argument|const MCSchedModel *SchedModel
+argument_list|,
+argument|const MachineInstr *DefMI
 argument_list|)
 specifier|const
 block|;
@@ -1567,6 +1881,8 @@ argument_list|,
 argument|unsigned DefIdx
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|;
 comment|/// verifyInstruction - Perform target specific instruction verification.
 name|virtual
@@ -1643,6 +1959,107 @@ argument|unsigned Domain
 argument_list|)
 specifier|const
 block|{}
+comment|/// getPartialRegUpdateClearance - Returns the preferred minimum clearance
+comment|/// before an instruction with an unwanted partial register update.
+comment|///
+comment|/// Some instructions only write part of a register, and implicitly need to
+comment|/// read the other parts of the register.  This may cause unwanted stalls
+comment|/// preventing otherwise unrelated instructions from executing in parallel in
+comment|/// an out-of-order CPU.
+comment|///
+comment|/// For example, the x86 instruction cvtsi2ss writes its result to bits
+comment|/// [31:0] of the destination xmm register. Bits [127:32] are unaffected, so
+comment|/// the instruction needs to wait for the old value of the register to become
+comment|/// available:
+comment|///
+comment|///   addps %xmm1, %xmm0
+comment|///   movaps %xmm0, (%rax)
+comment|///   cvtsi2ss %rbx, %xmm0
+comment|///
+comment|/// In the code above, the cvtsi2ss instruction needs to wait for the addps
+comment|/// instruction before it can issue, even though the high bits of %xmm0
+comment|/// probably aren't needed.
+comment|///
+comment|/// This hook returns the preferred clearance before MI, measured in
+comment|/// instructions.  Other defs of MI's operand OpNum are avoided in the last N
+comment|/// instructions before MI.  It should only return a positive value for
+comment|/// unwanted dependencies.  If the old bits of the defined register have
+comment|/// useful values, or if MI is determined to otherwise read the dependency,
+comment|/// the hook should return 0.
+comment|///
+comment|/// The unwanted dependency may be handled by:
+comment|///
+comment|/// 1. Allocating the same register for an MI def and use.  That makes the
+comment|///    unwanted dependency identical to a required dependency.
+comment|///
+comment|/// 2. Allocating a register for the def that has no defs in the previous N
+comment|///    instructions.
+comment|///
+comment|/// 3. Calling breakPartialRegDependency() with the same arguments.  This
+comment|///    allows the target to insert a dependency breaking instruction.
+comment|///
+name|virtual
+name|unsigned
+name|getPartialRegUpdateClearance
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{
+comment|// The default implementation returns 0 for no partial register dependency.
+return|return
+literal|0
+return|;
+block|}
+comment|/// breakPartialRegDependency - Insert a dependency-breaking instruction
+comment|/// before MI to eliminate an unwanted dependency on OpNum.
+comment|///
+comment|/// If it wasn't possible to avoid a def in the last N instructions before MI
+comment|/// (see getPartialRegUpdateClearance), this hook will be called to break the
+comment|/// unwanted dependency.
+comment|///
+comment|/// On x86, an xorps instruction can be used as a dependency breaker:
+comment|///
+comment|///   addps %xmm1, %xmm0
+comment|///   movaps %xmm0, (%rax)
+comment|///   xorps %xmm0, %xmm0
+comment|///   cvtsi2ss %rbx, %xmm0
+comment|///
+comment|/// An<imp-kill> operand should be added to MI if an instruction was
+comment|/// inserted.  This ties the instructions together in the post-ra scheduler.
+comment|///
+name|virtual
+name|void
+name|breakPartialRegDependency
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{}
+comment|/// Create machine specific model for scheduling.
+name|virtual
+name|DFAPacketizer
+operator|*
+name|CreateTargetScheduleState
+argument_list|(
+argument|const TargetMachine*
+argument_list|,
+argument|const ScheduleDAG*
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|private
 operator|:
 name|int
@@ -1750,6 +2167,14 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|isUnpredicatedTerminator
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
 name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
@@ -1811,6 +2236,83 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *DefNode
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SDNode *UseNode
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|int
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *Node
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getNumMicroOps
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned *PredCost =
+literal|0
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasLowDefLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|usePreRAHazardRecognizer
 argument_list|()
@@ -1822,6 +2324,17 @@ operator|*
 name|CreateTargetHazardRecognizer
 argument_list|(
 argument|const TargetMachine*
+argument_list|,
+argument|const ScheduleDAG*
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetMIHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData*
 argument_list|,
 argument|const ScheduleDAG*
 argument_list|)

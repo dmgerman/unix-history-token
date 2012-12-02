@@ -347,15 +347,9 @@ modifier|*
 name|comment
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FSMAXSNAP
 name|int
 name|j
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* FSMAXSNAP */
 if|if
 condition|(
 operator|!
@@ -1313,9 +1307,6 @@ operator|->
 name|fs_pendinginodes
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FSMAXSNAP
 for|for
 control|(
 name|j
@@ -1361,9 +1352,6 @@ comment|/* list is dense */
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* FSMAXSNAP */
 name|fprintf
 argument_list|(
 name|dbg_log

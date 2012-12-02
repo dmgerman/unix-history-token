@@ -131,7 +131,7 @@ operator|::
 name|string
 name|getGraphName
 argument_list|(
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|)
 block|{
 return|return
@@ -152,7 +152,7 @@ operator|::
 name|string
 name|getGraphProperties
 argument_list|(
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|)
 block|{
 return|return
@@ -180,7 +180,6 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|Node
 parameter_list|)
 block|{
 return|return
@@ -199,9 +198,9 @@ operator|::
 name|string
 name|getNodeLabel
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|)
 block|{
 return|return
@@ -219,9 +218,9 @@ specifier|static
 name|bool
 name|hasNodeAddressLabel
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|)
 block|{
 return|return
@@ -241,9 +240,9 @@ operator|::
 name|string
 name|getNodeAttributes
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|)
 block|{
 return|return
@@ -266,11 +265,11 @@ operator|::
 name|string
 name|getEdgeAttributes
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|EdgeIter EI
+argument|EdgeIter
 argument_list|,
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|)
 block|{
 return|return
@@ -290,9 +289,9 @@ operator|::
 name|string
 name|getEdgeSourceLabel
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|EdgeIter I
+argument|EdgeIter
 argument_list|)
 block|{
 return|return
@@ -311,9 +310,9 @@ specifier|static
 name|bool
 name|edgeTargetsEdgeSource
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|EdgeIter I
+argument|EdgeIter
 argument_list|)
 block|{
 return|return
@@ -332,7 +331,7 @@ specifier|static
 name|EdgeIter
 name|getEdgeTarget
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
 argument|EdgeIter I
 argument_list|)
@@ -361,7 +360,6 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|Node
 parameter_list|)
 block|{
 return|return
@@ -376,9 +374,9 @@ operator|::
 name|string
 name|getEdgeDestLabel
 argument_list|(
-argument|const void *Node
+argument|const void *
 argument_list|,
-argument|unsigned i
+argument|unsigned
 argument_list|)
 block|{
 return|return
@@ -403,9 +401,9 @@ specifier|static
 name|void
 name|addCustomGraphFeatures
 argument_list|(
-argument|const GraphType& Graph
+argument|const GraphType&
 argument_list|,
-argument|GraphWriter&GW
+argument|GraphWriter&
 argument_list|)
 block|{}
 block|}

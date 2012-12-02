@@ -158,11 +158,6 @@ decl_stmt|;
 name|APSInt
 name|APSIntVal
 decl_stmt|;
-name|std
-operator|::
-name|string
-name|TheError
-expr_stmt|;
 name|public
 label|:
 name|explicit

@@ -94,8 +94,11 @@ range|:
 name|public
 name|MemoryObject
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|StringRef
 name|Bytes
 block|;

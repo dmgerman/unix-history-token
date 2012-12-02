@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -3604,15 +3610,10 @@ index|[
 name|i
 index|]
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown intrinsic!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 specifier|const
@@ -3673,15 +3674,10 @@ operator|-
 literal|1
 index|]
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Bad intrinsic ID!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 name|unsigned
@@ -3768,15 +3764,10 @@ operator|.
 name|size
 argument_list|()
 return|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown intrinsic!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 specifier|const

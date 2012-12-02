@@ -44,7 +44,7 @@ name|d2i_of_void
 modifier|*
 name|d2i
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|x
 parameter_list|)

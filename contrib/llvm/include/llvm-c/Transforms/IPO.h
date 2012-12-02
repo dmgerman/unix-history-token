@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCTransformsIPO Interprocedural transformations  * @ingroup LLVMCTransforms  *  * @{  */
 comment|/** See llvm::createArgumentPromotionPass function. */
 name|void
 name|LLVMAddArgumentPromotionPass
@@ -147,6 +148,7 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 ifdef|#
 directive|ifdef
 name|__cplusplus

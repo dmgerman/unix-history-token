@@ -291,6 +291,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
+name|cpuset_t
+name|suspended_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|cpuset_t
 name|hlt_cpus_mask
 decl_stmt|;
@@ -587,6 +595,11 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 end_if
 
 begin_function_decl
@@ -628,6 +641,34 @@ end_endif
 begin_comment
 comment|/* SMP */
 end_comment
+
+begin_function_decl
+name|int
+name|quiesce_all_cpus
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|quiesce_cpus
+parameter_list|(
+name|cpuset_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

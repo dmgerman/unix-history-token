@@ -98,7 +98,7 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|,
 literal|2
@@ -114,7 +114,7 @@ specifier|const
 name|FileEntry
 operator|*
 operator|,
-name|Module
+name|ModuleFile
 operator|*
 operator|>
 name|Modules
@@ -145,7 +145,7 @@ label|:
 typedef|typedef
 name|SmallVector
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|,
 literal|2
@@ -157,7 +157,7 @@ expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|,
 literal|2
@@ -169,7 +169,7 @@ expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|,
 literal|2
@@ -280,7 +280,7 @@ return|;
 block|}
 comment|/// \brief Returns the primary module associated with the manager, that is,
 comment|/// the first module loaded
-name|Module
+name|ModuleFile
 modifier|&
 name|getPrimaryModule
 parameter_list|()
@@ -295,7 +295,7 @@ return|;
 block|}
 comment|/// \brief Returns the primary module associated with the manager, that is,
 comment|/// the first module loaded.
-name|Module
+name|ModuleFile
 operator|&
 name|getPrimaryModule
 argument_list|()
@@ -310,7 +310,7 @@ index|]
 return|;
 block|}
 comment|/// \brief Returns the module associated with the given index
-name|Module
+name|ModuleFile
 modifier|&
 name|operator
 index|[]
@@ -329,7 +329,7 @@ index|]
 return|;
 block|}
 comment|/// \brief Returns the module associated with the given name
-name|Module
+name|ModuleFile
 modifier|*
 name|lookup
 parameter_list|(
@@ -370,6 +370,8 @@ comment|///
 comment|/// \param ImportedBy The module that is importing this module, or NULL if
 comment|/// this module is imported directly by the user.
 comment|///
+comment|/// \param Generation The generation in which this module was loaded.
+comment|///
 comment|/// \param ErrorStr Will be set to a non-empty string if any errors occurred
 comment|/// while trying to load the module.
 comment|///
@@ -379,7 +381,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|Module
+name|ModuleFile
 operator|*
 operator|,
 name|bool
@@ -390,7 +392,9 @@ argument|StringRef FileName
 argument_list|,
 argument|ModuleKind Type
 argument_list|,
-argument|Module *ImportedBy
+argument|ModuleFile *ImportedBy
+argument_list|,
+argument|unsigned Generation
 argument_list|,
 argument|std::string&ErrorStr
 argument_list|)
@@ -436,7 +440,7 @@ modifier|*
 name|Visitor
 function_decl|)
 parameter_list|(
-name|Module
+name|ModuleFile
 modifier|&
 name|M
 parameter_list|,
@@ -475,7 +479,7 @@ modifier|*
 name|Visitor
 function_decl|)
 parameter_list|(
-name|Module
+name|ModuleFile
 modifier|&
 name|M
 parameter_list|,

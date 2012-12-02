@@ -939,7 +939,7 @@ name|unsigned
 name|getFirstUnallocated
 argument_list|(
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|Regs
 argument_list|,
@@ -1051,7 +1051,7 @@ name|unsigned
 name|AllocateReg
 parameter_list|(
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|Regs
 parameter_list|,
@@ -1102,12 +1102,12 @@ name|unsigned
 name|AllocateReg
 parameter_list|(
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|Regs
 parameter_list|,
 specifier|const
-name|unsigned
+name|uint16_t
 modifier|*
 name|ShadowRegs
 parameter_list|,
@@ -1291,13 +1291,14 @@ comment|// First GPR that carries part of a byval aggregate that's split
 comment|// between registers and memory.
 name|unsigned
 name|getFirstByValReg
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|FirstByValRegValid
-condition|?
+operator|?
 name|FirstByValReg
-else|:
+operator|:
 literal|0
 return|;
 block|}
@@ -1332,7 +1333,8 @@ expr_stmt|;
 block|}
 name|bool
 name|isFirstByValRegValid
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|FirstByValRegValid
@@ -1340,7 +1342,8 @@ return|;
 block|}
 name|ParmContext
 name|getCallOrPrologue
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|CallOrPrologue

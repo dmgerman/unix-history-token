@@ -121,6 +121,11 @@ comment|///
 name|class
 name|MachineConstantPoolValue
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|Type
 modifier|*
 name|Ty

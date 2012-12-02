@@ -1220,8 +1220,6 @@ name|ovp
 argument_list|,
 name|cred
 argument_list|,
-name|td
-argument_list|,
 name|length
 argument_list|,
 operator|(
@@ -1945,6 +1943,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
@@ -1954,9 +1953,10 @@ name|B_DONE
 operator||
 name|B_DELWRI
 operator|)
+operator|)
+operator|==
+literal|0
 condition|)
-block|{ 	}
-else|else
 block|{
 name|bp
 operator|->
@@ -2521,8 +2521,6 @@ condition|)
 name|vrecycle
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

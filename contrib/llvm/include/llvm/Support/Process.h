@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Support/Process.h ------------------------------------*- C++ -*-===//
+comment|//===- llvm/Support/Process.h -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -197,6 +197,16 @@ name|int
 name|fd
 parameter_list|)
 function_decl|;
+comment|/// This function determines if the given file descriptor is displayd and
+comment|/// supports colors.
+specifier|static
+name|bool
+name|FileDescriptorHasColors
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+function_decl|;
 comment|/// This function determines the number of columns in the window
 comment|/// if standard output is connected to a "tty" or "console"
 comment|/// window. If standard output is not connected to a tty or
@@ -273,6 +283,15 @@ name|bool
 name|bg
 parameter_list|)
 function_decl|;
+comment|/// This function returns the escape sequence to reverse forground and
+comment|/// background colors.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|OutputReverse
+parameter_list|()
+function_decl|;
 comment|/// Resets the terminals colors, or returns an escape sequence to do so.
 specifier|static
 specifier|const
@@ -281,17 +300,13 @@ modifier|*
 name|ResetColor
 parameter_list|()
 function_decl|;
-comment|/// Change the program working directory to that given by \arg Path.
+comment|/// Get the result of a process wide random number generator. The
+comment|/// generator will be automatically seeded in non-deterministic fashion.
 specifier|static
-name|void
-name|SetWorkingDirectory
-argument_list|(
-name|std
-operator|::
-name|string
-name|Path
-argument_list|)
-decl_stmt|;
+name|unsigned
+name|GetRandomNumber
+parameter_list|()
+function_decl|;
 comment|/// @}
 block|}
 empty_stmt|;

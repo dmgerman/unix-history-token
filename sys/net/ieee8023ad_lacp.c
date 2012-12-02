@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -1042,14 +1048,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
-end_if
+begin_comment
+comment|/* Debugging */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -1237,6 +1238,49 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|lacp_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lacp_debug
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
+argument_list|,
+operator|&
+name|lacp_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable LACP debug logging (1=debug, 2=trace)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.lacp_debug"
+argument_list|,
+operator|&
+name|lacp_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -1244,31 +1288,18 @@ name|LACP_DPRINTF
 parameter_list|(
 name|a
 parameter_list|)
-value|lacp_dprintf a
+value|if (lacp_debug> 0) { lacp_dprintf a ; }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
 directive|define
-name|LACP_DPRINTF
+name|LACP_TRACE
 parameter_list|(
 name|a
 parameter_list|)
+value|if (lacp_debug> 1) { lacp_dprintf(a,"%s\n",__func__); }
 end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * partner administration variables.  * XXX should be configurable.  */
@@ -1670,19 +1701,18 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
-name|defined
+if|if
+condition|(
+name|lacp_debug
+operator|>
+literal|0
+condition|)
+block|{
+name|lacp_dprintf
 argument_list|(
-name|LACP_DEBUG
-argument_list|)
-name|LACP_DPRINTF
-argument_list|(
-operator|(
 name|lp
-operator|,
+argument_list|,
 literal|"lacpdu receive\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|lacp_dump_lacpdu
@@ -1690,9 +1720,7 @@ argument_list|(
 name|du
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(LACP_DEBUG) */
+block|}
 name|LACP_LOCK
 argument_list|(
 name|lsc
@@ -2135,19 +2163,18 @@ name|lci_maxdelay
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
+if|if
+condition|(
+name|lacp_debug
+operator|>
+literal|0
+condition|)
+block|{
+name|lacp_dprintf
 argument_list|(
-name|LACP_DEBUG
-argument_list|)
-name|LACP_DPRINTF
-argument_list|(
-operator|(
 name|lp
-operator|,
+argument_list|,
 literal|"lacpdu transmit\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|lacp_dump_lacpdu
@@ -2155,9 +2182,7 @@ argument_list|(
 name|du
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(LACP_DEBUG) */
+block|}
 name|m
 operator|->
 name|m_flags
@@ -3787,12 +3812,6 @@ name|lp
 operator|->
 name|lp_lsc
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -3801,9 +3820,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(LACP_DEBUG) */
 name|LACP_LOCK_ASSERT
 argument_list|(
 name|lsc
@@ -3992,12 +4008,6 @@ name|lp
 operator|->
 name|lp_lsc
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -4006,9 +4016,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(LACP_DEBUG) */
 name|LACP_LOCK_ASSERT
 argument_list|(
 name|lsc
@@ -4153,15 +4160,9 @@ argument_list|(
 name|lsc
 argument_list|)
 expr_stmt|;
-name|LACP_DPRINTF
+name|LACP_TRACE
 argument_list|(
-operator|(
 name|NULL
-operator|,
-literal|"%s\n"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 name|lsc
@@ -4724,15 +4725,9 @@ condition|)
 block|{
 return|return;
 block|}
-name|LACP_DPRINTF
+name|LACP_TRACE
 argument_list|(
-operator|(
 name|NULL
-operator|,
-literal|"%s\n"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 name|lsc
@@ -5008,12 +5003,6 @@ name|best_speed
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -5022,18 +5011,9 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(LACP_DEBUG) */
-name|LACP_DPRINTF
+name|LACP_TRACE
 argument_list|(
-operator|(
 name|NULL
-operator|,
-literal|"%s:\n"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -5180,12 +5160,6 @@ literal|"invalid aggregator list"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 if|if
 condition|(
 name|lsc
@@ -5261,9 +5235,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(LACP_DEBUG) */
 if|if
 condition|(
 name|lsc
@@ -5637,12 +5608,6 @@ modifier|*
 name|la
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -5651,8 +5616,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|LACP_DPRINTF
 argument_list|(
 operator|(
@@ -5746,12 +5709,6 @@ modifier|*
 name|la
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -5760,8 +5717,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|LACP_DPRINTF
 argument_list|(
 operator|(
@@ -6400,12 +6355,6 @@ name|lacp_aggregator
 modifier|*
 name|la
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -6414,8 +6363,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|lp
@@ -6750,7 +6697,25 @@ name|lacp_aggregator
 modifier|*
 name|la
 decl_stmt|;
-comment|/* LACP_DPRINTF((lp, "%s: state %d\n", __func__, lp->lp_mux_state)); */
+if|if
+condition|(
+name|lacp_debug
+operator|>
+literal|1
+condition|)
+name|lacp_dprintf
+argument_list|(
+name|lp
+argument_list|,
+literal|"%s: state %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|lp
+operator|->
+name|lp_mux_state
+argument_list|)
+expr_stmt|;
 name|re_eval
 label|:
 name|la
@@ -7210,12 +7175,6 @@ name|lp
 operator|->
 name|lp_aggregator
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -7224,8 +7183,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|la
@@ -7736,12 +7693,6 @@ decl_stmt|;
 name|uint8_t
 name|oldpstate
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
 name|char
 name|buf
 index|[
@@ -7750,9 +7701,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* LACP_DPRINTF((lp, "%s\n", __func__)); */
+name|LACP_TRACE
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 name|oldpstate
 operator|=
 name|lp
@@ -7957,7 +7910,11 @@ modifier|*
 name|du
 parameter_list|)
 block|{
-comment|/* LACP_DPRINTF((lp, "%s\n", __func__)); */
+name|LACP_TRACE
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lacp_compare_peerinfo
@@ -8028,7 +7985,11 @@ block|{
 name|uint8_t
 name|oldpstate
 decl_stmt|;
-comment|/* LACP_DPRINTF((lp, "%s\n", __func__)); */
+name|LACP_TRACE
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 name|oldpstate
 operator|=
 name|lp
@@ -8076,7 +8037,11 @@ modifier|*
 name|info
 parameter_list|)
 block|{
-comment|/* LACP_DPRINTF((lp, "%s\n", __func__)); */
+name|LACP_TRACE
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lacp_compare_peerinfo
@@ -8134,7 +8099,11 @@ modifier|*
 name|du
 parameter_list|)
 block|{
-comment|/* LACP_DPRINTF((lp, "%s\n", __func__)); */
+name|LACP_TRACE
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 name|lacp_sm_rx_update_selected_from_peerinfo
 argument_list|(
 name|lp
@@ -8159,7 +8128,11 @@ modifier|*
 name|lp
 parameter_list|)
 block|{
-comment|/* LACP_DPRINTF((lp, "%s\n", __func__)); */
+name|LACP_TRACE
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
 name|lacp_sm_rx_update_selected_from_peerinfo
 argument_list|(
 name|lp
@@ -9060,14 +9033,9 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LACP_DEBUG
-argument_list|)
-end_if
+begin_comment
+comment|/* Debugging */
+end_comment
 
 begin_function
 specifier|const
@@ -9731,11 +9699,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

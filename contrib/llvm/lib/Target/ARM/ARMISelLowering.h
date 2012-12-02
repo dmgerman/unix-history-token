@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ARM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ARMSubtarget.h"
 end_include
 
@@ -141,6 +147,9 @@ comment|// PIC mode.
 name|WrapperJT
 block|,
 comment|// WrapperJT - A wrapper node for TargetJumpTable
+comment|// Add pseudo op to model memcpy for struct byval.
+name|COPY_STRUCT_BYVAL
+block|,
 name|CALL
 block|,
 comment|// Function call.
@@ -171,6 +180,9 @@ comment|// Add with a PC operand and a PIC label.
 name|CMP
 block|,
 comment|// ARM compare instructions.
+name|CMN
+block|,
+comment|// ARM CMN instructions.
 name|CMPZ
 block|,
 comment|// ARM compare that sets only Z flag.
@@ -186,6 +198,15 @@ comment|// ARM fmstat instruction.
 name|CMOV
 block|,
 comment|// ARM conditional move instructions.
+name|CAND
+block|,
+comment|// ARM conditional and instructions.
+name|COR
+block|,
+comment|// ARM conditional or instructions.
+name|CXOR
+block|,
+comment|// ARM conditional xor instructions.
 name|BCC_i64
 block|,
 name|RBIT
@@ -236,9 +257,6 @@ comment|// SjLj exception handling setjmp.
 name|EH_SJLJ_LONGJMP
 block|,
 comment|// SjLj exception handling longjmp.
-name|EH_SJLJ_DISPATCHSETUP
-block|,
-comment|// SjLj exception handling dispatch setup.
 name|TC_RETURN
 block|,
 comment|// Tail call return pseudo.
@@ -369,6 +387,9 @@ comment|// Vector move immediate and move negated immediate:
 name|VMOVIMM
 block|,
 name|VMVNIMM
+block|,
+comment|// Vector move f32 immediate:
+name|VMOVFPIMM
 block|,
 comment|// Vector duplicate:
 name|VDUP
@@ -633,12 +654,29 @@ specifier|const
 block|;
 comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
 comment|/// unaligned memory accesses. of the specified type.
-comment|/// FIXME: Add getOptimalMemOpType to implement memcpy with NEON?
 name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|EVT
+name|getOptimalMemOpType
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|unsigned DstAlign
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|bool IsZeroVal
+argument_list|,
+argument|bool MemcpyStrSrc
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -733,8 +771,6 @@ name|computeMaskedBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|const APInt&Mask
-argument_list|,
 argument|APInt&KnownZero
 argument_list|,
 argument|APInt&KnownOne
@@ -821,6 +857,7 @@ block|}
 comment|/// getRegClassFor - Return the register class that should be used for the
 comment|/// specified value type.
 name|virtual
+specifier|const
 name|TargetRegisterClass
 operator|*
 name|getRegClassFor
@@ -845,6 +882,8 @@ operator|*
 name|createFastISel
 argument_list|(
 argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
 argument_list|)
 specifier|const
 block|;
@@ -943,23 +982,23 @@ block|;
 name|void
 name|addTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|,
-argument|EVT PromotedLdStVT
+argument|MVT PromotedLdStVT
 argument_list|,
-argument|EVT PromotedBitwiseVT
+argument|MVT PromotedBitwiseVT
 argument_list|)
 block|;
 name|void
 name|addDRTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 block|;
 name|void
 name|addQRTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 block|;
 typedef|typedef
@@ -1103,18 +1142,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|LowerEH_SJLJ_DISPATCHSETUP
-argument_list|(
-name|SDValue
-name|Op
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 name|SDValue
@@ -1202,6 +1229,11 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|,
+name|TLSModel
+operator|::
+name|Model
+name|model
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1334,6 +1366,23 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerConstantFP
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|ARMSubtarget
+operator|*
+name|ST
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1498,58 +1547,11 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Callee
-argument_list|,
-name|CallingConv
+name|TargetLowering
 operator|::
-name|ID
-name|CallConv
-argument_list|,
-name|bool
-name|isVarArg
-argument_list|,
-name|bool
+name|CallLoweringInfo
 operator|&
-name|isTailCall
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|OutputArg
-operator|>
-operator|&
-name|Outs
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|OutVals
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|InputArg
-operator|>
-operator|&
-name|Ins
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+name|CLI
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -1679,6 +1681,10 @@ argument_list|(
 name|SDNode
 operator|*
 name|N
+argument_list|,
+name|SDValue
+operator|&
+name|Chain
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1854,23 +1860,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|EmitBasePointerRecalculation
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|DispatchBB
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
 name|SetupEntryBlockForSjLj
 argument_list|(
 name|MachineInstr
@@ -1917,6 +1906,20 @@ name|BB
 argument_list|)
 decl|const
 decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitStructByval
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1948,6 +1951,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 block|}

@@ -72,7 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceLocation.h"
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_decl_stmt
@@ -86,6 +92,9 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|TextDiagnostic
+decl_stmt|;
+name|class
 name|TextDiagnosticPrinter
 range|:
 name|public
@@ -96,36 +105,27 @@ operator|&
 name|OS
 block|;
 specifier|const
-name|LangOptions
-operator|*
-name|LangOpts
-block|;
-specifier|const
 name|DiagnosticOptions
 operator|*
 name|DiagOpts
 block|;
-name|SourceLocation
-name|LastWarningLoc
-block|;
-name|FullSourceLoc
-name|LastLoc
-block|;
-name|unsigned
-name|LastCaretDiagnosticWasNote
-operator|:
-literal|1
-block|;
-name|unsigned
-name|OwnsOutputStream
-operator|:
-literal|1
+comment|/// \brief Handle to the currently active text diagnostic emitter.
+name|OwningPtr
+operator|<
+name|TextDiagnostic
+operator|>
+name|TextDiag
 block|;
 comment|/// A string to prefix to error messages.
 name|std
 operator|::
 name|string
 name|Prefix
+block|;
+name|unsigned
+name|OwnsOutputStream
+operator|:
+literal|1
 block|;
 name|public
 operator|:
@@ -159,35 +159,21 @@ block|; }
 name|void
 name|BeginSourceFile
 argument_list|(
-argument|const LangOptions&LO
-argument_list|,
-argument|const Preprocessor *PP
-argument_list|)
-block|{
-name|LangOpts
-operator|=
+specifier|const
+name|LangOptions
 operator|&
 name|LO
-block|;   }
+argument_list|,
+specifier|const
+name|Preprocessor
+operator|*
+name|PP
+argument_list|)
+block|;
 name|void
 name|EndSourceFile
 argument_list|()
-block|{
-name|LangOpts
-operator|=
-literal|0
-block|;   }
-name|void
-name|PrintIncludeStack
-argument_list|(
-argument|DiagnosticsEngine::Level Level
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|const SourceManager&SM
-argument_list|)
 block|;
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -203,20 +189,6 @@ argument_list|(
 argument|DiagnosticsEngine&Diags
 argument_list|)
 specifier|const
-block|;
-name|private
-operator|:
-name|void
-name|EmitDiagnosticLoc
-argument_list|(
-argument|DiagnosticsEngine::Level Level
-argument_list|,
-argument|const Diagnostic&Info
-argument_list|,
-argument|const SourceManager&SM
-argument_list|,
-argument|PresumedLoc PLoc
-argument_list|)
 block|; }
 decl_stmt|;
 block|}

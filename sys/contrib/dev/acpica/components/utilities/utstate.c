@@ -127,10 +127,8 @@ modifier|*
 name|State
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|UtPushGenericState
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Push the state object onto the front of the list (stack) */
 name|State
@@ -147,8 +145,7 @@ name|ListHead
 operator|=
 name|State
 expr_stmt|;
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -171,10 +168,8 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|UtPopGenericState
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Remove the state object at the head of the list (stack) */
 name|State
@@ -198,16 +193,16 @@ operator|.
 name|Next
 expr_stmt|;
 block|}
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|State
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateGenericState  *  * PARAMETERS:  None  *  * RETURN:      The new state object. NULL on failure.  *  * DESCRIPTION: Create a generic state object.  Attempt to obtain one from  *              the global state cache;  If none available, create a new one.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateGenericState  *  * PARAMETERS:  None  *  * RETURN:      The new state object. NULL on failure.  *  * DESCRIPTION: Create a generic state object. Attempt to obtain one from  *              the global state cache;  If none available, create a new one.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -271,10 +266,8 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|UtCreateThreadState
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Create the generic state object */
 name|State
@@ -288,11 +281,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|NULL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Init fields specific to the update struct */
 name|State
@@ -344,15 +337,15 @@ operator|)
 literal|1
 expr_stmt|;
 block|}
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 operator|(
 name|ACPI_THREAD_STATE
 operator|*
 operator|)
 name|State
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -377,12 +370,8 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE_PTR
-argument_list|(
-name|UtCreateUpdateState
-argument_list|,
-name|Object
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Create the generic state object */
 name|State
@@ -396,11 +385,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|NULL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Init fields specific to the update struct */
 name|State
@@ -427,11 +416,11 @@ name|Value
 operator|=
 name|Action
 expr_stmt|;
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|State
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -460,12 +449,8 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE_PTR
-argument_list|(
-name|UtCreatePkgState
-argument_list|,
-name|InternalObject
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Create the generic state object */
 name|State
@@ -479,11 +464,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|NULL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Init fields specific to the update struct */
 name|State
@@ -530,11 +515,11 @@ name|NumPackages
 operator|=
 literal|1
 expr_stmt|;
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|State
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -554,10 +539,8 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|UtCreateControlState
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Create the generic state object */
 name|State
@@ -571,11 +554,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|NULL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Init fields specific to the control struct */
 name|State
@@ -594,11 +577,11 @@ name|State
 operator|=
 name|ACPI_CONTROL_CONDITIONAL_EXECUTING
 expr_stmt|;
-name|return_PTR
-argument_list|(
+return|return
+operator|(
 name|State
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -615,10 +598,8 @@ modifier|*
 name|State
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|UtDeleteGenericState
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Ignore null state */
 if|if
@@ -637,8 +618,7 @@ name|State
 argument_list|)
 expr_stmt|;
 block|}
-name|return_VOID
-expr_stmt|;
+return|return;
 block|}
 end_function
 

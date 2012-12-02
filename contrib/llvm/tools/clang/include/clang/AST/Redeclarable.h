@@ -92,12 +92,9 @@ name|Redeclarable
 block|{
 name|protected
 operator|:
-comment|// FIXME: PointerIntPair is a value class that should not be inherited from.
-comment|// This should change to using containment.
-expr|struct
+name|class
 name|DeclLink
-operator|:
-name|public
+block|{
 name|llvm
 operator|::
 name|PointerIntPair
@@ -109,7 +106,10 @@ literal|1
 block|,
 name|bool
 operator|>
-block|{
+name|NextAndIsPrevious
+block|;
+name|public
+operator|:
 name|DeclLink
 argument_list|(
 argument|decl_type *D
@@ -117,49 +117,24 @@ argument_list|,
 argument|bool isLatest
 argument_list|)
 operator|:
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|decl_type
-operator|*
-block|,
-literal|1
-block|,
-name|bool
-operator|>
-operator|(
-name|D
-operator|,
-name|isLatest
-operator|)
+name|NextAndIsPrevious
+argument_list|(
+argument|D
+argument_list|,
+argument|isLatest
+argument_list|)
 block|{ }
-typedef|typedef
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|decl_type
-operator|*
-operator|,
-literal|1
-operator|,
-name|bool
-operator|>
-name|base_type
-expr_stmt|;
 name|bool
 name|NextIsPrevious
 argument_list|()
 specifier|const
 block|{
 return|return
-name|base_type
-operator|::
+operator|!
+name|NextAndIsPrevious
+operator|.
 name|getInt
 argument_list|()
-operator|==
-name|false
 return|;
 block|}
 name|bool
@@ -168,12 +143,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|base_type
-operator|::
+name|NextAndIsPrevious
+operator|.
 name|getInt
 argument_list|()
-operator|==
-name|true
 return|;
 block|}
 name|decl_type
@@ -183,56 +156,59 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|base_type
-operator|::
+name|NextAndIsPrevious
+operator|.
 name|getPointer
 argument_list|()
 return|;
 block|}
+name|void
+name|setNext
+argument_list|(
+argument|decl_type *D
+argument_list|)
+block|{
+name|NextAndIsPrevious
+operator|.
+name|setPointer
+argument_list|(
+name|D
+argument_list|)
+block|; }
 expr|}
-block|;    struct
-name|PreviousDeclLink
-operator|:
-name|public
-name|DeclLink
-block|{
-name|PreviousDeclLink
-argument_list|(
-name|decl_type
-operator|*
-name|D
-argument_list|)
-operator|:
-name|DeclLink
-argument_list|(
-argument|D
-argument_list|,
-argument|false
-argument_list|)
-block|{ }
-block|}
-block|;    struct
-name|LatestDeclLink
-operator|:
-name|public
-name|DeclLink
-block|{
-name|LatestDeclLink
-argument_list|(
-name|decl_type
-operator|*
-name|D
-argument_list|)
-operator|:
-name|DeclLink
-argument_list|(
-argument|D
-argument_list|,
-argument|true
-argument_list|)
-block|{ }
-block|}
 block|;
+specifier|static
+name|DeclLink
+name|PreviousDeclLink
+argument_list|(
+argument|decl_type *D
+argument_list|)
+block|{
+return|return
+name|DeclLink
+argument_list|(
+name|D
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+specifier|static
+name|DeclLink
+name|LatestDeclLink
+argument_list|(
+argument|decl_type *D
+argument_list|)
+block|{
+return|return
+name|DeclLink
+argument_list|(
+name|D
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// \brief Points to the next redeclaration in the chain.
 comment|///
 comment|/// If NextIsPrevious() is true, this is a link to the previous declaration
@@ -261,7 +237,7 @@ comment|/// \brief Return the previous declaration of this declaration or NULL i
 comment|/// is the first declaration.
 name|decl_type
 operator|*
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 block|{
 if|if
@@ -284,7 +260,7 @@ block|}
 specifier|const
 name|decl_type
 operator|*
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 specifier|const
 block|{
@@ -306,21 +282,21 @@ name|this
 operator|)
 operator|)
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 return|;
 block|}
 comment|/// \brief Return the first declaration of this declaration or itself if this
 comment|/// is the only declaration.
 name|decl_type
-modifier|*
+operator|*
 name|getFirstDeclaration
-parameter_list|()
+argument_list|()
 block|{
 name|decl_type
-modifier|*
+operator|*
 name|D
-init|=
+operator|=
 name|static_cast
 operator|<
 name|decl_type
@@ -329,19 +305,19 @@ operator|>
 operator|(
 name|this
 operator|)
-decl_stmt|;
+block|;
 while|while
 condition|(
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 condition|)
 name|D
 operator|=
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 expr_stmt|;
 return|return
@@ -376,14 +352,14 @@ while|while
 condition|(
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 condition|)
 name|D
 operator|=
 name|D
 operator|->
-name|getPreviousDeclaration
+name|getPreviousDecl
 argument_list|()
 expr_stmt|;
 return|return
@@ -418,7 +394,7 @@ end_comment
 begin_function
 name|decl_type
 modifier|*
-name|getMostRecentDeclaration
+name|getMostRecentDecl
 parameter_list|()
 block|{
 return|return
@@ -441,7 +417,7 @@ begin_expr_stmt
 specifier|const
 name|decl_type
 operator|*
-name|getMostRecentDeclaration
+name|getMostRecentDecl
 argument_list|()
 specifier|const
 block|{
@@ -492,6 +468,9 @@ decl_stmt|;
 name|decl_type
 modifier|*
 name|Starter
+decl_stmt|;
+name|bool
+name|PassedFirst
 decl_stmt|;
 name|public
 label|:
@@ -545,7 +524,12 @@ argument_list|)
 operator|,
 name|Starter
 argument_list|(
-argument|C
+name|C
+argument_list|)
+operator|,
+name|PassedFirst
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 name|reference
@@ -587,8 +571,49 @@ operator|&&
 literal|"Advancing while iterator has reached end"
 argument_list|)
 block|;
+comment|// Sanity check to avoid infinite loop on invalid redecl chain.
+if|if
+condition|(
+name|Current
+operator|->
+name|isFirstDeclaration
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|PassedFirst
+condition|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Passed first decl twice, invalid redecl chain!"
+argument_list|)
+expr_stmt|;
+name|Current
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|PassedFirst
+operator|=
+name|true
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|// Get either previous decl or latest decl.
-name|decl_type
+end_comment
+
+begin_expr_stmt
+unit|decl_type
 operator|*
 name|Next
 operator|=
@@ -598,7 +623,10 @@ name|RedeclLink
 operator|.
 name|getNext
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|Current
 operator|=
 operator|(
@@ -610,16 +638,18 @@ name|Next
 else|:
 literal|0
 operator|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|this
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_expr_stmt
-name|redecl_iterator
+unit|}      redecl_iterator
 name|operator
 operator|++
 operator|(

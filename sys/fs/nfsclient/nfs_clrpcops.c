@@ -94,6 +94,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfscl_debuglevel
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|NFSCLSTATEMUTEX
 expr_stmt|;
@@ -8736,8 +8743,10 @@ name|nostateid
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|NFSCL_DEBUG
 argument_list|(
+literal|1
+argument_list|,
 literal|"stateid0 in write\n"
 argument_list|)
 expr_stmt|;

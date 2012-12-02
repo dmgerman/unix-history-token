@@ -125,6 +125,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gen-private.h"
+end_include
+
 begin_function_decl
 name|FTSENT
 modifier|*
@@ -1004,6 +1010,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -1544,6 +1552,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -1955,6 +1965,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -2511,6 +2523,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -2981,7 +2995,7 @@ name|sp
 argument_list|,
 name|cur
 argument_list|,
-name|dirfd
+name|_dirfd
 argument_list|(
 name|dirp
 argument_list|)
@@ -4965,6 +4979,8 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines various enumerations that describe declaration and
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// type specifiers.
+comment|/// \brief Defines various enumerations that describe declaration and
 end_comment
 
 begin_comment
-comment|//
+comment|/// type specifiers.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -112,6 +116,8 @@ block|,
 comment|// C++0x char32_t
 name|TST_int
 block|,
+name|TST_int128
+block|,
 name|TST_half
 block|,
 comment|// OpenCL half, ARM NEON __fp16
@@ -161,14 +167,13 @@ block|,
 comment|// __unknown_anytype extension
 name|TST_atomic
 block|,
-comment|// C1X _Atomic
+comment|// C11 _Atomic
 name|TST_error
 comment|// erroneous type
 block|}
 enum|;
-comment|/// WrittenBuiltinSpecs - Structure that packs information about the
-comment|/// type specifiers that were written in a particular type specifier
-comment|/// sequence.
+comment|/// \brief Structure that packs information about the type specifiers that
+comment|/// were written in a particular type specifier sequence.
 struct|struct
 name|WrittenBuiltinSpecs
 block|{
@@ -197,9 +202,8 @@ literal|1
 decl_stmt|;
 block|}
 struct|;
-comment|/// AccessSpecifier - A C++ access specifier (public, private,
-comment|/// protected), plus the special value "none" which means
-comment|/// different things in different contexts.
+comment|/// \brief A C++ access specifier (public, private, protected), plus the
+comment|/// special value "none" which means different things in different contexts.
 enum|enum
 name|AccessSpecifier
 block|{
@@ -212,26 +216,26 @@ block|,
 name|AS_none
 block|}
 enum|;
-comment|/// ExprValueKind - The categorization of expression values,
-comment|/// currently following the C++0x scheme.
+comment|/// \brief The categorization of expression values, currently following the
+comment|/// C++11 scheme.
 enum|enum
 name|ExprValueKind
 block|{
-comment|/// An r-value expression (a pr-value in the C++0x taxonomy)
+comment|/// \brief An r-value expression (a pr-value in the C++11 taxonomy)
 comment|/// produces a temporary value.
 name|VK_RValue
 block|,
-comment|/// An l-value expression is a reference to an object with
+comment|/// \brief An l-value expression is a reference to an object with
 comment|/// independent storage.
 name|VK_LValue
 block|,
-comment|/// An x-value expression is a reference to an object with
+comment|/// \brief An x-value expression is a reference to an object with
 comment|/// independent storage but which can be "moved", i.e.
 comment|/// efficiently cannibalized for its resources.
 name|VK_XValue
 block|}
 enum|;
-comment|/// A further classification of the kind of object referenced by an
+comment|/// \brief A further classification of the kind of object referenced by an
 comment|/// l-value or x-value.
 enum|enum
 name|ExprObjectKind
@@ -245,9 +249,14 @@ block|,
 comment|/// A vector component is an element or range of elements on a vector.
 name|OK_VectorComponent
 block|,
-comment|/// An Objective C property is a logical field of an Objective-C
-comment|/// object which is read and written via Objective C method calls.
+comment|/// An Objective-C property is a logical field of an Objective-C
+comment|/// object which is read and written via Objective-C method calls.
 name|OK_ObjCProperty
+block|,
+comment|/// An Objective-C array/dictionary subscripting which reads an
+comment|/// object or writes at the subscripted array/dictionary element via
+comment|/// Objective-C method calls.
+name|OK_ObjCSubscript
 block|}
 enum|;
 comment|// \brief Describes the kind of template specialization that a
@@ -302,7 +311,7 @@ block|,
 name|SC_Register
 block|}
 enum|;
-comment|/// Checks whether the given storage class is legal for functions.
+comment|/// \brief Checks whether the given storage class is legal for functions.
 specifier|inline
 name|bool
 name|isLegalForFunction
@@ -317,7 +326,7 @@ operator|<=
 name|SC_PrivateExtern
 return|;
 block|}
-comment|/// Checks whether the given storage class is legal for variables.
+comment|/// \brief Checks whether the given storage class is legal for variables.
 specifier|inline
 name|bool
 name|isLegalForVariable
@@ -330,6 +339,20 @@ return|return
 name|true
 return|;
 block|}
+comment|/// \brief In-class initialization styles for non-static data members.
+enum|enum
+name|InClassInitStyle
+block|{
+name|ICIS_NoInit
+block|,
+comment|///< No in-class initializer.
+name|ICIS_CopyInit
+block|,
+comment|///< Copy initialization.
+name|ICIS_ListInit
+comment|///< Direct list-initialization.
+block|}
+enum|;
 block|}
 end_decl_stmt
 

@@ -690,6 +690,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|ugen_debug
@@ -1341,6 +1343,16 @@ index|[
 literal|0
 index|]
 operator|.
+name|stream_id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX support more stream ID's */
+name|usb_config
+index|[
+literal|0
+index|]
+operator|.
 name|direction
 operator|=
 name|UE_DIR_TX
@@ -1762,6 +1774,16 @@ name|bEndpointAddress
 operator|&
 name|UE_ADDR
 expr_stmt|;
+name|usb_config
+index|[
+literal|0
+index|]
+operator|.
+name|stream_id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX support more stream ID's */
 name|usb_config
 index|[
 literal|0
@@ -6637,6 +6659,11 @@ modifier|*
 name|popen
 decl_stmt|;
 name|struct
+name|usb_fs_open_stream
+modifier|*
+name|popen_stream
+decl_stmt|;
+name|struct
 name|usb_fs_close
 modifier|*
 name|pclose
@@ -6911,6 +6938,9 @@ expr_stmt|;
 break|break;
 case|case
 name|USB_FS_OPEN
+case|:
+case|case
+name|USB_FS_OPEN_STREAM
 case|:
 if|if
 condition|(
@@ -7244,6 +7274,25 @@ operator|=
 name|USB_MODE_DUAL
 expr_stmt|;
 comment|/* both modes */
+if|if
+condition|(
+name|cmd
+operator|==
+name|USB_FS_OPEN_STREAM
+condition|)
+name|usb_config
+index|[
+literal|0
+index|]
+operator|.
+name|stream_id
+operator|=
+name|u
+operator|.
+name|popen_stream
+operator|->
+name|stream_id
+expr_stmt|;
 if|if
 condition|(
 name|usb_config
@@ -9989,6 +10038,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Detach the currently attached driver. 		 */
 name|usb_detach_device
 argument_list|(
 name|f
@@ -9998,6 +10048,18 @@ argument_list|,
 name|n
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Set parent to self, this should keep attach away 		 * until the next set configuration event. 		 */
+name|usbd_set_parent_iface
+argument_list|(
+name|f
+operator|->
+name|udev
+argument_list|,
+name|n
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 break|break;

@@ -329,7 +329,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetNextObject  *  * PARAMETERS:  Type            - Type of object to be searched for  *              Parent          - Parent object whose children we are getting  *              LastChild       - Previous child that was found.  *                                The NEXT child will be returned  *              RetHandle       - Where handle to the next object is placed  *  * RETURN:      Status  *  * DESCRIPTION: Return the next peer object within the namespace.  If Handle is  *              valid, Scope is ignored.  Otherwise, the first object within  *              Scope is returned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetNextObject  *  * PARAMETERS:  Type            - Type of object to be searched for  *              Parent          - Parent object whose children we are getting  *              LastChild       - Previous child that was found.  *                                The NEXT child will be returned  *              RetHandle       - Where handle to the next object is placed  *  * RETURN:      Status  *  * DESCRIPTION: Return the next peer object within the namespace. If Handle is  *              valid, Scope is ignored. Otherwise, the first object within  *              Scope is returned.  *  ******************************************************************************/
 end_comment
 
 begin_function

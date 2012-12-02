@@ -182,14 +182,14 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 operator|,
+name|SS
+argument_list|(
+name|SS
+argument_list|)
+operator|,
 name|Loc
 argument_list|(
 name|TemplateLoc
-argument_list|)
-operator|,
-name|SS
-argument_list|(
-name|SS
 argument_list|)
 operator|,
 name|EllipsisLoc
@@ -368,14 +368,14 @@ name|void
 modifier|*
 name|Arg
 decl_stmt|;
-comment|/// \brief the location of the template argument.
-name|SourceLocation
-name|Loc
-decl_stmt|;
 comment|/// \brief The nested-name-specifier that can accompany a template template
 comment|/// argument.
 name|CXXScopeSpec
 name|SS
+decl_stmt|;
+comment|/// \brief the location of the template argument.
+name|SourceLocation
+name|Loc
 decl_stmt|;
 comment|/// \brief The ellipsis location that can accompany a template template
 comment|/// argument (turning it into a template template argument expansion).
@@ -398,6 +398,11 @@ block|{
 comment|/// \brief The nested-name-specifier that precedes the template name.
 name|CXXScopeSpec
 name|SS
+decl_stmt|;
+comment|/// TemplateKWLoc - The location of the template keyword within the
+comment|/// source.
+name|SourceLocation
+name|TemplateKWLoc
 decl_stmt|;
 comment|/// TemplateNameLoc - The location of the template name within the
 comment|/// source.
@@ -455,14 +460,24 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// \brief Creates a new TemplateIdAnnotation with NumArgs arguments and
+comment|/// appends it to List.
 specifier|static
 name|TemplateIdAnnotation
 modifier|*
 name|Allocate
-parameter_list|(
+argument_list|(
 name|unsigned
 name|NumArgs
-parameter_list|)
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|TemplateIdAnnotation
+operator|*
+operator|>
+operator|&
+name|List
+argument_list|)
 block|{
 name|TemplateIdAnnotation
 modifier|*
@@ -533,6 +548,13 @@ argument|TemplateArgs + I
 argument_list|)
 name|ParsedTemplateArgument
 argument_list|()
+expr_stmt|;
+name|List
+operator|.
+name|push_back
+argument_list|(
+name|TemplateId
+argument_list|)
 expr_stmt|;
 return|return
 name|TemplateId

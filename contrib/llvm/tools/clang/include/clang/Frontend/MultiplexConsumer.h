@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/SemaConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -103,15 +115,11 @@ operator|:
 comment|// Takes ownership of the pointers in C.
 name|MultiplexConsumer
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|ASTConsumer
 operator|*
 operator|>
-operator|&
 name|C
 argument_list|)
 block|;
@@ -131,6 +139,15 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|HandleCXXStaticMemberVarInstantiation
+argument_list|(
+name|VarDecl
+operator|*
+name|VD
+argument_list|)
+block|;
+name|virtual
+name|bool
 name|HandleTopLevelDecl
 argument_list|(
 argument|DeclGroupRef D
@@ -159,6 +176,22 @@ argument_list|(
 name|TagDecl
 operator|*
 name|D
+argument_list|)
+block|;
+name|virtual
+name|void
+name|HandleCXXImplicitFunctionInstantiation
+argument_list|(
+name|FunctionDecl
+operator|*
+name|D
+argument_list|)
+block|;
+name|virtual
+name|void
+name|HandleTopLevelDeclInObjCContainer
+argument_list|(
+argument|DeclGroupRef D
 argument_list|)
 block|;
 name|virtual
@@ -234,16 +267,12 @@ operator|>
 name|Consumers
 block|;
 comment|// Owns these.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|MultiplexASTMutationListener
 operator|>
 name|MutationListener
 block|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|MultiplexASTDeserializationListener

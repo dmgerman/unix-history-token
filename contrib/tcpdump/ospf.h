@@ -1485,6 +1485,7 @@ specifier|extern
 name|int
 name|ospf_print_te_lsa
 parameter_list|(
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -1498,6 +1499,7 @@ specifier|extern
 name|int
 name|ospf_print_grace_lsa
 parameter_list|(
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,

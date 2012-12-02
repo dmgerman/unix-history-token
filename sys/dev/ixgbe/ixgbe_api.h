@@ -753,6 +753,21 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|ixgbe_set_vmdq_san_mac
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|vmdq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|ixgbe_clear_vmdq
 parameter_list|(
 name|struct
@@ -949,9 +964,6 @@ name|struct
 name|ixgbe_hw
 modifier|*
 name|hw
-parameter_list|,
-name|s32
-name|packetbuf_num
 parameter_list|)
 function_decl|;
 end_function_decl

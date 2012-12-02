@@ -102,13 +102,7 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
 name|JITCodeEmitter
-decl_stmt|;
-name|class
-name|Target
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -119,9 +113,11 @@ decl_stmt|;
 name|class
 name|MCInst
 decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
+name|FunctionPass
+modifier|*
+name|createPPCCTRLoops
+parameter_list|()
+function_decl|;
 name|FunctionPass
 modifier|*
 name|createPPCBranchSelectionPass
@@ -187,33 +183,46 @@ name|MO_DARWIN_STUB
 init|=
 literal|1
 block|,
-comment|/// MO_LO16, MO_HA16 - lo16(symbol) and ha16(symbol)
-name|MO_LO16
-init|=
-literal|4
-block|,
-name|MO_HA16
-init|=
-literal|8
-block|,
 comment|/// MO_PIC_FLAG - If this bit is set, the symbol reference is relative to
 comment|/// the function's picbase, e.g. lo16(symbol-picbase).
 name|MO_PIC_FLAG
 init|=
-literal|16
+literal|4
 block|,
 comment|/// MO_NLP_FLAG - If this bit is set, the symbol reference is actually to
 comment|/// the non_lazy_ptr for the global, e.g. lo16(symbol$non_lazy_ptr-picbase).
 name|MO_NLP_FLAG
 init|=
-literal|32
+literal|8
 block|,
 comment|/// MO_NLP_HIDDEN_FLAG - If this bit is set, the symbol reference is to a
 comment|/// symbol with hidden visibility.  This causes a different kind of
 comment|/// non-lazy-pointer to be generated.
 name|MO_NLP_HIDDEN_FLAG
 init|=
+literal|16
+block|,
+comment|/// The next are not flags but distinct values.
+name|MO_ACCESS_MASK
+init|=
+literal|224
+block|,
+comment|/// MO_LO16, MO_HA16 - lo16(symbol) and ha16(symbol)
+name|MO_LO16
+init|=
+literal|32
+block|,
+name|MO_HA16
+init|=
 literal|64
+block|,
+name|MO_TPREL16_HA
+init|=
+literal|96
+block|,
+name|MO_TPREL16_LO
+init|=
+literal|128
 block|}
 enum|;
 block|}

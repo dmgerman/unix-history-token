@@ -458,7 +458,6 @@ specifier|static
 specifier|const
 name|struct
 name|ata_chip_id
-specifier|const
 name|ids
 index|[]
 init|=
@@ -790,7 +789,6 @@ specifier|static
 specifier|const
 name|struct
 name|ata_chip_id
-specifier|const
 name|new_ids
 index|[]
 init|=
@@ -2974,11 +2972,6 @@ modifier|*
 name|result
 parameter_list|)
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-decl_stmt|;
 name|device_t
 name|parent
 decl_stmt|;
@@ -2988,13 +2981,6 @@ decl_stmt|;
 name|parent
 operator|=
 name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|ch
-operator|=
-name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
@@ -3214,11 +3200,6 @@ name|u_int32_t
 name|value
 parameter_list|)
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-decl_stmt|;
 name|device_t
 name|parent
 decl_stmt|;
@@ -3228,13 +3209,6 @@ decl_stmt|;
 name|parent
 operator|=
 name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|ch
-operator|=
-name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)

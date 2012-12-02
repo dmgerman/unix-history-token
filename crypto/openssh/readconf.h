@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.90 2011/05/24 07:15:47 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.91 2011/09/23 07:45:05 markus Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,10 @@ name|int
 name|allocated_port
 decl_stmt|;
 comment|/* Dynamically allocated listen port */
+name|int
+name|handle
+decl_stmt|;
+comment|/* Handle for dynamic listen ports */
 block|}
 name|Forward
 typedef|;
@@ -416,6 +420,11 @@ decl_stmt|;
 name|int
 name|request_tty
 decl_stmt|;
+name|char
+modifier|*
+name|version_addendum
+decl_stmt|;
+comment|/* Appended to SSH banner */
 name|int
 name|hpn_disabled
 decl_stmt|;

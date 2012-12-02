@@ -378,6 +378,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method

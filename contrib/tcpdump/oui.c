@@ -152,6 +152,12 @@ literal|"ANSI/TIA"
 block|}
 block|,
 block|{
+name|OUI_DCBX
+block|,
+literal|"DCBX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

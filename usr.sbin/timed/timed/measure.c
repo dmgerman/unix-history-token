@@ -471,7 +471,7 @@ argument_list|(
 operator|&
 name|tdone
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mstotvround
@@ -519,7 +519,7 @@ argument_list|(
 operator|&
 name|tcur
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * keep sending until we have sent the max 		 */
@@ -734,12 +734,7 @@ argument_list|(
 operator|&
 name|tcur
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

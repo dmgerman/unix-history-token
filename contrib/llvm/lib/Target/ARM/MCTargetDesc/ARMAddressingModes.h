@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMAddressingModes.h - ARM Addressing Modes --------------*- C++ -*-===//
+comment|//===-- ARMAddressingModes.h - ARM Addressing Modes -------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -157,10 +163,8 @@ name|Op
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown shift opc!"
 argument_list|)
 expr_stmt|;
@@ -221,10 +225,8 @@ name|Op
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown shift opc!"
 argument_list|)
 expr_stmt|;
@@ -295,10 +297,8 @@ name|Mode
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown addressing sub-mode!"
 argument_list|)
 expr_stmt|;
@@ -2339,10 +2339,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Unsupported NEON immediate"
 argument_list|)
 expr_stmt|;

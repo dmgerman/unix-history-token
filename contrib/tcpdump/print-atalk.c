@@ -453,35 +453,59 @@ decl_stmt|;
 name|u_int
 name|hdrlen
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Our packet is on a 4-byte boundary, as we're either called 	 * directly from a top-level link-layer printer (ltalk_if_print) 	 * or from the UDP printer.  The LLAP+DDP header is a multiple 	 * of 4 bytes in length, so the DDP payload is also on a 4-byte 	 * boundary, and we don't need to align it before calling 	 * "ddp_print()". 	 */
-block|lp = (const struct LAP *)bp; 	bp += sizeof(*lp); 	length -= sizeof(*lp);
-else|#
-directive|else
+if|if
+condition|(
+name|length
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lp
+argument_list|)
+condition|)
 block|{
-specifier|static
-name|struct
-name|LAP
-name|lp_
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-name|lapDDP
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" [|llap %u]"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|length
+operator|)
+return|;
 block|}
-decl_stmt|;
 name|lp
 operator|=
-operator|&
-name|lp_
+operator|(
+specifier|const
+expr|struct
+name|LAP
+operator|*
+operator|)
+name|bp
 expr_stmt|;
-block|}
-endif|#
-directive|endif
+name|bp
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lp
+argument_list|)
+expr_stmt|;
+name|length
+operator|-=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lp
+argument_list|)
+expr_stmt|;
 name|hdrlen
 operator|=
 sizeof|sizeof
@@ -512,7 +536,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [|sddp %d]"
+literal|" [|sddp %u]"
 argument_list|,
 name|length
 argument_list|)
@@ -624,7 +648,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [|ddp %d]"
+literal|" [|ddp %u]"
 argument_list|,
 name|length
 argument_list|)
@@ -756,7 +780,7 @@ directive|endif
 default|default:
 name|printf
 argument_list|(
-literal|"%d> %d at-lap#%d %d"
+literal|"%d> %d at-lap#%d %u"
 argument_list|,
 name|lp
 operator|->
@@ -833,7 +857,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [|ddp %d]"
+literal|" [|ddp %u]"
 argument_list|,
 name|length
 argument_list|)
@@ -1313,6 +1337,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|length
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" [|atp %u]"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|length
 operator|-=
 sizeof|sizeof
@@ -1377,7 +1424,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [len=%d]"
+literal|" [len=%u]"
 argument_list|,
 name|length
 argument_list|)
@@ -1443,7 +1490,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" atp-resp%s%d:%d (%d)"
+literal|" atp-resp%s%d:%d (%u)"
 argument_list|,
 name|ap
 operator|->
@@ -1559,7 +1606,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" [len=%d]"
+literal|" [len=%u]"
 argument_list|,
 name|length
 argument_list|)
@@ -1672,7 +1719,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" atp-0x%x  %d (%d)"
+literal|" atp-0x%x  %d (%u)"
 argument_list|,
 name|ap
 operator|->
@@ -1927,7 +1974,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" truncated-nbp %d"
+literal|" truncated-nbp %u"
 argument_list|,
 name|length
 argument_list|)
@@ -1951,7 +1998,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" truncated-nbp %d"
+literal|" truncated-nbp %u"
 argument_list|,
 name|length
 operator|+
@@ -2209,7 +2256,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" nbp-0x%x  %d (%d)"
+literal|" nbp-0x%x  %d (%u)"
 argument_list|,
 name|np
 operator|->
@@ -2785,8 +2832,6 @@ name|int
 name|i1
 decl_stmt|,
 name|i2
-decl_stmt|,
-name|i3
 decl_stmt|;
 while|while
 condition|(
@@ -2833,44 +2878,6 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%d.%d.%d %256s"
-argument_list|,
-operator|&
-name|i1
-argument_list|,
-operator|&
-name|i2
-argument_list|,
-operator|&
-name|i3
-argument_list|,
-name|nambuf
-argument_list|)
-operator|==
-literal|4
-condition|)
-comment|/* got a hostname. */
-name|i3
-operator||=
-operator|(
-operator|(
-name|i1
-operator|<<
-literal|8
-operator|)
-operator||
-name|i2
-operator|)
-operator|<<
-literal|8
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|line
-argument_list|,
 literal|"%d.%d %256s"
 argument_list|,
 operator|&
@@ -2884,19 +2891,37 @@ argument_list|)
 operator|==
 literal|3
 condition|)
-comment|/* got a net name */
-name|i3
-operator|=
-operator|(
-operator|(
+comment|/* got a hostname. */
+name|i2
+operator||=
 operator|(
 name|i1
 operator|<<
 literal|8
 operator|)
-operator||
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|line
+argument_list|,
+literal|"%d %256s"
+argument_list|,
+operator|&
+name|i1
+argument_list|,
+name|nambuf
+argument_list|)
+operator|==
+literal|2
+condition|)
+comment|/* got a net name */
 name|i2
-operator|)
+operator|=
+operator|(
+name|i1
 operator|<<
 literal|8
 operator|)
@@ -3136,15 +3161,9 @@ argument_list|(
 name|nambuf
 argument_list|)
 argument_list|,
-literal|"%d.%d.%d"
+literal|"%d.%d"
 argument_list|,
 name|atnet
-operator|>>
-literal|8
-argument_list|,
-name|atnet
-operator|&
-literal|0xff
 argument_list|,
 name|athost
 argument_list|)
@@ -3162,15 +3181,9 @@ argument_list|(
 name|nambuf
 argument_list|)
 argument_list|,
-literal|"%d.%d"
+literal|"%d"
 argument_list|,
 name|atnet
-operator|>>
-literal|8
-argument_list|,
-name|atnet
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 name|tp

@@ -355,6 +355,8 @@ name|BSD_AFNUM_INET6_DARWIN
 case|:
 name|ip6_print
 argument_list|(
+name|gndo
+argument_list|,
 name|p
 argument_list|,
 name|length

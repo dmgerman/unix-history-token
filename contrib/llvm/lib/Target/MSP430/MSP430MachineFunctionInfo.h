@@ -77,6 +77,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// CalleeSavedFrameSize - Size of the callee-saved register portion of the
 comment|/// stack frame in bytes.
 name|unsigned

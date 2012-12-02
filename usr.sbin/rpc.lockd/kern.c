@@ -3219,7 +3219,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"start %qu; len %qu; pid %lu; type %d; whence %d\n"
+literal|"start %llu; len %llu; pid %lu; type %d; whence %d\n"
 argument_list|,
 operator|(
 name|unsigned

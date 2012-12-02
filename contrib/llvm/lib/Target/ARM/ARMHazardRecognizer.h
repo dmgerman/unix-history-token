@@ -81,6 +81,10 @@ decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
+comment|/// ARMHazardRecognizer handles special constraints that are not expressed in
+comment|/// the scheduling itinerary. This is only used during postRA scheduling. The
+comment|/// ARM preRA scheduler uses an unspecialized instance of the
+comment|/// ScoreboardHazardRecognizer.
 name|class
 name|ARMHazardRecognizer
 range|:
@@ -108,17 +112,6 @@ name|LastMI
 block|;
 name|unsigned
 name|FpMLxStalls
-block|;
-name|unsigned
-name|ITBlockSize
-block|;
-comment|// No. of MIs in current IT block yet to be scheduled.
-name|MachineInstr
-operator|*
-name|ITBlockMIs
-index|[
-literal|4
-index|]
 block|;
 name|public
 operator|:
@@ -175,11 +168,6 @@ name|sti
 argument_list|)
 block|,
 name|LastMI
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ITBlockSize
 argument_list|(
 literal|0
 argument_list|)

@@ -519,6 +519,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_ATI_RV870
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV840
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa58)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV830
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV810
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa68)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV970
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV940
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa88)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV930
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa90)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV910
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa98)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_R1000
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaaa0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_ATI_ALL
 value|HDA_MODEL_CONSTRUCT(ATI, 0xffff)
 end_define
@@ -3258,6 +3321,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAGTS450
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0011)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT440
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0014)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGTX550
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0015)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGTX570
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0018)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
 end_define
@@ -3641,6 +3732,18 @@ argument_list|,
 name|SUBDEVICE_ID
 argument_list|,
 name|uint16_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|HDA_ACCESSOR
+argument_list|(
+name|subsystem_id
+argument_list|,
+name|SUBSYSTEM_ID
+argument_list|,
+name|uint32_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt

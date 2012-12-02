@@ -91,7 +91,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Enable "slack" in the AML interpreter?  Default is FALSE, and the  * interpreter strictly follows the ACPI specification.  Setting to TRUE  * allows the interpreter to ignore certain errors and/or bad AML constructs.  *  * Currently, these features are enabled by this flag:  *  * 1) Allow "implicit return" of last value in a control method  * 2) Allow access beyond the end of an operation region  * 3) Allow access to uninitialized locals/args (auto-init to integer 0)  * 4) Allow ANY object type to be a source operand for the Store() operator  * 5) Allow unresolved references (invalid target name) in package objects  * 6) Enable warning messages for behavior that is not ACPI spec compliant  */
+comment|/*  * Enable "slack" in the AML interpreter?  Default is FALSE, and the  * interpreter strictly follows the ACPI specification. Setting to TRUE  * allows the interpreter to ignore certain errors and/or bad AML constructs.  *  * Currently, these features are enabled by this flag:  *  * 1) Allow "implicit return" of last value in a control method  * 2) Allow access beyond the end of an operation region  * 3) Allow access to uninitialized locals/args (auto-init to integer 0)  * 4) Allow ANY object type to be a source operand for the Store() operator  * 5) Allow unresolved references (invalid target name) in package objects  * 6) Enable warning messages for behavior that is not ACPI spec compliant  */
 end_comment
 
 begin_function_decl
@@ -570,15 +570,11 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_DeviceNotify
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_SystemNotify
+name|ACPI_GLOBAL_NOTIFY_HANDLER
+name|AcpiGbl_GlobalNotify
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -763,60 +759,6 @@ ifndef|#
 directive|ifndef
 name|DEFINE_ACPI_GLOBALS
 end_ifndef
-
-begin_comment
-comment|/* Exception codes */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-modifier|*
-name|AcpiGbl_ExceptionNames_Env
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-modifier|*
-name|AcpiGbl_ExceptionNames_Pgm
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-modifier|*
-name|AcpiGbl_ExceptionNames_Tbl
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-modifier|*
-name|AcpiGbl_ExceptionNames_Aml
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-modifier|*
-name|AcpiGbl_ExceptionNames_Ctrl
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Other miscellaneous */
@@ -1617,6 +1559,19 @@ end_endif
 begin_comment
 comment|/* ACPI_DEBUGGER */
 end_comment
+
+begin_comment
+comment|/*****************************************************************************  *  * Info/help support  *  ****************************************************************************/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|AH_PREDEFINED_NAME
+name|AslPredefinedInfo
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

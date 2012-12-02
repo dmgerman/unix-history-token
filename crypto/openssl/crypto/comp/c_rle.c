@@ -162,11 +162,15 @@ block|{
 comment|/* int i; */
 if|if
 condition|(
+name|ilen
+operator|==
+literal|0
+operator|||
 name|olen
 operator|<
 operator|(
 name|ilen
-operator|+
+operator|-
 literal|1
 operator|)
 condition|)

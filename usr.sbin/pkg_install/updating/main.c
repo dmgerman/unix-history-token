@@ -345,6 +345,9 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
+name|warnpkgng
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(

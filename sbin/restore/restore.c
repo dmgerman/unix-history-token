@@ -59,6 +59,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -160,8 +166,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%10d\t%s\n"
+literal|"%10ju\t%s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
 name|name
@@ -272,8 +281,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"./%u"
+literal|"./%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -1649,10 +1661,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: (inode %d) not found on tape\n"
+literal|"%s: (inode %ju) not found on tape\n"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -2286,8 +2301,11 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%d: bad first\n"
+literal|"%ju: bad first\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|first
 argument_list|)
 expr_stmt|;
@@ -2336,10 +2354,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"expected next file %d, got %d\n"
+literal|"expected next file %ju, got %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|first
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|curfile
 operator|.
 name|ino
@@ -3290,8 +3314,11 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"missing inumber %d\n"
+literal|"missing inumber %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

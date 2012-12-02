@@ -2040,6 +2040,11 @@ begin_decl_stmt
 specifier|static
 name|cpuset_t
 name|intr_cpus
+init|=
+name|CPUSET_T_INITIALIZER
+argument_list|(
+literal|0x1
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -136,6 +142,30 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
+name|symbol_iterator
+name|begin_dynamic_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|symbol_iterator
+name|end_dynamic_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|library_iterator
+name|begin_libraries_needed
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|library_iterator
+name|end_libraries_needed
+argument_list|()
+specifier|const
+block|;
+name|virtual
 name|section_iterator
 name|begin_sections
 argument_list|()
@@ -165,6 +195,48 @@ name|getArch
 argument_list|()
 specifier|const
 block|;
+name|virtual
+name|StringRef
+name|getLoadName
+argument_list|()
+specifier|const
+block|;
+name|MachOObject
+operator|*
+name|getObject
+argument_list|()
+block|{
+return|return
+name|MachOObj
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Binary *v
+argument_list|)
+block|{
+return|return
+name|v
+operator|->
+name|isMachO
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const MachOObjectFile *v
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 name|protected
 operator|:
 name|virtual
@@ -189,7 +261,7 @@ specifier|const
 block|;
 name|virtual
 name|error_code
-name|getSymbolOffset
+name|getSymbolFileOffset
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
@@ -229,21 +301,11 @@ specifier|const
 block|;
 name|virtual
 name|error_code
-name|isSymbolInternal
+name|getSymbolFlags
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
-argument|bool&Res
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|error_code
-name|isSymbolGlobal
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|bool&Res
+argument|uint32_t&Res
 argument_list|)
 specifier|const
 block|;
@@ -253,7 +315,17 @@ name|getSymbolType
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
-argument|SymbolRef::SymbolType&Res
+argument|SymbolRef::Type&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getSymbolSection
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|section_iterator&Res
 argument_list|)
 specifier|const
 block|;
@@ -349,6 +421,36 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|isSectionRequiredForExecution
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionVirtual
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionZeroInit
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|sectionContainsSymbol
 argument_list|(
 argument|DataRefImpl DRI
@@ -397,6 +499,16 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|getRelocationOffset
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|uint64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|getRelocationSymbol
 argument_list|(
 argument|DataRefImpl Rel
@@ -411,7 +523,7 @@ name|getRelocationType
 argument_list|(
 argument|DataRefImpl Rel
 argument_list|,
-argument|uint32_t&Res
+argument|uint64_t&Res
 argument_list|)
 specifier|const
 block|;
@@ -442,6 +554,36 @@ argument_list|(
 argument|DataRefImpl Rel
 argument_list|,
 argument|SmallVectorImpl<char>&Result
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationHidden
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|bool&Result
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getLibraryNext
+argument_list|(
+argument|DataRefImpl LibData
+argument_list|,
+argument|LibraryRef&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getLibraryPath
+argument_list|(
+argument|DataRefImpl LibData
+argument_list|,
+argument|StringRef&Res
 argument_list|)
 specifier|const
 block|;
@@ -579,6 +721,24 @@ argument|DataRefImpl Sec
 argument_list|)
 specifier|const
 expr_stmt|;
+name|void
+name|printRelocationTargetName
+argument_list|(
+name|InMemoryStruct
+operator|<
+name|macho
+operator|::
+name|RelocationEntry
+operator|>
+operator|&
+name|RE
+argument_list|,
+name|raw_string_ostream
+operator|&
+name|fmt
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

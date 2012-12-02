@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/Module.h"
 end_include
 
 begin_include
@@ -81,6 +81,12 @@ directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -92,9 +98,6 @@ name|class
 name|Mangler
 decl_stmt|;
 name|class
-name|MCAsmInfo
-decl_stmt|;
-name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -102,9 +105,6 @@ name|MCExpr
 decl_stmt|;
 name|class
 name|MCSection
-decl_stmt|;
-name|class
-name|MCSectionMachO
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -204,6 +204,21 @@ argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
 block|;
+comment|/// emitModuleFlags - Emit the module flags that the platform cares about.
+name|virtual
+name|void
+name|emitModuleFlags
+argument_list|(
+argument|MCStreamer&
+argument_list|,
+argument|ArrayRef<Module::ModuleFlagEntry>
+argument_list|,
+argument|Mangler *
+argument_list|,
+argument|const TargetMachine&
+argument_list|)
+specifier|const
+block|{   }
 comment|/// shouldEmitUsedDirectiveFor - This hook allows targets to selectively
 comment|/// decide not to emit the UsedDirective for some symbols in llvm.used.
 comment|/// FIXME: REMOVE this (rdar://7071300)
@@ -394,6 +409,46 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getStaticCtorSection
+argument_list|(
+argument|unsigned Priority =
+literal|65535
+argument_list|)
+specifier|const
+block|{
+operator|(
+name|void
+operator|)
+name|Priority
+block|;
+return|return
+name|StaticCtorSection
+return|;
+block|}
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getStaticDtorSection
+argument_list|(
+argument|unsigned Priority =
+literal|65535
+argument_list|)
+specifier|const
+block|{
+operator|(
+name|void
+operator|)
+name|Priority
+block|;
+return|return
+name|StaticDtorSection
+return|;
+block|}
 name|protected
 operator|:
 name|virtual

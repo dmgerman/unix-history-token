@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utresrc - Resource managment utilities  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utresrc - Resource management utilities  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Strings used to decode resource descriptors.  * Used by both the disasssembler and the debugger resource dump routines  */
+comment|/*  * Strings used to decode resource descriptors.  * Used by both the disassembler and the debugger resource dump routines  */
 end_comment
 
 begin_decl_stmt
@@ -285,6 +285,12 @@ block|{
 literal|"Exclusive"
 block|,
 literal|"Shared"
+block|,
+literal|"ExclusiveAndWake"
+block|,
+comment|/* ACPI 5.0 */
+literal|"SharedAndWake"
+comment|/* ACPI 5.0 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -975,52 +981,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * For the iASL compiler/disassembler, we don't want any error messages  * because the disassembler uses the resource validation code to determine  * if Buffer objects are actually Resource Templates.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_ASL_COMPILER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_ERROR
-parameter_list|(
-name|plist
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_ERROR
-parameter_list|(
-name|plist
-parameter_list|)
-value|ACPI_ERROR(plist)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkAmlResources  *  * PARAMETERS:  Aml             - Pointer to the raw AML resource template  *              AmlLength       - Length of the entire template  *              UserFunction    - Called once for each descriptor found. If  *                                NULL, a pointer to the EndTag is returned  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Walk a raw AML resource list(buffer). User function called  *              once for each resource found.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkAmlResources  *  * PARAMETERS:  WalkState           - Current walk info  * PARAMETERS:  Aml                 - Pointer to the raw AML resource template  *              AmlLength           - Length of the entire template  *              UserFunction        - Called once for each descriptor found. If  *                                    NULL, a pointer to the EndTag is returned  *              Context             - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Walk a raw AML resource list(buffer). User function called  *              once for each resource found.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiUtWalkAmlResources
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|UINT8
 modifier|*
 name|Aml
@@ -1108,6 +1079,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|WalkState
+argument_list|,
 name|Aml
 argument_list|,
 operator|&
@@ -1248,6 +1221,8 @@ name|void
 operator|)
 name|AcpiUtValidateResource
 argument_list|(
+name|WalkState
+argument_list|,
 name|EndTag
 argument_list|,
 operator|&
@@ -1293,13 +1268,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateResource  *  * PARAMETERS:  Aml             - Pointer to the raw AML resource descriptor  *              ReturnIndex     - Where the resource index is returned. NULL  *                                if the index is not required.  *  * RETURN:      Status, and optionally the Index into the global resource tables  *  * DESCRIPTION: Validate an AML resource descriptor by checking the Resource  *              Type and Resource Length. Returns an index into the global  *              resource information/dispatch tables for later use.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateResource  *  * PARAMETERS:  WalkState           - Current walk info  *              Aml                 - Pointer to the raw AML resource descriptor  *              ReturnIndex         - Where the resource index is returned. NULL  *                                    if the index is not required.  *  * RETURN:      Status, and optionally the Index into the global resource tables  *  * DESCRIPTION: Validate an AML resource descriptor by checking the Resource  *              Type and Resource Length. Returns an index into the global  *              resource information/dispatch tables for later use.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiUtValidateResource
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|void
 modifier|*
 name|Aml
@@ -1532,7 +1511,12 @@ name|AML_RESOURCE_MAX_SERIALBUSTYPE
 operator|)
 condition|)
 block|{
-name|ACPI_RESOURCE_ERROR
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
+name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1547,6 +1531,7 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_INVALID_RESOURCE_TYPE
@@ -1573,7 +1558,12 @@ operator|)
 return|;
 name|InvalidResource
 label|:
-name|ACPI_RESOURCE_ERROR
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
+name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1584,6 +1574,7 @@ name|ResourceType
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_INVALID_RESOURCE_TYPE
@@ -1591,7 +1582,12 @@ operator|)
 return|;
 name|BadResourceLength
 label|:
-name|ACPI_RESOURCE_ERROR
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
+name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1607,6 +1603,7 @@ name|MinimumResourceLength
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_BAD_RESOURCE_LENGTH
@@ -1887,6 +1884,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 name|ObjDesc
 operator|->
 name|Buffer

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -91,6 +95,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|asize
+parameter_list|,
+name|uint64_t
+modifier|*
+name|max_asize
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -212,6 +220,11 @@ return|;
 block|}
 operator|*
 name|asize
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|max_asize
 operator|=
 literal|0
 expr_stmt|;
