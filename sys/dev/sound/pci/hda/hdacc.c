@@ -2067,11 +2067,35 @@ literal|"NVIDIA GT240"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIAGTS450
+block|,
+literal|0
+block|,
+literal|"NVIDIA GTS450"
+block|}
+block|,
+block|{
 name|HDA_CODEC_NVIDIAGT440
 block|,
 literal|0
 block|,
 literal|"NVIDIA GT440"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGTX550
+block|,
+literal|0
+block|,
+literal|"NVIDIA GTX550"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGTX570
+block|,
+literal|0
+block|,
+literal|"NVIDIA GTX570"
 block|}
 block|,
 block|{
