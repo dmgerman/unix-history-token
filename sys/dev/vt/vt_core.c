@@ -872,6 +872,8 @@ case|:
 block|{
 name|int
 name|state
+init|=
+literal|0
 decl_stmt|;
 name|kbdd_ioctl
 argument_list|(
@@ -3331,6 +3333,8 @@ case|:
 block|{
 name|int
 name|state
+init|=
+literal|0
 decl_stmt|;
 name|kbdd_ioctl
 argument_list|(

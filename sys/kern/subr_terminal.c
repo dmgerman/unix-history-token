@@ -629,6 +629,8 @@ name|tp
 argument_list|,
 name|NULL
 argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
