@@ -8826,6 +8826,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ATH_TX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
@@ -8837,11 +8842,6 @@ name|sc_txstart_cnt
 operator|--
 expr_stmt|;
 name|ATH_PCU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ATH_TX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
