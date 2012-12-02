@@ -529,20 +529,6 @@ begin_comment
 comment|// Forwarding pointer.
 end_comment
 
-begin_decl_stmt
-name|AliasSet
-modifier|*
-name|Next
-decl_stmt|,
-modifier|*
-name|Prev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Doubly linked list of AliasSets.
-end_comment
-
 begin_comment
 comment|// All instructions without a specific address in this alias set.
 end_comment
@@ -1269,17 +1255,11 @@ argument_list|)
 block|{   }
 name|AliasSet
 argument_list|(
-specifier|const
-name|AliasSet
-operator|&
-name|AS
+argument|const AliasSet&AS
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// do not implement
-end_comment
 
 begin_decl_stmt
 name|void
@@ -1291,12 +1271,9 @@ name|AliasSet
 operator|&
 name|AS
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// do not implement
-end_comment
 
 begin_expr_stmt
 name|PointerRec

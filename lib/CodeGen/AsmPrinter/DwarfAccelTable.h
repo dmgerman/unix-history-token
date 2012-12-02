@@ -1004,12 +1004,10 @@ block|}
 empty_stmt|;
 name|DwarfAccelTable
 argument_list|(
-specifier|const
-name|DwarfAccelTable
-operator|&
+argument|const DwarfAccelTable&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -1018,8 +1016,8 @@ specifier|const
 name|DwarfAccelTable
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 comment|// Internal Functions
 name|void
 name|EmitHeader

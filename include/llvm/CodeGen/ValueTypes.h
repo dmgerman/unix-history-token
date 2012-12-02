@@ -204,129 +204,159 @@ name|LAST_FP_VALUETYPE
 init|=
 name|ppcf128
 block|,
-name|v2i8
+name|v2i1
 init|=
 literal|13
+block|,
+comment|//  2 x i1
+name|v4i1
+init|=
+literal|14
+block|,
+comment|//  4 x i1
+name|v8i1
+init|=
+literal|15
+block|,
+comment|//  8 x i1
+name|v16i1
+init|=
+literal|16
+block|,
+comment|// 16 x i1
+name|v2i8
+init|=
+literal|17
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|14
+literal|18
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|15
+literal|19
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|16
+literal|20
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|17
+literal|21
 block|,
 comment|// 32 x i8
+name|v1i16
+init|=
+literal|22
+block|,
+comment|//  1 x i16
 name|v2i16
 init|=
-literal|18
+literal|23
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|19
+literal|24
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|20
+literal|25
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|21
+literal|26
 block|,
 comment|// 16 x i16
+name|v1i32
+init|=
+literal|27
+block|,
+comment|//  1 x i32
 name|v2i32
 init|=
-literal|22
+literal|28
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|23
+literal|29
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|24
+literal|30
 block|,
 comment|//  8 x i32
 name|v16i32
 init|=
-literal|25
+literal|31
 block|,
 comment|// 16 x i32
 name|v1i64
 init|=
-literal|26
+literal|32
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|27
+literal|33
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|28
+literal|34
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|29
+literal|35
 block|,
 comment|//  8 x i64
 name|v16i64
 init|=
-literal|30
+literal|36
 block|,
 comment|// 16 x i64
 name|v2f16
 init|=
-literal|31
+literal|37
 block|,
 comment|//  2 x f16
 name|v2f32
 init|=
-literal|32
+literal|38
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|33
+literal|39
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|34
+literal|40
 block|,
 comment|//  8 x f32
 name|v2f64
 init|=
-literal|35
+literal|41
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|36
+literal|42
 block|,
 comment|//  4 x f64
 name|FIRST_VECTOR_VALUETYPE
 init|=
-name|v2i8
+name|v2i1
 block|,
 name|LAST_VECTOR_VALUETYPE
 init|=
@@ -334,7 +364,7 @@ name|v4f64
 block|,
 name|FIRST_INTEGER_VECTOR_VALUETYPE
 init|=
-name|v2i8
+name|v2i1
 block|,
 name|LAST_INTEGER_VECTOR_VALUETYPE
 init|=
@@ -350,29 +380,29 @@ name|v4f64
 block|,
 name|x86mmx
 init|=
-literal|37
+literal|43
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|38
+literal|44
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|39
+literal|45
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|40
+literal|46
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
 comment|// will be determined by the opcode.
 name|LAST_VALUETYPE
 init|=
-literal|41
+literal|47
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -668,6 +698,62 @@ name|LAST_VECTOR_VALUETYPE
 operator|)
 return|;
 block|}
+comment|/// is16BitVector - Return true if this is a 16-bit vector type.
+name|bool
+name|is16BitVector
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v2i8
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v1i16
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v16i1
+operator|)
+return|;
+block|}
+comment|/// is32BitVector - Return true if this is a 32-bit vector type.
+name|bool
+name|is32BitVector
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v4i8
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v2i16
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v1i32
+operator|)
+return|;
+block|}
 comment|/// is64BitVector - Return true if this is a 64-bit vector type.
 name|bool
 name|is64BitVector
@@ -942,6 +1028,21 @@ literal|"Not a vector MVT!"
 argument_list|)
 expr_stmt|;
 case|case
+name|v2i1
+case|:
+case|case
+name|v4i1
+case|:
+case|case
+name|v8i1
+case|:
+case|case
+name|v16i1
+case|:
+return|return
+name|i1
+return|;
+case|case
 name|v2i8
 case|:
 case|case
@@ -960,6 +1061,9 @@ return|return
 name|i8
 return|;
 case|case
+name|v1i16
+case|:
+case|case
 name|v2i16
 case|:
 case|case
@@ -974,6 +1078,9 @@ case|:
 return|return
 name|i16
 return|;
+case|case
+name|v1i32
+case|:
 case|case
 name|v2i32
 case|:
@@ -1059,6 +1166,9 @@ return|return
 literal|32
 return|;
 case|case
+name|v16i1
+case|:
+case|case
 name|v16i8
 case|:
 case|case
@@ -1073,6 +1183,9 @@ case|:
 return|return
 literal|16
 return|;
+case|case
+name|v8i1
+case|:
 case|case
 name|v8i8
 case|:
@@ -1091,6 +1204,9 @@ case|:
 return|return
 literal|8
 return|;
+case|case
+name|v4i1
+case|:
 case|case
 name|v4i8
 case|:
@@ -1112,6 +1228,9 @@ case|:
 return|return
 literal|4
 return|;
+case|case
+name|v2i1
+case|:
 case|case
 name|v2i8
 case|:
@@ -1136,6 +1255,12 @@ case|:
 return|return
 literal|2
 return|;
+case|case
+name|v1i16
+case|:
+case|case
+name|v1i32
+case|:
 case|case
 name|v1i64
 case|:
@@ -1189,7 +1314,22 @@ return|return
 literal|1
 return|;
 case|case
+name|v2i1
+case|:
+return|return
+literal|2
+return|;
+case|case
+name|v4i1
+case|:
+return|return
+literal|4
+return|;
+case|case
 name|i8
+case|:
+case|case
+name|v8i1
 case|:
 return|return
 literal|8
@@ -1201,7 +1341,13 @@ case|case
 name|f16
 case|:
 case|case
+name|v16i1
+case|:
+case|case
 name|v2i8
+case|:
+case|case
+name|v1i16
 case|:
 return|return
 literal|16
@@ -1220,6 +1366,9 @@ name|v2i16
 case|:
 case|case
 name|v2f16
+case|:
+case|case
+name|v1i32
 case|:
 return|return
 literal|32
@@ -1517,6 +1666,56 @@ break|break;
 case|case
 name|MVT
 operator|::
+name|i1
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|v2i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|v4i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|v8i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|v16i1
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
 name|i8
 case|:
 if|if
@@ -1584,6 +1783,17 @@ if|if
 condition|(
 name|NumElements
 operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
 literal|2
 condition|)
 return|return
@@ -1630,6 +1840,17 @@ name|MVT
 operator|::
 name|i32
 case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1i32
+return|;
 if|if
 condition|(
 name|NumElements
@@ -2262,6 +2483,44 @@ name|isVector
 argument_list|()
 else|:
 name|isExtendedVector
+argument_list|()
+return|;
+block|}
+comment|/// is16BitVector - Return true if this is a 16-bit vector type.
+name|bool
+name|is16BitVector
+argument_list|()
+decl|const
+block|{
+return|return
+name|isSimple
+argument_list|()
+condition|?
+name|V
+operator|.
+name|is16BitVector
+argument_list|()
+else|:
+name|isExtended16BitVector
+argument_list|()
+return|;
+block|}
+comment|/// is32BitVector - Return true if this is a 32-bit vector type.
+name|bool
+name|is32BitVector
+argument_list|()
+decl|const
+block|{
+return|return
+name|isSimple
+argument_list|()
+condition|?
+name|V
+operator|.
+name|is32BitVector
+argument_list|()
+else|:
+name|isExtended32BitVector
 argument_list|()
 return|;
 block|}
@@ -3220,6 +3479,22 @@ end_expr_stmt
 begin_expr_stmt
 name|bool
 name|isExtendedVector
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isExtended16BitVector
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isExtended32BitVector
 argument_list|()
 specifier|const
 expr_stmt|;

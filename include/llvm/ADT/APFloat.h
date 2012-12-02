@@ -1541,20 +1541,19 @@ name|sign
 range|:
 literal|1
 decl_stmt|;
-comment|/* For PPCDoubleDouble, we have a second exponent and sign (the second        significand is appended to the first one, although it would be wrong to        regard these as a single number for arithmetic purposes).  These fields        are not meaningful for any other type. */
-name|exponent_t
-name|exponent2
-range|:
-literal|11
-decl_stmt|;
-name|unsigned
-name|int
-name|sign2
-range|:
-literal|1
-decl_stmt|;
 block|}
 empty_stmt|;
+comment|// See friend declaration above. This additional declaration is required in
+comment|// order to compile LLVM with IBM xlC compiler.
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|APFloat
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

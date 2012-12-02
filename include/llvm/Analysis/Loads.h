@@ -73,7 +73,7 @@ name|class
 name|AliasAnalysis
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|MDNode
@@ -97,7 +97,7 @@ name|unsigned
 name|Align
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=

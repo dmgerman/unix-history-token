@@ -187,18 +187,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVConstant *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -273,18 +261,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVCastExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -344,18 +320,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVTruncateExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -401,18 +365,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVZeroExtendExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -453,18 +405,6 @@ block|;
 name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVSignExtendExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -642,18 +582,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVNAryExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -733,18 +661,6 @@ block|{}
 name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVCommutativeExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -859,18 +775,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVAddExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -921,18 +825,6 @@ block|{     }
 name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVMulExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -1045,18 +937,6 @@ argument_list|()
 return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVUDivExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -1340,18 +1220,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVAddRecExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -1420,18 +1288,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SCEVSMaxExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const SCEV *S
 argument_list|)
 block|{
@@ -1495,18 +1351,6 @@ block|;     }
 name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVUMaxExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -1662,18 +1506,6 @@ argument_list|()
 return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVUnknown *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

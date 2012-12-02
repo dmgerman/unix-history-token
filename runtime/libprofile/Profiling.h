@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/ProfileInfoTypes.h"
+file|"llvm/Analysis/ProfileDataTypes.h"
 end_include
 
 begin_comment

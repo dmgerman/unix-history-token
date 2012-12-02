@@ -265,18 +265,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const TerminatorInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Instruction *I
 argument_list|)
 block|{
@@ -332,12 +320,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|protected
 operator|:
 name|UnaryInstruction
@@ -446,18 +434,6 @@ name|Value
 argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const UnaryInstruction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -589,12 +565,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|protected
 operator|:
 name|void
@@ -639,6 +615,7 @@ operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|public
 operator|:
@@ -1640,18 +1617,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const BinaryOperator *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Instruction *I
 argument_list|)
 block|{
@@ -1736,6 +1701,7 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
+name|LLVM_OVERRIDE
 block|;
 name|protected
 operator|:
@@ -2292,7 +2258,7 @@ comment|/// It implies that the source and destination types are the same size. 
 comment|/// IntPtrTy argument is used to make accurate determinations for casts
 comment|/// involving Integer and Pointer types. They are no-op casts if the integer
 comment|/// is the same size as the pointer. However, pointer size varies with
-comment|/// platform. Generally, the result of TargetData::getIntPtrType() should be
+comment|/// platform. Generally, the result of DataLayout::getIntPtrType() should be
 comment|/// passed in. If that's not available, use Type::Int64Ty, which will make
 comment|/// the isNoopCast call conservative.
 comment|/// @brief Determine if the described cast is a no-op cast.
@@ -2324,8 +2290,8 @@ specifier|const
 block|;
 comment|/// Determine how a pair of casts can be eliminated, if they can be at all.
 comment|/// This is a helper function for both CastInst and ConstantExpr.
-comment|/// @returns 0 if the CastInst pair can't be eliminated
-comment|/// @returns Instruction::CastOps value for a cast that can replace
+comment|/// @returns 0 if the CastInst pair can't be eliminated, otherwise
+comment|/// returns Instruction::CastOps value for a cast that can replace
 comment|/// the pair, casting SrcTy to DstTy.
 comment|/// @brief Determine if a cast pair is eliminable
 specifier|static
@@ -2347,8 +2313,14 @@ comment|///< DstTy of 1st cast& SrcTy of 2nd cast
 argument|Type *DstTy
 argument_list|,
 comment|///< DstTy of 2nd cast
-argument|Type *IntPtrTy
-comment|///< Integer type corresponding to Ptr types, or null
+argument|Type *SrcIntPtrTy
+argument_list|,
+comment|///< Integer type corresponding to Ptr SrcTy, or null
+argument|Type *MidIntPtrTy
+argument_list|,
+comment|///< Integer type corresponding to Ptr MidTy, or null
+argument|Type *DstIntPtrTy
+comment|///< Integer type corresponding to Ptr DstTy, or null
 argument_list|)
 block|;
 comment|/// @brief Return the opcode of this CastInst
@@ -2421,18 +2393,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const CastInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Instruction *I
 argument_list|)
 block|{
@@ -2490,16 +2450,16 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|CmpInst
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|protected
 operator|:
 name|CmpInst
@@ -2540,9 +2500,9 @@ argument_list|)
 block|;
 name|virtual
 name|void
-name|Anchor
+name|anchor
 argument_list|()
-specifier|const
+name|LLVM_OVERRIDE
 block|;
 comment|// Out of line virtual method.
 name|public
@@ -3082,18 +3042,6 @@ argument|unsigned short predicate
 argument_list|)
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const CmpInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -70,6 +76,9 @@ name|DWARFContext
 decl_stmt|;
 name|class
 name|DWARFFormValue
+decl_stmt|;
+name|class
+name|DWARFInlinedSubroutineChain
 decl_stmt|;
 comment|/// DWARFDebugInfoEntryMinimal - A DIE with only the minimum required data.
 name|class
@@ -221,6 +230,19 @@ operator|==
 literal|0
 return|;
 block|}
+comment|/// Returns true if DIE represents a subprogram (not inlined).
+name|bool
+name|isSubprogramDIE
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if DIE represents a subprogram or an inlined
+comment|/// subroutine.
+name|bool
+name|isSubroutineDIE
+argument_list|()
+specifier|const
+expr_stmt|;
 name|uint32_t
 name|getOffset
 argument_list|()
@@ -548,17 +570,37 @@ name|fail_value
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Retrieves DW_AT_low_pc and DW_AT_high_pc from CU.
+comment|/// Returns true if both attributes are present.
+name|bool
+name|getLowAndHighPC
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|CU
+argument_list|,
+name|uint64_t
+operator|&
+name|LowPC
+argument_list|,
+name|uint64_t
+operator|&
+name|HighPC
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|buildAddressRangeTable
 argument_list|(
 specifier|const
 name|DWARFCompileUnit
 operator|*
-name|cu
+name|CU
 argument_list|,
 name|DWARFDebugAranges
 operator|*
-name|debug_aranges
+name|DebugAranges
 argument_list|)
 decl|const
 decl_stmt|;
@@ -568,27 +610,82 @@ argument_list|(
 specifier|const
 name|DWARFCompileUnit
 operator|*
-name|cu
+name|CU
 argument_list|,
 specifier|const
 name|uint64_t
-name|address
+name|Address
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// If a DIE represents a subprogram, returns its mangled name
-comment|// (or short name, if mangled is missing). This name may be fetched
-comment|// from specification or abstract origin for this subprogram.
-comment|// Returns null if no name is found.
+comment|/// If a DIE represents a subprogram (or inlined subroutine),
+comment|/// returns its mangled name (or short name, if mangled is missing).
+comment|/// This name may be fetched from specification or abstract origin
+comment|/// for this subprogram. Returns null if no name is found.
 specifier|const
 name|char
 modifier|*
-name|getSubprogramName
+name|getSubroutineName
 argument_list|(
 specifier|const
 name|DWARFCompileUnit
 operator|*
-name|cu
+name|CU
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Retrieves values of DW_AT_call_file, DW_AT_call_line and
+comment|/// DW_AT_call_column from DIE (or zeroes if they are missing).
+name|void
+name|getCallerFrame
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|CU
+argument_list|,
+name|uint32_t
+operator|&
+name|CallFile
+argument_list|,
+name|uint32_t
+operator|&
+name|CallLine
+argument_list|,
+name|uint32_t
+operator|&
+name|CallColumn
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// InlinedChain - represents a chain of inlined_subroutine
+comment|/// DIEs, (possibly ending with subprogram DIE), all of which are contained
+comment|/// in some concrete inlined instance tree. Address range for each DIE
+comment|/// (except the last DIE) in this chain is contained in address
+comment|/// range for next DIE in the chain.
+typedef|typedef
+name|SmallVector
+operator|<
+name|DWARFDebugInfoEntryMinimal
+operator|,
+literal|4
+operator|>
+name|InlinedChain
+expr_stmt|;
+comment|/// Get inlined chain for a given address, rooted at the current DIE.
+comment|/// Returns empty chain if address is not contained in address range
+comment|/// of current DIE.
+name|InlinedChain
+name|getInlinedChainForAddress
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|CU
+argument_list|,
+specifier|const
+name|uint64_t
+name|Address
 argument_list|)
 decl|const
 decl_stmt|;

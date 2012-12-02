@@ -158,6 +158,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -1659,19 +1665,17 @@ begin_comment
 comment|// copy/copy-assign won't do.
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|iplist
 argument_list|(
-specifier|const
-name|iplist
-operator|&
+argument|const iplist&
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// do not implement
-end_comment
 
 begin_decl_stmt
 name|void
@@ -1682,12 +1686,9 @@ specifier|const
 name|iplist
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// do not implement
-end_comment
 
 begin_label
 name|public

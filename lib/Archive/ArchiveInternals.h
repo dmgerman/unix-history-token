@@ -320,7 +320,8 @@ expr_stmt|;
 block|}
 name|bool
 name|checkSignature
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 literal|0

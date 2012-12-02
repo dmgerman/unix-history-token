@@ -137,25 +137,6 @@ name|MachineModuleInfo
 modifier|*
 name|MMI
 decl_stmt|;
-comment|/// EmitExceptionTable - Emit landing pads and actions.
-comment|///
-comment|/// The general organization of the table is complex, but the basic concepts
-comment|/// are easy.  First there is a header which describes the location and
-comment|/// organization of the three components that follow.
-comment|///  1. The landing pad site information describes the range of code covered
-comment|///     by the try.  In our case it's an accumulation of the ranges covered
-comment|///     by the invokes in the try.  There is also a reference to the landing
-comment|///     pad that handles the exception once processed.  Finally an index into
-comment|///     the actions table.
-comment|///  2. The action table, in our case, is composed of pairs of type ids
-comment|///     and next action offset.  Starting with the action index from the
-comment|///     landing pad site, each type Id is checked for a match to the current
-comment|///     exception.  If it matches then the exception and type id are passed
-comment|///     on to the landing pad.  Otherwise the next action is looked up.  This
-comment|///     chain is terminated with a next action of zero.  If no type id is
-comment|///     found the frame is unwound and handling continues.
-comment|///  3. Type id table contains references to all the C++ typeinfo for all
-comment|///     catches in the function.  This tables is reversed indexed base 1.
 comment|/// SharedTypeIds - How many leading type ids two landing pads have in common.
 specifier|static
 name|unsigned
@@ -336,6 +317,25 @@ operator|&
 name|FirstActions
 argument_list|)
 decl_stmt|;
+comment|/// EmitExceptionTable - Emit landing pads and actions.
+comment|///
+comment|/// The general organization of the table is complex, but the basic concepts
+comment|/// are easy.  First there is a header which describes the location and
+comment|/// organization of the three components that follow.
+comment|///  1. The landing pad site information describes the range of code covered
+comment|///     by the try.  In our case it's an accumulation of the ranges covered
+comment|///     by the invokes in the try.  There is also a reference to the landing
+comment|///     pad that handles the exception once processed.  Finally an index into
+comment|///     the actions table.
+comment|///  2. The action table, in our case, is composed of pairs of type ids
+comment|///     and next action offset.  Starting with the action index from the
+comment|///     landing pad site, each type Id is checked for a match to the current
+comment|///     exception.  If it matches then the exception and type id are passed
+comment|///     on to the landing pad.  Otherwise the next action is looked up.  This
+comment|///     chain is terminated with a next action of zero.  If no type id is
+comment|///     found the frame is unwound and handling continues.
+comment|///  3. Type id table contains references to all the C++ typeinfo for all
+comment|///     catches in the function.  This tables is reversed indexed base 1.
 name|void
 name|EmitExceptionTable
 parameter_list|()

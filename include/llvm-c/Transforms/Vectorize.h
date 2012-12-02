@@ -42,6 +42,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createLoopVectorizePass function. */
+name|void
+name|LLVMAddLoopVectorizePass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 ifdef|#
 directive|ifdef

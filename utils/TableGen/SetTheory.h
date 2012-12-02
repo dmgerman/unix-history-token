@@ -206,6 +206,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/SourceMgr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -288,6 +294,12 @@ argument_list|,
 name|RecSet
 operator|&
 name|Elts
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMLoc
+operator|>
+name|Loc
 argument_list|)
 operator|=
 literal|0
@@ -415,16 +427,22 @@ function_decl|;
 comment|/// evaluate - Evaluate Expr and append the resulting set to Elts.
 name|void
 name|evaluate
-parameter_list|(
+argument_list|(
 name|Init
-modifier|*
+operator|*
 name|Expr
-parameter_list|,
+argument_list|,
 name|RecSet
-modifier|&
+operator|&
 name|Elts
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMLoc
+operator|>
+name|Loc
+argument_list|)
+decl_stmt|;
 comment|/// evaluate - Evaluate a sequence of Inits and append to Elts.
 name|template
 operator|<
@@ -439,6 +457,8 @@ argument_list|,
 argument|Iter end
 argument_list|,
 argument|RecSet&Elts
+argument_list|,
+argument|ArrayRef<SMLoc> Loc
 argument_list|)
 block|{
 while|while
@@ -454,6 +474,8 @@ name|begin
 operator|++
 argument_list|,
 name|Elts
+argument_list|,
+name|Loc
 argument_list|)
 expr_stmt|;
 block|}

@@ -118,7 +118,7 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetInstrInfo
@@ -187,7 +187,7 @@ modifier|&
 name|TM
 decl_stmt|;
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|&
 name|TD
 decl_stmt|;

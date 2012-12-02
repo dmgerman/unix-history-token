@@ -235,12 +235,10 @@ name|AllGVs
 expr_stmt|;
 name|DIBuilder
 argument_list|(
-specifier|const
-name|DIBuilder
-operator|&
+argument|const DIBuilder&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -249,8 +247,8 @@ specifier|const
 name|DIBuilder
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|explicit
@@ -542,8 +540,10 @@ comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Ty           Parent type.
 comment|/// @param PropertyName Name of the Objective C property associated with
 comment|///                     this ivar.
-comment|/// @param GetterName   Name of the Objective C property getter selector.
-comment|/// @param SetterName   Name of the Objective C property setter selector.
+comment|/// @param PropertyGetterName Name of the Objective C property getter
+comment|///                           selector.
+comment|/// @param PropertySetterName Name of the Objective C property setter
+comment|///                           selector.
 comment|/// @param PropertyAttributes Objective C property attributes.
 name|DIType
 name|createObjCIVar
@@ -606,7 +606,7 @@ comment|/// @param AlignInBits  Member alignment.
 comment|/// @param OffsetInBits Member offset.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Ty           Parent type.
-comment|/// @param Property     Property associated with this ivar.
+comment|/// @param PropertyNode Property associated with this ivar.
 name|DIType
 name|createObjCIVar
 parameter_list|(
@@ -677,7 +677,7 @@ comment|/// createClassType - Create debugging information entry for a class.
 comment|/// @param Scope        Scope in which this class is defined.
 comment|/// @param Name         class name.
 comment|/// @param File         File where this member is defined.
-comment|/// @param LineNo       Line number.
+comment|/// @param LineNumber   Line number.
 comment|/// @param SizeInBits   Member size.
 comment|/// @param AlignInBits  Member alignment.
 comment|/// @param OffsetInBits Member offset.
@@ -738,7 +738,7 @@ comment|/// createStructType - Create debugging information entry for a struct.
 comment|/// @param Scope        Scope in which this struct is defined.
 comment|/// @param Name         Struct name.
 comment|/// @param File         File where this member is defined.
-comment|/// @param LineNo       Line number.
+comment|/// @param LineNumber   Line number.
 comment|/// @param SizeInBits   Member size.
 comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
@@ -781,7 +781,7 @@ comment|/// createUnionType - Create debugging information entry for an union.
 comment|/// @param Scope        Scope in which this union is defined.
 comment|/// @param Name         Union name.
 comment|/// @param File         File where this member is defined.
-comment|/// @param LineNo       Line number.
+comment|/// @param LineNumber   Line number.
 comment|/// @param SizeInBits   Member size.
 comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
@@ -945,11 +945,10 @@ comment|/// enumeration.
 comment|/// @param Scope        Scope in which this enumeration is defined.
 comment|/// @param Name         Union name.
 comment|/// @param File         File where this member is defined.
-comment|/// @param LineNo       Line number.
+comment|/// @param LineNumber   Line number.
 comment|/// @param SizeInBits   Member size.
 comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Elements     Enumeration elements.
-comment|/// @param Flags        Flags (e.g. forward decl)
 name|DIType
 name|createEnumerationType
 parameter_list|(
@@ -976,15 +975,12 @@ name|Elements
 parameter_list|,
 name|DIType
 name|ClassType
-parameter_list|,
-name|unsigned
-name|Flags
 parameter_list|)
 function_decl|;
 comment|/// createSubroutineType - Create subroutine type.
-comment|/// @param File          File in which this subroutine is defined.
-comment|/// @param ParamterTypes An array of subroutine parameter types. This
-comment|///                      includes return type at 0th index.
+comment|/// @param File           File in which this subroutine is defined.
+comment|/// @param ParameterTypes An array of subroutine parameter types. This
+comment|///                       includes return type at 0th index.
 name|DIType
 name|createSubroutineType
 parameter_list|(
@@ -998,6 +994,15 @@ function_decl|;
 comment|/// createArtificialType - Create a new DIType with "artificial" flag set.
 name|DIType
 name|createArtificialType
+parameter_list|(
+name|DIType
+name|Ty
+parameter_list|)
+function_decl|;
+comment|/// createObjectPointerType - Create a new DIType with the "object pointer"
+comment|/// flag set.
+name|DIType
+name|createObjectPointerType
 parameter_list|(
 name|DIType
 name|Ty
@@ -1036,6 +1041,16 @@ name|Line
 parameter_list|,
 name|unsigned
 name|RuntimeLang
+init|=
+literal|0
+parameter_list|,
+name|uint64_t
+name|SizeInBits
+init|=
+literal|0
+parameter_list|,
+name|uint64_t
+name|AlignInBits
 init|=
 literal|0
 parameter_list|)
@@ -1114,9 +1129,9 @@ argument_list|)
 decl_stmt|;
 comment|/// createStaticVariable - Create a new descriptor for the specified
 comment|/// variable.
-comment|/// @param Conext      Variable scope.
+comment|/// @param Context     Variable scope.
 comment|/// @param Name        Name of the variable.
-comment|/// @param LinakgeName Mangled  name of the variable.
+comment|/// @param LinkageName Mangled  name of the variable.
 comment|/// @param File        File where this variable is defined.
 comment|/// @param LineNo      Line number.
 comment|/// @param Ty          Variable Type.
@@ -1211,7 +1226,7 @@ comment|/// @param Tag         Dwarf TAG. Usually DW_TAG_auto_variable or
 comment|///                    DW_TAG_arg_variable.
 comment|/// @param Scope       Variable scope.
 comment|/// @param Name        Variable name.
-comment|/// @param File        File where this variable is defined.
+comment|/// @param F           File where this variable is defined.
 comment|/// @param LineNo      Line number.
 comment|/// @param Ty          Variable Type
 comment|/// @param Addr        An array of complex address operations.

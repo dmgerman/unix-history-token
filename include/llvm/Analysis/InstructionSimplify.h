@@ -98,7 +98,7 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -130,7 +130,7 @@ name|bool
 name|isNUW
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -172,7 +172,7 @@ name|bool
 name|isNUW
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -208,7 +208,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -244,7 +244,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -280,7 +280,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -316,7 +316,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -352,7 +352,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -388,7 +388,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -424,7 +424,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -466,7 +466,7 @@ name|bool
 name|isNUW
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -505,7 +505,7 @@ name|bool
 name|isExact
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -544,7 +544,7 @@ name|bool
 name|isExact
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -580,7 +580,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -616,7 +616,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -652,7 +652,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -691,7 +691,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -730,7 +730,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -770,7 +770,7 @@ modifier|*
 name|FalseVal
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -805,7 +805,7 @@ operator|>
 name|Ops
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -847,7 +847,7 @@ operator|>
 name|Idxs
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -883,7 +883,7 @@ modifier|*
 name|Ty
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -923,7 +923,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -962,7 +962,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -994,7 +994,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -1035,7 +1035,7 @@ modifier|*
 name|SimpleV
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -1070,7 +1070,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=

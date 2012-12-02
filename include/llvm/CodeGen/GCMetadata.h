@@ -436,6 +436,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// removeStackRoot - Removes a root.
+name|roots_iterator
+name|removeStackRoot
+parameter_list|(
+name|roots_iterator
+name|position
+parameter_list|)
+block|{
+return|return
+name|Roots
+operator|.
+name|erase
+argument_list|(
+name|position
+argument_list|)
+return|;
+block|}
 comment|/// addSafePoint - Notes the existence of a safe point. Num is the ID of the
 comment|/// label just prior to the safe point (if the code generator is using
 comment|/// MachineModuleInfo).

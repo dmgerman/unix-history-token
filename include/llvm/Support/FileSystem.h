@@ -183,11 +183,11 @@ directive|include
 file|<vector>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SYS_STAT_H
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1013,7 +1013,7 @@ function_decl|;
 comment|/// @brief Get the current path.
 comment|///
 comment|/// @param result Holds the current path on return.
-comment|/// @results errc::success if the current path has been stored in result,
+comment|/// @returns errc::success if the current path has been stored in result,
 comment|///          otherwise a platform specific error_code.
 name|error_code
 name|current_path
@@ -1031,7 +1031,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param existed Set to true if \a path existed, false if it did not.
 comment|///                undefined otherwise.
-comment|/// @results errc::success if path has been removed and existed has been
+comment|/// @returns errc::success if path has been removed and existed has been
 comment|///          successfully set, otherwise a platform specific error_code.
 name|error_code
 name|remove
@@ -1051,7 +1051,7 @@ comment|///        removed as if by POSIX remove().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param num_removed Number of files removed.
-comment|/// @results errc::success if path has been removed and num_removed has been
+comment|/// @returns errc::success if path has been removed and num_removed has been
 comment|///          successfully set, otherwise a platform specific error_code.
 name|error_code
 name|remove_all
@@ -1108,7 +1108,7 @@ comment|/// @{
 comment|/// @brief Does file exist?
 comment|///
 comment|/// @param status A file_status previously returned from stat.
-comment|/// @results True if the file represented by status exists, false if it does
+comment|/// @returns True if the file represented by status exists, false if it does
 comment|///          not.
 name|bool
 name|exists
@@ -1122,7 +1122,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if the file represented by status exists, false if
 comment|///               it does not. Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|exists
@@ -1171,7 +1171,7 @@ comment|/// @param B Input file_status.
 comment|///
 comment|/// assert(status_known(A) || status_known(B));
 comment|///
-comment|/// @results True if A and B both represent the same file system entity, false
+comment|/// @returns True if A and B both represent the same file system entity, false
 comment|///          otherwise.
 name|bool
 name|equivalent
@@ -1191,7 +1191,7 @@ comment|/// @param A Input path A.
 comment|/// @param B Input path B.
 comment|/// @param result Set to true if stat(A) and stat(B) have the same device and
 comment|///               inode (or equivalent).
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|equivalent
@@ -1267,7 +1267,7 @@ function_decl|;
 comment|/// @brief Does status represent a directory?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @results status.type() == file_type::directory_file.
+comment|/// @returns status.type() == file_type::directory_file.
 name|bool
 name|is_directory
 parameter_list|(
@@ -1280,7 +1280,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a directory, false if it is not.
 comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_directory
@@ -1298,7 +1298,7 @@ function_decl|;
 comment|/// @brief Does status represent a regular file?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @results status_known(status)&& status.type() == file_type::regular_file.
+comment|/// @returns status_known(status)&& status.type() == file_type::regular_file.
 name|bool
 name|is_regular_file
 parameter_list|(
@@ -1311,7 +1311,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a regular file, false if it is not.
 comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_regular_file
@@ -1330,7 +1330,7 @@ comment|/// @brief Does this status represent something that exists but is not a
 comment|///        directory, regular file, or symlink?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @results exists(s)&& !is_regular_file(s)&& !is_directory(s)&&
+comment|/// @returns exists(s)&& !is_regular_file(s)&& !is_directory(s)&&
 comment|///          !is_symlink(s)
 name|bool
 name|is_other
@@ -1345,7 +1345,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path exists, but is not a directory, regular
 comment|///               file, or a symlink, false if it does not. Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_other
@@ -1363,7 +1363,7 @@ function_decl|;
 comment|/// @brief Does status represent a symlink?
 comment|///
 comment|/// @param status A file_status previously returned from stat.
-comment|/// @param result status.type() == symlink_file.
+comment|/// @returns status.type() == symlink_file.
 name|bool
 name|is_symlink
 parameter_list|(
@@ -1376,7 +1376,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a symlink, false if it is not.
 comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_symlink
@@ -1395,7 +1395,7 @@ comment|/// @brief Get file status as if by POSIX stat().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the file status.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|status
@@ -1413,7 +1413,7 @@ function_decl|;
 comment|/// @brief Modifies permission bits on a file
 comment|///
 comment|/// @param path Input path.
-comment|/// @results errc::success if permissions have been changed, otherwise a
+comment|/// @returns errc::success if permissions have been changed, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|permissions
@@ -1429,8 +1429,8 @@ parameter_list|)
 function_decl|;
 comment|/// @brief Is status available?
 comment|///
-comment|/// @param path Input path.
-comment|/// @results True if status() != status_error.
+comment|/// @param s Input file status.
+comment|/// @returns True if status() != status_error.
 name|bool
 name|status_known
 parameter_list|(
@@ -1442,7 +1442,7 @@ comment|/// @brief Is status available?
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if status() != status_error.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|status_known
@@ -1470,11 +1470,11 @@ comment|///
 comment|/// clang-%%-%%-%%-%%-%%.s => /tmp/clang-a0-b1-c2-d3-e4.s
 comment|///
 comment|/// @param model Name to base unique path off of.
-comment|/// @param result_fs Set to the opened file's file descriptor.
+comment|/// @param result_fd Set to the opened file's file descriptor.
 comment|/// @param result_path Set to the opened file's absolute path.
-comment|/// @param makeAbsolute If true and @model is not an absolute path, a temp
+comment|/// @param makeAbsolute If true and \a model is not an absolute path, a temp
 comment|///        directory will be prepended.
-comment|/// @results errc::success if result_{fd,path} have been successfully set,
+comment|/// @returns errc::success if result_{fd,path} have been successfully set,
 comment|///          otherwise a platform specific error_code.
 name|error_code
 name|unique_file
@@ -1513,7 +1513,7 @@ comment|/// absolute and has the same capitalization as the file system.
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the canonicalized version of \a path.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|canonicalize
@@ -1535,7 +1535,7 @@ comment|/// @brief Are \a path's first bytes \a magic?
 comment|///
 comment|/// @param path Input path.
 comment|/// @param magic Byte sequence to compare \a path's first len(magic) bytes to.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|has_magic
@@ -1562,7 +1562,7 @@ comment|/// @param len Number of magic bytes to get.
 comment|/// @param result Set to the first \a len bytes in the file pointed to by
 comment|///               \a path. Or the entire file if file_size(path)< len, in which
 comment|///               case result.size() returns the size of the file.
-comment|/// @results errc::success if result has been successfully set,
+comment|/// @returns errc::success if result has been successfully set,
 comment|///          errc::value_too_large if len is larger then the file pointed to by
 comment|///          \a path, otherwise a platform specific error_code.
 name|error_code
@@ -1596,7 +1596,7 @@ comment|/// @brief Get and identify \a path's type based on its content.
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the type of file, or LLVMFileType::Unknown_FileType.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|identify_magic
@@ -1614,7 +1614,7 @@ function_decl|;
 comment|/// @brief Get library paths the system linker uses.
 comment|///
 comment|/// @param result Set to the list of system library paths.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|GetSystemLibraryPaths
@@ -1633,7 +1633,7 @@ comment|/// @brief Get bitcode library paths the system linker uses
 comment|///        + LLVM_LIB_SEARCH_PATH + LLVM_LIBDIR.
 comment|///
 comment|/// @param result Set to the list of bitcode library paths.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|GetBitcodeLibraryPaths
@@ -1657,7 +1657,7 @@ comment|/// c => /usr/lib/libc.so
 comment|///
 comment|/// @param short_name Library name one would give to the system linker.
 comment|/// @param result Set to the absolute path \a short_name represents.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|FindLibrary
@@ -1680,7 +1680,7 @@ comment|///
 comment|/// @param argv0 The program name as it was spelled on the command line.
 comment|/// @param MainAddr Address of some symbol in the executable (not in a library).
 comment|/// @param result Set to the absolute path of the current executable.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|GetMainExecutable
@@ -1734,12 +1734,12 @@ name|mapmode
 block|{
 name|readonly
 block|,
-comment|//< May only access map via const_data as read only.
+comment|///< May only access map via const_data as read only.
 name|readwrite
 block|,
-comment|//< May access map via data and modify it. Written to path.
+comment|///< May access map via data and modify it. Written to path.
 name|priv
-comment|//< May modify via data, but changes are lost on destruction.
+comment|///< May modify via data, but changes are lost on destruction.
 block|}
 enum|;
 name|private
@@ -1755,8 +1755,8 @@ name|void
 modifier|*
 name|Mapping
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|LLVM_ON_WIN32
 name|int
 name|FileDescriptor
@@ -1890,13 +1890,13 @@ comment|/// @brief Memory maps the contents of a file
 comment|///
 comment|/// @param path Path to file to map.
 comment|/// @param file_offset Byte offset in file where mapping should begin.
-comment|/// @param size_t Byte length of range of the file to map.
+comment|/// @param size Byte length of range of the file to map.
 comment|/// @param map_writable If true, the file will be mapped in r/w such
 comment|///        that changes to the mapped buffer will be flushed back
 comment|///        to the file.  If false, the file will be mapped read-only
 comment|///        and the buffer will be read-only.
 comment|/// @param result Set to the start address of the mapped buffer.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|map_file_pages
@@ -1925,7 +1925,7 @@ comment|/// @brief Memory unmaps the contents of a file
 comment|///
 comment|/// @param base Pointer to the start of the buffer.
 comment|/// @param size Byte length of the range to unmmap.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|unmap_file_pages

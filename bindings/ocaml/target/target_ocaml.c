@@ -16,7 +16,7 @@ file|"caml/alloc.h"
 end_include
 
 begin_comment
-comment|/* string -> TargetData.t */
+comment|/* string -> DataLayout.t */
 end_comment
 
 begin_function
@@ -41,7 +41,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> [<Llvm.PassManager.any] Llvm.PassManager.t -> unit */
+comment|/* DataLayout.t -> [<Llvm.PassManager.any] Llvm.PassManager.t -> unit */
 end_comment
 
 begin_function
@@ -70,7 +70,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> string */
+comment|/* DataLayout.t -> string */
 end_comment
 
 begin_function
@@ -111,7 +111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> unit */
+comment|/* DataLayout.t -> unit */
 end_comment
 
 begin_function
@@ -135,7 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Endian.t */
+comment|/* DataLayout.t -> Endian.t */
 end_comment
 
 begin_function
@@ -160,7 +160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> int */
+comment|/* DataLayout.t -> int */
 end_comment
 
 begin_function
@@ -185,7 +185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> Int64.t */
+comment|/* DataLayout.t -> Llvm.lltype -> Int64.t */
 end_comment
 
 begin_function
@@ -215,7 +215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> Int64.t */
+comment|/* DataLayout.t -> Llvm.lltype -> Int64.t */
 end_comment
 
 begin_function
@@ -245,7 +245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> Int64.t */
+comment|/* DataLayout.t -> Llvm.lltype -> Int64.t */
 end_comment
 
 begin_function
@@ -275,7 +275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> int */
+comment|/* DataLayout.t -> Llvm.lltype -> int */
 end_comment
 
 begin_function
@@ -305,7 +305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> int */
+comment|/* DataLayout.t -> Llvm.lltype -> int */
 end_comment
 
 begin_function
@@ -335,7 +335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> int */
+comment|/* DataLayout.t -> Llvm.lltype -> int */
 end_comment
 
 begin_function
@@ -365,7 +365,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.llvalue -> int */
+comment|/* DataLayout.t -> Llvm.llvalue -> int */
 end_comment
 
 begin_function
@@ -395,7 +395,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> Int64.t -> int */
+comment|/* DataLayout.t -> Llvm.lltype -> Int64.t -> int */
 end_comment
 
 begin_function
@@ -433,7 +433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> int -> Int64.t */
+comment|/* DataLayout.t -> Llvm.lltype -> int -> Int64.t */
 end_comment
 
 begin_function

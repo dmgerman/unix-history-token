@@ -195,6 +195,15 @@ argument_list|()
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopVectorize - Create a loop vectorization pass.
+comment|//
+name|Pass
+modifier|*
+name|createLoopVectorizePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
 comment|/// @brief Vectorize the BasicBlock.
 comment|///
 comment|/// @param BB The BasicBlock to be vectorized

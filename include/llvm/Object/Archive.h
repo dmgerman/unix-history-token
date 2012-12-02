@@ -591,18 +591,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|Archive const *v
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|Binary const *v
 argument_list|)
 block|{

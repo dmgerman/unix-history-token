@@ -292,17 +292,6 @@ operator|==
 name|SV_ELF
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCSectionELF *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Return the entry size for sections with fixed-width data.
 specifier|static
 name|unsigned

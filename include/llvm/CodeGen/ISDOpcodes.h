@@ -832,6 +832,12 @@ name|ATOMIC_LOAD_UMIN
 block|,
 name|ATOMIC_LOAD_UMAX
 block|,
+comment|/// This corresponds to the llvm.lifetime.* intrinsics. The first operand
+comment|/// is the chain and the second operand is the alloca pointer.
+name|LIFETIME_START
+block|,
+name|LIFETIME_END
+block|,
 comment|/// BUILTIN_OP_END - This must be the last enum value in this list.
 comment|/// The target-specific pre-isel opcode values start here.
 name|BUILTIN_OP_END

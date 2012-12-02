@@ -314,6 +314,45 @@ name|unsigned
 name|getEHHandlerRegister
 argument_list|()
 specifier|const
+block|;
+specifier|const
+name|RegClassWeight
+operator|&
+name|getRegClassWeight
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getNumRegPressureSets
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|char
+operator|*
+name|getRegPressureSetName
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegPressureSetLimit
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|int
+operator|*
+name|getRegClassPressureSets
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

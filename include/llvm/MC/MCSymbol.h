@@ -65,6 +65,12 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -179,12 +185,10 @@ argument_list|)
 block|{}
 name|MCSymbol
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
+argument|const MCSymbol&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -193,8 +197,8 @@ specifier|const
 name|MCSymbol
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// getName - Get the symbol name.
@@ -321,7 +325,7 @@ operator|*
 name|Section
 return|;
 block|}
-comment|/// setSection - Mark the symbol as defined in the section \arg S.
+comment|/// setSection - Mark the symbol as defined in the section \p S.
 name|void
 name|setSection
 parameter_list|(
@@ -372,7 +376,7 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getValue() - Get the value for variable symbols.
+comment|/// getVariableValue() - Get the value for variable symbols.
 specifier|const
 name|MCExpr
 operator|*
@@ -416,7 +420,7 @@ name|Value
 parameter_list|)
 function_decl|;
 comment|/// @}
-comment|/// print - Print the value to the stream \arg OS.
+comment|/// print - Print the value to the stream \p OS.
 name|void
 name|print
 argument_list|(

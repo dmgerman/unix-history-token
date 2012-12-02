@@ -142,8 +142,6 @@ name|Use
 modifier|*
 name|U
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// captured - Information about the pointer was captured by the user of
 comment|/// use U. Return true to stop the traversal or false to continue looking

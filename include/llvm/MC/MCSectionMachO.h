@@ -569,22 +569,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MCSectionMachO
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 unit|};  }
 comment|// end namespace llvm

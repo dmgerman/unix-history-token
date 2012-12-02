@@ -1157,8 +1157,8 @@ comment|/// archive members will have their path component stripped and the file
 comment|/// name will be truncated at 15 characters. If \p Compress is specified,
 comment|/// all archive members will be compressed before being written. If
 comment|/// \p PrintSymTab is true, the symbol table will be printed to std::cout.
-comment|/// @returns true if an error occurred, \p error set to error message
-comment|/// @returns false if the writing succeeded.
+comment|/// @returns true if an error occurred, \p error set to error message;
+comment|/// returns false if the writing succeeded.
 comment|/// @brief Write (possibly modified) archive contents to disk
 name|bool
 name|writeToDisk
@@ -1339,8 +1339,8 @@ decl_stmt|;
 comment|/// Writes one ArchiveMember to an ofstream. If an error occurs, returns
 comment|/// false, otherwise true. If an error occurs and error is non-null then
 comment|/// it will be set to an error message.
-comment|/// @returns false Writing member succeeded
-comment|/// @returns true Writing member failed, \p error set to error message
+comment|/// @returns false if writing member succeeded,
+comment|/// returns true if writing member failed, \p error set to error message.
 name|bool
 name|writeMember
 argument_list|(
@@ -1499,16 +1499,14 @@ name|private
 label|:
 name|Archive
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|///< Do not implement
 name|Archive
 argument_list|(
-specifier|const
-name|Archive
-operator|&
+argument|const Archive&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|///< Do not implement
 name|Archive
 modifier|&
 name|operator
@@ -1518,8 +1516,8 @@ specifier|const
 name|Archive
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|///< Do not implement
 comment|/// @}
 block|}
 empty_stmt|;

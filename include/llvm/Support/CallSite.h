@@ -430,7 +430,7 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-comment|/// getCalledValue - Return the pointer to function that is being called...
+comment|/// getCalledValue - Return the pointer to function that is being called.
 comment|///
 name|ValTy
 operator|*
@@ -472,7 +472,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// setCalledFunction - Set the callee to the specified value...
+comment|/// setCalledFunction - Set the callee to the specified value.
 comment|///
 name|void
 name|setCalledFunction
@@ -646,7 +646,7 @@ argument_list|()
 return|;
 block|}
 comment|/// arg_iterator - The type of iterator to use when looping over actual
-comment|/// arguments at this call site...
+comment|/// arguments at this call site.
 typedef|typedef
 name|IterTy
 name|arg_iterator
@@ -841,7 +841,7 @@ comment|/// \brief Return true if this function has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-argument|Attributes N
+argument|Attributes::AttrVal A
 argument_list|)
 specifier|const
 block|{
@@ -849,17 +849,17 @@ name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|hasFnAttr
 argument_list|(
-name|N
+name|A
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// paramHasAttr - whether the call or the callee has the given attribute.
+comment|/// \brief Return true if the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr
 argument_list|(
-argument|uint16_t i
+argument|unsigned i
 argument_list|,
-argument|Attributes attr
+argument|Attributes::AttrVal A
 argument_list|)
 specifier|const
 block|{
@@ -869,7 +869,7 @@ name|paramHasAttr
 argument_list|(
 name|i
 argument_list|,
-name|attr
+name|A
 argument_list|)
 argument_list|)
 block|;   }
@@ -929,16 +929,12 @@ argument_list|)
 block|;   }
 name|void
 name|setDoesNotAccessMemory
-argument_list|(
-argument|bool doesNotAccessMemory = true
-argument_list|)
+argument_list|()
 block|{
 name|CALLSITE_DELEGATE_SETTER
 argument_list|(
 name|setDoesNotAccessMemory
-argument_list|(
-name|doesNotAccessMemory
-argument_list|)
+argument_list|()
 argument_list|)
 block|;   }
 comment|/// @brief Determine if the call does not access or only reads memory.
@@ -955,16 +951,12 @@ argument_list|)
 block|;   }
 name|void
 name|setOnlyReadsMemory
-argument_list|(
-argument|bool onlyReadsMemory = true
-argument_list|)
+argument_list|()
 block|{
 name|CALLSITE_DELEGATE_SETTER
 argument_list|(
 name|setOnlyReadsMemory
-argument_list|(
-name|onlyReadsMemory
-argument_list|)
+argument_list|()
 argument_list|)
 block|;   }
 comment|/// @brief Determine if the call cannot return.
@@ -981,16 +973,12 @@ argument_list|)
 block|;   }
 name|void
 name|setDoesNotReturn
-argument_list|(
-argument|bool doesNotReturn = true
-argument_list|)
+argument_list|()
 block|{
 name|CALLSITE_DELEGATE_SETTER
 argument_list|(
 name|setDoesNotReturn
-argument_list|(
-name|doesNotReturn
-argument_list|)
+argument_list|()
 argument_list|)
 block|;   }
 comment|/// @brief Determine if the call cannot unwind.
@@ -1007,16 +995,12 @@ argument_list|)
 block|;   }
 name|void
 name|setDoesNotThrow
-argument_list|(
-argument|bool doesNotThrow = true
-argument_list|)
+argument_list|()
 block|{
 name|CALLSITE_DELEGATE_SETTER
 argument_list|(
 name|setDoesNotThrow
-argument_list|(
-name|doesNotThrow
-argument_list|)
+argument_list|()
 argument_list|)
 block|;   }
 undef|#
@@ -1040,7 +1024,7 @@ name|ArgNo
 operator|+
 literal|1
 argument_list|,
-name|Attribute
+name|Attributes
 operator|::
 name|NoCapture
 argument_list|)
@@ -1062,7 +1046,7 @@ name|ArgNo
 operator|+
 literal|1
 argument_list|,
-name|Attribute
+name|Attributes
 operator|::
 name|ByVal
 argument_list|)

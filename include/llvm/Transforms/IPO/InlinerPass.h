@@ -85,7 +85,7 @@ name|class
 name|CallSite
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|InlineCost

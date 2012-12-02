@@ -190,8 +190,9 @@ comment|// more details:
 comment|// http://groups.google.com/groups?hl=en&selm=000001c1cc83%24e154d5e0%247772e50c%40c161550a&rnum=1
 name|public
 operator|:
-expr|enum
-block|{
+specifier|static
+specifier|const
+name|bool
 name|value
 operator|=
 sizeof|sizeof
@@ -199,8 +200,8 @@ argument_list|(
 name|char
 argument_list|)
 operator|==
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|dont_use
 operator|::
 name|is_class_helper
@@ -210,8 +211,7 @@ operator|>
 operator|(
 literal|0
 operator|)
-operator|)
-block|}
+argument_list|)
 block|; }
 expr_stmt|;
 comment|/// isPodLike - This is a type trait that is used to determine whether a given
@@ -1022,9 +1022,10 @@ name|public
 label|:
 end_label
 
-begin_enum
-enum|enum
-block|{
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bool
 name|value
 init|=
 operator|(
@@ -1077,9 +1078,8 @@ name|nonce_instance
 argument_list|)
 argument_list|)
 operator|)
-block|}
-enum|;
-end_enum
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};

@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_decl_stmt
@@ -131,7 +131,13 @@ name|class
 name|ConstantExpr
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
+name|TargetTransformInfo
 decl_stmt|;
 name|class
 name|DIBuilder
@@ -165,6 +171,13 @@ name|bool
 name|DeleteDeadConditions
 init|=
 name|false
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -179,6 +192,13 @@ parameter_list|(
 name|Instruction
 modifier|*
 name|I
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteTriviallyDeadInstructions - If the specified value is a
@@ -191,6 +211,13 @@ parameter_list|(
 name|Value
 modifier|*
 name|V
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteDeadPHINode - If the specified value is an effectively
@@ -204,6 +231,13 @@ parameter_list|(
 name|PHINode
 modifier|*
 name|PN
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyInstructionsInBlock - Scan the specified basic block and try to
@@ -219,9 +253,16 @@ modifier|*
 name|BB
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 literal|0
 parameter_list|)
@@ -251,7 +292,7 @@ name|BasicBlock
 modifier|*
 name|Pred
 parameter_list|,
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -317,9 +358,16 @@ modifier|*
 name|BB
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetTransformInfo
+modifier|*
+name|TTI
 init|=
 literal|0
 parameter_list|)
@@ -395,7 +443,7 @@ name|unsigned
 name|PrefAlign
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -413,7 +461,7 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -447,7 +495,7 @@ name|EmitGEPOffset
 argument_list|(
 argument|IRBuilderTy *Builder
 argument_list|,
-argument|const TargetData&TD
+argument|const DataLayout&TD
 argument_list|,
 argument|User *GEP
 argument_list|,

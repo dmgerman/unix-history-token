@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstddef>
 end_include
 
@@ -237,11 +243,9 @@ label|:
 comment|/// Copy ctor - do not implement
 name|Use
 argument_list|(
-specifier|const
-name|Use
-operator|&
-name|U
+argument|const Use&U
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 comment|/// Destructor - Only for zap()
 operator|~

@@ -270,12 +270,10 @@ operator|>
 expr_stmt|;
 name|BasicBlock
 argument_list|(
-specifier|const
-name|BasicBlock
-operator|&
+argument|const BasicBlock&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
 name|void
 name|operator
 init|=
@@ -284,8 +282,8 @@ specifier|const
 name|BasicBlock
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 comment|/// BasicBlock ctor - If the function parameter is specified, the basic block
 comment|/// is automatically inserted at either the end of the function (if
 comment|/// InsertBefore is null), or before the specified basic block.
@@ -817,20 +815,6 @@ name|getValueSymbolTable
 parameter_list|()
 function_decl|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|BasicBlock
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

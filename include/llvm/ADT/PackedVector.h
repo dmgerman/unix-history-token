@@ -83,6 +83,9 @@ operator|,
 name|unsigned
 name|BitNum
 operator|,
+name|typename
+name|BitVectorTy
+operator|,
 name|bool
 name|isSigned
 operator|>
@@ -98,6 +101,9 @@ name|T
 operator|,
 name|unsigned
 name|BitNum
+operator|,
+name|typename
+name|BitVectorTy
 operator|>
 name|class
 name|PackedVectorBase
@@ -105,6 +111,8 @@ operator|<
 name|T
 operator|,
 name|BitNum
+operator|,
+name|BitVectorTy
 operator|,
 name|false
 operator|>
@@ -115,7 +123,7 @@ specifier|static
 name|T
 name|getValue
 argument_list|(
-argument|const llvm::BitVector&Bits
+argument|const BitVectorTy&Bits
 argument_list|,
 argument|unsigned Idx
 argument_list|)
@@ -179,19 +187,17 @@ block|}
 specifier|static
 name|void
 name|setValue
-argument_list|(
-name|llvm
-operator|::
-name|BitVector
-operator|&
+parameter_list|(
+name|BitVectorTy
+modifier|&
 name|Bits
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Idx
-argument_list|,
+parameter_list|,
 name|T
 name|val
-argument_list|)
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -262,6 +268,9 @@ name|T
 operator|,
 name|unsigned
 name|BitNum
+operator|,
+name|typename
+name|BitVectorTy
 operator|>
 name|class
 name|PackedVectorBase
@@ -269,6 +278,8 @@ operator|<
 name|T
 operator|,
 name|BitNum
+operator|,
+name|BitVectorTy
 operator|,
 name|true
 operator|>
@@ -279,7 +290,7 @@ specifier|static
 name|T
 name|getValue
 argument_list|(
-argument|const llvm::BitVector&Bits
+argument|const BitVectorTy&Bits
 argument_list|,
 argument|unsigned Idx
 argument_list|)
@@ -370,23 +381,21 @@ name|val
 return|;
 end_return
 
-begin_decl_stmt
+begin_function
 unit|}    static
 name|void
 name|setValue
-argument_list|(
-name|llvm
-operator|::
-name|BitVector
-operator|&
+parameter_list|(
+name|BitVectorTy
+modifier|&
 name|Bits
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Idx
-argument_list|,
+parameter_list|,
 name|T
 name|val
-argument_list|)
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -480,7 +489,7 @@ name|i
 operator|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 unit|};
@@ -519,6 +528,11 @@ name|T
 operator|,
 name|unsigned
 name|BitNum
+operator|,
+name|typename
+name|BitVectorTy
+operator|=
+name|BitVector
 operator|>
 name|class
 name|PackedVector
@@ -530,6 +544,8 @@ name|T
 operator|,
 name|BitNum
 operator|,
+name|BitVectorTy
+operator|,
 name|std
 operator|::
 name|numeric_limits
@@ -540,9 +556,7 @@ operator|::
 name|is_signed
 operator|>
 block|{
-name|llvm
-operator|::
-name|BitVector
+name|BitVectorTy
 name|Bits
 block|;
 typedef|typedef
@@ -551,6 +565,8 @@ operator|<
 name|T
 operator|,
 name|BitNum
+operator|,
+name|BitVectorTy
 operator|,
 name|std
 operator|::

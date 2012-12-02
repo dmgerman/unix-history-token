@@ -391,8 +391,8 @@ name|private
 label|:
 name|AnalysisResolver
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|explicit

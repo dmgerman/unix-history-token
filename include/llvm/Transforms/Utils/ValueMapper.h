@@ -97,7 +97,7 @@ name|ValueMapTypeRemapper
 block|{
 name|virtual
 name|void
-name|Anchor
+name|anchor
 parameter_list|()
 function_decl|;
 comment|// Out of line method.

@@ -6437,6 +6437,13 @@ block|,
 name|custom_serialize_default
 block|,
 name|custom_deserialize_default
+ifdef|#
+directive|ifdef
+name|custom_compare_ext_default
+block|,
+name|custom_compare_ext_default
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

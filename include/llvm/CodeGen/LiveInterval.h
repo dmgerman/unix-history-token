@@ -128,6 +128,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|CoalescerPair
+decl_stmt|;
+name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
@@ -444,12 +447,6 @@ name|os
 argument_list|)
 decl|const
 decl_stmt|;
-name|private
-label|:
-name|LiveRange
-argument_list|()
-expr_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 struct|;
 name|template
@@ -1128,27 +1125,6 @@ modifier|*
 name|LHSValNo
 parameter_list|)
 function_decl|;
-comment|/// Copy - Copy the specified live interval. This copies all the fields
-comment|/// except for the register of the interval.
-name|void
-name|Copy
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|RHS
-argument_list|,
-name|MachineRegisterInfo
-operator|*
-name|MRI
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|&
-name|VNInfoAllocator
-argument_list|)
-decl_stmt|;
 name|bool
 name|empty
 argument_list|()
@@ -1291,21 +1267,6 @@ operator|==
 name|index
 return|;
 block|}
-comment|/// killedInRange - Return true if the interval has kills in [Start,End).
-comment|/// Note that the kill point is considered the end of a live range, so it is
-comment|/// not contained in the live range. If a live range ends at End, it won't
-comment|/// be counted as a kill by this method.
-name|bool
-name|killedInRange
-argument_list|(
-name|SlotIndex
-name|Start
-argument_list|,
-name|SlotIndex
-name|End
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getLiveRangeContaining - Return the live range that contains the
 comment|/// specified index, or null if there is none.
 specifier|const
@@ -1540,6 +1501,30 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// overlaps - Return true if the two intervals have overlapping segments
+comment|/// that are not coalescable according to CP.
+comment|///
+comment|/// Overlapping segments where one interval is defined by a coalescable
+comment|/// copy are allowed.
+name|bool
+name|overlaps
+argument_list|(
+specifier|const
+name|LiveInterval
+operator|&
+name|Other
+argument_list|,
+specifier|const
+name|CoalescerPair
+operator|&
+name|CP
+argument_list|,
+specifier|const
+name|SlotIndexes
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// overlaps - Return true if the live interval overlaps a range specified
 comment|/// by [Start, End).
 name|bool
@@ -1974,8 +1959,8 @@ name|LiveInterval
 operator|&
 name|rhs
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 empty_stmt|;
 specifier|inline
@@ -2088,18 +2073,18 @@ name|E
 condition|)
 return|return;
 comment|// Is this an instruction live-in segment?
+comment|// If Idx is the start index of a basic block, include live-in segments
+comment|// that start at Idx.getBaseIndex().
 if|if
 condition|(
-name|SlotIndex
-operator|::
-name|isEarlierInstr
-argument_list|(
 name|I
 operator|->
 name|start
-argument_list|,
+operator|<=
 name|Idx
-argument_list|)
+operator|.
+name|getBaseIndex
+argument_list|()
 condition|)
 block|{
 name|EarlyVal
@@ -2142,6 +2127,25 @@ name|E
 condition|)
 return|return;
 block|}
+comment|// Special case: A PHIDef value can have its def in the middle of a
+comment|// segment if the value happens to be live out of the layout
+comment|// predecessor.
+comment|// Such a value is not live-in.
+if|if
+condition|(
+name|EarlyVal
+operator|->
+name|def
+operator|==
+name|Idx
+operator|.
+name|getBaseIndex
+argument_list|()
+condition|)
+name|EarlyVal
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|// I now points to the segment that may be live-through, or defined by
 comment|// this instr. Ignore segments starting after the current instr.

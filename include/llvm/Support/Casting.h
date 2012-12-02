@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -164,6 +170,11 @@ name|To
 operator|,
 name|typename
 name|From
+operator|,
+name|typename
+name|Enabler
+operator|=
+name|void
 operator|>
 expr|struct
 name|isa_impl
@@ -188,6 +199,56 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Always allow upcasts, and perform no dynamic check for them.
+name|template
+operator|<
+name|typename
+name|To
+block|,
+name|typename
+name|From
+operator|>
+expr|struct
+name|isa_impl
+operator|<
+name|To
+block|,
+name|From
+block|,
+name|typename
+name|llvm
+operator|::
+name|enable_if_c
+operator|<
+name|llvm
+operator|::
+name|is_base_of
+operator|<
+name|To
+block|,
+name|From
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|bool
+name|doit
+argument_list|(
+argument|const From&
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 name|template
 operator|<
 name|typename
@@ -289,6 +350,13 @@ argument_list|(
 argument|const From *Val
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Val
+operator|&&
+literal|"isa<> used on a null pointer"
+argument_list|)
+block|;
 return|return
 name|isa_impl
 operator|<
@@ -332,6 +400,13 @@ argument_list|(
 argument|const From *Val
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Val
+operator|&&
+literal|"isa<> used on a null pointer"
+argument_list|)
+block|;
 return|return
 name|isa_impl
 operator|<
@@ -376,6 +451,13 @@ argument_list|(
 argument|const From *Val
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Val
+operator|&&
+literal|"isa<> used on a null pointer"
+argument_list|)
+block|;
 return|return
 name|isa_impl
 operator|<

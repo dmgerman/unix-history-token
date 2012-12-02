@@ -182,12 +182,10 @@ name|IgnoreBlockInfoNames
 decl_stmt|;
 name|BitstreamReader
 argument_list|(
-specifier|const
-name|BitstreamReader
-operator|&
+argument|const BitstreamReader&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -196,8 +194,8 @@ specifier|const
 name|BitstreamReader
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|BitstreamReader
@@ -1818,7 +1816,7 @@ name|false
 return|;
 block|}
 comment|/// EnterSubBlock - Having read the ENTER_SUBBLOCK abbrevid, enter
-comment|/// the block, and return true if the block is valid.
+comment|/// the block, and return true if the block has an error.
 name|bool
 name|EnterSubBlock
 parameter_list|(

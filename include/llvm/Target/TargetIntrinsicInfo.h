@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -87,12 +93,10 @@ name|TargetIntrinsicInfo
 block|{
 name|TargetIntrinsicInfo
 argument_list|(
-specifier|const
-name|TargetIntrinsicInfo
-operator|&
+argument|const TargetIntrinsicInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -101,8 +105,8 @@ specifier|const
 name|TargetIntrinsicInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|TargetIntrinsicInfo

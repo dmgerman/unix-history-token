@@ -60,6 +60,18 @@ comment|/// between parsing an asm instruction and recognizing it.
 name|class
 name|MCParsedAsmOperand
 block|{
+comment|/// MCOperandNum - The corresponding MCInst operand number.  Only valid when
+comment|/// parsing MS-style inline assembly.
+name|unsigned
+name|MCOperandNum
+decl_stmt|;
+comment|/// Constraint - The constraint on this operand.  Only valid when parsing
+comment|/// MS-style inline assembly.
+name|std
+operator|::
+name|string
+name|Constraint
+expr_stmt|;
 name|public
 label|:
 name|MCParsedAsmOperand
@@ -70,6 +82,159 @@ operator|~
 name|MCParsedAsmOperand
 argument_list|()
 block|{}
+name|void
+name|setConstraint
+argument_list|(
+argument|StringRef C
+argument_list|)
+block|{
+name|Constraint
+operator|=
+name|C
+operator|.
+name|str
+argument_list|()
+block|; }
+name|StringRef
+name|getConstraint
+argument_list|()
+block|{
+return|return
+name|Constraint
+return|;
+block|}
+name|void
+name|setMCOperandNum
+parameter_list|(
+name|unsigned
+name|OpNum
+parameter_list|)
+block|{
+name|MCOperandNum
+operator|=
+name|OpNum
+expr_stmt|;
+block|}
+name|unsigned
+name|getMCOperandNum
+parameter_list|()
+block|{
+return|return
+name|MCOperandNum
+return|;
+block|}
+name|unsigned
+name|getNameLen
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|getStartLoc
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Invalid StartLoc!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|getEndLoc
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Invalid EndLoc!"
+argument_list|)
+expr_stmt|;
+return|return
+name|getEndLoc
+argument_list|()
+operator|.
+name|getPointer
+argument_list|()
+operator|-
+name|getStartLoc
+argument_list|()
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|StringRef
+name|getName
+parameter_list|()
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|getStartLoc
+argument_list|()
+operator|.
+name|getPointer
+argument_list|()
+argument_list|,
+name|getNameLen
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// isToken - Is this a token operand?
+name|virtual
+name|bool
+name|isToken
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// isImm - Is this an immediate operand?
+name|virtual
+name|bool
+name|isImm
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// isReg - Is this a register operand?
+name|virtual
+name|bool
+name|isReg
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|unsigned
+name|getReg
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// isMem - Is this a memory operand?
+name|virtual
+name|bool
+name|isMem
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|unsigned
+name|getMemSize
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// getStartLoc - Get the location of the first token of this operand.
 name|virtual
 name|SMLoc
@@ -88,6 +253,57 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// needAsmRewrite - AsmRewrites happen in both the target-independent and
+comment|/// target-dependent parsers.  The target-independent parser calls this
+comment|/// function to determine if the target-dependent parser has already taken
+comment|/// care of the rewrites.  Only valid when parsing MS-style inline assembly.
+name|virtual
+name|bool
+name|needAsmRewrite
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// isOffsetOf - Do we need to emit code to get the offset of the variable,
+comment|/// rather then the value of the variable?   Only valid when parsing MS-style
+comment|/// inline assembly.
+name|virtual
+name|bool
+name|isOffsetOf
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// getOffsetOfLoc - Get the location of the offset operator.
+name|virtual
+name|SMLoc
+name|getOffsetOfLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SMLoc
+argument_list|()
+return|;
+block|}
+comment|/// needSizeDirective - Do we need to emit a sizing directive for this
+comment|/// operand?  Only valid when parsing MS-style inline assembly.
+name|virtual
+name|bool
+name|needSizeDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// print - Print a debug representation of the operand to the given stream.
 name|virtual
 name|void

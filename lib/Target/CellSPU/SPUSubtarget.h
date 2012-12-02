@@ -217,12 +217,12 @@ return|return
 name|UseLargeMem
 return|;
 block|}
-comment|/// getTargetDataString - Return the pointer size and type alignment
+comment|/// getDataLayoutString - Return the pointer size and type alignment
 comment|/// properties of this subtarget.
 specifier|const
 name|char
 operator|*
-name|getTargetDataString
+name|getDataLayoutString
 argument_list|()
 specifier|const
 block|{

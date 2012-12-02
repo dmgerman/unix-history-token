@@ -134,16 +134,14 @@ specifier|const
 name|GlobalAlias
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|GlobalAlias
 argument_list|(
-specifier|const
-name|GlobalAlias
-operator|&
+argument|const GlobalAlias&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
 name|void
 name|setParent
 parameter_list|(
@@ -278,20 +276,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|GlobalAlias
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

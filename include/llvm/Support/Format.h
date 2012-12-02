@@ -863,11 +863,27 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// format - This is a helper function that is used to produce formatted output.
+comment|/// This is a helper function that is used to produce formatted output.
 end_comment
 
 begin_comment
-comment|/// This is typically used like:  OS<< format("%0.4f", myfloat)<< '\n';
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is typically used like:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   OS<< format("%0.4f", myfloat)<< '\n';
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_expr_stmt
@@ -903,11 +919,27 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// format - This is a helper function that is used to produce formatted output.
+comment|/// This is a helper function that is used to produce formatted output.
 end_comment
 
 begin_comment
-comment|/// This is typically used like:  OS<< format("%0.4f", myfloat)<< '\n';
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is typically used like:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   OS<< format("%0.4f", myfloat)<< '\n';
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_expr_stmt
@@ -954,11 +986,27 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// format - This is a helper function that is used to produce formatted output.
+comment|/// This is a helper function that is used to produce formatted output.
 end_comment
 
 begin_comment
-comment|/// This is typically used like:  OS<< format("%0.4f", myfloat)<< '\n';
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is typically used like:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   OS<< format("%0.4f", myfloat)<< '\n';
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_expr_stmt
@@ -1016,11 +1064,27 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// format - This is a helper function that is used to produce formatted output.
+comment|/// This is a helper function that is used to produce formatted output.
 end_comment
 
 begin_comment
-comment|/// This is typically used like:  OS<< format("%0.4f", myfloat)<< '\n';
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is typically used like:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   OS<< format("%0.4f", myfloat)<< '\n';
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_expr_stmt
@@ -1089,11 +1153,27 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// format - This is a helper function that is used to produce formatted output.
+comment|/// This is a helper function that is used to produce formatted output.
 end_comment
 
 begin_comment
-comment|/// This is typically used like:  OS<< format("%0.4f", myfloat)<< '\n';
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is typically used like:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   OS<< format("%0.4f", myfloat)<< '\n';
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_expr_stmt

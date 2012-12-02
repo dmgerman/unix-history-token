@@ -103,6 +103,9 @@ decl_stmt|;
 name|class
 name|FileInfo
 decl_stmt|;
+name|namespace
+name|GCOV
+block|{
 enum|enum
 name|GCOVFormat
 block|{
@@ -117,6 +120,8 @@ block|,
 name|GCDA_404
 block|}
 enum|;
+block|}
+comment|// end GCOV namespace
 comment|/// GCOVBuffer - A wrapper around MemoryBuffer to provide GCOV specific
 comment|/// read operations.
 name|class
@@ -142,7 +147,8 @@ literal|0
 argument_list|)
 block|{}
 comment|/// readGCOVFormat - Read GCOV signature at the beginning of buffer.
-expr|enum
+name|GCOV
+operator|::
 name|GCOVFormat
 name|readGCOVFormat
 argument_list|()
@@ -173,6 +179,8 @@ operator|==
 literal|"oncg*404MVLL"
 condition|)
 return|return
+name|GCOV
+operator|::
 name|GCNO_404
 return|;
 elseif|else
@@ -183,6 +191,8 @@ operator|==
 literal|"oncg*204MVLL"
 condition|)
 return|return
+name|GCOV
+operator|::
 name|GCNO_402
 return|;
 elseif|else
@@ -193,6 +203,8 @@ operator|==
 literal|"adcg*404MVLL"
 condition|)
 return|return
+name|GCOV
+operator|::
 name|GCDA_404
 return|;
 elseif|else
@@ -203,6 +215,8 @@ operator|==
 literal|"adcg*204MVLL"
 condition|)
 return|return
+name|GCOV
+operator|::
 name|GCDA_402
 return|;
 name|Cursor
@@ -210,6 +224,8 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+name|GCOV
+operator|::
 name|InvalidGCOV
 return|;
 block|}
@@ -612,6 +628,7 @@ name|Result
 operator|=
 operator|*
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -807,15 +824,17 @@ argument_list|()
 expr_stmt|;
 name|bool
 name|read
-parameter_list|(
+argument_list|(
 name|GCOVBuffer
-modifier|&
+operator|&
 name|Buffer
-parameter_list|,
+argument_list|,
+name|GCOV
+operator|::
 name|GCOVFormat
 name|Format
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|dump
 parameter_list|()

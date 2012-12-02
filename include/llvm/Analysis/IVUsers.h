@@ -107,7 +107,7 @@ name|class
 name|IVUsers
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 comment|/// IVStrideUse - Keep track of one use of a strided induction variable.
 comment|/// The Expr member keeps track of the expression, User is the actual user
@@ -392,7 +392,7 @@ name|ScalarEvolution
 operator|*
 name|SE
 block|;
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 block|;

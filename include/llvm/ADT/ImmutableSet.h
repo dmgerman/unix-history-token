@@ -107,12 +107,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -377,9 +371,9 @@ condition|)
 block|{
 name|T
 operator|=
-name|right
+name|Right
 expr_stmt|;
-name|right
+name|Right
 operator|=
 name|T
 operator|->
@@ -2667,7 +2661,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-elseif|else
 if|if
 condition|(
 name|hr
@@ -2789,7 +2782,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-else|else
 return|return
 name|createNode
 argument_list|(
@@ -5544,13 +5536,10 @@ name|private
 label|:
 name|Factory
 argument_list|(
-specifier|const
-name|Factory
-operator|&
-name|RHS
+argument|const Factory& RHS
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -5560,8 +5549,8 @@ name|Factory
 operator|&
 name|RHS
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 end_decl_stmt
 

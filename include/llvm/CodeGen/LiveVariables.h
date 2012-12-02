@@ -378,13 +378,6 @@ operator|<
 operator|>
 name|PHIJoins
 expr_stmt|;
-comment|/// ReservedRegisters - This vector keeps track of which registers
-comment|/// are reserved register which are not allocatable by the target machine.
-comment|/// We can not track liveness for values that are in this set.
-comment|///
-name|BitVector
-name|ReservedRegisters
-decl_stmt|;
 name|private
 label|:
 comment|// Intermediate data structures

@@ -638,6 +638,16 @@ decl_stmt|;
 name|bool
 name|Used
 decl_stmt|;
+comment|/// Index original Function's argument.
+name|unsigned
+name|OrigArgIndex
+decl_stmt|;
+comment|/// Offset in bytes of current input value relative to the beginning of
+comment|/// original argument. E.g. if argument was splitted into four 32 bit
+comment|/// registers, we got 4 InputArgs with PartOffsets 0, 4, 8 and 12.
+name|unsigned
+name|PartOffset
+decl_stmt|;
 name|InputArg
 argument_list|()
 operator|:
@@ -660,6 +670,10 @@ argument_list|,
 argument|EVT vt
 argument_list|,
 argument|bool used
+argument_list|,
+argument|unsigned origIdx
+argument_list|,
+argument|unsigned partOffs
 argument_list|)
 operator|:
 name|Flags
@@ -669,7 +683,17 @@ argument_list|)
 operator|,
 name|Used
 argument_list|(
-argument|used
+name|used
+argument_list|)
+operator|,
+name|OrigArgIndex
+argument_list|(
+name|origIdx
+argument_list|)
+operator|,
+name|PartOffset
+argument_list|(
+argument|partOffs
 argument_list|)
 block|{
 name|VT
@@ -698,6 +722,16 @@ comment|/// IsFixed - Is this a "fixed" value, ie not passed through a vararg ".
 name|bool
 name|IsFixed
 decl_stmt|;
+comment|/// Index original Function's argument.
+name|unsigned
+name|OrigArgIndex
+decl_stmt|;
+comment|/// Offset in bytes of current output value relative to the beginning of
+comment|/// original argument. E.g. if argument was splitted into four 32 bit
+comment|/// registers, we got 4 OutputArgs with PartOffsets 0, 4, 8 and 12.
+name|unsigned
+name|PartOffset
+decl_stmt|;
 name|OutputArg
 argument_list|()
 operator|:
@@ -713,6 +747,10 @@ argument_list|,
 argument|EVT vt
 argument_list|,
 argument|bool isfixed
+argument_list|,
+argument|unsigned origIdx
+argument_list|,
+argument|unsigned partOffs
 argument_list|)
 operator|:
 name|Flags
@@ -722,7 +760,17 @@ argument_list|)
 operator|,
 name|IsFixed
 argument_list|(
-argument|isfixed
+name|isfixed
+argument_list|)
+operator|,
+name|OrigArgIndex
+argument_list|(
+name|origIdx
+argument_list|)
+operator|,
+name|PartOffset
+argument_list|(
+argument|partOffs
 argument_list|)
 block|{
 name|VT

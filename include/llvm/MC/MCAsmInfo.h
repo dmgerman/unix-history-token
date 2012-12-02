@@ -134,11 +134,11 @@ block|{
 enum|enum
 name|LCOMMType
 block|{
-name|None
-block|,
 name|NoAlignment
 block|,
 name|ByteAlignment
+block|,
+name|Log2Alignment
 block|}
 enum|;
 block|}
@@ -514,20 +514,20 @@ name|bool
 name|HasAggressiveSymbolFolding
 decl_stmt|;
 comment|// Defaults to true.
-comment|/// LCOMMDirectiveType - Describes if the target supports the .lcomm
-comment|/// directive and whether it has an alignment parameter.
-name|LCOMM
-operator|::
-name|LCOMMType
-name|LCOMMDirectiveType
-expr_stmt|;
-comment|// Defaults to LCOMM::None.
-comment|/// COMMDirectiveAlignmentIsInBytes - True is COMMDirective's optional
+comment|/// COMMDirectiveAlignmentIsInBytes - True is .comm's and .lcomms optional
 comment|/// alignment is to be specified in bytes instead of log2(n).
 name|bool
 name|COMMDirectiveAlignmentIsInBytes
 decl_stmt|;
 comment|// Defaults to true;
+comment|/// LCOMMDirectiveAlignment - Describes if the .lcomm directive for the
+comment|/// target supports an alignment argument and how it is interpreted.
+name|LCOMM
+operator|::
+name|LCOMMType
+name|LCOMMDirectiveAlignmentType
+expr_stmt|;
+comment|// Defaults to NoAlignment.
 comment|/// HasDotTypeDotSizeDirective - True if the target has .type and .size
 comment|/// directives, this is true for most ELF targets.
 name|bool
@@ -1274,15 +1274,24 @@ return|return
 name|HasAggressiveSymbolFolding
 return|;
 block|}
-name|LCOMM
-operator|::
-name|LCOMMType
-name|getLCOMMDirectiveType
+name|bool
+name|getCOMMDirectiveAlignmentIsInBytes
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LCOMMDirectiveType
+name|COMMDirectiveAlignmentIsInBytes
+return|;
+block|}
+name|LCOMM
+operator|::
+name|LCOMMType
+name|getLCOMMDirectiveAlignmentType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LCOMMDirectiveAlignmentType
 return|;
 block|}
 name|bool
@@ -1292,15 +1301,6 @@ specifier|const
 block|{
 return|return
 name|HasDotTypeDotSizeDirective
-return|;
-block|}
-name|bool
-name|getCOMMDirectiveAlignmentIsInBytes
-argument_list|()
-specifier|const
-block|{
-return|return
-name|COMMDirectiveAlignmentIsInBytes
 return|;
 block|}
 name|bool

@@ -96,10 +96,19 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
 name|ReturnInst
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
+name|TerminatorInst
 decl_stmt|;
 comment|/// DeleteDeadBlock - Delete the specified block, which must have no
 comment|/// predecessors.
@@ -140,6 +149,13 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// MergeBlockIntoPredecessor - Attempts to merge a block into its predecessor,
@@ -710,6 +726,43 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|Pred
+parameter_list|)
+function_decl|;
+comment|/// SplitBlockAndInsertIfThen - Split the containing block at the
+comment|/// specified instruction - everything before and including Cmp stays
+comment|/// in the old basic block, and everything after Cmp is moved to a
+comment|/// new block. The two blocks are connected by a conditional branch
+comment|/// (with value of Cmp being the condition).
+comment|/// Before:
+comment|///   Head
+comment|///   Cmp
+comment|///   Tail
+comment|/// After:
+comment|///   Head
+comment|///   Cmp
+comment|///   if (Cmp)
+comment|///     ThenBlock
+comment|///   Tail
+comment|///
+comment|/// If Unreachable is true, then ThenBlock ends with
+comment|/// UnreachableInst, otherwise it branches to Tail.
+comment|/// Returns the NewBasicBlock's terminator.
+name|TerminatorInst
+modifier|*
+name|SplitBlockAndInsertIfThen
+parameter_list|(
+name|Instruction
+modifier|*
+name|Cmp
+parameter_list|,
+name|bool
+name|Unreachable
+parameter_list|,
+name|MDNode
+modifier|*
+name|BranchWeights
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}
