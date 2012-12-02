@@ -114,7 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/VersionTuple.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Specifiers.h"
 end_include
 
 begin_include
@@ -164,9 +176,6 @@ decl_stmt|;
 name|class
 name|SourceManager
 decl_stmt|;
-name|class
-name|TargetOptions
-decl_stmt|;
 name|namespace
 name|Builtin
 block|{
@@ -203,6 +212,14 @@ operator|<
 name|TargetInfo
 operator|>
 block|{
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|TargetOptions
+operator|>
+name|TargetOpts
+block|;
 name|llvm
 operator|::
 name|Triple
@@ -403,8 +420,40 @@ operator|~
 name|TargetInfo
 argument_list|()
 block|;
+comment|/// \brief Retrieve the target options.
+name|TargetOptions
+operator|&
+name|getTargetOpts
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|TargetOpts
+operator|&&
+literal|"Missing target options"
+argument_list|)
+block|;
+return|return
+operator|*
+name|TargetOpts
+return|;
+block|}
+name|void
+name|setTargetOpts
+argument_list|(
+argument|TargetOptions&TargetOpts
+argument_list|)
+block|{
+name|this
+operator|->
+name|TargetOpts
+operator|=
+operator|&
+name|TargetOpts
+block|;   }
 comment|///===---- Target Data Type Query Methods -------------------------------===//
-block|enum
+expr|enum
 name|IntType
 block|{
 name|NoInt
@@ -464,6 +513,11 @@ block|,
 comment|/// __builtin_va_list as defined by the x86-64 ABI:
 comment|/// http://www.x86-64.org/documentation/abi.pdf
 name|X86_64ABIBuiltinVaList
+block|,
+comment|/// __builtin_va_list as defined by ARM AAPCS ABI
+comment|/// http://infocenter.arm.com
+comment|//        /help/topic/com.arm.doc.ihi0042d/IHI0042D_aapcs.pdf
+name|AAPCSABIBuiltinVaList
 block|}
 block|;
 name|protected
@@ -490,6 +544,8 @@ block|,
 name|Int64Type
 block|,
 name|SigAtomicType
+block|,
+name|ProcessIDType
 block|;
 comment|/// \brief Whether Objective-C's built-in boolean type should be signed char.
 comment|///
@@ -636,6 +692,15 @@ specifier|const
 block|{
 return|return
 name|SigAtomicType
+return|;
+block|}
+name|IntType
+name|getProcessIDType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ProcessIDType
 return|;
 block|}
 comment|/// \brief Return the width (in bits) of the specified integer type enum.
@@ -1662,6 +1727,25 @@ argument|ConstraintInfo&info
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|validateConstraintModifier
+argument_list|(
+argument|StringRef
+comment|/*Constraint*/
+argument_list|,
+argument|const char
+comment|/*Modifier*/
+argument_list|,
+argument|unsigned
+comment|/*Size*/
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|bool
 name|resolveSymbolicName
 argument_list|(
@@ -2239,6 +2323,62 @@ block|{
 return|return
 name|BigEndian
 return|;
+block|}
+comment|/// \brief Gets the default calling convention for the given target and
+comment|/// declaration context.
+name|virtual
+name|CallingConv
+name|getDefaultCallingConv
+argument_list|()
+specifier|const
+block|{
+comment|// Not all targets will specify an explicit calling convention that we can
+comment|// express.  This will always do the right thing, even though it's not
+comment|// an explicit calling convention.
+return|return
+name|CC_Default
+return|;
+block|}
+enum|enum
+name|CallingConvCheckResult
+block|{
+name|CCCR_OK
+block|,
+name|CCCR_Warning
+block|}
+enum|;
+comment|/// \brief Determines whether a given calling convention is valid for the
+comment|/// target. A calling convention can either be accepted, produce a warning
+comment|/// and be substituted with the default calling convention, or (someday)
+comment|/// produce an error (such as using thiscall on a non-instance function).
+name|virtual
+name|CallingConvCheckResult
+name|checkCallingConvention
+argument_list|(
+name|CallingConv
+name|CC
+argument_list|)
+decl|const
+block|{
+switch|switch
+condition|(
+name|CC
+condition|)
+block|{
+default|default:
+return|return
+name|CCCR_Warning
+return|;
+case|case
+name|CC_C
+case|:
+case|case
+name|CC_Default
+case|:
+return|return
+name|CCCR_OK
+return|;
+block|}
 block|}
 name|protected
 label|:

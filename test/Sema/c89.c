@@ -605,5 +605,35 @@ begin_comment
 comment|/* expected-error {{'main' must return 'int'}} */
 end_comment
 
+begin_decl_stmt
+name|long
+name|long
+name|ll1
+init|=
+comment|/* expected-warning {{'long long' is an extension when C99 mode is not enabled}} */
+operator|-
+literal|42LL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{'long long' is an extension when C99 mode is not enabled}} */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|long
+name|ull1
+init|=
+comment|/* expected-warning {{'long long' is an extension when C99 mode is not enabled}} */
+literal|42ULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{'long long' is an extension when C99 mode is not enabled}} */
+end_comment
+
 end_unit
 

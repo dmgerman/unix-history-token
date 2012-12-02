@@ -89,6 +89,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|TargetInfo
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// Common components of both fprintf and fscanf format strings.
 name|namespace
@@ -420,11 +423,14 @@ name|cArg
 block|,
 name|dArg
 block|,
+name|DArg
+block|,
+comment|// Apple extension
 name|iArg
 block|,
 name|IntArgBeg
 init|=
-name|cArg
+name|dArg
 block|,
 name|IntArgEnd
 init|=
@@ -432,8 +438,14 @@ name|iArg
 block|,
 name|oArg
 block|,
+name|OArg
+block|,
+comment|// Apple extension
 name|uArg
 block|,
+name|UArg
+block|,
+comment|// Apple extension
 name|xArg
 block|,
 name|XArg
@@ -522,7 +534,7 @@ block|}
 enum|;
 name|ConversionSpecifier
 argument_list|(
-argument|bool isPrintf
+argument|bool isPrintf = true
 argument_list|)
 block|:
 name|IsPrintf
@@ -671,6 +683,21 @@ literal|1
 return|;
 block|}
 name|bool
+name|isIntArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|kind
+operator|>=
+name|IntArgBeg
+operator|&&
+name|kind
+operator|<=
+name|IntArgEnd
+return|;
+block|}
+name|bool
 name|isUIntArg
 argument_list|()
 specifier|const
@@ -679,6 +706,21 @@ return|return
 name|kind
 operator|>=
 name|UIntArgBeg
+operator|&&
+name|kind
+operator|<=
+name|UIntArgEnd
+return|;
+block|}
+name|bool
+name|isAnyIntArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|kind
+operator|>=
+name|IntArgBeg
 operator|&&
 name|kind
 operator|<=
@@ -701,6 +743,16 @@ return|return
 name|IsPrintf
 return|;
 block|}
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|ConversionSpecifier
+operator|>
+name|getStandardSpecifier
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|bool
@@ -1371,11 +1423,26 @@ return|;
 block|}
 name|bool
 name|hasValidLengthModifier
+argument_list|(
+specifier|const
+name|TargetInfo
+operator|&
+name|Target
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|hasStandardLengthModifier
 argument_list|()
 specifier|const
 expr_stmt|;
-name|bool
-name|hasStandardLengthModifier
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|LengthModifier
+operator|>
+name|getCorrectedLengthModifier
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1468,21 +1535,6 @@ operator|&&
 name|kind
 operator|<=
 name|ObjCEnd
-return|;
-block|}
-name|bool
-name|isIntArg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|kind
-operator|>=
-name|IntArgBeg
-operator|&&
-name|kind
-operator|<=
-name|IntArgEnd
 return|;
 block|}
 name|bool
@@ -2367,6 +2419,11 @@ specifier|const
 name|LangOptions
 operator|&
 name|LO
+argument_list|,
+specifier|const
+name|TargetInfo
+operator|&
+name|Target
 argument_list|)
 block|;
 name|bool
@@ -2390,6 +2447,11 @@ specifier|const
 name|LangOptions
 operator|&
 name|LO
+argument_list|,
+specifier|const
+name|TargetInfo
+operator|&
+name|Target
 argument_list|)
 block|;  }
 comment|// end analyze_format_string namespace

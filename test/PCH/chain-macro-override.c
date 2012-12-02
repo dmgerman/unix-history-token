@@ -37,6 +37,13 @@ expr_stmt|;
 name|h
 argument_list|()
 expr_stmt|;
+name|h2
+argument_list|()
+expr_stmt|;
+comment|// expected-warning{{implicit declaration of function 'h2' is invalid in C99}}
+name|h3
+argument_list|()
+expr_stmt|;
 return|return
 name|x
 return|;

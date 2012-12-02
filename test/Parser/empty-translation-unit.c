@@ -29,7 +29,7 @@ comment|// In C we should get this warning, but in C++ we shouldn't.
 end_comment
 
 begin_comment
-comment|// expected-warning{{ISO C requires a translation unit to contain at least one declaration.}}
+comment|// expected-warning{{ISO C requires a translation unit to contain at least one declaration}}
 end_comment
 
 end_unit

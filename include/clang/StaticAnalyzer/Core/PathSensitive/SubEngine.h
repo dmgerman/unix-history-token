@@ -217,6 +217,10 @@ parameter_list|,
 name|NodeBuilderWithSinks
 modifier|&
 name|nodeBuilder
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
 parameter_list|)
 init|=
 literal|0
@@ -297,6 +301,10 @@ parameter_list|(
 name|NodeBuilderContext
 modifier|&
 name|BC
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
 parameter_list|)
 init|=
 literal|0

@@ -52,6 +52,26 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-availability-attr-01.xml
+end_comment
+
+begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-availability-attr-02.xml
+end_comment
+
+begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-deprecated-attr.xml
+end_comment
+
+begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-unavailable-attr.xml
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-class-01.xml
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -fsyntax-only %s 2>&1 | FileCheck %s -strict-whitespace
 end_comment
 
 begin_define
@@ -30,9 +30,9 @@ argument_list|(
 name|M2
 argument_list|)
 expr_stmt|;
-comment|// CHECK: :7:{{[0-9]+}}: warning: expression result unused
-comment|// CHECK: :4:{{[0-9]+}}: note: expanded from macro 'M2'
-comment|// CHECK: :3:{{[0-9]+}}: note: expanded from macro 'M1'
+comment|// CHECK: {{.*}}:7:{{[0-9]+}}: warning: expression result unused
+comment|// CHECK: {{.*}}:4:{{[0-9]+}}: note: expanded from macro 'M2'
+comment|// CHECK: {{.*}}:3:{{[0-9]+}}: note: expanded from macro 'M1'
 block|}
 end_function
 
@@ -64,10 +64,10 @@ parameter_list|()
 block|{
 name|C
 expr_stmt|;
-comment|// CHECK: :17:3: warning: expression result unused
-comment|// CHECK: :15:11: note: expanded from macro 'C'
-comment|// CHECK: :14:11: note: expanded from macro 'B'
-comment|// CHECK: :13:11: note: expanded from macro 'A'
+comment|// CHECK: {{.*}}:17:3: warning: expression result unused
+comment|// CHECK: {{.*}}:15:11: note: expanded from macro 'C'
+comment|// CHECK: {{.*}}:14:11: note: expanded from macro 'B'
+comment|// CHECK: {{.*}}:13:11: note: expanded from macro 'A'
 block|}
 end_function
 
@@ -194,14 +194,14 @@ parameter_list|()
 block|{
 name|macro_args3
 argument_list|(
-literal|1
+literal|11
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:43:15: warning: expression result unused
 comment|// Also check that the 'caret' printing agrees with the location here where
 comment|// its easy to FileCheck.
-comment|// CHECK-NEXT: macro_args3(1);
-comment|// CHECK-NEXT: ~~~~~~~~~~~~^~
+comment|// CHECK-NEXT:      macro_args3(11);
+comment|// CHECK-NEXT: {{^              \^~}}
 comment|// CHECK: {{.*}}:36:36: note: expanded from macro 'macro_args3'
 comment|// CHECK: {{.*}}:35:36: note: expanded from macro 'macro_args2'
 comment|// CHECK: {{.*}}:34:24: note: expanded from macro 'macro_args1'
@@ -238,7 +238,7 @@ literal|1
 argument_list|,
 name|macro_args2
 argument_list|(
-literal|2
+literal|22
 argument_list|)
 argument_list|,
 literal|3
@@ -247,8 +247,8 @@ expr_stmt|;
 comment|// CHECK: {{.*}}:74:17: warning: expression result unused
 comment|// This caret location needs to be printed *inside* a different macro's
 comment|// arguments.
-comment|// CHECK-NEXT: macro_args2(2),
-comment|// CHECK-NEXT: ~~~~~~~~~~~~^~~
+comment|// CHECK-NEXT:        macro_args2(22),
+comment|// CHECK-NEXT: {{^                \^~}}
 comment|// CHECK: {{.*}}:35:36: note: expanded from macro 'macro_args2'
 comment|// CHECK: {{.*}}:34:24: note: expanded from macro 'macro_args1'
 comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
@@ -306,7 +306,7 @@ name|variadic_args3
 argument_list|(
 literal|1
 argument_list|,
-literal|2
+literal|22
 argument_list|,
 literal|3
 argument_list|,
@@ -314,8 +314,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:93:21: warning: expression result unused
-comment|// CHECK-NEXT: variadic_args3(1, 2, 3, 4);
-comment|// CHECK-NEXT: ~~~~~~~~~~~~~~~~~~^~~~~~~~
+comment|// CHECK-NEXT:      variadic_args3(1, 22, 3, 4);
+comment|// CHECK-NEXT: {{^                    \^~}}
 comment|// CHECK: {{.*}}:90:53: note: expanded from macro 'variadic_args3'
 comment|// CHECK: {{.*}}:89:50: note: expanded from macro 'variadic_args2'
 comment|// CHECK: {{.*}}:88:35: note: expanded from macro 'variadic_args1'
@@ -427,6 +427,206 @@ comment|// CHECK: {{.*}}:104:70: note: expanded from macro 'variadic_pasting_arg
 comment|// CHECK: {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|BAD_CONDITIONAL_OPERATOR
+value|(2<3)?2:3
+end_define
+
+begin_decl_stmt
+name|int
+name|test4
+init|=
+name|BAD_CONDITIONAL_OPERATOR
+operator|+
+name|BAD_CONDITIONAL_OPERATOR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK:         {{.*}}:122:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define BAD_CONDITIONAL_OPERATOR (2<3)?2:3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                      \^}}
+end_comment
+
+begin_comment
+comment|// CHECK:         {{.*}}:122:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define BAD_CONDITIONAL_OPERATOR (2<3)?2:3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                      \^}}
+end_comment
+
+begin_comment
+comment|// CHECK:         {{.*}}:122:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define BAD_CONDITIONAL_OPERATOR (2<3)?2:3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                 ~~~~~\^~~~}}
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QMARK
+value|?
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWOL
+value|(2<
+end_define
+
+begin_define
+define|#
+directive|define
+name|X
+value|1+TWOL 3) QMARK 4:5
+end_define
+
+begin_decl_stmt
+name|int
+name|x
+init|=
+name|X
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK:         {{.*}}:137:9: note: place parentheses around the '+' expression to silence this warning
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    int x = X;
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^        \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:136:21: note: expanded from macro 'X'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define X 1+TWOL 3) QMARK 4:5
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^          ~~~~~~~~~ \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:134:15: note: expanded from macro 'QMARK'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define QMARK ?
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^              \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:137:9: note: place parentheses around the '?:' expression to evaluate it first
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    int x = X;
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^        \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:136:21: note: expanded from macro 'X'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define X 1+TWOL 3) QMARK 4:5
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^            ~~~~~~~~\^~~~~~~~~}}
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONEPLUS
+value|1+
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y
+value|ONEPLUS (2<3) QMARK 4:5
+end_define
+
+begin_decl_stmt
+name|int
+name|y
+init|=
+name|Y
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK:         {{.*}}:156:9: warning: operator '?:' has lower precedence than '+'; '+' will be evaluated first
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    int y = Y;
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^        \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:155:25: note: expanded from macro 'Y'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define Y ONEPLUS (2<3) QMARK 4:5
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^          ~~~~~~~~~~~~~ \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:134:15: note: expanded from macro 'QMARK'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define QMARK ?
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^              \^}}
+end_comment
 
 end_unit
 

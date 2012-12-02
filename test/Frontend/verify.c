@@ -76,6 +76,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// eexpected-error {{should also be ignored: unrecognised directive}}
+end_comment
+
 begin_error
 error|#
 directive|error
@@ -501,7 +505,11 @@ comment|// RUN: %clang_cc1 -verify %t.invalid 2>&1 | FileCheck -check-prefix=CHE
 end_comment
 
 begin_comment
-comment|//      CHECK6: error: 'error' diagnostics seen but not expected:
+comment|//      CHECK6: error: no expected directives found: consider use of 'expected-no-diagnostics'
+end_comment
+
+begin_comment
+comment|// CHECK6-NEXT: error: 'error' diagnostics seen but not expected:
 end_comment
 
 begin_comment
@@ -509,7 +517,7 @@ comment|// CHECK6-NEXT:   (frontend): error reading '{{.*}}verify.c.tmp.invalid'
 end_comment
 
 begin_comment
-comment|// CHECK6-NEXT: 1 error generated.
+comment|// CHECK6-NEXT: 2 errors generated.
 end_comment
 
 begin_comment

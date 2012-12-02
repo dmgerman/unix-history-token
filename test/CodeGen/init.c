@@ -473,6 +473,8 @@ comment|// CHECK: call void @llvm.memset
 comment|// CHECK: store i8 97
 comment|// CHECK: store i8 98
 comment|// CHECK: store i8 99
+comment|// CHECK-NOT: getelementptr
+comment|// CHECK: load
 block|}
 end_function
 

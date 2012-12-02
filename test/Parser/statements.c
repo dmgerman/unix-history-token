@@ -231,6 +231,44 @@ comment|// Should not skip '}' and produce a "expected '}'" error.
 name|undecl
 comment|// expected-error {{use of undeclared identifier 'undecl'}}
 block|}
+name|int
+name|test9
+parameter_list|()
+block|{
+name|int
+name|T
+index|[]
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|, }
+decl_stmt|;
+name|int
+name|X
+decl_stmt|;
+name|X
+operator|=
+literal|0
+operator|,
+comment|// expected-error {{expected ';' after expression}}
+block|{     }
+name|X
+operator|=
+literal|0
+operator|,
+comment|// expected-error {{expected ';' after expression}}
+if|if
+condition|(
+literal|0
+condition|)
+empty_stmt|;
+return|return
+literal|4
+operator|,
+comment|// expected-error {{expected ';' after return statement}}
+block|}
 end_function
 
 end_unit

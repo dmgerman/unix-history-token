@@ -180,6 +180,96 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// The sequence push, define/undef, pop caused problems if macro was not
+end_comment
+
+begin_comment
+comment|// previously defined.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|push_macro
+name|(
+literal|"PREVIOUSLY_UNDEFINED1"
+name|)
+end_pragma
+
+begin_undef
+undef|#
+directive|undef
+name|PREVIOUSLY_UNDEFINED1
+end_undef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pop_macro
+name|(
+literal|"PREVIOUSLY_UNDEFINED1"
+name|)
+end_pragma
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREVIOUSLY_UNDEFINED1
+end_ifndef
+
+begin_decl_stmt
+name|int
+name|Q
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|push_macro
+name|(
+literal|"PREVIOUSLY_UNDEFINED2"
+name|)
+end_pragma
+
+begin_define
+define|#
+directive|define
+name|PREVIOUSLY_UNDEFINED2
+end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pop_macro
+name|(
+literal|"PREVIOUSLY_UNDEFINED2"
+name|)
+end_pragma
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREVIOUSLY_UNDEFINED2
+end_ifndef
+
+begin_decl_stmt
+name|int
+name|P
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// CHECK: int pmx0 = 1
 end_comment
 
@@ -205,6 +295,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: int pmy2 = 4
+end_comment
+
+begin_comment
+comment|// CHECK: int Q;
+end_comment
+
+begin_comment
+comment|// CHECK: int P;
 end_comment
 
 end_unit

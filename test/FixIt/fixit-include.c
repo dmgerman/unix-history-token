@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -Wall -pedantic %t
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -27,6 +31,10 @@ end_include
 
 begin_comment
 comment|// expected-error {{'fixit-include.h' file not found with<angled> include; use "quotes" instead}}
+end_comment
+
+begin_comment
+comment|// CHECK: fix-it:{{.*}}:{8:10-8:27}
 end_comment
 
 begin_pragma

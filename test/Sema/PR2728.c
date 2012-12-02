@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -verify -fsyntax-only -std=c99 %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_struct
 struct|struct
 name|s

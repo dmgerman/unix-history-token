@@ -32,7 +32,7 @@ empty|# foo
 end_empty
 
 begin_comment
-comment|// CHECK: error: -fobjc-arc is not supported with legacy abi
+comment|// CHECK: error: -fobjc-arc is not supported on platforms using the legacy runtime
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// CHECK-NOT: invalid preprocessing directive
 end_comment
 
 begin_comment
-comment|// NOTOBJC-NOT: error: -fobjc-arc is not supported with legacy abi
+comment|// NOTOBJC-NOT: error: -fobjc-arc is not supported on platforms using the legacy runtime
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// NOTOBJC: invalid preprocessing directive
 end_comment
 
 begin_comment
-comment|// UNSUPPORTED: error: -fobjc-arc is not supported on current deployment target
+comment|// UNSUPPORTED: error: -fobjc-arc is not supported on versions of OS X prior to 10.6
 end_comment
 
 end_unit

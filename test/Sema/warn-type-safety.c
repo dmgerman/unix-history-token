@@ -677,6 +677,58 @@ comment|// should warn, but may cause false positives
 block|}
 end_function
 
+begin_function
+name|void
+name|test_null_pointer
+parameter_list|()
+block|{
+name|C_func
+argument_list|(
+literal|0
+argument_list|,
+name|C_tag
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|C_func
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|C_tag
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|C_func
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|C_tag
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|C_func
+argument_list|(
+operator|(
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|C_tag
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{argument type 'long *' doesn't match specified 'c' type tag that requires 'int *'}}
+block|}
+end_function
+
 begin_comment
 comment|// Check that we look through typedefs in the special case of allowing 'char'
 end_comment

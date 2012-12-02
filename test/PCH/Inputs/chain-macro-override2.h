@@ -33,5 +33,18 @@ name|x
 decl_stmt|;
 end_decl_stmt
 
+begin_undef
+undef|#
+directive|undef
+name|h2
+end_undef
+
+begin_function_decl
+name|int
+name|h3
+parameter_list|()
+function_decl|;
+end_function_decl
+
 end_unit
 

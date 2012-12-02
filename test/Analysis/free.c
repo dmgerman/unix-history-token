@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-checker=cor
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-checker=core,experimental.unix.MallocWithAnnotations -fblocks -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-checker=core,alpha.unix.MallocWithAnnotations -fblocks -verify %s
 end_comment
 
 begin_function_decl

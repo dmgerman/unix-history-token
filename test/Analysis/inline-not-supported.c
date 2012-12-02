@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -analyze -analyzer-checker=core -analyzer-ipa=inlining -analyzer-store region -verify %s
+comment|// RUN: %clang_cc1 -fblocks -analyze -analyzer-checker=core -verify %s
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ block|}
 end_function
 
 begin_comment
-comment|// For now, don't inline blocks.
+comment|// For now, don't inline global blocks.
 end_comment
 
 begin_function_decl

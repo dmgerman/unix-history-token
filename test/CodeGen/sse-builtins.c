@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<xmmintrin.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<emmintrin.h>
 end_include
 
@@ -14,6 +20,75 @@ include|#
 directive|include
 file|<smmintrin.h>
 end_include
+
+begin_function
+name|__m128
+name|test_rsqrt_ss
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: define {{.*}} @test_rsqrt_ss
+comment|// CHECK: call<4 x float> @llvm.x86.sse.rsqrt.ss
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+return|return
+name|_mm_rsqrt_ss
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_rcp_ss
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: define {{.*}} @test_rcp_ss
+comment|// CHECK: call<4 x float> @llvm.x86.sse.rcp.ss
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+return|return
+name|_mm_rcp_ss
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_sqrt_ss
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: define {{.*}} @test_sqrt_ss
+comment|// CHECK: call<4 x float> @llvm.x86.sse.sqrt.ss
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+return|return
+name|_mm_sqrt_ss
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|__m128

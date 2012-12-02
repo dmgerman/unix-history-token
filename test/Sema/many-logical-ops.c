@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -Wconstant-conversion -verify %s
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// rdar://10913206&10941790
 end_comment
 

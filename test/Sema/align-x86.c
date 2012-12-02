@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// PR3433
 end_comment
 

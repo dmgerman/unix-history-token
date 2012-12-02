@@ -336,14 +336,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_function
 name|int
 name|func1
 parameter_list|(
 name|int
+name|x
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|x
+return|;
+block|}
+end_function
 
 begin_function_decl
 name|int
@@ -388,39 +393,6 @@ name|double
 name|var3
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|Vector
-block|{
-name|public
-operator|:
-name|void
-name|push_back
-argument_list|(
-specifier|const
-name|T
-operator|&
-argument_list|)
-block|; }
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int

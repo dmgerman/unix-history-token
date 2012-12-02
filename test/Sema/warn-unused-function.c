@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wunused-function -Wunneeded-internal-declaration -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -Wused-but-marked-unused -Wunused-function -Wunneeded-internal-declaration -verify %s
 end_comment
 
 begin_comment
@@ -421,6 +421,66 @@ operator|(
 name|void
 operator|)
 name|a
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://12233989
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|a
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unused
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|b
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unused
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|b
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|a
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|b
+argument_list|()
 expr_stmt|;
 block|}
 end_function

@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -include-pch %t -verify -fsyntax-only
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

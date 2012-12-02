@@ -20,6 +20,10 @@ comment|// RUN: %clang_cc1 %s -include-pch %t -verify -fsyntax-only -Wno-sign-co
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// This tests that diagnostic mappings from PCH are propagated for #pragma
 end_comment
 

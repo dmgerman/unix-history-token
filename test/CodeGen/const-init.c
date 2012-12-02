@@ -968,5 +968,68 @@ decl_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// PR13643
+end_comment
+
+begin_function
+name|void
+name|g29
+parameter_list|()
+block|{
+typedef|typedef
+name|char
+name|DCC_PASSWD
+index|[
+literal|2
+index|]
+typedef|;
+typedef|typedef
+struct|struct
+block|{
+name|DCC_PASSWD
+name|passwd
+decl_stmt|;
+block|}
+name|DCC_SRVR_NM
+typedef|;
+comment|// CHECK: @g29.a = internal global %struct.DCC_SRVR_NM { [2 x i8] c"@\00" }, align 1
+comment|// CHECK: @g29.b = internal global [1 x i32] [i32 ptrtoint ([5 x i8]* @.str to i32)], align 4
+comment|// CHECK: @g29.c = internal global [1 x i32] [i32 97], align 4
+specifier|static
+name|DCC_SRVR_NM
+name|a
+init|=
+block|{
+block|{
+literal|"@"
+block|}
+block|}
+decl_stmt|;
+specifier|static
+name|int
+name|b
+index|[
+literal|1
+index|]
+init|=
+block|{
+literal|"asdf"
+block|}
+decl_stmt|;
+specifier|static
+name|int
+name|c
+index|[
+literal|1
+index|]
+init|=
+block|{
+literal|L"a"
+block|}
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

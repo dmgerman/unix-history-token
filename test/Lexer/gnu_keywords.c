@@ -15,6 +15,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -std=gnu89 -fno-gnu-keywords -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_function
 name|void
 name|f

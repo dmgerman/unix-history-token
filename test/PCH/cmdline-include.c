@@ -15,6 +15,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -include-pch %t -include %S/cmdline-include2.h -fsyntax-only -verify
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_decl_stmt
 name|int
 name|g

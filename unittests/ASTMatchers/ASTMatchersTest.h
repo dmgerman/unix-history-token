@@ -80,7 +80,7 @@ name|clang
 operator|::
 name|tooling
 operator|::
-name|runToolOnCode
+name|runToolOnCodeWithArgs
 expr_stmt|;
 name|using
 name|clang
@@ -111,6 +111,22 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|bool
+name|run
+parameter_list|(
+specifier|const
+name|BoundNodes
+modifier|*
+name|BoundNodes
+parameter_list|,
+name|ASTContext
+modifier|*
+name|Context
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 block|}
 empty_stmt|;
 comment|// If 'FindResultVerifier' is not NULL, sets *Verified to the result of
@@ -163,7 +179,7 @@ condition|)
 block|{
 operator|*
 name|Verified
-operator|=
+operator||=
 name|FindResultReviewer
 operator|->
 name|run
@@ -172,6 +188,10 @@ operator|&
 name|Result
 operator|.
 name|Nodes
+argument_list|,
+name|Result
+operator|.
+name|Context
 argument_list|)
 expr_stmt|;
 block|}
@@ -212,6 +232,8 @@ argument_list|,
 argument|const T&AMatcher
 argument_list|,
 argument|bool ExpectMatch
+argument_list|,
+argument|llvm::StringRef CompileArg
 argument_list|)
 block|{
 name|bool
@@ -246,10 +268,26 @@ name|Finder
 argument_list|)
 argument_list|)
 block|;
+comment|// Some tests use typeof, which is a gnu extension.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Args
+argument_list|(
+literal|1
+argument_list|,
+name|CompileArg
+argument_list|)
+block|;
 if|if
 condition|(
 operator|!
-name|runToolOnCode
+name|runToolOnCodeWithArgs
 argument_list|(
 name|Factory
 operator|->
@@ -257,6 +295,8 @@ name|create
 argument_list|()
 argument_list|,
 name|Code
+argument_list|,
+name|Args
 argument_list|)
 condition|)
 block|{
@@ -346,6 +386,8 @@ argument_list|,
 name|AMatcher
 argument_list|,
 name|true
+argument_list|,
+literal|"-std=c++11"
 argument_list|)
 return|;
 block|}
@@ -372,6 +414,8 @@ argument_list|,
 name|AMatcher
 argument_list|,
 name|false
+argument_list|,
+literal|"-std=c++11"
 argument_list|)
 return|;
 block|}
@@ -435,10 +479,26 @@ name|Finder
 argument_list|)
 argument_list|)
 block|;
+comment|// Some tests use typeof, which is a gnu extension.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Args
+argument_list|(
+literal|1
+argument_list|,
+literal|"-std=gnu++98"
+argument_list|)
+block|;
 if|if
 condition|(
 operator|!
-name|runToolOnCode
+name|runToolOnCodeWithArgs
 argument_list|(
 name|Factory
 operator|->
@@ -446,6 +506,8 @@ name|create
 argument_list|()
 argument_list|,
 name|Code
+argument_list|,
+name|Args
 argument_list|)
 condition|)
 block|{

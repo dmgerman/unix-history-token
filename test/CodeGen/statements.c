@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -Wno-error=return-type %s -emit-llvm-only
 end_comment
 
+begin_comment
+comment|// REQUIRES: LP64
+end_comment
+
 begin_function
 name|void
 name|test1

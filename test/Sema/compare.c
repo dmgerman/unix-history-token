@@ -911,6 +911,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'unsigned short' is always false}}
 operator|(
 name|C
 operator|==
@@ -921,6 +922,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'unsigned char' is always false}}
 operator|(
 operator|(
 name|long
@@ -1041,6 +1043,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'unsigned short' is always false}}
 operator|(
 name|C
 operator|<
@@ -1051,6 +1054,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'unsigned char' is always false}}
 operator|(
 operator|(
 name|long
@@ -1209,6 +1213,7 @@ operator|==
 name|C
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'short' is always false}}
 operator|(
 operator|(
 name|signed
@@ -1219,6 +1224,7 @@ operator|==
 name|C
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'signed char' is always false}}
 operator|(
 operator|(
 name|long
@@ -1340,6 +1346,7 @@ operator|<
 name|C
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'short' is always true}}
 operator|(
 operator|(
 name|signed
@@ -1350,6 +1357,7 @@ operator|<
 name|C
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 65536 with expression of type 'signed char' is always true}}
 operator|(
 operator|(
 name|long
@@ -1436,6 +1444,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'unsigned short' is always false}}
 operator|(
 literal|0x80000
 operator|==
@@ -1446,6 +1455,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'unsigned char' is always false}}
 operator|(
 operator|(
 name|long
@@ -1566,6 +1576,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'unsigned short' is always false}}
 operator|(
 literal|0x80000
 operator|<
@@ -1576,6 +1587,7 @@ operator|)
 name|b
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'unsigned char' is always false}}
 operator|(
 operator|(
 name|long
@@ -1734,6 +1746,7 @@ operator|==
 literal|0x80000
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'short' is always false}}
 operator|(
 operator|(
 name|signed
@@ -1744,6 +1757,7 @@ operator|==
 literal|0x80000
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'signed char' is always false}}
 operator|(
 operator|(
 name|long
@@ -1865,6 +1879,7 @@ operator|<
 literal|0x80000
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'short' is always true}}
 operator|(
 operator|(
 name|signed
@@ -1875,6 +1890,7 @@ operator|<
 literal|0x80000
 operator|)
 operator|+
+comment|// expected-warning {{comparison of constant 524288 with expression of type 'signed char' is always true}}
 operator|(
 operator|(
 name|long

@@ -45,7 +45,7 @@ operator|)
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{C99 forbids casts to union type}}
+comment|// expected-warning {{cast to union type is a GNU extension}}
 name|f
 argument_list|(
 operator|(
@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{C99 forbids casts to union type}}
+comment|// expected-warning {{cast to union type is a GNU extension}}
 end_comment
 
 begin_decl_stmt
@@ -137,7 +137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{initializer element is not a compile-time constant}}  expected-warning {{C99 forbids casts to union type}}
+comment|// expected-error{{initializer element is not a compile-time constant}}  expected-warning {{cast to union type is a GNU extension}}
 end_comment
 
 begin_struct

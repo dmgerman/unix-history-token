@@ -138,6 +138,31 @@ name|t2
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+block|{
+name|A
+init|=
+literal|0
+block|,
+name|B
+block|,
+name|C
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|ms_struct
+operator|)
+argument_list|)
+name|e1
+enum|;
+end_enum
+
+begin_comment
+comment|// expected-warning {{'ms_struct' attribute ignored}}
+end_comment
+
 begin_comment
 comment|// rdar://10513599
 end_comment

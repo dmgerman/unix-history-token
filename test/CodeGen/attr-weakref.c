@@ -333,6 +333,46 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK: declare extern_weak void @test8_f()
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|test8_g
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(weakref
+parameter_list|(
+function_decl|"test8_f"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|test8_h
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|test8_g
+condition|)
+name|test8_g
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// CHECK: declare extern_weak void @test7_f()
 end_comment
 

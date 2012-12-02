@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -target-abi aapcs -triple armv7-apple-darwin10 %s -verify
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -64,7 +64,7 @@ argument_list|)
 expr_stmt|;
 comment|// expected-warning {{& has lower precedence than ==}} \
 comment|// expected-note{{place parentheses around the& expression to evaluate it first}} \
-comment|// expected-note{{place parentheses around the == expression to silence this warning}}
+comment|// expected-note{{place parentheses around the '==' expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -78,7 +78,7 @@ argument_list|)
 expr_stmt|;
 comment|// expected-warning {{& has lower precedence than ==}} \
 comment|// expected-note{{place parentheses around the& expression to evaluate it first}} \
-comment|// expected-note{{place parentheses around the == expression to silence this warning}}
+comment|// expected-note{{place parentheses around the '==' expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -92,7 +92,7 @@ argument_list|)
 expr_stmt|;
 comment|// expected-warning {{& has lower precedence than<}} \
 comment|// expected-note{{place parentheses around the& expression to evaluate it first}} \
-comment|// expected-note{{place parentheses around the< expression to silence this warning}}
+comment|// expected-note{{place parentheses around the '<' expression to silence this warning}}
 call|(
 name|void
 call|)

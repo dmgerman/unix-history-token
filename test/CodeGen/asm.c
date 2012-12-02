@@ -677,5 +677,24 @@ comment|// CHECK: ret void
 block|}
 end_function
 
+begin_comment
+comment|// Check handling of '*' and '#' constraint modifiers.
+end_comment
+
+begin_function
+name|void
+name|t28
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|asm
+specifier|volatile
+asm|("/* %0 */" : : "i#*X,*r" (1));
+comment|// CHECK: @t28
+comment|// CHECK: call void asm sideeffect "/* $0 */", "i|r,~{dirflag},~{fpsr},~{flags}"(i32 1)
+block|}
+end_function
+
 end_unit
 

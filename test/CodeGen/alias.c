@@ -1,22 +1,60 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm -o - %s | FileCheck -check-prefix=CHECKBASIC %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g0 = common global i32 0' %t
+comment|// RUN: %clang_cc1 -triple armv7a-eabi -mfloat-abi hard -emit-llvm -o - %s | FileCheck -check-prefix=CHECKCC %s
 end_comment
 
-begin_comment
-comment|// RUN: grep '@f1 = alias void ()\* @f0' %t
-end_comment
+begin_decl_stmt
+name|int
+name|g0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g1 = alias i32\* @g0' %t
+comment|// CHECKBASIC: @g0 = common global i32 0
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|bar1
+init|=
+literal|42
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|// RUN: grep 'define void @f0() nounwind {' %t
+comment|// CHECKBASIC: @bar1 = internal global i32 42
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|g1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|g1
+name|__attribute
+argument_list|(
+operator|(
+name|alias
+argument_list|(
+literal|"g0"
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECKBASIC: @g1 = alias i32* @g0
 end_comment
 
 begin_function
@@ -57,34 +95,13 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
-begin_decl_stmt
-name|int
-name|g0
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|// CHECKBASIC: @f1 = alias void ()* @f0
+end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|g1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|g1
-name|__attribute
-argument_list|(
-operator|(
-name|alias
-argument_list|(
-literal|"g0"
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|// CHECKBASIC: define void @f0() nounwind {
+end_comment
 
 begin_comment
 comment|// Make sure that aliases cause referenced values to be emitted.
@@ -92,10 +109,6 @@ end_comment
 
 begin_comment
 comment|// PR3200
-end_comment
-
-begin_comment
-comment|// RUN: grep 'define internal i32 @foo1()' %t
 end_comment
 
 begin_function
@@ -110,6 +123,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECKBASIC: define internal i32 @foo1()
+end_comment
 
 begin_function_decl
 name|int
@@ -126,19 +143,6 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|// RUN: grep '@bar1 = internal global i32 42' %t
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bar1
-init|=
-literal|42
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -198,6 +202,138 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_function
+specifier|static
+name|int
+name|inner
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|inner_weak
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_extern
+extern|extern __typeof(inner
+end_extern
+
+begin_decl_stmt
+unit|)
+name|inner_a
+name|__attribute__
+argument_list|(
+operator|(
+name|alias
+argument_list|(
+literal|"inner"
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|__typeof
+argument_list|(
+argument|inner_weak
+argument_list|)
+name|inner_weak_a
+name|__attribute__
+argument_list|(
+operator|(
+name|weakref
+operator|,
+name|alias
+argument_list|(
+literal|"inner_weak"
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// CHECKCC: @inner_a = alias i32 (i32)* @inner
+end_comment
+
+begin_comment
+comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner(i32 %a) nounwind {
+end_comment
+
+begin_function
+name|int
+name|outer
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+return|return
+name|inner
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECKCC: define arm_aapcs_vfpcc i32 @outer(i32 %a) nounwind {
+end_comment
+
+begin_comment
+comment|// CHECKCC: call arm_aapcs_vfpcc  i32 @inner(i32 %{{.*}})
+end_comment
+
+begin_function
+name|int
+name|outer_weak
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+return|return
+name|inner_weak_a
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECKCC: define arm_aapcs_vfpcc i32 @outer_weak(i32 %a) nounwind {
+end_comment
+
+begin_comment
+comment|// CHECKCC: call arm_aapcs_vfpcc  i32 @inner_weak(i32 %{{.*}})
+end_comment
+
+begin_comment
+comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner_weak(i32 %a) nounwind {
+end_comment
 
 end_unit
 

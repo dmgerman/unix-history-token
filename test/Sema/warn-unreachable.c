@@ -471,5 +471,71 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// Test case for<rdar://problem/11005770>.  We should treat code guarded
+end_comment
+
+begin_comment
+comment|// by 'x& 0' and 'x * 0' as unreachable.
+end_comment
+
+begin_function_decl
+name|void
+name|calledFun
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test_mul_and_zero
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+if|if
+condition|(
+name|x
+operator|&
+literal|0
+condition|)
+name|calledFun
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{will never be executed}}
+if|if
+condition|(
+literal|0
+operator|&
+name|x
+condition|)
+name|calledFun
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{will never be executed}}
+if|if
+condition|(
+name|x
+operator|*
+literal|0
+condition|)
+name|calledFun
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{will never be executed}}
+if|if
+condition|(
+literal|0
+operator|*
+name|x
+condition|)
+name|calledFun
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{will never be executed}}
+block|}
+end_function
+
 end_unit
 

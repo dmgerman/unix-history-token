@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -verify -Wsign-compare -Werror -w %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_function
 name|int
 name|f0

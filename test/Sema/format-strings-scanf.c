@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i386-apple-darwin9 -Wformat-nonliteral %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wformat-nonliteral %s
 end_comment
 
 begin_comment
@@ -790,7 +790,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{format specifies type 'wchar_t **' (aka 'int **') but the argument has type 'float *'}}
+comment|// expected-warning-re{{format specifies type 'wchar_t \*\*' \(aka '[^']+'\) but the argument has type 'float \*'}}
 name|scanf
 argument_list|(
 literal|"%mc"
@@ -806,7 +806,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{format specifies type 'wchar_t **' (aka 'int **') but the argument has type 'float *'}}
+comment|// expected-warning-re{{format specifies type 'wchar_t \*\*' \(aka '[^']+'\) but the argument has type 'float \*'}}
 name|scanf
 argument_list|(
 literal|"%m[abc]"
@@ -815,81 +815,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{format specifies type 'char **' but the argument has type 'float *'}}
-block|}
-end_function
-
-begin_function
-name|void
-name|test_longlong
-parameter_list|(
-name|long
-name|long
-modifier|*
-name|x
-parameter_list|,
-name|unsigned
-name|long
-name|long
-modifier|*
-name|y
-parameter_list|)
-block|{
-name|scanf
-argument_list|(
-literal|"%Ld"
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|scanf
-argument_list|(
-literal|"%Lu"
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|scanf
-argument_list|(
-literal|"%Lx"
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|scanf
-argument_list|(
-literal|"%Ld"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|scanf
-argument_list|(
-literal|"%Lu"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|scanf
-argument_list|(
-literal|"%Lx"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|scanf
-argument_list|(
-literal|"%Ls"
-argument_list|,
-literal|"hello"
-argument_list|)
-expr_stmt|;
-comment|// expected-warning {{length modifier 'L' results in undefined behavior or no effect with 's' conversion specifier}}
 block|}
 end_function
 

@@ -16,8 +16,23 @@ comment|// RUN: %clang_cc1 -emit-pch -fblocks -o %t %S/exprs.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -include-pch %t -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fblocks -include-pch %t -fsyntax-only -verify %s -DWITH_PCH
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_PCH
+end_ifdef
+
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|__SIZE_TYPE__

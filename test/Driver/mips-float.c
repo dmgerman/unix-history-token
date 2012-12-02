@@ -20,7 +20,7 @@ comment|// Default
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-clang-archs mips -c %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// -mhard-float
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-clang-archs mips -c %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// -msoft-float
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-clang-archs mips -c %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// -mfloat-abi=hard
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-clang-archs mips -c %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ comment|// -mfloat-abi=soft
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-clang-archs mips -c %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ comment|// -mfloat-abi=single
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-clang-archs mips -c %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment

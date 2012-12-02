@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,osx.coreFoundation.CFNumber,osx.cocoa.RetainCount -analyzer-store=region -analyzer-constraints=basic -verify -triple x86_64-apple-darwin9 %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,osx.coreFoundation.CFNumber,osx.cocoa.RetainCount -analyzer-store=region -analyzer-constraints=range -verify -triple x86_64-apple-darwin9 %s
 end_comment
 

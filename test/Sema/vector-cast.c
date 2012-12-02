@@ -55,7 +55,7 @@ name|t2
 operator|)
 name|v1
 expr_stmt|;
-comment|// -expected-error {{invalid conversion between vector type \
+comment|// expected-error {{invalid conversion between vector type \
 literal|'t2'
 name|and
 literal|'t1'
@@ -76,7 +76,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// -expected-error {{invalid conversion between vector type \
+comment|// expected-error {{invalid conversion between vector type \
 end_comment
 
 begin_expr_stmt
@@ -114,7 +114,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// -expected-error {{invalid conversion between vector \
+comment|// expected-error {{invalid conversion between vector \
 end_comment
 
 begin_expr_stmt
@@ -155,7 +155,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// -expected-error {{invalid conversion between vector \
+comment|// expected-error {{invalid conversion between vector \
 end_comment
 
 begin_expr_stmt
@@ -196,7 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-error {{invalid conversion between vector \
+comment|// expected-error {{invalid conversion between vector \
 end_comment
 
 begin_expr_stmt
@@ -226,7 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-error {{invalid conversion between vector\
+comment|// expected-error {{invalid conversion between vector\
 end_comment
 
 begin_expr_stmt

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple i686-apple-darwin9 %s -fsyntax-only -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// Stack: [], Alignment: 8
 end_comment
 

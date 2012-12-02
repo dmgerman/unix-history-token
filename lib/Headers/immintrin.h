@@ -361,6 +361,23 @@ begin_comment
 comment|/* __RDRND__ */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__RTM__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<rtmintrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

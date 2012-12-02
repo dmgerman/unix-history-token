@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only %s -verify -pedantic
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// Math stuff
 end_comment
 
@@ -95,6 +99,60 @@ end_comment
 begin_comment
 comment|//int h2 = __builtin_expect(0, 0);
 end_comment
+
+begin_decl_stmt
+name|int
+name|h3
+init|=
+name|__builtin_bswap16
+argument_list|(
+literal|0x1234
+argument_list|)
+operator|==
+literal|0x3412
+condition|?
+literal|1
+else|:
+name|f
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|h4
+init|=
+name|__builtin_bswap32
+argument_list|(
+literal|0x1234
+argument_list|)
+operator|==
+literal|0x34120000
+condition|?
+literal|1
+else|:
+name|f
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|h5
+init|=
+name|__builtin_bswap64
+argument_list|(
+literal|0x1234
+argument_list|)
+operator|==
+literal|0x3412000000000000
+condition|?
+literal|1
+else|:
+name|f
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|short

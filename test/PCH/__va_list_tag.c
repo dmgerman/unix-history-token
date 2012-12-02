@@ -27,6 +27,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple=x86_64-unknown-freebsd7.0 -include-pch %t %s -verify
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_function
 name|int
 name|myvprintf

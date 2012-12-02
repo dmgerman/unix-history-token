@@ -55,6 +55,12 @@ directive|include
 file|"clang/Frontend/CompilerInvocation.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -137,7 +143,7 @@ name|DiagClient
 parameter_list|)
 function_decl|;
 comment|/// \brief Applies automatic modifications and produces temporary files
-comment|/// and metadata into the \arg outputDir path.
+comment|/// and metadata into the \p outputDir path.
 comment|///
 comment|/// \param emitPremigrationARCErrors if true all ARC errors will get emitted
 comment|/// even if the migrator can fix them, but the function will still return false
@@ -173,7 +179,7 @@ name|StringRef
 name|plistOut
 parameter_list|)
 function_decl|;
-comment|/// \brief Get the set of file remappings from the \arg outputDir path that
+comment|/// \brief Get the set of file remappings from the \p outputDir path that
 comment|/// migrateWithTemporaryFiles produced.
 comment|///
 comment|/// \returns false if no error is produced, true otherwise.

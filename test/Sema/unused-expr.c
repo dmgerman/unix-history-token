@@ -657,5 +657,69 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// OpenSSL has some macros like this; we shouldn't warn on the cast.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M1
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(long)foo((a), (b))
+end_define
+
+begin_comment
+comment|// But, we should still warn on other subexpressions of casts in macros.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M2
+value|(long)0;
+end_define
+
+begin_function
+name|void
+name|t11
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|int
+name|j
+parameter_list|)
+block|{
+name|M1
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|M2
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+block|}
+end_function
+
+begin_undef
+undef|#
+directive|undef
+name|M1
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|M2
+end_undef
+
 end_unit
 

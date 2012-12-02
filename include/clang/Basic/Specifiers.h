@@ -146,6 +146,9 @@ block|,
 name|TST_class
 block|,
 comment|// C++ class type
+name|TST_interface
+block|,
+comment|// C++ (Microsoft-specific) __interface type
 name|TST_typename
 block|,
 comment|// Typedef, C++ class-name or enum name, etc.
@@ -351,6 +354,37 @@ block|,
 comment|///< Copy initialization.
 name|ICIS_ListInit
 comment|///< Direct list-initialization.
+block|}
+enum|;
+comment|/// \brief CallingConv - Specifies the calling convention that a function uses.
+enum|enum
+name|CallingConv
+block|{
+name|CC_Default
+block|,
+name|CC_C
+block|,
+comment|// __attribute__((cdecl))
+name|CC_X86StdCall
+block|,
+comment|// __attribute__((stdcall))
+name|CC_X86FastCall
+block|,
+comment|// __attribute__((fastcall))
+name|CC_X86ThisCall
+block|,
+comment|// __attribute__((thiscall))
+name|CC_X86Pascal
+block|,
+comment|// __attribute__((pascal))
+name|CC_AAPCS
+block|,
+comment|// __attribute__((pcs("aapcs")))
+name|CC_AAPCS_VFP
+block|,
+comment|// __attribute__((pcs("aapcs-vfp")))
+name|CC_PnaclCall
+comment|// __attribute__((pnaclcall))
 block|}
 enum|;
 block|}

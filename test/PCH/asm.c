@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -include-pch %t -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_function
 name|void
 name|call_f

@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 %s -fsyntax-only -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// rdar://problem/7095436
 end_comment
 

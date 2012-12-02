@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1< %s -E -verify -triple i686-pc-linux-gnu
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_if
 if|#
 directive|if

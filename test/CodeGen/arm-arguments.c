@@ -1057,5 +1057,251 @@ begin_comment
 comment|// AAPCS: define arm_aapcscc void @f33(%struct.s33* byval %s)
 end_comment
 
+begin_comment
+comment|// PR14048
+end_comment
+
+begin_struct
+struct|struct
+name|s34
+block|{
+name|char
+name|c
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|f34
+parameter_list|(
+name|struct
+name|s34
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|g34
+parameter_list|(
+name|struct
+name|s34
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|f34
+argument_list|(
+operator|*
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// APCS-GNU: @g34(%struct.s34* %s)
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %[[a:.*]] = alloca { [1 x i32] }
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %[[gep:.*]] = getelementptr { [1 x i32] }* %[[a]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// APCS-GNU: load [1 x i32]* %[[gep]]
+end_comment
+
+begin_comment
+comment|// AAPCS: @g34(%struct.s34* %s)
+end_comment
+
+begin_comment
+comment|// AAPCS: %[[a:.*]] = alloca { [1 x i32] }
+end_comment
+
+begin_comment
+comment|// AAPCS: %[[gep:.*]] = getelementptr { [1 x i32] }* %[[a]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// AAPCS: load [1 x i32]* %[[gep]]
+end_comment
+
+begin_comment
+comment|// rdar://12596507
+end_comment
+
+begin_struct
+struct|struct
+name|s35
+block|{
+name|float
+name|v
+index|[
+literal|18
+index|]
+decl_stmt|;
+comment|//make sure byval is on.
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|16
+argument_list|)
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|s35
+name|s35_with_align
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(neon_vector_type(
+literal|4
+argument|))
+argument_list|)
+name|float
+name|float32x4_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+specifier|static
+name|__attribute__
+argument_list|(
+argument|(__always_inline__, __nodebug__)
+argument_list|)
+name|float32x4_t
+name|vaddq_f32
+argument_list|(
+argument|float32x4_t __a
+argument_list|,
+argument|float32x4_t __b
+argument_list|)
+block|{
+return|return
+name|__a
+operator|+
+name|__b
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|float32x4_t
+name|f35
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|s35_with_align
+name|s1
+parameter_list|,
+name|s35_with_align
+name|s2
+parameter_list|)
+block|{
+name|float32x4_t
+name|v
+init|=
+name|vaddq_f32
+argument_list|(
+operator|*
+operator|(
+name|float32x4_t
+operator|*
+operator|)
+operator|&
+name|s1
+argument_list|,
+operator|*
+operator|(
+name|float32x4_t
+operator|*
+operator|)
+operator|&
+name|s2
+argument_list|)
+decl_stmt|;
+return|return
+name|v
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// APCS-GNU: define<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %[[a:.*]] = alloca %struct.s35, align 16
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %[[b:.*]] = bitcast %struct.s35* %[[a]] to i8*
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %[[c:.*]] = bitcast %struct.s35* %0 to i8*
+end_comment
+
+begin_comment
+comment|// APCS-GNU: call void @llvm.memcpy.p0i8.p0i8.i32(i8* %[[b]], i8* %[[c]]
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %[[d:.*]] = bitcast %struct.s35* %[[a]] to<4 x float>*
+end_comment
+
+begin_comment
+comment|// APCS-GNU: load<4 x float>* %[[d]], align 16
+end_comment
+
+begin_comment
+comment|// AAPCS: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
+end_comment
+
+begin_comment
+comment|// AAPCS: %[[a:.*]] = alloca %struct.s35, align 16
+end_comment
+
+begin_comment
+comment|// AAPCS: %[[b:.*]] = bitcast %struct.s35* %[[a]] to i8*
+end_comment
+
+begin_comment
+comment|// AAPCS: %[[c:.*]] = bitcast %struct.s35* %0 to i8*
+end_comment
+
+begin_comment
+comment|// AAPCS: call void @llvm.memcpy.p0i8.p0i8.i32(i8* %[[b]], i8* %[[c]]
+end_comment
+
+begin_comment
+comment|// AAPCS: %[[d:.*]] = bitcast %struct.s35* %[[a]] to<4 x float>*
+end_comment
+
+begin_comment
+comment|// AAPCS: load<4 x float>* %[[d]], align 16
+end_comment
+
 end_unit
 

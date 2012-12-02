@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_decl_stmt
 name|int
 name|i

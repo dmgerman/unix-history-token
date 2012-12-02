@@ -26,6 +26,12 @@ name|nil
 value|0
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|FOO
+end_undef
+
 begin_function
 name|void
 name|f
@@ -132,7 +138,11 @@ block|{    }
 end_function
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:7:1 %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// RUN: c-index-test -code-completion-at=%s:7:1 %s | FileCheck -check-prefix=CHECK-CC0 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC0-NOT: FOO
 end_comment
 
 begin_comment

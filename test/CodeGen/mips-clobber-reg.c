@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target mipsel-unknown-linux -ccc-clang-archs mipsel -S -o - -emit-llvm %s
+comment|// RUN: %clang -target mipsel-unknown-linux -S -o - -emit-llvm %s
 end_comment
 
 begin_comment

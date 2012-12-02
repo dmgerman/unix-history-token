@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1  -analyze -analyzer-checker=experimental.security.taint,core,experimental.security.ArrayBoundV2 -Wno-format-security -verify %s
+comment|// RUN: %clang_cc1  -analyze -analyzer-checker=alpha.security.taint,core,alpha.security.ArrayBoundV2 -Wno-format-security -verify %s
 end_comment
 
 begin_function_decl

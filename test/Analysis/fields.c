@@ -1,7 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.core %s -analyzer-store=region -verify
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core,debug.ExprInspection %s -analyzer-store=region -verify
 end_comment
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|unsigned
@@ -132,6 +141,50 @@ argument_list|)
 operator|.
 name|x
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|testLazyCompoundVal
+parameter_list|()
+block|{
+name|Point
+name|p
+init|=
+block|{
+literal|42
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|Point
+name|q
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|q
+operator|=
+name|p
+operator|)
+operator|.
+name|x
+operator|==
+literal|42
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|q
+operator|.
+name|x
+operator|==
+literal|42
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 

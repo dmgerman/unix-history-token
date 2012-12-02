@@ -68,7 +68,7 @@ name|a
 argument_list|)
 index|]
 decl_stmt|;
-comment|// expected-error{{variable length array declaration can not have 'static' storage duration}}
+comment|// expected-error{{builtin functions must be directly called}}
 name|int
 name|result
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- IndexingContext.h - Higher level API functions ------------------------===//
+comment|//===- IndexingContext.h - Higher level API functions -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -349,21 +349,11 @@ name|lexicalContainer
 operator|=
 literal|0
 block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DeclInfo *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
 block|}
-expr|}
-block|;  struct
+decl_stmt|;
+name|struct
 name|ObjCContainerDeclInfo
-operator|:
+range|:
 name|public
 name|DeclInfo
 block|{
@@ -449,17 +439,6 @@ operator|->
 name|Kind
 operator|<=
 name|Info_ObjCCategory
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCContainerDeclInfo *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|private
@@ -552,17 +531,6 @@ operator|==
 name|Info_ObjCInterface
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCInterfaceDeclInfo *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;  struct
 name|ObjCProtocolDeclInfo
@@ -608,17 +576,6 @@ operator|->
 name|Kind
 operator|==
 name|Info_ObjCProtocol
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCProtocolDeclInfo *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -669,17 +626,6 @@ operator|==
 name|Info_ObjCCategory
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCCategoryDeclInfo *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;  struct
 name|ObjCPropertyDeclInfo
@@ -720,17 +666,6 @@ operator|->
 name|Kind
 operator|==
 name|Info_ObjCProperty
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCPropertyDeclInfo *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -776,17 +711,6 @@ operator|==
 name|Info_CXXClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXClassDeclInfo *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;  struct
 name|AttrInfo
@@ -828,18 +752,7 @@ name|A
 operator|=
 name|A
 block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AttrInfo *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
 block|}
-expr|}
 block|;  struct
 name|IBOutletCollectionInfo
 operator|:
@@ -910,17 +823,6 @@ operator|==
 name|CXIdxAttr_IBOutletCollection
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const IBOutletCollectionInfo *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -959,12 +861,10 @@ name|ref_cnt
 block|;
 name|AttrListInfo
 argument_list|(
-specifier|const
-name|AttrListInfo
-operator|&
+argument|const AttrListInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -973,8 +873,8 @@ specifier|const
 name|AttrListInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 name|AttrListInfo
@@ -1490,6 +1390,16 @@ operator|&
 name|CXIndexOpt_IndexImplicitTemplateInstantiations
 return|;
 block|}
+specifier|static
+name|bool
+name|isFunctionLocalDecl
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+block|;
 name|bool
 name|shouldAbort
 argument_list|()
@@ -1526,6 +1436,26 @@ argument_list|,
 argument|bool isImport
 argument_list|,
 argument|bool isAngled
+argument_list|,
+argument|bool isModuleImport
+argument_list|)
+block|;
+name|void
+name|importedModule
+argument_list|(
+specifier|const
+name|ImportDecl
+operator|*
+name|ImportD
+argument_list|)
+block|;
+name|void
+name|importedPCH
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
 argument_list|)
 block|;
 name|void
@@ -1846,6 +1776,7 @@ block|;
 name|void
 name|indexTopLevelDecl
 argument_list|(
+specifier|const
 name|Decl
 operator|*
 name|D

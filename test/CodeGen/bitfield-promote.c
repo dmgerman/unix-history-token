@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -O3 -emit-llvm -S -o %t %s
-end_comment
-
-begin_comment
-comment|// RUN: grep 'ret i64 4294967292' %t | count 2
-end_comment
-
-begin_comment
-comment|// RUN: grep 'ret i64 -4' %t | count 1
+comment|// RUN: %clang -O3 -emit-llvm -S -o - %s | FileCheck %s
 end_comment
 
 begin_function
@@ -52,6 +44,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @f0()
+end_comment
+
+begin_comment
+comment|// CHECK: ret i64 4294967292
+end_comment
+
 begin_function
 name|long
 name|long
@@ -93,6 +93,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @f1()
+end_comment
+
+begin_comment
+comment|// CHECK: ret i64 -4
+end_comment
+
 begin_function
 name|long
 name|long
@@ -131,6 +139,14 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: @f2()
+end_comment
+
+begin_comment
+comment|// CHECK: ret i64 4294967292
+end_comment
 
 end_unit
 

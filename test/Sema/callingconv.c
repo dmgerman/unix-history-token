@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
+comment|// RUN: %clang_cc1 %s -fsyntax-only -triple i386-unknown-unknown -verify
 end_comment
 
 begin_decl_stmt
@@ -364,6 +364,10 @@ begin_comment
 comment|// expected-error {{'pcs' attribute requires parameter 1 to be a string}}
 end_comment
 
+begin_comment
+comment|/* These are ignored because the target is i386 and not ARM */
+end_comment
+
 begin_decl_stmt
 name|int
 name|__attribute__
@@ -383,7 +387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// no-error
+comment|// expected-warning {{calling convention 'pcs' ignored for this target}}
 end_comment
 
 begin_decl_stmt
@@ -405,7 +409,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// no-error
+comment|// expected-warning {{calling convention 'pcs' ignored for this target}}
 end_comment
 
 begin_decl_stmt
@@ -490,6 +494,27 @@ name|x
 argument_list|)
 block|{}
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|pnaclcall
+operator|)
+argument_list|)
+name|pnaclfunc
+argument_list|(
+name|float
+operator|*
+name|a
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{calling convention 'pnaclcall' ignored for this target}}
+end_comment
 
 end_unit
 

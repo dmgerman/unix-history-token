@@ -29,7 +29,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning{{feature cannot be deprecated in Mac OS X version 10.2 before it was introduced in version 10.4; attribute ignored}}
+comment|// expected-warning{{feature cannot be deprecated in OS X version 10.2 before it was introduced in version 10.4; attribute ignored}}
 end_comment
 
 begin_function_decl
@@ -201,13 +201,13 @@ argument_list|(
 literal|"Hello"
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{'ATSFontGetName' is deprecated: first deprecated in Mac OS X 9.0 - use CTFontCopyFullName}}
+comment|// expected-warning {{'ATSFontGetName' is deprecated: first deprecated in OS X 9.0 - use CTFontCopyFullName}}
 name|ATSFontGetPostScriptName
 argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{'ATSFontGetPostScriptName' is unavailable: obsoleted in Mac OS X 9.0 - use ATSFontGetFullPostScriptName}}
+comment|// expected-error {{'ATSFontGetPostScriptName' is unavailable: obsoleted in OS X 9.0 - use ATSFontGetFullPostScriptName}}
 block|}
 end_function
 

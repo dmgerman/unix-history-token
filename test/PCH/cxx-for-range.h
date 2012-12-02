@@ -48,17 +48,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
+begin_decl_stmt
+name|namespace
+name|NS
+block|{
 struct|struct
 name|U
 block|{ }
 struct|;
-end_struct
-
-begin_decl_stmt
-name|namespace
-name|std
-block|{
 name|char
 modifier|*
 name|begin
@@ -75,6 +72,14 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|using
+name|NS
+operator|::
+name|U
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

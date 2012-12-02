@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s -verify
+comment|// RUN: %clang_cc1 -fsyntax-only -triple x86_64-unknown-unknown %s -verify
 end_comment
 
 begin_typedef
@@ -378,6 +378,7 @@ name|VoidPtr
 operator|)
 name|v
 expr_stmt|;
+comment|// expected-warning{{cast to 'VoidPtr' (aka 'void *') from smaller integer type 'Int' (aka 'int')}}
 operator|(
 name|void
 operator|)
@@ -386,6 +387,7 @@ name|CharPtr
 operator|)
 name|v
 expr_stmt|;
+comment|// expected-warning{{cast to 'CharPtr' (aka 'char *') from smaller integer type 'Int' (aka 'int')}}
 block|}
 end_function
 
@@ -1085,6 +1087,57 @@ name|CharPtr
 operator|)
 name|v
 expr_stmt|;
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|x_a
+block|,
+name|x_b
+block|}
+name|X
+typedef|;
+end_typedef
+
+begin_function
+name|void
+modifier|*
+name|intToPointerCast2
+parameter_list|(
+name|X
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+name|x
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|intToPointerCast3
+parameter_list|()
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+literal|1
+operator|+
+literal|3
+operator|)
+return|;
 block|}
 end_function
 

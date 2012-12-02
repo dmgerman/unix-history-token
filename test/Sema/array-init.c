@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -Wgnu -Wc11-extensions -verify %s
+end_comment
+
+begin_comment
+comment|// REQUIRES: LP64
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int

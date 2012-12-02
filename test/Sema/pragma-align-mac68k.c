@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -948,6 +952,66 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_pragma
+pragma|#
+directive|pragma
+name|options
+name|align
+name|=
+name|reset
+end_pragma
+
+begin_function
+name|void
+name|f12
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+pragma|#
+directive|pragma
+name|options
+name|align
+name|=
+name|mac68k
+struct|struct
+name|s12
+block|{
+name|char
+name|f0
+decl_stmt|;
+name|int
+name|f1
+decl_stmt|;
+block|}
+struct|;
+pragma|#
+directive|pragma
+name|options
+name|align
+name|=
+name|reset
+specifier|extern
+name|int
+name|a12
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|s12
+argument_list|)
+operator|==
+literal|6
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+block|}
+end_function
 
 end_unit
 

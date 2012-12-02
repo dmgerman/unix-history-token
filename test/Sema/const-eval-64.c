@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-linux %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_define
 define|#
 directive|define

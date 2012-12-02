@@ -64,7 +64,6 @@ end_comment
 
 begin_function
 name|void
-modifier|*
 name|t4
 parameter_list|(
 name|void
@@ -137,7 +136,7 @@ empty_stmt|;
 end_for
 
 begin_macro
-unit|} int
+unit|} void
 name|t7
 argument_list|()
 end_macro
@@ -193,12 +192,14 @@ end_comment
 
 begin_asm
 asm|__asm
+comment|//
+asm|expected-warning {{MS-style inline assembly is not supported}}
 end_asm
 
 begin_asm
 asm|__asm {
 comment|//
-asm|expected-error 3 {{expected}} expected-note {{to match this}}
+asm|expected-warning {{MS-style inline assembly is not supported}} expected-error 3 {{expected}} expected-note {{to match this}}
 end_asm
 
 end_unit

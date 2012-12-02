@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -emit-llvm -O1 -o -
 end_comment
 
+begin_comment
+comment|// REQUIRES: LP64
+end_comment
+
 begin_typedef
 typedef|typedef
 name|long

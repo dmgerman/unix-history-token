@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fshort-enums -fsyntax-only %s -verify
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_enum
 enum|enum
 name|x

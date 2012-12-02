@@ -4,6 +4,10 @@ comment|// RUN: %clang -target i386-apple-darwin10 -fsyntax-only -Xclang -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// FIXME: Disable inclusion of mm_malloc.h, our current implementation is broken
 end_comment
 

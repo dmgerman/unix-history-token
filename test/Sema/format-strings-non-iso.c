@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c99 -pedantic %s
+comment|// RUN: %clang_cc1 -triple i686-linux-gnu -fsyntax-only -verify -std=c99 -pedantic %s
 end_comment
 
 begin_function_decl
@@ -54,7 +54,7 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{'q' length modifier is not supported by ISO C}}
+comment|// expected-warning{{'q' length modifier is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 name|scanf
 argument_list|(
 literal|"%qd"
@@ -67,7 +67,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{'q' length modifier is not supported by ISO C}}
+comment|// expected-warning{{'q' length modifier is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 comment|// The 'm' length modifier.
 name|scanf
 argument_list|(
@@ -108,7 +108,7 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{using length modifier 'L' with conversion specifier 'i' is not supported by ISO C}}
+comment|// expected-warning{{using length modifier 'L' with conversion specifier 'i' is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 name|printf
 argument_list|(
 literal|"%Lo"
@@ -120,7 +120,7 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{using length modifier 'L' with conversion specifier 'o' is not supported by ISO C}}
+comment|// expected-warning{{using length modifier 'L' with conversion specifier 'o' is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 name|printf
 argument_list|(
 literal|"%Lu"
@@ -132,7 +132,7 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{using length modifier 'L' with conversion specifier 'u' is not supported by ISO C}}
+comment|// expected-warning{{using length modifier 'L' with conversion specifier 'u' is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 name|printf
 argument_list|(
 literal|"%Lx"
@@ -144,7 +144,7 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{using length modifier 'L' with conversion specifier 'x' is not supported by ISO C}}
+comment|// expected-warning{{using length modifier 'L' with conversion specifier 'x' is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 name|printf
 argument_list|(
 literal|"%LX"
@@ -156,7 +156,7 @@ operator|)
 literal|42
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{using length modifier 'L' with conversion specifier 'X' is not supported by ISO C}}
+comment|// expected-warning{{using length modifier 'L' with conversion specifier 'X' is not supported by ISO C}} expected-note{{did you mean to use 'll'?}}
 comment|// Positional arguments.
 name|printf
 argument_list|(

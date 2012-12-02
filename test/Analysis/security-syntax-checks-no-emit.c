@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -analyze -analyzer-checker=
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// This file complements 'security-syntax-checks.m', but tests that we omit
 end_comment
 

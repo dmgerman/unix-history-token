@@ -56,6 +56,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fno-honor-infinities -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-NO-INFS %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NO-INFS: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NO-INFS: "-menable-no-infs"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-honor-infinities -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-INFS-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-INFS-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-INFS-NO-FAST-MATH-NOT: "-menable-no-infs"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -fno-honor-nans -c %s 2>&1 \
 end_comment
 
@@ -76,6 +116,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fno-honor-nans -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-NO-NANS %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NO-NANS: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NO-NANS: "-menable-no-nans"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-honor-nans -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-NANS-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-NANS-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-NANS-NO-FAST-MATH-NOT: "-menable-no-nans"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -fmath-errno -c %s 2>&1 \
 end_comment
 
@@ -89,6 +169,46 @@ end_comment
 
 begin_comment
 comment|// CHECK-MATH-ERRNO: "-fmath-errno"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fmath-errno -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-MATH-ERRNO: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-MATH-ERRNO: "-fmath-errno"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fmath-errno -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MATH-ERRNO-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-MATH-ERRNO-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-MATH-ERRNO-NO-FAST-MATH-NOT: "-fmath-errno"
 end_comment
 
 begin_comment
@@ -180,6 +300,54 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fno-math-errno -fassociative-math -freciprocal-math \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-signed-zeros -fno-trapping-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-UNSAFE-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-UNSAFE-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-UNSAFE-MATH: "-menable-unsafe-fp-math"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fno-math-errno -fassociative-math -freciprocal-math \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-fast-math -fno-signed-zeros -fno-trapping-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UNSAFE-MATH-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-UNSAFE-MATH-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-UNSAFE-MATH-NO-FAST-MATH-NOT: "-menable-unsafe-fp-math"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Check that various umbrella flags also enable these frontend options.
 end_comment
 
@@ -260,6 +428,14 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FAST-MATH %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -fno-fast-math -ffast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FAST-MATH %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -ffast-math -fno-finite-math-only \
 end_comment
 
@@ -277,6 +453,26 @@ end_comment
 
 begin_comment
 comment|// CHECK-FAST-MATH: "-ffast-math"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ffast-math -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NOT: "-ffast-math"
 end_comment
 
 begin_comment

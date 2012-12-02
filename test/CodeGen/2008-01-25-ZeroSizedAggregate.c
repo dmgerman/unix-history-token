@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o -
 end_comment
 
 begin_comment
+comment|// REQUIRES: LP64
+end_comment
+
+begin_comment
 comment|// Aggregates of size zero should be dropped from argument list.
 end_comment
 

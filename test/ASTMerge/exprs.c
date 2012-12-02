@@ -11,5 +11,9 @@ begin_comment
 comment|// RUN: %clang_cc1 -ast-merge %t.1.ast -ast-merge %t.2.ast -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 end_unit
 

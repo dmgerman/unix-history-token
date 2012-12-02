@@ -700,13 +700,11 @@ decl_stmt|;
 comment|// This class is non-copyable
 name|LocalInstantiationScope
 argument_list|(
-specifier|const
-name|LocalInstantiationScope
-operator|&
+argument|const LocalInstantiationScope&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-name|LocalInstantiationScope
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -714,6 +712,7 @@ specifier|const
 name|LocalInstantiationScope
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:

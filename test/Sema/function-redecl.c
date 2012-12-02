@@ -684,5 +684,36 @@ parameter_list|)
 block|{}
 end_function
 
+begin_enum_decl
+enum_decl|enum
+name|incomplete_enum
+enum_decl|;
+end_enum_decl
+
+begin_function_decl
+name|void
+name|f4
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{previous declaration is here}}
+end_comment
+
+begin_function_decl
+name|void
+name|f4
+parameter_list|(
+name|enum
+name|incomplete_enum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{conflicting types for 'f4'}}
+end_comment
+
 end_unit
 

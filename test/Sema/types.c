@@ -256,7 +256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{redefinition of 'j' with a different type}}
+comment|// expected-error {{redefinition of 'j' with a different type: 'int [42]' vs 'int [4]'}}
 end_comment
 
 begin_comment

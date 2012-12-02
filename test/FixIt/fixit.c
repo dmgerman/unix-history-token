@@ -392,6 +392,34 @@ end_decl_stmt
 
 begin_function
 name|int
+name|commaAtEndOfStatement
+parameter_list|()
+block|{
+name|int
+name|a
+init|=
+literal|1
+decl_stmt|;
+name|a
+operator|=
+literal|5
+operator|,
+comment|// expected-error {{';'}}
+name|int
+name|m
+operator|=
+literal|5
+operator|,
+comment|// expected-error {{';'}}
+return|return
+literal|0
+operator|,
+comment|// expected-error {{';'}}
+block|}
+end_function
+
+begin_function
+name|int
 name|noSemiAfterLabel
 parameter_list|(
 name|int

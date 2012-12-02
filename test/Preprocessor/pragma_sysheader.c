@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -E %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// rdar://6899937
 end_comment
 
@@ -38,7 +42,7 @@ comment|// CHECK-NEXT: typedef int x;
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: # 5 "{{.*}}pragma_sysheader.c" 2
+comment|// CHECK-NEXT: # 6 "{{.*}}pragma_sysheader.c" 2
 end_comment
 
 end_unit

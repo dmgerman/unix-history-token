@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -ffreestanding %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_include
 include|#
 directive|include

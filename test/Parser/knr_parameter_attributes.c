@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -W -Wall -Werror -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_decl_stmt
 name|int
 name|f

@@ -218,17 +218,6 @@ operator|==
 name|CXXCatchStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXCatchStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -529,17 +518,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXTryStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXTryStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_range
@@ -1094,17 +1072,6 @@ operator|==
 name|CXXForRangeStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXForRangeStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1353,17 +1320,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|MSDependentExistsStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|MSDependentExistsStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

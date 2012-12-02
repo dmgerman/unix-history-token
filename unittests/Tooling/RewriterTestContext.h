@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DiagnosticOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/FileManager.h"
 end_include
 
@@ -86,19 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/DiagnosticOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Frontend/TextDiagnosticPrinter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Rewrite/Rewriter.h"
+file|"clang/Rewrite/Core/Rewriter.h"
 end_include
 
 begin_include
@@ -136,6 +136,11 @@ label|:
 name|RewriterTestContext
 argument_list|()
 operator|:
+name|DiagOpts
+argument_list|(
+argument|new DiagnosticOptions()
+argument_list|)
+operator|,
 name|Diagnostics
 argument_list|(
 name|llvm
@@ -145,7 +150,13 @@ operator|<
 name|DiagnosticIDs
 operator|>
 operator|(
+name|new
+name|DiagnosticIDs
 operator|)
+argument_list|,
+operator|&
+operator|*
+name|DiagOpts
 argument_list|)
 operator|,
 name|DiagnosticPrinter
@@ -155,8 +166,9 @@ operator|::
 name|outs
 argument_list|()
 argument_list|,
-name|DiagnosticOptions
-argument_list|()
+operator|&
+operator|*
+name|DiagOpts
 argument_list|)
 operator|,
 name|Files
@@ -619,6 +631,14 @@ name|getBuffer
 argument_list|()
 return|;
 block|}
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|DiagnosticOptions
+operator|>
+name|DiagOpts
+expr_stmt|;
 name|DiagnosticsEngine
 name|Diagnostics
 decl_stmt|;

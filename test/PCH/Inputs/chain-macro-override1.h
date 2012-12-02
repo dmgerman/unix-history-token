@@ -43,5 +43,26 @@ name|x
 value|x
 end_define
 
+begin_define
+define|#
+directive|define
+name|h2
+parameter_list|()
+value|f()
+end_define
+
+begin_define
+define|#
+directive|define
+name|h3
+parameter_list|()
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|h3
+end_undef
+
 end_unit
 

@@ -4,7 +4,7 @@ comment|// RUN: echo "GNU89 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -O1 -emit-llvm -S -o %t -std=gnu89
+comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o %t -std=gnu89
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ comment|// RUN: echo "C99 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -O1 -emit-llvm -S -o %t -std=gnu99
+comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o %t -std=gnu99
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ comment|// RUN: echo "C++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x c++ %s -O1 -emit-llvm -S -o %t -std=c++98
+comment|// RUN: %clang -x c++ %s -target i386-unknown-unknown -O1 -emit-llvm -S -o %t -std=c++98
 end_comment
 
 begin_comment

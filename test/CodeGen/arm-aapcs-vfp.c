@@ -27,6 +27,26 @@ begin_comment
 comment|// RUN:   -emit-llvm -w -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple armv7-unknown-nacl-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:  -target-cpu cortex-a8 \
+end_comment
+
+begin_comment
+comment|// RUN:  -mfloat-abi hard \
+end_comment
+
+begin_comment
+comment|// RUN:  -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -w -o - %s | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple=i686-linux-gnu -fsyntax-only -verify %s
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// Check types are the same through redeclaration
 end_comment
 

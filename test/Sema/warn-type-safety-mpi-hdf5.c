@@ -1041,6 +1041,27 @@ name|MPI_INT
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+comment|// Null pointer constant.
+name|MPI_Send
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|MPI_INT
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|MPI_Send
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MPI_INT
+argument_list|)
+expr_stmt|;
+comment|// no-warning
 comment|// Layout-compatible class types.
 name|MPI_Send
 argument_list|(

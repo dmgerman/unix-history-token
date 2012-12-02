@@ -20,6 +20,30 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-LINUX %s
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// CHECK-LINUX: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
@@ -52,11 +76,35 @@ comment|// RUN:     -target arm-linux-androideabi -faddress-sanitizer \
 end_comment
 
 begin_comment
-comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID %s
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -68,11 +116,11 @@ comment|// CHECK-ANDROID-NOT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID: "-u" "__asan_preinit" "-lasan"
+comment|// CHECK-ANDROID: libclang_rt.asan-arm-android.so"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID: "-lasan_preload" "-ldl"
+comment|// CHECK-ANDROID-NOT: "-lpthread"
 end_comment
 
 begin_comment
@@ -84,7 +132,7 @@ comment|// RUN:     -target arm-linux-androideabi -faddress-sanitizer \
 end_comment
 
 begin_comment
-comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
@@ -96,6 +144,34 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-SHARED %s
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-SHARED %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// CHECK-ANDROID-SHARED: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
@@ -104,11 +180,11 @@ comment|// CHECK-ANDROID-SHARED-NOT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-SHARED-NOT: "-lasan"
+comment|// CHECK-ANDROID-SHARED: libclang_rt.asan-arm-android.so"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-SHARED: "-lasan_preload" "-ldl"
+comment|// CHECK-ANDROID-SHARED-NOT: "-lpthread"
 end_comment
 
 end_unit

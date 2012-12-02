@@ -856,7 +856,7 @@ comment|// ARM:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// ARM:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// ARM:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -864,7 +864,7 @@ comment|// ARM:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// ARM:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// ARM:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -892,7 +892,7 @@ comment|// ARM:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// ARM:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// ARM:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -904,7 +904,7 @@ comment|// ARM:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// ARM:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// ARM:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -1045,6 +1045,830 @@ end_comment
 
 begin_comment
 comment|// ARM:#define __arm__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-linux-gnueabi -target-feature +soft-float -target-feature +soft-float-abi< /dev/null | FileCheck -check-prefix ARMEABISOFTFP %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ARM-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __APCS_32__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __ARMEL__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __ARM_ARCH 6
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __ARM_EABI__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __ARM_PCS 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP-NOT:#define __ARM_PCS_VFP 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __DECIMAL_DIG__ 17
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MAX__ 1.7976931348623157e+308L
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LDBL_MIN__ 2.2250738585072014e-308L
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SOFTFP__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __USER_LABEL_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __WCHAR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __WCHAR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __WINT_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __arm 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __arm__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-linux-gnueabi< /dev/null | FileCheck -check-prefix ARMEABIHARDFP %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ARM-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __APCS_32__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __ARMEL__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __ARM_ARCH 6
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __ARM_EABI__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __ARM_PCS 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __ARM_PCS_VFP 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __DECIMAL_DIG__ 17
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MAX__ 1.7976931348623157e+308L
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LDBL_MIN__ 2.2250738585072014e-308L
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP-NOT:#define __SOFTFP__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __USER_LABEL_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __WCHAR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __WCHAR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __WINT_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __arm 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __arm__ 1
 end_comment
 
 begin_comment
@@ -1852,6 +2676,14 @@ comment|// MIPS32BE:#define _MIPSEB 1
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define _MIPS_ARCH "mips32"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define _MIPS_ARCH_MIPS32 1
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define _MIPS_SIM _ABIO32
 end_comment
 
@@ -2048,7 +2880,7 @@ comment|// MIPS32BE:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// MIPS32BE:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -2056,7 +2888,7 @@ comment|// MIPS32BE:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// MIPS32BE:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -2084,7 +2916,7 @@ comment|// MIPS32BE:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// MIPS32BE:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -2096,7 +2928,7 @@ comment|// MIPS32BE:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// MIPS32BE:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -2308,6 +3140,14 @@ comment|// MIPS32EL:#define _MIPSEL 1
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define _MIPS_ARCH "mips32"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define _MIPS_ARCH_MIPS32 1
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define _MIPS_SIM _ABIO32
 end_comment
 
@@ -2504,7 +3344,7 @@ comment|// MIPS32EL:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// MIPS32EL:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -2512,7 +3352,7 @@ comment|// MIPS32EL:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// MIPS32EL:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -2540,7 +3380,7 @@ comment|// MIPS32EL:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// MIPS32EL:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -2552,7 +3392,7 @@ comment|// MIPS32EL:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// MIPS32EL:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -2749,6 +3589,14 @@ end_comment
 
 begin_comment
 comment|// MIPS64BE:#define _MIPSEB 1
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define _MIPS_ARCH "mips64"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define _MIPS_ARCH_MIPS64 1
 end_comment
 
 begin_comment
@@ -3148,6 +3996,14 @@ comment|// MIPS64BE:#define __mips 1
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __mips64 1
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __mips64__ 1
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __mips__ 1
 end_comment
 
@@ -3193,6 +4049,14 @@ end_comment
 
 begin_comment
 comment|// MIPS64EL:#define _MIPSEL 1
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define _MIPS_ARCH "mips64"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define _MIPS_ARCH_MIPS64 1
 end_comment
 
 begin_comment
@@ -3592,6 +4456,14 @@ comment|// MIPS64EL:#define __mips 1
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __mips64 1
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __mips64__ 1
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __mips__ 1
 end_comment
 
@@ -3980,7 +4852,7 @@ comment|// MSP430:#define __INT_MAX__ 32767
 end_comment
 
 begin_comment
-comment|// MSP430:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// MSP430:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -3988,7 +4860,7 @@ comment|// MSP430:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// MSP430:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// MSP430:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -4016,7 +4888,7 @@ comment|// MSP430:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// MSP430:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// MSP430:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -4028,7 +4900,7 @@ comment|// MSP430:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// MSP430:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// MSP430:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -4360,7 +5232,7 @@ comment|// NVPTX32:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// NVPTX32:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -4368,7 +5240,7 @@ comment|// NVPTX32:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// NVPTX32:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -4396,7 +5268,7 @@ comment|// NVPTX32:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// NVPTX32:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -4408,7 +5280,7 @@ comment|// NVPTX32:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// NVPTX32:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -4744,7 +5616,7 @@ comment|// NVPTX64:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// NVPTX64:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// NVPTX64:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -4752,7 +5624,7 @@ comment|// NVPTX64:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// NVPTX64:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// NVPTX64:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -4780,7 +5652,7 @@ comment|// NVPTX64:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// NVPTX64:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// NVPTX64:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -4792,7 +5664,7 @@ comment|// NVPTX64:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// NVPTX64:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// NVPTX64:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -7192,7 +8064,7 @@ comment|// SPARC:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// SPARC:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324
+comment|// SPARC:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
 end_comment
 
 begin_comment
@@ -7200,7 +8072,7 @@ comment|// SPARC:#define __LDBL_DIG__ 15
 end_comment
 
 begin_comment
-comment|// SPARC:#define __LDBL_EPSILON__ 2.2204460492503131e-16
+comment|// SPARC:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
 end_comment
 
 begin_comment
@@ -7228,7 +8100,7 @@ comment|// SPARC:#define __LDBL_MAX_EXP__ 1024
 end_comment
 
 begin_comment
-comment|// SPARC:#define __LDBL_MAX__ 1.7976931348623157e+308
+comment|// SPARC:#define __LDBL_MAX__ 1.7976931348623157e+308L
 end_comment
 
 begin_comment
@@ -7240,7 +8112,7 @@ comment|// SPARC:#define __LDBL_MIN_EXP__ (-1021)
 end_comment
 
 begin_comment
-comment|// SPARC:#define __LDBL_MIN__ 2.2250738585072014e-308
+comment|// SPARC:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
@@ -7420,7 +8292,7 @@ comment|// TCE:#define __CHAR_BIT__ 8
 end_comment
 
 begin_comment
-comment|// TCE:#define __DBL_DENORM_MIN__ 1.40129846e-45F
+comment|// TCE:#define __DBL_DENORM_MIN__ 1.40129846e-45
 end_comment
 
 begin_comment
@@ -7428,7 +8300,7 @@ comment|// TCE:#define __DBL_DIG__ 6
 end_comment
 
 begin_comment
-comment|// TCE:#define __DBL_EPSILON__ 1.19209290e-7F
+comment|// TCE:#define __DBL_EPSILON__ 1.19209290e-7
 end_comment
 
 begin_comment
@@ -7456,7 +8328,7 @@ comment|// TCE:#define __DBL_MAX_EXP__ 128
 end_comment
 
 begin_comment
-comment|// TCE:#define __DBL_MAX__ 3.40282347e+38F
+comment|// TCE:#define __DBL_MAX__ 3.40282347e+38
 end_comment
 
 begin_comment
@@ -7468,7 +8340,7 @@ comment|// TCE:#define __DBL_MIN_EXP__ (-125)
 end_comment
 
 begin_comment
-comment|// TCE:#define __DBL_MIN__ 1.17549435e-38F
+comment|// TCE:#define __DBL_MIN__ 1.17549435e-38
 end_comment
 
 begin_comment
@@ -7572,7 +8444,7 @@ comment|// TCE:#define __INT_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// TCE:#define __LDBL_DENORM_MIN__ 1.40129846e-45F
+comment|// TCE:#define __LDBL_DENORM_MIN__ 1.40129846e-45L
 end_comment
 
 begin_comment
@@ -7580,7 +8452,7 @@ comment|// TCE:#define __LDBL_DIG__ 6
 end_comment
 
 begin_comment
-comment|// TCE:#define __LDBL_EPSILON__ 1.19209290e-7F
+comment|// TCE:#define __LDBL_EPSILON__ 1.19209290e-7L
 end_comment
 
 begin_comment
@@ -7608,7 +8480,7 @@ comment|// TCE:#define __LDBL_MAX_EXP__ 128
 end_comment
 
 begin_comment
-comment|// TCE:#define __LDBL_MAX__ 3.40282347e+38F
+comment|// TCE:#define __LDBL_MAX__ 3.40282347e+38L
 end_comment
 
 begin_comment
@@ -7620,7 +8492,7 @@ comment|// TCE:#define __LDBL_MIN_EXP__ (-125)
 end_comment
 
 begin_comment
-comment|// TCE:#define __LDBL_MIN__ 1.17549435e-38F
+comment|// TCE:#define __LDBL_MIN__ 1.17549435e-38L
 end_comment
 
 begin_comment

@@ -11,6 +11,10 @@ begin_comment
 comment|// RUN:   -verify %s -ffreestanding -target-feature +aes
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_include
 include|#
 directive|include

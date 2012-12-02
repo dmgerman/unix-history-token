@@ -857,6 +857,39 @@ comment|// CHECK: call void @SHA384Pad(i8* null)
 end_comment
 
 begin_comment
+comment|// PR14046: Parse #pragma weak in function-local context
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|PR14046e
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|PR14046f
+parameter_list|()
+block|{
+pragma|#
+directive|pragma
+name|weak
+name|PR14046e
+name|PR14046e
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: declare extern_weak i32 @PR14046e()
+end_comment
+
+begin_comment
 comment|///////////// TODO: stuff that still doesn't work
 end_comment
 

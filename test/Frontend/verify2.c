@@ -18,7 +18,7 @@ comment|// VerifyDiagnosticConsumer sees no comments while processing this
 end_comment
 
 begin_comment
-comment|// test-case.
+comment|// test-case (and hence no expected-* directives).
 end_comment
 
 begin_endif
@@ -49,7 +49,11 @@ comment|// expected-error {{should be ignored}}
 end_comment
 
 begin_comment
-comment|//      CHECK: error: 'error' diagnostics seen but not expected:
+comment|//      CHECK: error: no expected directives found: consider use of 'expected-no-diagnostics'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: error: 'error' diagnostics seen but not expected:
 end_comment
 
 begin_comment
@@ -61,7 +65,7 @@ comment|// CHECK-NEXT:   Line 10: source
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: 2 errors generated.
+comment|// CHECK-NEXT: 3 errors generated.
 end_comment
 
 begin_endif

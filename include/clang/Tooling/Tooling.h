@@ -250,6 +250,27 @@ operator|*
 name|newFrontendActionFactory
 argument_list|()
 expr_stmt|;
+comment|/// \brief Called at the end of each source file when used with
+comment|/// \c newFrontendActionFactory.
+name|class
+name|EndOfSourceFileCallback
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|EndOfSourceFileCallback
+argument_list|()
+block|{}
+name|virtual
+name|void
+name|run
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// \brief Returns a new FrontendActionFactory for any type that provides an
 comment|/// implementation of newASTConsumer().
 comment|///
@@ -274,6 +295,12 @@ argument_list|(
 name|FactoryT
 operator|*
 name|ConsumerFactory
+argument_list|,
+name|EndOfSourceFileCallback
+operator|*
+name|EndCallback
+operator|=
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/// \brief Runs (and deletes) the tool on 'Code' with the -fsyntax-only flag.
@@ -296,6 +323,49 @@ specifier|const
 name|Twine
 operator|&
 name|Code
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|FileName
+operator|=
+literal|"input.cc"
+argument_list|)
+decl_stmt|;
+comment|/// \brief Runs (and deletes) the tool on 'Code' with the -fsyntax-only flag and
+comment|///        with additional other flags.
+comment|///
+comment|/// \param ToolAction The action to run over the code.
+comment|/// \param Code C++ code.
+comment|/// \param Args Additional flags to pass on.
+comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|///
+comment|/// \return - True if 'ToolAction' was successfully executed.
+name|bool
+name|runToolOnCodeWithArgs
+argument_list|(
+name|clang
+operator|::
+name|FrontendAction
+operator|*
+name|ToolAction
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Code
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Args
 argument_list|,
 specifier|const
 name|Twine
@@ -617,6 +687,8 @@ operator|*
 name|newFrontendActionFactory
 argument_list|(
 argument|FactoryT *ConsumerFactory
+argument_list|,
+argument|EndOfSourceFileCallback *EndCallback
 argument_list|)
 block|{
 name|class
@@ -633,11 +705,20 @@ argument_list|(
 name|FactoryT
 operator|*
 name|ConsumerFactory
+argument_list|,
+name|EndOfSourceFileCallback
+operator|*
+name|EndCallback
 argument_list|)
 operator|:
 name|ConsumerFactory
 argument_list|(
-argument|ConsumerFactory
+name|ConsumerFactory
+argument_list|)
+block|,
+name|EndCallback
+argument_list|(
+argument|EndCallback
 argument_list|)
 block|{}
 name|virtual
@@ -653,6 +734,8 @@ name|new
 name|ConsumerFactoryAdaptor
 argument_list|(
 name|ConsumerFactory
+argument_list|,
+name|EndCallback
 argument_list|)
 return|;
 block|}
@@ -673,11 +756,20 @@ argument_list|(
 name|FactoryT
 operator|*
 name|ConsumerFactory
+argument_list|,
+name|EndOfSourceFileCallback
+operator|*
+name|EndCallback
 argument_list|)
 operator|:
 name|ConsumerFactory
 argument_list|(
-argument|ConsumerFactory
+name|ConsumerFactory
+argument_list|)
+block|,
+name|EndCallback
+argument_list|(
+argument|EndCallback
 argument_list|)
 block|{}
 name|clang
@@ -698,16 +790,49 @@ name|newASTConsumer
 argument_list|()
 return|;
 block|}
+name|protected
+operator|:
+name|virtual
+name|void
+name|EndSourceFileAction
+argument_list|()
+block|{
+if|if
+condition|(
+name|EndCallback
+operator|!=
+name|NULL
+condition|)
+name|EndCallback
+operator|->
+name|run
+argument_list|()
+expr_stmt|;
+name|clang
+operator|::
+name|ASTFrontendAction
+operator|::
+name|EndSourceFileAction
+argument_list|()
+block|;       }
 name|private
 operator|:
 name|FactoryT
 operator|*
 name|ConsumerFactory
+block|;
+name|EndOfSourceFileCallback
+operator|*
+name|EndCallback
 block|;     }
 block|;
 name|FactoryT
 operator|*
 name|ConsumerFactory
+block|;
+name|EndOfSourceFileCallback
+operator|*
+name|EndCallback
 block|;   }
 block|;
 return|return
@@ -715,6 +840,8 @@ name|new
 name|FrontendActionFactoryAdapter
 argument_list|(
 name|ConsumerFactory
+argument_list|,
+name|EndCallback
 argument_list|)
 return|;
 block|}
@@ -739,7 +866,8 @@ name|getAbsolutePath
 argument_list|(
 argument|StringRef File
 argument_list|)
-block|;  }
+expr_stmt|;
+block|}
 comment|// end namespace tooling
 block|}
 end_decl_stmt

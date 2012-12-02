@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -target-abi apcs-gnu -triple armv7-apple-darwin10 %s 
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

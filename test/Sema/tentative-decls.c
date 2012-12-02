@@ -270,7 +270,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of __private_extern__ on tentative definition has unexpected behaviour}}
+comment|// expected-warning {{use of __private_extern__ on a declaration may not produce external symbol private to the linkage unit and is deprecated}} \
+end_comment
+
+begin_comment
+comment|// expected-note {{use __attribute__((visibility("hidden"))) attribute instead}}
 end_comment
 
 begin_decl_stmt

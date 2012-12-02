@@ -16,6 +16,10 @@ comment|// RUN: %clang_cc1 -ast-print -include-pch %t2 %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// CHECK: void f();
 end_comment
 

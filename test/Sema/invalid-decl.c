@@ -133,5 +133,55 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// rdar://11743706
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|bar
+parameter_list|(
+name|hid_t
+parameter_list|,
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{expected identifier}}
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|bar
+parameter_list|(
+name|hid_t
+name|p
+parameter_list|,
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{unknown type name 'hid_t'}}
+end_comment
+
+begin_function
+name|void
+name|foo
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|bar
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

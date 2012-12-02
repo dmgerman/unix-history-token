@@ -47,5 +47,29 @@ begin_comment
 comment|// PR4062
 end_comment
 
+begin_comment
+comment|// RUN: %clang --target i386-pc-linux-gnu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -Wp,-MMD -fsyntax-only %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix MMD< %t %s
+end_comment
+
+begin_comment
+comment|// MMD: "-cc1"
+end_comment
+
+begin_comment
+comment|// MMD-NOT: -MMD
+end_comment
+
+begin_comment
+comment|// MMD: "-dependency-file" "Wp-args.d"
+end_comment
+
 end_unit
 

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 %s -fsyntax-only -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|//<rdar://problem/10494810> and PR9560
 end_comment
 

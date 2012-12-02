@@ -364,7 +364,7 @@ comment|// FIXME: We can recover better in almost all of these cases. (PR13335)
 end_comment
 
 begin_comment
-comment|// expected-error@+1 {{missing '(' after '__has_include'}} expected-error@+1 {{expected end of line}}
+comment|// expected-error@+1 {{missing '(' after '__has_include'}}
 end_comment
 
 begin_if
@@ -433,7 +433,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// expected-error@+1 {{missing '(' after '__has_include'}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
+comment|// expected-error@+1 {{missing '(' after '__has_include'}}
 end_comment
 
 begin_if
@@ -454,7 +454,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-warning@+1 {{missing terminating '"' character}}
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-warning@+1 {{missing terminating '"' character}}  expected-error@+1 {{invalid token at start of a preprocessor expression}}
 end_comment
 
 begin_if
@@ -470,12 +470,20 @@ literal|")
 argument|#endif
 comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
 argument|#if __has_include(stdint.h>) #endif
-comment|// FIXME: These test cases cause the compiler to crash. (PR13334)
-comment|//#if __has_include("stdint.h"
-comment|//#if __has_include(
-comment|//#if __has_include
-comment|//#if __has_include(<stdint.h>
-comment|//#if __has_include(<stdint.h)
+comment|// expected-error@+1 {{missing '(' after '__has_include'}}
+argument|__has_include
+comment|// expected-error@+1 {{missing ')' after '__has_include'}} // expected-error@+1 {{expected value in expression}}  // expected-note@+1 {{to match this '('}}
+argument|#if __has_include(
+literal|"stdint.h"
+argument|#endif
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} // expected-error@+1 {{expected value in expression}}
+argument|#if __has_include( #endif
+comment|// expected-error@+1 {{missing '(' after '__has_include'}} // expected-error@+1 {{expected value in expression}}
+argument|#if __has_include #endif
+comment|// expected-error@+1 {{missing ')' after '__has_include'}}  // expected-error@+1 {{expected value in expression}}  // expected-note@+1 {{to match this '('}}
+argument|#if __has_include(<stdint.h> #endif
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} // expected-error@+1 {{expected value in expression}}
+argument|#if __has_include(<stdint.h) #endif
 end_if
 
 end_unit

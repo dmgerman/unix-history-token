@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic %s
 end_comment
 
+begin_comment
+comment|// REQUIRES: LP64
+end_comment
+
 begin_struct
 struct|struct
 name|foo
@@ -92,7 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-error {{initializer element is not a compile-time constant}}
+comment|// expected-error {{initializer element is not a compile-time constant}}
 end_comment
 
 begin_decl_stmt
@@ -146,7 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-error {{initializer element is not a compile-time constant}}
+comment|// expected-error {{initializer element is not a compile-time constant}}
 end_comment
 
 begin_decl_stmt
@@ -168,7 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-warning {{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [2]'}}
+comment|// expected-warning {{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [2]'}}
 end_comment
 
 begin_typedef
@@ -180,7 +184,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// -expected-warning{{empty struct is a GNU extension}}
+comment|// expected-warning{{empty struct is a GNU extension}}
 end_comment
 
 begin_decl_stmt
@@ -198,7 +202,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-warning{{use of GNU empty initializer extension}}
+comment|// expected-warning{{use of GNU empty initializer extension}}
 end_comment
 
 begin_typedef
@@ -328,7 +332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-error {{variable has incomplete type}}
+comment|// expected-error {{variable has incomplete type}}
 end_comment
 
 begin_function
@@ -359,7 +363,7 @@ block|,
 literal|3
 block|}
 decl_stmt|;
-comment|// -expected-error {{variable-sized object may not be initialized}}
+comment|// expected-error {{variable-sized object may not be initialized}}
 operator|(
 name|void
 operator|)
@@ -371,7 +375,7 @@ block|,
 literal|3
 block|}
 expr_stmt|;
-comment|// -expected-error {{variable has incomplete type}}
+comment|// expected-error {{variable has incomplete type}}
 operator|(
 name|void
 argument_list|(
@@ -382,7 +386,7 @@ block|{
 literal|0
 block|}
 expr_stmt|;
-comment|// -expected-error{{illegal initializer type 'void (void)'}}
+comment|// expected-error{{illegal initializer type 'void (void)'}}
 block|}
 end_function
 

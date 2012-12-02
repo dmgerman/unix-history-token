@@ -55,6 +55,14 @@ begin_comment
 comment|// RUN: not %clang_cc1 -triple i386-pc-openbsd -fsyntax-only %s
 end_comment
 
+begin_comment
+comment|// Haiku does not suppport TLS.
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -triple i586-pc-haiku -fsyntax-only %s
+end_comment
+
 begin_decl_stmt
 name|__thread
 name|int

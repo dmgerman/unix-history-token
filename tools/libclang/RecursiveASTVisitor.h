@@ -2057,6 +2057,11 @@ name|TemplateArgument
 operator|::
 name|Integral
 case|:
+case|case
+name|TemplateArgument
+operator|::
+name|NullPtr
+case|:
 return|return
 name|true
 return|;
@@ -2205,6 +2210,11 @@ case|case
 name|TemplateArgument
 operator|::
 name|Integral
+case|:
+case|case
+name|TemplateArgument
+operator|::
+name|NullPtr
 case|:
 return|return
 name|true
@@ -5198,7 +5208,7 @@ define|\
 value|template<typename Derived>                                              \ bool RecursiveASTVisitor<Derived>::Traverse##STMT (STMT *S) {           \   TRY_TO(WalkUpFrom##STMT(S));                                          \   StmtQueueAction StmtQueue(*this);                                     \   { CODE; }                                                             \   for (Stmt::child_range range = S->children(); range; ++range) {       \     StmtQueue.queue(*range);                                            \   }                                                                     \   return true;                                                          \ }
 name|DEF_TRAVERSE_STMT
 argument_list|(
-argument|AsmStmt
+argument|GCCAsmStmt
 argument_list|,
 argument|{     StmtQueue.queue(S->getAsmString());     for (unsigned I =
 literal|0
@@ -5206,7 +5216,7 @@ argument|, E = S->getNumInputs(); I< E; ++I) {       StmtQueue.queue(S->getInput
 literal|0
 argument|, E = S->getNumOutputs(); I< E; ++I) {       StmtQueue.queue(S->getOutputConstraintLiteral(I));     }     for (unsigned I =
 literal|0
-argument|, E = S->getNumClobbers(); I< E; ++I) {       StmtQueue.queue(S->getClobber(I));     }
+argument|, E = S->getNumClobbers(); I< E; ++I) {       StmtQueue.queue(S->getClobberStringLiteral(I));     }
 comment|// children() iterates over inputExpr and outputExpr.
 argument|}
 argument_list|)
@@ -6505,6 +6515,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|SubstNonTypeTemplateParmExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|FunctionParmPackExpr
 argument_list|,
 argument|{ }
 argument_list|)

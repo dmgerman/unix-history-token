@@ -930,5 +930,42 @@ empty_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// PR13704: negative increment in i128 is not preserved.
+end_comment
+
+begin_comment
+comment|// CHECK: define void @f17()
+end_comment
+
+begin_function
+name|void
+name|f17
+parameter_list|()
+block|{
+specifier|extern
+name|void
+name|extfunc
+argument_list|(
+name|__int128
+argument_list|)
+decl_stmt|;
+name|__int128
+name|x
+init|=
+literal|2
+decl_stmt|;
+name|x
+operator|--
+expr_stmt|;
+name|extfunc
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i128 %{{.}}, -1
+block|}
+end_function
+
 end_unit
 

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s -triple i686-pc-linux-gnu
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// PR 4142 - support glibc extension to printf: '%m' (which prints strerror(errno)).
 end_comment
 

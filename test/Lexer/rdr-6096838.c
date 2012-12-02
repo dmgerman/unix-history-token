@@ -3,6 +3,10 @@ begin_comment
 comment|/* RUN: %clang_cc1 -triple i386-unknown-unknown -fsyntax-only -verify %s  * RUN: %clang_cc1 -triple x86_64-unknown-unknown -std=gnu89 -fsyntax-only -verify %s  rdar://6096838  */
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_decl_stmt
 name|long
 name|double

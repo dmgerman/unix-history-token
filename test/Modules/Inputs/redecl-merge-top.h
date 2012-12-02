@@ -66,27 +66,14 @@ name|S2
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|Vector
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|int
+name|func1
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

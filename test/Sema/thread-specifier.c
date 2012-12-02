@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -verify -pedantic %s
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-extern -verify -pedantic %s
 end_comment
 
 begin_decl_stmt
@@ -171,6 +171,47 @@ end_decl_stmt
 begin_comment
 comment|// expected-error {{thread-local declaration of 't16' follows non-thread-local declaration}}
 end_comment
+
+begin_comment
+comment|// PR13720
+end_comment
+
+begin_decl_stmt
+name|__thread
+name|int
+name|thread_int
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|thread_int_ptr
+init|=
+operator|&
+name|thread_int
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error{{initializer element is not a compile-time constant}}
+end_comment
+
+begin_function
+name|void
+name|g
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|p
+init|=
+operator|&
+name|thread_int
+decl_stmt|;
+comment|// This is perfectly fine, though.
+block|}
+end_function
 
 end_unit
 

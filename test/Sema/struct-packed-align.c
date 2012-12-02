@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// Packed structs.
 end_comment
 

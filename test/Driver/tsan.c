@@ -1,22 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang     -target i386-unknown-unknown -fthread-sanitizer %s -S -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang     -target i386-unknown-unknown -fsanitize=thread %s -S -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -O1 -target i386-unknown-unknown -fthread-sanitizer %s -S -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang -O1 -target i386-unknown-unknown -fsanitize=thread %s -S -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -O2 -target i386-unknown-unknown -fthread-sanitizer %s -S -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang -O2 -target i386-unknown-unknown -fsanitize=thread %s -S -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -O3 -target i386-unknown-unknown -fthread-sanitizer %s -S -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang -O3 -target i386-unknown-unknown -fsanitize=thread %s -S -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// Verify that -fthread-sanitizer invokes tsan instrumentation.
+comment|// RUN: %clang     -target i386-unknown-unknown -fsanitize=thread  %s -S -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// Verify that -fsanitize=thread invokes tsan instrumentation.
 end_comment
 
 begin_function

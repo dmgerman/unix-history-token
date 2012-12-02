@@ -209,7 +209,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{'f2' is deprecated: first deprecated in Mac OS X 10.5}}
+comment|// expected-warning{{'f2' is deprecated: first deprecated in OS X 10.5}}
 name|f3
 argument_list|(
 literal|0
@@ -220,13 +220,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{f4' is unavailable: obsoleted in Mac OS X 10.5}}
+comment|// expected-error{{f4' is unavailable: obsoleted in OS X 10.5}}
 name|f5
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{'f5' is unavailable: not available on Mac OS X}}
+comment|// expected-error{{'f5' is unavailable: not available on OS X}}
 block|}
 end_function
 

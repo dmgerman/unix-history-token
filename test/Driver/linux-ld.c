@@ -960,7 +960,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -ccc-clang-archs mips \
+comment|// RUN:     -target mips-linux-gnu \
 end_comment
 
 begin_comment
@@ -988,7 +988,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -ccc-clang-archs mipsel \
+comment|// RUN:     -target mipsel-linux-gnu \
 end_comment
 
 begin_comment
@@ -1016,7 +1016,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu -ccc-clang-archs mips64 \
+comment|// RUN:     -target mips64-linux-gnu \
 end_comment
 
 begin_comment
@@ -1044,7 +1044,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu -ccc-clang-archs mips64el \
+comment|// RUN:     -target mips64el-linux-gnu \
 end_comment
 
 begin_comment
@@ -1065,6 +1065,62 @@ end_comment
 
 begin_comment
 comment|// CHECK-MIPS64EL-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64-linux-gnu -mabi=n32 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64-N32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-N32: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-N32: "-m" "elf32btsmipn32"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-N32: "-dynamic-linker" "{{.*}}/lib32/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-N32-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64el-linux-gnu -mabi=n32 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64EL-N32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-N32: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-N32: "-m" "elf32ltsmipn32"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-N32: "-dynamic-linker" "{{.*}}/lib32/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-N32-NOT: "--hash-style={{gnu|both}}"
 end_comment
 
 begin_comment
@@ -1452,6 +1508,94 @@ comment|// CHECK-DEBIAN-MIPS64EL: "-L[[SYSROOT]]/usr/lib"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64-linux-gnu -mabi=n32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-MIPS64-N32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5/n32/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "-L[[SYSROOT]]/usr/lib/gcc/mips-linux-gnu/4.5/n32"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "-L[[SYSROOT]]/usr/lib/gcc/mips-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "-L[[SYSROOT]]/usr/lib/gcc/mips-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64-N32: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64el-linux-gnu -mabi=n32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-MIPS64EL-N32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5/n32/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.5/n32"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -1468,7 +1612,55 @@ comment|// RUN:     -target arm-linux-androideabi \
 end_comment
 
 begin_comment
-comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
@@ -1512,7 +1704,67 @@ comment|// RUN:     -target arm-linux-androideabi \
 end_comment
 
 begin_comment
-comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-SO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-SO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-SO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
@@ -1525,6 +1777,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-ANDROID-SO: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-SO: "-Bsymbolic"
 end_comment
 
 begin_comment
@@ -1560,7 +1816,67 @@ comment|// RUN:     -target arm-linux-androideabi \
 end_comment
 
 begin_comment
-comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -static \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-STATIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -static \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-STATIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -static \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-STATIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
@@ -1597,6 +1913,474 @@ end_comment
 
 begin_comment
 comment|// CHECK-ANDROID-STATIC: "{{.*}}/crtend_android.o"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot  \
+end_comment
+
+begin_comment
+comment|// RUN:     -pie \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -pie \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -pie \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -pie \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-PIE %s
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE: "{{.*}}/crtbegin_dynamic.o"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE-NOT: "gcc_s"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE: "-lgcc"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE-NOT: "gcc_s"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-PIE: "{{.*}}/crtend_android.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check linker invocation on Debian 6 MIPS 32/64-bit.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_6_mips_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-ML-MIPSEL %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib/crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib/crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/usr/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPSEL: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64el-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_6_mips_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-ML-MIPS64EL %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64/crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64/crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/64/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/64"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/lib/../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/usr/lib/../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64el-linux-gnu -mabi=n32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_6_mips_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-ML-MIPS64EL-N32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32/crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32/crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/n32/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/n32"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib/gcc/mipsel-linux-gnu/4.4/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Test linker invocation for Freescale SDK (OpenEmbedded).
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc-fsl-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/freescale_ppc_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FSL-PPC %s
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC: "-m" "elf32ppclinux"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC: "{{.*}}/crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC: "{{.*}}/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-fsl-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/freescale_ppc64_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FSL-PPC64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC64: "-m" "elf64ppc"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC64: "{{.*}}/crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC64: "{{.*}}/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FSL-PPC64: "-L[[SYSROOT]]/usr/lib64/powerpc64-fsl-linux/4.6.2/../.."
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check that crtfastmath.o is linked with -ffast-math.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux -### %s \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux -### %s -ffast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux -### %s -funsafe-math-optimizations\
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux -### %s -ffast-math -fno-fast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// We don't have crtfastmath.o in the i386 tree, use it to check that file
+end_comment
+
+begin_comment
+comment|// detection works.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-linux -### %s -ffast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-CRTFASTMATH: usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtfastmath.o
+end_comment
+
+begin_comment
+comment|// CHECK-NOCRTFASTMATH-NOT: crtfastmath.o
 end_comment
 
 end_unit

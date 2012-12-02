@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -triple=i686-apple-darwin9
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_define
 define|#
 directive|define

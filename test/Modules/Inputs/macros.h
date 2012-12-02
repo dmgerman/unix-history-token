@@ -49,5 +49,44 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|__building_module
+argument_list|(
+name|macros
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|Can't include this header without building the 'macros' module.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MODULE__
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__MODULE__
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

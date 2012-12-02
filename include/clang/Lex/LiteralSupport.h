@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -176,11 +182,9 @@ name|public
 label|:
 name|NumericLiteralParser
 argument_list|(
-argument|const char *begin
+argument|StringRef TokSpelling
 argument_list|,
-argument|const char *end
-argument_list|,
-argument|SourceLocation Loc
+argument|SourceLocation TokLoc
 argument_list|,
 argument|Preprocessor&PP
 argument_list|)
@@ -999,17 +1003,18 @@ function_decl|;
 name|bool
 name|CopyStringFragment
 parameter_list|(
-name|StringRef
-name|Fragment
-parameter_list|)
-function_decl|;
-name|bool
-name|DiagnoseBadString
-parameter_list|(
 specifier|const
 name|Token
 modifier|&
 name|Tok
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|TokBegin
+parameter_list|,
+name|StringRef
+name|Fragment
 parameter_list|)
 function_decl|;
 name|void

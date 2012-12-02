@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple=x86_64-unknown-freebsd7
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// PR2631
 end_comment
 

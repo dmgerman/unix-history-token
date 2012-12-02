@@ -8,7 +8,7 @@ comment|// RUN: mkdir %t
 end_comment
 
 begin_comment
-comment|// RUN: env TMPDIR=%t TEMP=%t TMP=%t %clang -fsyntax-only %s \
+comment|// RUN: env TMPDIR=%t TEMP=%t TMP=%t RC_DEBUG_OPTIONS=1 %clang -fsyntax-only %s \
 end_comment
 
 begin_comment
@@ -105,6 +105,10 @@ end_comment
 
 begin_comment
 comment|// CHECKSH-NOT: -internal-externc-isystem /tmp/
+end_comment
+
+begin_comment
+comment|// CHECKSH-NOT: -dwarf-debug-flags
 end_comment
 
 end_unit

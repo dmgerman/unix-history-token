@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -triple=x86_64-mingw32
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// mingw-w64's intrin.h has decls below.
 end_comment
 

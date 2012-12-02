@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.core.CastToStruct -analyzer-store=region -analyzer-constraints=basic -verify %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.core.CastToStruct -analyzer-store=region -analyzer-constraints=range -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core.CastToStruct -analyzer-store=region -analyzer-constraints=range -verify %s
 end_comment
 
 begin_struct
@@ -823,6 +819,50 @@ condition|)
 block|{
 comment|// no-warning
 block|}
+block|}
+end_function
+
+begin_comment
+comment|// [PR13927] offsetof replacement macro flagged as "dereference of a null pointer"
+end_comment
+
+begin_function
+name|int
+name|offset_of_data_array
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+operator|(
+operator|(
+operator|(
+expr|struct
+name|s
+operator|*
+operator|)
+literal|0
+operator|)
+operator|->
+name|data_array
+operator|)
+operator|)
+operator|-
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+operator|)
+return|;
+comment|// no-warning
 block|}
 end_function
 

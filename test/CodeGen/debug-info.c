@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unk-unk -o %t -emit-llvm -g %s
-end_comment
-
-begin_comment
-comment|// RUN: FileCheck --input-file=%t %s
+comment|// RUN: %clang_cc1 -triple x86_64-unk-unk -o - -emit-llvm -g %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -41,6 +37,10 @@ struct_decl|struct
 name|OPAQUE
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|// CHECK: DW_TAG_structure_type
+end_comment
 
 begin_typedef
 typedef|typedef

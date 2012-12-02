@@ -8,11 +8,11 @@ comment|// RUN: env "CPATH=%T/test1%{pathsep}%T/test2" %clang -x c -E -v %s 2>&1
 end_comment
 
 begin_comment
-comment|// CPATH: -I {{.*}}/test1
+comment|// CPATH: -I{{.*}}/test1
 end_comment
 
 begin_comment
-comment|// CPATH: -I {{.*}}/test2
+comment|// CPATH: -I{{.*}}/test2
 end_comment
 
 begin_comment

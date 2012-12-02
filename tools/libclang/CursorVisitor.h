@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- CursorVisitor.h - CursorVisitor interface --------------------------===//
+comment|//===- CursorVisitor.h - CursorVisitor interface ----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -119,6 +119,8 @@ block|,
 name|SizeOfPackExprPartsKind
 block|,
 name|LambdaExprPartsKind
+block|,
+name|PostChildrenVisitKind
 block|}
 enum|;
 name|protected
@@ -204,19 +206,6 @@ return|return
 name|parent
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-name|VisitorJob
-modifier|*
-name|VJ
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 typedef|typedef
@@ -248,6 +237,26 @@ decl_stmt|,
 name|bool
 decl|>
 block|{
+name|public
+label|:
+comment|/// \brief Callback called after child nodes of a cursor have been visited.
+comment|/// Return true to break visitation or false to continue.
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|PostChildrenVisitorTy
+function_decl|)
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|,
+name|CXClientData
+name|client_data
+parameter_list|)
+function_decl|;
+name|private
+label|:
 comment|/// \brief The translation unit we are traversing.
 name|CXTranslationUnit
 name|TU
@@ -269,6 +278,9 @@ decl_stmt|;
 comment|/// \brief The visitor function.
 name|CXCursorVisitor
 name|Visitor
+decl_stmt|;
+name|PostChildrenVisitorTy
+name|PostChildrenVisitor
 decl_stmt|;
 comment|/// \brief The opaque client data, to be passed along to the visitor.
 name|CXClientData
@@ -495,6 +507,9 @@ argument_list|,
 argument|SourceRange RegionOfInterest = SourceRange()
 argument_list|,
 argument|bool VisitDeclsOnly = false
+argument_list|,
+argument|PostChildrenVisitorTy PostChildrenVisitor =
+literal|0
 argument_list|)
 block|:
 name|TU
@@ -519,6 +534,11 @@ operator|,
 name|Visitor
 argument_list|(
 name|Visitor
+argument_list|)
+operator|,
+name|PostChildrenVisitor
+argument_list|(
+name|PostChildrenVisitor
 argument_list|)
 operator|,
 name|ClientData

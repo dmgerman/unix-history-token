@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -triple=i686-linux-gnu
+comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -triple=i686-linux-gnu -std=c11
 end_comment
 
 begin_comment
@@ -1729,6 +1729,42 @@ name|memory_order_seq_cst
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{operand of type 'void'}}
+specifier|const
+atomic|_Atomic
+argument_list|(
+name|int
+argument_list|)
+name|const_atomic
+decl_stmt|;
+name|__c11_atomic_init
+argument_list|(
+operator|&
+name|const_atomic
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
+name|__c11_atomic_store
+argument_list|(
+operator|&
+name|const_atomic
+argument_list|,
+literal|0
+argument_list|,
+name|memory_order_release
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
+name|__c11_atomic_load
+argument_list|(
+operator|&
+name|const_atomic
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
 block|}
 end_function
 

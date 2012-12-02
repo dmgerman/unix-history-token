@@ -13,10 +13,10 @@ name|a
 decl_stmt|;
 comment|// PR3788
 asm|asm("nop" : : "m"((int)(a)));
-comment|// expected-warning {{cast in a inline asm context requiring an l-value}}
+comment|// expected-warning {{cast in an inline asm context requiring an l-value}}
 comment|// PR3794
 asm|asm("nop" : "=r"((unsigned)a));
-comment|// expected-warning {{cast in a inline asm context requiring an l-value}}
+comment|// expected-warning {{cast in an inline asm context requiring an l-value}}
 block|}
 end_function
 

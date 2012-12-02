@@ -2072,6 +2072,10 @@ comment|// CHECK_CORE_AVX2_M32: #define __RDRND__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_CORE_AVX2_M32: #define __RTM__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_CORE_AVX2_M32: #define __SSE2__ 1
 end_comment
 
@@ -2169,6 +2173,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_CORE_AVX2_M64: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CORE_AVX2_M64: #define __RTM__ 1
 end_comment
 
 begin_comment

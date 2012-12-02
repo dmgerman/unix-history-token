@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple i686-apple-darwin9 %s -fsyntax-only -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// Pragma pack handling with tag declarations
 end_comment
 

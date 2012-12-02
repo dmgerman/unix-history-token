@@ -3,6 +3,45 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
 end_comment
 
+begin_define
+define|#
+directive|define
+name|a
+parameter_list|(
+name|x
+parameter_list|)
+value|enum { x }
+end_define
+
+begin_expr_stmt
+name|a
+argument_list|(
+name|n
+operator|=
+undef|#
+directive|undef
+name|a
+define|#
+directive|define
+name|a
+value|5
+name|a
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|n
+operator|==
+literal|5
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
 begin_comment
 comment|// header1.h
 end_comment

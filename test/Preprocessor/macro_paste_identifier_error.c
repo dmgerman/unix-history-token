@@ -11,6 +11,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -E -fms-extensions -Wno-invalid-token-paste -x assembler-with-cpp %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-constraints=range -fblocks -analyzer-opt-analyze-nested-blocks -analyzer-checker=experimental.deadcode.IdempotentOperations -verify %s
+comment|// RUN: %clang_cc1 -Wno-int-to-pointer-cast -analyze -analyzer-store=region -analyzer-constraints=range -fblocks -analyzer-opt-analyze-nested-blocks -analyzer-checker=alpha.deadcode.IdempotentOperations -verify %s
 end_comment
 
 begin_comment
@@ -1067,6 +1067,28 @@ name|void
 operator|)
 name|start
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|float
+name|testFloatCast
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|float
+name|f
+init|=
+name|i
+decl_stmt|;
+comment|// Don't crash when trying to create a "zero" float.
+return|return
+name|f
+operator|-
+name|f
+return|;
 block|}
 end_function
 

@@ -56,6 +56,22 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__arm
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|WCHAR_T_TYPE
+value|unsigned int
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__sun
 argument_list|)
 operator|||

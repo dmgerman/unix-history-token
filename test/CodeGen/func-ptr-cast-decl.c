@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -emit-llvm-only %s -verify
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// PR5882
 end_comment
 

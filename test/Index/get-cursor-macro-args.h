@@ -20,14 +20,14 @@ name|MACRO2
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 define|#
 directive|define
 name|MACRO
 parameter_list|(
 name|x
 parameter_list|)
-value|MACRO2(x)
+value|MACRO2((x))
 name|void
 name|test
 parameter_list|()

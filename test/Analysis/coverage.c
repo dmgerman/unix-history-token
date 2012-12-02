@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"system-header-simulator.h"
+file|"Inputs/system-header-simulator.h"
 end_include
 
 begin_typedef

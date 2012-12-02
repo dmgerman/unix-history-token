@@ -155,5 +155,29 @@ begin_comment
 comment|// CHECK-NOMDSPR2: "-target-feature" "-dspr2"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -G
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -G 16 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS-G %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-G: "-mllvm" "-mips-ssection-threshold=16"
+end_comment
+
 end_unit
 

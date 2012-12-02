@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple armv7 -fsyntax-only -verify -DTEST1 %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple armv7 -target-abi apcs-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:   -fsyntax-only -verify -DTEST1 %s
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -55,9 +63,87 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_PCS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
 begin_comment
-comment|// va_list on ARM is void*.
+comment|// va_list on ARM AAPCS is struct { void* __ap }.
 end_comment
+
+begin_function
+name|void
+name|test1
+parameter_list|()
+block|{
+name|__builtin_va_list
+name|ptr
+decl_stmt|;
+name|ptr
+operator|.
+name|__ap
+operator|=
+literal|"x"
+expr_stmt|;
+operator|*
+operator|(
+name|ptr
+operator|.
+name|__ap
+operator|)
+operator|=
+literal|'0'
+expr_stmt|;
+comment|// expected-error {{incomplete type 'void' is not assignable}}
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// va_list on ARM apcs-gnu is void*.
+end_comment
+
+begin_function
+name|void
+name|test1
+parameter_list|()
+block|{
+name|__builtin_va_list
+name|ptr
+decl_stmt|;
+name|ptr
+operator|.
+name|__ap
+operator|=
+literal|"x"
+expr_stmt|;
+comment|// expected-error {{member reference base type '__builtin_va_list' is not a structure or union}}
+operator|*
+operator|(
+name|ptr
+operator|.
+name|__ap
+operator|)
+operator|=
+literal|'0'
+expr_stmt|;
+comment|// expected-error {{member reference base type '__builtin_va_list' is not a structure or union}}
+block|}
+end_function
 
 begin_function
 name|void
@@ -77,6 +163,11 @@ expr_stmt|;
 comment|// expected-error {{incomplete type 'void' is not assignable}}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -4,63 +4,19 @@ comment|// Basic binding.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings %s 2> %t
+comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings %s 2>&1 | FileCheck %s --check-prefix=CHECK01
 end_comment
 
 begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: ".*\.s"' %t
+comment|// CHECK01: "clang", inputs: ["{{.*}}bindings.c"], output: "{{.*}}.s"
 end_comment
 
 begin_comment
-comment|// RUN: grep '"gcc::Assemble", inputs: \[".*\.s"\], output: ".*\.o"' %t
+comment|// CHECK01: "gcc::Assemble", inputs: ["{{.*}}.s"], output: "{{.*}}.o"
 end_comment
 
 begin_comment
-comment|// RUN: grep '"gcc::Link", inputs: \[".*\.o"\], output: "a.out"' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-no-clang %s 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: ".*\.s"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Assemble", inputs: \[".*\.s"\], output: ".*\.o"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Link", inputs: \[".*\.o"\], output: "a.out"' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-no-clang -no-integrated-cpp %s 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Preprocess", inputs: \[".*bindings.c"\], output: ".*\.i"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[".*\.i"\], output: ".*\.s"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Assemble", inputs: \[".*\.s"\], output: ".*\.o"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Link", inputs: \[".*\.o"\], output: "a.out"' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-no-clang -x c-header %s 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Precompile", inputs: \[".*bindings.c"\], output: ".*bindings.c.gch' %t
+comment|// CHECK01: "gcc::Link", inputs: ["{{.*}}.o"], output: "a.out"
 end_comment
 
 begin_comment
@@ -68,79 +24,35 @@ comment|// Clang control options
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -fsyntax-only %s 2> %t
+comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -fsyntax-only %s 2>&1 | FileCheck %s --check-prefix=CHECK05
 end_comment
 
 begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: (nothing)' %t
+comment|// CHECK05: "clang", inputs: ["{{.*}}bindings.c"], output: (nothing)
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-no-clang -fsyntax-only %s 2> %t
+comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -fsyntax-only -x c++ %s 2>&1 | FileCheck %s --check-prefix=CHECK08
 end_comment
 
 begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: (nothing)' %t
+comment|// CHECK08: "clang", inputs: ["{{.*}}bindings.c"], output: (nothing)
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-no-clang-cxx -fsyntax-only -x c++ %s 2> %t
+comment|// RUN: %clang -target i386-apple-darwin9 -ccc-print-bindings %s -S -arch ppc 2>&1 | FileCheck %s --check-prefix=CHECK11
 end_comment
 
 begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: (nothing)' %t
+comment|// CHECK11: "clang", inputs: ["{{.*}}bindings.c"], output: "bindings.s"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-clang-cxx -fsyntax-only -x c++ %s 2> %t
+comment|// RUN: %clang -target powerpc-unknown-unknown -ccc-print-bindings %s -S 2>&1 | FileCheck %s --check-prefix=CHECK12
 end_comment
 
 begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: (nothing)' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -ccc-print-bindings -ccc-no-clang-cpp -fsyntax-only -no-integrated-cpp %s 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Preprocess", inputs: \[".*bindings.c"\], output: ".*\.i"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*\.i"\], output: (nothing)' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i386-apple-darwin9 -ccc-print-bindings -ccc-clang-archs i386 %s -S -arch ppc 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: "bindings.s"' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i386-apple-darwin9 -ccc-print-bindings -ccc-clang-archs powerpc %s -S -arch ppc 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: "bindings.s"' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target powerpc-unknown-unknown -ccc-print-bindings -ccc-clang-archs "" %s -S 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: "bindings.s"' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target powerpc-unknown-unknown -ccc-print-bindings -ccc-clang-archs "i386" %s -S 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: "bindings.s"' %t
+comment|// CHECK12: "clang", inputs: ["{{.*}}bindings.c"], output: "bindings.s"
 end_comment
 
 begin_comment
@@ -148,19 +60,19 @@ comment|// Darwin bindings
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-apple-darwin9 -no-integrated-as -ccc-print-bindings %s 2> %t
+comment|// RUN: %clang -target i386-apple-darwin9 -no-integrated-as -ccc-print-bindings %s 2>&1 | FileCheck %s --check-prefix=CHECK14
 end_comment
 
 begin_comment
-comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: ".*\.s"' %t
+comment|// CHECK14: "clang", inputs: ["{{.*}}bindings.c"], output: "{{.*}}.s"
 end_comment
 
 begin_comment
-comment|// RUN: grep '"darwin::Assemble", inputs: \[".*\.s"\], output: ".*\.o"' %t
+comment|// CHECK14: "darwin::Assemble", inputs: ["{{.*}}.s"], output: "{{.*}}.o"
 end_comment
 
 begin_comment
-comment|// RUN: grep '"darwin::Link", inputs: \[".*\.o"\], output: "a.out"' %t
+comment|// CHECK14: "darwin::Link", inputs: ["{{.*}}.o"], output: "a.out"
 end_comment
 
 end_unit

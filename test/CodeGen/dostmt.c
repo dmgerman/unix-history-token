@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o -
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -236,6 +236,38 @@ condition|(
 literal|0
 condition|)
 do|;
+block|}
+end_function
+
+begin_comment
+comment|// PR14191
+end_comment
+
+begin_function_decl
+name|void
+name|test6f
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+do|do
+block|{   }
+do|while
+condition|(
+name|test6f
+argument_list|()
+operator|,
+literal|0
+condition|)
+do|;
+comment|// CHECK: call void @test6f()
 block|}
 end_function
 

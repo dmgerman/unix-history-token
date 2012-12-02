@@ -16,6 +16,10 @@ comment|// RUN: %clang -O3 -target i386-unknown-unknown -faddress-sanitizer %s -
 end_comment
 
 begin_comment
+comment|// RUN: %clang     -target i386-unknown-unknown -fsanitize=address  %s -S -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
 comment|// Verify that -faddress-sanitizer invokes asan instrumentation.
 end_comment
 

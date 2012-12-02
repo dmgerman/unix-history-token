@@ -87,5 +87,61 @@ begin_comment
 comment|// CHECK-NO-LEVELS: warn_objc_root_class_missing [-Wobjc-root-class]
 end_comment
 
+begin_comment
+comment|// Test if EnumConversion is a subgroup of -Wconversion.
+end_comment
+
+begin_comment
+comment|// RUN: diagtool show-enabled --no-levels -Wno-conversion -Wenum-conversion %s | FileCheck --check-prefix CHECK-ENUM-CONVERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: diagtool show-enabled --no-levels %s | FileCheck --check-prefix CHECK-ENUM-CONVERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: diagtool show-enabled --no-levels -Wno-conversion %s | FileCheck --check-prefix CHECK-NO-ENUM-CONVERSION %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ENUM-CONVERSION: -Wenum-conversion
+end_comment
+
+begin_comment
+comment|// CHECK-NO-ENUM-CONVERSION-NOT: -Wenum-conversion
+end_comment
+
+begin_comment
+comment|// Test if -Wshift-op-parentheses is a subgroup of -Wparentheses
+end_comment
+
+begin_comment
+comment|// RUN: diagtool show-enabled --no-levels -Wno-parentheses -Wshift-op-parentheses %s | FileCheck --check-prefix CHECK-SHIFT-OP-PARENTHESES %s
+end_comment
+
+begin_comment
+comment|// RUN: diagtool show-enabled --no-levels %s | FileCheck --check-prefix CHECK-SHIFT-OP-PARENTHESES %s
+end_comment
+
+begin_comment
+comment|// RUN: diagtool show-enabled --no-levels -Wno-parentheses %s | FileCheck --check-prefix CHECK-NO-SHIFT-OP-PARENTHESES %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SHIFT-OP-PARENTHESES: -Wshift-op-parentheses
+end_comment
+
+begin_comment
+comment|// CHECK-NO-SHIFT-OP-PARENTHESES-NOT: -Wshift-op-parentheses
+end_comment
+
 end_unit
 

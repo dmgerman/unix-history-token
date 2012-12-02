@@ -942,6 +942,15 @@ expr_stmt|;
 comment|// Whatever
 name|P
 argument_list|(
+name|bswap16
+argument_list|,
+operator|(
+name|N
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
 name|bswap32
 argument_list|,
 operator|(

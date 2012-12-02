@@ -12,11 +12,31 @@ comment|// RUN: %clang_cc1 -DBAR=int -include-pch %t -fsyntax-only -pedantic %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DFOO -DBAR=int -include-pch %t -Werror %s
+comment|// RUN: %clang_cc1 -DFOO -DBAR=int -include-pch %t %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -DFOO -DBAR=int -DX=5 -include-pch %t -Werror %s
+comment|// RUN: not %clang_cc1 -DFOO=blah -DBAR=int -include-pch %t %s 2> %t.err
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-FOO %s< %t.err
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -UFOO -include-pch %t %s 2> %t.err
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-NOFOO %s< %t.err
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -DFOO -undef -include-pch %t %s 2> %t.err
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-UNDEF %s< %t.err
 end_comment
 
 begin_decl_stmt
@@ -79,6 +99,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// CHECK-FOO: definition of macro 'FOO' differs between the precompiled header ('1') and the command line ('blah')
+end_comment
+
+begin_comment
+comment|// CHECK-NOFOO: macro 'FOO' was defined in the precompiled header but undef'd on the command line
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEF: command line contains '-undef' but precompiled header was not built with it
+end_comment
 
 end_unit
 

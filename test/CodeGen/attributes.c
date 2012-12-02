@@ -522,7 +522,7 @@ comment|// CHECK: [[FPTRVAR:%[a-z0-9]+]] = load void (i32)** @fptr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call x86_fastcallcc void [[FPTRVAR]](i32 10)
+comment|// CHECK-NEXT: call x86_fastcallcc void [[FPTRVAR]](i32 inreg 10)
 end_comment
 
 begin_comment

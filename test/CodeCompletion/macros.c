@@ -55,10 +55,17 @@ block|{
 comment|// RUN: %clang_cc1 -include %S/Inputs/macros.h -fsyntax-only -code-completion-macros -code-completion-at=%s:14:9 %s -o - | FileCheck -check-prefix=CC2 %s
 case|case
 block|}
+comment|// RUN: %clang_cc1 -include %S/Inputs/macros.h -fsyntax-only -code-completion-macros -code-completion-at=%s:17:7 %s -o - | FileCheck -check-prefix=CC3 %s
+ifdef|#
+directive|ifdef
+name|Q
+endif|#
+directive|endif
 comment|// Run the same tests, this time with macros loaded from the PCH file.
 comment|// RUN: %clang_cc1 -emit-pch -o %t %S/Inputs/macros.h
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -code-completion-macros -code-completion-at=%s:12:14 %s -o - | FileCheck -check-prefix=CC1 %s
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -code-completion-macros -code-completion-at=%s:14:9 %s -o - | FileCheck -check-prefix=CC2 %s
+comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -code-completion-macros -code-completion-at=%s:17:7 %s -o - | FileCheck -check-prefix=CC3 %s
 comment|// CC1: color
 comment|// CC1: x
 comment|// CC1: y
@@ -68,8 +75,15 @@ comment|// CC2: Blue
 comment|// CC2: FOO
 comment|// CC2: Green
 comment|// CC2: IDENTITY(<#X#>)
+comment|// CC2: MACRO_WITH_HISTORY(<#X#>,<#Y#>)
 comment|// CC2: Red
 comment|// CC2: WIBBLE
+comment|// CC3: BAR
+comment|// CC3: DEAD_MACRO
+comment|// CC3: FOO
+comment|// CC3: IDENTITY
+comment|// CC3: MACRO_WITH_HISTORY
+comment|// CC3: WIBBLE
 block|}
 end_function
 

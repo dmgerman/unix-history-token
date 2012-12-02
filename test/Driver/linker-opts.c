@@ -4,7 +4,7 @@ comment|// RUN: env LIBRARY_PATH=%T/test1 %clang -x c %s -### 2>&1 | FileCheck %
 end_comment
 
 begin_comment
-comment|// CHECK: "-L" "{{.*}}/test1"
+comment|// CHECK: "-L{{.*}}/test1"
 end_comment
 
 begin_comment

@@ -1,14 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s | not grep readonly
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s | not grep readnone
+comment|// XFAIL: mips
 end_comment
 
 begin_comment
-comment|// XFAIL: arm,mips
+comment|// CHECK-NOT: readonly
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
 end_comment
 
 begin_comment

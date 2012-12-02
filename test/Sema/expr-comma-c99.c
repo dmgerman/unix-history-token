@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -std=c99
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// rdar://6095180
 end_comment
 

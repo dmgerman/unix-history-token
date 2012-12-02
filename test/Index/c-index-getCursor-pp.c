@@ -90,6 +90,12 @@ name|__FILE__
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|<a.h>
+end_include
+
 begin_comment
 comment|// RUN: c-index-test -cursor-at=%s:1:11 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-1 %s
 end_comment
@@ -152,6 +158,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-8: macro expansion=__FILE__
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -cursor-at=%s:18:12 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-9 %s
+end_comment
+
+begin_comment
+comment|// CHECK-9: inclusion directive=a.h
 end_comment
 
 begin_comment

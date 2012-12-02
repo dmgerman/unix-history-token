@@ -986,6 +986,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{length modifier 'L' results in undefined behavior or no effect with 'n' conversion specifier}}
+comment|// expected-note@-1{{did you mean to use 'll'?}}
 block|}
 end_function
 
@@ -3563,83 +3564,6 @@ literal|0.0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{format specifies}}
-block|}
-end_function
-
-begin_comment
-comment|// PR 9466: clang: doesn't know about %Lu, %Ld, and %Lx
-end_comment
-
-begin_function
-name|void
-name|printf_longlong
-parameter_list|(
-name|long
-name|long
-name|x
-parameter_list|,
-name|unsigned
-name|long
-name|long
-name|y
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"%Ld"
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|printf
-argument_list|(
-literal|"%Lu"
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|printf
-argument_list|(
-literal|"%Lx"
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|printf
-argument_list|(
-literal|"%Ld"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|printf
-argument_list|(
-literal|"%Lu"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|printf
-argument_list|(
-literal|"%Lx"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-name|printf
-argument_list|(
-literal|"%Ls"
-argument_list|,
-literal|"hello"
-argument_list|)
-expr_stmt|;
-comment|// expected-warning {{length modifier 'L' results in undefined behavior or no effect with 's' conversion specifier}}
 block|}
 end_function
 

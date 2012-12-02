@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines a utility class for RecursiveASTVisitor related tests.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines utility templates for RecursiveASTVisitor related tests.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -58,6 +62,12 @@ define|#
 directive|define
 name|LLVM_CLANG_TEST_VISITOR_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
 
 begin_include
 include|#
@@ -110,7 +120,7 @@ comment|///
 comment|/// This is a drop-in replacement for RecursiveASTVisitor itself, with the
 comment|/// additional capability of running it over a snippet of code.
 comment|///
-comment|/// Visits template instantiations by default.
+comment|/// Visits template instantiations (but not implicit code) by default.
 name|template
 operator|<
 name|typename
@@ -135,22 +145,72 @@ operator|~
 name|TestVisitor
 argument_list|()
 block|{ }
+expr|enum
+name|Language
+block|{
+name|Lang_C
+block|,
+name|Lang_CXX
+block|}
+block|;
 comment|/// \brief Runs the current AST visitor over the given code.
 name|bool
 name|runOver
 argument_list|(
 argument|StringRef Code
+argument_list|,
+argument|Language L = Lang_CXX
 argument_list|)
 block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Args
+block|;
+switch|switch
+condition|(
+name|L
+condition|)
+block|{
+case|case
+name|Lang_C
+case|:
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-std=c99"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Lang_CXX
+case|:
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-std=c++98"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 return|return
 name|tooling
 operator|::
-name|runToolOnCode
+name|runToolOnCodeWithArgs
 argument_list|(
 name|CreateTestAction
 argument_list|()
 argument_list|,
 name|Code
+argument_list|,
+name|Args
 argument_list|)
 return|;
 block|}
@@ -283,9 +343,11 @@ operator|*
 name|Context
 block|; }
 expr_stmt|;
-comment|/// \brief A RecursiveASTVisitor for testing the RecursiveASTVisitor itself.
+comment|/// \brief A RecursiveASTVisitor to check that certain matches are (or are
+comment|/// not) observed during visitation.
 comment|///
-comment|/// Allows simple creation of test visitors running matches on only a small
+comment|/// This is a RecursiveASTVisitor for testing the RecursiveASTVisitor itself,
+comment|/// and allows simple creation of test visitors running matches on only a small
 comment|/// subset of the Visit* methods.
 name|template
 operator|<
@@ -312,49 +374,37 @@ operator|>
 block|{
 name|public
 operator|:
-name|ExpectedLocationVisitor
-argument_list|()
-operator|:
-name|ExpectedLine
+comment|/// \brief Expect 'Match' *not* to occur at the given 'Line' and 'Column'.
+comment|///
+comment|/// Any number of matches can be disallowed.
+name|void
+name|DisallowMatch
 argument_list|(
-literal|0
+argument|Twine Match
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|unsigned Column
 argument_list|)
-block|,
-name|ExpectedColumn
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Found
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|ExpectedLocationVisitor
-argument_list|()
 block|{
-name|EXPECT_TRUE
+name|DisallowedMatches
+operator|.
+name|push_back
 argument_list|(
-name|Found
+name|MatchCandidate
+argument_list|(
+name|Match
+argument_list|,
+name|Line
+argument_list|,
+name|Column
 argument_list|)
-operator|<<
-literal|"Expected \""
-operator|<<
-name|ExpectedMatch
-operator|<<
-literal|"\" at "
-operator|<<
-name|ExpectedLine
-operator|<<
-literal|":"
-operator|<<
-name|ExpectedColumn
-operator|<<
-name|PartialMatches
+argument_list|)
 block|;   }
 comment|/// \brief Expect 'Match' to occur at the given 'Line' and 'Column'.
+comment|///
+comment|/// Any number of expected matches can be set by calling this repeatedly.
+comment|/// Each is expected to be matched exactly once.
 name|void
 name|ExpectMatch
 argument_list|(
@@ -365,28 +415,69 @@ argument_list|,
 argument|unsigned Column
 argument_list|)
 block|{
-name|ExpectedMatch
-operator|=
-name|Match
+name|ExpectedMatches
 operator|.
-name|str
-argument_list|()
-block|;
-name|ExpectedLine
-operator|=
+name|push_back
+argument_list|(
+name|ExpectedMatch
+argument_list|(
+name|Match
+argument_list|,
 name|Line
-block|;
-name|ExpectedColumn
-operator|=
+argument_list|,
 name|Column
+argument_list|)
+argument_list|)
 block|;   }
+comment|/// \brief Checks that all expected matches have been found.
+name|virtual
+operator|~
+name|ExpectedLocationVisitor
+argument_list|()
+block|{
+for|for
+control|(
+name|typename
+name|std
+operator|::
+name|vector
+operator|<
+name|ExpectedMatch
+operator|>
+operator|::
+name|const_iterator
+name|It
+operator|=
+name|ExpectedMatches
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|End
+operator|=
+name|ExpectedMatches
+operator|.
+name|end
+argument_list|()
+init|;
+name|It
+operator|!=
+name|End
+condition|;
+operator|++
+name|It
+control|)
+block|{
+name|It
+operator|->
+name|ExpectFound
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 name|protected
 operator|:
-comment|/// \brief Convenience method to simplify writing test visitors.
-comment|///
-comment|/// Sets 'Found' to true if 'Name' and 'Location' match the expected
-comment|/// values. If only a partial match is found, record the information
-comment|/// to produce nice error output when a test fails.
+comment|/// \brief Checks an actual match against expected and disallowed matches.
 comment|///
 comment|/// Implementations are required to call this with appropriate values
 comment|/// for 'Name' during visitation.
@@ -398,6 +489,7 @@ argument_list|,
 argument|SourceLocation Location
 argument_list|)
 block|{
+specifier|const
 name|FullSourceLoc
 name|FullLocation
 operator|=
@@ -410,30 +502,321 @@ argument_list|(
 name|Location
 argument_list|)
 block|;
-if|if
-condition|(
+for|for
+control|(
+name|typename
+name|std
+operator|::
+name|vector
+operator|<
+name|MatchCandidate
+operator|>
+operator|::
+name|const_iterator
+name|It
+operator|=
+name|DisallowedMatches
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|End
+operator|=
+name|DisallowedMatches
+operator|.
+name|end
+argument_list|()
+init|;
+name|It
+operator|!=
+name|End
+condition|;
+operator|++
+name|It
+control|)
+block|{
+name|EXPECT_FALSE
+argument_list|(
+name|It
+operator|->
+name|Matches
+argument_list|(
+name|Name
+argument_list|,
+name|FullLocation
+argument_list|)
+argument_list|)
+operator|<<
+literal|"Matched disallowed "
+operator|<<
+operator|*
+name|It
+expr_stmt|;
+block|}
+for|for
+control|(
+name|typename
+name|std
+operator|::
+name|vector
+operator|<
+name|ExpectedMatch
+operator|>
+operator|::
+name|iterator
+name|It
+operator|=
+name|ExpectedMatches
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|End
+operator|=
+name|ExpectedMatches
+operator|.
+name|end
+argument_list|()
+init|;
+name|It
+operator|!=
+name|End
+condition|;
+operator|++
+name|It
+control|)
+block|{
+name|It
+operator|->
+name|UpdateFor
+argument_list|(
+name|Name
+argument_list|,
+name|FullLocation
+argument_list|,
+name|this
+operator|->
+name|Context
+operator|->
+name|getSourceManager
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|private
+operator|:
+expr|struct
+name|MatchCandidate
+block|{
+name|std
+operator|::
+name|string
+name|ExpectedName
+block|;
+name|unsigned
+name|LineNumber
+block|;
+name|unsigned
+name|ColumnNumber
+block|;
+name|MatchCandidate
+argument_list|(
+argument|Twine Name
+argument_list|,
+argument|unsigned LineNumber
+argument_list|,
+argument|unsigned ColumnNumber
+argument_list|)
+operator|:
+name|ExpectedName
+argument_list|(
+name|Name
+operator|.
+name|str
+argument_list|()
+argument_list|)
+block|,
+name|LineNumber
+argument_list|(
+name|LineNumber
+argument_list|)
+block|,
+name|ColumnNumber
+argument_list|(
+argument|ColumnNumber
+argument_list|)
+block|{     }
+name|bool
+name|Matches
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|FullSourceLoc const&Location
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MatchesName
+argument_list|(
+name|Name
+argument_list|)
+operator|&&
+name|MatchesLocation
+argument_list|(
+name|Location
+argument_list|)
+return|;
+block|}
+name|bool
+name|PartiallyMatches
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|FullSourceLoc const&Location
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MatchesName
+argument_list|(
+name|Name
+argument_list|)
+operator|||
+name|MatchesLocation
+argument_list|(
+name|Location
+argument_list|)
+return|;
+block|}
+name|bool
+name|MatchesName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+return|return
 name|Name
 operator|==
-name|ExpectedMatch
-operator|&&
-name|FullLocation
+name|ExpectedName
+return|;
+block|}
+name|bool
+name|MatchesLocation
+argument_list|(
+argument|FullSourceLoc const&Location
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Location
 operator|.
 name|isValid
 argument_list|()
 operator|&&
-name|FullLocation
+name|Location
 operator|.
 name|getSpellingLineNumber
 argument_list|()
 operator|==
-name|ExpectedLine
+name|LineNumber
 operator|&&
-name|FullLocation
+name|Location
 operator|.
 name|getSpellingColumnNumber
 argument_list|()
 operator|==
-name|ExpectedColumn
+name|ColumnNumber
+return|;
+block|}
+name|friend
+name|std
+operator|::
+name|ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|std
+operator|::
+name|ostream
+operator|&
+name|Stream
+operator|,
+name|MatchCandidate
+specifier|const
+operator|&
+name|Match
+operator|)
+block|{
+return|return
+name|Stream
+operator|<<
+name|Match
+operator|.
+name|ExpectedName
+operator|<<
+literal|" at "
+operator|<<
+name|Match
+operator|.
+name|LineNumber
+operator|<<
+literal|":"
+operator|<<
+name|Match
+operator|.
+name|ColumnNumber
+return|;
+block|}
+expr|}
+block|;    struct
+name|ExpectedMatch
+block|{
+name|ExpectedMatch
+argument_list|(
+argument|Twine Name
+argument_list|,
+argument|unsigned LineNumber
+argument_list|,
+argument|unsigned ColumnNumber
+argument_list|)
+operator|:
+name|Candidate
+argument_list|(
+name|Name
+argument_list|,
+name|LineNumber
+argument_list|,
+name|ColumnNumber
+argument_list|)
+block|,
+name|Found
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|void
+name|UpdateFor
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|FullSourceLoc Location
+argument_list|,
+argument|SourceManager&SM
+argument_list|)
+block|{
+if|if
+condition|(
+name|Candidate
+operator|.
+name|Matches
+argument_list|(
+name|Name
+argument_list|,
+name|Location
+argument_list|)
 condition|)
 block|{
 name|EXPECT_TRUE
@@ -450,33 +833,19 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|Found
+operator|&&
+name|Candidate
+operator|.
+name|PartiallyMatches
+argument_list|(
 name|Name
-operator|==
-name|ExpectedMatch
-operator|||
-operator|(
-name|FullLocation
-operator|.
-name|isValid
-argument_list|()
-operator|&&
-name|FullLocation
-operator|.
-name|getSpellingLineNumber
-argument_list|()
-operator|==
-name|ExpectedLine
-operator|&&
-name|FullLocation
-operator|.
-name|getSpellingColumnNumber
-argument_list|()
-operator|==
-name|ExpectedColumn
-operator|)
+argument_list|,
+name|Location
+argument_list|)
 condition|)
 block|{
-comment|// If we did not match, record information about partial matches.
 name|llvm
 operator|::
 name|raw_string_ostream
@@ -499,26 +868,43 @@ name|print
 argument_list|(
 name|Stream
 argument_list|,
-name|this
-operator|->
-name|Context
-operator|->
-name|getSourceManager
-argument_list|()
+name|SM
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|std
-operator|::
-name|string
-name|ExpectedMatch
-block|;
-name|unsigned
-name|ExpectedLine
-block|;
-name|unsigned
-name|ExpectedColumn
+name|void
+name|ExpectFound
+argument_list|()
+specifier|const
+block|{
+name|EXPECT_TRUE
+argument_list|(
+name|Found
+argument_list|)
+operator|<<
+literal|"Expected \""
+operator|<<
+name|Candidate
+operator|.
+name|ExpectedName
+operator|<<
+literal|"\" at "
+operator|<<
+name|Candidate
+operator|.
+name|LineNumber
+operator|<<
+literal|":"
+operator|<<
+name|Candidate
+operator|.
+name|ColumnNumber
+operator|<<
+name|PartialMatches
+block|;     }
+name|MatchCandidate
+name|Candidate
 block|;
 name|std
 operator|::
@@ -527,9 +913,25 @@ name|PartialMatches
 block|;
 name|bool
 name|Found
+block|;   }
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|MatchCandidate
+operator|>
+name|DisallowedMatches
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|ExpectedMatch
+operator|>
+name|ExpectedMatches
 block|; }
-expr_stmt|;
-block|}
+block|; }
 end_decl_stmt
 
 begin_endif

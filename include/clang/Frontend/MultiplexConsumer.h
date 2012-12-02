@@ -244,17 +244,6 @@ name|void
 name|ForgetSema
 argument_list|()
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MultiplexConsumer *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|private
 operator|:
 name|std

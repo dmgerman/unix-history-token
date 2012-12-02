@@ -280,7 +280,7 @@ comment|// LINK_OLDER_NODEMANGLE: "-lSystem"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin10 -### %t.o \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -### %s \
 end_comment
 
 begin_comment
@@ -421,6 +421,18 @@ end_comment
 
 begin_comment
 comment|// LINK_NO_CRT1-NOT: crt
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-ios6.0 -miphoneos-version-min=6.0 -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_NO_IOS_CRT1 %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_NO_IOS_CRT1-NOT: crt
 end_comment
 
 begin_comment

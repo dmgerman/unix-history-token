@@ -12,7 +12,7 @@ comment|// RUN: %clang -target powerpc-unknown-unknown \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-clang-archs i386 -c %s \
+comment|// RUN:   -c %s \
 end_comment
 
 begin_comment

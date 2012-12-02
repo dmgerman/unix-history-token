@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple arm-unknown-unknown -target-abi apcs-gnu -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_struct
 struct|struct
 name|s0

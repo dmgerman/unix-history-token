@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix -verify %s
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|// Testing core functionality of the SValBuilder.
 end_comment
 

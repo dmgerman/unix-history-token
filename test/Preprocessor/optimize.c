@@ -9,6 +9,10 @@ directive|ifdef
 name|OPT_O2
 end_ifdef
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -58,6 +62,10 @@ directive|ifdef
 name|OPT_O0
 end_ifdef
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -106,6 +114,10 @@ ifdef|#
 directive|ifdef
 name|OPT_OS
 end_ifdef
+
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
 
 begin_ifndef
 ifndef|#

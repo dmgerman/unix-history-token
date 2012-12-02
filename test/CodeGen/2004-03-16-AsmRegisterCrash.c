@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s  -o /dev/null
+comment|// RUN: %clang_cc1 -triple armv7-unknown-unknown %s  -o /dev/null
 end_comment
 
 begin_comment
-comment|// XFAIL: *
-end_comment
-
-begin_comment
-comment|// XTARGET: arm, i386, i686, x86_64
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown %s  -o /dev/null
 end_comment
 
 begin_function

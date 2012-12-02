@@ -89,7 +89,7 @@ comment|// either explicitly or as a prefix header.
 end_comment
 
 begin_comment
-comment|// expected-error{{ISO C requires a translation unit to contain at least one declaration.}}
+comment|// expected-error{{ISO C requires a translation unit to contain at least one declaration}}
 end_comment
 
 end_unit

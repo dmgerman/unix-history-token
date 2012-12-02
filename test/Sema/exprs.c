@@ -245,7 +245,7 @@ block|{
 return|return
 literal|1.0if
 return|;
-comment|// expected-warning {{imaginary constants are an extension}}
+comment|// expected-warning {{imaginary constants are a GNU extension}}
 block|}
 end_function
 

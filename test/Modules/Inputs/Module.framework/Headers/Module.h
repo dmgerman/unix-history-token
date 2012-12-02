@@ -107,6 +107,10 @@ directive|include
 file|<Module/Buried/Treasure.h>
 end_include
 
+begin_asm
+asm|__asm("foo");
+end_asm
+
 begin_endif
 endif|#
 directive|endif

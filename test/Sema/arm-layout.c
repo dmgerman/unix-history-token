@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple armv7-unknown-unknown -target-abi aapcs %s -verify
 end_comment
 
+begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
 begin_define
 define|#
 directive|define

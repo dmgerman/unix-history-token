@@ -219,7 +219,7 @@ argument_list|,
 name|Array
 argument_list|)
 expr_stmt|;
-comment|//CHECK:	.loc	2 31 8
+comment|//CHECK:	.loc	2 31
 for|for
 control|(
 name|i

@@ -27,11 +27,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: ret void, !dbg !17
+comment|// CHECK: ret void, !dbg [[LINE:.*]]
 end_comment
 
 begin_comment
-comment|// CHECK: !17 = metadata !{i32 6,
+comment|// CHECK: [[LINE]] = metadata !{i32 6,
 end_comment
 
 end_unit
