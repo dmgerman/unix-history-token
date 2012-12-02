@@ -507,9 +507,9 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -676,9 +676,9 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|ath_edma_tx_fifo_fill
@@ -725,9 +725,9 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -898,9 +898,9 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1070,9 +1070,9 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -1881,9 +1881,9 @@ operator|.
 name|ts_queue_id
 index|]
 expr_stmt|;
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|bf
@@ -1950,9 +1950,9 @@ name|axq_fifo_depth
 operator|--
 expr_stmt|;
 comment|/* XXX assert FIFO depth>= 0 */
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 		 * First we need to make sure ts_rate is valid. 		 * 		 * Pre-EDMA chips pass the whole TX descriptor to 		 * the proctxdesc function which will then fill out 		 * ts_rate based on the ts_finaltsi (final TX index) 		 * in the TX descriptor.  However the TX completion 		 * FIFO doesn't have this information.  So here we 		 * do a separate HAL call to populate that information. 		 * 		 * The same problem exists with ts_longretry. 		 * The FreeBSD HAL corrects ts_longretry in the HAL layer; 		 * the AR9380 HAL currently doesn't.  So until the HAL 		 * is imported and this can be added, we correct for it 		 * here. 		 */
@@ -2174,9 +2174,9 @@ argument_list|)
 expr_stmt|;
 comment|/* bf is invalid at this point */
 comment|/* 		 * Now that there's space in the FIFO, let's push some 		 * more frames into it. 		 * 		 * Unfortunately for now, the txq has FIFO and non-FIFO 		 * frames in the same linked list, so there's no way 		 * to quickly/easily populate frames without walking 		 * the queue and skipping 'axq_fifo_depth' frames. 		 * 		 * So for now, let's only repopulate the FIFO once it 		 * is empty.  It's sucky for performance but it's enough 		 * to begin validating that things are somewhat 		 * working. 		 */
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2198,9 +2198,9 @@ name|txq
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
