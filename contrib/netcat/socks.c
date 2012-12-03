@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: socks.c,v 1.19 2011/02/12 15:54:18 okan Exp $	*/
+comment|/*	$OpenBSD: socks.c,v 1.20 2012/03/08 09:56:28 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -1303,7 +1303,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%zd/6)"
+literal|"read failed (%zu/6)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1337,7 +1337,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%zd/18)"
+literal|"read failed (%zu/18)"
 argument_list|,
 name|cnt
 argument_list|)
