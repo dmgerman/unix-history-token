@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This class prints an X86 MCInst to intel style .s file syntax.
+comment|// This class prints an X86 MCInst to Intel style .s file syntax.
 end_comment
 
 begin_comment
@@ -188,7 +188,17 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|print_pcrel_imm
+name|printAVXCC
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned Op
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printPCRelImm
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

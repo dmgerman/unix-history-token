@@ -286,6 +286,7 @@ typedef|;
 name|_Unwind_VRS_Result
 name|_Unwind_VRS_Get
 parameter_list|(
+name|struct
 name|_Unwind_Context
 modifier|*
 name|context

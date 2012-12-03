@@ -139,9 +139,8 @@ name|raw_ostream
 operator|*
 name|OS
 argument_list|,
-specifier|const
 name|DiagnosticOptions
-operator|&
+operator|*
 name|diags
 argument_list|)
 decl_stmt|;

@@ -208,6 +208,21 @@ name|ProfileLoaderPassID
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createProfileMetadataLoaderPass - This pass loads information from a
+comment|// profile dump file and sets branch weight metadata.
+comment|//
+name|ModulePass
+modifier|*
+name|createProfileMetadataLoaderPass
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|ProfileMetadataLoaderPassID
+decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createNoProfileInfoPass - This pass implements the default "no profile".
 comment|//
 name|ImmutablePass
@@ -315,14 +330,26 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createLoopDependenceAnalysisPass - This creates an instance of the
-comment|// LoopDependenceAnalysis pass.
+comment|// createDependenceAnalysisPass - This creates an instance of the
+comment|// DependenceAnalysis pass.
 comment|//
-name|LoopPass
+name|FunctionPass
 modifier|*
-name|createLoopDependenceAnalysisPass
+name|createDependenceAnalysisPass
 parameter_list|()
 function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createCostModelAnalysisPass - This creates an instance of the
+comment|// CostModelAnalysis pass.
+comment|//
+name|FunctionPass
+modifier|*
+name|createCostModelAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// Minor pass prototypes, allowing us to expose them through bugpoint and
 comment|// analyze.
 name|FunctionPass

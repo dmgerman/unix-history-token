@@ -593,27 +593,6 @@ name|unsigned
 name|NumParams
 parameter_list|)
 function_decl|;
-specifier|inline
-specifier|const
-name|ParsedTemplateArgument
-operator|&
-name|ASTTemplateArgsPtr
-operator|::
-name|operator
-index|[]
-operator|(
-name|unsigned
-name|Arg
-operator|)
-specifier|const
-block|{
-return|return
-name|Args
-index|[
-name|Arg
-index|]
-return|;
-block|}
 block|}
 end_decl_stmt
 

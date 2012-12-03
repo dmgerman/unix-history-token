@@ -456,6 +456,89 @@ define|\
 value|namespace internal {                                                         \   template<typename NodeType, typename ParamT1, typename ParamT2>             \   class matcher_##DefineMatcher##Matcher                                       \       : public MatcherInterface<NodeType> {                                    \    public:                                                                     \     matcher_##DefineMatcher##Matcher(                                          \         const ParamType1&A##Param1, const ParamType2&A##Param2)              \         : Param1(A##Param1), Param2(A##Param2) {}                              \     virtual bool matches(                                                      \         const NodeType&Node, ASTMatchFinder *Finder,                          \         BoundNodesTreeBuilder *Builder) const;                                 \    private:                                                                    \     const ParamType1 Param1;                                                   \     const ParamType2 Param2;                                                   \   };                                                                           \   }                                                                            \   inline internal::PolymorphicMatcherWithParam2<                               \       internal::matcher_##DefineMatcher##Matcher,                              \       ParamType1, ParamType2>                                                 \     DefineMatcher(const ParamType1&Param1, const ParamType2&Param2) {        \     return internal::PolymorphicMatcherWithParam2<                             \         internal::matcher_##DefineMatcher##Matcher,                            \         ParamType1, ParamType2>(                                              \         Param1, Param2);                                                       \   }                                                                            \   template<typename NodeType, typename ParamT1, typename ParamT2>             \   bool internal::matcher_##DefineMatcher##Matcher<                             \       NodeType, ParamT1, ParamT2>::matches(                                    \       const NodeType&Node, ASTMatchFinder *Finder,                            \       BoundNodesTreeBuilder *Builder) const
 end_define
 
+begin_comment
+comment|/// \brief Creates a variadic matcher for both a specific \c Type as well as
+end_comment
+
+begin_comment
+comment|/// the corresponding \c TypeLoc.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_TYPE_MATCHER
+parameter_list|(
+name|NodeType
+parameter_list|,
+name|MatcherName
+parameter_list|)
+define|\
+value|const internal::VariadicDynCastAllOfMatcher<Type, NodeType> MatcherName;     \   const internal::VariadicDynCastAllOfMatcher<TypeLoc,                         \                                               NodeType##Loc> MatcherName##Loc
+end_define
+
+begin_comment
+comment|/// \brief AST_TYPE_TRAVERSE_MATCHER(MatcherName, FunctionName) defines
+end_comment
+
+begin_comment
+comment|/// the matcher \c MatcherName that can be used to traverse from one \c Type
+end_comment
+
+begin_comment
+comment|/// to another.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For a specific \c SpecificType, the traversal is done using
+end_comment
+
+begin_comment
+comment|/// \c SpecificType::FunctionName. The existance of such a function determines
+end_comment
+
+begin_comment
+comment|/// whether a corresponding matcher can be used on \c SpecificType.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_TYPE_TRAVERSE_MATCHER
+parameter_list|(
+name|MatcherName
+parameter_list|,
+name|FunctionName
+parameter_list|)
+define|\
+value|class Polymorphic##MatcherName##TypeMatcher {                                  \ public:                                                                        \   Polymorphic##MatcherName##TypeMatcher(                                       \       const internal::Matcher<QualType>&InnerMatcher)                         \     : InnerMatcher(InnerMatcher) {}                                            \   template<typename T> operator internal::Matcher<T>() {                      \     return internal::Matcher<T>(new internal::TypeTraverseMatcher<T>(          \       InnerMatcher,&T::FunctionName));                                        \   }                                                                            \ private:                                                                       \   const internal::Matcher<QualType> InnerMatcher;                              \ };                                                                             \ class Variadic##MatcherName##TypeTraverseMatcher                               \     : public llvm::VariadicFunction<                                           \         Polymorphic##MatcherName##TypeMatcher,                                 \         internal::Matcher<QualType>,                                           \         internal::makeTypeAllOfComposite<                                      \           Polymorphic##MatcherName##TypeMatcher, QualType>> {                 \ public:                                                                        \   Variadic##MatcherName##TypeTraverseMatcher() {}                              \ };                                                                             \ const Variadic##MatcherName##TypeTraverseMatcher MatcherName
+end_define
+
+begin_comment
+comment|/// \brief AST_TYPELOC_TRAVERSE_MATCHER(MatcherName, FunctionName) works
+end_comment
+
+begin_comment
+comment|/// identical to \c AST_TYPE_TRAVERSE_MATCHER but operates on \c TypeLocs.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_TYPELOC_TRAVERSE_MATCHER
+parameter_list|(
+name|MatcherName
+parameter_list|,
+name|FunctionName
+parameter_list|)
+define|\
+value|class Polymorphic##MatcherName##TypeLocMatcher {                               \ public:                                                                        \   Polymorphic##MatcherName##TypeLocMatcher(                                    \       const internal::Matcher<TypeLoc>&InnerMatcher)                          \     : InnerMatcher(InnerMatcher) {}                                            \   template<typename T> operator internal::Matcher<T>() {                      \     return internal::Matcher<T>(new internal::TypeLocTraverseMatcher<T>(       \       InnerMatcher,&T::FunctionName##Loc));                                   \   }                                                                            \ private:                                                                       \   const internal::Matcher<TypeLoc> InnerMatcher;                               \ };                                                                             \ class Variadic##MatcherName##TypeLocTraverseMatcher                            \     : public llvm::VariadicFunction<                                           \         Polymorphic##MatcherName##TypeLocMatcher,                              \         internal::Matcher<TypeLoc>,                                            \         internal::makeTypeAllOfComposite<                                      \           Polymorphic##MatcherName##TypeLocMatcher, TypeLoc>> {               \ public:                                                                        \   Variadic##MatcherName##TypeLocTraverseMatcher() {}                           \ };                                                                             \ const Variadic##MatcherName##TypeLocTraverseMatcher MatcherName##Loc;          \ AST_TYPE_TRAVERSE_MATCHER(MatcherName, FunctionName##Type)
+end_define
+
 begin_endif
 endif|#
 directive|endif

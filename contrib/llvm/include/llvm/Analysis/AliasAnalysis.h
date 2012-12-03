@@ -177,7 +177,10 @@ name|class
 name|VAArgInst
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
 decl_stmt|;
 name|class
 name|Pass
@@ -200,9 +203,14 @@ block|{
 name|protected
 label|:
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
+decl_stmt|;
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 decl_stmt|;
 name|private
 label|:
@@ -253,6 +261,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|TLI
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|AA
 argument_list|(
 literal|0
@@ -278,13 +291,13 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// getTargetData - Return a pointer to the current TargetData object, or
-comment|/// null if no TargetData object is available.
+comment|/// getDataLayout - Return a pointer to the current DataLayout object, or
+comment|/// null if no DataLayout object is available.
 comment|///
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
@@ -292,7 +305,21 @@ return|return
 name|TD
 return|;
 block|}
-comment|/// getTypeStoreSize - Return the TargetData store size for the given type,
+comment|/// getTargetLibraryInfo - Return a pointer to the current TargetLibraryInfo
+comment|/// object, or null if no TargetLibraryInfo object is available.
+comment|///
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|getTargetLibraryInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TLI
+return|;
+block|}
+comment|/// getTypeStoreSize - Return the DataLayout store size for the given type,
 comment|/// if known, or a conservative value otherwise.
 comment|///
 name|uint64_t
@@ -675,6 +702,36 @@ argument_list|(
 name|V2
 argument_list|,
 name|V2Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// isNoAlias - A convenience wrapper.
+name|bool
+name|isNoAlias
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V1
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V2
+parameter_list|)
+block|{
+return|return
+name|isNoAlias
+argument_list|(
+name|Location
+argument_list|(
+name|V1
+argument_list|)
+argument_list|,
+name|Location
+argument_list|(
+name|V2
 argument_list|)
 argument_list|)
 return|;

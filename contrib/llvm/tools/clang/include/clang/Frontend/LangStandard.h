@@ -65,7 +65,7 @@ block|{
 enum|enum
 name|LangFeatures
 block|{
-name|BCPLComment
+name|LineComment
 init|=
 operator|(
 literal|1
@@ -113,7 +113,7 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|Digraphs
+name|CPlusPlus1y
 init|=
 operator|(
 literal|1
@@ -121,7 +121,7 @@ operator|<<
 literal|6
 operator|)
 block|,
-name|GNUMode
+name|Digraphs
 init|=
 operator|(
 literal|1
@@ -129,7 +129,7 @@ operator|<<
 literal|7
 operator|)
 block|,
-name|HexFloat
+name|GNUMode
 init|=
 operator|(
 literal|1
@@ -137,12 +137,20 @@ operator|<<
 literal|8
 operator|)
 block|,
-name|ImplicitInt
+name|HexFloat
 init|=
 operator|(
 literal|1
 operator|<<
 literal|9
+operator|)
+block|,
+name|ImplicitInt
+init|=
+operator|(
+literal|1
+operator|<<
+literal|10
 operator|)
 block|}
 enum|;
@@ -214,9 +222,9 @@ return|return
 name|Description
 return|;
 block|}
-comment|/// hasBCPLComments - Language supports '//' comments.
+comment|/// Language supports '//' comments.
 name|bool
-name|hasBCPLComments
+name|hasLineComments
 argument_list|()
 specifier|const
 block|{
@@ -225,7 +233,7 @@ name|Flags
 operator|&
 name|frontend
 operator|::
-name|BCPLComment
+name|LineComment
 return|;
 block|}
 comment|/// isC89 - Language is a superset of C89.
@@ -296,6 +304,20 @@ operator|&
 name|frontend
 operator|::
 name|CPlusPlus0x
+return|;
+block|}
+comment|/// isCPlusPlus1y - Language is a C++1y variant.
+name|bool
+name|isCPlusPlus1y
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|CPlusPlus1y
 return|;
 block|}
 comment|/// hasDigraphs - Language supports digraphs.

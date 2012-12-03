@@ -2540,9 +2540,9 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Add a constructor-initialization step.
 comment|///
-comment|/// \arg FromInitList The constructor call is syntactically an initializer
+comment|/// \param FromInitList The constructor call is syntactically an initializer
 comment|/// list.
-comment|/// \arg AsInitList The constructor is called as an init list constructor.
+comment|/// \param AsInitList The constructor is called as an init list constructor.
 name|void
 name|AddConstructorInitializationStep
 parameter_list|(

@@ -136,12 +136,10 @@ name|Kind
 decl_stmt|;
 name|MCExpr
 argument_list|(
-specifier|const
-name|MCExpr
-operator|&
+argument|const MCExpr&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -150,8 +148,8 @@ specifier|const
 name|MCExpr
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|bool
 name|EvaluateAsAbsolute
 argument_list|(
@@ -262,6 +260,25 @@ argument_list|(
 name|int64_t
 operator|&
 name|Res
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|,
+specifier|const
+name|SectionAddrMap
+operator|&
+name|Addrs
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|EvaluateAsAbsolute
+argument_list|(
+name|int64_t
+operator|&
+name|Res
 argument_list|)
 decl|const
 decl_stmt|;
@@ -290,25 +307,6 @@ specifier|const
 name|MCAsmLayout
 operator|&
 name|Layout
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|EvaluateAsAbsolute
-argument_list|(
-name|int64_t
-operator|&
-name|Res
-argument_list|,
-specifier|const
-name|MCAsmLayout
-operator|&
-name|Layout
-argument_list|,
-specifier|const
-name|SectionAddrMap
-operator|&
-name|Addrs
 argument_list|)
 decl|const
 decl_stmt|;
@@ -344,19 +342,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// @}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MCExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 specifier|inline
@@ -460,17 +445,6 @@ operator|::
 name|Constant
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCConstantExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// MCSymbolRefExpr - Represent a reference to a symbol from inside an
@@ -542,8 +516,14 @@ name|VK_ARM_GOTTPOFF
 block|,
 name|VK_ARM_TARGET1
 block|,
+name|VK_ARM_TARGET2
+block|,
 name|VK_PPC_TOC
 block|,
+comment|// TOC base
+name|VK_PPC_TOC_ENTRY
+block|,
+comment|// TOC entry
 name|VK_PPC_DARWIN_HA16
 block|,
 comment|// ha16(symbol)
@@ -760,17 +740,6 @@ operator|::
 name|SymbolRef
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCSymbolRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// MCUnaryExpr - Unary assembler expressions.
@@ -979,17 +948,6 @@ operator|==
 name|MCExpr
 operator|::
 name|Unary
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCUnaryExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1652,17 +1610,6 @@ operator|::
 name|Binary
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCBinaryExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// MCTargetExpr - This is an extension point for target-specific MCExpr
@@ -1678,7 +1625,7 @@ name|MCExpr
 block|{
 name|virtual
 name|void
-name|Anchor
+name|anchor
 argument_list|()
 block|;
 name|protected
@@ -1756,17 +1703,6 @@ operator|==
 name|MCExpr
 operator|::
 name|Target
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCTargetExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

@@ -76,6 +76,36 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+block|{
+comment|// Helper for extensive error checking in debug builds.
+name|error_code
+name|Check
+parameter_list|(
+name|error_code
+name|Err
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Err
+condition|)
+block|{
+name|report_fatal_error
+argument_list|(
+name|Err
+operator|.
+name|message
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|Err
+return|;
+block|}
+block|}
+comment|// end anonymous namespace
 name|class
 name|RuntimeDyldELF
 range|:
@@ -84,16 +114,12 @@ name|RuntimeDyldImpl
 block|{
 name|protected
 operator|:
-name|ObjectImage
-operator|*
-name|LoadedObject
-block|;
 name|void
 name|resolveX86_64Relocation
 argument_list|(
-argument|uint8_t *LocalAddress
+argument|const SectionEntry&Section
 argument_list|,
-argument|uint64_t FinalAddress
+argument|uint64_t Offset
 argument_list|,
 argument|uint64_t Value
 argument_list|,
@@ -105,9 +131,9 @@ block|;
 name|void
 name|resolveX86Relocation
 argument_list|(
-argument|uint8_t *LocalAddress
+argument|const SectionEntry&Section
 argument_list|,
-argument|uint32_t FinalAddress
+argument|uint64_t Offset
 argument_list|,
 argument|uint32_t Value
 argument_list|,
@@ -119,9 +145,9 @@ block|;
 name|void
 name|resolveARMRelocation
 argument_list|(
-argument|uint8_t *LocalAddress
+argument|const SectionEntry&Section
 argument_list|,
-argument|uint32_t FinalAddress
+argument|uint64_t Offset
 argument_list|,
 argument|uint32_t Value
 argument_list|,
@@ -130,13 +156,41 @@ argument_list|,
 argument|int32_t Addend
 argument_list|)
 block|;
+name|void
+name|resolveMIPSRelocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint32_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int32_t Addend
+argument_list|)
+block|;
+name|void
+name|resolvePPC64Relocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int64_t Addend
+argument_list|)
+block|;
 name|virtual
 name|void
 name|resolveRelocation
 argument_list|(
-argument|uint8_t *LocalAddress
+argument|const SectionEntry&Section
 argument_list|,
-argument|uint64_t FinalAddress
+argument|uint64_t Offset
 argument_list|,
 argument|uint64_t Value
 argument_list|,
@@ -172,24 +226,44 @@ operator|&
 name|Stubs
 argument_list|)
 block|;
+name|unsigned
+name|getCommonSymbolAlignment
+argument_list|(
+specifier|const
+name|SymbolRef
+operator|&
+name|Sym
+argument_list|)
+block|;
 name|virtual
 name|ObjectImage
 operator|*
 name|createObjectImage
 argument_list|(
-specifier|const
-name|MemoryBuffer
+name|ObjectBuffer
 operator|*
 name|InputBuffer
 argument_list|)
 block|;
-name|virtual
+name|uint64_t
+name|findPPC64TOC
+argument_list|()
+specifier|const
+block|;
 name|void
-name|handleObjectLoaded
+name|findOPDEntrySection
 argument_list|(
 name|ObjectImage
-operator|*
+operator|&
 name|Obj
+argument_list|,
+name|ObjSectionToIDMap
+operator|&
+name|LocalSections
+argument_list|,
+name|RelocationValueRef
+operator|&
+name|Rel
 argument_list|)
 block|;
 name|public
@@ -203,12 +277,7 @@ argument_list|)
 operator|:
 name|RuntimeDyldImpl
 argument_list|(
-name|mm
-argument_list|)
-block|,
-name|LoadedObject
-argument_list|(
-literal|0
+argument|mm
 argument_list|)
 block|{}
 name|virtual
@@ -219,7 +288,7 @@ block|;
 name|bool
 name|isCompatibleFormat
 argument_list|(
-argument|const MemoryBuffer *InputBuffer
+argument|const ObjectBuffer *Buffer
 argument_list|)
 specifier|const
 block|; }

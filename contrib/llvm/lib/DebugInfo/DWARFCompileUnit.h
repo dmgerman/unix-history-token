@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"DWARFDebugRangeList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -174,6 +180,21 @@ name|bool
 name|cu_die_only
 parameter_list|)
 function_decl|;
+comment|/// extractRangeList - extracts the range list referenced by this compile
+comment|/// unit from .debug_ranges section. Returns true on success.
+comment|/// Requires that compile unit is already extracted.
+name|bool
+name|extractRangeList
+argument_list|(
+name|uint32_t
+name|RangeListOffset
+argument_list|,
+name|DWARFDebugRangeList
+operator|&
+name|RangeList
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|clear
 parameter_list|()
@@ -432,19 +453,16 @@ name|bool
 name|clear_dies_if_already_not_parsed
 parameter_list|)
 function_decl|;
-comment|/// getFunctionDIEForAddress - Returns pointer to parsed subprogram DIE,
-comment|/// address ranges of which contain the provided address,
-comment|/// or NULL if there is no such subprogram. The pointer
-comment|/// is valid until DWARFCompileUnit::clear() or clearDIEs() is called.
-specifier|const
+comment|/// getInlinedChainForAddress - fetches inlined chain for a given address.
+comment|/// Returns empty chain if there is no subprogram containing address.
 name|DWARFDebugInfoEntryMinimal
-modifier|*
-name|getFunctionDIEForAddress
-parameter_list|(
-name|int64_t
-name|address
-parameter_list|)
-function_decl|;
+operator|::
+name|InlinedChain
+name|getInlinedChainForAddress
+argument_list|(
+argument|uint64_t Address
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

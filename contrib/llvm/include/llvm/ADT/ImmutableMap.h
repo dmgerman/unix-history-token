@@ -736,13 +736,10 @@ name|private
 label|:
 name|Factory
 argument_list|(
-specifier|const
-name|Factory
-operator|&
-name|RHS
+argument|const Factory& RHS
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -752,8 +749,8 @@ name|Factory
 operator|&
 name|RHS
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 end_decl_stmt
 

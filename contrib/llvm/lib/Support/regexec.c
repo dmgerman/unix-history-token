@@ -232,7 +232,7 @@ name|INC
 parameter_list|(
 name|o
 parameter_list|)
-value|((o)<<= 1)
+value|((o) = (unsigned long)(o)<< 1)
 end_define
 
 begin_define

@@ -56,7 +56,7 @@ modifier|*
 name|edx
 parameter_list|)
 block|{
-asm|asm("cpuid" : "=a"(*eax), "=b" (*ebx), "=c"(*ecx), "=d"(*edx) : "0"(level));
+asm|__asm("cpuid" : "=a"(*eax), "=b" (*ebx), "=c"(*ecx), "=d"(*edx) : "0"(level));
 return|return
 literal|1
 return|;

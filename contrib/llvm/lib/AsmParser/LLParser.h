@@ -866,7 +866,7 @@ function_decl|;
 name|bool
 name|ParseOptionalAttrs
 parameter_list|(
-name|Attributes
+name|AttrBuilder
 modifier|&
 name|Attrs
 parameter_list|,

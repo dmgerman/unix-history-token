@@ -98,13 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetTransformImpl.h"
 end_include
 
 begin_decl_stmt
@@ -121,8 +127,8 @@ name|SparcSubtarget
 name|Subtarget
 block|;
 specifier|const
-name|TargetData
 name|DataLayout
+name|DL
 block|;
 comment|// Calculates type size& alignment
 name|SparcInstrInfo
@@ -136,6 +142,12 @@ name|TSInfo
 block|;
 name|SparcFrameLowering
 name|FrameLowering
+block|;
+name|ScalarTargetTransformImpl
+name|STTI
+block|;
+name|VectorTargetTransformImpl
+name|VTTI
 block|;
 name|public
 operator|:
@@ -243,15 +255,41 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetData
+name|ScalarTargetTransformInfo
 operator|*
-name|getTargetData
+name|getScalarTargetTransformInfo
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
+name|STTI
+return|;
+block|}
+name|virtual
+specifier|const
+name|VectorTargetTransformInfo
+operator|*
+name|getVectorTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|VTTI
+return|;
+block|}
+name|virtual
+specifier|const
 name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|DL
 return|;
 block|}
 comment|// Pass Pipeline Configuration

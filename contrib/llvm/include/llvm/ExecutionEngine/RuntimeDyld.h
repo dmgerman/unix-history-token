@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/ObjectBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Memory.h"
 end_include
 
@@ -79,12 +85,12 @@ name|class
 name|RuntimeDyldImpl
 decl_stmt|;
 name|class
-name|MemoryBuffer
+name|ObjectImage
 decl_stmt|;
 comment|// RuntimeDyld clients often want to handle the memory management of
-comment|// what gets placed where. For JIT clients, this is an abstraction layer
-comment|// over the JITMemoryManager, which references objects by their source
-comment|// representations in LLVM IR.
+comment|// what gets placed where. For JIT clients, this is the subset of
+comment|// JITMemoryManager required for dynamic loading of binaries.
+comment|//
 comment|// FIXME: As the RuntimeDyld fills out, additional routines will be needed
 comment|//        for the varying types of objects to be allocated.
 name|class
@@ -92,12 +98,10 @@ name|RTDyldMemoryManager
 block|{
 name|RTDyldMemoryManager
 argument_list|(
-specifier|const
-name|RTDyldMemoryManager
-operator|&
+argument|const RTDyldMemoryManager&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -106,8 +110,8 @@ specifier|const
 name|RTDyldMemoryManager
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|RTDyldMemoryManager
@@ -119,7 +123,9 @@ name|RTDyldMemoryManager
 argument_list|()
 expr_stmt|;
 comment|/// allocateCodeSection - Allocate a memory block of (at least) the given
-comment|/// size suitable for executable code.
+comment|/// size suitable for executable code. The SectionID is a unique identifier
+comment|/// assigned by the JIT engine, and optionally recorded by the memory manager
+comment|/// to access a loaded section.
 name|virtual
 name|uint8_t
 modifier|*
@@ -138,7 +144,9 @@ init|=
 literal|0
 function_decl|;
 comment|/// allocateDataSection - Allocate a memory block of (at least) the given
-comment|/// size suitable for data.
+comment|/// size suitable for data. The SectionID is a unique identifier
+comment|/// assigned by the JIT engine, and optionally recorded by the memory manager
+comment|/// to access a loaded section.
 name|virtual
 name|uint8_t
 modifier|*
@@ -156,6 +164,13 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// getPointerToNamedFunction - This method returns the address of the
+comment|/// specified function. As such it is only useful for resolving library
+comment|/// symbols, not code generated symbols.
+comment|///
+comment|/// If AbortOnFailure is false and no function with the given name is
+comment|/// found, this function returns a null pointer. Otherwise, it prints a
+comment|/// message to stderr and aborts.
 name|virtual
 name|void
 modifier|*
@@ -183,12 +198,10 @@ name|RuntimeDyld
 block|{
 name|RuntimeDyld
 argument_list|(
-specifier|const
-name|RuntimeDyld
-operator|&
+argument|const RuntimeDyld&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -197,8 +210,8 @@ specifier|const
 name|RuntimeDyld
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 comment|// RuntimeDyldImpl is the actual class. RuntimeDyld is just the public
 comment|// interface.
 name|RuntimeDyldImpl
@@ -235,11 +248,15 @@ operator|~
 name|RuntimeDyld
 argument_list|()
 expr_stmt|;
-comment|/// Load an in-memory object file into the dynamic linker.
-name|bool
+comment|/// loadObject - prepare the object contained in the input buffer for
+comment|/// execution.  Ownership of the input buffer is transferred to the
+comment|/// ObjectImage instance returned from this function if successful.
+comment|/// In the case of load failure, the input buffer will be deleted.
+name|ObjectImage
+modifier|*
 name|loadObject
 parameter_list|(
-name|MemoryBuffer
+name|ObjectBuffer
 modifier|*
 name|InputBuffer
 parameter_list|)
@@ -250,6 +267,15 @@ comment|/// and resolve relocatons based on where they put it).
 name|void
 modifier|*
 name|getSymbolAddress
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+comment|/// Get the address of the target copy of the symbol. This is the address
+comment|/// used for relocation.
+name|uint64_t
+name|getSymbolLoadAddress
 parameter_list|(
 name|StringRef
 name|Name
@@ -267,6 +293,7 @@ comment|/// This is the address which will be used for relocation resolution.
 name|void
 name|mapSectionAddress
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|LocalAddress

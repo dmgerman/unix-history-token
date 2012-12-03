@@ -230,28 +230,11 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createInternalizePass - This pass loops over all of the functions in the
-comment|/// input module, internalizing all globals (functions and variables) not part
-comment|/// of the api.  If a list of symbols is specified with the
-comment|/// -internalize-public-api-* command line options, those symbols are not
-comment|/// internalized and all others are.  Otherwise if AllButMain is set and the
-comment|/// main function is found, all other globals are marked as internal. If no api
-comment|/// is supplied and AllButMain is not set, or no main function is found, nothing
-comment|/// is internalized.
-comment|///
-name|ModulePass
-modifier|*
-name|createInternalizePass
-parameter_list|(
-name|bool
-name|AllButMain
-parameter_list|)
-function_decl|;
-comment|/// createInternalizePass - This pass loops over all of the functions in the
 comment|/// input module, internalizing all globals (functions and variables) not in the
 comment|/// given exportList.
 comment|///
 comment|/// Note that commandline options that are used with the above function are not
-comment|/// used now! Also, when exportList is empty, nothing is internalized.
+comment|/// used now!
 name|ModulePass
 modifier|*
 name|createInternalizePass
@@ -269,6 +252,12 @@ operator|&
 name|exportList
 argument_list|)
 decl_stmt|;
+comment|/// createInternalizePass - Same as above, but with an empty exportList.
+name|ModulePass
+modifier|*
+name|createInternalizePass
+parameter_list|()
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createDeadArgEliminationPass - This pass removes arguments from functions
 comment|/// which are not used by the body of the function.
@@ -379,6 +368,22 @@ comment|///
 name|ModulePass
 modifier|*
 name|createPartialInliningPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|// createMetaRenamerPass - Rename everything with metasyntatic names.
+comment|//
+name|ModulePass
+modifier|*
+name|createMetaRenamerPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// createBarrierNoopPass - This pass is purely a module pass barrier in a pass
+comment|/// manager.
+name|ModulePass
+modifier|*
+name|createBarrierNoopPass
 parameter_list|()
 function_decl|;
 block|}

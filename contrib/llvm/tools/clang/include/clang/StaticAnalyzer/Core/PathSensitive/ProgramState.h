@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  This file defines SymbolRef, ExprBindKey, and ProgramState*.
+comment|// This file defines the state of the program along the analysisa path.
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/ConstraintManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/DynamicTypeInfo.h"
 end_include
 
 begin_include
@@ -160,7 +166,7 @@ name|ProgramStateManager
 modifier|&
 parameter_list|,
 name|SubEngine
-modifier|&
+modifier|*
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -243,132 +249,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \class Stores the dynamic type information.
-comment|/// Information about type of an object at runtime. This is used by dynamic
-comment|/// dispatch implementation.
-name|class
-name|DynamicTypeInfo
-block|{
-name|QualType
-name|T
-decl_stmt|;
-name|bool
-name|CanBeASubClass
-decl_stmt|;
-name|public
-label|:
-name|DynamicTypeInfo
-argument_list|()
-operator|:
-name|T
-argument_list|(
-argument|QualType()
-argument_list|)
-block|{}
-name|DynamicTypeInfo
-argument_list|(
-argument|QualType WithType
-argument_list|,
-argument|bool CanBeSub = true
-argument_list|)
-operator|:
-name|T
-argument_list|(
-name|WithType
-argument_list|)
-operator|,
-name|CanBeASubClass
-argument_list|(
-argument|CanBeSub
-argument_list|)
-block|{}
-name|bool
-name|isValid
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|T
-operator|.
-name|isNull
-argument_list|()
-return|;
-block|}
-name|QualType
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|T
-return|;
-block|}
-name|bool
-name|canBeASubClass
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CanBeASubClass
-return|;
-block|}
-name|void
-name|Profile
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-decl|const
-block|{
-name|T
-operator|.
-name|Profile
-argument_list|(
-name|ID
-argument_list|)
-expr_stmt|;
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|CanBeASubClass
-argument_list|)
-expr_stmt|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|DynamicTypeInfo
-operator|&
-name|X
-operator|)
-specifier|const
-block|{
-return|return
-name|T
-operator|==
-name|X
-operator|.
-name|T
-operator|&&
-name|CanBeASubClass
-operator|==
-name|X
-operator|.
-name|CanBeASubClass
-return|;
-block|}
-block|}
-empty_stmt|;
 comment|/// \class ProgramState
 comment|/// ProgramState - This class encapsulates:
 comment|///
@@ -427,9 +307,8 @@ name|ProgramState
 operator|&
 name|R
 operator|)
-specifier|const
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement.
 name|friend
 name|class
 name|ProgramStateManager
@@ -522,6 +401,13 @@ operator|*
 name|stateMgr
 return|;
 block|}
+comment|/// Return the ConstraintManager.
+name|ConstraintManager
+operator|&
+name|getConstraintManager
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getEnvironment - Return the environment associated with this state.
 comment|///  The environment is the mapping from expressions to values.
 specifier|const
@@ -742,8 +628,10 @@ decl_stmt|;
 comment|//==---------------------------------------------------------------------==//
 comment|// Binding and retrieving values to/from the environment and symbolic store.
 comment|//==---------------------------------------------------------------------==//
-comment|/// BindCompoundLiteral - Return the state that has the bindings currently
-comment|///  in this state plus the bindings for the CompoundLiteral.
+comment|/// \brief Create a new state with the specified CompoundLiteral binding.
+comment|/// \param CL the compound literal expression (the binding key)
+comment|/// \param LC the LocationContext of the binding
+comment|/// \param V the value to bind.
 name|ProgramStateRef
 name|bindCompoundLiteral
 argument_list|(
@@ -811,29 +699,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|ProgramStateRef
-name|bindDecl
-argument_list|(
-specifier|const
-name|VarRegion
-operator|*
-name|VR
-argument_list|,
-name|SVal
-name|V
-argument_list|)
-decl|const
-decl_stmt|;
-name|ProgramStateRef
-name|bindDeclWithNoInit
-argument_list|(
-specifier|const
-name|VarRegion
-operator|*
-name|VR
-argument_list|)
-decl|const
-decl_stmt|;
-name|ProgramStateRef
 name|bindLoc
 argument_list|(
 name|Loc
@@ -841,6 +706,11 @@ name|location
 argument_list|,
 name|SVal
 name|V
+argument_list|,
+name|bool
+name|notifyChanges
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -867,7 +737,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|ProgramStateRef
-name|unbindLoc
+name|killBinding
 argument_list|(
 name|Loc
 name|LV
@@ -1023,17 +893,6 @@ name|Base
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|*
-name|getSymVal
-argument_list|(
-argument|SymbolRef sym
-argument_list|)
-specifier|const
-expr_stmt|;
 comment|/// Returns the SVal bound to the statement 'S' in the state's environment.
 name|SVal
 name|getSVal
@@ -1047,11 +906,6 @@ specifier|const
 name|LocationContext
 operator|*
 name|LCtx
-argument_list|,
-name|bool
-name|useOnlyDirectBindings
-operator|=
-name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1925,7 +1779,7 @@ argument|ConstraintManagerCreator CreateConstraintManager
 argument_list|,
 argument|llvm::BumpPtrAllocator& alloc
 argument_list|,
-argument|SubEngine&subeng
+argument|SubEngine *subeng
 argument_list|)
 empty_stmt|;
 operator|~
@@ -1971,20 +1825,6 @@ name|BasicValueFactory
 modifier|&
 name|getBasicVals
 parameter_list|()
-block|{
-return|return
-name|svalBuilder
-operator|->
-name|getBasicValueFactory
-argument_list|()
-return|;
-block|}
-specifier|const
-name|BasicValueFactory
-operator|&
-name|getBasicVals
-argument_list|()
-specifier|const
 block|{
 return|return
 name|svalBuilder
@@ -2119,20 +1959,6 @@ parameter_list|,
 name|SymbolReaper
 modifier|&
 name|SymReaper
-parameter_list|)
-function_decl|;
-comment|/// Marshal a new state for the callee in another translation unit.
-comment|/// 'state' is owned by the caller's engine.
-name|ProgramStateRef
-name|MarshalState
-parameter_list|(
-name|ProgramStateRef
-name|state
-parameter_list|,
-specifier|const
-name|StackFrameContext
-modifier|*
-name|L
 parameter_list|)
 function_decl|;
 name|public
@@ -2616,29 +2442,6 @@ name|p
 argument_list|)
 return|;
 block|}
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|*
-name|getSymVal
-argument_list|(
-argument|ProgramStateRef St
-argument_list|,
-argument|SymbolRef sym
-argument_list|)
-block|{
-return|return
-name|ConstraintMgr
-operator|->
-name|getSymVal
-argument_list|(
-name|St
-argument_list|,
-name|sym
-argument_list|)
-return|;
-block|}
 name|void
 name|EndPath
 parameter_list|(
@@ -2659,6 +2462,22 @@ empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Out-of-line method definitions for ProgramState.
 comment|//===----------------------------------------------------------------------===//
+specifier|inline
+name|ConstraintManager
+operator|&
+name|ProgramState
+operator|::
+name|getConstraintManager
+argument_list|()
+specifier|const
+block|{
+return|return
+name|stateMgr
+operator|->
+name|getConstraintManager
+argument_list|()
+return|;
+block|}
 specifier|inline
 specifier|const
 name|VarRegion
@@ -3084,35 +2903,6 @@ end_return
 
 begin_expr_stmt
 unit|}  inline
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|*
-name|ProgramState
-operator|::
-name|getSymVal
-argument_list|(
-argument|SymbolRef sym
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getStateManager
-argument_list|()
-operator|.
-name|getSymVal
-argument_list|(
-name|this
-argument_list|,
-name|sym
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|inline
 name|SVal
 name|ProgramState
 operator|::
@@ -3121,8 +2911,6 @@ argument_list|(
 argument|const Stmt *Ex
 argument_list|,
 argument|const LocationContext *LCtx
-argument_list|,
-argument|bool useOnlyDirectBindings
 argument_list|)
 specifier|const
 block|{
@@ -3143,8 +2931,6 @@ name|getStateManager
 argument_list|()
 operator|.
 name|svalBuilder
-argument_list|,
-name|useOnlyDirectBindings
 argument_list|)
 return|;
 block|}
@@ -3827,7 +3613,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// end GR namespace
+comment|// end ento namespace
 end_comment
 
 begin_comment

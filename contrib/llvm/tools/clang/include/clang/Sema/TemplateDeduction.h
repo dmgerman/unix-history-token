@@ -82,9 +82,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|ASTContext
-decl_stmt|;
-name|class
 name|TemplateArgumentList
 decl_stmt|;
 name|namespace
@@ -96,11 +93,6 @@ comment|/// TemplateDeductionResult value.
 name|class
 name|TemplateDeductionInfo
 block|{
-comment|/// \brief The context in which the template arguments are stored.
-name|ASTContext
-modifier|&
-name|Context
-decl_stmt|;
 comment|/// \brief The deduced template argument list.
 comment|///
 name|TemplateArgumentList
@@ -126,16 +118,13 @@ literal|4
 operator|>
 name|SuppressedDiagnostics
 expr_stmt|;
-comment|// do not implement these
 name|TemplateDeductionInfo
 argument_list|(
-specifier|const
-name|TemplateDeductionInfo
-operator|&
+argument|const TemplateDeductionInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-name|TemplateDeductionInfo
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -143,21 +132,15 @@ specifier|const
 name|TemplateDeductionInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:
 name|TemplateDeductionInfo
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|:
-name|Context
-argument_list|(
-name|Context
-argument_list|)
-operator|,
 name|Deduced
 argument_list|(
 literal|0
@@ -173,12 +156,6 @@ argument_list|(
 argument|false
 argument_list|)
 block|{ }
-operator|~
-name|TemplateDeductionInfo
-argument_list|()
-block|{
-comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
-block|}
 comment|/// \brief Returns the location at which template argument is
 comment|/// occurring.
 name|SourceLocation
@@ -269,7 +246,6 @@ modifier|*
 name|NewDeduced
 parameter_list|)
 block|{
-comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
 name|Deduced
 operator|=
 name|NewDeduced

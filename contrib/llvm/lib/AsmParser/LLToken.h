@@ -134,11 +134,14 @@ name|kw_linker_private_weak
 block|,
 name|kw_linker_private_weak_def_auto
 block|,
+comment|// FIXME: For backwards compatibility.
 name|kw_internal
 block|,
 name|kw_linkonce
 block|,
 name|kw_linkonce_odr
+block|,
+name|kw_linkonce_odr_auto_hide
 block|,
 name|kw_weak
 block|,
@@ -236,6 +239,8 @@ name|kw_sideeffect
 block|,
 name|kw_alignstack
 block|,
+name|kw_inteldialect
+block|,
 name|kw_gc
 block|,
 name|kw_c
@@ -247,6 +252,8 @@ block|,
 name|kw_fastcc
 block|,
 name|kw_coldcc
+block|,
+name|kw_intel_ocl_bicc
 block|,
 name|kw_x86_stdcallcc
 block|,
@@ -265,6 +272,10 @@ block|,
 name|kw_ptx_kernel
 block|,
 name|kw_ptx_device
+block|,
+name|kw_spir_kernel
+block|,
+name|kw_spir_func
 block|,
 name|kw_signext
 block|,
@@ -316,7 +327,7 @@ name|kw_nonlazybind
 block|,
 name|kw_address_safety
 block|,
-name|kw_ia_nsdialect
+name|kw_minsize
 block|,
 name|kw_type
 block|,

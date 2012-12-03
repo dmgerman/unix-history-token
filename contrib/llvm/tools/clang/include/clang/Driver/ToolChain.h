@@ -324,6 +324,15 @@ name|getOSName
 argument_list|()
 return|;
 block|}
+comment|/// \brief Provide the default architecture name (as expected by -arch) for
+comment|/// this toolchain. Note t
+name|std
+operator|::
+name|string
+name|getDefaultUniversalArchName
+argument_list|()
+specifier|const
+expr_stmt|;
 name|std
 operator|::
 name|string
@@ -405,8 +414,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// SelectTool - Choose a tool to use to handle the action \arg JA with the
-comment|/// given \arg Inputs.
+comment|/// SelectTool - Choose a tool to use to handle the action \p JA with the
+comment|/// given \p Inputs.
 name|virtual
 name|Tool
 modifier|&
@@ -447,8 +456,6 @@ name|string
 name|GetProgramPath
 argument_list|(
 argument|const char *Name
-argument_list|,
-argument|bool WantFile = false
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -531,6 +538,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// IsEncodeExtendedBlockSignatureDefault - Does this tool chain enable
+comment|/// -fencode-extended-block-signature by default.
+name|virtual
+name|bool
+name|IsEncodeExtendedBlockSignatureDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// IsObjCNonFragileABIDefault - Does this tool chain set
 comment|/// -fobjc-nonfragile-abi by default.
 name|virtual
@@ -590,29 +609,22 @@ name|bool
 name|IsUnwindTablesDefault
 argument_list|()
 specifier|const
-operator|=
-literal|0
 expr_stmt|;
-comment|/// GetDefaultRelocationModel - Return the LLVM name of the default
-comment|/// relocation model for this tool chain.
+comment|/// \brief Test whether this toolchain defaults to PIC.
 name|virtual
-specifier|const
-name|char
-operator|*
-name|GetDefaultRelocationModel
+name|bool
+name|isPICDefault
 argument_list|()
 specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// GetForcedPicModel - Return the LLVM name of the forced PIC model
-comment|/// for this tool chain, or 0 if this tool chain does not force a
-comment|/// particular PIC mode.
+comment|/// \brief Tests whether this toolchain forces its default for PIC or non-PIC.
+comment|/// If this returns true, any PIC related flags should be ignored and instead
+comment|/// the result of \c isPICDefault() is used exclusively.
 name|virtual
-specifier|const
-name|char
-operator|*
-name|GetForcedPicModel
+name|bool
+name|isPICDefaultForced
 argument_list|()
 specifier|const
 operator|=
@@ -640,17 +652,13 @@ return|return
 name|true
 return|;
 block|}
-comment|/// Does this tool chain support Objective-C ARC.
+comment|/// Complain if this tool chain doesn't support Objective-C ARC.
 name|virtual
-name|bool
-name|SupportsObjCARC
+name|void
+name|CheckObjCARC
 argument_list|()
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
+block|{}
 comment|/// UseDwarfDebugFlags - Embed the compile options to clang into the Dwarf
 comment|/// compile unit information.
 name|virtual
@@ -829,6 +837,25 @@ comment|/// for kernel extensions (Darwin-specific).
 name|virtual
 name|void
 name|AddCCKextLibArgs
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// AddFastMathRuntimeIfAvailable - If a runtime library exists that sets
+comment|/// global flags for unsafe floating point math, add it and return true.
+comment|///
+comment|/// This checks for presence of the -ffast-math or -funsafe-math flags.
+name|virtual
+name|bool
+name|AddFastMathRuntimeIfAvailable
 argument_list|(
 specifier|const
 name|ArgList

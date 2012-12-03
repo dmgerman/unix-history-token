@@ -64,9 +64,26 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TableGenAction
+name|RecordKeeper
 decl_stmt|;
-comment|/// Run the table generator, performing the specified Action on parsed records.
+name|class
+name|raw_ostream
+decl_stmt|;
+comment|/// \brief Perform the action using Records, and write output to OS.
+comment|/// \returns true on error, false otherwise
+typedef|typedef
+name|bool
+name|TableGenMainFn
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|RecordKeeper
+modifier|&
+name|Records
+parameter_list|)
+function_decl|;
 name|int
 name|TableGenMain
 parameter_list|(
@@ -74,9 +91,9 @@ name|char
 modifier|*
 name|argv0
 parameter_list|,
-name|TableGenAction
-modifier|&
-name|Action
+name|TableGenMainFn
+modifier|*
+name|MainFn
 parameter_list|)
 function_decl|;
 block|}

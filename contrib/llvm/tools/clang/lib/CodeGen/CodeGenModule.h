@@ -163,7 +163,7 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|FunctionType
@@ -691,12 +691,10 @@ name|CodeGenTypeCache
 block|{
 name|CodeGenModule
 argument_list|(
-specifier|const
-name|CodeGenModule
-operator|&
+argument|const CodeGenModule&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -705,8 +703,8 @@ specifier|const
 name|CodeGenModule
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 typedef|typedef
 name|std
 operator|::
@@ -749,9 +747,9 @@ expr_stmt|;
 specifier|const
 name|llvm
 operator|::
-name|TargetData
+name|DataLayout
 operator|&
-name|TheTargetData
+name|TheDataLayout
 expr_stmt|;
 name|mutable
 specifier|const
@@ -1022,10 +1020,7 @@ name|unsigned
 operator|>
 name|DelayedCXXInitPosition
 expr_stmt|;
-comment|/// - Global variables with initializers whose order of initialization
-comment|/// is set by init_priority attribute.
-name|SmallVector
-operator|<
+typedef|typedef
 name|std
 operator|::
 name|pair
@@ -1037,6 +1032,48 @@ operator|::
 name|Function
 operator|*
 operator|>
+name|GlobalInitData
+expr_stmt|;
+struct|struct
+name|GlobalInitPriorityCmp
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|GlobalInitData
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|GlobalInitData
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|LHS
+operator|.
+name|first
+operator|.
+name|priority
+operator|<
+name|RHS
+operator|.
+name|first
+operator|.
+name|priority
+return|;
+block|}
+block|}
+struct|;
+comment|/// - Global variables with initializers whose order of initialization
+comment|/// is set by init_priority attribute.
+name|SmallVector
+operator|<
+name|GlobalInitData
 operator|,
 literal|8
 operator|>
@@ -1204,7 +1241,7 @@ argument_list|,
 specifier|const
 name|llvm
 operator|::
-name|TargetData
+name|DataLayout
 operator|&
 name|TD
 argument_list|,
@@ -1656,14 +1693,14 @@ begin_expr_stmt
 specifier|const
 name|llvm
 operator|::
-name|TargetData
+name|DataLayout
 operator|&
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TheTargetData
+name|TheDataLayout
 return|;
 block|}
 end_expr_stmt
@@ -1749,6 +1786,18 @@ name|MDNode
 operator|*
 name|getTBAAInfoForVTablePtr
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAStructInfo
+argument_list|(
+argument|QualType QTy
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -2230,6 +2279,25 @@ argument_list|(
 argument|QualType Ty
 argument_list|,
 argument|bool ForEH = false
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// GetAddrOfUuidDescriptor - Get the address of a uuid descriptor .
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetAddrOfUuidDescriptor
+argument_list|(
+specifier|const
+name|CXXUuidofExpr
+operator|*
+name|E
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2988,7 +3056,7 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::Attributes ExtraAttrs =                                           llvm::Attribute::None
+argument|llvm::Attributes ExtraAttrs =                                           llvm::Attributes()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3917,7 +3985,7 @@ argument|GlobalDecl D
 argument_list|,
 argument|bool ForVTable
 argument_list|,
-argument|llvm::Attributes ExtraAttrs =                                             llvm::Attribute::None
+argument|llvm::Attributes ExtraAttrs =                                             llvm::Attributes()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4477,6 +4545,24 @@ name|EmitCoverageFile
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Emits the initializer for a uuidof string.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitUuidofInitializer
+argument_list|(
+argument|StringRef uuidstr
+argument_list|,
+argument|QualType IIDType
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// MayDeferGeneration - Determine if the given decl can be emitted

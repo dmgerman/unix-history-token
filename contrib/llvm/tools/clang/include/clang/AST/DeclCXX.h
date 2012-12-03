@@ -596,17 +596,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const AccessSpecDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -1442,6 +1431,8 @@ name|LambdaDefinitionData
 argument_list|(
 argument|CXXRecordDecl *D
 argument_list|,
+argument|TypeSourceInfo *Info
+argument_list|,
 argument|bool Dependent
 argument_list|)
 operator|:
@@ -1478,6 +1469,11 @@ block|,
 name|Captures
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|MethodTyInfo
+argument_list|(
+argument|Info
 argument_list|)
 block|{
 name|IsLambda
@@ -1527,7 +1523,12 @@ comment|/// lambda.
 name|Capture
 operator|*
 name|Captures
-block|;       }
+block|;
+comment|/// \brief The type of the call method.
+name|TypeSourceInfo
+operator|*
+name|MethodTyInfo
+block|;   }
 decl_stmt|;
 name|struct
 name|DefinitionData
@@ -1945,6 +1946,10 @@ parameter_list|,
 name|DeclContext
 modifier|*
 name|DC
+parameter_list|,
+name|TypeSourceInfo
+modifier|*
+name|Info
 parameter_list|,
 name|SourceLocation
 name|Loc
@@ -4709,7 +4714,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Base the definition of the base class
+comment|/// \param BaseDefinition the definition of the base class
 end_comment
 
 begin_comment
@@ -5615,6 +5620,22 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|TypeSourceInfo
+operator|*
+name|getLambdaTypeInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLambdaData
+argument_list|()
+operator|.
+name|MethodTyInfo
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 specifier|static
 name|bool
@@ -5655,40 +5676,6 @@ operator|&&
 name|K
 operator|<=
 name|lastCXXRecord
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ClassTemplateSpecializationDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -5871,6 +5858,7 @@ block|}
 name|bool
 name|isConst
 argument_list|()
+specifier|const
 block|{
 return|return
 name|getType
@@ -5890,6 +5878,7 @@ block|}
 name|bool
 name|isVolatile
 argument_list|()
+specifier|const
 block|{
 return|return
 name|getType
@@ -5933,12 +5922,28 @@ name|getCanonicalDecl
 argument_list|()
 operator|)
 block|;
+comment|// Methods declared in interfaces are automatically (pure) virtual.
 if|if
 condition|(
 name|CD
 operator|->
 name|isVirtualAsWritten
 argument_list|()
+operator|||
+operator|(
+name|CD
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|isInterface
+argument_list|()
+operator|&&
+name|CD
+operator|->
+name|isUserProvided
+argument_list|()
+operator|)
 condition|)
 return|return
 name|true
@@ -6452,23 +6457,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -8429,23 +8417,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXConstructorDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -8715,17 +8686,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const CXXDestructorDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -8972,17 +8932,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXConversionDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -9296,23 +9245,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|LinkageSpecDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -9727,17 +9659,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const UsingDirectiveDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -10133,23 +10054,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|NamespaceAliasDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -10425,17 +10329,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UsingShadowDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -11058,23 +10951,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|UsingDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -11350,17 +11226,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const UnresolvedUsingValueDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -11590,17 +11455,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const UnresolvedUsingTypenameDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -11818,17 +11672,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|StaticAssertDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static

@@ -1843,6 +1843,7 @@ init|=
 literal|21
 block|}
 enum|;
+comment|// ELF Relocation types for PPC32
 enum|enum
 block|{
 name|R_PPC_NONE
@@ -1905,6 +1906,58 @@ block|,
 name|R_PPC_REL32
 init|=
 literal|26
+block|,
+name|R_PPC_TPREL16_LO
+init|=
+literal|70
+block|,
+name|R_PPC_TPREL16_HA
+init|=
+literal|72
+block|}
+enum|;
+comment|// ELF Relocation types for PPC64
+enum|enum
+block|{
+name|R_PPC64_ADDR16_LO
+init|=
+literal|4
+block|,
+name|R_PPC64_ADDR16_HI
+init|=
+literal|5
+block|,
+name|R_PPC64_ADDR14
+init|=
+literal|7
+block|,
+name|R_PPC64_REL24
+init|=
+literal|10
+block|,
+name|R_PPC64_ADDR64
+init|=
+literal|38
+block|,
+name|R_PPC64_ADDR16_HIGHER
+init|=
+literal|39
+block|,
+name|R_PPC64_ADDR16_HIGHEST
+init|=
+literal|41
+block|,
+name|R_PPC64_TOC16
+init|=
+literal|47
+block|,
+name|R_PPC64_TOC
+init|=
+literal|51
+block|,
+name|R_PPC64_TOC16_DS
+init|=
+literal|63
 block|}
 enum|;
 comment|// ARM Specific e_flags
@@ -2730,8 +2783,91 @@ init|=
 literal|218
 block|}
 enum|;
+comment|// Hexagon Specific e_flags
+comment|// Release 5 ABI
+enum|enum
+block|{
+comment|// Object processor version flags, bits[3:0]
+name|EF_HEXAGON_MACH_V2
+init|=
+literal|0x00000001
+block|,
+comment|// Hexagon V2
+name|EF_HEXAGON_MACH_V3
+init|=
+literal|0x00000002
+block|,
+comment|// Hexagon V3
+name|EF_HEXAGON_MACH_V4
+init|=
+literal|0x00000003
+block|,
+comment|// Hexagon V4
+name|EF_HEXAGON_MACH_V5
+init|=
+literal|0x00000004
+block|,
+comment|// Hexagon V5
+comment|// Highest ISA version flags
+name|EF_HEXAGON_ISA_MACH
+init|=
+literal|0x00000000
+block|,
+comment|// Same as specified in bits[3:0]
+comment|// of e_flags
+name|EF_HEXAGON_ISA_V2
+init|=
+literal|0x00000010
+block|,
+comment|// Hexagon V2 ISA
+name|EF_HEXAGON_ISA_V3
+init|=
+literal|0x00000020
+block|,
+comment|// Hexagon V3 ISA
+name|EF_HEXAGON_ISA_V4
+init|=
+literal|0x00000030
+block|,
+comment|// Hexagon V4 ISA
+name|EF_HEXAGON_ISA_V5
+init|=
+literal|0x00000040
+comment|// Hexagon V5 ISA
+block|}
+enum|;
+comment|// Hexagon specific Section indexes for common small data
+comment|// Release 5 ABI
+enum|enum
+block|{
+name|SHN_HEXAGON_SCOMMON
+init|=
+literal|0xff00
+block|,
+comment|// Other access sizes
+name|SHN_HEXAGON_SCOMMON_1
+init|=
+literal|0xff01
+block|,
+comment|// Byte-sized access
+name|SHN_HEXAGON_SCOMMON_2
+init|=
+literal|0xff02
+block|,
+comment|// Half-word-sized access
+name|SHN_HEXAGON_SCOMMON_4
+init|=
+literal|0xff03
+block|,
+comment|// Word-sized access
+name|SHN_HEXAGON_SCOMMON_8
+init|=
+literal|0xff04
+comment|// Double-word-size access
+block|}
+enum|;
 comment|// ELF Relocation types for Hexagon
-comment|// Release 5 ABI - Document: 80-V9418-3 Rev. J
+comment|// Release 5 ABI
 enum|enum
 block|{
 name|R_HEX_NONE
@@ -4420,6 +4556,21 @@ init|=
 literal|0x60000000
 block|,
 comment|// Lowest operating system-specific pt entry type.
+name|PT_HIOS
+init|=
+literal|0x6fffffff
+block|,
+comment|// Highest operating system-specific pt entry type.
+name|PT_LOPROC
+init|=
+literal|0x70000000
+block|,
+comment|// Lowest processor-specific program hdr entry type.
+name|PT_HIPROC
+init|=
+literal|0x7fffffff
+block|,
+comment|// Highest processor-specific program hdr entry type.
 comment|// x86-64 program header types.
 comment|// These all contain stack unwind tables.
 name|PT_GNU_EH_FRAME
@@ -4444,20 +4595,20 @@ init|=
 literal|0x6474e552
 block|,
 comment|// Read-only after relocation.
-name|PT_HIOS
-init|=
-literal|0x6fffffff
-block|,
-comment|// Highest operating system-specific pt entry type.
-name|PT_LOPROC
+comment|// ARM program header types.
+name|PT_ARM_ARCHEXT
 init|=
 literal|0x70000000
 block|,
-comment|// Lowest processor-specific program hdr entry type.
-name|PT_HIPROC
+comment|// Platform architecture compatibility information
+comment|// These all contain stack unwind tables.
+name|PT_ARM_EXIDX
 init|=
-literal|0x7fffffff
-comment|// Highest processor-specific program hdr entry type.
+literal|0x70000001
+block|,
+name|PT_ARM_UNWIND
+init|=
+literal|0x70000001
 block|}
 enum|;
 comment|// Segment flag bits.

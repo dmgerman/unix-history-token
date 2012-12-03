@@ -701,12 +701,10 @@ name|private
 label|:
 name|Query
 argument_list|(
-specifier|const
-name|Query
-operator|&
+argument|const Query&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -715,8 +713,8 @@ specifier|const
 name|Query
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 empty_stmt|;
 comment|// Array of LiveIntervalUnions.

@@ -147,12 +147,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly one operand
@@ -231,12 +231,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly two operands
@@ -331,12 +331,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly three operands
@@ -441,12 +441,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly two operands
@@ -538,12 +538,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly three operands
@@ -648,12 +648,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly three operands
@@ -758,12 +758,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly one operand
@@ -877,12 +877,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly one operand
@@ -1091,12 +1091,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|// allocate space for exactly two operands
@@ -1707,6 +1707,8 @@ argument_list|,
 argument|bool hasSideEffects
 argument_list|,
 argument|bool isAlignStack
+argument_list|,
+argument|InlineAsm::AsmDialect asmDialect
 argument_list|)
 block|:
 name|asm_string
@@ -1726,7 +1728,12 @@ argument_list|)
 operator|,
 name|is_align_stack
 argument_list|(
-argument|isAlignStack
+name|isAlignStack
+argument_list|)
+operator|,
+name|asm_dialect
+argument_list|(
+argument|asmDialect
 argument_list|)
 block|{}
 name|std
@@ -1745,6 +1752,11 @@ decl_stmt|;
 name|bool
 name|is_align_stack
 decl_stmt|;
+name|InlineAsm
+operator|::
+name|AsmDialect
+name|asm_dialect
+expr_stmt|;
 name|bool
 name|operator
 operator|==
@@ -1788,6 +1800,14 @@ operator|==
 name|that
 operator|.
 name|is_align_stack
+operator|&&
+name|this
+operator|->
+name|asm_dialect
+operator|==
+name|that
+operator|.
+name|asm_dialect
 return|;
 block|}
 name|bool
@@ -1876,6 +1896,25 @@ operator|<
 name|that
 operator|.
 name|is_align_stack
+return|;
+if|if
+condition|(
+name|this
+operator|->
+name|asm_dialect
+operator|!=
+name|that
+operator|.
+name|asm_dialect
+condition|)
+return|return
+name|this
+operator|->
+name|asm_dialect
+operator|<
+name|that
+operator|.
+name|asm_dialect
 return|;
 return|return
 name|false
@@ -2779,6 +2818,10 @@ argument_list|,
 name|Key
 operator|.
 name|is_align_stack
+argument_list|,
+name|Key
+operator|.
+name|asm_dialect
 argument_list|)
 return|;
 block|}
@@ -2827,6 +2870,11 @@ argument_list|,
 name|Asm
 operator|->
 name|isAlignStack
+argument_list|()
+argument_list|,
+name|Asm
+operator|->
+name|getDialect
 argument_list|()
 argument_list|)
 return|;

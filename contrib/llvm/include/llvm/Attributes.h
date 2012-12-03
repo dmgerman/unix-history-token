@@ -92,742 +92,510 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AttrBuilder
+decl_stmt|;
+name|class
+name|AttributesImpl
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|Type
 decl_stmt|;
-name|namespace
-name|Attribute
-block|{
-comment|/// We use this proxy POD type to allow constructing Attributes constants
-comment|/// using initializer lists. Do not use this class directly.
-struct|struct
-name|AttrConst
-block|{
-name|uint64_t
-name|v
-decl_stmt|;
-name|AttrConst
-name|operator
-operator||
-operator|(
-specifier|const
-name|AttrConst
-name|Attrs
-operator|)
-specifier|const
-block|{
-name|AttrConst
-name|Res
-operator|=
-block|{
-name|v
-operator||
-name|Attrs
-operator|.
-name|v
-block|}
-block|;
-return|return
-name|Res
-return|;
-block|}
-name|AttrConst
-name|operator
-operator|~
-operator|(
-operator|)
-specifier|const
-block|{
-name|AttrConst
-name|Res
-operator|=
-block|{
-operator|~
-name|v
-block|}
-block|;
-return|return
-name|Res
-return|;
-block|}
-block|}
-struct|;
-block|}
-comment|// namespace Attribute
 comment|/// Attributes - A bitset of attributes.
 name|class
 name|Attributes
 block|{
 name|public
 label|:
+comment|/// Function parameters and results can have attributes to indicate how they
+comment|/// should be treated by optimizations and code generation. This enumeration
+comment|/// lists the attributes that can be associated with parameters, function
+comment|/// results or the function itself.
+comment|///
+comment|/// Note that uwtable is about the ABI or the user mandating an entry in the
+comment|/// unwind table. The nounwind attribute is about an exception passing by the
+comment|/// function.
+comment|///
+comment|/// In a theoretical system that uses tables for profiling and sjlj for
+comment|/// exceptions, they would be fully independent. In a normal system that uses
+comment|/// tables for both, the semantics are:
+comment|///
+comment|/// nil                = Needs an entry because an exception might pass by.
+comment|/// nounwind           = No need for an entry
+comment|/// uwtable            = Needs an entry because the ABI says so and because
+comment|///                      an exception might pass by.
+comment|/// uwtable + nounwind = Needs an entry because the ABI says so.
+enum|enum
+name|AttrVal
+block|{
+comment|// IR-Level Attributes
+name|None
+block|,
+comment|///< No attributes have been set
+name|AddressSafety
+block|,
+comment|///< Address safety checking is on.
+name|Alignment
+block|,
+comment|///< Alignment of parameter (5 bits)
+comment|///< stored as log2 of alignment with +1 bias
+comment|///< 0 means unaligned different from align 1
+name|AlwaysInline
+block|,
+comment|///< inline=always
+name|ByVal
+block|,
+comment|///< Pass structure by value
+name|InlineHint
+block|,
+comment|///< Source said inlining was desirable
+name|InReg
+block|,
+comment|///< Force argument to be passed in register
+name|MinSize
+block|,
+comment|///< Function must be optimized for size first
+name|Naked
+block|,
+comment|///< Naked function
+name|Nest
+block|,
+comment|///< Nested function static chain
+name|NoAlias
+block|,
+comment|///< Considered to not alias after call
+name|NoCapture
+block|,
+comment|///< Function creates no aliases of pointer
+name|NoImplicitFloat
+block|,
+comment|///< Disable implicit floating point insts
+name|NoInline
+block|,
+comment|///< inline=never
+name|NonLazyBind
+block|,
+comment|///< Function is called early and/or
+comment|///< often, so lazy binding isn't worthwhile
+name|NoRedZone
+block|,
+comment|///< Disable redzone
+name|NoReturn
+block|,
+comment|///< Mark the function as not returning
+name|NoUnwind
+block|,
+comment|///< Function doesn't unwind stack
+name|OptimizeForSize
+block|,
+comment|///< opt_size
+name|ReadNone
+block|,
+comment|///< Function does not access memory
+name|ReadOnly
+block|,
+comment|///< Function only reads from memory
+name|ReturnsTwice
+block|,
+comment|///< Function can return twice
+name|SExt
+block|,
+comment|///< Sign extended before/after call
+name|StackAlignment
+block|,
+comment|///< Alignment of stack for function (3 bits)
+comment|///< stored as log2 of alignment with +1 bias 0
+comment|///< means unaligned (different from
+comment|///< alignstack={1))
+name|StackProtect
+block|,
+comment|///< Stack protection.
+name|StackProtectReq
+block|,
+comment|///< Stack protection required.
+name|StructRet
+block|,
+comment|///< Hidden pointer to structure to return
+name|UWTable
+block|,
+comment|///< Function must be in a unwind table
+name|ZExt
+comment|///< Zero extended before/after call
+block|}
+enum|;
+name|private
+label|:
+name|AttributesImpl
+modifier|*
+name|Attrs
+decl_stmt|;
 name|Attributes
-argument_list|()
-operator|:
-name|Bits
 argument_list|(
-literal|0
-argument_list|)
-block|{ }
-name|explicit
-name|Attributes
-argument_list|(
-argument|uint64_t Val
-argument_list|)
-operator|:
-name|Bits
-argument_list|(
-argument|Val
-argument_list|)
-block|{ }
-comment|/*implicit*/
-name|Attributes
-argument_list|(
-argument|Attribute::AttrConst Val
-argument_list|)
-operator|:
-name|Bits
-argument_list|(
-argument|Val.v
-argument_list|)
-block|{ }
-comment|// This is a "safe bool() operator".
-name|operator
-specifier|const
-name|void
+name|AttributesImpl
 operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|Bits
-operator|?
-name|this
+name|A
+argument_list|)
 operator|:
-literal|0
-return|;
-block|}
-name|bool
-name|isEmptyOrSingleton
+name|Attrs
+argument_list|(
+argument|A
+argument_list|)
+block|{}
+name|public
+operator|:
+name|Attributes
 argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|Bits
-operator|&
-operator|(
-name|Bits
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
+operator|:
+name|Attrs
+argument_list|(
 literal|0
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-operator|)
-specifier|const
-block|{
-return|return
-name|Bits
-operator|==
-name|Attrs
-operator|.
-name|Bits
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-operator|)
-specifier|const
-block|{
-return|return
-name|Bits
-operator|!=
-name|Attrs
-operator|.
-name|Bits
-return|;
-block|}
-name|Attributes
-name|operator
-operator||
-operator|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-operator|)
-specifier|const
-block|{
-return|return
+argument_list|)
+block|{}
 name|Attributes
 argument_list|(
-name|Bits
-operator||
-name|Attrs
-operator|.
-name|Bits
+specifier|const
+name|Attributes
+operator|&
+name|A
 argument_list|)
+operator|:
+name|Attrs
+argument_list|(
+argument|A.Attrs
+argument_list|)
+block|{}
+name|Attributes
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Attributes
+operator|&
+name|A
+operator|)
+block|{
+name|Attrs
+operator|=
+name|A
+operator|.
+name|Attrs
+block|;
+return|return
+operator|*
+name|this
 return|;
 block|}
+comment|/// get - Return a uniquified Attributes object. This takes the uniquified
+comment|/// value from the Builder and wraps it in the Attributes class.
+specifier|static
 name|Attributes
-name|operator
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|AttrVal
+operator|>
+name|Vals
+argument_list|)
+decl_stmt|;
+specifier|static
+name|Attributes
+name|get
+parameter_list|(
+name|LLVMContext
 modifier|&
+name|Context
+parameter_list|,
+name|AttrBuilder
+modifier|&
+name|B
+parameter_list|)
+function_decl|;
+comment|/// @brief Return true if the attribute is present.
+name|bool
+name|hasAttribute
 argument_list|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
+name|AttrVal
+name|Val
 argument_list|)
 decl|const
-block|{
-return|return
-name|Attributes
-argument_list|(
-name|Bits
-operator|&
-name|Attrs
-operator|.
-name|Bits
-argument_list|)
-return|;
-block|}
-name|Attributes
-name|operator
-modifier|^
+decl_stmt|;
+comment|/// @brief Return true if attributes exist
+name|bool
+name|hasAttributes
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @brief Return true if the attributes are a non-null intersection.
+name|bool
+name|hasAttributes
 argument_list|(
 specifier|const
 name|Attributes
 operator|&
-name|Attrs
+name|A
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// @brief Returns the alignment field of an attribute as a byte alignment
+comment|/// value.
+name|unsigned
+name|getAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @brief Returns the stack alignment field of an attribute as a byte
+comment|/// alignment value.
+name|unsigned
+name|getStackAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
+name|bool
+name|hasIncompatibleWithVarArgsAttrs
+argument_list|()
+specifier|const
 block|{
 return|return
-name|Attributes
+name|hasAttribute
 argument_list|(
-name|Bits
-operator|^
-name|Attrs
-operator|.
-name|Bits
+name|Attributes
+operator|::
+name|StructRet
 argument_list|)
 return|;
 block|}
-name|Attributes
-operator|&
-name|operator
-operator||=
-operator|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-operator|)
-block|{
-name|Bits
-operator||=
-name|Attrs
-operator|.
-name|Bits
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|Attributes
-operator|&
-name|operator
-operator|&=
-operator|(
-specifier|const
-name|Attributes
-operator|&
-name|Attrs
-operator|)
-block|{
-name|Bits
-operator|&=
-name|Attrs
-operator|.
-name|Bits
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|Attributes
-name|operator
-operator|~
-operator|(
-operator|)
+comment|/// @brief Attributes that only apply to function parameters.
+name|bool
+name|hasParameterOnlyAttrs
+argument_list|()
 specifier|const
 block|{
 return|return
-name|Attributes
+name|hasAttribute
 argument_list|(
-operator|~
-name|Bits
+name|Attributes
+operator|::
+name|ByVal
 argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|Nest
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StructRet
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoCapture
+argument_list|)
+return|;
+block|}
+comment|/// @brief Attributes that may be applied to the function itself.  These cannot
+comment|/// be used on return values or function parameters.
+name|bool
+name|hasFunctionOnlyAttrs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoReturn
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoUnwind
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|ReadNone
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|ReadOnly
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoInline
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|AlwaysInline
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|OptimizeForSize
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StackProtect
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StackProtectReq
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoRedZone
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoImplicitFloat
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|Naked
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|InlineHint
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StackAlignment
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|UWTable
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NonLazyBind
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|ReturnsTwice
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|AddressSafety
+argument_list|)
+operator|||
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|MinSize
+argument_list|)
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Attributes
+operator|&
+name|A
+operator|)
+specifier|const
+block|{
+return|return
+name|Attrs
+operator|==
+name|A
+operator|.
+name|Attrs
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Attributes
+operator|&
+name|A
+operator|)
+specifier|const
+block|{
+return|return
+name|Attrs
+operator|!=
+name|A
+operator|.
+name|Attrs
 return|;
 block|}
 name|uint64_t
 name|Raw
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Bits
-return|;
-block|}
-name|private
-label|:
-comment|// Currently, we need less than 64 bits.
-name|uint64_t
-name|Bits
-decl_stmt|;
-block|}
-empty_stmt|;
-name|namespace
-name|Attribute
-block|{
-comment|/// Function parameters and results can have attributes to indicate how they
-comment|/// should be treated by optimizations and code generation. This enumeration
-comment|/// lists the attributes that can be associated with parameters, function
-comment|/// results or the function itself.
-comment|/// @brief Function attributes.
-comment|// We declare AttrConst objects that will be used throughout the code
-comment|// and also raw uint64_t objects with _i suffix to be used below for other
-comment|// constant declarations. This is done to avoid static CTORs and at the same
-comment|// time to keep type-safety of Attributes.
-define|#
-directive|define
-name|DECLARE_LLVM_ATTRIBUTE
-parameter_list|(
-name|name
-parameter_list|,
-name|value
-parameter_list|)
-define|\
-value|const uint64_t name##_i = value; \   const AttrConst name = {value};
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|None
-argument_list|,
-literal|0
-argument_list|)
-comment|///< No attributes have been set
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|ZExt
-argument_list|,
-literal|1
-argument|<<
-literal|0
-argument_list|)
-comment|///< Zero extended before/after call
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|SExt
-argument_list|,
-literal|1
-argument|<<
-literal|1
-argument_list|)
-comment|///< Sign extended before/after call
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoReturn
-argument_list|,
-literal|1
-argument|<<
-literal|2
-argument_list|)
-comment|///< Mark the function as not returning
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|InReg
-argument_list|,
-literal|1
-argument|<<
-literal|3
-argument_list|)
-comment|///< Force argument to be passed in register
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|StructRet
-argument_list|,
-literal|1
-argument|<<
-literal|4
-argument_list|)
-comment|///< Hidden pointer to structure to return
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoUnwind
-argument_list|,
-literal|1
-argument|<<
-literal|5
-argument_list|)
-comment|///< Function doesn't unwind stack
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoAlias
-argument_list|,
-literal|1
-argument|<<
-literal|6
-argument_list|)
-comment|///< Considered to not alias after call
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|ByVal
-argument_list|,
-literal|1
-argument|<<
-literal|7
-argument_list|)
-comment|///< Pass structure by value
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|Nest
-argument_list|,
-literal|1
-argument|<<
-literal|8
-argument_list|)
-comment|///< Nested function static chain
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|ReadNone
-argument_list|,
-literal|1
-argument|<<
-literal|9
-argument_list|)
-comment|///< Function does not access memory
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|ReadOnly
-argument_list|,
-literal|1
-argument|<<
-literal|10
-argument_list|)
-comment|///< Function only reads from memory
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoInline
-argument_list|,
-literal|1
-argument|<<
-literal|11
-argument_list|)
-comment|///< inline=never
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|AlwaysInline
-argument_list|,
-literal|1
-argument|<<
-literal|12
-argument_list|)
-comment|///< inline=always
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|OptimizeForSize
-argument_list|,
-literal|1
-argument|<<
-literal|13
-argument_list|)
-comment|///< opt_size
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|StackProtect
-argument_list|,
-literal|1
-argument|<<
-literal|14
-argument_list|)
-comment|///< Stack protection.
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|StackProtectReq
-argument_list|,
-literal|1
-argument|<<
-literal|15
-argument_list|)
-comment|///< Stack protection required.
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|Alignment
-argument_list|,
-literal|31
-argument|<<
-literal|16
-argument_list|)
-comment|///< Alignment of parameter (5 bits)
-comment|// stored as log2 of alignment with +1 bias
-comment|// 0 means unaligned different from align 1
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoCapture
-argument_list|,
-literal|1
-argument|<<
-literal|21
-argument_list|)
-comment|///< Function creates no aliases of pointer
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoRedZone
-argument_list|,
-literal|1
-argument|<<
-literal|22
-argument_list|)
-comment|/// disable redzone
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NoImplicitFloat
-argument_list|,
-literal|1
-argument|<<
-literal|23
-argument_list|)
-comment|/// disable implicit floating point
-comment|/// instructions.
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|Naked
-argument_list|,
-literal|1
-argument|<<
-literal|24
-argument_list|)
-comment|///< Naked function
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|InlineHint
-argument_list|,
-literal|1
-argument|<<
-literal|25
-argument_list|)
-comment|///< source said inlining was
-comment|///desirable
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|StackAlignment
-argument_list|,
-literal|7
-argument|<<
-literal|26
-argument_list|)
-comment|///< Alignment of stack for
-comment|///function (3 bits) stored as log2
-comment|///of alignment with +1 bias
-comment|///0 means unaligned (different from
-comment|///alignstack= {1))
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|ReturnsTwice
-argument_list|,
-literal|1
-argument|<<
-literal|29
-argument_list|)
-comment|///< Function can return twice
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|UWTable
-argument_list|,
-literal|1
-argument|<<
-literal|30
-argument_list|)
-comment|///< Function must be in a unwind
-comment|///table
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|NonLazyBind
-argument_list|,
-literal|1U
-argument|<<
-literal|31
-argument_list|)
-comment|///< Function is called early and/or
-comment|/// often, so lazy binding isn't
-comment|/// worthwhile.
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|AddressSafety
-argument_list|,
-literal|1ULL
-argument|<<
-literal|32
-argument_list|)
-comment|///< Address safety checking is on.
-name|DECLARE_LLVM_ATTRIBUTE
-argument_list|(
-argument|IANSDialect
-argument_list|,
-literal|1ULL
-argument|<<
-literal|33
-argument_list|)
-comment|///< Inline asm non-standard dialect.
-comment|/// When not set, ATT dialect assumed.
-comment|/// When set implies the Intel dialect.
-undef|#
-directive|undef
-name|DECLARE_LLVM_ATTRIBUTE
-comment|/// Note that uwtable is about the ABI or the user mandating an entry in the
-comment|/// unwind table. The nounwind attribute is about an exception passing by the
-comment|/// function.
-comment|/// In a theoretical system that uses tables for profiling and sjlj for
-comment|/// exceptions, they would be fully independent. In a normal system that
-comment|/// uses tables for both, the semantics are:
-comment|/// nil                = Needs an entry because an exception might pass by.
-comment|/// nounwind           = No need for an entry
-comment|/// uwtable            = Needs an entry because the ABI says so and because
-comment|///                      an exception might pass by.
-comment|/// uwtable + nounwind = Needs an entry because the ABI says so.
-comment|/// @brief Attributes that only apply to function parameters.
-specifier|const
-name|AttrConst
-name|ParameterOnly
-init|=
-block|{
-name|ByVal_i
-operator||
-name|Nest_i
-operator||
-name|StructRet_i
-operator||
-name|NoCapture_i
-block|}
-decl_stmt|;
-comment|/// @brief Attributes that may be applied to the function itself.  These cannot
-comment|/// be used on return values or function parameters.
-specifier|const
-name|AttrConst
-name|FunctionOnly
-init|=
-block|{
-name|NoReturn_i
-operator||
-name|NoUnwind_i
-operator||
-name|ReadNone_i
-operator||
-name|ReadOnly_i
-operator||
-name|NoInline_i
-operator||
-name|AlwaysInline_i
-operator||
-name|OptimizeForSize_i
-operator||
-name|StackProtect_i
-operator||
-name|StackProtectReq_i
-operator||
-name|NoRedZone_i
-operator||
-name|NoImplicitFloat_i
-operator||
-name|Naked_i
-operator||
-name|InlineHint_i
-operator||
-name|StackAlignment_i
-operator||
-name|UWTable_i
-operator||
-name|NonLazyBind_i
-operator||
-name|ReturnsTwice_i
-operator||
-name|AddressSafety_i
-operator||
-name|IANSDialect_i
-block|}
-decl_stmt|;
-comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
-specifier|const
-name|AttrConst
-name|VarArgsIncompatible
-init|=
-block|{
-name|StructRet_i
-block|}
-decl_stmt|;
-comment|/// @brief Attributes that are mutually incompatible.
-specifier|const
-name|AttrConst
-name|MutuallyIncompatible
-index|[
-literal|5
-index|]
-init|=
-block|{
-block|{
-name|ByVal_i
-operator||
-name|Nest_i
-operator||
-name|StructRet_i
-block|}
-block|,
-block|{
-name|ByVal_i
-operator||
-name|Nest_i
-operator||
-name|InReg_i
-block|}
-block|,
-block|{
-name|ZExt_i
-operator||
-name|SExt_i
-block|}
-block|,
-block|{
-name|ReadNone_i
-operator||
-name|ReadOnly_i
-block|}
-block|,
-block|{
-name|NoInline_i
-operator||
-name|AlwaysInline_i
-block|}
-block|}
-decl_stmt|;
+expr_stmt|;
 comment|/// @brief Which attributes cannot be applied to a type.
+specifier|static
 name|Attributes
 name|typeIncompatible
 parameter_list|(
@@ -836,391 +604,421 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// This turns an int alignment (a power of 2, normally) into the
-comment|/// form used internally in Attributes.
-specifier|inline
-name|Attributes
-name|constructAlignmentFromInt
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-block|{
-comment|// Default alignment, allow the target to define how to align it.
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-return|return
-name|None
-return|;
-name|assert
-argument_list|(
-name|isPowerOf2_32
-argument_list|(
-name|i
-argument_list|)
-operator|&&
-literal|"Alignment must be a power of two."
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|i
-operator|<=
-literal|0x40000000
-operator|&&
-literal|"Alignment too large."
-argument_list|)
-expr_stmt|;
-return|return
-name|Attributes
-argument_list|(
-operator|(
-name|Log2_32
-argument_list|(
-name|i
-argument_list|)
-operator|+
-literal|1
-operator|)
-operator|<<
-literal|16
-argument_list|)
-return|;
-block|}
-comment|/// This returns the alignment field of an attribute as a byte alignment value.
-specifier|inline
-name|unsigned
-name|getAlignmentFromAttrs
-parameter_list|(
-name|Attributes
-name|A
-parameter_list|)
-block|{
-name|Attributes
-name|Align
-init|=
-name|A
-operator|&
-name|Attribute
-operator|::
-name|Alignment
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|Align
-condition|)
-return|return
-literal|0
-return|;
-return|return
-literal|1U
-operator|<<
-operator|(
-operator|(
-name|Align
-operator|.
-name|Raw
-argument_list|()
-operator|>>
-literal|16
-operator|)
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-comment|/// This turns an int stack alignment (which must be a power of 2) into
-comment|/// the form used internally in Attributes.
-specifier|inline
-name|Attributes
-name|constructStackAlignmentFromInt
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-block|{
-comment|// Default alignment, allow the target to define how to align it.
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-return|return
-name|None
-return|;
-name|assert
-argument_list|(
-name|isPowerOf2_32
-argument_list|(
-name|i
-argument_list|)
-operator|&&
-literal|"Alignment must be a power of two."
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|i
-operator|<=
-literal|0x100
-operator|&&
-literal|"Alignment too large."
-argument_list|)
-expr_stmt|;
-return|return
-name|Attributes
-argument_list|(
-operator|(
-name|Log2_32
-argument_list|(
-name|i
-argument_list|)
-operator|+
-literal|1
-operator|)
-operator|<<
-literal|26
-argument_list|)
-return|;
-block|}
-comment|/// This returns the stack alignment field of an attribute as a byte alignment
-comment|/// value.
-specifier|inline
-name|unsigned
-name|getStackAlignmentFromAttrs
-parameter_list|(
-name|Attributes
-name|A
-parameter_list|)
-block|{
-name|Attributes
-name|StackAlign
-init|=
-name|A
-operator|&
-name|Attribute
-operator|::
-name|StackAlignment
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|StackAlign
-condition|)
-return|return
-literal|0
-return|;
-return|return
-literal|1U
-operator|<<
-operator|(
-operator|(
-name|StackAlign
-operator|.
-name|Raw
-argument_list|()
-operator|>>
-literal|26
-operator|)
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-comment|/// This returns an integer containing an encoding of all the
-comment|/// LLVM attributes found in the given attribute bitset.  Any
-comment|/// change to this encoding is a breaking change to bitcode
-comment|/// compatibility.
-specifier|inline
+comment|/// encodeLLVMAttributesForBitcode - This returns an integer containing an
+comment|/// encoding of all the LLVM attributes found in the given attribute bitset.
+comment|/// Any change to this encoding is a breaking change to bitcode compatibility.
+specifier|static
 name|uint64_t
 name|encodeLLVMAttributesForBitcode
 parameter_list|(
 name|Attributes
 name|Attrs
 parameter_list|)
-block|{
-comment|// FIXME: It doesn't make sense to store the alignment information as an
-comment|// expanded out value, we should store it as a log2 value.  However, we can't
-comment|// just change that here without breaking bitcode compatibility.  If this ever
-comment|// becomes a problem in practice, we should introduce new tag numbers in the
-comment|// bitcode file and have those tags use a more efficiently encoded alignment
-comment|// field.
-comment|// Store the alignment in the bitcode as a 16-bit raw value instead of a
-comment|// 5-bit log2 encoded value. Shift the bits above the alignment up by
-comment|// 11 bits.
-name|uint64_t
-name|EncodedAttrs
-init|=
-name|Attrs
-operator|.
-name|Raw
-argument_list|()
-operator|&
-literal|0xffff
-decl_stmt|;
-if|if
-condition|(
-name|Attrs
-operator|&
-name|Attribute
-operator|::
-name|Alignment
-condition|)
-name|EncodedAttrs
-operator||=
-operator|(
-literal|1ull
-operator|<<
-literal|16
-operator|)
-operator|<<
-operator|(
-operator|(
-operator|(
-name|Attrs
-operator|&
-name|Attribute
-operator|::
-name|Alignment
-operator|)
-operator|.
-name|Raw
-argument_list|()
-operator|-
-literal|1
-operator|)
-operator|>>
-literal|16
-operator|)
-expr_stmt|;
-name|EncodedAttrs
-operator||=
-operator|(
-name|Attrs
-operator|.
-name|Raw
-argument_list|()
-operator|&
-operator|(
-literal|0xfffull
-operator|<<
-literal|21
-operator|)
-operator|)
-operator|<<
-literal|11
-expr_stmt|;
-return|return
-name|EncodedAttrs
-return|;
-block|}
-comment|/// This returns an attribute bitset containing the LLVM attributes
-comment|/// that have been decoded from the given integer.  This function
-comment|/// must stay in sync with 'encodeLLVMAttributesForBitcode'.
-specifier|inline
+function_decl|;
+comment|/// decodeLLVMAttributesForBitcode - This returns an attribute bitset
+comment|/// containing the LLVM attributes that have been decoded from the given
+comment|/// integer.  This function must stay in sync with
+comment|/// 'encodeLLVMAttributesForBitcode'.
+specifier|static
 name|Attributes
 name|decodeLLVMAttributesForBitcode
 parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
 name|uint64_t
 name|EncodedAttrs
 parameter_list|)
-block|{
-comment|// The alignment is stored as a 16-bit raw value from bits 31--16.
-comment|// We shift the bits above 31 down by 11 bits.
-name|unsigned
-name|Alignment
-init|=
-operator|(
-name|EncodedAttrs
-operator|&
-operator|(
-literal|0xffffull
-operator|<<
-literal|16
-operator|)
-operator|)
-operator|>>
-literal|16
-decl_stmt|;
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|Alignment
-operator|||
-name|isPowerOf2_32
-argument_list|(
-name|Alignment
-argument_list|)
-operator|)
-operator|&&
-literal|"Alignment must be a power of two."
-argument_list|)
-expr_stmt|;
-name|Attributes
-name|Attrs
-argument_list|(
-name|EncodedAttrs
-operator|&
-literal|0xffff
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|Alignment
-condition|)
-name|Attrs
-operator||=
-name|Attribute
-operator|::
-name|constructAlignmentFromInt
-argument_list|(
-name|Alignment
-argument_list|)
-expr_stmt|;
-name|Attrs
-operator||=
-name|Attributes
-argument_list|(
-operator|(
-name|EncodedAttrs
-operator|&
-operator|(
-literal|0xfffull
-operator|<<
-literal|32
-operator|)
-operator|)
-operator|>>
-literal|11
-argument_list|)
-expr_stmt|;
-return|return
-name|Attrs
-return|;
-block|}
-comment|/// The set of Attributes set in Attributes is converted to a
-comment|/// string of equivalent mnemonics. This is, presumably, for writing out
-comment|/// the mnemonics for the assembly writer.
+function_decl|;
+comment|/// getAsString - The set of Attributes set in Attributes is converted to a
+comment|/// string of equivalent mnemonics. This is, presumably, for writing out the
+comment|/// mnemonics for the assembly writer.
 comment|/// @brief Convert attribute bits to text
 name|std
 operator|::
 name|string
 name|getAsString
+argument_list|()
+specifier|const
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// AttrBuilder - This class is used in conjunction with the Attributes::get
+comment|/// method to create an Attributes object. The object itself is uniquified. The
+comment|/// Builder's value, however, is not. So this can be used as a quick way to test
+comment|/// for equality, presence of attributes, etc.
+name|class
+name|AttrBuilder
+block|{
+name|uint64_t
+name|Bits
+decl_stmt|;
+name|public
+label|:
+name|AttrBuilder
+argument_list|()
+operator|:
+name|Bits
 argument_list|(
-argument|Attributes Attrs
+literal|0
+argument_list|)
+block|{}
+name|explicit
+name|AttrBuilder
+argument_list|(
+argument|uint64_t B
+argument_list|)
+operator|:
+name|Bits
+argument_list|(
+argument|B
+argument_list|)
+block|{}
+name|AttrBuilder
+argument_list|(
+specifier|const
+name|Attributes
+operator|&
+name|A
+argument_list|)
+operator|:
+name|Bits
+argument_list|(
+argument|A.Raw()
+argument_list|)
+block|{}
+name|AttrBuilder
+argument_list|(
+specifier|const
+name|AttrBuilder
+operator|&
+name|B
+argument_list|)
+operator|:
+name|Bits
+argument_list|(
+argument|B.Bits
+argument_list|)
+block|{}
+name|void
+name|clear
+argument_list|()
+block|{
+name|Bits
+operator|=
+literal|0
+block|; }
+comment|/// addAttribute - Add an attribute to the builder.
+name|AttrBuilder
+operator|&
+name|addAttribute
+argument_list|(
+argument|Attributes::AttrVal Val
+argument_list|)
+expr_stmt|;
+comment|/// removeAttribute - Remove an attribute from the builder.
+name|AttrBuilder
+modifier|&
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|AttrVal
+name|Val
+argument_list|)
+decl_stmt|;
+comment|/// addAttribute - Add the attributes from A to the builder.
+name|AttrBuilder
+modifier|&
+name|addAttributes
+parameter_list|(
+specifier|const
+name|Attributes
+modifier|&
+name|A
+parameter_list|)
+function_decl|;
+comment|/// removeAttribute - Remove the attributes from A from the builder.
+name|AttrBuilder
+modifier|&
+name|removeAttributes
+parameter_list|(
+specifier|const
+name|Attributes
+modifier|&
+name|A
+parameter_list|)
+function_decl|;
+comment|/// hasAttribute - Return true if the builder has the specified attribute.
+name|bool
+name|hasAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|AttrVal
+name|A
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// hasAttributes - Return true if the builder has IR-level attributes.
+name|bool
+name|hasAttributes
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// hasAttributes - Return true if the builder has any attribute that's in the
+comment|/// specified attribute.
+name|bool
+name|hasAttributes
+argument_list|(
+specifier|const
+name|Attributes
+operator|&
+name|A
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// hasAlignmentAttr - Return true if the builder has an alignment attribute.
+name|bool
+name|hasAlignmentAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getAlignment - Retrieve the alignment attribute, if it exists.
+name|uint64_t
+name|getAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getStackAlignment - Retrieve the stack alignment attribute, if it exists.
+name|uint64_t
+name|getStackAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// addAlignmentAttr - This turns an int alignment (which must be a power of
+comment|/// 2) into the form used internally in Attributes.
+name|AttrBuilder
+modifier|&
+name|addAlignmentAttr
+parameter_list|(
+name|unsigned
+name|Align
+parameter_list|)
+function_decl|;
+comment|/// addStackAlignmentAttr - This turns an int stack alignment (which must be a
+comment|/// power of 2) into the form used internally in Attributes.
+name|AttrBuilder
+modifier|&
+name|addStackAlignmentAttr
+parameter_list|(
+name|unsigned
+name|Align
+parameter_list|)
+function_decl|;
+comment|/// addRawValue - Add the raw value to the internal representation.
+comment|/// N.B. This should be used ONLY for decoding LLVM bitcode!
+name|AttrBuilder
+modifier|&
+name|addRawValue
+parameter_list|(
+name|uint64_t
+name|Val
+parameter_list|)
+function_decl|;
+comment|/// @brief Remove attributes that are used on functions only.
+name|void
+name|removeFunctionOnlyAttrs
+parameter_list|()
+block|{
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoReturn
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoUnwind
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|ReadNone
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|ReadOnly
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoInline
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|AlwaysInline
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|OptimizeForSize
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StackProtect
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StackProtectReq
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoRedZone
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NoImplicitFloat
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|Naked
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|InlineHint
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|StackAlignment
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|UWTable
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|NonLazyBind
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|ReturnsTwice
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|AddressSafety
+argument_list|)
+operator|.
+name|removeAttribute
+argument_list|(
+name|Attributes
+operator|::
+name|MinSize
 argument_list|)
 expr_stmt|;
 block|}
-comment|// end namespace Attribute
-comment|/// This is just a pair of values to associate a set of attributes
-comment|/// with an index.
+name|uint64_t
+name|Raw
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Bits
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|AttrBuilder
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|Bits
+operator|==
+name|B
+operator|.
+name|Bits
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|AttrBuilder
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|Bits
+operator|!=
+name|B
+operator|.
+name|Bits
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|// AttributeWithIndex
+comment|//===----------------------------------------------------------------------===//
+comment|/// AttributeWithIndex - This is just a pair of values to associate a set of
+comment|/// attributes with an index.
 struct|struct
 name|AttributeWithIndex
 block|{
@@ -1234,6 +1032,42 @@ decl_stmt|;
 comment|///< Index of the parameter for which the attributes apply.
 comment|///< Index 0 is used for return value attributes.
 comment|///< Index ~0U is used for function attributes.
+specifier|static
+name|AttributeWithIndex
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|,
+name|ArrayRef
+operator|<
+name|Attributes
+operator|::
+name|AttrVal
+operator|>
+name|Attrs
+argument_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|Idx
+argument_list|,
+name|Attributes
+operator|::
+name|get
+argument_list|(
+name|C
+argument_list|,
+name|Attrs
+argument_list|)
+argument_list|)
+return|;
+block|}
 specifier|static
 name|AttributeWithIndex
 name|get
@@ -1277,14 +1111,54 @@ comment|/// AttributeListImpl object and provides accessors for it.
 name|class
 name|AttrListPtr
 block|{
-comment|/// AttrList - The attributes that we are managing.  This can be null
-comment|/// to represent the empty attributes list.
+name|public
+label|:
+enum|enum
+name|AttrIndex
+block|{
+name|ReturnIndex
+init|=
+literal|0U
+block|,
+name|FunctionIndex
+init|=
+operator|~
+literal|0U
+block|}
+enum|;
+name|private
+label|:
+comment|/// @brief The attributes that we are managing.  This can be null to represent
+comment|/// the empty attributes list.
 name|AttributeListImpl
 modifier|*
 name|AttrList
 decl_stmt|;
+comment|/// @brief The attributes for the specified index are returned.  Attributes
+comment|/// for the result are denoted with Idx = 0.
+name|Attributes
+name|getAttributes
+argument_list|(
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+decl_stmt|;
+name|explicit
+name|AttrListPtr
+argument_list|(
+name|AttributeListImpl
+operator|*
+name|LI
+argument_list|)
+operator|:
+name|AttrList
+argument_list|(
+argument|LI
+argument_list|)
+block|{}
 name|public
-label|:
+operator|:
 name|AttrListPtr
 argument_list|()
 operator|:
@@ -1300,22 +1174,23 @@ name|AttrListPtr
 operator|&
 name|P
 argument_list|)
-expr_stmt|;
+operator|:
+name|AttrList
+argument_list|(
+argument|P.AttrList
+argument_list|)
+block|{}
 specifier|const
 name|AttrListPtr
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|AttrListPtr
 operator|&
 name|RHS
 operator|)
-decl_stmt|;
-operator|~
-name|AttrListPtr
-argument_list|()
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute List Construction and Mutation
@@ -1325,6 +1200,10 @@ specifier|static
 name|AttrListPtr
 name|get
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|ArrayRef
 operator|<
 name|AttributeWithIndex
@@ -1338,6 +1217,10 @@ comment|/// returns the new list.
 name|AttrListPtr
 name|addAttr
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|unsigned
 name|Idx
 argument_list|,
@@ -1352,6 +1235,10 @@ comment|/// returns the new list.
 name|AttrListPtr
 name|removeAttr
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|unsigned
 name|Idx
 argument_list|,
@@ -1373,18 +1260,6 @@ name|Idx
 argument_list|)
 decl|const
 block|{
-name|assert
-argument_list|(
-name|Idx
-operator|&&
-name|Idx
-operator|!=
-operator|~
-literal|0U
-operator|&&
-literal|"Invalid parameter index!"
-argument_list|)
-expr_stmt|;
 return|return
 name|getAttributes
 argument_list|(
@@ -1402,7 +1277,7 @@ block|{
 return|return
 name|getAttributes
 argument_list|(
-literal|0
+name|ReturnIndex
 argument_list|)
 return|;
 block|}
@@ -1415,8 +1290,7 @@ block|{
 return|return
 name|getAttributes
 argument_list|(
-operator|~
-literal|0U
+name|FunctionIndex
 argument_list|)
 return|;
 block|}
@@ -1438,8 +1312,11 @@ name|getAttributes
 argument_list|(
 name|Idx
 argument_list|)
-operator|&
+operator|.
+name|hasAttributes
+argument_list|(
 name|Attr
+argument_list|)
 return|;
 block|}
 comment|/// getParamAlignment - Return the alignment for the specified function
@@ -1453,15 +1330,13 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|Attribute
-operator|::
-name|getAlignmentFromAttrs
-argument_list|(
 name|getAttributes
 argument_list|(
 name|Idx
 argument_list|)
-argument_list|)
+operator|.
+name|getAlignment
+argument_list|()
 return|;
 block|}
 comment|/// hasAttrSomewhere - Return true if the specified attribute is set for at
@@ -1470,7 +1345,23 @@ name|bool
 name|hasAttrSomewhere
 argument_list|(
 name|Attributes
+operator|::
+name|AttrVal
 name|Attr
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getNumAttrs
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Attributes
+modifier|&
+name|getAttributesAtIndex
+argument_list|(
+name|unsigned
+name|i
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1513,11 +1404,6 @@ operator|.
 name|AttrList
 return|;
 block|}
-name|void
-name|dump
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute List Introspection
 comment|//===--------------------------------------------------------------------===//
@@ -1569,26 +1455,11 @@ name|Slot
 argument_list|)
 decl|const
 decl_stmt|;
-name|private
-label|:
-name|explicit
-name|AttrListPtr
-parameter_list|(
-name|AttributeListImpl
-modifier|*
-name|L
-parameter_list|)
-function_decl|;
-comment|/// getAttributes - The attributes for the specified index are
-comment|/// returned.  Attributes for the result are denoted with Idx = 0.
-name|Attributes
-name|getAttributes
-argument_list|(
-name|unsigned
-name|Idx
-argument_list|)
-decl|const
-decl_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

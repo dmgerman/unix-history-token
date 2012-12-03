@@ -173,6 +173,9 @@ specifier|const
 name|unsigned
 name|EnumValue
 decl_stmt|;
+name|unsigned
+name|LaneMask
+decl_stmt|;
 name|CodeGenSubRegIndex
 argument_list|(
 argument|Record *R
@@ -396,11 +399,6 @@ name|CodeGenRegBank
 modifier|&
 parameter_list|)
 function_decl|;
-comment|// Clean out redundant composite mappings.
-name|void
-name|cleanComposites
-parameter_list|()
-function_decl|;
 comment|// Return the map of composites.
 specifier|const
 name|CompMap
@@ -413,6 +411,11 @@ return|return
 name|Composed
 return|;
 block|}
+comment|// Compute LaneMask from Composed. Return LaneMask.
+name|unsigned
+name|computeLaneMask
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|CompMap
@@ -1706,6 +1709,13 @@ operator|*
 operator|>
 name|Registers
 expr_stmt|;
+name|StringMap
+operator|<
+name|CodeGenRegister
+operator|*
+operator|>
+name|RegistersByName
+expr_stmt|;
 name|DenseMap
 operator|<
 name|Record
@@ -1884,6 +1894,11 @@ name|void
 name|computeComposites
 parameter_list|()
 function_decl|;
+comment|// Compute a lane mask for each sub-register index.
+name|void
+name|computeSubRegIndexLaneMasks
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|CodeGenRegBank
@@ -2004,6 +2019,20 @@ argument_list|()
 block|{
 return|return
 name|Registers
+return|;
+block|}
+specifier|const
+name|StringMap
+operator|<
+name|CodeGenRegister
+operator|*
+operator|>
+operator|&
+name|getRegistersByName
+argument_list|()
+block|{
+return|return
+name|RegistersByName
 return|;
 block|}
 comment|// Find a register from its Record def.

@@ -568,7 +568,7 @@ return|;
 block|}
 comment|/// getOperandNamed - Return the index of the operand with the specified
 comment|/// non-empty name.  If the instruction does not have an operand with the
-comment|/// specified name, throw an exception.
+comment|/// specified name, abort.
 name|unsigned
 name|getOperandNamed
 argument_list|(
@@ -594,9 +594,8 @@ decl|const
 decl_stmt|;
 comment|/// ParseOperandName - Parse an operand name like "$foo" or "$foo.bar",
 comment|/// where $foo is a whole operand and $foo.bar refers to a suboperand.
-comment|/// This throws an exception if the name is invalid.  If AllowWholeOp is
-comment|/// true, references to operands with suboperands are allowed, otherwise
-comment|/// not.
+comment|/// This aborts if the name is invalid.  If AllowWholeOp is true, references
+comment|/// to operands with suboperands are allowed, otherwise not.
 name|std
 operator|::
 name|pair
@@ -873,8 +872,15 @@ name|canFoldAsLoad
 decl_stmt|;
 name|bool
 name|mayLoad
-decl_stmt|,
+decl_stmt|;
+name|bool
+name|mayLoad_Unset
+decl_stmt|;
+name|bool
 name|mayStore
+decl_stmt|;
+name|bool
+name|mayStore_Unset
 decl_stmt|;
 name|bool
 name|isPredicable
@@ -910,6 +916,9 @@ name|bool
 name|hasSideEffects
 decl_stmt|;
 name|bool
+name|hasSideEffects_Unset
+decl_stmt|;
+name|bool
 name|neverHasSideEffects
 decl_stmt|;
 name|bool
@@ -926,6 +935,26 @@ name|isCodeGenOnly
 decl_stmt|;
 name|bool
 name|isPseudo
+decl_stmt|;
+comment|/// Are there any undefined flags?
+name|bool
+name|hasUndefFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|mayLoad_Unset
+operator|||
+name|mayStore_Unset
+operator|||
+name|hasSideEffects_Unset
+return|;
+block|}
+comment|// The record used to infer instruction flags, or NULL if no flag values
+comment|// have been inferred.
+name|Record
+modifier|*
+name|InferredFrom
 decl_stmt|;
 name|CodeGenInstruction
 argument_list|(
@@ -1221,33 +1250,36 @@ argument_list|)
 expr_stmt|;
 name|bool
 name|tryAliasOpMatch
-parameter_list|(
+argument_list|(
 name|DagInit
-modifier|*
+operator|*
 name|Result
-parameter_list|,
+argument_list|,
 name|unsigned
 name|AliasOpNo
-parameter_list|,
+argument_list|,
 name|Record
-modifier|*
+operator|*
 name|InstOpRec
-parameter_list|,
+argument_list|,
 name|bool
 name|hasSubOps
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|SMLoc
+operator|>
 name|Loc
-parameter_list|,
+argument_list|,
 name|CodeGenTarget
-modifier|&
+operator|&
 name|T
-parameter_list|,
+argument_list|,
 name|ResultOperand
-modifier|&
+operator|&
 name|ResOp
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

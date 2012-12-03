@@ -310,6 +310,22 @@ name|LLVMSymbolLookupCallback
 name|SymbolLookUp
 parameter_list|)
 function_decl|;
+comment|/**  * Set the disassembler's options.  Returns 1 if it can set the Options and 0  * otherwise.  */
+name|int
+name|LLVMSetDisasmOptions
+parameter_list|(
+name|LLVMDisasmContextRef
+name|DC
+parameter_list|,
+name|uint64_t
+name|Options
+parameter_list|)
+function_decl|;
+comment|/* The option to produce marked up assembly. */
+define|#
+directive|define
+name|LLVMDisassembler_Option_UseMarkup
+value|1
 comment|/**  * Dispose of a disassembler context.  */
 name|void
 name|LLVMDisasmDispose

@@ -77,7 +77,7 @@ name|class
 name|Value
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -116,7 +116,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -148,7 +148,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -179,7 +179,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -213,7 +213,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -244,7 +244,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -284,7 +284,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -329,7 +329,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -364,7 +364,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -398,7 +398,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -453,7 +453,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -480,7 +480,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -511,7 +511,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -542,7 +542,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -577,7 +577,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -641,7 +641,7 @@ modifier|*
 name|CI
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 parameter_list|,

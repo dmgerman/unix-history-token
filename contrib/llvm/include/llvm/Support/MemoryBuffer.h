@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -113,12 +119,10 @@ decl_stmt|;
 comment|// End of the buffer.
 name|MemoryBuffer
 argument_list|(
-specifier|const
-name|MemoryBuffer
-operator|&
+argument|const MemoryBuffer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MemoryBuffer
 modifier|&
 name|operator
@@ -128,8 +132,8 @@ specifier|const
 name|MemoryBuffer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 name|MemoryBuffer

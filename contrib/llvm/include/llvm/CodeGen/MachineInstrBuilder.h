@@ -900,6 +900,12 @@ name|Disp
 argument_list|,
 name|int64_t
 name|off
+argument_list|,
+name|unsigned
+name|char
+name|TargetFlags
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -938,6 +944,15 @@ name|MachineOperand
 operator|::
 name|MO_GlobalAddress
 case|:
+block|{
+comment|// If caller specifies new TargetFlags then use it, otherwise the
+comment|// default behavior is to copy the target flags from the existing
+comment|// MachineOperand. This means if the caller wants to clear the
+comment|// target flags it needs to do so explicitly.
+if|if
+condition|(
+name|TargetFlags
+condition|)
 return|return
 name|addGlobalAddress
 argument_list|(
@@ -952,8 +967,32 @@ name|getOffset
 argument_list|()
 operator|+
 name|off
+argument_list|,
+name|TargetFlags
 argument_list|)
 return|;
+return|return
+name|addGlobalAddress
+argument_list|(
+name|Disp
+operator|.
+name|getGlobal
+argument_list|()
+argument_list|,
+name|Disp
+operator|.
+name|getOffset
+argument_list|()
+operator|+
+name|off
+argument_list|,
+name|Disp
+operator|.
+name|getTargetFlags
+argument_list|()
+argument_list|)
+return|;
+block|}
 block|}
 block|}
 block|}

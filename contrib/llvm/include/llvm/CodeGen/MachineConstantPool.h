@@ -102,7 +102,7 @@ name|class
 name|FoldingSetNodeID
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -403,11 +403,11 @@ name|class
 name|MachineConstantPool
 block|{
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
-comment|///< The machine's TargetData.
+comment|///< The machine's DataLayout.
 name|unsigned
 name|PoolAlignment
 decl_stmt|;
@@ -436,7 +436,7 @@ name|explicit
 name|MachineConstantPool
 argument_list|(
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|td
 argument_list|)

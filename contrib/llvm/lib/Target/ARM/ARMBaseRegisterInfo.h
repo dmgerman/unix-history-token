@@ -364,28 +364,17 @@ argument|CallingConv::ID
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getNoPreservedMask
+argument_list|()
+specifier|const
+block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-comment|/// canCombineSubRegIndices - Given a register class and a list of
-comment|/// subregister indices, return true if it's possible to combine the
-comment|/// subregister indices into one that corresponds to a larger
-comment|/// subregister. Return the new subregister index by reference. Note the
-comment|/// new index may be zero if the given subregisters can be combined to
-comment|/// form the whole register.
-name|virtual
-name|bool
-name|canCombineSubRegIndices
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<unsigned>&SubIndices
-argument_list|,
-argument|unsigned&NewSubIdx
 argument_list|)
 specifier|const
 block|;
@@ -616,16 +605,6 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
-name|virtual
-name|bool
-name|isReservedReg
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|unsigned Reg
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|bool
 name|requiresRegisterScavenging

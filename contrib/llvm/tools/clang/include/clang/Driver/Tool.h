@@ -205,8 +205,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// ConstructJob - Construct jobs to perform the action \arg JA,
-comment|/// writing to \arg Output and with \arg Inputs.
+comment|/// ConstructJob - Construct jobs to perform the action \p JA,
+comment|/// writing to \p Output and with \p Inputs.
 comment|///
 comment|/// \param TCArgs - The argument list for this toolchain, with any
 comment|/// tool chain specific translations applied.

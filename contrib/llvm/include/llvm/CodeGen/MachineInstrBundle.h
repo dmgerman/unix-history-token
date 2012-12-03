@@ -403,10 +403,10 @@ name|operands_begin
 argument_list|()
 return|;
 block|}
-comment|/// RegInfo - Information about a virtual register used by a set of operands.
+comment|/// VirtRegInfo - Information about a virtual register used by a set of operands.
 comment|///
 struct|struct
-name|RegInfo
+name|VirtRegInfo
 block|{
 comment|/// Reads - One of the operands read the virtual register.  This does not
 comment|/// include<undef> or<internal> use operands, see MO::readsReg().
@@ -425,6 +425,42 @@ name|Tied
 decl_stmt|;
 block|}
 struct|;
+comment|/// PhysRegInfo - Information about a physical register used by a set of
+comment|/// operands.
+struct|struct
+name|PhysRegInfo
+block|{
+comment|/// Clobbers - Reg or an overlapping register is defined, or a regmask
+comment|/// clobbers Reg.
+name|bool
+name|Clobbers
+decl_stmt|;
+comment|/// Defines - Reg or a super-register is defined.
+name|bool
+name|Defines
+decl_stmt|;
+comment|/// DefinesOverlap - Reg or an overlapping register is defined.
+name|bool
+name|DefinesOverlap
+decl_stmt|;
+comment|/// Reads - Read or a super-register is read.
+name|bool
+name|Reads
+decl_stmt|;
+comment|/// ReadsOverlap - Reg or an overlapping register is read.
+name|bool
+name|ReadsOverlap
+decl_stmt|;
+comment|/// DefinesDead - All defs of a Reg or a super-register are dead.
+name|bool
+name|DefinesDead
+decl_stmt|;
+comment|/// There is a kill of Reg or a super-register.
+name|bool
+name|Kills
+decl_stmt|;
+block|}
+struct|;
 comment|/// analyzeVirtReg - Analyze how the current instruction or bundle uses a
 comment|/// virtual register.  This function should not be called after operator++(),
 comment|/// it expects a fresh iterator.
@@ -433,7 +469,7 @@ comment|/// @param Reg The virtual register to analyze.
 comment|/// @param Ops When set, this vector will receive an (MI, OpNum) entry for
 comment|///            each operand referring to Reg.
 comment|/// @returns A filled-in RegInfo struct.
-name|RegInfo
+name|VirtRegInfo
 name|analyzeVirtReg
 argument_list|(
 name|unsigned
@@ -457,6 +493,24 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// analyzePhysReg - Analyze how the current instruction or bundle uses a
+comment|/// physical register.  This function should not be called after operator++(),
+comment|/// it expects a fresh iterator.
+comment|///
+comment|/// @param Reg The physical register to analyze.
+comment|/// @returns A filled-in PhysRegInfo struct.
+name|PhysRegInfo
+name|analyzePhysReg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|TRI
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// MIOperands - Iterate over operands of a single instruction.

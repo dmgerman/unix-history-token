@@ -275,9 +275,9 @@ comment|///
 comment|/// For sets that may grow to thousands of elements, SparseT should be set to
 comment|/// uint16_t or uint32_t.
 comment|///
-comment|/// @param ValueT      The type of objects in the set.
-comment|/// @param KeyFunctorT A functor that computes an unsigned index from KeyT.
-comment|/// @param SparseT     An unsigned integer type. See above.
+comment|/// @tparam ValueT      The type of objects in the set.
+comment|/// @tparam KeyFunctorT A functor that computes an unsigned index from KeyT.
+comment|/// @tparam SparseT     An unsigned integer type. See above.
 comment|///
 name|template
 operator|<
@@ -345,12 +345,10 @@ comment|// Disable copy construction and assignment.
 comment|// This data structure is not meant to be used that way.
 name|SparseSet
 argument_list|(
-specifier|const
-name|SparseSet
-operator|&
+argument|const SparseSet&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT.
 name|SparseSet
 operator|&
 name|operator
@@ -360,8 +358,8 @@ specifier|const
 name|SparseSet
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT.
 name|public
 operator|:
 typedef|typedef

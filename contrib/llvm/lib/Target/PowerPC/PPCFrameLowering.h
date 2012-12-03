@@ -184,6 +184,32 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|spillCalleeSavedRegisters
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|restoreCalleeSavedRegisters
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
 comment|/// targetHandlesStackFrameRounding - Returns true if the target is
 comment|/// responsible for rounding up the stack frame (probably at emitPrologue
 comment|/// time).
@@ -800,23 +826,19 @@ operator|-
 literal|72
 block|}
 block|,
-comment|// CR save area offset.
-comment|// FIXME SVR4: Disable CR save area for now.
-comment|//      {PPC::CR2, -4},
-comment|//      {PPC::CR3, -4},
-comment|//      {PPC::CR4, -4},
-comment|//      {PPC::CR2LT, -4},
-comment|//      {PPC::CR2GT, -4},
-comment|//      {PPC::CR2EQ, -4},
-comment|//      {PPC::CR2UN, -4},
-comment|//      {PPC::CR3LT, -4},
-comment|//      {PPC::CR3GT, -4},
-comment|//      {PPC::CR3EQ, -4},
-comment|//      {PPC::CR3UN, -4},
-comment|//      {PPC::CR4LT, -4},
-comment|//      {PPC::CR4GT, -4},
-comment|//      {PPC::CR4EQ, -4},
-comment|//      {PPC::CR4UN, -4},
+comment|// CR save area offset.  We map each of the nonvolatile CR fields
+comment|// to the slot for CR2, which is the first of the nonvolatile CR
+comment|// fields to be assigned, so that we only allocate one save slot.
+comment|// See PPCRegisterInfo::hasReservedSpillSlot() for more information.
+block|{
+name|PPC
+operator|::
+name|CR2
+block|,
+operator|-
+literal|4
+block|}
+block|,
 comment|// VRSAVE save area offset.
 block|{
 name|PPC
@@ -1108,170 +1130,6 @@ literal|144
 block|}
 block|,
 comment|// General register save area offsets.
-comment|// FIXME 64-bit SVR4: Are 32-bit registers actually allocated in 64-bit
-comment|//                    mode?
-block|{
-name|PPC
-operator|::
-name|R31
-block|,
-operator|-
-literal|4
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R30
-block|,
-operator|-
-literal|12
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R29
-block|,
-operator|-
-literal|20
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R28
-block|,
-operator|-
-literal|28
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R27
-block|,
-operator|-
-literal|36
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R26
-block|,
-operator|-
-literal|44
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R25
-block|,
-operator|-
-literal|52
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R24
-block|,
-operator|-
-literal|60
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R23
-block|,
-operator|-
-literal|68
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R22
-block|,
-operator|-
-literal|76
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R21
-block|,
-operator|-
-literal|84
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R20
-block|,
-operator|-
-literal|92
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R19
-block|,
-operator|-
-literal|100
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R18
-block|,
-operator|-
-literal|108
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R17
-block|,
-operator|-
-literal|116
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R16
-block|,
-operator|-
-literal|124
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R15
-block|,
-operator|-
-literal|132
-block|}
-block|,
-block|{
-name|PPC
-operator|::
-name|R14
-block|,
-operator|-
-literal|140
-block|}
-block|,
 block|{
 name|PPC
 operator|::
@@ -1434,23 +1292,6 @@ operator|-
 literal|144
 block|}
 block|,
-comment|// CR save area offset.
-comment|// FIXME SVR4: Disable CR save area for now.
-comment|//      {PPC::CR2, -4},
-comment|//      {PPC::CR3, -4},
-comment|//      {PPC::CR4, -4},
-comment|//      {PPC::CR2LT, -4},
-comment|//      {PPC::CR2GT, -4},
-comment|//      {PPC::CR2EQ, -4},
-comment|//      {PPC::CR2UN, -4},
-comment|//      {PPC::CR3LT, -4},
-comment|//      {PPC::CR3GT, -4},
-comment|//      {PPC::CR3EQ, -4},
-comment|//      {PPC::CR3UN, -4},
-comment|//      {PPC::CR4LT, -4},
-comment|//      {PPC::CR4GT, -4},
-comment|//      {PPC::CR4EQ, -4},
-comment|//      {PPC::CR4UN, -4},
 comment|// VRSAVE save area offset.
 block|{
 name|PPC

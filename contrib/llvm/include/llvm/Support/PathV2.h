@@ -114,13 +114,14 @@ comment|/// * Dot, if one or more trailing non-root slash characters are present
 comment|/// The backwards traversal order is the reverse of forward traversal.
 comment|///
 comment|/// Iteration examples. Each component is separated by ',':
-comment|/// /          => /
-comment|/// /foo       => /,foo
-comment|/// foo/       => foo,.
-comment|/// /foo/bar   => /,foo,bar
-comment|/// ../        => ..,.
-comment|/// C:\foo\bar => C:,/,foo,bar
-comment|///
+comment|/// @code
+comment|///   /          => /
+comment|///   /foo       => /,foo
+comment|///   foo/       => foo,.
+comment|///   /foo/bar   => /,foo,bar
+comment|///   ../        => ..,.
+comment|///   C:\foo\bar => C:,/,foo,bar
+comment|/// @endcode
 name|class
 name|const_iterator
 block|{
@@ -349,9 +350,11 @@ comment|/// @name Lexical Modifiers
 comment|/// @{
 comment|/// @brief Remove the last component from \a path unless it is the root dir.
 comment|///
-comment|/// directory/filename.cpp => directory/
-comment|/// directory/             => directory
-comment|/// /                      => /
+comment|/// @code
+comment|///   directory/filename.cpp => directory/
+comment|///   directory/             => directory
+comment|///   /                      => /
+comment|/// @endcode
 comment|///
 comment|/// @param path A path that is modified to not have a file component.
 name|void
@@ -367,9 +370,11 @@ argument_list|)
 decl_stmt|;
 comment|/// @brief Replace the file extension of \a path with \a extension.
 comment|///
-comment|/// ./filename.cpp => ./filename.extension
-comment|/// ./filename     => ./filename.extension
-comment|/// ./             => ./.extension
+comment|/// @code
+comment|///   ./filename.cpp => ./filename.extension
+comment|///   ./filename     => ./filename.extension
+comment|///   ./             => ./.extension
+comment|/// @endcode
 comment|///
 comment|/// @param path A path that has its extension replaced with \a extension.
 comment|/// @param extension The extension to be added. It may be empty. It may also
@@ -393,12 +398,14 @@ argument_list|)
 decl_stmt|;
 comment|/// @brief Append to path.
 comment|///
-comment|/// /foo  + bar/f => /foo/bar/f
-comment|/// /foo/ + bar/f => /foo/bar/f
-comment|/// foo   + bar/f => foo/bar/f
+comment|/// @code
+comment|///   /foo  + bar/f => /foo/bar/f
+comment|///   /foo/ + bar/f => /foo/bar/f
+comment|///   foo   + bar/f => foo/bar/f
+comment|/// @endcode
 comment|///
 comment|/// @param path Set to \a path + \a component.
-comment|/// @param component The component to be appended to \a path.
+comment|/// @param a The component to be appended to \a path.
 name|void
 name|append
 argument_list|(
@@ -438,9 +445,11 @@ argument_list|)
 decl_stmt|;
 comment|/// @brief Append to path.
 comment|///
-comment|/// /foo  + [bar,f] => /foo/bar/f
-comment|/// /foo/ + [bar,f] => /foo/bar/f
-comment|/// foo   + [bar,f] => foo/bar/f
+comment|/// @code
+comment|///   /foo  + [bar,f] => /foo/bar/f
+comment|///   /foo/ + [bar,f] => /foo/bar/f
+comment|///   foo   + [bar,f] => foo/bar/f
+comment|/// @endcode
 comment|///
 comment|/// @param path Set to \a path + [\a begin, \a end).
 comment|/// @param begin Start of components to append.
@@ -492,9 +501,11 @@ comment|/// @name Lexical Observers
 comment|/// @{
 comment|/// @brief Get root name.
 comment|///
-comment|/// //net/hello => //net
-comment|/// c:/hello    => c: (on Windows, on other platforms nothing)
-comment|/// /hello      =><empty>
+comment|/// @code
+comment|///   //net/hello => //net
+comment|///   c:/hello    => c: (on Windows, on other platforms nothing)
+comment|///   /hello      =><empty>
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The root name of \a path if it has one, otherwise "".
@@ -508,9 +519,11 @@ parameter_list|)
 function_decl|;
 comment|/// @brief Get root directory.
 comment|///
-comment|/// /goo/hello => /
-comment|/// c:/hello   => /
-comment|/// d/file.txt =><empty>
+comment|/// @code
+comment|///   /goo/hello => /
+comment|///   c:/hello   => /
+comment|///   d/file.txt =><empty>
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The root directory of \a path if it has one, otherwise
@@ -539,9 +552,11 @@ parameter_list|)
 function_decl|;
 comment|/// @brief Get relative path.
 comment|///
-comment|/// C:\hello\world => hello\world
-comment|/// foo/bar        => foo/bar
-comment|/// /foo/bar       => foo/bar
+comment|/// @code
+comment|///   C:\hello\world => hello\world
+comment|///   foo/bar        => foo/bar
+comment|///   /foo/bar       => foo/bar
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The path starting after root_path if one exists, otherwise "".
@@ -555,9 +570,11 @@ parameter_list|)
 function_decl|;
 comment|/// @brief Get parent path.
 comment|///
-comment|/// /          =><empty>
-comment|/// /foo       => /
-comment|/// foo/../bar => foo/..
+comment|/// @code
+comment|///   /          =><empty>
+comment|///   /foo       => /
+comment|///   foo/../bar => foo/..
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The parent path of \a path if one exists, otherwise "".
@@ -571,10 +588,12 @@ parameter_list|)
 function_decl|;
 comment|/// @brief Get filename.
 comment|///
-comment|/// /foo.txt    => foo.txt
-comment|/// .          => .
-comment|/// ..         => ..
-comment|/// /          => /
+comment|/// @code
+comment|///   /foo.txt    => foo.txt
+comment|///   .          => .
+comment|///   ..         => ..
+comment|///   /          => /
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The filename part of \a path. This is defined as the last component
@@ -593,11 +612,13 @@ comment|/// If filename contains a dot but not solely one or two dots, result is
 comment|/// substring of filename ending at (but not including) the last dot. Otherwise
 comment|/// it is filename.
 comment|///
-comment|/// /foo/bar.txt => bar
-comment|/// /foo/bar     => bar
-comment|/// /foo/.txt    =><empty>
-comment|/// /foo/.       => .
-comment|/// /foo/..      => ..
+comment|/// @code
+comment|///   /foo/bar.txt => bar
+comment|///   /foo/bar     => bar
+comment|///   /foo/.txt    =><empty>
+comment|///   /foo/.       => .
+comment|///   /foo/..      => ..
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The stem of \a path.
@@ -615,9 +636,11 @@ comment|/// If filename contains a dot but not solely one or two dots, result is
 comment|/// substring of filename starting at (and including) the last dot, and ending
 comment|/// at the end of \a path. Otherwise "".
 comment|///
-comment|/// /foo/bar.txt => .txt
-comment|/// /foo/bar     =><empty>
-comment|/// /foo/.txt    => .txt
+comment|/// @code
+comment|///   /foo/bar.txt => .txt
+comment|///   /foo/bar     =><empty>
+comment|///   /foo/.txt    => .txt
+comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The extension of \a path.
@@ -648,7 +671,7 @@ comment|/// rather than one that potentially persists longer. This parameter wil
 comment|/// ignored if the user or system has set the typical environment variable
 comment|/// (e.g., TEMP on Windows, TMPDIR on *nix) to specify a temporary directory.
 comment|///
-comment|/// @param Result Holds the resulting path name.
+comment|/// @param result Holds the resulting path name.
 name|void
 name|system_temp_directory
 argument_list|(

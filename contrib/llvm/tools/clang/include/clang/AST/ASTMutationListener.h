@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CLANG_AST_ASTMUTATIONLISTENER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang

@@ -334,20 +334,14 @@ operator|*
 operator|>
 name|Blocks
 block|;
-comment|// DO NOT IMPLEMENT
 name|LoopBase
 argument_list|(
-specifier|const
-name|LoopBase
-operator|<
-name|BlockT
+argument|const LoopBase<BlockT
 argument_list|,
-name|LoopT
-operator|>
-operator|&
+argument|LoopT>&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 specifier|const
 name|LoopBase
 operator|<
@@ -368,6 +362,7 @@ name|LoopT
 operator|>
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|public
 operator|:
@@ -2019,16 +2014,14 @@ specifier|const
 name|LoopInfoBase
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|LoopInfoBase
 argument_list|(
-specifier|const
-name|LoopInfo
-operator|&
+argument|const LoopInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|public
 operator|:
 name|LoopInfoBase
@@ -2856,16 +2849,14 @@ specifier|const
 name|LoopInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|LoopInfo
 argument_list|(
-specifier|const
-name|LoopInfo
-operator|&
+argument|const LoopInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|public
 operator|:
 specifier|static

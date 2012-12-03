@@ -130,6 +130,36 @@ operator|*
 name|MI
 argument_list|)
 block|;
+name|private
+operator|:
+comment|// tblgen'erated function.
+name|bool
+name|emitPseudoExpansionLowering
+argument_list|(
+name|MCStreamer
+operator|&
+name|OutStreamer
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
+comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
+name|bool
+name|lowerOperand
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+name|MCOperand
+operator|&
+name|MCOp
+argument_list|)
+block|;
 name|public
 operator|:
 specifier|const
