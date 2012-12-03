@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sysexits.h>
 end_include
 
@@ -1102,18 +1108,11 @@ expr_stmt|;
 else|else
 name|timeout
 operator|=
-literal|1.0
-operator|+
-name|log
+name|flsll
 argument_list|(
 name|a
 operator|*
 literal|1e9
-argument_list|)
-operator|/
-name|log
-argument_list|(
-literal|2.0
 argument_list|)
 expr_stmt|;
 if|if
