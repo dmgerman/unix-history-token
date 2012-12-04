@@ -975,6 +975,15 @@ name|ah_btCoexEnable
 operator|=
 name|ar5416BTCoexEnable
 expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_btCoexSetDiversity
+operator|=
+name|ar5416BTCoexAntennaDiversity
+expr_stmt|;
 name|ahp
 operator|->
 name|ah_priv
