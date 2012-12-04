@@ -1937,6 +1937,9 @@ literal|0
 operator|&&
 operator|!
 name|debugonly
+operator|&&
+operator|!
+name|tflag
 condition|)
 block|{
 name|errx
@@ -4115,6 +4118,12 @@ condition|(
 name|uid
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|debugonly
+operator|&&
+operator|!
+name|tflag
 condition|)
 block|{
 name|errx
