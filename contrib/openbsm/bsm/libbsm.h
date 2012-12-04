@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/libbsm.h#45 $  */
+comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/libbsm.h#50 $  */
 end_comment
 
 begin_ifndef
@@ -185,8 +185,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MINFREE_CONTROL_ENTRY
-value|"minfree"
+name|DIST_CONTROL_ENTRY
+value|"dist"
 end_define
 
 begin_define
@@ -206,6 +206,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HOST_CONTROL_ENTRY
+value|"host"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINFREE_CONTROL_ENTRY
+value|"minfree"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NA_CONTROL_ENTRY
 value|"naflags"
 end_define
@@ -215,13 +229,6 @@ define|#
 directive|define
 name|POLICY_CONTROL_ENTRY
 value|"policy"
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUDIT_HOST_CONTROL_ENTRY
-value|"host"
 end_define
 
 begin_define
@@ -315,6 +322,65 @@ end_define
 
 begin_comment
 comment|/* Commit audit record. */
+end_comment
+
+begin_comment
+comment|/*  * Output format flags for au_print_flags_tok().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AU_OFLAG_NONE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* Default form. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AU_OFLAG_RAW
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Raw, numeric form. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AU_OFLAG_SHORT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Short form. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AU_OFLAG_XML
+value|0x0004
+end_define
+
+begin_comment
+comment|/* XML form. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AU_OFLAG_NORESOLVE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* No user/group name resolution. */
 end_comment
 
 begin_macro
@@ -1578,6 +1644,56 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * upriv status         1 byte  * privstr len          2 bytes  * privstr              N bytes + 1 (\0 byte)  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|sorf
+decl_stmt|;
+name|u_int16_t
+name|privstrlen
+decl_stmt|;
+name|char
+modifier|*
+name|priv
+decl_stmt|;
+block|}
+name|au_priv_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* * privset * privtstrlen		2 bytes * privtstr		N Bytes + 1 * privstrlen		2 bytes * privstr		N Bytes + 1 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int16_t
+name|privtstrlen
+decl_stmt|;
+name|char
+modifier|*
+name|privtstr
+decl_stmt|;
+name|u_int16_t
+name|privstrlen
+decl_stmt|;
+name|char
+modifier|*
+name|privstr
+decl_stmt|;
+block|}
+name|au_privset_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * zonename length	2 bytes  * zonename text	N bytes + 1 NULL terminator  */
 end_comment
 
@@ -1798,6 +1914,12 @@ decl_stmt|;
 name|au_zonename_t
 name|zonename
 decl_stmt|;
+name|au_priv_t
+name|priv
+decl_stmt|;
+name|au_privset_t
+name|privset
+decl_stmt|;
 block|}
 name|tt
 union|;
@@ -1984,11 +2106,28 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getacmin
+name|getacdist
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getacexpire
 parameter_list|(
 name|int
 modifier|*
-name|min_val
+name|andflg
+parameter_list|,
+name|time_t
+modifier|*
+name|age
+parameter_list|,
+name|size_t
+modifier|*
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2020,6 +2159,31 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|getachost
+parameter_list|(
+name|char
+modifier|*
+name|auditstr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getacmin
+parameter_list|(
+name|int
+modifier|*
+name|min_val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|getacna
 parameter_list|(
 name|char
@@ -2042,39 +2206,6 @@ name|auditstr
 parameter_list|,
 name|size_t
 name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|getachost
-parameter_list|(
-name|char
-modifier|*
-name|auditstr
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|getacexpire
-parameter_list|(
-name|int
-modifier|*
-name|andflg
-parameter_list|,
-name|time_t
-modifier|*
-name|age
-parameter_list|,
-name|size_t
-modifier|*
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2481,6 +2612,28 @@ name|raw
 parameter_list|,
 name|char
 name|sfrm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|au_print_flags_tok
+parameter_list|(
+name|FILE
+modifier|*
+name|outfp
+parameter_list|,
+name|tokenstr_t
+modifier|*
+name|tok
+parameter_list|,
+name|char
+modifier|*
+name|del
+parameter_list|,
+name|int
+name|oflags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -346,20 +346,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TranslationUnitDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -749,14 +735,20 @@ function|const;
 name|class
 name|LinkageInfo
 block|{
-name|Linkage
+name|uint8_t
 name|linkage_
+range|:
+literal|2
 decl_stmt|;
-name|Visibility
+name|uint8_t
 name|visibility_
+range|:
+literal|2
 decl_stmt|;
-name|bool
+name|uint8_t
 name|explicit_
+range|:
+literal|1
 decl_stmt|;
 name|void
 name|setVisibility
@@ -820,7 +812,27 @@ name|explicit_
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|linkage
+argument_list|()
+operator|==
+name|L
+operator|&&
+name|visibility
+argument_list|()
+operator|==
+name|V
+operator|&&
+name|visibilityExplicit
+argument_list|()
+operator|==
+name|E
+operator|&&
+literal|"Enum truncated!"
+argument_list|)
+block|;     }
 specifier|static
 name|LinkageInfo
 name|external
@@ -885,6 +897,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|Linkage
+operator|)
 name|linkage_
 return|;
 block|}
@@ -894,6 +909,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|Visibility
+operator|)
 name|visibility_
 return|;
 block|}
@@ -1240,20 +1258,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -1499,17 +1503,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LabelDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -2063,23 +2056,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|NamespaceDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -2298,17 +2274,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const ValueDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -2385,10 +2350,9 @@ operator|:
 comment|// Copy constructor and copy assignment are disabled.
 name|QualifierInfo
 argument_list|(
-specifier|const
-name|QualifierInfo
-operator|&
+argument|const QualifierInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|QualifierInfo
 operator|&
@@ -2399,6 +2363,7 @@ specifier|const
 name|QualifierInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|; }
 block|;
 comment|/// \brief Represents a ValueDecl that came out of a declarator.
@@ -2760,17 +2725,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const DeclaratorDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -2894,7 +2848,7 @@ name|StorageClass
 name|StorageClass
 expr_stmt|;
 comment|/// getStorageClassSpecifierString - Return the string used to
-comment|/// specify the storage class \arg SC.
+comment|/// specify the storage class \p SC.
 comment|///
 comment|/// It is illegal to call this function with SC == None.
 specifier|static
@@ -5268,23 +5222,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|VarDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -5381,17 +5318,6 @@ name|setImplicit
 argument_list|()
 block|;   }
 comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImplicitParamDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -6203,23 +6129,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ParmVarDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -8369,20 +8278,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|FunctionDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -8904,17 +8799,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const FieldDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -9139,17 +9023,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const EnumConstantDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -9383,17 +9256,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const IndirectFieldDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -9601,17 +9463,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -9878,23 +9729,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TypedefNameDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -10013,17 +9847,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const TypedefDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -10129,17 +9952,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const TypeAliasDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -10183,7 +9995,7 @@ comment|/// TagDeclKind - The TagKind enum.
 name|unsigned
 name|TagDeclKind
 operator|:
-literal|2
+literal|3
 block|;
 comment|/// IsCompleteDefinition - True if this is a definition ("struct foo
 comment|/// {};"), false if it is a declaration ("struct foo;").  It is not
@@ -10913,6 +10725,21 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|isInterface
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTagKind
+argument_list|()
+operator|==
+name|TTK_Interface
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
 name|isClass
 argument_list|()
 specifier|const
@@ -11160,23 +10987,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TagDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -12221,23 +12031,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|EnumDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -12665,23 +12458,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|RecordDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -12699,6 +12475,31 @@ name|lastRecord
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// isMsStrust - Get whether or not this is an ms_struct which can
+end_comment
+
+begin_comment
+comment|/// be turned on with an attribute, pragma, or -mms-bitfields
+end_comment
+
+begin_comment
+comment|/// commandline option.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isMsStruct
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|private
@@ -12886,17 +12687,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FileScopeAsmDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -13701,23 +13491,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|BlockDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -14017,17 +13790,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImportDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static

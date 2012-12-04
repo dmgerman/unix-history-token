@@ -122,6 +122,7 @@ expr_stmt|;
 comment|/// \brief FileManager that handles translating between filenames and
 comment|/// FileEntry *.
 name|FileManager
+modifier|&
 name|FileMgr
 decl_stmt|;
 comment|/// \brief A lookup of in-memory (virtual file) buffers
@@ -189,14 +190,14 @@ name|StringRef
 operator|>
 name|ModuleOffset
 expr_stmt|;
+name|explicit
 name|ModuleManager
-argument_list|(
-specifier|const
-name|FileSystemOptions
-operator|&
-name|FSO
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|FileManager
+modifier|&
+name|FileMgr
+parameter_list|)
+function_decl|;
 operator|~
 name|ModuleManager
 argument_list|()
@@ -399,6 +400,17 @@ argument_list|,
 argument|std::string&ErrorStr
 argument_list|)
 expr_stmt|;
+comment|/// \brief Remove the given set of modules.
+name|void
+name|removeModules
+parameter_list|(
+name|ModuleIterator
+name|first
+parameter_list|,
+name|ModuleIterator
+name|last
+parameter_list|)
+function_decl|;
 comment|/// \brief Add an in-memory buffer the list of known buffers
 name|void
 name|addInMemoryBuffer

@@ -112,7 +112,7 @@ init|=
 literal|2
 block|}
 enum|;
-comment|/// Compiles the given POSIX Extended Regular Expression \arg Regex.
+comment|/// Compiles the given POSIX Extended Regular Expression \p Regex.
 comment|/// This implementation supports regexes and matching strings with embedded
 comment|/// NUL characters.
 name|Regex
@@ -146,10 +146,10 @@ name|getNumMatches
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// matches - Match the regex against a given \arg String.
+comment|/// matches - Match the regex against a given \p String.
 comment|///
 comment|/// \param Matches - If given, on a successful match this will be filled in
-comment|/// with references to the matched group expressions (inside \arg String),
+comment|/// with references to the matched group expressions (inside \p String),
 comment|/// the first group is always the entire pattern.
 comment|///
 comment|/// This returns true on a successful match.
@@ -170,7 +170,7 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/// sub - Return the result of replacing the first match of the regex in
-comment|/// \arg String with the \arg Repl string. Backreferences like "\0" in the
+comment|/// \p String with the \p Repl string. Backreferences like "\0" in the
 comment|/// replacement string are replaced with the appropriate match substring.
 comment|///
 comment|/// Note that the replacement string has backslash escaping performed on

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -204,6 +210,10 @@ name|int
 name|res_type
 decl_stmt|;
 comment|/* Resource type for p_lvlx. */
+name|int
+name|res_rid
+decl_stmt|;
+comment|/* Resource ID for p_lvlx. */
 block|}
 struct|;
 end_struct
@@ -289,14 +299,15 @@ decl_stmt|;
 name|int
 name|cpu_cx_lowest_lim
 decl_stmt|;
+name|int
+name|cpu_disable_idle
+decl_stmt|;
+comment|/* Disable entry to idle function */
 name|char
 name|cpu_cx_supported
 index|[
 literal|64
 index|]
-decl_stmt|;
-name|int
-name|cpu_rid
 decl_stmt|;
 block|}
 struct|;
@@ -555,21 +566,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Indicate any hardware bugs. */
-end_comment
-
-begin_comment
-comment|/* Runtime state. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cpu_disable_idle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Disable entry to idle function */
 end_comment
 
 begin_comment
@@ -2264,6 +2260,96 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+specifier|static
+name|void
+name|disable_idle
+parameter_list|(
+name|struct
+name|acpi_cpu_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|cpuset_t
+name|cpuset
+decl_stmt|;
+name|CPU_SETOF
+argument_list|(
+name|sc
+operator|->
+name|cpu_pcpu
+operator|->
+name|pc_cpuid
+argument_list|,
+operator|&
+name|cpuset
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|cpu_disable_idle
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/*      * Ensure that the CPU is not in idle state or in acpi_cpu_idle().      * Note that this code depends on the fact that the rendezvous IPI      * can not penetrate context where interrupts are disabled and acpi_cpu_idle      * is called and executed in such a context with interrupts being re-enabled      * right before return.      */
+name|smp_rendezvous_cpus
+argument_list|(
+name|cpuset
+argument_list|,
+name|smp_no_rendevous_barrier
+argument_list|,
+name|NULL
+argument_list|,
+name|smp_no_rendevous_barrier
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|enable_idle
+parameter_list|(
+name|struct
+name|acpi_cpu_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|sc
+operator|->
+name|cpu_disable_idle
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|is_idle_disabled
+parameter_list|(
+name|struct
+name|acpi_cpu_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+operator|(
+name|sc
+operator|->
+name|cpu_disable_idle
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Disable any entry to the idle function during suspend and re-enable it  * during resume.  */
 end_comment
@@ -2296,9 +2382,13 @@ operator|(
 name|error
 operator|)
 return|;
-name|cpu_disable_idle
-operator|=
-name|TRUE
+name|disable_idle
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2317,9 +2407,13 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|cpu_disable_idle
-operator|=
-name|FALSE
+name|enable_idle
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2887,11 +2981,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*      * Disable any entry to the idle function.  There is a small race where      * an idle thread have passed this check but not gone to sleep.  This      * is ok since device_shutdown() does not free the softc, otherwise      * we'd have to be sure all threads were evicted before returning.      */
-name|cpu_disable_idle
-operator|=
-name|TRUE
+comment|/*      * Disable any entry to the idle function.      */
+name|disable_idle
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
+comment|/*      * CPU devices are not truely detached and remain referenced,      * so their resources are not freed.      */
 name|return_VALUE
 argument_list|(
 literal|0
@@ -3088,6 +3187,12 @@ name|cpu_p_blk
 operator|+
 literal|4
 expr_stmt|;
+name|cx_ptr
+operator|->
+name|res_rid
+operator|=
+literal|0
+expr_stmt|;
 name|acpi_bus_alloc_gas
 argument_list|(
 name|sc
@@ -3100,9 +3205,9 @@ operator|->
 name|res_type
 argument_list|,
 operator|&
-name|sc
+name|cx_ptr
 operator|->
-name|cpu_rid
+name|res_rid
 argument_list|,
 operator|&
 name|gas
@@ -3124,11 +3229,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sc
-operator|->
-name|cpu_rid
-operator|++
-expr_stmt|;
 name|cx_ptr
 operator|->
 name|type
@@ -3197,6 +3297,12 @@ name|cpu_p_blk
 operator|+
 literal|5
 expr_stmt|;
+name|cx_ptr
+operator|->
+name|res_rid
+operator|=
+literal|1
+expr_stmt|;
 name|acpi_bus_alloc_gas
 argument_list|(
 name|sc
@@ -3209,9 +3315,9 @@ operator|->
 name|res_type
 argument_list|,
 operator|&
-name|sc
+name|cx_ptr
 operator|->
-name|cpu_rid
+name|res_rid
 argument_list|,
 operator|&
 name|gas
@@ -3233,11 +3339,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sc
-operator|->
-name|cpu_rid
-operator|++
-expr_stmt|;
 name|cx_ptr
 operator|->
 name|type
@@ -3720,9 +3821,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Free up any previous register. */
 if|if
 condition|(
@@ -3739,9 +3837,13 @@ name|sc
 operator|->
 name|cpu_dev
 argument_list|,
-literal|0
+name|cx_ptr
+operator|->
+name|res_type
 argument_list|,
-literal|0
+name|cx_ptr
+operator|->
+name|res_rid
 argument_list|,
 name|cx_ptr
 operator|->
@@ -3755,9 +3857,15 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Allocate the control register for C2 or C3. */
+name|cx_ptr
+operator|->
+name|res_rid
+operator|=
+name|sc
+operator|->
+name|cpu_cx_count
+expr_stmt|;
 name|acpi_PkgGas
 argument_list|(
 name|sc
@@ -3774,9 +3882,9 @@ operator|->
 name|res_type
 argument_list|,
 operator|&
-name|sc
+name|cx_ptr
 operator|->
-name|cpu_rid
+name|res_rid
 argument_list|,
 operator|&
 name|cx_ptr
@@ -3793,11 +3901,6 @@ operator|->
 name|p_lvlx
 condition|)
 block|{
-name|sc
-operator|->
-name|cpu_rid
-operator|++
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -4077,10 +4180,36 @@ name|cpu_cx_lowest_lim
 operator|=
 literal|0
 expr_stmt|;
-name|cpu_disable_idle
+for|for
+control|(
+name|i
 operator|=
-name|FALSE
+literal|0
+init|;
+name|i
+operator|<
+name|cpu_ndevices
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|cpu_devices
+index|[
+name|i
+index|]
+argument_list|)
 expr_stmt|;
+name|enable_idle
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|cpu_idle_hook
 operator|=
 name|acpi_cpu_idle
@@ -4383,17 +4512,6 @@ name|cx_next_idx
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* If disabled, return immediately. */
-if|if
-condition|(
-name|cpu_disable_idle
-condition|)
-block|{
-name|ACPI_ENABLE_IRQS
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 comment|/*      * Look up our CPU id to get our softc.  If it's NULL, we'll use C1      * since there is no ACPI processor object for this CPU.  This occurs      * for logical CPUs in the HTT case.      */
 name|sc
 operator|=
@@ -4410,6 +4528,20 @@ condition|(
 name|sc
 operator|==
 name|NULL
+condition|)
+block|{
+name|acpi_cpu_c1
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+comment|/* If disabled, take the safe path. */
+if|if
+condition|(
+name|is_idle_disabled
+argument_list|(
+name|sc
+argument_list|)
 condition|)
 block|{
 name|acpi_cpu_c1
@@ -4839,7 +4971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-evaluate the _CST object when we are notified that it changed.  *  * XXX Re-evaluation disabled until locking is done.  */
+comment|/*  * Re-evaluate the _CST object when we are notified that it changed.  */
 end_comment
 
 begin_function
@@ -4877,6 +5009,17 @@ operator|!=
 name|ACPI_NOTIFY_CX_STATES
 condition|)
 return|return;
+comment|/*      * C-state data for target CPU is going to be in flux while we execute      * acpi_cpu_cx_cst, so disable entering acpi_cpu_idle.      * Also, it may happen that multiple ACPI taskqueues may concurrently      * execute notifications for the same CPU.  ACPI_SERIAL is used to      * protect against that.      */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|cpu
+argument_list|)
+expr_stmt|;
+name|disable_idle
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Update the list of Cx states. */
 name|acpi_cpu_cx_cst
 argument_list|(
@@ -4888,12 +5031,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ACPI_SERIAL_BEGIN
+name|acpi_cpu_set_cx_lowest
 argument_list|(
-name|cpu
+name|sc
 argument_list|)
 expr_stmt|;
-name|acpi_cpu_set_cx_lowest
+name|enable_idle
 argument_list|(
 name|sc
 argument_list|)

@@ -141,6 +141,18 @@ range|:
 name|public
 name|Value
 block|{
+name|public
+operator|:
+expr|enum
+name|AsmDialect
+block|{
+name|AD_ATT
+block|,
+name|AD_Intel
+block|}
+block|;
+name|private
+operator|:
 name|friend
 expr|struct
 name|ConstantCreator
@@ -171,12 +183,10 @@ operator|>
 block|;
 name|InlineAsm
 argument_list|(
-specifier|const
-name|InlineAsm
-operator|&
+argument|const InlineAsm&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|void
 name|operator
 operator|=
@@ -185,8 +195,8 @@ specifier|const
 name|InlineAsm
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|std
 operator|::
 name|string
@@ -200,6 +210,9 @@ block|;
 name|bool
 name|IsAlignStack
 block|;
+name|AsmDialect
+name|Dialect
+block|;
 name|InlineAsm
 argument_list|(
 argument|PointerType *Ty
@@ -211,6 +224,8 @@ argument_list|,
 argument|bool hasSideEffects
 argument_list|,
 argument|bool isAlignStack
+argument_list|,
+argument|AsmDialect asmDialect
 argument_list|)
 block|;
 name|virtual
@@ -242,6 +257,8 @@ argument_list|,
 argument|bool hasSideEffects
 argument_list|,
 argument|bool isAlignStack = false
+argument_list|,
+argument|AsmDialect asmDialect = AD_ATT
 argument_list|)
 block|;
 name|bool
@@ -260,6 +277,15 @@ specifier|const
 block|{
 return|return
 name|IsAlignStack
+return|;
+block|}
+name|AsmDialect
+name|getDialect
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Dialect
 return|;
 block|}
 comment|/// getType - InlineAsm's are always pointers.
@@ -540,20 +566,6 @@ name|bool
 name|classof
 parameter_list|(
 specifier|const
-name|InlineAsm
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
 name|Value
 modifier|*
 name|V
@@ -591,7 +603,7 @@ name|Op_ExtraInfo
 init|=
 literal|3
 block|,
-comment|// HasSideEffects, IsAlignStack
+comment|// HasSideEffects, IsAlignStack, AsmDialect.
 name|Op_FirstOperand
 init|=
 literal|4
@@ -605,7 +617,7 @@ name|MIOp_ExtraInfo
 init|=
 literal|1
 block|,
-comment|// HasSideEffects, IsAlignStack
+comment|// HasSideEffects, IsAlignStack, AsmDialect.
 name|MIOp_FirstOperand
 init|=
 literal|2
@@ -618,6 +630,18 @@ block|,
 name|Extra_IsAlignStack
 init|=
 literal|2
+block|,
+name|Extra_AsmDialect
+init|=
+literal|4
+block|,
+name|Extra_MayLoad
+init|=
+literal|8
+block|,
+name|Extra_MayStore
+init|=
+literal|16
 block|,
 comment|// Inline asm operands map to multiple SDNode / MachineInstr operands.
 comment|// The first operand is an immediate describing the asm operand, the low

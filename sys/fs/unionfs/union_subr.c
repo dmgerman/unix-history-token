@@ -1063,7 +1063,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced elsewhere 	 * if MALLOC should block. 	 */
 name|unp
 operator|=
 name|malloc

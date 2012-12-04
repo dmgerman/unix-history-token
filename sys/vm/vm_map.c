@@ -7135,7 +7135,7 @@ value|96
 end_define
 
 begin_comment
-comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the given object's resident pages into  *	the given map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  Because these are speculative mappings,  *	cached pages are not reactivated and mapped.  */
+comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the specified object's resident pages  *	into the target map.  If "flags" is MAP_PREFAULT_PARTIAL, then only  *	the resident pages within the address range [addr, addr + ulmin(size,  *	ptoa(MAX_INIT_PT))) are mapped.  Otherwise, all resident pages within  *	the specified address range are mapped.  This eliminates many soft  *	faults on process startup and immediately after an mmap(2).  Because  *	these are speculative mappings, cached pages are not reactivated and  *	mapped.  */
 end_comment
 
 begin_function
@@ -7244,25 +7244,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|psize
+operator|>
+name|MAX_INIT_PT
+operator|&&
 operator|(
 name|flags
 operator|&
 name|MAP_PREFAULT_PARTIAL
 operator|)
-operator|&&
-name|psize
-operator|>
-name|MAX_INIT_PT
-operator|&&
-name|object
-operator|->
-name|resident_page_count
-operator|>
-name|MAX_INIT_PT
+operator|!=
+literal|0
 condition|)
-goto|goto
-name|unlock_return
-goto|;
+name|psize
+operator|=
+name|MAX_INIT_PT
+expr_stmt|;
 if|if
 condition|(
 name|psize

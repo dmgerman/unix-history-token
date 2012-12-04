@@ -2848,6 +2848,22 @@ begin_comment
 comment|/* nfs_clvfsops.c */
 end_comment
 
+begin_function_decl
+name|void
+name|nfscl_retopts
+parameter_list|(
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nfs_commonport.c */
 end_comment

@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
@@ -202,6 +196,12 @@ literal|1
 decl_stmt|;
 comment|// True if there is a #define for this.
 name|bool
+name|HadMacro
+range|:
+literal|1
+decl_stmt|;
+comment|// True if there was a #define for this.
+name|bool
 name|IsExtension
 range|:
 literal|1
@@ -267,7 +267,7 @@ literal|1
 decl_stmt|;
 comment|// True if this is the 'import' contextual
 comment|// keyword.
-comment|// 1 bit left in 32-bit word.
+comment|// 32-bit word is filled.
 name|void
 modifier|*
 name|FETokenInfo
@@ -285,12 +285,10 @@ name|Entry
 expr_stmt|;
 name|IdentifierInfo
 argument_list|(
-specifier|const
-name|IdentifierInfo
-operator|&
+argument|const IdentifierInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// NONCOPYABLE.
 name|void
 name|operator
 init|=
@@ -299,8 +297,8 @@ specifier|const
 name|IdentifierInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// NONASSIGNABLE.
 name|friend
 name|class
 name|IdentifierTable
@@ -547,13 +545,60 @@ if|if
 condition|(
 name|Val
 condition|)
+block|{
 name|NeedsHandleIdentifier
 operator|=
 literal|1
 expr_stmt|;
+name|HadMacro
+operator|=
+name|true
+expr_stmt|;
+block|}
 else|else
+block|{
 name|RecomputeNeedsHandleIdentifier
 argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns true if this identifier was \#defined to some value at any
+end_comment
+
+begin_comment
+comment|/// moment. In this case there should be an entry for the identifier in the
+end_comment
+
+begin_comment
+comment|/// macro history table in Preprocessor.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hadMacroDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HadMacro
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHadMacroDefinition
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|HadMacro
+operator|=
+name|Val
 expr_stmt|;
 block|}
 end_function
@@ -1501,14 +1546,11 @@ name|private
 label|:
 name|IdentifierIterator
 argument_list|(
-specifier|const
-name|IdentifierIterator
-operator|&
+argument|const IdentifierIterator&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
-name|IdentifierIterator
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -1516,8 +1558,8 @@ specifier|const
 name|IdentifierIterator
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|protected
 label|:
 name|IdentifierIterator
@@ -2860,12 +2902,10 @@ decl_stmt|;
 comment|// Actually a SelectorTableImpl
 name|SelectorTable
 argument_list|(
-specifier|const
-name|SelectorTable
-operator|&
+argument|const SelectorTable&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DISABLED: DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -2874,8 +2914,8 @@ specifier|const
 name|SelectorTable
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DISABLED: DO NOT IMPLEMENT
 name|public
 label|:
 name|SelectorTable

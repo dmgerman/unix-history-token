@@ -368,6 +368,22 @@ name|LazyCompoundValData
 operator|>
 name|LazyCompoundValDataSet
 expr_stmt|;
+comment|// This is private because external clients should use the factory
+comment|// method that takes a QualType.
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|getValue
+argument_list|(
+argument|uint64_t X
+argument_list|,
+argument|unsigned BitWidth
+argument_list|,
+argument|bool isUnsigned
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 name|BasicValueFactory
@@ -445,20 +461,6 @@ operator|&
 name|getValue
 argument_list|(
 argument|const llvm::APInt& X
-argument_list|,
-argument|bool isUnsigned
-argument_list|)
-expr_stmt|;
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|&
-name|getValue
-argument_list|(
-argument|uint64_t X
-argument_list|,
-argument|unsigned BitWidth
 argument_list|,
 argument|bool isUnsigned
 argument_list|)

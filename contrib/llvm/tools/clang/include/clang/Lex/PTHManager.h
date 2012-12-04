@@ -228,9 +228,11 @@ argument_list|,
 argument|const char *originalSourceFile
 argument_list|)
 block|;
-comment|// Do not implement.
 name|PTHManager
-argument_list|()
+argument_list|(
+argument|const PTHManager&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|void
 name|operator
@@ -240,6 +242,7 @@ specifier|const
 name|PTHManager
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 comment|/// getSpellingAtPTHOffset - Used by PTHLexer classes to get the cached
 comment|///  spelling for a token.

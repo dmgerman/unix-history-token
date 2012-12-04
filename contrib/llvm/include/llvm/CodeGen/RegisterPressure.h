@@ -159,13 +159,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|dump
-parameter_list|(
+argument_list|(
 specifier|const
 name|TargetRegisterInfo
-modifier|*
+operator|*
 name|TRI
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 struct|;
 comment|/// RegisterPressure computed within a region of instructions delimited by
@@ -584,6 +585,17 @@ name|RegisterPressure
 modifier|&
 name|getPressure
 parameter_list|()
+block|{
+return|return
+name|P
+return|;
+block|}
+specifier|const
+name|RegisterPressure
+operator|&
+name|getPressure
+argument_list|()
+specifier|const
 block|{
 return|return
 name|P

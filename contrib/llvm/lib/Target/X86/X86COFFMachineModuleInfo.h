@@ -85,7 +85,7 @@ name|class
 name|X86MachineFunctionInfo
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 comment|/// X86COFFMachineModuleInfo - This is a MachineModuleInfoImpl implementation
 comment|/// for X86 COFF targets.

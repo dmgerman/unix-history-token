@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"AttributesImpl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ConstantsContext.h"
 end_include
 
@@ -1497,6 +1503,18 @@ expr_stmt|;
 name|FPMapTy
 name|FPConstants
 decl_stmt|;
+name|FoldingSet
+operator|<
+name|AttributesImpl
+operator|>
+name|AttrsSet
+expr_stmt|;
+name|FoldingSet
+operator|<
+name|AttributeListImpl
+operator|>
+name|AttrsLists
+expr_stmt|;
 name|StringMap
 operator|<
 name|Value

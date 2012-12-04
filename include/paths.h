@@ -353,6 +353,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_UFSSUSPEND
+value|"/dev/ufssuspend"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_VI
 value|"/usr/bin/vi"
 end_define

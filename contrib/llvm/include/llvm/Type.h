@@ -483,7 +483,7 @@ operator|==
 name|PPC_FP128TyID
 return|;
 block|}
-comment|/// isFloatingPointTy - Return true if this is one of the five floating point
+comment|/// isFloatingPointTy - Return true if this is one of the six floating point
 comment|/// types
 name|bool
 name|isFloatingPointTy
@@ -541,7 +541,15 @@ name|bool
 name|isFPOrFPVectorTy
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getScalarType
+argument_list|()
+operator|->
+name|isFloatingPointTy
+argument_list|()
+return|;
+block|}
 comment|/// isLabelTy - Return true if this is 'label'.
 name|bool
 name|isLabelTy
@@ -598,7 +606,15 @@ name|bool
 name|isIntOrIntVectorTy
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getScalarType
+argument_list|()
+operator|->
+name|isIntegerTy
+argument_list|()
+return|;
+block|}
 comment|/// isFunctionTy - True if this is an instance of FunctionType.
 comment|///
 name|bool
@@ -653,6 +669,22 @@ name|getTypeID
 argument_list|()
 operator|==
 name|PointerTyID
+return|;
+block|}
+comment|/// isPtrOrPtrVectorTy - Return true if this is a pointer type or a vector of
+comment|/// pointer types.
+comment|///
+name|bool
+name|isPtrOrPtrVectorTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getScalarType
+argument_list|()
+operator|->
+name|isPointerTy
+argument_list|()
 return|;
 block|}
 comment|/// isVectorTy - True if this is an instance of VectorType.
@@ -797,7 +829,7 @@ return|;
 block|}
 comment|/// isSized - Return true if it makes sense to take the size of this type.  To
 comment|/// get the actual size for a particular target, it is reasonable to use the
-comment|/// TargetData subsystem to do this.
+comment|/// DataLayout subsystem to do this.
 comment|///
 name|bool
 name|isSized
@@ -863,7 +895,7 @@ comment|/// primitive type.
 comment|///
 comment|/// Note that this may not reflect the size of memory allocated for an
 comment|/// instance of the type or the number of bytes that are written when an
-comment|/// instance of the type is stored to memory. The TargetData class provides
+comment|/// instance of the type is stored to memory. The DataLayout class provides
 comment|/// additional query functions to provide this information.
 comment|///
 name|unsigned
@@ -888,6 +920,13 @@ specifier|const
 expr_stmt|;
 comment|/// getScalarType - If this is a vector type, return the element type,
 comment|/// otherwise return 'this'.
+specifier|const
+name|Type
+operator|*
+name|getScalarType
+argument_list|()
+specifier|const
+expr_stmt|;
 name|Type
 modifier|*
 name|getScalarType
@@ -1052,11 +1091,6 @@ name|getSequentialElementType
 argument_list|()
 return|;
 block|}
-name|unsigned
-name|getPointerAddressSpace
-argument_list|()
-specifier|const
-expr_stmt|;
 name|Type
 operator|*
 name|getPointerElementType
@@ -1068,6 +1102,12 @@ name|getSequentialElementType
 argument_list|()
 return|;
 block|}
+comment|/// \brief Get the address space of this pointer or pointer vector type.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Static members exported by the Type class itself.  Useful for getting
 comment|// instances of Type.
@@ -1454,21 +1494,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// getPointerTo - Return a pointer to the current type.  This is equivalent
 comment|/// to PointerType::get(Foo, AddrSpace).
 name|PointerType

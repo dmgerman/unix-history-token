@@ -701,6 +701,12 @@ name|ar5416GetTsf64
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setTsf64
+operator|=
+name|ar5416SetTsf64
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetTsf
 operator|=
 name|ar5416ResetTsf

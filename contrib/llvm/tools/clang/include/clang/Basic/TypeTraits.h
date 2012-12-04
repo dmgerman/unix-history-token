@@ -115,6 +115,8 @@ name|UTT_IsFundamental
 block|,
 name|UTT_IsIntegral
 block|,
+name|UTT_IsInterfaceClass
+block|,
 name|UTT_IsLiteral
 block|,
 name|UTT_IsLvalueReference

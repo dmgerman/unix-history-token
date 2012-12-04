@@ -78,7 +78,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -92,12 +92,10 @@ name|TargetSelectionDAGInfo
 block|{
 name|TargetSelectionDAGInfo
 argument_list|(
-specifier|const
-name|TargetSelectionDAGInfo
-operator|&
+argument|const TargetSelectionDAGInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -106,19 +104,19 @@ specifier|const
 name|TargetSelectionDAGInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
 name|protected
 label|:
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{

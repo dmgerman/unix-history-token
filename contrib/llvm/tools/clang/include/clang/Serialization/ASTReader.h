@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/PPMutationListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/PreprocessingRecord.h"
 end_include
 
@@ -171,6 +177,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/APSInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/MapVector.h"
 end_include
 
 begin_include
@@ -291,6 +303,9 @@ name|class
 name|DeclContext
 decl_stmt|;
 name|class
+name|DiagnosticOptions
+decl_stmt|;
+name|class
 name|NestedNameSpecifier
 decl_stmt|;
 name|class
@@ -316,6 +331,9 @@ name|OpaqueValueExpr
 decl_stmt|;
 name|class
 name|Preprocessor
+decl_stmt|;
+name|class
+name|PreprocessorOptions
 decl_stmt|;
 name|class
 name|Sema
@@ -347,28 +365,9 @@ struct_decl|;
 name|class
 name|VersionTuple
 decl_stmt|;
-struct|struct
-name|PCHPredefinesBlock
-block|{
-comment|/// \brief The file ID for this predefines buffer in a PCH file.
-name|FileID
-name|BufferID
+name|class
+name|TargetOptions
 decl_stmt|;
-comment|/// \brief This predefines buffer in a PCH file.
-name|StringRef
-name|Data
-decl_stmt|;
-block|}
-struct|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|PCHPredefinesBlock
-operator|,
-literal|2
-operator|>
-name|PCHPredefinesBlocks
-expr_stmt|;
 comment|/// \brief Abstract interface for callback invocations by the ASTReader.
 comment|///
 comment|/// While reading an AST file, the ASTReader will call the methods of the
@@ -396,59 +395,124 @@ specifier|const
 name|LangOptions
 modifier|&
 name|LangOpts
+parameter_list|,
+name|bool
+name|Complain
 parameter_list|)
 block|{
 return|return
 name|false
 return|;
 block|}
-comment|/// \brief Receives the target triple.
+comment|/// \brief Receives the target options.
 comment|///
-comment|/// \returns true to indicate the target triple is invalid or false otherwise.
+comment|/// \returns true to indicate the target options are invalid, or false
+comment|/// otherwise.
 name|virtual
 name|bool
-name|ReadTargetTriple
+name|ReadTargetOptions
 parameter_list|(
-name|StringRef
-name|Triple
+specifier|const
+name|TargetOptions
+modifier|&
+name|TargetOpts
+parameter_list|,
+name|bool
+name|Complain
 parameter_list|)
 block|{
 return|return
 name|false
 return|;
 block|}
-comment|/// \brief Receives the contents of the predefines buffer.
+comment|/// \brief Receives the diagnostic options.
 comment|///
-comment|/// \param Buffers Information about the predefines buffers.
-comment|///
-comment|/// \param OriginalFileName The original file name for the AST file, which
-comment|/// will appear as an entry in the predefines buffer.
-comment|///
-comment|/// \param SuggestedPredefines If necessary, additional definitions are added
-comment|/// here.
-comment|///
-comment|/// \returns true to indicate the predefines are invalid or false otherwise.
+comment|/// \returns true to indicate the diagnostic options are invalid, or false
+comment|/// otherwise.
 name|virtual
 name|bool
-name|ReadPredefinesBuffer
+name|ReadDiagnosticOptions
+parameter_list|(
+specifier|const
+name|DiagnosticOptions
+modifier|&
+name|DiagOpts
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Receives the file system options.
+comment|///
+comment|/// \returns true to indicate the file system options are invalid, or false
+comment|/// otherwise.
+name|virtual
+name|bool
+name|ReadFileSystemOptions
+parameter_list|(
+specifier|const
+name|FileSystemOptions
+modifier|&
+name|FSOpts
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Receives the header search options.
+comment|///
+comment|/// \returns true to indicate the header search options are invalid, or false
+comment|/// otherwise.
+name|virtual
+name|bool
+name|ReadHeaderSearchOptions
+parameter_list|(
+specifier|const
+name|HeaderSearchOptions
+modifier|&
+name|HSOpts
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Receives the preprocessor options.
+comment|///
+comment|/// \param SuggestedPredefines Can be filled in with the set of predefines
+comment|/// that are suggested by the preprocessor options. Typically only used when
+comment|/// loading a precompiled header.
+comment|///
+comment|/// \returns true to indicate the preprocessor options are invalid, or false
+comment|/// otherwise.
+name|virtual
+name|bool
+name|ReadPreprocessorOptions
 argument_list|(
 specifier|const
-name|PCHPredefinesBlocks
+name|PreprocessorOptions
 operator|&
-name|Buffers
+name|PPOpts
 argument_list|,
-name|StringRef
-name|OriginalFileName
+name|bool
+name|Complain
 argument_list|,
 name|std
 operator|::
 name|string
 operator|&
 name|SuggestedPredefines
-argument_list|,
-name|FileManager
-operator|&
-name|FileMgr
 argument_list|)
 block|{
 return|return
@@ -473,10 +537,17 @@ comment|/// \brief Receives __COUNTER__ value.
 name|virtual
 name|void
 name|ReadCounter
-parameter_list|(
+argument_list|(
+specifier|const
+name|serialization
+operator|::
+name|ModuleFile
+operator|&
+name|M
+argument_list|,
 name|unsigned
 name|Value
-parameter_list|)
+argument_list|)
 block|{}
 block|}
 empty_stmt|;
@@ -531,30 +602,29 @@ name|virtual
 name|bool
 name|ReadLanguageOptions
 argument_list|(
-specifier|const
-name|LangOptions
-operator|&
-name|LangOpts
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|ReadTargetTriple
-argument_list|(
-argument|StringRef Triple
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|ReadPredefinesBuffer
-argument_list|(
-argument|const PCHPredefinesBlocks&Buffers
+argument|const LangOptions&LangOpts
 argument_list|,
-argument|StringRef OriginalFileName
+argument|bool Complain
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ReadTargetOptions
+argument_list|(
+argument|const TargetOptions&TargetOpts
+argument_list|,
+argument|bool Complain
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ReadPreprocessorOptions
+argument_list|(
+argument|const PreprocessorOptions&PPOpts
+argument_list|,
+argument|bool Complain
 argument_list|,
 argument|std::string&SuggestedPredefines
-argument_list|,
-argument|FileManager&FileMgr
 argument_list|)
 block|;
 name|virtual
@@ -570,6 +640,8 @@ name|virtual
 name|void
 name|ReadCounter
 argument_list|(
+argument|const serialization::ModuleFile&M
+argument_list|,
 argument|unsigned Value
 argument_list|)
 block|;
@@ -655,14 +727,31 @@ literal|64
 operator|>
 name|RecordData
 expr_stmt|;
+comment|/// \brief The result of reading the control block of an AST file, which
+comment|/// can fail for various reasons.
 enum|enum
 name|ASTReadResult
 block|{
+comment|/// \brief The control block was read successfully. Aside from failures,
+comment|/// the AST file is safe to read into the current context.
 name|Success
 block|,
+comment|/// \brief The AST file itself appears corrupted.
 name|Failure
 block|,
-name|IgnorePCH
+comment|/// \brief The AST file is out-of-date relative to its input files,
+comment|/// and needs to be regenerated.
+name|OutOfDate
+block|,
+comment|/// \brief The AST file was written by a different version of Clang.
+name|VersionMismatch
+block|,
+comment|/// \brief The AST file was writtten with a different language/target
+comment|/// configuration.
+name|ConfigurationMismatch
+block|,
+comment|/// \brief The AST file has errors.
+name|HadErrors
 block|}
 enum|;
 comment|/// \brief Types of AST files.
@@ -1133,6 +1222,51 @@ literal|4
 operator|>
 name|PendingDefinitions
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|MapVector
+operator|<
+name|Decl
+operator|*
+operator|,
+name|uint64_t
+operator|,
+name|llvm
+operator|::
+name|SmallDenseMap
+operator|<
+name|Decl
+operator|*
+operator|,
+name|unsigned
+operator|,
+literal|4
+operator|>
+operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|Decl
+operator|*
+operator|,
+name|uint64_t
+operator|>
+operator|,
+literal|4
+operator|>
+expr|>
+name|PendingBodiesMap
+expr_stmt|;
+comment|/// \brief Functions or methods that have bodies that will be attached.
+name|PendingBodiesMap
+name|PendingBodies
+decl_stmt|;
 comment|/// \brief Read the records that describe the contents of declcontexts.
 name|bool
 name|ReadDeclContextStorage
@@ -1195,11 +1329,80 @@ literal|4
 operator|>
 name|GlobalIdentifierMapType
 expr_stmt|;
-comment|/// \brief Mapping from global identifer IDs to the module in which the
+comment|/// \brief Mapping from global identifier IDs to the module in which the
 comment|/// identifier resides along with the offset that should be added to the
 comment|/// global identifier ID to produce a local ID.
 name|GlobalIdentifierMapType
 name|GlobalIdentifierMap
+decl_stmt|;
+comment|/// \brief A vector containing macros that have already been
+comment|/// loaded.
+comment|///
+comment|/// If the pointer at index I is non-NULL, then it refers to the
+comment|/// MacroInfo for the identifier with ID=I+1 that has already
+comment|/// been loaded.
+name|std
+operator|::
+name|vector
+operator|<
+name|MacroInfo
+operator|*
+operator|>
+name|MacrosLoaded
+expr_stmt|;
+typedef|typedef
+name|ContinuousRangeMap
+operator|<
+name|serialization
+operator|::
+name|MacroID
+operator|,
+name|ModuleFile
+operator|*
+operator|,
+literal|4
+operator|>
+name|GlobalMacroMapType
+expr_stmt|;
+comment|/// \brief Mapping from global macro IDs to the module in which the
+comment|/// macro resides along with the offset that should be added to the
+comment|/// global macro ID to produce a local ID.
+name|GlobalMacroMapType
+name|GlobalMacroMap
+decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|serialization
+operator|::
+name|MacroID
+operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|serialization
+operator|::
+name|SubmoduleID
+operator|,
+name|MacroUpdate
+operator|>
+operator|,
+literal|1
+operator|>
+expr|>
+name|MacroUpdatesMap
+expr_stmt|;
+comment|/// \brief Mapping from (global) macro IDs to the set of updates to be
+comment|/// performed to the corresponding macro.
+name|MacroUpdatesMap
+name|MacroUpdates
 decl_stmt|;
 comment|/// \brief A vector containing submodules that have already been loaded.
 comment|///
@@ -1234,22 +1437,234 @@ comment|/// global submodule ID to produce a local ID.
 name|GlobalSubmoduleMapType
 name|GlobalSubmoduleMap
 decl_stmt|;
+comment|/// \brief An entity that has been hidden.
+name|class
+name|HiddenName
+block|{
+name|public
+label|:
+enum|enum
+name|NameKind
+block|{
+name|Declaration
+block|,
+name|MacroVisibility
+block|,
+name|MacroUndef
+block|}
+name|Kind
+enum|;
+name|private
+label|:
+name|unsigned
+name|Loc
+decl_stmt|;
+union|union
+block|{
+name|Decl
+modifier|*
+name|D
+decl_stmt|;
+name|MacroInfo
+modifier|*
+name|MI
+decl_stmt|;
+block|}
+union|;
+name|IdentifierInfo
+modifier|*
+name|Id
+decl_stmt|;
+name|public
+label|:
+name|HiddenName
+argument_list|(
+name|Decl
+operator|*
+name|D
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|Declaration
+argument_list|)
+operator|,
+name|Loc
+argument_list|()
+operator|,
+name|D
+argument_list|(
+name|D
+argument_list|)
+operator|,
+name|Id
+argument_list|()
+block|{ }
+name|HiddenName
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|,
+name|MacroInfo
+operator|*
+name|MI
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|MacroVisibility
+argument_list|)
+operator|,
+name|Loc
+argument_list|()
+operator|,
+name|MI
+argument_list|(
+name|MI
+argument_list|)
+operator|,
+name|Id
+argument_list|(
+argument|II
+argument_list|)
+block|{ }
+name|HiddenName
+argument_list|(
+argument|IdentifierInfo *II
+argument_list|,
+argument|MacroInfo *MI
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|MacroUndef
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|Loc
+operator|.
+name|getRawEncoding
+argument_list|()
+argument_list|)
+operator|,
+name|MI
+argument_list|(
+name|MI
+argument_list|)
+operator|,
+name|Id
+argument_list|(
+argument|II
+argument_list|)
+block|{ }
+name|NameKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+name|Decl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|Declaration
+operator|&&
+literal|"Hidden name is not a declaration"
+argument_list|)
+block|;
+return|return
+name|D
+return|;
+block|}
+name|std
+operator|::
+name|pair
+operator|<
+name|IdentifierInfo
+operator|*
+operator|,
+name|MacroInfo
+operator|*
+operator|>
+name|getMacro
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|getKind
+argument_list|()
+operator|==
+name|MacroUndef
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|MacroVisibility
+operator|)
+operator|&&
+literal|"Hidden name is not a macro!"
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Id
+argument_list|,
+name|MI
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getMacroUndefLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|MacroUndef
+operator|&&
+literal|"Hidden name is not an undef!"
+argument_list|)
+block|;
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief A set of hidden declarations.
 typedef|typedef
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|llvm
-operator|::
-name|PointerUnion
-operator|<
-name|Decl
-operator|*
-operator|,
-name|IdentifierInfo
-operator|*
-operator|>
+name|HiddenName
 operator|,
 literal|2
 operator|>
@@ -1361,20 +1776,32 @@ name|unsigned
 operator|>
 name|SelectorGeneration
 expr_stmt|;
-comment|/// \brief Mapping from identifiers that represent macros whose definitions
-comment|/// have not yet been deserialized to the global offset where the macro
-comment|/// record resides.
+typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|IdentifierInfo
 operator|*
 operator|,
-name|uint64_t
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|serialization
+operator|::
+name|MacroID
+operator|,
+literal|2
 operator|>
-name|UnreadMacroRecordOffsets
+expr|>
+name|PendingMacroIDsMap
 expr_stmt|;
+comment|/// \brief Mapping from identifiers that have a macro history to the global
+comment|/// IDs have not yet been deserialized to the global IDs of those macros.
+name|PendingMacroIDsMap
+name|PendingMacroIDs
+decl_stmt|;
 typedef|typedef
 name|ContinuousRangeMap
 operator|<
@@ -1607,42 +2034,12 @@ operator|>
 name|ImportedModules
 expr_stmt|;
 comment|//@}
-comment|/// \brief The original file name that was used to build the primary AST file,
-comment|/// which may have been modified for relocatable-pch support.
-name|std
-operator|::
-name|string
-name|OriginalFileName
-expr_stmt|;
-comment|/// \brief The actual original file name that was used to build the primary
-comment|/// AST file.
-name|std
-operator|::
-name|string
-name|ActualOriginalFileName
-expr_stmt|;
-comment|/// \brief The file ID for the original file that was used to build the
-comment|/// primary AST file.
-name|FileID
-name|OriginalFileID
-decl_stmt|;
-comment|/// \brief The directory that the PCH was originally created in. Used to
-comment|/// allow resolving headers even after headers+PCH was moved to a new path.
-name|std
-operator|::
-name|string
-name|OriginalDir
-expr_stmt|;
 comment|/// \brief The directory that the PCH we are reading is stored in.
 name|std
 operator|::
 name|string
 name|CurrentDir
 expr_stmt|;
-comment|/// \brief Whether this precompiled header is a relocatable PCH file.
-name|bool
-name|RelocatablePCH
-decl_stmt|;
 comment|/// \brief The system include root to be used when loading the
 comment|/// precompiled header.
 name|std
@@ -1654,10 +2051,6 @@ comment|/// \brief Whether to disable the normal validation performed on precomp
 comment|/// headers when they are loaded.
 name|bool
 name|DisableValidation
-decl_stmt|;
-comment|/// \brief Whether to disable the use of stat caches in AST files.
-name|bool
-name|DisableStatCache
 decl_stmt|;
 comment|/// \brief Whether to accept an AST file with compiler errors.
 name|bool
@@ -1690,13 +2083,6 @@ decl_stmt|;
 name|SwitchCaseMapTy
 modifier|*
 name|CurrSwitchCaseStmts
-decl_stmt|;
-comment|/// \brief The number of stat() calls that hit/missed the stat
-comment|/// cache.
-name|unsigned
-name|NumStatHits
-decl_stmt|,
-name|NumStatMisses
 decl_stmt|;
 comment|/// \brief The number of source location entries de-serialized from
 comment|/// the PCH file.
@@ -1833,7 +2219,7 @@ operator|*
 operator|>
 name|InterestingDecls
 expr_stmt|;
-comment|/// \brief The set of redeclarable declaraations that have been deserialized
+comment|/// \brief The set of redeclarable declarations that have been deserialized
 comment|/// since the last time the declaration chains were linked.
 name|llvm
 operator|::
@@ -2030,14 +2416,11 @@ name|PrevKind
 decl_stmt|;
 name|ReadingKindTracker
 argument_list|(
-specifier|const
-name|ReadingKindTracker
-operator|&
+argument|const ReadingKindTracker&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// do not implement
-name|ReadingKindTracker
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -2045,8 +2428,8 @@ specifier|const
 name|ReadingKindTracker
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// do not implement
 name|public
 label|:
 name|ReadingKindTracker
@@ -2084,11 +2467,6 @@ name|PrevKind
 block|; }
 block|}
 empty_stmt|;
-comment|/// \brief All predefines buffers in the chain, to be treated as if
-comment|/// concatenated.
-name|PCHPredefinesBlocks
-name|PCHPredefinesBuffers
-decl_stmt|;
 comment|/// \brief Suggested contents of the predefines buffer, after this
 comment|/// PCH file has been processed.
 comment|///
@@ -2112,6 +2490,39 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|InputFile
+expr_stmt|;
+comment|/// \brief Retrieve the file entry and 'overridden' bit for an input
+comment|/// file in the given module file.
+name|InputFile
+name|getInputFile
+parameter_list|(
+name|ModuleFile
+modifier|&
+name|F
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|bool
+name|Complain
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// \brief Get a FileEntry out of stored-in-PCH filename, making sure we take
 comment|/// into account all the necessary relocations.
 specifier|const
@@ -2126,6 +2537,10 @@ function_decl|;
 name|void
 name|MaybeAddSystemRootToFilename
 argument_list|(
+name|ModuleFile
+operator|&
+name|M
+argument_list|,
 name|std
 operator|::
 name|string
@@ -2135,29 +2550,59 @@ argument_list|)
 decl_stmt|;
 name|ASTReadResult
 name|ReadASTCore
-parameter_list|(
+argument_list|(
 name|StringRef
 name|FileName
-parameter_list|,
+argument_list|,
 name|ModuleKind
 name|Type
-parameter_list|,
+argument_list|,
 name|ModuleFile
-modifier|*
+operator|*
 name|ImportedBy
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|ModuleFile
+operator|*
+operator|>
+operator|&
+name|Loaded
+argument_list|,
+name|unsigned
+name|ClientLoadCapabilities
+argument_list|)
+decl_stmt|;
 name|ASTReadResult
+name|ReadControlBlock
+argument_list|(
+name|ModuleFile
+operator|&
+name|F
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|ModuleFile
+operator|*
+operator|>
+operator|&
+name|Loaded
+argument_list|,
+name|unsigned
+name|ClientLoadCapabilities
+argument_list|)
+decl_stmt|;
+name|bool
 name|ReadASTBlock
 parameter_list|(
 name|ModuleFile
 modifier|&
 name|F
 parameter_list|)
-function_decl|;
-name|bool
-name|CheckPredefinesBuffers
-parameter_list|()
 function_decl|;
 name|bool
 name|ParseLineTable
@@ -2174,19 +2619,12 @@ operator|&
 name|Record
 argument_list|)
 decl_stmt|;
-name|ASTReadResult
+name|bool
 name|ReadSourceManagerBlock
 parameter_list|(
 name|ModuleFile
 modifier|&
 name|F
-parameter_list|)
-function_decl|;
-name|ASTReadResult
-name|ReadSLocEntryRecord
-parameter_list|(
-name|int
-name|ID
 parameter_list|)
 function_decl|;
 name|llvm
@@ -2206,7 +2644,7 @@ modifier|*
 name|F
 parameter_list|)
 function_decl|;
-name|ASTReadResult
+name|bool
 name|ReadSubmoduleBlock
 parameter_list|(
 name|ModuleFile
@@ -2214,6 +2652,7 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+specifier|static
 name|bool
 name|ParseLanguageOptions
 parameter_list|(
@@ -2221,8 +2660,106 @@ specifier|const
 name|RecordData
 modifier|&
 name|Record
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|,
+name|ASTReaderListener
+modifier|&
+name|Listener
 parameter_list|)
 function_decl|;
+specifier|static
+name|bool
+name|ParseTargetOptions
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|,
+name|ASTReaderListener
+modifier|&
+name|Listener
+parameter_list|)
+function_decl|;
+specifier|static
+name|bool
+name|ParseDiagnosticOptions
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|,
+name|ASTReaderListener
+modifier|&
+name|Listener
+parameter_list|)
+function_decl|;
+specifier|static
+name|bool
+name|ParseFileSystemOptions
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|,
+name|ASTReaderListener
+modifier|&
+name|Listener
+parameter_list|)
+function_decl|;
+specifier|static
+name|bool
+name|ParseHeaderSearchOptions
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|,
+name|ASTReaderListener
+modifier|&
+name|Listener
+parameter_list|)
+function_decl|;
+specifier|static
+name|bool
+name|ParsePreprocessorOptions
+argument_list|(
+specifier|const
+name|RecordData
+operator|&
+name|Record
+argument_list|,
+name|bool
+name|Complain
+argument_list|,
+name|ASTReaderListener
+operator|&
+name|Listener
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|SuggestedPredefines
+argument_list|)
+decl_stmt|;
 struct|struct
 name|RecordLocation
 block|{
@@ -2380,7 +2917,8 @@ specifier|const
 expr_stmt|;
 comment|/// \brief Find the next module that contains entities and return the ID
 comment|/// of the first entry.
-comment|/// \arg SLocMapI points at a chunk of a module that contains no
+comment|///
+comment|/// \param SLocMapI points at a chunk of a module that contains no
 comment|/// preprocessed entities or the entities it contains are not the
 comment|/// ones we are looking for.
 name|serialization
@@ -2392,7 +2930,7 @@ argument|GlobalSLocOffsetMapType::const_iterator SLocMapI
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// \brief Returns (ModuleFile, Local index) pair for \arg GlobalIndex of a
+comment|/// \brief Returns (ModuleFile, Local index) pair for \p GlobalIndex of a
 comment|/// preprocessed entity.
 name|std
 operator|::
@@ -2406,6 +2944,317 @@ operator|>
 name|getModulePreprocessedEntity
 argument_list|(
 argument|unsigned GlobalIndex
+argument_list|)
+expr_stmt|;
+comment|/// \brief Returns (begin, end) pair for the preprocessed entities of a
+comment|/// particular module.
+name|std
+operator|::
+name|pair
+operator|<
+name|PreprocessingRecord
+operator|::
+name|iterator
+operator|,
+name|PreprocessingRecord
+operator|::
+name|iterator
+operator|>
+name|getModulePreprocessedEntities
+argument_list|(
+argument|ModuleFile&Mod
+argument_list|)
+specifier|const
+expr_stmt|;
+name|class
+name|ModuleDeclIterator
+block|{
+name|ASTReader
+modifier|*
+name|Reader
+decl_stmt|;
+name|ModuleFile
+modifier|*
+name|Mod
+decl_stmt|;
+specifier|const
+name|serialization
+operator|::
+name|LocalDeclID
+operator|*
+name|Pos
+expr_stmt|;
+name|public
+label|:
+typedef|typedef
+specifier|const
+name|Decl
+modifier|*
+name|value_type
+typedef|;
+typedef|typedef
+name|value_type
+modifier|&
+name|reference
+typedef|;
+typedef|typedef
+name|value_type
+modifier|*
+name|pointer
+typedef|;
+name|ModuleDeclIterator
+argument_list|()
+operator|:
+name|Reader
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Mod
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Pos
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|ModuleDeclIterator
+argument_list|(
+name|ASTReader
+operator|*
+name|Reader
+argument_list|,
+name|ModuleFile
+operator|*
+name|Mod
+argument_list|,
+specifier|const
+name|serialization
+operator|::
+name|LocalDeclID
+operator|*
+name|Pos
+argument_list|)
+operator|:
+name|Reader
+argument_list|(
+name|Reader
+argument_list|)
+operator|,
+name|Mod
+argument_list|(
+name|Mod
+argument_list|)
+operator|,
+name|Pos
+argument_list|(
+argument|Pos
+argument_list|)
+block|{ }
+name|value_type
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Reader
+operator|->
+name|GetDecl
+argument_list|(
+name|Reader
+operator|->
+name|getGlobalDeclID
+argument_list|(
+operator|*
+name|Mod
+argument_list|,
+operator|*
+name|Pos
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|ModuleDeclIterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|Pos
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|ModuleDeclIterator
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+name|ModuleDeclIterator
+name|Prev
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|++
+name|Pos
+block|;
+return|return
+name|Prev
+return|;
+block|}
+name|ModuleDeclIterator
+operator|&
+name|operator
+operator|--
+operator|(
+operator|)
+block|{
+operator|--
+name|Pos
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|ModuleDeclIterator
+name|operator
+operator|--
+operator|(
+name|int
+operator|)
+block|{
+name|ModuleDeclIterator
+name|Prev
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|--
+name|Pos
+block|;
+return|return
+name|Prev
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|ModuleDeclIterator
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ModuleDeclIterator
+operator|&
+name|RHS
+operator|)
+block|{
+name|assert
+argument_list|(
+name|LHS
+operator|.
+name|Reader
+operator|==
+name|RHS
+operator|.
+name|Reader
+operator|&&
+name|LHS
+operator|.
+name|Mod
+operator|==
+name|RHS
+operator|.
+name|Mod
+argument_list|)
+block|;
+return|return
+name|LHS
+operator|.
+name|Pos
+operator|==
+name|RHS
+operator|.
+name|Pos
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|ModuleDeclIterator
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ModuleDeclIterator
+operator|&
+name|RHS
+operator|)
+block|{
+name|assert
+argument_list|(
+name|LHS
+operator|.
+name|Reader
+operator|==
+name|RHS
+operator|.
+name|Reader
+operator|&&
+name|LHS
+operator|.
+name|Mod
+operator|==
+name|RHS
+operator|.
+name|Mod
+argument_list|)
+block|;
+return|return
+name|LHS
+operator|.
+name|Pos
+operator|!=
+name|RHS
+operator|.
+name|Pos
+return|;
+block|}
+block|}
+empty_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|ModuleDeclIterator
+operator|,
+name|ModuleDeclIterator
+operator|>
+name|getModuleFileLevelDecls
+argument_list|(
+name|ModuleFile
+operator|&
+name|Mod
 argument_list|)
 expr_stmt|;
 name|void
@@ -2456,14 +3305,11 @@ parameter_list|)
 function_decl|;
 name|ASTReader
 argument_list|(
-specifier|const
-name|ASTReader
-operator|&
+argument|const ASTReader&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// do not implement
-name|ASTReader
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -2471,8 +3317,8 @@ specifier|const
 name|ASTReader
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// do not implement
 name|public
 label|:
 comment|/// \brief Load the AST file and validate its contents against the given
@@ -2492,12 +3338,6 @@ comment|/// \param DisableValidation If true, the AST reader will suppress most
 comment|/// of its regular consistency checking, allowing the use of precompiled
 comment|/// headers that cannot be determined to be compatible.
 comment|///
-comment|/// \param DisableStatCache If true, the AST reader will ignore the
-comment|/// stat cache in the AST files. This performance pessimization can
-comment|/// help when an AST file is being used in cases where the
-comment|/// underlying files in the file system may have changed, but
-comment|/// parsing should still continue.
-comment|///
 comment|/// \param AllowASTWithCompilerErrors If true, the AST reader will accept an
 comment|/// AST file the was created out of an AST with compiler errors,
 comment|/// otherwise it will reject it.
@@ -2511,8 +3351,6 @@ argument|StringRef isysroot =
 literal|""
 argument_list|,
 argument|bool DisableValidation = false
-argument_list|,
-argument|bool DisableStatCache = false
 argument_list|,
 argument|bool AllowASTWithCompilerErrors = false
 argument_list|)
@@ -2531,7 +3369,49 @@ return|return
 name|SourceMgr
 return|;
 block|}
+comment|/// \brief Flags that indicate what kind of AST loading failures the client
+comment|/// of the AST reader can directly handle.
+comment|///
+comment|/// When a client states that it can handle a particular kind of failure,
+comment|/// the AST reader will not emit errors when producing that kind of failure.
+enum|enum
+name|LoadFailureCapabilities
+block|{
+comment|/// \brief The client can't handle any AST loading failures.
+name|ARR_None
+init|=
+literal|0
+block|,
+comment|/// \brief The client can handle an AST file that cannot load because it
+comment|/// is out-of-date relative to its input files.
+name|ARR_OutOfDate
+init|=
+literal|0x1
+block|,
+comment|/// \brief The client can handle an AST file that cannot load because it
+comment|/// was built with a different version of Clang.
+name|ARR_VersionMismatch
+init|=
+literal|0x2
+block|,
+comment|/// \brief The client can handle an AST file that cannot load because it's
+comment|/// compiled configuration doesn't match that of the context it was
+comment|/// loaded into.
+name|ARR_ConfigurationMismatch
+init|=
+literal|0x4
+block|}
+enum|;
 comment|/// \brief Load the AST file designated by the given file name.
+comment|///
+comment|/// \param FileName The name of the AST file to load.
+comment|///
+comment|/// \param Type The kind of AST being loaded, e.g., PCH, module, main file,
+comment|/// or preamble.
+comment|///
+comment|/// \param ClientLoadCapabilities The set of client load-failure
+comment|/// capabilities, represented as a bitset of the enumerators of
+comment|/// LoadFailureCapabilities.
 name|ASTReadResult
 name|ReadAST
 argument_list|(
@@ -2544,18 +3424,11 @@ name|FileName
 argument_list|,
 name|ModuleKind
 name|Type
+argument_list|,
+name|unsigned
+name|ClientLoadCapabilities
 argument_list|)
 decl_stmt|;
-comment|/// \brief Checks that no file that is stored in PCH is out-of-sync with
-comment|/// the actual file in the file system.
-name|ASTReadResult
-name|validateFileEntries
-parameter_list|(
-name|ModuleFile
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
 comment|/// \brief Make the entities in the given module and any of its (non-explicit)
 comment|/// submodules visible to name lookup.
 comment|///
@@ -2672,17 +3545,19 @@ return|return
 name|PP
 return|;
 block|}
-comment|/// \brief Retrieve the name of the original source file name
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+comment|/// \brief Retrieve the name of the original source file name for the primary
+comment|/// module file.
+name|StringRef
 name|getOriginalSourceFile
-argument_list|()
+parameter_list|()
 block|{
 return|return
-name|OriginalFileName
+name|ModuleMgr
+operator|.
+name|getPrimaryModule
+argument_list|()
+operator|.
+name|OriginalSourceFileName
 return|;
 block|}
 comment|/// \brief Retrieve the name of the original source file name directly from
@@ -2709,6 +3584,54 @@ operator|&
 name|Diags
 argument_list|)
 expr_stmt|;
+comment|/// \brief Read the control block for the named AST file.
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+specifier|static
+name|bool
+name|readASTFileControlBlock
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|,
+name|FileManager
+modifier|&
+name|FileMgr
+parameter_list|,
+name|ASTReaderListener
+modifier|&
+name|Listener
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine whether the given AST file is acceptable to load into a
+comment|/// translation unit with the given language and target options.
+specifier|static
+name|bool
+name|isAcceptableASTFile
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|,
+name|FileManager
+modifier|&
+name|FileMgr
+parameter_list|,
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|,
+specifier|const
+name|TargetOptions
+modifier|&
+name|TargetOpts
+parameter_list|,
+specifier|const
+name|PreprocessorOptions
+modifier|&
+name|PPOpts
+parameter_list|)
+function_decl|;
 comment|/// \brief Returns the suggested contents of the predefines buffer,
 comment|/// which contains a (typically-empty) subset of the predefines
 comment|/// build prior to including the precompiled header.
@@ -2738,7 +3661,7 @@ name|Index
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns a pair of [Begin, End) indices of preallocated
-comment|/// preprocessed entities that \arg Range encompasses.
+comment|/// preprocessed entities that \p Range encompasses.
 name|virtual
 name|std
 operator|::
@@ -2754,7 +3677,7 @@ argument|SourceRange Range
 argument_list|)
 expr_stmt|;
 comment|/// \brief Optionally returns true or false if the preallocated preprocessed
-comment|/// entity with index \arg Index came from file \arg FID.
+comment|/// entity with index \p Index came from file \p FID.
 name|virtual
 name|llvm
 operator|::
@@ -2811,6 +3734,25 @@ name|unsigned
 operator|>
 operator|(
 name|IdentifiersLoaded
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the number of macros found in the chain.
+name|unsigned
+name|getTotalNumMacros
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|MacrosLoaded
 operator|.
 name|size
 argument_list|()
@@ -3104,12 +4046,11 @@ name|getGlobalDeclID
 argument_list|(
 argument|ModuleFile&F
 argument_list|,
-argument|unsigned LocalID
+argument|serialization::LocalDeclID LocalID
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// \brief Returns true if global DeclID \arg ID originated from module
-comment|/// \arg M.
+comment|/// \brief Returns true if global DeclID \p ID originated from module \p M.
 name|bool
 name|isDeclIDFromModule
 argument_list|(
@@ -3135,7 +4076,7 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// \brief Returns the source location for the decl \arg ID.
+comment|/// \brief Returns the source location for the decl \p ID.
 name|SourceLocation
 name|getSourceLocationForDeclID
 argument_list|(
@@ -3451,7 +4392,7 @@ name|Decls
 argument_list|)
 decl_stmt|;
 comment|/// \brief Get the decls that are contained in a file in the Offset/Length
-comment|/// range. \arg Length can be 0 to indicate a point at \arg Offset instead of
+comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
 comment|/// a range.
 name|virtual
 name|void
@@ -3897,6 +4838,13 @@ name|IdentifierID
 name|ID
 argument_list|)
 block|{
+comment|// Note that we are loading an identifier.
+name|Deserializing
+name|AnIdentifier
+parameter_list|(
+name|this
+parameter_list|)
+function_decl|;
 return|return
 name|DecodeIdentifierInfo
 argument_list|(
@@ -3920,6 +4868,35 @@ name|serialization
 operator|::
 name|IdentifierID
 name|getGlobalIdentifierID
+argument_list|(
+argument|ModuleFile&M
+argument_list|,
+argument|unsigned LocalID
+argument_list|)
+expr_stmt|;
+comment|/// \brief Retrieve the macro with the given ID.
+name|MacroInfo
+modifier|*
+name|getMacro
+argument_list|(
+name|serialization
+operator|::
+name|MacroID
+name|ID
+argument_list|,
+name|MacroInfo
+operator|*
+name|Hint
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// \brief Retrieve the global macro ID corresponding to the given local
+comment|/// ID within the given module file.
+name|serialization
+operator|::
+name|MacroID
+name|getGlobalMacroID
 argument_list|(
 argument|ModuleFile&M
 argument_list|,
@@ -4477,6 +5454,7 @@ name|Idx
 argument_list|)
 expr_stmt|;
 comment|// \brief Read a string
+specifier|static
 name|std
 operator|::
 name|string
@@ -4493,6 +5471,7 @@ name|Idx
 argument_list|)
 expr_stmt|;
 comment|/// \brief Read a version tuple.
+specifier|static
 name|VersionTuple
 name|ReadVersionTuple
 parameter_list|(
@@ -4617,6 +5596,12 @@ name|F
 parameter_list|,
 name|uint64_t
 name|Offset
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|Hint
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine the global preprocessed entity ID that corresponds to
@@ -4632,50 +5617,32 @@ argument|unsigned LocalID
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// \brief Note that the identifier is a macro whose record will be loaded
-comment|/// from the given AST file at the given (file-local) offset.
+comment|/// \brief Note that the identifier has a macro history.
 comment|///
 comment|/// \param II The name of the macro.
 comment|///
-comment|/// \param F The module file from which the macro definition was deserialized.
-comment|///
-comment|/// \param Offset The offset into the module file at which the macro
-comment|/// definition is located.
-comment|///
-comment|/// \param Visible Whether the macro should be made visible.
+comment|/// \param IDs The global macro IDs that are associated with this identifier.
 name|void
 name|setIdentifierIsMacro
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|*
+operator|*
 name|II
-parameter_list|,
-name|ModuleFile
-modifier|&
-name|F
-parameter_list|,
-name|uint64_t
-name|Offset
-parameter_list|,
-name|bool
-name|Visible
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|serialization
+operator|::
+name|MacroID
+operator|>
+name|IDs
+argument_list|)
+decl_stmt|;
 comment|/// \brief Read the set of macros defined by this external macro source.
 name|virtual
 name|void
 name|ReadDefinedMacros
 parameter_list|()
-function_decl|;
-comment|/// \brief Read the macro definition for this identifier.
-name|virtual
-name|void
-name|LoadMacroDefinition
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|)
 function_decl|;
 comment|/// \brief Update an out-of-date identifier.
 name|virtual
@@ -4696,25 +5663,6 @@ modifier|*
 name|II
 parameter_list|)
 function_decl|;
-comment|/// \brief Read the macro definition corresponding to this iterator
-comment|/// into the unread macro record offsets table.
-name|void
-name|LoadMacroDefinition
-argument_list|(
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|IdentifierInfo
-operator|*
-argument_list|,
-name|uint64_t
-operator|>
-operator|::
-name|iterator
-name|Pos
-argument_list|)
-decl_stmt|;
 comment|/// \brief Load all external visible decls in the given DeclContext.
 name|void
 name|completeVisibleDeclsMap

@@ -209,7 +209,9 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
-name|bootverbose
+name|snd_verbose
+operator|>
+literal|3
 condition|)
 block|{
 name|device_printf

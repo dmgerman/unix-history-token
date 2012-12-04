@@ -1167,7 +1167,26 @@ name|f
 operator||=
 name|DT_CALLOUT_ARMED
 expr_stmt|;
+if|if
+condition|(
+name|ticks
+operator|<
+literal|0
+condition|)
+name|ticks
+operator|=
+operator|-
+name|ticks
+expr_stmt|;
+comment|/* Ignore overflow. */
 block|}
+if|if
+condition|(
+name|ticks
+operator|>
+literal|0
+condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -1182,6 +1201,7 @@ argument_list|,
 name|timeout_task
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|TQ_UNLOCK
 argument_list|(

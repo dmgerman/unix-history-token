@@ -99,12 +99,10 @@ name|Constant
 block|{
 name|GlobalValue
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|&
+argument|const GlobalValue&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|public
 operator|:
 comment|/// @brief An enumeration for the kinds of linkage for global values.
@@ -125,6 +123,9 @@ comment|///< Keep one copy of function when linking (inline)
 name|LinkOnceODRLinkage
 block|,
 comment|///< Same, but only replaced by something equivalent.
+name|LinkOnceODRAutoHideLinkage
+block|,
+comment|///< Like LinkOnceODRLinkage but addr not taken.
 name|WeakAnyLinkage
 block|,
 comment|///< Keep one copy of named function when linking (weak)
@@ -146,10 +147,6 @@ comment|///< Like Private, but linker removes.
 name|LinkerPrivateWeakLinkage
 block|,
 comment|///< Like LinkerPrivate, but weak.
-name|LinkerPrivateWeakDefAutoLinkage
-block|,
-comment|///< Like LinkerPrivateWeak, but possibly
-comment|///  hidden.
 name|DLLImportLinkage
 block|,
 comment|///< Function to be imported from DLL
@@ -518,6 +515,23 @@ operator|||
 name|Linkage
 operator|==
 name|LinkOnceODRLinkage
+operator|||
+name|Linkage
+operator|==
+name|LinkOnceODRAutoHideLinkage
+return|;
+block|}
+specifier|static
+name|bool
+name|isLinkOnceODRAutoHideLinkage
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
+name|Linkage
+operator|==
+name|LinkOnceODRAutoHideLinkage
 return|;
 block|}
 specifier|static
@@ -604,19 +618,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|isLinkerPrivateWeakDefAutoLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|LinkerPrivateWeakDefAutoLinkage
-return|;
-block|}
-specifier|static
-name|bool
 name|isLocalLinkage
 argument_list|(
 argument|LinkageTypes Linkage
@@ -639,11 +640,6 @@ name|Linkage
 argument_list|)
 operator|||
 name|isLinkerPrivateWeakLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-operator|||
-name|isLinkerPrivateWeakDefAutoLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -752,10 +748,6 @@ operator|||
 name|Linkage
 operator|==
 name|LinkerPrivateWeakLinkage
-operator|||
-name|Linkage
-operator|==
-name|LinkerPrivateWeakDefAutoLinkage
 return|;
 block|}
 comment|/// isWeakForLinker - Whether the definition of this global may be replaced at
@@ -792,6 +784,10 @@ name|LinkOnceODRLinkage
 operator|||
 name|Linkage
 operator|==
+name|LinkOnceODRAutoHideLinkage
+operator|||
+name|Linkage
+operator|==
 name|CommonLinkage
 operator|||
 name|Linkage
@@ -801,10 +797,6 @@ operator|||
 name|Linkage
 operator|==
 name|LinkerPrivateWeakLinkage
-operator|||
-name|Linkage
-operator|==
-name|LinkerPrivateWeakDefAutoLinkage
 return|;
 block|}
 name|bool
@@ -838,6 +830,18 @@ specifier|const
 block|{
 return|return
 name|isLinkOnceLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasLinkOnceODRAutoHideLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLinkOnceODRAutoHideLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -910,18 +914,6 @@ specifier|const
 block|{
 return|return
 name|isLinkerPrivateWeakLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
-name|hasLinkerPrivateWeakDefAutoLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isLinkerPrivateWeakDefAutoLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -1154,18 +1146,6 @@ name|Parent
 return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const GlobalValue *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

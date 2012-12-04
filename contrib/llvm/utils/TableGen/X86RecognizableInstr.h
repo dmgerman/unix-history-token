@@ -291,12 +291,6 @@ name|hasFROperands
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// has256BitOperands - Returns true if any operand is a 256-bit SSE operand.
-name|bool
-name|has256BitOperands
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// typeFromString - Translates an operand type from the string provided in
 comment|///   the LLVM tables to an OperandType for use in the operand specifier.
 comment|///
@@ -309,7 +303,7 @@ comment|///                         mandatory OpSize prefix.
 comment|/// @param hasREX_WPrefix - Indicates whether the instruction has a REX.W
 comment|///                         prefix.  If it does, 32-bit register operands stay
 comment|///                         32-bit regardless of the operand size.
-comment|/// @param hasOpSizePrefix- Indicates whether the instruction has an OpSize
+comment|/// @param hasOpSizePrefix  Indicates whether the instruction has an OpSize
 comment|///                         prefix.  If it does not, then 16-bit register
 comment|///                         operands stay 16-bit.
 comment|/// @return               - The operand's type.
@@ -530,7 +524,7 @@ block|}
 comment|/// emitInstructionSpecifier - Loads the instruction specifier for the current
 comment|///   instruction into a DisassemblerTables.
 comment|///
-comment|/// @arg tables - The DisassemblerTables to populate with the specifier for
+comment|/// \param tables The DisassemblerTables to populate with the specifier for
 comment|///               the current instruction.
 name|void
 name|emitInstructionSpecifier
@@ -543,7 +537,7 @@ function_decl|;
 comment|/// emitDecodePath - Populates the proper fields in the decode tables
 comment|///   corresponding to the decode paths for this instruction.
 comment|///
-comment|/// @arg tables - The DisassemblerTables to populate with the decode
+comment|/// \param tables The DisassemblerTables to populate with the decode
 comment|///               decode information for the current instruction.
 name|void
 name|emitDecodePath
@@ -556,9 +550,9 @@ function_decl|const;
 comment|/// Constructor - Initializes a RecognizableInstr with the appropriate fields
 comment|///   from a CodeGenInstruction.
 comment|///
-comment|/// @arg tables - The DisassemblerTables that the specifier will be added to.
-comment|/// @arg insn   - The CodeGenInstruction to extract information from.
-comment|/// @arg uid    - The unique ID of the current instruction.
+comment|/// \param tables The DisassemblerTables that the specifier will be added to.
+comment|/// \param insn   The CodeGenInstruction to extract information from.
+comment|/// \param uid    The unique ID of the current instruction.
 name|RecognizableInstr
 argument_list|(
 argument|DisassemblerTables&tables
@@ -573,11 +567,11 @@ label|:
 comment|/// processInstr - Accepts a CodeGenInstruction and loads decode information
 comment|///   for it into a DisassemblerTables if appropriate.
 comment|///
-comment|/// @arg tables - The DiassemblerTables to be populated with decode
+comment|/// \param tables The DiassemblerTables to be populated with decode
 comment|///               information.
-comment|/// @arg insn   - The CodeGenInstruction to be used as a source for this
+comment|/// \param insn   The CodeGenInstruction to be used as a source for this
 comment|///               information.
-comment|/// @uid        - The unique ID of the instruction.
+comment|/// \param uid    The unique ID of the instruction.
 specifier|static
 name|void
 name|processInstr

@@ -315,16 +315,14 @@ specifier|const
 name|SDDbgInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement.
 name|SDDbgInfo
 argument_list|(
-specifier|const
-name|SDDbgInfo
-operator|&
+argument|const SDDbgInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement.
 name|public
 label|:
 name|SDDbgInfo
@@ -879,16 +877,14 @@ specifier|const
 name|SelectionDAG
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement.
 name|SelectionDAG
 argument_list|(
-specifier|const
-name|SelectionDAG
-operator|&
+argument|const SelectionDAG&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement.
 name|public
 label|:
 name|explicit
@@ -2100,6 +2096,11 @@ parameter_list|,
 name|EVT
 name|VT
 parameter_list|,
+name|int64_t
+name|Offset
+init|=
+literal|0
+parameter_list|,
 name|bool
 name|isTarget
 init|=
@@ -2112,6 +2113,44 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+name|SDValue
+name|getTargetBlockAddress
+parameter_list|(
+specifier|const
+name|BlockAddress
+modifier|*
+name|BA
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|int64_t
+name|Offset
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+block|{
+return|return
+name|getBlockAddress
+argument_list|(
+name|BA
+argument_list|,
+name|VT
+argument_list|,
+name|Offset
+argument_list|,
+name|true
+argument_list|,
+name|TargetFlags
+argument_list|)
+return|;
+block|}
 name|SDValue
 name|getCopyToReg
 parameter_list|(

@@ -126,6 +126,10 @@ name|TargetInstrInfo
 operator|&
 name|TII
 block|;
+name|mutable
+name|int
+name|CRSpillFrameIdx
+block|;
 name|public
 operator|:
 name|PPCRegisterInfo
@@ -177,7 +181,7 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|unsigned
+name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
@@ -261,6 +265,17 @@ argument_list|,
 argument|int SPAdj
 argument_list|,
 argument|RegScavenger *RS
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasReservedSpillSlot
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|int&FrameIdx
 argument_list|)
 specifier|const
 block|;

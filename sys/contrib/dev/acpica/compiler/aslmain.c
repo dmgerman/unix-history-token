@@ -198,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
+value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
@@ -503,13 +503,6 @@ argument_list|(
 literal|"-e  [f1,f2]"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-2"
-argument_list|,
-literal|"Emit ACPI 2.0 compatible ASL code"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -1206,15 +1199,6 @@ literal|1
 operator|)
 return|;
 block|}
-break|break;
-case|case
-literal|'2'
-case|:
-comment|/* ACPI 2.0 compatibility mode */
-name|Gbl_Acpi2
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 case|case
 literal|'b'

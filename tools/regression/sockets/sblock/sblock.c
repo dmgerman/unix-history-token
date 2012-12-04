@@ -146,7 +146,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"FAIL: blocking_recver: recv: %d bytes"
+literal|"FAIL: blocking_recver: recv: %zd bytes"
 argument_list|,
 name|len
 argument_list|)
@@ -407,7 +407,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"signaller send ret %d"
+literal|"signaller send ret %zd"
 argument_list|,
 name|len
 argument_list|)

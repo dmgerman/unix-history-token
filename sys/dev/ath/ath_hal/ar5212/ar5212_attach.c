@@ -443,6 +443,11 @@ operator|=
 name|ar5212GetTsf64
 block|,
 operator|.
+name|ah_setTsf64
+operator|=
+name|ar5212SetTsf64
+block|,
+operator|.
 name|ah_resetTsf
 operator|=
 name|ar5212ResetTsf

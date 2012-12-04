@@ -19,6 +19,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `arc4random' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `arc4random_buf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM_BUF
+value|1
+end_define
+
+begin_comment
 comment|/* Define if audit system calls present */
 end_comment
 
@@ -33,20 +55,6 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/* Define if be32enc is present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_BE32ENC
-end_define
-
-begin_comment
-comment|/**/
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `bzero' function. */
 end_comment
 
@@ -54,6 +62,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_BZERO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `cap_enter' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CAP_ENTER
 value|1
 end_define
 
@@ -80,6 +99,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `closefrom' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOSEFROM
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -99,6 +129,28 @@ comment|/* #undef HAVE_ENDIAN_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `faccessat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FACCESSAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fdopendir' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FDOPENDIR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `fork' function. */
 end_comment
 
@@ -106,6 +158,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FORK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fstatat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSTATAT
 value|1
 end_define
 
@@ -133,6 +196,28 @@ end_define
 begin_comment
 comment|/**/
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `getresgid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETRESGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getresuid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETRESUID
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `gettimeofday' function. */
@@ -200,6 +285,28 @@ comment|/* #undef HAVE_IPC_PERM___SEQ */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `jail' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_JAIL
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `kqueue' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KQUEUE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<machine/endian.h> header file. */
 end_comment
 
@@ -252,6 +359,47 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `openat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<printf.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PRINTF_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `pthread_condattr_setclock' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_CONDATTR_SETCLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `pthread_cond_timedwait_relative_np' function.    */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE_NP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `pthread_mutex_lock' function. */
 end_comment
 
@@ -261,6 +409,64 @@ directive|define
 name|HAVE_PTHREAD_MUTEX_LOCK
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<pthread_np.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_NP_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `renameat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RENAMEAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setproctitle' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPROCTITLE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `sigtimedwait' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGTIMEDWAIT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if sockaddr_storage.ss_len field exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SOCKADDR_STORAGE_SS_LEN
+end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/* Define to 1 if `stat' has the bug that it succeeds when given the    zero-length file name argument. */
@@ -370,6 +576,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strndup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRNDUP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strrchr' function. */
 end_comment
 
@@ -414,7 +631,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if `st_rdev' is member of `struct stat'. */
+comment|/* Define to 1 if `st_rdev' is a member of `struct stat'. */
 end_comment
 
 begin_define
@@ -491,6 +708,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `unlinkat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNLINKAT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `vfork' function. */
 end_comment
 
@@ -508,6 +736,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_VFORK_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `vis' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VIS
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if `fork' works. */
@@ -540,6 +779,17 @@ define|#
 directive|define
 name|LSTAT_FOLLOWS_SLASHED_SYMLINK
 value|1
+end_define
+
+begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
 end_define
 
 begin_comment
@@ -583,7 +833,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.1p2"
+value|"OpenBSM 1.2alpha2"
 end_define
 
 begin_comment
@@ -598,6 +848,17 @@ value|"openbsm"
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -605,7 +866,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.1p2"
+value|"1.2alpha2"
 end_define
 
 begin_comment
@@ -650,6 +911,38 @@ comment|/* #undef TM_IN_SYS_TIME */
 end_comment
 
 begin_comment
+comment|/* Define if compat/endian_enc.h is required */
+end_comment
+
+begin_comment
+comment|/* #undef USE_COMPAT_ENDIAN_ENC_H */
+end_comment
+
+begin_comment
+comment|/* Define if compat/endian.h is required */
+end_comment
+
+begin_comment
+comment|/* #undef USE_COMPAT_ENDIAN_H */
+end_comment
+
+begin_comment
+comment|/* Define if endian.h should be included */
+end_comment
+
+begin_comment
+comment|/* #undef USE_ENDIAN_H */
+end_comment
+
+begin_comment
+comment|/* Define if machine/endian.h should be included */
+end_comment
+
+begin_comment
+comment|/* #undef USE_MACHINE_ENDIAN_H */
+end_comment
+
+begin_comment
 comment|/* Define if uses Mach IPC for Triggers messages */
 end_comment
 
@@ -661,10 +954,18 @@ begin_comment
 comment|/* Define to use native include files */
 end_comment
 
+begin_comment
+comment|/* #undef USE_NATIVE_INCLUDES */
+end_comment
+
+begin_comment
+comment|/* Define if sys/endian.h should be included */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|USE_NATIVE_INCLUDES
+name|USE_SYS_ENDIAN_H
 end_define
 
 begin_comment
@@ -679,7 +980,18 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.1p2"
+value|"1.2alpha2"
+end_define
+
+begin_comment
+comment|/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a    `char[]'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYTEXT_POINTER
+value|1
 end_define
 
 begin_comment

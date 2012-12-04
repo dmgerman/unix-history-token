@@ -15,12 +15,6 @@ directive|define
 name|_DEV_ATH_AR5211DESC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"ah_desc.h"
-end_include
-
 begin_comment
 comment|/*  * Defintions for the DMA descriptors used by the Atheros  * AR5211 and AR5110 Wireless Lan controller parts.  */
 end_comment

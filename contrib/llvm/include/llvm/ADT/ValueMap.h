@@ -337,12 +337,10 @@ name|Data
 decl_stmt|;
 name|ValueMap
 argument_list|(
-specifier|const
-name|ValueMap
-operator|&
+argument|const ValueMap&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|ValueMap
 modifier|&
 name|operator
@@ -352,8 +350,8 @@ specifier|const
 name|ValueMap
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 typedef|typedef

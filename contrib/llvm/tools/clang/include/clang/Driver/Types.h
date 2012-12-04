@@ -173,15 +173,6 @@ name|ID
 name|Id
 parameter_list|)
 function_decl|;
-comment|/// isOnlyAcceptedByClang - Is clang the only compiler that can handle this
-comment|/// input type.
-name|bool
-name|isOnlyAcceptedByClang
-parameter_list|(
-name|ID
-name|Id
-parameter_list|)
-function_decl|;
 comment|/// isCXX - Is this a "C++" input (C++ and Obj-C++ sources and headers).
 name|bool
 name|isCXX

@@ -99,6 +99,12 @@ directive|include
 file|<cassert>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -694,6 +700,16 @@ name|SM
 argument_list|)
 decl|const
 decl_stmt|;
+name|LLVM_ATTRIBUTE_USED
+name|std
+operator|::
+name|string
+name|printToString
+argument_list|(
+argument|const SourceManager&SM
+argument_list|)
+specifier|const
+expr_stmt|;
 name|void
 name|dump
 argument_list|(

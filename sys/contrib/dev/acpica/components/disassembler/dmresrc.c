@@ -524,6 +524,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|NULL
+argument_list|,
 name|Aml
 argument_list|,
 operator|&
@@ -697,13 +699,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceTemplate  *  * PARAMETERS:  Op          - Buffer Op to be examined  *  * RETURN:      Status. AE_OK if valid template  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors. Nothing is output.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsResourceTemplate  *  * PARAMETERS:  WalkState           - Current walk info  *              Op                  - Buffer Op to be examined  *  * RETURN:      Status. AE_OK if valid template  *  * DESCRIPTION: Walk a byte list to determine if it consists of a valid set  *              of resource descriptors. Nothing is output.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiDmIsResourceTemplate
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
@@ -756,6 +762,23 @@ name|Value
 operator|.
 name|Arg
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NextOp
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"NULL byte list in buffer\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
+block|}
 name|NextOp
 operator|=
 name|NextOp
@@ -802,6 +825,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|WalkState
+argument_list|,
 name|Aml
 argument_list|,
 name|Length

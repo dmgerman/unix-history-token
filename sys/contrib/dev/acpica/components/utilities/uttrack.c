@@ -1077,7 +1077,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtRemoveAllocation
 argument_list|)
@@ -1087,11 +1087,11 @@ condition|(
 name|AcpiGbl_DisableMemTracking
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|MemList
 operator|=
@@ -1118,11 +1118,11 @@ literal|"Empty allocation list, nothing to free!"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|Status
 operator|=
@@ -1139,11 +1139,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Unlink */
 if|if
@@ -1197,6 +1197,24 @@ operator|->
 name|Previous
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ALLOCATIONS
+operator|,
+literal|"Freeing %p, size 0%X\n"
+operator|,
+operator|&
+name|Allocation
+operator|->
+name|UserSpace
+operator|,
+name|Allocation
+operator|->
+name|Size
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Mark the segment as deleted */
 name|ACPI_MEMSET
 argument_list|(
@@ -1212,19 +1230,6 @@ operator|->
 name|Size
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ALLOCATIONS
-operator|,
-literal|"Freeing size 0%X\n"
-operator|,
-name|Allocation
-operator|->
-name|Size
-operator|)
-argument_list|)
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtReleaseMutex
@@ -1232,11 +1237,11 @@ argument_list|(
 name|ACPI_MTX_MEMORY
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

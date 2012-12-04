@@ -634,6 +634,16 @@ operator|==
 literal|1
 return|;
 block|}
+name|virtual
+name|bool
+name|isProfitableToUnpredicate
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|)
+specifier|const
+block|;
 comment|/// analyzeCompare - For a comparison instruction, return the source registers
 comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
 comment|/// compares against in CmpValue. Return true if the comparison instruction
@@ -761,20 +771,6 @@ argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|unsigned
-name|getOutputLatency
-argument_list|(
-argument|const InstrItineraryData *ItinData
-argument_list|,
-argument|const MachineInstr *DefMI
-argument_list|,
-argument|unsigned DefIdx
-argument_list|,
-argument|const MachineInstr *DepMI
-argument_list|)
-specifier|const
-block|;
 comment|/// VFP/NEON execution domains.
 name|std
 operator|::
@@ -796,6 +792,36 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|unsigned Domain
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getPartialRegUpdateClearance
+argument_list|(
+argument|const MachineInstr*
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|const TargetRegisterInfo*
+argument_list|)
+specifier|const
+block|;
+name|void
+name|breakPartialRegDependency
+argument_list|(
+argument|MachineBasicBlock::iterator
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+comment|/// Get the number of addresses by LDM or VLDM or zero for unknown.
+name|unsigned
+name|getNumLDMAddresses
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;

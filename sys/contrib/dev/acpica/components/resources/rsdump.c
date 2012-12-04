@@ -352,7 +352,7 @@ name|AcpiGbl_LlDecode
 block|}
 block|,
 block|{
-name|ACPI_RSD_1BITFLAG
+name|ACPI_RSD_2BITFLAG
 block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
@@ -1661,7 +1661,7 @@ name|AcpiGbl_LlDecode
 block|}
 block|,
 block|{
-name|ACPI_RSD_1BITFLAG
+name|ACPI_RSD_2BITFLAG
 block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
@@ -1916,7 +1916,7 @@ operator|.
 name|Sharable
 argument_list|)
 block|,
-literal|"Sharable"
+literal|"Sharing"
 block|,
 name|AcpiGbl_ShrDecode
 block|}

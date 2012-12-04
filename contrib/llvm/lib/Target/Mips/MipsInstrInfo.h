@@ -310,50 +310,6 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
-name|namespace
-name|Mips
-block|{
-comment|/// Emit a series of instructions to load an immediate. All instructions
-comment|/// except for the last one are emitted. The function returns the number of
-comment|/// MachineInstrs generated. The opcode-immediate pair of the last
-comment|/// instruction is returned in LastInst, if it is not 0.
-name|unsigned
-name|loadImmediate
-argument_list|(
-name|int64_t
-name|Imm
-argument_list|,
-name|bool
-name|IsN64
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-argument_list|,
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|II
-argument_list|,
-name|DebugLoc
-name|DL
-argument_list|,
-name|bool
-name|LastInstrIsADDiu
-argument_list|,
-name|MipsAnalyzeImmediate
-operator|::
-name|Inst
-operator|*
-name|LastInst
-argument_list|)
-decl_stmt|;
-block|}
 comment|/// Create MipsInstrInfo objects.
 specifier|const
 name|MipsInstrInfo

@@ -971,6 +971,15 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|TST
+name|TST_interface
+init|=
+name|clang
+operator|::
+name|TST_interface
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
 name|TST_class
 init|=
 name|clang
@@ -1388,6 +1397,10 @@ name|TST_struct
 operator|||
 name|T
 operator|==
+name|TST_interface
+operator|||
+name|T
+operator|==
 name|TST_union
 operator|||
 name|T
@@ -1398,12 +1411,10 @@ return|;
 block|}
 name|DeclSpec
 argument_list|(
-specifier|const
-name|DeclSpec
-operator|&
+argument|const DeclSpec&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -1412,8 +1423,8 @@ specifier|const
 name|DeclSpec
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|DeclSpec
@@ -2667,9 +2678,6 @@ specifier|const
 name|LangOptions
 modifier|&
 name|Lang
-parameter_list|,
-name|bool
-name|IsTypeSpec
 parameter_list|)
 function_decl|;
 name|bool
@@ -3373,6 +3381,12 @@ name|UnqualifiedId
 block|{
 name|private
 label|:
+name|UnqualifiedId
+argument_list|(
+argument|const UnqualifiedId&Other
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 specifier|const
 name|UnqualifiedId
 modifier|&
@@ -3383,8 +3397,8 @@ specifier|const
 name|UnqualifiedId
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// \brief Describes the kind of unqualified-id parsed.
@@ -3501,54 +3515,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{ }
-comment|/// \brief Do not use this copy constructor. It is temporary, and only
-comment|/// exists because we are holding FieldDeclarators in a SmallVector when we
-comment|/// don't actually need them.
-comment|///
-comment|/// FIXME: Kill this copy constructor.
-name|UnqualifiedId
-argument_list|(
-specifier|const
-name|UnqualifiedId
-operator|&
-name|Other
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|IK_Identifier
-argument_list|)
-operator|,
-name|Identifier
-argument_list|(
-name|Other
-operator|.
-name|Identifier
-argument_list|)
-operator|,
-name|StartLocation
-argument_list|(
-name|Other
-operator|.
-name|StartLocation
-argument_list|)
-operator|,
-name|EndLocation
-argument_list|(
-argument|Other.EndLocation
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Other
-operator|.
-name|Kind
-operator|==
-name|IK_Identifier
-operator|&&
-literal|"Cannot copy non-identifiers"
-argument_list|)
-block|;   }
 comment|/// \brief Clear out this unqualified-id, setting it to default (invalid)
 comment|/// state.
 name|void
@@ -4183,9 +4149,17 @@ name|HasTrailingReturnType
 operator|:
 literal|1
 block|;
+comment|/// The location of the left parenthesis in the source.
+name|unsigned
+name|LParenLoc
+block|;
 comment|/// When isVariadic is true, the location of the ellipsis in the source.
 name|unsigned
 name|EllipsisLoc
+block|;
+comment|/// The location of the right parenthesis in the source.
+name|unsigned
+name|RParenLoc
 block|;
 comment|/// NumArgs - This is the number of formal arguments provided for the
 comment|/// declarator.
@@ -4320,6 +4294,20 @@ literal|0
 return|;
 block|}
 name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|LParenLoc
+argument_list|)
+return|;
+block|}
+name|SourceLocation
 name|getEllipsisLoc
 argument_list|()
 specifier|const
@@ -4330,6 +4318,20 @@ operator|::
 name|getFromRawEncoding
 argument_list|(
 name|EllipsisLoc
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|RParenLoc
 argument_list|)
 return|;
 block|}
@@ -4950,15 +4952,17 @@ name|getFunction
 argument_list|(
 argument|bool hasProto
 argument_list|,
-argument|bool isVariadic
-argument_list|,
 argument|bool isAmbiguous
 argument_list|,
-argument|SourceLocation EllipsisLoc
+argument|SourceLocation LParenLoc
 argument_list|,
 argument|ParamInfo *ArgInfo
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation EllipsisLoc
+argument_list|,
+argument|SourceLocation RParenLoc
 argument_list|,
 argument|unsigned TypeQuals
 argument_list|,

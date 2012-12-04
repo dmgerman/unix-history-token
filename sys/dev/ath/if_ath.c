@@ -4290,11 +4290,16 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+comment|/* 	 * To work around scoping issues with CURVNET_SET/CURVNET_RESTORE.. 	 */
 if|if
 condition|(
 name|ifp
 operator|!=
 name|NULL
+operator|&&
+name|ifp
+operator|->
+name|if_vnet
 condition|)
 block|{
 name|CURVNET_SET
@@ -4313,6 +4318,18 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_invalid
@@ -6000,14 +6017,6 @@ name|ath_tx_draintxq
 argument_list|(
 name|sc
 argument_list|,
-operator|&
-name|avp
-operator|->
-name|av_mcastq
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_LOCK_DESTROY
-argument_list|(
 operator|&
 name|avp
 operator|->
@@ -9260,7 +9269,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX Restart TX completion and pending TX */
+comment|/* Restart TX completion and pending TX */
 if|if
 condition|(
 name|reset_type
@@ -9268,6 +9277,11 @@ operator|==
 name|ATH_RESET_NOLOSS
 condition|)
 block|{
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9292,17 +9306,6 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|ATH_TXQ_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_txq
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|ath_txq_restart_dma
 argument_list|(
 name|sc
@@ -9329,19 +9332,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
+block|}
+block|}
+name|ATH_TX_UNLOCK
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_txq
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 comment|/* 	 * This may have been set during an ath_start() call which 	 * set this once it detected a concurrent TX was going on. 	 * So, clear it. 	 */
 name|IF_LOCK
@@ -10235,11 +10232,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_start
 argument_list|(
 name|sc
 operator|->
 name|sc_ifp
+argument_list|)
+expr_stmt|;
+name|ATH_TX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|ATH_PCU_LOCK
@@ -10333,6 +10340,11 @@ operator|->
 name|sc_invalid
 condition|)
 return|return;
+name|ATH_TX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_KTR
 argument_list|(
 name|sc
@@ -10609,6 +10621,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX todo, free the node outside of 			 * the TX lock context! 			 */
 if|if
 condition|(
 name|ni
@@ -11531,16 +11544,6 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-name|ATH_TXQ_LOCK_ASSERT
-argument_list|(
-name|dst
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
-argument_list|(
-name|src
-argument_list|)
-expr_stmt|;
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
@@ -13935,13 +13938,6 @@ operator|->
 name|axq_tidq
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_LOCK_INIT
-argument_list|(
-name|sc
-argument_list|,
-name|txq
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -14681,11 +14677,6 @@ argument_list|,
 name|txq
 operator|->
 name|axq_qnum
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_LOCK_DESTROY
-argument_list|(
-name|txq
 argument_list|)
 expr_stmt|;
 name|sc
@@ -15522,9 +15513,9 @@ name|an
 init|=
 name|NULL
 decl_stmt|;
-name|ATH_TXQ_UNLOCK_ASSERT
+name|ATH_TX_UNLOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* If unicast frame, update general statistics */
@@ -15811,9 +15802,9 @@ init|;
 condition|;
 control|)
 block|{
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|txq
@@ -15840,9 +15831,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16003,9 +15994,9 @@ argument_list|,
 name|ds
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16159,9 +16150,9 @@ name|ts_rssi
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update statistics and call completion 		 */
@@ -16207,9 +16198,9 @@ condition|(
 name|dosched
 condition|)
 block|{
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|ath_txq_sched
@@ -16219,9 +16210,9 @@ argument_list|,
 name|txq
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -17028,6 +17019,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -17052,17 +17048,6 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|ATH_TXQ_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_txq
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|ath_txq_sched
 argument_list|(
 name|sc
@@ -17076,19 +17061,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
+block|}
+block|}
+name|ATH_TX_UNLOCK
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_txq
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
@@ -17602,9 +17581,9 @@ name|ix
 operator|++
 control|)
 block|{
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|bf
@@ -17637,9 +17616,9 @@ name|axq_fifo_depth
 operator|=
 literal|0
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -17774,9 +17753,9 @@ directive|endif
 comment|/* ATH_DEBUG */
 comment|/* 		 * Since we're now doing magic in the completion 		 * functions, we -must- call it for aggregation 		 * destinations or BAW tracking will get upset. 		 */
 comment|/* 		 * Clear ATH_BUF_BUSY; the completion handler 		 * will free the buffer. 		 */
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|bf

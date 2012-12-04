@@ -255,14 +255,6 @@ name|VirtReg2IndexFunctor
 operator|>
 name|VirtRegIntervals
 block|;
-comment|/// AllocatableRegs - A bit vector of allocatable registers.
-name|BitVector
-name|AllocatableRegs
-block|;
-comment|/// ReservedRegs - A bit vector of reserved registers.
-name|BitVector
-name|ReservedRegs
-block|;
 comment|/// RegMaskSlots - Sorted list of instructions with register mask operands.
 comment|/// Always use the 'r' slot, RegMasks are normal clobbers, not early
 comment|/// clobbers.
@@ -428,42 +420,6 @@ name|Reg
 index|]
 return|;
 block|}
-comment|/// isAllocatable - is the physical register reg allocatable in the current
-comment|/// function?
-name|bool
-name|isAllocatable
-argument_list|(
-argument|unsigned reg
-argument_list|)
-specifier|const
-block|{
-return|return
-name|AllocatableRegs
-operator|.
-name|test
-argument_list|(
-name|reg
-argument_list|)
-return|;
-block|}
-comment|/// isReserved - is the physical register reg reserved in the current
-comment|/// function
-name|bool
-name|isReserved
-argument_list|(
-argument|unsigned reg
-argument_list|)
-specifier|const
-block|{
-return|return
-name|ReservedRegs
-operator|.
-name|test
-argument_list|(
-name|reg
-argument_list|)
-return|;
-block|}
 comment|// Interval creation.
 name|LiveInterval
 operator|&
@@ -559,6 +515,45 @@ operator|*
 name|dead
 operator|=
 literal|0
+argument_list|)
+block|;
+comment|/// extendToIndices - Extend the live range of LI to reach all points in
+comment|/// Indices. The points in the Indices array must be jointly dominated by
+comment|/// existing defs in LI. PHI-defs are added as needed to maintain SSA form.
+comment|///
+comment|/// If a SlotIndex in Indices is the end index of a basic block, LI will be
+comment|/// extended to be live out of the basic block.
+comment|///
+comment|/// See also LiveRangeCalc::extend().
+name|void
+name|extendToIndices
+argument_list|(
+name|LiveInterval
+operator|*
+name|LI
+argument_list|,
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Indices
+argument_list|)
+block|;
+comment|/// pruneValue - If an LI value is live at Kill, prune its live range by
+comment|/// removing any liveness reachable from Kill. Add live range end points to
+comment|/// EndPoints such that extendToIndices(LI, EndPoints) will reconstruct the
+comment|/// value's live range.
+comment|///
+comment|/// Calling pruneValue() and extendToIndices() can be used to reconstruct
+comment|/// SSA form after adding defs to a virtual register.
+name|void
+name|pruneValue
+argument_list|(
+argument|LiveInterval *LI
+argument_list|,
+argument|SlotIndex Kill
+argument_list|,
+argument|SmallVectorImpl<SlotIndex> *EndPoints
 argument_list|)
 block|;
 name|SlotIndexes
@@ -871,22 +866,30 @@ comment|/// addKillFlags - Add kill flags to any instruction that kills a virtua
 comment|/// register.
 name|void
 name|addKillFlags
-argument_list|()
+argument_list|(
+specifier|const
+name|VirtRegMap
+operator|*
+argument_list|)
 block|;
 comment|/// handleMove - call this method to notify LiveIntervals that
 comment|/// instruction 'mi' has been moved within a basic block. This will update
 comment|/// the live intervals for all operands of mi. Moves between basic blocks
 comment|/// are not supported.
+comment|///
+comment|/// \param UpdateFlags Update live intervals for nonallocatable physregs.
 name|void
 name|handleMove
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr* MI
+argument_list|,
+argument|bool UpdateFlags = false
 argument_list|)
 block|;
 comment|/// moveIntoBundle - Update intervals for operands of MI so that they
 comment|/// begin/end on the SlotIndex for BundleStart.
+comment|///
+comment|/// \param UpdateFlags Update live intervals for nonallocatable physregs.
 comment|///
 comment|/// Requires MI and BundleStart to have SlotIndexes, and assumes
 comment|/// existing liveness is accurate. BundleStart should be the first
@@ -894,13 +897,11 @@ comment|/// instruction in the Bundle.
 name|void
 name|handleMoveIntoBundle
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr* MI
 argument_list|,
-name|MachineInstr
-operator|*
-name|BundleStart
+argument|MachineInstr* BundleStart
+argument_list|,
+argument|bool UpdateFlags = false
 argument_list|)
 block|;
 comment|// Register mask functions.

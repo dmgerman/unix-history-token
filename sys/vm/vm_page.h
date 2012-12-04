@@ -882,7 +882,7 @@ file|<machine/atomic.h>
 end_include
 
 begin_comment
-comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  *	hold  *		Will become free after a pending I/O operation  *		completes.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
+comment|/*  * Each pageable resident page falls into one of four lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
 end_comment
 
 begin_decl_stmt

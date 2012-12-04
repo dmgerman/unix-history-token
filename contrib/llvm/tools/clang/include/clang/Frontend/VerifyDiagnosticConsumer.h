@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -107,7 +107,9 @@ comment|///
 comment|/// Indicating that a line expects an error or a warning is simple. Put a
 comment|/// comment on the line that has the diagnostic, use:
 comment|///
-comment|///     expected-{error,warning,note}
+comment|/// \code
+comment|///   expected-{error,warning,note}
+comment|/// \endcode
 comment|///
 comment|/// to tag if it's an expected error or warning, and place the expected text
 comment|/// between {{ and }} markers. The full text doesn't have to be included, only
@@ -168,12 +170,15 @@ comment|/// \endcode
 comment|///
 comment|/// In this example, the diagnostic may appear only once, if at all.
 comment|///
-comment|/// Regex matching mode may be selected by appending '-re' to type. Example:
+comment|/// Regex matching mode may be selected by appending '-re' to type, such as:
 comment|///
+comment|/// \code
 comment|///   expected-error-re
+comment|/// \endcode
 comment|///
 comment|/// Examples matching error: "variable has incomplete type 'struct s'"
 comment|///
+comment|/// \code
 comment|///   // expected-error {{variable has incomplete type 'struct s'}}
 comment|///   // expected-error {{variable has incomplete type}}
 comment|///
@@ -181,6 +186,15 @@ comment|///   // expected-error-re {{variable has has type 'struct .'}}
 comment|///   // expected-error-re {{variable has has type 'struct .*'}}
 comment|///   // expected-error-re {{variable has has type 'struct (.*)'}}
 comment|///   // expected-error-re {{variable has has type 'struct[[:space:]](.*)'}}
+comment|/// \endcode
+comment|///
+comment|/// VerifyDiagnosticConsumer expects at least one expected-* directive to
+comment|/// be found inside the source code.  If no diagnostics are expected the
+comment|/// following directive can be used to indicate this:
+comment|///
+comment|/// \code
+comment|///   // expected-no-diagnostics
+comment|/// \endcode
 comment|///
 name|class
 name|VerifyDiagnosticConsumer
@@ -348,12 +362,10 @@ name|private
 operator|:
 name|Directive
 argument_list|(
-specifier|const
-name|Directive
-operator|&
+argument|const Directive&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -362,8 +374,8 @@ specifier|const
 name|Directive
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 empty_stmt|;
 typedef|typedef
@@ -417,33 +429,18 @@ argument_list|)
 block|;     }
 block|}
 struct|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-typedef|typedef
-name|llvm
-operator|::
-name|DenseSet
-operator|<
-name|FileID
-operator|>
-name|FilesWithDiagnosticsSet
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|4
-operator|>
-name|FilesParsedForDirectivesSet
-expr_stmt|;
-endif|#
-directive|endif
+enum|enum
+name|DirectiveStatus
+block|{
+name|HasNoDirectives
+block|,
+name|HasNoDirectivesReported
+block|,
+name|HasExpectedNoDiagnostics
+block|,
+name|HasOtherExpectedDirectives
+block|}
+enum|;
 name|private
 label|:
 name|DiagnosticsEngine
@@ -468,20 +465,21 @@ name|Preprocessor
 modifier|*
 name|CurrentPreprocessor
 decl_stmt|;
+specifier|const
+name|LangOptions
+modifier|*
+name|LangOpts
+decl_stmt|;
+name|SourceManager
+modifier|*
+name|SrcManager
+decl_stmt|;
 name|unsigned
 name|ActiveSourceFiles
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|FilesWithDiagnosticsSet
-name|FilesWithDiagnostics
+name|DirectiveStatus
+name|Status
 decl_stmt|;
-name|FilesParsedForDirectivesSet
-name|FilesParsedForDirectives
-decl_stmt|;
-endif|#
-directive|endif
 name|ExpectedData
 name|ED
 decl_stmt|;
@@ -489,6 +487,131 @@ name|void
 name|CheckDiagnostics
 parameter_list|()
 function_decl|;
+name|void
+name|setSourceManager
+parameter_list|(
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|SrcManager
+operator|||
+name|SrcManager
+operator|==
+operator|&
+name|SM
+operator|)
+operator|&&
+literal|"SourceManager changed!"
+argument_list|)
+expr_stmt|;
+name|SrcManager
+operator|=
+operator|&
+name|SM
+expr_stmt|;
+block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|class
+name|UnparsedFileStatus
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Data
+expr_stmt|;
+name|public
+label|:
+name|UnparsedFileStatus
+argument_list|(
+argument|const FileEntry *File
+argument_list|,
+argument|bool FoundDirectives
+argument_list|)
+block|:
+name|Data
+argument_list|(
+argument|File
+argument_list|,
+argument|FoundDirectives
+argument_list|)
+block|{}
+specifier|const
+name|FileEntry
+operator|*
+name|getFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|foundDirectives
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|FileID
+operator|,
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+name|ParsedFilesMap
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|FileID
+operator|,
+name|UnparsedFileStatus
+operator|>
+name|UnparsedFilesMap
+expr_stmt|;
+name|ParsedFilesMap
+name|ParsedFiles
+decl_stmt|;
+name|UnparsedFilesMap
+name|UnparsedFiles
+decl_stmt|;
+endif|#
+directive|endif
 name|public
 label|:
 comment|/// Create a new verifying diagnostic client, which will issue errors to
@@ -525,30 +648,34 @@ name|void
 name|EndSourceFile
 parameter_list|()
 function_decl|;
-comment|/// \brief Manually register a file as parsed.
-specifier|inline
-name|void
-name|appendParsedFile
-parameter_list|(
-specifier|const
-name|FileEntry
-modifier|*
-name|File
-parameter_list|)
+enum|enum
+name|ParsedStatus
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|FilesParsedForDirectives
-operator|.
-name|insert
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+comment|/// File has been processed via HandleComment.
+name|IsParsed
+block|,
+comment|/// File has diagnostics and may have directives.
+name|IsUnparsed
+block|,
+comment|/// File has diagnostics but guaranteed no directives.
+name|IsUnparsedNoDirectives
 block|}
+enum|;
+comment|/// \brief Update lists of parsed and unparsed files.
+name|void
+name|UpdateParsedFileStatus
+parameter_list|(
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|,
+name|FileID
+name|FID
+parameter_list|,
+name|ParsedStatus
+name|PS
+parameter_list|)
+function_decl|;
 name|virtual
 name|bool
 name|HandleComment

@@ -335,6 +335,10 @@ name|um_candelete
 decl_stmt|;
 comment|/* devvp supports TRIM */
 name|int
+name|um_writesuspended
+decl_stmt|;
+comment|/* suspension in progress */
+name|int
 function_decl|(
 modifier|*
 name|um_balloc

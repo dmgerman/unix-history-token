@@ -485,17 +485,14 @@ name|d_partition
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Figure out if we are using MBR or GPT. 		 * If neither, then access the disk as a raw device. 		 */
+comment|/* 		 * If we cannot auto-detect the partition type then 		 * access the disk as a raw device. 		 */
 if|if
 condition|(
-call|(
-modifier|*
 name|dev
 operator|.
 name|d_dev
 operator|->
 name|dv_open
-call|)
 argument_list|(
 name|NULL
 argument_list|,
@@ -517,12 +514,6 @@ name|d_partition
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|dev
-operator|.
-name|d_offset
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}

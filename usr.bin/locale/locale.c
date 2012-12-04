@@ -1858,12 +1858,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* process '-c' and/or '-k' */
+comment|/* process '-c', '-k', or command line arguments. */
 if|if
 condition|(
 name|prt_categories
 operator|||
 name|prt_keywords
+operator|||
+name|argc
+operator|>
+literal|0
 condition|)
 block|{
 if|if

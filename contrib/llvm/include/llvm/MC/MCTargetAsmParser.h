@@ -79,6 +79,126 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+enum|enum
+name|AsmRewriteKind
+block|{
+name|AOK_DotOperator
+block|,
+comment|// Rewrite a dot operator expression as an immediate.
+comment|// E.g., [eax].foo.bar -> [eax].8
+name|AOK_Emit
+block|,
+comment|// Rewrite _emit as .byte.
+name|AOK_Imm
+block|,
+comment|// Rewrite as $$N.
+name|AOK_ImmPrefix
+block|,
+comment|// Add $$ before a parsed Imm.
+name|AOK_Input
+block|,
+comment|// Rewrite in terms of $N.
+name|AOK_Output
+block|,
+comment|// Rewrite in terms of $N.
+name|AOK_SizeDirective
+block|,
+comment|// Add a sizing directive (e.g., dword ptr).
+name|AOK_Skip
+comment|// Skip emission (e.g., offset/type operators).
+block|}
+enum|;
+struct|struct
+name|AsmRewrite
+block|{
+name|AsmRewriteKind
+name|Kind
+decl_stmt|;
+name|SMLoc
+name|Loc
+decl_stmt|;
+name|unsigned
+name|Len
+decl_stmt|;
+name|unsigned
+name|Val
+decl_stmt|;
+name|public
+label|:
+name|AsmRewrite
+argument_list|(
+argument|AsmRewriteKind kind
+argument_list|,
+argument|SMLoc loc
+argument_list|,
+argument|unsigned len =
+literal|0
+argument_list|,
+argument|unsigned val =
+literal|0
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+name|kind
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|loc
+argument_list|)
+operator|,
+name|Len
+argument_list|(
+name|len
+argument_list|)
+operator|,
+name|Val
+argument_list|(
+argument|val
+argument_list|)
+block|{}
+block|}
+struct|;
+struct|struct
+name|ParseInstructionInfo
+block|{
+name|SmallVectorImpl
+operator|<
+name|AsmRewrite
+operator|>
+operator|*
+name|AsmRewrites
+expr_stmt|;
+name|ParseInstructionInfo
+argument_list|()
+operator|:
+name|AsmRewrites
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|ParseInstructionInfo
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|AsmRewrite
+operator|>
+operator|*
+name|rewrites
+argument_list|)
+operator|:
+name|AsmRewrites
+argument_list|(
+argument|rewrites
+argument_list|)
+block|{}
+operator|~
+name|ParseInstructionInfo
+argument_list|()
+block|{}
+block|}
+struct|;
 comment|/// MCTargetAsmParser - Generic interface to target specific assembly parsers.
 name|class
 name|MCTargetAsmParser
@@ -91,8 +211,6 @@ operator|:
 expr|enum
 name|MatchResultTy
 block|{
-name|Match_ConversionFail
-block|,
 name|Match_InvalidOperand
 block|,
 name|Match_MissingFeature
@@ -108,12 +226,10 @@ name|private
 operator|:
 name|MCTargetAsmParser
 argument_list|(
-specifier|const
-name|MCTargetAsmParser
-operator|&
+argument|const MCTargetAsmParser&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -122,8 +238,8 @@ specifier|const
 name|MCTargetAsmParser
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 comment|// Can only create subclasses.
@@ -133,6 +249,16 @@ block|;
 comment|/// AvailableFeatures - The current set of available features.
 name|unsigned
 name|AvailableFeatures
+block|;
+comment|/// ParsingInlineAsm - Are we parsing ms-style inline assembly?
+name|bool
+name|ParsingInlineAsm
+block|;
+comment|/// SemaCallback - The Sema callback implementation.  Must be set when parsing
+comment|/// ms-style inline assembly.
+name|MCAsmParserSemaCallback
+operator|*
+name|SemaCallback
 block|;
 name|public
 operator|:
@@ -160,6 +286,34 @@ name|AvailableFeatures
 operator|=
 name|Value
 block|; }
+name|bool
+name|isParsingInlineAsm
+argument_list|()
+block|{
+return|return
+name|ParsingInlineAsm
+return|;
+block|}
+name|void
+name|setParsingInlineAsm
+argument_list|(
+argument|bool Value
+argument_list|)
+block|{
+name|ParsingInlineAsm
+operator|=
+name|Value
+block|; }
+name|void
+name|setSemaCallback
+argument_list|(
+argument|MCAsmParserSemaCallback *Callback
+argument_list|)
+block|{
+name|SemaCallback
+operator|=
+name|Callback
+block|;   }
 name|virtual
 name|bool
 name|ParseRegister
@@ -196,6 +350,8 @@ name|virtual
 name|bool
 name|ParseInstruction
 argument_list|(
+argument|ParseInstructionInfo&Info
+argument_list|,
 argument|StringRef Name
 argument_list|,
 argument|SMLoc NameLoc
@@ -224,27 +380,17 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|/// MatchInstruction - Recognize a series of operands of a parsed instruction
-comment|/// as an actual MCInst.  This returns false on success and returns true on
-comment|/// failure to match.
-comment|///
-comment|/// On failure, the target parser is responsible for emitting a diagnostic
-comment|/// explaining the match failure.
+comment|/// mnemonicIsValid - This returns true if this is a valid mnemonic and false
+comment|/// otherwise.
 name|virtual
 name|bool
-name|MatchInstruction
+name|mnemonicIsValid
 argument_list|(
-argument|SMLoc IDLoc
-argument_list|,
-argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
-argument_list|,
-argument|SmallVectorImpl<MCInst>&MCInsts
+argument|StringRef Mnemonic
 argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
+operator|=
+literal|0
+block|;
 comment|/// MatchAndEmitInstruction - Recognize a series of operands of a parsed
 comment|/// instruction as an actual MCInst and emit it to the specified MCStreamer.
 comment|/// This returns false on success and returns true on failure to match.
@@ -257,9 +403,15 @@ name|MatchAndEmitInstruction
 argument_list|(
 argument|SMLoc IDLoc
 argument_list|,
+argument|unsigned&Opcode
+argument_list|,
 argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
 argument_list|,
 argument|MCStreamer&Out
+argument_list|,
+argument|unsigned&ErrorInfo
+argument_list|,
+argument|bool MatchingInlineAsm
 argument_list|)
 operator|=
 literal|0
@@ -277,8 +429,19 @@ return|return
 name|Match_Success
 return|;
 block|}
-expr|}
-block|;  }
+name|virtual
+name|void
+name|convertToMapAndConstraints
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|const SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument_list|)
+operator|=
+literal|0
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

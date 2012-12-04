@@ -63,6 +63,12 @@ directive|define
 name|LLVM_LLVMCONTEXT_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -142,7 +148,12 @@ comment|// "fpmath"
 name|MD_range
 init|=
 literal|4
+block|,
 comment|// "range"
+name|MD_tbaa_struct
+init|=
+literal|5
+comment|// "tbaa.struct"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -265,12 +276,11 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|// DO NOT IMPLEMENT
 name|LLVMContext
 argument_list|(
-name|LLVMContext
-operator|&
+argument|LLVMContext&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 name|void
 name|operator
@@ -279,6 +289,7 @@ operator|(
 name|LLVMContext
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 comment|/// addModule - Register a module as being instantiated in this context.  If
 comment|/// the context is deleted, the module will be deleted as well.

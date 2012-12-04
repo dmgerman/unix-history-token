@@ -2661,16 +2661,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* XXX also for AR5416 burst */
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|tid
-operator|->
-name|ac
-index|]
 argument_list|)
 expr_stmt|;
 name|tap

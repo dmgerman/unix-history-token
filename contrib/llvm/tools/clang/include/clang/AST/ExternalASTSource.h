@@ -407,7 +407,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Get the decls that are contained in a file in the Offset/Length
-comment|/// range. \arg Length can be 0 to indicate a point at \arg Offset instead of
+comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
 comment|/// a range.
 name|virtual
 name|void

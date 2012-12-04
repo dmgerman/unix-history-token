@@ -995,6 +995,9 @@ name|long
 modifier|*
 parameter_list|,
 name|db_addr_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1237,6 +1240,8 @@ parameter_list|,
 name|argp
 parameter_list|,
 name|callpc
+parameter_list|,
+name|frame
 parameter_list|)
 specifier|const
 name|char
@@ -1257,6 +1262,10 @@ name|argp
 decl_stmt|;
 name|db_addr_t
 name|callpc
+decl_stmt|;
+name|void
+modifier|*
+name|frame
 decl_stmt|;
 block|{
 name|db_printf
@@ -1282,6 +1291,22 @@ argument_list|(
 name|callpc
 argument_list|,
 name|DB_STGY_PROC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|frame
+operator|!=
+name|NULL
+condition|)
+name|db_printf
+argument_list|(
+literal|"/frame 0x%lx"
+argument_list|,
+operator|(
+name|register_t
+operator|)
+name|frame
 argument_list|)
 expr_stmt|;
 name|db_printf
@@ -1811,6 +1836,14 @@ argument_list|,
 literal|0
 argument_list|,
 name|rip
+argument_list|,
+operator|&
+operator|(
+operator|*
+name|fp
+operator|)
+operator|->
+name|f_frame
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Point to base of trapframe which is just above the 	 * current frame. 	 */
@@ -2244,6 +2277,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|pc
+argument_list|,
+name|actframe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2307,6 +2342,8 @@ argument_list|,
 name|argp
 argument_list|,
 name|pc
+argument_list|,
+name|actframe
 argument_list|)
 expr_stmt|;
 if|if
@@ -2403,6 +2440,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|pc
+argument_list|,
+name|frame
 argument_list|)
 expr_stmt|;
 break|break;

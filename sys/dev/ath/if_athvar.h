@@ -318,17 +318,6 @@ argument_list|)
 name|tid_q
 expr_stmt|;
 comment|/* pending buffers */
-name|u_int
-name|axq_depth
-decl_stmt|;
-comment|/* SW queue depth */
-name|char
-name|axq_name
-index|[
-literal|48
-index|]
-decl_stmt|;
-comment|/* lock name */
 name|struct
 name|ath_node
 modifier|*
@@ -347,6 +336,10 @@ name|int
 name|hwq_depth
 decl_stmt|;
 comment|/* how many buffers are on HW */
+name|u_int
+name|axq_depth
+decl_stmt|;
+comment|/* SW queue depth */
 struct|struct
 block|{
 name|TAILQ_HEAD
@@ -361,13 +354,6 @@ name|u_int
 name|axq_depth
 decl_stmt|;
 comment|/* SW queue depth */
-name|char
-name|axq_name
-index|[
-literal|48
-index|]
-decl_stmt|;
-comment|/* lock name */
 block|}
 name|filtq
 struct|;
@@ -1049,11 +1035,6 @@ argument_list|)
 name|axq_q
 expr_stmt|;
 comment|/* transmit queue */
-name|struct
-name|mtx
-name|axq_lock
-decl_stmt|;
-comment|/* lock on q and link */
 name|char
 name|axq_name
 index|[
@@ -1112,106 +1093,6 @@ parameter_list|(
 name|_an
 parameter_list|)
 value|mtx_assert(&(_an)->an_mtx,	\ 					    MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_tq
-parameter_list|)
-value|do { \ 	snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 		device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, NULL, MTX_DEF); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_DESTROY
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_destroy(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_lock(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_UNLOCK
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_unlock(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_ASSERT
-parameter_list|(
-name|_tq
-parameter_list|)
-define|\
-value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_UNLOCK_ASSERT
-parameter_list|(
-name|_tq
-parameter_list|)
-define|\
-value|mtx_assert(&(_tq)->axq_lock, MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_IS_LOCKED
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_owned(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TID_LOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_tid
-parameter_list|)
-define|\
-value|ATH_TXQ_LOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TID_UNLOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_tid
-parameter_list|)
-define|\
-value|ATH_TXQ_UNLOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
 end_define
 
 begin_comment
@@ -3661,6 +3542,19 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getTsf64)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settsf64
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setTsf64)((_ah), (_val)))
 end_define
 
 begin_define

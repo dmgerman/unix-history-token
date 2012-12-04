@@ -553,6 +553,27 @@ argument_list|)
 expr_stmt|;
 name|public
 label|:
+comment|/// Adjust the given non-null pointer to an object of polymorphic
+comment|/// type to point to the complete object.
+comment|///
+comment|/// The IR type of the result should be a pointer but is otherwise
+comment|/// irrelevant.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|adjustToCompleteObject
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|llvm::Value *ptr
+argument_list|,
+argument|QualType type
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Build the signature of the given constructor variant by adding
 comment|/// any required parameters.  For convenience, ResTy has been
 comment|/// initialized to 'void', and ArgTys has been initialized with the
@@ -674,6 +695,14 @@ comment|/// Gets the pure virtual member call function.
 name|virtual
 name|StringRef
 name|GetPureVirtualCallName
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// Gets the deleted virtual member call name.
+name|virtual
+name|StringRef
+name|GetDeletedVirtualCallName
 parameter_list|()
 init|=
 literal|0

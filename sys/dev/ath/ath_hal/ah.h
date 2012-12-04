@@ -634,6 +634,11 @@ init|=
 literal|245
 block|,
 comment|/* serialise register access on PCI */
+name|HAL_CAP_ENFORCE_TXOP
+init|=
+literal|246
+block|,
+comment|/* Enforce TXOP if supported */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -2384,6 +2389,7 @@ name|uint32_t
 name|bs_intval
 decl_stmt|;
 comment|/* beacon interval+flags */
+comment|/*  * HAL_BEACON_PERIOD, HAL_BEACON_ENA and HAL_BEACON_RESET_TSF  * are all 1:1 correspondances with the pre-11n chip AR_BEACON  * register.  */
 define|#
 directive|define
 name|HAL_BEACON_PERIOD
@@ -5008,6 +5014,20 @@ parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setTsf64
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 name|void

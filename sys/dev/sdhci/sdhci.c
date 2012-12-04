@@ -482,6 +482,13 @@ parameter_list|)
 value|mtx_assert(&_slot->mtx, MA_NOTOWNED);
 end_define
 
+begin_define
+define|#
+directive|define
+name|SDHCI_DEFAULT_MAX_FREQ
+value|50
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -2502,6 +2509,27 @@ name|SDHCI_CAPABILITIES
 argument_list|)
 expr_stmt|;
 comment|/* Calculate base clock frequency. */
+if|if
+condition|(
+name|slot
+operator|->
+name|version
+operator|>=
+name|SDHCI_SPEC_300
+condition|)
+name|slot
+operator|->
+name|max_clk
+operator|=
+operator|(
+name|caps
+operator|&
+name|SDHCI_CLOCK_V3_BASE_MASK
+operator|)
+operator|>>
+name|SDHCI_CLOCK_BASE_SHIFT
+expr_stmt|;
+else|else
 name|slot
 operator|->
 name|max_clk
@@ -2527,14 +2555,16 @@ name|slot
 operator|->
 name|max_clk
 operator|=
-literal|50
+name|SDHCI_DEFAULT_MAX_FREQ
 expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
 literal|"Hardware doesn't specify base clock "
-literal|"frequency.\n"
+literal|"frequency, using %dMHz as default.\n"
+argument_list|,
+name|SDHCI_DEFAULT_MAX_FREQ
 argument_list|)
 expr_stmt|;
 block|}

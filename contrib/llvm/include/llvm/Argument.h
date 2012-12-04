@@ -230,8 +230,8 @@ name|hasNoCaptureAttr
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// hasSRetAttr - Return true if this argument has the sret attribute on it in
-comment|/// its containing function.
+comment|/// hasStructRetAttr - Return true if this argument has the sret attribute on
+comment|/// it in its containing function.
 name|bool
 name|hasStructRetAttr
 argument_list|()
@@ -254,20 +254,6 @@ function_decl|;
 comment|/// classof - Methods for support type inquiry through isa, cast, and
 comment|/// dyn_cast:
 comment|///
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Argument
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -104,13 +110,13 @@ specifier|const
 name|raw_ostream
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|raw_ostream
 argument_list|(
-specifier|const
-name|raw_ostream
-operator|&
+argument|const raw_ostream&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 comment|/// The buffer is handled in such a way that the buffer is
 comment|/// uninitialized, unbuffered, or out of space when OutBufCur>=
@@ -703,7 +709,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// write_hex - Output \arg N in hexadecimal, without any prefix or padding.
+comment|/// write_hex - Output \p N in hexadecimal, without any prefix or padding.
 end_comment
 
 begin_function_decl
@@ -720,7 +726,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// write_escaped - Output \arg Str, turning '\\', '\t', '\n', '"', and
+comment|/// write_escaped - Output \p Str, turning '\\', '\t', '\n', '"', and
 end_comment
 
 begin_comment
@@ -813,7 +819,7 @@ comment|/// forward.
 end_comment
 
 begin_comment
-comment|/// @param colors ANSI color to use, the special SAVEDCOLOR can be used to
+comment|/// @param Color ANSI color to use, the special SAVEDCOLOR can be used to
 end_comment
 
 begin_comment
@@ -821,11 +827,11 @@ comment|/// change only the bold attribute, and keep colors untouched
 end_comment
 
 begin_comment
-comment|/// @param bold bold/brighter text, default false
+comment|/// @param Bold bold/brighter text, default false
 end_comment
 
 begin_comment
-comment|/// @param bg if true change the background, default: change foreground
+comment|/// @param BG if true change the background, default: change foreground
 end_comment
 
 begin_comment
@@ -840,16 +846,34 @@ name|changeColor
 parameter_list|(
 name|enum
 name|Colors
+name|Color
 parameter_list|,
 name|bool
+name|Bold
 init|=
 name|false
 parameter_list|,
 name|bool
+name|BG
 init|=
 name|false
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|Color
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|Bold
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|BG
+expr_stmt|;
 return|return
 operator|*
 name|this
@@ -962,11 +986,11 @@ comment|/// write_impl - The is the piece of the class that is implemented
 end_comment
 
 begin_comment
-comment|/// by subclasses.  This writes the \args Size bytes starting at
+comment|/// by subclasses.  This writes the \p Size bytes starting at
 end_comment
 
 begin_comment
-comment|/// \arg Ptr to the underlying stream.
+comment|/// \p Ptr to the underlying stream.
 end_comment
 
 begin_comment
@@ -986,7 +1010,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \arg Ptr - The start of the data to be written. For buffered streams this
+comment|/// \param Ptr The start of the data to be written. For buffered streams this
 end_comment
 
 begin_comment
@@ -994,7 +1018,11 @@ comment|/// is guaranteed to be the start of the buffer.
 end_comment
 
 begin_comment
-comment|/// \arg Size - The number of bytes to be written.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Size The number of bytes to be written.
 end_comment
 
 begin_comment
@@ -1274,6 +1302,7 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
@@ -1282,6 +1311,7 @@ name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|{
 return|return
 name|pos
@@ -1293,6 +1323,7 @@ name|size_t
 name|preferred_buffer_size
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 comment|/// error_detected - Set the flag indicating that an output error has
 comment|/// been encountered.
@@ -1404,30 +1435,35 @@ argument|bool bold=false
 argument_list|,
 argument|bool bg=false
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|raw_ostream
 operator|&
 name|resetColor
 argument_list|()
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|raw_ostream
 operator|&
 name|reverseColor
 argument_list|()
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|bool
 name|is_displayed
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|bool
 name|has_colors
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 comment|/// has_error - Return the value of the flag in this raw_fd_ostream indicating
 comment|/// whether an output error has been encountered.
@@ -1508,6 +1544,7 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
@@ -1516,6 +1553,7 @@ name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|{
 return|return
 name|OS
@@ -1588,6 +1626,7 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
@@ -1596,12 +1635,13 @@ name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|public
 operator|:
 comment|/// Construct a new raw_svector_ostream.
 comment|///
-comment|/// \arg O - The vector to write to; this should generally have at least 128
+comment|/// \param O The vector to write to; this should generally have at least 128
 comment|/// bytes free to avoid any extraneous memory overhead.
 name|explicit
 name|raw_svector_ostream
@@ -1648,6 +1688,7 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
@@ -1656,6 +1697,7 @@ name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|public
 operator|:

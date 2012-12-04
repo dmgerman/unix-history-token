@@ -91,9 +91,6 @@ name|class
 name|MipsSubtarget
 decl_stmt|;
 name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
 name|Type
 decl_stmt|;
 name|class
@@ -109,11 +106,6 @@ name|MipsSubtarget
 operator|&
 name|Subtarget
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 name|public
 operator|:
 name|MipsRegisterInfo
@@ -122,11 +114,6 @@ specifier|const
 name|MipsSubtarget
 operator|&
 name|Subtarget
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|/// getRegisterNumbering - Given the enum value for some register, e.g.

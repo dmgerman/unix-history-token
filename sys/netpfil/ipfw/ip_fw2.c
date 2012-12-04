@@ -8531,16 +8531,12 @@ name|NULL
 condition|)
 block|{
 comment|/* 					 * Found dynamic entry, update stats 					 * and jump to the 'action' part of 					 * the parent rule by setting 					 * f, cmd, l and clearing cmdlen. 					 */
+name|IPFW_INC_DYN_COUNTER
+argument_list|(
 name|q
-operator|->
-name|pcnt
-operator|++
-expr_stmt|;
-name|q
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
+argument_list|)
 expr_stmt|;
 comment|/* XXX we would like to have f_pos 					 * readily accessible in the dynamic 				         * rule, instead of having to 					 * lookup q->rule. 					 */
 name|f
@@ -8582,7 +8578,9 @@ operator|->
 name|act_ofs
 expr_stmt|;
 name|ipfw_dyn_unlock
-argument_list|()
+argument_list|(
+name|q
+argument_list|)
 expr_stmt|;
 name|cmdlen
 operator|=
@@ -8782,23 +8780,12 @@ break|break;
 case|case
 name|O_COUNT
 case|:
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
 name|f
-operator|->
-name|pcnt
-operator|++
-expr_stmt|;
-comment|/* update stats */
-name|f
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
-expr_stmt|;
-name|f
-operator|->
-name|timestamp
-operator|=
-name|time_uptime
+argument_list|)
 expr_stmt|;
 name|l
 operator|=
@@ -8809,23 +8796,12 @@ break|break;
 case|case
 name|O_SKIPTO
 case|:
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
 name|f
-operator|->
-name|pcnt
-operator|++
-expr_stmt|;
-comment|/* update stats */
-name|f
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
-expr_stmt|;
-name|f
-operator|->
-name|timestamp
-operator|=
-name|time_uptime
+argument_list|)
 expr_stmt|;
 comment|/* If possible use cached f_pos (in f->next_rule), 			     * whose version is written in f->next_rule 			     * (horrible hacks to avoid changing the ABI). 			     */
 if|if
@@ -9169,23 +9145,12 @@ expr_stmt|;
 comment|/* exit inner loop */
 break|break;
 block|}
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
 name|f
-operator|->
-name|pcnt
-operator|++
-expr_stmt|;
-comment|/* update stats */
-name|f
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
-expr_stmt|;
-name|f
-operator|->
-name|timestamp
-operator|=
-name|time_uptime
+argument_list|)
 expr_stmt|;
 name|stack
 operator|=
@@ -9888,23 +9853,12 @@ block|{
 name|uint32_t
 name|fib
 decl_stmt|;
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
 name|f
-operator|->
-name|pcnt
-operator|++
-expr_stmt|;
-comment|/* update stats */
-name|f
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
-expr_stmt|;
-name|f
-operator|->
-name|timestamp
-operator|=
-name|time_uptime
+argument_list|)
 expr_stmt|;
 name|fib
 operator|=
@@ -10142,16 +10096,12 @@ block|{
 name|int
 name|ip_off
 decl_stmt|;
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
 name|f
-operator|->
-name|pcnt
-operator|++
-expr_stmt|;
-name|f
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
+argument_list|)
 expr_stmt|;
 name|l
 operator|=
@@ -10404,22 +10354,12 @@ name|f_pos
 index|]
 block|;
 comment|/* Update statistics */
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
 name|rule
-operator|->
-name|pcnt
-operator|++
-block|;
-name|rule
-operator|->
-name|bcnt
-operator|+=
+argument_list|,
 name|pktlen
-block|;
-name|rule
-operator|->
-name|timestamp
-operator|=
-name|time_uptime
+argument_list|)
 block|; 	}
 end_expr_stmt
 
@@ -10610,9 +10550,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|ipfw_dyn_attach
-argument_list|()
-expr_stmt|;
 comment|/*  	 * Only print out this stuff the first time around, 	 * when called from the sysinit code. 	 */
 name|printf
 argument_list|(
@@ -10730,9 +10667,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* uninit */
-name|ipfw_dyn_detach
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"IP firewall unloaded\n"
@@ -11003,7 +10937,9 @@ name|chain
 argument_list|)
 expr_stmt|;
 name|ipfw_dyn_init
-argument_list|()
+argument_list|(
+name|chain
+argument_list|)
 expr_stmt|;
 comment|/* First set up some values that are compile time options */
 name|V_ipfw_vnet_ready

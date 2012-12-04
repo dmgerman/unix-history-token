@@ -59,6 +59,12 @@ directive|define
 name|LLVM_MC_MCLABEL_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -98,12 +104,10 @@ argument_list|)
 block|{}
 name|MCLabel
 argument_list|(
-specifier|const
-name|MCLabel
-operator|&
+argument|const MCLabel&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -112,8 +116,8 @@ specifier|const
 name|MCLabel
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// getInstance - Get the current instance of this Directional Local Label.
@@ -137,7 +141,7 @@ operator|++
 name|Instance
 return|;
 block|}
-comment|/// print - Print the value to the stream \arg OS.
+comment|/// print - Print the value to the stream \p OS.
 name|void
 name|print
 argument_list|(

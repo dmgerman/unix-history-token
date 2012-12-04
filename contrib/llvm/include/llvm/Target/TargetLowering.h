@@ -94,6 +94,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/AddressingMode.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CallingConv.h"
 end_include
 
@@ -107,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -212,7 +224,7 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -265,12 +277,10 @@ name|TargetLowering
 block|{
 name|TargetLowering
 argument_list|(
-specifier|const
-name|TargetLowering
-operator|&
+argument|const TargetLowering&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -279,8 +289,8 @@ specifier|const
 name|TargetLowering
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// LegalizeAction - This enum indicates whether operations are valid for a
@@ -331,6 +341,19 @@ name|TypeWidenVector
 comment|// This vector should be widened into a larger vector.
 block|}
 enum|;
+comment|/// LegalizeKind holds the legalization kind that needs to happen to EVT
+comment|/// in order to type-legalize it.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|LegalizeTypeAction
+operator|,
+name|EVT
+operator|>
+name|LegalizeKind
+expr_stmt|;
 enum|enum
 name|BooleanContent
 block|{
@@ -343,6 +366,21 @@ block|,
 comment|// All bits zero except for bit 0.
 name|ZeroOrNegativeOneBooleanContent
 comment|// All bits equal to bit 0.
+block|}
+enum|;
+enum|enum
+name|SelectSupportKind
+block|{
+name|ScalarValSelect
+block|,
+comment|// The target supports scalar selects (ex: cmov).
+name|ScalarCondVectorVal
+block|,
+comment|// The target supports selects with a scalar condition
+comment|// and vector values (ex: cmov).
+name|VectorMaskSelect
+comment|// The target supports vector selects with a vector
+comment|// mask (ex: x86 blends).
 block|}
 enum|;
 specifier|static
@@ -425,9 +463,9 @@ name|TM
 return|;
 block|}
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
@@ -465,10 +503,19 @@ return|return
 name|IsLittleEndian
 return|;
 block|}
+comment|// Return the pointer type for the given address space, defaults to
+comment|// the pointer type from the data layout.
+comment|// FIXME: The default needs to be removed once all the code is updated.
+name|virtual
 name|MVT
 name|getPointerTy
-argument_list|()
-specifier|const
+argument_list|(
+name|uint32_t
+name|AS
+operator|=
+literal|0
+argument_list|)
+decl|const
 block|{
 return|return
 name|PointerTy
@@ -494,6 +541,19 @@ return|return
 name|SelectIsExpensive
 return|;
 block|}
+name|virtual
+name|bool
+name|isSelectSupported
+argument_list|(
+name|SelectSupportKind
+name|kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// isIntDivCheap() - Return true if integer divide is usually cheaper than
 comment|/// a sequence of several shifts, adds, and multiplies for this target.
 name|bool
@@ -503,6 +563,41 @@ specifier|const
 block|{
 return|return
 name|IntDivIsCheap
+return|;
+block|}
+comment|/// isSlowDivBypassed - Returns true if target has indicated at least one
+comment|/// type should be bypassed.
+name|bool
+name|isSlowDivBypassed
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|BypassSlowDivWidths
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// getBypassSlowDivTypes - Returns map of slow types for division or
+comment|/// remainder with corresponding fast types
+specifier|const
+name|DenseMap
+operator|<
+name|unsigned
+name|int
+operator|,
+name|unsigned
+name|int
+operator|>
+operator|&
+name|getBypassSlowDivWidths
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BypassSlowDivWidths
 return|;
 block|}
 comment|/// isPow2DivCheap() - Return true if pow2 div is cheaper than a chain of
@@ -1334,6 +1429,39 @@ name|Custom
 operator|)
 return|;
 block|}
+comment|/// isOperationExpand - Return true if the specified operation is illegal on
+comment|/// this target or unlikely to be made legal with custom lowering. This is
+comment|/// used to help guide high-level lowering decisions.
+name|bool
+name|isOperationExpand
+argument_list|(
+name|unsigned
+name|Op
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+operator|!
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+operator|||
+name|getOperationAction
+argument_list|(
+name|Op
+argument_list|,
+name|VT
+argument_list|)
+operator|==
+name|Expand
+operator|)
+return|;
+block|}
 comment|/// isOperationLegal - Return true if the specified operation is legal on this
 comment|/// target.
 name|bool
@@ -1813,6 +1941,9 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
+comment|/// The lower 5 bits of the SimpleTy index into Nth 2bit set from the 64bit
+comment|/// value and the upper 27 bits index into the second dimension of the
+comment|/// array to select what 64bit value to use.
 name|LegalizeAction
 name|Action
 init|=
@@ -1825,16 +1956,30 @@ name|CondCodeActions
 index|[
 name|CC
 index|]
-operator|>>
-operator|(
-literal|2
-operator|*
+index|[
 name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
+operator|>>
+literal|5
+index|]
+operator|>>
+operator|(
+literal|2
+operator|*
+operator|(
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+operator|&
+literal|0x1F
+operator|)
 operator|)
 operator|)
 operator|&
@@ -2702,6 +2847,17 @@ specifier|const
 block|{
 return|return
 name|SupportJumpTables
+return|;
+block|}
+comment|/// getMinimumJumpTableEntries - return integer threshold on number of
+comment|/// blocks to use jump tables rather than if sequence.
+name|int
+name|getMinimumJumpTableEntries
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinimumJumpTableEntries
 return|;
 block|}
 comment|/// getStackPointerRegisterToSaveRestore - If a physical register, this
@@ -3656,6 +3812,20 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+comment|/// setMinimumJumpTableEntries - Indicate the number of blocks to generate
+comment|/// jump tables rather than if sequence.
+name|void
+name|setMinimumJumpTableEntries
+parameter_list|(
+name|int
+name|Val
+parameter_list|)
+block|{
+name|MinimumJumpTableEntries
+operator|=
+name|Val
+expr_stmt|;
+block|}
 comment|/// setStackPointerRegisterToSaveRestore - If set to a physical register, this
 comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
 comment|/// and restore.
@@ -3749,6 +3919,27 @@ block|{
 name|IntDivIsCheap
 operator|=
 name|isCheap
+expr_stmt|;
+block|}
+comment|/// addBypassSlowDiv - Tells the code generator which bitwidths to bypass.
+name|void
+name|addBypassSlowDiv
+parameter_list|(
+name|unsigned
+name|int
+name|SlowBitWidth
+parameter_list|,
+name|unsigned
+name|int
+name|FastBitWidth
+parameter_list|)
+block|{
+name|BypassSlowDivWidths
+index|[
+name|SlowBitWidth
+index|]
+operator|=
+name|FastBitWidth
 expr_stmt|;
 block|}
 comment|/// setPow2DivIsCheap - Tells the code generator that it shouldn't generate
@@ -4198,12 +4389,22 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
+comment|/// The lower 5 bits of the SimpleTy index into Nth 2bit set from the 64bit
+comment|/// value and the upper 27 bits index into the second dimension of the
+comment|/// array to select what 64bit value to use.
 name|CondCodeActions
 index|[
 operator|(
 name|unsigned
 operator|)
 name|CC
+index|]
+index|[
+name|VT
+operator|.
+name|SimpleTy
+operator|>>
+literal|5
 index|]
 operator|&=
 operator|~
@@ -4213,9 +4414,13 @@ argument_list|(
 literal|3UL
 argument_list|)
 operator|<<
+operator|(
 name|VT
 operator|.
 name|SimpleTy
+operator|&
+literal|0x1F
+operator|)
 operator|*
 literal|2
 operator|)
@@ -4227,15 +4432,26 @@ name|unsigned
 operator|)
 name|CC
 index|]
+index|[
+name|VT
+operator|.
+name|SimpleTy
+operator|>>
+literal|5
+index|]
 operator||=
 operator|(
 name|uint64_t
 operator|)
 name|Action
 operator|<<
+operator|(
 name|VT
 operator|.
 name|SimpleTy
+operator|&
+literal|0x1F
+operator|)
 operator|*
 literal|2
 expr_stmt|;
@@ -4438,7 +4654,7 @@ name|public
 label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Lowering methods - These methods must be implemented by targets so that
-comment|// the SelectionDAGLowering code knows how to lower these.
+comment|// the SelectionDAGBuilder code knows how to lower these.
 comment|//
 comment|/// LowerFormalArguments - This hook must be implemented to lower the
 comment|/// incoming (formal) arguments, described by the Ins array, into the
@@ -4729,7 +4945,7 @@ name|paramHasAttr
 argument_list|(
 literal|0
 argument_list|,
-name|Attribute
+name|Attributes
 operator|::
 name|SExt
 argument_list|)
@@ -4743,7 +4959,7 @@ name|paramHasAttr
 argument_list|(
 literal|0
 argument_list|,
-name|Attribute
+name|Attributes
 operator|::
 name|ZExt
 argument_list|)
@@ -4765,7 +4981,7 @@ name|paramHasAttr
 argument_list|(
 literal|0
 argument_list|,
-name|Attribute
+name|Attributes
 operator|::
 name|InReg
 argument_list|)
@@ -5012,6 +5228,8 @@ operator|*
 argument_list|,
 name|unsigned
 operator|&
+argument_list|,
+name|unsigned
 argument_list|)
 decl|const
 block|{}
@@ -5754,55 +5972,6 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Addressing mode description hooks (used by LSR etc).
 comment|//
-comment|/// AddrMode - This represents an addressing mode of:
-comment|///    BaseGV + BaseOffs + BaseReg + Scale*ScaleReg
-comment|/// If BaseGV is null,  there is no BaseGV.
-comment|/// If BaseOffs is zero, there is no base offset.
-comment|/// If HasBaseReg is false, there is no base register.
-comment|/// If Scale is zero, there is no ScaleReg.  Scale of 1 indicates a reg with
-comment|/// no scale.
-comment|///
-struct|struct
-name|AddrMode
-block|{
-name|GlobalValue
-modifier|*
-name|BaseGV
-decl_stmt|;
-name|int64_t
-name|BaseOffs
-decl_stmt|;
-name|bool
-name|HasBaseReg
-decl_stmt|;
-name|int64_t
-name|Scale
-decl_stmt|;
-name|AddrMode
-argument_list|()
-operator|:
-name|BaseGV
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BaseOffs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|HasBaseReg
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Scale
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-block|}
-struct|;
 comment|/// GetAddrModeArguments - CodeGenPrepare sinks address calculations into the
 comment|/// same BB as Load/Store instructions reading the address.  This allows as
 comment|/// much computation as possible to be done in the address mode for that
@@ -6242,7 +6411,7 @@ modifier|&
 name|TM
 decl_stmt|;
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -6251,7 +6420,8 @@ name|TargetLoweringObjectFile
 modifier|&
 name|TLOF
 decl_stmt|;
-comment|/// PointerTy - The type to use for pointers, usually i32 or i64.
+comment|/// PointerTy - The type to use for pointers for the default address space,
+comment|/// usually i32 or i64.
 comment|///
 name|MVT
 name|PointerTy
@@ -6273,6 +6443,20 @@ comment|/// set to true unconditionally.
 name|bool
 name|IntDivIsCheap
 decl_stmt|;
+comment|/// BypassSlowDivMap - Tells the code generator to bypass slow divide or
+comment|/// remainder instructions. For example, BypassSlowDivWidths[32,8] tells the
+comment|/// code generator to bypass 32-bit integer div/rem with an 8-bit unsigned
+comment|/// integer div/rem when the operands are positive and less than 256.
+name|DenseMap
+operator|<
+name|unsigned
+name|int
+operator|,
+name|unsigned
+name|int
+operator|>
+name|BypassSlowDivWidths
+expr_stmt|;
 comment|/// Pow2DivIsCheap - Tells the code generator that it shouldn't generate
 comment|/// srl/add/sra for a signed divide by power of two, and let the target handle
 comment|/// it.
@@ -6299,6 +6483,10 @@ comment|/// SupportJumpTables - Whether the target can generate code for jumptab
 comment|/// If it's not true, then each jumptable must be lowered into if-then-else's.
 name|bool
 name|SupportJumpTables
+decl_stmt|;
+comment|/// MinimumJumpTableEntries - Number of blocks threshold to use jump tables.
+name|int
+name|MinimumJumpTableEntries
 decl_stmt|;
 comment|/// BooleanContents - Information about the contents of the high-bits in
 comment|/// boolean values held in a type wider than i1.  See getBooleanContents.
@@ -6521,6 +6709,9 @@ decl_stmt|;
 comment|/// CondCodeActions - For each condition code (ISD::CondCode) keep a
 comment|/// LegalizeAction that indicates how instruction selection should
 comment|/// deal with the condition code.
+comment|/// Because each CC action takes up 2 bits, we need to have the array size
+comment|/// be large enough to fit all of the value types. This can be done by
+comment|/// dividing the MVT::LAST_VALUETYPE by 32 and adding one.
 name|uint64_t
 name|CondCodeActions
 index|[
@@ -6528,21 +6719,23 @@ name|ISD
 operator|::
 name|SETCC_INVALID
 index|]
+index|[
+operator|(
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+operator|/
+literal|32
+operator|)
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|ValueTypeActionImpl
 name|ValueTypeActions
 decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|LegalizeTypeAction
-operator|,
-name|EVT
-operator|>
-name|LegalizeKind
-expr_stmt|;
+name|public
+label|:
 name|LegalizeKind
 name|getTypeConversion
 argument_list|(
@@ -6637,6 +6830,33 @@ name|TypePromoteInteger
 operator|)
 operator|&&
 literal|"Promote may not follow Expand or Promote"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LA
+operator|==
+name|TypeSplitVector
+condition|)
+name|NVT
+operator|=
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+argument_list|,
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 return|return
@@ -7115,6 +7335,8 @@ name|NVT
 argument_list|)
 return|;
 block|}
+name|private
+label|:
 name|std
 operator|::
 name|vector

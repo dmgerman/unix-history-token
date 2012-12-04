@@ -2072,6 +2072,8 @@ name|g_new_providerf
 argument_list|(
 name|gp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|sbuf_data
 argument_list|(
 name|sb

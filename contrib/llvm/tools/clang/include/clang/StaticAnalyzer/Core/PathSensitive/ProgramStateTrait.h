@@ -137,6 +137,20 @@ operator|>
 expr|struct
 name|ProgramStatePartialTrait
 expr_stmt|;
+comment|/// Declares a program state trait for type \p Type called \p Name, and
+comment|/// introduce a typedef named \c NameTy.
+comment|/// The macro should not be used inside namespaces, or for traits that must
+comment|/// be accessible from more than one translation unit.
+define|#
+directive|define
+name|REGISTER_TRAIT_WITH_PROGRAMSTATE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|)
+define|\
+value|namespace { \       class Name {}; \       typedef Type Name ## Ty; \     } \     namespace clang { \     namespace ento { \       template<> \       struct ProgramStateTrait<Name> \         : public ProgramStatePartialTrait<Name ## Ty> { \         static void *GDMIndex() { static int Index; return&Index; } \       }; \     } \     }
 comment|// Partial-specialization for ImmutableMap.
 name|template
 operator|<
@@ -390,6 +404,22 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Helper for registering a map trait.
+comment|///
+comment|/// If the map type were written directly in the invocation of
+comment|/// REGISTER_TRAIT_WITH_PROGRAMSTATE, the comma in the template arguments
+comment|/// would be treated as a macro argument separator, which is wrong.
+comment|/// This allows the user to specify a map type in a way that the preprocessor
+comment|/// can deal with.
+define|#
+directive|define
+name|CLANG_ENTO_PROGRAMSTATE_MAP
+parameter_list|(
+name|Key
+parameter_list|,
+name|Value
+parameter_list|)
+value|llvm::ImmutableMap<Key, Value>
 comment|// Partial-specialization for ImmutableSet.
 name|template
 operator|<

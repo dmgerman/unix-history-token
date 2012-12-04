@@ -447,7 +447,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"ARM MPCore Timecouter"
+literal|"ARM MPCore Timecounter"
 block|,
 operator|.
 name|tc_get_timecount

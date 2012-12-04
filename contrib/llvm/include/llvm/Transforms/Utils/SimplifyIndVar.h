@@ -83,7 +83,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-extern|extern cl::opt<bool> DisableIVRewrite;
 name|class
 name|CastInst
 decl_stmt|;

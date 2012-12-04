@@ -766,7 +766,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printT2LdrLabelOperand
+name|printThumbLdrLabelOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

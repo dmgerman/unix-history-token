@@ -78,6 +78,15 @@ name|class
 name|MCExpr
 decl_stmt|;
 name|class
+name|MCInstPrinter
+decl_stmt|;
+name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCParsedAsmOperand
+decl_stmt|;
+name|class
 name|MCStreamer
 decl_stmt|;
 name|class
@@ -98,6 +107,55 @@ decl_stmt|;
 name|class
 name|Twine
 decl_stmt|;
+comment|/// MCAsmParserSemaCallback - Generic Sema callback for assembly parser.
+name|class
+name|MCAsmParserSemaCallback
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|MCAsmParserSemaCallback
+argument_list|()
+expr_stmt|;
+name|virtual
+name|void
+modifier|*
+name|LookupInlineAsmIdentifier
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|void
+modifier|*
+name|Loc
+parameter_list|,
+name|unsigned
+modifier|&
+name|Size
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|bool
+name|LookupInlineAsmField
+parameter_list|(
+name|StringRef
+name|Base
+parameter_list|,
+name|StringRef
+name|Member
+parameter_list|,
+name|unsigned
+modifier|&
+name|Offset
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
 comment|/// assembly parsers.
 name|class
@@ -124,12 +182,10 @@ name|private
 label|:
 name|MCAsmParser
 argument_list|(
-specifier|const
-name|MCAsmParser
-operator|&
+argument|const MCAsmParser&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -138,8 +194,8 @@ specifier|const
 name|MCAsmParser
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MCTargetAsmParser
 modifier|*
 name|TargetParser
@@ -285,8 +341,97 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Warning - Emit a warning at the location \arg L, with the message \arg
-comment|/// Msg.
+name|virtual
+name|void
+name|setParsingInlineAsm
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|bool
+name|isParsingInlineAsm
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// ParseMSInlineAsm - Parse ms-style inline assembly.
+name|virtual
+name|bool
+name|ParseMSInlineAsm
+argument_list|(
+name|void
+operator|*
+name|AsmLoc
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|AsmString
+argument_list|,
+name|unsigned
+operator|&
+name|NumOutputs
+argument_list|,
+name|unsigned
+operator|&
+name|NumInputs
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|void
+operator|*
+argument_list|,
+name|bool
+operator|>
+expr|>
+operator|&
+name|OpDecls
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Constraints
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Clobbers
+argument_list|,
+specifier|const
+name|MCInstrInfo
+operator|*
+name|MII
+argument_list|,
+specifier|const
+name|MCInstPrinter
+operator|*
+name|IP
+argument_list|,
+name|MCAsmParserSemaCallback
+operator|&
+name|SI
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// Warning - Emit a warning at the location \p L, with the message \p Msg.
 comment|///
 comment|/// \return The return value is true, if warnings are fatal.
 name|virtual
@@ -317,8 +462,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Error - Emit an error at the location \arg L, with the message \arg
-comment|/// Msg.
+comment|/// Error - Emit an error at the location \p L, with the message \p Msg.
 comment|///
 comment|/// \return The return value is always true, as an idiomatic convenience to
 comment|/// clients.
@@ -392,7 +536,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|/// ParseIdentifier - Parse an identifier or string (as a quoted identifier)
-comment|/// and set \arg Res to the identifier contents.
+comment|/// and set \p Res to the identifier contents.
 name|virtual
 name|bool
 name|ParseIdentifier

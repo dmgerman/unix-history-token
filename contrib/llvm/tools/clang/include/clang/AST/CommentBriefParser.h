@@ -132,8 +132,7 @@ operator|&
 name|Traits
 argument_list|)
 expr_stmt|;
-comment|/// Return \\brief paragraph, if it exists; otherwise return the first
-comment|/// paragraph.
+comment|/// Return the best "brief description" we can find.
 name|std
 operator|::
 name|string

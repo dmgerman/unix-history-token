@@ -400,19 +400,6 @@ name|end
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Action
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 name|class
@@ -465,17 +452,6 @@ name|getKind
 argument_list|()
 operator|==
 name|InputClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InputAction *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -539,17 +515,6 @@ operator|==
 name|BindArchClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BindArchAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -610,17 +575,6 @@ name|JobClassLast
 operator|)
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const JobAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -657,17 +611,6 @@ name|getKind
 argument_list|()
 operator|==
 name|PreprocessJobClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PreprocessJobAction *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -708,17 +651,6 @@ operator|==
 name|PrecompileJobClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PrecompileJobAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -755,17 +687,6 @@ name|getKind
 argument_list|()
 operator|==
 name|AnalyzeJobClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AnalyzeJobAction *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -806,17 +727,6 @@ operator|==
 name|MigrateJobClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MigrateJobAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -853,17 +763,6 @@ name|getKind
 argument_list|()
 operator|==
 name|CompileJobClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CompileJobAction *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -904,17 +803,6 @@ operator|==
 name|AssembleJobClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AssembleJobAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -951,17 +839,6 @@ name|getKind
 argument_list|()
 operator|==
 name|LinkJobClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LinkJobAction *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1002,17 +879,6 @@ operator|==
 name|LipoJobClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LipoJobAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -1051,17 +917,6 @@ operator|==
 name|DsymutilJobClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DsymutilJobAction *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -1098,17 +953,6 @@ name|getKind
 argument_list|()
 operator|==
 name|VerifyJobClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const VerifyJobAction *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

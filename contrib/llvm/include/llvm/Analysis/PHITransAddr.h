@@ -79,7 +79,7 @@ name|class
 name|DominatorTree
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -104,7 +104,7 @@ name|Addr
 decl_stmt|;
 comment|/// TD - The target data we are playing with if known, otherwise null.
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -133,7 +133,7 @@ operator|*
 name|addr
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|td
 argument_list|)

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -647,6 +653,25 @@ name|lookupAddress
 argument_list|(
 name|uint64_t
 name|address
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// Extracts filename by its index in filename table in prologue.
+comment|// Returns true on success.
+name|bool
+name|getFileNameByIndex
+argument_list|(
+name|uint64_t
+name|FileIndex
+argument_list|,
+name|bool
+name|NeedsAbsoluteFilePath
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Result
 argument_list|)
 decl|const
 decl_stmt|;

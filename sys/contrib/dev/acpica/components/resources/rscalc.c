@@ -749,6 +749,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|NULL
+argument_list|,
 name|AmlBuffer
 argument_list|,
 operator|&

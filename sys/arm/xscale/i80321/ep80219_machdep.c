@@ -605,6 +605,10 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|freemempos
 operator|=
 literal|0xa0200000
@@ -619,7 +623,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_pa, (np));				\ 	(var).pv_va = (var).pv_pa + 0x20000000;
+value|alloc_pages((var).pv_pa, (np));		\ 	(var).pv_va = (var).pv_pa + 0x20000000;
 define|#
 directive|define
 name|alloc_pages
@@ -630,10 +634,6 @@ name|np
 parameter_list|)
 define|\
 value|freemempos -= (np * PAGE_SIZE);		\ 	(var) = freemempos;		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1393,6 +1393,7 @@ name|afterkern
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * ARM_USE_SMALL_ALLOC uses dump_avail, so it must be filled before 	 * calling pmap_bootstrap. 	 */
 name|dump_avail
 index|[
 literal|0

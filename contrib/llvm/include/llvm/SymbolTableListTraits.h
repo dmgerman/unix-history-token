@@ -182,16 +182,6 @@ operator|*
 name|getListOwner
 argument_list|()
 block|{
-typedef|typedef
-name|iplist
-operator|<
-name|ValueSubClass
-operator|>
-name|ItemParentClass
-operator|::
-operator|*
-name|Sublist
-expr_stmt|;
 name|size_t
 name|Offset
 argument_list|(
@@ -221,7 +211,7 @@ argument_list|)
 operator|)
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 name|iplist
 operator|<
 name|ValueSubClass
@@ -241,7 +231,7 @@ operator|(
 name|this
 operator|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -262,9 +252,6 @@ name|Offset
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 specifier|static
 name|iplist
 operator|<
@@ -293,9 +280,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|ValueSymbolTable
 modifier|*
@@ -320,9 +304,6 @@ else|:
 literal|0
 return|;
 block|}
-end_function
-
-begin_function_decl
 name|void
 name|addNodeToList
 parameter_list|(
@@ -331,9 +312,6 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|removeNodeFromList
 parameter_list|(
@@ -342,9 +320,6 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|void
 name|transferNodesFromList
 argument_list|(
@@ -368,13 +343,7 @@ operator|>
 name|last
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|//private:
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -389,9 +358,6 @@ argument_list|,
 name|TPtr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|ValueSymbolTable
 modifier|*
@@ -406,9 +372,6 @@ return|return
 name|P
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ValueSymbolTable
 modifier|*
@@ -424,10 +387,15 @@ operator|&
 name|R
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// End llvm namespace
 end_comment
 

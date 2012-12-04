@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -82,41 +88,58 @@ block|{
 comment|/// \brief Options for controlling the target.
 name|class
 name|TargetOptions
+range|:
+name|public
+name|RefCountedBase
+operator|<
+name|TargetOptions
+operator|>
 block|{
 name|public
-label|:
+operator|:
 comment|/// If given, the name of the target triple to compile for. If not given the
 comment|/// target will be selected to match the host.
 name|std
 operator|::
 name|string
 name|Triple
-expr_stmt|;
+block|;
 comment|/// If given, the name of the target CPU to generate code for.
 name|std
 operator|::
 name|string
 name|CPU
-expr_stmt|;
+block|;
 comment|/// If given, the name of the target ABI to use.
 name|std
 operator|::
 name|string
 name|ABI
-expr_stmt|;
+block|;
 comment|/// If given, the name of the target C++ ABI to use. If not given, defaults
 comment|/// to "itanium".
 name|std
 operator|::
 name|string
 name|CXXABI
-expr_stmt|;
+block|;
 comment|/// If given, the version string of the linker in use.
 name|std
 operator|::
 name|string
 name|LinkerVersion
-expr_stmt|;
+block|;
+comment|/// \brief The list of target specific features to enable or disable, as written on the command line.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|FeaturesAsWritten
+block|;
 comment|/// The list of target specific features to enable or disable -- this should
 comment|/// be a list of strings starting with by '+' or '-'.
 name|std
@@ -128,9 +151,8 @@ operator|::
 name|string
 operator|>
 name|Features
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

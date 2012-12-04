@@ -77,7 +77,7 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -94,7 +94,7 @@ name|public
 name|FunctionPass
 block|{
 name|class
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 block|;
@@ -109,12 +109,10 @@ name|PImpl
 block|;
 name|LazyValueInfo
 argument_list|(
-specifier|const
-name|LazyValueInfo
-operator|&
+argument|const LazyValueInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT.
 name|void
 name|operator
 operator|=
@@ -123,8 +121,8 @@ specifier|const
 name|LazyValueInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT.
 name|public
 operator|:
 specifier|static

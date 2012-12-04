@@ -91,7 +91,7 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -110,6 +110,12 @@ name|TargetFrameLowering
 decl_stmt|;
 name|class
 name|BitVector
+decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
+name|class
+name|AllocaInst
 decl_stmt|;
 comment|/// The CalleeSavedInfo class tracks the information need to locate where a
 comment|/// callee saved register is in the current frame.
@@ -243,6 +249,13 @@ comment|// protector.
 name|bool
 name|MayNeedSP
 decl_stmt|;
+comment|/// Alloca - If this stack object is originated from an Alloca instruction
+comment|/// this value saves the original IR allocation. Can be NULL.
+specifier|const
+name|AllocaInst
+modifier|*
+name|Alloca
+decl_stmt|;
 comment|// PreAllocated - If true, the object was mapped into the local frame
 comment|// block and doesn't need additional handling for allocation beyond that.
 name|bool
@@ -261,6 +274,8 @@ argument_list|,
 argument|bool isSS
 argument_list|,
 argument|bool NSP
+argument_list|,
+argument|const AllocaInst *Val
 argument_list|)
 block|:
 name|SPOffset
@@ -291,6 +306,11 @@ operator|,
 name|MayNeedSP
 argument_list|(
 name|NSP
+argument_list|)
+operator|,
+name|Alloca
+argument_list|(
+name|Val
 argument_list|)
 operator|,
 name|PreAllocated
@@ -1068,6 +1088,46 @@ name|Align
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// getObjectAllocation - Return the underlying Alloca of the specified
+comment|/// stack object if it exists. Returns 0 if none exists.
+specifier|const
+name|AllocaInst
+modifier|*
+name|getObjectAllocation
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|Alloca
+return|;
+block|}
 comment|/// NeedsStackProtector - Returns true if the object may need stack
 comment|/// protectors.
 name|bool
@@ -1546,6 +1606,13 @@ name|bool
 name|MayNeedSP
 init|=
 name|false
+parameter_list|,
+specifier|const
+name|AllocaInst
+modifier|*
+name|Alloca
+init|=
+literal|0
 parameter_list|)
 block|{
 name|assert
@@ -1574,6 +1641,8 @@ argument_list|,
 name|isSS
 argument_list|,
 name|MayNeedSP
+argument_list|,
+name|Alloca
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1715,6 +1784,8 @@ argument_list|,
 name|false
 argument_list|,
 name|true
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;

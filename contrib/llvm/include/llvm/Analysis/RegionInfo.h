@@ -181,15 +181,12 @@ comment|/// Region.
 name|class
 name|RegionNode
 block|{
-comment|// DO NOT IMPLEMENT
 name|RegionNode
 argument_list|(
-specifier|const
-name|RegionNode
-operator|&
+argument|const RegionNode&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 specifier|const
 name|RegionNode
 modifier|&
@@ -200,6 +197,7 @@ specifier|const
 name|RegionNode
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|protected
 label|:
@@ -500,15 +498,12 @@ name|friend
 name|class
 name|RegionInfo
 block|;
-comment|// DO NOT IMPLEMENT
 name|Region
 argument_list|(
-specifier|const
-name|Region
-operator|&
+argument|const Region&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 specifier|const
 name|Region
 operator|&
@@ -519,6 +514,7 @@ specifier|const
 name|Region
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 comment|// Information necessary to manage this Region.
 name|RegionInfo
@@ -1193,89 +1189,6 @@ argument_list|()
 return|;
 block|}
 comment|//@}
-comment|/// @name BasicBlock Node Iterators
-comment|///
-comment|/// These iterators iterate over all BasicBlock RegionNodes that are
-comment|/// contained in this Region. The iterator also iterates over BasicBlock
-comment|/// RegionNodes that are elements of a subregion of this Region. It is
-comment|/// therefore called a flat iterator.
-comment|//@{
-typedef|typedef
-name|df_iterator
-operator|<
-name|RegionNode
-operator|*
-operator|,
-name|SmallPtrSet
-operator|<
-name|RegionNode
-operator|*
-operator|,
-literal|8
-operator|>
-operator|,
-name|false
-operator|,
-name|GraphTraits
-operator|<
-name|FlatIt
-operator|<
-name|RegionNode
-operator|*
-operator|>
-expr|>
-operator|>
-name|block_node_iterator
-expr_stmt|;
-typedef|typedef
-name|df_iterator
-operator|<
-specifier|const
-name|RegionNode
-operator|*
-operator|,
-name|SmallPtrSet
-operator|<
-specifier|const
-name|RegionNode
-operator|*
-operator|,
-literal|8
-operator|>
-operator|,
-name|false
-operator|,
-name|GraphTraits
-operator|<
-name|FlatIt
-operator|<
-specifier|const
-name|RegionNode
-operator|*
-operator|>
-expr|>
-operator|>
-name|const_block_node_iterator
-expr_stmt|;
-name|block_node_iterator
-name|block_node_begin
-parameter_list|()
-function_decl|;
-name|block_node_iterator
-name|block_node_end
-parameter_list|()
-function_decl|;
-name|const_block_node_iterator
-name|block_node_begin
-argument_list|()
-specifier|const
-expr_stmt|;
-name|const_block_node_iterator
-name|block_node_end
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|//@}
 comment|/// @name BasicBlock Iterators
 comment|///
 comment|/// These iterators iterate over all BasicBlocks that are contained in this
@@ -1698,23 +1611,17 @@ name|RegionSet
 expr_stmt|;
 end_typedef
 
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
-
-begin_expr_stmt
+begin_macro
 name|RegionInfo
 argument_list|(
-specifier|const
-name|RegionInfo
-operator|&
+argument|const RegionInfo&
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
 
 begin_decl_stmt
 specifier|const
@@ -1727,6 +1634,7 @@ specifier|const
 name|RegionInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 end_decl_stmt
 

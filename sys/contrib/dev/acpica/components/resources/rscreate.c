@@ -155,6 +155,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 name|AmlBuffer
 argument_list|,
 name|AmlBufferLength
@@ -354,6 +356,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 name|AmlStart
 argument_list|,
 name|AmlBufferLength

@@ -2832,9 +2832,10 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return
+name|error
+operator|=
 name|EXDEV
-return|;
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2851,9 +2852,10 @@ operator|>
 literal|1
 condition|)
 block|{
-return|return
+name|error
+operator|=
 name|EBUSY
-return|;
+expr_stmt|;
 goto|goto
 name|out
 goto|;

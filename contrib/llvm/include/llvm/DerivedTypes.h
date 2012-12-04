@@ -87,6 +87,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -261,18 +267,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const IntegerType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -297,12 +291,10 @@ name|Type
 block|{
 name|FunctionType
 argument_list|(
-specifier|const
-name|FunctionType
-operator|&
+argument|const FunctionType&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 specifier|const
 name|FunctionType
 operator|&
@@ -313,8 +305,8 @@ specifier|const
 name|FunctionType
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|FunctionType
 argument_list|(
 argument|Type *Result
@@ -466,18 +458,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const FunctionType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -559,18 +539,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const CompositeType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -623,7 +591,7 @@ comment|///
 comment|/// Independent of what kind of struct you have, the body of a struct type are
 comment|/// laid out in memory consequtively with the elements directly one after the
 comment|/// other (if the struct is packed) or (if not packed) with padding between the
-comment|/// elements as defined by TargetData (which is required to match what the code
+comment|/// elements as defined by DataLayout (which is required to match what the code
 comment|/// generator for a target expects).
 comment|///
 name|class
@@ -634,12 +602,10 @@ name|CompositeType
 block|{
 name|StructType
 argument_list|(
-specifier|const
-name|StructType
-operator|&
+argument|const StructType&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 specifier|const
 name|StructType
 operator|&
@@ -650,8 +616,8 @@ specifier|const
 name|StructType
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|StructType
 argument_list|(
 name|LLVMContext
@@ -1037,18 +1003,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const StructType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -1084,12 +1038,10 @@ block|;
 comment|///< Storage for the single contained type.
 name|SequentialType
 argument_list|(
-specifier|const
-name|SequentialType
-operator|&
+argument|const SequentialType&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement!
 specifier|const
 name|SequentialType
 operator|&
@@ -1100,8 +1052,8 @@ specifier|const
 name|SequentialType
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement!
 name|protected
 operator|:
 name|SequentialType
@@ -1156,18 +1108,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SequentialType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -1209,12 +1149,10 @@ name|NumElements
 block|;
 name|ArrayType
 argument_list|(
-specifier|const
-name|ArrayType
-operator|&
+argument|const ArrayType&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 specifier|const
 name|ArrayType
 operator|&
@@ -1225,8 +1163,8 @@ specifier|const
 name|ArrayType
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|ArrayType
 argument_list|(
 argument|Type *ElType
@@ -1275,18 +1213,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const ArrayType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -1314,12 +1240,10 @@ name|NumElements
 block|;
 name|VectorType
 argument_list|(
-specifier|const
-name|VectorType
-operator|&
+argument|const VectorType&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 specifier|const
 name|VectorType
 operator|&
@@ -1330,8 +1254,8 @@ specifier|const
 name|VectorType
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|VectorType
 argument_list|(
 argument|Type *ElType
@@ -1581,18 +1505,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const VectorType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Type *T
 argument_list|)
 block|{
@@ -1617,12 +1529,10 @@ name|SequentialType
 block|{
 name|PointerType
 argument_list|(
-specifier|const
-name|PointerType
-operator|&
+argument|const PointerType&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 specifier|const
 name|PointerType
 operator|&
@@ -1633,8 +1543,8 @@ specifier|const
 name|PointerType
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|explicit
 name|PointerType
 argument_list|(
@@ -1702,18 +1612,6 @@ argument_list|()
 return|;
 block|}
 comment|// Implement support type inquiry through isa, cast, and dyn_cast.
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const PointerType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

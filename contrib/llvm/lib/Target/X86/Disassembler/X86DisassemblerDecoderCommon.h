@@ -272,7 +272,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * ModRMDecisionType - describes the type of ModR/M decision, allowing the  * consumer to determine the number of entries in it.  *  * MODRM_ONEENTRY - No matter what the value of the ModR/M byte is, the decoded  *                  instruction is the same.  * MODRM_SPLITRM  - If the ModR/M byte is between 0x00 and 0xbf, the opcode  *                  corresponds to one instruction; otherwise, it corresponds to  *                  a different instruction.  * MODRM_SPLITREG - ModR/M byte divided by 8 is used to select instruction. This                     corresponds to instructions that use reg field as opcode  * MODRM_FULL     - Potentially, each value of the ModR/M byte could correspond  *                  to a different instruction.  */
+comment|/*  * ModRMDecisionType - describes the type of ModR/M decision, allowing the  * consumer to determine the number of entries in it.  *  * MODRM_ONEENTRY - No matter what the value of the ModR/M byte is, the decoded  *                  instruction is the same.  * MODRM_SPLITRM  - If the ModR/M byte is between 0x00 and 0xbf, the opcode  *                  corresponds to one instruction; otherwise, it corresponds to  *                  a different instruction.  * MODRM_SPLITMISC- If the ModR/M byte is between 0x00 and 0xbf, ModR/M byte  *                  divided by 8 is used to select instruction; otherwise, each  *                  value of the ModR/M byte could correspond to a different  *                  instruction.  * MODRM_SPLITREG - ModR/M byte divided by 8 is used to select instruction. This                     corresponds to instructions that use reg field as opcode  * MODRM_FULL     - Potentially, each value of the ModR/M byte could correspond  *                  to a different instruction.  */
 end_comment
 
 begin_define
@@ -280,7 +280,7 @@ define|#
 directive|define
 name|MODRMTYPES
 define|\
-value|ENUM_ENTRY(MODRM_ONEENTRY)  \   ENUM_ENTRY(MODRM_SPLITRM)   \   ENUM_ENTRY(MODRM_SPLITREG)  \   ENUM_ENTRY(MODRM_FULL)
+value|ENUM_ENTRY(MODRM_ONEENTRY)  \   ENUM_ENTRY(MODRM_SPLITRM)   \   ENUM_ENTRY(MODRM_SPLITMISC)  \   ENUM_ENTRY(MODRM_SPLITREG)  \   ENUM_ENTRY(MODRM_FULL)
 end_define
 
 begin_define

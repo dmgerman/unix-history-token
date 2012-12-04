@@ -1568,6 +1568,17 @@ modifier|*
 name|db
 parameter_list|)
 function_decl|;
+comment|/*  * Returns the blkptr associated with this dbuf, or NULL if not set.  */
+name|struct
+name|blkptr
+modifier|*
+name|dmu_buf_get_blkptr
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
 comment|/*  * Indicate that you are going to modify the buffer's data (db_data).  *  * The transaction (tx) must be assigned to a txg (ie. you've called  * dmu_tx_assign()).  The buffer's object must be held in the tx  * (ie. you've called dmu_tx_hold_object(tx, db->db_object)).  */
 name|void
 name|dmu_buf_will_dirty

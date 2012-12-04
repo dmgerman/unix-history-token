@@ -1202,7 +1202,6 @@ argument_list|,
 name|SMBFS_MOUNT_NO_LONG
 argument_list|)
 expr_stmt|;
-comment|/*	simple_lock_init(&smp->sm_npslock);*/
 name|pc
 operator|=
 name|mp
@@ -1807,9 +1806,9 @@ name|mp
 argument_list|,
 name|NULL
 argument_list|,
-literal|"TheRooT"
+name|NULL
 argument_list|,
-literal|7
+literal|0
 argument_list|,
 operator|&
 name|fattr

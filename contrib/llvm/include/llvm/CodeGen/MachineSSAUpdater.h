@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CODEGEN_MACHINESSAUPDATER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -292,16 +298,14 @@ specifier|const
 name|MachineSSAUpdater
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MachineSSAUpdater
 argument_list|(
-specifier|const
-name|MachineSSAUpdater
-operator|&
+argument|const MachineSSAUpdater&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 empty_stmt|;
 block|}
