@@ -2543,14 +2543,19 @@ operator|->
 name|p_orphans
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|p2
 operator|->
 name|p_itcallout
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|p2
+operator|->
+name|p_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If PF_FORK is set, the child process inherits the 	 * procfs ioctl flags from its parent. 	 */
