@@ -1289,7 +1289,7 @@ name|m_collapse
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|ATH_TXDESC
 argument_list|)

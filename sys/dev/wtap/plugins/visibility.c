@@ -682,7 +682,7 @@ name|p
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 name|DWTAP_PRINTF
