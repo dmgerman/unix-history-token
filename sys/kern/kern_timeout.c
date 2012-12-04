@@ -328,8 +328,6 @@ begin_decl_stmt
 name|int
 name|callwheelsize
 decl_stmt|,
-name|callwheelbits
-decl_stmt|,
 name|callwheelmask
 decl_stmt|;
 end_decl_stmt
@@ -727,29 +725,16 @@ argument_list|(
 name|timeout_cpu
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate callout wheel size 	 */
-for|for
-control|(
+comment|/* 	 * Calculate callout wheel size, should be next power of two higher 	 * than 'ncallout'. 	 */
 name|callwheelsize
 operator|=
 literal|1
-operator|,
-name|callwheelbits
-operator|=
-literal|0
-init|;
-name|callwheelsize
-operator|<
+operator|<<
+name|fls
+argument_list|(
 name|ncallout
-condition|;
-name|callwheelsize
-operator|<<=
-literal|1
-operator|,
-operator|++
-name|callwheelbits
-control|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 name|callwheelmask
 operator|=
 name|callwheelsize
