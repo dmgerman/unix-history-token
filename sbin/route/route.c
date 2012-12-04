@@ -5469,6 +5469,27 @@ name|rtm_addrs
 operator||=
 name|RTA_NETMASK
 expr_stmt|;
+comment|/* 	 * MSB of net should be meaningful. 0/0 is exception. 	 */
+if|if
+condition|(
+name|net
+operator|>
+literal|0
+condition|)
+while|while
+condition|(
+operator|(
+name|net
+operator|&
+literal|0xff000000
+operator|)
+operator|==
+literal|0
+condition|)
+name|net
+operator|<<=
+literal|8
+expr_stmt|;
 comment|/* 	 * If no /xx was specified we must calculate the 	 * CIDR address. 	 */
 if|if
 condition|(
