@@ -2451,7 +2451,7 @@ name|cd
 operator|->
 name|resid
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
@@ -2883,7 +2883,7 @@ name|MGETHDR
 argument_list|(
 name|mrep
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2992,7 +2992,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 operator|*

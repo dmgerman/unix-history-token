@@ -5890,7 +5890,7 @@ name|MGETHDR
 argument_list|(
 name|mcopy
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -5910,7 +5910,7 @@ name|mcopy
 argument_list|,
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 condition|)
 block|{

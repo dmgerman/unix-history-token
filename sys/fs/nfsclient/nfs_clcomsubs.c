@@ -761,7 +761,7 @@ name|NFSMCLGET
 argument_list|(
 name|mb
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
@@ -1220,7 +1220,7 @@ name|NFSMCLGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else

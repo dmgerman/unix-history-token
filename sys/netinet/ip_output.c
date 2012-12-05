@@ -2681,7 +2681,7 @@ name|m_fragment
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|mbuf_frag_size
 argument_list|)
@@ -3308,7 +3308,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3493,7 +3493,7 @@ name|off
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4175,9 +4175,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5270,7 +5270,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

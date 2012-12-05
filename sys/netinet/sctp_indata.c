@@ -1022,7 +1022,7 @@ name|len
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -2842,7 +2842,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4087,7 +4087,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4305,7 +4305,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4537,7 +4537,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4771,7 +4771,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -5229,7 +5229,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -5459,7 +5459,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -5705,7 +5705,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -5938,7 +5938,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -6206,7 +6206,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -6460,7 +6460,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -6692,7 +6692,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -6938,7 +6938,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -8120,7 +8120,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -8531,7 +8531,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -8724,7 +8724,7 @@ operator|)
 argument_list|,
 name|the_len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -9851,7 +9851,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -10081,7 +10081,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -10327,7 +10327,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -13326,7 +13326,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -13571,7 +13571,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -13982,7 +13982,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -14055,7 +14055,7 @@ name|offset
 argument_list|,
 name|chk_length
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -18793,7 +18793,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -20646,7 +20646,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -21720,7 +21720,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -24055,7 +24055,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -26078,7 +26078,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,

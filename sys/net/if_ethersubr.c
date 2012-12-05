@@ -1433,7 +1433,7 @@ name|m
 argument_list|,
 name|LLC_SNAPFRAMELEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1749,7 +1749,7 @@ name|m
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1969,7 +1969,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|!=
@@ -4004,7 +4004,7 @@ name|m
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 call|(
@@ -5819,7 +5819,7 @@ name|m
 argument_list|,
 name|ETHER_VLAN_ENCAP_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

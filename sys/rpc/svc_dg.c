@@ -999,7 +999,7 @@ name|MGETHDR
 argument_list|(
 name|mrep
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)

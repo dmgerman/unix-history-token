@@ -1731,7 +1731,7 @@ expr|struct
 name|ether_header
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2195,7 +2195,7 @@ argument_list|)
 operator|+
 literal|2
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2258,7 +2258,7 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

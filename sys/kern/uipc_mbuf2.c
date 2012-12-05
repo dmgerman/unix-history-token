@@ -395,7 +395,7 @@ name|m_len
 operator|-
 name|off
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -666,7 +666,7 @@ name|o
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -680,7 +680,7 @@ name|o
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->

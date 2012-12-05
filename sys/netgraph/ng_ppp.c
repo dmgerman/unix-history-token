@@ -9637,7 +9637,7 @@ name|m
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -9673,7 +9673,7 @@ name|n
 argument_list|,
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m
@@ -11081,7 +11081,7 @@ name|m
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

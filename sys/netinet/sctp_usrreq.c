@@ -3614,7 +3614,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4125,7 +4125,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -5157,7 +5157,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,

@@ -1498,7 +1498,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags specifying how an allocation should be made.  *  * The flag to use is as follows:  * - M_NOWAIT (M_DONTWAIT) from an interrupt handler to not block allocation.  * - M_WAITOK (M_WAIT) from wherever it is safe to block.  *  * M_DONTWAIT/M_NOWAIT means that we will not block the thread explicitly and  * if we cannot allocate immediately we may return NULL, whereas  * M_WAIT/M_WAITOK means that if we cannot allocate resources we  * will block until they are available, and thus never return NULL.  *  * XXX Eventually just phase this out to use M_WAITOK/M_NOWAIT.  */
+comment|/*  * Compatibility with historic mbuf allocator.  */
 end_comment
 
 begin_define
@@ -3596,7 +3596,7 @@ name|o
 parameter_list|,
 name|l
 parameter_list|)
-value|m_copym((m), (o), (l), M_DONTWAIT)
+value|m_copym((m), (o), (l), M_NOWAIT)
 end_define
 
 begin_decl_stmt

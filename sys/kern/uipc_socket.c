@@ -4345,7 +4345,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4406,7 +4406,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6285,7 +6285,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -8339,7 +8339,7 @@ name|MSG_DONTWAIT
 condition|)
 name|copy_flag
 operator|=
-name|M_DONTWAIT
+name|M_NOWAIT
 expr_stmt|;
 else|else
 name|copy_flag
@@ -8350,7 +8350,7 @@ if|if
 condition|(
 name|copy_flag
 operator|==
-name|M_WAIT
+name|M_WAITOK
 condition|)
 name|SOCKBUF_UNLOCK
 argument_list|(
@@ -8378,7 +8378,7 @@ if|if
 condition|(
 name|copy_flag
 operator|==
-name|M_WAIT
+name|M_WAITOK
 condition|)
 name|SOCKBUF_LOCK
 argument_list|(
@@ -9670,7 +9670,7 @@ literal|0
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13176,9 +13176,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -13207,9 +13207,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13288,9 +13288,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -13329,9 +13329,9 @@ name|sopt_td
 operator|!=
 name|NULL
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15472,7 +15472,7 @@ name|so_accf
 operator|->
 name|so_accept_filter_arg
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

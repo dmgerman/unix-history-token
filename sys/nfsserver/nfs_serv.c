@@ -3404,7 +3404,7 @@ name|MGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3413,7 +3413,7 @@ name|MCLGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|nmp
@@ -4461,7 +4461,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4470,7 +4470,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m

@@ -10118,7 +10118,7 @@ name|len
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -17714,7 +17714,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -17744,7 +17744,7 @@ name|init_offset
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -17829,7 +17829,7 @@ name|initack_offset
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -18123,7 +18123,7 @@ name|SCTP_SECRET_SIZE
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -18902,7 +18902,7 @@ name|len
 argument_list|,
 literal|1
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -20568,7 +20568,7 @@ name|len
 argument_list|,
 literal|1
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -22778,7 +22778,7 @@ name|MCLBYTES
 argument_list|,
 literal|1
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -25074,7 +25074,7 @@ name|l_len
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -25422,7 +25422,7 @@ name|l_len
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -25843,7 +25843,7 @@ name|l_len
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -27205,7 +27205,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -31416,7 +31416,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -31638,7 +31638,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -31725,7 +31725,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -32146,7 +32146,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -32292,7 +32292,7 @@ expr|struct
 name|sctp_paramhdr
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -33057,7 +33057,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 literal|1
 argument_list|,
@@ -33193,7 +33193,7 @@ name|left
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 literal|1
 argument_list|,
@@ -35969,7 +35969,7 @@ literal|0
 argument_list|,
 name|to_move
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|chk
@@ -36322,7 +36322,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|0
 argument_list|,
@@ -36504,7 +36504,7 @@ expr|struct
 name|sctp_data_chunk
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -43091,7 +43091,7 @@ expr|struct
 name|sctp_chunkhdr
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -43429,7 +43429,7 @@ name|at
 argument_list|,
 name|plen
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -43756,7 +43756,7 @@ name|offset
 argument_list|,
 name|chk_length
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -44064,7 +44064,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -44333,7 +44333,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -44591,7 +44591,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -45304,7 +45304,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -49518,7 +49518,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -50832,7 +50832,7 @@ name|space_req
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -52488,7 +52488,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -52813,7 +52813,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -53301,7 +53301,7 @@ name|max_linkhdr
 argument_list|,
 literal|1
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -54674,7 +54674,7 @@ name|send_size
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -55373,7 +55373,7 @@ name|send_size
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -55894,7 +55894,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -56541,7 +56541,7 @@ name|send_size
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -58391,7 +58391,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -62501,7 +62501,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 literal|1
 argument_list|,
@@ -62597,7 +62597,7 @@ name|tot_demand
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 literal|1
 argument_list|,
@@ -66510,7 +66510,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,

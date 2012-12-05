@@ -2153,7 +2153,7 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

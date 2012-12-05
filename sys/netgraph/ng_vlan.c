@@ -2625,7 +2625,7 @@ name|m
 argument_list|,
 name|ETHER_VLAN_ENCAP_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

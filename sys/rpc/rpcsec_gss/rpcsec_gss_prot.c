@@ -313,7 +313,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|n
@@ -914,7 +914,7 @@ name|results
 argument_list|,
 name|len
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
