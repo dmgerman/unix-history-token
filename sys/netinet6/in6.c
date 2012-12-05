@@ -11978,6 +11978,18 @@ name|lle
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|V_deembed_scopeid
+condition|)
+name|sa6_recoverscope
+argument_list|(
+operator|&
+name|ndpc
+operator|.
+name|sin6
+argument_list|)
+expr_stmt|;
 comment|/* publish */
 if|if
 condition|(

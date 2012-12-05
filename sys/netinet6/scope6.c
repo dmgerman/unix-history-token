@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -140,6 +146,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|deembed_scopeid
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_ip6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|deembed_scopeid
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|deembed_scopeid
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Extract embedded zone ID and set it to sin6_scope_id in sockaddr_in6."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * The scope6_lock protects the global sid default stored in  * sid_default below.  */
@@ -1176,19 +1226,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-if|if
-condition|(
-operator|!
-name|ifnet_byindex
-argument_list|(
-name|zoneid
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: Disabled due to possible deadlock. */
+block|if (!ifnet_byindex(zoneid)) 				return (ENXIO);
+endif|#
+directive|endif
 if|if
 condition|(
 name|sin6
