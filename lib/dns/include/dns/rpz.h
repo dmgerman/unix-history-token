@@ -69,6 +69,13 @@ name|DNS_RPZ_NSDNAME_ZONE
 value|"rpz-nsdname"
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_RPZ_PASSTHRU_ZONE
+value|"rpz-passthru"
+end_define
+
 begin_typedef
 typedef|typedef
 name|isc_uint8_t
@@ -169,6 +176,7 @@ expr_stmt|;
 name|int
 name|num
 decl_stmt|;
+comment|/* ordinal in list of policy zones */
 name|dns_name_t
 name|origin
 decl_stmt|;
@@ -177,14 +185,24 @@ name|dns_name_t
 name|nsdname
 decl_stmt|;
 comment|/* DNS_RPZ_NSDNAME_ZONE.origin */
-name|dns_rpz_policy_t
-name|policy
+name|dns_name_t
+name|passthru
 decl_stmt|;
-comment|/* DNS_RPZ_POLICY_GIVEN or override */
+comment|/* DNS_RPZ_PASSTHRU_ZONE. */
 name|dns_name_t
 name|cname
 decl_stmt|;
 comment|/* override value for ..._CNAME */
+name|dns_ttl_t
+name|max_policy_ttl
+decl_stmt|;
+name|dns_rpz_policy_t
+name|policy
+decl_stmt|;
+comment|/* DNS_RPZ_POLICY_GIVEN or override */
+name|isc_boolean_t
+name|recursive_only
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -404,6 +422,13 @@ name|DNS_RPZ_TTL_DEFAULT
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_RPZ_MAX_TTL_DEFAULT
+value|DNS_RPZ_TTL_DEFAULT
+end_define
+
 begin_comment
 comment|/*  * So various response policy zone messages can be turned up or down.  */
 end_comment
@@ -441,6 +466,13 @@ define|#
 directive|define
 name|DNS_RPZ_DEBUG_LEVEL3
 value|ISC_LOG_DEBUG(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RPZ_DEBUG_QUIET
+value|(DNS_RPZ_DEBUG_LEVEL3+1)
 end_define
 
 begin_function_decl
@@ -621,8 +653,13 @@ begin_function_decl
 name|dns_rpz_policy_t
 name|dns_rpz_decode_cname
 parameter_list|(
+name|dns_rpz_zone_t
+modifier|*
+name|rpz
+parameter_list|,
 name|dns_rdataset_t
 modifier|*
+name|rdataset
 parameter_list|,
 name|dns_name_t
 modifier|*

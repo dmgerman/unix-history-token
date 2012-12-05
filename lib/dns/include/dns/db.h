@@ -869,7 +869,7 @@ modifier|*
 name|st
 parameter_list|)
 function_decl|;
-name|isc_result_t
+name|void
 function_decl|(
 modifier|*
 name|rpz_findips
@@ -2424,7 +2424,7 @@ comment|/*%<  * See if a policy database has DNS_RPZ_TYPE_IP, DNS_RPZ_TYPE_NSIP,
 end_comment
 
 begin_function_decl
-name|isc_result_t
+name|void
 name|dns_db_rpz_findips
 parameter_list|(
 name|dns_rpz_zone_t
@@ -2462,7 +2462,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Search the CDIR block tree of a response policy tree of trees for the best  * match to any of the IP addresses in an A or AAAA rdataset.  *  * Requires:  * \li	search in policy zone 'rpz' for a match of 'rpz_type' either  *	    DNS_RPZ_TYPE_IP or DNS_RPZ_TYPE_NSIP  * \li	'zone' and 'db' are the database corresponding to 'rpz'  * \li	'version' is the required version of the database  * \li	'ardataset' is an A or AAAA rdataset of addresses to check  * \li	'found' specifies the previous best match if any or  *	    or NULL, an empty name, 0, DNS_RPZ_POLICY_MISS, and 0  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_UNEXPECTED  */
+comment|/*%<  * Search the CDIR block tree of a response policy tree of trees for the best  * match to any of the IP addresses in an A or AAAA rdataset.  *  * Requires:  * \li	search in policy zone 'rpz' for a match of 'rpz_type' either  *	    DNS_RPZ_TYPE_IP or DNS_RPZ_TYPE_NSIP  * \li	'zone' and 'db' are the database corresponding to 'rpz'  * \li	'version' is the required version of the database  * \li	'ardataset' is an A or AAAA rdataset of addresses to check  * \li	'found' specifies the previous best match if any or  *	    or NULL, an empty name, 0, DNS_RPZ_POLICY_MISS, and 0  */
 end_comment
 
 begin_macro

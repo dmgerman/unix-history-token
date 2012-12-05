@@ -1760,6 +1760,13 @@ name|secret
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISCCC_R_BADAUTH
+condition|)
+block|{
 name|log_invalid
 argument_list|(
 operator|&
@@ -1773,6 +1780,7 @@ expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
+block|}
 block|}
 if|if
 condition|(

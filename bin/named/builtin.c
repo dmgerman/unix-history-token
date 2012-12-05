@@ -897,7 +897,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+literal|4U
 condition|;
 name|i
 operator|++
@@ -917,7 +917,7 @@ if|if
 condition|(
 name|start
 operator|==
-literal|7
+literal|7U
 condition|)
 name|start
 operator|++
@@ -1220,7 +1220,7 @@ while|while
 condition|(
 name|j
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|INSIST
