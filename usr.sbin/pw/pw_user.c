@@ -2322,9 +2322,14 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Remove crontabs 				 */
-name|sprintf
+name|snprintf
 argument_list|(
 name|file
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|file
+argument_list|)
 argument_list|,
 literal|"/var/cron/tabs/%s"
 argument_list|,
