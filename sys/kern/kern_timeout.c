@@ -2354,6 +2354,7 @@ argument_list|(
 name|cc
 argument_list|)
 expr_stmt|;
+comment|/* 			 * It should be assert here that the callout is not 			 * destroyed but that is not easy. 			 */
 name|c
 operator|->
 name|c_flags
@@ -2399,8 +2400,6 @@ block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|c
-operator|->
 name|c_flags
 operator|&
 name|CALLOUT_LOCAL_ALLOC
@@ -2448,7 +2447,7 @@ argument_list|(
 name|cc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Handle deferred callout stops 		 */
+comment|/* 		 * It should be assert here that the callout is not destroyed 		 * but that is not easy. 		 * 		 * As first thing, handle deferred callout stops. 		 */
 if|if
 condition|(
 operator|(
@@ -2491,7 +2490,6 @@ operator|&=
 operator|~
 name|CALLOUT_DFRMIGRATION
 expr_stmt|;
-comment|/* 		 * It should be assert here that the 		 * callout is not destroyed but that 		 * is not easy. 		 */
 name|new_cc
 operator|=
 name|callout_cpu_switch
@@ -2560,6 +2558,12 @@ literal|"corrupted callout"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c_flags
+operator|&
+name|CALLOUT_LOCAL_ALLOC
+condition|)
 name|callout_cc_del
 argument_list|(
 name|c
