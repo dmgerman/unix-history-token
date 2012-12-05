@@ -24005,6 +24005,12 @@ name|ttl
 init|=
 name|ISC_UINT32_MAX
 decl_stmt|;
+name|dns_rdataset_init
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|dns_db_getoriginnode
@@ -24024,12 +24030,6 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|dns_rdataset_init
-argument_list|(
-operator|&
-name|rdataset
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|dns_db_findrdataset
