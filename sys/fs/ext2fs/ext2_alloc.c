@@ -868,6 +868,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If the cluster crosses the boundary for the first indirect 	 * block, leave space for the indirect block. Indirect blocks 	 * are initially laid out in a position after the last direct 	 * block. Block reallocation would usually destroy locality by 	 * moving the indirect block out of the way to make room for 	 * data blocks if we didn't compensate here. We should also do 	 * this for other indirect block boundaries, but it is only 	 * important for the first one. 	 */
+if|if
+condition|(
+name|start_lbn
+operator|<
+name|NDADDR
+operator|&&
+name|end_lbn
+operator|>=
+name|NDADDR
+condition|)
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
 comment|/* 	 * If the latest allocation is in a new cylinder group, assume that 	 * the filesystem has decided to move and do not force it back to 	 * the previous cylinder group. 	 */
 if|if
 condition|(
