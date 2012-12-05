@@ -1639,10 +1639,6 @@ operator|->
 name|gr_gid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|members
-condition|)
 name|free
 argument_list|(
 name|members
