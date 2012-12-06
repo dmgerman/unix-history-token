@@ -8166,12 +8166,6 @@ operator|)
 return|;
 comment|/* XXXGL: undefined actually */
 block|}
-name|s
-operator|->
-name|timeout
-operator|=
-name|PFTM_UNLINKED
-expr_stmt|;
 if|if
 condition|(
 name|s
@@ -8299,11 +8293,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|PF_HASHROW_UNLOCK
-argument_list|(
-name|ih
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pfsync_delete_state_ptr
@@ -8313,6 +8302,17 @@ condition|)
 name|pfsync_delete_state_ptr
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|timeout
+operator|=
+name|PFTM_UNLINKED
+expr_stmt|;
+name|PF_HASHROW_UNLOCK
+argument_list|(
+name|ih
 argument_list|)
 expr_stmt|;
 name|pf_detach_state
