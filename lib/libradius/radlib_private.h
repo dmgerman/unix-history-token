@@ -119,6 +119,13 @@ begin_comment
 comment|/* In seconds */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEAD_TIME
+value|0
+end_define
+
 begin_comment
 comment|/* Limits */
 end_comment
@@ -274,6 +281,22 @@ name|int
 name|num_tries
 decl_stmt|;
 comment|/* Number of tries so far */
+name|int
+name|is_dead
+decl_stmt|;
+comment|/* The server did not answer last time */
+name|time_t
+name|dead_time
+decl_stmt|;
+comment|/* Don't try this server for the time period if it is dead */
+name|time_t
+name|next_probe
+decl_stmt|;
+comment|/* Time of a next probe after failure */
+name|in_addr_t
+name|bindto
+decl_stmt|;
+comment|/* Bind to address */
 block|}
 struct|;
 end_struct
@@ -369,14 +392,6 @@ name|in_pos
 decl_stmt|;
 comment|/* Current position scanning attrs */
 name|int
-name|total_tries
-decl_stmt|;
-comment|/* How many requests we'll send */
-name|int
-name|try
-decl_stmt|;
-comment|/* How many requests we've sent */
-name|int
 name|srv
 decl_stmt|;
 comment|/* Server number we did last */
@@ -387,7 +402,7 @@ comment|/* Handle type */
 name|in_addr_t
 name|bindto
 decl_stmt|;
-comment|/* Bind to address */
+comment|/* Current bind address */
 block|}
 struct|;
 end_struct
