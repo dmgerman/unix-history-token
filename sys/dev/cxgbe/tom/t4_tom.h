@@ -197,6 +197,15 @@ literal|11
 operator|)
 block|,
 comment|/* toepcb ready, tid context updated */
+name|TPF_SYNQE_HAS_L2TE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
+operator|)
+block|,
+comment|/* we've replied to PASS_ACCEPT_REQ */
 block|}
 enum|;
 end_enum
@@ -1447,6 +1456,19 @@ name|struct
 name|toepcb
 modifier|*
 name|toep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|insert_ddp_data
+parameter_list|(
+name|struct
+name|toepcb
+modifier|*
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
