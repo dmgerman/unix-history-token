@@ -2451,10 +2451,6 @@ comment|/* Sanity check frame length */
 if|if
 condition|(
 name|m
-operator|!=
-name|NULL
-operator|&&
-name|m
 operator|->
 name|m_pkthdr
 operator|.
