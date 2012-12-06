@@ -229,6 +229,11 @@ argument_list|(
 literal|"Can't open"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|8
 return|;
