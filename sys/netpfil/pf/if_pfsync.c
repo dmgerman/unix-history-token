@@ -8398,23 +8398,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|st
-operator|->
-name|timeout
-operator|==
-name|PFTM_UNLINKED
-condition|)
-block|{
-comment|/* 				 * This happens if pfsync was once 				 * stopped, and then re-enabled 				 * after long time. Theoretically 				 * may happen at usual runtime, too. 				 */
-name|pf_release_state
-argument_list|(
-name|st
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* 			 * XXXGL: some of write methods do unlocked reads 			 * of state data :( 			 */
 name|pfsync_qs
 index|[
