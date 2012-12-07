@@ -162,6 +162,27 @@ name|dns_resstatscounter_max
 init|=
 literal|30
 block|,
+comment|/* 	 * DNSSEC stats. 	 */
+name|dns_dnssecstats_asis
+init|=
+literal|0
+block|,
+name|dns_dnssecstats_downcase
+init|=
+literal|1
+block|,
+name|dns_dnssecstats_wildcard
+init|=
+literal|2
+block|,
+name|dns_dnssecstats_fail
+init|=
+literal|3
+block|,
+name|dns_dnssecstats_max
+init|=
+literal|4
+block|,
 comment|/*% 	 * Zone statistics counters. 	 */
 name|dns_zonestatscounter_notifyoutv4
 init|=
