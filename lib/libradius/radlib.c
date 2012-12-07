@@ -2823,7 +2823,7 @@ name|char
 modifier|*
 name|fields
 index|[
-literal|5
+name|MAX_FIELDS
 index|]
 decl_stmt|;
 name|int
