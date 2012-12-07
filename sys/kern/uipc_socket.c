@@ -858,6 +858,7 @@ comment|/*  * Initialize the socket subsystem and set up the socket  * memory al
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|socket_zone
 decl_stmt|;
@@ -879,6 +880,8 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|maxsockets
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|socket_zone
@@ -924,6 +927,8 @@ argument_list|,
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+name|maxsockets
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|socket_zone
