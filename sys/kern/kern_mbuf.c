@@ -1297,6 +1297,13 @@ argument_list|,
 name|nmbufs
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|zone_mbuf
+argument_list|,
+literal|"kern.ipc.nmbufs limit reached"
+argument_list|)
+expr_stmt|;
 name|zone_clust
 operator|=
 name|uma_zcreate
@@ -1342,6 +1349,13 @@ argument_list|(
 name|zone_clust
 argument_list|,
 name|nmbclusters
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|zone_clust
+argument_list|,
+literal|"kern.ipc.nmbclusters limit reached"
 argument_list|)
 expr_stmt|;
 name|zone_pack
@@ -1409,6 +1423,13 @@ argument_list|,
 name|nmbjumbop
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|zone_jumbop
+argument_list|,
+literal|"kern.ipc.nmbjumbop limit reached"
+argument_list|)
+expr_stmt|;
 name|zone_jumbo9
 operator|=
 name|uma_zcreate
@@ -1463,6 +1484,13 @@ argument_list|,
 name|nmbjumbo9
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|zone_jumbo9
+argument_list|,
+literal|"kern.ipc.nmbjumbo9 limit reached"
+argument_list|)
+expr_stmt|;
 name|zone_jumbo16
 operator|=
 name|uma_zcreate
@@ -1515,6 +1543,13 @@ argument_list|(
 name|zone_jumbo16
 argument_list|,
 name|nmbjumbo16
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|zone_jumbo16
+argument_list|,
+literal|"kern.ipc.nmbjumbo16 limit reached"
 argument_list|)
 expr_stmt|;
 name|zone_ext_refcnt
