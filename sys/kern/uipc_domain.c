@@ -89,12 +89,6 @@ directive|include
 file|<net/vnet.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
-end_include
-
 begin_comment
 comment|/*  * System initialization  *  * Note: domain initialization takes place on a per domain basis  * as a result of traversing a SYSINIT linker set.  Most likely,  * each domain would want to call DOMAIN_SET(9) itself, which  * would cause the domain to be added just after domaininit()  * is called during startup.  *  * See DOMAIN_SET(9) for details on its use.  */
 end_comment
