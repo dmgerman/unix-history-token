@@ -858,6 +858,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Sets a warning to be printed when limit is reached  *  * Arguments:  *	zone  The zone we will warn about  *	warning  Warning content  *  * Returns:  *	Nothing  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_set_warning
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|warning
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Obtains the approximate current number of items allocated from a zone  *  * Arguments:  *	zone  The zone to obtain the current allocation count from  *  * Return:  *	int  The approximate current number of items allocated from the zone  */
 end_comment
 
