@@ -234,7 +234,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|DTRACE_DEVSTAT_BIO_START
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
 name|DTRACE_DEVSTAT_DONE
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTRACE_DEVSTAT_BIO_DONE
 parameter_list|()
 end_define
 
