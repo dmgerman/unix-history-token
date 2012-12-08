@@ -17,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|MODEM_LIST
-value|"/dev/cuad1\0/dev/cuad0"
+value|"/dev/cuau1\0/dev/cuau0"
 end_define
 
 begin_comment
