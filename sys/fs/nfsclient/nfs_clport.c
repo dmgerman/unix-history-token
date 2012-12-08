@@ -4449,6 +4449,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -5883,6 +5885,22 @@ name|EPERM
 operator|)
 return|;
 case|case
+name|NFSERR_BADNAME
+case|:
+case|case
+name|NFSERR_BADCHAR
+case|:
+name|printf
+argument_list|(
+literal|"nfsv4 char/name not handled by server\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+case|case
 name|NFSERR_STALECLIENTID
 case|:
 case|case
@@ -5893,6 +5911,9 @@ name|NFSERR_EXPIRED
 case|:
 case|case
 name|NFSERR_BADSTATEID
+case|:
+case|case
+name|NFSERR_BADSESSION
 case|:
 name|printf
 argument_list|(
@@ -5944,12 +5965,6 @@ name|NFSERR_RECLAIMBAD
 case|:
 case|case
 name|NFSERR_BADXDR
-case|:
-case|case
-name|NFSERR_BADCHAR
-case|:
-case|case
-name|NFSERR_BADNAME
 case|:
 case|case
 name|NFSERR_OPILLEGAL

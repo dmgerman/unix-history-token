@@ -53,6 +53,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|extern
 name|SVCPOOL
 modifier|*
 name|nfscbd_pool
@@ -84,6 +85,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|nfs_numnfscbd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfscl_debuglevel
 decl_stmt|;
 end_decl_stmt
 
@@ -249,6 +257,17 @@ operator|.
 name|nd_cred
 operator|=
 name|NULL
+expr_stmt|;
+name|NFSCL_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"cbproc=%d\n"
+argument_list|,
+name|nd
+operator|.
+name|nd_procnum
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -478,13 +497,19 @@ operator|.
 name|nd_mreq
 argument_list|)
 condition|)
-block|{
 name|svcerr_systemerr
 argument_list|(
 name|rqst
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|NFSCL_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"cbrep sent\n"
+argument_list|)
+expr_stmt|;
 name|svc_freereq
 argument_list|(
 name|rqst
@@ -886,6 +911,27 @@ condition|(
 name|terminating
 condition|)
 block|{
+comment|/* Wait for any xprt registrations to complete. */
+while|while
+condition|(
+name|nfs_numnfscbd
+operator|>
+literal|0
+condition|)
+name|msleep
+argument_list|(
+operator|&
+name|nfs_numnfscbd
+argument_list|,
+name|NFSDLOCKMUTEXPTR
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"nfscbdt"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -898,10 +944,8 @@ name|nfscbd_pool
 operator|=
 name|NULL
 expr_stmt|;
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
 block|}
+else|else
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
