@@ -855,6 +855,13 @@ argument_list|,
 name|maxsockets
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|V_udpcb_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|maxsockets_change
