@@ -1144,6 +1144,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|AIRPRIME
+argument_list|,
+name|AC313U
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|ALINK
 argument_list|,
 literal|3G
