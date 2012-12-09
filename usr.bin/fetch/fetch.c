@@ -1009,10 +1009,6 @@ operator|-
 name|xs
 operator|->
 name|lastrcvd
-operator|-
-name|xs
-operator|->
-name|offset
 operator|)
 operator|/
 name|delta
