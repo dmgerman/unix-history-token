@@ -4203,6 +4203,15 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+name|U3G_DEV
+argument_list|(
+name|WETELECOM
+argument_list|,
+name|WM_D200
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* Autoinstallers */
 name|U3G_DEV
 argument_list|(
