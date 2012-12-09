@@ -165,10 +165,6 @@ index|[
 name|WME_NUM_AC
 index|]
 decl_stmt|;
-name|int
-name|ff_stageqdepth
-decl_stmt|;
-comment|/* cumulative depth */
 block|}
 struct|;
 end_struct
@@ -432,10 +428,6 @@ condition|(
 name|sg
 operator|!=
 name|NULL
-operator|&&
-name|sg
-operator|->
-name|ff_stageqdepth
 condition|)
 block|{
 if|if
