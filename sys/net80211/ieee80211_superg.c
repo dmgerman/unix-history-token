@@ -2633,7 +2633,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Age frames on the staging queue.  */
+comment|/*  * Age frames on the staging queue.  *  * This is called without the comlock held, but it does all its work  * behind the comlock.  Because of this, it's possible that the  * staging queue will be serviced between the function which called  * it and now; thus simply checking that the queue has work in it  * may fail.  *  * See PR kern/174283 for more details.  */
 end_comment
 
 begin_function
@@ -2681,19 +2681,12 @@ name|ieee80211_tx_ampdu
 modifier|*
 name|tap
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|sq
-operator|->
-name|head
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"stageq empty"
-operator|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|KASSERT(sq->head != NULL, ("stageq empty"));
+endif|#
+directive|endif
 name|IEEE80211_LOCK
 argument_list|(
 name|ic

@@ -338,6 +338,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * See ieee80211_ff_age() for a description of the locking  * expectation here.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -394,6 +398,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * See ieee80211_ff_age() for a description of the locking  * expectation here.  */
+end_comment
 
 begin_function
 specifier|static
