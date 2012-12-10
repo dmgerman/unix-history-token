@@ -255,14 +255,13 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_IOERR
+name|EX_NOINPUT
 argument_list|,
 literal|"%s"
 argument_list|,
 name|gfn
 argument_list|)
 expr_stmt|;
-comment|/* XXX - is IO_ERR the correct exit code? */
 comment|/* check line by line */
 while|while
 condition|(
