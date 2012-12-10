@@ -222,7 +222,7 @@ name|fopen
 argument_list|(
 name|file
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 if|if

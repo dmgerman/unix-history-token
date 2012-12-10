@@ -560,7 +560,7 @@ name|fopen
 argument_list|(
 name|_PATH_NETGROUP
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|!=
@@ -636,7 +636,7 @@ name|fopen
 argument_list|(
 name|_PATH_NETGROUP
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 condition|)
