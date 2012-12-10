@@ -17,20 +17,6 @@ name|HUMANVALSTR_LEN
 value|5
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEVSTR_LEN
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVSTR_HEX_LEN
-value|15
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|long
@@ -155,6 +141,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_samesort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sort time and name in same direction */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_sectime
 decl_stmt|;
 end_decl_stmt
@@ -205,6 +202,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* use time of last mode change */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_thousands
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show file sizes with thousands separators */
 end_comment
 
 begin_decl_stmt
