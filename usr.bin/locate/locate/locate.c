@@ -1198,7 +1198,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"database too small: %s"
+literal|"database too small: %s\nRun /usr/libexec/locate.updatedb"
 argument_list|,
 name|db
 argument_list|)
