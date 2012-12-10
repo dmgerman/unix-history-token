@@ -6077,6 +6077,9 @@ expr_stmt|;
 name|unique_init
 argument_list|()
 expr_stmt|;
+name|space_map_init
+argument_list|()
+expr_stmt|;
 name|zio_init
 argument_list|()
 expr_stmt|;
@@ -6130,6 +6133,9 @@ name|dmu_fini
 argument_list|()
 expr_stmt|;
 name|zio_fini
+argument_list|()
+expr_stmt|;
+name|space_map_fini
 argument_list|()
 expr_stmt|;
 name|unique_fini

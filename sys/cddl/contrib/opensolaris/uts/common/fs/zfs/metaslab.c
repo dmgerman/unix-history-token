@@ -3853,6 +3853,15 @@ operator|->
 name|sm_loaded
 condition|)
 block|{
+name|space_map_obj_t
+modifier|*
+name|smo
+init|=
+operator|&
+name|msp
+operator|->
+name|ms_smo
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -3864,10 +3873,7 @@ name|sm_ops
 argument_list|,
 name|SM_FREE
 argument_list|,
-operator|&
-name|msp
-operator|->
-name|ms_smo
+name|smo
 argument_list|,
 name|spa_meta_objset
 argument_list|(
