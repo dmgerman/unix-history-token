@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.125 - rewrite merge or stale processing  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  * 1.173 - correct expire time processing  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.125, 1.127 - rewrite merge or stale processing  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  * 1.173 - correct expire time processing  */
 end_comment
 
 begin_include
@@ -4413,6 +4413,17 @@ name|PF_TCPS_PROXY_SRC
 operator|)
 operator|)
 operator|||
+operator|(
+name|st
+operator|->
+name|src
+operator|.
+name|state
+operator|==
+name|src
+operator|->
+name|state
+operator|&&
 name|SEQ_GT
 argument_list|(
 name|st
@@ -4428,6 +4439,7 @@ operator|->
 name|seqlo
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 name|sync
 operator|++
@@ -4445,6 +4457,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|st
 operator|->
 name|dst
@@ -4454,6 +4467,7 @@ operator|>
 name|dst
 operator|->
 name|state
+operator|)
 operator|||
 operator|(
 name|st
