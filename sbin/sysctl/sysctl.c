@@ -185,6 +185,10 @@ name|oflag
 decl_stmt|,
 name|qflag
 decl_stmt|,
+name|Tflag
+decl_stmt|,
+name|Wflag
+decl_stmt|,
 name|xflag
 decl_stmt|,
 name|warncount
@@ -296,9 +300,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdehiNnoqx] name[=value] ..."
+literal|"usage: sysctl [-bdehiNnoqTWx] name[=value] ..."
 argument_list|,
-literal|"       sysctl [-bdehNnoqx] -a"
+literal|"       sysctl [-bdehNnoqTWx] -a"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -357,7 +361,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AabdehiNnoqwxX"
+literal|"AabdehiNnoqTwWxX"
 argument_list|)
 operator|)
 operator|!=
@@ -462,10 +466,26 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+name|Tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'w'
 case|:
 comment|/* compatibility */
 comment|/* ignored */
+break|break;
+case|case
+literal|'W'
+case|:
+name|Wflag
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'X'
@@ -689,6 +709,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Tflag just lists tunables, do not allow assignment */
+if|if
+condition|(
+name|Tflag
+operator|||
+name|Wflag
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Can't set variables when using -T or -W"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|isspace
@@ -3071,6 +3108,48 @@ index|[
 name|ctltype
 index|]
 expr_stmt|;
+comment|/* if Wflag then only list sysctls that are writeable and not stats. */
+if|if
+condition|(
+name|Wflag
+operator|&&
+operator|(
+operator|(
+name|kind
+operator|&
+name|CTLFLAG_WR
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|kind
+operator|&
+name|CTLFLAG_STATS
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* if Tflag then only list sysctls that are tuneables. */
+if|if
+condition|(
+name|Tflag
+operator|&&
+operator|(
+name|kind
+operator|&
+name|CTLFLAG_TUN
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
 switch|switch
 condition|(
 name|ctltype
