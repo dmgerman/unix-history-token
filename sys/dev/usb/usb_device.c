@@ -554,6 +554,8 @@ argument_list|,
 name|template
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_template
@@ -608,6 +610,8 @@ argument_list|,
 name|usb_lang_id
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_lang_id
@@ -640,6 +644,8 @@ argument_list|,
 name|usb_lang_mask
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_lang_mask

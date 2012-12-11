@@ -90,12 +90,10 @@ name|M
 expr_stmt|;
 name|MutexGuard
 argument_list|(
-specifier|const
-name|MutexGuard
-operator|&
+argument|const MutexGuard&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -104,8 +102,8 @@ specifier|const
 name|MutexGuard
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|MutexGuard

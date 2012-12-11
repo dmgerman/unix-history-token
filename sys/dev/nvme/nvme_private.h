@@ -133,9 +133,24 @@ end_endif
 begin_define
 define|#
 directive|define
-name|IDT_PCI_ID
+name|IDT32_PCI_ID
 value|0x80d0111d
 end_define
+
+begin_comment
+comment|/* 32 channel board */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT8_PCI_ID
+value|0x80d2111d
+end_define
+
+begin_comment
+comment|/* 8 channel board */
+end_comment
 
 begin_define
 define|#

@@ -3808,7 +3808,7 @@ argument_list|)
 condition|)
 name|machine_cpu
 operator|=
-literal|"i386"
+literal|"i486"
 expr_stmt|;
 else|else
 name|machine_cpu

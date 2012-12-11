@@ -19,6 +19,12 @@ directive|define
 name|_MACHINE_BAT_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_struct
 struct|struct
 name|bat
@@ -32,6 +38,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Lower BAT bits (all but PowerPC 601): */
@@ -549,11 +560,20 @@ define|\
 value|(((pa)& BAT601_PBN) | (v) | (size))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern

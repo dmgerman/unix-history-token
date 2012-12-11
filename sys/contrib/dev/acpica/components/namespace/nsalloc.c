@@ -678,7 +678,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceSubtree  *  * PARAMETERS:  ParentNode      - Root of the subtree to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Delete a subtree of the namespace.  This includes all objects  *              stored within the subtree.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceSubtree  *  * PARAMETERS:  ParentNode      - Root of the subtree to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Delete a subtree of the namespace. This includes all objects  *              stored within the subtree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -828,7 +828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceByOwner  *  * PARAMETERS:  OwnerId     - All nodes with this owner will be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Delete entries within the namespace that are owned by a  *              specific ID.  Used to delete entire ACPI tables.  All  *              reference counts are updated.  *  * MUTEX:       Locks namespace during deletion walk.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceByOwner  *  * PARAMETERS:  OwnerId     - All nodes with this owner will be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Delete entries within the namespace that are owned by a  *              specific ID. Used to delete entire ACPI tables. All  *              reference counts are updated.  *  * MUTEX:       Locks namespace during deletion walk.  *  ******************************************************************************/
 end_comment
 
 begin_function

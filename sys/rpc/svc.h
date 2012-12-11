@@ -2532,6 +2532,18 @@ begin_comment
 comment|/*          * struct socket *;                             -- open connection          * const size_t sendsize;                        -- max send size          * const size_t recvsize;                        -- max recv size          */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|SVCXPRT
+modifier|*
+name|svc_vc_create_backchannel
+parameter_list|(
+name|SVCPOOL
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Generic TLI create routine  */
 end_comment

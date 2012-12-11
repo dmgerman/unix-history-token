@@ -895,6 +895,13 @@ name|char
 modifier|&
 name|EarlyIfConverterID
 decl_stmt|;
+comment|/// StackSlotColoring - This pass performs stack coloring and merging.
+comment|/// It merges disjoint allocas to reduce the stack size.
+specifier|extern
+name|char
+modifier|&
+name|StackColoringID
+decl_stmt|;
 comment|/// IfConverter - This pass performs machine code if conversion.
 specifier|extern
 name|char

@@ -364,38 +364,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* time */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fuse_timespec_add
-parameter_list|(
-name|vvp
-parameter_list|,
-name|uvp
-parameter_list|)
-define|\
-value|do {                                       \            (vvp)->tv_sec += (uvp)->tv_sec;     \            (vvp)->tv_nsec += (uvp)->tv_nsec;   \            if ((vvp)->tv_nsec>= 1000000000) { \                (vvp)->tv_sec++;                \                (vvp)->tv_nsec -= 1000000000;   \            }                                   \     } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fuse_timespec_cmp
-parameter_list|(
-name|tvp
-parameter_list|,
-name|uvp
-parameter_list|,
-name|cmp
-parameter_list|)
-define|\
-value|(((tvp)->tv_sec == (uvp)->tv_sec) ?    \          ((tvp)->tv_nsec cmp (uvp)->tv_nsec) : \          ((tvp)->tv_sec cmp (uvp)->tv_sec))
-end_define
-
-begin_comment
 comment|/* miscellaneous */
 end_comment
 
@@ -907,7 +875,8 @@ name|vp
 parameter_list|,
 name|fuse_out
 parameter_list|)
-value|do {                                         \     struct timespec uptsp_ ## __func__;                                        \                                                                                \     VTOFUD(vp)->cached_attrs_valid.tv_sec = (fuse_out)->attr_valid;            \     VTOFUD(vp)->cached_attrs_valid.tv_nsec = (fuse_out)->attr_valid_nsec;      \     nanouptime(&uptsp_ ## __func__);                                           \                                                                                \     fuse_timespec_add(&VTOFUD(vp)->cached_attrs_valid,&uptsp_ ## __func__);   \                                                                                \     fuse_internal_attr_fat2vat(vnode_mount(vp),&(fuse_out)->attr, VTOVA(vp)); \ } while (0)
+define|\
+value|fuse_internal_attr_fat2vat(vnode_mount(vp),&(fuse_out)->attr,	\ 	    VTOVA(vp));
 end_define
 
 begin_comment

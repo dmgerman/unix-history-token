@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -540,12 +546,10 @@ name|T
 decl_stmt|;
 name|TimeRegion
 argument_list|(
-specifier|const
-name|TimeRegion
-operator|&
+argument|const TimeRegion&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|explicit
@@ -681,13 +685,10 @@ decl_stmt|;
 comment|// Doubly linked list of TimerGroup's.
 name|TimerGroup
 argument_list|(
-specifier|const
-name|TimerGroup
-operator|&
-name|TG
+argument|const TimerGroup&TG
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -697,8 +698,8 @@ name|TimerGroup
 operator|&
 name|TG
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|explicit

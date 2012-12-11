@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReleaseOwnerId  *  * PARAMETERS:  OwnerIdPtr          - Pointer to a previously allocated OwnerID  *  * RETURN:      None. No error is returned because we are either exiting a  *              control method or unloading a table. Either way, we would  *              ignore any error anyway.  *  * DESCRIPTION: Release a table or method owner ID.  Valid IDs are 1 - 255  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReleaseOwnerId  *  * PARAMETERS:  OwnerIdPtr          - Pointer to a previously allocated OwnerID  *  * RETURN:      None. No error is returned because we are either exiting a  *              control method or unloading a table. Either way, we would  *              ignore any error anyway.  *  * DESCRIPTION: Release a table or method owner ID. Valid IDs are 1 - 255  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1195,7 +1195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSetIntegerWidth  *  * PARAMETERS:  Revision            From DSDT header  *  * RETURN:      None  *  * DESCRIPTION: Set the global integer bit width based upon the revision  *              of the DSDT.  For Revision 1 and 0, Integers are 32 bits.  *              For Revision 2 and above, Integers are 64 bits.  Yes, this  *              makes a difference.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSetIntegerWidth  *  * PARAMETERS:  Revision            From DSDT header  *  * RETURN:      None  *  * DESCRIPTION: Set the global integer bit width based upon the revision  *              of the DSDT. For Revision 1 and 0, Integers are 32 bits.  *              For Revision 2 and above, Integers are 64 bits. Yes, this  *              makes a difference.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1477,7 +1477,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Name            - The name to be examined  *  * RETURN:      TRUE if the name is valid, FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI name.  Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Name            - The name to be examined  *  * RETURN:      TRUE if the name is valid, FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI name. Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1566,9 +1566,20 @@ name|FoundBadChar
 init|=
 name|FALSE
 decl_stmt|;
+name|UINT32
+name|OriginalName
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 name|UtRepairName
+argument_list|)
+expr_stmt|;
+name|ACPI_MOVE_NAME
+argument_list|(
+operator|&
+name|OriginalName
+argument_list|,
+name|Name
 argument_list|)
 expr_stmt|;
 comment|/* Check each character in the name */
@@ -1631,7 +1642,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Found bad character(s) in name, repaired: [%4.4s]\n"
+literal|"Invalid character(s) in name (0x%.8X), repaired: [%4.4s]"
+operator|,
+name|OriginalName
 operator|,
 name|Name
 operator|)
@@ -1645,7 +1658,9 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Found bad character(s) in name, repaired: [%4.4s]\n"
+literal|"Invalid character(s) in name (0x%.8X), repaired: [%4.4s]"
+operator|,
+name|OriginalName
 operator|,
 name|Name
 operator|)
@@ -2343,7 +2358,7 @@ index|[
 name|ThisIndex
 index|]
 expr_stmt|;
-comment|/*          * Check for:          * 1) An uninitialized package element.  It is completely          *    legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package.  Packages are handled in else          *    case below.          */
+comment|/*          * Check for:          * 1) An uninitialized package element. It is completely          *    legal to declare a package and leave it uninitialized          * 2) Not an internal object - can be a namespace node instead          * 3) Any type other than a package. Packages are handled in else          *    case below.          */
 if|if
 condition|(
 operator|(
@@ -2424,7 +2439,7 @@ operator|.
 name|Count
 condition|)
 block|{
-comment|/*                  * We've handled all of the objects at this level,  This means                  * that we have just completed a package.  That package may                  * have contained one or more packages itself.                  *                  * Delete this state and pop the previous state (package).                  */
+comment|/*                  * We've handled all of the objects at this level,  This means                  * that we have just completed a package. That package may                  * have contained one or more packages itself.                  *                  * Delete this state and pop the previous state (package).                  */
 name|AcpiUtDeleteGenericState
 argument_list|(
 name|State

@@ -533,8 +533,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOCAPCHECK
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* do not perform capability checks */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
-value|0x1ffffe00
+value|0x3ffffe00
 end_define
 
 begin_comment

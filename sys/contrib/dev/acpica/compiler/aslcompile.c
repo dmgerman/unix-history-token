@@ -46,6 +46,19 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*  * Main parser entry  * External is here in case the parser emits the same external in the  * generated header. (Newer versions of Bison)  */
+end_comment
+
+begin_function_decl
+name|int
+name|AslCompilerparse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Local prototypes */
 end_comment
 
@@ -488,6 +501,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* Scan until comment close is found */
@@ -585,6 +600,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 name|Status
@@ -673,6 +690,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* Ignore comment fields (allow non-ascii within) */
@@ -921,7 +940,9 @@ name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1107,8 +1128,10 @@ name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Interpret and generate all compile-time constants */
@@ -1248,7 +1271,9 @@ name|FullCompile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/*      * Create an internal namespace and use it as a symbol table      */
@@ -1318,7 +1343,7 @@ argument_list|(
 name|AslGbl_NamespaceEvent
 argument_list|)
 expr_stmt|;
-comment|/*      * Semantic analysis.  This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
+comment|/*      * Semantic analysis. This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
 name|Event
 operator|=
 name|UtBeginEvent
@@ -1545,7 +1570,9 @@ name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ErrorExit
 label|:

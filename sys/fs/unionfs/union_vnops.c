@@ -8767,16 +8767,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|mp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_MPSAFE
-operator|)
-operator|!=
-literal|0
-operator|&&
-operator|(
 name|vp
 operator|->
 name|v_iflag

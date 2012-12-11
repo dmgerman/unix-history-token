@@ -1301,7 +1301,7 @@ comment|/* Not a comment */
 name|i
 operator|++
 expr_stmt|;
-comment|/* Save the preceeding slash */
+comment|/* Save the preceding slash */
 if|if
 condition|(
 name|i
@@ -2272,13 +2272,15 @@ argument_list|,
 name|Gbl_TableLength
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|Buffer
 argument_list|,
 name|Gbl_TableLength
 argument_list|,
 name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiOsRedirectOutput

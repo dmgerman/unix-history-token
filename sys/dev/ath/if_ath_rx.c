@@ -395,6 +395,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only until recently)  *   and we are not scanning (ANI is disabled)  *   NB: older hal's add rx filter bits out of sight and we need to  *	 blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, mesh, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  *   - when operating in mesh mode to detect neighbors  * o accept control frames:  *   - when in monitor mode  * XXX HT protection for 11n  */
 end_comment
@@ -711,7 +728,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -3576,6 +3593,44 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_RXSTATUS
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_RXSTATUS
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_statuslen
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|ds
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 if|if
 condition|(
 name|status
@@ -4592,11 +4647,16 @@ name|sc
 parameter_list|)
 block|{
 comment|/* Sensible legacy defaults */
+comment|/* 	 * XXX this should be changed to properly support the 	 * exact RX descriptor size for each HAL. 	 */
 name|sc
 operator|->
 name|sc_rx_statuslen
 operator|=
-literal|0
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

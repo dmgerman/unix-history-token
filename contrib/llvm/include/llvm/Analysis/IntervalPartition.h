@@ -121,8 +121,8 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// IntervalPartition - This class builds and holds an "interval partition" for
 comment|// a function.  This partition divides the control flow graph into a set of
-comment|// maximal intervals, as defined with the properties above.  Intuitively, a
-comment|// BasicBlock is a (possibly nonexistent) loop with a "tail" of non looping
+comment|// maximal intervals, as defined with the properties above.  Intuitively, an
+comment|// interval is a (possibly nonexistent) loop with a "tail" of non looping
 comment|// nodes following it.
 comment|//
 name|class

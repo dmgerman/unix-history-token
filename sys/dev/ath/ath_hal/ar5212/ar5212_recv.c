@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ah_desc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ar5212/ar5212.h"
 end_include
 

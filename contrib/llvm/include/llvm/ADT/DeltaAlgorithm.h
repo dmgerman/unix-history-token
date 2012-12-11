@@ -114,7 +114,7 @@ name|changeset_ty
 operator|>
 name|FailedTestsCache
 expr_stmt|;
-comment|/// GetTestResult - Get the test result for the \arg Changes from the
+comment|/// GetTestResult - Get the test result for the \p Changes from the
 comment|/// cache, executing the test if necessary.
 comment|///
 comment|/// \param Changes - The change set to test.
@@ -128,7 +128,7 @@ modifier|&
 name|Changes
 parameter_list|)
 function_decl|;
-comment|/// Split - Partition a set of changes \arg S into one or two subsets.
+comment|/// Split - Partition a set of changes \p S into one or two subsets.
 name|void
 name|Split
 parameter_list|(
@@ -142,7 +142,7 @@ modifier|&
 name|Res
 parameter_list|)
 function_decl|;
-comment|/// Delta - Minimize a set of \arg Changes which has been partioned into
+comment|/// Delta - Minimize a set of \p Changes which has been partioned into
 comment|/// smaller sets, by attempting to remove individual subsets.
 name|changeset_ty
 name|Delta
@@ -158,8 +158,8 @@ modifier|&
 name|Sets
 parameter_list|)
 function_decl|;
-comment|/// Search - Search for a subset (or subsets) in \arg Sets which can be
-comment|/// removed from \arg Changes while still satisfying the predicate.
+comment|/// Search - Search for a subset (or subsets) in \p Sets which can be
+comment|/// removed from \p Changes while still satisfying the predicate.
 comment|///
 comment|/// \param Res - On success, a subset of Changes which satisfies the
 comment|/// predicate.
@@ -200,7 +200,7 @@ modifier|&
 name|Sets
 parameter_list|)
 block|{}
-comment|/// ExecuteOneTest - Execute a single test predicate on the change set \arg S.
+comment|/// ExecuteOneTest - Execute a single test predicate on the change set \p S.
 name|virtual
 name|bool
 name|ExecuteOneTest
@@ -220,7 +220,7 @@ operator|~
 name|DeltaAlgorithm
 argument_list|()
 expr_stmt|;
-comment|/// Run - Minimize the set \arg Changes by executing \see ExecuteOneTest() on
+comment|/// Run - Minimize the set \p Changes by executing \see ExecuteOneTest() on
 comment|/// subsets of changes and returning the smallest set which still satisfies
 comment|/// the test predicate.
 name|changeset_ty

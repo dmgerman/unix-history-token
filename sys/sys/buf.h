@@ -1579,11 +1579,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|BUF_LOCKFREE
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -695,12 +695,10 @@ name|NumReferences
 decl_stmt|;
 name|CallGraphNode
 argument_list|(
-specifier|const
-name|CallGraphNode
-operator|&
+argument|const CallGraphNode&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -709,8 +707,8 @@ specifier|const
 name|CallGraphNode
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|DropRef
 parameter_list|()

@@ -296,25 +296,21 @@ expr_stmt|;
 name|bool
 name|Popped
 decl_stmt|;
-comment|// Do not implement.
 name|ParsingDeclRAIIObject
 argument_list|(
-specifier|const
-name|ParsingDeclRAIIObject
-operator|&
-name|other
+argument|const ParsingDeclRAIIObject&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-name|ParsingDeclRAIIObject
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
 specifier|const
 name|ParsingDeclRAIIObject
 operator|&
-name|other
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:
@@ -880,6 +876,12 @@ comment|/// parser.
 name|class
 name|ExtensionRAIIObject
 block|{
+name|ExtensionRAIIObject
+argument_list|(
+argument|const ExtensionRAIIObject&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+block|;
 name|void
 name|operator
 operator|=
@@ -888,16 +890,8 @@ specifier|const
 name|ExtensionRAIIObject
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
-name|ExtensionRAIIObject
-argument_list|(
-specifier|const
-name|ExtensionRAIIObject
-operator|&
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
 name|DiagnosticsEngine
 operator|&
 name|Diags

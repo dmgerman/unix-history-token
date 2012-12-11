@@ -220,15 +220,6 @@ comment|/*  * Stuff for handling job specifications  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|col

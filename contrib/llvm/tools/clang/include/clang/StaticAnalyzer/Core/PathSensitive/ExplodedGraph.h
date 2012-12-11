@@ -219,98 +219,48 @@ name|friend
 name|class
 name|EndOfFunctionNodeBuilder
 block|;
+comment|/// Efficiently stores a list of ExplodedNodes, or an optional flag.
+comment|///
+comment|/// NodeGroup provides opaque storage for a list of ExplodedNodes, optimizing
+comment|/// for the case when there is only one node in the group. This is a fairly
+comment|/// common case in an ExplodedGraph, where most nodes have only one
+comment|/// predecessor and many have only one successor. It can also be used to
+comment|/// store a flag rather than a node list, which ExplodedNode uses to mark
+comment|/// whether a node is a sink. If the flag is set, the group is implicitly
+comment|/// empty and no nodes may be added.
 name|class
 name|NodeGroup
-block|{     enum
 block|{
-name|Size1
-operator|=
-literal|0x0
-block|,
-name|SizeOther
-operator|=
-literal|0x1
-block|,
-name|AuxFlag
-operator|=
-literal|0x2
-block|,
-name|Mask
-operator|=
-literal|0x3
-block|}
-block|;
+comment|// Conceptually a discriminated union. If the low bit is set, the node is
+comment|// a sink. If the low bit is not set, the pointer refers to the storage
+comment|// for the nodes in the group.
+comment|// This is not a PointerIntPair in order to keep the storage type opaque.
 name|uintptr_t
 name|P
 block|;
-name|unsigned
-name|getKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|P
-operator|&
-literal|0x1
-return|;
-block|}
-name|void
-operator|*
-name|getPtr
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|getFlag
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|reinterpret_cast
-operator|<
-name|void
-operator|*
-operator|>
-operator|(
-name|P
-operator|&
-operator|~
-name|Mask
-operator|)
-return|;
-block|}
-name|ExplodedNode
-operator|*
-name|getNode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|ExplodedNode
-operator|*
-operator|>
-operator|(
-name|getPtr
-argument_list|()
-operator|)
-return|;
-block|}
 name|public
 operator|:
 name|NodeGroup
-argument_list|()
+argument_list|(
+argument|bool Flag = false
+argument_list|)
 operator|:
 name|P
 argument_list|(
-literal|0
+argument|Flag
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|getFlag
+argument_list|()
+operator|==
+name|Flag
+argument_list|)
+block|;     }
 name|ExplodedNode
 operator|*
+specifier|const
 operator|*
 name|begin
 argument_list|()
@@ -318,6 +268,7 @@ specifier|const
 block|;
 name|ExplodedNode
 operator|*
+specifier|const
 operator|*
 name|end
 argument_list|()
@@ -334,16 +285,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|P
-operator|&
-operator|~
-name|Mask
-operator|)
 operator|==
+literal|0
+operator|||
+name|getFlag
+argument_list|()
+operator|!=
 literal|0
 return|;
 block|}
+comment|/// Adds a node to the list.
+comment|///
+comment|/// The group must not have been created with its flag set.
 name|void
 name|addNode
 argument_list|(
@@ -356,6 +310,11 @@ operator|&
 name|G
 argument_list|)
 block|;
+comment|/// Replaces the single node in this group with a new node.
+comment|///
+comment|/// Note that this should only be used when you know the group was not
+comment|/// created with its flag set, and that the group is empty or contains
+comment|/// only a single node.
 name|void
 name|replaceNode
 argument_list|(
@@ -364,34 +323,18 @@ operator|*
 name|node
 argument_list|)
 block|;
-name|void
-name|setFlag
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|P
-operator|==
-literal|0
-argument_list|)
-block|;
-name|P
-operator|=
-name|AuxFlag
-block|;     }
+comment|/// Returns whether this group was created with its flag set.
 name|bool
 name|getFlag
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|P
 operator|&
-name|AuxFlag
-operator|?
-name|true
-operator|:
-name|false
+literal|1
+operator|)
 return|;
 block|}
 expr|}
@@ -433,19 +376,22 @@ argument_list|)
 block|,
 name|State
 argument_list|(
-argument|state
+name|state
+argument_list|)
+block|,
+name|Succs
+argument_list|(
+argument|IsSink
 argument_list|)
 block|{
-if|if
-condition|(
-name|IsSink
-condition|)
-name|Succs
-operator|.
-name|setFlag
+name|assert
+argument_list|(
+name|isSink
 argument_list|()
-expr_stmt|;
-block|}
+operator|==
+name|IsSink
+argument_list|)
+block|;   }
 operator|~
 name|ExplodedNode
 argument_list|()
@@ -782,6 +728,7 @@ comment|// Iterators over successor and predecessor vertices.
 typedef|typedef
 name|ExplodedNode
 modifier|*
+specifier|const
 modifier|*
 name|succ_iterator
 typedef|;
@@ -796,6 +743,7 @@ typedef|;
 typedef|typedef
 name|ExplodedNode
 modifier|*
+specifier|const
 modifier|*
 name|pred_iterator
 typedef|;
@@ -1108,13 +1056,15 @@ comment|/// A list of nodes that can be reused.
 name|NodeVector
 name|FreeNodes
 decl_stmt|;
-comment|/// A flag that indicates whether nodes should be recycled.
-name|bool
-name|reclaimNodes
+comment|/// Determines how often nodes are reclaimed.
+comment|///
+comment|/// If this is 0, nodes will never be reclaimed.
+name|unsigned
+name|ReclaimNodeInterval
 decl_stmt|;
 comment|/// Counter to determine when to reclaim nodes.
 name|unsigned
-name|reclaimCounter
+name|ReclaimCounter
 decl_stmt|;
 name|public
 label|:
@@ -1542,11 +1492,16 @@ comment|/// Enable tracking of recently allocated nodes for potential reclamatio
 comment|/// when calling reclaimRecentlyAllocatedNodes().
 name|void
 name|enableNodeReclamation
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|Interval
+parameter_list|)
 block|{
-name|reclaimNodes
+name|ReclaimCounter
 operator|=
-name|true
+name|ReclaimNodeInterval
+operator|=
+name|Interval
 expr_stmt|;
 block|}
 comment|/// Reclaim "uninteresting" nodes created since the last time this method

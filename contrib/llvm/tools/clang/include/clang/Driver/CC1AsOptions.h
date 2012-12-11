@@ -66,8 +66,18 @@ block|,
 comment|// This is not an option ID.
 define|#
 directive|define
+name|PREFIX
+parameter_list|(
+name|NAME
+parameter_list|,
+name|VALUE
+parameter_list|)
+define|#
+directive|define
 name|OPTION
 parameter_list|(
+name|PREFIX
+parameter_list|,
 name|NAME
 parameter_list|,
 name|ID
@@ -94,6 +104,9 @@ name|LastOption
 undef|#
 directive|undef
 name|OPTION
+undef|#
+directive|undef
+name|PREFIX
 block|}
 enum|;
 block|}

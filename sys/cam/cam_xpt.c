@@ -9793,7 +9793,7 @@ operator|=
 name|next_periph
 control|)
 block|{
-comment|/* 		 * In this case, we want to show peripherals that have been 		 * invalidated, but not peripherals that are scheduled to 		 * be freed.  So instead of calling cam_periph_acquire(), 		 * which will fail if the periph has been invalidated, we 		 * just check for the free flag here.  If it is free, we 		 * skip to the next periph. 		 */
+comment|/* 		 * In this case, we want to show peripherals that have been 		 * invalidated, but not peripherals that are scheduled to 		 * be freed.  So instead of calling cam_periph_acquire(), 		 * which will fail if the periph has been invalidated, we 		 * just check for the free flag here.  If it is in the 		 * process of being freed, we skip to the next periph. 		 */
 if|if
 condition|(
 name|periph
@@ -9820,9 +9820,6 @@ operator|->
 name|refcount
 operator|++
 expr_stmt|;
-name|xpt_unlock_buses
-argument_list|()
-expr_stmt|;
 name|retval
 operator|=
 name|tr_func
@@ -9831,10 +9828,6 @@ name|periph
 argument_list|,
 name|arg
 argument_list|)
-expr_stmt|;
-comment|/* 		 * We need the lock for list traversal. 		 */
-name|xpt_lock_buses
-argument_list|()
 expr_stmt|;
 comment|/* 		 * Grab the next peripheral before we release this one, so 		 * our next pointer is still valid. 		 */
 name|next_periph
@@ -10058,7 +10051,6 @@ operator|->
 name|refcount
 operator|++
 expr_stmt|;
-comment|/* 		 * XXX KDM we have the toplogy lock here, but in 		 * xptperiphtraverse(), we drop it before calling the 		 * traversal function.  Which is correct? 		 */
 name|retval
 operator|=
 name|tr_func
@@ -10817,34 +10809,6 @@ operator|.
 name|status
 operator|=
 name|CAM_REQ_INPROG
-expr_stmt|;
-comment|/* Compatibility for RL-unaware code. */
-if|if
-condition|(
-name|CAM_PRIORITY_TO_RL
-argument_list|(
-name|start_ccb
-operator|->
-name|ccb_h
-operator|.
-name|pinfo
-operator|.
-name|priority
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|start_ccb
-operator|->
-name|ccb_h
-operator|.
-name|pinfo
-operator|.
-name|priority
-operator|+=
-name|CAM_PRIORITY_NORMAL
-operator|-
-literal|1
 expr_stmt|;
 operator|(
 operator|*

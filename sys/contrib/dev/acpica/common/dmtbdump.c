@@ -4472,10 +4472,10 @@ decl_stmt|;
 name|UINT16
 name|SubtableCount
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|PowerStateCount
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|ComponentCount
 decl_stmt|;
 comment|/* Main table */

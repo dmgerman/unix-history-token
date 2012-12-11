@@ -2277,6 +2277,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * dmdeferred  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDmParseDeferredOps
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Root
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * dmextern  */
 end_comment
 
@@ -2443,6 +2458,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiDmIsResourceTemplate
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op

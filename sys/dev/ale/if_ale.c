@@ -366,7 +366,6 @@ modifier|*
 name|ale_name
 decl_stmt|;
 block|}
-decl|const
 name|ale_devs
 index|[]
 init|=
@@ -9073,7 +9072,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* Release original mbufs. */
@@ -9153,7 +9152,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -9568,7 +9567,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|ALE_MAXTXSEGS
 argument_list|)

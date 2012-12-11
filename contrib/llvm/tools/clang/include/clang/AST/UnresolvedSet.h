@@ -572,7 +572,8 @@ name|UnresolvedSetImpl
 argument_list|(
 argument|const UnresolvedSetImpl&
 argument_list|)
-block|{}
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 name|public
 label|:
 comment|// We don't currently support assignment through this iterator, so we might

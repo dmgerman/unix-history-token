@@ -401,6 +401,23 @@ directive|include
 file|<dev/ath/if_ath_tx_edma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * some general macros  */
 end_comment
@@ -448,6 +465,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|ath_edma_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -469,9 +502,14 @@ name|ath_buf
 modifier|*
 name|bf
 decl_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -518,12 +556,75 @@ operator|->
 name|bf_daddr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_debug
+operator|&
+name|ATH_DEBUG_XMIT_DESC
+condition|)
+name|ath_printtxbuf
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXDESC
+argument_list|)
+condition|)
+name|ath_tx_alq_post
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 name|txq
 operator|->
 name|axq_fifo_depth
 operator|++
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|ath_hal_txstart
 argument_list|(
 name|sc
@@ -539,7 +640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-initialise the DMA FIFO with the current contents of  * said TXQ.  *  * This should only be called as part of the chip reset path, as it  * assumes the FIFO is currently empty.  *  * TODO: verify that a cold/warm reset does clear the TX FIFO, so  * writing in a partially-filled FIFO will not cause double-entries  * to appear.  */
+comment|/*  * Re-initialise the DMA FIFO with the current contents of  * said TXQ.  *  * This should only be called as part of the chip reset path, as it  * assumes the FIFO is currently empty.  */
 end_comment
 
 begin_function
@@ -558,11 +659,11 @@ modifier|*
 name|txq
 parameter_list|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: called: txq=%p, qnum=%d\n"
 argument_list|,
@@ -575,9 +676,9 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|ath_edma_tx_fifo_fill
@@ -624,9 +725,9 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -677,6 +778,16 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
+comment|/* Only schedule to the FIFO if there's space */
+if|if
+condition|(
+name|txq
+operator|->
+name|axq_fifo_depth
+operator|<
+name|HAL_TXFIFO_DEPTH
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|ATH_DEBUG
@@ -706,16 +817,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ATH_DEBUG */
-comment|/* Only schedule to the FIFO if there's space */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
 if|if
 condition|(
-name|txq
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
 operator|->
-name|axq_fifo_depth
-operator|<
-name|HAL_TXFIFO_DEPTH
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXDESC
+argument_list|)
 condition|)
-block|{
+name|ath_tx_alq_post
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 name|ath_hal_puttxbuf
 argument_list|(
 name|ah
@@ -748,7 +874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hand off this frame to a multicast software queue.  *  * Unlike legacy DMA, this doesn't chain together frames via the  * link pointer.  Instead, they're just added to the queue.  * When it comes time to populate the CABQ, these frames should  * be individually pushed into the FIFO as appropriate.  *  * Yes, this does mean that I'll eventually have to flesh out some  * replacement code to handle populating the CABQ, rather than  * what's done in ath_beacon_generate().  It'll have to push each  * frame from the HW CABQ to the FIFO rather than just appending  * it to the existing TXQ and kicking off DMA.  */
+comment|/*  * Hand off this frame to a multicast software queue.  *  * The EDMA TX CABQ will get a list of chained frames, chained  * together using the next pointer.  The single head of that  * particular queue is pushed to the hardware CABQ.  */
 end_comment
 
 begin_function
@@ -772,9 +898,9 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -866,6 +992,31 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXDESC
+argument_list|)
+condition|)
+name|ath_tx_alq_post
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|txq
@@ -873,6 +1024,22 @@ argument_list|,
 name|bf
 argument_list|,
 name|bf_list
+argument_list|)
+expr_stmt|;
+name|ath_hal_gettxdesclinkptr
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|bf
+operator|->
+name|bf_lastds
+argument_list|,
+operator|&
+name|txq
+operator|->
+name|axq_link
 argument_list|)
 expr_stmt|;
 block|}
@@ -903,9 +1070,9 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -1299,11 +1466,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: called\n"
 argument_list|,
@@ -1319,9 +1486,23 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If reset type is noloss, the TX FIFO needs to be serviced 	 * and those frames need to be handled. 	 * 	 * Otherwise, just toss everything in each TX queue. 	 */
-comment|/* XXX dump out the TX completion FIFO contents */
-comment|/* XXX dump out the frames */
-comment|/* XXX for now, just drain */
+if|if
+condition|(
+name|reset_type
+operator|==
+name|ATH_RESET_NOLOSS
+condition|)
+block|{
+name|ath_edma_tx_processq
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -1359,6 +1540,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* XXX dump out the TX completion FIFO contents */
+comment|/* XXX dump out the frames */
 name|IF_LOCK
 argument_list|(
 operator|&
@@ -1392,7 +1576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process the TX status queue.  */
+comment|/*  * TX completion tasklet.  */
 end_comment
 
 begin_function
@@ -1420,6 +1604,47 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_TX_PROC
+argument_list|,
+literal|"%s: called, npending=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|npending
+argument_list|)
+expr_stmt|;
+name|ath_edma_tx_processq
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Process the TX status queue.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_edma_tx_processq
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+block|{
 name|struct
 name|ath_hal
 modifier|*
@@ -1456,23 +1681,30 @@ name|nacked
 init|=
 literal|0
 decl_stmt|;
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_DEBUG_TX_PROC
-argument_list|,
-literal|"%s: called, npending=%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|npending
-argument_list|)
-expr_stmt|;
+name|int
+name|idx
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+comment|/* XXX */
+name|uint32_t
+name|txstatus
+index|[
+literal|32
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
+name|idx
+operator|=
+literal|0
 init|;
 condition|;
+name|idx
+operator|++
 control|)
 block|{
 name|bzero
@@ -1491,6 +1723,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+name|ath_hal_gettxrawtxdesc
+argument_list|(
+name|ah
+argument_list|,
+name|txstatus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|status
 operator|=
 name|ath_hal_txprocdesc
@@ -1512,6 +1756,40 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_debug
+operator|&
+name|ATH_DEBUG_TX_PROC
+condition|)
+name|ath_printtxstatbuf
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|,
+name|txstatus
+argument_list|,
+name|ts
+operator|.
+name|ts_queue_id
+argument_list|,
+name|idx
+argument_list|,
+operator|(
+name|status
+operator|==
+name|HAL_OK
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|status
@@ -1540,6 +1818,44 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXSTATUS
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_TXSTATUS
+argument_list|,
+name|sc
+operator|->
+name|sc_tx_statuslen
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|txstatus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 comment|/* 		 * At this point we have a valid status descriptor. 		 * The QID and descriptor ID (which currently isn't set) 		 * is part of the status. 		 * 		 * We then assume that the descriptor in question is the 		 * -head- of the given QID.  Eventually we should verify 		 * this by using the descriptor ID. 		 */
 comment|/* 		 * The beacon queue is not currently a "real" queue. 		 * Frames aren't pushed onto it and the lock isn't setup. 		 * So skip it for now; the beacon handling code will 		 * free and alloc more beacon buffers as appropriate. 		 */
 if|if
@@ -1565,9 +1881,9 @@ operator|.
 name|ts_queue_id
 index|]
 expr_stmt|;
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|bf
@@ -1597,6 +1913,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: actually output debugging info about this */
 if|#
 directive|if
 literal|0
@@ -1633,12 +1950,12 @@ name|axq_fifo_depth
 operator|--
 expr_stmt|;
 comment|/* XXX assert FIFO depth>= 0 */
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * First we need to make sure ts_rate is valid. 		 * 		 * Pre-EDMA chips pass the whole TX descriptor to 		 * the proctxdesc function which will then fill out 		 * ts_rate based on the ts_finaltsi (final TX index) 		 * in the TX descriptor.  However the TX completion 		 * FIFO doesn't have this information.  So here we 		 * do a separate HAL call to populate that information. 		 */
+comment|/* 		 * First we need to make sure ts_rate is valid. 		 * 		 * Pre-EDMA chips pass the whole TX descriptor to 		 * the proctxdesc function which will then fill out 		 * ts_rate based on the ts_finaltsi (final TX index) 		 * in the TX descriptor.  However the TX completion 		 * FIFO doesn't have this information.  So here we 		 * do a separate HAL call to populate that information. 		 * 		 * The same problem exists with ts_longretry. 		 * The FreeBSD HAL corrects ts_longretry in the HAL layer; 		 * the AR9380 HAL currently doesn't.  So until the HAL 		 * is imported and this can be added, we correct for it 		 * here. 		 */
 comment|/* XXX TODO */
 comment|/* XXX faked for now. Ew. */
 if|if
@@ -1667,6 +1984,68 @@ index|]
 operator|.
 name|ratecode
 expr_stmt|;
+switch|switch
+condition|(
+name|ts
+operator|.
+name|ts_finaltsi
+condition|)
+block|{
+case|case
+literal|3
+case|:
+name|ts
+operator|.
+name|ts_longretry
+operator|+=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_rc
+index|[
+literal|2
+index|]
+operator|.
+name|tries
+expr_stmt|;
+case|case
+literal|2
+case|:
+name|ts
+operator|.
+name|ts_longretry
+operator|+=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_rc
+index|[
+literal|1
+index|]
+operator|.
+name|tries
+expr_stmt|;
+case|case
+literal|1
+case|:
+name|ts
+operator|.
+name|ts_longretry
+operator|+=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_rc
+index|[
+literal|0
+index|]
+operator|.
+name|tries
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1795,13 +2174,15 @@ argument_list|)
 expr_stmt|;
 comment|/* bf is invalid at this point */
 comment|/* 		 * Now that there's space in the FIFO, let's push some 		 * more frames into it. 		 * 		 * Unfortunately for now, the txq has FIFO and non-FIFO 		 * frames in the same linked list, so there's no way 		 * to quickly/easily populate frames without walking 		 * the queue and skipping 'axq_fifo_depth' frames. 		 * 		 * So for now, let's only repopulate the FIFO once it 		 * is empty.  It's sucky for performance but it's enough 		 * to begin validating that things are somewhat 		 * working. 		 */
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dosched
+operator|&&
 name|txq
 operator|->
 name|axq_fifo_depth
@@ -1817,9 +2198,9 @@ name|txq
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1829,8 +2210,49 @@ name|sc_wd_timer
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|idx
+operator|>
+literal|0
+condition|)
+block|{
+name|IF_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_snd
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_OACTIVE
+expr_stmt|;
+name|IF_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_snd
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Kick software scheduler */
 comment|/* 	 * XXX It's inefficient to do this if the FIFO queue is full, 	 * but there's no easy way right now to only populate 	 * the txq task for _one_ TXQ.  This should be fixed. 	 */
+if|if
+condition|(
+name|dosched
+condition|)
 name|taskqueue_enqueue
 argument_list|(
 name|sc

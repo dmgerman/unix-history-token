@@ -1308,7 +1308,7 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
-name|vm_pageq_remove
+name|vm_page_remque
 argument_list|(
 name|fs
 operator|.
@@ -3373,25 +3373,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Neither fictitious nor unmanaged pages can be cached. */
 if|if
 condition|(
+operator|(
 name|first_object
 operator|->
-name|type
-operator|!=
-name|OBJT_DEVICE
-operator|&&
-name|first_object
-operator|->
-name|type
-operator|!=
-name|OBJT_PHYS
-operator|&&
-name|first_object
-operator|->
-name|type
-operator|!=
-name|OBJT_SG
+name|flags
+operator|&
+operator|(
+name|OBJ_FICTITIOUS
+operator||
+name|OBJ_UNMANAGED
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -4714,7 +4711,7 @@ operator|&=
 operator|~
 name|VM_PROT_WRITE
 expr_stmt|;
-comment|/* 	 * Loop through all of the pages in the entry's range, copying each 	 * one from the source object (it should be there) to the destination 	 * object. 	 */
+comment|/* 	 * Loop through all of the virtual pages within the entry's 	 * range, copying each page from the source object to the 	 * destination object.  Since the source is wired, those pages 	 * must exist.  In contrast, the destination is pageable. 	 * Since the destination object does share any backing storage 	 * with the source object, all of its pages must be dirtied, 	 * regardless of whether they can be written. 	 */
 for|for
 control|(
 name|vaddr
@@ -4878,6 +4875,12 @@ expr_stmt|;
 name|dst_m
 operator|->
 name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|dst_m
+operator|->
+name|dirty
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;

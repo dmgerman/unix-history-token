@@ -1848,7 +1848,7 @@ name|ACPI_ASL_COMPILER
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump.  Use INT_MAX  *                                    for an effectively unlimited depth.  *  * RETURN:      None  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump. Use INT_MAX  *                                    for an effectively unlimited depth.  *  * RETURN:      None  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ******************************************************************************/
 end_comment
 
 begin_function

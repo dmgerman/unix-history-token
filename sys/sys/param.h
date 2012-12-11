@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000021
+value|1000025
 end_define
 
 begin_comment
@@ -168,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|MAXLOGNAME
-value|17
+value|33
 end_define
 
 begin_comment

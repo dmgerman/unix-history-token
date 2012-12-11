@@ -41,16 +41,11 @@ begin_comment
 comment|/* next character in input buffer */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|init_editline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 0 == not setup, 1 == OK, -1 == failed */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|alias
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -116,7 +111,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|void
+name|struct
+name|alias
 modifier|*
 parameter_list|)
 function_decl|;

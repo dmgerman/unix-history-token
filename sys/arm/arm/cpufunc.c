@@ -159,12 +159,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Some definitions in i81342reg.h clash with i80321reg.h.  * This only happens for the LINT kernel. As it happens,  * we don't need anything from i81342reg.h that we already  * got from somewhere else during a LINT compile.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|COMPILING_LINT
 argument_list|)
 end_if
 
@@ -2668,7 +2678,7 @@ name|cpufunc_faultaddress
 block|,
 comment|/* Faultaddress         */
 comment|/* TLB functions */
-name|arm11_tlb_flushID
+name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushID          */
 name|armv7_tlb_flushID_SE
@@ -2711,7 +2721,7 @@ comment|/* idcache_wbinv_all    */
 name|armv7_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range  */
-comment|/* Note: From OMAP4 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
+comment|/*  	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all    */

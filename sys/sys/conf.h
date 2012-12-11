@@ -1905,6 +1905,11 @@ parameter_list|(
 name|struct
 name|dumperinfo
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_devname
 parameter_list|)
 function_decl|;
 end_function_decl

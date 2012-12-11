@@ -347,15 +347,15 @@ name|Allocate
 argument_list|(
 argument|size_t Size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|void
 name|Deallocate
 argument_list|(
-name|MemSlab
-operator|*
-name|Slab
+argument|MemSlab *Slab
 argument_list|)
+name|LLVM_OVERRIDE
 block|; }
 decl_stmt|;
 comment|/// BumpPtrAllocator - This allocator is useful for containers that need
@@ -367,12 +367,10 @@ name|BumpPtrAllocator
 block|{
 name|BumpPtrAllocator
 argument_list|(
-specifier|const
-name|BumpPtrAllocator
-operator|&
+argument|const BumpPtrAllocator&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// do not implement
 name|void
 name|operator
 init|=
@@ -381,8 +379,8 @@ specifier|const
 name|BumpPtrAllocator
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// do not implement
 comment|/// SlabSize - Allocate data into slabs of this size unless we get an
 comment|/// allocation above SizeThreshold.
 name|size_t

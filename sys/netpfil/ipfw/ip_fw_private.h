@@ -493,11 +493,36 @@ begin_comment
 comment|/*  * The lock for dynamic rules is only used once outside the file,  * and only to release the result of lookup_dyn_rule().  * Eventually we may implement it with a callback on the function.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ip_fw_chain
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|ipfw_expire_dyn_rules
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+parameter_list|,
+name|struct
+name|ip_fw
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|ipfw_dyn_unlock
 parameter_list|(
-name|void
+name|ipfw_dyn_rule
+modifier|*
+name|q
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -593,6 +618,11 @@ begin_function_decl
 name|void
 name|ipfw_get_dynamic
 parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -608,35 +638,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipfw_dyn_attach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* uma_zcreate .... */
-end_comment
-
-begin_function_decl
-name|void
-name|ipfw_dyn_detach
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* uma_zdestroy ... */
-end_comment
-
-begin_function_decl
-name|void
 name|ipfw_dyn_init
 parameter_list|(
-name|void
+name|struct
+name|ip_fw_chain
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -894,6 +900,54 @@ comment|/* used by tcp_var.h */
 end_comment
 
 begin_comment
+comment|/* Macro for working with various counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_INC_RULE_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|,
+name|_bytes
+parameter_list|)
+value|do {	\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	(_cntr)->timestamp = time_uptime;		\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_INC_DYN_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|,
+name|_bytes
+parameter_list|)
+value|do {		\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_ZERO_RULE_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|)
+value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	(_cntr)->timestamp = 0;				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_ZERO_DYN_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|)
+value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
+end_define
+
+begin_comment
 comment|/*  * The lock is heavily used by ip_fw2.c (the main file) and ip_fw_nat.c  * so the variable and the macros must be here.  */
 end_comment
 
@@ -915,6 +969,16 @@ parameter_list|(
 name|_chain
 parameter_list|)
 value|do {			\ 	rw_destroy(&(_chain)->rwmtx);			\ 	rw_destroy(&(_chain)->uh_lock);			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_RLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->rwmtx, RA_RLOCKED)
 end_define
 
 begin_define
@@ -965,6 +1029,26 @@ parameter_list|(
 name|p
 parameter_list|)
 value|rw_wunlock(&(p)->rwmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_RLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->uh_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_WLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->uh_lock, RA_WLOCKED)
 end_define
 
 begin_define

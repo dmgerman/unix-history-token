@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_phys.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cache.h>
 end_include
 
@@ -361,20 +367,12 @@ name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Isolate the global TTE list lock from data and other locks to prevent  * false sharing within the cache (see also the declaration of struct  * tte_list_lock).  */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 name|struct
-name|tte_list_lock
-name|tte_list_global
-name|__aligned
-parameter_list|(
-name|CACHE_LINE_SIZE
-parameter_list|)
-function_decl|;
-end_function_decl
+name|rwlock_padalign
+name|tte_list_global_lock
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Allocate physical memory for use in pmap_bootstrap.  */

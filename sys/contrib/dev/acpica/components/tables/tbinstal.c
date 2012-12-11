@@ -1357,6 +1357,8 @@ argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 

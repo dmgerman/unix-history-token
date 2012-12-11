@@ -35,6 +35,14 @@ value|"http://llvm.org/bugs/"
 end_define
 
 begin_comment
+comment|/* Define if we have libxml2 */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_HAVE_LIBXML */
+end_comment
+
+begin_comment
 comment|/* Relative directory for resource files */
 end_comment
 
@@ -63,6 +71,17 @@ end_comment
 begin_comment
 comment|/* #undef DEFAULT_SYSROOT */
 end_comment
+
+begin_comment
+comment|/* Define if you want backtraces on crash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_BACKTRACES
+value|1
+end_define
 
 begin_comment
 comment|/* Define if position independent code is enabled */

@@ -110,12 +110,10 @@ name|MCAsmBackend
 block|{
 name|MCAsmBackend
 argument_list|(
-specifier|const
-name|MCAsmBackend
-operator|&
+argument|const MCAsmBackend&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -124,8 +122,8 @@ specifier|const
 name|MCAsmBackend
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -134,6 +132,11 @@ argument_list|()
 expr_stmt|;
 name|unsigned
 name|HasReliableSymbolDifference
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|HasDataInCodeSupport
 range|:
 literal|1
 decl_stmt|;
@@ -191,6 +194,17 @@ specifier|const
 block|{
 return|return
 name|HasReliableSymbolDifference
+return|;
+block|}
+comment|/// hasDataInCodeSupport - Check whether this target implements data-in-code
+comment|/// markers. If not, data region directives will be ignored.
+name|bool
+name|hasDataInCodeSupport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDataInCodeSupport
 return|;
 block|}
 comment|/// doesSectionRequireSymbols - Check whether the given section requires that
@@ -293,7 +307,7 @@ name|IsResolved
 parameter_list|)
 block|{}
 comment|/// @}
-comment|/// applyFixup - Apply the \arg Value for given \arg Fixup into the provided
+comment|/// applyFixup - Apply the \p Value for given \p Fixup into the provided
 comment|/// data fragment, at the offset specified by the fixup and following the
 comment|/// fixup kind as appropriate.
 name|virtual
@@ -370,9 +384,9 @@ decl_stmt|;
 comment|/// RelaxInstruction - Relax the instruction in the given fragment to the next
 comment|/// wider instruction.
 comment|///
-comment|/// \param Inst - The instruction to relax, which may be the same as the
+comment|/// \param Inst The instruction to relax, which may be the same as the
 comment|/// output.
-comment|/// \parm Res [output] - On return, the relaxed instruction.
+comment|/// \param [out] Res On return, the relaxed instruction.
 name|virtual
 name|void
 name|relaxInstruction
@@ -391,6 +405,21 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// @}
+comment|/// getMinimumNopSize - Returns the minimum size of a nop in bytes on this
+comment|/// target. The assembler will use this to emit excess padding in situations
+comment|/// where the padding required for simple alignment would be less than the
+comment|/// minimum nop size.
+comment|///
+name|virtual
+name|unsigned
+name|getMinimumNopSize
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|1
+return|;
+block|}
 comment|/// writeNopData - Write an (optimal) nop sequence of Count bytes to the given
 comment|/// output. If the target cannot generate such a sequence, it should return an
 comment|/// error.

@@ -129,7 +129,7 @@ operator|==
 name|ACPI_TYPE_LOCAL_REFERENCE
 condition|)
 block|{
-comment|/*          * Allow the AML "Constant" opcodes (Zero, One, etc.) to be reference          * objects and thus allow them to be targets.  (As per the ACPI          * specification, a store to a constant is a noop.)          */
+comment|/*          * Allow the AML "Constant" opcodes (Zero, One, etc.) to be reference          * objects and thus allow them to be targets. (As per the ACPI          * specification, a store to a constant is a noop.)          */
 if|if
 condition|(
 operator|(
@@ -1412,7 +1412,7 @@ condition|(
 name|AcpiGbl_EnableInterpreterSlack
 condition|)
 block|{
-comment|/*                      * Enable original behavior of Store(), allowing any and all                      * objects as the source operand.  The ACPI spec does not                      * allow this, however.                      */
+comment|/*                      * Enable original behavior of Store(), allowing any and all                      * objects as the source operand. The ACPI spec does not                      * allow this, however.                      */
 break|break;
 block|}
 if|if

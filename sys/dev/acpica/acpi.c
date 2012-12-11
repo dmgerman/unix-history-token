@@ -7084,7 +7084,7 @@ name|ACPI_DEVICE_INFO
 modifier|*
 name|devinfo
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|ids
 decl_stmt|;

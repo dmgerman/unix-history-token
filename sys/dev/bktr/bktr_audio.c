@@ -1904,7 +1904,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Set volume to 0db gain */
 block|}
-comment|/* MSP3415D SPECIAL CASE Use the Tuner's Mono audio ouput for the MSP */
+comment|/* MSP3415D SPECIAL CASE Use the Tuner's Mono audio output for the MSP */
 comment|/* (for Hauppauge 44xxx card with Tuner Type 0x2a) */
 elseif|else
 if|if

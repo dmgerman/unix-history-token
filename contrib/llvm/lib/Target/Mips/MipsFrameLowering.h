@@ -160,6 +160,15 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+block|;
+name|protected
+operator|:
+name|uint64_t
+name|estimateStackSize
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 comment|/// Create MipsInstrInfo objects.

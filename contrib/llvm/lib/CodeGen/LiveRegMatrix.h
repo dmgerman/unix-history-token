@@ -68,7 +68,7 @@ comment|// LiveRegMatrix is represented as a LiveIntervalUnion per register unit
 end_comment
 
 begin_comment
-comment|// a virtual register is assigned to a physicval register, the live range for
+comment|// a virtual register is assigned to a physical register, the live range for
 end_comment
 
 begin_comment

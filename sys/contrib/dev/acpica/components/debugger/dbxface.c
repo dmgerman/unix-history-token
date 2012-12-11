@@ -465,7 +465,7 @@ case|:
 case|case
 name|AML_CLASS_ARGUMENT
 case|:
-comment|/* constants, literals, etc.  do nothing */
+comment|/* constants, literals, etc. do nothing */
 return|return
 operator|(
 name|AE_OK

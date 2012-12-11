@@ -1230,6 +1230,16 @@ end_expr_stmt
 begin_expr_stmt
 name|EVENTHANDLER_DECLARE
 argument_list|(
+name|nmbufs_change
+argument_list|,
+name|uma_zone_chfn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
 name|maxsockets_change
 argument_list|,
 name|uma_zone_chfn

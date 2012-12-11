@@ -5034,7 +5034,7 @@ name|pa
 parameter_list|,
 name|size
 parameter_list|)
-value|cpu_l2cache_wbinv_range(va, size)
+value|cpu_l2cache_inv_range(va, size)
 end_define
 
 begin_endif
@@ -6983,11 +6983,6 @@ name|bounce_page
 modifier|*
 name|bpage
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"add bounce page\n"
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|dmat

@@ -344,7 +344,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
-specifier|const
 name|fxp_cb_config_template
 index|[]
 init|=
@@ -476,7 +475,6 @@ specifier|static
 specifier|const
 name|struct
 name|fxp_ident
-specifier|const
 name|fxp_ident_table
 index|[]
 init|=
@@ -7098,7 +7096,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -7701,7 +7699,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|sc
 operator|->
@@ -12663,7 +12661,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -14753,7 +14751,6 @@ name|u_short
 name|bundle_max_offset
 decl_stmt|;
 block|}
-decl|const
 name|ucode_table
 index|[]
 init|=

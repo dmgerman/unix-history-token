@@ -198,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSetOutputDestination  *  * PARAMETERS:  OutputFlags         - Current flags word  *  * RETURN:      None  *  * DESCRIPTION: Set the current destination for debugger output.  Also sets  *              the debug output level accordingly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSetOutputDestination  *  * PARAMETERS:  OutputFlags         - Current flags word  *  * RETURN:      None  *  * DESCRIPTION: Set the current destination for debugger output. Also sets  *              the debug output level accordingly.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -399,7 +399,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -629,7 +629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLocalNsLookup  *  * PARAMETERS:  Name            - Name to lookup  *  * RETURN:      Pointer to a namespace node, null on failure  *  * DESCRIPTION: Lookup a name in the ACPI namespace  *  * Note: Currently begins search from the root.  Could be enhanced to use  * the current prefix (scope) node as the search beginning point.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLocalNsLookup  *  * PARAMETERS:  Name            - Name to lookup  *  * RETURN:      Pointer to a namespace node, null on failure  *  * DESCRIPTION: Lookup a name in the ACPI namespace  *  * Note: Currently begins search from the root. Could be enhanced to use  * the current prefix (scope) node as the search beginning point.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -834,7 +834,7 @@ name|ACPI_OBSOLETE_FUNCTIONS
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSecondPassParse  *  * PARAMETERS:  Root            - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Second pass parse of the ACPI tables.  We need to wait until  *              second pass to parse the control methods  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSecondPassParse  *  * PARAMETERS:  Root            - Root of the parse tree  *  * RETURN:      Status  *  * DESCRIPTION: Second pass parse of the ACPI tables. We need to wait until  *              second pass to parse the control methods  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1128,7 +1128,7 @@ name|AcpiDbgLevel
 operator||=
 name|ACPI_LV_TABLES
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 name|ACPI_TO_POINTER
 argument_list|(

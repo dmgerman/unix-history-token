@@ -20,7 +20,7 @@ name|__ASLGLOBAL_H
 end_define
 
 begin_comment
-comment|/*  * Global variables.  Defined in aslmain.c only, externed in all other files  */
+comment|/*  * Global variables. Defined in aslmain.c only, externed in all other files  */
 end_comment
 
 begin_undef
@@ -624,18 +624,6 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_DisassembleAll
-parameter_list|,
-name|FALSE
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ASL_EXTERN
-name|BOOLEAN
-name|ASL_INIT_GLOBAL
-parameter_list|(
-name|Gbl_Acpi2
 parameter_list|,
 name|FALSE
 parameter_list|)

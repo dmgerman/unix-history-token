@@ -26,11 +26,51 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_CAST8
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT8, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST16
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT16, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST32
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT32, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST64
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT64, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_GET8
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT8, ptr)
+value|(*ACPI_CAST8 (ptr))
 end_define
 
 begin_define
@@ -40,7 +80,7 @@ name|ACPI_GET16
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT16, ptr)
+value|(*ACPI_CAST16 (ptr))
 end_define
 
 begin_define
@@ -50,7 +90,7 @@ name|ACPI_GET32
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT32, ptr)
+value|(*ACPI_CAST32 (ptr))
 end_define
 
 begin_define
@@ -60,7 +100,7 @@ name|ACPI_GET64
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT64, ptr)
+value|(*ACPI_CAST64 (ptr))
 end_define
 
 begin_define
@@ -69,8 +109,10 @@ directive|define
 name|ACPI_SET8
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT8, ptr)
+value|(*ACPI_CAST8 (ptr) = (UINT8) (val))
 end_define
 
 begin_define
@@ -79,8 +121,10 @@ directive|define
 name|ACPI_SET16
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT16, ptr)
+value|(*ACPI_CAST16 (ptr) = (UINT16) (val))
 end_define
 
 begin_define
@@ -89,8 +133,10 @@ directive|define
 name|ACPI_SET32
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT32, ptr)
+value|(*ACPI_CAST32 (ptr) = (UINT32) (val))
 end_define
 
 begin_define
@@ -99,8 +145,10 @@ directive|define
 name|ACPI_SET64
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT64, ptr)
+value|(*ACPI_CAST64 (ptr) = (UINT64) (val))
 end_define
 
 begin_comment
@@ -1139,6 +1187,102 @@ value|0x00FFFFFF
 end_define
 
 begin_comment
+comment|/* Macros to extract flag bits from position zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_1BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_1BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_2BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_2BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_3BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_3BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_4BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_4BIT_MASK)
+end_define
+
+begin_comment
+comment|/* Macros to extract flag bits from position one and above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_1BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_1BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_2BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_2BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_3BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_3BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_4BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_4BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_comment
 comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
 end_comment
 
@@ -1967,7 +2111,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|AcpiUtDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
+value|AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
 end_define
 
 begin_else

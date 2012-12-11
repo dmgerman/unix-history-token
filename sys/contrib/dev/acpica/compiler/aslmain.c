@@ -198,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
+value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
@@ -230,6 +230,13 @@ argument_list|(
 literal|"-I<dir>"
 argument_list|,
 literal|"Specify additional include directory"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<sig>|ALL|*"
+argument_list|,
+literal|"Create table template file for ACPI<Sig>"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -335,14 +342,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML Output Files:\n"
+literal|"\nAML and Data Output Files:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-sa -sc"
 argument_list|,
-literal|"Create AML in assembler or C source file (*.asm or *.c)"
+literal|"Create assembler or C source file (*.asm or *.c)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -356,7 +363,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-ta -tc -ts"
 argument_list|,
-literal|"Create AML in assembler, C, or ASL hex table (*.hex)"
+literal|"Create assembler, C, or ASL hex table (*.hex)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -446,13 +453,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-T<sig>|ALL|*"
-argument_list|,
-literal|"Create table template file(s) for<Sig>"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-vt"
 argument_list|,
 literal|"Create verbose templates (full disassembly)"
@@ -507,16 +507,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-2"
+literal|"-g"
 argument_list|,
-literal|"Emit ACPI 2.0 compatible ASL code"
+literal|"Get ACPI tables and write to files (*.dat)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-g"
+literal|"-vt"
 argument_list|,
-literal|"Get ACPI tables and write to files (*.dat)"
+literal|"Dump binary table data in hex format within output file"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -633,7 +633,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  filename prefix.  The filename prefix is obtained via one of the\n"
+literal|"  filename prefix. The filename prefix is obtained via one of the\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1017,8 +1017,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Must save the current GetOpt globals */
@@ -1197,15 +1199,6 @@ literal|1
 operator|)
 return|;
 block|}
-break|break;
-case|case
-literal|'2'
-case|:
-comment|/* ACPI 2.0 compatibility mode */
-name|Gbl_Acpi2
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 case|case
 literal|'b'

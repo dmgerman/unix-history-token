@@ -15942,8 +15942,8 @@ argument_list|(
 name|td
 operator|->
 name|td_pinned
-operator|>
-literal|0
+operator|==
+literal|1
 argument_list|,
 operator|(
 literal|"[pmc,%d] invalid td_pinned value"

@@ -261,9 +261,15 @@ literal|"Chatham Prototype NVMe Controller"
 block|}
 block|,
 block|{
-name|IDT_PCI_ID
+name|IDT32_PCI_ID
 block|,
-literal|"IDT NVMe Controller"
+literal|"IDT NVMe Controller (32 channel)"
+block|}
+block|,
+block|{
+name|IDT8_PCI_ID
+block|,
+literal|"IDT NVMe Controller (8 channel)"
 block|}
 block|,
 block|{

@@ -436,7 +436,7 @@ block|,
 operator|.
 name|maxSpurImmunityLevel
 operator|=
-literal|2
+literal|7
 block|,
 operator|.
 name|cycPwrThr1
@@ -447,6 +447,16 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|8
+block|,
+literal|10
+block|,
+literal|12
+block|,
+literal|14
+block|,
+literal|16
 block|}
 block|,
 operator|.
@@ -720,8 +730,7 @@ operator|=
 name|eepromdata
 expr_stmt|;
 block|}
-comment|/* XXX override with 9285 specific state */
-comment|/* override 5416 methods for our needs */
+comment|/* override with 9285 specific state */
 name|AH5416
 argument_list|(
 name|ah
@@ -730,6 +739,15 @@ operator|->
 name|ah_initPLL
 operator|=
 name|ar9280InitPLL
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_btCoexSetDiversity
+operator|=
+name|ar5416BTCoexAntennaDiversity
 expr_stmt|;
 name|ah
 operator|->
@@ -760,6 +778,12 @@ operator|->
 name|ah_setBoardValues
 operator|=
 name|ar9285SetBoardValues
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btcoexSetParameter
+operator|=
+name|ar9285BTCoexSetParameter
 expr_stmt|;
 name|AH5416
 argument_list|(

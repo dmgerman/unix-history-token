@@ -655,7 +655,7 @@ define|#
 directive|define
 name|ACPI_MPST_CHANNEL_INFO
 define|\
-value|UINT16                  Reserved1; \     UINT8                   ChannelId; \     UINT8                   Reserved2; \     UINT16                  PowerNodeCount;
+value|UINT8                   ChannelId; \     UINT8                   Reserved1[3]; \     UINT16                  PowerNodeCount; \     UINT16                  Reserved2;
 end_define
 
 begin_comment
@@ -721,14 +721,11 @@ decl_stmt|;
 name|UINT64
 name|RangeLength
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|NumPowerStates
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|NumPhysicalComponents
-decl_stmt|;
-name|UINT16
-name|Reserved2
 decl_stmt|;
 block|}
 name|ACPI_MPST_POWER_NODE
@@ -809,6 +806,9 @@ block|{
 name|UINT16
 name|CharacteristicsCount
 decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
 block|}
 name|ACPI_MPST_DATA_HDR
 typedef|;
@@ -820,7 +820,7 @@ struct|struct
 name|acpi_mpst_power_data
 block|{
 name|UINT8
-name|Revision
+name|StructureId
 decl_stmt|;
 name|UINT8
 name|Flags
@@ -888,16 +888,16 @@ decl_stmt|;
 name|UINT16
 name|PccStatus
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|CommandRegister
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|StatusRegister
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|PowerStateId
 decl_stmt|;
-name|UINT16
+name|UINT32
 name|PowerNodeId
 decl_stmt|;
 name|UINT64

@@ -3321,6 +3321,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAGTS450
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0011)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT440
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0014)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGTX550
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0015)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGTX570
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0018)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
 end_define
@@ -3704,6 +3732,18 @@ argument_list|,
 name|SUBDEVICE_ID
 argument_list|,
 name|uint16_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|HDA_ACCESSOR
+argument_list|(
+name|subsystem_id
+argument_list|,
+name|SUBSYSTEM_ID
+argument_list|,
+name|uint32_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt

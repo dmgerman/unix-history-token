@@ -178,6 +178,16 @@ comment|/// TryScope - This is the scope of a C++ try statement.
 name|TryScope
 init|=
 literal|0x1000
+block|,
+comment|/// FnTryScope - This is the scope of a function-level C++ try scope.
+name|FnTryScope
+init|=
+literal|0x3000
+block|,
+comment|/// FnCatchScope - This is the scope of a function-level C++ catch scope.
+name|FnCatchScope
+init|=
+literal|0x4000
 block|}
 enum|;
 name|private

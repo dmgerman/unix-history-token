@@ -197,6 +197,23 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|int
+name|blocks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|clrbuf
+index|[
+name|MAXBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|uufsd
 name|disk
@@ -211,6 +228,7 @@ value|disk.d_fs
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -220,6 +238,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printfs
 parameter_list|(
@@ -229,6 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|journal_alloc
 parameter_list|(
@@ -239,6 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|journal_clear
 parameter_list|(
@@ -248,6 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sbdirty
 parameter_list|(
@@ -2694,6 +2716,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sbdirty
 parameter_list|(
@@ -2720,23 +2743,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|blocks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|clrbuf
-index|[
-name|MAXBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -4461,6 +4467,7 @@ comment|/*  * Clear the flag bits so the journal can be removed.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|journal_clear
 parameter_list|(
@@ -4601,6 +4608,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|journal_alloc
 parameter_list|(
@@ -5360,6 +5368,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -5394,6 +5403,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printfs
 parameter_list|(

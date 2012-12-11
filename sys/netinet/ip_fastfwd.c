@@ -482,16 +482,13 @@ name|hlen
 decl_stmt|,
 name|mtu
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
+init|=
+name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Are we active and forwarding packets? 	 */
 if|if
 condition|(
@@ -1244,9 +1241,6 @@ name|forwardlocal
 goto|;
 comment|/* 		 * Go on with new destination address 		 */
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|m
@@ -1261,9 +1255,6 @@ goto|goto
 name|forwardlocal
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|passin
 label|:
 comment|/* 	 * Step 4: decrement TTL and look up route 	 */
@@ -1485,22 +1476,14 @@ operator|.
 name|s_addr
 expr_stmt|;
 comment|/* 	 * Destination address changed? 	 */
-ifndef|#
-directive|ifndef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
-name|odest
-operator|.
-name|s_addr
-operator|!=
-name|dest
-operator|.
-name|s_addr
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
 condition|)
-block|{
-else|#
-directive|else
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -1527,23 +1510,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 comment|/* 		 * Is it now for a local address on this host? 		 */
-ifndef|#
-directive|ifndef
-name|IPFIREWALL_FORWARD
-if|if
-condition|(
-name|in_localip
-argument_list|(
-name|dest
-argument_list|)
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|m
@@ -1558,9 +1525,6 @@ name|dest
 argument_list|)
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|forwardlocal
 label|:
 comment|/* 			 * Return packet for processing by ip_input(). 			 */
@@ -1588,9 +1552,6 @@ name|m
 return|;
 block|}
 comment|/* 		 * Redo route lookup with new destination address 		 */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|fwd_tag
@@ -1624,10 +1585,14 @@ argument_list|,
 name|fwd_tag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|RTFREE
 argument_list|(
 name|ro
@@ -1949,22 +1914,11 @@ argument_list|,
 name|ifp
 operator|->
 name|if_hwassist
-argument_list|,
-operator|(
-operator|~
-name|ifp
-operator|->
-name|if_hwassist
-operator|&
-name|CSUM_DELAY_IP
-operator|)
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|drop
 goto|;
-block|}
 name|KASSERT
 argument_list|(
 name|m

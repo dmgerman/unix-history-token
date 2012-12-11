@@ -697,7 +697,7 @@ expr|struct
 name|etherip_header
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -846,6 +846,8 @@ name|iphdr
 operator|.
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
@@ -856,6 +858,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip_ecn_ingress
@@ -911,7 +914,7 @@ name|m
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

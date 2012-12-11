@@ -44,11 +44,11 @@ comment|// functionality.  This makes it easier to access the data and provides 
 end_comment
 
 begin_comment
-comment|// place that needs to check it for validity.  All of these classes throw
+comment|// place that needs to check it for validity.  All of these classes abort
 end_comment
 
 begin_comment
-comment|// exceptions on error conditions.
+comment|// on error conditions.
 end_comment
 
 begin_comment
@@ -753,6 +753,22 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isLittleEndianEncoding
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// guessInstructionProperties - should we just guess unset instruction
+end_comment
+
+begin_comment
+comment|/// properties?
+end_comment
+
+begin_expr_stmt
+name|bool
+name|guessInstructionProperties
 argument_list|()
 specifier|const
 expr_stmt|;

@@ -405,7 +405,7 @@ specifier|const
 expr_stmt|;
 comment|/// MergeInTypeInfo - This merges in type information from the specified
 comment|/// argument.  If 'this' changes, it returns true.  If the two types are
-comment|/// contradictory (e.g. merge f32 into i32) then this throws an exception.
+comment|/// contradictory (e.g. merge f32 into i32) then this flags an error.
 name|bool
 name|MergeInTypeInfo
 argument_list|(
@@ -733,8 +733,8 @@ name|x
 union|;
 comment|/// ApplyTypeConstraint - Given a node in a pattern, apply this type
 comment|/// constraint to the nodes operands.  This returns true if it makes a
-comment|/// change, false otherwise.  If a type contradiction is found, throw an
-comment|/// exception.
+comment|/// change, false otherwise.  If a type contradiction is found, an error
+comment|/// is flagged.
 name|bool
 name|ApplyTypeConstraint
 argument_list|(
@@ -922,7 +922,7 @@ block|}
 comment|/// ApplyTypeConstraints - Given a node in a pattern, apply the type
 comment|/// constraints for this node to the operands of the node.  This returns
 comment|/// true if it makes a change, false otherwise.  If a type contradiction is
-comment|/// found, throw an exception.
+comment|/// found, an error is flagged.
 name|bool
 name|ApplyTypeConstraints
 argument_list|(
@@ -1941,8 +1941,7 @@ parameter_list|)
 function_decl|;
 comment|/// ApplyTypeConstraints - Apply all of the type constraints relevant to
 comment|/// this node and its children in the tree.  This returns true if it makes a
-comment|/// change, false otherwise.  If a type contradiction is found, throw an
-comment|/// exception.
+comment|/// change, false otherwise.  If a type contradiction is found, flag an error.
 name|bool
 name|ApplyTypeConstraints
 parameter_list|(
@@ -1955,8 +1954,8 @@ name|NotRegisters
 parameter_list|)
 function_decl|;
 comment|/// UpdateNodeType - Set the node type of N to VT if VT contains
-comment|/// information.  If N already contains a conflicting type, then throw an
-comment|/// exception.  This returns true if any information was updated.
+comment|/// information.  If N already contains a conflicting type, then flag an
+comment|/// error.  This returns true if any information was updated.
 comment|///
 name|bool
 name|UpdateNodeType
@@ -2234,6 +2233,11 @@ comment|/// isInputPattern - True if this is an input pattern, something to matc
 comment|/// False if this is an output pattern, something to emit.
 name|bool
 name|isInputPattern
+decl_stmt|;
+comment|/// hasError - True if the currently processed nodes have unresolvable types
+comment|/// or other non-fatal errors
+name|bool
+name|HasError
 decl_stmt|;
 name|public
 label|:
@@ -2546,7 +2550,7 @@ comment|/// patterns as possible.  Return true if all types are inferred, false
 end_comment
 
 begin_comment
-comment|/// otherwise.  Throw an exception if a type contradiction is found.
+comment|/// otherwise.  Bail out if a type contradiction is found.
 end_comment
 
 begin_decl_stmt
@@ -2573,11 +2577,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// error - Throw an exception, prefixing it with information about this
+comment|/// error - If this is the first error in the current resolution step,
 end_comment
 
 begin_comment
-comment|/// pattern.
+comment|/// print it and set the error flag.  Otherwise, continue silently.
 end_comment
 
 begin_decl_stmt
@@ -2591,9 +2595,32 @@ name|string
 operator|&
 name|Msg
 argument_list|)
-decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|hasError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasError
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|resetError
+parameter_list|()
+block|{
+name|HasError
+operator|=
+name|false
+expr_stmt|;
+block|}
+end_function
 
 begin_decl_stmt
 name|void
@@ -2655,11 +2682,11 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// DAGDefaultOperand - One of these is created for each PredicateOperand
+comment|/// DAGDefaultOperand - One of these is created for each OperandWithDefaultOps
 end_comment
 
 begin_comment
-comment|/// or OptionalDefOperand that has a set ExecuteAlways / DefaultOps field.
+comment|/// that has a set ExecuteAlways / DefaultOps field.
 end_comment
 
 begin_struct
@@ -2785,7 +2812,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-specifier|const
 name|TreePattern
 operator|*
 name|getPattern
@@ -3153,34 +3179,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|// Deterministic comparison of Record*.
-end_comment
-
-begin_struct
-struct|struct
-name|RecordPtrCmp
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|Record
-operator|*
-name|LHS
-operator|,
-specifier|const
-name|Record
-operator|*
-name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 name|class
 name|CodeGenDAGPatterns
@@ -3217,7 +3215,7 @@ operator|*
 operator|,
 name|SDNodeInfo
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 name|SDNodes
 expr_stmt|;
@@ -3240,7 +3238,7 @@ operator|::
 name|string
 operator|>
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 name|SDNodeXForms
 expr_stmt|;
@@ -3253,7 +3251,7 @@ operator|*
 operator|,
 name|ComplexPattern
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 name|ComplexPatterns
 expr_stmt|;
@@ -3267,7 +3265,7 @@ operator|,
 name|TreePattern
 operator|*
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 name|PatternFragments
 expr_stmt|;
@@ -3280,7 +3278,7 @@ operator|*
 operator|,
 name|DAGDefaultOperand
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 name|DefaultOperands
 expr_stmt|;
@@ -3293,7 +3291,7 @@ operator|*
 operator|,
 name|DAGInstruction
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 name|Instructions
 expr_stmt|;
@@ -3459,7 +3457,7 @@ operator|*
 operator|,
 name|NodeXForm
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 operator|::
 name|const_iterator
@@ -3883,7 +3881,7 @@ operator|,
 name|TreePattern
 operator|*
 operator|,
-name|RecordPtrCmp
+name|LessRecordByID
 operator|>
 operator|::
 name|const_iterator
@@ -4064,9 +4062,12 @@ name|GenerateVariants
 parameter_list|()
 function_decl|;
 name|void
+name|VerifyInstructionFlags
+parameter_list|()
+function_decl|;
+name|void
 name|AddPatternToMatch
 parameter_list|(
-specifier|const
 name|TreePattern
 modifier|*
 name|Pattern

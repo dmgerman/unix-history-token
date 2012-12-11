@@ -382,7 +382,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"BCM2835 Timecouter"
+literal|"BCM2835 Timecounter"
 block|,
 operator|.
 name|tc_get_timecount

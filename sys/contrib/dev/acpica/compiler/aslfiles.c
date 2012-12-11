@@ -76,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler.  Used for serious  *              I/O errors  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler. Used for serious  *              I/O errors  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -200,6 +200,23 @@ argument_list|,
 name|Mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|File
+condition|)
+block|{
+name|FlFileError
+argument_list|(
+name|FileId
+argument_list|,
+name|ASL_MSG_OPEN
+argument_list|)
+expr_stmt|;
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 name|Gbl_Files
 index|[
 name|FileId
@@ -218,23 +235,6 @@ name|Handle
 operator|=
 name|File
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|File
-condition|)
-block|{
-name|FlFileError
-argument_list|(
-name|FileId
-argument_list|,
-name|ASL_MSG_OPEN
-argument_list|)
-expr_stmt|;
-name|AslAbort
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -314,7 +314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlReadFile  *  * PARAMETERS:  FileId              - Index into file info array  *              Buffer              - Where to place the data  *              Length              - Amount to read  *  * RETURN:      Status.  AE_ERROR indicates EOF.  *  * DESCRIPTION: Read data from an open file.  *              NOTE: Aborts compiler on any error.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlReadFile  *  * PARAMETERS:  FileId              - Index into file info array  *              Buffer              - Where to place the data  *              Length              - Amount to read  *  * RETURN:      Status. AE_ERROR indicates EOF.  *  * DESCRIPTION: Read data from an open file.  *              NOTE: Aborts compiler on any error.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -357,7 +357,7 @@ expr_stmt|;
 if|if
 condition|(
 name|Actual
-operator|!=
+operator|<
 name|Length
 condition|)
 block|{
@@ -594,7 +594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCloseFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Close an open file.  Aborts compiler on error  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCloseFile  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      None  *  * DESCRIPTION: Close an open file. Aborts compiler on error  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1302,9 +1302,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|IncludeFile
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not open include file %s\n"
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Pathname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Push the include file on the open input file stack */
 name|AslPushInputFileStack
 argument_list|(
@@ -1316,17 +1337,6 @@ expr_stmt|;
 return|return
 operator|(
 name|IncludeFile
-operator|)
-return|;
-block|}
-name|ACPI_FREE
-argument_list|(
-name|Pathname
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
@@ -1619,7 +1629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlOpenAmlOutputFile  *  * PARAMETERS:  FilenamePrefix       - The user-specified ASL source file  *  * RETURN:      Status  *  * DESCRIPTION: Create the output filename (*.AML) and open the file.  The file  *              is created in the same directory as the parent input file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlOpenAmlOutputFile  *  * PARAMETERS:  FilenamePrefix       - The user-specified ASL source file  *  * RETURN:      Status  *  * DESCRIPTION: Create the output filename (*.AML) and open the file. The file  *              is created in the same directory as the parent input file.  *  ******************************************************************************/
 end_comment
 
 begin_function

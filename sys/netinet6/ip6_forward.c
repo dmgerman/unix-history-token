@@ -359,16 +359,11 @@ name|sw_csum
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|ip6bufs
 index|[
@@ -1149,13 +1144,8 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|again2
 label|:
-endif|#
-directive|endif
 name|rin6
 operator|.
 name|ro_rt
@@ -2046,9 +2036,6 @@ name|again
 goto|;
 comment|/* Redo the routing table lookup. */
 block|}
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 comment|/* See if local, if yes, send it to netisr. */
 if|if
 condition|(
@@ -2144,6 +2131,17 @@ name|out
 goto|;
 block|}
 comment|/* Or forward to some other address? */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP6_NEXTHOP
+operator|)
+operator|&&
+operator|(
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -2154,10 +2152,9 @@ name|PACKET_TAG_IPFORWARD
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fwd_tag
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dst
@@ -2195,6 +2192,13 @@ name|m_flags
 operator||=
 name|M_SKIP_FIREWALL
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP6_NEXTHOP
+expr_stmt|;
 name|m_tag_delete
 argument_list|(
 name|m
@@ -2206,9 +2210,6 @@ goto|goto
 name|again2
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|pass
 label|:
 name|error

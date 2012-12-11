@@ -301,20 +301,6 @@ operator|==
 name|InvalidKind
 return|;
 block|}
-comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|PreprocessedEntity
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Only allow allocation of preprocessed entities using the allocator
 comment|// in PreprocessingRecord or by doing a placement new.
 name|void
@@ -501,17 +487,6 @@ operator|<=
 name|LastPreprocessingDirective
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PreprocessingDirective *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief Record the location of a macro definition.
@@ -590,17 +565,6 @@ name|getKind
 argument_list|()
 operator|==
 name|MacroDefinitionKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MacroDefinition *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -756,17 +720,6 @@ operator|==
 name|MacroExpansionKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MacroExpansion *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief Record the location of an inclusion directive, such as an
@@ -819,6 +772,13 @@ name|Kind
 operator|:
 literal|2
 block|;
+comment|/// \brief Whether the inclusion directive was automatically turned into
+comment|/// a module import.
+name|unsigned
+name|ImportedModule
+operator|:
+literal|1
+block|;
 comment|/// \brief The file that was included.
 specifier|const
 name|FileEntry
@@ -836,6 +796,8 @@ argument_list|,
 argument|StringRef FileName
 argument_list|,
 argument|bool InQuotes
+argument_list|,
+argument|bool ImportedModule
 argument_list|,
 argument|const FileEntry *File
 argument_list|,
@@ -879,6 +841,17 @@ return|return
 name|InQuotes
 return|;
 block|}
+comment|/// \brief Determine whether the inclusion directive was automatically
+comment|/// turned into a module import.
+name|bool
+name|importedModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ImportedModule
+return|;
+block|}
 comment|/// \brief Retrieve the file entry for the actual file that was included
 comment|/// by this directive.
 specifier|const
@@ -907,17 +880,6 @@ name|getKind
 argument_list|()
 operator|==
 name|InclusionDirectiveKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InclusionDirective *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -949,7 +911,7 @@ operator|=
 literal|0
 block|;
 comment|/// \brief Returns a pair of [Begin, End) indices of preallocated
-comment|/// preprocessed entities that \arg Range encompasses.
+comment|/// preprocessed entities that \p Range encompasses.
 name|virtual
 name|std
 operator|::
@@ -967,7 +929,7 @@ operator|=
 literal|0
 block|;
 comment|/// \brief Optionally returns true or false if the preallocated preprocessed
-comment|/// entity with index \arg Index came from file \arg FID.
+comment|/// entity with index \p Index came from file \p FID.
 name|virtual
 name|llvm
 operator|::
@@ -1240,13 +1202,45 @@ comment|/// \brief Global (loaded or local) ID for a preprocessed entity.
 comment|/// Negative values are used to indicate preprocessed entities
 comment|/// loaded from the external source while non-negative values are used to
 comment|/// indicate preprocessed entities introduced by the current preprocessor.
-comment|/// If M is the number of loaded preprocessed entities, value -M
-comment|/// corresponds to element 0 in the loaded entities vector, position -M+1
-comment|/// corresponds to element 1 in the loaded entities vector, etc.
-typedef|typedef
-name|int
+comment|/// Value -1 corresponds to element 0 in the loaded entities vector,
+comment|/// value -2 corresponds to element 1 in the loaded entities vector, etc.
+comment|/// Value 0 is an invalid value, the index to local entities is 1-based,
+comment|/// value 1 corresponds to element 0 in the local entities vector,
+comment|/// value 2 corresponds to element 1 in the local entities vector, etc.
+name|class
 name|PPEntityID
-typedef|;
+block|{
+name|int
+name|ID
+block|;
+name|explicit
+name|PPEntityID
+argument_list|(
+argument|int ID
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+argument|ID
+argument_list|)
+block|{}
+name|friend
+name|class
+name|PreprocessingRecord
+block|;
+name|public
+operator|:
+name|PPEntityID
+argument_list|()
+operator|:
+name|ID
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+block|;
+specifier|static
 name|PPEntityID
 name|getPPEntityID
 argument_list|(
@@ -1254,22 +1248,27 @@ argument|unsigned Index
 argument_list|,
 argument|bool isLoaded
 argument_list|)
-specifier|const
 block|{
 return|return
 name|isLoaded
 operator|?
 name|PPEntityID
 argument_list|(
+operator|-
+name|int
+argument_list|(
 name|Index
 argument_list|)
 operator|-
-name|LoadedPreprocessedEntities
-operator|.
-name|size
-argument_list|()
+literal|1
+argument_list|)
 operator|:
+name|PPEntityID
+argument_list|(
 name|Index
+operator|+
+literal|1
+argument_list|)
 return|;
 block|}
 comment|/// \brief Mapping from MacroInfo structures to their definitions.
@@ -1321,7 +1320,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Returns a pair of [Begin, End) indices of local preprocessed
-comment|/// entities that \arg Range encompasses.
+comment|/// entities that \p Range encompasses.
 name|std
 operator|::
 name|pair
@@ -1443,7 +1442,7 @@ comment|/// values (corresponding to loaded entities), so that position -M
 comment|/// corresponds to element 0 in the loaded entities vector, position -M+1
 comment|/// corresponds to element 1 in the loaded entities vector, etc. This
 comment|/// gives us a reasonably efficient, source-order walk.
-name|PPEntityID
+name|int
 name|Position
 block|;
 name|public
@@ -1490,17 +1489,17 @@ name|iterator
 argument_list|(
 argument|PreprocessingRecord *Self
 argument_list|,
-argument|PPEntityID Position
+argument|int Position
 argument_list|)
 operator|:
 name|Self
 argument_list|(
 name|Self
 argument_list|)
-decl_stmt|,
+block|,
 name|Position
 argument_list|(
-name|Position
+argument|Position
 argument_list|)
 block|{ }
 name|value_type
@@ -1510,22 +1509,57 @@ operator|(
 operator|)
 specifier|const
 block|{
+name|bool
+name|isLoaded
+operator|=
+name|Position
+operator|<
+literal|0
+block|;
+name|unsigned
+name|Index
+operator|=
+name|isLoaded
+condition|?
+name|Self
+operator|->
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+operator|+
+name|Position
+else|:
+name|Position
+block|;
+name|PPEntityID
+name|ID
+operator|=
+name|Self
+operator|->
+name|getPPEntityID
+argument_list|(
+name|Index
+argument_list|,
+name|isLoaded
+argument_list|)
+block|;
 return|return
 name|Self
 operator|->
 name|getPreprocessedEntity
 argument_list|(
-name|Position
+name|ID
 argument_list|)
 return|;
 block|}
 name|value_type
 name|operator
-function|[]
-parameter_list|(
+index|[]
+operator|(
 name|difference_type
 name|D
-parameter_list|)
+operator|)
 block|{
 return|return
 operator|*
@@ -1618,7 +1652,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1644,7 +1678,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1670,7 +1704,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1696,7 +1730,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1722,7 +1756,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1748,7 +1782,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1774,7 +1808,7 @@ operator|(
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 name|difference_type
 name|D
 operator|)
@@ -1798,7 +1832,7 @@ operator|(
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 name|difference_type
 name|D
 operator|)
@@ -1820,7 +1854,7 @@ operator|+
 operator|(
 name|iterator
 name|X
-operator|,
+expr|,
 name|difference_type
 name|D
 operator|)
@@ -1842,7 +1876,7 @@ operator|+
 operator|(
 name|difference_type
 name|D
-operator|,
+expr|,
 name|iterator
 name|X
 operator|)
@@ -1866,7 +1900,7 @@ specifier|const
 name|iterator
 operator|&
 name|X
-operator|,
+expr|,
 specifier|const
 name|iterator
 operator|&
@@ -1890,7 +1924,7 @@ operator|-
 operator|(
 name|iterator
 name|X
-operator|,
+expr|,
 name|difference_type
 name|D
 operator|)
@@ -1908,26 +1942,13 @@ block|}
 name|friend
 name|class
 name|PreprocessingRecord
+block|;     }
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|iterator
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Begin iterator for all preprocessed entities.
-end_comment
-
-begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -1948,13 +1969,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief End iterator for all preprocessed entities.
-end_comment
-
-begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -1971,13 +1986,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Begin iterator for local, non-loaded, preprocessed entities.
-end_comment
-
-begin_function
 name|iterator
 name|local_begin
 parameter_list|()
@@ -1991,13 +2000,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief End iterator for local, non-loaded, preprocessed entities.
-end_comment
-
-begin_function
 name|iterator
 name|local_end
 parameter_list|()
@@ -2014,29 +2017,82 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
+comment|/// \brief begin/end iterator pair for the given range of loaded
+comment|/// preprocessed entities.
+name|std
+operator|::
+name|pair
+operator|<
+name|iterator
+operator|,
+name|iterator
+operator|>
+name|getIteratorsForLoadedRange
+argument_list|(
+argument|unsigned start
+argument_list|,
+argument|unsigned count
+argument_list|)
+block|{
+name|unsigned
+name|end
+operator|=
+name|start
+operator|+
+name|count
+block|;
+name|assert
+argument_list|(
+name|end
+operator|<=
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|iterator
+argument_list|(
+name|this
+argument_list|,
+name|int
+argument_list|(
+name|start
+argument_list|)
+operator|-
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+argument_list|)
+argument_list|,
+name|iterator
+argument_list|(
+name|this
+argument_list|,
+name|int
+argument_list|(
+name|end
+argument_list|)
+operator|-
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// \brief Returns a pair of [Begin, End) iterators of preprocessed entities
-end_comment
-
-begin_comment
-comment|/// that source range \arg R encompasses.
-end_comment
-
-begin_comment
+comment|/// that source range \p R encompasses.
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param R the range to look for preprocessed entities.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -2050,37 +2106,13 @@ argument_list|(
 argument|SourceRange R
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Returns true if the preprocessed entity that \arg PPEI iterator
-end_comment
-
-begin_comment
-comment|/// points to is coming from the file \arg FID.
-end_comment
-
-begin_comment
+comment|/// \brief Returns true if the preprocessed entity that \p PPEI iterator
+comment|/// points to is coming from the file \p FID.
 comment|///
-end_comment
-
-begin_comment
 comment|/// Can be used to avoid implicit deserializations of preallocated
-end_comment
-
-begin_comment
 comment|/// preprocessed entities if we only care about entities of a specific file
-end_comment
-
-begin_comment
 comment|/// and not from files \#included in the range given at
-end_comment
-
-begin_comment
 comment|/// \see getPreprocessedEntitiesInRange.
-end_comment
-
-begin_function_decl
 name|bool
 name|isEntityInFileID
 parameter_list|(
@@ -2091,13 +2123,7 @@ name|FileID
 name|FID
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Add a new preprocessed entity to this record.
-end_comment
-
-begin_function_decl
 name|PPEntityID
 name|addPreprocessedEntity
 parameter_list|(
@@ -2106,17 +2132,8 @@ modifier|*
 name|Entity
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Returns true if this PreprocessingRecord is keeping track of
-end_comment
-
-begin_comment
 comment|/// conditional directives locations.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isRecordingConditionalDirectives
 argument_list|()
@@ -2126,21 +2143,9 @@ return|return
 name|RecordCondDirectives
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Returns true if the given range intersects with a conditional
-end_comment
-
-begin_comment
 comment|/// directive. if a \#if/\#endif block is fully contained within the range,
-end_comment
-
-begin_comment
 comment|/// this function will return false.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|rangeIntersectsConditionalDirective
 argument_list|(
@@ -2149,17 +2154,8 @@ name|Range
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Returns true if the given locations are in different regions,
-end_comment
-
-begin_comment
 comment|/// separated by conditional directive blocks.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|areInDifferentConditionalDirectiveRegion
 argument_list|(
@@ -2183,13 +2179,7 @@ name|RHS
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Set the external source for preprocessed entities.
-end_comment
-
-begin_function_decl
 name|void
 name|SetExternalSource
 parameter_list|(
@@ -2198,13 +2188,7 @@ modifier|&
 name|Source
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Retrieve the external source for preprocessed entities.
-end_comment
-
-begin_expr_stmt
 name|ExternalPreprocessingRecordSource
 operator|*
 name|getExternalSource
@@ -2215,17 +2199,8 @@ return|return
 name|ExternalSource
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the macro definition that corresponds to the given
-end_comment
-
-begin_comment
 comment|/// \c MacroInfo.
-end_comment
-
-begin_function_decl
 name|MacroDefinition
 modifier|*
 name|findMacroDefinition
@@ -2236,14 +2211,8 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_function_decl
 name|virtual
 name|void
 name|MacroExpands
@@ -2262,9 +2231,6 @@ name|SourceRange
 name|Range
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|MacroDefined
@@ -2280,9 +2246,6 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|MacroUndefined
@@ -2298,9 +2261,6 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|InclusionDirective
@@ -2319,24 +2279,26 @@ parameter_list|,
 name|bool
 name|IsAngled
 parameter_list|,
+name|CharSourceRange
+name|FilenameRange
+parameter_list|,
 specifier|const
 name|FileEntry
 modifier|*
 name|File
-parameter_list|,
-name|SourceLocation
-name|EndLoc
 parameter_list|,
 name|StringRef
 name|SearchPath
 parameter_list|,
 name|StringRef
 name|RelativePath
+parameter_list|,
+specifier|const
+name|Module
+modifier|*
+name|Imported
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|If
@@ -2348,9 +2310,6 @@ name|SourceRange
 name|ConditionRange
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|Elif
@@ -2365,9 +2324,6 @@ name|SourceLocation
 name|IfLoc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|Ifdef
@@ -2381,9 +2337,6 @@ modifier|&
 name|MacroNameTok
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|Ifndef
@@ -2397,9 +2350,6 @@ modifier|&
 name|MacroNameTok
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|Else
@@ -2411,9 +2361,6 @@ name|SourceLocation
 name|IfLoc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|Endif
@@ -2425,17 +2372,8 @@ name|SourceLocation
 name|IfLoc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Cached result of the last \see getPreprocessedEntitiesInRange
-end_comment
-
-begin_comment
 comment|/// query.
-end_comment
-
-begin_struct
 struct|struct
 block|{
 name|SourceRange
@@ -2445,49 +2383,45 @@ name|std
 operator|::
 name|pair
 operator|<
-name|PPEntityID
+name|int
 operator|,
-name|PPEntityID
+name|int
 operator|>
 name|Result
 expr_stmt|;
 block|}
 name|CachedRangeQuery
 struct|;
-end_struct
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
 operator|<
-name|PPEntityID
+name|int
 operator|,
-name|PPEntityID
+name|int
 operator|>
 name|getPreprocessedEntitiesInRangeSlow
 argument_list|(
 argument|SourceRange R
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTReader
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTWriter
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|}; }
+unit|}
 comment|// end namespace clang
 end_comment
 

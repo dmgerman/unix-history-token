@@ -253,7 +253,32 @@ decl_stmt|;
 name|ACPI_SIZE
 name|Length
 decl_stmt|;
-comment|/* Search upwards in the parse tree until we reach a namespace node */
+name|UINT32
+name|Index
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* Search upwards in the parse tree until we reach the next namespace node */
+name|Op
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
 while|while
 condition|(
 name|Op
@@ -385,6 +410,20 @@ comment|/*          * If ParentPath is not just a simple '\', increment the leng
 name|Length
 operator|++
 expr_stmt|;
+comment|/* For External() statements, we do not want a leading '\' */
+if|if
+condition|(
+operator|*
+name|ParentPath
+operator|==
+name|AML_ROOT_PREFIX
+condition|)
+block|{
+name|Index
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 name|Fullpath
 operator|=
@@ -404,11 +443,15 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Concatenate parent fullpath and path. For example,      * parent fullpath "\_SB_", Path "^INIT", Fullpath "\_SB_.INIT"      *      * Copy the parent path      */
-name|ACPI_STRCAT
+name|ACPI_STRCPY
 argument_list|(
 name|Fullpath
 argument_list|,
+operator|&
 name|ParentPath
+index|[
+name|Index
+index|]
 argument_list|)
 expr_stmt|;
 comment|/*      * Add dot separator      * (don't need dot if parent fullpath is a single backslash)      */
@@ -704,7 +747,29 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Externalize the ACPI path */
+comment|/*      * We don't want External() statements to contain a leading '\'.      * This prevents duplicate external statements of the form:      *      *    External (\ABCD)      *    External (ABCD)      *      * This would cause a compile time error when the disassembled      * output file is recompiled.      */
+if|if
+condition|(
+operator|(
+operator|*
+name|Path
+operator|==
+name|AML_ROOT_PREFIX
+operator|)
+operator|&&
+operator|(
+name|Path
+index|[
+literal|1
+index|]
+operator|)
+condition|)
+block|{
+name|Path
+operator|++
+expr_stmt|;
+block|}
+comment|/* Externalize the ACPI pathname */
 name|Status
 operator|=
 name|AcpiNsExternalizeName
@@ -729,7 +794,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Get the full pathname from root if "Path" has a parent prefix */
+comment|/*      * Get the full pathname from the root if "Path" has one or more      * parent prefixes (^). Note: path will not contain a leading '\'.      */
 if|if
 condition|(
 operator|*

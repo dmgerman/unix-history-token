@@ -179,6 +179,30 @@ name|PathDiagnosticConsumer
 block|{
 name|public
 label|:
+name|class
+name|PDFileEntry
+range|:
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|public
+operator|:
+name|PDFileEntry
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|NodeID
+argument_list|)
+operator|:
+name|NodeID
+argument_list|(
+argument|NodeID
+argument_list|)
+block|{}
 typedef|typedef
 name|std
 operator|::
@@ -190,13 +214,79 @@ name|pair
 operator|<
 name|StringRef
 operator|,
-name|std
-operator|::
-name|string
+name|StringRef
 operator|>
 expr|>
-name|FilesMade
+name|ConsumerFiles
 expr_stmt|;
+comment|/// \brief A vector of<consumer,file> pairs.
+name|ConsumerFiles
+name|files
+decl_stmt|;
+comment|/// \brief A precomputed hash tag used for uniquing PDFileEntry objects.
+specifier|const
+name|llvm
+operator|::
+name|FoldingSetNodeID
+name|NodeID
+expr_stmt|;
+comment|/// \brief Used for profiling in the FoldingSet.
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|{
+name|ID
+operator|=
+name|NodeID
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+name|struct
+name|FilesMade
+range|:
+name|public
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|PDFileEntry
+operator|>
+block|{
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|Alloc
+block|;
+name|void
+name|addDiagnostic
+argument_list|(
+argument|const PathDiagnostic&PD
+argument_list|,
+argument|StringRef ConsumerName
+argument_list|,
+argument|StringRef fileName
+argument_list|)
+block|;
+name|PDFileEntry
+operator|::
+name|ConsumerFiles
+operator|*
+name|getFiles
+argument_list|(
+specifier|const
+name|PathDiagnostic
+operator|&
+name|PD
+argument_list|)
+block|;   }
+decl_stmt|;
 name|private
 label|:
 name|virtual
@@ -303,16 +393,6 @@ specifier|const
 block|{
 return|return
 name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|useVerboseDescription
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|/// Return true if the PathDiagnosticConsumer supports individual
@@ -478,23 +558,7 @@ name|Range
 argument_list|(
 argument|genRange()
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Loc
-operator|.
-name|isValid
-argument_list|()
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|Range
-operator|.
-name|isValid
-argument_list|()
-argument_list|)
-block|;   }
+block|{   }
 name|FullSourceLoc
 name|genLocation
 argument_list|(
@@ -557,12 +621,28 @@ argument_list|)
 operator|:
 name|K
 argument_list|(
+name|s
+operator|->
+name|getLocStart
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|?
 name|StmtK
+operator|:
+name|SingleLocK
 argument_list|)
 operator|,
 name|S
 argument_list|(
+name|K
+operator|==
+name|StmtK
+operator|?
 name|s
+operator|:
+literal|0
 argument_list|)
 operator|,
 name|D
@@ -594,11 +674,19 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+name|K
+operator|==
+name|SingleLocK
+operator|||
 name|S
 argument_list|)
 block|;
 name|assert
 argument_list|(
+name|K
+operator|==
+name|SingleLocK
+operator|||
 name|Loc
 operator|.
 name|isValid
@@ -607,6 +695,10 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
+name|K
+operator|==
+name|SingleLocK
+operator|||
 name|Range
 operator|.
 name|isValid
@@ -1289,6 +1381,13 @@ specifier|const
 name|DisplayHint
 name|Hint
 block|;
+comment|/// A constant string that can be used to tag the PathDiagnosticPiece,
+comment|/// typically with the identification of the creator.  The actual pointer
+comment|/// value is meant to be an identifier; the string itself is useful for
+comment|/// debugging.
+name|StringRef
+name|Tag
+block|;
 name|std
 operator|::
 name|vector
@@ -1297,20 +1396,17 @@ name|SourceRange
 operator|>
 name|ranges
 block|;
-comment|// Do not implement:
 name|PathDiagnosticPiece
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
 name|PathDiagnosticPiece
 argument_list|(
-specifier|const
-name|PathDiagnosticPiece
-operator|&
-name|P
+argument|const PathDiagnosticPiece&P
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-name|PathDiagnosticPiece
-operator|&
+name|void
 name|operator
 operator|=
 operator|(
@@ -1319,6 +1415,7 @@ name|PathDiagnosticPiece
 operator|&
 name|P
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|protected
 operator|:
@@ -1345,17 +1442,52 @@ operator|~
 name|PathDiagnosticPiece
 argument_list|()
 block|;
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getString
 argument_list|()
 specifier|const
 block|{
 return|return
 name|str
+return|;
+block|}
+comment|/// Tag this PathDiagnosticPiece with the given C-string.
+name|void
+name|setTag
+argument_list|(
+argument|const char *tag
+argument_list|)
+block|{
+name|Tag
+operator|=
+name|tag
+block|; }
+comment|/// Return the opaque tag (if any) on the PathDiagnosticPiece.
+specifier|const
+name|void
+operator|*
+name|getTag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Tag
+operator|.
+name|data
+argument_list|()
+return|;
+block|}
+comment|/// Return the string representation of the tag.  This is useful
+comment|/// for debugging.
+name|StringRef
+name|getTagStr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Tag
 return|;
 block|}
 comment|/// getDisplayHint - Return a hint indicating where the diagnostic should
@@ -1451,7 +1583,13 @@ argument_list|)
 argument_list|)
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Return the SourceRanges associated with this PathDiagnosticPiece.
+end_comment
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|SourceRange
@@ -1464,21 +1602,9 @@ return|return
 name|ranges
 return|;
 block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|PathDiagnosticPiece
-modifier|*
-name|P
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|virtual
 name|void
 name|Profile
@@ -1491,14 +1617,10 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
+unit|};
 name|class
 name|PathPieces
 range|:
@@ -1653,7 +1775,31 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
-block|; }
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const PathDiagnosticPiece *P
+argument_list|)
+block|{
+return|return
+name|P
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|Event
+operator|||
+name|P
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|Macro
+return|;
+block|}
+expr|}
 block|;
 comment|/// \brief Interface for classes constructing Stack hints.
 comment|///
@@ -1745,16 +1891,6 @@ specifier|const
 name|ExplodedNode
 operator|*
 name|N
-argument_list|)
-block|;
-comment|/// Prints the ordinal form of the given integer,
-comment|/// only valid for ValNo : ValNo> 0.
-name|void
-name|printOrdinal
-argument_list|(
-argument|unsigned ValNo
-argument_list|,
-argument|llvm::raw_svector_ostream&Out
 argument_list|)
 block|;
 comment|/// Produces the message of the following form:
@@ -2564,13 +2700,10 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|class
 name|PathDiagnosticMacroPiece
-range|:
+operator|:
 name|public
 name|PathDiagnosticSpotPiece
 block|{
@@ -2675,25 +2808,13 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// PathDiagnostic - PathDiagnostic objects represent a single path-sensitive
-end_comment
-
-begin_comment
 comment|///  diagnostic.  It represents an ordered-collection of PathDiagnosticPieces,
-end_comment
-
-begin_comment
 comment|///  each which represent the pieces of the path.
-end_comment
-
-begin_decl_stmt
 name|class
 name|PathDiagnostic
-range|:
+operator|:
 name|public
 name|llvm
 operator|::
@@ -2712,7 +2833,12 @@ block|;
 name|std
 operator|::
 name|string
-name|Desc
+name|VerboseDesc
+block|;
+name|std
+operator|::
+name|string
+name|ShortDesc
 block|;
 name|std
 operator|::
@@ -2728,6 +2854,9 @@ operator|::
 name|string
 operator|>
 name|OtherDesc
+block|;
+name|PathDiagnosticLocation
+name|Loc
 block|;
 name|PathPieces
 name|pathImpl
@@ -2749,6 +2878,23 @@ block|;
 comment|// Do not implement.
 name|public
 operator|:
+name|PathDiagnostic
+argument_list|(
+argument|const Decl *DeclWithIssue
+argument_list|,
+argument|StringRef bugtype
+argument_list|,
+argument|StringRef verboseDesc
+argument_list|,
+argument|StringRef shortDesc
+argument_list|,
+argument|StringRef category
+argument_list|)
+block|;
+operator|~
+name|PathDiagnostic
+argument_list|()
+block|;
 specifier|const
 name|PathPieces
 operator|&
@@ -2779,43 +2925,26 @@ name|back
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a mutable version of 'path'.
-end_comment
-
-begin_function
 name|PathPieces
-modifier|&
+operator|&
 name|getMutablePieces
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|pathImpl
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Return the unrolled size of the path.
-end_comment
-
-begin_function_decl
 name|unsigned
 name|full_size
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function
+argument_list|()
+block|;
 name|void
 name|pushActivePath
-parameter_list|(
-name|PathPieces
-modifier|*
-name|p
-parameter_list|)
+argument_list|(
+argument|PathPieces *p
+argument_list|)
 block|{
 name|pathStack
 operator|.
@@ -2823,14 +2952,10 @@ name|push_back
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+block|; }
 name|void
 name|popActivePath
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -2846,9 +2971,6 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isWithinCall
 argument_list|()
@@ -2862,49 +2984,92 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|//  PathDiagnostic();
-end_comment
-
-begin_macro
-name|PathDiagnostic
+name|void
+name|setEndOfPath
 argument_list|(
-argument|const Decl *DeclWithIssue
-argument_list|,
-argument|StringRef bugtype
-argument_list|,
-argument|StringRef desc
-argument_list|,
-argument|StringRef category
+argument|PathDiagnosticPiece *EndPiece
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-operator|~
-name|PathDiagnostic
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Loc
+operator|.
+name|isValid
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+operator|&&
+literal|"End location already set!"
+argument_list|)
+block|;
+name|Loc
+operator|=
+name|EndPiece
+operator|->
+name|getLocation
+argument_list|()
+block|;
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Invalid location for end-of-path piece"
+argument_list|)
+block|;
+name|getActivePath
+argument_list|()
+operator|.
+name|push_back
+argument_list|(
+name|EndPiece
+argument_list|)
+block|;   }
+name|void
+name|resetPath
+argument_list|()
+block|{
+name|pathStack
+operator|.
+name|clear
+argument_list|()
+block|;
+name|pathImpl
+operator|.
+name|clear
+argument_list|()
+block|;
+name|Loc
+operator|=
+name|PathDiagnosticLocation
+argument_list|()
+block|;   }
 name|StringRef
-name|getDescription
+name|getVerboseDescription
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Desc
+name|VerboseDesc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
+name|StringRef
+name|getShortDescription
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShortDesc
+operator|.
+name|empty
+argument_list|()
+operator|?
+name|VerboseDesc
+operator|:
+name|ShortDesc
+return|;
+block|}
 name|StringRef
 name|getBugType
 argument_list|()
@@ -2914,9 +3079,6 @@ return|return
 name|BugType
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|StringRef
 name|getCategory
 argument_list|()
@@ -2926,21 +3088,9 @@ return|return
 name|Category
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Return the semantic context where an issue occurred.  If the
-end_comment
-
-begin_comment
 comment|/// issue occurs along a path, this represents the "central" area
-end_comment
-
-begin_comment
 comment|/// where the bug manifests.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -2952,9 +3102,6 @@ return|return
 name|DeclWithIssue
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -2968,9 +3115,6 @@ operator|::
 name|const_iterator
 name|meta_iterator
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|meta_iterator
 name|meta_begin
 argument_list|()
@@ -2983,9 +3127,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|meta_iterator
 name|meta_end
 argument_list|()
@@ -2998,15 +3139,11 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|addMeta
-parameter_list|(
-name|StringRef
-name|s
-parameter_list|)
+argument_list|(
+argument|StringRef s
+argument_list|)
 block|{
 name|OtherDesc
 operator|.
@@ -3014,23 +3151,38 @@ name|push_back
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|; }
 name|PathDiagnosticLocation
 name|getLocation
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
+block|{
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"No end-of-path location set yet!"
+argument_list|)
+block|;
+return|return
+name|Loc
+return|;
+block|}
+end_decl_stmt
 
 begin_function
 name|void
 name|flattenLocations
 parameter_list|()
 block|{
+name|Loc
+operator|.
+name|flatten
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|PathPieces
@@ -3068,6 +3220,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// Profiles the diagnostic, independent of the path it references.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This can be used to merge diagnostics that refer to the same issue
+end_comment
+
+begin_comment
+comment|/// along different paths.
+end_comment
+
 begin_decl_stmt
 name|void
 name|Profile
@@ -3081,6 +3249,22 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Profiles the diagnostic, including its path.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Two diagnostics with the same issue along different paths will generate
+end_comment
+
+begin_comment
+comment|/// different profiles.
+end_comment
 
 begin_decl_stmt
 name|void

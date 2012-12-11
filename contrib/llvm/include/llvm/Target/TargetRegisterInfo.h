@@ -805,6 +805,18 @@ begin_comment
 comment|// Names of subreg indexes.
 end_comment
 
+begin_comment
+comment|// Pointer to array of lane masks, one per sub-reg index.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|unsigned
+modifier|*
+name|SubRegIndexLaneMasks
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|regclass_iterator
 name|RegClassBegin
@@ -831,7 +843,9 @@ argument|regclass_iterator RegClassBegin
 argument_list|,
 argument|regclass_iterator RegClassEnd
 argument_list|,
-argument|const char *const *subregindexnames
+argument|const char *const *SRINames
+argument_list|,
+argument|const unsigned *SRILaneMasks
 argument_list|)
 end_macro
 
@@ -1341,6 +1355,11 @@ name|assert
 argument_list|(
 name|SubIdx
 operator|&&
+name|SubIdx
+operator|<
+name|getNumSubRegIndices
+argument_list|()
+operator|&&
 literal|"This is not a subregister index"
 argument_list|)
 expr_stmt|;
@@ -1350,6 +1369,111 @@ index|[
 name|SubIdx
 operator|-
 literal|1
+index|]
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// getSubRegIndexLaneMask - Return a bitmask representing the parts of a
+end_comment
+
+begin_comment
+comment|/// register that are covered by SubIdx.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Lane masks for sub-register indices are similar to register units for
+end_comment
+
+begin_comment
+comment|/// physical registers. The individual bits in a lane mask can't be assigned
+end_comment
+
+begin_comment
+comment|/// any specific meaning. They can be used to check if two sub-register
+end_comment
+
+begin_comment
+comment|/// indices overlap.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the target has a register such that:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   getSubReg(Reg, A) overlaps getSubReg(Reg, B)
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// then:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   getSubRegIndexLaneMask(A)& getSubRegIndexLaneMask(B) != 0
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The converse is not necessarily true. If two lane masks have a common
+end_comment
+
+begin_comment
+comment|/// bit, the corresponding sub-registers may not overlap, but it can be
+end_comment
+
+begin_comment
+comment|/// assumed that they usually will.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getSubRegIndexLaneMask
+argument_list|(
+name|unsigned
+name|SubIdx
+argument_list|)
+decl|const
+block|{
+comment|// SubIdx == 0 is allowed, it has the lane mask ~0u.
+name|assert
+argument_list|(
+name|SubIdx
+operator|<
+name|getNumSubRegIndices
+argument_list|()
+operator|&&
+literal|"This is not a subregister index"
+argument_list|)
+expr_stmt|;
+return|return
+name|SubRegIndexLaneMasks
+index|[
+name|SubIdx
 index|]
 return|;
 block|}
@@ -1806,59 +1930,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// canCombineSubRegIndices - Given a register class and a list of
-end_comment
-
-begin_comment
-comment|/// subregister indices, return true if it's possible to combine the
-end_comment
-
-begin_comment
-comment|/// subregister indices into one that corresponds to a larger
-end_comment
-
-begin_comment
-comment|/// subregister. Return the new subregister index by reference. Note the
-end_comment
-
-begin_comment
-comment|/// new index may be zero if the given subregisters can be combined to
-end_comment
-
-begin_comment
-comment|/// form the whole register.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|bool
-name|canCombineSubRegIndices
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|SubIndices
-argument_list|,
-name|unsigned
-operator|&
-name|NewSubIdx
-argument_list|)
-decl|const
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
 end_comment
 
@@ -1995,6 +2066,14 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// The special null sub-register index composes as the identity.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// If R:a:b is the same register as R:c, then composeSubRegIndices(a, b)
 end_comment
 
@@ -2031,7 +2110,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|unsigned
 name|composeSubRegIndices
 argument_list|(
@@ -2043,12 +2121,65 @@ name|b
 argument_list|)
 decl|const
 block|{
-comment|// This default implementation is correct for most targets.
+if|if
+condition|(
+operator|!
+name|a
+condition|)
 return|return
 name|b
 return|;
+if|if
+condition|(
+operator|!
+name|b
+condition|)
+return|return
+name|a
+return|;
+return|return
+name|composeSubRegIndicesImpl
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
 block|}
 end_decl_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|/// Overridden by TableGen in targets that have sub-registers.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|unsigned
+name|composeSubRegIndicesImpl
+argument_list|(
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|)
+decl|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target has no sub-registers"
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
 
 begin_comment
 comment|/// getCommonSuperRegClass - Find a common super-register class if it exists.

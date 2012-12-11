@@ -1060,11 +1060,6 @@ name|INET
 case|case
 name|IPVERSION
 case|:
-name|SET_HOST_IPLEN
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ip_output
@@ -1324,7 +1319,7 @@ argument_list|(
 operator|*
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==

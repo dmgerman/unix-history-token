@@ -17515,7 +17515,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -17922,6 +17922,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|1
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

@@ -498,8 +498,6 @@ name|cdp
 argument_list|,
 name|M_CDEVP
 argument_list|,
-name|M_USE_RESERVE
-operator||
 name|M_ZERO
 operator||
 operator|(

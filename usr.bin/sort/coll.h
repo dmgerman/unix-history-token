@@ -299,33 +299,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Main localised symbols  */
+comment|/*  * Main localised symbols. These must be wint_t as they may hold WEOF.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|wchar_t
+name|wint_t
 name|symbol_decimal_point
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|wchar_t
+name|wint_t
 name|symbol_thousands_sep
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|wchar_t
+name|wint_t
 name|symbol_negative_sign
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|wchar_t
+name|wint_t
 name|symbol_positive_sign
 decl_stmt|;
 end_decl_stmt

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -1970,6 +1976,44 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * If the user has closed the socket then drop a persisting 	 * connection after a much reduced timeout. 	 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|>
+name|TCPS_CLOSE_WAIT
+operator|&&
+operator|(
+name|ticks
+operator|-
+name|tp
+operator|->
+name|t_rcvtime
+operator|)
+operator|>=
+name|TCPTV_PERSMAX
+condition|)
+block|{
+name|TCPSTAT_INC
+argument_list|(
+name|tcps_persistdrop
+argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
+name|ETIMEDOUT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|tcp_setpersist
 argument_list|(
 name|tp
@@ -2360,6 +2404,24 @@ if|if
 condition|(
 name|tp
 operator|->
+name|t_state
+operator|==
+name|TCPS_SYN_SENT
+condition|)
+block|{
+comment|/* 		 * If the SYN was retransmitted, indicate CWND to be 		 * limited to 1 segment in cc_conn_init(). 		 */
+name|tp
+operator|->
+name|snd_cwnd
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tp
+operator|->
 name|t_rxtshift
 operator|==
 literal|1
@@ -2484,10 +2546,7 @@ name|TCPS_SYN_SENT
 condition|)
 name|rexmt
 operator|=
-name|TCP_REXMTVAL
-argument_list|(
-name|tp
-argument_list|)
+name|TCPTV_RTOBASE
 operator|*
 name|tcp_syn_backoff
 index|[
@@ -2526,7 +2585,7 @@ argument_list|,
 name|TCPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable rfc1323 if we haven't got any response to 	 * our third SYN to work-around some broken terminal servers 	 * (most of which have hopefully been retired) that have bad VJ 	 * header compression code which trashes TCP segments containing 	 * unknown-to-them TCP options. 	 */
+comment|/* 	 * Disable RFC1323 and SACK if we haven't got any response to 	 * our third SYN to work-around some broken terminal servers 	 * (most of which have hopefully been retired) that have bad VJ 	 * header compression code which trashes TCP segments containing 	 * unknown-to-them TCP options. 	 */
 if|if
 condition|(
 operator|(
@@ -2554,6 +2613,8 @@ operator|(
 name|TF_REQ_SCALE
 operator||
 name|TF_REQ_TSTMP
+operator||
+name|TF_SACK_PERMIT
 operator|)
 expr_stmt|;
 comment|/* 	 * If we backed off this far, our srtt estimate is probably bogus. 	 * Clobber it so we'll take the next rtt measurement as our srtt; 	 * move the current srtt into rttvar to keep the current 	 * retransmit times until then. 	 */
@@ -2592,7 +2653,6 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 name|tp

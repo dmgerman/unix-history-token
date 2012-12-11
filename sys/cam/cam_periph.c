@@ -2766,6 +2766,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * We need to set this flag before dropping the topology lock, to 	 * let anyone who is traversing the list that this peripheral is 	 * about to be freed, and there will be no more reference count 	 * checks. 	 */
+name|periph
+operator|->
+name|flags
+operator||=
+name|CAM_PERIPH_FREE
+expr_stmt|;
 comment|/* 	 * The peripheral destructor semantics dictate calling with only the 	 * SIM mutex held.  Since it might sleep, it should not be called 	 * with the topology lock held. 	 */
 name|xpt_unlock_buses
 argument_list|()

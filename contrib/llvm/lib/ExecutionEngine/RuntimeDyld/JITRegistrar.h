@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MemoryBuffer.h"
+file|"llvm/ExecutionEngine/ObjectBuffer.h"
 end_include
 
 begin_decl_stmt
@@ -78,7 +78,7 @@ name|void
 name|registerObject
 argument_list|(
 specifier|const
-name|MemoryBuffer
+name|ObjectBuffer
 operator|&
 name|Object
 argument_list|)
@@ -93,7 +93,7 @@ name|bool
 name|deregisterObject
 parameter_list|(
 specifier|const
-name|MemoryBuffer
+name|ObjectBuffer
 modifier|&
 name|Object
 parameter_list|)

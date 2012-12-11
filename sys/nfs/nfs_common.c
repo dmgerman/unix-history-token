@@ -1332,7 +1332,7 @@ name|MGET
 argument_list|(
 name|mb2
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1439,7 +1439,7 @@ name|md
 argument_list|,
 name|dpos
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 operator|)
 return|;
@@ -1475,7 +1475,7 @@ name|md
 argument_list|,
 name|dpos
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 return|;

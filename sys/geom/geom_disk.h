@@ -409,13 +409,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|disk_resize
 parameter_list|(
 name|struct
 name|disk
 modifier|*
 name|dp
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl

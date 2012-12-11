@@ -1200,6 +1200,8 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -1294,6 +1296,8 @@ operator|=
 name|g_new_providerf
 argument_list|(
 name|gp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|gp
 operator|->

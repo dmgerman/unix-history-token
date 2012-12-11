@@ -174,7 +174,7 @@ name|DISP_CPU
 condition|)
 name|fputs
 argument_list|(
-literal|"\ o       - specify sort order (pri, size, res, cpu, time, threads, jid)\n"
+literal|"\ o       - specify sort order (pri, size, res, cpu, time, threads, jid, pid)\n"
 argument_list|,
 name|stdout
 argument_list|)
@@ -182,7 +182,7 @@ expr_stmt|;
 else|else
 name|fputs
 argument_list|(
-literal|"\ o       - specify sort order (vcsw, ivcsw, read, write, fault, total, jid)\n"
+literal|"\ o       - specify sort order (vcsw, ivcsw, read, write, fault, total, jid, pid)\n"
 argument_list|,
 name|stdout
 argument_list|)

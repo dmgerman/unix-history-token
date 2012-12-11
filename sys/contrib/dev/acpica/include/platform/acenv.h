@@ -1275,7 +1275,7 @@ name|va_end
 parameter_list|(
 name|ap
 parameter_list|)
-value|(void) 0
+value|(ap = (va_list) NULL)
 end_define
 
 begin_define

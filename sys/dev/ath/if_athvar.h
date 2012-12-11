@@ -55,6 +55,23 @@ directive|include
 file|<dev/ath/if_athrate.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -301,17 +318,6 @@ argument_list|)
 name|tid_q
 expr_stmt|;
 comment|/* pending buffers */
-name|u_int
-name|axq_depth
-decl_stmt|;
-comment|/* SW queue depth */
-name|char
-name|axq_name
-index|[
-literal|48
-index|]
-decl_stmt|;
-comment|/* lock name */
 name|struct
 name|ath_node
 modifier|*
@@ -330,6 +336,10 @@ name|int
 name|hwq_depth
 decl_stmt|;
 comment|/* how many buffers are on HW */
+name|u_int
+name|axq_depth
+decl_stmt|;
+comment|/* SW queue depth */
 struct|struct
 block|{
 name|TAILQ_HEAD
@@ -344,13 +354,6 @@ name|u_int
 name|axq_depth
 decl_stmt|;
 comment|/* SW queue depth */
-name|char
-name|axq_name
-index|[
-literal|48
-index|]
-decl_stmt|;
-comment|/* lock name */
 block|}
 name|filtq
 struct|;
@@ -444,6 +447,14 @@ name|uint32_t
 name|an_is_powersave
 decl_stmt|;
 comment|/* node is sleeping */
+name|uint32_t
+name|an_stack_psq
+decl_stmt|;
+comment|/* net80211 psq isn't empty */
+name|uint32_t
+name|an_tim_set
+decl_stmt|;
+comment|/* TIM has been set */
 name|struct
 name|ath_buf
 modifier|*
@@ -1024,11 +1035,6 @@ argument_list|)
 name|axq_q
 expr_stmt|;
 comment|/* transmit queue */
-name|struct
-name|mtx
-name|axq_lock
-decl_stmt|;
-comment|/* lock on q and link */
 name|char
 name|axq_name
 index|[
@@ -1087,106 +1093,6 @@ parameter_list|(
 name|_an
 parameter_list|)
 value|mtx_assert(&(_an)->an_mtx,	\ 					    MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_tq
-parameter_list|)
-value|do { \ 	snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 		device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, NULL, MTX_DEF); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_DESTROY
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_destroy(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_lock(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_UNLOCK
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_unlock(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_ASSERT
-parameter_list|(
-name|_tq
-parameter_list|)
-define|\
-value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_UNLOCK_ASSERT
-parameter_list|(
-name|_tq
-parameter_list|)
-define|\
-value|mtx_assert(&(_tq)->axq_lock, MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_IS_LOCKED
-parameter_list|(
-name|_tq
-parameter_list|)
-value|mtx_owned(&(_tq)->axq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TID_LOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_tid
-parameter_list|)
-define|\
-value|ATH_TXQ_LOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TID_UNLOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_tid
-parameter_list|)
-define|\
-value|ATH_TXQ_UNLOCK_ASSERT((_sc)->sc_ac2q[(_tid)->ac])
 end_define
 
 begin_comment
@@ -1474,6 +1380,19 @@ name|void
 function_decl|(
 modifier|*
 name|av_node_ps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|av_set_tim
 function_decl|)
 parameter_list|(
 name|struct
@@ -1953,6 +1872,17 @@ literal|32
 index|]
 decl_stmt|;
 name|struct
+name|mtx
+name|sc_tx_mtx
+decl_stmt|;
+comment|/* TX access mutex */
+name|char
+name|sc_tx_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
 name|taskqueue
 modifier|*
 name|sc_tq
@@ -1989,8 +1919,8 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-name|unsigned
-name|int
+comment|/* 	 * First set of flags. 	 */
+name|uint32_t
 name|sc_invalid
 range|:
 literal|1
@@ -2151,6 +2081,16 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* supports EDMA */
+comment|/* 	 * Second set of flags. 	 */
+name|u_int32_t
+name|sc_use_ent
+range|:
+literal|1
+decl_stmt|;
+comment|/* 	 * Enterprise mode configuration for AR9380 and later chipsets. 	 */
+name|uint32_t
+name|sc_ent_cfg
+decl_stmt|;
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -2483,11 +2423,6 @@ name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
 name|struct
-name|task
-name|sc_txsndtask
-decl_stmt|;
-comment|/* tx send processing */
-name|struct
 name|ath_descdma
 name|sc_txcompdma
 decl_stmt|;
@@ -2711,6 +2646,16 @@ name|task
 name|sc_dfstask
 decl_stmt|;
 comment|/* DFS processing task */
+comment|/* ALQ */
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+name|struct
+name|if_ath_alq
+name|sc_alq
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* TX AMPDU handling */
 name|int
 function_decl|(
@@ -2867,6 +2812,70 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED)
+end_define
+
+begin_comment
+comment|/*  * The TX lock is non-reentrant and serialises the TX send operations.  * (ath_start(), ath_raw_xmit().)  It doesn't yet serialise the TX  * completion operations; thus it can't be used (yet!) to protect  * hardware / software TXQ operations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_tx_mtx_name,				\ 	    sizeof((_sc)->sc_tx_mtx_name),				\ 	    "%s TX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_tx_mtx, (_sc)->sc_tx_mtx_name,		\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_NOTOWNED)
 end_define
 
 begin_comment
@@ -3533,6 +3542,19 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getTsf64)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settsf64
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setTsf64)((_ah), (_val)))
 end_define
 
 begin_define
@@ -5216,6 +5238,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_gettxrawtxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_txstatus
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxRawTxDesc)((_ah), (_txstatus)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_setupfirsttxdesc
 parameter_list|(
 name|_ah
@@ -5329,13 +5364,13 @@ parameter_list|,
 name|_num
 parameter_list|)
 define|\
-value|((*(_ah)->ah_set11nAggrFirst)((_ah), (_ds), (_len)))
+value|((*(_ah)->ah_set11nAggrFirst)((_ah), (_ds), (_len), (_num)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ath_hal_set11naggrmiddle
+name|ath_hal_set11n_aggr_middle
 parameter_list|(
 name|_ah
 parameter_list|,

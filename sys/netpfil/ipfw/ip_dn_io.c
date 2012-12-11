@@ -3100,18 +3100,6 @@ block|{
 case|case
 name|DIR_OUT
 case|:
-name|SET_HOST_IPLEN
-argument_list|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ip_output
 argument_list|(
 name|m
@@ -3131,8 +3119,6 @@ break|break ;
 case|case
 name|DIR_IN
 case|:
-comment|/* put header in network format for ip_input() */
-comment|//SET_NET_IPLEN(mtod(m, struct ip *));
 name|netisr_dispatch
 argument_list|(
 name|NETISR_IP

@@ -960,7 +960,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 value|"%*.s/* %18s : %-6.2X */\n", ACPI_MUL_4 (Level), " "
 end_define
 
@@ -1037,7 +1037,7 @@ block|}
 comment|/* First 32-bit dword */
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Revision"
 argument_list|,
@@ -1048,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"IgnoreColor"
 argument_list|,
@@ -1094,7 +1094,7 @@ expr_stmt|;
 comment|/* Third 32-bit dword */
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"UserVisible"
 argument_list|,
@@ -1105,7 +1105,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Dock"
 argument_list|,
@@ -1116,7 +1116,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Lid"
 argument_list|,
@@ -1127,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Panel"
 argument_list|,
@@ -1138,7 +1138,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"VerticalPosition"
 argument_list|,
@@ -1149,7 +1149,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"HorizontalPosition"
 argument_list|,
@@ -1160,7 +1160,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Shape"
 argument_list|,
@@ -1171,7 +1171,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"GroupOrientation"
 argument_list|,
@@ -1182,7 +1182,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"GroupToken"
 argument_list|,
@@ -1193,7 +1193,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"GroupPosition"
 argument_list|,
@@ -1204,7 +1204,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Bay"
 argument_list|,
@@ -1216,7 +1216,7 @@ expr_stmt|;
 comment|/* Fourth 32-bit dword */
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Ejectable"
 argument_list|,
@@ -1227,7 +1227,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"OspmEjectRequired"
 argument_list|,
@@ -1238,7 +1238,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"CabinetNumber"
 argument_list|,
@@ -1249,7 +1249,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"CardCageNumber"
 argument_list|,
@@ -1260,7 +1260,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Reference"
 argument_list|,
@@ -1271,7 +1271,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Rotation"
 argument_list|,
@@ -1282,7 +1282,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_PLD_OUTPUT
+name|ACPI_PLD_OUTPUT08
 argument_list|,
 literal|"Order"
 argument_list|,
@@ -1331,7 +1331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmUnicode  *  * PARAMETERS:  Op              - Byte List op containing Unicode string  *  * RETURN:      None  *  * DESCRIPTION: Dump Unicode string as a standard ASCII string.  (Remove  *              the extra zero bytes).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmUnicode  *  * PARAMETERS:  Op              - Byte List op containing Unicode string  *  * RETURN:      None  *  * DESCRIPTION: Dump Unicode string as a standard ASCII string. (Remove  *              the extra zero bytes).  *  ******************************************************************************/
 end_comment
 
 begin_function

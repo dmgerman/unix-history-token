@@ -148,7 +148,7 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|FunctionType
@@ -178,8 +178,71 @@ decl_stmt|;
 name|class
 name|CGBlockInfo
 decl_stmt|;
+comment|// Flags stored in __block variables.
 enum|enum
-name|BlockFlag_t
+name|BlockByrefFlags
+block|{
+name|BLOCK_BYREF_HAS_COPY_DISPOSE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|25
+operator|)
+block|,
+comment|// compiler
+name|BLOCK_BYREF_LAYOUT_MASK
+init|=
+operator|(
+literal|0xF
+operator|<<
+literal|28
+operator|)
+block|,
+comment|// compiler
+name|BLOCK_BYREF_LAYOUT_EXTENDED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|28
+operator|)
+block|,
+name|BLOCK_BYREF_LAYOUT_NON_OBJECT
+init|=
+operator|(
+literal|2
+operator|<<
+literal|28
+operator|)
+block|,
+name|BLOCK_BYREF_LAYOUT_STRONG
+init|=
+operator|(
+literal|3
+operator|<<
+literal|28
+operator|)
+block|,
+name|BLOCK_BYREF_LAYOUT_WEAK
+init|=
+operator|(
+literal|4
+operator|<<
+literal|28
+operator|)
+block|,
+name|BLOCK_BYREF_LAYOUT_UNRETAINED
+init|=
+operator|(
+literal|5
+operator|<<
+literal|28
+operator|)
+block|}
+enum|;
+enum|enum
+name|BlockLiteralFlags
 block|{
 name|BLOCK_HAS_COPY_DISPOSE
 init|=
@@ -220,6 +283,14 @@ literal|1
 operator|<<
 literal|30
 operator|)
+block|,
+name|BLOCK_HAS_EXTENDED_LAYOUT
+init|=
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
 block|}
 enum|;
 name|class
@@ -250,7 +321,7 @@ argument_list|)
 block|{}
 name|BlockFlags
 argument_list|(
-argument|BlockFlag_t flag
+argument|BlockLiteralFlags flag
 argument_list|)
 operator|:
 name|flags
@@ -359,10 +430,10 @@ name|BlockFlags
 name|operator
 operator||
 operator|(
-name|BlockFlag_t
+name|BlockLiteralFlags
 name|l
 operator|,
-name|BlockFlag_t
+name|BlockLiteralFlags
 name|r
 operator|)
 block|{
@@ -817,6 +888,13 @@ comment|/// because it gets set later in the block-creation process.
 name|mutable
 name|bool
 name|UsesStret
+range|:
+literal|1
+decl_stmt|;
+comment|/// HasCapturedVariableLayout : True if block has captured variables
+comment|/// and their layout meta-data has been generated.
+name|bool
+name|HasCapturedVariableLayout
 range|:
 literal|1
 decl_stmt|;

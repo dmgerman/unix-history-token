@@ -123,16 +123,14 @@ name|InstCombineWorklist
 operator|&
 name|RHS
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|InstCombineWorklist
 argument_list|(
-specifier|const
-name|InstCombineWorklist
-operator|&
+argument|const InstCombineWorklist&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|InstCombineWorklist

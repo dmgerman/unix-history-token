@@ -154,7 +154,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s: try_0send: returned %d"
+literal|"%s: try_0send: returned %zd"
 argument_list|,
 name|test
 argument_list|,
@@ -227,7 +227,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s: try_0write: returned %d"
+literal|"%s: try_0write: returned %zd"
 argument_list|,
 name|test
 argument_list|,

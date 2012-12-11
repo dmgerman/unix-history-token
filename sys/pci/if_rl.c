@@ -271,7 +271,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_type
-specifier|const
 name|rl_devs
 index|[]
 init|=
@@ -6845,7 +6844,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

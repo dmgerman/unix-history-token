@@ -1742,7 +1742,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecutionWalk  *  * PARAMETERS:  WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method.  Name is relative to the current  *              scope.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecutionWalk  *  * PARAMETERS:  WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method. Name is relative to the current  *              scope.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2421,7 +2421,7 @@ argument_list|(
 literal|"Converted _PLD buffer does not compare. New:\n"
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|NewBuffer
 argument_list|,
@@ -2432,6 +2432,8 @@ operator|.
 name|Length
 argument_list|,
 name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2741,7 +2743,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecute  *  * PARAMETERS:  Name                - Name of method to execute  *              Args                - Parameters to the method  *              Flags               - single step/no single step  *  * RETURN:      None  *  * DESCRIPTION: Execute a control method.  Name is relative to the current  *              scope.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecute  *  * PARAMETERS:  Name                - Name of method to execute  *              Args                - Parameters to the method  *              Flags               - single step/no single step  *  * RETURN:      None  *  * DESCRIPTION: Execute a control method. Name is relative to the current  *              scope.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3118,7 +3120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMethodThread  *  * PARAMETERS:  Context             - Execution info segment  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread.  Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMethodThread  *  * PARAMETERS:  Context             - Execution info segment  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread. Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
 end_comment
 
 begin_function

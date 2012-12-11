@@ -777,6 +777,8 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pp
 operator|->
 name|name
@@ -1824,6 +1826,8 @@ block|{
 name|set_dumper
 argument_list|(
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|error
@@ -1878,6 +1882,11 @@ operator|&
 name|kd
 operator|.
 name|di
+argument_list|,
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2644,6 +2653,8 @@ name|SI_DUMPDEV
 condition|)
 name|set_dumper
 argument_list|(
+name|NULL
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;

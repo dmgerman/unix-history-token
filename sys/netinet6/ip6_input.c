@@ -1927,7 +1927,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -1960,7 +1960,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2422,9 +2422,6 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|m
@@ -2459,6 +2456,14 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP6_NEXTHOP
+operator|)
+operator|&&
 name|m_tag_find
 argument_list|(
 name|m
@@ -2483,9 +2488,6 @@ goto|goto
 name|out
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|passin
 label|:
 comment|/* 	 * Disambiguate address scope zones (if there is ambiguity). 	 * We first make sure that the original source or destination address 	 * is not in our internal form for scoped addresses.  Such addresses 	 * are not necessarily invalid spec-wise, but we cannot accept them due 	 * to the usage conflict. 	 * in6_setscope() then also checks and rejects the cases where src or 	 * dst are the loopback address and the receiving interface 	 * is not loopback. 	 */
@@ -2645,7 +2647,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2670,7 +2672,7 @@ operator|&
 name|dst6
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6682,7 +6684,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6700,7 +6702,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

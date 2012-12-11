@@ -247,6 +247,22 @@ end_struct
 
 begin_struct
 struct|struct
+name|wrusage32
+block|{
+name|struct
+name|rusage32
+name|wru_self
+decl_stmt|;
+name|struct
+name|rusage32
+name|wru_children
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|itimerval32
 block|{
 name|struct

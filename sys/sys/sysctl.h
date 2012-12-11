@@ -355,6 +355,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLFLAG_STATS
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Statistics, not a tuneable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_CAPRW
 value|(CTLFLAG_CAPRD|CTLFLAG_CAPWR)
 end_define

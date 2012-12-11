@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/ModuleLoader.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -235,10 +241,10 @@ comment|///
 comment|/// \param IsAngled Whether the file name was enclosed in angle brackets;
 comment|/// otherwise, it was enclosed in quotes.
 comment|///
-comment|/// \param File The actual file that may be included by this inclusion
-comment|/// directive.
+comment|/// \param FilenameRange The character range of the quotes or angle brackets
+comment|/// for the written file name.
 comment|///
-comment|/// \param EndLoc The location of the last token within the inclusion
+comment|/// \param File The actual file that may be included by this inclusion
 comment|/// directive.
 comment|///
 comment|/// \param SearchPath Contains the search path which was used to find the file
@@ -252,6 +258,10 @@ comment|/// "Some.h".
 comment|///
 comment|/// \param RelativePath The path relative to SearchPath, at which the include
 comment|/// file was found. This is equal to FileName except for framework includes.
+comment|///
+comment|/// \param Imported The module, whenever an inclusion directive was
+comment|/// automatically turned into a module import or null otherwise.
+comment|///
 name|virtual
 name|void
 name|InclusionDirective
@@ -270,19 +280,50 @@ parameter_list|,
 name|bool
 name|IsAngled
 parameter_list|,
+name|CharSourceRange
+name|FilenameRange
+parameter_list|,
 specifier|const
 name|FileEntry
 modifier|*
 name|File
-parameter_list|,
-name|SourceLocation
-name|EndLoc
 parameter_list|,
 name|StringRef
 name|SearchPath
 parameter_list|,
 name|StringRef
 name|RelativePath
+parameter_list|,
+specifier|const
+name|Module
+modifier|*
+name|Imported
+parameter_list|)
+block|{   }
+comment|/// \brief Callback invoked whenever there was an explicit module-import
+comment|/// syntax.
+comment|///
+comment|/// \param ImportLoc The location of import directive token.
+comment|///
+comment|/// \param Path The identifiers (and their locations) of the module
+comment|/// "path", e.g., "std.vector" would be split into "std" and "vector".
+comment|///
+comment|/// \param Imported The imported module; can be null if importing failed.
+comment|///
+name|virtual
+name|void
+name|moduleImport
+parameter_list|(
+name|SourceLocation
+name|ImportLoc
+parameter_list|,
+name|ModuleIdPath
+name|Path
+parameter_list|,
+specifier|const
+name|Module
+modifier|*
+name|Imported
 parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when the end of the main file is reached.
@@ -731,13 +772,15 @@ argument|StringRef FileName
 argument_list|,
 argument|bool IsAngled
 argument_list|,
-argument|const FileEntry *File
+argument|CharSourceRange FilenameRange
 argument_list|,
-argument|SourceLocation EndLoc
+argument|const FileEntry *File
 argument_list|,
 argument|StringRef SearchPath
 argument_list|,
 argument|StringRef RelativePath
+argument_list|,
+argument|const Module *Imported
 argument_list|)
 block|{
 name|First
@@ -752,13 +795,15 @@ name|FileName
 argument_list|,
 name|IsAngled
 argument_list|,
-name|File
+name|FilenameRange
 argument_list|,
-name|EndLoc
+name|File
 argument_list|,
 name|SearchPath
 argument_list|,
 name|RelativePath
+argument_list|,
+name|Imported
 argument_list|)
 block|;
 name|Second
@@ -773,13 +818,48 @@ name|FileName
 argument_list|,
 name|IsAngled
 argument_list|,
-name|File
+name|FilenameRange
 argument_list|,
-name|EndLoc
+name|File
 argument_list|,
 name|SearchPath
 argument_list|,
 name|RelativePath
+argument_list|,
+name|Imported
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|moduleImport
+argument_list|(
+argument|SourceLocation ImportLoc
+argument_list|,
+argument|ModuleIdPath Path
+argument_list|,
+argument|const Module *Imported
+argument_list|)
+block|{
+name|First
+operator|->
+name|moduleImport
+argument_list|(
+name|ImportLoc
+argument_list|,
+name|Path
+argument_list|,
+name|Imported
+argument_list|)
+block|;
+name|Second
+operator|->
+name|moduleImport
+argument_list|(
+name|ImportLoc
+argument_list|,
+name|Path
+argument_list|,
+name|Imported
 argument_list|)
 block|;   }
 name|virtual

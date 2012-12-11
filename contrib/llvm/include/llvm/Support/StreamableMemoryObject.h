@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryObject.h"
 end_include
 
@@ -247,6 +253,7 @@ name|uint64_t
 name|getBase
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|{
 return|return
 literal|0
@@ -257,6 +264,7 @@ name|uint64_t
 name|getExtent
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|int
@@ -267,6 +275,7 @@ argument_list|,
 argument|uint8_t* ptr
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|int
@@ -281,6 +290,7 @@ argument_list|,
 argument|uint64_t* copied
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 specifier|const
@@ -293,6 +303,7 @@ argument_list|,
 argument|uint64_t size
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|{
 comment|// This could be fixed by ensuring the bytes are fetched and making a copy,
 comment|// requiring that the bitcode size be known, or otherwise ensuring that
@@ -316,6 +327,7 @@ argument_list|(
 argument|uint64_t address
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|bool
@@ -324,6 +336,7 @@ argument_list|(
 argument|uint64_t address
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 comment|/// Drop s bytes from the front of the stream, pushing the positions of the
 comment|/// remaining bytes down by s. This is used to skip past the bitcode header,
@@ -500,12 +513,10 @@ return|;
 block|}
 name|StreamingMemoryObject
 argument_list|(
-specifier|const
-name|StreamingMemoryObject
-operator|&
+argument|const StreamingMemoryObject&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -514,8 +525,8 @@ specifier|const
 name|StreamingMemoryObject
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 end_decl_stmt
 

@@ -838,17 +838,15 @@ block|{
 comment|/* 		 * Perform unsynchronized reads on the object to avoid 		 * a lock-order reversal.  In this case, the lack of 		 * synchronization should not impair the accuracy of 		 * the reported statistics.  		 */
 if|if
 condition|(
+operator|(
 name|object
 operator|->
-name|type
-operator|==
-name|OBJT_DEVICE
-operator|||
-name|object
-operator|->
-name|type
-operator|==
-name|OBJT_SG
+name|flags
+operator|&
+name|OBJ_FICTITIOUS
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * Devices, like /dev/mem, will badly skew our totals. 			 */

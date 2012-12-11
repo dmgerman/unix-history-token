@@ -541,20 +541,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Attr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 name|class
@@ -615,17 +601,6 @@ operator|::
 name|LAST_INHERITABLE
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InheritableAttr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -674,17 +649,6 @@ operator|<=
 name|attr
 operator|::
 name|LAST_INHERITABLE_PARAM
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InheritableParamAttr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

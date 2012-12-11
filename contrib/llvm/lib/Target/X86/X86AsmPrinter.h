@@ -160,6 +160,7 @@ operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|{
 return|return
 literal|"X86 AT&T-Style Assembly Printer"
@@ -181,29 +182,25 @@ name|virtual
 name|void
 name|EmitStartOfAsmFile
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|void
 name|EmitEndOfAsmFile
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|void
 name|printSymbolOperand
@@ -230,10 +227,13 @@ argument|raw_ostream&O
 argument_list|,
 argument|const char *Modifier =
 literal|0
+argument_list|,
+argument|unsigned AsmVariant =
+literal|0
 argument_list|)
 block|;
 name|void
-name|print_pcrel_imm
+name|printPCRelImm
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
@@ -252,6 +252,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|virtual
 name|bool
 name|PrintAsmOperand
 argument_list|(
@@ -265,7 +266,9 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
+name|virtual
 name|bool
 name|PrintAsmMemoryOperand
 argument_list|(
@@ -279,25 +282,7 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)
-block|;
-name|void
-name|printMachineInstruction
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-block|;
-name|void
-name|printSSECC
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned Op
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|void
 name|printMemReference
@@ -324,22 +309,27 @@ argument|const char *Modifier=NULL
 argument_list|)
 block|;
 name|void
-name|printPICLabel
+name|printIntelMemReference
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned Op
 argument_list|,
 argument|raw_ostream&O
+argument_list|,
+argument|const char *Modifier=NULL
+argument_list|,
+argument|unsigned AsmVariant =
+literal|1
 argument_list|)
 block|;
+name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|F
+argument|MachineFunction&F
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|void
 name|PrintDebugValueComment
@@ -354,12 +344,14 @@ operator|&
 name|OS
 argument_list|)
 block|;
+name|virtual
 name|MachineLocation
 name|getDebugValueLocation
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|; }
 decl_stmt|;
 block|}

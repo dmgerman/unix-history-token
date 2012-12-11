@@ -557,6 +557,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int64_t
+name|rctl_pcpu_available
+parameter_list|(
+specifier|const
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint64_t
 name|rctl_get_limit
 parameter_list|(

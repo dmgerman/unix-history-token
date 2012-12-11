@@ -227,6 +227,15 @@ return|return
 name|Length
 return|;
 block|}
+name|StringRef
+name|getReplacementText
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReplacementText
+return|;
+block|}
 comment|/// @}
 comment|/// \brief Applies the replacement on the Rewriter.
 name|bool

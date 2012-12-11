@@ -9355,8 +9355,6 @@ operator|&
 name|g_swap_class
 argument_list|,
 literal|"swap"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|cp

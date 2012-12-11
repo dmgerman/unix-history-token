@@ -164,7 +164,7 @@ operator|!
 name|SymB
 return|;
 block|}
-comment|/// print - Print the value to the stream \arg OS.
+comment|/// print - Print the value to the stream \p OS.
 name|void
 name|print
 argument_list|(

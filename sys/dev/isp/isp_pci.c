@@ -8036,8 +8036,6 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|,
-name|ns
-decl_stmt|,
 name|cmap
 init|=
 literal|0
@@ -8702,16 +8700,6 @@ name|XCMD_SIZE
 operator|)
 expr_stmt|;
 block|}
-name|ns
-operator|=
-operator|(
-name|len
-operator|/
-name|PAGE_SIZE
-operator|)
-operator|+
-literal|1
-expr_stmt|;
 comment|/* 	 * Create a tag for the control spaces. We don't always need this 	 * to be 32 bits, but we do this for simplicity and speed's sake. 	 */
 if|if
 condition|(
@@ -8737,7 +8725,7 @@ name|NULL
 argument_list|,
 name|len
 argument_list|,
-name|ns
+literal|1
 argument_list|,
 name|slim
 argument_list|,

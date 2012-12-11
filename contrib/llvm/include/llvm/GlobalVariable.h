@@ -153,13 +153,13 @@ name|void
 modifier|*
 name|operator
 name|new
-parameter_list|(
+argument_list|(
 name|size_t
-parameter_list|,
+argument_list|,
 name|unsigned
-parameter_list|)
-function_decl|;
-comment|// Do not implement
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
 name|void
 name|operator
 init|=
@@ -168,16 +168,14 @@ specifier|const
 name|GlobalVariable
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|GlobalVariable
 argument_list|(
-specifier|const
-name|GlobalVariable
-operator|&
+argument|const GlobalVariable&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
 name|void
 name|setParent
 parameter_list|(
@@ -585,20 +583,6 @@ name|U
 parameter_list|)
 function_decl|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|GlobalVariable
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

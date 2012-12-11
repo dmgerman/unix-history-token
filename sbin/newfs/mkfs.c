@@ -1338,6 +1338,20 @@ argument_list|,
 name|fssize
 argument_list|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_providersize
+operator|=
+name|dbtofsb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|mediasize
+operator|/
+name|sectorsize
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Before the filesystem is finally initialized, mark it 	 * as incompletely initialized. 	 */
 name|sblock
 operator|.

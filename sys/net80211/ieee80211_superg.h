@@ -165,10 +165,6 @@ index|[
 name|WME_NUM_AC
 index|]
 decl_stmt|;
-name|int
-name|ff_stageqdepth
-decl_stmt|;
-comment|/* cumulative depth */
 block|}
 struct|;
 end_struct
@@ -338,6 +334,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * See ieee80211_ff_age() for a description of the locking  * expectation here.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -395,6 +395,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * See ieee80211_ff_age() for a description of the locking  * expectation here.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -424,10 +428,6 @@ condition|(
 name|sg
 operator|!=
 name|NULL
-operator|&&
-name|sg
-operator|->
-name|ff_stageqdepth
 condition|)
 block|{
 if|if

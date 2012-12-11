@@ -72,6 +72,10 @@ comment|/* Total region size. */
 name|size_t
 name|size
 decl_stmt|;
+comment|/* True if zero-filled; used by chunk recycling code. */
+name|bool
+name|zeroed
+decl_stmt|;
 block|}
 struct|;
 end_struct

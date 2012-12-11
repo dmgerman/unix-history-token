@@ -199,6 +199,9 @@ decl_stmt|;
 name|bool
 name|Vectorize
 decl_stmt|;
+name|bool
+name|LoopVectorize
+decl_stmt|;
 name|private
 label|:
 comment|/// ExtensionList - This is list of all of the extensions that are registered.

@@ -353,18 +353,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|init_editline
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* editline library initialized? */
-end_comment
-
-begin_decl_stmt
-name|int
 name|whichprompt
 decl_stmt|;
 end_decl_stmt
@@ -1238,7 +1226,8 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|void
+name|struct
+name|alias
 modifier|*
 name|ap
 parameter_list|)
@@ -1320,25 +1309,13 @@ name|sp
 operator|->
 name|ap
 operator|=
-operator|(
-expr|struct
-name|alias
-operator|*
-operator|)
 name|ap
 expr_stmt|;
 if|if
 condition|(
 name|ap
 condition|)
-operator|(
-operator|(
-expr|struct
-name|alias
-operator|*
-operator|)
 name|ap
-operator|)
 operator|->
 name|flag
 operator||=

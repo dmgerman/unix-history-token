@@ -187,6 +187,16 @@ operator|.
 name|Bool
 argument_list|)
 operator|,
+name|TerseOutput
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|SuppressAttributes
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|DumpSourceManager
 argument_list|(
 literal|0
@@ -316,6 +326,23 @@ comment|/// \brief Whether we can use 'bool' rather than '_Bool', even if the la
 comment|/// doesn't actually have 'bool' (because, e.g., it is defined as a macro).
 name|unsigned
 name|Bool
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Provide a 'terse' output.
+comment|///
+comment|/// For example, in this mode we don't print function bodies, class members,
+comment|/// declarations inside namespaces etc.  Effectively, this should print
+comment|/// only the requested declaration.
+name|unsigned
+name|TerseOutput
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief When true, do not print attributes attached to the declaration.
+comment|///
+name|unsigned
+name|SuppressAttributes
 range|:
 literal|1
 decl_stmt|;

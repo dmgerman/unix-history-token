@@ -501,6 +501,14 @@ literal|"/packages-9.0-release"
 block|}
 block|,
 block|{
+literal|901000
+block|,
+literal|901499
+block|,
+literal|"/packages-9.1-release"
+block|}
+block|,
+block|{
 literal|300000
 block|,
 literal|399000
@@ -846,9 +854,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|warnpkgng
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1712,6 +1717,9 @@ name|Chroot
 argument_list|)
 expr_stmt|;
 block|}
+name|warnpkgng
+argument_list|()
+expr_stmt|;
 comment|/* Make sure the sub-execs we invoke get found */
 name|setenv
 argument_list|(

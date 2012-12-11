@@ -258,6 +258,20 @@ begin_comment
 comment|/* The option is always available */
 end_comment
 
+begin_function_decl
+name|void
+name|kassert_panic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -267,7 +281,7 @@ name|exp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {						\ 	if (__predict_false(!(exp)))					\ 		panic msg;						\ } while (0)
+value|do {						\ 	if (__predict_false(!(exp)))					\ 		kassert_panic msg;						\ } while (0)
 end_define
 
 begin_define
@@ -281,7 +295,7 @@ name|vp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		panic msg;						\ 	}								\ } while (0)
+value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		kassert_panic msg;						\ 	}								\ } while (0)
 end_define
 
 begin_else

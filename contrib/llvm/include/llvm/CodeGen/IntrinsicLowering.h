@@ -84,13 +84,13 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|IntrinsicLowering
 block|{
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|&
 name|TD
 decl_stmt|;
@@ -103,7 +103,7 @@ name|explicit
 name|IntrinsicLowering
 argument_list|(
 specifier|const
-name|TargetData
+name|DataLayout
 operator|&
 name|td
 argument_list|)

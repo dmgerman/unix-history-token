@@ -1154,7 +1154,7 @@ begin_define
 define|#
 directive|define
 name|TCBHASHSIZE
-value|512
+value|0
 end_define
 
 begin_endif
@@ -1328,6 +1328,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Take a value and get the next power of 2 that doesn't overflow.  * Used to size the tcp_inpcb hash buckets.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|maketcp_hashsize
+parameter_list|(
+name|int
+name|size
+parameter_list|)
+block|{
+name|int
+name|hashsize
+decl_stmt|;
+comment|/* 	 * auto tune. 	 * get the next power of 2 higher than maxsockets. 	 */
+name|hashsize
+operator|=
+literal|1
+operator|<<
+name|fls
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+comment|/* catch overflow, and just go one power of 2 smaller */
+if|if
+condition|(
+name|hashsize
+operator|<
+name|size
+condition|)
+block|{
+name|hashsize
+operator|=
+literal|1
+operator|<<
+operator|(
+name|fls
+argument_list|(
+name|size
+argument_list|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|hashsize
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|tcp_init
@@ -1335,9 +1391,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|tcbhash_tuneable
+decl_stmt|;
 name|int
 name|hashsize
 decl_stmt|;
+name|tcbhash_tuneable
+operator|=
+literal|"net.inet.tcp.tcbhashsize"
+expr_stmt|;
 if|if
 condition|(
 name|hhook_head_register
@@ -1400,12 +1465,57 @@ name|TCBHASHSIZE
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"net.inet.tcp.tcbhashsize"
+name|tcbhash_tuneable
 argument_list|,
 operator|&
 name|hashsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hashsize
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Auto tune the hash size based on maxsockets. 		 * A perfect hash would have a 1:1 mapping 		 * (hashsize = maxsockets) however it's been 		 * suggested that O(2) average is better. 		 */
+name|hashsize
+operator|=
+name|maketcp_hashsize
+argument_list|(
+name|maxsockets
+operator|/
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Our historical default is 512, 		 * do not autotune lower than this. 		 */
+if|if
+condition|(
+name|hashsize
+operator|<
+literal|512
+condition|)
+name|hashsize
+operator|=
+literal|512
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: %s auto tuned to %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tcbhash_tuneable
+argument_list|,
+name|hashsize
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * We require a hashsize to be a power of two. 	 * Previously if it was not a power of two we would just reset it 	 * back to 512, which could be a nasty surprise if you did not notice 	 * the error message. 	 * Instead what we do is clip it to the closest power of two lower 	 * than the specified hash value. 	 */
 if|if
 condition|(
 operator|!
@@ -1415,16 +1525,41 @@ name|hashsize
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"WARNING: TCB hash size not a power of 2\n"
-argument_list|)
-expr_stmt|;
+name|int
+name|oldhashsize
+init|=
+name|hashsize
+decl_stmt|;
 name|hashsize
 operator|=
-literal|512
+name|maketcp_hashsize
+argument_list|(
+name|hashsize
+argument_list|)
 expr_stmt|;
-comment|/* safe default */
+comment|/* prevent absurdly low value */
+if|if
+condition|(
+name|hashsize
+operator|<
+literal|16
+condition|)
+name|hashsize
+operator|=
+literal|16
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: WARNING: TCB hash size not a power of 2, "
+literal|"clipped from %d to %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|oldhashsize
+argument_list|,
+name|hashsize
+argument_list|)
+expr_stmt|;
 block|}
 name|in_pcbinfo_init
 argument_list|(
@@ -1482,6 +1617,13 @@ argument_list|(
 name|V_tcpcb_zone
 argument_list|,
 name|maxsockets
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|V_tcpcb_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
 argument_list|)
 expr_stmt|;
 name|tcp_tw_init
@@ -2390,7 +2532,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2776,7 +2918,10 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|tlen
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -2792,7 +2937,10 @@ name|ip
 operator|->
 name|ip_off
 operator||=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -6631,7 +6779,7 @@ operator|->
 name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
-comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one.  ip->ip_len has already 					     * been swapped in icmp_input(). 					     */
+comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one. 					     */
 if|if
 condition|(
 operator|!
@@ -6641,9 +6789,12 @@ name|mtu
 operator|=
 name|ip_next_mtu
 argument_list|(
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -8594,7 +8745,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

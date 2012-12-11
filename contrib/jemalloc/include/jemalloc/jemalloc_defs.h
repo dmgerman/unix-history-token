@@ -662,6 +662,17 @@ name|JEMALLOC_OVERRIDE_VALLOC
 end_define
 
 begin_comment
+comment|/*  * At least Linux omits the "const" in:  *  *   size_t malloc_usable_size(const void *ptr);  *  * Match the operating system's prototype.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_USABLE_SIZE_CONST
+value|const
+end_define
+
+begin_comment
 comment|/*  * Darwin (OS X) uses zones to work around Mach-O symbol override shortcomings.  */
 end_comment
 

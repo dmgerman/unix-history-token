@@ -199,7 +199,9 @@ name|ACPI_TABLE_FILE_SUFFIX
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FilenameBuf
+operator|)
 return|;
 block|}
 end_function
@@ -227,12 +229,12 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
-name|fp
+name|File
 decl_stmt|;
 name|ACPI_SIZE
 name|Actual
 decl_stmt|;
-name|fp
+name|File
 operator|=
 name|fopen
 argument_list|(
@@ -244,12 +246,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fp
+name|File
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Couldn't open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -267,19 +269,34 @@ name|fwrite
 argument_list|(
 name|Buffer
 argument_list|,
+literal|1
+argument_list|,
 operator|(
 name|size_t
 operator|)
 name|Length
 argument_list|,
-literal|1
-argument_list|,
-name|fp
+name|File
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Actual
+operator|!=
+name|Length
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not write to file %s\n"
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+block|}
 name|fclose
 argument_list|(
-name|fp
+name|File
 argument_list|)
 expr_stmt|;
 return|return
@@ -356,7 +373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlGenerateFilename  *  * PARAMETERS:  InputFilename       - Original ASL source filename  *              Suffix              - New extension.  *  * RETURN:      New filename containing the original base + the new suffix  *  * DESCRIPTION: Generate a new filename from the ASL source filename and a new  *              extension.  Used to create the *.LST, *.TXT, etc. files.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlGenerateFilename  *  * PARAMETERS:  InputFilename       - Original ASL source filename  *              Suffix              - New extension.  *  * RETURN:      New filename containing the original base + the new suffix  *  * DESCRIPTION: Generate a new filename from the ASL source filename and a new  *              extension. Used to create the *.LST, *.TXT, etc. files.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -460,7 +477,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|NewFilename
+operator|)
 return|;
 block|}
 end_function

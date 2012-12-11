@@ -37,12 +37,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acnamesp.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1460,7 +1454,7 @@ break|break;
 case|case
 name|AML_BUFFER_OP
 case|:
-comment|/*          * Determine the type of buffer.  We can have one of the following:          *          * 1) ResourceTemplate containing Resource Descriptors.          * 2) Unicode String buffer          * 3) ASCII String buffer          * 4) Raw data buffer (if none of the above)          *          * Since there are no special AML opcodes to differentiate these          * types of buffers, we have to closely look at the data in the          * buffer to determine the type.          */
+comment|/*          * Determine the type of buffer. We can have one of the following:          *          * 1) ResourceTemplate containing Resource Descriptors.          * 2) Unicode String buffer          * 3) ASCII String buffer          * 4) Raw data buffer (if none of the above)          *          * Since there are no special AML opcodes to differentiate these          * types of buffers, we have to closely look at the data in the          * buffer to determine the type.          */
 if|if
 condition|(
 operator|!
@@ -1471,6 +1465,8 @@ name|Status
 operator|=
 name|AcpiDmIsResourceTemplate
 argument_list|(
+name|WalkState
+argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;

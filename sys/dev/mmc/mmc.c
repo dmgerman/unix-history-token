@@ -5004,7 +5004,7 @@ operator|->
 name|card_id_string
 argument_list|)
 argument_list|,
-literal|"%s%s %s %d.%d SN %d MFG %02d/%04d by %d %s"
+literal|"%s%s %s %d.%d SN %u MFG %02d/%04d by %d %s"
 argument_list|,
 name|ivar
 operator|->
@@ -10655,6 +10655,24 @@ argument_list|(
 name|mmc
 argument_list|,
 name|sdhci_pci
+argument_list|,
+name|mmc_driver
+argument_list|,
+name|mmc_devclass
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|mmc
+argument_list|,
+name|sdhci_bcm
 argument_list|,
 name|mmc_driver
 argument_list|,

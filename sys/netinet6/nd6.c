@@ -594,24 +594,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|nd6_is_new_addr_neighbor
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sockaddr_in6
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|ifnet
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -3782,7 +3779,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Even if the address matches none of our addresses, it might be 	 * in the neighbor cache. 	 */
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3818,7 +3815,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5773,7 +5770,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5790,7 +5787,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8231,7 +8228,7 @@ return|;
 block|}
 block|}
 comment|/* 	 * the entry should have been created in nd6_store_lladdr 	 */
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8250,7 +8247,7 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

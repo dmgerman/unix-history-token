@@ -185,8 +185,114 @@ operator|*
 operator|>
 name|Modules
 expr_stmt|;
-comment|/// \brief Mapping from each header to the module that owns the contents of the
-comment|/// that header.
+comment|/// \brief A header that is known to reside within a given module,
+comment|/// whether it was included or excluded.
+name|class
+name|KnownHeader
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|Module
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Storage
+expr_stmt|;
+name|public
+label|:
+name|KnownHeader
+argument_list|()
+operator|:
+name|Storage
+argument_list|(
+literal|0
+argument_list|,
+argument|false
+argument_list|)
+block|{ }
+name|KnownHeader
+argument_list|(
+argument|Module *M
+argument_list|,
+argument|bool Excluded
+argument_list|)
+operator|:
+name|Storage
+argument_list|(
+argument|M
+argument_list|,
+argument|Excluded
+argument_list|)
+block|{ }
+comment|/// \brief Retrieve the module the header is stored in.
+name|Module
+operator|*
+name|getModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+comment|/// \brief Whether this header is explicitly excluded from the module.
+name|bool
+name|isExcluded
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Whether this header is available in the module.
+name|bool
+name|isAvailable
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isExcluded
+argument_list|()
+operator|&&
+name|getModule
+argument_list|()
+operator|->
+name|isAvailable
+argument_list|()
+return|;
+block|}
+comment|// \brief Whether this known header is valid (i.e., it has an
+comment|// associated module).
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|getPointer
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
+block|}
+empty_stmt|;
+typedef|typedef
 name|llvm
 operator|::
 name|DenseMap
@@ -195,11 +301,15 @@ specifier|const
 name|FileEntry
 operator|*
 operator|,
-name|Module
-operator|*
+name|KnownHeader
 operator|>
-name|Headers
+name|HeadersMap
 expr_stmt|;
+comment|/// \brief Mapping from each header to the module that owns the contents of the
+comment|/// that header.
+name|HeadersMap
+name|Headers
+decl_stmt|;
 comment|/// \brief Mapping from directories with umbrella headers to the module
 comment|/// that is generated from the umbrella header.
 comment|///
@@ -218,6 +328,61 @@ name|Module
 operator|*
 operator|>
 name|UmbrellaDirs
+expr_stmt|;
+comment|/// \brief A directory for which framework modules can be inferred.
+struct|struct
+name|InferredDirectory
+block|{
+name|InferredDirectory
+argument_list|()
+operator|:
+name|InferModules
+argument_list|()
+operator|,
+name|InferSystemModules
+argument_list|()
+block|{ }
+comment|/// \brief Whether to infer modules from this directory.
+name|unsigned
+name|InferModules
+operator|:
+literal|1
+expr_stmt|;
+comment|/// \brief Whether the modules we infer are [system] modules.
+name|unsigned
+name|InferSystemModules
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief The names of modules that cannot be inferred within this
+comment|/// directory.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+literal|2
+operator|>
+name|ExcludedModules
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief A mapping from directories to information about inferring
+comment|/// framework modules from within those directories.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|,
+name|InferredDirectory
+operator|>
+name|InferredDirectories
 expr_stmt|;
 name|friend
 name|class
@@ -431,6 +596,35 @@ argument_list|,
 argument|bool IsExplicit
 argument_list|)
 expr_stmt|;
+comment|/// \brief Determine whether we can infer a framework module a framework
+comment|/// with the given name in the given
+comment|///
+comment|/// \param ParentDir The directory that is the parent of the framework
+comment|/// directory.
+comment|///
+comment|/// \param Name The name of the module.
+comment|///
+comment|/// \param IsSystem Will be set to 'true' if the inferred module must be a
+comment|/// system module.
+comment|///
+comment|/// \returns true if we are allowed to infer a framework module, and false
+comment|/// otherwise.
+name|bool
+name|canInferFrameworkModule
+parameter_list|(
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|ParentDir
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|bool
+modifier|&
+name|IsSystem
+parameter_list|)
+function_decl|;
 comment|/// \brief Infer the contents of a framework module map from the given
 comment|/// framework directory.
 name|Module
@@ -536,6 +730,8 @@ name|UmbrellaDir
 parameter_list|)
 function_decl|;
 comment|/// \brief Adds this header to the given module.
+comment|/// \param Excluded Whether this header is explicitly excluded from the
+comment|/// module; otherwise, it's included in the module.
 name|void
 name|addHeader
 parameter_list|(
@@ -547,6 +743,9 @@ specifier|const
 name|FileEntry
 modifier|*
 name|Header
+parameter_list|,
+name|bool
+name|Excluded
 parameter_list|)
 function_decl|;
 comment|/// \brief Parse the given module map file, and record any modules we

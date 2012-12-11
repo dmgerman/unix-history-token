@@ -6750,7 +6750,7 @@ literal|0x53
 block|,
 literal|0x54
 block|,
-literal|0x6E
+literal|0xB6
 block|,
 literal|0x00
 block|,
@@ -6758,10 +6758,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "MPSTn..." */
+comment|/* 00000000    "MPST...." */
 literal|0x01
 block|,
-literal|0x98
+literal|0x77
 block|,
 literal|0x49
 block|,
@@ -6775,7 +6775,7 @@ literal|0x4C
 block|,
 literal|0x20
 block|,
-comment|/* 00000008    "..INTEL " */
+comment|/* 00000008    ".wINTEL " */
 literal|0x54
 block|,
 literal|0x45
@@ -6810,11 +6810,11 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x04
+literal|0x13
 block|,
-literal|0x08
+literal|0x09
 block|,
-literal|0x11
+literal|0x12
 block|,
 literal|0x20
 block|,
@@ -6827,7 +6827,7 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000020    "... ...." */
-literal|0x01
+literal|0x02
 block|,
 literal|0x00
 block|,
@@ -6882,11 +6882,11 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x02
-block|,
-literal|0x03
+literal|0x00
 block|,
 literal|0x00
+block|,
+literal|0x02
 block|,
 literal|0x00
 block|,
@@ -6895,7 +6895,7 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000040    "........" */
-literal|0x00
+literal|0x03
 block|,
 literal|0x00
 block|,
@@ -6912,11 +6912,15 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000048    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
 literal|0x01
 block|,
 literal|0x00
 block|,
-literal|0x41
+literal|0x02
 block|,
 literal|0x00
 block|,
@@ -6924,11 +6928,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000050    "..A....." */
+comment|/* 00000050    "........" */
 literal|0x00
 block|,
 literal|0x00
@@ -6974,7 +6974,160 @@ block|,
 literal|0x00
 block|,
 literal|0x00
-comment|/* 00000068    "......"   */
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+comment|/* 00000068    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000070    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x02
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+comment|/* 00000078    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000080    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000088    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000090    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000098    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000A0    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000A8    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+comment|/* 000000B0    "......"   */
 block|}
 decl_stmt|;
 end_decl_stmt

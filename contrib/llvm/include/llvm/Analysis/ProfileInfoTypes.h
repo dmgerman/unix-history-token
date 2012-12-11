@@ -47,45 +47,9 @@ init|=
 literal|2
 block|}
 enum|;
-enum|enum
-name|ProfilingType
-block|{
-name|ArgumentInfo
-init|=
-literal|1
-block|,
-comment|/* The command line argument block */
-name|FunctionInfo
-init|=
-literal|2
-block|,
-comment|/* Function profiling information  */
-name|BlockInfo
-init|=
-literal|3
-block|,
-comment|/* Block profiling information     */
-name|EdgeInfo
-init|=
-literal|4
-block|,
-comment|/* Edge profiling information      */
-name|PathInfo
-init|=
-literal|5
-block|,
-comment|/* Path profiling information      */
-name|BBTraceInfo
-init|=
-literal|6
-block|,
-comment|/* Basic block trace information   */
-name|OptEdgeInfo
-init|=
-literal|7
-comment|/* Edge profiling information, optimal version */
-block|}
-enum|;
+include|#
+directive|include
+file|"llvm/Analysis/ProfileDataTypes.h"
 comment|/*  * The header for tables that map path numbers to path counters.  */
 typedef|typedef
 struct|struct

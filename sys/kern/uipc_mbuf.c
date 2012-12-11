@@ -2498,7 +2498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAIT/M_DONTWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
+comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAITOK/M_NOWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
 end_comment
 
 begin_function
@@ -4706,31 +4706,20 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|M_WRITABLE
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
+argument_list|)
 operator|||
+name|M_TRAILINGSPACE
+argument_list|(
 name|m
-operator|->
-name|m_data
-operator|+
-name|m
-operator|->
-name|m_len
-operator|+
+argument_list|)
+operator|<
 name|n
 operator|->
 name|m_len
-operator|>=
-operator|&
-name|m
-operator|->
-name|m_dat
-index|[
-name|MLEN
-index|]
 condition|)
 block|{
 comment|/* just join the two chains */
@@ -5092,7 +5081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod and dtom  * will work for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
+comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod will work  * for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
 end_comment
 
 begin_function
@@ -5198,7 +5187,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|n
 operator|->
@@ -5461,7 +5450,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|n
 operator|->
@@ -6162,7 +6151,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -6180,7 +6169,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6256,7 +6245,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -6274,7 +6263,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6484,7 +6473,7 @@ name|n
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -6660,7 +6649,7 @@ name|n
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -6862,7 +6851,7 @@ name|n
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -8007,15 +7996,10 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
+name|M_WRITABLE
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_RDONLY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 name|n
 operator|->

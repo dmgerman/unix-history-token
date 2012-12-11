@@ -2321,8 +2321,6 @@ name|int
 name|i
 decl_stmt|,
 name|error
-decl_stmt|,
-name|ns
 decl_stmt|;
 name|struct
 name|imush
@@ -2633,16 +2631,6 @@ name|isp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ns
-operator|=
-operator|(
-name|len
-operator|/
-name|PAGE_SIZE
-operator|)
-operator|+
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|isp_dma_tag_create
@@ -2669,7 +2657,7 @@ name|NULL
 argument_list|,
 name|len
 argument_list|,
-name|ns
+literal|1
 argument_list|,
 name|BUS_SPACE_MAXADDR_24BIT
 argument_list|,

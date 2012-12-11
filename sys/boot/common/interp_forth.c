@@ -557,6 +557,20 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+comment|/*      * If there was error during nested ficlExec(), we may no longer have      * valid environment to return.  Throw all exceptions from here.      */
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+name|vmThrow
+argument_list|(
+name|vm
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
 comment|/* This is going to be thrown!!! */
 name|stackPushINT
 argument_list|(

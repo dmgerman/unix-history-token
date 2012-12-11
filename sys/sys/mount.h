@@ -1629,12 +1629,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_MPSAFE
+name|MNTK_UNUSED25
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* Filesystem is MPSAFE. */
+comment|/*  --available-- */
 end_comment
 
 begin_define

@@ -145,18 +145,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const PseudoSourceValue *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -259,18 +247,6 @@ block|{}
 comment|/// classof - Methods for support type inquiry through isa, cast, and
 comment|/// dyn_cast:
 comment|///
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const FixedStackPseudoSourceValue *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

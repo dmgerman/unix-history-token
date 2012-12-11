@@ -1735,7 +1735,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -1850,7 +1850,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -3349,7 +3349,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|p
@@ -4020,7 +4020,7 @@ name|m0
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -4490,7 +4490,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|,

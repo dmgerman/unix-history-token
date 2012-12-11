@@ -306,7 +306,7 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|SourceDesc
 operator|->
@@ -333,6 +333,8 @@ else|:
 literal|256
 argument_list|,
 name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -465,7 +467,8 @@ operator|.
 name|Value
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 default|default:
 break|break;
 block|}

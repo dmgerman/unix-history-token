@@ -47,7 +47,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|{ if ((s)> M_TRAILINGSPACE(mb)) { \ 			MGET(mb2, M_WAIT, MT_DATA); \ 			if ((s)> MLEN) \ 				panic("build> MLEN"); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s); }
+value|{ if ((s)> M_TRAILINGSPACE(mb)) { \ 			MGET(mb2, M_WAITOK, MT_DATA); \ 			if ((s)> MLEN) \ 				panic("build> MLEN"); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s); }
 end_define
 
 begin_define

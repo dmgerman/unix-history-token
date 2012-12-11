@@ -3984,12 +3984,34 @@ begin_define
 unit|}
 define|#
 directive|define
+name|ARM_CPSR_F32
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* FIQ disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_CPSR_I32
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* IRQ disable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|disable_interrupts
 parameter_list|(
 name|mask
 parameter_list|)
 define|\
-value|(__set_cpsr_c((mask)& (I32_bit | F32_bit), \ 		      (mask)& (I32_bit | F32_bit)))
+value|(__set_cpsr_c((mask)& (ARM_CPSR_I32 | ARM_CPSR_F32),		\ 		      (mask)& (ARM_CPSR_I32 | ARM_CPSR_F32)))
 end_define
 
 begin_define
@@ -4000,7 +4022,7 @@ parameter_list|(
 name|mask
 parameter_list|)
 define|\
-value|(__set_cpsr_c((mask)& (I32_bit | F32_bit), 0))
+value|(__set_cpsr_c((mask)& (ARM_CPSR_I32 | ARM_CPSR_F32), 0))
 end_define
 
 begin_define
@@ -4011,46 +4033,72 @@ parameter_list|(
 name|old_cpsr
 parameter_list|)
 define|\
-value|(__set_cpsr_c((I32_bit | F32_bit), (old_cpsr)& (I32_bit | F32_bit)))
+value|(__set_cpsr_c((ARM_CPSR_I32 | ARM_CPSR_F32),			\ 		      (old_cpsr)& (ARM_CPSR_I32 | ARM_CPSR_F32)))
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function
+unit|static
+name|__inline
+name|register_t
 name|intr_disable
-parameter_list|()
-define|\
-value|disable_interrupts(I32_bit | F32_bit)
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_t
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|disable_interrupts
+argument_list|(
+name|ARM_CPSR_I32
+operator||
+name|ARM_CPSR_F32
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|void
 name|intr_restore
 parameter_list|(
+name|register_t
 name|s
 parameter_list|)
-define|\
-value|restore_interrupts(s)
-end_define
+block|{
+name|restore_interrupts
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Functions to manipulate the CPSR. */
 end_comment
 
-begin_macro
-unit|u_int
+begin_function_decl
+name|u_int
 name|SetCPSR
-argument_list|(
-argument|u_int bic
-argument_list|,
-argument|u_int eor
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+parameter_list|(
+name|u_int
+name|bic
+parameter_list|,
+name|u_int
+name|eor
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|u_int

@@ -15,8 +15,14 @@ directive|define
 name|_SYS__MUTEX_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
+
 begin_comment
-comment|/*  * Sleep/spin mutex.  */
+comment|/*  * Sleep/spin mutex.  *  * All mutex implementations must always have a member called mtx_lock.  * Other locking primitive structures are not allowed to use this name  * for their members.  * If this rule needs to change, the bits in the mutex implementation must  * be modified appropriately.  */
 end_comment
 
 begin_struct
@@ -34,6 +40,32 @@ name|mtx_lock
 decl_stmt|;
 comment|/* Owner and flags. */
 block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Members of struct mtx_padalign must mirror members of struct mtx.  * mtx_padalign mutexes can use the mtx(9) API transparently without  * modification.  * Pad-aligned mutexes used within structures should generally be the  * first member of the struct.  Otherwise, the compiler can generate  * additional padding for the struct to keep a correct alignment for  * the mutex.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mtx_padalign
+block|{
+name|struct
+name|lock_object
+name|lock_object
+decl_stmt|;
+comment|/* Common lock properties. */
+specifier|volatile
+name|uintptr_t
+name|mtx_lock
+decl_stmt|;
+comment|/* Owner and flags. */
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 

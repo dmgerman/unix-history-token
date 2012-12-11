@@ -579,7 +579,7 @@ begin_define
 define|#
 directive|define
 name|BUSDMA_STATIC_MAPS
-value|500
+value|128
 end_define
 
 begin_decl_stmt
@@ -2448,11 +2448,6 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-name|_busdma_free_dmamap
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|STAILQ_FIRST
@@ -2502,6 +2497,11 @@ name|dmat
 operator|->
 name|map_count
 operator|--
+expr_stmt|;
+name|_busdma_free_dmamap
+argument_list|(
+name|map
+argument_list|)
 expr_stmt|;
 name|CTR2
 argument_list|(

@@ -534,6 +534,17 @@ begin_comment
 comment|/* changed dst to local */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_IP_NEXTHOP
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* explicit ip nexthop */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -926,9 +937,6 @@ name|mtu
 parameter_list|,
 name|u_long
 name|if_hwassist_flags
-parameter_list|,
-name|int
-name|sw_csum
 parameter_list|)
 function_decl|;
 end_function_decl

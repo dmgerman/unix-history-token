@@ -204,7 +204,9 @@ name|Op
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -250,7 +252,9 @@ name|Op
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|DbgPrint
@@ -435,7 +439,9 @@ comment|/* Don't care about others, don't need to check QWORD */
 break|break;
 block|}
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -637,7 +643,9 @@ name|Op
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|Op
@@ -691,7 +699,9 @@ name|Op
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|Op
@@ -805,7 +815,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -1226,7 +1238,9 @@ literal|"\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -1507,7 +1521,9 @@ literal|"\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -1702,7 +1718,9 @@ literal|"Child node list invalid"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 name|DbgPrint
@@ -1818,7 +1836,9 @@ literal|"\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op
+operator|)
 return|;
 block|}
 end_function
@@ -1903,7 +1923,9 @@ literal|"\nTwo Null nodes!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op1
+operator|)
 return|;
 block|}
 comment|/* If one of the nodes is null, just return the non-null node */
@@ -1914,7 +1936,9 @@ name|Op2
 condition|)
 block|{
 return|return
+operator|(
 name|Op1
+operator|)
 return|;
 block|}
 if|if
@@ -1924,7 +1948,9 @@ name|Op1
 condition|)
 block|{
 return|return
+operator|(
 name|Op2
+operator|)
 return|;
 block|}
 if|if
@@ -1955,7 +1981,9 @@ literal|"Linking node to itself"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Op1
+operator|)
 return|;
 block|}
 name|Op1
@@ -2002,7 +2030,9 @@ operator|=
 name|Op2
 expr_stmt|;
 return|return
+operator|(
 name|Op1
+operator|)
 return|;
 block|}
 end_function
@@ -2250,7 +2280,9 @@ name|Op2
 condition|)
 block|{
 return|return
+operator|(
 name|Op1
+operator|)
 return|;
 block|}
 name|Op1
@@ -2289,7 +2321,9 @@ name|Next
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|Op1
+operator|)
 return|;
 block|}
 end_function

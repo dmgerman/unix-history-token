@@ -83,18 +83,7 @@ name|addr
 parameter_list|,
 modifier|...
 parameter_list|)
-block|{
-comment|/* XXX this is wrong */
-asm|__asm __volatile("movl %cr0, %eax");
-asm|__asm __volatile("andl $0x7fffffff, %eax");
-asm|__asm __volatile("mov %eax, %cr0");
-asm|__asm __volatile("xorl %eax, %eax");
-asm|__asm __volatile("mov %eax, %cr3");
-asm|__asm __volatile("movl %cr0, %eax");
-asm|__asm __volatile("andl $0xfffffffe, %eax");
-asm|__asm __volatile("movl %eax, %cr0");
-asm|__asm __volatile("jmp %0" :: "r" (addr));
-block|}
+block|{ }
 end_function
 
 end_unit

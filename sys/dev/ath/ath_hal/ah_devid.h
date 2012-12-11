@@ -520,6 +520,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9300_DEVID_EMU_PCIE
+value|0xabcd
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR9300_DEVID_AR9340
 value|0x0031
 end_define

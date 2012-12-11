@@ -416,6 +416,12 @@ operator|->
 name|v_type
 operator|==
 name|VREG
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
 argument_list|)
 expr_stmt|;
 name|err
@@ -590,11 +596,6 @@ argument_list|,
 name|cred
 argument_list|,
 name|fufh
-argument_list|)
-expr_stmt|;
-name|fuse_invalidate_attr
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2531,6 +2532,12 @@ operator|->
 name|v_type
 operator|==
 name|VREG
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
 argument_list|)
 expr_stmt|;
 name|MPASS

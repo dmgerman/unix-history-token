@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveObject  *  * PARAMETERS:  SourceDescPtr       - Pointer to the source object  *              TargetType          - Current type of the target  *              WalkState           - Current walk state  *  * RETURN:      Status, resolved object in SourceDescPtr.  *  * DESCRIPTION: Resolve an object.  If the object is a reference, dereference  *              it and return the actual object in the SourceDescPtr.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveObject  *  * PARAMETERS:  SourceDescPtr       - Pointer to the source object  *              TargetType          - Current type of the target  *              WalkState           - Current walk state  *  * RETURN:      Status, resolved object in SourceDescPtr.  *  * DESCRIPTION: Resolve an object. If the object is a reference, dereference  *              it and return the actual object in the SourceDescPtr.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -117,7 +117,7 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*          * Stores into a Field/Region or into a Integer/Buffer/String          * are all essentially the same.  This case handles the          * "interchangeable" types Integer, String, and Buffer.          */
+comment|/*          * Stores into a Field/Region or into a Integer/Buffer/String          * are all essentially the same. This case handles the          * "interchangeable" types Integer, String, and Buffer.          */
 if|if
 condition|(
 name|SourceDesc
@@ -282,7 +282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToObject  *  * PARAMETERS:  SourceDesc          - Object to store  *              DestDesc            - Object to receive a copy of the source  *              NewDesc             - New object if DestDesc is obsoleted  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: "Store" an object to another object.  This may include  *              converting the source type to the target type (implicit  *              conversion), and a copy of the value of the source to  *              the target.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The Source passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              Buffer, and Package.  *  *              Assumes parameters are already validated.  NOTE: SourceDesc  *              resolution (from a reference object) must be performed by  *              the caller if necessary.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToObject  *  * PARAMETERS:  SourceDesc          - Object to store  *              DestDesc            - Object to receive a copy of the source  *              NewDesc             - New object if DestDesc is obsoleted  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: "Store" an object to another object. This may include  *              converting the source type to the target type (implicit  *              conversion), and a copy of the value of the source to  *              the target.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The Source passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object. This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              Buffer, and Package.  *  *              Assumes parameters are already validated. NOTE: SourceDesc  *              resolution (from a reference object) must be performed by  *              the caller if necessary.  *  ******************************************************************************/
 end_comment
 
 begin_function

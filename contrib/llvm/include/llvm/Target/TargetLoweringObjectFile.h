@@ -130,12 +130,10 @@ name|Ctx
 block|;
 name|TargetLoweringObjectFile
 argument_list|(
-specifier|const
-name|TargetLoweringObjectFile
-operator|&
+argument|const TargetLoweringObjectFile&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -144,8 +142,8 @@ specifier|const
 name|TargetLoweringObjectFile
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 name|MCContext

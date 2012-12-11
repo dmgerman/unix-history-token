@@ -902,7 +902,7 @@ name|m
 argument_list|,
 name|LLC_SNAPFRAMELEN
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|llc
@@ -1271,7 +1271,7 @@ name|m
 argument_list|,
 name|LLC_SNAPFRAMELEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1360,7 +1360,7 @@ name|m
 argument_list|,
 name|FDDI_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

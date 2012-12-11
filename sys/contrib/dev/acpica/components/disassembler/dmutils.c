@@ -406,7 +406,9 @@ name|Next
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -456,7 +458,7 @@ name|String
 operator|)
 condition|)
 block|{
-comment|/*              * To handle the Divide() case where there are two optional              * targets, look ahead one more op.  If null, this null target              * is the one and only target -- no comma needed.  Otherwise,              * we need a comma to prepare for the next target.              */
+comment|/*              * To handle the Divide() case where there are two optional              * targets, look ahead one more op. If null, this null target              * is the one and only target -- no comma needed. Otherwise,              * we need a comma to prepare for the next target.              */
 if|if
 condition|(
 operator|!
@@ -472,7 +474,9 @@ name|Next
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -507,7 +511,9 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|AcpiOsPrintf

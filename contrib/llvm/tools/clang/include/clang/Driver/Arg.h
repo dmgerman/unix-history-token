@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Option.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"Util.h"
 end_include
 
@@ -97,9 +103,6 @@ block|{
 name|class
 name|ArgList
 decl_stmt|;
-name|class
-name|Option
-decl_stmt|;
 comment|/// \brief A concrete instance of a particular driver option.
 comment|///
 comment|/// The Arg class encodes just enough information to be able to
@@ -112,12 +115,10 @@ name|Arg
 block|{
 name|Arg
 argument_list|(
-specifier|const
-name|Arg
-operator|&
+argument|const Arg&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -126,14 +127,13 @@ specifier|const
 name|Arg
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|private
 label|:
 comment|/// \brief The option this argument is an instance of.
 specifier|const
 name|Option
-modifier|*
 name|Opt
 decl_stmt|;
 comment|/// \brief The argument this argument was derived from (during tool chain
@@ -142,6 +142,10 @@ specifier|const
 name|Arg
 modifier|*
 name|BaseArg
+decl_stmt|;
+comment|/// \brief How this instance of the option was spelled.
+name|StringRef
+name|Spelling
 decl_stmt|;
 comment|/// \brief The index at which this argument appears in the containing
 comment|/// ArgList.
@@ -179,7 +183,9 @@ name|public
 label|:
 name|Arg
 argument_list|(
-argument|const Option *Opt
+argument|const Option Opt
+argument_list|,
+argument|StringRef Spelling
 argument_list|,
 argument|unsigned Index
 argument_list|,
@@ -189,7 +195,9 @@ argument_list|)
 empty_stmt|;
 name|Arg
 argument_list|(
-argument|const Option *Opt
+argument|const Option Opt
+argument_list|,
+argument|StringRef Spelling
 argument_list|,
 argument|unsigned Index
 argument_list|,
@@ -201,7 +209,9 @@ argument_list|)
 empty_stmt|;
 name|Arg
 argument_list|(
-argument|const Option *Opt
+argument|const Option Opt
+argument_list|,
+argument|StringRef Spelling
 argument_list|,
 argument|unsigned Index
 argument_list|,
@@ -219,14 +229,21 @@ argument_list|()
 expr_stmt|;
 specifier|const
 name|Option
-operator|&
 name|getOption
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
 name|Opt
+return|;
+block|}
+name|StringRef
+name|getSpelling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Spelling
 return|;
 block|}
 name|unsigned
@@ -337,11 +354,6 @@ name|char
 modifier|*
 name|getValue
 argument_list|(
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|,
 name|unsigned
 name|N
 operator|=
@@ -447,19 +459,6 @@ name|Output
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Arg
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|void
 name|dump
 argument_list|()

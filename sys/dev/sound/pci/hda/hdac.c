@@ -5247,6 +5247,8 @@ expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(dev,
+literal|"PCI card vendor: 0x%04x, device: 0x%04x\n"
+argument|, 		    pci_get_subvendor(dev), pci_get_subdevice(dev)); 		device_printf(dev,
 literal|"HDA Driver Revision: %s\n"
 argument|, 		    HDA_DRV_TEST_REV);
 argument_list|)

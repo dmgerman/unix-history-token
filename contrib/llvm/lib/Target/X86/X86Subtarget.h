@@ -268,6 +268,10 @@ comment|/// HasBMI2 - Processor has BMI2 instructions.
 name|bool
 name|HasBMI2
 block|;
+comment|/// HasRTM - Processor has RTM instructions.
+name|bool
+name|HasRTM
+block|;
 comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
@@ -290,6 +294,11 @@ comment|/// UseLeaForSP - True if the LEA instruction should be used for adjusti
 comment|/// the stack pointer. This is an optimization for Intel Atom processors.
 name|bool
 name|UseLeaForSP
+block|;
+comment|/// HasSlowDivide - True if smaller divides are significantly faster than
+comment|/// full divides and should be used when possible.
+name|bool
+name|HasSlowDivide
 block|;
 comment|/// PostRAScheduler - True if using post-register-allocation scheduler.
 name|bool
@@ -581,6 +590,7 @@ return|return
 name|HasFMA
 return|;
 block|}
+comment|// FIXME: Favor FMA when both are enabled. Is this the right thing to do?
 name|bool
 name|hasFMA4
 argument_list|()
@@ -588,6 +598,9 @@ specifier|const
 block|{
 return|return
 name|HasFMA4
+operator|&&
+operator|!
+name|HasFMA
 return|;
 block|}
 name|bool
@@ -663,6 +676,15 @@ name|HasBMI2
 return|;
 block|}
 name|bool
+name|hasRTM
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRTM
+return|;
+block|}
+name|bool
 name|isBTMemSlow
 argument_list|()
 specifier|const
@@ -705,6 +727,15 @@ specifier|const
 block|{
 return|return
 name|UseLeaForSP
+return|;
+block|}
+name|bool
+name|hasSlowDivide
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSlowDivide
 return|;
 block|}
 name|bool
@@ -773,18 +804,27 @@ operator|::
 name|Solaris
 return|;
 block|}
-comment|// ELF is a reasonably sane default and the only other X86 targets we
-comment|// support are Darwin and Windows. Just use "not those".
 name|bool
 name|isTargetELF
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|ELF
+operator|||
 name|TargetTriple
 operator|.
 name|isOSBinFormatELF
 argument_list|()
+operator|)
 return|;
 block|}
 name|bool
@@ -912,10 +952,21 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|!=
+name|Triple
+operator|::
+name|ELF
+operator|&&
 name|TargetTriple
 operator|.
 name|isOSBinFormatCOFF
 argument_list|()
+operator|)
 return|;
 block|}
 name|bool
@@ -1089,15 +1140,6 @@ specifier|const
 name|char
 operator|*
 name|getBZeroEntry
-argument_list|()
-specifier|const
-block|;
-comment|/// getSpecialAddressLatency - For targets where it is beneficial to
-comment|/// backschedule instructions that compute addresses, return a value
-comment|/// indicating the number of scheduling cycles of backscheduling that
-comment|/// should be attempted.
-name|unsigned
-name|getSpecialAddressLatency
 argument_list|()
 specifier|const
 block|;

@@ -571,21 +571,6 @@ name|symbol_end
 argument_list|()
 return|;
 block|}
-comment|// Implement isa<T> support.
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|SVal
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 name|class
@@ -964,8 +949,6 @@ block|{
 name|ConcreteIntKind
 block|,
 name|SymbolValKind
-block|,
-name|SymExprValKind
 block|,
 name|LocAsIntegerKind
 block|,

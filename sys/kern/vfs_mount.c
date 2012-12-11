@@ -3610,7 +3610,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Mount flags are now 64-bits. On 32-bit archtectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
+comment|/* 	 * Mount flags are now 64-bits. On 32-bit architectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
 name|flags
 operator|=
 name|uap
@@ -5875,13 +5875,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AUDIT_ARG_UPATH1
-argument_list|(
-name|td
-argument_list|,
-name|pathbuf
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Try to find global path for path argument. 		 */
 name|NDINIT
 argument_list|(

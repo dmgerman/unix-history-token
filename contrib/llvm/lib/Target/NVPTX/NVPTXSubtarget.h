@@ -99,10 +99,6 @@ range|:
 name|public
 name|NVPTXGenSubtargetInfo
 block|{
-name|unsigned
-name|int
-name|SmVersion
-block|;
 name|std
 operator|::
 name|string
@@ -114,11 +110,16 @@ name|DrvInterface
 name|drvInterface
 block|;
 name|bool
-name|dummy
-block|;
-comment|// For the 'dummy' feature, see NVPTX.td
-name|bool
 name|Is64Bit
+block|;
+comment|// PTX version x.y is represented as 10*x+y, e.g. 3.1 == 31
+name|unsigned
+name|PTXVersion
+block|;
+comment|// SM version x.y is represented as 10*x+y, e.g. 3.1 == 31
+name|unsigned
+name|int
+name|SmVersion
 block|;
 name|public
 operator|:
@@ -397,6 +398,15 @@ specifier|const
 block|{
 return|return
 name|TargetName
+return|;
+block|}
+name|unsigned
+name|getPTXVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PTXVersion
 return|;
 block|}
 name|void

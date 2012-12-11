@@ -804,7 +804,9 @@ name|WalkState
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 name|WalkState

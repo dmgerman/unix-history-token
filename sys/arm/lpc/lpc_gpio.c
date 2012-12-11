@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2011 Jakub Wojciech Klama<jceel@FreeBSD.org>  * All
 end_comment
 
 begin_comment
-comment|/*  * GPIO on LPC32x0 consist of 4 ports:  * - Port0 with 8 input/output pins  * - Port1 with 24 input/output pins  * - Port2 with 13 input/output pins  * - Port3 with:  *   - 26 input pins (GPI_00..GPI_09 + GPI_15..GPI_23 + GPI_25 + GPI_27..GPI_28)  *   - 24 output pins (GPO_00..GPO_23)  *   - 6 input/ouput pins (GPIO_00..GPIO_05)  *  * Pins are mapped to logical pin number as follows:  * [0..9] -> GPI_00..GPI_09 		(port 3)  * [10..18] -> GPI_15..GPI_23 		(port 3)  * [19] -> GPI_25			(port 3)  * [20..21] -> GPI_27..GPI_28		(port 3)  * [22..45] -> GPO_00..GPO_23		(port 3)  * [46..51] -> GPIO_00..GPIO_05		(port 3)  * [52..64] -> P2.0..P2.12		(port 2)  * [65..88] -> P1.0..P1.23		(port 1)  * [89..96] -> P0.0..P0.7		(port 0)  *  */
+comment|/*  * GPIO on LPC32x0 consist of 4 ports:  * - Port0 with 8 input/output pins  * - Port1 with 24 input/output pins  * - Port2 with 13 input/output pins  * - Port3 with:  *   - 26 input pins (GPI_00..GPI_09 + GPI_15..GPI_23 + GPI_25 + GPI_27..GPI_28)  *   - 24 output pins (GPO_00..GPO_23)  *   - 6 input/output pins (GPIO_00..GPIO_05)  *  * Pins are mapped to logical pin number as follows:  * [0..9] -> GPI_00..GPI_09 		(port 3)  * [10..18] -> GPI_15..GPI_23 		(port 3)  * [19] -> GPI_25			(port 3)  * [20..21] -> GPI_27..GPI_28		(port 3)  * [22..45] -> GPO_00..GPO_23		(port 3)  * [46..51] -> GPIO_00..GPIO_05		(port 3)  * [52..64] -> P2.0..P2.12		(port 2)  * [65..88] -> P1.0..P1.23		(port 1)  * [89..96] -> P0.0..P0.7		(port 0)  *  */
 end_comment
 
 begin_include

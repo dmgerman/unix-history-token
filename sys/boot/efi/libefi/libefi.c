@@ -536,7 +536,7 @@ name|args
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Use a quick and dirty algorithm to build the argv vector. We 	 * first count the number of words. Then, after allocating the 	 * vector, we split the string up. We don't deal with quotes or 	 * other more advanced shell features. 	 * The EFI shell will pas the name of the image as the first 	 * word in the argument list. This does not happen if we're 	 * loaded by the boot manager. This is not so easy to figure 	 * out though. The ParentHandle is not always NULL, because 	 * there can be a function (=image) that will perform the task 	 * for the boot manager. 	 */
+comment|/* 	 * Use a quick and dirty algorithm to build the argv vector. We 	 * first count the number of words. Then, after allocating the 	 * vector, we split the string up. We don't deal with quotes or 	 * other more advanced shell features. 	 * The EFI shell will pass the name of the image as the first 	 * word in the argument list. This does not happen if we're 	 * loaded by the boot manager. This is not so easy to figure 	 * out though. The ParentHandle is not always NULL, because 	 * there can be a function (=image) that will perform the task 	 * for the boot manager. 	 */
 comment|/* Part 1: Figure out if we need to add our program name. */
 name|addprog
 operator|=

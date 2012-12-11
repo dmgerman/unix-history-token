@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -140,6 +146,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|deembed_scopeid
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_ip6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|deembed_scopeid
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|deembed_scopeid
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Extract embedded zone ID and set it to sin6_scope_id in sockaddr_in6."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * The scope6_lock protects the global sid default stored in  * sid_default below.  */
@@ -399,7 +449,7 @@ name|sid
 init|=
 name|NULL
 decl_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -418,7 +468,7 @@ name|sid
 condition|)
 block|{
 comment|/* paranoid? */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -431,9 +481,6 @@ return|;
 block|}
 comment|/* 	 * XXX: We need more consistency checks of the relationship among 	 * scopes (e.g. an organization should be larger than a site). 	 */
 comment|/* 	 * TODO(XXX): after setting, we should reflect the changes to 	 * interface addresses, routing table entries, PCB entries... 	 */
-name|SCOPE6_LOCK
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -491,13 +538,10 @@ operator|->
 name|if_index
 condition|)
 block|{
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-name|SCOPE6_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -522,13 +566,10 @@ name|V_if_index
 condition|)
 block|{
 comment|/* 				 * XXX: theoretically, there should be no 				 * relationship between link IDs and interface 				 * IDs, but we check the consistency for 				 * safety in later use. 				 */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-name|SCOPE6_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -553,10 +594,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -584,22 +622,24 @@ modifier|*
 name|idlist
 parameter_list|)
 block|{
-comment|/* We only need to lock the interface's afdata for SID() to work. */
-name|IF_AFDATA_LOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|struct
 name|scope6_id
 modifier|*
 name|sid
-init|=
+decl_stmt|;
+comment|/* We only need to lock the interface's afdata for SID() to work. */
+name|IF_AFDATA_RLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|sid
+operator|=
 name|SID
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sid
@@ -608,7 +648,7 @@ name|NULL
 condition|)
 block|{
 comment|/* paranoid? */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -619,19 +659,13 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|SCOPE6_LOCK
-argument_list|()
-expr_stmt|;
 operator|*
 name|idlist
 operator|=
 operator|*
 name|sid
 expr_stmt|;
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1143,38 +1177,6 @@ name|zoneid
 decl_stmt|;
 if|if
 condition|(
-name|sin6
-operator|->
-name|sin6_scope_id
-operator|!=
-literal|0
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"sa6_recoverscope: assumption failure (non 0 ID): %s%%%d\n"
-argument_list|,
-name|ip6_sprintf
-argument_list|(
-name|ip6buf
-argument_list|,
-operator|&
-name|sin6
-operator|->
-name|sin6_addr
-argument_list|)
-argument_list|,
-name|sin6
-operator|->
-name|sin6_scope_id
-argument_list|)
-expr_stmt|;
-comment|/* XXX: proceed anyway... */
-block|}
-if|if
-condition|(
 name|IN6_IS_SCOPE_LINKLOCAL
 argument_list|(
 operator|&
@@ -1215,10 +1217,6 @@ block|{
 comment|/* sanity check */
 if|if
 condition|(
-name|zoneid
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|zoneid
@@ -1228,19 +1226,53 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: Disabled due to possible deadlock. */
+block|if (!ifnet_byindex(zoneid)) 				return (ENXIO);
+endif|#
+directive|endif
 if|if
 condition|(
-operator|!
-name|ifnet_byindex
-argument_list|(
+name|sin6
+operator|->
+name|sin6_scope_id
+operator|!=
+literal|0
+operator|&&
 name|zoneid
-argument_list|)
+operator|!=
+name|sin6
+operator|->
+name|sin6_scope_id
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+block|{
+name|log
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: embedded scope mismatch: %s%%%d. "
+literal|"sin6_scope_id was overridden."
+argument_list|,
+name|__func__
+argument_list|,
+name|ip6_sprintf
+argument_list|(
+name|ip6buf
+argument_list|,
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+argument_list|)
+argument_list|,
+name|sin6
+operator|->
+name|sin6_scope_id
+argument_list|)
+expr_stmt|;
+block|}
 name|sin6
 operator|->
 name|sin6_addr
@@ -1302,7 +1334,7 @@ name|scope6_id
 modifier|*
 name|sid
 decl_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1355,7 +1387,7 @@ name|IFF_LOOPBACK
 operator|)
 condition|)
 block|{
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1380,7 +1412,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* there's no ambiguity */
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1398,9 +1430,6 @@ name|in6_addrscope
 argument_list|(
 name|in6
 argument_list|)
-expr_stmt|;
-name|SCOPE6_LOCK
-argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -1468,10 +1497,7 @@ expr_stmt|;
 comment|/* XXX: treat as global. */
 break|break;
 block|}
-name|SCOPE6_UNLOCK
-argument_list|()
-expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

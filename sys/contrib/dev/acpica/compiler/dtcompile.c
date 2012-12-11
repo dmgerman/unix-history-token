@@ -164,7 +164,9 @@ name|Gbl_PreprocessOnly
 condition|)
 block|{
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 comment|/*      * Scan the input file (file is already open) and      * build the parse tree      */

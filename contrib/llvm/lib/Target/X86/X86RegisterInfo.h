@@ -154,15 +154,6 @@ operator|&
 name|tii
 argument_list|)
 block|;
-comment|/// getX86RegNum - Returns the native X86 register number for the given LLVM
-comment|/// register identifier.
-specifier|static
-name|unsigned
-name|getX86RegNum
-argument_list|(
-argument|unsigned RegNo
-argument_list|)
-block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
 name|int
 name|getSEHRegNum
@@ -286,6 +277,13 @@ argument|CallingConv::ID
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getNoPreservedMask
+argument_list|()
+specifier|const
+block|;
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
 comment|/// indicating if a register is a special register that has particular uses and
 comment|/// should be considered unavailable at all times, e.g. SP, RA. This is used by
@@ -401,20 +399,22 @@ block|; }
 decl_stmt|;
 comment|// getX86SubSuperRegister - X86 utility function. It returns the sub or super
 comment|// register of a specific X86 register.
-comment|// e.g. getX86SubSuperRegister(X86::EAX, EVT::i16) return X86:AX
+comment|// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) return X86:AX
 name|unsigned
 name|getX86SubSuperRegister
-parameter_list|(
+argument_list|(
 name|unsigned
-parameter_list|,
-name|EVT
-parameter_list|,
+argument_list|,
+name|MVT
+operator|::
+name|SimpleValueType
+argument_list|,
 name|bool
 name|High
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

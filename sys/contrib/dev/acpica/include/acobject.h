@@ -511,7 +511,7 @@ comment|/* Method modified the namespace */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * Objects that can be notified.  All share a common NotifyInfo area.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Objects that can be notified. All share a common NotifyInfo area.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -614,7 +614,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/******************************************************************************  *  * Fields.  All share a common header/info field.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Fields. All share a common header/info field.  *  *****************************************************************************/
 end_comment
 
 begin_comment

@@ -1146,7 +1146,7 @@ name|MGET
 argument_list|(
 name|nam
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)
@@ -2066,7 +2066,7 @@ name|m_dup
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6836,7 +6836,7 @@ name|MGET
 argument_list|(
 name|nam
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)

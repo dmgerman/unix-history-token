@@ -1558,7 +1558,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1578,7 +1578,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1589,6 +1589,9 @@ name|Count
 parameter_list|,
 name|UINT32
 name|Display
+parameter_list|,
+name|UINT32
+name|Offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1792,7 +1795,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 modifier|*
 name|ReturnId
@@ -1808,7 +1811,23 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
+modifier|*
+modifier|*
+name|ReturnId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtExecute_SUB
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DeviceNode
+parameter_list|,
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 modifier|*
 name|ReturnId
@@ -1824,7 +1843,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 modifier|*
 modifier|*
 name|ReturnCidList
@@ -2570,6 +2589,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtWalkAmlResources
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|UINT8
 modifier|*
 name|Aml
@@ -2591,6 +2614,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtValidateResource
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|void
 modifier|*
 name|Aml

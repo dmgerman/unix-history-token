@@ -5828,6 +5828,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|do_aggrmode
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Set up the channel access parameters for the physical 	 * device.  First populate the configured settings. 	 */
 for|for
 control|(
@@ -5980,9 +5985,9 @@ operator|=
 name|IEEE80211_MODE_AUTO
 expr_stmt|;
 comment|/* 	 * This implements agressive mode as found in certain 	 * vendors' AP's.  When there is significant high 	 * priority (VI/VO) traffic in the BSS throttle back BE 	 * traffic by using conservative parameters.  Otherwise 	 * BE uses agressive params to optimize performance of 	 * legacy/non-QoS traffic. 	 */
+comment|/* Hostap? Only if aggressive mode is enabled */
 if|if
 condition|(
-operator|(
 name|vap
 operator|->
 name|iv_opmode
@@ -5998,8 +6003,15 @@ name|WME_F_AGGRMODE
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
+condition|)
+name|do_aggrmode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 	 * Station? Only if we're in a non-QoS BSS. 	 */
+elseif|else
+if|if
+condition|(
 operator|(
 name|vap
 operator|->
@@ -6019,7 +6031,38 @@ operator|)
 operator|==
 literal|0
 operator|)
-operator|||
+condition|)
+name|do_aggrmode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 	 * IBSS? Only if we we have WME enabled. 	 */
+elseif|else
+if|if
+condition|(
+operator|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_IBSS
+operator|)
+operator|&&
+operator|(
+name|vap
+operator|->
+name|iv_flags
+operator|&
+name|IEEE80211_F_WME
+operator|)
+condition|)
+name|do_aggrmode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 	 * If WME is disabled on this VAP, default to aggressive mode 	 * regardless of the configuration. 	 */
+if|if
+condition|(
 operator|(
 name|vap
 operator|->
@@ -6029,6 +6072,16 @@ name|IEEE80211_F_WME
 operator|)
 operator|==
 literal|0
+condition|)
+name|do_aggrmode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX WDS? */
+comment|/* XXX MBSS? */
+if|if
+condition|(
+name|do_aggrmode
 condition|)
 block|{
 name|chanp
@@ -6161,6 +6214,7 @@ name|wmep_txopLimit
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Change the contention window based on the number of associated 	 * stations.  If the number of associated stations is 1 and 	 * aggressive mode is enabled, lower the contention window even 	 * further. 	 */
 if|if
 condition|(
 name|vap
@@ -6324,6 +6378,7 @@ name|wmep_logcwmin
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Arrange for the beacon update. 	 * 	 * XXX what about MBSS, WDS? 	 */
 if|if
 condition|(
 name|vap
@@ -6331,9 +6386,14 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_IBSS
 condition|)
 block|{
-comment|/* XXX ibss? */
 comment|/* 		 * Arrange for a beacon update and bump the parameter 		 * set number so associated stations load the new values. 		 */
 name|wme
 operator|->

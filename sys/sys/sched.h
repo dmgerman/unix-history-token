@@ -344,6 +344,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCHED_4BSD
+end_ifdef
+
+begin_function_decl
+name|fixpt_t
+name|sched_pctcpu_delta
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Threads are moved on and off of run queues  */
 end_comment
@@ -583,6 +617,9 @@ operator|->
 name|td_pinned
 operator|++
 expr_stmt|;
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -595,6 +632,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 name|curthread
 operator|->
 name|td_pinned

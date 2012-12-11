@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.89 2012/06/10 21:44:01 wiz Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.90 2012/10/07 19:17:31 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.89 2012/06/10 21:44:01 wiz Exp $"
+literal|"$NetBSD: compat.c,v 1.90 2012/10/07 19:17:31 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.89 2012/06/10 21:44:01 wiz Exp $"
+literal|"$NetBSD: compat.c,v 1.90 2012/10/07 19:17:31 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -588,13 +588,6 @@ block|{
 name|free
 argument_list|(
 name|cmdStart
-argument_list|)
-expr_stmt|;
-name|Error
-argument_list|(
-literal|"%s expands to empty string"
-argument_list|,
-name|cmd
 argument_list|)
 expr_stmt|;
 return|return

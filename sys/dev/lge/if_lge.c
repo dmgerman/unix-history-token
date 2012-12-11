@@ -210,7 +210,6 @@ specifier|static
 specifier|const
 name|struct
 name|lge_type
-specifier|const
 name|lge_devs
 index|[]
 init|=
@@ -3117,7 +3116,7 @@ name|MGETHDR
 argument_list|(
 name|m_new
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

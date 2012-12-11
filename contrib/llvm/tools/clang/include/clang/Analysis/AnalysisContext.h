@@ -213,6 +213,7 @@ decl_stmt|;
 specifier|const
 name|Decl
 modifier|*
+specifier|const
 name|D
 decl_stmt|;
 name|OwningPtr
@@ -247,18 +248,6 @@ name|builtCFG
 decl_stmt|,
 name|builtCompleteCFG
 decl_stmt|;
-name|OwningPtr
-operator|<
-name|LiveVariables
-operator|>
-name|liveness
-expr_stmt|;
-name|OwningPtr
-operator|<
-name|LiveVariables
-operator|>
-name|relaxedLiveness
-expr_stmt|;
 name|OwningPtr
 operator|<
 name|ParentMap
@@ -338,9 +327,10 @@ name|AnalysisDeclContext
 argument_list|()
 expr_stmt|;
 name|ASTContext
-modifier|&
+operator|&
 name|getASTContext
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|D
@@ -358,6 +348,18 @@ specifier|const
 block|{
 return|return
 name|D
+return|;
+block|}
+comment|/// Return the AnalysisDeclContextManager (if any) that created
+comment|/// this AnalysisDeclContext.
+name|AnalysisDeclContextManager
+operator|*
+name|getManager
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Manager
 return|;
 block|}
 comment|/// Return the build options used to construct the CFG.
@@ -861,6 +863,13 @@ name|getCurrentStackFrame
 argument_list|()
 specifier|const
 block|;
+comment|/// Return true if the current LocationContext has no caller context.
+name|virtual
+name|bool
+name|inTopFrame
+argument_list|()
+specifier|const
+block|;
 name|virtual
 name|void
 name|Profile
@@ -874,17 +883,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LocationContext*
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -992,6 +990,20 @@ specifier|const
 block|{
 return|return
 name|Block
+return|;
+block|}
+comment|/// Return true if the current LocationContext has no caller context.
+name|virtual
+name|bool
+name|inTopFrame
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getParent
+argument_list|()
+operator|==
+literal|0
 return|;
 block|}
 name|unsigned
@@ -1476,6 +1488,11 @@ operator|::
 name|BuildOptions
 name|cfgBuildOptions
 block|;
+comment|/// Flag to indicate whether or not bodies should be synthesized
+comment|/// for well-known functions.
+name|bool
+name|SynthesizeBodies
+block|;
 name|public
 operator|:
 name|AnalysisDeclContextManager
@@ -1485,6 +1502,10 @@ argument_list|,
 argument|bool addImplicitDtors = false
 argument_list|,
 argument|bool addInitializers = false
+argument_list|,
+argument|bool addTemporaryDtors = false
+argument_list|,
+argument|bool synthesizeBodies = false
 argument_list|)
 block|;
 operator|~
@@ -1522,6 +1543,17 @@ argument_list|()
 block|{
 return|return
 name|cfgBuildOptions
+return|;
+block|}
+comment|/// Return true if faux bodies should be synthesized for well-known
+comment|/// functions.
+name|bool
+name|synthesizeBodies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SynthesizeBodies
 return|;
 block|}
 specifier|const

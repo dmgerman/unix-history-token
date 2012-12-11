@@ -478,45 +478,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Isolate the global pv list lock from data and other locks to prevent false  * sharing within the cache.  */
-end_comment
-
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
-block|{
 name|struct
-name|rwlock
-name|lock
-decl_stmt|;
-name|char
-name|padding
-index|[
-name|CACHE_LINE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rwlock
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|pvh_global
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
+name|rwlock_padalign
 name|pvh_global_lock
-value|pvh_global.lock
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Data for the pv entry allocation mechanism  */
@@ -632,6 +600,21 @@ name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|vm_page_t
+name|pmap_alloc_direct_page
+parameter_list|(
+name|unsigned
+name|int
+name|index
+parameter_list|,
+name|int
+name|req
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4493,6 +4476,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vm_page_t
 name|pmap_alloc_direct_page
 parameter_list|(
@@ -6319,13 +6303,6 @@ operator|*
 name|pte
 operator|=
 literal|0
-expr_stmt|;
-name|pmap_invalidate_page
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
 expr_stmt|;
 name|m
 operator|=

@@ -211,7 +211,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayObjectPathname  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Object whose pathname is to be obtained  *  * RETURN:      Status  *  * DESCRIPTION: Diplay the pathname associated with a named object.  Two  *              versions. One searches the parse tree (for parser-only  *              applications suchas AcpiDump), and the other searches the  *              ACPI namespace (the parse tree is probably deleted)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayObjectPathname  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Object whose pathname is to be obtained  *  * RETURN:      Status  *  * DESCRIPTION: Diplay the pathname associated with a named object. Two  *              versions. One searches the parse tree (for parser-only  *              applications suchas AcpiDump), and the other searches the  *              ACPI namespace (the parse tree is probably deleted)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -303,7 +303,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * We can't get the pathname since the object              * is not in the namespace.  This can happen during single              * stepping where a dynamic named object is *about* to be created.              */
+comment|/*              * We can't get the pathname since the object              * is not in the namespace. This can happen during single              * stepping where a dynamic named object is *about* to be created.              */
 name|AcpiOsPrintf
 argument_list|(
 literal|"  [Path not found]"
@@ -983,7 +983,7 @@ operator|!
 name|TargetOp
 condition|)
 block|{
-comment|/*          * Didn't find the name in the parse tree.  This may be          * a problem, or it may simply be one of the predefined names          * (such as _OS_).  Rather than worry about looking up all          * the predefined names, just display the name as given          */
+comment|/*          * Didn't find the name in the parse tree. This may be          * a problem, or it may simply be one of the predefined names          * (such as _OS_). Rather than worry about looking up all          * the predefined names, just display the name as given          */
 name|AcpiOsPrintf
 argument_list|(
 literal|" /**** Name not found or not accessible from this scope ****/ "

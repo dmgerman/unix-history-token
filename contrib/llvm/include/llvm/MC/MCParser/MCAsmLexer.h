@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -97,6 +103,8 @@ comment|// No-value.
 name|EndOfStatement
 block|,
 name|Colon
+block|,
+name|Space
 block|,
 name|Plus
 block|,
@@ -409,12 +417,10 @@ name|Err
 expr_stmt|;
 name|MCAsmLexer
 argument_list|(
-specifier|const
-name|MCAsmLexer
-operator|&
+argument|const MCAsmLexer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -423,8 +429,8 @@ specifier|const
 name|MCAsmLexer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -432,6 +438,9 @@ specifier|const
 name|char
 modifier|*
 name|TokStart
+decl_stmt|;
+name|bool
+name|SkipSpace
 decl_stmt|;
 name|MCAsmLexer
 argument_list|()
@@ -555,7 +564,7 @@ name|getKind
 argument_list|()
 return|;
 block|}
-comment|/// is - Check if the current token has kind \arg K.
+comment|/// is - Check if the current token has kind \p K.
 name|bool
 name|is
 argument_list|(
@@ -575,7 +584,7 @@ name|K
 argument_list|)
 return|;
 block|}
-comment|/// isNot - Check if the current token has kind \arg K.
+comment|/// isNot - Check if the current token has kind \p K.
 name|bool
 name|isNot
 argument_list|(
@@ -594,6 +603,19 @@ argument_list|(
 name|K
 argument_list|)
 return|;
+block|}
+comment|/// setSkipSpace - Set whether spaces should be ignored by the lexer
+name|void
+name|setSkipSpace
+parameter_list|(
+name|bool
+name|val
+parameter_list|)
+block|{
+name|SkipSpace
+operator|=
+name|val
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

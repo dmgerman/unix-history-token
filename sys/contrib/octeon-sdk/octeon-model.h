@@ -583,6 +583,12 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OCTEON_MODEL
+argument_list|)
 operator|)
 comment|/* NOTE: This for internal use only!!!!! */
 specifier|static
@@ -689,6 +695,13 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|int
+name|octeon_model_version_check
+parameter_list|(
+name|uint32_t
+name|chip_id
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*

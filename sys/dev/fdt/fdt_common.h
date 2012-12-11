@@ -340,6 +340,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|fdt_get_reserved_regions
+parameter_list|(
+name|struct
+name|mem_region
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|fdt_get_phyaddr
 parameter_list|(
 name|phandle_t

@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -6973,7 +6967,7 @@ name|MGETHDR
 argument_list|(
 name|mm
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

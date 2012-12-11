@@ -89,7 +89,7 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|Value
@@ -104,7 +104,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -249,7 +249,7 @@ operator|*
 name|BB
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -265,7 +265,7 @@ modifier|*
 name|F
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=

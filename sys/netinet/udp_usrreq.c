@@ -855,6 +855,13 @@ argument_list|,
 name|maxsockets
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|V_udpcb_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|maxsockets_change
@@ -1484,8 +1491,10 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|int
+name|uint16_t
 name|len
+decl_stmt|,
+name|ip_len
 decl_stmt|;
 name|struct
 name|ip
@@ -1495,16 +1504,11 @@ name|struct
 name|sockaddr_in
 name|udp_in
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
 decl_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|=
 name|m
@@ -1696,10 +1700,19 @@ operator|->
 name|uh_ulen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
+name|ip_len
+argument_list|)
+operator|-
+name|iphlen
+expr_stmt|;
+if|if
+condition|(
 name|ip_len
 operator|!=
 name|len
@@ -1709,8 +1722,6 @@ if|if
 condition|(
 name|len
 operator|>
-name|ip
-operator|->
 name|ip_len
 operator|||
 name|len
@@ -1737,12 +1748,9 @@ name|m
 argument_list|,
 name|len
 operator|-
-name|ip
-operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-comment|/* ip->ip_len = len; */
 block|}
 comment|/* 	 * Save a copy of the IP header in case we want restore it for 	 * sending an ICMP error message in response. 	 */
 if|if
@@ -2387,10 +2395,18 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Locate pcb for datagram. 	 */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_IP_NEXTHOP
+operator|)
+operator|&&
+operator|(
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -2401,10 +2417,7 @@ name|PACKET_TAG_IPFORWARD
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fwd_tag
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -2515,11 +2528,15 @@ argument_list|,
 name|fwd_tag
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 name|inp
 operator|=
 name|in_pcblookup_mbuf
@@ -2665,12 +2682,6 @@ operator|*
 name|ip
 operator|=
 name|save_ip
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|+=
-name|iphlen
 expr_stmt|;
 name|icmp_error
 argument_list|(
@@ -5265,7 +5276,7 @@ argument_list|)
 operator|+
 name|max_linkhdr
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5409,7 +5420,10 @@ name|ip
 operator|->
 name|ip_off
 operator||=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 block|}
 name|ipflags
@@ -5562,6 +5576,8 @@ operator|)
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5569,6 +5585,7 @@ name|udpiphdr
 argument_list|)
 operator|+
 name|len
+argument_list|)
 expr_stmt|;
 operator|(
 operator|(
@@ -6239,8 +6256,18 @@ expr_stmt|;
 name|ip
 operator|->
 name|ip_len
-operator|-=
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+operator|-
 name|skip
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

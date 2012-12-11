@@ -66,7 +66,7 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -157,7 +157,6 @@ name|Type
 operator|*
 name|PaddingType
 expr_stmt|;
-comment|// Currently allowed only for Direct.
 name|unsigned
 name|UIntData
 decl_stmt|;
@@ -169,6 +168,9 @@ name|BoolData1
 decl_stmt|;
 name|bool
 name|InReg
+decl_stmt|;
+name|bool
+name|PaddingInReg
 decl_stmt|;
 name|ABIArgInfo
 argument_list|(
@@ -183,6 +185,8 @@ argument_list|,
 argument|bool B1
 argument_list|,
 argument|bool IR
+argument_list|,
+argument|bool PIR
 argument_list|,
 argument|llvm::Type* P
 argument_list|)
@@ -219,7 +223,12 @@ argument_list|)
 operator|,
 name|InReg
 argument_list|(
-argument|IR
+name|IR
+argument_list|)
+operator|,
+name|PaddingInReg
+argument_list|(
+argument|PIR
 argument_list|)
 block|{}
 name|public
@@ -271,6 +280,8 @@ name|false
 argument_list|,
 name|false
 argument_list|,
+name|false
+argument_list|,
 name|Padding
 argument_list|)
 return|;
@@ -284,6 +295,8 @@ operator|::
 name|Type
 operator|*
 name|T
+operator|=
+literal|0
 argument_list|)
 block|{
 return|return
@@ -300,6 +313,8 @@ argument_list|,
 name|false
 argument_list|,
 name|true
+argument_list|,
+name|false
 argument_list|,
 literal|0
 argument_list|)
@@ -326,6 +341,8 @@ argument_list|,
 name|T
 argument_list|,
 literal|0
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -365,6 +382,8 @@ name|false
 argument_list|,
 name|true
 argument_list|,
+name|false
+argument_list|,
 literal|0
 argument_list|)
 return|;
@@ -382,6 +401,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -426,6 +447,8 @@ name|Realign
 argument_list|,
 name|false
 argument_list|,
+name|false
+argument_list|,
 literal|0
 argument_list|)
 return|;
@@ -463,6 +486,8 @@ name|Realign
 argument_list|,
 name|true
 argument_list|,
+name|false
+argument_list|,
 literal|0
 argument_list|)
 return|;
@@ -487,7 +512,44 @@ name|false
 argument_list|,
 name|false
 argument_list|,
+name|false
+argument_list|,
 literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ABIArgInfo
+name|getExpandWithPadding
+argument_list|(
+name|bool
+name|PaddingInReg
+argument_list|,
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Padding
+argument_list|)
+block|{
+return|return
+name|ABIArgInfo
+argument_list|(
+name|Expand
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|PaddingInReg
+argument_list|,
+name|Padding
 argument_list|)
 return|;
 block|}
@@ -603,6 +665,15 @@ specifier|const
 block|{
 return|return
 name|PaddingType
+return|;
+block|}
+name|bool
+name|getPaddingInReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PaddingInReg
 return|;
 block|}
 name|llvm
@@ -784,9 +855,9 @@ expr_stmt|;
 specifier|const
 name|llvm
 operator|::
-name|TargetData
+name|DataLayout
 operator|&
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 expr_stmt|;

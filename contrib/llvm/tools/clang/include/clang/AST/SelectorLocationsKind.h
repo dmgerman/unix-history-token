@@ -112,7 +112,7 @@ init|=
 literal|2
 block|}
 enum|;
-comment|/// \brief Returns true if all \arg SelLocs are in a "standard" location.
+comment|/// \brief Returns true if all \p SelLocs are in a "standard" location.
 name|SelectorLocationsKind
 name|hasStandardSelectorLocs
 argument_list|(
@@ -165,7 +165,7 @@ name|SourceLocation
 name|EndLoc
 argument_list|)
 decl_stmt|;
-comment|/// \brief Returns true if all \arg SelLocs are in a "standard" location.
+comment|/// \brief Returns true if all \p SelLocs are in a "standard" location.
 name|SelectorLocationsKind
 name|hasStandardSelectorLocs
 argument_list|(

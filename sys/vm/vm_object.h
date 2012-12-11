@@ -239,6 +239,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_FICTITIOUS
+value|0x0001
+end_define
+
+begin_comment
+comment|/* (c) contains fictitious pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_UNMANAGED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* (c) contains unmanaged pages */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OBJ_ACTIVE
 value|0x0004
 end_define

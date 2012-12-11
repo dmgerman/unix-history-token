@@ -1063,7 +1063,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced elsewhere 	 * if MALLOC should block. 	 */
 name|unp
 operator|=
 name|malloc
@@ -4412,10 +4411,12 @@ goto|goto
 name|unionfs_vn_create_on_upper_free_out1
 goto|;
 block|}
+name|VOP_ADD_WRITECOUNT
+argument_list|(
 name|vp
-operator|->
-name|v_writecount
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|CTR3
 argument_list|(
@@ -5089,10 +5090,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|VOP_ADD_WRITECOUNT
+argument_list|(
 name|uvp
-operator|->
-name|v_writecount
-operator|--
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 name|CTR3
 argument_list|(

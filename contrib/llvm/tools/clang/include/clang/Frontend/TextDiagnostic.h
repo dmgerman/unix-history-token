@@ -118,9 +118,8 @@ name|LangOptions
 operator|&
 name|LangOpts
 argument_list|,
-specifier|const
 name|DiagnosticOptions
-operator|&
+operator|*
 name|DiagOpts
 argument_list|)
 block|;

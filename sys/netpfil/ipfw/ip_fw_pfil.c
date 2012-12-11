@@ -752,12 +752,6 @@ break|break;
 comment|/* pass */
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|IPFIREWALL_FORWARD
-argument_list|)
-operator|||
 operator|(
 operator|!
 name|defined
@@ -970,6 +964,15 @@ name|m_flags
 operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_flags
+operator||=
+name|M_IP6_NEXTHOP
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -1020,6 +1023,15 @@ name|m_flags
 operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
+operator|(
+operator|*
+name|m0
+operator|)
+operator|->
+name|m_flags
+operator||=
+name|M_IP_NEXTHOP
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -1034,7 +1046,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* IPFIREWALL_FORWARD */
+comment|/* INET || INET6 */
 break|break;
 case|case
 name|IP_FW_DENY
@@ -1598,7 +1610,7 @@ name|m
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1852,7 +1864,7 @@ argument_list|(
 operator|*
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* If we cannot duplicate the mbuf, we sacrifice the divert 		 * chain and continue with the tee-ed packet. 		 */
@@ -1906,12 +1918,6 @@ name|mbuf
 modifier|*
 name|reass
 decl_stmt|;
-name|SET_HOST_IPLEN
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-comment|/* ip_reass wants host order */
 name|reass
 operator|=
 name|ip_reass
@@ -1950,11 +1956,6 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
-expr_stmt|;
-name|SET_NET_IPLEN
-argument_list|(
-name|ip
-argument_list|)
 expr_stmt|;
 name|ip
 operator|->

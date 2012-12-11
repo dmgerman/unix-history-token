@@ -94,11 +94,9 @@ decl_stmt|;
 comment|// Noncopyable.
 name|Program
 argument_list|(
-specifier|const
-name|Program
-operator|&
-name|other
+argument|const Program& other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 name|Program
 modifier|&
@@ -110,6 +108,7 @@ name|Program
 operator|&
 name|other
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 comment|/// @name Methods
 comment|/// @{

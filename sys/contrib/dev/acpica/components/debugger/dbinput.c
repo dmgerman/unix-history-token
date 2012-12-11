@@ -161,6 +161,8 @@ name|CMD_DEBUG
 block|,
 name|CMD_DISASSEMBLE
 block|,
+name|CMD_DISASM
+block|,
 name|CMD_DUMP
 block|,
 name|CMD_ENABLEACPI
@@ -349,6 +351,12 @@ block|}
 block|,
 block|{
 literal|"DISASSEMBLE"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"DISASM"
 block|,
 literal|1
 block|}
@@ -1547,7 +1555,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetNextToken  *  * PARAMETERS:  String          - Command buffer  *              Next            - Return value, end of next token  *  * RETURN:      Pointer to the start of the next token.  *  * DESCRIPTION: Command line parsing.  Get the next token on the command line  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetNextToken  *  * PARAMETERS:  String          - Command buffer  *              Next            - Return value, end of next token  *  * RETURN:      Pointer to the start of the next token.  *  * DESCRIPTION: Command line parsing. Get the next token on the command line  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1895,7 +1903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetLine  *  * PARAMETERS:  InputBuffer         - Command line buffer  *  * RETURN:      Count of arguments to the command  *  * DESCRIPTION: Get the next command line from the user.  Gets entire line  *              up to the next newline  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetLine  *  * PARAMETERS:  InputBuffer         - Command line buffer  *  * RETURN:      Count of arguments to the command  *  * DESCRIPTION: Get the next command line from the user. Gets entire line  *              up to the next newline  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2371,6 +2379,9 @@ expr_stmt|;
 break|break;
 case|case
 name|CMD_DISASSEMBLE
+case|:
+case|case
+name|CMD_DISASM
 case|:
 operator|(
 name|void
@@ -3249,7 +3260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecuteThread  *  * PARAMETERS:  Context         - Not used  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread.  Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecuteThread  *  * PARAMETERS:  Context         - Not used  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread. Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3335,7 +3346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleThread  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread.  Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleThread  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Debugger execute thread. Waits for a command line, then  *              simply dispatches it.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3370,7 +3381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUserCommands  *  * PARAMETERS:  Prompt              - User prompt (depends on mode)  *              Op                  - Current executing parse op  *  * RETURN:      None  *  * DESCRIPTION: Command line execution for the AML debugger.  Commands are  *              matched and dispatched here.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbUserCommands  *  * PARAMETERS:  Prompt              - User prompt (depends on mode)  *              Op                  - Current executing parse op  *  * RETURN:      None  *  * DESCRIPTION: Command line execution for the AML debugger. Commands are  *              matched and dispatched here.  *  ******************************************************************************/
 end_comment
 
 begin_function

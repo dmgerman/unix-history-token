@@ -87,7 +87,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * NAME:        AcpiGbl_AmlOpInfo  *  * DESCRIPTION: Opcode table. Each entry contains<opcode, type, name, operands>  *              The name is a simple ascii string, the operand specifier is an  *              ascii string with one letter per operand.  The letter specifies  *              the operand type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * NAME:        AcpiGbl_AmlOpInfo  *  * DESCRIPTION: Opcode table. Each entry contains<opcode, type, name, operands>  *              The name is a simple ascii string, the operand specifier is an  *              ascii string with one letter per operand. The letter specifies  *              the operand type.  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ comment|/*  * Summary of opcode types/flags  *   Opcodes that have associated na
 end_comment
 
 begin_comment
-comment|/*  * Master Opcode information table.  A summary of everything we know about each  * opcode, all in one place.  */
+comment|/*  * Master Opcode information table. A summary of everything we know about each  * opcode, all in one place.  */
 end_comment
 
 begin_decl_stmt
@@ -3313,7 +3313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This table is indexed by the second opcode of the extended opcode  * pair.  It returns an index into the opcode table (AcpiGbl_AmlOpInfo)  */
+comment|/*  * This table is indexed by the second opcode of the extended opcode  * pair. It returns an index into the opcode table (AcpiGbl_AmlOpInfo)  */
 end_comment
 
 begin_decl_stmt

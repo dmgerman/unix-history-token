@@ -376,6 +376,12 @@ name|defined
 argument_list|(
 name|CVMX_BUILD_FOR_TOOLCHAIN
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
 name|exit
 argument_list|(
 literal|1

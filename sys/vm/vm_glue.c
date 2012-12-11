@@ -1113,6 +1113,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|kstack_cache
+argument_list|,
+operator|&
+name|kstack_cache_mtx
+argument_list|,
+literal|"kstkch"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vm
@@ -1853,21 +1868,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|kstack_cache
-argument_list|,
-operator|&
-name|kstack_cache_mtx
-argument_list|,
-literal|"kstkch"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSINIT

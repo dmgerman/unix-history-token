@@ -11846,25 +11846,24 @@ name|id
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_decl_stmt
 name|_GLIBCXX_END_LDBL_NAMESPACE
-end_macro
-
-begin_comment
 comment|/**    *  @brief  Messages facet base class providing catalog typedef.    */
-end_comment
-
-begin_struct
-struct|struct
+name|class
 name|messages_base
 block|{
+name|public
+label|:
 typedef|typedef
 name|int
 name|catalog
 typedef|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/**    *  @brief  Facet for handling message catalogs    *    *  This facet encapsulates the code to retrieve messages from    *  message catalogs.  The only thing defined by the standard for this facet    *  is the interface.  All underlying functionality is    *  implementation-defined.    *    *  This library currently implements 3 versions of the message facet.  The    *  first version (gnu) is a wrapper around gettext, provided by libintl.    *  The second version (ieee) is a wrapper around catgets.  The final    *  version (default) does no actual translation.  These implementations are    *  only provided for char and wchar_t instantiations.    *    *  The messages template uses protected virtual functions to    *  provide the actual results.  The public accessors forward the    *  call to the virtual functions.  These virtual functions are    *  hooks for developers to implement the behavior they require from    *  the messages facet.   */

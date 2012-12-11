@@ -208,11 +208,11 @@ name|ResourceIndex
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_INVALID_RESOURCE_TYPE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Convert the AML byte stream resource to a local resource struct */
 name|Status
@@ -451,11 +451,11 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_INVALID_RESOURCE_TYPE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|Status
 operator|=
@@ -507,6 +507,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|NULL
+argument_list|,
 name|ACPI_CAST_PTR
 argument_list|(
 name|AML_RESOURCE

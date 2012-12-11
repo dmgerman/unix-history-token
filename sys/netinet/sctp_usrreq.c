@@ -715,9 +715,12 @@ return|return;
 block|}
 name|totsz
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 expr_stmt|;
 name|nxtsz
 operator|=
@@ -3611,7 +3614,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4122,7 +4125,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -4632,11 +4635,24 @@ expr_stmt|;
 comment|/* For UDP model this is a invalid call */
 if|if
 condition|(
+operator|!
+operator|(
+operator|(
 name|inp
 operator|->
 name|sctp_flags
 operator|&
-name|SCTP_PCB_FLAGS_UDPTYPE
+name|SCTP_PCB_FLAGS_TCPTYPE
+operator|)
+operator|||
+operator|(
+name|inp
+operator|->
+name|sctp_flags
+operator|&
+name|SCTP_PCB_FLAGS_IN_TCPPOOL
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Restore the flags that the soshutdown took away. */
@@ -5141,7 +5157,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,

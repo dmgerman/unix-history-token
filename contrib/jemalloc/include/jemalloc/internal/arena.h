@@ -68,14 +68,14 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * The minimum ratio of active:dirty pages per arena is computed as:  *  *   (nactive>> opt_lg_dirty_mult)>= ndirty  *  * So, supposing that opt_lg_dirty_mult is 5, there can be no less than 32  * times as many active pages as dirty pages.  */
+comment|/*  * The minimum ratio of active:dirty pages per arena is computed as:  *  *   (nactive>> opt_lg_dirty_mult)>= ndirty  *  * So, supposing that opt_lg_dirty_mult is 3, there can be no less than 8 times  * as many active pages as dirty pages.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LG_DIRTY_MULT_DEFAULT
-value|5
+value|3
 end_define
 
 begin_typedef
@@ -163,7 +163,7 @@ endif|#
 directive|endif
 union|union
 block|{
-comment|/* 		 * Linkage for run trees.  There are two disjoint uses: 		 * 		 * 1) arena_t's runs_avail_{clean,dirty} trees. 		 * 2) arena_run_t conceptually uses this linkage for in-use 		 *    non-full runs, rather than directly embedding linkage. 		 */
+comment|/* 		 * Linkage for run trees.  There are two disjoint uses: 		 * 		 * 1) arena_t's runs_avail tree. 		 * 2) arena_run_t conceptually uses this linkage for in-use 		 *    non-full runs, rather than directly embedding linkage. 		 */
 name|rb_node
 argument_list|(
 argument|arena_chunk_map_t
@@ -275,20 +275,24 @@ name|arena_t
 modifier|*
 name|arena
 decl_stmt|;
-comment|/* Linkage for the arena's chunks_dirty list. */
-name|ql_elm
+comment|/* Linkage for tree of arena chunks that contain dirty runs. */
+name|rb_node
 argument_list|(
 argument|arena_chunk_t
 argument_list|)
-name|link_dirty
+name|dirty_link
 expr_stmt|;
-comment|/* 	 * True if the chunk is currently in the chunks_dirty list, due to 	 * having at some point contained one or more dirty pages.  Removal 	 * from chunks_dirty is lazy, so (dirtied&& ndirty == 0) is possible. 	 */
-name|bool
-name|dirtied
-decl_stmt|;
 comment|/* Number of dirty pages. */
 name|size_t
 name|ndirty
+decl_stmt|;
+comment|/* Number of available runs. */
+name|size_t
+name|nruns_avail
+decl_stmt|;
+comment|/* 	 * Number of available run adjacencies.  Clean and dirty available runs 	 * are not coalesced, which causes virtual memory fragmentation.  The 	 * ratio of (nruns_avail-nruns_adjac):nruns_adjac is used for tracking 	 * this fragmentation. 	 * */
+name|size_t
+name|nruns_adjac
 decl_stmt|;
 comment|/* 	 * Map of pages within chunk that keeps track of free/large/small.  The 	 * first map_bias entries are omitted, since the chunk header does not 	 * need to be tracked in the map.  This omission saves a header page 	 * for common chunk sizes (e.g. 4 MiB). 	 */
 name|arena_chunk_map_t
@@ -435,13 +439,13 @@ expr_stmt|;
 name|uint64_t
 name|prof_accumbytes
 decl_stmt|;
-comment|/* List of dirty-page-containing chunks this arena manages. */
-name|ql_head
-argument_list|(
-argument|arena_chunk_t
-argument_list|)
+name|dss_prec_t
+name|dss_prec
+decl_stmt|;
+comment|/* Tree of dirty-page-containing chunks this arena manages. */
+name|arena_chunk_tree_t
 name|chunks_dirty
-expr_stmt|;
+decl_stmt|;
 comment|/* 	 * In order to avoid rapid chunk allocation/deallocation when an arena 	 * oscillates right on the cusp of needing a new chunk, cache the most 	 * recently freed chunk.  The spare is left in the arena's chunk trees 	 * until it is deleted. 	 * 	 * There is one spare chunk per arena, rather than one spare total, in 	 * order to avoid interactions between multiple threads that could make 	 * a single spare inadequate. 	 */
 name|arena_chunk_t
 modifier|*
@@ -459,12 +463,9 @@ comment|/* 	 * Approximate number of pages being purged.  It is possible for 	 *
 name|size_t
 name|npurgatory
 decl_stmt|;
-comment|/* 	 * Size/address-ordered trees of this arena's available runs.  The trees 	 * are used for first-best-fit run allocation.  The dirty tree contains 	 * runs with dirty pages (i.e. very likely to have been touched and 	 * therefore have associated physical pages), whereas the clean tree 	 * contains runs with pages that either have no associated physical 	 * pages, or have pages that the kernel may recycle at any time due to 	 * previous madvise(2) calls.  The dirty tree is used in preference to 	 * the clean tree for allocations, because using dirty pages reduces 	 * the amount of dirty purging necessary to keep the active:dirty page 	 * ratio below the purge threshold. 	 */
+comment|/* 	 * Size/address-ordered trees of this arena's available runs.  The trees 	 * are used for first-best-fit run allocation. 	 */
 name|arena_avail_tree_t
-name|runs_avail_clean
-decl_stmt|;
-name|arena_avail_tree_t
-name|runs_avail_dirty
+name|runs_avail
 decl_stmt|;
 comment|/* bins is used to store trees of free regions. */
 name|arena_bin_t
@@ -809,37 +810,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arena_stats_merge
-parameter_list|(
-name|arena_t
-modifier|*
-name|arena
-parameter_list|,
-name|size_t
-modifier|*
-name|nactive
-parameter_list|,
-name|size_t
-modifier|*
-name|ndirty
-parameter_list|,
-name|arena_stats_t
-modifier|*
-name|astats
-parameter_list|,
-name|malloc_bin_stats_t
-modifier|*
-name|bstats
-parameter_list|,
-name|malloc_large_stats_t
-modifier|*
-name|lstats
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|arena_ralloc_no_move
 parameter_list|(
@@ -867,6 +837,10 @@ name|void
 modifier|*
 name|arena_ralloc
 parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
 name|void
 modifier|*
 name|ptr
@@ -887,7 +861,72 @@ name|bool
 name|zero
 parameter_list|,
 name|bool
-name|try_tcache
+name|try_tcache_alloc
+parameter_list|,
+name|bool
+name|try_tcache_dalloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dss_prec_t
+name|arena_dss_prec_get
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|arena_dss_prec_set
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|dss_prec_t
+name|dss_prec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|arena_stats_merge
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|dss
+parameter_list|,
+name|size_t
+modifier|*
+name|nactive
+parameter_list|,
+name|size_t
+modifier|*
+name|ndirty
+parameter_list|,
+name|arena_stats_t
+modifier|*
+name|astats
+parameter_list|,
+name|malloc_bin_stats_t
+modifier|*
+name|bstats
+parameter_list|,
+name|malloc_large_stats_t
+modifier|*
+name|lstats
 parameter_list|)
 function_decl|;
 end_function_decl

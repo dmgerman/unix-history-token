@@ -1073,7 +1073,6 @@ specifier|static
 specifier|const
 name|struct
 name|schizo_desc
-specifier|const
 name|schizo_compats
 index|[]
 init|=

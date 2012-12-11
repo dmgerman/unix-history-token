@@ -112,9 +112,16 @@ name|__GXX_EXPERIMENTAL_CXX0X__
 argument_list|)
 expr|\
 operator|||
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
 name|_MSC_VER
 operator|>=
 literal|1600
+operator|)
 operator|)
 end_if
 
@@ -195,7 +202,7 @@ comment|/// Use to mark functions as uncallable. Member functions with this shou
 end_comment
 
 begin_comment
-comment|/// be declared private so that some behaivor is kept in C++03 mode.
+comment|/// be declared private so that some behavior is kept in C++03 mode.
 end_comment
 
 begin_comment
@@ -267,6 +274,90 @@ begin_define
 define|#
 directive|define
 name|LLVM_DELETED_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// LLVM_FINAL - Expands to 'final' if the compiler supports it.
+end_comment
+
+begin_comment
+comment|/// Use to mark classes or virtual methods as final.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__has_feature
+argument_list|(
+name|cxx_override_control
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_FINAL
+value|final
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_FINAL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// LLVM_OVERRIDE - Expands to 'override' if the compiler supports it.
+end_comment
+
+begin_comment
+comment|/// Use to mark virtual methods as overriding a base class method.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__has_feature
+argument_list|(
+name|cxx_override_control
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_OVERRIDE
+value|override
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_OVERRIDE
 end_define
 
 begin_endif
@@ -577,13 +668,21 @@ end_if
 begin_define
 define|#
 directive|define
-name|BUILTIN_EXPECT
+name|LLVM_LIKELY
 parameter_list|(
 name|EXPR
-parameter_list|,
-name|VALUE
 parameter_list|)
-value|__builtin_expect((EXPR), (VALUE))
+value|__builtin_expect((bool)(EXPR), true)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_UNLIKELY
+parameter_list|(
+name|EXPR
+parameter_list|)
+value|__builtin_expect((bool)(EXPR), false)
 end_define
 
 begin_else
@@ -594,11 +693,19 @@ end_else
 begin_define
 define|#
 directive|define
-name|BUILTIN_EXPECT
+name|LLVM_LIKELY
 parameter_list|(
 name|EXPR
-parameter_list|,
-name|VALUE
+parameter_list|)
+value|(EXPR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_UNLIKELY
+parameter_list|(
+name|EXPR
 parameter_list|)
 value|(EXPR)
 end_define
@@ -1030,6 +1137,64 @@ define|#
 directive|define
 name|LLVM_BUILTIN_UNREACHABLE
 value|__builtin_unreachable()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_BUILTIN_TRAP - On compilers which support it, expands to an expression
+end_comment
+
+begin_comment
+comment|// which causes the program to exit abnormally.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+operator|(
+name|__GNUC__
+operator|>
+literal|4
+operator|)
+expr|\
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|3
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_TRAP
+value|__builtin_trap()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_TRAP
+value|*(volatile int*)0x11 = 0
 end_define
 
 begin_endif

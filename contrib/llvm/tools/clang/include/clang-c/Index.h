@@ -45,6 +45,76 @@ directive|include
 file|"clang-c/CXString.h"
 end_include
 
+begin_comment
+comment|/**  * \brief The version constants for the libclang API.  * CINDEX_VERSION_MINOR should increase when there are API additions.  * CINDEX_VERSION_MAJOR is intended for "major" source/ABI breaking changes.  *  * The policy about the libclang API was always to keep it source and ABI  * compatible, thus CINDEX_VERSION_MAJOR is expected to remain stable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION_MAJOR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION_MINOR
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION_ENCODE
+parameter_list|(
+name|major
+parameter_list|,
+name|minor
+parameter_list|)
+value|( \       ((major) * 10000)                       \     + ((minor) *     1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION
+value|CINDEX_VERSION_ENCODE( \     CINDEX_VERSION_MAJOR,                     \     CINDEX_VERSION_MINOR )
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION_STRINGIZE_
+parameter_list|(
+name|major
+parameter_list|,
+name|minor
+parameter_list|)
+define|\
+value|#major"."#minor
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION_STRINGIZE
+parameter_list|(
+name|major
+parameter_list|,
+name|minor
+parameter_list|)
+define|\
+value|CINDEX_VERSION_STRINGIZE_(major, minor)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINDEX_VERSION_STRING
+value|CINDEX_VERSION_STRINGIZE( \     CINDEX_VERSION_MAJOR,                               \     CINDEX_VERSION_MINOR)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -375,7 +445,7 @@ name|CXSourceRange
 name|range2
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Returns non-zero if \arg range is null.  */
+comment|/**  * \brief Returns non-zero if \p range is null.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_Range_isNull
@@ -914,8 +984,8 @@ name|CXTranslationUnit_CacheCompletionResults
 init|=
 literal|0x08
 block|,
-comment|/**    * \brief DEPRECATED: Enable precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support. It is deprecated.    */
-name|CXTranslationUnit_CXXPrecompiledPreamble
+comment|/**    * \brief Used to indicate that the translation unit will be serialized with    * \c clang_saveTranslationUnit.    *    * This option is typically used when parsing a header with the intent of    * producing a precompiled header.    */
+name|CXTranslationUnit_ForSerialization
 init|=
 literal|0x10
 block|,
@@ -1845,10 +1915,14 @@ name|CXCursor_ReturnStmt
 init|=
 literal|214
 block|,
-comment|/** \brief A GNU inline assembly statement extension.    */
-name|CXCursor_AsmStmt
+comment|/** \brief A GCC inline assembly statement extension.    */
+name|CXCursor_GCCAsmStmt
 init|=
 literal|215
+block|,
+name|CXCursor_AsmStmt
+init|=
+name|CXCursor_GCCAsmStmt
 block|,
 comment|/** \brief Objective-C's overall \@try-\@catch-\@finally statement.    */
 name|CXCursor_ObjCAtTryStmt
@@ -2009,6 +2083,20 @@ block|,
 name|CXCursor_LastPreprocessing
 init|=
 name|CXCursor_InclusionDirective
+block|,
+comment|/* Extra Declarations */
+comment|/**    * \brief A module import declaration.    */
+name|CXCursor_ModuleImportDecl
+init|=
+literal|600
+block|,
+name|CXCursor_FirstExtraDecl
+init|=
+name|CXCursor_ModuleImportDecl
+block|,
+name|CXCursor_LastExtraDecl
+init|=
+name|CXCursor_ModuleImportDecl
 block|}
 enum|;
 comment|/**  * \brief A cursor representing some element in the abstract syntax tree for  * a translation unit.  *  * The cursor abstraction unifies the different kinds of entities in a  * program--declaration, statements, expressions, references to declarations,  * etc.--under a single "cursor" abstraction with a common set of operations.  * Common operation for a cursor include: getting the physical location in  * a source file where the cursor points, getting the name associated with a  * cursor, and retrieving cursors for any child nodes of a particular cursor.  *  * Cursors can be produced in two specific ways.  * clang_getTranslationUnitCursor() produces a cursor for a translation unit,  * from which one can use clang_visitChildren() to explore the rest of the  * translation unit. clang_getCursor() maps from a physical source location  * to the entity that resides at that location, allowing one to map from the  * source code into the AST.  */
@@ -2039,7 +2127,10 @@ block|{
 specifier|const
 name|void
 modifier|*
-name|Data
+name|ASTNode
+decl_stmt|;
+name|CXTranslationUnit
+name|TranslationUnit
 decl_stmt|;
 block|}
 name|CXComment
@@ -2071,12 +2162,13 @@ parameter_list|,
 name|CXCursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Returns non-zero if \arg cursor is null.  */
+comment|/**  * \brief Returns non-zero if \p cursor is null.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_Cursor_isNull
 parameter_list|(
 name|CXCursor
+name|cursor
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Compute a hash value for the given cursor.  */
@@ -2683,6 +2775,10 @@ block|,
 name|CXCallingConv_AAPCS_VFP
 init|=
 literal|7
+block|,
+name|CXCallingConv_PnaclCall
+init|=
+literal|8
 block|,
 name|CXCallingConv_Invalid
 init|=
@@ -3293,6 +3389,15 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Given a cursor pointing to an ObjC message, returns the CXType of the  * receiver.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_Cursor_getReceiverType
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Given a cursor that represents a declaration, return the associated  * comment's source range.  The range may include multiple consecutive comments  * with whitespace in between.  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
@@ -3327,6 +3432,70 @@ name|clang_Cursor_getParsedComment
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * \defgroup CINDEX_MODULE Module introspection  *  * The functions in this group provide access to information about modules.  *  * @{  */
+typedef|typedef
+name|void
+modifier|*
+name|CXModule
+typedef|;
+comment|/**  * \brief Given a CXCursor_ModuleImportDecl cursor, return the associated module.  */
+name|CINDEX_LINKAGE
+name|CXModule
+name|clang_Cursor_getModule
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \param Module a module object.  *  * \returns the parent of a sub-module or NULL if the given module is top-level,  * e.g. for 'std.vector' it will return the 'std' module.  */
+name|CINDEX_LINKAGE
+name|CXModule
+name|clang_Module_getParent
+parameter_list|(
+name|CXModule
+name|Module
+parameter_list|)
+function_decl|;
+comment|/**  * \param Module a module object.  *  * \returns the name of the module, e.g. for the 'std.vector' sub-module it  * will return "vector".  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_Module_getName
+parameter_list|(
+name|CXModule
+name|Module
+parameter_list|)
+function_decl|;
+comment|/**  * \param Module a module object.  *  * \returns the full name of the module, e.g. "std.vector".  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_Module_getFullName
+parameter_list|(
+name|CXModule
+name|Module
+parameter_list|)
+function_decl|;
+comment|/**  * \param Module a module object.  *  * \returns the number of top level headers associated with this module.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Module_getNumTopLevelHeaders
+parameter_list|(
+name|CXModule
+name|Module
+parameter_list|)
+function_decl|;
+comment|/**  * \param Module a module object.  *  * \param Index top level header index (zero-based).  *  * \returns the specified top level header associated with the module.  */
+name|CINDEX_LINKAGE
+name|CXFile
+name|clang_Module_getTopLevelHeader
+parameter_list|(
+name|CXModule
+name|Module
+parameter_list|,
+name|unsigned
+name|Index
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -3370,12 +3539,12 @@ name|CXComment_BlockCommand
 init|=
 literal|6
 block|,
-comment|/**    * \brief A \\param or \\arg command that describes the function parameter    * (name, passing direction, description).    *    * \brief For example: \\param [in] ParamName description.    */
+comment|/**    * \brief A \\param or \\arg command that describes the function parameter    * (name, passing direction, description).    *    * For example: \\param [in] ParamName description.    */
 name|CXComment_ParamCommand
 init|=
 literal|7
 block|,
-comment|/**    * \brief A \\tparam command that describes a template parameter (name and    * description).    *    * \brief For example: \\tparam T description.    */
+comment|/**    * \brief A \\tparam command that describes a template parameter (name and    * description).    *    * For example: \\tparam T description.    */
 name|CXComment_TParamCommand
 init|=
 literal|8
@@ -3451,7 +3620,7 @@ name|CXComment
 name|Comment
 parameter_list|)
 function_decl|;
-comment|/**  * \param Comment AST node of any kind.  *  * \param ArgIdx argument index (zero-based).  *  * \returns the specified child of the AST node.  */
+comment|/**  * \param Comment AST node of any kind.  *  * \param ChildIdx child index (zero-based).  *  * \returns the specified child of the AST node.  */
 name|CINDEX_LINKAGE
 name|CXComment
 name|clang_Comment_getChild
@@ -3741,14 +3910,11 @@ name|CXComment
 name|Comment
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Convert a given full parsed comment to an XML document.  *  * A Relax NG schema for the XML can be found in comment-xml-schema.rng file  * inside clang source tree.  *  * \param TU the translation unit \c Comment belongs to.  *  * \param Comment a \c CXComment_FullComment AST node.  *  * \returns string containing an XML document.  */
+comment|/**  * \brief Convert a given full parsed comment to an XML document.  *  * A Relax NG schema for the XML can be found in comment-xml-schema.rng file  * inside clang source tree.  *  * \param Comment a \c CXComment_FullComment AST node.  *  * \returns string containing an XML document.  */
 name|CINDEX_LINKAGE
 name|CXString
 name|clang_FullComment_getAsXML
 parameter_list|(
-name|CXTranslationUnit
-name|TU
-parameter_list|,
 name|CXComment
 name|Comment
 parameter_list|)
@@ -4216,7 +4382,7 @@ name|unsigned
 name|annotation_number
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the parent context of the given completion string.  *  * The parent context of a completion string is the semantic parent of   * the declaration (if any) that the code completion represents. For example,  * a code completion for an Objective-C method would have the method's class  * or protocol as its context.  *  * \param completion_string The code completion string whose parent is  * being queried.  *  * \param kind If non-NULL, will be set to the kind of the parent context,  * or CXCursor_NotImplemented if there is no context.  *  * \returns The name of the completion parent, e.g., "NSObject" if  * the completion string represents a method in the NSObject class.  */
+comment|/**  * \brief Retrieve the parent context of the given completion string.  *  * The parent context of a completion string is the semantic parent of   * the declaration (if any) that the code completion represents. For example,  * a code completion for an Objective-C method would have the method's class  * or protocol as its context.  *  * \param completion_string The code completion string whose parent is  * being queried.  *  * \param kind DEPRECATED: always set to CXCursor_NotImplemented if non-NULL.  *  * \returns The name of the completion parent, e.g., "NSObject" if  * the completion string represents a method in the NSObject class.  */
 name|CINDEX_LINKAGE
 name|CXString
 name|clang_getCompletionParent
@@ -4870,6 +5036,10 @@ decl_stmt|;
 name|int
 name|isAngled
 decl_stmt|;
+comment|/**    * \brief Non-zero if the directive was automatically turned into a module    * import.    */
+name|int
+name|isModuleImport
+decl_stmt|;
 block|}
 name|CXIdxIncludedFileInfo
 typedef|;
@@ -4877,16 +5047,21 @@ comment|/**  * \brief Data for IndexerCallbacks#importedASTFile.  */
 typedef|typedef
 struct|struct
 block|{
+comment|/**    * \brief Top level AST file containing the imported PCH, module or submodule.    */
 name|CXFile
 name|file
 decl_stmt|;
-comment|/**    * \brief Location where the file is imported. It is useful mostly for    * modules.    */
+comment|/**    * \brief The imported module or NULL if the AST file is a PCH.    */
+name|CXModule
+name|module
+decl_stmt|;
+comment|/**    * \brief Location where the file is imported. Applicable only for modules.    */
 name|CXIdxLoc
 name|loc
 decl_stmt|;
-comment|/**    * \brief Non-zero if the AST file is a module otherwise it's a PCH.    */
+comment|/**    * \brief Non-zero if an inclusion directive was automatically turned into    * a module import. Applicable only for modules.    */
 name|int
-name|isModule
+name|isImplicit
 decl_stmt|;
 block|}
 name|CXIdxImportedASTFileInfo
@@ -4997,6 +5172,10 @@ block|,
 name|CXIdxEntity_CXXTypeAlias
 init|=
 literal|25
+block|,
+name|CXIdxEntity_CXXInterface
+init|=
+literal|26
 block|}
 name|CXIdxEntityKind
 typedef|;
@@ -5494,7 +5673,7 @@ name|CXIdxIncludedFileInfo
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**    * \brief Called when a AST file (PCH or module) gets imported.    *     * AST files will not get indexed (there will not be callbacks to index all    * the entities in an AST file). The recommended action is that, if the AST    * file is not already indexed, to block further indexing and initiate a new    * indexing job specific to the AST file.    */
+comment|/**    * \brief Called when a AST file (PCH or module) gets imported.    *     * AST files will not get indexed (there will not be callbacks to index all    * the entities in an AST file). The recommended action is that, if the AST    * file is not already indexed, to initiate a new indexing job specific to    * the AST file.    */
 name|CXIdxClientASTFile
 function_decl|(
 modifier|*

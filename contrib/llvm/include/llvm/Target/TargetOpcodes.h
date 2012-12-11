@@ -170,6 +170,17 @@ comment|/// BUNDLE - This instruction represents an instruction bundle. Instruct
 comment|/// which immediately follow a BUNDLE instruction which are marked with
 comment|/// 'InsideBundle' flag are inside the bundle.
 name|BUNDLE
+init|=
+literal|14
+block|,
+comment|/// Lifetime markers.
+name|LIFETIME_START
+init|=
+literal|15
+block|,
+name|LIFETIME_END
+init|=
+literal|16
 block|}
 enum|;
 block|}

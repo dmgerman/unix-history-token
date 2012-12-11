@@ -459,6 +459,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KDB_WHY_KASSERT
+value|"kassert"
+end_define
+
+begin_comment
+comment|/* kassert failed. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KDB_WHY_SYSCTL
 value|"sysctl"
 end_define

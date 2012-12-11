@@ -312,7 +312,7 @@ define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|unsigned instructionIDs;
+value|uint16_t instructionIDs;
 end_define
 
 begin_include

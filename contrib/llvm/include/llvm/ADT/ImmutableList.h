@@ -146,7 +146,6 @@ operator|<
 name|T
 operator|>
 block|;
-comment|// Do not implement.
 name|void
 name|operator
 operator|=
@@ -155,13 +154,13 @@ specifier|const
 name|ImmutableListImpl
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|ImmutableListImpl
 argument_list|(
-specifier|const
-name|ImmutableListImpl
-operator|&
+argument|const ImmutableListImpl&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|public
 operator|:
