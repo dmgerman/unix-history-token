@@ -10686,6 +10686,7 @@ operator|->
 name|lo_name
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 switch|switch
 condition|(
