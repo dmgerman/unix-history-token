@@ -723,7 +723,7 @@ name|KERN_BOOTFILE
 argument_list|,
 name|bootfile
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 name|kernelname
 argument_list|,
