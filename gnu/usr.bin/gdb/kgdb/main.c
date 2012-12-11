@@ -505,6 +505,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
@@ -1856,6 +1858,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|path
 argument_list|)
