@@ -6607,6 +6607,7 @@ name|instance
 operator|==
 name|NULL
 condition|)
+block|{
 name|kassert_panic
 argument_list|(
 literal|"upgrade of unlocked lock (%s) %s @ %s:%d"
@@ -6627,6 +6628,8 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|witness_watch
@@ -6868,6 +6871,7 @@ name|instance
 operator|==
 name|NULL
 condition|)
+block|{
 name|kassert_panic
 argument_list|(
 literal|"downgrade of unlocked lock (%s) %s @ %s:%d"
@@ -6888,6 +6892,8 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|witness_watch
@@ -7151,6 +7157,7 @@ name|witness_watch
 operator|>
 literal|0
 condition|)
+block|{
 name|kassert_panic
 argument_list|(
 literal|"lock (%s) %s not locked @ %s:%d"
@@ -7171,8 +7178,12 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-else|else
 return|return;
+block|}
+else|else
+block|{
+return|return;
+block|}
 name|found
 label|:
 comment|/* First, check for shared/exclusive mismatches. */
@@ -8257,12 +8268,15 @@ operator|&
 name|LC_SLEEPLOCK
 operator|)
 condition|)
+block|{
 name|typelist
 operator|=
 operator|&
 name|w_sleep
 expr_stmt|;
+block|}
 else|else
+block|{
 name|kassert_panic
 argument_list|(
 literal|"lock class %s is not sleep or spin"
@@ -8272,6 +8286,12 @@ operator|->
 name|lc_name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -8937,6 +8957,9 @@ modifier|*
 name|child
 parameter_list|)
 block|{
+name|int
+name|unlocked
+decl_stmt|;
 name|MPASS
 argument_list|(
 name|child
@@ -8979,12 +9002,25 @@ name|witness_cold
 operator|==
 literal|0
 condition|)
+block|{
+name|unlocked
+operator|=
+literal|1
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|unlocked
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|kassert_panic
 argument_list|(
 literal|"%s: parent \"%s\" (%s) and child \"%s\" (%s) are not "
@@ -9011,6 +9047,16 @@ operator|->
 name|w_class
 operator|->
 name|lc_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unlocked
+condition|)
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|w_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -10364,6 +10410,7 @@ name|instance
 operator|==
 name|NULL
 condition|)
+block|{
 name|kassert_panic
 argument_list|(
 literal|"%s: lock (%s) %s not locked"
@@ -10379,6 +10426,8 @@ operator|->
 name|lo_name
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 operator|*
 name|filep
 operator|=
@@ -10549,6 +10598,13 @@ name|w_line
 operator|=
 name|line
 expr_stmt|;
+if|if
+condition|(
+name|instance
+operator|==
+name|NULL
+condition|)
+return|return;
 name|instance
 operator|->
 name|li_file
@@ -11073,6 +11129,7 @@ name|instance
 operator|==
 name|NULL
 condition|)
+block|{
 name|kassert_panic
 argument_list|(
 literal|"%s: lock (%s) %s not locked"
@@ -11088,6 +11145,8 @@ operator|->
 name|lo_name
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|set
