@@ -2060,7 +2060,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * The MAC address is the standard NetApp OUI of 00-a0-98, 	 * followed by an MD5 of the vm name. The slot number is 	 * prepended to this for slots other than 1, so that  	 * CFE can netboot from the equivalent of slot 1. 	 */
+comment|/* 	 * The MAC address is the standard NetApp OUI of 00-a0-98, 	 * followed by an MD5 of the vm name. The slot/func number is 	 * prepended to this for slots other than 1:0, so that  	 * a bootloader can netboot from the equivalent of slot 1. 	 */
 if|if
 condition|(
 name|pi
@@ -2068,6 +2068,12 @@ operator|->
 name|pi_slot
 operator|==
 literal|1
+operator|&&
+name|pi
+operator|->
+name|pi_func
+operator|==
+literal|0
 condition|)
 block|{
 name|strncpy
@@ -2094,11 +2100,15 @@ argument_list|(
 name|nstr
 argument_list|)
 argument_list|,
-literal|"%d-%s"
+literal|"%d-%d-%s"
 argument_list|,
 name|pi
 operator|->
 name|pi_slot
+argument_list|,
+name|pi
+operator|->
+name|pi_func
 argument_list|,
 name|vmname
 argument_list|)
