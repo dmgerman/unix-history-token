@@ -814,7 +814,6 @@ name|void
 name|vtscsi_get_request_lun
 parameter_list|(
 name|uint8_t
-name|lun
 index|[]
 parameter_list|,
 name|target_id_t
@@ -7681,18 +7680,6 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
-name|xpt_async
-argument_list|(
-name|ac_code
-argument_list|,
-name|sc
-operator|->
-name|vtscsi_path
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return;
 comment|/* Use the wildcard path from our softc for bus announcements. */
 if|if
 condition|(
