@@ -10634,7 +10634,7 @@ name|v_bufobj
 expr_stmt|;
 name|loop
 label|:
-comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem. 	 * 	 * XXX remove if 0 sections (clean this up after its proven)          */
+comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem.          */
 if|if
 condition|(
 name|numfreebuffers
