@@ -443,6 +443,17 @@ begin_comment
 comment|/* Fatal error parsing some list-option. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pid_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* kern.max_pid */
+end_comment
+
 begin_enum
 specifier|static
 enum|enum
@@ -781,6 +792,16 @@ begin_function_decl
 specifier|static
 name|void
 name|sizevars
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pidmax_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1150,6 +1171,9 @@ index|[
 literal|2
 index|]
 argument_list|)
+expr_stmt|;
+name|pidmax_init
+argument_list|()
 expr_stmt|;
 name|all
 operator|=
@@ -3456,17 +3480,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|BSD_PID_MAX
-value|99999
-end_define
-
-begin_comment
-comment|/* Copy of PID_MAX from sys/proc.h. */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -3571,7 +3584,7 @@ literal|0
 operator|||
 name|tempid
 operator|>
-name|BSD_PID_MAX
+name|pid_max
 condition|)
 block|{
 name|warnx
@@ -3645,12 +3658,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|BSD_PID_MAX
-end_undef
 
 begin_comment
 comment|/*-  * The user can specify a device via one of three formats:  *     1) fully qualified, e.g.:     /dev/ttyp0 /dev/console	/dev/pts/0  *     2) missing "/dev", e.g.:      ttyp0      console		pts/0  *     3) two-letters, e.g.:         p0         co		0  *        (matching letters that would be seen in the "TT" column)  */
@@ -6724,6 +6731,57 @@ operator|(
 name|newopts
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|pidmax_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|size_t
+name|intsize
+decl_stmt|;
+name|intsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|pid_max
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.pid_max"
+argument_list|,
+operator|&
+name|pid_max
+argument_list|,
+operator|&
+name|intsize
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"unable to read kern.pid_max"
+argument_list|)
+expr_stmt|;
+name|pid_max
+operator|=
+literal|99999
+expr_stmt|;
+block|}
 block|}
 end_function
 
