@@ -3587,7 +3587,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Mount flags are now 64-bits. On 32-bit archtectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
+comment|/* 	 * Mount flags are now 64-bits. On 32-bit architectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
 name|flags
 operator|=
 name|uap
