@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.125, 1.127 - rewrite merge or stale processing  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  * 1.173 - correct expire time processing  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.119 - don't m_copydata() beyond the len of mbuf in pfsync_input()  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.125, 1.127 - rewrite merge or stale processing  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  * 1.173 - correct expire time processing  */
 end_comment
 
 begin_include
@@ -3298,6 +3298,8 @@ name|subh
 decl_stmt|;
 name|int
 name|offset
+decl_stmt|,
+name|len
 decl_stmt|;
 name|int
 name|rv
@@ -3524,6 +3526,37 @@ goto|goto
 name|done
 goto|;
 block|}
+name|len
+operator|=
+name|ntohs
+argument_list|(
+name|ph
+operator|->
+name|len
+argument_list|)
+operator|+
+name|offset
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|len
+condition|)
+block|{
+name|pfsyncstats
+operator|.
+name|pfsyncs_badlen
+operator|++
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 comment|/* Cheaper to grab this now than having to mess with mbufs later */
 name|pkt
 operator|.
@@ -3581,11 +3614,17 @@ operator|*
 name|ph
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|offset
+operator|<=
+name|len
+operator|-
+sizeof|sizeof
+argument_list|(
+name|subh
+argument_list|)
+condition|)
 block|{
 name|m_copydata
 argument_list|(
@@ -6666,16 +6705,10 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pfsync_eof
-argument_list|)
 condition|)
 name|V_pfsyncstats
 operator|.
-name|pfsyncs_badact
+name|pfsyncs_badlen
 operator|++
 expr_stmt|;
 comment|/* we're done. free and let the caller return */
@@ -8752,7 +8785,6 @@ name|PFSYNC_ACT_EOF
 index|]
 operator|++
 expr_stmt|;
-comment|/* XXX write checksum in EOF here */
 comment|/* we're done, let's put it on the wire */
 if|if
 condition|(
