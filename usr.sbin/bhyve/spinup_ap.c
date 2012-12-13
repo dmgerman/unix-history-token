@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fbsdrun.h"
+file|"bhyverun.h"
 end_include
 
 begin_include
