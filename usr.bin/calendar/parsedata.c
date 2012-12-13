@@ -5426,12 +5426,14 @@ condition|)
 block|{
 name|i
 operator|=
-name|strtod
+name|strtol
 argument_list|(
 name|s
 argument_list|,
 operator|&
 name|es
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
