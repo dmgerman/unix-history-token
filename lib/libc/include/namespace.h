@@ -1309,6 +1309,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|wait6
+value|_wait6
+end_define
+
+begin_define
+define|#
+directive|define
 name|waitpid
 value|_waitpid
 end_define
