@@ -644,6 +644,35 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_read_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_read_8
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|o
+parameter_list|)
+value|!!! bus_space_read_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Read `count' 1, 2, 4, or 8 byte quantities from bus space  * described by tag/handle/offset and copy into buffer provided.  */
 end_comment
@@ -972,8 +1001,30 @@ directive|endif
 block|}
 end_function
 
-begin_comment
+begin_if
 unit|}
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_read_multi_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_read_multi_8
+value|!!! bus_space_read_multi_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Read `count' 1, 2, 4, or 8 byte quantities from bus space  * described by tag/handle and starting at `offset' and copy into  * buffer provided.  */
 end_comment
 
@@ -1471,8 +1522,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
+begin_if
 unit|} }
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_read_region_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_read_region_8
+value|!!! bus_space_read_region_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Write the 1, 2, 4, or 8 byte value `value' to bus space  * described by tag/handle/offset.  */
 end_comment
 
@@ -1694,6 +1767,28 @@ name|value
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_write_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_write_8
+value|!!! bus_space_write_8 not implemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Write `count' 1, 2, 4, or 8 byte quantities from the buffer  * provided to bus space described by tag/handle/offset.  */
@@ -2035,8 +2130,42 @@ directive|endif
 block|}
 end_function
 
-begin_comment
+begin_if
 unit|}
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_write_multi_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_write_multi_8
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|o
+parameter_list|,
+name|a
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|!!! bus_space_write_multi_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Write `count' 1, 2, 4, or 8 byte quantities from the buffer provided  * to bus space described by tag/handle starting at `offset'.  */
 end_comment
 
@@ -2540,8 +2669,31 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
+begin_if
 unit|} }
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_write_region_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_write_region_8
+define|\
+value|!!! bus_space_write_region_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Write the 1, 2, 4, or 8 byte value `val' to bus space described  * by tag/handle/offset `count' times.  */
 end_comment
 
@@ -2820,6 +2972,28 @@ name|value
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_set_multi_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_set_multi_8
+value|!!! bus_space_set_multi_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Write `count' 1, 2, 4, or 8 byte value `val' to bus space described  * by tag/handle starting at `offset'.  */
@@ -3152,6 +3326,28 @@ name|value
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_set_region_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_set_region_8
+value|!!! bus_space_set_region_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Copy `count' 1, 2, 4, or 8 byte values from bus space starting  * at tag/bsh1/off1 to bus space starting at tag/bsh2/off2.  */
@@ -3968,6 +4164,28 @@ block|}
 block|}
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Cause a link error for bus_space_copy_8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bus_space_copy_region_8
+value|!!! bus_space_copy_region_8 unimplemented !!!
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Bus read/write barrier methods.  *  *	void bus_space_barrier(bus_space_tag_t tag, bus_space_handle_t bsh,  *			       bus_size_t offset, bus_size_t len, int flags);  *  *  * Note that BUS_SPACE_BARRIER_WRITE doesn't do anything other than  * prevent reordering by the compiler; all Intel x86 processors currently  * retire operations outside the CPU in program order.  */
