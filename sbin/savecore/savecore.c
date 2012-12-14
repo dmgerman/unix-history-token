@@ -1729,6 +1729,14 @@ name|open
 argument_list|(
 name|device
 argument_list|,
+operator|(
+name|checkfor
+operator|||
+name|keep
+operator|)
+condition|?
+name|O_RDONLY
+else|:
 name|O_RDWR
 argument_list|)
 expr_stmt|;
@@ -2785,8 +2793,6 @@ name|nuke
 label|:
 if|if
 condition|(
-name|clear
-operator|||
 operator|!
 name|keep
 condition|)
