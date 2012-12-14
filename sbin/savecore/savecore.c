@@ -2894,9 +2894,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: savecore -c"
+literal|"usage: savecore -c [-v] [device ...]"
 argument_list|,
-literal|"       savecore -C [-v] [directory device]"
+literal|"       savecore -C [-v] [device ...]"
 argument_list|,
 literal|"       savecore [-fkvz] [directory [device ...]]"
 argument_list|)
@@ -3098,6 +3098,12 @@ condition|(
 name|argc
 operator|>=
 literal|1
+operator|&&
+operator|!
+name|checkfor
+operator|&&
+operator|!
+name|clear
 condition|)
 block|{
 name|error
