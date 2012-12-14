@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vis.h,v 1.19 2011/03/12 19:52:45 christos Exp $	*/
+comment|/*	$NetBSD: vis.h,v 1.20 2012/12/14 21:36:59 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|VIS_OCTAL
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|VIS_CSTYLE
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|VIS_SP
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|VIS_TAB
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|VIS_NL
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|VIS_SAFE
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|VIS_NOSLASH
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|VIS_HTTP1808
-value|0x080
+value|0x0080
 end_define
 
 begin_comment
@@ -136,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|VIS_HTTPSTYLE
-value|0x080
+value|0x0080
 end_define
 
 begin_comment
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|VIS_MIMESTYLE
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|VIS_HTTP1866
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
@@ -169,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|VIS_NOESCAPE
-value|0x400
+value|0x0400
 end_define
 
 begin_comment
@@ -180,11 +180,22 @@ begin_define
 define|#
 directive|define
 name|_VIS_END
-value|0x800
+value|0x0800
 end_define
 
 begin_comment
 comment|/* for unvis */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIS_GLOB
+value|0x1000
+end_define
+
+begin_comment
+comment|/* encode glob(3) magic characters */
 end_comment
 
 begin_comment

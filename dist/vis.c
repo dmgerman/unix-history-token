@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vis.c,v 1.44 2011/03/12 19:52:48 christos Exp $	*/
+comment|/*	$NetBSD: vis.c,v 1.45 2012/12/14 21:38:18 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vis.c,v 1.44 2011/03/12 19:52:48 christos Exp $"
+literal|"$NetBSD: vis.c,v 1.45 2012/12/14 21:38:18 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|MAXEXTRAS
-value|5
+value|9
 end_define
 
 begin_define
@@ -246,7 +246,7 @@ parameter_list|,
 name|orig_str
 parameter_list|)
 define|\
-value|do {									      \ 	const char *orig = orig_str;					      \ 	const char *o = orig;						      \ 	char *e;							      \ 	while (*o++)							      \ 		continue;						      \ 	extra = malloc((size_t)((o - orig) + MAXEXTRAS));		      \ 	if (!extra) break;						      \ 	for (o = orig, e = extra; (*e++ = *o++) != '\0';)		      \ 		continue;						      \ 	e--;								      \ 	if (flag& VIS_SP) *e++ = ' ';					      \ 	if (flag& VIS_TAB) *e++ = '\t';				      \ 	if (flag& VIS_NL) *e++ = '\n';					      \ 	if ((flag& VIS_NOSLASH) == 0) *e++ = '\\';			      \ 	*e = '\0';							      \ } while (
+value|do {									      \ 	const char *orig = orig_str;					      \ 	const char *o = orig;						      \ 	char *e;							      \ 	while (*o++)							      \ 		continue;						      \ 	extra = malloc((size_t)((o - orig) + MAXEXTRAS));		      \ 	if (!extra) break;						      \ 	for (o = orig, e = extra; (*e++ = *o++) != '\0';)		      \ 		continue;						      \ 	e--;								      \ 	if (flag& VIS_GLOB) {						      \ 		*e++ = '*';						      \ 		*e++ = '?';						      \ 		*e++ = '[';						      \ 		*e++ = '#';						      \ 	}								      \ 	if (flag& VIS_SP) *e++ = ' ';					      \ 	if (flag& VIS_TAB) *e++ = '\t';				      \ 	if (flag& VIS_NL) *e++ = '\n';					      \ 	if ((flag& VIS_NOSLASH) == 0) *e++ = '\\';			      \ 	*e = '\0';							      \ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
