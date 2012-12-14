@@ -3548,7 +3548,7 @@ operator|<
 name|len
 condition|)
 block|{
-name|pfsyncstats
+name|V_pfsyncstats
 operator|.
 name|pfsyncs_badlen
 operator|++
