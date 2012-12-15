@@ -4046,6 +4046,12 @@ begin_comment
 comment|/* !defined (__ARM_EABI__) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__clang__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -4059,6 +4065,11 @@ directive|define
 name|DTORS_SECTION_ASM_OP
 value|ARM_DTORS_SECTION_OP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
