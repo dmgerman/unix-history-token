@@ -729,7 +729,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|for (vp = __mnt_vnode_first_all(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_all(&(mvp), (mp)))
+value|for (vp = __mnt_vnode_first_all(&(mvp), (mp));			\ 		(vp) != NULL; vp = __mnt_vnode_next_all(&(mvp), (mp)))
 end_define
 
 begin_define
