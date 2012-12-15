@@ -6927,6 +6927,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Make sure the new size is a multiple of fs_fsize; /dev/ufssuspend 	 * only supports fragment-aligned IO requests. 	 */
+name|size
+operator|-=
+name|size
+operator|%
+name|osblock
+operator|.
+name|fs_fsize
+expr_stmt|;
 if|if
 condition|(
 name|size
