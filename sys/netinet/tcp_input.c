@@ -4083,6 +4083,10 @@ operator|&=
 operator|~
 name|M_IP_NEXTHOP
 expr_stmt|;
+name|fwd_tag
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4276,6 +4280,10 @@ name|m_flags
 operator|&=
 operator|~
 name|M_IP_NEXTHOP
+expr_stmt|;
+name|fwd_tag
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 else|else
