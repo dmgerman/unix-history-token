@@ -15622,9 +15622,7 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_uid
 argument_list|,
