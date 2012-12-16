@@ -3583,15 +3583,8 @@ if|if
 condition|(
 name|state
 operator|==
-name|X2APIC_ENABLED
+name|X2APIC_DISABLED
 condition|)
-name|vlapic
-operator|->
-name|msr_apicbase
-operator||=
-name|APICBASE_X2APIC
-expr_stmt|;
-else|else
 name|vlapic
 operator|->
 name|msr_apicbase
