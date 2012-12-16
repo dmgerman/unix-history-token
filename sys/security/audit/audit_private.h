@@ -1519,6 +1519,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|char
 modifier|*
 name|path
