@@ -3011,6 +3011,9 @@ operator||
 name|PSL_D
 argument_list|)
 expr_stmt|;
+name|lapic_init_ap
+argument_list|()
+expr_stmt|;
 comment|/* Disable local APIC just to be sure. */
 name|lapic_disable
 argument_list|()
