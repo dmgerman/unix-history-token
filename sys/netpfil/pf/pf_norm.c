@@ -881,6 +881,13 @@ argument_list|,
 name|PFFRAG_FRENT_HIWAT
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|V_pf_frent_z
+argument_list|,
+literal|"PF frag entries limit reached"
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

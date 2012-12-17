@@ -4179,6 +4179,13 @@ argument_list|,
 name|PFSTATE_HIWAT
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|V_pf_state_z
+argument_list|,
+literal|"PF states limit reached"
+argument_list|)
+expr_stmt|;
 name|V_pf_state_key_z
 operator|=
 name|uma_zcreate
@@ -4345,6 +4352,13 @@ argument_list|(
 name|V_pf_sources_z
 argument_list|,
 name|PFSNODE_HIWAT
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|V_pf_sources_z
+argument_list|,
+literal|"PF source nodes limit reached"
 argument_list|)
 expr_stmt|;
 name|V_pf_srchash
