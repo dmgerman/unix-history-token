@@ -15173,7 +15173,6 @@ if|if
 condition|(
 name|compress
 condition|)
-block|{
 name|sbuf_printf
 argument_list|(
 operator|&
@@ -15182,7 +15181,6 @@ argument_list|,
 name|GZ_SUFFIX
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -15511,13 +15509,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-specifier|register
 name|struct
 name|ucred
 modifier|*
@@ -15526,6 +15517,11 @@ init|=
 name|td
 operator|->
 name|td_ucred
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
 decl_stmt|;
 name|struct
 name|flock
@@ -15842,6 +15838,8 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|)
+operator|!=
+literal|0
 operator|||
 name|vattr
 operator|.
