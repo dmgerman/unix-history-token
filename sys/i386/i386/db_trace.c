@@ -898,6 +898,9 @@ name|int
 modifier|*
 parameter_list|,
 name|db_addr_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1144,6 +1147,8 @@ parameter_list|,
 name|argp
 parameter_list|,
 name|callpc
+parameter_list|,
+name|frame
 parameter_list|)
 specifier|const
 name|char
@@ -1164,6 +1169,10 @@ name|argp
 decl_stmt|;
 name|db_addr_t
 name|callpc
+decl_stmt|;
+name|void
+modifier|*
+name|frame
 decl_stmt|;
 block|{
 name|int
@@ -1256,6 +1265,22 @@ argument_list|(
 name|callpc
 argument_list|,
 name|DB_STGY_PROC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|frame
+operator|!=
+name|NULL
+condition|)
+name|db_printf
+argument_list|(
+literal|"/frame 0x%r"
+argument_list|,
+operator|(
+name|register_t
+operator|)
+name|frame
 argument_list|)
 expr_stmt|;
 name|db_printf
@@ -1733,6 +1758,14 @@ argument_list|,
 literal|0
 argument_list|,
 name|eip
+argument_list|,
+operator|&
+operator|(
+operator|*
+name|fp
+operator|)
+operator|->
+name|f_frame
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For a double fault, we have to snag the values from the 	 * previous TSS since a double fault uses a task gate to 	 * switch to a known good state. 	 */
@@ -2338,6 +2371,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|pc
+argument_list|,
+name|actframe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2401,6 +2436,8 @@ argument_list|,
 name|argp
 argument_list|,
 name|pc
+argument_list|,
+name|actframe
 argument_list|)
 expr_stmt|;
 if|if
@@ -2497,6 +2534,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|pc
+argument_list|,
+name|frame
 argument_list|)
 expr_stmt|;
 break|break;
