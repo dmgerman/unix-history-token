@@ -11190,7 +11190,7 @@ name|bulk
 argument_list|,
 name|count
 argument_list|,
-name|SA_ZPL_CTIME
+name|SA_ZPL_CRTIME
 argument_list|(
 name|zfsvfs
 argument_list|)
