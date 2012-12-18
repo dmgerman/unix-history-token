@@ -3227,11 +3227,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|kern_psignal
 argument_list|(
 name|p
@@ -3277,11 +3272,6 @@ operator|&
 name|p
 operator|->
 name|p_itcallout
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3367,11 +3357,6 @@ literal|1
 argument_list|,
 name|realitexpire
 argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
