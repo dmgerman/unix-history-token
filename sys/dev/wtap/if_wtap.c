@@ -1528,6 +1528,8 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
+literal|"%s"
+argument_list|,
 operator|(
 specifier|const
 name|char
