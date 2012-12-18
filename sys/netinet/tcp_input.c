@@ -4086,7 +4086,7 @@ operator|->
 name|m_flags
 operator|&=
 operator|~
-name|M_IP_NEXTHOP
+name|M_IP6_NEXTHOP
 expr_stmt|;
 name|fwd_tag
 operator|=
