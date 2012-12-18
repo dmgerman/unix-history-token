@@ -5463,7 +5463,7 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|MNT_VNODE_FOREACH_ALL_ABORT
+name|MNT_VNODE_FOREACH_ACTIVE_ABORT
 argument_list|(
 name|mp
 argument_list|,
