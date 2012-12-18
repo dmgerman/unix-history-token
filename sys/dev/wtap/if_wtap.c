@@ -3466,13 +3466,6 @@ index|]
 operator|=
 literal|'E'
 expr_stmt|;
-comment|/* 	 * Indicate we need the 802.11 header padded to a 	 * 32-bit boundary for 4-address and QoS frames. 	 */
-name|ic
-operator|->
-name|ic_flags
-operator||=
-name|IEEE80211_F_DATAPAD
-expr_stmt|;
 name|ic
 operator|->
 name|ic_nchans
