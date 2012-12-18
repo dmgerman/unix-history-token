@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/uma.h>
 end_include
 
@@ -627,15 +621,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|tag
-decl_stmt|;
-name|struct
-name|task
-name|task
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|taskqueue
 decl_stmt|;
 name|bus_dma_tag_t
 name|hw_desc_tag
