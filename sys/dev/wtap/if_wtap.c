@@ -1446,6 +1446,27 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|free
+argument_list|(
+operator|(
+expr|struct
+name|wtap_vap
+operator|*
+operator|)
+name|vap
+argument_list|,
+name|M_80211_VAP
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/* override various methods */
 name|avp
 operator|->
