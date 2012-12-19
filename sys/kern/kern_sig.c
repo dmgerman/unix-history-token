@@ -14716,7 +14716,7 @@ name|compress_user_cores
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Compression of user corefiles"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14751,7 +14751,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|"user core gz compression level"
+literal|"Corefile gzip compression level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14822,7 +14822,7 @@ argument_list|(
 name|corefilename
 argument_list|)
 argument_list|,
-literal|"process corefile name format string"
+literal|"Process corefile name format string"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14870,10 +14870,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|indexpos
 decl_stmt|;
 name|char
@@ -14931,6 +14930,8 @@ name|format
 index|[
 name|i
 index|]
+operator|!=
+literal|'\0'
 condition|;
 name|i
 operator|++
@@ -15100,6 +15101,7 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 break|break;
 default|default:
@@ -15216,13 +15218,16 @@ name|nameidata
 name|nd
 decl_stmt|;
 name|int
-name|error
+name|cmode
 decl_stmt|,
-name|n
-decl_stmt|;
-name|int
 name|flags
-init|=
+decl_stmt|,
+name|oflags
+decl_stmt|,
+name|error
+decl_stmt|;
+name|flags
+operator|=
 name|O_CREAT
 operator||
 name|O_EXCL
@@ -15230,10 +15235,9 @@ operator||
 name|FWRITE
 operator||
 name|O_NOFOLLOW
-decl_stmt|;
-name|int
+expr_stmt|;
 name|cmode
-init|=
+operator|=
 name|S_IRUSR
 operator||
 name|S_IWUSR
@@ -15241,31 +15245,26 @@ operator||
 name|S_IRGRP
 operator||
 name|S_IWGRP
-decl_stmt|;
-name|int
-name|oflags
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|capmode_coredump
-condition|)
+expr_stmt|;
 name|oflags
 operator|=
+name|capmode_coredump
+condition|?
 name|VN_OPEN_NOCAPCHECK
+else|:
+literal|0
 expr_stmt|;
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<
 name|num_cores
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
@@ -15276,7 +15275,7 @@ index|]
 operator|=
 literal|'0'
 operator|+
-name|n
+name|i
 expr_stmt|;
 name|NDINIT
 argument_list|(
