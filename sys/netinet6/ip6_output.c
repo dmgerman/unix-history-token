@@ -947,6 +947,8 @@ name|struct
 name|m_tag
 modifier|*
 name|fwd_tag
+init|=
+name|NULL
 decl_stmt|;
 name|ip6
 operator|=
@@ -2326,6 +2328,10 @@ condition|(
 name|ro
 operator|->
 name|ro_rt
+operator|&&
+name|fwd_tag
+operator|==
+name|NULL
 condition|)
 block|{
 name|rt
@@ -2344,6 +2350,13 @@ name|rt_ifp
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|fwd_tag
+operator|==
+name|NULL
+condition|)
 block|{
 name|bzero
 argument_list|(
@@ -2379,6 +2392,7 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|in6_selectroute_fib
@@ -3578,7 +3592,8 @@ operator|+
 literal|1
 operator|)
 argument_list|,
-name|dst
+operator|&
+name|dst_sa
 argument_list|,
 sizeof|sizeof
 argument_list|(
