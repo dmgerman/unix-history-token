@@ -15248,11 +15248,15 @@ name|S_IWGRP
 expr_stmt|;
 name|oflags
 operator|=
+name|VN_OPEN_NOAUDIT
+operator||
+operator|(
 name|capmode_coredump
 condition|?
 name|VN_OPEN_NOCAPCHECK
 else|:
 literal|0
+operator|)
 expr_stmt|;
 for|for
 control|(
