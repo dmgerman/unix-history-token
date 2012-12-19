@@ -15231,10 +15231,6 @@ operator|=
 name|S_IRUSR
 operator||
 name|S_IWUSR
-operator||
-name|S_IRGRP
-operator||
-name|S_IWGRP
 expr_stmt|;
 name|oflags
 operator|=
