@@ -2418,27 +2418,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-switch|switch
-condition|(
-name|error
-condition|)
-block|{
-case|case
-name|EHOSTUNREACH
-case|:
-name|V_ip6stat
-operator|.
-name|ip6s_noroute
-operator|++
-expr_stmt|;
-break|break;
-case|case
-name|EADDRNOTAVAIL
-case|:
-default|default:
-break|break;
-comment|/* XXX statistics? */
-block|}
 if|if
 condition|(
 name|ifp
