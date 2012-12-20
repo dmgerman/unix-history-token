@@ -1740,7 +1740,7 @@ name|EXT2_HAS_RO_COMPAT_FEATURE
 argument_list|(
 name|fs
 argument_list|,
-name|EXT4F_ROCOMPAT_EXTRA_ISIZE
+name|EXT2F_ROCOMPAT_EXTRA_ISIZE
 argument_list|)
 operator|&&
 name|EXT2_INODE_SIZE

@@ -184,7 +184,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_INDEX
+name|EXT4_INDEX
 value|0x00001000
 end_define
 
@@ -195,7 +195,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_IMAGIC
+name|EXT4_IMAGIC
 value|0x00002000
 end_define
 
@@ -206,7 +206,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_JOURNAL_DATA
+name|EXT4_JOURNAL_DATA
 value|0x00004000
 end_define
 
@@ -217,7 +217,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_NOTAIL
+name|EXT4_NOTAIL
 value|0x00008000
 end_define
 
@@ -228,7 +228,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_DIRSYNC
+name|EXT4_DIRSYNC
 value|0x00010000
 end_define
 
@@ -239,7 +239,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_TOPDIR
+name|EXT4_TOPDIR
 value|0x00020000
 end_define
 
@@ -250,7 +250,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_HUGE_FILE
+name|EXT4_HUGE_FILE
 value|0x00040000
 end_define
 
@@ -261,7 +261,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_EXTENTS
+name|EXT4_EXTENTS
 value|0x00080000
 end_define
 
@@ -272,7 +272,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_EOFBLOCKS
+name|EXT4_EOFBLOCKS
 value|0x00400000
 end_define
 
@@ -312,7 +312,7 @@ name|E2DI_HAS_XTIME
 parameter_list|(
 name|ip
 parameter_list|)
-value|(EXT2_INODE_SIZE((ip)->i_e2fs)> \ 				    E2FS_REV0_INODE_SIZE)
+value|(EXT2_HAS_RO_COMPAT_FEATURE(ip->i_e2fs, EXT2F_ROCOMPAT_EXTRA_ISIZE))
 end_define
 
 begin_comment
