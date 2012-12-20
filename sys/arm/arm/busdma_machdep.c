@@ -696,11 +696,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//----------------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// Begin block of code useful to transplant to other implementations.
+comment|/*  * ----------------------------------------------------------------------------  * Begin block of code useful to transplant to other implementations.  */
 end_comment
 
 begin_decl_stmt
@@ -952,11 +948,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// End block of code useful to transplant to other implementations.
-end_comment
-
-begin_comment
-comment|//----------------------------------------------------------------------------
+comment|/*  * End block of code useful to transplant to other implementations.  * ----------------------------------------------------------------------------  */
 end_comment
 
 begin_comment
