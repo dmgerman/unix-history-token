@@ -318,6 +318,13 @@ block|}
 block|,
 comment|/* BRIB400 - Boca 56k PnP */
 block|{
+literal|0x0010320d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* CIR1000 - Cirrus Logic V34 */
+block|{
 literal|0x0030320d
 block|,
 name|NULL
