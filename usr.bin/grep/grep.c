@@ -438,6 +438,17 @@ comment|/* count for -m */
 end_comment
 
 begin_decl_stmt
+name|long
+name|long
+name|mlimit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* requested value for -m */
+end_comment
+
+begin_decl_stmt
 name|bool
 name|nflag
 decl_stmt|;
@@ -2849,6 +2860,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|mlimit
+operator|=
 name|mcount
 operator|=
 name|strtoll
