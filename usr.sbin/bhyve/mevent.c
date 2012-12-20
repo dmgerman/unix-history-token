@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mevent.h"
 end_include
 
@@ -114,6 +120,14 @@ directive|define
 name|MEV_DEL_PENDING
 value|3
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|vmname
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1215,6 +1229,46 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|mevent_set_name
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+name|tname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|tname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tname
+argument_list|)
+argument_list|,
+literal|"%s mevent"
+argument_list|,
+name|vmname
+argument_list|)
+expr_stmt|;
+name|pthread_set_name_np
+argument_list|(
+name|mevent_tid
+argument_list|,
+name|tname
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|mevent_dispatch
 parameter_list|(
@@ -1252,6 +1306,9 @@ decl_stmt|;
 name|mevent_tid
 operator|=
 name|pthread_self
+argument_list|()
+expr_stmt|;
+name|mevent_set_name
 argument_list|()
 expr_stmt|;
 name|mfd
