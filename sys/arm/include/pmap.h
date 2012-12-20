@@ -2497,7 +2497,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM11 */
+comment|/* (ARM_MMU_V6 + ARM_MMU_V7) != 0 */
 end_comment
 
 begin_endif
