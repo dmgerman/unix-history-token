@@ -2489,21 +2489,21 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ARM11
+name|CPU_ARM1136
 argument_list|)
 end_if
 
 begin_decl_stmt
 name|struct
 name|cpu_functions
-name|arm11_cpufuncs
+name|arm1136_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
 name|cpufunc_id
 block|,
 comment|/* id                   */
-name|arm11_drain_writebuf
+name|cpufunc_nullop
 block|,
 comment|/* cpwait               */
 comment|/* MMU functions */
@@ -2513,7 +2513,7 @@ comment|/* control              */
 name|cpufunc_domains
 block|,
 comment|/* Domain               */
-name|arm11_setttb
+name|arm11x6_setttb
 block|,
 comment|/* Setttb               */
 name|cpufunc_faultstatus
@@ -2542,13 +2542,13 @@ name|arm11_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|armv6_icache_sync_all
+name|arm11x6_icache_sync_all
 block|,
 comment|/* icache_sync_all      */
-name|armv6_icache_sync_range
+name|arm11x6_icache_sync_range
 block|,
 comment|/* icache_sync_range    */
-name|armv6_dcache_wbinv_all
+name|arm11x6_dcache_wbinv_all
 block|,
 comment|/* dcache_wbinv_all     */
 name|armv6_dcache_wbinv_range
@@ -2560,10 +2560,10 @@ comment|/* dcache_inv_range     */
 name|armv6_dcache_wb_range
 block|,
 comment|/* dcache_wb_range      */
-name|armv6_idcache_wbinv_all
+name|arm11x6_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all    */
-name|armv6_idcache_wbinv_range
+name|arm11x6_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range  */
 operator|(
@@ -2595,7 +2595,7 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range     */
 comment|/* Other functions */
-name|cpufunc_nullop
+name|arm11x6_flush_prefetchbuf
 block|,
 comment|/* flush_prefetchbuf    */
 name|arm11_drain_writebuf
@@ -2624,7 +2624,7 @@ comment|/* prefetchabt_fixup    */
 name|arm11_context_switch
 block|,
 comment|/* context_switch       */
-name|arm11_setup
+name|arm11x6_setup
 comment|/* cpu setup            */
 block|}
 decl_stmt|;
@@ -2636,7 +2636,162 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM11 */
+comment|/* CPU_ARM1136 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|arm1176_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id                   */
+name|cpufunc_nullop
+block|,
+comment|/* cpwait               */
+comment|/* MMU functions */
+name|cpufunc_control
+block|,
+comment|/* control              */
+name|cpufunc_domains
+block|,
+comment|/* Domain               */
+name|arm11x6_setttb
+block|,
+comment|/* Setttb               */
+name|cpufunc_faultstatus
+block|,
+comment|/* Faultstatus          */
+name|cpufunc_faultaddress
+block|,
+comment|/* Faultaddress         */
+comment|/* TLB functions */
+name|arm11_tlb_flushID
+block|,
+comment|/* tlb_flushID          */
+name|arm11_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE       */
+name|arm11_tlb_flushI
+block|,
+comment|/* tlb_flushI           */
+name|arm11_tlb_flushI_SE
+block|,
+comment|/* tlb_flushI_SE        */
+name|arm11_tlb_flushD
+block|,
+comment|/* tlb_flushD           */
+name|arm11_tlb_flushD_SE
+block|,
+comment|/* tlb_flushD_SE        */
+comment|/* Cache operations */
+name|arm11x6_icache_sync_all
+block|,
+comment|/* icache_sync_all      */
+name|arm11x6_icache_sync_range
+block|,
+comment|/* icache_sync_range    */
+name|arm11x6_dcache_wbinv_all
+block|,
+comment|/* dcache_wbinv_all     */
+name|armv6_dcache_wbinv_range
+block|,
+comment|/* dcache_wbinv_range   */
+name|armv6_dcache_inv_range
+block|,
+comment|/* dcache_inv_range     */
+name|armv6_dcache_wb_range
+block|,
+comment|/* dcache_wb_range      */
+name|arm11x6_idcache_wbinv_all
+block|,
+comment|/* idcache_wbinv_all    */
+name|arm11x6_idcache_wbinv_range
+block|,
+comment|/* idcache_wbinv_range  */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range  */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range     */
+comment|/* Other functions */
+name|arm11x6_flush_prefetchbuf
+block|,
+comment|/* flush_prefetchbuf    */
+name|arm11_drain_writebuf
+block|,
+comment|/* drain_writebuf       */
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_C     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_E     */
+name|arm11x6_sleep
+block|,
+comment|/* sleep                */
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup        */
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup    */
+name|arm11_context_switch
+block|,
+comment|/* context_switch       */
+name|arm11x6_setup
+comment|/* cpu setup            */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*CPU_ARM1176 */
 end_comment
 
 begin_if
@@ -2849,10 +3004,15 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_ARM11
+name|CPU_ARM1136
 argument_list|)
 operator|||
 expr|\
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_80200
@@ -4215,13 +4375,66 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_ARM10 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_ARM1136JS
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_ARM1136JSR1
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_ARM1176JZS
+condition|)
+block|{
 ifdef|#
 directive|ifdef
-name|CPU_ARM11
+name|CPU_ARM1136
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_ARM1136JS
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_ARM1136JSR1
+condition|)
 name|cpufuncs
 operator|=
-name|arm11_cpufuncs
+name|arm1136_cpufuncs
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CPU_ARM1176
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_ARM1176JZS
+condition|)
+name|cpufuncs
+operator|=
+name|arm1176_cpufuncs
+expr_stmt|;
+endif|#
+directive|endif
 name|cpu_reset_needs_v4_MMU_disable
 operator|=
 literal|1
@@ -4236,9 +4449,10 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 endif|#
 directive|endif
-comment|/* CPU_ARM11 */
+comment|/* CPU_ARM1136 || CPU_ARM1176 */
 ifdef|#
 directive|ifdef
 name|CPU_CORTEXA
@@ -6268,7 +6482,12 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_ARM11
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
 argument_list|)
 operator|||
 expr|\
@@ -7706,11 +7925,19 @@ begin_comment
 comment|/* CPU_ARM9E || CPU_ARM10 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ARM11
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|struct
@@ -7796,42 +8023,111 @@ end_decl_stmt
 
 begin_function
 name|void
-name|arm11_setup
+name|arm11x6_setup
 parameter_list|(
-name|args
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cpuctrl
+decl_stmt|,
+name|cpuctrl_wax
 decl_stmt|;
+name|uint32_t
+name|auxctrl
+decl_stmt|,
+name|auxctrl_wax
+decl_stmt|;
+name|uint32_t
+name|tmp
+decl_stmt|,
+name|tmp2
+decl_stmt|;
+name|uint32_t
+name|sbz
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|cpuid
+decl_stmt|;
+name|cpuid
+operator|=
+name|cpufunc_id
+argument_list|()
+expr_stmt|;
 name|cpuctrl
 operator|=
 name|CPU_CONTROL_MMU_ENABLE
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM32_DISABLE_ALIGNMENT_FAULTS
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_AFLT_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-name|cpuctrl
-operator||=
+operator||
 name|CPU_CONTROL_DC_ENABLE
+operator||
+name|CPU_CONTROL_WBUF_ENABLE
+operator||
+name|CPU_CONTROL_32BP_ENABLE
+operator||
+name|CPU_CONTROL_32BD_ENABLE
+operator||
+name|CPU_CONTROL_LABT_ENABLE
+operator||
+name|CPU_CONTROL_SYST_ENABLE
+operator||
+name|CPU_CONTROL_IC_ENABLE
+expr_stmt|;
+comment|/* 	 * "write as existing" bits 	 * inverse of this is mask 	 */
+name|cpuctrl_wax
+operator|=
+operator|(
+literal|3
+operator|<<
+literal|30
+operator|)
+operator||
+comment|/* SBZ */
+operator|(
+literal|1
+operator|<<
+literal|29
+operator|)
+operator||
+comment|/* FA */
+operator|(
+literal|1
+operator|<<
+literal|28
+operator|)
+operator||
+comment|/* TR */
+operator|(
+literal|3
+operator|<<
+literal|26
+operator|)
+operator||
+comment|/* SBZ */
+operator|(
+literal|3
+operator|<<
+literal|19
+operator|)
+operator||
+comment|/* SBZ */
+operator|(
+literal|1
+operator|<<
+literal|17
+operator|)
+expr_stmt|;
+comment|/* SBZ */
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_BPRD_ENABLE
 expr_stmt|;
 name|cpuctrl
 operator||=
-operator|(
-literal|0xf
-operator|<<
-literal|3
-operator|)
+name|CPU_CONTROL_V6_EXTPAGE
 expr_stmt|;
 name|cpuctrl
 operator|=
@@ -7853,18 +8149,6 @@ name|CPU_CONTROL_BEND_ENABLE
 expr_stmt|;
 endif|#
 directive|endif
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_SYST_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BPRD_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_IC_ENABLE
-expr_stmt|;
 if|if
 condition|(
 name|vector_page
@@ -7875,25 +8159,73 @@ name|cpuctrl
 operator||=
 name|CPU_CONTROL_VECRELOC
 expr_stmt|;
-name|cpuctrl
-operator||=
+name|auxctrl
+operator|=
+literal|0
+expr_stmt|;
+name|auxctrl_wax
+operator|=
+operator|~
+literal|0
+expr_stmt|;
+comment|/* 	 * This options enables the workaround for the 364296 ARM1136 	 * r0pX errata (possible cache data corruption with 	 * hit-under-miss enabled). It sets the undocumented bit 31 in 	 * the auxiliary control register and the FI bit in the control 	 * register, thus disabling hit-under-miss without putting the 	 * processor into full low interrupt latency mode. ARM11MPCore 	 * is not affected. 	 */
+if|if
+condition|(
 operator|(
-literal|0x5
-operator|<<
-literal|16
+name|cpuid
+operator|&
+name|CPU_ID_CPU_MASK
 operator|)
-expr_stmt|;
+operator|==
+name|CPU_ID_ARM1136JS
+condition|)
+block|{
+comment|/* ARM1136JSr0pX */
 name|cpuctrl
 operator||=
-name|CPU_CONTROL_V6_EXTPAGE
+name|CPU_CONTROL_FI_ENABLE
 expr_stmt|;
-comment|/* Make sure caches are clean.  */
+name|auxctrl
+operator|=
+name|ARM1136_AUXCTL_PFI
+expr_stmt|;
+name|auxctrl_wax
+operator|=
+operator|~
+name|ARM1136_AUXCTL_PFI
+expr_stmt|;
+block|}
+comment|/* 	 * Enable an errata workaround 	 */
+if|if
+condition|(
+operator|(
+name|cpuid
+operator|&
+name|CPU_ID_CPU_MASK
+operator|)
+operator|==
+name|CPU_ID_ARM1176JZS
+condition|)
+block|{
+comment|/* ARM1176JZSr0 */
+name|auxctrl
+operator|=
+name|ARM1176_AUXCTL_PHD
+expr_stmt|;
+name|auxctrl_wax
+operator|=
+operator|~
+name|ARM1176_AUXCTL_PHD
+expr_stmt|;
+block|}
+comment|/* Clear out the cache */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
+comment|/* Now really make sure they are clean.  */
+asm|__asm volatile ("mcr\tp15, 0, %0, c7, c7, 0" : : "r"(sbz));
+comment|/* Allow detection code to find the VFP if it's fitted.  */
+asm|__asm volatile ("mcr\tp15, 0, %0, c1, c0, 2" : : "r" (0x0fffffff));
 comment|/* Set the control register */
 name|ctrl
 operator|=
@@ -7901,27 +8233,59 @@ name|cpuctrl
 expr_stmt|;
 name|cpu_control
 argument_list|(
-literal|0xffffffff
+operator|~
+name|cpuctrl_wax
 argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
+asm|__asm volatile ("mrc	p15, 0, %0, c1, c0, 1\n\t"
+literal|"and	%1, %0, %2\n\t"
+literal|"orr	%1, %1, %3\n\t"
+literal|"teq	%0, %1\n\t"
+literal|"mcrne	p15, 0, %1, c1, c0, 1\n\t"
+operator|:
+literal|"=r"
+operator|(
+name|tmp
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|tmp2
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|auxctrl_wax
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|auxctrl
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* And again. */
+end_comment
+
+begin_expr_stmt
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM11 */
+comment|/* CPU_ARM1136 || CPU_ARM1176 */
 end_comment
 
 begin_ifdef
@@ -7930,14 +8294,15 @@ directive|ifdef
 name|CPU_MV_PJ4B
 end_ifdef
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|pj4bv6_setup
-parameter_list|(
-name|char
-modifier|*
-name|args
-parameter_list|)
+argument_list|(
+argument|char *args
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|cpuctrl
@@ -8041,7 +8406,7 @@ name|cpu_l2cache_wbinv_all
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 name|void
