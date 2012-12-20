@@ -3182,6 +3182,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
 name|mkstemps
 argument_list|(
 name|tmppath
@@ -3193,7 +3195,22 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: mkstemps()"
+argument_list|,
+name|path
+argument_list|)
 expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 name|of
 operator|=
 name|fopen
@@ -4929,6 +4946,8 @@ name|N_filename
 operator|!=
 name|NULL
 condition|)
+if|if
+condition|(
 name|setenv
 argument_list|(
 literal|"NETRC"
@@ -4936,6 +4955,18 @@ argument_list|,
 name|N_filename
 argument_list|,
 literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setenv: cannot set NETRC=%s"
+argument_list|,
+name|N_filename
 argument_list|)
 expr_stmt|;
 while|while
