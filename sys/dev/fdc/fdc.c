@@ -3926,6 +3926,8 @@ name|fd
 operator|->
 name|fd_geom
 argument_list|,
+literal|"%s"
+argument_list|,
 name|fd
 operator|->
 name|fd_geom
@@ -9724,6 +9726,8 @@ argument_list|(
 name|fd
 operator|->
 name|fd_geom
+argument_list|,
+literal|"%s"
 argument_list|,
 name|fd
 operator|->

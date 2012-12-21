@@ -860,6 +860,8 @@ name|g_new_providerf
 argument_list|(
 name|gp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gp
 operator|->
 name|name
