@@ -1050,6 +1050,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * ipfw_nat - perform mbuf header translation.  *  * Note V_layer3_chain has to be locked while calling ipfw_nat() in  * 'global' operation mode (t == NULL).  *  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1221,7 +1225,7 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
-name|IPFW_RLOCK
+name|IPFW_RLOCK_ASSERT
 argument_list|(
 name|chain
 argument_list|)
@@ -1286,11 +1290,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|found
