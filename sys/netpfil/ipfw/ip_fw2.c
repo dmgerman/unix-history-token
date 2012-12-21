@@ -8548,7 +8548,9 @@ operator|->
 name|act_ofs
 expr_stmt|;
 name|ipfw_dyn_unlock
-argument_list|()
+argument_list|(
+name|q
+argument_list|)
 expr_stmt|;
 name|cmdlen
 operator|=
@@ -10587,9 +10589,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|ipfw_dyn_attach
-argument_list|()
-expr_stmt|;
 comment|/*  	 * Only print out this stuff the first time around, 	 * when called from the sysinit code. 	 */
 name|printf
 argument_list|(
@@ -10707,9 +10706,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* uninit */
-name|ipfw_dyn_detach
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"IP firewall unloaded\n"
@@ -10980,7 +10976,9 @@ name|chain
 argument_list|)
 expr_stmt|;
 name|ipfw_dyn_init
-argument_list|()
+argument_list|(
+name|chain
+argument_list|)
 expr_stmt|;
 comment|/* First set up some values that are compile time options */
 name|V_ipfw_vnet_ready
