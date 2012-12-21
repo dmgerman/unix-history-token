@@ -2488,7 +2488,7 @@ name|NULL
 operator|||
 name|errno
 operator|!=
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 operator|||
 operator|(
 name|s
