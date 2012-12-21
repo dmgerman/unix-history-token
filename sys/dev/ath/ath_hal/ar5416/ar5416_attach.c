@@ -4980,13 +4980,13 @@ name|halBurstSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* 	 * This is disabled for now; the net80211 layer needs to be 	 * taught when it is and isn't appropriate to enable FF processing 	 * with 802.11n NICs (it tries to enable both A-MPDU and 	 * fast frames, with very tragic crash-y results.) 	 */
 name|pCap
 operator|->
 name|halFastFramesSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
-comment|/* XXX? */
 name|pCap
 operator|->
 name|halChapTuningSupport
