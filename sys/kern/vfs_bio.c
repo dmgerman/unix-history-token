@@ -8912,7 +8912,7 @@ condition|)
 break|break;
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 block|}

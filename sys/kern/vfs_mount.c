@@ -8662,7 +8662,7 @@ argument_list|)
 expr_stmt|;
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 name|MNT_ILOCK

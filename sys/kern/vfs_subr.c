@@ -3037,7 +3037,7 @@ name|yield
 label|:
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 name|relock_mnt
@@ -3510,7 +3510,7 @@ block|}
 else|else
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 block|}
@@ -20887,7 +20887,7 @@ argument_list|()
 condition|)
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 name|MNT_ILOCK
@@ -21750,7 +21750,7 @@ argument_list|()
 condition|)
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 name|mtx_lock
