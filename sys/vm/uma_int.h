@@ -801,7 +801,7 @@ comment|/* Outstanding bucket fills */
 name|uint16_t
 name|uz_count
 decl_stmt|;
-comment|/* Highest value ub_ptr can have */
+comment|/* Highest amount of items in bucket */
 comment|/* The next three fields are used to print a rate-limited warnings. */
 specifier|const
 name|char
