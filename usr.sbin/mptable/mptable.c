@@ -1024,7 +1024,7 @@ specifier|static
 name|int
 name|busses
 index|[
-literal|16
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1034,7 +1034,7 @@ specifier|static
 name|int
 name|apics
 index|[
-literal|16
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2862,7 +2862,7 @@ literal|0
 init|;
 name|x
 operator|<
-literal|16
+literal|256
 condition|;
 operator|++
 name|x
