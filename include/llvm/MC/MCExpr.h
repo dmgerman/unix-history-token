@@ -581,6 +581,14 @@ block|,
 name|VK_Mips_HIGHER
 block|,
 name|VK_Mips_HIGHEST
+block|,
+name|VK_Mips_GOT_HI16
+block|,
+name|VK_Mips_GOT_LO16
+block|,
+name|VK_Mips_CALL_HI16
+block|,
+name|VK_Mips_CALL_LO16
 block|}
 block|;
 name|private
