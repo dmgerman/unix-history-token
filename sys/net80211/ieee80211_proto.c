@@ -8707,6 +8707,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX Kick-start a VAP queue - this should be a method, 		 * not if_start()! 		 */
 name|if_start
 argument_list|(
 name|vap
