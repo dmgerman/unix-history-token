@@ -739,6 +739,13 @@ range|:
 literal|1
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
 struct|;
 end_struct
 
