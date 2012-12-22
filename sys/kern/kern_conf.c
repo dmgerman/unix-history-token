@@ -3412,6 +3412,25 @@ name|to
 operator|++
 control|)
 block|{
+comment|/* 		 * Spaces and double quotation marks cause 		 * problems for the devctl(4) protocol. 		 * Reject names containing those characters. 		 */
+if|if
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|from
+argument_list|)
+operator|||
+operator|*
+name|from
+operator|==
+literal|'"'
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* Treat multiple sequential slashes as single. */
 while|while
 condition|(
