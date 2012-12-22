@@ -2106,7 +2106,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/*  		 * To allow 'pkg -n' to be used as a reliable test for whether 		 * a system is configured to use pkg, don't bootstrap pkg 		 * when that argument is given as argv[1]. 		 */
+comment|/*  		 * To allow 'pkg -N' to be used as a reliable test for whether 		 * a system is configured to use pkg, don't bootstrap pkg 		 * when that argument is given as argv[1]. 		 */
 if|if
 condition|(
 name|argv
@@ -2123,7 +2123,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|"-n"
+literal|"-N"
 argument_list|)
 operator|==
 literal|0
