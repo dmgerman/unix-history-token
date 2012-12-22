@@ -350,7 +350,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Missing FTP host or directory specification.  FTP media not initialized,"
+literal|"Missing FTP host or directory specification.  FTP media not initialized."
 argument_list|)
 expr_stmt|;
 name|netDown
