@@ -9740,16 +9740,13 @@ name|L2_XN
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|m
 operator|->
 name|md
 operator|.
 name|pv_memattr
-operator|&
+operator|!=
 name|VM_MEMATTR_UNCACHEABLE
-operator|)
 condition|)
 name|npte
 operator||=
