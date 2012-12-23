@@ -2128,20 +2128,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"%s"
+name|EXIT_FAILURE
 argument_list|,
 literal|"pkg is not installed\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * Do not ask for confirmation if either of stdin or stdout is 		 * not tty. Check the environment to see if user has answer 		 * tucked in there already. 		 */
 if|if
 condition|(
