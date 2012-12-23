@@ -17417,6 +17417,9 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|int
+name|locked
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -17424,13 +17427,24 @@ name|IGNORE_LOCK
 argument_list|(
 name|vp
 argument_list|)
-operator|&&
+condition|)
+block|{
+name|locked
+operator|=
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locked
 operator|==
 literal|0
+operator|||
+name|locked
+operator|==
+name|LK_EXCLOTHER
 condition|)
 name|vfs_badlock
 argument_list|(
@@ -17441,6 +17455,7 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
