@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -204,6 +210,10 @@ name|int
 name|res_type
 decl_stmt|;
 comment|/* Resource type for p_lvlx. */
+name|int
+name|res_rid
+decl_stmt|;
+comment|/* Resource ID for p_lvlx. */
 block|}
 struct|;
 end_struct
@@ -298,9 +308,6 @@ name|cpu_cx_supported
 index|[
 literal|64
 index|]
-decl_stmt|;
-name|int
-name|cpu_rid
 decl_stmt|;
 block|}
 struct|;
@@ -3180,6 +3187,12 @@ name|cpu_p_blk
 operator|+
 literal|4
 expr_stmt|;
+name|cx_ptr
+operator|->
+name|res_rid
+operator|=
+literal|0
+expr_stmt|;
 name|acpi_bus_alloc_gas
 argument_list|(
 name|sc
@@ -3192,9 +3205,9 @@ operator|->
 name|res_type
 argument_list|,
 operator|&
-name|sc
+name|cx_ptr
 operator|->
-name|cpu_rid
+name|res_rid
 argument_list|,
 operator|&
 name|gas
@@ -3216,11 +3229,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sc
-operator|->
-name|cpu_rid
-operator|++
-expr_stmt|;
 name|cx_ptr
 operator|->
 name|type
@@ -3289,6 +3297,12 @@ name|cpu_p_blk
 operator|+
 literal|5
 expr_stmt|;
+name|cx_ptr
+operator|->
+name|res_rid
+operator|=
+literal|1
+expr_stmt|;
 name|acpi_bus_alloc_gas
 argument_list|(
 name|sc
@@ -3301,9 +3315,9 @@ operator|->
 name|res_type
 argument_list|,
 operator|&
-name|sc
+name|cx_ptr
 operator|->
-name|cpu_rid
+name|res_rid
 argument_list|,
 operator|&
 name|gas
@@ -3325,11 +3339,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sc
-operator|->
-name|cpu_rid
-operator|++
-expr_stmt|;
 name|cx_ptr
 operator|->
 name|type
@@ -3812,9 +3821,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Free up any previous register. */
 if|if
 condition|(
@@ -3831,9 +3837,13 @@ name|sc
 operator|->
 name|cpu_dev
 argument_list|,
-literal|0
+name|cx_ptr
+operator|->
+name|res_type
 argument_list|,
-literal|0
+name|cx_ptr
+operator|->
+name|res_rid
 argument_list|,
 name|cx_ptr
 operator|->
@@ -3847,9 +3857,15 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Allocate the control register for C2 or C3. */
+name|cx_ptr
+operator|->
+name|res_rid
+operator|=
+name|sc
+operator|->
+name|cpu_cx_count
+expr_stmt|;
 name|acpi_PkgGas
 argument_list|(
 name|sc
@@ -3866,9 +3882,9 @@ operator|->
 name|res_type
 argument_list|,
 operator|&
-name|sc
+name|cx_ptr
 operator|->
-name|cpu_rid
+name|res_rid
 argument_list|,
 operator|&
 name|cx_ptr
@@ -3885,11 +3901,6 @@ operator|->
 name|p_lvlx
 condition|)
 block|{
-name|sc
-operator|->
-name|cpu_rid
-operator|++
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
