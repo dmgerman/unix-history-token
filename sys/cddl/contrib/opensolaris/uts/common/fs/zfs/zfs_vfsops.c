@@ -9720,8 +9720,6 @@ operator|*
 name|vpp
 argument_list|,
 name|flags
-operator||
-name|LK_RETRY
 argument_list|)
 expr_stmt|;
 if|if
