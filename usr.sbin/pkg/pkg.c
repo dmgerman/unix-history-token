@@ -2132,7 +2132,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"pkg is not installed\n"
+literal|"pkg is not installed"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Do not ask for confirmation if either of stdin or stdout is 		 * not tty. Check the environment to see if user has answer 		 * tucked in there already. 		 */
