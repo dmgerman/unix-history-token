@@ -16587,6 +16587,22 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|zvol_create_minors
+argument_list|(
+name|tofs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * On error, restore the original props. 	 */
 if|if
 condition|(
