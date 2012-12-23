@@ -173,6 +173,15 @@ comment|/// 64-bit symbol address.
 name|MO_HIGHER
 block|,
 name|MO_HIGHEST
+block|,
+comment|/// MO_GOT_HI16/LO16, MO_CALL_HI16/LO16 - Relocations used for large GOTs.
+name|MO_GOT_HI16
+block|,
+name|MO_GOT_LO16
+block|,
+name|MO_CALL_HI16
+block|,
+name|MO_CALL_LO16
 block|}
 enum|;
 enum|enum

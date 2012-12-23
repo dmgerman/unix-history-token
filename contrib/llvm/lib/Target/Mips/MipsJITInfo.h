@@ -105,6 +105,9 @@ block|{
 name|bool
 name|IsPIC
 block|;
+name|bool
+name|IsLittleEndian
+block|;
 name|public
 operator|:
 name|explicit
@@ -113,7 +116,12 @@ argument_list|()
 operator|:
 name|IsPIC
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|IsLittleEndian
+argument_list|(
+argument|true
 argument_list|)
 block|{}
 comment|/// replaceMachineCodeForFunction - Make it so that calling the function
@@ -194,11 +202,17 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|bool isPIC
+argument_list|,
+argument|bool isLittleEndian
 argument_list|)
 block|{
 name|IsPIC
 operator|=
 name|isPIC
+block|;
+name|IsLittleEndian
+operator|=
+name|isLittleEndian
 block|;     }
 block|}
 decl_stmt|;
