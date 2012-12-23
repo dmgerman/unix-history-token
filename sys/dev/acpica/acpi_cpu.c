@@ -4477,7 +4477,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* If disabled, return immediately. */
+comment|/* If disabled, take the safe path. */
 if|if
 condition|(
 name|is_idle_disabled
@@ -4486,7 +4486,7 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|ACPI_ENABLE_IRQS
+name|acpi_cpu_c1
 argument_list|()
 expr_stmt|;
 return|return;
@@ -4894,7 +4894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-evaluate the _CST object when we are notified that it changed.  *  * XXX Re-evaluation disabled until locking is done.  */
+comment|/*  * Re-evaluate the _CST object when we are notified that it changed.  */
 end_comment
 
 begin_function
@@ -4932,6 +4932,17 @@ operator|!=
 name|ACPI_NOTIFY_CX_STATES
 condition|)
 return|return;
+comment|/*      * C-state data for target CPU is going to be in flux while we execute      * acpi_cpu_cx_cst, so disable entering acpi_cpu_idle.      * Also, it may happen that multiple ACPI taskqueues may concurrently      * execute notifications for the same CPU.  ACPI_SERIAL is used to      * protect against that.      */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|cpu
+argument_list|)
+expr_stmt|;
+name|disable_idle
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Update the list of Cx states. */
 name|acpi_cpu_cx_cst
 argument_list|(
@@ -4943,12 +4954,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ACPI_SERIAL_BEGIN
+name|acpi_cpu_set_cx_lowest
 argument_list|(
-name|cpu
+name|sc
 argument_list|)
 expr_stmt|;
-name|acpi_cpu_set_cx_lowest
+name|enable_idle
 argument_list|(
 name|sc
 argument_list|)
