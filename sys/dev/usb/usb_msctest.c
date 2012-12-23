@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|SCSI_MAX_LEN
-value|0x100
+value|MAX(0x100, BULK_SIZE)
 end_define
 
 begin_define
@@ -719,6 +719,10 @@ name|usb_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* bytes */
+name|usb_frlength_t
+name|buffer_size
+decl_stmt|;
+comment|/* bytes */
 name|uint8_t
 name|cmd_len
 decl_stmt|;
@@ -967,12 +971,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|MAX
-argument_list|(
 name|SCSI_MAX_LEN
-argument_list|,
-name|BULK_SIZE
-argument_list|)
 block|,
 operator|.
 name|flags
@@ -1074,7 +1073,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|BULK_SIZE
+name|SCSI_MAX_LEN
 block|,
 operator|.
 name|flags
@@ -2724,6 +2723,20 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|buffer_size
+operator|=
+name|usbd_xfer_max_len
+argument_list|(
+name|sc
+operator|->
+name|xfer
+index|[
+name|ST_DATA_RD
+index|]
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|cbw
 operator|=
 name|usbd_xfer_get_frame_buffer
@@ -3904,17 +3917,13 @@ name|DIR_IN
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|buffer
 argument_list|,
-sizeof|sizeof
-argument_list|(
 name|sc
 operator|->
-name|buffer
-argument_list|)
+name|buffer_size
 argument_list|,
 operator|&
 name|scsi_tct_eject
