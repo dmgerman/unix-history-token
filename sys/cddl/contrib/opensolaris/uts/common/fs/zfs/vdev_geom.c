@@ -1358,7 +1358,7 @@ condition|)
 return|return;
 name|new_configs
 operator|=
-name|kmem_alloc
+name|kmem_zalloc
 argument_list|(
 operator|(
 name|id
@@ -1373,8 +1373,6 @@ operator|*
 argument_list|)
 argument_list|,
 name|KM_SLEEP
-operator||
-name|KM_ZERO
 argument_list|)
 expr_stmt|;
 for|for
