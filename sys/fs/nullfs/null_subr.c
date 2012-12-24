@@ -862,19 +862,6 @@ name|lowervp
 operator|->
 name|v_vnlock
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_vnlock
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"null_nodeget: Passed a NULL vnlock.\n"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|insmntque1
