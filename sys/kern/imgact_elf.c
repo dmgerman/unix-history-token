@@ -3177,13 +3177,12 @@ goto|goto
 name|fail
 goto|;
 comment|/* 	 * Also make certain that the interpreter stays the same, so set 	 * its VV_TEXT flag, too. 	 */
+name|VOP_SET_TEXT
+argument_list|(
 name|nd
 operator|->
 name|ni_vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
+argument_list|)
 expr_stmt|;
 name|imgp
 operator|->

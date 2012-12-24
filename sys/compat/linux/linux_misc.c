@@ -1652,11 +1652,10 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Prevent more writers. 	 * XXX: Note that if any of the VM operations fail below we don't 	 * clear this flag. 	 */
+name|VOP_SET_TEXT
+argument_list|(
 name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Lock no longer needed 	 */
 name|locked

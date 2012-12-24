@@ -20529,11 +20529,10 @@ block|}
 comment|/* 		 * If there's shared text associated with 		 * the inode, we can't allow writing. 		 */
 if|if
 condition|(
+name|VOP_IS_TEXT
+argument_list|(
 name|vp
-operator|->
-name|v_vflag
-operator|&
-name|VV_TEXT
+argument_list|)
 condition|)
 return|return
 operator|(

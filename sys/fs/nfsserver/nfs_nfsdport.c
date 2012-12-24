@@ -1147,15 +1147,10 @@ block|}
 comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
 if|if
 condition|(
-operator|(
+name|VOP_IS_TEXT
+argument_list|(
 name|vp
-operator|->
-name|v_vflag
-operator|&
-name|VV_TEXT
-operator|)
-operator|!=
-literal|0
+argument_list|)
 operator|&&
 name|error
 operator|==
