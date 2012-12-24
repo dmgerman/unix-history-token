@@ -1521,6 +1521,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_LOOKUP_EXCL_DOTDOT
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define
