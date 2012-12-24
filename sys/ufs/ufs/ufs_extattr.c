@@ -1375,10 +1375,12 @@ name|error
 operator|)
 return|;
 block|}
+name|VOP_ADD_WRITECOUNT
+argument_list|(
 name|vp
-operator|->
-name|v_writecount
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|vref
 argument_list|(

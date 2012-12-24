@@ -1042,10 +1042,13 @@ name|writemappings
 operator|=
 literal|0
 expr_stmt|;
+name|VOP_ADD_WRITECOUNT
+argument_list|(
 name|vp
-operator|->
-name|v_writecount
-operator|--
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|vp
@@ -5289,10 +5292,12 @@ argument_list|,
 literal|"v_writecount inc"
 argument_list|)
 expr_stmt|;
+name|VOP_ADD_WRITECOUNT
+argument_list|(
 name|vp
-operator|->
-name|v_writecount
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -5320,10 +5325,13 @@ argument_list|,
 literal|"v_writecount dec"
 argument_list|)
 expr_stmt|;
+name|VOP_ADD_WRITECOUNT
+argument_list|(
 name|vp
-operator|->
-name|v_writecount
-operator|--
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|VM_OBJECT_UNLOCK
