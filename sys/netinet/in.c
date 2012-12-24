@@ -3650,8 +3650,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|flags
-init|=
-name|RTF_UP
 decl_stmt|,
 name|error
 init|=
@@ -3862,6 +3860,10 @@ name|ia_sockmask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add route for the network. 	 */
+name|flags
+operator|=
+name|RTF_UP
+expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa
