@@ -1573,6 +1573,19 @@ literal|"Truncating long command\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|usbd_xfer_set_frame_len
+argument_list|(
+name|xfer
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bbb_cbw
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|usbd_transfer_submit
 argument_list|(
 name|xfer
@@ -1949,7 +1962,7 @@ argument_list|,
 name|ST_STATUS
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -1994,7 +2007,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 if|if
@@ -2022,7 +2035,7 @@ name|ST_DATA_WR_CS
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 block|}
 block|}
 end_function
@@ -2168,6 +2181,19 @@ break|break;
 case|case
 name|USB_ST_SETUP
 case|:
+name|usbd_xfer_set_frame_len
+argument_list|(
+name|xfer
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bbb_csw
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|usbd_transfer_submit
 argument_list|(
 name|xfer
