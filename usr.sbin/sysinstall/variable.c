@@ -982,9 +982,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to write to /etc/%s.vars: %s"
-argument_list|,
-name|ProgName
+literal|"Unable to write to /etc/sysinstall.vars: %s"
 argument_list|,
 name|strerror
 argument_list|(
