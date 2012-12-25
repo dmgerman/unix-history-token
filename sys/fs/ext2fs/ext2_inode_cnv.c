@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -52,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_dinode.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_define
@@ -78,7 +84,7 @@ name|NSEC_TO_XTIME
 parameter_list|(
 name|t
 parameter_list|)
-value|((t<< 2)& EXT3_NSEC_MASK)
+value|(le32toh(t<< 2)& EXT3_NSEC_MASK)
 end_define
 
 begin_function
