@@ -1251,7 +1251,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Error %s,"
+literal|"Error %s"
 argument_list|,
 name|buf
 argument_list|)
