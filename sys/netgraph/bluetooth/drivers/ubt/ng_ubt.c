@@ -1224,13 +1224,19 @@ argument_list|(
 name|USB_VENDOR_BROADCOM
 argument_list|)
 block|,
-name|USB_IF_CSI
+name|USB_IFACE_CLASS
 argument_list|(
-argument|UICLASS_VENDOR
-argument_list|,
-literal|0x01
-argument_list|,
-literal|0x01
+name|UICLASS_VENDOR
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UDSUBCLASS_RF
+argument_list|)
+block|,
+name|USB_IFACE_PROTOCOL
+argument_list|(
+argument|UDPROTO_BLUETOOTH
 argument_list|)
 block|}
 block|, }
