@@ -1216,6 +1216,23 @@ argument_list|,
 literal|0
 argument_list|)
 block|}
+block|,
+comment|/* Broadcom USB dongles, mostly BCM20702 and BCM20702A0 */
+block|{
+name|USB_VENDOR
+argument_list|(
+name|USB_VENDOR_BROADCOM
+argument_list|)
+block|,
+name|USB_IF_CSI
+argument_list|(
+argument|UICLASS_VENDOR
+argument_list|,
+literal|0x01
+argument_list|,
+literal|0x01
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
