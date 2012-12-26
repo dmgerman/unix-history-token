@@ -616,11 +616,18 @@ literal|"pw_copy()"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * in case of deletion of a user, the whole database 		 * needs to be regenerated 		 */
 if|if
 condition|(
 name|pw_mkdb
 argument_list|(
+name|pw
+operator|!=
+name|NULL
+condition|?
 name|user
+else|:
+name|NULL
 argument_list|)
 operator|==
 operator|-
