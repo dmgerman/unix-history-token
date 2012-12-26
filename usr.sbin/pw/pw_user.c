@@ -4662,7 +4662,7 @@ operator|*
 operator|(
 name|j
 operator|+
-literal|1
+literal|2
 operator|)
 argument_list|)
 expr_stmt|;
