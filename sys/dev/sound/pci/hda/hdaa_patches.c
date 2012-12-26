@@ -956,6 +956,43 @@ if|if
 condition|(
 name|id
 operator|==
+name|HDA_CODEC_AD1984A
+operator|&&
+name|subid
+operator|==
+name|LENOVO_X300_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|17
+case|:
+comment|/* Headphones with redirection */
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+case|case
+literal|20
+case|:
+comment|/* Two mics together */
+name|patch
+operator|=
+literal|"as=2 seq=15"
+expr_stmt|;
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
 name|HDA_CODEC_AD1986A
 operator|&&
 operator|(
@@ -1308,6 +1345,31 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * Clear "digital" flag from digital mic input, as its signal then goes 	 * to "analog" mixer and this separation just limits functionaity. 	 */
+if|if
+condition|(
+name|hdaa_codec_id
+argument_list|(
+name|devinfo
+argument_list|)
+operator|==
+name|HDA_CODEC_AD1984A
+operator|&&
+name|w
+operator|->
+name|nid
+operator|==
+literal|23
+condition|)
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+operator|&=
+operator|~
+name|HDA_PARAM_AUDIO_WIDGET_CAP_DIGITAL_MASK
+expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|if (w->param.widget_cap != orig) { 			device_printf(w->devinfo->dev,
