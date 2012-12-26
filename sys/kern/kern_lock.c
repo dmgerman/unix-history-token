@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -2213,6 +2219,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|kdb_active
+operator|!=
+literal|0
+operator|||
 operator|!
 name|TD_IS_IDLETHREAD
 argument_list|(

@@ -3069,7 +3069,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * handler for net.link.bridge.pfil_ipfw  */
+comment|/*  * handler for net.link.bridge.ipfw  */
 end_comment
 
 begin_function

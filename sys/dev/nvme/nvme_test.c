@@ -1273,7 +1273,7 @@ name|fn
 argument_list|,
 name|io_test_internal
 argument_list|,
-name|NULL
+name|curproc
 argument_list|,
 name|NULL
 argument_list|,
@@ -1294,7 +1294,7 @@ name|fn
 argument_list|,
 name|io_test_internal
 argument_list|,
-name|NULL
+name|curproc
 argument_list|,
 literal|0
 argument_list|,

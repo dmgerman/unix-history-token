@@ -193,37 +193,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * See zio.h for more information about these fields.  */
-end_comment
-
 begin_decl_stmt
 name|zio_trim_stats_t
 name|zio_trim_stats
 init|=
 block|{
 block|{
-literal|"zio_trim_bytes"
+literal|"bytes"
 block|,
 name|KSTAT_DATA_UINT64
+block|,
+literal|"Number of bytes successfully TRIMmed"
 block|}
 block|,
 block|{
-literal|"zio_trim_success"
+literal|"success"
 block|,
 name|KSTAT_DATA_UINT64
+block|,
+literal|"Number of successful TRIM requests"
 block|}
 block|,
 block|{
-literal|"zio_trim_unsupported"
+literal|"unsupported"
 block|,
 name|KSTAT_DATA_UINT64
+block|,
+literal|"Number of TRIM requests that failed because TRIM is not supported"
 block|}
 block|,
 block|{
-literal|"zio_trim_failed"
+literal|"failed"
 block|,
 name|KSTAT_DATA_UINT64
+block|,
+literal|"Number of TRIM requests that failed for reasons other than not supported"
 block|}
 block|, }
 decl_stmt|;
@@ -12079,7 +12083,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ==========================================================================  * Read and write to physical devices  * ==========================================================================  */
+comment|/*  * ==========================================================================  * Read, write and delete to physical devices  * ==========================================================================  */
 end_comment
 
 begin_function
@@ -13141,7 +13145,7 @@ literal|0
 case|:
 name|ZIO_TRIM_STAT_INCR
 argument_list|(
-name|zio_trim_bytes
+name|bytes
 argument_list|,
 name|zio
 operator|->
@@ -13150,7 +13154,7 @@ argument_list|)
 expr_stmt|;
 name|ZIO_TRIM_STAT_BUMP
 argument_list|(
-name|zio_trim_success
+name|success
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13159,14 +13163,14 @@ name|EOPNOTSUPP
 case|:
 name|ZIO_TRIM_STAT_BUMP
 argument_list|(
-name|zio_trim_unsupported
+name|unsupported
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|ZIO_TRIM_STAT_BUMP
 argument_list|(
-name|zio_trim_failed
+name|failed
 argument_list|)
 expr_stmt|;
 break|break;

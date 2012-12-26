@@ -567,7 +567,7 @@ name|l2t_entry
 modifier|*
 name|e
 decl_stmt|;
-name|rw_rlock
+name|rw_wlock
 argument_list|(
 operator|&
 name|d
@@ -621,7 +621,7 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-name|rw_runlock
+name|rw_wunlock
 argument_list|(
 operator|&
 name|d

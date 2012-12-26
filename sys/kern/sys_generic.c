@@ -2637,6 +2637,16 @@ operator|->
 name|f_type
 operator|==
 name|DTYPE_VNODE
+operator|&&
+operator|(
+name|fp
+operator|->
+name|f_vnread_flags
+operator|&
+name|FDEVFS_VNODE
+operator|)
+operator|==
+literal|0
 condition|)
 name|bwillwrite
 argument_list|()

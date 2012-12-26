@@ -713,6 +713,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_ARM1176JZS
+value|0x410fb760
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_CORTEXA8R1
 value|0x411fc080
 end_define
@@ -1465,6 +1472,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_FI_ENABLE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* FI: Low interrupt latency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONTROL_UNAL_ENABLE
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* U: unaligned data access */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_V6_EXTPAGE
 value|0x00800000
 end_define
@@ -1490,6 +1519,165 @@ directive|define
 name|CPU_CONTROL_IDC_ENABLE
 value|CPU_CONTROL_DC_ENABLE
 end_define
+
+begin_comment
+comment|/* ARM11x6 Auxiliary Control Register (CP15 register 1, opcode2 1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_RS
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* return stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_DB
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* dynamic branch prediction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_SB
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* static branch prediction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_TR
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* MicroTLB replacement strat. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_EX
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* exclusive L1/L2 cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_RA
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* clean entire cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_RV
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* block transfer cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM11X6_AUXCTL_CZ
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* restrict cache size */
+end_comment
+
+begin_comment
+comment|/* ARM1136 Auxiliary Control Register (CP15 register 1, opcode2 1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM1136_AUXCTL_PFI
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* PFI: partial FI mode. */
+end_comment
+
+begin_comment
+comment|/* This is an undocumented flag 					    * used to work around a cache bug 					    * in r0 steppings. See errata 					    * 364296. 					    */
+end_comment
+
+begin_comment
+comment|/* ARM1176 Auxiliary Control Register (CP15 register 1, opcode2 1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM1176_AUXCTL_PHD
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* inst. prefetch halting disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM1176_AUXCTL_BFD
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* branch folding disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM1176_AUXCTL_FSD
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* force speculative ops disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM1176_AUXCTL_FIO
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* low intr latency override */
+end_comment
 
 begin_comment
 comment|/* XScale Auxillary Control Register (CP15 register 1, opcode2 1) */

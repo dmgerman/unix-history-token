@@ -1363,11 +1363,6 @@ argument_list|)
 expr_stmt|;
 name|avp
 operator|=
-operator|(
-expr|struct
-name|wtap_vap
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1383,6 +1378,17 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|avp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|avp
 operator|->
 name|id
@@ -1446,6 +1452,24 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|free
+argument_list|(
+name|avp
+argument_list|,
+name|M_80211_VAP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* override various methods */
 name|avp
 operator|->
@@ -1527,6 +1551,8 @@ argument_list|,
 name|GID_WHEEL
 argument_list|,
 literal|0600
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|(
 specifier|const
@@ -3439,13 +3465,6 @@ literal|1
 index|]
 operator|=
 literal|'E'
-expr_stmt|;
-comment|/* 	 * Indicate we need the 802.11 header padded to a 	 * 32-bit boundary for 4-address and QoS frames. 	 */
-name|ic
-operator|->
-name|ic_flags
-operator||=
-name|IEEE80211_F_DATAPAD
 expr_stmt|;
 name|ic
 operator|->

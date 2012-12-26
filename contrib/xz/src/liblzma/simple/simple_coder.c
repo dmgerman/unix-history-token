@@ -169,9 +169,6 @@ block|}
 else|else
 block|{
 comment|// Call the next coder in the chain to provide us some data.
-comment|// We don't care about uncompressed_size here, because
-comment|// the next filter in the chain will do it for us (since
-comment|// we don't change the size of the data).
 specifier|const
 name|lzma_ret
 name|ret
@@ -480,6 +477,10 @@ condition|(
 name|out_avail
 operator|>
 name|buf_avail
+operator|||
+name|buf_avail
+operator|==
+literal|0
 condition|)
 block|{
 comment|// Store the old position so that we know from which byte

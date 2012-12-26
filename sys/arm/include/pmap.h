@@ -224,7 +224,7 @@ name|pmap_page_get_memattr
 parameter_list|(
 name|m
 parameter_list|)
-value|VM_MEMATTR_DEFAULT
+value|((m)->md.pv_memattr)
 end_define
 
 begin_define
@@ -247,17 +247,18 @@ parameter_list|)
 value|(((m)->aflags& PGA_WRITEABLE) != 0)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|pmap_page_set_memattr
 parameter_list|(
+name|vm_page_t
 name|m
 parameter_list|,
+name|vm_memattr_t
 name|ma
 parameter_list|)
-value|(void)0
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Pmap stuff  */
@@ -299,6 +300,9 @@ name|md_page
 block|{
 name|int
 name|pvh_attrs
+decl_stmt|;
+name|vm_memattr_t
+name|pv_memattr
 decl_stmt|;
 name|vm_offset_t
 name|pv_kva
@@ -2493,7 +2497,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM11 */
+comment|/* (ARM_MMU_V6 + ARM_MMU_V7) != 0 */
 end_comment
 
 begin_endif

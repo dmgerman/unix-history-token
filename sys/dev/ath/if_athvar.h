@@ -751,12 +751,10 @@ name|uint8_t
 name|bfs_pri
 decl_stmt|;
 comment|/* packet AC priority */
-name|struct
-name|ath_txq
-modifier|*
-name|bfs_txq
+name|uint8_t
+name|bfs_tx_queue
 decl_stmt|;
-comment|/* eventual dest hardware TXQ */
+comment|/* destination hardware TX queue */
 name|u_int32_t
 name|bfs_aggr
 range|:

@@ -230,7 +230,7 @@ name|ZDB_COMPRESS_NAME
 parameter_list|(
 name|idx
 parameter_list|)
-value|((idx)< ZIO_COMPRESS_FUNCTIONS ? \     zio_compress_table[(idx)].ci_name : "UNKNOWN")
+value|((idx)< ZIO_COMPRESS_FUNCTIONS ?	\ 	zio_compress_table[(idx)].ci_name : "UNKNOWN")
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ name|ZDB_CHECKSUM_NAME
 parameter_list|(
 name|idx
 parameter_list|)
-value|((idx)< ZIO_CHECKSUM_FUNCTIONS ? \     zio_checksum_table[(idx)].ci_name : "UNKNOWN")
+value|((idx)< ZIO_CHECKSUM_FUNCTIONS ?	\ 	zio_checksum_table[(idx)].ci_name : "UNKNOWN")
 end_define
 
 begin_define
@@ -250,7 +250,7 @@ name|ZDB_OT_NAME
 parameter_list|(
 name|idx
 parameter_list|)
-value|((idx)< DMU_OT_NUMTYPES ? \     dmu_ot[(idx)].ot_name : DMU_OT_IS_VALID(idx) ? \     dmu_ot_byteswap[DMU_OT_BYTESWAP(idx)].ob_name : "UNKNOWN")
+value|((idx)< DMU_OT_NUMTYPES ?	\ 	dmu_ot[(idx)].ot_name : DMU_OT_IS_VALID(idx) ?	\ 	dmu_ot_byteswap[DMU_OT_BYTESWAP(idx)].ob_name : "UNKNOWN")
 end_define
 
 begin_define
@@ -260,7 +260,7 @@ name|ZDB_OT_TYPE
 parameter_list|(
 name|idx
 parameter_list|)
-value|((idx)< DMU_OT_NUMTYPES ? (idx) : DMU_OT_NUMTYPES)
+value|((idx)< DMU_OT_NUMTYPES ? (idx) :		\ 	(((idx) == DMU_OTN_ZAP_DATA || (idx) == DMU_OTN_ZAP_METADATA) ?	\ 	DMU_OT_ZAP_OTHER : DMU_OT_NUMTYPES))
 end_define
 
 begin_ifndef
@@ -17804,22 +17804,49 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
+if|if
+condition|(
 name|os
 operator|!=
 name|NULL
-operator|)
-condition|?
+condition|)
+block|{
 name|dump_dir
 argument_list|(
 name|os
 argument_list|)
-else|:
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|zopt_objects
+operator|>
+literal|0
+operator|&&
+operator|!
+name|dump_opt
+index|[
+literal|'m'
+index|]
+condition|)
+block|{
+name|dump_dir
+argument_list|(
+name|spa
+operator|->
+name|spa_meta_objset
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dump_zpool
 argument_list|(
 name|spa
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

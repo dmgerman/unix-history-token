@@ -5249,14 +5249,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|td
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX keep in sync with switch() below */
 if|if
 condition|(
@@ -5598,6 +5590,14 @@ name|EACCES
 operator|)
 return|;
 block|}
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd

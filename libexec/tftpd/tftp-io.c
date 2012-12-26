@@ -288,12 +288,6 @@ name|errmsg
 modifier|*
 name|pe
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXPKTSIZE
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|error
@@ -341,7 +335,7 @@ name|ebuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|ebuf
 argument_list|)
 argument_list|,
 literal|"error %d"

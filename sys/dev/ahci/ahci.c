@@ -822,6 +822,56 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x78001022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78011022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78021022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78031022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78041022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x06121b21
 block|,
 literal|0x00

@@ -2052,11 +2052,19 @@ comment|/* assuming reset worked */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WITNESS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INVARIANTS
-end_ifdef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static

@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -44,24 +50,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LINE_MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LINE_MAX
-value|_POSIX2_LINE_MAX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -90,7 +78,7 @@ block|{
 name|char
 name|buf
 index|[
-name|LINE_MAX
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|char
@@ -142,7 +130,11 @@ argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|<
@@ -151,18 +143,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-name|len
-operator|>
-sizeof|sizeof
-name|buf
-condition|)
-name|len
-operator|=
-sizeof|sizeof
-name|buf
-expr_stmt|;
 name|buf
 index|[
 name|len

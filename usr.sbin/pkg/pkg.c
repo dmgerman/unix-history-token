@@ -2106,6 +2106,35 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/*  		 * To allow 'pkg -N' to be used as a reliable test for whether 		 * a system is configured to use pkg, don't bootstrap pkg 		 * when that argument is given as argv[1]. 		 */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-N"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"pkg is not installed"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Do not ask for confirmation if either of stdin or stdout is 		 * not tty. Check the environment to see if user has answer 		 * tucked in there already. 		 */
 if|if
 condition|(

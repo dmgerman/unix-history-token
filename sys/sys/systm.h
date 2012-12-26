@@ -248,15 +248,19 @@ block|}
 enum|;
 end_enum
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WITNESS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INVARIANTS
-end_ifdef
-
-begin_comment
-comment|/* The option is always available */
-end_comment
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -271,6 +275,21 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_comment
+comment|/* The option is always available */
+end_comment
 
 begin_define
 define|#

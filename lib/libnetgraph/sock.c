@@ -129,7 +129,7 @@ name|name
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Create control socket; this also creates the netgraph node. 	   If we get an EPROTONOSUPPORT then the socket node type is 	   not loaded, so load it and try again. */
+comment|/* Create control socket; this also creates the netgraph node. 	   If we get an EAFNOSUPPORT then the socket node type is 	   not loaded, so load it and try again. */
 if|if
 condition|(
 operator|(
@@ -152,7 +152,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 condition|)
 block|{
 if|if

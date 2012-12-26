@@ -17002,7 +17002,7 @@ argument_list|)
 expr_stmt|;
 name|tops
 operator|=
-name|kmem_alloc
+name|kmem_zalloc
 argument_list|(
 name|nchildren
 operator|*
@@ -17013,8 +17013,6 @@ operator|*
 argument_list|)
 argument_list|,
 name|KM_SLEEP
-operator||
-name|KM_ZERO
 argument_list|)
 expr_stmt|;
 for|for

@@ -328,6 +328,21 @@ parameter_list|()
 value|__asm__ volatile("membar #Sync" : : : "memory")
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__arm__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|__do_dmb()
+end_define
+
 begin_else
 else|#
 directive|else

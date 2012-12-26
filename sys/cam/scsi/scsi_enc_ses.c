@@ -4648,15 +4648,12 @@ index|]
 operator|==
 name|SesElementDescriptor
 condition|)
-block|{
 name|ses
 operator|->
 name|ses_flags
 operator||=
 name|SES_FLAG_DESC
 expr_stmt|;
-break|break;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4669,15 +4666,12 @@ index|]
 operator|==
 name|SesAddlElementStatus
 condition|)
-block|{
 name|ses
 operator|->
 name|ses_flags
 operator||=
 name|SES_FLAG_ADDLSTATUS
 expr_stmt|;
-break|break;
-block|}
 block|}
 name|out
 label|:
@@ -6896,13 +6890,7 @@ operator|.
 name|global_element_index
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|EIO
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+break|break;
 block|}
 comment|/* Advance to the protocol data, skipping eip bytes if needed */
 name|offset
@@ -7038,9 +7026,7 @@ name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+break|break;
 block|}
 name|offset
 operator|+=

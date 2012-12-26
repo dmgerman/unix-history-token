@@ -3336,7 +3336,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 operator|&&
 name|nconf
 operator|->

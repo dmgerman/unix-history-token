@@ -1337,7 +1337,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 condition|)
 name|non_fatal
 operator|=
@@ -1677,7 +1677,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 operator|&&
 name|nconf
 operator|->
