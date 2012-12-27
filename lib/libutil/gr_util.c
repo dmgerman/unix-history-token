@@ -2230,16 +2230,9 @@ operator|*
 operator|*
 operator|)
 operator|(
-operator|(
-name|uintptr_t
-operator|)
 name|newgr
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|group
-argument_list|)
+literal|1
 operator|)
 expr_stmt|;
 else|else
