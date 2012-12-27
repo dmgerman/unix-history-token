@@ -172,9 +172,6 @@ decl_stmt|;
 name|uint32_t
 name|cons_tail
 decl_stmt|;
-name|int
-name|success
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_BUFRING
@@ -289,8 +286,10 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|success
-operator|=
+block|}
+do|while
+condition|(
+operator|!
 name|atomic_cmpset_int
 argument_list|(
 operator|&
@@ -302,13 +301,6 @@ name|prod_head
 argument_list|,
 name|prod_next
 argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|success
-operator|==
-literal|0
 condition|)
 do|;
 ifdef|#
