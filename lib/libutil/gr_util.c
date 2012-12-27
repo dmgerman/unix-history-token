@@ -2430,7 +2430,6 @@ name|group
 modifier|*
 name|gr
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|newmember
@@ -2547,10 +2546,8 @@ condition|(
 operator|(
 name|members
 operator|=
-name|calloc
+name|malloc
 argument_list|(
-literal|1
-argument_list|,
 name|mlen
 argument_list|)
 operator|)
@@ -2593,10 +2590,6 @@ name|num_mem
 operator|++
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|newmember
 expr_stmt|;
 name|members

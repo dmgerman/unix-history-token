@@ -1048,7 +1048,6 @@ name|group
 modifier|*
 name|_gr
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|_newmember
