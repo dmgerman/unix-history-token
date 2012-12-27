@@ -288,6 +288,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|stf_permit_rfc1918
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_stf
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|permit_rfc1918
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|stf_permit_rfc1918
+argument_list|,
+literal|0
+argument_list|,
+literal|"Permit the use of private IPv4 addresses"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -2620,6 +2650,11 @@ block|{
 comment|/* 	 * returns 1 if private address range: 	 * 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 	 */
 if|if
 condition|(
+name|stf_permit_rfc1918
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|(
 name|ntohl
 argument_list|(
@@ -2672,6 +2707,7 @@ operator|*
 literal|256
 operator|+
 literal|168
+operator|)
 condition|)
 return|return
 literal|1
