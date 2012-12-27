@@ -298,6 +298,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.stf.permit_rfc1918"
+argument_list|,
+operator|&
+name|stf_permit_rfc1918
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_stf
@@ -307,6 +318,8 @@ argument_list|,
 name|permit_rfc1918
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|stf_permit_rfc1918
