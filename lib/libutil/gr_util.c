@@ -2561,10 +2561,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|memcpy
 argument_list|(
 name|members
