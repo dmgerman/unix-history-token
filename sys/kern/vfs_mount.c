@@ -2661,7 +2661,7 @@ name|errmsg
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|errmsg
 argument_list|,
@@ -2722,7 +2722,7 @@ name|errmsg
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|errmsg
 argument_list|,
@@ -7290,7 +7290,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 operator|(
 name|char
