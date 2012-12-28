@@ -23890,7 +23890,7 @@ operator|->
 name|ni_vap
 argument_list|)
 decl_stmt|;
-comment|/* 	 * Some operating omdes don't set av_set_tim(), so don't 	 * update it here. 	 */
+comment|/* 	 * Some operating modes don't set av_set_tim(), so don't 	 * update it here. 	 */
 if|if
 condition|(
 name|avp
