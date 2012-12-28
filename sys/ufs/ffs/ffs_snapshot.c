@@ -3857,21 +3857,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Resume operation on filesystem. 	 */
-name|vfs_write_resume
+name|vfs_write_resume_flags
 argument_list|(
 name|vp
 operator|->
 name|v_mount
-argument_list|)
-expr_stmt|;
-name|vn_start_write
-argument_list|(
-name|NULL
 argument_list|,
-operator|&
-name|wrtmp
-argument_list|,
-name|V_WAIT
+name|VR_START_WRITE
 argument_list|)
 expr_stmt|;
 if|if
