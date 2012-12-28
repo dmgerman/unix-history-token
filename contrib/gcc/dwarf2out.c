@@ -43198,8 +43198,12 @@ name|DW_AT_byte_size
 argument_list|,
 operator|(
 name|size
-operator|>
-literal|0
+operator|!=
+operator|(
+name|unsigned
+operator|)
+operator|-
+literal|1
 condition|?
 name|size
 else|:
