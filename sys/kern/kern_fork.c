@@ -476,18 +476,6 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|flags
-operator|=
-name|RFFDG
-operator||
-name|RFPROC
-expr_stmt|;
-comment|/* validate that this is still an issue */
-else|#
-directive|else
 name|flags
 operator|=
 name|RFFDG
@@ -498,8 +486,6 @@ name|RFPPWAIT
 operator||
 name|RFMEM
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|fork1
