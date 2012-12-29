@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.416 2009/12/18 17:05:26 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.425 2012/03/03 00:10:43 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9066,6 +9066,7 @@ name|type
 operator|==
 name|PROC_QUEUE
 condition|)
+block|{
 name|CurRunners
 operator|-=
 name|ProcListVec
@@ -9075,6 +9076,18 @@ index|]
 operator|.
 name|proc_count
 expr_stmt|;
+comment|/* CHK_CUR_RUNNERS() can't be used here: uses syslog() */
+if|if
+condition|(
+name|CurRunners
+operator|<
+literal|0
+condition|)
+name|CurRunners
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -9244,6 +9257,42 @@ operator|.
 name|proc_task
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_type
+operator|==
+name|PROC_QUEUE
+condition|)
+block|{
+name|CurRunners
+operator|-=
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_count
+expr_stmt|;
+name|CHK_CUR_RUNNERS
+argument_list|(
+literal|"proc_list_probe"
+argument_list|,
+name|i
+argument_list|,
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|.
+name|proc_count
+argument_list|)
+expr_stmt|;
+block|}
 name|CurChildren
 operator|--
 expr_stmt|;

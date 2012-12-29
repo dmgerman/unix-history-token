@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2010, 2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.1008 2011/01/12 23:52:59 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.1011 2012/12/19 02:49:21 ca Exp $"
 argument_list|)
 end_macro
 
@@ -126,6 +126,12 @@ if|#
 directive|if
 name|STARTTLS
 end_if
+
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
 
 begin_include
 include|#
@@ -7399,15 +7405,44 @@ operator|>
 literal|5
 condition|)
 block|{
+name|unsigned
+name|long
+name|l
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sr
+decl_stmt|;
+name|l
+operator|=
+name|ERR_peek_error
+argument_list|()
+expr_stmt|;
+name|sr
+operator|=
+name|ERR_reason_error_string
+argument_list|(
+name|l
+argument_list|)
+expr_stmt|;
 name|sm_syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"STARTTLS=server, error: accept failed=%d, SSL_error=%d, errno=%d, retry=%d, relay=%.100s"
+literal|"STARTTLS=server, error: accept failed=%d, reason=%s, SSL_error=%d, errno=%d, retry=%d, relay=%.100s"
 argument_list|,
 name|r
+argument_list|,
+name|sr
+operator|==
+name|NULL
+condition|?
+literal|"unknown"
+else|:
+name|sr
 argument_list|,
 name|ssl_err
 argument_list|,
@@ -7422,7 +7457,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|8
+literal|9
 condition|)
 name|tlslogerr
 argument_list|(
@@ -13688,9 +13723,12 @@ argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|e
 operator|->
 name|e_msgsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -14063,9 +14101,12 @@ argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|e
 operator|->
 name|e_msgsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine
