@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.284 2008/08/06 05:26:24 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.285 2012/06/14 23:54:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3207,9 +3207,12 @@ name|e_id
 argument_list|,
 literal|"message size (%ld) exceeds maximum (%ld)"
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|e
 operator|->
 name|e_msgsize
+argument_list|)
 argument_list|,
 name|MaxMessageSize
 argument_list|)
