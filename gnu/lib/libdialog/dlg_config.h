@@ -10,15 +10,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CURSES_WACS_ARRAY
-value|_nc_wacs
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIALOG_PATCHDATE
-value|20120706
+value|20100428
 end_define
 
 begin_define
@@ -32,13 +25,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_ALLOCA
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_BTOWC
 value|1
 end_define
 
@@ -109,13 +95,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_FSEEKO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETATTRS
 value|1
 end_define
 
@@ -269,6 +248,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_LIBNCURSESW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_LIMITS_H
 value|1
 end_define
@@ -283,35 +269,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MBLEN
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBRLEN
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBRTOWC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_MBSTATE_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_MBTOWC
 value|1
 end_define
 
@@ -340,13 +298,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_MUNMAP
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_NCURSES_H
 value|1
 end_define
 
@@ -549,42 +500,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_WCHGAT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSRTOMBS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSTOMBS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCTOB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCTOMB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_WGETPARENT
+name|HAVE_WGET_WCH
 value|1
 end_define
 
@@ -655,7 +571,7 @@ begin_define
 define|#
 directive|define
 name|SYSTEM_NAME
-value|"freebsd10.0"
+value|"freebsd9.0"
 end_define
 
 begin_define
@@ -669,6 +585,13 @@ begin_define
 define|#
 directive|define
 name|TYPE_CHTYPE_IS_SCALAR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_WIDE_CURSES
 value|1
 end_define
 
