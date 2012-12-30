@@ -259,6 +259,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|bmachine_scale
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|scale_number
 parameter_list|(
@@ -367,16 +376,11 @@ parameter_list|,
 name|struct
 name|number
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|BIGNUM
-name|zero
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
