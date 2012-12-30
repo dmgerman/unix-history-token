@@ -1043,6 +1043,10 @@ decl_stmt|,
 name|halRadioRetentionSupport
 range|:
 literal|1
+decl_stmt|,
+name|halSpectralScanSupport
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes
