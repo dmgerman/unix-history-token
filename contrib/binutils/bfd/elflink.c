@@ -35552,6 +35552,17 @@ operator|&
 name|SEC_LINKER_CREATED
 operator|)
 operator|||
+name|elf_section_data
+argument_list|(
+name|o
+argument_list|)
+operator|->
+name|this_hdr
+operator|.
+name|sh_type
+operator|==
+name|SHT_NOTE
+operator|||
 operator|(
 name|o
 operator|->
