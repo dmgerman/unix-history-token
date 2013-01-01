@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stab.c,v 8.89 2006/08/15 23:24:58 ca Exp $"
+literal|"@(#)$Id: stab.c,v 8.91 2011/08/08 17:33:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -185,6 +185,10 @@ operator|||
 name|type
 operator|==
 name|ST_RULESET
+operator|||
+name|type
+operator|==
+name|ST_NAMECANON
 condition|)
 block|{
 while|while
@@ -374,19 +378,6 @@ argument_list|(
 name|s
 operator|->
 name|s_class
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ST_ADDRESS
-case|:
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|s
-operator|->
-name|s_address
 argument_list|)
 expr_stmt|;
 break|break;

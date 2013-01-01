@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.691 2011/01/25 18:31:30 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.694 2012/03/03 00:10:42 ca Exp $"
 argument_list|)
 end_macro
 
@@ -17481,6 +17481,20 @@ operator|/
 name|_res
 operator|.
 name|retrans
+expr_stmt|;
+if|if
+condition|(
+name|_res
+operator|.
+name|retry
+operator|==
+literal|0
+condition|)
+name|_res
+operator|.
+name|retry
+operator|=
+literal|1
 expr_stmt|;
 endif|#
 directive|endif
