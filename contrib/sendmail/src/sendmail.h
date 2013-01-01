@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1089 2011/03/15 23:14:36 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1096 2012/11/16 20:25:03 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -6031,6 +6031,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|PRT_NONNEGL
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)< 0 ? LONG_MAX : (v))
+end_define
+
 begin_comment
 comment|/* values for e_flags */
 end_comment
@@ -9241,11 +9251,6 @@ name|BITMAP256
 name|sv_class
 decl_stmt|;
 comment|/* bit-map of word classes */
-name|ADDRESS
-modifier|*
-name|sv_addr
-decl_stmt|;
-comment|/* pointer to address header */
 name|MAILER
 modifier|*
 name|sv_mailer
@@ -9377,15 +9382,8 @@ begin_comment
 comment|/* class map */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ST_ADDRESS
-value|2
-end_define
-
 begin_comment
-comment|/* an address in parsed format */
+comment|/* #define ST_unused	2	UNUSED */
 end_comment
 
 begin_define
@@ -9607,13 +9605,6 @@ define|#
 directive|define
 name|s_class
 value|s_value.sv_class
-end_define
-
-begin_define
-define|#
-directive|define
-name|s_address
-value|s_value.sv_addr
 end_define
 
 begin_define
@@ -11113,6 +11104,14 @@ name|char
 name|mf_state
 decl_stmt|;
 comment|/* state of filter */
+name|char
+name|mf_lflags
+decl_stmt|;
+comment|/* "local" flags */
+name|int
+name|mf_idx
+decl_stmt|;
+comment|/* milter number (index) */
 name|time_t
 name|mf_timeout
 index|[
@@ -11139,6 +11138,27 @@ comment|/* _FFR_MILTER_CHECK */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MI_LFL_NONE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_LFLAGS_SYM
+parameter_list|(
+name|st
+parameter_list|)
+value|(1<< (st))
+end_define
+
+begin_comment
+comment|/* has its own symlist for stage st */
+end_comment
 
 begin_struct
 struct|struct
@@ -13813,6 +13833,21 @@ define|#
 directive|define
 name|CHECK_RESTART
 value|_CHECK_RESTART
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHK_CUR_RUNNERS
+parameter_list|(
+name|fct
+parameter_list|,
+name|idx
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|do	\ 	{	\ 		if (CurRunners< 0)	\ 		{	\ 			if (LogLevel> 3)	\ 				sm_syslog(LOG_ERR, NOQID,	\ 					"%s: CurRunners=%d, i=%d, count=%d, status=should not happen",	\ 					fct, CurRunners, idx, count);	\ 			CurRunners = 0;	\ 		}	\ 	} while (0)
 end_define
 
 begin_comment
