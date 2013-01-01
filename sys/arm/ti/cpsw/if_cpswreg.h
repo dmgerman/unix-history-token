@@ -118,8 +118,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_CPDMA_TX_TEARDOWN
+value|(CPSW_CPDMA_OFFSET + 0x08)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_CPDMA_RX_CONTROL
 value|(CPSW_CPDMA_OFFSET + 0x14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_CPDMA_RX_TEARDOWN
+value|(CPSW_CPDMA_OFFSET + 0x18)
 end_define
 
 begin_define
@@ -254,11 +268,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_STATS_OFFSET
+value|0x0900
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_STATERAM_OFFSET
+value|0x0A00
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_CPDMA_TX_HDP
 parameter_list|(
 name|p
 parameter_list|)
-value|(CPSW_CPDMA_OFFSET + 0x200 + ((p) * 0x04))
+value|(CPSW_STATERAM_OFFSET + 0x00 + ((p) * 0x04))
 end_define
 
 begin_define
@@ -268,7 +296,7 @@ name|CPSW_CPDMA_RX_HDP
 parameter_list|(
 name|p
 parameter_list|)
-value|(CPSW_CPDMA_OFFSET + 0x220 + ((p) * 0x04))
+value|(CPSW_STATERAM_OFFSET + 0x20 + ((p) * 0x04))
 end_define
 
 begin_define
@@ -278,7 +306,7 @@ name|CPSW_CPDMA_TX_CP
 parameter_list|(
 name|p
 parameter_list|)
-value|(CPSW_CPDMA_OFFSET + 0x240 + ((p) * 0x04))
+value|(CPSW_STATERAM_OFFSET + 0x40 + ((p) * 0x04))
 end_define
 
 begin_define
@@ -288,7 +316,7 @@ name|CPSW_CPDMA_RX_CP
 parameter_list|(
 name|p
 parameter_list|)
-value|(CPSW_CPDMA_OFFSET + 0x260 + ((p) * 0x04))
+value|(CPSW_STATERAM_OFFSET + 0x60 + ((p) * 0x04))
 end_define
 
 begin_define
