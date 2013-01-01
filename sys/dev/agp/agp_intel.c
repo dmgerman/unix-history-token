@@ -355,7 +355,6 @@ literal|"Intel 82855GM host to AGP bridge"
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|NULL

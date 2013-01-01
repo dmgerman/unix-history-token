@@ -471,7 +471,6 @@ literal|"VIA 8385 host to PCI bridge"
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|NULL
