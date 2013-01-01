@@ -1546,6 +1546,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VR_NO_SUSPCLR
+value|0x0002
+end_define
+
+begin_comment
+comment|/* vfs_write_resume: do not clear suspension */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VREF
 parameter_list|(
 name|vp

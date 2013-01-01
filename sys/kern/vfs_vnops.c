@@ -7632,6 +7632,16 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|VR_NO_SUSPCLR
+operator|)
+operator|==
+literal|0
+condition|)
 name|VFS_SUSP_CLEAN
 argument_list|(
 name|mp

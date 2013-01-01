@@ -3864,6 +3864,8 @@ operator|->
 name|v_mount
 argument_list|,
 name|VR_START_WRITE
+operator||
+name|VR_NO_SUSPCLR
 argument_list|)
 expr_stmt|;
 if|if
