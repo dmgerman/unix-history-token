@@ -979,9 +979,14 @@ literal|1
 argument_list|,
 literal|"unknown flag %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|-
 name|cp
+argument_list|)
 argument_list|,
 name|cp
 argument_list|)
@@ -1015,10 +1020,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: 0x%x => "
+literal|"%s: 0x%llx => "
 argument_list|,
 name|oid
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|debug
 argument_list|)
 expr_stmt|;
@@ -1054,8 +1063,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%x"
+literal|"0x%llx"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ndebug
 argument_list|)
 expr_stmt|;
@@ -1067,10 +1080,14 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s: 0x%x"
+literal|"%s: 0x%llx"
 argument_list|,
 name|oid
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|debug
 argument_list|)
 expr_stmt|;
