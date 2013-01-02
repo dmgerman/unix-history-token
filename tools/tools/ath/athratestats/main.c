@@ -346,12 +346,16 @@ name|y
 decl_stmt|;
 name|PRINTMSG
 argument_list|(
-literal|"static_rix (%d) ratemask 0x%x\n"
+literal|"static_rix (%d) ratemask 0x%llx\n"
 argument_list|,
 name|sn
 operator|->
 name|static_rix
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sn
 operator|->
 name|ratemask
@@ -1108,6 +1112,9 @@ name|av
 operator|->
 name|tlv_len
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1213,6 +1220,9 @@ name|av
 operator|->
 name|tlv_len
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1263,6 +1273,11 @@ argument_list|,
 name|sn
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
