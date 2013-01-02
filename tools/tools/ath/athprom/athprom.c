@@ -767,6 +767,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"ioctl: %s"
+argument_list|,
 name|atd
 operator|.
 name|ad_name
@@ -924,6 +926,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"ioctl: %s"
+argument_list|,
 name|atd
 operator|.
 name|ad_name
@@ -1018,6 +1022,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl: %s"
 argument_list|,
 name|atd
 operator|.
@@ -1677,6 +1683,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl: %s"
 argument_list|,
 name|atd
 operator|.
