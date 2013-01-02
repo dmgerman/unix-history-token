@@ -387,6 +387,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_spectral.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_athdfs.h>
 end_include
 
@@ -2692,6 +2698,36 @@ goto|goto
 name|bad2
 goto|;
 block|}
+comment|/* Attach spectral module */
+if|if
+condition|(
+name|ath_spectral_attach
+argument_list|(
+name|sc
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: unable to attach spectral\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|bad2
+goto|;
+block|}
 comment|/* Start DFS processing tasklet */
 name|TASK_INIT
 argument_list|(
@@ -4440,6 +4476,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ath_spectral_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_dfs_detach
 argument_list|(
 name|sc
@@ -6502,6 +6543,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* Restore the LED configuration */
 name|ath_led_config
 argument_list|(
@@ -8192,6 +8243,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Likewise this is set during reset so update 	 * state cached in the driver. 	 */
 name|sc
 operator|->
@@ -9164,6 +9225,16 @@ argument_list|)
 expr_stmt|;
 comment|/* Let DFS at it in case it's a DFS channel */
 name|ath_dfs_radar_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
 argument_list|(
 name|sc
 argument_list|,
@@ -18576,6 +18647,14 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|chan
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Re-enable rx framework. 		 */
 if|if
 condition|(
@@ -23078,6 +23157,24 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|SIOCGATHSPECTRAL
+case|:
+name|error
+operator|=
+name|ath_ioctl_spectral
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+expr|struct
+name|ath_diag
+operator|*
+operator|)
+name|ifr
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|SIOCGATHNODERATESTATS
 case|:

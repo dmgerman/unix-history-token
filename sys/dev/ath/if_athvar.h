@@ -2644,6 +2644,14 @@ name|task
 name|sc_dfstask
 decl_stmt|;
 comment|/* DFS processing task */
+comment|/* Spectral related state */
+name|void
+modifier|*
+name|sc_spectral
+decl_stmt|;
+name|int
+name|sc_dospectral
+decl_stmt|;
 comment|/* ALQ */
 ifdef|#
 directive|ifdef
