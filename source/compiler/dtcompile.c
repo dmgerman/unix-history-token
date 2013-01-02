@@ -304,7 +304,7 @@ argument_list|(
 name|Gbl_RootTable
 argument_list|)
 expr_stmt|;
-name|LsDoHexOutput
+name|HxDoHexOutput
 argument_list|()
 expr_stmt|;
 name|DtWriteTableToListing
@@ -529,6 +529,13 @@ name|AcpiTableHeader
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|DT_FIELD
+modifier|*
+name|RootField
+init|=
+operator|*
+name|FieldList
 decl_stmt|;
 comment|/* Verify that we at least have a table signature and save it */
 name|Signature
@@ -764,7 +771,7 @@ name|FieldList
 argument_list|)
 expr_stmt|;
 goto|goto
-name|Out
+name|FinishHeader
 goto|;
 block|}
 comment|/* Dispatch to per-table compile */
@@ -877,7 +884,7 @@ name|AE_ERROR
 operator|)
 return|;
 block|}
-name|Out
+name|FinishHeader
 label|:
 comment|/* Set the final table length and then the checksum */
 name|DtSetTableLength
@@ -901,6 +908,14 @@ name|AcpiTableHeader
 operator|->
 name|Checksum
 argument_list|)
+expr_stmt|;
+name|DtDumpFieldList
+argument_list|(
+name|RootField
+argument_list|)
+expr_stmt|;
+name|DtDumpSubtableList
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

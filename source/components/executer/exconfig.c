@@ -55,6 +55,12 @@ directive|include
 file|"acevents.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -386,7 +392,7 @@ condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_BAD_PARAMETER
+name|AE_AML_STRING_LIMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -578,7 +584,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|'\\'
+name|AML_ROOT_PREFIX
 operator|)
 operator|&&
 operator|(
@@ -594,7 +600,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|'^'
+name|AML_PARENT_PREFIX
 operator|)
 condition|)
 block|{

@@ -999,7 +999,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|'\\'
+name|AML_ROOT_PREFIX
 expr_stmt|;
 name|AcpiGbl_DbScopeBuf
 index|[

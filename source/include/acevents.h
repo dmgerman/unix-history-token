@@ -433,8 +433,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * evregion - Address Space handling  */
+comment|/*  * evhandler - Address space handling  */
 end_comment
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiEvHasDefaultHandler
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|ACPI_ADR_SPACE_TYPE
+name|SpaceId
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -444,6 +458,34 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiEvInstallSpaceHandler
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|ACPI_ADR_SPACE_TYPE
+name|SpaceId
+parameter_list|,
+name|ACPI_ADR_SPACE_HANDLER
+name|Handler
+parameter_list|,
+name|ACPI_ADR_SPACE_SETUP
+name|Setup
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * evregion - Operation region support  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -510,30 +552,6 @@ name|RegionObj
 parameter_list|,
 name|BOOLEAN
 name|AcpiNsIsLocked
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvInstallSpaceHandler
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-parameter_list|,
-name|ACPI_ADR_SPACE_TYPE
-name|SpaceId
-parameter_list|,
-name|ACPI_ADR_SPACE_HANDLER
-name|Handler
-parameter_list|,
-name|ACPI_ADR_SPACE_SETUP
-name|Setup
-parameter_list|,
-name|void
-modifier|*
-name|Context
 parameter_list|)
 function_decl|;
 end_function_decl

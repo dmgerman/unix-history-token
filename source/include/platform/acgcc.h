@@ -52,7 +52,7 @@ value|__attribute__ ((__format__ (__printf__, c, c+1)))
 end_define
 
 begin_comment
-comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to to tell the compiler warning in a per-variable manner that a variable  * is unused.  */
+comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to tell the compiler warning in a per-variable manner that a variable  * is unused.  */
 end_comment
 
 begin_define

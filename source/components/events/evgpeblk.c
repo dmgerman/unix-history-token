@@ -1113,12 +1113,12 @@ operator|=
 name|GpeBlock
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"GPE %02X to %02X [%4.4s] %u regs on int 0x%X\n"
+literal|"    Initialized GPE %02X to %02X [%4.4s] %u regs on interrupt 0x%X\n"
 operator|,
 operator|(
 name|UINT32
@@ -1373,14 +1373,38 @@ condition|(
 name|GpeEnabledCount
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_INFO
 argument_list|(
 operator|(
-name|ACPI_DB_INIT
+name|AE_INFO
 operator|,
-literal|"Enabled %u GPEs in this block\n"
+literal|"Enabled %u GPEs in block %02X to %02X"
 operator|,
 name|GpeEnabledCount
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+operator|,
+call|(
+name|UINT32
+call|)
+argument_list|(
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+operator|+
+operator|(
+name|GpeBlock
+operator|->
+name|GpeCount
+operator|-
+literal|1
+operator|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

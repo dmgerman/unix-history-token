@@ -173,6 +173,7 @@ name|ResourceIndex
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|Context
 parameter_list|)
 function_decl|;
@@ -3325,6 +3326,11 @@ name|Integer
 argument_list|,
 name|AcpiDmAddResourceToNamespace
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 name|BufferNode
 argument_list|)
 expr_stmt|;
@@ -3354,6 +3360,7 @@ name|UINT8
 name|ResourceIndex
 parameter_list|,
 name|void
+modifier|*
 modifier|*
 name|Context
 parameter_list|)

@@ -1630,7 +1630,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|BOOLEAN
 name|AcpiExTruncateFor32bitTable
 parameter_list|(
 name|ACPI_OPERAND_OBJECT

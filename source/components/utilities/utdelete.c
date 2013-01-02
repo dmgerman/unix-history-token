@@ -842,10 +842,8 @@ modifier|*
 modifier|*
 name|InternalObj
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
-argument_list|(
-name|UtDeleteInternalObjectList
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Walk the null-terminated internal list */
 for|for

@@ -833,6 +833,11 @@ name|Length
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 operator|&
 name|EndAml
 argument_list|)

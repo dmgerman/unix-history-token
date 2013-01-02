@@ -662,6 +662,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsCheckObjectType
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnObjectPtr
+parameter_list|,
+name|UINT32
+name|ExpectedBtypes
+parameter_list|,
+name|UINT32
+name|PackageIndex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * nsprepkg - Validation of predefined name packages  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsCheckPackage
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnObjectPtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * nsnames - Name and Scope manipulation  */
 end_comment
@@ -1075,16 +1117,6 @@ end_function_decl
 begin_comment
 comment|/*  * nsutils - Utility functions  */
 end_comment
-
-begin_function_decl
-name|BOOLEAN
-name|AcpiNsValidRootPrefix
-parameter_list|(
-name|char
-name|Prefix
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|ACPI_OBJECT_TYPE

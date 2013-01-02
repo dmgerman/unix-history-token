@@ -1541,7 +1541,7 @@ name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_INTERRUPT_NOT_HANDLED
 argument_list|)
@@ -1579,7 +1579,7 @@ name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_INTERRUPT_NOT_HANDLED
 argument_list|)
@@ -1696,7 +1696,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_INTERRUPT_HANDLED
 argument_list|)

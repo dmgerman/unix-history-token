@@ -166,7 +166,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"Completing Region/Field/Buffer/Package initialization:"
+literal|"Completing Region/Field/Buffer/Package initialization:\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -230,7 +230,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nInitialized %u/%u Regions %u/%u Fields %u/%u "
+literal|"    Initialized %u/%u Regions %u/%u Fields %u/%u "
 literal|"Buffers %u/%u Packages (%u nodes)\n"
 operator|,
 name|Info
@@ -352,7 +352,7 @@ operator|(
 name|ACPI_DB_INIT
 operator|,
 literal|"Initializing Device/Processor/Thermal objects "
-literal|"by executing _INI methods:"
+literal|"and executing _INI/_STA methods:\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -536,7 +536,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nExecuted %u _INI methods requiring %u _STA executions "
+literal|"    Executed %u _INI methods requiring %u _STA executions "
 literal|"(examined %u objects)\n"
 operator|,
 name|Info
@@ -870,27 +870,6 @@ name|AcpiUtGetTypeName
 argument_list|(
 name|Type
 argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Print a dot for each object unless we are going to print the entire      * pathname      */
-if|if
-condition|(
-operator|!
-operator|(
-name|AcpiDbgLevel
-operator|&
-name|ACPI_LV_INIT_NAMES
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT_RAW
-argument_list|(
-operator|(
-name|ACPI_DB_INIT
-operator|,
-literal|"."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1341,34 +1320,6 @@ operator|->
 name|Num_INI
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|AcpiDbgLevel
-operator|<=
-name|ACPI_LV_ALL_EXCEPTIONS
-operator|)
-operator|&&
-operator|(
-operator|!
-operator|(
-name|AcpiDbgLevel
-operator|&
-name|ACPI_LV_INFO
-operator|)
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT_RAW
-argument_list|(
-operator|(
-name|ACPI_DB_INIT
-operator|,
-literal|"."
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef

@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"amlcode.h"
 end_include
 
@@ -419,7 +413,15 @@ block|}
 comment|/* Handle all Scope Prefix operators */
 while|while
 condition|(
-name|AcpiPsIsPrefixChar
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+name|ACPI_GET8
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+operator|||
+name|ACPI_IS_PARENT_PREFIX
 argument_list|(
 name|ACPI_GET8
 argument_list|(
@@ -667,6 +669,8 @@ name|String
 operator|)
 operator|&&
 operator|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
 name|NamePath
 operator|->
 name|Common
@@ -677,8 +681,7 @@ name|String
 index|[
 literal|0
 index|]
-operator|==
-literal|'\\'
+argument_list|)
 operator|)
 condition|)
 block|{

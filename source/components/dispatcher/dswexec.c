@@ -360,6 +360,9 @@ name|Cleanup
 goto|;
 block|}
 comment|/* Truncate the predicate to 32-bits if necessary */
+operator|(
+name|void
+operator|)
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|LocalObjDesc
@@ -1938,6 +1941,9 @@ break|break;
 block|}
 block|}
 comment|/*      * ACPI 2.0 support for 64-bit integers: Truncate numeric      * result value if we are executing from a 32-bit ACPI table      */
+operator|(
+name|void
+operator|)
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|WalkState

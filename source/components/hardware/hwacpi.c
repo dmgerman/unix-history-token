@@ -267,7 +267,7 @@ expr_stmt|;
 block|}
 name|AcpiOsStall
 argument_list|(
-literal|1000
+name|ACPI_USEC_PER_MSEC
 argument_list|)
 expr_stmt|;
 name|Retry
@@ -322,7 +322,7 @@ operator|.
 name|SmiCommand
 condition|)
 block|{
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_SYS_MODE_ACPI
 argument_list|)
@@ -346,7 +346,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_SYS_MODE_LEGACY
 argument_list|)
@@ -357,7 +357,7 @@ condition|(
 name|Value
 condition|)
 block|{
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_SYS_MODE_ACPI
 argument_list|)
@@ -365,7 +365,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_SYS_MODE_LEGACY
 argument_list|)

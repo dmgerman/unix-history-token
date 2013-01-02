@@ -581,10 +581,11 @@ block|}
 comment|/* Ignore a leading backslash, this is the root prefix */
 if|if
 condition|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
 operator|*
 name|Name
-operator|==
-literal|'\\'
+argument_list|)
 condition|)
 block|{
 name|Name

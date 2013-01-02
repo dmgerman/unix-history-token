@@ -513,7 +513,7 @@ name|Pathname
 operator|)
 operator|&&
 operator|(
-name|AcpiNsValidRootPrefix
+name|ACPI_IS_ROOT_PREFIX
 argument_list|(
 name|Pathname
 index|[

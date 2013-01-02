@@ -424,43 +424,47 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AnMethodAnalysisWalkBegin
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AnMethodAnalysisWalkEnd
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AnMethodTypingWalkEnd
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslmethod - Control method analysis walk  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|MtMethodAnalysisWalkBegin
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|MtMethodAnalysisWalkEnd
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -837,6 +841,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|LsDumpAsciiInComment
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|,
+name|UINT32
+name|Count
+parameter_list|,
+name|UINT8
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|LsWriteNodeToAsmListing
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -862,16 +883,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|LsDoHexOutput
+name|LsDumpParseTree
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * aslhex - generate all "hex" output files (C, ASM, ASL)  */
+end_comment
+
 begin_function_decl
 name|void
-name|LsDumpParseTree
+name|HxDoHexOutput
 parameter_list|(
 name|void
 parameter_list|)
@@ -1720,17 +1745,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * asllookup - namespace cross reference  */
+comment|/*  * asllookup - namespace lookup functions  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|LkCrossReferenceNamespace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1741,9 +1757,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * aslnamesp - namespace output file generation  */
+end_comment
+
 begin_function_decl
 name|ACPI_STATUS
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 parameter_list|(
 name|void
 parameter_list|)
@@ -1752,11 +1772,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|LsSetupNsList
+name|NsSetupNamespaceListing
 parameter_list|(
 name|void
 modifier|*
 name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslxref - namespace cross reference  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|XfCrossReferenceNamespace
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -248,11 +248,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *  * RETURN:      none  *  * DESCRIPTION: Truncate an ACPI Integer to 32 bits if the execution mode is  *              32-bit, as determined by the revision of the DSDT.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *  * RETURN:      TRUE if a truncation was performed, FALSE otherwise.  *  * DESCRIPTION: Truncate an ACPI Integer to 32 bits if the execution mode is  *              32-bit, as determined by the revision of the DSDT.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|void
+name|BOOLEAN
 name|AcpiExTruncateFor32bitTable
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
@@ -263,7 +263,7 @@ block|{
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * Object must be a valid number and we must be executing      * a control method. NS node could be there for AML_INT_NAMEPATH_OP.      */
+comment|/*      * Object must be a valid number and we must be executing      * a control method. Object could be NS node for AML_INT_NAMEPATH_OP.      */
 if|if
 condition|(
 operator|(
@@ -291,16 +291,35 @@ name|ACPI_TYPE_INTEGER
 operator|)
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 if|if
 condition|(
+operator|(
 name|AcpiGbl_IntegerByteWidth
 operator|==
 literal|4
+operator|)
+operator|&&
+operator|(
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|>
+operator|(
+name|UINT64
+operator|)
+name|ACPI_UINT32_MAX
+operator|)
 condition|)
 block|{
-comment|/*          * We are running a method that exists in a 32-bit ACPI table.          * Truncate the value to 32 bits by zeroing out the upper 32-bit field          */
+comment|/*          * We are executing in a 32-bit ACPI table.          * Truncate the value to 32 bits by zeroing out the upper 32-bit field          */
 name|ObjDesc
 operator|->
 name|Integer
@@ -312,7 +331,17 @@ name|UINT64
 operator|)
 name|ACPI_UINT32_MAX
 expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 end_function
 
@@ -491,7 +520,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 literal|1
 argument_list|)
@@ -530,7 +559,7 @@ name|NumDigits
 operator|++
 expr_stmt|;
 block|}
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|NumDigits
 argument_list|)

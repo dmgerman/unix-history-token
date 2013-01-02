@@ -55,17 +55,6 @@ begin_comment
 comment|/* Local prototypes */
 end_comment
 
-begin_function_decl
-specifier|static
-name|BOOLEAN
-name|AcpiNsValidPathSeparator
-parameter_list|(
-name|char
-name|Sep
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -190,61 +179,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsValidRootPrefix  *  * PARAMETERS:  Prefix          - Character to be checked  *  * RETURN:      TRUE if a valid prefix  *  * DESCRIPTION: Check if a character is a valid ACPI Root prefix  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiNsValidRootPrefix
-parameter_list|(
-name|char
-name|Prefix
-parameter_list|)
-block|{
-return|return
-operator|(
-call|(
-name|BOOLEAN
-call|)
-argument_list|(
-name|Prefix
-operator|==
-literal|'\\'
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsValidPathSeparator  *  * PARAMETERS:  Sep         - Character to be checked  *  * RETURN:      TRUE if a valid path separator  *  * DESCRIPTION: Check if a character is a valid ACPI path separator  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|BOOLEAN
-name|AcpiNsValidPathSeparator
-parameter_list|(
-name|char
-name|Sep
-parameter_list|)
-block|{
-return|return
-operator|(
-call|(
-name|BOOLEAN
-call|)
-argument_list|(
-name|Sep
-operator|==
-literal|'.'
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetType  *  * PARAMETERS:  Node        - Parent Node to be examined  *  * RETURN:      Type field from Node whose handle is passed  *  * DESCRIPTION: Return the type of a Namespace node  *  ******************************************************************************/
 end_comment
 
@@ -277,17 +211,14 @@ literal|"Null Node parameter"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|)
 expr_stmt|;
 block|}
-name|return_UINT32
+name|return_VALUE
 argument_list|(
-operator|(
-name|ACPI_OBJECT_TYPE
-operator|)
 name|Node
 operator|->
 name|Type
@@ -334,17 +265,14 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|ACPI_NS_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|return_UINT32
+name|return_VALUE
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|AcpiGbl_NsProperties
 index|[
 name|Type
@@ -407,7 +335,7 @@ expr_stmt|;
 comment|/*      * For the internal name, the required length is 4 bytes per segment, plus      * 1 each for RootPrefix, MultiNamePrefixOp, segment count, trailing null      * (which is not really needed, but no there's harm in putting it there)      *      * strlen() + 1 covers the first NameSeg, which has no path separator      */
 if|if
 condition|(
-name|AcpiNsValidRootPrefix
+name|ACPI_IS_ROOT_PREFIX
 argument_list|(
 operator|*
 name|NextExternalChar
@@ -426,7 +354,7 @@ expr_stmt|;
 comment|/* Skip redundant RootPrefix, like \\_SB.PCI0.SBRG.EC0 */
 while|while
 condition|(
-name|AcpiNsValidRootPrefix
+name|ACPI_IS_ROOT_PREFIX
 argument_list|(
 operator|*
 name|NextExternalChar
@@ -443,10 +371,11 @@ block|{
 comment|/* Handle Carat prefixes */
 while|while
 condition|(
+name|ACPI_IS_PARENT_PREFIX
+argument_list|(
 operator|*
 name|NextExternalChar
-operator|==
-literal|'^'
+argument_list|)
 condition|)
 block|{
 name|Info
@@ -489,7 +418,7 @@ control|)
 block|{
 if|if
 condition|(
-name|AcpiNsValidPathSeparator
+name|ACPI_IS_PATH_SEPARATOR
 argument_list|(
 name|NextExternalChar
 index|[
@@ -597,7 +526,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|'\\'
+name|AML_ROOT_PREFIX
 expr_stmt|;
 if|if
 condition|(
@@ -703,7 +632,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|'^'
+name|AML_PARENT_PREFIX
 expr_stmt|;
 block|}
 block|}
@@ -817,7 +746,7 @@ control|)
 block|{
 if|if
 condition|(
-name|AcpiNsValidPathSeparator
+name|ACPI_IS_PATH_SEPARATOR
 argument_list|(
 operator|*
 name|ExternalName
@@ -869,7 +798,7 @@ comment|/* Now we must have a path separator, or the pathname is bad */
 if|if
 condition|(
 operator|!
-name|AcpiNsValidPathSeparator
+name|ACPI_IS_PATH_SEPARATOR
 argument_list|(
 operator|*
 name|ExternalName
@@ -1178,7 +1107,7 @@ index|]
 condition|)
 block|{
 case|case
-literal|'\\'
+name|AML_ROOT_PREFIX
 case|:
 name|PrefixLength
 operator|=
@@ -1186,7 +1115,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'^'
+name|AML_PARENT_PREFIX
 case|:
 for|for
 control|(
@@ -1204,12 +1133,13 @@ control|)
 block|{
 if|if
 condition|(
+name|ACPI_IS_PARENT_PREFIX
+argument_list|(
 name|InternalName
 index|[
 name|i
 index|]
-operator|==
-literal|'^'
+argument_list|)
 condition|)
 block|{
 name|PrefixLength
@@ -1767,6 +1697,7 @@ name|Pathname
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Simplest case is a null pathname */
 if|if
 condition|(
 operator|!
@@ -1790,6 +1721,37 @@ operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
 block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Quick check for a reference to the root */
+if|if
+condition|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+name|Pathname
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|Pathname
+index|[
+literal|1
+index|]
+operator|)
+condition|)
+block|{
+operator|*
+name|ReturnNode
+operator|=
+name|AcpiGbl_RootNode
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

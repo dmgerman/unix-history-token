@@ -414,7 +414,7 @@ do|do
 block|{
 name|AcpiOsStall
 argument_list|(
-literal|1000
+name|ACPI_USEC_PER_MSEC
 argument_list|)
 expr_stmt|;
 name|Status

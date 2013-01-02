@@ -697,11 +697,62 @@ name|UINT16
 name|Reserved
 decl_stmt|;
 name|UINT32
-name|InfoLength
+name|SharedInfoLength
 decl_stmt|;
-comment|/* Shared data (length = InfoLength) immediately follows */
+comment|/* Shared data immediately follows (Length = SharedInfoLength) */
 block|}
 name|ACPI_CSRT_GROUP
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Shared Info subtable */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_csrt_shared_info
+block|{
+name|UINT16
+name|MajorVersion
+decl_stmt|;
+name|UINT16
+name|MinorVersion
+decl_stmt|;
+name|UINT32
+name|MmioBaseLow
+decl_stmt|;
+name|UINT32
+name|MmioBaseHigh
+decl_stmt|;
+name|UINT32
+name|GsiInterrupt
+decl_stmt|;
+name|UINT8
+name|InterruptPolarity
+decl_stmt|;
+name|UINT8
+name|InterruptMode
+decl_stmt|;
+name|UINT8
+name|NumChannels
+decl_stmt|;
+name|UINT8
+name|DmaAddressWidth
+decl_stmt|;
+name|UINT16
+name|BaseRequestLine
+decl_stmt|;
+name|UINT16
+name|NumHandshakeSignals
+decl_stmt|;
+name|UINT32
+name|MaxBlockSize
+decl_stmt|;
+comment|/* Resource descriptors immediately follow (Length = Group Length - SharedInfoLength) */
+block|}
+name|ACPI_CSRT_SHARED_INFO
 typedef|;
 end_typedef
 

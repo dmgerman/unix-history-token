@@ -594,7 +594,7 @@ name|Access
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 literal|0
 argument_list|)
@@ -622,7 +622,7 @@ name|ReturnByteAlignment
 operator|=
 name|ByteAlignment
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|BitLength
 argument_list|)

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20121114
+value|0x20121220
 end_define
 
 begin_include
@@ -1329,6 +1329,24 @@ parameter_list|,
 name|ACPI_BUFFER
 modifier|*
 name|RetBuffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiWalkResourceBuffer
+parameter_list|(
+name|ACPI_BUFFER
+modifier|*
+name|Buffer
+parameter_list|,
+name|ACPI_WALK_RESOURCE_CALLBACK
+name|UserFunction
+parameter_list|,
+name|void
+modifier|*
+name|Context
 parameter_list|)
 function_decl|;
 end_function_decl

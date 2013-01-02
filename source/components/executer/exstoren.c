@@ -445,6 +445,9 @@ operator|.
 name|Value
 expr_stmt|;
 comment|/* Truncate value if we are executing from a 32-bit ACPI table */
+operator|(
+name|void
+operator|)
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|DestDesc

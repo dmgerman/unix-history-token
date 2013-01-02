@@ -382,6 +382,13 @@ name|ACPI_MAX_ADDRESS_SPACE
 value|255
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_DEFAULT_SPACES
+value|4
+end_define
+
 begin_comment
 comment|/* Array sizes. Used for range checking also */
 end_comment

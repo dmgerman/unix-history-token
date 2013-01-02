@@ -334,6 +334,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Save the Result */
+operator|(
+name|void
+operator|)
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|ReturnDesc

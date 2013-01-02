@@ -306,7 +306,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Compute Duration (Requires a 64-bit multiply and divide):      *      * TimeElapsed = (DeltaTicks * 1000000) / PM_TIMER_FREQUENCY;      */
+comment|/*      * Compute Duration (Requires a 64-bit multiply and divide):      *      * TimeElapsed (microseconds) =      *  (DeltaTicks * ACPI_USEC_PER_SEC) / ACPI_PM_TIMER_FREQUENCY;      */
 name|Status
 operator|=
 name|AcpiUtShortDivide
@@ -318,9 +318,9 @@ operator|)
 name|DeltaTicks
 operator|)
 operator|*
-literal|1000000
+name|ACPI_USEC_PER_SEC
 argument_list|,
-name|PM_TIMER_FREQUENCY
+name|ACPI_PM_TIMER_FREQUENCY
 argument_list|,
 operator|&
 name|Quotient

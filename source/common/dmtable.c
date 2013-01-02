@@ -677,9 +677,9 @@ name|NULL
 block|,
 name|AcpiDmDumpCsrt
 block|,
-name|NULL
+name|DtCompileCsrt
 block|,
-name|NULL
+name|TemplateCsrt
 block|,
 literal|"Core System Resource Table"
 block|}
@@ -1074,6 +1074,20 @@ block|,
 name|TemplateTcpa
 block|,
 literal|"Trusted Computing Platform Alliance table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_TPM2
+block|,
+name|AcpiDmTableInfoTpm2
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateTpm2
+block|,
+literal|"Trusted Platform Module hardware interface table"
 block|}
 block|,
 block|{

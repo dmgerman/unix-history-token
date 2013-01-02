@@ -68,6 +68,7 @@ name|ResourceIndex
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|Context
 parameter_list|)
 block|{

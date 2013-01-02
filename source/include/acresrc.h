@@ -618,6 +618,7 @@ name|ResourceIndex
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|Context
 parameter_list|)
 function_decl|;
@@ -1123,13 +1124,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * rsdump  */
+comment|/*  * rsdumpinfo  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpIrq
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_RSDUMP_INFO
+name|AcpiRsDumpPrt
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1162,6 +1171,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpIo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_RSDUMP_INFO
+name|AcpiRsDumpIoFlags
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1202,6 +1219,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpMemory32
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_RSDUMP_INFO
+name|AcpiRsDumpMemoryFlags
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1306,6 +1331,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpUartSerialBus
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_RSDUMP_INFO
+name|AcpiRsDumpGeneralFlags
 index|[]
 decl_stmt|;
 end_decl_stmt

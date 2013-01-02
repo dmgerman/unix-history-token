@@ -120,7 +120,7 @@ literal|"Concatenate"
 block|,
 literal|"(Source1, Source2, Result) => ComputationalData"
 block|,
-literal|"Concatenate two strings}, integers or buffers"
+literal|"Concatenate two strings, integers or buffers"
 block|}
 block|,
 block|{
@@ -246,8 +246,8 @@ block|,
 block|{
 literal|"DefinitionBlock"
 block|,
-literal|"(AMLFileName, TableSignature, ComplianceRevision, "
-literal|"OEMID, TableID, OEMRevision) {TermList}"
+literal|"(AmlFileName, TableSignature, ComplianceRevision, "
+literal|"OemId, TableId, OemRevision) {TermList}"
 block|,
 literal|"Declare a Definition Block"
 block|}
@@ -654,7 +654,7 @@ block|,
 block|{
 literal|"LoadTable"
 block|,
-literal|"(SignatureString, OEMIDString, OEMTableIDString, RootPathString, "
+literal|"(SignatureString, OemIdString, OemTableIdString, RootPathString, "
 literal|"ParameterPathString, ParameterData) => DDBHandle"
 block|,
 literal|"Load Table from RSDT/XSDT"
@@ -663,7 +663,7 @@ block|,
 block|{
 literal|"Local"
 block|,
-literal|"Local0 - Local 7"
+literal|"Local0 - Local7"
 block|,
 literal|"Method local data objects"
 block|}
@@ -830,7 +830,7 @@ literal|"Ones"
 block|,
 literal|"=> Integer"
 block|,
-literal|"Constant Ones Object (-1)"
+literal|"Constant Ones Object (0xFFFFFFFF or 0xFFFFFFFFFFFFFFFF)"
 block|}
 block|,
 block|{
@@ -1018,7 +1018,7 @@ block|,
 block|{
 literal|"Sleep"
 block|,
-literal|"(MilliSeconds)"
+literal|"(Milliseconds)"
 block|,
 literal|"Sleep n milliseconds (yields the processor)"
 block|}
@@ -1038,7 +1038,7 @@ block|,
 block|{
 literal|"Stall"
 block|,
-literal|"(MicroSeconds)"
+literal|"(Microseconds)"
 block|,
 literal|"Delay n microseconds (does not yield the processor)"
 block|}

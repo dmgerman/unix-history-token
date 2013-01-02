@@ -401,12 +401,12 @@ name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT
+name|ACPI_INFO
 argument_list|(
 operator|(
-name|ACPI_DB_INIT
+name|AE_INFO
 operator|,
-literal|"ACPI Tables successfully acquired\n"
+literal|"All ACPI Tables successfully acquired"
 operator|)
 argument_list|)
 expr_stmt|;

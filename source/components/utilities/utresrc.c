@@ -1004,6 +1004,7 @@ name|UserFunction
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|Context
 parameter_list|)
 block|{
@@ -1183,11 +1184,6 @@ name|UserFunction
 condition|)
 block|{
 operator|*
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 name|Context
 operator|=
 name|Aml
@@ -1900,6 +1896,11 @@ name|Length
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 name|EndTag
 argument_list|)
 expr_stmt|;

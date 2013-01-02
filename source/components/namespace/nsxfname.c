@@ -164,7 +164,7 @@ block|}
 comment|/*      * Valid cases are:      * 1) Fully qualified pathname      * 2) Parent + Relative pathname      *      * Error for<null Parent + relative path>      */
 if|if
 condition|(
-name|AcpiNsValidRootPrefix
+name|ACPI_IS_ROOT_PREFIX
 argument_list|(
 name|Pathname
 index|[

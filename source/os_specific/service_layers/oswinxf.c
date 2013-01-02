@@ -609,7 +609,7 @@ operator|*
 operator|(
 name|UINT64
 operator|)
-literal|10000000
+name|ACPI_100NSEC_PER_SEC
 operator|)
 operator|/
 name|TimerFrequency
@@ -629,7 +629,7 @@ operator|)
 name|GetTickCount
 argument_list|()
 operator|*
-literal|10000
+name|ACPI_100NSEC_PER_MSEC
 operator|)
 return|;
 block|}
@@ -2131,7 +2131,7 @@ argument_list|(
 operator|(
 name|Microseconds
 operator|/
-literal|1000
+name|ACPI_USEC_PER_MSEC
 operator|)
 operator|+
 literal|1

@@ -96,6 +96,15 @@ argument_list|(
 name|EvGpeInitialize
 argument_list|)
 expr_stmt|;
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_INIT
+operator|,
+literal|"Initializing General Purpose Events (GPEs):\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtAcquireMutex

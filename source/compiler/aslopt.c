@@ -692,7 +692,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|'^'
+name|AML_PARENT_PREFIX
 expr_stmt|;
 block|}
 comment|/*      * Copy only the necessary (optimal) segments from the original      * target string      */
@@ -746,7 +746,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|'^'
+name|AML_PARENT_PREFIX
 expr_stmt|;
 name|i
 operator|++
@@ -1097,12 +1097,13 @@ operator|)
 operator|)
 operator|&&
 operator|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
 name|AmlNameString
 index|[
 literal|0
 index|]
-operator|==
-literal|'\\'
+argument_list|)
 operator|)
 condition|)
 block|{

@@ -3401,6 +3401,11 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* TBD: [Restructure] Need a separate command line buffer for step mode */
 while|while
 condition|(

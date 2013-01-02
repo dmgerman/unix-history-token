@@ -629,7 +629,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to to tell the compiler in a per-variable manner that a variable  * is unused  */
+comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to tell the compiler in a per-variable manner that a variable  * is unused  */
 end_comment
 
 begin_ifndef
@@ -792,7 +792,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PM_TIMER_FREQUENCY
+name|ACPI_PM_TIMER_FREQUENCY
 value|3579545
 end_define
 
@@ -919,6 +919,73 @@ end_typedef
 begin_comment
 comment|/* Actually a ptr to a NS Node */
 end_comment
+
+begin_comment
+comment|/* Time constants for timer calculations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSEC_PER_SEC
+value|1000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USEC_PER_MSEC
+value|1000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USEC_PER_SEC
+value|1000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_100NSEC_PER_USEC
+value|10L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_100NSEC_PER_MSEC
+value|10000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_100NSEC_PER_SEC
+value|10000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NSEC_PER_USEC
+value|1000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NSEC_PER_MSEC
+value|1000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NSEC_PER_SEC
+value|1000000000L
+end_define
 
 begin_comment
 comment|/* Owner IDs are used to track namespace nodes for selective deletion */
@@ -1958,7 +2025,7 @@ comment|/* Last typecode used within a NS Node */
 end_comment
 
 begin_comment
-comment|/*  * These are special object types that never appear in  * a Namespace node, only in an ACPI_OPERAND_OBJECT  */
+comment|/*  * These are special object types that never appear in  * a Namespace node, only in an object of ACPI_OPERAND_OBJECT  */
 end_comment
 
 begin_define
@@ -2921,6 +2988,20 @@ block|}
 name|ACPI_BUFFER
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Free a buffer created in an ACPI_BUFFER via ACPI_ALLOCATE_LOCAL_BUFFER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE_BUFFER
+parameter_list|(
+name|b
+parameter_list|)
+value|ACPI_FREE(b.Pointer)
+end_define
 
 begin_comment
 comment|/*  * NameType for AcpiGetName  */

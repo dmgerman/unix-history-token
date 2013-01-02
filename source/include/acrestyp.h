@@ -226,18 +226,22 @@ name|ACPI_SHARED
 value|(UINT8) 0x01
 end_define
 
+begin_comment
+comment|/* Wake */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ACPI_EXCLUSIVE_AND_WAKE
-value|(UINT8) 0x02
+name|ACPI_NOT_WAKE_CAPABLE
+value|(UINT8) 0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_SHARED_AND_WAKE
-value|(UINT8) 0x03
+name|ACPI_WAKE_CAPABLE
+value|(UINT8) 0x01
 end_define
 
 begin_comment
@@ -486,6 +490,9 @@ name|Polarity
 decl_stmt|;
 name|UINT8
 name|Sharable
+decl_stmt|;
+name|UINT8
+name|WakeCapable
 decl_stmt|;
 name|UINT8
 name|InterruptCount
@@ -1035,6 +1042,9 @@ name|UINT8
 name|Sharable
 decl_stmt|;
 name|UINT8
+name|WakeCapable
+decl_stmt|;
+name|UINT8
 name|InterruptCount
 decl_stmt|;
 name|ACPI_RESOURCE_SOURCE
@@ -1096,6 +1106,10 @@ name|PinConfig
 decl_stmt|;
 name|UINT8
 name|Sharable
+decl_stmt|;
+comment|/* For values, see Interrupt Attributes above */
+name|UINT8
+name|WakeCapable
 decl_stmt|;
 comment|/* For values, see Interrupt Attributes above */
 name|UINT8

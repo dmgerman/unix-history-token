@@ -1725,6 +1725,25 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* !ACPI_REDUCED_HARDWARE */
+name|Status
+operator|=
+name|AcpiGetHandle
+argument_list|(
+name|NULL
+argument_list|,
+literal|"\\"
+argument_list|,
+operator|&
+name|Handle
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiGetHandle
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AcpiGbl_DoInterfaceTests

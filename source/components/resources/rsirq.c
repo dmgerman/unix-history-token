@@ -53,7 +53,7 @@ begin_decl_stmt
 name|ACPI_RSCONVERT_INFO
 name|AcpiRsGetIrq
 index|[
-literal|8
+literal|9
 index|]
 init|=
 block|{
@@ -154,7 +154,7 @@ block|,
 literal|3
 block|}
 block|,
-comment|/* Get flags: Triggering[0], Polarity[3], Sharing[4] */
+comment|/* Get flags: Triggering[0], Polarity[3], Sharing[4], Wake[5] */
 block|{
 name|ACPI_RSC_1BITFLAG
 block|,
@@ -220,6 +220,28 @@ argument_list|)
 block|,
 literal|4
 block|}
+block|,
+block|{
+name|ACPI_RSC_1BITFLAG
+block|,
+name|ACPI_RS_OFFSET
+argument_list|(
+name|Data
+operator|.
+name|Irq
+operator|.
+name|WakeCapable
+argument_list|)
+block|,
+name|AML_OFFSET
+argument_list|(
+name|Irq
+operator|.
+name|Flags
+argument_list|)
+block|,
+literal|5
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -232,7 +254,7 @@ begin_decl_stmt
 name|ACPI_RSCONVERT_INFO
 name|AcpiRsSetIrq
 index|[
-literal|13
+literal|14
 index|]
 init|=
 block|{
@@ -282,7 +304,7 @@ argument|Data.Irq.InterruptCount
 argument_list|)
 block|}
 block|,
-comment|/* Set the flags byte */
+comment|/* Set flags: Triggering[0], Polarity[3], Sharing[4], Wake[5] */
 block|{
 name|ACPI_RSC_1BITFLAG
 block|,
@@ -347,6 +369,28 @@ name|Flags
 argument_list|)
 block|,
 literal|4
+block|}
+block|,
+block|{
+name|ACPI_RSC_1BITFLAG
+block|,
+name|ACPI_RS_OFFSET
+argument_list|(
+name|Data
+operator|.
+name|Irq
+operator|.
+name|WakeCapable
+argument_list|)
+block|,
+name|AML_OFFSET
+argument_list|(
+name|Irq
+operator|.
+name|Flags
+argument_list|)
+block|,
+literal|5
 block|}
 block|,
 comment|/*      * All done if the output descriptor length is required to be 3      * (i.e., optimization to 2 bytes cannot be attempted)      */
@@ -490,7 +534,7 @@ begin_decl_stmt
 name|ACPI_RSCONVERT_INFO
 name|AcpiRsConvertExtIrq
 index|[
-literal|9
+literal|10
 index|]
 init|=
 block|{
@@ -523,7 +567,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Flag bits */
+comment|/*      * Flags: Producer/Consumer[0], Triggering[1], Polarity[2],      *        Sharing[3], Wake[4]      */
 block|{
 name|ACPI_RSC_1BITFLAG
 block|,
@@ -610,6 +654,28 @@ name|Flags
 argument_list|)
 block|,
 literal|3
+block|}
+block|,
+block|{
+name|ACPI_RSC_1BITFLAG
+block|,
+name|ACPI_RS_OFFSET
+argument_list|(
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
+name|WakeCapable
+argument_list|)
+block|,
+name|AML_OFFSET
+argument_list|(
+name|ExtendedIrq
+operator|.
+name|Flags
+argument_list|)
+block|,
+literal|4
 block|}
 block|,
 comment|/* IRQ Table length (Byte4) */
@@ -926,7 +992,7 @@ argument_list|)
 block|,
 literal|1
 block|}
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 

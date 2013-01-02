@@ -277,22 +277,16 @@ decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
-comment|/*      * Stay silent if the debug level or component ID is disabled      */
+comment|/* Check if debug output enabled */
 if|if
 condition|(
 operator|!
-operator|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
 name|RequestedDebugLevel
-operator|&
-name|AcpiDbgLevel
-operator|)
-operator|||
-operator|!
-operator|(
+argument_list|,
 name|ComponentId
-operator|&
-name|AcpiDbgLayer
-operator|)
+argument_list|)
 condition|)
 block|{
 return|return;
@@ -446,21 +440,16 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+comment|/* Check if debug output enabled */
 if|if
 condition|(
 operator|!
-operator|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
 name|RequestedDebugLevel
-operator|&
-name|AcpiDbgLevel
-operator|)
-operator|||
-operator|!
-operator|(
+argument_list|,
 name|ComponentId
-operator|&
-name|AcpiDbgLayer
-operator|)
+argument_list|)
 condition|)
 block|{
 return|return;
@@ -525,6 +514,17 @@ expr_stmt|;
 name|AcpiUtTrackStackPtr
 argument_list|()
 expr_stmt|;
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -542,6 +542,7 @@ argument_list|,
 name|AcpiGbl_FnEntryStr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -587,6 +588,17 @@ expr_stmt|;
 name|AcpiUtTrackStackPtr
 argument_list|()
 expr_stmt|;
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -606,6 +618,7 @@ argument_list|,
 name|Pointer
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -644,6 +657,17 @@ expr_stmt|;
 name|AcpiUtTrackStackPtr
 argument_list|()
 expr_stmt|;
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -663,6 +687,7 @@ argument_list|,
 name|String
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -700,6 +725,17 @@ expr_stmt|;
 name|AcpiUtTrackStackPtr
 argument_list|()
 expr_stmt|;
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -719,6 +755,7 @@ argument_list|,
 name|Integer
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -747,6 +784,17 @@ name|UINT32
 name|ComponentId
 parameter_list|)
 block|{
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -764,6 +812,7 @@ argument_list|,
 name|AcpiGbl_FnExitStr
 argument_list|)
 expr_stmt|;
+block|}
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
@@ -804,6 +853,17 @@ parameter_list|,
 name|ACPI_STATUS
 name|Status
 parameter_list|)
+block|{
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
 block|{
 if|if
 condition|(
@@ -861,6 +921,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
@@ -902,6 +963,17 @@ name|UINT64
 name|Value
 parameter_list|)
 block|{
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -924,6 +996,7 @@ name|Value
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
@@ -966,6 +1039,17 @@ modifier|*
 name|Ptr
 parameter_list|)
 block|{
+comment|/* Check if enabled up-front for performance */
+if|if
+condition|(
+name|ACPI_IS_DEBUG_ENABLED
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|ComponentId
+argument_list|)
+condition|)
+block|{
 name|AcpiDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
@@ -985,6 +1069,7 @@ argument_list|,
 name|Ptr
 argument_list|)
 expr_stmt|;
+block|}
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;

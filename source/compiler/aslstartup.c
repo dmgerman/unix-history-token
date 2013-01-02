@@ -770,7 +770,7 @@ if|#
 directive|if
 literal|0
 comment|/* TBD: Handle additional output files for disassembler */
-block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);         LsDisplayNamespace ();
+block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);         NsDisplayNamespace ();
 endif|#
 directive|endif
 comment|/* Shutdown compiler and ACPICA subsystem */

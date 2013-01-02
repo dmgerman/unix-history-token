@@ -117,7 +117,7 @@ end_endif
 
 begin_function_decl
 name|ACPI_STATUS
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 parameter_list|(
 name|void
 parameter_list|)
@@ -126,7 +126,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|LsSetupNsList
+name|NsSetupNamespaceListing
 parameter_list|(
 name|void
 modifier|*
@@ -1050,12 +1050,12 @@ argument_list|(
 literal|"/**** Before second load\n"
 argument_list|)
 expr_stmt|;
-name|LsSetupNsList
+name|NsSetupNamespaceListing
 argument_list|(
 name|File
 argument_list|)
 expr_stmt|;
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1238,12 +1238,12 @@ argument_list|(
 literal|"/**** After second load and resource conversion\n"
 argument_list|)
 expr_stmt|;
-name|LsSetupNsList
+name|NsSetupNamespaceListing
 argument_list|(
 name|File
 argument_list|)
 expr_stmt|;
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1352,12 +1352,12 @@ name|AslCompilerdebug
 condition|)
 comment|/* Display final namespace, with transforms */
 block|{
-name|LsSetupNsList
+name|NsSetupNamespaceListing
 argument_list|(
 name|File
 argument_list|)
 expr_stmt|;
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
 block|}

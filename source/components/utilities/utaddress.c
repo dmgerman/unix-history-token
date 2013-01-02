@@ -452,7 +452,7 @@ name|ACPI_ADR_SPACE_SYSTEM_IO
 operator|)
 condition|)
 block|{
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 literal|0
 argument_list|)
@@ -564,7 +564,7 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|OverlapCount
 argument_list|)

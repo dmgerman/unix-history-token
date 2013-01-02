@@ -107,10 +107,8 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
-argument_list|(
-name|DmParseDeferredOps
-argument_list|)
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 comment|/* Traverse the entire parse tree */
 while|while

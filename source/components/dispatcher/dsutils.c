@@ -306,7 +306,7 @@ literal|"Null Op"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT8
+name|return_VALUE
 argument_list|(
 name|TRUE
 argument_list|)
@@ -373,7 +373,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT8
+name|return_VALUE
 argument_list|(
 name|FALSE
 argument_list|)
@@ -415,7 +415,7 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT8
+name|return_VALUE
 argument_list|(
 name|FALSE
 argument_list|)
@@ -659,7 +659,7 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT8
+name|return_VALUE
 argument_list|(
 name|TRUE
 argument_list|)
@@ -699,7 +699,7 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT8
+name|return_VALUE
 argument_list|(
 name|FALSE
 argument_list|)

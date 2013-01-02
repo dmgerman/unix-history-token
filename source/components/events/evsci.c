@@ -118,7 +118,7 @@ expr_stmt|;
 name|AcpiSciCount
 operator|++
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|InterruptHandled
 argument_list|)
@@ -165,7 +165,7 @@ argument_list|(
 name|GpeXruptList
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|InterruptHandled
 argument_list|)

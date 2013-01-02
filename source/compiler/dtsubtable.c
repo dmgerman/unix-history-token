@@ -148,6 +148,16 @@ name|Parent
 operator|=
 name|ParentTable
 expr_stmt|;
+name|Subtable
+operator|->
+name|Depth
+operator|=
+name|ParentTable
+operator|->
+name|Depth
+operator|+
+literal|1
+expr_stmt|;
 comment|/* Link the new entry into the child list */
 if|if
 condition|(

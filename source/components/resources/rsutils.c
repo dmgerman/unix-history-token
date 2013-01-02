@@ -1263,7 +1263,12 @@ name|Status
 operator|=
 name|AcpiUtEvaluateObject
 argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
 name|Handle
+argument_list|)
 argument_list|,
 name|Path
 argument_list|,

@@ -1319,7 +1319,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|LkCrossReferenceNamespace
+name|XfCrossReferenceNamespace
 argument_list|()
 expr_stmt|;
 if|if
@@ -1370,9 +1370,9 @@ name|RootNode
 argument_list|,
 name|ASL_WALK_VISIT_TWICE
 argument_list|,
-name|AnMethodAnalysisWalkBegin
+name|MtMethodAnalysisWalkBegin
 argument_list|,
-name|AnMethodAnalysisWalkEnd
+name|MtMethodAnalysisWalkEnd
 argument_list|,
 operator|&
 name|AnalysisWalkInfo
@@ -1608,14 +1608,14 @@ comment|/* Create listings and hex files */
 name|LsDoListings
 argument_list|()
 expr_stmt|;
-name|LsDoHexOutput
+name|HxDoHexOutput
 argument_list|()
 expr_stmt|;
 comment|/* Dump the namespace to the .nsp file if requested */
 operator|(
 name|void
 operator|)
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
 block|}
@@ -1712,13 +1712,13 @@ name|USec
 operator|=
 name|Delta
 operator|/
-literal|10
+name|ACPI_100NSEC_PER_USEC
 expr_stmt|;
 name|MSec
 operator|=
 name|Delta
 operator|/
-literal|10000
+name|ACPI_100NSEC_PER_MSEC
 expr_stmt|;
 comment|/* Round milliseconds up */
 if|if
@@ -1729,7 +1729,7 @@ operator|-
 operator|(
 name|MSec
 operator|*
-literal|1000
+name|ACPI_USEC_PER_MSEC
 operator|)
 operator|)
 operator|>=

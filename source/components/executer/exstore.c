@@ -1040,7 +1040,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Storing %s (%p) directly into node (%p) with no implicit conversion\n"
+literal|"Storing [%s] (%p) directly into node [%s] (%p)"
+literal|" with no implicit conversion\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -1049,24 +1050,60 @@ argument_list|)
 operator|,
 name|SourceDesc
 operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|TargetDesc
+argument_list|)
+operator|,
 name|Node
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* No conversions for all other types. Just attach the source object */
+comment|/*          * No conversions for all other types. Directly store a copy of          * the source object. NOTE: This is a departure from the ACPI          * spec, which states "If conversion is impossible, abort the          * running control method".          *          * This code implements "If conversion is impossible, treat the          * Store operation as a CopyObject".          */
+name|Status
+operator|=
+name|AcpiUtCopyIobjectToIobject
+argument_list|(
+name|SourceDesc
+argument_list|,
+operator|&
+name|NewDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
 name|Node
 argument_list|,
-name|SourceDesc
+name|NewDesc
 argument_list|,
-name|SourceDesc
+name|NewDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|NewDesc
 argument_list|)
 expr_stmt|;
 break|break;

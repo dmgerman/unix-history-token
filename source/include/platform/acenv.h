@@ -876,7 +876,7 @@ name|ACPI_USE_SYSTEM_CLIBRARY
 end_ifdef
 
 begin_comment
-comment|/* Use the standard C library headers. We want to keep these to a minimum */
+comment|/* Use the standard C library headers. We want to keep these to a minimum. */
 end_comment
 
 begin_ifdef

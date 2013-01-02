@@ -423,37 +423,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Is "c" a namestring prefix character?  */
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiPsIsPrefixChar
-parameter_list|(
-name|UINT32
-name|c
-parameter_list|)
-block|{
-return|return
-operator|(
-call|(
-name|BOOLEAN
-call|)
-argument_list|(
-name|c
-operator|==
-literal|'\\'
-operator|||
-name|c
-operator|==
-literal|'^'
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Get op's name (4-byte name segment) or 0 if unnamed  */
 end_comment
 

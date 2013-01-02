@@ -349,12 +349,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
 name|Name
 index|[
 literal|0
 index|]
-operator|==
-literal|'\\'
+argument_list|)
 condition|)
 block|{
 comment|/* Validate new scope from the root */

@@ -1774,19 +1774,17 @@ comment|/* No dots in the namepath, there is only a single nameseg. */
 comment|/* Handle prefixes */
 while|while
 condition|(
-operator|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
 operator|*
 name|Name
-operator|==
-literal|'\\'
-operator|)
+argument_list|)
 operator|||
-operator|(
+name|ACPI_IS_PARENT_PREFIX
+argument_list|(
 operator|*
 name|Name
-operator|==
-literal|'^'
-operator|)
+argument_list|)
 condition|)
 block|{
 name|Name

@@ -335,7 +335,9 @@ block|{
 comment|/*          * We wanted to sleep> S3, but it didn't happen (by virtue of the          * fact that we are still executing!)          *          * Wait ten seconds, then try again. This is to get S4/S5 to work on          * all machines.          *          * We wait so long to allow chipsets that poll this reg very slowly          * to still read the right value. Ideally, this block would go          * away entirely.          */
 name|AcpiOsStall
 argument_list|(
-literal|10000000
+literal|10
+operator|*
+name|ACPI_USEC_PER_SEC
 argument_list|)
 expr_stmt|;
 name|Status

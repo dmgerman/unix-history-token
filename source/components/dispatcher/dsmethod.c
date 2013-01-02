@@ -271,6 +271,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtDeleteObjectDesc
+argument_list|(
+name|MutexDesc
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

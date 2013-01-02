@@ -205,7 +205,7 @@ operator|&
 name|ByteZeroMask
 operator|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|PackageLength
 argument_list|)
@@ -300,7 +300,13 @@ expr_stmt|;
 comment|/* Point past any namestring prefix characters (backslash or carat) */
 while|while
 condition|(
-name|AcpiPsIsPrefixChar
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+operator|*
+name|End
+argument_list|)
+operator|||
+name|ACPI_IS_PARENT_PREFIX
 argument_list|(
 operator|*
 name|End
@@ -2027,7 +2033,12 @@ argument_list|(
 name|Subop
 argument_list|)
 operator|||
-name|AcpiPsIsPrefixChar
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+name|Subop
+argument_list|)
+operator|||
+name|ACPI_IS_PARENT_PREFIX
 argument_list|(
 name|Subop
 argument_list|)
