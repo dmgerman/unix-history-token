@@ -315,6 +315,10 @@ name|AR_PHY_SPECTRAL_SCAN_PERIOD_S
 value|8
 end_define
 
+begin_comment
+comment|/* Scan count and Short repeat flags are different for Kiwi and Merlin */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -332,6 +336,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_PHY_SPECTRAL_SCAN_COUNT_KIWI
+value|0x0FFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_COUNT_KIWI_S
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_PHY_SPECTRAL_SCAN_SHORT_REPEAT
 value|0x01000000
 end_define
@@ -342,6 +360,68 @@ directive|define
 name|AR_PHY_SPECTRAL_SCAN_SHORT_REPEAT_S
 value|24
 end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_SHORT_REPEAT_KIWI
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_SHORT_REPEAT_KIWI_S
+value|28
+end_define
+
+begin_comment
+comment|/*  * Kiwi only, bit 30 is used to set the error type, if set it is 0x5 (HAL_PHYERR_RADAR)  * Else it is 38 (new error type)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_PHYERR_MASK_SELECT_KIWI
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Spectral Error select bit mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_PHYERR_MASK_SELECT_KIWI_S
+value|30
+end_define
+
+begin_comment
+comment|/* Spectral Error select bit 30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_PRIORITY_SELECT_KIWI
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Spectral Error select bit mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_SPECTRAL_SCAN_PRIORITY_SELECT_SELECT_KIWI_S
+value|29
+end_define
+
+begin_comment
+comment|/* Spectral Error select bit 30 */
+end_comment
 
 begin_comment
 comment|/* For AR_PHY_RADAR0 */
@@ -378,14 +458,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR_PHY_RADAR_1_BIN_THRESH_SEL
+name|AR_PHY_RADAR_1_BIN_THRESH_SELECT
 value|0x07000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR_PHY_RADAR_1_BIN_THRESH_SEL_S
+name|AR_PHY_RADAR_1_BIN_THRESH_SELECT_S
 value|24
 end_define
 

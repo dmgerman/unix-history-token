@@ -2139,6 +2139,12 @@ name|halPSPollBroken
 operator|=
 name|AH_FALSE
 expr_stmt|;
+name|pCap
+operator|->
+name|halSpectralScanSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 comment|/* Hardware supports (at least) single-stream STBC TX/RX */
 name|pCap
 operator|->
