@@ -926,8 +926,7 @@ name|ath_ratestats
 modifier|*
 name|r
 parameter_list|,
-specifier|const
-name|char
+name|uint8_t
 modifier|*
 name|mac
 parameter_list|)
@@ -1043,6 +1042,10 @@ name|uint8_t
 modifier|*
 name|buf
 init|=
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|r
 operator|->
 name|re
@@ -1584,6 +1587,10 @@ name|re
 operator|.
 name|buf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|r
