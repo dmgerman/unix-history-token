@@ -71,11 +71,22 @@ directive|include
 file|<err.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_KERBEROS
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<krb5.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -429,6 +440,9 @@ break|break;
 case|case
 literal|'s'
 case|:
+ifndef|#
+directive|ifndef
+name|WITHOUT_KERBEROS
 comment|/* 			 * Set the directory search list. This enables use of 			 * find_ccache_file() to search the directories for a 			 * suitable credentials cache file. 			 */
 name|strlcpy
 argument_list|(
@@ -442,6 +456,18 @@ name|ccfile_dirlist
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"This option not available when built"
+literal|" without MK_KERBEROS\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'c'
@@ -4061,6 +4087,9 @@ modifier|*
 name|retexptime
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|WITHOUT_KERBEROS
 name|krb5_context
 name|context
 decl_stmt|;
@@ -4556,6 +4585,17 @@ operator|(
 name|ret
 operator|)
 return|;
+else|#
+directive|else
+comment|/* WITHOUT_KERBEROS */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* !WITHOUT_KERBEROS */
 block|}
 end_function
 
