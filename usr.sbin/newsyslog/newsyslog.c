@@ -8599,6 +8599,14 @@ argument_list|,
 name|file1
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ttouch %s\t\t"
+literal|"# Update mtime for 'when'-interval processing\n"
+argument_list|,
+name|file1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -8630,6 +8638,14 @@ operator|->
 name|log
 argument_list|,
 name|file1
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Interval-based rotations are done using the mtime of 			 * the most recently archived log, so make sure it gets 			 * updated during a rotation. 			 */
+name|utimes
+argument_list|(
+name|file1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
