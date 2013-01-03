@@ -7439,7 +7439,7 @@ argument_list|(
 name|errbuf
 argument_list|)
 argument_list|,
-literal|"Could not delet old logfile '%s'"
+literal|"Could not delete old logfile '%s'"
 argument_list|,
 name|oldlogs
 index|[
