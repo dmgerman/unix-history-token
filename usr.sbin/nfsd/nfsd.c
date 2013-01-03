@@ -1043,6 +1043,10 @@ condition|(
 name|errno
 operator|!=
 name|EPROTONOSUPPORT
+operator|&&
+name|errno
+operator|!=
+name|EAFNOSUPPORT
 condition|)
 name|err
 argument_list|(
