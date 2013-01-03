@@ -7825,6 +7825,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|origs
 decl_stmt|;
 name|int
 name|sep
@@ -7863,11 +7866,16 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* source string */
+name|origs
+operator|=
 name|s
 operator|=
+name|strdup
+argument_list|(
 name|getsval
 argument_list|(
 name|y
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|arg3type
@@ -8786,6 +8794,11 @@ expr_stmt|;
 name|tempfree
 argument_list|(
 name|y
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|origs
 argument_list|)
 expr_stmt|;
 if|if
