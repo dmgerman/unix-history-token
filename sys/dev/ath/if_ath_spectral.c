@@ -208,7 +208,7 @@ comment|/*  * Methods which are required  */
 end_comment
 
 begin_comment
-comment|/*  * Attach DFS to the given interface  */
+comment|/*  * Attach spectral to the given interface  */
 end_comment
 
 begin_function
@@ -226,6 +226,22 @@ name|ath_spectral_state
 modifier|*
 name|ss
 decl_stmt|;
+comment|/* 	 * If spectral isn't supported, don't error - just 	 * quietly complete. 	 */
+if|if
+condition|(
+operator|!
+name|ath_hal_spectral_supported
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|ss
 operator|=
 name|malloc
@@ -298,7 +314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach DFS from the given interface  */
+comment|/*  * Detach spectral from the given interface  */
 end_comment
 
 begin_function
@@ -311,6 +327,21 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ath_hal_spectral_supported
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|sc
@@ -441,6 +472,21 @@ name|sc
 operator|->
 name|sc_spectral
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ath_hal_spectral_supported
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|ad
