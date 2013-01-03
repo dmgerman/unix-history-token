@@ -250,16 +250,6 @@ directive|include
 file|<xen/xenbus/xenbusvar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NUM_ELEMENTS
-parameter_list|(
-name|x
-parameter_list|)
-value|(sizeof(x) / sizeof(*(x)))
-end_define
-
 begin_comment
 comment|/*--------------------------- Forward Declarations --------------------------*/
 end_comment
@@ -346,6 +336,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|xctrl_shutdown_reason
 name|xctrl_shutdown_reasons
@@ -467,9 +458,6 @@ name|void
 name|xctrl_suspend
 parameter_list|()
 block|{
-name|u_int
-name|cpuid
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -500,6 +488,9 @@ name|td
 decl_stmt|;
 name|cpuset_t
 name|map
+decl_stmt|;
+name|u_int
+name|cpuid
 decl_stmt|;
 comment|/* 	 * Bind us to CPU 0 and stop any other VCPUs. 	 */
 name|td
@@ -603,7 +594,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xen_suspend: device_suspend failed\n"
+literal|"%s: device_suspend failed\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1012,6 +1005,8 @@ name|DEVICE_SUSPEND
 argument_list|(
 name|root_bus
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|mtx_unlock
@@ -1022,7 +1017,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xen_suspend: device_suspend failed\n"
+literal|"%s: device_suspend failed\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1151,11 +1148,13 @@ name|int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|xctrl_shutdown_reason
 modifier|*
 name|reason
 decl_stmt|;
+specifier|const
 name|struct
 name|xctrl_shutdown_reason
 modifier|*
@@ -1208,7 +1207,7 @@ name|last_reason
 operator|=
 name|reason
 operator|+
-name|NUM_ELEMENTS
+name|nitems
 argument_list|(
 name|xctrl_shutdown_reasons
 argument_list|)
@@ -1488,11 +1487,7 @@ argument_list|,
 name|xctrl_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1532,9 +1527,9 @@ name|xctrl_driver
 argument_list|,
 name|xctrl_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
