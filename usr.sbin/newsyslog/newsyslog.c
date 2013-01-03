@@ -3339,7 +3339,7 @@ case|:
 name|noaction
 operator|++
 expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
 literal|'r'
 case|:
