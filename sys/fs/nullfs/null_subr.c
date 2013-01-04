@@ -754,7 +754,7 @@ name|nullm_flags
 operator|&
 name|NULLM_CACHE
 operator|)
-operator|==
+operator|!=
 literal|0
 argument_list|,
 operator|(
