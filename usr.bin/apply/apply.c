@@ -128,9 +128,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -999,10 +1001,12 @@ name|char
 modifier|*
 name|command
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|use_shell
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|use_name
@@ -1179,6 +1183,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
