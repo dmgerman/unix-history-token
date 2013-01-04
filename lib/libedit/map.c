@@ -5493,8 +5493,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|out
-init|=
-name|NULL
 decl_stmt|;
 name|el_bindings_t
 modifier|*
@@ -6134,11 +6132,11 @@ name|el
 argument_list|,
 name|in
 argument_list|,
-name|key_map_str
+name|key_map_cmd
 argument_list|(
 name|el
 argument_list|,
-name|out
+name|cmd
 argument_list|)
 argument_list|,
 name|ntype
