@@ -3369,7 +3369,7 @@ name|isc_uint16_t
 name|keyid
 parameter_list|,
 name|isc_boolean_t
-name|delete
+name|deleteit
 parameter_list|)
 function_decl|;
 end_function_decl

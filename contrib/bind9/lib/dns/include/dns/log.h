@@ -344,6 +344,20 @@ name|DNS_LOGMODULE_DLZ
 value|(&dns_modules[26])
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_LOGMODULE_DNSSEC
+value|(&dns_modules[27])
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_LOGMODULE_CRYPTO
+value|(&dns_modules[28])
+end_define
+
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
 name|void

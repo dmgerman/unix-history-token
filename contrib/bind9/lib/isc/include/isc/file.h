@@ -118,8 +118,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|isc_file_bopenunique
+parameter_list|(
+name|char
+modifier|*
+name|templet
+parameter_list|,
+name|FILE
+modifier|*
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*!<  * \brief Create and open a file with a unique name based on 'templet'.  *  * Notes:  *\li	'template' is a reserved work in C++.  If you want to complain  *	about the spelling of 'templet', first look it up in the  *	Merriam-Webster English dictionary. (http://www.m-w.com/)  *  *\li	This function works by using the template to generate file names.  *	The template must be a writable string, as it is modified in place.  *	Trailing X characters in the file name (full file name on Unix,  *	basename on Win32 -- eg, tmp-XXXXXX vs XXXXXX.tmp, respectively)  *	are replaced with ASCII characters until a non-existent filename  *	is found.  If the template does not include pathname information,  *	the files in the working directory of the program are searched.  *  *\li	isc_file_mktemplate is a good, portable way to get a template.  *  * Requires:  *\li	'fp' is non-NULL and '*fp' is NULL.  *  *\li	'template' is non-NULL, and of a form suitable for use by  *	the system as described above.  *  * Ensures:  *\li	If result is #ISC_R_SUCCESS:  *		*fp points to an stream opening in stdio's "w+" mode.  *  *\li	If result is not #ISC_R_SUCCESS:  *		*fp is NULL.  *  *		No file is open.  Even if one was created (but unable  *		to be reopened as a stdio FILE pointer) then it has been  *		removed.  *  *\li	This function does *not* ensure that the template string has not been  *	modified, even if the operation was unsuccessful.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_EXISTS  *		No file with a unique name could be created based on the  *		template.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file could not be created because permission was denied  *		to some part of the file's path.  *\li	#ISC_R_IOERROR  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  */
+comment|/*!<  * \brief Create and open a file with a unique name based on 'templet'.  *	isc_file_bopen*() open the file in binary mode in Windows.   *	isc_file_open*() open the file in text mode in Windows.   *  * Notes:  *\li	'template' is a reserved work in C++.  If you want to complain  *	about the spelling of 'templet', first look it up in the  *	Merriam-Webster English dictionary. (http://www.m-w.com/)  *  *\li	This function works by using the template to generate file names.  *	The template must be a writable string, as it is modified in place.  *	Trailing X characters in the file name (full file name on Unix,  *	basename on Win32 -- eg, tmp-XXXXXX vs XXXXXX.tmp, respectively)  *	are replaced with ASCII characters until a non-existent filename  *	is found.  If the template does not include pathname information,  *	the files in the working directory of the program are searched.  *  *\li	isc_file_mktemplate is a good, portable way to get a template.  *  * Requires:  *\li	'fp' is non-NULL and '*fp' is NULL.  *  *\li	'template' is non-NULL, and of a form suitable for use by  *	the system as described above.  *  * Ensures:  *\li	If result is #ISC_R_SUCCESS:  *		*fp points to an stream opening in stdio's "w+" mode.  *  *\li	If result is not #ISC_R_SUCCESS:  *		*fp is NULL.  *  *		No file is open.  Even if one was created (but unable  *		to be reopened as a stdio FILE pointer) then it has been  *		removed.  *  *\li	This function does *not* ensure that the template string has not been  *	modified, even if the operation was unsuccessful.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_EXISTS  *		No file with a unique name could be created based on the  *		template.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file could not be created because permission was denied  *		to some part of the file's path.  *\li	#ISC_R_IOERROR  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  */
 end_comment
 
 begin_function_decl

@@ -243,6 +243,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|query_error
+init|=
+literal|1
+decl_stmt|,
+name|print_error
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 name|domainopt
 index|[
@@ -1830,6 +1843,11 @@ index|[
 name|ISC_SOCKADDR_FORMATSIZE
 index|]
 decl_stmt|;
+comment|/* I've we've gotten this far, we've reached a server. */
+name|query_error
+operator|=
+literal|0
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"printmessage()"
@@ -2001,6 +2019,11 @@ name|debug
 argument_list|(
 literal|"returning with rcode == 0"
 argument_list|)
+expr_stmt|;
+comment|/* the lookup failed */
+name|print_error
+operator||=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -5029,7 +5052,9 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|query_error
+operator||
+name|print_error
 operator|)
 return|;
 block|}
