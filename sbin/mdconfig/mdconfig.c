@@ -316,7 +316,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\ttype = {malloc, preload, vnode, swap}\n"
+literal|"\t\ttype = {malloc, vnode, swap}\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -583,31 +583,6 @@ operator|=
 name|MD_AUTOUNIT
 operator||
 name|MD_COMPRESS
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
-literal|"preload"
-argument_list|)
-condition|)
-block|{
-name|mdio
-operator|.
-name|md_type
-operator|=
-name|MD_PRELOAD
-expr_stmt|;
-name|mdio
-operator|.
-name|md_options
-operator|=
-literal|0
 expr_stmt|;
 block|}
 elseif|else
