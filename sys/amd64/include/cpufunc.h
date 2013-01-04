@@ -2085,62 +2085,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CR0_TS
-end_ifndef
-
-begin_comment
-comment|/* Defined in<machine/specialreg.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CR0_TS
-value|0x00000008
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|start_emulating
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("smsw %%ax; orb %0,%%al; lmsw %%ax"
-block|: :
-literal|"n"
-operator|(
-name|CR0_TS
-operator|)
-operator|:
-literal|"ax"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|stop_emulating
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("clts");
-block|}
-end_function
-
 begin_function
 specifier|static
 name|__inline

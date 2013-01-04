@@ -618,7 +618,7 @@ define|#
 directive|define
 name|fpu_start_emulating
 parameter_list|()
-value|start_emulating()
+value|load_cr0(rcr0() | CR0_TS)
 end_define
 
 begin_define
@@ -626,7 +626,7 @@ define|#
 directive|define
 name|fpu_stop_emulating
 parameter_list|()
-value|stop_emulating()
+value|clts()
 end_define
 
 begin_expr_stmt
