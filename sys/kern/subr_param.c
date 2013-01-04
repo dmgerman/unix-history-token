@@ -1485,6 +1485,9 @@ name|realmem
 operator|=
 name|qmin
 argument_list|(
+operator|(
+name|quad_t
+operator|)
 name|physpages
 operator|*
 name|PAGE_SIZE

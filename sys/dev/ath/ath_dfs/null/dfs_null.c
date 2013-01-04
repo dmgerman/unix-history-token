@@ -285,6 +285,36 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Explicity disable radar reporting.  *  * Return 0 if it was disabled,< 0 on error.  */
+end_comment
+
+begin_function
+name|int
+name|ath_dfs_radar_disable
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|#
+directive|if
+literal|0
+block|HAL_PHYERR_PARAM pe;  	(void) ath_hal_getdfsthresh(sc->sc_ah,&pe); 	pe.pe_enabled = 0; 	(void) ath_hal_enabledfs(sc->sc_ah,&pe); 	return (0);
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
 comment|/*  * Process DFS related PHY errors  *  * The mbuf is not "ours" and if we want a copy, we have  * to take a copy.  It'll be freed after this function returns.  */
 end_comment
 

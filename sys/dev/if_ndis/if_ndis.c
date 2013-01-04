@@ -6023,7 +6023,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -7068,7 +7068,7 @@ name|m_dup
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* 				 * NOTE: we want to destroy the mbuf here, but 				 * we don't actually want to return it to the 				 * driver via the return packet handler. By 				 * bumping np_refcnt, we can prevent the 				 * ndis_return_packet() routine from actually 				 * doing anything. 				 */
@@ -7116,7 +7116,7 @@ name|m_dup
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

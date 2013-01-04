@@ -52,6 +52,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Used by the adhoc/mesh/tdma paths.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ieee80211_parse_wmeparams
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|uint8_t
+modifier|*
+name|frm
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

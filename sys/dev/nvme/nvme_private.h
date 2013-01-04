@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/uma.h>
 end_include
 
@@ -133,9 +127,24 @@ end_endif
 begin_define
 define|#
 directive|define
-name|IDT_PCI_ID
+name|IDT32_PCI_ID
 value|0x80d0111d
 end_define
+
+begin_comment
+comment|/* 32 channel board */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT8_PCI_ID
+value|0x80d2111d
+end_define
+
+begin_comment
+comment|/* 8 channel board */
+end_comment
 
 begin_define
 define|#
@@ -558,6 +567,15 @@ name|resource
 modifier|*
 name|resource
 decl_stmt|;
+comment|/* 	 * The NVMe spec allows for the MSI-X table to be placed in BAR 4/5, 	 *  separate from the control registers which are in BAR 0/1.  These 	 *  members track the mapping of BAR 4/5 for that reason. 	 */
+name|int
+name|bar4_resource_id
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|bar4_resource
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CHATHAM2
@@ -612,15 +630,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|tag
-decl_stmt|;
-name|struct
-name|task
-name|task
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|taskqueue
 decl_stmt|;
 name|bus_dma_tag_t
 name|hw_desc_tag

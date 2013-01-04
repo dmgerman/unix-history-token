@@ -5235,6 +5235,11 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+name|outclearerror
+argument_list|(
+name|out1
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If there is no command word, redirection errors should 		 * not be fatal but assignment errors should. 		 */
 if|if
 condition|(
@@ -5314,6 +5319,34 @@ expr_stmt|;
 name|flushall
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|outiserror
+argument_list|(
+name|out1
+argument_list|)
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"write error on stdout"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|exitstatus
+operator|==
+literal|0
+operator|||
+name|exitstatus
+operator|==
+literal|1
+condition|)
+name|exitstatus
+operator|=
+literal|2
+expr_stmt|;
+block|}
 name|cmddone
 label|:
 if|if

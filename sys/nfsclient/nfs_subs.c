@@ -531,7 +531,7 @@ name|MGET
 argument_list|(
 name|mb
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -546,7 +546,7 @@ name|MCLGET
 argument_list|(
 name|mb
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mb
@@ -727,7 +727,7 @@ name|MGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -740,7 +740,7 @@ name|MCLGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mp
@@ -947,7 +947,7 @@ name|MGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1201,7 +1201,7 @@ name|MGET
 argument_list|(
 name|m1
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1216,7 +1216,7 @@ name|MCLGET
 argument_list|(
 name|m1
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m1
@@ -2089,7 +2089,7 @@ argument_list|)
 argument_list|,
 name|t1
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

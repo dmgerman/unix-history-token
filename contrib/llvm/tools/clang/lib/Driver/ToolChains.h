@@ -1800,6 +1800,12 @@ argument_list|,
 argument|const ActionList&Inputs
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|bool
+name|UseSjLjExceptions
+argument_list|()
+specifier|const
 block|; }
 block|;
 name|class

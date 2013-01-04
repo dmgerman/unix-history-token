@@ -1276,6 +1276,15 @@ argument_list|,
 name|maxsockets
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|pcbinfo
+operator|->
+name|ipi_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

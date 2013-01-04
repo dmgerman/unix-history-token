@@ -1577,10 +1577,7 @@ argument_list|,
 operator|&
 name|count
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|count
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -6147,7 +6144,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

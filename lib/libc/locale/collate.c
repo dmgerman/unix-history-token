@@ -511,7 +511,7 @@ name|fopen
 argument_list|(
 name|buf
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==

@@ -1803,6 +1803,9 @@ name|intmax_t
 operator|)
 name|fsbs
 operator|/
+operator|(
+name|int64_t
+operator|)
 name|bs
 operator|)
 return|;

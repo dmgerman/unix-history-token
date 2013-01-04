@@ -4262,7 +4262,7 @@ name|fopen
 argument_list|(
 name|_PATH_GROUP
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4509,7 +4509,7 @@ name|fopen
 argument_list|(
 name|_PATH_GROUP
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==
@@ -6528,7 +6528,7 @@ name|fopen
 argument_list|(
 name|_PATH_GROUP
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 name|set_setent
@@ -6928,7 +6928,7 @@ name|fopen
 argument_list|(
 name|_PATH_GROUP
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==

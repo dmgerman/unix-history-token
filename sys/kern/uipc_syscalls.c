@@ -3583,7 +3583,7 @@ operator|*
 name|cm
 argument_list|)
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|cm
@@ -8157,7 +8157,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|type
 argument_list|)
@@ -8175,7 +8175,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m

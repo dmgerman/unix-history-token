@@ -1043,7 +1043,7 @@ name|m_collapse
 argument_list|(
 name|mbuf
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|SFXGE_TX_MAPPING_MAX_SEG
 argument_list|)

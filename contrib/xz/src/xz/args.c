@@ -1660,7 +1660,7 @@ name|prev_was_space
 operator|=
 name|false
 expr_stmt|;
-comment|// Keep argc small enough to fit into a singed int
+comment|// Keep argc small enough to fit into a signed int
 comment|// and to keep it usable for memory allocation.
 if|if
 condition|(

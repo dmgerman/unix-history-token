@@ -248,6 +248,39 @@ block|}
 enum|;
 end_enum
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WITNESS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+end_if
+
+begin_function_decl
+name|void
+name|kassert_panic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -267,7 +300,7 @@ name|exp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {						\ 	if (__predict_false(!(exp)))					\ 		panic msg;						\ } while (0)
+value|do {						\ 	if (__predict_false(!(exp)))					\ 		kassert_panic msg;						\ } while (0)
 end_define
 
 begin_define
@@ -281,7 +314,7 @@ name|vp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		panic msg;						\ 	}								\ } while (0)
+value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		kassert_panic msg;						\ 	}								\ } while (0)
 end_define
 
 begin_else

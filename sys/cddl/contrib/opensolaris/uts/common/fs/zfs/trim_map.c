@@ -31,6 +31,20 @@ directive|include
 file|<sys/trim_map.h>
 end_include
 
+begin_comment
+comment|/*  * Calculate the zio end, upgrading based on ashift which would be  * done by zio_vdev_io_start.  *  * This makes free range consolidation much more effective  * than it would otherwise be as well as ensuring that entire  * blocks are invalidated by writes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRIM_ZIO_END
+parameter_list|(
+name|zio
+parameter_list|)
+value|((zio)->io_offset +		\  	P2ROUNDUP((zio)->io_size, 1ULL<< (zio)->io_vd->vdev_top->vdev_ashift))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1466,13 +1480,10 @@ name|zio
 operator|->
 name|io_offset
 argument_list|,
+name|TRIM_ZIO_END
+argument_list|(
 name|zio
-operator|->
-name|io_offset
-operator|+
-name|zio
-operator|->
-name|io_size
+argument_list|)
 argument_list|,
 name|vd
 operator|->
@@ -1558,11 +1569,10 @@ name|io_offset
 expr_stmt|;
 name|end
 operator|=
-name|start
-operator|+
+name|TRIM_ZIO_END
+argument_list|(
 name|zio
-operator|->
-name|io_size
+argument_list|)
 expr_stmt|;
 name|tsearch
 operator|.

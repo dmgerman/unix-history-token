@@ -946,19 +946,19 @@ name|zio_trim_stats
 block|{
 comment|/* 	 * Number of bytes successfully TRIMmed. 	 */
 name|kstat_named_t
-name|zio_trim_bytes
+name|bytes
 decl_stmt|;
 comment|/* 	 * Number of successful TRIM requests. 	 */
 name|kstat_named_t
-name|zio_trim_success
+name|success
 decl_stmt|;
 comment|/* 	 * Number of TRIM requests that failed because TRIM is not 	 * supported. 	 */
 name|kstat_named_t
-name|zio_trim_unsupported
+name|unsupported
 decl_stmt|;
 comment|/* 	 * Number of TRIM requests that failed for other reasons. 	 */
 name|kstat_named_t
-name|zio_trim_failed
+name|failed
 decl_stmt|;
 block|}
 name|zio_trim_stats_t

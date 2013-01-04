@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_struct
 struct|struct
 name|scope6_id
@@ -35,6 +41,23 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|deembed_scopeid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_deembed_scopeid
+value|VNET(deembed_scopeid)
+end_define
 
 begin_function_decl
 name|void

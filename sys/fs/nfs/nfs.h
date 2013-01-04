@@ -150,6 +150,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFSV4_CBSLOTS
+value|8
+end_define
+
+begin_comment
+comment|/* Number of slots for session */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFSV4_CBRETRYCNT
 value|4
 end_define
@@ -558,6 +569,28 @@ end_define
 
 begin_comment
 comment|/* limit for client delegations */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFSCLLAYOUTHIGHWATER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFSCLLAYOUTHIGHWATER
+value|10000
+end_define
+
+begin_comment
+comment|/* limit for client pNFS layouts */
 end_comment
 
 begin_endif
@@ -2321,6 +2354,11 @@ modifier|*
 name|nd_gssname
 decl_stmt|;
 comment|/* principal name */
+name|uint32_t
+modifier|*
+name|nd_slotseq
+decl_stmt|;
+comment|/* ptr to slot seq# in req */
 block|}
 struct|;
 end_struct
@@ -2518,6 +2556,20 @@ name|ND_NFSCL
 value|0x01000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND_NFSV41
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_HASSEQUENCE
+value|0x04000000
+end_define
+
 begin_comment
 comment|/*  * ND_GSS should be the "or" of all GSS type authentications.  */
 end_comment
@@ -2547,6 +2599,9 @@ name|modifyfs
 decl_stmt|;
 name|int
 name|lktype
+decl_stmt|;
+name|int
+name|needsseq
 decl_stmt|;
 block|}
 struct|;
@@ -2736,6 +2791,29 @@ directive|define
 name|NFSACCCHK_VPISLOCKED
 value|1
 end_define
+
+begin_comment
+comment|/*  * Slot for the NFSv4.1 Sequence Op.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsslot
+block|{
+name|int
+name|nfssl_inprog
+decl_stmt|;
+name|uint32_t
+name|nfssl_seq
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|nfssl_reply
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

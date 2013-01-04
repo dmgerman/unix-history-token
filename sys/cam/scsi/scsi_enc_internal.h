@@ -573,6 +573,9 @@ name|cam_periph
 modifier|*
 name|periph
 decl_stmt|;
+name|int
+name|open_count
+decl_stmt|;
 comment|/* Bitmap of pending operations. */
 name|uint32_t
 name|pending_actions

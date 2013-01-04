@@ -2106,7 +2106,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -4146,7 +4146,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MAX_FRAGMENT
 argument_list|)
@@ -4568,7 +4568,7 @@ directive|if
 literal|0
 block|if (m0->m_next != NULL) {
 comment|/* Fragmented mbuf chain, collapse it. */
-block|m_new = m_defrag(m0, M_DONTWAIT); 			if (m_new != NULL) {
+block|m_new = m_defrag(m0, M_NOWAIT); 			if (m_new != NULL) {
 comment|/* Original frame freed. */
 block|m0 = m_new; 			} else {
 comment|/* Defragmentation failed, just use the chain. */

@@ -822,6 +822,56 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x78001022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78011022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78021022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78031022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78041022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x06121b21
 block|,
 literal|0x00
@@ -1337,6 +1387,86 @@ block|,
 literal|0x00
 block|,
 literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c038086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c048086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c058086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c078086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c0e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c0f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
 block|,
 literal|0
 block|}

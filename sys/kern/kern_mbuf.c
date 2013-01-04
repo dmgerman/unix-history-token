@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004, 2005,  * 	Bosko Milekic<bmilekic@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004, 2005,  *	Bosko Milekic<bmilekic@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ file|<vm/uma_dbg.h>
 end_include
 
 begin_comment
-comment|/*  * In FreeBSD, Mbufs and Mbuf Clusters are allocated from UMA  * Zones.  *  * Mbuf Clusters (2K, contiguous) are allocated from the Cluster  * Zone.  The Zone can be capped at kern.ipc.nmbclusters, if the  * administrator so desires.  *  * Mbufs are allocated from a UMA Master Zone called the Mbuf  * Zone.  *  * Additionally, FreeBSD provides a Packet Zone, which it  * configures as a Secondary Zone to the Mbuf Master Zone,  * thus sharing backend Slab kegs with the Mbuf Master Zone.  *  * Thus common-case allocations and locking are simplified:  *  *  m_clget()                m_getcl()  *    |                         |  *    |   .------------>[(Packet Cache)]    m_get(), m_gethdr()  *    |   |             [     Packet   ]            |  *  [(Cluster Cache)]   [    Secondary ]   [ (Mbuf Cache)     ]  *  [ Cluster Zone  ]   [     Zone     ]   [ Mbuf Master Zone ]  *        |                       \________         |  *  [ Cluster Keg   ]                      \       /  *        |    	                         [ Mbuf Keg   ]  *  [ Cluster Slabs ]                         |  *        |                              [ Mbuf Slabs ]  *         \____________(VM)_________________/  *  *  * Whenever an object is allocated with uma_zalloc() out of  * one of the Zones its _ctor_ function is executed.  The same  * for any deallocation through uma_zfree() the _dtor_ function  * is executed.  *  * Caches are per-CPU and are filled from the Master Zone.  *  * Whenever an object is allocated from the underlying global  * memory pool it gets pre-initialized with the _zinit_ functions.  * When the Keg's are overfull objects get decomissioned with  * _zfini_ functions and free'd back to the global memory pool.  *  */
+comment|/*  * In FreeBSD, Mbufs and Mbuf Clusters are allocated from UMA  * Zones.  *  * Mbuf Clusters (2K, contiguous) are allocated from the Cluster  * Zone.  The Zone can be capped at kern.ipc.nmbclusters, if the  * administrator so desires.  *  * Mbufs are allocated from a UMA Master Zone called the Mbuf  * Zone.  *  * Additionally, FreeBSD provides a Packet Zone, which it  * configures as a Secondary Zone to the Mbuf Master Zone,  * thus sharing backend Slab kegs with the Mbuf Master Zone.  *  * Thus common-case allocations and locking are simplified:  *  *  m_clget()                m_getcl()  *    |                         |  *    |   .------------>[(Packet Cache)]    m_get(), m_gethdr()  *    |   |             [     Packet   ]            |  *  [(Cluster Cache)]   [    Secondary ]   [ (Mbuf Cache)     ]  *  [ Cluster Zone  ]   [     Zone     ]   [ Mbuf Master Zone ]  *        |                       \________         |  *  [ Cluster Keg   ]                      \       /  *        |	                         [ Mbuf Keg   ]  *  [ Cluster Slabs ]                         |  *        |                              [ Mbuf Slabs ]  *         \____________(VM)_________________/  *  *  * Whenever an object is allocated with uma_zalloc() out of  * one of the Zones its _ctor_ function is executed.  The same  * for any deallocation through uma_zfree() the _dtor_ function  * is executed.  *  * Caches are per-CPU and are filled from the Master Zone.  *  * Whenever an object is allocated from the underlying global  * memory pool it gets pre-initialized with the _zinit_ functions.  * When the Keg's are overfull objects get decomissioned with  * _zfini_ functions and free'd back to the global memory pool.  *  */
 end_comment
 
 begin_decl_stmt
@@ -1288,7 +1288,8 @@ name|nmbufs
 operator|>
 literal|0
 condition|)
-block|{
+name|nmbufs
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|zone_mbuf
@@ -1296,14 +1297,13 @@ argument_list|,
 name|nmbufs
 argument_list|)
 expr_stmt|;
-name|nmbufs
-operator|=
-name|uma_zone_get_max
+name|uma_zone_set_warning
 argument_list|(
 name|zone_mbuf
+argument_list|,
+literal|"kern.ipc.nmbufs limit reached"
 argument_list|)
 expr_stmt|;
-block|}
 name|zone_clust
 operator|=
 name|uma_zcreate
@@ -1342,7 +1342,8 @@ name|nmbclusters
 operator|>
 literal|0
 condition|)
-block|{
+name|nmbclusters
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|zone_clust
@@ -1350,14 +1351,13 @@ argument_list|,
 name|nmbclusters
 argument_list|)
 expr_stmt|;
-name|nmbclusters
-operator|=
-name|uma_zone_get_max
+name|uma_zone_set_warning
 argument_list|(
 name|zone_clust
+argument_list|,
+literal|"kern.ipc.nmbclusters limit reached"
 argument_list|)
 expr_stmt|;
-block|}
 name|zone_pack
 operator|=
 name|uma_zsecond_create
@@ -1414,7 +1414,8 @@ name|nmbjumbop
 operator|>
 literal|0
 condition|)
-block|{
+name|nmbjumbop
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|zone_jumbop
@@ -1422,14 +1423,13 @@ argument_list|,
 name|nmbjumbop
 argument_list|)
 expr_stmt|;
-name|nmbjumbop
-operator|=
-name|uma_zone_get_max
+name|uma_zone_set_warning
 argument_list|(
 name|zone_jumbop
+argument_list|,
+literal|"kern.ipc.nmbjumbop limit reached"
 argument_list|)
 expr_stmt|;
-block|}
 name|zone_jumbo9
 operator|=
 name|uma_zcreate
@@ -1475,7 +1475,8 @@ name|nmbjumbo9
 operator|>
 literal|0
 condition|)
-block|{
+name|nmbjumbo9
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|zone_jumbo9
@@ -1483,14 +1484,13 @@ argument_list|,
 name|nmbjumbo9
 argument_list|)
 expr_stmt|;
-name|nmbjumbo9
-operator|=
-name|uma_zone_get_max
+name|uma_zone_set_warning
 argument_list|(
 name|zone_jumbo9
+argument_list|,
+literal|"kern.ipc.nmbjumbo9 limit reached"
 argument_list|)
 expr_stmt|;
-block|}
 name|zone_jumbo16
 operator|=
 name|uma_zcreate
@@ -1536,7 +1536,8 @@ name|nmbjumbo16
 operator|>
 literal|0
 condition|)
-block|{
+name|nmbjumbo16
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|zone_jumbo16
@@ -1544,14 +1545,13 @@ argument_list|,
 name|nmbjumbo16
 argument_list|)
 expr_stmt|;
-name|nmbjumbo16
-operator|=
-name|uma_zone_get_max
+name|uma_zone_set_warning
 argument_list|(
 name|zone_jumbo16
+argument_list|,
+literal|"kern.ipc.nmbjumbo16 limit reached"
 argument_list|)
 expr_stmt|;
-block|}
 name|zone_ext_refcnt
 operator|=
 name|uma_zcreate

@@ -454,7 +454,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_debug_ktr
 argument_list|,
@@ -827,7 +827,7 @@ name|OID_AUTO
 argument_list|,
 name|mask
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -837,7 +837,7 @@ literal|0
 argument_list|,
 name|sysctl_debug_ktr_mask
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|"Bitmask of KTR event classes for which logging is enabled"
 argument_list|)

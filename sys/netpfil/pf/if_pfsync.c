@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_pfsync.c,v 1.110 2009/02/24 05:39:19 dlg Exp $	*/
+comment|/*-  * Copyright (c) 2002 Michael Shalayeff  * Copyright (c) 2012 Gleb Smirnoff<glebius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR OR HIS RELATIVES BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF MIND, USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2002 Michael Shalayeff  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR OR HIS RELATIVES BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF MIND, USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.125 - rewrite merge or stale processing  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  * 1.173 - correct expire time processing  */
+comment|/*  * $OpenBSD: if_pfsync.c,v 1.110 2009/02/24 05:39:19 dlg Exp $  *  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.119 - don't m_copydata() beyond the len of mbuf in pfsync_input()  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.125, 1.127 - rewrite merge or stale processing  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  * 1.173 - correct expire time processing  */
 end_comment
 
 begin_include
@@ -3298,6 +3294,8 @@ name|subh
 decl_stmt|;
 name|int
 name|offset
+decl_stmt|,
+name|len
 decl_stmt|;
 name|int
 name|rv
@@ -3524,6 +3522,37 @@ goto|goto
 name|done
 goto|;
 block|}
+name|len
+operator|=
+name|ntohs
+argument_list|(
+name|ph
+operator|->
+name|len
+argument_list|)
+operator|+
+name|offset
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|len
+condition|)
+block|{
+name|V_pfsyncstats
+operator|.
+name|pfsyncs_badlen
+operator|++
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 comment|/* Cheaper to grab this now than having to mess with mbufs later */
 name|pkt
 operator|.
@@ -3581,11 +3610,17 @@ operator|*
 name|ph
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|offset
+operator|<=
+name|len
+operator|-
+sizeof|sizeof
+argument_list|(
+name|subh
+argument_list|)
+condition|)
 block|{
 name|m_copydata
 argument_list|(
@@ -4413,6 +4448,17 @@ name|PF_TCPS_PROXY_SRC
 operator|)
 operator|)
 operator|||
+operator|(
+name|st
+operator|->
+name|src
+operator|.
+name|state
+operator|==
+name|src
+operator|->
+name|state
+operator|&&
 name|SEQ_GT
 argument_list|(
 name|st
@@ -4428,6 +4474,7 @@ operator|->
 name|seqlo
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 name|sync
 operator|++
@@ -4445,6 +4492,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|st
 operator|->
 name|dst
@@ -4454,6 +4502,7 @@ operator|>
 name|dst
 operator|->
 name|state
+operator|)
 operator|||
 operator|(
 name|st
@@ -6652,16 +6701,10 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pfsync_eof
-argument_list|)
 condition|)
 name|V_pfsyncstats
 operator|.
-name|pfsyncs_badact
+name|pfsyncs_badlen
 operator|++
 expr_stmt|;
 comment|/* we're done. free and let the caller return */
@@ -8398,23 +8441,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|st
-operator|->
-name|timeout
-operator|==
-name|PFTM_UNLINKED
-condition|)
-block|{
-comment|/* 				 * This happens if pfsync was once 				 * stopped, and then re-enabled 				 * after long time. Theoretically 				 * may happen at usual runtime, too. 				 */
-name|pf_release_state
-argument_list|(
-name|st
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* 			 * XXXGL: some of write methods do unlocked reads 			 * of state data :( 			 */
 name|pfsync_qs
 index|[
@@ -8755,7 +8781,6 @@ name|PFSYNC_ACT_EOF
 index|]
 operator|++
 expr_stmt|;
-comment|/* XXX write checksum in EOF here */
 comment|/* we're done, let's put it on the wire */
 if|if
 condition|(
@@ -11002,19 +11027,9 @@ operator|->
 name|sc_ureq_received
 condition|)
 block|{
-name|PFSYNC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|pfsync_update_state_req
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|PFSYNC_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|sent

@@ -1017,7 +1017,7 @@ name|fopen
 argument_list|(
 name|_PATH_TTYS
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 condition|)

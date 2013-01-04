@@ -3650,8 +3650,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|flags
-init|=
-name|RTF_UP
 decl_stmt|,
 name|error
 init|=
@@ -3748,7 +3746,13 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
+comment|/* 	 * Give the interface a chance to initialize if this is its first 	 * address, and to validate the address if necessary. 	 * 	 * Historically, drivers managed IFF_UP flag theirselves, so we 	 * need to check whether driver did that. 	 */
+name|flags
+operator|=
+name|ifp
+operator|->
+name|if_flags
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -3786,6 +3790,29 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|&&
+operator|(
+name|flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+condition|)
+name|if_up
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Be compatible with network classes, if netmask isn't supplied, 	 * guess it based on classes. 	 */
 if|if
 condition|(
@@ -3862,6 +3889,10 @@ name|ia_sockmask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add route for the network. 	 */
+name|flags
+operator|=
+name|RTF_UP
+expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa

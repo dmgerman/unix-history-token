@@ -664,10 +664,7 @@ argument_list|,
 operator|&
 name|qsize
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|qsize
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

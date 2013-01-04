@@ -1038,6 +1038,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|group
+modifier|*
+name|gr_add
+parameter_list|(
+name|struct
+name|group
+modifier|*
+name|_gr
+parameter_list|,
+name|char
+modifier|*
+name|_newmember
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|gr_equal
 parameter_list|(

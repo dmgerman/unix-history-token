@@ -52,6 +52,12 @@ directive|include
 file|<dns/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dns/rdatastruct.h>
+end_include
+
 begin_macro
 name|ISC_LANG_BEGINDECLS
 end_macro
@@ -1287,6 +1293,35 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Mark the rdataset to be expired in the backing database.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_rdataset_trimttl
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|sigrdataset
+parameter_list|,
+name|dns_rdata_rrsig_t
+modifier|*
+name|rrsig
+parameter_list|,
+name|isc_stdtime_t
+name|now
+parameter_list|,
+name|isc_boolean_t
+name|acceptexpired
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Trim the ttl of 'rdataset' and 'sigrdataset' so that they will expire  * at or before 'rrsig->expiretime'.  If 'acceptexpired' is true and the  * signature has expired or will expire in the next 120 seconds, limit  * the ttl to be no more than 120 seconds.  *  * The ttl is further limited by the original ttl as stored in 'rrsig'  * and the original ttl values of 'rdataset' and 'sigrdataset'.  *  * Requires:  * \li	'rdataset' is a valid rdataset.  * \li	'sigrdataset' is a valid rdataset.  * \li	'rrsig' is non NULL.  */
 end_comment
 
 begin_function_decl

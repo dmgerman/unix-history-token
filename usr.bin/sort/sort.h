@@ -149,7 +149,8 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|size_t
+name|unsigned
+name|int
 name|ncpu
 decl_stmt|;
 end_decl_stmt

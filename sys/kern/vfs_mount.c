@@ -2661,7 +2661,7 @@ name|errmsg
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|errmsg
 argument_list|,
@@ -2722,7 +2722,7 @@ name|errmsg
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|errmsg
 argument_list|,
@@ -3610,7 +3610,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Mount flags are now 64-bits. On 32-bit archtectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
+comment|/* 	 * Mount flags are now 64-bits. On 32-bit architectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
 name|flags
 operator|=
 name|uap
@@ -7290,7 +7290,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -8662,7 +8662,7 @@ argument_list|)
 expr_stmt|;
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 name|MNT_ILOCK

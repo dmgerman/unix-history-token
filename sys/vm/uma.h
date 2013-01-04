@@ -87,7 +87,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if necessary.  */
+comment|/*  * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *	flags See zalloc flags  *  * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if necessary.  */
 end_comment
 
 begin_typedef
@@ -116,7 +116,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Item destructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being destructed.  *	arg   Argument passed through uma_zfree_arg  *   * Returns:  *	Nothing  *  * Discussion:  *	The destructor may perform operations that differ from those performed  *	by the initializer, but it must leave the object in the same state.  *	This IS type stable storage.  This is called after EVERY zfree call.  */
+comment|/*  * Item destructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being destructed.  *	arg   Argument passed through uma_zfree_arg  *  * Returns:  *	Nothing  *  * Discussion:  *	The destructor may perform operations that differ from those performed  *	by the initializer, but it must leave the object in the same state.  *	This IS type stable storage.  This is called after EVERY zfree call.  */
 end_comment
 
 begin_typedef
@@ -142,7 +142,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*   * Item initializer  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being initialized.  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The initializer is called when the memory is cached in the uma zone.   *	The initializer and the destructor should leave the object in the same  *	state.  */
+comment|/*  * Item initializer  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being initialized.  *	flags See zalloc flags  *  * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The initializer is called when the memory is cached in the uma zone.  *	The initializer and the destructor should leave the object in the same  *	state.  */
 end_comment
 
 begin_typedef
@@ -167,7 +167,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Item discard function  *  * Arguments:  * 	item  A pointer to memory which has been 'freed' but has not left the   *	      zone's cache.  *	size  The size of the item being discarded.  *  * Returns:  *	Nothing  *  * Discussion:  *	This routine is called when memory leaves a zone and is returned to the  *	system for other uses.  It is the counter-part to the init function.  */
+comment|/*  * Item discard function  *  * Arguments:  *	item  A pointer to memory which has been 'freed' but has not left the  *	      zone's cache.  *	size  The size of the item being discarded.  *  * Returns:  *	Nothing  *  * Discussion:  *	This routine is called when memory leaves a zone and is returned to the  *	system for other uses.  It is the counter-part to the init function.  */
 end_comment
 
 begin_typedef
@@ -189,7 +189,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the   * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embedded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be necessary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
+comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the  * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embedded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be necessary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
 end_comment
 
 begin_comment
@@ -264,7 +264,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Add a second master to a secondary zone.  This provides multiple data  * backends for objects with the same size.  Both masters must have  * compatible allocation flags.  Presently, UMA_ZONE_MALLOC type zones are  * the only supported.  *  * Returns:  * 	Error on failure, 0 on success.  */
+comment|/*  * Add a second master to a secondary zone.  This provides multiple data  * backends for objects with the same size.  Both masters must have  * compatible allocation flags.  Presently, UMA_ZONE_MALLOC type zones are  * the only supported.  *  * Returns:  *	Error on failure, 0 on success.  */
 end_comment
 
 begin_function_decl
@@ -858,6 +858,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Sets a warning to be printed when limit is reached  *  * Arguments:  *	zone  The zone we will warn about  *	warning  Warning content  *  * Returns:  *	Nothing  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_set_warning
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|warning
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Obtains the approximate current number of items allocated from a zone  *  * Arguments:  *	zone  The zone to obtain the current allocation count from  *  * Return:  *	int  The approximate current number of items allocated from the zone  */
 end_comment
 
@@ -1057,7 +1076,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  * 	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  * 	A pointer to a u_int32_t reference counter.  */
+comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  *	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  *	A pointer to a u_int32_t reference counter.  */
 end_comment
 
 begin_function_decl
@@ -1076,7 +1095,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Used to determine if a fixed-size zone is exhausted.  *  * Arguments:  *	zone    The zone to check  *  * Returns:  * 	Non-zero if zone is exhausted.  */
+comment|/*  * Used to determine if a fixed-size zone is exhausted.  *  * Arguments:  *	zone    The zone to check  *  * Returns:  *	Non-zero if zone is exhausted.  */
 end_comment
 
 begin_function_decl

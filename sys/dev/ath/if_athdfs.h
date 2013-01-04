@@ -60,6 +60,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|ath_dfs_radar_disable
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|ath_dfs_process_phy_err
 parameter_list|(

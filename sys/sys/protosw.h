@@ -2113,6 +2113,18 @@ end_function_decl
 
 begin_function_decl
 name|struct
+name|domain
+modifier|*
+name|pffinddomain
+parameter_list|(
+name|int
+name|family
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
 name|protosw
 modifier|*
 name|pffindproto

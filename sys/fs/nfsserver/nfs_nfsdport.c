@@ -2597,7 +2597,7 @@ name|MCLGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2971,7 +2971,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -281,6 +281,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"        ECDSAP256SHA256 | ECDSAP384SHA384 |\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"        DH | HMAC-MD5 | HMAC-SHA1 | HMAC-SHA224 | "
 literal|"HMAC-SHA256 | \n"
 argument_list|)
@@ -386,6 +393,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"        ECCGOST:\tignored\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"        ECDSAP256SHA256:\tignored\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"        ECDSAP384SHA384:\tignored\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2493,6 +2514,14 @@ operator|&&
 name|alg
 operator|!=
 name|DST_ALG_ECCGOST
+operator|&&
+name|alg
+operator|!=
+name|DST_ALG_ECDSA256
+operator|&&
+name|alg
+operator|!=
+name|DST_ALG_ECDSA384
 condition|)
 block|{
 name|fatal
@@ -2647,8 +2676,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"key size not "
-literal|"specified; defaulting "
-literal|"to %d\n"
+literal|"specified; defaulting"
+literal|" to %d\n"
 argument_list|,
 name|size
 argument_list|)
@@ -2660,6 +2689,14 @@ condition|(
 name|alg
 operator|!=
 name|DST_ALG_ECCGOST
+operator|&&
+name|alg
+operator|!=
+name|DST_ALG_ECDSA256
+operator|&&
+name|alg
+operator|!=
+name|DST_ALG_ECDSA384
 condition|)
 name|fatal
 argument_list|(
@@ -3273,6 +3310,12 @@ break|break;
 case|case
 name|DST_ALG_ECCGOST
 case|:
+case|case
+name|DST_ALG_ECDSA256
+case|:
+case|case
+name|DST_ALG_ECDSA384
+case|:
 break|break;
 case|case
 name|DST_ALG_HMACMD5
@@ -3692,6 +3735,14 @@ operator|||
 name|alg
 operator|==
 name|DST_ALG_ECCGOST
+operator|||
+name|alg
+operator|==
+name|DST_ALG_ECDSA256
+operator|||
+name|alg
+operator|==
+name|DST_ALG_ECDSA384
 operator|)
 operator|&&
 name|rsa_exp
@@ -4062,6 +4113,12 @@ name|DNS_KEYALG_NSEC3DSA
 case|:
 case|case
 name|DST_ALG_ECCGOST
+case|:
+case|case
+name|DST_ALG_ECDSA256
+case|:
+case|case
+name|DST_ALG_ECDSA384
 case|:
 name|show_progress
 operator|=

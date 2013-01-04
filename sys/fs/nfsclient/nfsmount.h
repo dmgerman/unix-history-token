@@ -142,6 +142,14 @@ name|nm_negnametimeo
 decl_stmt|;
 comment|/* timeout for -ve entries (sec) */
 comment|/* Newnfs additions */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|nfsclds
+argument_list|)
+name|nm_sess
+expr_stmt|;
+comment|/* Session(s) for NFSv4.1. */
 name|struct
 name|nfsclclient
 modifier|*
@@ -162,6 +170,10 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* NFSv4 fsid */
+name|int
+name|nm_minorvers
+decl_stmt|;
+comment|/* Minor version # for NFSv4 */
 name|u_int16_t
 name|nm_krbnamelen
 decl_stmt|;
@@ -339,6 +351,20 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|((struct nfsmount *)((mp)->mnt_data))
+end_define
+
+begin_comment
+comment|/*  * Get a pointer to the MDS session, which is always the first element  * in the list.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_MDSSESSION
+parameter_list|(
+name|m
+parameter_list|)
+value|(&(TAILQ_FIRST(&((m)->nm_sess))->nfsclds_sess))
 end_define
 
 begin_ifndef

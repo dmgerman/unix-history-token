@@ -3118,10 +3118,16 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+name|EWOULDBLOCK
 condition|)
 goto|goto
 name|out
 goto|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 name|out

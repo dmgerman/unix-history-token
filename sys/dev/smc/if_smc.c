@@ -3127,7 +3127,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3145,7 +3145,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3652,6 +3652,16 @@ operator|*
 operator|)
 name|context
 expr_stmt|;
+comment|/* 	 * Block interrupts in order to let smc_task_intr to kick in 	 */
+name|smc_write_1
+argument_list|(
+name|sc
+argument_list|,
+name|MSK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|taskqueue_enqueue_fast
 argument_list|(
 name|sc
@@ -3734,28 +3744,6 @@ argument_list|(
 name|sc
 argument_list|,
 literal|2
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Get the current mask, and then block all interrupts while we're 	 * working. 	 */
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_POLLING
-operator|)
-operator|==
-literal|0
-condition|)
-name|smc_write_1
-argument_list|(
-name|sc
-argument_list|,
-name|MSK
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find out what interrupts are flagged. 	 */

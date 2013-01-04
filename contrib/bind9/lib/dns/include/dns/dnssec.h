@@ -39,6 +39,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/stats.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/diff.h>
 end_include
 
@@ -54,9 +60,15 @@ directive|include
 file|<dst/dst.h>
 end_include
 
-begin_macro
+begin_decl_stmt
 name|ISC_LANG_BEGINDECLS
-end_macro
+name|LIBDNS_EXTERNAL_DATA
+specifier|extern
+name|isc_stats_t
+modifier|*
+name|dns_dnssec_stats
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*%< Maximum number of keys supported in a zone. */
@@ -229,7 +241,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Generates a SIG record covering this rdataset.  This has no effect  *	on existing SIG records.  *  *	Requires:  *\li		'name' (the owner name of the record) is a valid name  *\li		'set' is a valid rdataset  *\li		'key' is a valid key  *\li		'inception' is not NULL  *\li		'expire' is not NULL  *\li		'mctx' is not NULL  *\li		'buffer' is not NULL  *\li		'sigrdata' is not NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#ISC_R_NOSPACE  *\li		#DNS_R_INVALIDTIME - the expiration is before the inception  *\li		#DNS_R_KEYUNAUTHORIZED - the key cannot sign this data (either  *			it is not a zone key or its flags prevent  *			authentication)  *\li		DST_R_*  */
+comment|/*%<  *	Generates a RRSIG record covering this rdataset.  This has no effect  *	on existing RRSIG records.  *  *	Requires:  *\li		'name' (the owner name of the record) is a valid name  *\li		'set' is a valid rdataset  *\li		'key' is a valid key  *\li		'inception' is not NULL  *\li		'expire' is not NULL  *\li		'mctx' is not NULL  *\li		'buffer' is not NULL  *\li		'sigrdata' is not NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#ISC_R_NOSPACE  *\li		#DNS_R_INVALIDTIME - the expiration is before the inception  *\li		#DNS_R_KEYUNAUTHORIZED - the key cannot sign this data (either  *			it is not a zone key or its flags prevent  *			authentication)  *\li		DST_R_*  */
 end_comment
 
 begin_function_decl
@@ -297,7 +309,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Verifies the SIG record covering this rdataset signed by a specific  *	key.  This does not determine if the key's owner is authorized to  *	sign this record, as this requires a resolver or database.  *	If 'ignoretime' is ISC_TRUE, temporal validity will not be checked.  *  *	Requires:  *\li		'name' (the owner name of the record) is a valid name  *\li		'set' is a valid rdataset  *\li		'key' is a valid key  *\li		'mctx' is not NULL  *\li		'sigrdata' is a valid rdata containing a SIG record  *\li		'wild' if non-NULL then is a valid and has a buffer.  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#DNS_R_FROMWILDCARD - the signature is valid and is from  *			a wildcard expansion.  dns_dnssec_verify2() only.  *			'wild' contains the name of the wildcard if non-NULL.  *\li		#DNS_R_SIGINVALID - the signature fails to verify  *\li		#DNS_R_SIGEXPIRED - the signature has expired  *\li		#DNS_R_SIGFUTURE - the signature's validity period has not begun  *\li		#DNS_R_KEYUNAUTHORIZED - the key cannot sign this data (either  *			it is not a zone key or its flags prevent  *			authentication)  *\li		DST_R_*  */
+comment|/*%<  *	Verifies the RRSIG record covering this rdataset signed by a specific  *	key.  This does not determine if the key's owner is authorized to sign  *	this record, as this requires a resolver or database.  *	If 'ignoretime' is ISC_TRUE, temporal validity will not be checked.  *  *	Requires:  *\li		'name' (the owner name of the record) is a valid name  *\li		'set' is a valid rdataset  *\li		'key' is a valid key  *\li		'mctx' is not NULL  *\li		'sigrdata' is a valid rdata containing a SIG record  *\li		'wild' if non-NULL then is a valid and has a buffer.  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#DNS_R_FROMWILDCARD - the signature is valid and is from  *			a wildcard expansion.  dns_dnssec_verify2() only.  *			'wild' contains the name of the wildcard if non-NULL.  *\li		#DNS_R_SIGINVALID - the signature fails to verify  *\li		#DNS_R_SIGEXPIRED - the signature has expired  *\li		#DNS_R_SIGFUTURE - the signature's validity period has not begun  *\li		#DNS_R_KEYUNAUTHORIZED - the key cannot sign this data (either  *			it is not a zone key or its flags prevent  *			authentication)  *\li		DST_R_*  */
 end_comment
 
 begin_comment

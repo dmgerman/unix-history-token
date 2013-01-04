@@ -1030,6 +1030,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_ECDSA
+end_ifdef
+
+begin_function_decl
+name|isc_result_t
+name|dst__opensslecdsa_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*%  * Destructors  */
 end_comment

@@ -684,7 +684,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  */
+comment|/*  * Each process has:  *  * - An array of open file descriptors (fd_ofiles)  * - An array of file flags (fd_ofileflags)  * - A bitmap recording which descriptors are in use (fd_map)  *  * A process starts out with NDFILE descriptors.  The value of NDFILE has  * been selected based the historical limit of 20 open files, and an  * assumption that the majority of processes, especially short-lived  * processes like shells, will never need more.  *  * If this initial allocation is exhausted, a larger descriptor table and  * map are allocated dynamically, and the pointers in the process's struct  * filedesc are updated to point to those.  This is repeated every time  * the process runs out of file descriptors (provided it hasn't hit its  * resource limit).  *  * Since threads may hold references to individual descriptor table  * entries, the tables are never freed.  Instead, they are placed on a  * linked list and freed only when the struct filedesc is released.  */
 end_comment
 
 begin_define
@@ -739,18 +739,7 @@ value|(((x) + NDENTRIES - 1) / NDENTRIES)
 end_define
 
 begin_comment
-comment|/*  * Storage required per open file descriptor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OFILESIZE
-value|(sizeof(struct file *) + sizeof(char))
-end_define
-
-begin_comment
-comment|/*  * Storage to hold unused ofiles that need to be reclaimed.  */
+comment|/*  * SLIST entry used to keep track of ofiles which must be reclaimed when  * the process exits.  */
 end_comment
 
 begin_struct
@@ -774,7 +763,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Basic allocation of descriptors:  * one of the above, plus arrays for NDFILE descriptors.  */
+comment|/*  * Initial allocation: a filedesc structure + the head of SLIST used to  * keep track of old ofiles + enough space for NDFILE descriptors.  */
 end_comment
 
 begin_struct
@@ -785,7 +774,6 @@ name|struct
 name|filedesc
 name|fd_fd
 decl_stmt|;
-comment|/* 	 * ofiles which need to be reclaimed on free. 	 */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
@@ -793,7 +781,6 @@ argument|freetable
 argument_list|)
 name|fd_free
 expr_stmt|;
-comment|/* 	 * These arrays are used when the number of open files is 	 *<= NDFILE, and are then pointed to by the pointers above. 	 */
 name|struct
 name|file
 modifier|*
@@ -6574,7 +6561,7 @@ decl_stmt|;
 name|struct
 name|freetable
 modifier|*
-name|fo
+name|ft
 decl_stmt|;
 name|struct
 name|file
@@ -6591,6 +6578,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|nfileflags
+decl_stmt|,
+modifier|*
+name|ofileflags
 decl_stmt|;
 name|int
 name|nnfiles
@@ -6600,6 +6590,9 @@ decl_stmt|;
 name|NDSLOTTYPE
 modifier|*
 name|nmap
+decl_stmt|,
+modifier|*
+name|omap
 decl_stmt|;
 name|FILEDESC_XLOCK_ASSERT
 argument_list|(
@@ -6619,13 +6612,32 @@ literal|"zero-length file table"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* compute the size of the new table */
+comment|/* save old values */
 name|onfiles
 operator|=
 name|fdp
 operator|->
 name|fd_nfiles
 expr_stmt|;
+name|otable
+operator|=
+name|fdp
+operator|->
+name|fd_ofiles
+expr_stmt|;
+name|ofileflags
+operator|=
+name|fdp
+operator|->
+name|fd_ofileflags
+expr_stmt|;
+name|omap
+operator|=
+name|fdp
+operator|->
+name|fd_map
+expr_stmt|;
+comment|/* compute the size of the new table */
 name|nnfiles
 operator|=
 name|NDSLOTS
@@ -6644,21 +6656,31 @@ name|onfiles
 condition|)
 comment|/* the table is already large enough */
 return|return;
-comment|/* allocate a new table and (if required) new bitmaps */
+comment|/* 	 * Allocate a new table and map.  We need enough space for a) the 	 * file entries themselves, b) the file flags, and c) the struct 	 * freetable we will use when we decommission the table and place 	 * it on the freelist.  We place the struct freetable in the 	 * middle so we don't have to worry about padding. 	 */
 name|ntable
 operator|=
 name|malloc
 argument_list|(
-operator|(
 name|nnfiles
 operator|*
-name|OFILESIZE
-operator|)
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ntable
+argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|freetable
+argument_list|)
+operator|+
+name|nnfiles
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|nfileflags
 argument_list|)
 argument_list|,
 name|M_FILEDESC
@@ -6679,19 +6701,13 @@ name|ntable
 index|[
 name|nnfiles
 index|]
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|freetable
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NDSLOTS
-argument_list|(
-name|nnfiles
-argument_list|)
-operator|>
-name|NDSLOTS
-argument_list|(
-name|onfiles
-argument_list|)
-condition|)
 name|nmap
 operator|=
 name|malloc
@@ -6710,44 +6726,67 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-else|else
-name|nmap
-operator|=
-name|NULL
-expr_stmt|;
-name|bcopy
+comment|/* copy the old data over and point at the new tables */
+name|memcpy
 argument_list|(
-name|fdp
-operator|->
-name|fd_ofiles
-argument_list|,
 name|ntable
+argument_list|,
+name|otable
 argument_list|,
 name|onfiles
 operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-name|ntable
+name|otable
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|fdp
-operator|->
-name|fd_ofileflags
-argument_list|,
 name|nfileflags
+argument_list|,
+name|ofileflags
 argument_list|,
 name|onfiles
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ofileflags
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|otable
+name|memcpy
+argument_list|(
+name|nmap
+argument_list|,
+name|omap
+argument_list|,
+name|NDSLOTS
+argument_list|(
+name|onfiles
+argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|omap
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* update the pointers and counters */
+name|fdp
+operator|->
+name|fd_nfiles
 operator|=
+name|nnfiles
+expr_stmt|;
 name|fdp
 operator|->
 name|fd_ofiles
+operator|=
+name|ntable
 expr_stmt|;
 name|fdp
 operator|->
@@ -6757,11 +6796,11 @@ name|nfileflags
 expr_stmt|;
 name|fdp
 operator|->
-name|fd_ofiles
+name|fd_map
 operator|=
-name|ntable
+name|nmap
 expr_stmt|;
-comment|/* 	 * We must preserve ofiles until the process exits because we can't 	 * be certain that no threads have references to the old table via 	 * _fget(). 	 */
+comment|/* 	 * Do not free the old file table, as some threads may still 	 * reference entries within it.  Instead, place it on a freelist 	 * which will be processed when the struct filedesc is released. 	 * 	 * Do, however, free the old map. 	 * 	 * Note that if onfiles == NDFILE, we're dealing with the original 	 * static allocation contained within (struct filedesc0 *)fdp, 	 * which must not be freed. 	 */
 if|if
 condition|(
 name|onfiles
@@ -6769,7 +6808,7 @@ operator|>
 name|NDFILE
 condition|)
 block|{
-name|fo
+name|ft
 operator|=
 operator|(
 expr|struct
@@ -6791,7 +6830,7 @@ operator|*
 operator|)
 name|fdp
 expr_stmt|;
-name|fo
+name|ft
 operator|->
 name|ft_table
 operator|=
@@ -6804,79 +6843,19 @@ name|fdp0
 operator|->
 name|fd_free
 argument_list|,
-name|fo
+name|ft
 argument_list|,
 name|ft_next
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|NDSLOTS
-argument_list|(
-name|nnfiles
-argument_list|)
-operator|>
-name|NDSLOTS
-argument_list|(
-name|onfiles
-argument_list|)
-condition|)
-block|{
-name|bcopy
-argument_list|(
-name|fdp
-operator|->
-name|fd_map
-argument_list|,
-name|nmap
-argument_list|,
-name|NDSLOTS
-argument_list|(
-name|onfiles
-argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|nmap
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NDSLOTS
-argument_list|(
-name|onfiles
-argument_list|)
-operator|>
-name|NDSLOTS
-argument_list|(
-name|NDFILE
-argument_list|)
-condition|)
 name|free
 argument_list|(
-name|fdp
-operator|->
-name|fd_map
+name|omap
 argument_list|,
 name|M_FILEDESC
 argument_list|)
 expr_stmt|;
-name|fdp
-operator|->
-name|fd_map
-operator|=
-name|nmap
-expr_stmt|;
 block|}
-name|fdp
-operator|->
-name|fd_nfiles
-operator|=
-name|nnfiles
-expr_stmt|;
 block|}
 end_function
 

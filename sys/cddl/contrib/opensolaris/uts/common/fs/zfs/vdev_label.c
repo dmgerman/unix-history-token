@@ -89,6 +89,44 @@ directive|include
 file|<sys/fs/zfs.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|boolean_t
+name|vdev_trim_on_init
+init|=
+name|B_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs_vdev
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_vdev
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trim_on_init
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vdev_trim_on_init
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable/disable full vdev trim on initialisation"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Basic routines to read and write from a vdev label.  * Used throughout the rest of this file.  */
 end_comment
@@ -2712,6 +2750,8 @@ if|if
 condition|(
 operator|!
 name|zfs_notrim
+operator|&&
+name|vdev_trim_on_init
 operator|&&
 operator|(
 name|reason

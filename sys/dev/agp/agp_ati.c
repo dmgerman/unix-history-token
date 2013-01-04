@@ -327,7 +327,6 @@ literal|"ATI RS300_200 AGP bridge"
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 name|NULL
 return|;
@@ -737,7 +736,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-empty_stmt|;
 name|rid
 operator|=
 name|ATI_GART_MMADDR

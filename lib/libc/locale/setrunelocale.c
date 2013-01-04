@@ -477,7 +477,7 @@ name|fopen
 argument_list|(
 name|name
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==

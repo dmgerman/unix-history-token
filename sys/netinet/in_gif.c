@@ -697,7 +697,7 @@ expr|struct
 name|etherip_header
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -914,7 +914,7 @@ name|m
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

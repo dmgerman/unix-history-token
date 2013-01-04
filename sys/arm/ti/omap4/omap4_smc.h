@@ -40,7 +40,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|L2CACHE_ENABLE_L2
+name|L2CACHE_WRITE_CTRL_REG
 value|0x102
 end_define
 

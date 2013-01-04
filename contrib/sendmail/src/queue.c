@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009, 2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2009, 2011, 2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.991 2011/03/15 23:14:36 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.997 2012/06/14 23:54:03 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6049,6 +6049,9 @@ name|rwgflags
 init|=
 name|RWG_NONE
 decl_stmt|;
+name|int
+name|wasblocked
+decl_stmt|;
 comment|/* 		**  If MaxQueueChildren active then test whether the start 		**  of the next queue group's additional queue runners (maximum) 		**  will result in MaxQueueChildren being exceeded. 		** 		**  Note: do not use continue; even though another workgroup 		**	may have fewer queue runners, this would be "unfair", 		**	i.e., this work group might "starve" then. 		*/
 if|#
 directive|if
@@ -6106,6 +6109,14 @@ name|MaxQueueChildren
 condition|)
 break|break;
 comment|/* 		**  Pick up where we left off (curnum), in case we 		**  used up all the children last time without finishing. 		**  This give a round-robin fairness to queue runs. 		** 		**  Increment CurRunners before calling run_work_group() 		**  to avoid a "race condition" with proc_list_drop() which 		**  decrements CurRunners if the queue runners terminate. 		**  Notice: CurRunners is an upper limit, in some cases 		**  (too few jobs in the queue) this value is larger than 		**  the actual number of queue runners. The discrepancy can 		**  increase if some queue runners "hang" for a long time. 		*/
+comment|/* don't let proc_list_drop() change CurRunners */
+name|wasblocked
+operator|=
+name|sm_blocksignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|CurRunners
 operator|+=
 name|WorkGrp
@@ -6114,6 +6125,20 @@ name|curnum
 index|]
 operator|.
 name|wg_maxact
+expr_stmt|;
+if|if
+condition|(
+name|wasblocked
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_releasesignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6163,6 +6188,14 @@ operator|!
 name|ret
 condition|)
 block|{
+comment|/* don't let proc_list_drop() change CurRunners */
+name|wasblocked
+operator|=
+name|sm_blocksignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|CurRunners
 operator|-=
 name|WorkGrp
@@ -6171,6 +6204,34 @@ name|curnum
 index|]
 operator|.
 name|wg_maxact
+expr_stmt|;
+name|CHK_CUR_RUNNERS
+argument_list|(
+literal|"runqueue"
+argument_list|,
+name|curnum
+argument_list|,
+name|WorkGrp
+index|[
+name|curnum
+index|]
+operator|.
+name|wg_maxact
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wasblocked
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_releasesignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -7803,6 +7864,16 @@ name|MinQueueAge
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_EXPDELAY
+name|MaxQueueAge
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_EXPDELAY */
 block|}
 comment|/* 	**  Here is where we choose the queue group from the work group. 	**  The caller of the "domorework" label must setup a new envelope. 	*/
 name|endgrp
@@ -8658,7 +8729,7 @@ name|sm_setproctitle
 argument_list|(
 name|true
 argument_list|,
-name|CurEnv
+name|NULL
 argument_list|,
 literal|"running queue: %s"
 argument_list|,
@@ -13786,6 +13857,12 @@ name|e_rpool
 operator|=
 name|NULL
 expr_stmt|;
+name|e
+operator|->
+name|e_message
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 name|e
@@ -17079,9 +17156,12 @@ argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|e
 operator|->
 name|e_msgsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine

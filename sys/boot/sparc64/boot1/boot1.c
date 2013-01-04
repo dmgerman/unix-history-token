@@ -1712,7 +1712,7 @@ directive|ifdef
 name|ZFSBOOT
 name|printf
 argument_list|(
-literal|" \n>> FreeBSD/sparc64 ZFS boot block\n    Boot path:   %s\n"
+literal|" \n>> FreeBSD/sparc64 ZFS boot block\n   Boot path:   %s\n"
 argument_list|,
 name|bootpath
 argument_list|)
@@ -1721,10 +1721,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|" \n>> FreeBSD/sparc64 boot block\n    Boot path:   %s\n"
+literal|" \n>> FreeBSD/sparc64 boot block\n   Boot path:   %s\n"
 literal|"   Boot loader: %s\n"
-argument_list|,
-literal|""
 argument_list|,
 name|bootpath
 argument_list|,

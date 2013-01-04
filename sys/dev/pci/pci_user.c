@@ -2060,6 +2060,8 @@ name|struct
 name|pci_match_conf_old32
 modifier|*
 name|pattern_buf_old32
+init|=
+name|NULL
 decl_stmt|;
 endif|#
 directive|endif
@@ -2080,6 +2082,8 @@ name|struct
 name|pci_match_conf_old
 modifier|*
 name|pattern_buf_old
+init|=
+name|NULL
 decl_stmt|;
 name|io_old
 operator|=
@@ -2298,19 +2302,11 @@ name|COMPAT_FREEBSD32
 case|case
 name|PCIOCGETCONF_OLD32
 case|:
-name|pattern_buf_old32
-operator|=
-name|NULL
-expr_stmt|;
 endif|#
 directive|endif
 case|case
 name|PCIOCGETCONF_OLD
 case|:
-name|pattern_buf_old
-operator|=
-name|NULL
-expr_stmt|;
 endif|#
 directive|endif
 case|case

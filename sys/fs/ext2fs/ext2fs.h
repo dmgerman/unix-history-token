@@ -669,28 +669,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_HUGE_FILE
+name|EXT2F_ROCOMPAT_HUGE_FILE
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_GDT_CSUM
+name|EXT2F_ROCOMPAT_GDT_CSUM
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_DIR_NLINK
+name|EXT2F_ROCOMPAT_DIR_NLINK
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_EXTRA_ISIZE
+name|EXT2F_ROCOMPAT_EXTRA_ISIZE
 value|0x0040
 end_define
 
@@ -711,35 +711,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_META_BG
+name|EXT2F_INCOMPAT_META_BG
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_EXTENTS
+name|EXT2F_INCOMPAT_EXTENTS
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_64BIT
+name|EXT2F_INCOMPAT_64BIT
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_MMP
+name|EXT2F_INCOMPAT_MMP
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_FLEX_BG
+name|EXT2F_INCOMPAT_FLEX_BG
 value|0x0200
 end_define
 
@@ -758,7 +758,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT4F_ROCOMPAT_EXTRA_ISIZE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define

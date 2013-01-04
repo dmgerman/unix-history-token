@@ -92,20 +92,14 @@ decl_stmt|;
 name|uint64_t
 name|br_drops
 decl_stmt|;
-name|uint64_t
-name|br_prod_bufs
-decl_stmt|;
-comment|/* 	 * Pad out to next L2 cache line 	 */
-name|uint64_t
-name|_pad0
-index|[
-literal|11
-index|]
-decl_stmt|;
 specifier|volatile
 name|uint32_t
 name|br_cons_head
-decl_stmt|;
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
 specifier|volatile
 name|uint32_t
 name|br_cons_tail
@@ -115,13 +109,6 @@ name|br_cons_size
 decl_stmt|;
 name|int
 name|br_cons_mask
-decl_stmt|;
-comment|/* 	 * Pad out to next L2 cache line 	 */
-name|uint64_t
-name|_pad1
-index|[
-literal|14
-index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -139,7 +126,11 @@ name|br_ring
 index|[
 literal|0
 index|]
-decl_stmt|;
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -171,9 +162,6 @@ name|prod_next
 decl_stmt|;
 name|uint32_t
 name|cons_tail
-decl_stmt|;
-name|int
-name|success
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -289,8 +277,10 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|success
-operator|=
+block|}
+do|while
+condition|(
+operator|!
 name|atomic_cmpset_int
 argument_list|(
 operator|&
@@ -302,13 +292,6 @@ name|prod_head
 argument_list|,
 name|prod_next
 argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|success
-operator|==
-literal|0
 condition|)
 do|;
 ifdef|#
@@ -341,7 +324,8 @@ index|]
 operator|=
 name|buf
 expr_stmt|;
-name|wmb
+comment|/* 	 * The full memory barrier also avoids that br_prod_tail store 	 * is reordered before the br_ring[prod_head] is full setup. 	 */
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If there are other enqueues in progress 	 * that preceeded us, we need to wait for them 	 * to complete  	 */
@@ -355,11 +339,6 @@ name|prod_head
 condition|)
 name|cpu_spinwait
 argument_list|()
-expr_stmt|;
-name|br
-operator|->
-name|br_prod_bufs
-operator|++
 expr_stmt|;
 name|br
 operator|->
@@ -500,7 +479,8 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-name|rmb
+comment|/* 	 * The full memory barrier also avoids that br_ring[cons_read] 	 * load is reordered after br_cons_tail is set. 	 */
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If there are other dequeues in progress 	 * that preceeded us, we need to wait for them 	 * to complete  	 */

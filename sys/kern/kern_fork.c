@@ -620,18 +620,6 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|flags
-operator|=
-name|RFFDG
-operator||
-name|RFPROC
-expr_stmt|;
-comment|/* validate that this is still an issue */
-else|#
-directive|else
 name|flags
 operator|=
 name|RFFDG
@@ -642,8 +630,6 @@ name|RFPPWAIT
 operator||
 name|RFMEM
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|fork1
@@ -2543,14 +2529,19 @@ operator|->
 name|p_orphans
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|p2
 operator|->
 name|p_itcallout
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|p2
+operator|->
+name|p_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If PF_FORK is set, the child process inherits the 	 * procfs ioctl flags from its parent. 	 */

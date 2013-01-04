@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.56 2010-12-18 01:56:23 each Exp $ */
+comment|/* $Id: platform.h.in,v 1.56 2010/12/18 01:56:23 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -382,13 +382,34 @@ begin_comment
 comment|/*  * Defined to<gssapi.h> or<gssapi/gssapi.h> for how to include  * the GSSAPI header.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_GSSAPIHEADER
+value|<gssapi/gssapi.h>
+end_define
+
 begin_comment
 comment|/*  * Defined to<gssapi_krb5.h> or<gssapi/gssapi_krb5.h> for how to  * include the GSSAPI KRB5 header.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_GSSAPI_KRB5_HEADER
+value|<gssapi/gssapi_krb5.h>
+end_define
+
 begin_comment
 comment|/*  * Defined to<krb5.h> or<krb5/krb5.h> for how to include  * the KRB5 header.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_KRB5HEADER
+value|<krb5.h>
+end_define
 
 begin_comment
 comment|/*  * Type used for resource limits.  */

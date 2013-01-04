@@ -605,6 +605,12 @@ operator|==
 name|Triple
 operator|::
 name|mipsel
+operator|||
+name|Arch
+operator|==
+name|Triple
+operator|::
+name|mips
 condition|)
 return|return
 literal|16
