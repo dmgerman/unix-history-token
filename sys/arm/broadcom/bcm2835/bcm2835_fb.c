@@ -4250,7 +4250,7 @@ operator|=
 operator|(
 name|a
 operator|>>
-literal|8
+literal|4
 operator|)
 operator|&
 literal|0xf
