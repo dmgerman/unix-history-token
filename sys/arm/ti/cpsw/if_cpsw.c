@@ -3659,7 +3659,7 @@ name|newslots
 argument_list|)
 condition|)
 return|return;
-comment|/* Attach new segments to the hardware TX queue. */
+comment|/* Attach the list of new buffers to the hardware TX queue. */
 name|prev_slot
 operator|=
 name|STAILQ_LAST
@@ -3719,13 +3719,39 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Add packets to current queue. */
-comment|/* Race: The hardware might have sent the last packet 		 * on the queue and stopped the transmitter just 		 * before we got here.  In that case, this is a no-op, 		 * but it also means there's a TX interrupt waiting 		 * to be processed as soon as we release the lock here. 		 * That TX interrupt can detect and recover from this 		 * situation; see cpsw_intr_tx_locked. 		 */
+comment|/* Add buffers to end of current queue. */
 name|cpsw_cpdma_write_txbd_next
 argument_list|(
 name|prev_slot
 operator|->
 name|index
+argument_list|,
+name|cpsw_cpdma_txbd_paddr
+argument_list|(
+name|first_new_slot
+operator|->
+name|index
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* If underrun, restart queue. */
+if|if
+condition|(
+name|cpsw_cpdma_read_txbd_flags
+argument_list|(
+name|prev_slot
+operator|->
+name|index
+argument_list|)
+operator|&
+name|CPDMA_BD_EOQ
+condition|)
+name|cpsw_write_4
+argument_list|(
+name|CPSW_CPDMA_TX_HDP
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|cpsw_cpdma_txbd_paddr
 argument_list|(
@@ -5484,7 +5510,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Extend an existing RX queue. */
+comment|/* Add buffers to end of current queue. */
 name|cpsw_cpdma_write_rxbd_next
 argument_list|(
 name|prev_slot
@@ -5499,8 +5525,7 @@ name|index
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX Order matters: Previous write must complete 		   before next read begins in order to avoid an 		   end-of-queue race.  I think bus_write and bus_read have 		   sufficient barriers built-in to ensure this. XXX */
-comment|/* If old RX queue was stopped, restart it. */
+comment|/* If underrun, restart queue. */
 if|if
 condition|(
 name|cpsw_cpdma_read_rxbd_flags
@@ -5855,39 +5880,6 @@ name|index
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If transmitter stopped and there's more, restart it. */
-comment|/* This resolves the race described in tx_start above. */
-if|if
-condition|(
-operator|(
-name|last_flags
-operator|&
-name|CPDMA_BD_EOQ
-operator|)
-operator|&&
-operator|(
-name|slot
-operator|!=
-name|NULL
-operator|)
-condition|)
-block|{
-name|cpsw_write_4
-argument_list|(
-name|CPSW_CPDMA_TX_HDP
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|cpsw_cpdma_txbd_paddr
-argument_list|(
-name|slot
-operator|->
-name|index
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|tx_retires
