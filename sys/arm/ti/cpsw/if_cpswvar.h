@@ -165,7 +165,7 @@ name|callout
 name|wd_callout
 decl_stmt|;
 name|int
-name|wd_timer
+name|tx_wd_timer
 decl_stmt|;
 name|bus_dma_tag_t
 name|mbuf_dtag
@@ -218,7 +218,7 @@ name|tx_retires
 decl_stmt|;
 comment|/* total TX bufs removed from queue */
 name|uint32_t
-name|tx_retires_at_wd_reset
+name|tx_retires_at_last_tick
 decl_stmt|;
 comment|/* used for watchdog */
 comment|/* Note:  tx_queued != tx_enqueues - tx_retires 	   At driver reset, packets can be discarded 	   from TX queue without being retired. */
