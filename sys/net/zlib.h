@@ -951,7 +951,7 @@ argument_list|)
 define|#
 directive|define
 name|inflate
-value|inflate_ppp
+value|_zlib104_inflate
 comment|/* FreeBSD already has an inflate :-( */
 endif|#
 directive|endif
