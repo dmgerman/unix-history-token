@@ -817,10 +817,17 @@ name|goodchar
 operator|&&
 name|f_octal_escape
 operator|&&
+if|#
+directive|if
+name|WCHAR_MIN
+operator|<
+literal|0
 name|wc
 operator|>=
 literal|0
 operator|&&
+endif|#
+directive|endif
 name|wc
 operator|<=
 operator|(
