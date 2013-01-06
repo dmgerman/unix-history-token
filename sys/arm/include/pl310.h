@@ -680,6 +680,9 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|u_int
+name|sc_rtl_revision
+decl_stmt|;
 block|}
 struct|;
 end_struct
