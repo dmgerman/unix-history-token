@@ -514,18 +514,38 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Interix has broken header files, which typedef size_t to unsigned long,
+comment|// Incorrect(?) SIZE_MAX:
 end_comment
 
 begin_comment
-comment|// but a few lines later define SIZE_MAX to INT32_MAX.
+comment|//   - Interix headers typedef size_t to unsigned long,
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|//     but a few lines later define SIZE_MAX to INT32_MAX.
+end_comment
+
+begin_comment
+comment|//   - SCO OpenServer (x86) headers typedef size_t to unsigned int
+end_comment
+
+begin_comment
+comment|//     but define SIZE_MAX to INT32_MAX.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__INTERIX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_SCO_DS
+argument_list|)
+end_if
 
 begin_undef
 undef|#

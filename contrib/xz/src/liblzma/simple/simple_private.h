@@ -77,8 +77,7 @@ comment|/// Next filter in the chain
 name|lzma_next_coder
 name|next
 decl_stmt|;
-comment|/// True if the next coder in the chain has returned LZMA_STREAM_END
-comment|/// or if we have processed uncompressed_size bytes.
+comment|/// True if the next coder in the chain has returned LZMA_STREAM_END.
 name|bool
 name|end_was_reached
 decl_stmt|;
