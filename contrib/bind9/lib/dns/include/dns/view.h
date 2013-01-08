@@ -386,6 +386,12 @@ argument|dns_rpz_zone_t
 argument_list|)
 name|rpz_zones
 expr_stmt|;
+name|isc_boolean_t
+name|rpz_recursive_only
+decl_stmt|;
+name|isc_boolean_t
+name|rpz_break_dnssec
+decl_stmt|;
 comment|/* 	 * Configurable data for server use only, 	 * locked by server configuration lock. 	 */
 name|dns_acl_t
 modifier|*

@@ -15776,7 +15776,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"%s:dns_journal_open -> %s\n"
+literal|"%s:dns_journal_open -> %s"
 argument_list|,
 name|caller
 argument_list|,
@@ -15820,7 +15820,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"%s:dns_journal_write_transaction -> %s\n"
+literal|"%s:dns_journal_write_transaction -> %s"
 argument_list|,
 name|caller
 argument_list|,
@@ -15932,7 +15932,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"add_soa:dns_db_newversion -> %s\n"
+literal|"add_soa:dns_db_newversion -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -15989,7 +15989,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"add_soa:dns_soa_buildrdata -> %s\n"
+literal|"add_soa:dns_soa_buildrdata -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -16217,7 +16217,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"sync_keyzone:dns_db_newversion -> %s\n"
+literal|"sync_keyzone:dns_db_newversion -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -24769,7 +24769,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:dns_db_newversion -> %s\n"
+literal|"zone_resigninc:dns_db_newversion -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -24816,7 +24816,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:find_zone_keys -> %s\n"
+literal|"zone_resigninc:find_zone_keys -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -24926,7 +24926,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:dns_db_getsigningtime -> %s\n"
+literal|"zone_resigninc:dns_db_getsigningtime -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -25023,7 +25023,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:del_sigs -> %s\n"
+literal|"zone_resigninc:del_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -25078,7 +25078,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:add_sigs -> %s\n"
+literal|"zone_resigninc:add_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -25133,7 +25133,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:dns_db_getsigningtime -> %s\n"
+literal|"zone_resigninc:dns_db_getsigningtime -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -25197,7 +25197,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:del_sigs -> %s\n"
+literal|"zone_resigninc:del_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -25252,7 +25252,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:increment_soa_serial -> %s\n"
+literal|"zone_resigninc:increment_soa_serial -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -25313,7 +25313,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_resigninc:add_sigs -> %s\n"
+literal|"zone_resigninc:add_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -29039,7 +29039,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"update_sigs:del_sigs -> %s\n"
+literal|"update_sigs:del_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -29104,7 +29104,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"update_sigs:add_sigs -> %s\n"
+literal|"update_sigs:add_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -29540,7 +29540,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_nsec3chain:dns_db_newversion -> %s\n"
+literal|"zone_nsec3chain:dns_db_newversion -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -29587,7 +29587,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_nsec3chain:find_zone_keys -> %s\n"
+literal|"zone_nsec3chain:find_zone_keys -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -30237,7 +30237,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"dns_nsec3_addnsec3 -> %s\n"
+literal|"dns_nsec3_addnsec3 -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -30462,7 +30462,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"dns_dbiterator_next -> %s\n"
+literal|"dns_dbiterator_next -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -30711,7 +30711,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"need_nsec_chain -> %s\n"
+literal|"need_nsec_chain -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -30803,7 +30803,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"fixup_nsec3param -> %s\n"
+literal|"fixup_nsec3param -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -30852,7 +30852,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"deletematchingnsec3 -> %s\n"
+literal|"deletematchingnsec3 -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31319,7 +31319,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"fixup_nsec3param -> %s\n"
+literal|"fixup_nsec3param -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31350,7 +31350,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"dns_dbiterator_next -> %s\n"
+literal|"dns_dbiterator_next -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31516,7 +31516,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"dns_db_allrdatasets -> %s\n"
+literal|"dns_db_allrdatasets -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31657,7 +31657,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"updatesecure -> %s\n"
+literal|"updatesecure -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31712,7 +31712,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"dns_nsec3_addnsec3s -> %s\n"
+literal|"dns_nsec3_addnsec3s -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31772,7 +31772,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"update_sigs -> %s\n"
+literal|"update_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31830,7 +31830,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"update_sigs -> %s\n"
+literal|"update_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31897,7 +31897,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"updatesecure -> %s\n"
+literal|"updatesecure -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -31955,7 +31955,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"update_sigs -> %s\n"
+literal|"update_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -32025,7 +32025,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"del_sigs -> %s\n"
+literal|"del_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -32067,7 +32067,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"increment_soa_serial -> %s\n"
+literal|"increment_soa_serial -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -32128,7 +32128,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_nsec3chain:"
-literal|"add_sigs -> %s\n"
+literal|"add_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -32313,7 +32313,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_nsec3chain: %s\n"
+literal|"zone_nsec3chain: %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -33406,7 +33406,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_sign:dns_db_newversion -> %s\n"
+literal|"zone_sign:dns_db_newversion -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -33453,7 +33453,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_sign:find_zone_keys -> %s\n"
+literal|"zone_sign:find_zone_keys -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34354,7 +34354,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"updatesecure -> %s\n"
+literal|"updatesecure -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34400,8 +34400,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"updatesignwithkey "
-literal|"-> %s\n"
+literal|"updatesignwithkey -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34435,7 +34434,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_sign:dns_dbiterator_next -> %s\n"
+literal|"zone_sign:dns_dbiterator_next -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34569,7 +34568,7 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"zone_sign:"
-literal|"update_sigs -> %s\n"
+literal|"update_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34649,7 +34648,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_sign:del_sigs -> %s\n"
+literal|"zone_sign:del_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34690,7 +34689,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_sign:increment_soa_serial -> %s\n"
+literal|"zone_sign:increment_soa_serial -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -34751,7 +34750,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"zone_sign:add_sigs -> %s\n"
+literal|"zone_sign:add_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -68608,7 +68607,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"sign_apex:find_zone_keys -> %s\n"
+literal|"sign_apex:find_zone_keys -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -68761,7 +68760,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"sign_apex:del_sigs -> %s\n"
+literal|"sign_apex:del_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -68820,7 +68819,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"sign_apex:add_sigs -> %s\n"
+literal|"sign_apex:add_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
@@ -68875,7 +68874,7 @@ name|zone
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"sign_apex:update_sigs -> %s\n"
+literal|"sign_apex:update_sigs -> %s"
 argument_list|,
 name|dns_result_totext
 argument_list|(
