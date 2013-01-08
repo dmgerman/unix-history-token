@@ -2247,7 +2247,7 @@ index|]
 expr_stmt|;
 name|lowmem
 operator|=
-literal|768
+literal|128
 operator|*
 name|MB
 expr_stmt|;
