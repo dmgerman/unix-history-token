@@ -833,6 +833,9 @@ literal|"%d != %d\n"
 argument_list|,
 name|insize
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int
