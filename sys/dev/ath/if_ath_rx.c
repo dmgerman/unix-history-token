@@ -642,6 +642,17 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_PHYRADAR
 expr_stmt|;
+comment|/* 	 * Enable spectral PHY errors if requested by the 	 * spectral module. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dospectral
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYRADAR
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
