@@ -199,7 +199,23 @@ name|IEEE80211_RADIOTAP_DB_ANTNOISE
 init|=
 literal|13
 block|,
-comment|/* NB: gap for netbsd definitions */
+comment|/* 	 * 14-17 are from Linux, they overlap the netbsd-specific 	 * fields. 	 */
+name|IEEE80211_RADIOTAP_RX_FLAGS
+init|=
+literal|14
+block|,
+name|IEEE80211_RADIOTAP_TX_FLAGS
+init|=
+literal|15
+block|,
+name|IEEE80211_RADIOTAP_RTS_RETRIES
+init|=
+literal|16
+block|,
+name|IEEE80211_RADIOTAP_DATA_RETRIES
+init|=
+literal|17
+block|,
 name|IEEE80211_RADIOTAP_XCHANNEL
 init|=
 literal|18
@@ -207,6 +223,14 @@ block|,
 name|IEEE80211_RADIOTAP_MCS
 init|=
 literal|19
+block|,
+name|IEEE80211_RADIOTAP_AMPDU_STATUS
+init|=
+literal|20
+block|,
+name|IEEE80211_RADIOTAP_RADIOTAP_NAMESPACE
+init|=
+literal|29
 block|,
 name|IEEE80211_RADIOTAP_VENDOREXT
 init|=
