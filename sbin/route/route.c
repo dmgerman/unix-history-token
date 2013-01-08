@@ -345,8 +345,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|iflag
-decl_stmt|,
 name|verbose
 decl_stmt|,
 name|aflen
@@ -486,6 +484,8 @@ name|struct
 name|hostent
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4538,9 +4538,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_IFA
@@ -4550,6 +4547,8 @@ operator|++
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4567,9 +4566,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_IFP
@@ -4579,6 +4575,8 @@ operator|++
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4596,9 +4594,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_GENMASK
@@ -4608,6 +4603,8 @@ operator|++
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4625,9 +4622,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_GATEWAY
@@ -4637,6 +4631,8 @@ operator|++
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4666,6 +4662,8 @@ name|argv
 argument_list|,
 operator|&
 name|hp
+argument_list|,
+name|nrflags
 argument_list|)
 condition|)
 name|nrflags
@@ -4692,9 +4690,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_NETMASK
@@ -4704,6 +4699,8 @@ operator|++
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -4853,6 +4850,8 @@ name|argv
 argument_list|,
 operator|&
 name|hp
+argument_list|,
+name|nrflags
 argument_list|)
 condition|)
 name|nrflags
@@ -4877,9 +4876,6 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_GATEWAY
@@ -4889,14 +4885,13 @@ name|argv
 argument_list|,
 operator|&
 name|hp
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_NETMASK
@@ -4905,6 +4900,8 @@ operator|*
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 name|nrflags
@@ -5914,6 +5911,9 @@ name|hostent
 modifier|*
 modifier|*
 name|hpp
+parameter_list|,
+name|int
+name|nrflags
 parameter_list|)
 block|{
 name|sup
@@ -5992,7 +5992,9 @@ name|so_gate
 expr_stmt|;
 if|if
 condition|(
-name|iflag
+name|nrflags
+operator|&
+name|F_INTERFACE
 condition|)
 block|{
 name|struct
@@ -6224,6 +6226,8 @@ argument_list|,
 name|str
 argument_list|,
 literal|0
+argument_list|,
+name|nrflags
 argument_list|)
 expr_stmt|;
 break|break;
