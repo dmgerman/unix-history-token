@@ -2435,6 +2435,12 @@ literal|0x440a
 block|,
 literal|"Chelsio T404-BT"
 block|}
+block|,
+block|{
+literal|0x440e
+block|,
+literal|"Chelsio T440-LP-CR"
+block|}
 block|, }
 struct|;
 end_struct
