@@ -1739,7 +1739,7 @@ argument|short type
 argument_list|,
 argument|int flags
 argument_list|,
-argument|int size
+argument|u_int size
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2452,7 +2452,7 @@ argument|short type
 argument_list|,
 argument|int flags
 argument_list|,
-argument|int size
+argument|u_int size
 argument_list|)
 block|{ 	struct
 name|mb_args
@@ -2484,22 +2484,12 @@ if|if
 condition|(
 name|size
 operator|<=
-operator|(
-operator|(
-name|int
-operator|)
 name|MHLEN
-operator|)
 operator|||
 operator|(
 name|size
 operator|<=
-operator|(
-operator|(
-name|int
-operator|)
 name|MLEN
-operator|)
 operator|&&
 operator|(
 name|flags
