@@ -258,7 +258,7 @@ name|PCPU_PTR
 parameter_list|(
 name|member
 parameter_list|)
-value|(&pcpup->pc_ ## member)
+value|(&get_pcpu()->pc_ ## member)
 end_define
 
 begin_define
@@ -270,7 +270,7 @@ name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(pcpup->pc_ ## member = (value))
+value|(get_pcpu()->pc_ ## member = (value))
 end_define
 
 begin_function_decl

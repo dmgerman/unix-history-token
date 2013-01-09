@@ -2201,13 +2201,10 @@ name|cpu_reset_proxy_active
 operator|==
 literal|1
 condition|)
-block|{
 name|ia32_pause
 argument_list|()
 expr_stmt|;
-empty_stmt|;
 comment|/* Wait for other cpu to see that we've started */
-block|}
 name|CPU_SETOF
 argument_list|(
 name|cpu_reset_proxyid

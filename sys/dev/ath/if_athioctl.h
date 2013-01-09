@@ -1273,6 +1273,20 @@ name|SPECTRAL_CONTROL_SET_PARAMS
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPECTRAL_CONTROL_ENABLE_AT_RESET
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPECTRAL_CONTROL_DISABLE_AT_RESET
+value|9
+end_define
+
 begin_endif
 endif|#
 directive|endif
