@@ -790,6 +790,43 @@ name|ah_isFastClockEnabled
 operator|=
 name|ar5416IsFastClockEnabled
 expr_stmt|;
+comment|/* Spectral Scan Functions */
+name|ah
+operator|->
+name|ah_spectralConfigure
+operator|=
+name|ar5416ConfigureSpectralScan
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralGetConfig
+operator|=
+name|ar5416GetSpectralParams
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralStart
+operator|=
+name|ar5416StartSpectralScan
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralStop
+operator|=
+name|ar5416StopSpectralScan
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralIsEnabled
+operator|=
+name|ar5416IsSpectralEnabled
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralIsActive
+operator|=
+name|ar5416IsSpectralActive
+expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
 operator|->
@@ -5062,6 +5099,13 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* Broken in Owl */
+name|pCap
+operator|->
+name|halSpectralScanSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+comment|/* AR9280 and later */
 if|if
 condition|(
 name|ath_hal_eepromGet

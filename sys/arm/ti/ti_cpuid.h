@@ -166,6 +166,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|OMAP4430_REV_UNKNOWN
+value|OMAP_MAKEREV(OMAP4430_DEV, 9, 9, 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4460_DEV
+value|0x4460
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4460_REV_ES1_0
+value|OMAP_MAKEREV(OMAP4460_DEV, 1, 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4460_REV_ES1_1
+value|OMAP_MAKEREV(OMAP4460_DEV, 1, 1, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4460_REV_UNKNOWN
+value|OMAP_MAKEREV(OMAP4460_DEV, 9, 9, 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4470_DEV
+value|0x4470
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4470_REV_ES1_0
+value|OMAP_MAKEREV(OMAP4470_DEV, 1, 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP4470_REV_UNKNOWN
+value|OMAP_MAKEREV(OMAP4470_DEV, 9, 9, 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OMAP_UNKNOWN_DEV
+value|OMAP_MAKEREV(0x9999, 9, 9, 9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AM335X_DEVREV
 parameter_list|(
 name|x

@@ -738,7 +738,6 @@ literal|"AMD 762 host to AGP bridge"
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 name|NULL
 return|;

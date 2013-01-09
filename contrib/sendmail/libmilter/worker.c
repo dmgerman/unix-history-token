@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 2003-2004, 2007, 2009-2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Jose Marcio Martins da Cruz - Ecole des Mines de Paris  *   Jose-Marcio.Martins@ensmp.fr  */
+comment|/*  *  Copyright (c) 2003-2004, 2007, 2009-2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Jose Marcio Martins da Cruz - Ecole des Mines de Paris  *   Jose-Marcio.Martins@ensmp.fr  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: worker.c,v 8.19 2011/02/14 23:33:48 ca Exp $"
+literal|"@(#)$Id: worker.c,v 8.24 2012/03/13 15:37:46 ca Exp $"
 argument_list|)
 end_macro
 
@@ -447,7 +447,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {								\ 		if ((lev)< ctx->ctx_dbg)				\ 			sm_dprintf x;					\ 	} while (0)
+value|do								\ 	{								\ 		if ((lev)< ctx->ctx_dbg)				\ 			sm_dprintf x;					\ 	} while (0)
 end_define
 
 begin_else
@@ -1173,7 +1173,7 @@ decl_stmt|;
 name|int
 name|nfd
 decl_stmt|,
-name|rfd
+name|r
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -1576,7 +1576,7 @@ name|TASKMGR_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* Everything is ready, let's wait for an event */
-name|rfd
+name|r
 operator|=
 name|poll
 argument_list|(
@@ -1605,7 +1605,7 @@ expr_stmt|;
 comment|/* timeout */
 if|if
 condition|(
-name|rfd
+name|r
 operator|==
 literal|0
 condition|)
@@ -1617,7 +1617,7 @@ expr_stmt|;
 comment|/* error */
 if|if
 condition|(
-name|rfd
+name|r
 operator|<
 literal|0
 condition|)
@@ -1663,6 +1663,7 @@ condition|)
 goto|goto
 name|err
 goto|;
+continue|continue;
 block|}
 name|pcnt
 operator|=
@@ -1715,7 +1716,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* has a worker signaled an end of task ? */
+comment|/* has a worker signaled an end of task? */
 if|if
 condition|(
 name|WAIT_FD
@@ -1842,7 +1843,10 @@ comment|/* Exception handling */
 block|}
 continue|continue;
 block|}
-comment|/* no ! sendmail wants to send a command */
+comment|/* 			**  Not the pipe for workers waking us, 			**  so must be something on an MTA connection. 			*/
+name|TASKMGR_LOCK
+argument_list|()
+expr_stmt|;
 name|SM_TAILQ_FOREACH
 argument_list|(
 argument|ctx
@@ -1893,9 +1897,6 @@ operator|.
 name|fd
 condition|)
 block|{
-name|TASKMGR_LOCK
-argument_list|()
-expr_stmt|;
 name|POOL_LEV_DPRINTF
 argument_list|(
 literal|4
@@ -1949,12 +1950,12 @@ name|ctx
 argument_list|)
 expr_stmt|;
 block|}
-name|TASKMGR_UNLOCK
-argument_list|()
-expr_stmt|;
 break|break;
 block|}
 block|}
+name|TASKMGR_UNLOCK
+argument_list|()
+expr_stmt|;
 name|POOL_LEV_DPRINTF
 argument_list|(
 literal|4
@@ -1998,36 +1999,13 @@ name|tm_signature
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|SMFICTX_PTR
-name|ctx
-decl_stmt|;
-name|ctx
-operator|=
-name|SM_TAILQ_FIRST
-argument_list|(
-operator|&
-name|WRK_CTX_HEAD
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ctx
-operator|==
-name|NULL
-condition|)
-break|break;
-name|mi_close_session
-argument_list|(
-name|ctx
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* 	**  Do not clean up ctx -- it can cause double-free()s. 	**  The program is shutting down anyway, so it's not worth the trouble. 	**  There is a more complex solution that prevents race conditions 	**  while accessing ctx, but that's maybe for a later version. 	*/
+block|for (;;) 	{ 		SMFICTX_PTR ctx;  		ctx = SM_TAILQ_FIRST(&WRK_CTX_HEAD); 		if (ctx == NULL) 			break; 		mi_close_session(ctx); 	}
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)

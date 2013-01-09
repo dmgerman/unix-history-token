@@ -147,6 +147,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_LPT1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8c20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_LPT2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8c21)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_ALL
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xffff)
 end_define

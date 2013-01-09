@@ -4094,6 +4094,11 @@ name|P_PGID
 operator|)
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 name|id
 operator|=
 operator|(
@@ -4102,6 +4107,11 @@ operator|)
 name|q
 operator|->
 name|p_pgid
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|q
+argument_list|)
 expr_stmt|;
 name|idtype
 operator|=

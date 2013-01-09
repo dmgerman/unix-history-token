@@ -234,6 +234,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"open: %s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
@@ -917,6 +919,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1417,6 +1424,7 @@ name|r
 operator|->
 name|name
 operator|||
+operator|(
 name|nr
 operator|->
 name|name
@@ -1441,6 +1449,7 @@ name|name
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|)
 condition|)
 block|{

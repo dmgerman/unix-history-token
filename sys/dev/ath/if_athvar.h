@@ -2644,6 +2644,14 @@ name|task
 name|sc_dfstask
 decl_stmt|;
 comment|/* DFS processing task */
+comment|/* Spectral related state */
+name|void
+modifier|*
+name|sc_spectral
+decl_stmt|;
+name|int
+name|sc_dospectral
+decl_stmt|;
 comment|/* ALQ */
 ifdef|#
 directive|ifdef
@@ -5617,6 +5625,65 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_get11nExtBusy)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_supported
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_SPECTRAL_SCAN, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_get_config
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_p
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralGetConfig)((_ah), (_p)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_configure
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_p
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralConfigure)((_ah), (_p)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_start
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralStart)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_stop
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralStop)((_ah)))
 end_define
 
 begin_endif

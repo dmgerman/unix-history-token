@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 1.0.1c 10 May 2012"
+value|"OpenSSL 1.0.1c-freebsd 10 May 2012"
 end_define
 
 begin_endif

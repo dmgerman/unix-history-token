@@ -232,6 +232,9 @@ operator|->
 name|code
 argument_list|)
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|td
 argument_list|,
 literal|"pid:%d"
@@ -621,6 +624,9 @@ operator|->
 name|code
 argument_list|)
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|td
 argument_list|,
 literal|"pid:%d"

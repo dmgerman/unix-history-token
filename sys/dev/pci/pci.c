@@ -1355,6 +1355,17 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|0x12751275
+block|,
+name|PCI_QUIRK_ENABLE_MSI_VM
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* bhyve */
 comment|/* 	 * HPET MMIO base address may appear in Bar1 for AMD SB600 SMBus 	 * controller depending on SoftPciRst register (PM_IO 0x55 [7]). 	 * It prevents us from attaching hpet(4) when the bit is unset. 	 * Note this quirk only affects SB600 revision A13 and earlier. 	 * For SB600 A21 and later, firmware must set the bit to hide it. 	 * For SB700 and later, it is unused and hardcoded to zero. 	 */
 block|{
 literal|0x43851002

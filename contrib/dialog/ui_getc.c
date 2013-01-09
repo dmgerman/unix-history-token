@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: ui_getc.c,v 1.65 2011/10/20 23:45:48 tom Exp $  *  *  ui_getc.c - user interface glue for getc()  *  *  Copyright 2001-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: ui_getc.c,v 1.63 2011/07/07 22:05:58 tom Exp $  *  *  ui_getc.c - user interface glue for getc()  *  *  Copyright 2001-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -1216,8 +1216,16 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|long
+name|result
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|result
+operator|=
 name|fcntl
 argument_list|(
 name|fd
@@ -1226,6 +1234,7 @@ name|F_GETFL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -2217,23 +2226,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|done
-operator|=
-operator|(
-name|p
-operator|->
-name|win
-operator|==
-name|save_win
-operator|)
-operator|&&
-operator|(
-operator|!
-name|p
-operator|->
-name|keep_win
-operator|)
-expr_stmt|;
 name|dlg_remove_callback
 argument_list|(
 name|p

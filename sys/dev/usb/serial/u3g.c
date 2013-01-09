@@ -2308,6 +2308,15 @@ name|U3G_DEV
 argument_list|(
 name|NOVATEL
 argument_list|,
+name|MIFI2200
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|NOVATEL
+argument_list|,
 name|U720
 argument_list|,
 literal|0
