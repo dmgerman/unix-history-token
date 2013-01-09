@@ -574,6 +574,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_IP6ADDRCTL
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|struct
@@ -689,6 +695,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Functions defined in RFC2553  *	getipnodebyname, getipnodebyaddr, freehostent  */
@@ -1121,6 +1132,9 @@ name|options
 operator|=
 name|options
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_IP6ADDRCTL
 return|return
 name|_hpreorder
 argument_list|(
@@ -1132,6 +1146,18 @@ name|statp
 argument_list|)
 argument_list|)
 return|;
+else|#
+directive|else
+return|return
+name|_hpsort
+argument_list|(
+name|hp
+argument_list|,
+name|statp
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3126,6 +3152,12 @@ name|hp
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_IP6ADDRCTL
+end_ifdef
 
 begin_comment
 comment|/*  * _hpreorder: sort address by default address selection  */
@@ -5690,6 +5722,11 @@ return|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
