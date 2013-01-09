@@ -494,7 +494,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cpsw_watchdog
+name|cpsw_tx_watchdog
 parameter_list|(
 name|struct
 name|cpsw_softc
@@ -3659,7 +3659,7 @@ name|newslots
 argument_list|)
 condition|)
 return|return;
-comment|/* Attach new segments to the hardware TX queue. */
+comment|/* Attach the list of new buffers to the hardware TX queue. */
 name|prev_slot
 operator|=
 name|STAILQ_LAST
@@ -3719,8 +3719,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Add packets to current queue. */
-comment|/* Race: The hardware might have sent the last packet 		 * on the queue and stopped the transmitter just 		 * before we got here.  In that case, this is a no-op, 		 * but it also means there's a TX interrupt waiting 		 * to be processed as soon as we release the lock here. 		 * That TX interrupt can detect and recover from this 		 * situation; see cpsw_intr_tx_locked. 		 */
+comment|/* Add buffers to end of current queue. */
 name|cpsw_cpdma_write_txbd_next
 argument_list|(
 name|prev_slot
@@ -3735,40 +3734,40 @@ name|index
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If underrun, restart queue. */
+if|if
+condition|(
+name|cpsw_cpdma_read_txbd_flags
+argument_list|(
+name|prev_slot
+operator|->
+name|index
+argument_list|)
+operator|&
+name|CPDMA_BD_EOQ
+condition|)
+name|cpsw_write_4
+argument_list|(
+name|CPSW_CPDMA_TX_HDP
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+name|cpsw_cpdma_txbd_paddr
+argument_list|(
+name|first_new_slot
+operator|->
+name|index
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* If tx_retires hasn't changed, then we may have 	   lost a TX interrupt, so let the timer tick. */
 name|sc
 operator|->
 name|tx_enqueues
 operator|+=
 name|enqueued
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|tx_retires_at_wd_reset
-operator|!=
-name|sc
-operator|->
-name|tx_retires
-condition|)
-block|{
-name|sc
-operator|->
-name|tx_retires_at_wd_reset
-operator|=
-name|sc
-operator|->
-name|tx_retires
-expr_stmt|;
-name|sc
-operator|->
-name|wd_timer
-operator|=
-literal|5
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|tx_queued
@@ -3879,12 +3878,6 @@ name|sc
 operator|->
 name|wd_callout
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|wd_timer
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Wait for hardware to clear pending ops. */
 name|CPSW_GLOBAL_UNLOCK
@@ -5517,7 +5510,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Extend an existing RX queue. */
+comment|/* Add buffers to end of current queue. */
 name|cpsw_cpdma_write_rxbd_next
 argument_list|(
 name|prev_slot
@@ -5532,8 +5525,7 @@ name|index
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX Order matters: Previous write must complete 		   before next read begins in order to avoid an 		   end-of-queue race.  I think bus_write and bus_read have 		   sufficient barriers built-in to ensure this. XXX */
-comment|/* If old RX queue was stopped, restart it. */
+comment|/* If underrun, restart queue. */
 if|if
 condition|(
 name|cpsw_cpdma_read_rxbd_flags
@@ -5888,39 +5880,6 @@ name|index
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If transmitter stopped and there's more, restart it. */
-comment|/* This resolves the race described in tx_start above. */
-if|if
-condition|(
-operator|(
-name|last_flags
-operator|&
-name|CPDMA_BD_EOQ
-operator|)
-operator|&&
-operator|(
-name|slot
-operator|!=
-name|NULL
-operator|)
-condition|)
-block|{
-name|cpsw_write_4
-argument_list|(
-name|CPSW_CPDMA_TX_HDP
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|cpsw_cpdma_txbd_paddr
-argument_list|(
-name|slot
-operator|->
-name|index
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|tx_retires
@@ -5932,12 +5891,6 @@ operator|->
 name|tx_queued
 operator|-=
 name|retires
-expr_stmt|;
-name|sc
-operator|->
-name|wd_timer
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
@@ -6009,7 +5962,7 @@ init|=
 name|msc
 decl_stmt|;
 comment|/* Check for TX timeout */
-name|cpsw_watchdog
+name|cpsw_tx_watchdog
 argument_list|(
 name|sc
 argument_list|)
@@ -6081,7 +6034,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cpsw_watchdog
+name|cpsw_tx_watchdog
 parameter_list|(
 name|struct
 name|cpsw_softc
@@ -6093,13 +6046,11 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|ifp
-operator|=
+init|=
 name|sc
 operator|->
 name|ifp
-expr_stmt|;
+decl_stmt|;
 name|CPSW_GLOBAL_LOCK
 argument_list|(
 name|sc
@@ -6109,23 +6060,62 @@ if|if
 condition|(
 name|sc
 operator|->
-name|wd_timer
-operator|==
-literal|0
-operator|||
-operator|--
+name|tx_retires
+operator|>
 name|sc
 operator|->
-name|wd_timer
+name|tx_retires_at_last_tick
 condition|)
 block|{
-name|CPSW_GLOBAL_UNLOCK
-argument_list|(
 name|sc
-argument_list|)
+operator|->
+name|tx_wd_timer
+operator|=
+literal|0
 expr_stmt|;
-return|return;
+comment|/* Stuff got sent. */
 block|}
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|tx_queued
+operator|==
+literal|0
+condition|)
+block|{
+name|sc
+operator|->
+name|tx_wd_timer
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Nothing to send. */
+block|}
+else|else
+block|{
+comment|/* There was something to send but we didn't. */
+operator|++
+name|sc
+operator|->
+name|tx_wd_timer
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|tx_wd_timer
+operator|>
+literal|3
+condition|)
+block|{
+name|sc
+operator|->
+name|tx_wd_timer
+operator|=
+literal|0
+expr_stmt|;
 name|ifp
 operator|->
 name|if_oerrors
@@ -6147,6 +6137,23 @@ name|cpsw_init_locked
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|CPSW_DEBUGF
+argument_list|(
+operator|(
+literal|"watchdog reset completed\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|sc
+operator|->
+name|tx_retires_at_last_tick
+operator|=
+name|sc
+operator|->
+name|tx_retires
 expr_stmt|;
 name|CPSW_GLOBAL_UNLOCK
 argument_list|(
@@ -6815,7 +6822,7 @@ literal|1
 expr_stmt|;
 name|sc
 operator|->
-name|wd_timer
+name|tx_wd_timer
 operator|=
 literal|0
 expr_stmt|;

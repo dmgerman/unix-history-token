@@ -842,7 +842,7 @@ block|,
 comment|/* Xen */
 literal|"BHYVE"
 block|,
-comment|/* BHyVe */
+comment|/* bhyve */
 name|NULL
 block|}
 decl_stmt|;

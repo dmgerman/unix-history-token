@@ -10118,9 +10118,9 @@ name|vap
 operator|->
 name|iv_ifp
 expr_stmt|;
-operator|(
-name|void
-operator|)
+comment|/* 	 * Free any node ref which this mbuf may have. 	 * 	 * Much like psq_mfree(), we assume that M_ENCAP nodes have 	 * node references. 	 */
+if|if
+condition|(
 name|ifp
 operator|->
 name|if_transmit
@@ -10129,7 +10129,27 @@ name|ifp
 argument_list|,
 name|m
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * XXX m is invalid (freed) at this point, determine M_ENCAP 		 * an alternate way. 		 */
+if|if
+condition|(
+name|ifp
+operator|==
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_ifp
+condition|)
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

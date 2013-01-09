@@ -402,6 +402,14 @@ return|return;
 ifdef|#
 directive|ifdef
 name|PL310_ERRATA_753970
+if|if
+condition|(
+name|pl310_softc
+operator|->
+name|sc_rtl_revision
+operator|==
+name|CACHE_ID_RELEASE_r3p0
+condition|)
 comment|/* Write uncached PL310 register */
 name|pl310_write4
 argument_list|(
@@ -412,8 +420,9 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
+endif|#
+directive|endif
 name|pl310_write4
 argument_list|(
 name|pl310_softc
@@ -423,8 +432,6 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -458,6 +465,20 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PL310_ERRATA_727915
+if|if
+condition|(
+name|pl310_softc
+operator|->
+name|sc_rtl_revision
+operator|==
+name|CACHE_ID_RELEASE_r2p0
+operator|||
+name|pl310_softc
+operator|->
+name|sc_rtl_revision
+operator|==
+name|CACHE_ID_RELEASE_r3p0
+condition|)
 name|platform_pl310_write_debug
 argument_list|(
 name|pl310_softc
@@ -489,6 +510,20 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PL310_ERRATA_727915
+if|if
+condition|(
+name|pl310_softc
+operator|->
+name|sc_rtl_revision
+operator|==
+name|CACHE_ID_RELEASE_r2p0
+operator|||
+name|pl310_softc
+operator|->
+name|sc_rtl_revision
+operator|==
+name|CACHE_ID_RELEASE_r3p0
+condition|)
 name|platform_pl310_write_debug
 argument_list|(
 name|pl310_softc
@@ -595,7 +630,16 @@ block|{
 ifdef|#
 directive|ifdef
 name|PL310_ERRATA_588369
-comment|/*  		 * Errata 588369 says that clean + inv may keep the  		 * cache line if it was clean, the recommanded workaround 		 * is to clean then invalidate the cache line, with 		 * write-back and cache linefill disabled 		 */
+if|if
+condition|(
+name|pl310_softc
+operator|->
+name|sc_rtl_revision
+operator|<=
+name|CACHE_ID_RELEASE_r1p0
+condition|)
+block|{
+comment|/*  			 * Errata 588369 says that clean + inv may keep the  			 * cache line if it was clean, the recommanded 			 * workaround is to clean then invalidate the cache 			 * line, with write-back and cache linefill disabled. 			 */
 name|pl310_write4
 argument_list|(
 name|pl310_softc
@@ -614,8 +658,10 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+endif|#
+directive|endif
 name|pl310_write4
 argument_list|(
 name|pl310_softc
@@ -625,8 +671,6 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|start
 operator|+=
 name|g_l2cache_line_size
@@ -1078,6 +1122,18 @@ name|sc
 argument_list|,
 name|PL310_CACHE_ID
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rtl_revision
+operator|=
+operator|(
+name|cache_id
+operator|>>
+name|CACHE_ID_RELEASE_SHIFT
+operator|)
+operator|&
+name|CACHE_ID_RELEASE_MASK
 expr_stmt|;
 name|device_printf
 argument_list|(

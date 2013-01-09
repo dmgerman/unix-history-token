@@ -384,7 +384,7 @@ comment|/* Initialize. */
 define|\
 value|memset(fg, 0, sizeof(*fg));						\   fg->icase = (cflags& REG_ICASE);					\   fg->word = (cflags& REG_WORD);					\   fg->newline = (cflags& REG_NEWLINE);					\   fg->nosub = (cflags& REG_NOSUB);					\ 									\
 comment|/* Cannot handle REG_ICASE with MB string */
-value|\   if (fg->icase&& (TRE_MB_CUR_MAX> 1))				\     {									\       DPRINT(("Cannot use fast matcher for MBS with REG_ICASE\n"));	\       return REG_BADPAT;						\     }
+value|\   if (fg->icase&& (TRE_MB_CUR_MAX> 1)&& n> 0)			\     {									\       DPRINT(("Cannot use fast matcher for MBS with REG_ICASE\n"));	\       return REG_BADPAT;						\     }
 end_define
 
 begin_comment
