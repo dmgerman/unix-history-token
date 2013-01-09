@@ -185,6 +185,11 @@ name|cdev_pager_ops
 modifier|*
 name|ops
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|dev
+decl_stmt|;
 block|}
 name|devp
 struct|;
