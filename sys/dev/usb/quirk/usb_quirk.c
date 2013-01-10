@@ -5457,6 +5457,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|pqe
 argument_list|)
 argument_list|)
