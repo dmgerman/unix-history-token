@@ -3097,12 +3097,11 @@ name|i
 decl_stmt|,
 name|rc
 decl_stmt|;
-name|ADAPTER_LOCK_ASSERT_OWNED
+name|ASSERT_SYNCHRONIZED_OP
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* for sc->flags */
 comment|/* per-adapter softc for TOM */
 name|td
 operator|=
@@ -3423,12 +3422,11 @@ name|sc
 operator|->
 name|tom_softc
 decl_stmt|;
-name|ADAPTER_LOCK_ASSERT_OWNED
+name|ASSERT_SYNCHRONIZED_OP
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* for sc->flags */
 if|if
 condition|(
 name|td
@@ -3677,12 +3675,21 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-comment|/* Try to free resources (works only if no port has IFCAP_TOE) */
-name|ADAPTER_LOCK
+if|if
+condition|(
+name|begin_synchronized_op
 argument_list|(
 name|sc
+argument_list|,
+name|NULL
+argument_list|,
+name|HOLD_LOCK
+argument_list|,
+literal|"t4tomun"
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
+comment|/* Try to free resources (works only if no port has IFCAP_TOE) */
 if|if
 condition|(
 name|sc
@@ -3698,9 +3705,11 @@ argument_list|,
 name|ULD_TOM
 argument_list|)
 expr_stmt|;
-name|ADAPTER_UNLOCK
+name|end_synchronized_op
 argument_list|(
 name|sc
+argument_list|,
+name|LOCK_HELD
 argument_list|)
 expr_stmt|;
 block|}
