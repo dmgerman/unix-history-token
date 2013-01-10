@@ -2307,6 +2307,23 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we were opened for write, we leased one write reference 	 * to the lower vnode.  If this is a reclamation due to the 	 * forced unmount, undo the reference now. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_writecount
+operator|>
+literal|0
+condition|)
+name|VOP_ADD_WRITECOUNT
+argument_list|(
+name|lowervp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|lowervp
