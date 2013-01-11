@@ -128,6 +128,12 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -340,7 +346,7 @@ define|#
 directive|define
 name|MEMORY_BARRIER
 parameter_list|()
-value|__do_dmb()
+value|dmb()
 end_define
 
 begin_else
