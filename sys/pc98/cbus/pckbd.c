@@ -251,8 +251,8 @@ specifier|static
 name|int
 name|pckbd_probe_unit
 parameter_list|(
-name|int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
 name|int
 name|port
@@ -271,8 +271,8 @@ specifier|static
 name|int
 name|pckbd_attach_unit
 parameter_list|(
-name|int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
 name|keyboard_t
 modifier|*
@@ -381,10 +381,7 @@ name|error
 operator|=
 name|pckbd_probe_unit
 argument_list|(
-name|device_get_unit
-argument_list|(
 name|dev
-argument_list|)
 argument_list|,
 name|isa_get_port
 argument_list|(
@@ -496,10 +493,7 @@ name|error
 operator|=
 name|pckbd_attach_unit
 argument_list|(
-name|device_get_unit
-argument_list|(
 name|dev
-argument_list|)
 argument_list|,
 operator|&
 name|kbd
@@ -651,8 +645,8 @@ specifier|static
 name|int
 name|pckbd_probe_unit
 parameter_list|(
-name|int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
 name|int
 name|port
@@ -716,7 +710,10 @@ operator|->
 name|probe
 call|)
 argument_list|(
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|args
 argument_list|,
@@ -741,8 +738,8 @@ specifier|static
 name|int
 name|pckbd_attach_unit
 parameter_list|(
-name|int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
 name|keyboard_t
 modifier|*
@@ -772,6 +769,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 name|sw
 operator|=
 name|kbd_get_switch
@@ -789,6 +789,13 @@ return|return
 name|ENXIO
 return|;
 comment|/* reset, initialize and enable the device */
+name|unit
+operator|=
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|args
 index|[
 literal|0
