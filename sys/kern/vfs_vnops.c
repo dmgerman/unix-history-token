@@ -7505,6 +7505,8 @@ condition|)
 name|vfs_write_resume
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -7521,7 +7523,7 @@ end_comment
 
 begin_function
 name|void
-name|vfs_write_resume_flags
+name|vfs_write_resume
 parameter_list|(
 name|struct
 name|mount
@@ -7681,26 +7683,6 @@ name|mp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|vfs_write_resume
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-block|{
-name|vfs_write_resume_flags
-argument_list|(
-name|mp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
