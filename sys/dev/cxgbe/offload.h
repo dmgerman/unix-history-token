@@ -74,6 +74,44 @@ parameter_list|)
 value|do { \ 	INIT_TP_WR(w, tid); \ 	OPCODE_TID(w) = htonl(MK_OPCODE_TID(cpl, tid)); \ } while (0)
 end_define
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|stid_head
+argument_list|,
+name|stid_region
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|listen_ctx
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|stid_region
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|stid_region
+argument_list|)
+name|link
+expr_stmt|;
+name|int
+name|used
+decl_stmt|;
+comment|/* # of stids used by this region */
+name|int
+name|free
+decl_stmt|;
+comment|/* # of contiguous stids free right after this region */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Max # of ATIDs.  The absolute HW max is 16K but we keep it lower.  */
 end_comment
@@ -84,23 +122,6 @@ directive|define
 name|MAX_ATIDS
 value|8192U
 end_define
-
-begin_union
-union|union
-name|serv_entry
-block|{
-name|void
-modifier|*
-name|data
-decl_stmt|;
-name|union
-name|serv_entry
-modifier|*
-name|next
-decl_stmt|;
-block|}
-union|;
-end_union
 
 begin_union
 union|union
@@ -146,8 +167,9 @@ parameter_list|(
 name|CACHE_LINE_SIZE
 parameter_list|)
 function_decl|;
-name|union
-name|serv_entry
+name|struct
+name|listen_ctx
+modifier|*
 modifier|*
 name|stid_tab
 decl_stmt|;
@@ -157,13 +179,16 @@ decl_stmt|;
 name|u_int
 name|stid_base
 decl_stmt|;
-name|union
-name|serv_entry
-modifier|*
-name|sfree
-decl_stmt|;
 name|u_int
 name|stids_in_use
+decl_stmt|;
+name|u_int
+name|nstids_free_head
+decl_stmt|;
+comment|/* # of available stids at the begining */
+name|struct
+name|stid_head
+name|stids
 decl_stmt|;
 name|struct
 name|mtx

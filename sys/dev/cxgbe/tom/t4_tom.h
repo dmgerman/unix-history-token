@@ -619,6 +619,10 @@ decl_stmt|;
 name|int
 name|stid
 decl_stmt|;
+name|struct
+name|stid_region
+name|stid_region
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
