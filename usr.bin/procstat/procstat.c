@@ -704,6 +704,10 @@ name|eflag
 operator|+
 name|fflag
 operator|+
+name|iflag
+operator|+
+name|jflag
+operator|+
 operator|(
 name|kflag
 condition|?
