@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ucontext.h>
 end_include
 
@@ -224,6 +230,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/metadata.h>
 end_include
 
 begin_include
@@ -464,6 +476,18 @@ name|memsize
 init|=
 name|a3
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FDT
+name|vm_offset_t
+name|dtbp
+decl_stmt|;
+name|void
+modifier|*
+name|kmdp
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -503,12 +527,68 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FDT
-ifndef|#
-directive|ifndef
+comment|/* 	 * Find the dtb passed in by the boot loader (currently fictional). 	 */
+name|kmdp
+operator|=
+name|preload_search_by_type
+argument_list|(
+literal|"elf kernel"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kmdp
+operator|!=
+name|NULL
+condition|)
+name|dtbp
+operator|=
+name|MD_FETCH
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFOMD_DTBP
+argument_list|,
+name|vm_offset_t
+argument_list|)
+expr_stmt|;
+else|else
+name|dtbp
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|NULL
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FDT_DTB_STATIC
+argument_list|)
+comment|/* 	 * In case the device tree blob was not retrieved (from metadata) try 	 * to use the statically embedded one. 	 */
+if|if
+condition|(
+name|dtbp
+operator|==
+operator|(
+name|vm_offset_t
+operator|)
+name|NULL
+condition|)
+name|dtbp
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+operator|&
+name|fdt_static_dtb
+expr_stmt|;
+else|#
+directive|else
 error|#
 directive|error
-literal|"mips_init with FDT requires FDT_DTB_STATIC"
+literal|"Non-static FDT not yet supported on BERI"
 endif|#
 directive|endif
 if|if
