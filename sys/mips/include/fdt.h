@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|fdtbus_bs_tag
-value|NULL
+value|mips_bus_space_fdt
 end_define
 
 begin_endif
