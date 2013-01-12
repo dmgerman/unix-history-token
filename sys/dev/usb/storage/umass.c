@@ -10100,6 +10100,19 @@ operator|=
 name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
+operator||
+name|CAM_DEV_QFRZN
+expr_stmt|;
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|xpt_done
 argument_list|(
@@ -11352,6 +11365,17 @@ block|}
 break|break;
 default|default:
 comment|/* 		 * The wire protocol failed and will hopefully have 		 * recovered. We return an error to CAM and let CAM 		 * retry the command if necessary. 		 */
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -11359,6 +11383,8 @@ operator|.
 name|status
 operator|=
 name|CAM_REQ_CMP_ERR
+operator||
+name|CAM_DEV_QFRZN
 expr_stmt|;
 name|xpt_done
 argument_list|(
@@ -11591,6 +11617,17 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Some devices do not clear the unit attention error 			 * on request sense. We insert a test unit ready 			 * command to make sure we clear the unit attention 			 * condition, then allow the retry to proceed as 			 * usual. 			 */
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -11600,6 +11637,8 @@ operator|=
 name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
+operator||
+name|CAM_DEV_QFRZN
 expr_stmt|;
 name|ccb
 operator|->
@@ -11628,11 +11667,13 @@ expr_stmt|;
 comment|/* the rest of the command was filled in at attach */
 if|if
 condition|(
-name|umass_std_transform
+call|(
+name|sc
+operator|->
+name|sc_transform
+call|)
 argument_list|(
 name|sc
-argument_list|,
-name|ccb
 argument_list|,
 operator|&
 name|sc
@@ -11648,6 +11689,8 @@ operator|->
 name|cam_scsi_test_unit_ready
 argument_list|)
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 name|umass_command_start
@@ -11672,11 +11715,22 @@ argument_list|,
 name|ccb
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 block|}
 else|else
 block|{
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -11686,6 +11740,8 @@ operator|=
 name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
+operator||
+name|CAM_DEV_QFRZN
 expr_stmt|;
 name|ccb
 operator|->
@@ -11716,6 +11772,17 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -11723,6 +11790,8 @@ operator|.
 name|status
 operator|=
 name|CAM_AUTOSENSE_FAIL
+operator||
+name|CAM_DEV_QFRZN
 expr_stmt|;
 name|xpt_done
 argument_list|(
@@ -11734,7 +11803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This completion code just handles the fact that we sent a test-unit-ready  * after having previously failed a READ CAPACITY with CHECK_COND.  Even  * though this command succeeded, we have to tell CAM to retry.  */
+comment|/*  * This completion code just handles the fact that we sent a test-unit-ready  * after having previously failed a READ CAPACITY with CHECK_COND.  The CCB  * status for CAM is already set earlier.  */
 end_comment
 
 begin_function
@@ -11770,24 +11839,6 @@ literal|"returned status %d\n"
 argument_list|,
 name|status
 argument_list|)
-expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_SCSI_STATUS_ERROR
-operator||
-name|CAM_AUTOSNS_VALID
-expr_stmt|;
-name|ccb
-operator|->
-name|csio
-operator|.
-name|scsi_status
-operator|=
-name|SCSI_STATUS_CHECK_COND
 expr_stmt|;
 name|xpt_done
 argument_list|(
@@ -12920,6 +12971,17 @@ operator|==
 literal|0
 condition|)
 block|{
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -12927,6 +12989,8 @@ operator|.
 name|status
 operator|=
 name|CAM_REQ_INVALID
+operator||
+name|CAM_DEV_QFRZN
 expr_stmt|;
 name|xpt_done
 argument_list|(
