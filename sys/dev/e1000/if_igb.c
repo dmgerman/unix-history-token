@@ -20629,7 +20629,7 @@ init|=
 literal|0
 init|;
 name|j
-operator|>
+operator|<
 name|i
 condition|;
 operator|++
@@ -20643,7 +20643,7 @@ name|adapter
 operator|->
 name|rx_rings
 index|[
-name|i
+name|j
 index|]
 expr_stmt|;
 name|IGB_RX_LOCK
