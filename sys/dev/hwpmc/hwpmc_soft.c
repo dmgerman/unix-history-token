@@ -357,10 +357,16 @@ name|pm_event
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ev
 operator|<
 name|PMC_EV_SOFT_FIRST
 operator|||
+operator|(
+name|int
+operator|)
 name|ev
 operator|>
 name|PMC_EV_SOFT_LAST
