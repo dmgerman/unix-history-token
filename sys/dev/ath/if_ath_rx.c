@@ -3421,6 +3421,11 @@ name|npkts
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|kickpcu
+init|=
+literal|0
+decl_stmt|;
 comment|/* XXX we must not hold the ATH_LOCK here */
 name|ATH_UNLOCK_ASSERT
 argument_list|(
@@ -3441,6 +3446,12 @@ name|sc
 operator|->
 name|sc_rxproc_cnt
 operator|++
+expr_stmt|;
+name|kickpcu
+operator|=
+name|sc
+operator|->
+name|sc_kickpcu
 expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
@@ -3493,6 +3504,9 @@ block|{
 comment|/* 		 * Don't process too many packets at a time; give the 		 * TX thread time to also run - otherwise the TX 		 * latency can jump by quite a bit, causing throughput 		 * degredation. 		 */
 if|if
 condition|(
+operator|!
+name|kickpcu
+operator|&&
 name|npkts
 operator|>=
 name|ATH_RX_MAX
@@ -3894,6 +3908,12 @@ name|npkts
 argument_list|)
 expr_stmt|;
 comment|/* XXX rxslink? */
+if|#
+directive|if
+literal|0
+block|ath_startrecv(sc);
+else|#
+directive|else
 comment|/* 		 * XXX can we hold the PCU lock here? 		 * Are there any net80211 buffer calls involved? 		 */
 name|bf
 operator|=
@@ -3934,6 +3954,8 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* re-enable PCU/DMA engine */
+endif|#
+directive|endif
 name|ath_hal_intrset
 argument_list|(
 name|ah
