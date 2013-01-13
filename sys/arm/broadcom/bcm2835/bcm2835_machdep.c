@@ -167,7 +167,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-comment|/* 	 * It seems there is no way to let syscons framework know 	 * that framebuffer resolution has changed. So just try 	 * to fetch data from FDT and go with defaults if failed 	 */
 name|system
 operator|=
 name|OF_finddevice
