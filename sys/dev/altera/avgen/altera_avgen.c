@@ -130,6 +130,12 @@ comment|/*  * Generic device driver for allowing read(), write(), and mmap() on 
 end_comment
 
 begin_decl_stmt
+name|devclass_t
+name|altera_avgen_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|d_mmap_t
 name|altera_avgen_mmap
