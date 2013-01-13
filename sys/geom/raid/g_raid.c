@@ -2982,7 +2982,11 @@ operator|==
 name|G_RAID_DISK_S_DISABLED
 condition|)
 block|{
-empty_stmt|;
+name|s
+operator|=
+name|G_STATE_ACTIVE
+expr_stmt|;
+comment|/* XXX */
 block|}
 elseif|else
 if|if
