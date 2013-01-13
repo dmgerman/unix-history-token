@@ -154,17 +154,6 @@ name|initialized
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|group_line_format
-index|[]
-init|=
-literal|"%s:%s:%ju:"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Initialize statics  */
 end_comment
@@ -1834,6 +1823,13 @@ modifier|*
 name|gr
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|group_line_format
+init|=
+literal|"%s:%s:%ju:"
+decl_stmt|;
 name|char
 modifier|*
 name|line
