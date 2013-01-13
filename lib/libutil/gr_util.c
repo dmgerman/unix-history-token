@@ -1463,7 +1463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clean up. Preserver errno for the caller's convenience.  */
+comment|/*  * Clean up. Preserves errno for the caller's convenience.  */
 end_comment
 
 begin_function
