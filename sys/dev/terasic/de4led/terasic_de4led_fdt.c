@@ -150,7 +150,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"cambridge,de4led"
+literal|"sri-cambridge,de4led"
 argument_list|)
 condition|)
 block|{

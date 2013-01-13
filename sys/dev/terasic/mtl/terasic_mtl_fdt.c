@@ -160,7 +160,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"cambridge,mtl"
+literal|"sri-cambridge,mtl"
 argument_list|)
 condition|)
 block|{
