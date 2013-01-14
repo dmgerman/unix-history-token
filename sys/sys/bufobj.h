@@ -253,33 +253,11 @@ name|bo_mtx
 decl_stmt|;
 comment|/* Mutex which protects "i" things */
 name|struct
-name|bufv
-name|bo_clean
-decl_stmt|;
-comment|/* i Clean buffers */
-name|struct
-name|bufv
-name|bo_dirty
-decl_stmt|;
-comment|/* i Dirty buffers */
-name|long
-name|bo_numoutput
-decl_stmt|;
-comment|/* i Writes in progress */
-name|u_int
-name|bo_flag
-decl_stmt|;
-comment|/* i Flags */
-name|struct
 name|buf_ops
 modifier|*
 name|bo_ops
 decl_stmt|;
 comment|/* - Buffer operations */
-name|int
-name|bo_bsize
-decl_stmt|;
-comment|/* - Block size for i/o */
 name|struct
 name|vm_object
 modifier|*
@@ -304,6 +282,28 @@ modifier|*
 name|__bo_vnode
 decl_stmt|;
 comment|/* 					 * XXX: This vnode pointer is here 					 * XXX: only to keep the syncer working 					 * XXX: for now. 					 */
+name|struct
+name|bufv
+name|bo_clean
+decl_stmt|;
+comment|/* i Clean buffers */
+name|struct
+name|bufv
+name|bo_dirty
+decl_stmt|;
+comment|/* i Dirty buffers */
+name|long
+name|bo_numoutput
+decl_stmt|;
+comment|/* i Writes in progress */
+name|u_int
+name|bo_flag
+decl_stmt|;
+comment|/* i Flags */
+name|int
+name|bo_bsize
+decl_stmt|;
+comment|/* - Block size for i/o */
 block|}
 struct|;
 end_struct

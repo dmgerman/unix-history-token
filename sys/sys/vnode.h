@@ -169,11 +169,6 @@ struct|struct
 name|vnode
 block|{
 comment|/* 	 * Fields which define the identity of the vnode.  These fields are 	 * owned by the filesystem (XXX: and vgone() ?) 	 */
-name|enum
-name|vtype
-name|v_type
-decl_stmt|;
-comment|/* u vnode type */
 specifier|const
 name|char
 modifier|*
@@ -235,16 +230,13 @@ comment|/* v fifo (VFIFO) */
 block|}
 name|v_un
 union|;
-comment|/* 	 * vfs_hash:  (mount + inode) -> vnode hash. 	 */
+comment|/* 	 * vfs_hash: (mount + inode) -> vnode hash.  The hash value 	 * itself is grouped with other int fields, to avoid padding. 	 */
 name|LIST_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
 name|v_hashlist
 expr_stmt|;
-name|u_int
-name|v_hash
-decl_stmt|;
 comment|/* 	 * VFS_namecache stuff 	 */
 name|LIST_HEAD
 argument_list|(
@@ -268,23 +260,6 @@ modifier|*
 name|v_cache_dd
 decl_stmt|;
 comment|/* c Cache entry for .. vnode */
-comment|/* 	 * clustering stuff 	 */
-name|daddr_t
-name|v_cstart
-decl_stmt|;
-comment|/* v start block of cluster */
-name|daddr_t
-name|v_lasta
-decl_stmt|;
-comment|/* v last allocation  */
-name|daddr_t
-name|v_lastw
-decl_stmt|;
-comment|/* v last write  */
-name|int
-name|v_clen
-decl_stmt|;
-comment|/* v length of cur. cluster */
 comment|/* 	 * Locking 	 */
 name|struct
 name|lock
@@ -302,26 +277,6 @@ modifier|*
 name|v_vnlock
 decl_stmt|;
 comment|/* u pointer to vnode lock */
-name|int
-name|v_holdcnt
-decl_stmt|;
-comment|/* i prevents recycling. */
-name|int
-name|v_usecount
-decl_stmt|;
-comment|/* i ref count of users */
-name|u_int
-name|v_iflag
-decl_stmt|;
-comment|/* i vnode flags (see below) */
-name|u_int
-name|v_vflag
-decl_stmt|;
-comment|/* v vnode flags */
-name|int
-name|v_writecount
-decl_stmt|;
-comment|/* v ref count of writers */
 comment|/* 	 * The machinery of being a vnode 	 */
 name|TAILQ_ENTRY
 argument_list|(
@@ -359,6 +314,51 @@ name|rangelock
 name|v_rl
 decl_stmt|;
 comment|/* Byte-range lock */
+comment|/* 	 * clustering stuff 	 */
+name|daddr_t
+name|v_cstart
+decl_stmt|;
+comment|/* v start block of cluster */
+name|daddr_t
+name|v_lasta
+decl_stmt|;
+comment|/* v last allocation  */
+name|daddr_t
+name|v_lastw
+decl_stmt|;
+comment|/* v last write  */
+name|int
+name|v_clen
+decl_stmt|;
+comment|/* v length of cur. cluster */
+name|int
+name|v_holdcnt
+decl_stmt|;
+comment|/* i prevents recycling. */
+name|int
+name|v_usecount
+decl_stmt|;
+comment|/* i ref count of users */
+name|u_int
+name|v_iflag
+decl_stmt|;
+comment|/* i vnode flags (see below) */
+name|u_int
+name|v_vflag
+decl_stmt|;
+comment|/* v vnode flags */
+name|int
+name|v_writecount
+decl_stmt|;
+comment|/* v ref count of writers */
+name|u_int
+name|v_hash
+decl_stmt|;
+name|enum
+name|vtype
+name|v_type
+decl_stmt|;
+comment|/* u vnode type */
 block|}
 struct|;
 end_struct
