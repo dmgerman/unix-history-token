@@ -237,7 +237,7 @@ begin_define
 define|#
 directive|define
 name|SUBTARGET_CPU_DEFAULT
-value|TARGET_CPU_strongarm
+value|TARGET_CPU_arm9
 end_define
 
 begin_undef
