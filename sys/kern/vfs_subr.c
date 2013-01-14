@@ -1207,6 +1207,10 @@ parameter_list|)
 value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
 end_define
 
+begin_comment
+comment|/* Shift count for (uintptr_t)vp to initialize vp->v_hash. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
