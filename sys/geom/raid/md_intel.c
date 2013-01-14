@@ -5907,6 +5907,9 @@ name|mvol
 operator|->
 name|name
 argument_list|,
+name|mvol
+operator|->
+name|tid
 operator|-
 literal|1
 argument_list|)
@@ -12651,6 +12654,16 @@ name|INTEL_ST_READ_COALESCING
 operator||
 name|INTEL_ST_WRITE_COALESCING
 operator|)
+expr_stmt|;
+name|mvol
+operator|->
+name|tid
+operator|=
+name|vol
+operator|->
+name|v_global_id
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
