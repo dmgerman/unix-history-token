@@ -2832,6 +2832,10 @@ goto|goto
 name|out
 goto|;
 block|}
+name|exitstatus
+operator|=
+name|oexitstatus
+expr_stmt|;
 if|if
 condition|(
 name|is_valid_fast_cmdsubst
@@ -2840,10 +2844,6 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|exitstatus
-operator|=
-name|oexitstatus
-expr_stmt|;
 name|savelocalvars
 operator|=
 name|localvars
@@ -2950,10 +2950,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|exitstatus
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|pipe
