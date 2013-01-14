@@ -244,12 +244,10 @@ begin_struct
 struct|struct
 name|t4_range
 block|{
-name|unsigned
-name|int
+name|u_int
 name|start
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|size
 decl_stmt|;
 block|}
@@ -292,6 +290,10 @@ decl_stmt|;
 name|struct
 name|t4_range
 name|ocq
+decl_stmt|;
+name|struct
+name|t4_range
+name|l2t
 decl_stmt|;
 block|}
 struct|;
