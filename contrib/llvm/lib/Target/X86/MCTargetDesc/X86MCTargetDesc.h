@@ -263,13 +263,6 @@ name|bool
 name|isEH
 parameter_list|)
 function_decl|;
-name|unsigned
-name|getX86RegNum
-parameter_list|(
-name|unsigned
-name|RegNo
-parameter_list|)
-function_decl|;
 name|void
 name|InitLLVM2SEHRegisterMapping
 parameter_list|(
@@ -304,6 +297,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|MCII
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo
@@ -376,10 +374,13 @@ modifier|&
 name|OS
 parameter_list|,
 name|bool
-name|Is64Bit
+name|IsELF64
 parameter_list|,
 name|uint8_t
 name|OSABI
+parameter_list|,
+name|uint16_t
+name|EMachine
 parameter_list|)
 function_decl|;
 comment|/// createX86WinCOFFObjectWriter - Construct an X86 Win COFF object writer.

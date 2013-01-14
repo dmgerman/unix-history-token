@@ -133,6 +133,11 @@ name|MachineConstantPool
 operator|*
 name|MCP
 block|;
+comment|/// InConstantPool - Maintain state when emitting a sequence of constant
+comment|/// pool entries so we can properly mark them as data regions.
+name|bool
+name|InConstantPool
+block|;
 name|public
 operator|:
 name|explicit
@@ -161,7 +166,12 @@ argument_list|)
 block|,
 name|MCP
 argument_list|(
-argument|NULL
+name|NULL
+argument_list|)
+block|,
+name|InConstantPool
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|Subtarget
@@ -183,6 +193,7 @@ operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|{
 return|return
 literal|"ARM Assembly Printer"
@@ -215,6 +226,7 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|bool
@@ -230,6 +242,7 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|void
 name|EmitJumpTable
@@ -253,55 +266,61 @@ name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
+name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|F
+argument|MachineFunction&F
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|void
 name|EmitConstantPool
 argument_list|()
-block|{}
+name|LLVM_OVERRIDE
+block|{
 comment|// we emit constant pools customly!
+block|}
+name|virtual
+name|void
+name|EmitFunctionBodyEnd
+argument_list|()
+name|LLVM_OVERRIDE
+block|;
 name|virtual
 name|void
 name|EmitFunctionEntryLabel
 argument_list|()
+name|LLVM_OVERRIDE
 block|;
+name|virtual
 name|void
 name|EmitStartOfAsmFile
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
+name|virtual
 name|void
 name|EmitEndOfAsmFile
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
+name|virtual
 name|void
 name|EmitXXStructor
 argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|CV
+argument|const Constant *CV
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
 name|bool
@@ -376,12 +395,14 @@ operator|&
 name|OS
 argument_list|)
 block|;
+name|virtual
 name|MachineLocation
 name|getDebugValueLocation
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 comment|/// EmitDwarfRegOp - Emit dwarf register operation.
 name|virtual
@@ -391,11 +412,13 @@ argument_list|(
 argument|const MachineLocation&MLoc
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|unsigned
 name|getISAEncoding
 argument_list|()
+name|LLVM_OVERRIDE
 block|{
 comment|// ARM/Darwin adds ISA to the DWARF info for each function.
 if|if
@@ -424,6 +447,8 @@ operator|::
 name|DW_ISA_ARM_arm
 return|;
 block|}
+name|private
+label|:
 name|MCOperand
 name|GetSymbolRef
 parameter_list|(
@@ -438,23 +463,6 @@ modifier|*
 name|Symbol
 parameter_list|)
 function_decl|;
-name|MCSymbol
-modifier|*
-name|GetARMSetPICJumpTableLabel2
-argument_list|(
-name|unsigned
-name|uid
-argument_list|,
-name|unsigned
-name|uid2
-argument_list|,
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|)
-decl|const
-decl_stmt|;
 name|MCSymbol
 modifier|*
 name|GetARMJTIPICJumpTableLabel2
@@ -485,17 +493,20 @@ modifier|*
 name|GV
 parameter_list|)
 function_decl|;
+name|public
+label|:
 comment|/// EmitMachineConstantPoolValue - Print a machine constantpool value to
 comment|/// the .s file.
 name|virtual
 name|void
 name|EmitMachineConstantPoolValue
-parameter_list|(
+argument_list|(
 name|MachineConstantPoolValue
-modifier|*
+operator|*
 name|MCPV
-parameter_list|)
-function_decl|;
+argument_list|)
+name|LLVM_OVERRIDE
+decl_stmt|;
 block|}
 end_decl_stmt
 

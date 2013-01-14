@@ -197,7 +197,7 @@ name|public
 operator|:
 comment|/// Constructor
 comment|///
-comment|/// @r            - True if the mod bits of the ModR/M byte must be 11; false
+comment|/// \param r        True if the mod bits of the ModR/M byte must be 11; false
 comment|///                 otherwise.  The name r derives from the fact that the mod
 comment|///                 bits indicate whether the R/M bits [bits 2-0] signify a
 comment|///                 register or a memory operand.
@@ -270,11 +270,12 @@ name|public
 operator|:
 comment|/// Constructor
 comment|///
-comment|/// @c0_ff        - True if the ModR/M byte must fall between 0xc0 and 0xff;
-comment|///                 false otherwise.
-comment|/// @nnn_or_modRM - If c0_ff is true, the required value of the entire ModR/M
-comment|///                 byte.  If c0_ff is false, the required value of the nnn
-comment|///                 field.
+comment|/// \param c0_ff True if the ModR/M byte must fall between 0xc0 and 0xff;
+comment|///              false otherwise.
+comment|///
+comment|/// \param nnn_or_modRM If c0_ff is true, the required value of the entire
+comment|///                     ModR/M byte.  If c0_ff is false, the required value
+comment|///                     of the nnn field.
 name|EscapeFilter
 argument_list|(
 argument|bool c0_ff
@@ -371,8 +372,8 @@ name|public
 operator|:
 comment|/// Constructor
 comment|///
-comment|/// @modRM        - The value of the ModR/M byte when the register operand
-comment|///                 refers to the first register in the register set.
+comment|/// \param modRM The value of the ModR/M byte when the register operand
+comment|///              refers to the first register in the register set.
 name|AddRegEscapeFilter
 argument_list|(
 argument|uint8_t modRM
@@ -435,9 +436,9 @@ name|public
 operator|:
 comment|/// Constructor
 comment|///
-comment|/// @r            - True if the mod field must be set to 11; false otherwise.
-comment|///                 The name is explained at ModFilter.
-comment|/// @nnn          - The required value of the nnn field.
+comment|/// \param r   True if the mod field must be set to 11; false otherwise.
+comment|///            The name is explained at ModFilter.
+comment|/// \param nnn The required value of the nnn field.
 name|ExtendedFilter
 argument_list|(
 argument|bool r
@@ -542,7 +543,7 @@ name|public
 operator|:
 comment|/// Constructor
 comment|///
-comment|/// @modRM        - The required value of the full ModR/M byte.
+comment|/// \param modRM The required value of the full ModR/M byte.
 name|ExactFilter
 argument_list|(
 argument|uint8_t modRM

@@ -195,20 +195,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantInt
 argument_list|(
-specifier|const
-name|ConstantInt
-operator|&
+argument|const ConstantInt&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantInt
 argument_list|(
 name|IntegerType
@@ -695,18 +693,6 @@ return|;
 block|}
 comment|/// @brief Methods to support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantInt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -746,20 +732,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantFP
 argument_list|(
-specifier|const
-name|ConstantFP
-operator|&
+argument|const ConstantFP&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|LLVMContextImpl
@@ -964,23 +948,6 @@ block|{
 name|bool
 name|ignored
 block|;
-comment|// convert is not supported on this type
-if|if
-condition|(
-operator|&
-name|Val
-operator|.
-name|getSemantics
-argument_list|()
-operator|==
-operator|&
-name|APFloat
-operator|::
-name|PPCDoubleDouble
-condition|)
-return|return
-name|false
-return|;
 name|APFloat
 name|FV
 argument_list|(
@@ -1013,18 +980,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantFP *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -1056,20 +1011,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantAggregateZero
 argument_list|(
-specifier|const
-name|ConstantAggregateZero
-operator|&
+argument|const ConstantAggregateZero&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|explicit
@@ -1175,17 +1128,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantAggregateZero *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -1220,12 +1162,10 @@ operator|>
 block|;
 name|ConstantArray
 argument_list|(
-specifier|const
-name|ConstantArray
-operator|&
+argument|const ConstantArray&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|ConstantArray
@@ -1316,18 +1256,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantArray *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -1387,12 +1315,10 @@ operator|>
 block|;
 name|ConstantStruct
 argument_list|(
-specifier|const
-name|ConstantStruct
-operator|&
+argument|const ConstantStruct&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|ConstantStruct
@@ -1573,18 +1499,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantStruct *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -1644,12 +1558,10 @@ operator|>
 block|;
 name|ConstantVector
 argument_list|(
-specifier|const
-name|ConstantVector
-operator|&
+argument|const ConstantVector&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|ConstantVector
@@ -1756,18 +1668,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantVector *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -1821,20 +1721,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantPointerNull
 argument_list|(
-specifier|const
-name|ConstantPointerNull
-operator|&
+argument|const ConstantPointerNull&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|explicit
@@ -1923,18 +1821,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantPointerNull *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -1991,20 +1877,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantDataSequential
 argument_list|(
-specifier|const
-name|ConstantDataSequential
-operator|&
+argument|const ConstantDataSequential&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|explicit
@@ -2278,17 +2162,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantDataSequential *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -2337,20 +2210,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantDataArray
 argument_list|(
-specifier|const
-name|ConstantDataArray
-operator|&
+argument|const ConstantDataArray&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|virtual
 name|void
 name|anchor
@@ -2553,17 +2424,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantDataArray *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -2595,20 +2455,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ConstantDataVector
 argument_list|(
-specifier|const
-name|ConstantDataVector
-operator|&
+argument|const ConstantDataVector&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|virtual
 name|void
 name|anchor
@@ -2815,17 +2673,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantDataVector *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -2853,12 +2700,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 operator|*
 name|operator
@@ -2992,18 +2839,6 @@ name|U
 argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const BlockAddress *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -3935,6 +3770,33 @@ name|true
 argument_list|)
 return|;
 block|}
+comment|/// getBinOpIdentity - Return the identity for the given binary operation,
+comment|/// i.e. a constant C such that X op C = X and C op X = X for every X.  It
+comment|/// returns null if the operator doesn't have an identity.
+specifier|static
+name|Constant
+operator|*
+name|getBinOpIdentity
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|)
+block|;
+comment|/// getBinOpAbsorber - Return the absorbing element for the given binary
+comment|/// operation, i.e. a constant C such that X op C = C and C op X = C for
+comment|/// every X.  For example, this returns zero for integer multiplication.
+comment|/// It returns null if the operator doesn't have an absorbing element.
+specifier|static
+name|Constant
+operator|*
+name|getBinOpAbsorber
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|)
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -4518,18 +4380,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -4606,20 +4456,18 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|UndefValue
 argument_list|(
-specifier|const
-name|UndefValue
-operator|&
+argument|const UndefValue&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 name|explicit
@@ -4723,18 +4571,6 @@ name|destroyConstant
 argument_list|()
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const UndefValue *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof

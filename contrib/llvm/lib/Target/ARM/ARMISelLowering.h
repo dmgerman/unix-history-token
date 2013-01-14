@@ -147,6 +147,9 @@ comment|// PIC mode.
 name|WrapperJT
 block|,
 comment|// WrapperJT - A wrapper node for TargetJumpTable
+comment|// Add pseudo op to model memcpy for struct byval.
+name|COPY_STRUCT_BYVAL
+block|,
 name|CALL
 block|,
 comment|// Function call.
@@ -177,6 +180,9 @@ comment|// Add with a PC operand and a PIC label.
 name|CMP
 block|,
 comment|// ARM compare instructions.
+name|CMN
+block|,
+comment|// ARM CMN instructions.
 name|CMPZ
 block|,
 comment|// ARM compare that sets only Z flag.
@@ -192,15 +198,6 @@ comment|// ARM fmstat instruction.
 name|CMOV
 block|,
 comment|// ARM conditional move instructions.
-name|CAND
-block|,
-comment|// ARM conditional and instructions.
-name|COR
-block|,
-comment|// ARM conditional or instructions.
-name|CXOR
-block|,
-comment|// ARM conditional xor instructions.
 name|BCC_i64
 block|,
 name|RBIT
@@ -425,6 +422,12 @@ comment|// ...signed
 name|VMULLu
 block|,
 comment|// ...unsigned
+name|UMLAL
+block|,
+comment|// 64bit Unsigned Accumulate Multiply
+name|SMLAL
+block|,
+comment|// 64bit Signed Accumulate Multiply
 comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
 comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
 comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
@@ -588,6 +591,23 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isSelectSupported
+argument_list|(
+argument|SelectSupportKind Kind
+argument_list|)
+specifier|const
+block|{
+comment|// ARM does not support scalar condition selects on vectors.
+return|return
+operator|(
+name|Kind
+operator|!=
+name|ScalarCondVectorVal
+operator|)
+return|;
+block|}
 comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
 name|virtual
 name|EVT
@@ -876,6 +896,8 @@ operator|*
 name|createFastISel
 argument_list|(
 argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
 argument_list|)
 specifier|const
 block|;
@@ -974,23 +996,23 @@ block|;
 name|void
 name|addTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|,
-argument|EVT PromotedLdStVT
+argument|MVT PromotedLdStVT
 argument_list|,
-argument|EVT PromotedBitwiseVT
+argument|MVT PromotedBitwiseVT
 argument_list|)
 block|;
 name|void
 name|addDRTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 block|;
 name|void
 name|addQRTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 block|;
 typedef|typedef
@@ -1221,6 +1243,11 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|,
+name|TLSModel
+operator|::
+name|Model
+name|model
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1504,8 +1531,21 @@ name|SDValue
 operator|&
 name|Chain
 argument_list|,
+specifier|const
+name|Value
+operator|*
+name|OrigArg
+argument_list|,
+name|unsigned
+name|OffsetFromOrigArg
+argument_list|,
 name|unsigned
 name|ArgOffset
+argument_list|,
+name|bool
+name|ForceMutable
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1534,61 +1574,11 @@ name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Callee
-argument_list|,
-name|CallingConv
+name|TargetLowering
 operator|::
-name|ID
-name|CallConv
-argument_list|,
-name|bool
-name|isVarArg
-argument_list|,
-name|bool
-name|doesNotRet
-argument_list|,
-name|bool
+name|CallLoweringInfo
 operator|&
-name|isTailCall
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|OutputArg
-operator|>
-operator|&
-name|Outs
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|OutVals
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|InputArg
-operator|>
-operator|&
-name|Ins
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+name|CLI
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -1609,6 +1599,8 @@ operator|*
 argument_list|,
 name|unsigned
 operator|&
+argument_list|,
+name|unsigned
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1943,6 +1935,20 @@ name|BB
 argument_list|)
 decl|const
 decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitStructByval
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1974,6 +1980,11 @@ parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
 name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
 parameter_list|)
 function_decl|;
 block|}

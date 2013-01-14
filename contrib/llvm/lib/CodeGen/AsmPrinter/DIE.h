@@ -828,20 +828,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|DIEValue
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -1054,17 +1040,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const DIEInteger *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const DIEValue *I
 argument_list|)
 block|{
@@ -1166,17 +1141,6 @@ argument_list|)
 specifier|const
 block|;
 comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIELabel *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -1287,17 +1251,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const DIEDelta *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const DIEValue *D
 argument_list|)
 block|{
@@ -1403,17 +1356,6 @@ argument_list|)
 return|;
 block|}
 comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIEEntry *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -1586,19 +1528,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|DIEBlock
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof

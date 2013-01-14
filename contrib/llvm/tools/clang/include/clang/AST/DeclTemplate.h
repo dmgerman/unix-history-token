@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the C++ template declaration subclasses.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the C++ template declaration subclasses.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -146,8 +150,8 @@ operator|*
 operator|>
 name|TemplateParameter
 expr_stmt|;
-comment|/// TemplateParameterList - Stores a list of template parameters for a
-comment|/// TemplateDecl and its derived classes.
+comment|/// \brief Stores a list of template parameters for a TemplateDecl and its
+comment|/// derived classes.
 name|class
 name|TemplateParameterList
 block|{
@@ -165,6 +169,15 @@ comment|/// The number of template parameters in this template
 comment|/// parameter list.
 name|unsigned
 name|NumParams
+range|:
+literal|31
+decl_stmt|;
+comment|/// Whether this template parameter list contains an unexpanded parameter
+comment|/// pack.
+name|unsigned
+name|ContainsUnexpandedParameterPack
+range|:
+literal|1
 decl_stmt|;
 name|protected
 label|:
@@ -211,14 +224,14 @@ name|SourceLocation
 name|RAngleLoc
 parameter_list|)
 function_decl|;
-comment|/// iterator - Iterates through the template parameters in this list.
+comment|/// \brief Iterates through the template parameters in this list.
 typedef|typedef
 name|NamedDecl
 modifier|*
 modifier|*
 name|iterator
 typedef|;
-comment|/// const_iterator - Iterates through the template parameters in this list.
+comment|/// \brief Iterates through the template parameters in this list.
 typedef|typedef
 name|NamedDecl
 modifier|*
@@ -351,9 +364,10 @@ index|]
 return|;
 block|}
 comment|/// \brief Returns the minimum number of arguments needed to form a
-comment|/// template specialization. This may be fewer than the number of
-comment|/// template parameters, if some of the parameters have default
-comment|/// arguments or if there is a parameter pack.
+comment|/// template specialization.
+comment|///
+comment|/// This may be fewer than the number of template parameters, if some of
+comment|/// the parameters have default arguments or if there is a parameter pack.
 name|unsigned
 name|getMinRequiredArguments
 argument_list|()
@@ -369,6 +383,17 @@ name|getDepth
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine whether this template parameter list contains an
+comment|/// unexpanded parameter pack.
+name|bool
+name|containsUnexpandedParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContainsUnexpandedParameterPack
+return|;
+block|}
 name|SourceLocation
 name|getTemplateLoc
 argument_list|()
@@ -413,8 +438,8 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// FixedSizeTemplateParameterList - Stores a list of template parameters for a
-comment|/// TemplateDecl and its derived classes. Suitable for creating on the stack.
+comment|/// \brief Stores a list of template parameters for a TemplateDecl and its
+comment|/// derived classes. Suitable for creating on the stack.
 name|template
 operator|<
 name|size_t
@@ -488,13 +513,10 @@ name|NumArguments
 decl_stmt|;
 name|TemplateArgumentList
 argument_list|(
-specifier|const
-name|TemplateArgumentList
-operator|&
-name|Other
+argument|const TemplateArgumentList&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPL
 name|void
 name|operator
 init|=
@@ -504,8 +526,8 @@ name|TemplateArgumentList
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPL
 name|TemplateArgumentList
 argument_list|(
 argument|const TemplateArgument *Args
@@ -690,10 +712,11 @@ empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Kinds of Templates
 comment|//===----------------------------------------------------------------------===//
-comment|/// TemplateDecl - The base class of all kinds of template declarations (e.g.,
-comment|/// class, function, etc.). The TemplateDecl class stores the list of template
-comment|/// parameters and a reference to the templated scoped declaration: the
-comment|/// underlying AST node.
+comment|/// \brief The base class of all kinds of template declarations (e.g.,
+comment|/// class, function, etc.).
+comment|///
+comment|/// The TemplateDecl class stores the list of template parameters and a
+comment|/// reference to the templated scoped declaration: the underlying AST node.
 name|class
 name|TemplateDecl
 range|:
@@ -853,72 +876,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TemplateDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const RedeclarableTemplateDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FunctionTemplateDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ClassTemplateDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TemplateTemplateParmDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeAliasTemplateDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -1444,16 +1401,19 @@ block|;   }
 expr|}
 block|;
 comment|/// \brief Provides information about a dependent function-template
-comment|/// specialization declaration.  Since explicit function template
-comment|/// specialization and instantiation declarations can only appear in
-comment|/// namespace scope, and you can only specialize a member of a
-comment|/// fully-specialized class, the only way to get one of these is in
-comment|/// a friend declaration like the following:
+comment|/// specialization declaration.
 comment|///
-comment|///   template<class T> void foo(T);
-comment|///   template<class T> class A {
+comment|/// Since explicit function template specialization and instantiation
+comment|/// declarations can only appear in namespace scope, and you can only
+comment|/// specialize a member of a fully-specialized class, the only way to
+comment|/// get one of these is in a friend declaration like the following:
+comment|///
+comment|/// \code
+comment|///   template \<class T> void foo(T);
+comment|///   template \<class T> class A {
 comment|///     friend void foo<>(T);
 comment|///   };
+comment|/// \endcode
 name|class
 name|DependentFunctionTemplateSpecializationInfo
 block|{
@@ -1794,7 +1754,7 @@ typedef|typedef
 name|typename
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|EntryType
 operator|>
@@ -1942,7 +1902,7 @@ name|EntryType
 operator|>
 name|makeSpecIterator
 argument_list|(
-argument|llvm::FoldingSet<EntryType>&Specs
+argument|llvm::FoldingSetVector<EntryType>&Specs
 argument_list|,
 argument|bool isEnd
 argument_list|)
@@ -1982,7 +1942,7 @@ name|DeclType
 operator|*
 name|findSpecializationImpl
 argument_list|(
-argument|llvm::FoldingSet<EntryType>&Specs
+argument|llvm::FoldingSetVector<EntryType>&Specs
 argument_list|,
 argument|const TemplateArgument *Args
 argument_list|,
@@ -2095,7 +2055,7 @@ name|friend
 name|class
 name|RedeclarableTemplate
 expr_stmt|;
-comment|/// Retrieves the canonical declaration of this template.
+comment|/// \brief Retrieves the canonical declaration of this template.
 name|RedeclarableTemplateDecl
 modifier|*
 name|getCanonicalDecl
@@ -2207,7 +2167,7 @@ comment|/// \endcode
 comment|///
 comment|/// which was itself created during the instantiation of \c X<int>. Calling
 comment|/// getInstantiatedFromMemberTemplate() on this FunctionTemplateDecl will
-comment|/// retrieve the FunctionTemplateDecl for the original template "f" within
+comment|/// retrieve the FunctionTemplateDecl for the original template \c f within
 comment|/// the class template \c X<T>, i.e.,
 comment|///
 comment|/// \code
@@ -2306,62 +2266,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|RedeclarableTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|FunctionTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ClassTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TypeAliasTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -2482,7 +2386,7 @@ comment|/// \brief The function template specializations for this function
 comment|/// template, including explicit specializations and instantiations.
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|FunctionTemplateSpecializationInfo
 operator|>
@@ -2564,7 +2468,7 @@ comment|/// \brief Retrieve the set of function template specializations of this
 comment|/// function template.
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|FunctionTemplateSpecializationInfo
 operator|>
@@ -2581,7 +2485,7 @@ return|;
 block|}
 comment|/// \brief Add a specialization of this function template.
 comment|///
-comment|/// \param InsertPos Insert position in the FoldingSet, must have been
+comment|/// \param InsertPos Insert position in the FoldingSetVector, must have been
 comment|///        retrieved by an earlier call to findSpecialization().
 name|void
 name|addSpecialization
@@ -2883,23 +2787,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|FunctionTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -2942,11 +2829,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// The TemplateParmPosition class defines the position of a template parameter
+comment|/// \brief Defines the position of a template parameter within a template
 end_comment
 
 begin_comment
-comment|/// within a template parameter list. Because template parameter can be listed
+comment|/// parameter list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Because template parameter can be listed
 end_comment
 
 begin_comment
@@ -3080,15 +2975,19 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// TemplateTypeParmDecl - Declaration of a template type parameter,
+comment|/// \brief Declaration of a template type parameter.
 end_comment
 
 begin_comment
-comment|/// e.g., "T" in
+comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// For example, "T" in
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -3096,7 +2995,7 @@ comment|/// template<typename T> class vector;
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -3107,8 +3006,9 @@ name|public
 name|TypeDecl
 block|{
 comment|/// \brief Whether this template type parameter was declaration with
-comment|/// the 'typename' keyword. If false, it was declared with the
-comment|/// 'class' keyword.
+comment|/// the 'typename' keyword.
+comment|///
+comment|/// If false, it was declared with the 'class' keyword.
 name|bool
 name|Typename
 operator|:
@@ -3207,8 +3107,9 @@ argument|unsigned ID
 argument_list|)
 block|;
 comment|/// \brief Whether this template type parameter was declared with
-comment|/// the 'typename' keyword. If not, it was declared with the 'class'
-comment|/// keyword.
+comment|/// the 'typename' keyword.
+comment|///
+comment|/// If not, it was declared with the 'class' keyword.
 name|bool
 name|wasDeclaredWithTypename
 argument_list|()
@@ -3356,17 +3257,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TemplateTypeParmDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -3748,8 +3638,32 @@ return|return
 name|ParameterPack
 return|;
 block|}
+comment|/// \brief Whether this parameter pack is a pack expansion.
+comment|///
+comment|/// A non-type template parameter pack is a pack expansion if its type
+comment|/// contains an unexpanded parameter pack. In this case, we will have
+comment|/// built a PackExpansionType wrapping the type.
+name|bool
+name|isPackExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParameterPack
+operator|&&
+name|getType
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|PackExpansionType
+operator|>
+operator|(
+operator|)
+return|;
+block|}
 comment|/// \brief Whether this parameter is a non-type template parameter pack
-comment|/// that has different types at different positions.
+comment|/// that has a known list of different types at different positions.
 comment|///
 comment|/// A parameter pack is an expanded parameter pack when the original
 comment|/// parameter pack's type was itself a pack expansion, and that expansion
@@ -3926,17 +3840,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const NonTypeTemplateParmDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -3982,6 +3885,16 @@ block|;
 comment|/// \brief Whether this parameter is a parameter pack.
 name|bool
 name|ParameterPack
+block|;
+comment|/// \brief Whether this template template parameter is an "expanded"
+comment|/// parameter pack, meaning that it is a pack expansion and we
+comment|/// already know the set of template parameters that expansion expands to.
+name|bool
+name|ExpandedParameterPack
+block|;
+comment|/// \brief The number of parameters in an expanded parameter pack.
+name|unsigned
+name|NumExpandedParams
 block|;
 name|TemplateTemplateParmDecl
 argument_list|(
@@ -4030,9 +3943,38 @@ argument_list|)
 block|,
 name|ParameterPack
 argument_list|(
-argument|ParameterPack
+name|ParameterPack
+argument_list|)
+block|,
+name|ExpandedParameterPack
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|NumExpandedParams
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
+name|TemplateTemplateParmDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|unsigned D
+argument_list|,
+argument|unsigned P
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|unsigned NumExpansions
+argument_list|,
+argument|TemplateParameterList * const *Expansions
+argument_list|)
+block|;
 name|public
 operator|:
 specifier|static
@@ -4060,11 +4002,45 @@ block|;
 specifier|static
 name|TemplateTemplateParmDecl
 operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|unsigned D
+argument_list|,
+argument|unsigned P
+argument_list|,
+argument|IdentifierInfo *Id
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|llvm::ArrayRef<TemplateParameterList*> Expansions
+argument_list|)
+block|;
+specifier|static
+name|TemplateTemplateParmDecl
+operator|*
 name|CreateDeserialized
 argument_list|(
 argument|ASTContext&C
 argument_list|,
 argument|unsigned ID
+argument_list|)
+block|;
+specifier|static
+name|TemplateTemplateParmDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|unsigned NumExpansions
 argument_list|)
 block|;
 name|using
@@ -4095,6 +4071,107 @@ specifier|const
 block|{
 return|return
 name|ParameterPack
+return|;
+block|}
+comment|/// \brief Whether this parameter pack is a pack expansion.
+comment|///
+comment|/// A template template parameter pack is a pack expansion if its template
+comment|/// parameter list contains an unexpanded parameter pack.
+name|bool
+name|isPackExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParameterPack
+operator|&&
+name|getTemplateParameters
+argument_list|()
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+return|;
+block|}
+comment|/// \brief Whether this parameter is a template template parameter pack that
+comment|/// has a known list of different template parameter lists at different
+comment|/// positions.
+comment|///
+comment|/// A parameter pack is an expanded parameter pack when the original parameter
+comment|/// pack's template parameter list was itself a pack expansion, and that
+comment|/// expansion has already been expanded. For exampe, given:
+comment|///
+comment|/// \code
+comment|/// template<typename...Types> struct Outer {
+comment|///   template<template<Types> class...Templates> struct Inner;
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// The parameter pack \c Templates is a pack expansion, which expands the
+comment|/// pack \c Types. When \c Types is supplied with template arguments by
+comment|/// instantiating \c Outer, the instantiation of \c Templates is an expanded
+comment|/// parameter pack.
+name|bool
+name|isExpandedParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExpandedParameterPack
+return|;
+block|}
+comment|/// \brief Retrieves the number of expansion template parameters in
+comment|/// an expanded parameter pack.
+name|unsigned
+name|getNumExpansionTemplateParameters
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ExpandedParameterPack
+operator|&&
+literal|"Not an expansion parameter pack"
+argument_list|)
+block|;
+return|return
+name|NumExpandedParams
+return|;
+block|}
+comment|/// \brief Retrieve a particular expansion type within an expanded parameter
+comment|/// pack.
+name|TemplateParameterList
+operator|*
+name|getExpansionTemplateParameters
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|NumExpandedParams
+operator|&&
+literal|"Out-of-range expansion type index"
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|TemplateParameterList
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+index|[
+name|I
+index|]
 return|;
 block|}
 comment|/// \brief Determine whether this template parameter has a default
@@ -4238,17 +4315,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TemplateTemplateParmDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -5296,38 +5362,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ClassTemplateSpecializationDecl
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ClassTemplatePartialSpecializationDecl
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|friend
 name|class
@@ -5781,17 +5815,6 @@ operator|==
 name|ClassTemplatePartialSpecialization
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ClassTemplatePartialSpecializationDecl *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|friend
 name|class
 name|ASTDeclReader
@@ -5842,7 +5865,7 @@ comment|/// \brief The class template specializations for this class
 comment|/// template, including explicit specializations and instantiations.
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|ClassTemplateSpecializationDecl
 operator|>
@@ -5852,7 +5875,7 @@ comment|/// \brief The class template partial specializations for this class
 comment|/// template.
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
@@ -5880,7 +5903,7 @@ block|;
 comment|/// \brief Retrieve the set of specializations of this class template.
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|ClassTemplateSpecializationDecl
 operator|>
@@ -5892,7 +5915,7 @@ comment|/// \brief Retrieve the set of partial specializations of this class
 comment|/// template.
 name|llvm
 operator|::
-name|FoldingSet
+name|FoldingSetVector
 operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
@@ -5978,7 +6001,7 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// Get the underlying class declarations of the template.
+comment|/// \brief Get the underlying class declarations of the template.
 name|CXXRecordDecl
 operator|*
 name|getTemplatedDecl
@@ -5996,7 +6019,7 @@ name|TemplatedDecl
 operator|)
 return|;
 block|}
-comment|/// Returns whether this template declaration defines the primary
+comment|/// \brief Returns whether this template declaration defines the primary
 comment|/// class pattern.
 name|bool
 name|isThisDeclarationADefinition
@@ -6011,7 +6034,7 @@ name|isThisDeclarationADefinition
 argument_list|()
 return|;
 block|}
-comment|/// Create a class template node.
+comment|/// \brief Create a class template node.
 specifier|static
 name|ClassTemplateDecl
 operator|*
@@ -6032,7 +6055,7 @@ argument_list|,
 argument|ClassTemplateDecl *PrevDecl
 argument_list|)
 block|;
-comment|/// Create an empty class template node.
+comment|/// \brief Create an empty class template node.
 specifier|static
 name|ClassTemplateDecl
 operator|*
@@ -6382,23 +6405,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ClassTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -6429,7 +6435,7 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// Declaration of a friend template.  For example:
+comment|/// \brief Declaration of a friend template.
 end_comment
 
 begin_comment
@@ -6437,7 +6443,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// template<typename T> class A {
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// template \<typename T> class A {
 end_comment
 
 begin_comment
@@ -6445,11 +6459,11 @@ comment|///   friend class MyVector<T>; // not a friend template
 end_comment
 
 begin_comment
-comment|///   template<typename U> friend class B; // not a friend template
+comment|///   template \<typename U> friend class B; // not a friend template
 end_comment
 
 begin_comment
-comment|///   template<typename U> friend class Foo<T>::Nested; // friend template
+comment|///   template \<typename U> friend class Foo<T>::Nested; // friend template
 end_comment
 
 begin_comment
@@ -6457,7 +6471,15 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// NOTE: This class is not currently in use.  All of the above
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note This class is not currently in use.  All of the above
 end_comment
 
 begin_comment
@@ -6712,7 +6734,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Retrieves the location of the 'friend' keyword.
+comment|/// \brief Retrieves the location of the 'friend' keyword.
 end_comment
 
 begin_expr_stmt
@@ -6811,23 +6833,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|FriendTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|friend
 name|class
@@ -6837,7 +6842,7 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// Declaration of an alias template.  For example:
+comment|/// \brief Declaration of an alias template.
 end_comment
 
 begin_comment
@@ -6845,7 +6850,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// template<typename T> using V = std::map<T*, int, MyCompare<T>>;
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// template \<typename T> using V = std::map<T*, int, MyCompare<T>>;
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -7170,23 +7187,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TypeAliasTemplateDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -7217,7 +7217,11 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// Declaration of a function specialization at template class scope.
+comment|/// \brief Declaration of a function specialization at template class scope.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -7225,7 +7229,15 @@ comment|/// This is a non standard extension needed to support MSVC.
 end_comment
 
 begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -7246,6 +7258,10 @@ end_comment
 
 begin_comment
 comment|/// }
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -7283,6 +7299,10 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|CXXMethodDecl *FD
+argument_list|,
+argument|bool Args
+argument_list|,
+argument|TemplateArgumentListInfo TemplArgs
 argument_list|)
 operator|:
 name|Decl
@@ -7298,7 +7318,17 @@ argument_list|)
 block|,
 name|Specialization
 argument_list|(
-argument|FD
+name|FD
+argument_list|)
+block|,
+name|HasExplicitTemplateArgs
+argument_list|(
+name|Args
+argument_list|)
+block|,
+name|TemplateArgs
+argument_list|(
+argument|TemplArgs
 argument_list|)
 block|{}
 name|ClassScopeFunctionSpecializationDecl
@@ -7317,6 +7347,12 @@ name|CXXMethodDecl
 operator|*
 name|Specialization
 block|;
+name|bool
+name|HasExplicitTemplateArgs
+block|;
+name|TemplateArgumentListInfo
+name|TemplateArgs
+block|;
 name|public
 operator|:
 name|CXXMethodDecl
@@ -7327,6 +7363,26 @@ specifier|const
 block|{
 return|return
 name|Specialization
+return|;
+block|}
+name|bool
+name|hasExplicitTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasExplicitTemplateArgs
+return|;
+block|}
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|templateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateArgs
 return|;
 block|}
 specifier|static
@@ -7341,6 +7397,10 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|CXXMethodDecl *FD
+argument_list|,
+argument|bool HasExplicitTemplateArgs
+argument_list|,
+argument|TemplateArgumentListInfo TemplateArgs
 argument_list|)
 block|{
 return|return
@@ -7355,6 +7415,10 @@ argument_list|,
 name|Loc
 argument_list|,
 name|FD
+argument_list|,
+name|HasExplicitTemplateArgs
+argument_list|,
+name|TemplateArgs
 argument_list|)
 return|;
 block|}
@@ -7399,17 +7463,6 @@ operator|==
 name|Decl
 operator|::
 name|ClassScopeFunctionSpecialization
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ClassScopeFunctionSpecializationDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|friend

@@ -98,7 +98,7 @@ block|{
 name|class
 name|ASTContext
 decl_stmt|;
-comment|/// \begin Given a potentially-evaluated expression, this visitor visits all
+comment|/// \brief Given a potentially-evaluated expression, this visitor visits all
 comment|/// of its potentially-evaluated subexpressions, recursively.
 name|template
 operator|<

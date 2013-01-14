@@ -220,6 +220,12 @@ name|unsigned
 operator|>
 name|CPEClones
 block|;
+comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
+comment|/// use as the global base register. This is used for PIC in some PIC
+comment|/// relocation models.
+name|unsigned
+name|GlobalBaseReg
+block|;
 name|public
 operator|:
 name|ARMFunctionInfo
@@ -327,7 +333,12 @@ argument_list|)
 block|,
 name|HasITBlocks
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|GlobalBaseReg
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|explicit
@@ -461,7 +472,12 @@ argument_list|)
 block|,
 name|HasITBlocks
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|GlobalBaseReg
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|bool
@@ -1099,6 +1115,27 @@ block|{
 name|HasITBlocks
 operator|=
 name|h
+expr_stmt|;
+block|}
+name|unsigned
+name|getGlobalBaseReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GlobalBaseReg
+return|;
+block|}
+name|void
+name|setGlobalBaseReg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+name|GlobalBaseReg
+operator|=
+name|Reg
 expr_stmt|;
 block|}
 name|void

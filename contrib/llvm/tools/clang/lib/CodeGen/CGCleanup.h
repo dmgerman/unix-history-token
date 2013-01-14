@@ -412,7 +412,7 @@ empty_stmt|;
 comment|/// A scope which attempts to handle some, possibly all, types of
 comment|/// exceptions.
 comment|///
-comment|/// Objective C @finally blocks are represented using a cleanup scope
+comment|/// Objective C \@finally blocks are represented using a cleanup scope
 comment|/// after the catch scope.
 name|class
 name|EHCatchScope

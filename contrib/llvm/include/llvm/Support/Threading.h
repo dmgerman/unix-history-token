@@ -99,8 +99,8 @@ name|void
 name|llvm_release_global_lock
 parameter_list|()
 function_decl|;
-comment|/// llvm_execute_on_thread - Execute the given \arg UserFn on a separate
-comment|/// thread, passing it the provided \arg UserData.
+comment|/// llvm_execute_on_thread - Execute the given \p UserFn on a separate
+comment|/// thread, passing it the provided \p UserData.
 comment|///
 comment|/// This function does not guarantee that the code will actually be executed
 comment|/// on a separate thread or honoring the requested stack size, but tries to do

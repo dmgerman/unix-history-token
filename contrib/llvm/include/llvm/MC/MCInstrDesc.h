@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Mc/McInstrDesc.h - Instruction Descriptors -*- C++ -*-===//
+comment|//===-- llvm/MC/MCInstrDesc.h - Instruction Descriptors -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -248,6 +248,8 @@ block|,
 name|MoveImm
 block|,
 name|Bitcast
+block|,
+name|Select
 block|,
 name|DelaySlot
 block|,
@@ -753,6 +755,25 @@ operator|<<
 name|MCID
 operator|::
 name|Bitcast
+operator|)
+return|;
+block|}
+comment|/// isSelect - Return true if this is a select instruction.
+comment|///
+name|bool
+name|isSelect
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|Select
 operator|)
 return|;
 block|}

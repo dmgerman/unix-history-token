@@ -106,6 +106,9 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|hash_code
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -142,6 +145,9 @@ comment|///< Abstract Stack Frame Index
 name|MO_ConstantPoolIndex
 block|,
 comment|///< Address of indexed Constant in Constant Pool
+name|MO_TargetIndex
+block|,
+comment|///< Target-dependent index+offset operand.
 name|MO_JumpTableIndex
 block|,
 comment|///< Address of indexed Jump Table for switch
@@ -173,6 +179,9 @@ name|char
 name|OpKind
 decl_stmt|;
 comment|// MachineOperandType
+comment|// This union is discriminated by OpKind.
+union|union
+block|{
 comment|/// SubReg - Subregister number, only valid for MO_Register.  A value of 0
 comment|/// indicates the MO_Register has no subReg.
 name|unsigned
@@ -183,6 +192,17 @@ comment|/// TargetFlags - This is a set of target-specific operand flags.
 name|unsigned
 name|char
 name|TargetFlags
+decl_stmt|;
+block|}
+union|;
+comment|/// TiedTo - Non-zero when this register operand is tied to another register
+comment|/// operand. The encoding of this field is described in the block comment
+comment|/// before MachineInstr::tieOperands().
+name|unsigned
+name|char
+name|TiedTo
+range|:
+literal|4
 decl_stmt|;
 comment|/// IsDef/IsImp/IsKill/IsDead flags - These are only valid for MO_Register
 comment|/// operands.
@@ -335,10 +355,9 @@ comment|// For MO_Register.
 comment|// Register number is in SmallContents.RegNo.
 name|MachineOperand
 modifier|*
-modifier|*
 name|Prev
 decl_stmt|;
-comment|// Access list for register.
+comment|// Access list for register. See MRI.
 name|MachineOperand
 modifier|*
 name|Next
@@ -431,6 +450,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isReg
+argument_list|()
+operator|?
+literal|0
+operator|:
 name|TargetFlags
 return|;
 block|}
@@ -442,6 +466,15 @@ name|char
 name|F
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isReg
+argument_list|()
+operator|&&
+literal|"Register operands can't have target flags"
+argument_list|)
+expr_stmt|;
 name|TargetFlags
 operator|=
 name|F
@@ -455,6 +488,15 @@ name|char
 name|F
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isReg
+argument_list|()
+operator|&&
+literal|"Register operands can't have target flags"
+argument_list|)
+expr_stmt|;
 name|TargetFlags
 operator||=
 name|F
@@ -600,6 +642,18 @@ return|return
 name|OpKind
 operator|==
 name|MO_ConstantPoolIndex
+return|;
+block|}
+comment|/// isTargetIndex - Tests if this is a MO_TargetIndex operand.
+name|bool
+name|isTargetIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_TargetIndex
 return|;
 block|}
 comment|/// isJTI - Tests if this is a MO_JumpTableIndex operand.
@@ -866,6 +920,23 @@ name|IsEarlyClobber
 return|;
 block|}
 name|bool
+name|isTied
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|TiedTo
+return|;
+block|}
+name|bool
 name|isDebug
 argument_list|()
 specifier|const
@@ -918,30 +989,6 @@ operator|||
 name|getSubReg
 argument_list|()
 operator|)
-return|;
-block|}
-comment|/// getNextOperandForReg - Return the next MachineOperand in the function that
-comment|/// uses or defines this register.
-name|MachineOperand
-operator|*
-name|getNextOperandForReg
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isReg
-argument_list|()
-operator|&&
-literal|"This is not a register operand!"
-argument_list|)
-block|;
-return|return
-name|Contents
-operator|.
-name|Reg
-operator|.
-name|Next
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1023,31 +1070,11 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|assert
+name|setIsDef
 argument_list|(
-name|isReg
-argument_list|()
-operator|&&
-literal|"Wrong MachineOperand accessor"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|Val
-operator|||
-operator|!
-name|isDebug
-argument_list|()
-operator|)
-operator|&&
-literal|"Marking a debug operation as def"
-argument_list|)
-expr_stmt|;
-name|IsDef
-operator|=
 operator|!
 name|Val
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -1058,34 +1085,7 @@ name|Val
 init|=
 name|true
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isReg
-argument_list|()
-operator|&&
-literal|"Wrong MachineOperand accessor"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|Val
-operator|||
-operator|!
-name|isDebug
-argument_list|()
-operator|)
-operator|&&
-literal|"Marking a debug operation as def"
-argument_list|)
-expr_stmt|;
-name|IsDef
-operator|=
-name|Val
-expr_stmt|;
-block|}
+function_decl|;
 name|void
 name|setImplicit
 parameter_list|(
@@ -1361,6 +1361,9 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
+name|isTargetIndex
+argument_list|()
+operator|||
 name|isJTI
 argument_list|()
 operator|)
@@ -1467,6 +1470,9 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
+name|isTargetIndex
+argument_list|()
+operator|||
 name|isBlockAddress
 argument_list|()
 operator|)
@@ -1475,8 +1481,9 @@ literal|"Wrong MachineOperand accessor"
 argument_list|)
 block|;
 return|return
-operator|(
 name|int64_t
+argument_list|(
+name|uint64_t
 argument_list|(
 name|Contents
 operator|.
@@ -1486,7 +1493,7 @@ name|OffsetHi
 argument_list|)
 operator|<<
 literal|32
-operator|)
+argument_list|)
 operator||
 name|SmallContents
 operator|.
@@ -1676,6 +1683,9 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
+name|isTargetIndex
+argument_list|()
+operator|||
 name|isBlockAddress
 argument_list|()
 operator|)
@@ -1720,6 +1730,9 @@ name|isFI
 argument_list|()
 operator|||
 name|isCPI
+argument_list|()
+operator|||
+name|isTargetIndex
 argument_list|()
 operator|||
 name|isJTI
@@ -1778,6 +1791,21 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief MachineOperand hash_value overload.
+comment|///
+comment|/// Note that this includes the same information in the hash that
+comment|/// isIdenticalTo uses for comparison. It is thus suited for use in hash
+comment|/// tables which use that function for equality comparisons only.
+name|friend
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
 comment|/// ChangeToImmediate - Replace this operand with a new immediate operand of
 comment|/// the specified value.  If an operand is known to be an immediate already,
 comment|/// the setImm method should be used.
@@ -1960,6 +1988,11 @@ name|bool
 name|isDebug
 init|=
 name|false
+parameter_list|,
+name|bool
+name|isInternalRead
+init|=
+name|false
 parameter_list|)
 block|{
 name|MachineOperand
@@ -2004,13 +2037,19 @@ name|Op
 operator|.
 name|IsInternalRead
 operator|=
-name|false
+name|isInternalRead
 expr_stmt|;
 name|Op
 operator|.
 name|IsEarlyClobber
 operator|=
 name|isEarlyClobber
+expr_stmt|;
+name|Op
+operator|.
+name|TiedTo
+operator|=
+literal|0
 expr_stmt|;
 name|Op
 operator|.
@@ -2147,6 +2186,56 @@ argument_list|(
 name|MachineOperand
 operator|::
 name|MO_ConstantPoolIndex
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|setIndex
+argument_list|(
+name|Idx
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setOffset
+argument_list|(
+name|Offset
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreateTargetIndex
+parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|,
+name|int64_t
+name|Offset
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_TargetIndex
 argument_list|)
 decl_stmt|;
 name|Op
@@ -2335,6 +2424,9 @@ name|BlockAddress
 modifier|*
 name|BA
 parameter_list|,
+name|int64_t
+name|Offset
+parameter_list|,
 name|unsigned
 name|char
 name|TargetFlags
@@ -2366,10 +2458,9 @@ name|Op
 operator|.
 name|setOffset
 argument_list|(
-literal|0
+name|Offset
 argument_list|)
 expr_stmt|;
-comment|// Offset is always 0.
 name|Op
 operator|.
 name|setTargetFlags
@@ -2528,23 +2619,6 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// AddRegOperandToRegInfo - Add this register operand to the specified
-comment|/// MachineRegisterInfo.  If it is null, then the next/prev fields should be
-comment|/// explicitly nulled out.
-name|void
-name|AddRegOperandToRegInfo
-parameter_list|(
-name|MachineRegisterInfo
-modifier|*
-name|RegInfo
-parameter_list|)
-function_decl|;
-comment|/// RemoveRegOperandFromRegInfo - Remove this register operand from the
-comment|/// MachineRegisterInfo it is linked with.
-name|void
-name|RemoveRegOperandFromRegInfo
-parameter_list|()
-function_decl|;
 block|}
 empty_stmt|;
 specifier|inline
@@ -2576,6 +2650,17 @@ return|return
 name|OS
 return|;
 block|}
+comment|// See friend declaration above. This additional declaration is required in
+comment|// order to compile LLVM with IBM xlC compiler.
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

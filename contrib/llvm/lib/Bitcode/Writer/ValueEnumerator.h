@@ -289,12 +289,10 @@ name|FirstInstID
 decl_stmt|;
 name|ValueEnumerator
 argument_list|(
-specifier|const
-name|ValueEnumerator
-operator|&
+argument|const ValueEnumerator&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -303,8 +301,8 @@ specifier|const
 name|ValueEnumerator
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|ValueEnumerator

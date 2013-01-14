@@ -99,11 +99,11 @@ decl_stmt|;
 name|class
 name|PragmaNamespace
 decl_stmt|;
-comment|/**    * \brief Describes how the pragma was introduced, e.g., with #pragma,     * _Pragma, or __pragma.    */
+comment|/**    * \brief Describes how the pragma was introduced, e.g., with \#pragma,    * _Pragma, or __pragma.    */
 enum|enum
 name|PragmaIntroducerKind
 block|{
-comment|/**      * \brief The pragma was introduced via #pragma.      */
+comment|/**      * \brief The pragma was introduced via \#pragma.      */
 name|PIK_HashPragma
 block|,
 comment|/**      * \brief The pragma was introduced via the C99 _Pragma(string-literal).      */
@@ -120,7 +120,7 @@ comment|/// that identifier is found.  If a handler does not match any of the de
 comment|/// pragmas the handler with a null identifier is invoked, if it exists.
 comment|///
 comment|/// Note that the PragmaNamespace class can be used to subdivide pragmas, e.g.
-comment|/// we treat "#pragma STDC" and "#pragma GCC" as namespaces that contain other
+comment|/// we treat "\#pragma STDC" and "\#pragma GCC" as namespaces that contain other
 comment|/// pragmas.
 name|class
 name|PragmaHandler
@@ -219,8 +219,8 @@ block|; }
 decl_stmt|;
 comment|/// PragmaNamespace - This PragmaHandler subdivides the namespace of pragmas,
 comment|/// allowing hierarchical pragmas to be defined.  Common examples of namespaces
-comment|/// are "#pragma GCC", "#pragma STDC", and "#pragma omp", but any namespaces may
-comment|/// be (potentially recursively) defined.
+comment|/// are "\#pragma GCC", "\#pragma STDC", and "\#pragma omp", but any namespaces
+comment|/// may be (potentially recursively) defined.
 name|class
 name|PragmaNamespace
 range|:

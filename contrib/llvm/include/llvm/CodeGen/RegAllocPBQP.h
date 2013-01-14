@@ -420,7 +420,8 @@ name|PBQPBuilder
 argument_list|(
 argument|const PBQPBuilder&
 argument_list|)
-block|{}
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 name|void
 name|operator
 init|=
@@ -429,9 +430,10 @@ specifier|const
 name|PBQPBuilder
 operator|&
 operator|)
-block|{}
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
 name|public
-operator|:
+label|:
 typedef|typedef
 name|std
 operator|::

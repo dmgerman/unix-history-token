@@ -34,6 +34,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Module.h"
 end_include
 
@@ -41,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/PassRegistry.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/IRBuilder.h"
 end_include
 
 begin_extern
@@ -57,7 +57,7 @@ endif|#
 directive|endif
 comment|/**  * @defgroup LLVMC LLVM-C: C interface to LLVM  *  * This module exposes parts of the LLVM library as a C API.  *  * @{  */
 comment|/**  * @defgroup LLVMCTransforms Transforms  */
-comment|/**  * @defgroup LLVMCCore Core  *  * This modules provide an interface to libLLVMCore, which implements  * the LLVM intermediate representation as well as other related types  * and utilities.  *  * LLVM uses a polymorphic type hierarchy which C cannot represent, therefore  * parameters must be passed as base types. Despite the declared types, most  * of the functions provided operate only on branches of the type hierarchy.  * The declared parameter names are descriptive and specify which type is  * required. Additionally, each type hierarchy is documented along with the  * functions that operate upon it. For more detail, refer to LLVM's C++ code.  * If in doubt, refer to Core.cpp, which performs paramter downcasts in the  * form unwrap<RequiredType>(Param).  *  * Many exotic languages can interoperate with C code but have a harder time  * with C++ due to name mangling. So in addition to C, this interface enables  * tools written in such languages.  *  * When included into a C++ source file, also declares 'wrap' and 'unwrap'  * helpers to perform opaque reference<-->pointer conversions. These helpers  * are shorter and more tightly typed than writing the casts by hand when  * authoring bindings. In assert builds, they will do runtime type checking.  *  * @{  */
+comment|/**  * @defgroup LLVMCCore Core  *  * This modules provide an interface to libLLVMCore, which implements  * the LLVM intermediate representation as well as other related types  * and utilities.  *  * LLVM uses a polymorphic type hierarchy which C cannot represent, therefore  * parameters must be passed as base types. Despite the declared types, most  * of the functions provided operate only on branches of the type hierarchy.  * The declared parameter names are descriptive and specify which type is  * required. Additionally, each type hierarchy is documented along with the  * functions that operate upon it. For more detail, refer to LLVM's C++ code.  * If in doubt, refer to Core.cpp, which performs parameter downcasts in the  * form unwrap<RequiredType>(Param).  *  * Many exotic languages can interoperate with C code but have a harder time  * with C++ due to name mangling. So in addition to C, this interface enables  * tools written in such languages.  *  * When included into a C++ source file, also declares 'wrap' and 'unwrap'  * helpers to perform opaque reference<-->pointer conversions. These helpers  * are shorter and more tightly typed than writing the casts by hand when  * authoring bindings. In assert builds, they will do runtime type checking.  *  * @{  */
 comment|/**  * @defgroup LLVMCCoreTypes Types and Enumerations  *  * @{  */
 typedef|typedef
 name|int
@@ -92,7 +92,7 @@ name|LLVMOpaqueValue
 modifier|*
 name|LLVMValueRef
 typedef|;
-comment|/**  * Represents a basic block of instruction in LLVM IR.  *  * This models llvm::BasicBlock.  */
+comment|/**  * Represents a basic block of instructions in LLVM IR.  *  * This models llvm::BasicBlock.  */
 typedef|typedef
 name|struct
 name|LLVMOpaqueBasicBlock
@@ -299,10 +299,7 @@ init|=
 literal|1
 operator|<<
 literal|31
-comment|// FIXME: This attribute is currently not included in the C API as
-comment|// a temporary measure until the API/ABI impact to the C API is understood
-comment|// and the path forward agreed upon.
-comment|//LLVMAddressSafety = 1ULL<< 32
+comment|/* FIXME: This attribute is currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32     */
 block|}
 name|LLVMAttribute
 typedef|;
@@ -619,6 +616,9 @@ comment|/**< Keep one copy of function when linking (inline)*/
 name|LLVMLinkOnceODRLinkage
 block|,
 comment|/**< Same, but only replaced by something                             equivalent. */
+name|LLVMLinkOnceODRAutoHideLinkage
+block|,
+comment|/**< Like LinkOnceODR, but possibly hidden. */
 name|LLVMWeakAnyLinkage
 block|,
 comment|/**< Keep one copy of function when linking (weak) */
@@ -653,10 +653,7 @@ name|LLVMLinkerPrivateLinkage
 block|,
 comment|/**< Like Private, but linker removes. */
 name|LLVMLinkerPrivateWeakLinkage
-block|,
 comment|/**< Like LinkerPrivate, but is weak. */
-name|LLVMLinkerPrivateWeakDefAutoLinkage
-comment|/**< Like LinkerPrivateWeak, but possibly                                            hidden. */
 block|}
 name|LLVMLinkage
 typedef|;
@@ -952,6 +949,24 @@ name|LLVMDumpModule
 parameter_list|(
 name|LLVMModuleRef
 name|M
+parameter_list|)
+function_decl|;
+comment|/**  * Print a representation of a module to a file. The ErrorMessage needs to be  * disposed with LLVMDisposeMessage. Returns 0 on success, 1 otherwise.  *  * @see Module::print()  */
+name|LLVMBool
+name|LLVMPrintModuleToFile
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ErrorMessage
 parameter_list|)
 function_decl|;
 comment|/**  * Set inline assembly for a module.  *  * @see Module::setModuleInlineAsm()  */
@@ -1582,7 +1597,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * @}  */
-comment|/**  * @defgroup LLVMCCoreValues Values  *  * The bulk of LLVM's object model consists of values, which comprise a very  * rich type hierarchy.  *  * LLVMValueRef essentially represents llvm::Value. There is a rich  * hierarchy of classes within this type. Depending on the instance  * obtain, not all APIs are available.  *  * Callers can determine the type of a LLVMValueRef by calling the  * LLVMIsA* family of functions (e.g. LLVMIsAArgument()). These  * functions are defined by a macro, so it isn't obvious which are  * available by looking at the Doxygen source code. Instead, look at the  * source definition of LLVM_FOR_EACH_VALUE_SUBCLASS and note the list  * of value names given. These value names also correspond to classes in  * the llvm::Value hierarchy.  *  * @{  */
+comment|/**  * @defgroup LLVMCCoreValues Values  *  * The bulk of LLVM's object model consists of values, which comprise a very  * rich type hierarchy.  *  * LLVMValueRef essentially represents llvm::Value. There is a rich  * hierarchy of classes within this type. Depending on the instance  * obtained, not all APIs are available.  *  * Callers can determine the type of a LLVMValueRef by calling the  * LLVMIsA* family of functions (e.g. LLVMIsAArgument()). These  * functions are defined by a macro, so it isn't obvious which are  * available by looking at the Doxygen source code. Instead, look at the  * source definition of LLVM_FOR_EACH_VALUE_SUBCLASS and note the list  * of value names given. These value names also correspond to classes in  * the llvm::Value hierarchy.  *  * @{  */
 define|#
 directive|define
 name|LLVM_FOR_EACH_VALUE_SUBCLASS
@@ -1673,7 +1688,7 @@ argument|LLVM_DECLARE_VALUE_CAST
 argument_list|)
 comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreValueUses Usage  *  * This module defines functions that allow you to inspect the uses of a  * LLVMValueRef.  *  * It is possible to obtain a LLVMUseRef for any LLVMValueRef instance.  * Each LLVMUseRef (which corresponds to a llvm::Use instance) holds a  * llvm::User and llvm::Value.  *  * @{  */
-comment|/**  * Obtain the first use of a value.  *  * Uses are obtained in an iterator fashion. First, call this function  * to obtain a reference to the first use. Then, call LLVMGetNextUse()  * on that instance and all subsequently obtained instances untl  * LLVMGetNextUse() returns NULL.  *  * @see llvm::Value::use_begin()  */
+comment|/**  * Obtain the first use of a value.  *  * Uses are obtained in an iterator fashion. First, call this function  * to obtain a reference to the first use. Then, call LLVMGetNextUse()  * on that instance and all subsequently obtained instances until  * LLVMGetNextUse() returns NULL.  *  * @see llvm::Value::use_begin()  */
 name|LLVMUseRef
 name|LLVMGetFirstUse
 parameter_list|(
@@ -3112,7 +3127,7 @@ name|LLVMValueRef
 name|Arg
 parameter_list|)
 function_decl|;
-comment|/**  * Set the alignment for a function parameter.  *  * @see llvm::Argument::addAttr()  * @see llvm::Attribute::constructAlignmentFromInt()  */
+comment|/**  * Set the alignment for a function parameter.  *  * @see llvm::Argument::addAttr()  * @see llvm::AttrBuilder::addAlignmentAttr()  */
 name|void
 name|LLVMSetParamAlignment
 parameter_list|(
@@ -3196,6 +3211,26 @@ parameter_list|,
 name|unsigned
 modifier|*
 name|Len
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the number of operands from an MDNode value.  *  * @param V MDNode to get number of operands from.  * @return Number of operands of the MDNode.  */
+name|unsigned
+name|LLVMGetMDNodeNumOperands
+parameter_list|(
+name|LLVMValueRef
+name|V
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the given MDNode's operands.  *  * The passed LLVMValueRef pointer should point to enough memory to hold all of  * the operands of the given MDNode (see LLVMGetMDNodeNumOperands) as  * LLVMValueRefs. This memory will be populated with the LLVMValueRefs of the  * MDNode's operands.  *  * @param V MDNode to get the operands from.  * @param Dest Destination array for operands.  */
+name|void
+name|LLVMGetMDNodeOperands
+parameter_list|(
+name|LLVMValueRef
+name|V
+parameter_list|,
+name|LLVMValueRef
+modifier|*
+name|Dest
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -3463,7 +3498,7 @@ name|LLVMValueRef
 name|Inst
 parameter_list|)
 function_decl|;
-comment|/**  * Obtain the instruction that occured before this one.  *  * If the instruction is the first instruction in a basic block, NULL  * will be returned.  */
+comment|/**  * Obtain the instruction that occurred before this one.  *  * If the instruction is the first instruction in a basic block, NULL  * will be returned.  */
 name|LLVMValueRef
 name|LLVMGetPreviousInstruction
 parameter_list|(
@@ -5684,8 +5719,8 @@ argument_list|,
 argument|unsigned Length
 argument_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 for|for
 control|(

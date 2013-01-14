@@ -124,6 +124,14 @@ modifier|*
 name|createGlobalBaseRegPass
 parameter_list|()
 function_decl|;
+comment|/// createCleanupLocalDynamicTLSPass() - This pass combines multiple accesses
+comment|/// to local-dynamic TLS variables so that the TLS base address for the module
+comment|/// is only fetched once per execution path through the function.
+name|FunctionPass
+modifier|*
+name|createCleanupLocalDynamicTLSPass
+parameter_list|()
+function_decl|;
 comment|/// createX86FloatingPointStackifierPass - This function returns a pass which
 comment|/// converts floating point register references and pseudo instructions into
 comment|/// floating point stack references and physical instructions.

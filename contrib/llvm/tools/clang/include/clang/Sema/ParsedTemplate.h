@@ -182,14 +182,14 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 operator|,
+name|SS
+argument_list|(
+name|SS
+argument_list|)
+operator|,
 name|Loc
 argument_list|(
 name|TemplateLoc
-argument_list|)
-operator|,
-name|SS
-argument_list|(
-name|SS
 argument_list|)
 operator|,
 name|EllipsisLoc
@@ -368,14 +368,14 @@ name|void
 modifier|*
 name|Arg
 decl_stmt|;
-comment|/// \brief the location of the template argument.
-name|SourceLocation
-name|Loc
-decl_stmt|;
 comment|/// \brief The nested-name-specifier that can accompany a template template
 comment|/// argument.
 name|CXXScopeSpec
 name|SS
+decl_stmt|;
+comment|/// \brief the location of the template argument.
+name|SourceLocation
+name|Loc
 decl_stmt|;
 comment|/// \brief The ellipsis location that can accompany a template template
 comment|/// argument (turning it into a template template argument expansion).
@@ -593,27 +593,6 @@ name|unsigned
 name|NumParams
 parameter_list|)
 function_decl|;
-specifier|inline
-specifier|const
-name|ParsedTemplateArgument
-operator|&
-name|ASTTemplateArgsPtr
-operator|::
-name|operator
-index|[]
-operator|(
-name|unsigned
-name|Arg
-operator|)
-specifier|const
-block|{
-return|return
-name|Args
-index|[
-name|Arg
-index|]
-return|;
-block|}
 block|}
 end_decl_stmt
 

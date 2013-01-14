@@ -155,6 +155,9 @@ name|class
 name|StackFrameContext
 decl_stmt|;
 name|class
+name|BlockInvocationContext
+decl_stmt|;
+name|class
 name|AnalysisDeclContextManager
 decl_stmt|;
 name|class
@@ -210,15 +213,9 @@ decl_stmt|;
 specifier|const
 name|Decl
 modifier|*
+specifier|const
 name|D
 decl_stmt|;
-comment|// TranslationUnit is NULL if we don't have multiple translation units.
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|TU
-expr_stmt|;
 name|OwningPtr
 operator|<
 name|CFG
@@ -251,18 +248,6 @@ name|builtCFG
 decl_stmt|,
 name|builtCompleteCFG
 decl_stmt|;
-name|OwningPtr
-operator|<
-name|LiveVariables
-operator|>
-name|liveness
-expr_stmt|;
-name|OwningPtr
-operator|<
-name|LiveVariables
-operator|>
-name|relaxedLiveness
-expr_stmt|;
 name|OwningPtr
 operator|<
 name|ParentMap
@@ -316,12 +301,6 @@ specifier|const
 name|Decl
 operator|*
 name|D
-argument_list|,
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|TU
 argument_list|)
 expr_stmt|;
 name|AnalysisDeclContext
@@ -334,12 +313,6 @@ specifier|const
 name|Decl
 operator|*
 name|D
-argument_list|,
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|TU
 argument_list|,
 specifier|const
 name|CFG
@@ -354,9 +327,10 @@ name|AnalysisDeclContext
 argument_list|()
 expr_stmt|;
 name|ASTContext
-modifier|&
+operator|&
 name|getASTContext
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|D
@@ -376,16 +350,16 @@ return|return
 name|D
 return|;
 block|}
-name|idx
-operator|::
-name|TranslationUnit
+comment|/// Return the AnalysisDeclContextManager (if any) that created
+comment|/// this AnalysisDeclContext.
+name|AnalysisDeclContextManager
 operator|*
-name|getTranslationUnit
+name|getManager
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TU
+name|Manager
 return|;
 block|}
 comment|/// Return the build options used to construct the CFG.
@@ -595,6 +569,27 @@ name|unsigned
 name|Idx
 parameter_list|)
 function_decl|;
+specifier|const
+name|BlockInvocationContext
+modifier|*
+name|getBlockInvocationContext
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|parent
+parameter_list|,
+specifier|const
+name|BlockDecl
+modifier|*
+name|BD
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ContextData
+parameter_list|)
+function_decl|;
 comment|/// Return the specified analysis object, lazily running the analysis if
 comment|/// necessary.  Return NULL if the analysis could not run.
 name|template
@@ -763,21 +758,6 @@ return|return
 name|Ctx
 return|;
 block|}
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|getTranslationUnit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Ctx
-operator|->
-name|getTranslationUnit
-argument_list|()
-return|;
-block|}
 specifier|const
 name|LocationContext
 operator|*
@@ -883,13 +863,11 @@ name|getCurrentStackFrame
 argument_list|()
 specifier|const
 block|;
-specifier|const
-name|StackFrameContext
-operator|*
-name|getStackFrameForDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
+comment|/// Return true if the current LocationContext has no caller context.
+name|virtual
+name|bool
+name|inTopFrame
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -905,17 +883,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LocationContext*
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -1023,6 +990,20 @@ specifier|const
 block|{
 return|return
 name|Block
+return|;
+block|}
+comment|/// Return true if the current LocationContext has no caller context.
+name|virtual
+name|bool
+name|inTopFrame
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getParent
+argument_list|()
+operator|==
+literal|0
 return|;
 block|}
 name|unsigned
@@ -1218,12 +1199,16 @@ operator|:
 name|public
 name|LocationContext
 block|{
-comment|// FIXME: Add back context-sensivity (we don't want libAnalysis to know
-comment|//  about MemRegion).
 specifier|const
 name|BlockDecl
 operator|*
 name|BD
+block|;
+comment|// FIXME: Come up with a more type-safe way to model context-sensitivity.
+specifier|const
+name|void
+operator|*
+name|ContextData
 block|;
 name|friend
 name|class
@@ -1244,6 +1229,11 @@ specifier|const
 name|BlockDecl
 operator|*
 name|bd
+argument_list|,
+specifier|const
+name|void
+operator|*
+name|contextData
 argument_list|)
 operator|:
 name|LocationContext
@@ -1257,7 +1247,12 @@ argument_list|)
 block|,
 name|BD
 argument_list|(
-argument|bd
+name|bd
+argument_list|)
+block|,
+name|ContextData
+argument_list|(
+argument|contextData
 argument_list|)
 block|{}
 name|public
@@ -1275,6 +1270,17 @@ specifier|const
 block|{
 return|return
 name|BD
+return|;
+block|}
+specifier|const
+name|void
+operator|*
+name|getContextData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContextData
 return|;
 block|}
 name|void
@@ -1298,6 +1304,8 @@ argument_list|,
 argument|const LocationContext *parent
 argument_list|,
 argument|const BlockDecl *bd
+argument_list|,
+argument|const void *contextData
 argument_list|)
 block|{
 name|ProfileCommon
@@ -1311,6 +1319,13 @@ argument_list|,
 name|parent
 argument_list|,
 name|bd
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|contextData
 argument_list|)
 block|;   }
 specifier|static
@@ -1384,6 +1399,31 @@ operator|*
 name|s
 argument_list|)
 block|;
+specifier|const
+name|BlockInvocationContext
+operator|*
+name|getBlockInvocationContext
+argument_list|(
+name|AnalysisDeclContext
+operator|*
+name|ctx
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|parent
+argument_list|,
+specifier|const
+name|BlockDecl
+operator|*
+name|BD
+argument_list|,
+specifier|const
+name|void
+operator|*
+name|ContextData
+argument_list|)
+block|;
 comment|/// Discard all previously created LocationContext objects.
 name|void
 name|clear
@@ -1448,6 +1488,11 @@ operator|::
 name|BuildOptions
 name|cfgBuildOptions
 block|;
+comment|/// Flag to indicate whether or not bodies should be synthesized
+comment|/// for well-known functions.
+name|bool
+name|SynthesizeBodies
+block|;
 name|public
 operator|:
 name|AnalysisDeclContextManager
@@ -1457,6 +1502,10 @@ argument_list|,
 argument|bool addImplicitDtors = false
 argument_list|,
 argument|bool addInitializers = false
+argument_list|,
+argument|bool addTemporaryDtors = false
+argument_list|,
+argument|bool synthesizeBodies = false
 argument_list|)
 block|;
 operator|~
@@ -1471,14 +1520,6 @@ specifier|const
 name|Decl
 operator|*
 name|D
-argument_list|,
-name|idx
-operator|::
-name|TranslationUnit
-operator|*
-name|TU
-operator|=
-literal|0
 argument_list|)
 block|;
 name|bool
@@ -1502,6 +1543,17 @@ argument_list|()
 block|{
 return|return
 name|cfgBuildOptions
+return|;
+block|}
+comment|/// Return true if faux bodies should be synthesized for well-known
+comment|/// functions.
+name|bool
+name|synthesizeBodies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SynthesizeBodies
 return|;
 block|}
 specifier|const
@@ -1543,9 +1595,7 @@ name|StackFrameContext
 operator|*
 name|getStackFrame
 argument_list|(
-argument|Decl const *D
-argument_list|,
-argument|idx::TranslationUnit *TU
+argument|const Decl *D
 argument_list|)
 block|{
 return|return
@@ -1556,8 +1606,6 @@ argument_list|(
 name|getContext
 argument_list|(
 name|D
-argument_list|,
-name|TU
 argument_list|)
 argument_list|,
 literal|0

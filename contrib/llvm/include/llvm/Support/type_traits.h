@@ -89,6 +89,33 @@ directive|include
 file|<utility>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_feature
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_DEFINED_HAS_FEATURE
+end_define
+
+begin_define
+define|#
+directive|define
+name|__has_feature
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|// This is actually the conforming implementation which works with abstract
 end_comment
@@ -163,8 +190,9 @@ comment|// more details:
 comment|// http://groups.google.com/groups?hl=en&selm=000001c1cc83%24e154d5e0%247772e50c%40c161550a&rnum=1
 name|public
 operator|:
-expr|enum
-block|{
+specifier|static
+specifier|const
+name|bool
 name|value
 operator|=
 sizeof|sizeof
@@ -172,8 +200,8 @@ argument_list|(
 name|char
 argument_list|)
 operator|==
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|dont_use
 operator|::
 name|is_class_helper
@@ -183,8 +211,7 @@ operator|>
 operator|(
 literal|0
 operator|)
-operator|)
-block|}
+argument_list|)
 block|; }
 expr_stmt|;
 comment|/// isPodLike - This is a type trait that is used to determine whether a given
@@ -197,6 +224,26 @@ operator|>
 expr|struct
 name|isPodLike
 block|{
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|is_trivially_copyable
+argument_list|)
+comment|// If the compiler supports the is_trivially_copyable trait use it, as it
+comment|// matches the definition of isPodLike closely.
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|__is_trivially_copyable
+argument_list|(
+name|T
+argument_list|)
+block|;
+else|#
+directive|else
 comment|// If we don't know anything else, we can (at least) assume that all non-class
 comment|// types are PODs.
 specifier|static
@@ -211,7 +258,10 @@ name|T
 operator|>
 operator|::
 name|value
-block|; }
+block|;
+endif|#
+directive|endif
+block|}
 expr_stmt|;
 comment|// std::pair's are pod-like if their elements are.
 name|template
@@ -972,9 +1022,10 @@ name|public
 label|:
 end_label
 
-begin_enum
-enum|enum
-block|{
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bool
 name|value
 init|=
 operator|(
@@ -1027,9 +1078,8 @@ name|nonce_instance
 argument_list|)
 argument_list|)
 operator|)
-block|}
-enum|;
-end_enum
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -1388,8 +1438,25 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_ifdef
 unit|}
+ifdef|#
+directive|ifdef
+name|LLVM_DEFINED_HAS_FEATURE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__has_feature
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
 end_endif

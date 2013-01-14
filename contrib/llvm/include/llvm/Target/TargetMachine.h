@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Pass.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CodeGen.h"
 end_include
 
@@ -69,6 +75,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetTransformImpl.h"
 end_include
 
 begin_include
@@ -118,10 +136,7 @@ name|class
 name|Target
 decl_stmt|;
 name|class
-name|TargetData
-decl_stmt|;
-name|class
-name|TargetELFWriterInfo
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetFrameLowering
@@ -167,12 +182,10 @@ name|TargetMachine
 block|{
 name|TargetMachine
 argument_list|(
-specifier|const
-name|TargetMachine
-operator|&
+argument|const TargetMachine&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -181,8 +194,8 @@ specifier|const
 name|TargetMachine
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -386,9 +399,33 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+specifier|const
+name|ScalarTargetTransformInfo
+operator|*
+name|getScalarTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+specifier|const
+name|VectorTargetTransformInfo
+operator|*
+name|getVectorTargetTransformInfo
 argument_list|()
 specifier|const
 block|{
@@ -490,21 +527,6 @@ specifier|const
 name|InstrItineraryData
 operator|*
 name|getInstrItineraryData
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
-comment|/// getELFWriterInfo - If this target supports an ELF writer, return
-comment|/// information for it, otherwise return null.
-comment|///
-name|virtual
-specifier|const
-name|TargetELFWriterInfo
-operator|*
-name|getELFWriterInfo
 argument_list|()
 specifier|const
 block|{
@@ -800,6 +822,16 @@ name|bool
 comment|/*DisableVerify*/
 init|=
 name|true
+parameter_list|,
+name|AnalysisID
+name|StartAfter
+init|=
+literal|0
+parameter_list|,
+name|AnalysisID
+name|StopAfter
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -922,6 +954,12 @@ argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify = true
+argument_list|,
+argument|AnalysisID StartAfter =
+literal|0
+argument_list|,
+argument|AnalysisID StopAfter =
+literal|0
 argument_list|)
 block|;
 comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to

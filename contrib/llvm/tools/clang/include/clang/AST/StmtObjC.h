@@ -32,19 +32,11 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// This file defines the Objective-C statement AST node classes.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
+comment|/// \brief Defines the Objective-C statement AST node classes.
 end_comment
 
 begin_ifndef
@@ -75,9 +67,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// ObjCForCollectionStmt - This represents Objective-c's collection statement;
-comment|/// represented as 'for (element 'in' collection-expression)' stmt.
+comment|/// \brief Represents Objective-C's collection statement.
 comment|///
+comment|/// This is represented as 'for (element 'in' collection-expression)' stmt.
 name|class
 name|ObjCForCollectionStmt
 range|:
@@ -349,17 +341,6 @@ operator|==
 name|ObjCForCollectionStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCForCollectionStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -384,7 +365,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCAtCatchStmt - This represents objective-c's @catch statement.
+comment|/// \brief Represents Objective-C's \@catch statement.
 name|class
 name|ObjCAtCatchStmt
 operator|:
@@ -601,17 +582,6 @@ operator|==
 name|ObjCAtCatchStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtCatchStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -631,7 +601,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCAtFinallyStmt - This represent objective-c's @finally Statement
+comment|/// \brief Represents Objective-C's \@finally statement
 name|class
 name|ObjCAtFinallyStmt
 operator|:
@@ -765,17 +735,6 @@ operator|==
 name|ObjCAtFinallyStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtFinallyStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -795,8 +754,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCAtTryStmt - This represent objective-c's over-all
-comment|/// @try ... @catch ... @finally statement.
+comment|/// \brief Represents Objective-C's \@try ... \@catch ... \@finally statement.
 name|class
 name|ObjCAtTryStmt
 operator|:
@@ -805,7 +763,7 @@ name|Stmt
 block|{
 name|private
 operator|:
-comment|// The location of the
+comment|// The location of the @ in the \@try.
 name|SourceLocation
 name|AtTryLoc
 block|;
@@ -815,17 +773,17 @@ name|NumCatchStmts
 operator|:
 literal|16
 block|;
-comment|// Whether this statement has a @finally statement.
+comment|// Whether this statement has a \@finally statement.
 name|bool
 name|HasFinally
 operator|:
 literal|1
 block|;
-comment|/// \brief Retrieve the statements that are stored after this @try statement.
+comment|/// \brief Retrieve the statements that are stored after this \@try statement.
 comment|///
 comment|/// The order of the statements in memory follows the order in the source,
-comment|/// with the @try body first, followed by the @catch statements (if any) and,
-comment|/// finally, the @finally (if it exists).
+comment|/// with the \@try body first, followed by the \@catch statements (if any)
+comment|/// and, finally, the \@finally (if it exists).
 name|Stmt
 operator|*
 operator|*
@@ -943,7 +901,7 @@ argument_list|,
 argument|bool HasFinally
 argument_list|)
 block|;
-comment|/// \brief Retrieve the location of the @ in the @try.
+comment|/// \brief Retrieve the location of the @ in the \@try.
 name|SourceLocation
 name|getAtTryLoc
 argument_list|()
@@ -963,7 +921,7 @@ name|AtTryLoc
 operator|=
 name|Loc
 block|; }
-comment|/// \brief Retrieve the @try body.
+comment|/// \brief Retrieve the \@try body.
 specifier|const
 name|Stmt
 operator|*
@@ -1006,7 +964,7 @@ index|]
 operator|=
 name|S
 block|; }
-comment|/// \brief Retrieve the number of @catch statements in this try-catch-finally
+comment|/// \brief Retrieve the number of \@catch statements in this try-catch-finally
 comment|/// block.
 name|unsigned
 name|getNumCatchStmts
@@ -1017,7 +975,7 @@ return|return
 name|NumCatchStmts
 return|;
 block|}
-comment|/// \brief Retrieve a @catch statement.
+comment|/// \brief Retrieve a \@catch statement.
 specifier|const
 name|ObjCAtCatchStmt
 operator|*
@@ -1052,7 +1010,7 @@ index|]
 operator|)
 return|;
 block|}
-comment|/// \brief Retrieve a @catch statement.
+comment|/// \brief Retrieve a \@catch statement.
 name|ObjCAtCatchStmt
 operator|*
 name|getCatchStmt
@@ -1113,7 +1071,7 @@ index|]
 operator|=
 name|S
 block|;   }
-comment|/// Retrieve the @finally statement, if any.
+comment|/// \brief Retrieve the \@finally statement, if any.
 specifier|const
 name|ObjCAtFinallyStmt
 operator|*
@@ -1219,17 +1177,6 @@ operator|==
 name|ObjCAtTryStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtTryStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -1253,11 +1200,14 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCAtSynchronizedStmt - This is for objective-c's @synchronized statement.
-comment|/// Example: @synchronized (sem) {
-comment|///             do-something;
-comment|///          }
+comment|/// \brief Represents Objective-C's \@synchronized statement.
 comment|///
+comment|/// Example:
+comment|/// \code
+comment|///   @synchronized (sem) {
+comment|///     do-something;
+comment|///   }
+comment|/// \endcode
 name|class
 name|ObjCAtSynchronizedStmt
 operator|:
@@ -1492,17 +1442,6 @@ operator|==
 name|ObjCAtSynchronizedStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtSynchronizedStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -1528,7 +1467,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCAtThrowStmt - This represents objective-c's @throw statement.
+comment|/// \brief Represents Objective-C's \@throw statement.
 name|class
 name|ObjCAtThrowStmt
 operator|:
@@ -1685,17 +1624,6 @@ operator|==
 name|ObjCAtThrowStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtThrowStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -1715,8 +1643,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCAutoreleasePoolStmt - This represent objective-c's
-comment|/// @autoreleasepool Statement
+comment|/// \brief Represents Objective-C's \@autoreleasepool Statement
 name|class
 name|ObjCAutoreleasePoolStmt
 operator|:
@@ -1848,17 +1775,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCAutoreleasePoolStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAutoreleasePoolStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_range

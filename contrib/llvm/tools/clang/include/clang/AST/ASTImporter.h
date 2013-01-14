@@ -664,6 +664,11 @@ name|From
 parameter_list|,
 name|QualType
 name|To
+parameter_list|,
+name|bool
+name|Complain
+init|=
+name|true
 parameter_list|)
 function_decl|;
 block|}

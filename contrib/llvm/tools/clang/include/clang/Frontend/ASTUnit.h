@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/HeaderSearchOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
@@ -111,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/FileSystemOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TargetOptions.h"
 end_include
 
 begin_include
@@ -241,6 +259,9 @@ decl_stmt|;
 name|class
 name|ASTFrontendAction
 decl_stmt|;
+name|class
+name|ASTDeserializationListener
+decl_stmt|;
 comment|/// \brief Utility class for loading a ASTContext from an AST file.
 comment|///
 name|class
@@ -299,9 +320,29 @@ name|ASTContext
 operator|>
 name|Ctx
 block|;
+name|IntrusiveRefCntPtr
+operator|<
+name|TargetOptions
+operator|>
+name|TargetOpts
+block|;
+name|IntrusiveRefCntPtr
+operator|<
+name|HeaderSearchOptions
+operator|>
+name|HSOpts
+block|;
 name|ASTReader
 operator|*
 name|Reader
+block|;    struct
+name|ASTWriterData
+block|;
+name|OwningPtr
+operator|<
+name|ASTWriterData
+operator|>
+name|WriterData
 block|;
 name|FileSystemOptions
 name|FileSystemOpts
@@ -329,21 +370,6 @@ operator|<
 name|CompilerInvocation
 operator|>
 name|Invocation
-block|;
-comment|/// \brief The set of target features.
-comment|///
-comment|/// FIXME: each time we reparse, we need to restore the set of target
-comment|/// features from this vector, because TargetInfo::CreateTargetInfo()
-comment|/// mangles the target options in place. Yuck!
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|TargetFeatures
 block|;
 comment|// OnlyLocalDecls - when true, walking this AST should only visit declarations
 comment|// that come from the AST itself, not from included precompiled headers.
@@ -877,6 +903,40 @@ end_comment
 begin_decl_stmt
 name|bool
 name|ShouldCacheCodeCompletionResults
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Whether to include brief documentation within the set of code
+end_comment
+
+begin_comment
+comment|/// completions cached.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|IncludeBriefCommentsInCodeCompletion
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief True if non-system source files should be treated as volatile
+end_comment
+
+begin_comment
+comment|/// (likely to change while trying to use them).
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UserFilesAreVolatile
+range|:
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -992,10 +1052,9 @@ comment|/// contain this completion result.
 comment|///
 comment|/// The bits in the bitmask correspond to the values of
 comment|/// CodeCompleteContext::Kind. To map from a completion context kind to a
-comment|/// bit, subtract one from the completion context kind and shift 1 by that
-comment|/// number of bits. Many completions can occur in several different
-comment|/// contexts.
-name|unsigned
+comment|/// bit, shift 1 by that number of bits. Many completions can occur in
+comment|/// several different contexts.
+name|uint64_t
 name|ShowInContexts
 decl_stmt|;
 comment|/// \brief The priority given to this code-completion result.
@@ -1265,23 +1324,20 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 name|ASTUnit
 argument_list|(
-specifier|const
-name|ASTUnit
-operator|&
+argument|const ASTUnit&
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
-
 begin_decl_stmt
-name|ASTUnit
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -1289,12 +1345,9 @@ specifier|const
 name|ASTUnit
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
 
 begin_function_decl
 name|explicit
@@ -1431,11 +1484,16 @@ begin_decl_stmt
 name|class
 name|ConcurrencyState
 block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|void
 modifier|*
 name|Mutex
 decl_stmt|;
 comment|// a llvm::sys::MutexImpl in debug;
+endif|#
+directive|endif
 name|public
 label|:
 name|ConcurrencyState
@@ -1786,16 +1844,24 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+begin_function
+name|StringRef
 name|getOriginalSourceFileName
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+block|{
+return|return
+name|OriginalSourceFile
+return|;
+block|}
+end_function
+
+begin_function_decl
+name|ASTDeserializationListener
+modifier|*
+name|getDeserializationListener
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Add a temporary file that the ASTUnit depends on.
@@ -2058,7 +2124,7 @@ comment|/// \brief Get the decls that are contained in a file in the Offset/Leng
 end_comment
 
 begin_comment
-comment|/// range. \arg Length can be 0 to indicate a point at \arg Offset instead of
+comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
 end_comment
 
 begin_comment
@@ -2201,7 +2267,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief If \arg Loc is a loaded location from the preamble, returns
+comment|/// \brief If \p Loc is a loaded location from the preamble, returns
 end_comment
 
 begin_comment
@@ -2209,7 +2275,7 @@ comment|/// the corresponding local location of the main file, otherwise it retu
 end_comment
 
 begin_comment
-comment|/// \arg Loc.
+comment|/// \p Loc.
 end_comment
 
 begin_function_decl
@@ -2223,7 +2289,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief If \arg Loc is a local location of the main file but inside the
+comment|/// \brief If \p Loc is a local location of the main file but inside the
 end_comment
 
 begin_comment
@@ -2231,7 +2297,7 @@ comment|/// preamble chunk, returns the corresponding loaded location from the
 end_comment
 
 begin_comment
-comment|/// preamble, otherwise it returns \arg Loc.
+comment|/// preamble, otherwise it returns \p Loc.
 end_comment
 
 begin_function_decl
@@ -2279,7 +2345,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief \see mapLocationFromPreamble.
+comment|/// \see mapLocationFromPreamble.
 end_comment
 
 begin_function
@@ -2314,7 +2380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief \see mapLocationToPreamble.
+comment|/// \see mapLocationToPreamble.
 end_comment
 
 begin_function
@@ -2528,6 +2594,123 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Returns an iterator range for the local preprocessing entities
+end_comment
+
+begin_comment
+comment|/// of the local Preprocessor, if this is a parsed source file, or the loaded
+end_comment
+
+begin_comment
+comment|/// preprocessing entities of the primary module if this is an AST file.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|PreprocessingRecord
+operator|::
+name|iterator
+operator|,
+name|PreprocessingRecord
+operator|::
+name|iterator
+operator|>
+name|getLocalPreprocessingEntities
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Type for a function iterating over a number of declarations.
+end_comment
+
+begin_comment
+comment|/// \returns true to continue iteration and false to abort.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|DeclVisitorFn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/// \brief Iterate over local declarations (locally parsed if this is a parsed
+end_comment
+
+begin_comment
+comment|/// source file or the loaded declarations of the primary module if this is an
+end_comment
+
+begin_comment
+comment|/// AST file).
+end_comment
+
+begin_comment
+comment|/// \returns true if the iteration was complete or false if it was aborted.
+end_comment
+
+begin_function_decl
+name|bool
+name|visitLocalTopLevelDecls
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|DeclVisitorFn
+name|Fn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Get the PCH file if one was included.
+end_comment
+
+begin_function_decl
+specifier|const
+name|FileEntry
+modifier|*
+name|getPCHFile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Returns true if the ASTUnit was constructed from a serialized
+end_comment
+
+begin_comment
+comment|/// module file.
+end_comment
+
+begin_function_decl
+name|bool
+name|isModuleFile
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|llvm
 operator|::
@@ -2625,8 +2808,9 @@ name|Diags
 argument_list|,
 name|bool
 name|CaptureDiagnostics
-operator|=
-name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2710,6 +2894,11 @@ name|false
 argument_list|,
 name|bool
 name|AllowPCHWithCompilerErrors
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 operator|=
 name|false
 argument_list|)
@@ -2861,7 +3050,7 @@ comment|/// This will only receive an ASTUnit if a new one was created. If an al
 end_comment
 
 begin_comment
-comment|/// created ASTUnit was passed in \param Unit then the caller can check that.
+comment|/// created ASTUnit was passed in \p Unit then the caller can check that.
 end_comment
 
 begin_comment
@@ -2924,6 +3113,16 @@ name|false
 argument_list|,
 name|bool
 name|CacheCodeCompletionResults
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IncludeBriefCommentsInCodeCompletion
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 operator|=
 name|false
 argument_list|,
@@ -3021,6 +3220,16 @@ name|TU_Complete
 argument_list|,
 name|bool
 name|CacheCodeCompletionResults
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IncludeBriefCommentsInCodeCompletion
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
 operator|=
 name|false
 argument_list|)
@@ -3168,12 +3377,27 @@ operator|=
 name|false
 argument_list|,
 name|bool
+name|IncludeBriefCommentsInCodeCompletion
+operator|=
+name|false
+argument_list|,
+name|bool
 name|AllowPCHWithCompilerErrors
 operator|=
 name|false
 argument_list|,
 name|bool
 name|SkipFunctionBodies
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UserFilesAreVolatile
+operator|=
+name|false
+argument_list|,
+name|bool
+name|ForSerialization
 operator|=
 name|false
 argument_list|,
@@ -3288,6 +3512,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param IncludeBriefComments Whether to include brief documentation within
+end_comment
+
+begin_comment
+comment|/// the set of code completions returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// FIXME: The Diag, LangOpts, SourceMgr, FileMgr, StoredDiagnostics, and
 end_comment
 
@@ -3320,6 +3556,9 @@ name|IncludeMacros
 argument_list|,
 name|bool
 name|IncludeCodePatterns
+argument_list|,
+name|bool
+name|IncludeBriefComments
 argument_list|,
 name|CodeCompleteConsumer
 operator|&
@@ -3371,11 +3610,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \returns An indication of whether the save was successful or not.
+comment|/// \returns true if there was a file error or false if the save was
+end_comment
+
+begin_comment
+comment|/// successful.
 end_comment
 
 begin_function_decl
-name|CXSaveError
+name|bool
 name|Save
 parameter_list|(
 name|StringRef

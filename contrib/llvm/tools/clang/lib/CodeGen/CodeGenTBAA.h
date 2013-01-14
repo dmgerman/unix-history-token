@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/MDBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MDBuilder.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -100,6 +100,9 @@ name|clang
 block|{
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|LangOptions
@@ -128,12 +131,11 @@ name|ASTContext
 modifier|&
 name|Context
 decl_stmt|;
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|VMContext
-expr_stmt|;
+specifier|const
+name|CodeGenOptions
+modifier|&
+name|CodeGenOpts
+decl_stmt|;
 specifier|const
 name|LangOptions
 modifier|&
@@ -165,6 +167,23 @@ operator|*
 operator|>
 name|MetadataCache
 expr_stmt|;
+comment|/// StructMetadataCache - This maps clang::Types to llvm::MDNodes describing
+comment|/// them for struct assignments.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|,
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|>
+name|StructMetadataCache
+expr_stmt|;
 name|llvm
 operator|::
 name|MDNode
@@ -195,6 +214,32 @@ operator|*
 name|getChar
 argument_list|()
 expr_stmt|;
+comment|/// CollectFields - Collect information about the fields of a type for
+comment|/// !tbaa.struct metadata formation. Return false for an unsupported type.
+name|bool
+name|CollectFields
+argument_list|(
+name|uint64_t
+name|BaseOffset
+argument_list|,
+name|QualType
+name|Ty
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|MDBuilder
+operator|::
+name|TBAAStructField
+operator|>
+operator|&
+name|Fields
+argument_list|,
+name|bool
+name|MayAlias
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 name|CodeGenTBAA
@@ -208,6 +253,11 @@ operator|::
 name|LLVMContext
 operator|&
 name|VMContext
+argument_list|,
+specifier|const
+name|CodeGenOptions
+operator|&
+name|CGO
 argument_list|,
 specifier|const
 name|LangOptions
@@ -242,6 +292,17 @@ name|MDNode
 operator|*
 name|getTBAAInfoForVTablePtr
 argument_list|()
+expr_stmt|;
+comment|/// getTBAAStructInfo - Get the TBAAStruct MDNode to be used for a memcpy of
+comment|/// the given type.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAStructInfo
+argument_list|(
+argument|QualType QTy
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;

@@ -127,17 +127,18 @@ operator|~
 name|DAGDeltaAlgorithm
 argument_list|()
 block|{}
-comment|/// Run - Minimize the DAG formed by the \arg Changes vertices and the \arg
-comment|/// Dependencies edges by executing \see ExecuteOneTest() on subsets of
+comment|/// Run - Minimize the DAG formed by the \p Changes vertices and the
+comment|/// \p Dependencies edges by executing \see ExecuteOneTest() on subsets of
 comment|/// changes and returning the smallest set which still satisfies the test
-comment|/// predicate and the input \arg Dependencies.
+comment|/// predicate and the input \p Dependencies.
 comment|///
 comment|/// \param Changes The list of changes.
 comment|///
 comment|/// \param Dependencies The list of dependencies amongst changes. For each
-comment|/// (x,y) in \arg Dependencies, both x and y must be in \arg Changes. The
-comment|/// minimization algorithm guarantees that for each tested changed set S, x
-comment|/// \in S implies y \in S. It is an error to have cyclic dependencies.
+comment|/// (x,y) in \p Dependencies, both x and y must be in \p Changes. The
+comment|/// minimization algorithm guarantees that for each tested changed set S,
+comment|/// \f$ x \in S \f$ implies \f$ y \in S \f$. It is an error to have cyclic
+comment|/// dependencies.
 name|changeset_ty
 name|Run
 argument_list|(
@@ -178,7 +179,7 @@ modifier|&
 name|Required
 parameter_list|)
 block|{}
-comment|/// ExecuteOneTest - Execute a single test predicate on the change set \arg S.
+comment|/// ExecuteOneTest - Execute a single test predicate on the change set \p S.
 name|virtual
 name|bool
 name|ExecuteOneTest

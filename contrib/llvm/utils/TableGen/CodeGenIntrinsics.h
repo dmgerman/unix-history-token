@@ -212,6 +212,10 @@ comment|/// canThrow - True if the intrinsic can throw.
 name|bool
 name|canThrow
 decl_stmt|;
+comment|/// isNoReturn - True if the intrinsic is no-return.
+name|bool
+name|isNoReturn
+decl_stmt|;
 enum|enum
 name|ArgAttribute
 block|{

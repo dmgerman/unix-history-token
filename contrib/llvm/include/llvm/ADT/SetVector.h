@@ -111,10 +111,11 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// \brief A vector that has set insertion semantics.
+comment|///
 comment|/// This adapter class provides a way to keep a set of things that also has the
 comment|/// property of a deterministic iteration order. The order of iteration is the
 comment|/// order of insertion.
-comment|/// @brief A vector that has set insertion semantics.
 name|template
 operator|<
 name|typename
@@ -193,11 +194,11 @@ operator|::
 name|size_type
 name|size_type
 expr_stmt|;
-comment|/// @brief Construct an empty SetVector
+comment|/// \brief Construct an empty SetVector
 name|SetVector
 argument_list|()
 block|{}
-comment|/// @brief Initialize a SetVector with a range of elements
+comment|/// \brief Initialize a SetVector with a range of elements
 name|template
 operator|<
 name|typename
@@ -217,7 +218,7 @@ argument_list|,
 name|End
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the SetVector is empty or not.
+comment|/// \brief Determine if the SetVector is empty or not.
 name|bool
 name|empty
 argument_list|()
@@ -230,7 +231,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// @brief Determine the number of elements in the SetVector.
+comment|/// \brief Determine the number of elements in the SetVector.
 name|size_type
 name|size
 argument_list|()
@@ -243,7 +244,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// @brief Get an iterator to the beginning of the SetVector.
+comment|/// \brief Get an iterator to the beginning of the SetVector.
 name|iterator
 name|begin
 parameter_list|()
@@ -255,7 +256,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// @brief Get a const_iterator to the beginning of the SetVector.
+comment|/// \brief Get a const_iterator to the beginning of the SetVector.
 name|const_iterator
 name|begin
 argument_list|()
@@ -268,7 +269,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// @brief Get an iterator to the end of the SetVector.
+comment|/// \brief Get an iterator to the end of the SetVector.
 name|iterator
 name|end
 parameter_list|()
@@ -280,7 +281,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// @brief Get a const_iterator to the end of the SetVector.
+comment|/// \brief Get a const_iterator to the end of the SetVector.
 name|const_iterator
 name|end
 argument_list|()
@@ -293,7 +294,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// @brief Return the last element of the SetVector.
+comment|/// \brief Return the last element of the SetVector.
 specifier|const
 name|T
 operator|&
@@ -317,7 +318,7 @@ name|back
 argument_list|()
 return|;
 block|}
-comment|/// @brief Index into the SetVector.
+comment|/// \brief Index into the SetVector.
 name|const_reference
 name|operator
 index|[]
@@ -346,8 +347,8 @@ name|n
 index|]
 return|;
 block|}
-comment|/// @returns true iff the element was inserted into the SetVector.
-comment|/// @brief Insert a new element into the SetVector.
+comment|/// \brief Insert a new element into the SetVector.
+comment|/// \returns true iff the element was inserted into the SetVector.
 name|bool
 name|insert
 parameter_list|(
@@ -382,7 +383,7 @@ return|return
 name|result
 return|;
 block|}
-comment|/// @brief Insert a range of elements into the SetVector.
+comment|/// \brief Insert a range of elements into the SetVector.
 name|template
 operator|<
 name|typename
@@ -425,7 +426,7 @@ name|Start
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// @brief Remove an item from the set vector.
+comment|/// \brief Remove an item from the set vector.
 name|bool
 name|remove
 parameter_list|(
@@ -495,8 +496,100 @@ return|return
 name|false
 return|;
 block|}
-comment|/// @returns 0 if the element is not in the SetVector, 1 if it is.
-comment|/// @brief Count the number of elements of a given key in the SetVector.
+comment|/// \brief Remove items from the set vector based on a predicate function.
+comment|///
+comment|/// This is intended to be equivalent to the following code, if we could
+comment|/// write it:
+comment|///
+comment|/// \code
+comment|///   V.erase(std::remove_if(V.begin(), V.end(), P), V.end());
+comment|/// \endcode
+comment|///
+comment|/// However, SetVector doesn't expose non-const iterators, making any
+comment|/// algorithm like remove_if impossible to use.
+comment|///
+comment|/// \returns true if any element is removed.
+name|template
+operator|<
+name|typename
+name|UnaryPredicate
+operator|>
+name|bool
+name|remove_if
+argument_list|(
+argument|UnaryPredicate P
+argument_list|)
+block|{
+name|typename
+name|vector_type
+operator|::
+name|iterator
+name|I
+operator|=
+name|std
+operator|::
+name|remove_if
+argument_list|(
+name|vector_
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|vector_
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|TestAndEraseFromSet
+operator|<
+name|UnaryPredicate
+operator|>
+operator|(
+name|P
+operator|,
+name|set_
+operator|)
+argument_list|)
+block|;
+if|if
+condition|(
+name|I
+operator|==
+name|vector_
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+name|vector_
+operator|.
+name|erase
+argument_list|(
+name|I
+argument_list|,
+name|vector_
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Count the number of elements of a given key in the SetVector.
+end_comment
+
+begin_comment
+comment|/// \returns 0 if the element is not in the SetVector, 1 if it is.
+end_comment
+
+begin_decl_stmt
 name|size_type
 name|count
 argument_list|(
@@ -516,7 +609,13 @@ name|key
 argument_list|)
 return|;
 block|}
-comment|/// @brief Completely clear the SetVector
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Completely clear the SetVector
+end_comment
+
+begin_function
 name|void
 name|clear
 parameter_list|()
@@ -532,7 +631,13 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// @brief Remove the last element of the SetVector.
+end_function
+
+begin_comment
+comment|/// \brief Remove the last element of the SetVector.
+end_comment
+
+begin_function
 name|void
 name|pop_back
 parameter_list|()
@@ -560,6 +665,9 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|T
 name|pop_back_val
 parameter_list|()
@@ -577,6 +685,9 @@ return|return
 name|Ret
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -596,6 +707,9 @@ operator|.
 name|vector_
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -615,25 +729,134 @@ operator|.
 name|vector_
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
+comment|/// \brief A wrapper predicate designed for use with std::remove_if.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This predicate wraps a predicate suitable for use with std::remove_if to
+end_comment
+
+begin_comment
+comment|/// call set_.erase(x) on each element which is slated for removal.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|UnaryPredicate
+operator|>
+name|class
+name|TestAndEraseFromSet
+block|{
+name|UnaryPredicate
+name|P
+block|;
 name|set_type
+operator|&
 name|set_
-decl_stmt|;
-comment|///< The set.
-name|vector_type
-name|vector_
-decl_stmt|;
-comment|///< The vector.
+block|;
+name|public
+operator|:
+typedef|typedef
+name|typename
+name|UnaryPredicate
+operator|::
+name|argument_type
+name|argument_type
+expr_stmt|;
+name|TestAndEraseFromSet
+argument_list|(
+argument|UnaryPredicate P
+argument_list|,
+argument|set_type&set_
+argument_list|)
+operator|:
+name|P
+argument_list|(
+name|P
+argument_list|)
+operator|,
+name|set_
+argument_list|(
+argument|set_
+argument_list|)
+block|{}
+name|bool
+name|operator
+argument_list|()
+operator|(
+name|argument_type
+name|Arg
+operator|)
+block|{
+if|if
+condition|(
+name|P
+argument_list|(
+name|Arg
+argument_list|)
+condition|)
+block|{
+name|set_
+operator|.
+name|erase
+argument_list|(
+name|Arg
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
 block|}
-end_decl_stmt
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
 
 begin_empty_stmt
+unit|}   }
 empty_stmt|;
 end_empty_stmt
 
+begin_decl_stmt
+name|set_type
+name|set_
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/// SmallSetVector - A SetVector that performs no allocations if smaller than
+comment|///< The set.
+end_comment
+
+begin_decl_stmt
+name|vector_type
+name|vector_
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|///< The vector.
+end_comment
+
+begin_comment
+unit|};
+comment|/// \brief A SetVector that performs no allocations if smaller than
 end_comment
 
 begin_comment
@@ -677,7 +900,7 @@ operator|:
 name|SmallSetVector
 argument_list|()
 block|{}
-comment|/// @brief Initialize a SmallSetVector with a range of elements
+comment|/// \brief Initialize a SmallSetVector with a range of elements
 name|template
 operator|<
 name|typename

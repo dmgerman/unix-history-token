@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IntrinsicInst.h"
 end_include
 
@@ -76,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IRBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/InstVisitor.h"
 end_include
 
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/TargetFolder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/SimplifyLibCalls.h"
 end_include
 
 begin_decl_stmt
@@ -99,7 +105,7 @@ name|class
 name|CallSite
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -310,7 +316,7 @@ name|Instruction
 modifier|*
 decl|>
 block|{
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -320,6 +326,10 @@ name|TLI
 decl_stmt|;
 name|bool
 name|MadeIRChange
+decl_stmt|;
+name|LibCallSimplifier
+modifier|*
+name|Simplifier
 decl_stmt|;
 name|public
 label|:
@@ -408,9 +418,9 @@ name|AU
 argument_list|)
 decl|const
 decl_stmt|;
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
@@ -1194,7 +1204,7 @@ parameter_list|)
 function_decl|;
 name|Instruction
 modifier|*
-name|visitMalloc
+name|visitAllocSite
 parameter_list|(
 name|Instruction
 modifier|&
@@ -1412,7 +1422,7 @@ modifier|*
 name|CI
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 parameter_list|)
@@ -2175,6 +2185,24 @@ name|Ty
 parameter_list|,
 name|bool
 name|isSigned
+parameter_list|)
+function_decl|;
+comment|/// Descale - Return a value X such that Val = X * Scale, or null if none.  If
+comment|/// the multiplication is known not to overflow then NoSignedWrap is set.
+name|Value
+modifier|*
+name|Descale
+parameter_list|(
+name|Value
+modifier|*
+name|Val
+parameter_list|,
+name|APInt
+name|Scale
+parameter_list|,
+name|bool
+modifier|&
+name|NoSignedWrap
 parameter_list|)
 function_decl|;
 block|}

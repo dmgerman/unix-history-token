@@ -130,19 +130,6 @@ modifier|*
 name|C
 parameter_list|)
 function_decl|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Job
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 comment|/// Command - An executable path/name and argument vector to
@@ -266,17 +253,6 @@ name|getKind
 argument_list|()
 operator|==
 name|CommandClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Command *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -441,19 +417,6 @@ name|getKind
 argument_list|()
 operator|==
 name|JobListClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|JobList
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 block|}

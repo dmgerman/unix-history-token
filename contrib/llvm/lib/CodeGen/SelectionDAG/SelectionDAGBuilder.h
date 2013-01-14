@@ -238,7 +238,7 @@ name|class
 name|SwitchInst
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -566,6 +566,9 @@ decl_stmt|;
 name|unsigned
 name|Bits
 decl_stmt|;
+name|uint32_t
+name|ExtraWeight
+decl_stmt|;
 name|CaseBits
 argument_list|(
 argument|uint64_t mask
@@ -573,6 +576,8 @@ argument_list|,
 argument|MachineBasicBlock* bb
 argument_list|,
 argument|unsigned bits
+argument_list|,
+argument|uint32_t Weight
 argument_list|)
 block|:
 name|Mask
@@ -587,7 +592,12 @@ argument_list|)
 operator|,
 name|Bits
 argument_list|(
-argument|bits
+name|bits
+argument_list|)
+operator|,
+name|ExtraWeight
+argument_list|(
+argument|Weight
 argument_list|)
 block|{ }
 block|}
@@ -696,98 +706,6 @@ name|CaseRec
 operator|>
 name|CaseRecVector
 expr_stmt|;
-comment|/// The comparison function for sorting the switch case values in the vector.
-comment|/// WARNING: Case ranges should be disjoint!
-struct|struct
-name|CaseCmp
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|Case
-operator|&
-name|C1
-operator|,
-specifier|const
-name|Case
-operator|&
-name|C2
-operator|)
-block|{
-name|assert
-argument_list|(
-name|isa
-operator|<
-name|ConstantInt
-operator|>
-operator|(
-name|C1
-operator|.
-name|Low
-operator|)
-operator|&&
-name|isa
-operator|<
-name|ConstantInt
-operator|>
-operator|(
-name|C2
-operator|.
-name|High
-operator|)
-argument_list|)
-block|;
-specifier|const
-name|ConstantInt
-operator|*
-name|CI1
-operator|=
-name|cast
-operator|<
-specifier|const
-name|ConstantInt
-operator|>
-operator|(
-name|C1
-operator|.
-name|Low
-operator|)
-block|;
-specifier|const
-name|ConstantInt
-operator|*
-name|CI2
-operator|=
-name|cast
-operator|<
-specifier|const
-name|ConstantInt
-operator|>
-operator|(
-name|C2
-operator|.
-name|High
-operator|)
-block|;
-return|return
-name|CI1
-operator|->
-name|getValue
-argument_list|()
-operator|.
-name|slt
-argument_list|(
-name|CI2
-operator|->
-name|getValue
-argument_list|()
-argument_list|)
-return|;
-block|}
-block|}
-struct|;
 struct|struct
 name|CaseBitsCmp
 block|{
@@ -1084,6 +1002,8 @@ argument_list|,
 argument|MachineBasicBlock* T
 argument_list|,
 argument|MachineBasicBlock* Tr
+argument_list|,
+argument|uint32_t Weight
 argument_list|)
 block|:
 name|Mask
@@ -1098,7 +1018,12 @@ argument_list|)
 operator|,
 name|TargetBB
 argument_list|(
-argument|Tr
+name|Tr
+argument_list|)
+operator|,
+name|ExtraWeight
+argument_list|(
+argument|Weight
 argument_list|)
 block|{ }
 name|uint64_t
@@ -1111,6 +1036,9 @@ decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|TargetBB
+decl_stmt|;
+name|uint32_t
+name|ExtraWeight
 decl_stmt|;
 block|}
 struct|;
@@ -1245,7 +1173,7 @@ modifier|&
 name|DAG
 decl_stmt|;
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -1391,12 +1319,7 @@ argument_list|)
 operator|,
 name|HasTailCall
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Context
-argument_list|(
-argument|dag.getContext()
+argument|false
 argument_list|)
 block|{   }
 name|void
@@ -1427,7 +1350,7 @@ name|clear
 parameter_list|()
 function_decl|;
 comment|/// clearDanglingDebugInfo - Clear the dangling debug information
-comment|/// map. This function is seperated from the clear so that debug
+comment|/// map. This function is separated from the clear so that debug
 comment|/// information that is dangling in a basic block can be properly
 comment|/// resolved in a different basic block. This allows the
 comment|/// SelectionDAG to resolve dangling debug information attached
@@ -1984,6 +1907,9 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|NextMBB
+parameter_list|,
+name|uint32_t
+name|BranchWeightToNext
 parameter_list|,
 name|unsigned
 name|Reg
@@ -2666,6 +2592,18 @@ specifier|const
 name|CallInst
 modifier|&
 name|I
+parameter_list|)
+function_decl|;
+name|bool
+name|visitUnaryFloatCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|unsigned
+name|Opcode
 parameter_list|)
 function_decl|;
 name|void

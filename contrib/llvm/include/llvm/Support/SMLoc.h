@@ -92,19 +92,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|SMLoc
-argument_list|(
-specifier|const
-name|SMLoc
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-argument|RHS.Ptr
-argument_list|)
-block|{}
 name|bool
 name|isValid
 argument_list|()
@@ -208,19 +195,19 @@ argument_list|()
 block|{}
 name|SMRange
 argument_list|(
-argument|SMLoc Start
+argument|SMLoc St
 argument_list|,
-argument|SMLoc End
+argument|SMLoc En
 argument_list|)
 block|:
 name|Start
 argument_list|(
-name|Start
+name|St
 argument_list|)
 operator|,
 name|End
 argument_list|(
-argument|End
+argument|En
 argument_list|)
 block|{
 name|assert

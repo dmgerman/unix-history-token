@@ -479,7 +479,6 @@ return|;
 block|}
 comment|/// Determine if \p this is greater than or equal to \p that.
 comment|/// @returns True iff *this>= that.
-comment|/// @brief True if this>= that.
 name|int
 name|operator
 operator|>=
@@ -537,8 +536,7 @@ literal|0
 return|;
 block|}
 comment|/// Determines if two TimeValue objects represent the same moment in time.
-comment|/// @brief True iff *this == that.
-comment|/// @brief True if this == that.
+comment|/// @returns True iff *this == that.
 name|int
 name|operator
 operator|==
@@ -574,8 +572,7 @@ return|;
 block|}
 comment|/// Determines if two TimeValue objects represent times that are not the
 comment|/// same.
-comment|/// @return True iff *this != that.
-comment|/// @brief True if this != that.
+comment|/// @returns True iff *this != that.
 name|int
 name|operator
 operator|!=

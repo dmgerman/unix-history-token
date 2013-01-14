@@ -63,6 +63,12 @@ directive|define
 name|LLVM_CLANG_UNINIT_VALS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -82,6 +88,177 @@ decl_stmt|;
 name|class
 name|VarDecl
 decl_stmt|;
+comment|/// A use of a variable, which might be uninitialized.
+name|class
+name|UninitUse
+block|{
+name|public
+label|:
+struct|struct
+name|Branch
+block|{
+specifier|const
+name|Stmt
+modifier|*
+name|Terminator
+decl_stmt|;
+name|unsigned
+name|Output
+decl_stmt|;
+block|}
+struct|;
+name|private
+label|:
+comment|/// The expression which uses this variable.
+specifier|const
+name|Expr
+modifier|*
+name|User
+decl_stmt|;
+comment|/// Does this use always see an uninitialized value?
+name|bool
+name|AlwaysUninit
+decl_stmt|;
+comment|/// This use is always uninitialized if it occurs after any of these branches
+comment|/// is taken.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Branch
+operator|,
+literal|2
+operator|>
+name|UninitBranches
+expr_stmt|;
+name|public
+label|:
+name|UninitUse
+argument_list|(
+argument|const Expr *User
+argument_list|,
+argument|bool AlwaysUninit
+argument_list|)
+block|:
+name|User
+argument_list|(
+name|User
+argument_list|)
+operator|,
+name|AlwaysUninit
+argument_list|(
+argument|AlwaysUninit
+argument_list|)
+block|{}
+name|void
+name|addUninitBranch
+argument_list|(
+argument|Branch B
+argument_list|)
+block|{
+name|UninitBranches
+operator|.
+name|push_back
+argument_list|(
+name|B
+argument_list|)
+block|;   }
+comment|/// Get the expression containing the uninitialized use.
+specifier|const
+name|Expr
+operator|*
+name|getUser
+argument_list|()
+specifier|const
+block|{
+return|return
+name|User
+return|;
+block|}
+comment|/// The kind of uninitialized use.
+enum|enum
+name|Kind
+block|{
+comment|/// The use might be uninitialized.
+name|Maybe
+block|,
+comment|/// The use is uninitialized whenever a certain branch is taken.
+name|Sometimes
+block|,
+comment|/// The use is always uninitialized.
+name|Always
+block|}
+enum|;
+comment|/// Get the kind of uninitialized use.
+name|Kind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AlwaysUninit
+operator|?
+name|Always
+operator|:
+operator|!
+name|branch_empty
+argument_list|()
+operator|?
+name|Sometimes
+operator|:
+name|Maybe
+return|;
+block|}
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|Branch
+operator|>
+operator|::
+name|const_iterator
+name|branch_iterator
+expr_stmt|;
+comment|/// Branches which inevitably result in the variable being used uninitialized.
+name|branch_iterator
+name|branch_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UninitBranches
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|branch_iterator
+name|branch_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UninitBranches
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|bool
+name|branch_empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UninitBranches
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
 name|class
 name|UninitVariablesHandler
 block|{
@@ -101,17 +278,14 @@ name|void
 name|handleUseOfUninitVariable
 parameter_list|(
 specifier|const
-name|Expr
-modifier|*
-name|ex
-parameter_list|,
-specifier|const
 name|VarDecl
 modifier|*
 name|vd
 parameter_list|,
-name|bool
-name|isAlwaysUninit
+specifier|const
+name|UninitUse
+modifier|&
+name|use
 parameter_list|)
 block|{}
 comment|/// Called when the uninitialized variable analysis detects the

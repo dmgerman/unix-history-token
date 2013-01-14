@@ -464,11 +464,12 @@ init|=
 literal|17
 block|,
 comment|// CE_CMP:        [opty, opval, opval, pred]
-name|CST_CODE_INLINEASM
+name|CST_CODE_INLINEASM_OLD
 init|=
 literal|18
 block|,
-comment|// INLINEASM:     [sideeffect,asmstr,conststr]
+comment|// INLINEASM:     [sideeffect|alignstack,
+comment|//                 asmstr,conststr]
 name|CST_CODE_CE_SHUFVEC_EX
 init|=
 literal|19
@@ -487,7 +488,13 @@ comment|// CST_CODE_BLOCKADDRESS [fnty, fnval, bb#]
 name|CST_CODE_DATA
 init|=
 literal|22
+block|,
 comment|// DATA:          [n x elements]
+name|CST_CODE_INLINEASM
+init|=
+literal|23
+comment|// INLINEASM:     [sideeffect|alignstack|
+comment|//                 asmdialect,asmstr,conststr]
 block|}
 enum|;
 comment|/// CastOpcodes - These are values used in the bitcode files to encode which

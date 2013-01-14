@@ -235,32 +235,32 @@ label|:
 name|unsigned
 name|NeededSafePoints
 decl_stmt|;
-comment|//< Bitmask of required safe points.
+comment|///< Bitmask of required safe points.
 name|bool
 name|CustomReadBarriers
 decl_stmt|;
-comment|//< Default is to insert loads.
+comment|///< Default is to insert loads.
 name|bool
 name|CustomWriteBarriers
 decl_stmt|;
-comment|//< Default is to insert stores.
+comment|///< Default is to insert stores.
 name|bool
 name|CustomRoots
 decl_stmt|;
-comment|//< Default is to pass through to backend.
+comment|///< Default is to pass through to backend.
 name|bool
 name|CustomSafePoints
 decl_stmt|;
-comment|//< Default is to use NeededSafePoints
-comment|//  to find safe points.
+comment|///< Default is to use NeededSafePoints
+comment|///< to find safe points.
 name|bool
 name|InitRoots
 decl_stmt|;
-comment|//< If set, roots are nulled during lowering.
+comment|///< If set, roots are nulled during lowering.
 name|bool
 name|UsesMetadata
 decl_stmt|;
-comment|//< If set, backend must emit metadata tables.
+comment|///< If set, backend must emit metadata tables.
 name|public
 label|:
 name|GCStrategy

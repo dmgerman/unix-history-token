@@ -178,6 +178,13 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|useFPForScavengingIndex
 argument_list|(
 argument|const MachineFunction&MF

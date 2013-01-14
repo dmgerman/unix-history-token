@@ -477,6 +477,58 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Specialize po_iterator_storage to record postorder numbers.
+name|template
+operator|<
+operator|>
+name|class
+name|po_iterator_storage
+operator|<
+name|LoopBlocksTraversal
+operator|,
+name|true
+operator|>
+block|{
+name|LoopBlocksTraversal
+operator|&
+name|LBT
+block|;
+name|public
+operator|:
+name|po_iterator_storage
+argument_list|(
+name|LoopBlocksTraversal
+operator|&
+name|lbs
+argument_list|)
+operator|:
+name|LBT
+argument_list|(
+argument|lbs
+argument_list|)
+block|{}
+comment|// These functions are defined below.
+name|bool
+name|insertEdge
+argument_list|(
+name|BasicBlock
+operator|*
+name|From
+argument_list|,
+name|BasicBlock
+operator|*
+name|To
+argument_list|)
+block|;
+name|void
+name|finishPostorder
+argument_list|(
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+block|; }
+expr_stmt|;
 comment|/// Traverse the blocks in a loop using a depth-first search.
 name|class
 name|LoopBlocksTraversal
@@ -696,83 +748,45 @@ name|size
 argument_list|()
 expr_stmt|;
 block|}
-comment|//===----------------------------------------------------------------------
-comment|// Implement part of the std::set interface for the purpose of driving the
-comment|// generic po_iterator.
-comment|/// Return true if the block is outside the loop or has already been visited.
-comment|/// Sorry if this is counterintuitive.
-name|bool
-name|count
-argument_list|(
-name|BasicBlock
-operator|*
-name|BB
-argument_list|)
-decl|const
-block|{
-return|return
-operator|!
-name|DFS
-operator|.
-name|L
-operator|->
-name|contains
-argument_list|(
-name|LI
-operator|->
-name|getLoopFor
-argument_list|(
-name|BB
-argument_list|)
-argument_list|)
-operator|||
-name|DFS
-operator|.
-name|PostNumbers
-operator|.
-name|count
-argument_list|(
-name|BB
-argument_list|)
-return|;
-block|}
-comment|/// If this block is contained in the loop and has not been visited, return
-comment|/// true and assign a preorder number. This is a proxy for visitPreorder
-comment|/// called by POIterator.
-name|bool
-name|insert
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|)
-block|{
-return|return
-name|visitPreorder
-argument_list|(
-name|BB
-argument_list|)
-return|;
-block|}
 block|}
 empty_stmt|;
-comment|/// Specialize DFSetTraits to record postorder numbers.
-name|template
-operator|<
-operator|>
-expr|struct
-name|DFSetTraits
+specifier|inline
+name|bool
+name|po_iterator_storage
 operator|<
 name|LoopBlocksTraversal
+operator|,
+name|true
 operator|>
+operator|::
+name|insertEdge
+argument_list|(
+argument|BasicBlock *From
+argument_list|,
+argument|BasicBlock *To
+argument_list|)
 block|{
-specifier|static
+return|return
+name|LBT
+operator|.
+name|visitPreorder
+argument_list|(
+name|To
+argument_list|)
+return|;
+block|}
+specifier|inline
 name|void
+name|po_iterator_storage
+operator|<
+name|LoopBlocksTraversal
+operator|,
+name|true
+operator|>
+operator|::
 name|finishPostorder
 argument_list|(
 argument|BasicBlock *BB
-argument_list|,
-argument|LoopBlocksTraversal& LBT
 argument_list|)
 block|{
 name|LBT
@@ -781,9 +795,7 @@ name|finishPostorder
 argument_list|(
 name|BB
 argument_list|)
-block|;   }
-block|}
-expr_stmt|;
+block|; }
 block|}
 end_decl_stmt
 

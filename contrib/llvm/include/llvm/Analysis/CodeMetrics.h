@@ -69,6 +69,12 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CallSite.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -83,7 +89,7 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|Value
@@ -98,7 +104,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -107,16 +113,15 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Check whether a call will lower to something small.
 comment|///
-comment|/// This tests checks whether calls to this function will lower to something
+comment|/// This tests checks whether this callsite will lower to something
 comment|/// significantly cheaper than a traditional call, often a single
-comment|/// instruction.
+comment|/// instruction. Note that if isInstructionFree(CS.getInstruction()) would
+comment|/// return true, so will this function.
 name|bool
 name|callIsSmall
 parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
+name|ImmutableCallSite
+name|CS
 parameter_list|)
 function_decl|;
 comment|/// \brief Utility to calculate the size and a few similar metrics for a set
@@ -244,7 +249,7 @@ operator|*
 name|BB
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -260,7 +265,7 @@ modifier|*
 name|F
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=

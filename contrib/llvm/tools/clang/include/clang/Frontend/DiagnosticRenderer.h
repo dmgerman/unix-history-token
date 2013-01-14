@@ -136,20 +136,16 @@ block|{
 name|protected
 label|:
 specifier|const
-name|SourceManager
-modifier|&
-name|SM
-decl_stmt|;
-specifier|const
 name|LangOptions
 modifier|&
 name|LangOpts
 decl_stmt|;
-specifier|const
+name|IntrusiveRefCntPtr
+operator|<
 name|DiagnosticOptions
-modifier|&
+operator|>
 name|DiagOpts
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief The location of the previous diagnostic if known.
 comment|///
 comment|/// This will be invalid in cases where there is no (known) previous
@@ -177,18 +173,12 @@ expr_stmt|;
 name|DiagnosticRenderer
 argument_list|(
 specifier|const
-name|SourceManager
-operator|&
-name|SM
-argument_list|,
-specifier|const
 name|LangOptions
 operator|&
 name|LangOpts
 argument_list|,
-specifier|const
 name|DiagnosticOptions
-operator|&
+operator|*
 name|DiagOpts
 argument_list|)
 expr_stmt|;
@@ -221,6 +211,11 @@ name|CharSourceRange
 operator|>
 name|Ranges
 argument_list|,
+specifier|const
+name|SourceManager
+operator|*
+name|SM
+argument_list|,
 name|DiagOrStoredDiag
 name|Info
 argument_list|)
@@ -247,6 +242,11 @@ operator|<
 name|CharSourceRange
 operator|>
 name|Ranges
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
 argument_list|)
 init|=
 literal|0
@@ -285,6 +285,11 @@ operator|<
 name|FixItHint
 operator|>
 name|Hints
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
 argument_list|)
 init|=
 literal|0
@@ -298,6 +303,11 @@ name|Loc
 parameter_list|,
 name|PresumedLoc
 name|PLoc
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
 parameter_list|)
 init|=
 literal|0
@@ -340,6 +350,11 @@ name|DiagnosticsEngine
 operator|::
 name|Level
 name|Level
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
 argument_list|)
 decl_stmt|;
 name|void
@@ -347,6 +362,11 @@ name|emitIncludeStackRecursively
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
 parameter_list|)
 function_decl|;
 name|void
@@ -373,6 +393,11 @@ name|FixItHint
 operator|>
 name|Hints
 argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
+argument_list|,
 name|unsigned
 operator|&
 name|MacroDepth
@@ -397,6 +422,8 @@ comment|/// \param Level The level of the diagnostic to be emitted.
 comment|/// \param Message The diagnostic message to emit.
 comment|/// \param Ranges The underlined ranges for this code snippet.
 comment|/// \param FixItHints The FixIt hints active for this diagnostic.
+comment|/// \param SM The SourceManager; will be null if the diagnostic came from the
+comment|///        frontend, thus \p Loc will be invalid.
 name|void
 name|emitDiagnostic
 argument_list|(
@@ -422,6 +449,11 @@ operator|<
 name|FixItHint
 operator|>
 name|FixItHints
+argument_list|,
+specifier|const
+name|SourceManager
+operator|*
+name|SM
 argument_list|,
 name|DiagOrStoredDiag
 name|D
@@ -456,25 +488,17 @@ operator|:
 name|DiagnosticNoteRenderer
 argument_list|(
 specifier|const
-name|SourceManager
-operator|&
-name|SM
-argument_list|,
-specifier|const
 name|LangOptions
 operator|&
 name|LangOpts
 argument_list|,
-specifier|const
 name|DiagnosticOptions
-operator|&
+operator|*
 name|DiagOpts
 argument_list|)
 operator|:
 name|DiagnosticRenderer
 argument_list|(
-argument|SM
-argument_list|,
 argument|LangOpts
 argument_list|,
 argument|DiagOpts
@@ -499,6 +523,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|PresumedLoc PLoc
+argument_list|,
+argument|const SourceManager&SM
 argument_list|)
 block|;
 name|virtual
@@ -508,6 +534,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|StringRef Message
+argument_list|,
+argument|const SourceManager *SM
 argument_list|)
 operator|=
 literal|0

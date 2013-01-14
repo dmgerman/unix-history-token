@@ -31,6 +31,30 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \file
+end_comment
+
+begin_comment
+comment|/// \brief Enumerates target-specific builtins in their own namespaces within
+end_comment
+
+begin_comment
+comment|/// namespace ::clang.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -59,7 +83,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// ARM builtins
+comment|/// \brief ARM builtins
 name|namespace
 name|ARM
 block|{
@@ -93,7 +117,7 @@ name|LastTSBuiltin
 block|}
 enum|;
 block|}
-comment|/// PPC builtins
+comment|/// \brief PPC builtins
 name|namespace
 name|PPC
 block|{
@@ -127,9 +151,9 @@ name|LastTSBuiltin
 block|}
 enum|;
 block|}
-comment|/// PTX builtins
+comment|/// \brief NVPTX builtins
 name|namespace
-name|PTX
+name|NVPTX
 block|{
 enum|enum
 block|{
@@ -156,12 +180,12 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"clang/Basic/BuiltinsPTX.def"
+file|"clang/Basic/BuiltinsNVPTX.def"
 name|LastTSBuiltin
 block|}
 enum|;
 block|}
-comment|/// X86 builtins
+comment|/// \brief X86 builtins
 name|namespace
 name|X86
 block|{
@@ -195,9 +219,9 @@ name|LastTSBuiltin
 block|}
 enum|;
 block|}
-comment|/// NeonTypeFlags - Flags to identify the types for overloaded Neon
-comment|/// builtins.  These must be kept in sync with the flags in
-comment|/// utils/TableGen/NeonEmitter.h.
+comment|/// \brief Flags to identify the types for overloaded Neon builtins.
+comment|///
+comment|/// These must be kept in sync with the flags in utils/TableGen/NeonEmitter.h.
 name|class
 name|NeonTypeFlags
 block|{
@@ -351,7 +375,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// Hexagon builtins
+comment|/// \brief Hexagon builtins
 name|namespace
 name|Hexagon
 block|{
@@ -381,6 +405,40 @@ value|BI##ID,
 include|#
 directive|include
 file|"clang/Basic/BuiltinsHexagon.def"
+name|LastTSBuiltin
+block|}
+enum|;
+block|}
+comment|/// \brief MIPS builtins
+name|namespace
+name|Mips
+block|{
+enum|enum
+block|{
+name|LastTIBuiltin
+init|=
+name|clang
+operator|::
+name|Builtin
+operator|::
+name|FirstTSBuiltin
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|BUILTIN
+parameter_list|(
+name|ID
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|ATTRS
+parameter_list|)
+value|BI##ID,
+include|#
+directive|include
+file|"clang/Basic/BuiltinsMips.def"
 name|LastTSBuiltin
 block|}
 enum|;

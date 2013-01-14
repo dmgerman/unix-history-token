@@ -111,16 +111,14 @@ specifier|const
 name|Constant
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|Constant
 argument_list|(
-specifier|const
-name|Constant
-operator|&
+argument|const Constant&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|virtual
 name|void
 name|anchor
@@ -181,6 +179,12 @@ comment|/// canTrap - Return true if evaluation of this constant could trap.  Th
 comment|/// true for things like constant expressions that could divide by zero.
 name|bool
 name|canTrap
+argument_list|()
+specifier|const
+block|;
+comment|/// isThreadDependent - Return true if the value can vary between threads.
+name|bool
+name|isThreadDependent
 argument_list|()
 specifier|const
 block|;
@@ -268,30 +272,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const Constant *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const GlobalValue *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Value *V
 argument_list|)
 block|{
@@ -362,8 +342,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// @returns the value for an integer constant of the given type that has all
-comment|/// its bits set to true.
+comment|/// @returns the value for an integer or vector of integer constant of the
+comment|/// given type that has all its bits set to true.
 comment|/// @brief Get the all ones value
 specifier|static
 name|Constant

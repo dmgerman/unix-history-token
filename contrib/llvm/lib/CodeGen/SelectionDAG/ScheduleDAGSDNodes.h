@@ -269,6 +269,19 @@ if|if
 condition|(
 name|isa
 operator|<
+name|TargetIndexSDNode
+operator|>
+operator|(
+name|Node
+operator|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|isa
+operator|<
 name|JumpTableSDNode
 operator|>
 operator|(
@@ -469,39 +482,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// computeOperandLatency - Override dependence edge latency using
-end_comment
-
-begin_comment
-comment|/// operand use/def information
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|void
-name|computeOperandLatency
-argument_list|(
-name|SUnit
-operator|*
-name|Def
-argument_list|,
-name|SUnit
-operator|*
-name|Use
-argument_list|,
-name|SDep
-operator|&
-name|dep
-argument_list|)
-decl|const
-block|{ }
-end_decl_stmt
-
 begin_decl_stmt
 name|virtual
 name|void
@@ -579,6 +559,7 @@ comment|///
 end_comment
 
 begin_decl_stmt
+name|virtual
 name|MachineBasicBlock
 modifier|*
 name|EmitSchedule
@@ -771,6 +752,36 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|/// ForceUnitLatencies - Return true if all scheduling edges should be given
+end_comment
+
+begin_comment
+comment|/// a latency value of one.  The default is to return false; schedulers may
+end_comment
+
+begin_comment
+comment|/// override this as needed.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|bool
+name|forceUnitLatencies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
 
 begin_label
 name|private

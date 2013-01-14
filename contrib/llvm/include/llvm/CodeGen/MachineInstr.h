@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DebugLoc.h"
 end_include
 
@@ -269,12 +275,10 @@ decl_stmt|;
 comment|// Source line information.
 name|MachineInstr
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
+argument|const MachineInstr&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -283,8 +287,8 @@ specifier|const
 name|MachineInstr
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 comment|// Intrusive list support
 name|friend
 block|struct
@@ -330,62 +334,18 @@ comment|/// MCID NULL and no operands.
 name|MachineInstr
 argument_list|()
 expr_stmt|;
-comment|// The next two constructors have DebugLoc and non-DebugLoc versions;
-comment|// over time, the non-DebugLoc versions should be phased out and eventually
-comment|// removed.
-comment|/// MachineInstr ctor - This constructor creates a MachineInstr and adds the
-comment|/// implicit operands.  It reserves space for the number of operands specified
-comment|/// by the MCInstrDesc.  The version with a DebugLoc should be preferred.
-name|explicit
-name|MachineInstr
-parameter_list|(
-specifier|const
-name|MCInstrDesc
-modifier|&
-name|MCID
-parameter_list|,
-name|bool
-name|NoImp
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
-comment|/// the MachineInstr is created and added to the end of the specified basic
-comment|/// block.  The version with a DebugLoc should be preferred.
-name|MachineInstr
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-specifier|const
-name|MCInstrDesc
-operator|&
-name|MCID
-argument_list|)
-expr_stmt|;
 comment|/// MachineInstr ctor - This constructor create a MachineInstr and add the
 comment|/// implicit operands.  It reserves space for number of operands specified by
 comment|/// MCInstrDesc.  An explicit DebugLoc is supplied.
-name|explicit
 name|MachineInstr
-parameter_list|(
-specifier|const
-name|MCInstrDesc
-modifier|&
-name|MCID
-parameter_list|,
-specifier|const
-name|DebugLoc
-name|dl
-parameter_list|,
-name|bool
-name|NoImp
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const MCInstrDesc&MCID
+argument_list|,
+argument|const DebugLoc dl
+argument_list|,
+argument|bool NoImp = false
+argument_list|)
+empty_stmt|;
 comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
 comment|/// the MachineInstr is created and added to the end of the specified basic
 comment|/// block.
@@ -1338,6 +1298,29 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// isSelect - Return true if this instruction is a select instruction.
+comment|///
+name|bool
+name|isSelect
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Select
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|/// isNotDuplicable - Return true if this instruction cannot be safely
 comment|/// duplicated.  For example, if the instruction has a unique labels attached
 comment|/// to it, duplicating it would cause multiple definition errors.
@@ -1430,6 +1413,37 @@ name|AnyInBundle
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|isInlineAsm
+argument_list|()
+condition|)
+block|{
+name|unsigned
+name|ExtraInfo
+init|=
+name|getOperand
+argument_list|(
+name|InlineAsm
+operator|::
+name|MIOp_ExtraInfo
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|ExtraInfo
+operator|&
+name|InlineAsm
+operator|::
+name|Extra_MayLoad
+condition|)
+return|return
+name|true
+return|;
+block|}
 return|return
 name|hasProperty
 argument_list|(
@@ -1455,6 +1469,37 @@ name|AnyInBundle
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|isInlineAsm
+argument_list|()
+condition|)
+block|{
+name|unsigned
+name|ExtraInfo
+init|=
+name|getOperand
+argument_list|(
+name|InlineAsm
+operator|::
+name|MIOp_ExtraInfo
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|ExtraInfo
+operator|&
+name|InlineAsm
+operator|::
+name|Extra_MayStore
+condition|)
+return|return
+name|true
+return|;
+block|}
 return|return
 name|hasProperty
 argument_list|(
@@ -1892,6 +1937,13 @@ name|isStackAligningInlineAsm
 argument_list|()
 specifier|const
 expr_stmt|;
+name|InlineAsm
+operator|::
+name|AsmDialect
+name|getInlineAsmDialect
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|isInsertSubreg
 argument_list|()
@@ -2047,6 +2099,87 @@ operator|.
 name|getSubReg
 argument_list|()
 return|;
+block|}
+comment|/// isTransient - Return true if this is a transient instruction that is
+comment|/// either very likely to be eliminated during register allocation (such as
+comment|/// copy-like instructions), or if this instruction doesn't have an
+comment|/// execution-time cost.
+name|bool
+name|isTransient
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+comment|// Copy-like instructions are usually eliminated during register allocation.
+case|case
+name|TargetOpcode
+operator|::
+name|PHI
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|COPY
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|INSERT_SUBREG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|SUBREG_TO_REG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|REG_SEQUENCE
+case|:
+comment|// Pseudo-instructions that don't produce any real output.
+case|case
+name|TargetOpcode
+operator|::
+name|IMPLICIT_DEF
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|KILL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|PROLOG_LABEL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|EH_LABEL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|GC_LABEL
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|DBG_VALUE
+case|:
+return|return
+name|true
+return|;
+block|}
 block|}
 comment|/// getBundleSize - Return the number of instructions inside the MI bundle.
 name|unsigned
@@ -2479,6 +2612,33 @@ name|TRI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// tieOperands - Add a tie between the register operands at DefIdx and
+comment|/// UseIdx. The tie will cause the register allocator to ensure that the two
+comment|/// operands are assigned the same physical register.
+comment|///
+comment|/// Tied operands are managed automatically for explicit operands in the
+comment|/// MCInstrDesc. This method is for exceptional cases like inline asm.
+name|void
+name|tieOperands
+parameter_list|(
+name|unsigned
+name|DefIdx
+parameter_list|,
+name|unsigned
+name|UseIdx
+parameter_list|)
+function_decl|;
+comment|/// findTiedOperandIdx - Given the index of a tied register operand, find the
+comment|/// operand it is tied to. Defs are tied to uses and vice versa. Returns the
+comment|/// index of the tied operand which must exist.
+name|unsigned
+name|findTiedOperandIdx
+argument_list|(
+name|unsigned
+name|OpIdx
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isRegTiedToUseOperand - Given the index of a register def operand,
 comment|/// check if the register def is tied to a source operand, due to either
 comment|/// two-address elimination or inline assembly constraints. Returns the
@@ -2496,7 +2656,56 @@ operator|=
 literal|0
 argument_list|)
 decl|const
+block|{
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+init|=
+name|getOperand
+argument_list|(
+name|DefOpIdx
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|MO
+operator|.
+name|isReg
+argument_list|()
+operator|||
+operator|!
+name|MO
+operator|.
+name|isDef
+argument_list|()
+operator|||
+operator|!
+name|MO
+operator|.
+name|isTied
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|UseOpIdx
+condition|)
+operator|*
+name|UseOpIdx
+operator|=
+name|findTiedOperandIdx
+argument_list|(
+name|DefOpIdx
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
 comment|/// isRegTiedToDefOperand - Return true if the use operand of the specified
 comment|/// index is tied to an def operand. It also returns the def operand index by
 comment|/// reference if DefOpIdx is not null.
@@ -2513,7 +2722,56 @@ operator|=
 literal|0
 argument_list|)
 decl|const
+block|{
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+init|=
+name|getOperand
+argument_list|(
+name|UseOpIdx
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|MO
+operator|.
+name|isReg
+argument_list|()
+operator|||
+operator|!
+name|MO
+operator|.
+name|isUse
+argument_list|()
+operator|||
+operator|!
+name|MO
+operator|.
+name|isTied
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|DefOpIdx
+condition|)
+operator|*
+name|DefOpIdx
+operator|=
+name|findTiedOperandIdx
+argument_list|(
+name|UseOpIdx
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
 comment|/// clearKillInfo - Clears kill flags on all operands.
 comment|///
 name|void
@@ -2693,12 +2951,12 @@ name|DstReg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// hasVolatileMemoryRef - Return true if this instruction may have a
-comment|/// volatile memory reference, or if the information describing the
-comment|/// memory reference is not available. Return false if it is known to
-comment|/// have no volatile memory references.
+comment|/// hasOrderedMemoryRef - Return true if this instruction may have an ordered
+comment|/// or volatile memory reference, or if the information describing the memory
+comment|/// reference is not available. Return false if it is known to have no
+comment|/// ordered or volatile memory references.
 name|bool
-name|hasVolatileMemoryRef
+name|hasOrderedMemoryRef
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2885,6 +3143,56 @@ modifier|*
 name|getRegInfo
 parameter_list|()
 function_decl|;
+comment|/// untieRegOperand - Break any tie involving OpIdx.
+name|void
+name|untieRegOperand
+parameter_list|(
+name|unsigned
+name|OpIdx
+parameter_list|)
+block|{
+name|MachineOperand
+modifier|&
+name|MO
+init|=
+name|getOperand
+argument_list|(
+name|OpIdx
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|MO
+operator|.
+name|isReg
+argument_list|()
+operator|&&
+name|MO
+operator|.
+name|isTied
+argument_list|()
+condition|)
+block|{
+name|getOperand
+argument_list|(
+name|findTiedOperandIdx
+argument_list|(
+name|OpIdx
+argument_list|)
+argument_list|)
+operator|.
+name|TiedTo
+operator|=
+literal|0
+expr_stmt|;
+name|MO
+operator|.
+name|TiedTo
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 comment|/// addImplicitDefUseOperands - Add all implicit def and use operands to
 comment|/// this instruction.
 name|void
@@ -2896,7 +3204,10 @@ comment|/// this instruction from their respective use lists.  This requires tha
 comment|/// operands already be on their use lists.
 name|void
 name|RemoveRegOperandsFromUseLists
-parameter_list|()
+parameter_list|(
+name|MachineRegisterInfo
+modifier|&
+parameter_list|)
 function_decl|;
 comment|/// AddRegOperandsToUseLists - Add all of the register operands in
 comment|/// this instruction from their respective use lists.  This requires that the
@@ -2906,7 +3217,6 @@ name|AddRegOperandsToUseLists
 parameter_list|(
 name|MachineRegisterInfo
 modifier|&
-name|RegInfo
 parameter_list|)
 function_decl|;
 comment|/// hasPropertyInBundle - Slow path for hasProperty when we're dealing with a

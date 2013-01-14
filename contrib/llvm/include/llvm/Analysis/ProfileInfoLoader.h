@@ -108,10 +108,6 @@ name|string
 operator|&
 name|Filename
 expr_stmt|;
-name|Module
-modifier|&
-name|M
-decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -162,9 +158,6 @@ name|unsigned
 operator|>
 name|BBTrace
 expr_stmt|;
-name|bool
-name|Warned
-decl_stmt|;
 name|public
 label|:
 comment|// ProfileInfoLoader ctor - Read the specified profiling data file, exiting
@@ -182,10 +175,6 @@ operator|::
 name|string
 operator|&
 name|Filename
-argument_list|,
-name|Module
-operator|&
-name|M
 argument_list|)
 expr_stmt|;
 specifier|static

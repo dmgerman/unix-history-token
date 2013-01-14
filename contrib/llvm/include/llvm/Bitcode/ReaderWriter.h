@@ -229,7 +229,6 @@ function_decl|;
 comment|/// isBitcodeWrapper - Return true if the given bytes are the magic bytes
 comment|/// for an LLVM IR bitcode wrapper.
 comment|///
-specifier|static
 specifier|inline
 name|bool
 name|isBitcodeWrapper
@@ -286,7 +285,6 @@ block|}
 comment|/// isRawBitcode - Return true if the given bytes are the magic bytes for
 comment|/// raw LLVM IR bitcode (without a wrapper).
 comment|///
-specifier|static
 specifier|inline
 name|bool
 name|isRawBitcode
@@ -343,9 +341,8 @@ block|}
 comment|/// isBitcode - Return true if the given bytes are the magic bytes for
 comment|/// LLVM IR bitcode, either with or without a wrapper.
 comment|///
-specifier|static
-name|bool
 specifier|inline
+name|bool
 name|isBitcode
 parameter_list|(
 specifier|const
@@ -393,7 +390,6 @@ comment|/// In this case, skip down to the subsection of the file that is actual
 comment|/// BC file.
 comment|/// If 'VerifyBufferSize' is true, check that the buffer is large enough to
 comment|/// contain the whole bitcode file.
-specifier|static
 specifier|inline
 name|bool
 name|SkipBitcodeWrapperHeader

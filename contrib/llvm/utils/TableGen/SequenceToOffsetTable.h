@@ -111,8 +111,8 @@ comment|/// SequenceToOffsetTable - Collect a number of terminated sequences of 
 comment|/// Compute the layout of a table that contains all the sequences, possibly by
 comment|/// reusing entries.
 comment|///
-comment|/// @param SeqT The sequence container. (vector or string).
-comment|/// @param Less A stable comparator for SeqT elements.
+comment|/// @tparam SeqT The sequence container. (vector or string).
+comment|/// @tparam Less A stable comparator for SeqT elements.
 name|template
 operator|<
 name|typename
@@ -389,6 +389,21 @@ argument_list|)
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Seqs
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// layout - Computes the final table layout.

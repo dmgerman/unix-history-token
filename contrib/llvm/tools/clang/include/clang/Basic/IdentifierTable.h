@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the IdentifierInfo, IdentifierTable, and Selector
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// interfaces.
+comment|/// \brief Defines the clang::IdentifierInfo, clang::IdentifierTable, and
 end_comment
 
 begin_comment
-comment|//
+comment|/// clang::Selector interfaces.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -91,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -156,7 +154,7 @@ name|class
 name|DeclarationName
 decl_stmt|;
 comment|// AST class that stores declaration names
-comment|/// IdentifierLocPair - A simple pair of identifier info and location.
+comment|/// \brief A simple pair of identifier info and location.
 typedef|typedef
 name|std
 operator|::
@@ -169,8 +167,8 @@ name|SourceLocation
 operator|>
 name|IdentifierLocPair
 expr_stmt|;
-comment|/// IdentifierInfo - One of these records is kept for each identifier that
-comment|/// is lexed.  This contains information about whether the token was #define'd,
+comment|/// One of these records is kept for each identifier that
+comment|/// is lexed.  This contains information about whether the token was \#define'd,
 comment|/// is a language keyword, or if it is a front-end token of some sort (e.g. a
 comment|/// variable or function name).  The preprocessor keeps this information in a
 comment|/// set, and all tok::identifier tokens have a pointer to one of these.
@@ -197,6 +195,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// True if there is a #define for this.
+name|bool
+name|HadMacro
+range|:
+literal|1
+decl_stmt|;
+comment|// True if there was a #define for this.
 name|bool
 name|IsExtension
 range|:
@@ -263,7 +267,7 @@ literal|1
 decl_stmt|;
 comment|// True if this is the 'import' contextual
 comment|// keyword.
-comment|// 1 bit left in 32-bit word.
+comment|// 32-bit word is filled.
 name|void
 modifier|*
 name|FETokenInfo
@@ -281,12 +285,10 @@ name|Entry
 expr_stmt|;
 name|IdentifierInfo
 argument_list|(
-specifier|const
-name|IdentifierInfo
-operator|&
+argument|const IdentifierInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// NONCOPYABLE.
 name|void
 name|operator
 init|=
@@ -295,8 +297,8 @@ specifier|const
 name|IdentifierInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// NONASSIGNABLE.
 name|friend
 name|class
 name|IdentifierTable
@@ -306,7 +308,8 @@ label|:
 name|IdentifierInfo
 argument_list|()
 expr_stmt|;
-comment|/// isStr - Return true if this is the identifier for the specified string.
+comment|/// \brief Return true if this is the identifier for the specified string.
+comment|///
 comment|/// This is intended to be used for string literals only: II->isStr("foo").
 name|template
 operator|<
@@ -344,8 +347,8 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// getNameStart - Return the beginning of the actual string for this
-comment|/// identifier.  The returned string is properly null terminated.
+comment|/// \brief Return the beginning of the actual null-terminated string for this
+comment|/// identifier.
 comment|///
 specifier|const
 name|char
@@ -395,7 +398,7 @@ operator|->
 name|second
 return|;
 block|}
-comment|/// getLength - Efficiently return the length of this identifier info.
+comment|/// \brief Efficiently return the length of this identifier info.
 comment|///
 name|unsigned
 name|getLength
@@ -481,7 +484,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getName - Return the actual identifier string.
+comment|/// \brief Return the actual identifier string.
 end_comment
 
 begin_expr_stmt
@@ -504,11 +507,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasMacroDefinition - Return true if this identifier is #defined to some
-end_comment
-
-begin_comment
-comment|/// other value.
+comment|/// \brief Return true if this identifier is \#defined to some other value.
 end_comment
 
 begin_expr_stmt
@@ -546,13 +545,60 @@ if|if
 condition|(
 name|Val
 condition|)
+block|{
 name|NeedsHandleIdentifier
 operator|=
 literal|1
 expr_stmt|;
+name|HadMacro
+operator|=
+name|true
+expr_stmt|;
+block|}
 else|else
+block|{
 name|RecomputeNeedsHandleIdentifier
 argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns true if this identifier was \#defined to some value at any
+end_comment
+
+begin_comment
+comment|/// moment. In this case there should be an entry for the identifier in the
+end_comment
+
+begin_comment
+comment|/// macro history table in Preprocessor.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hadMacroDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HadMacro
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHadMacroDefinition
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|HadMacro
+operator|=
+name|Val
 expr_stmt|;
 block|}
 end_function
@@ -658,7 +704,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// getPPKeywordID - Return the preprocessor keyword ID for this identifier.
+comment|/// \brief Return the preprocessor keyword ID for this identifier.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -676,15 +726,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getObjCKeywordID - Return the Objective-C keyword ID for the this
+comment|/// \brief Return the Objective-C keyword ID for the this identifier.
 end_comment
 
 begin_comment
-comment|/// identifier.  For example, 'class' will return tok::objc_class if ObjC is
+comment|///
 end_comment
 
 begin_comment
-comment|/// enabled.
+comment|/// For example, 'class' will return tok::objc_class if ObjC is enabled.
 end_comment
 
 begin_expr_stmt
@@ -1496,14 +1546,11 @@ name|private
 label|:
 name|IdentifierIterator
 argument_list|(
-specifier|const
-name|IdentifierIterator
-operator|&
+argument|const IdentifierIterator&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
-name|IdentifierIterator
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -1511,8 +1558,8 @@ specifier|const
 name|IdentifierIterator
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|protected
 label|:
 name|IdentifierIterator
@@ -1651,19 +1698,23 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// IdentifierTable - This table implements an efficient mapping from strings to
+comment|/// \brief Implements an efficient mapping from strings to IdentifierInfo nodes.
 end_comment
 
 begin_comment
-comment|/// IdentifierInfo nodes.  It has no other purpose, but this is an
+comment|///
 end_comment
 
 begin_comment
-comment|/// extremely performance-critical piece of the code, as each occurrence of
+comment|/// This has no other purpose, but this is an extremely performance-critical
 end_comment
 
 begin_comment
-comment|/// every identifier goes through here when lexed.
+comment|/// piece of the code, as each occurrence of every identifier goes through
+end_comment
+
+begin_comment
+comment|/// here when lexed.
 end_comment
 
 begin_decl_stmt
@@ -1695,8 +1746,8 @@ name|ExternalLookup
 decl_stmt|;
 name|public
 label|:
-comment|/// IdentifierTable ctor - Create the identifier table, populating it with
-comment|/// info about the language keywords for the language specified by LangOpts.
+comment|/// \brief Create the identifier table, populating it with info about the
+comment|/// language keywords for the language specified by \p LangOpts.
 name|IdentifierTable
 argument_list|(
 specifier|const
@@ -1750,8 +1801,8 @@ name|getAllocator
 argument_list|()
 return|;
 block|}
-comment|/// get - Return the identifier token info for the specified named identifier.
-comment|///
+comment|/// \brief Return the identifier token info for the specified named
+comment|/// identifier.
 name|IdentifierInfo
 modifier|&
 name|get
@@ -2076,7 +2127,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// PrintStats - Print some statistics to stderr that indicate how well the
+comment|/// \brief Print some statistics to stderr that indicate how well the
 comment|/// hashing is doing.
 name|void
 name|PrintStats
@@ -2100,11 +2151,15 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// ObjCMethodFamily - A family of Objective-C methods.  These
+comment|/// \brief A family of Objective-C methods.
 end_comment
 
 begin_comment
-comment|/// families have no inherent meaning in the language, but are
+comment|///
+end_comment
+
+begin_comment
+comment|/// These families have no inherent meaning in the language, but are
 end_comment
 
 begin_comment
@@ -2225,7 +2280,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/// An invalid value of ObjCMethodFamily.
+comment|/// \brief An invalid value of ObjCMethodFamily.
 end_comment
 
 begin_enum
@@ -2245,11 +2300,19 @@ enum|;
 end_enum
 
 begin_comment
-comment|/// Selector - This smart pointer class efficiently represents Objective-C
+comment|/// \brief Smart pointer class that efficiently represents Objective-C method
 end_comment
 
 begin_comment
-comment|/// method names. This class will either point to an IdentifierInfo or a
+comment|/// names.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This class will either point to an IdentifierInfo or a
 end_comment
 
 begin_comment
@@ -2275,7 +2338,7 @@ decl_stmt|;
 enum|enum
 name|IdentifierInfoFlag
 block|{
-comment|// MultiKeywordSelector = 0.
+comment|// Empty selector = 0.
 name|ZeroArg
 init|=
 literal|0x1
@@ -2283,6 +2346,10 @@ block|,
 name|OneArg
 init|=
 literal|0x2
+block|,
+name|MultiArg
+init|=
+literal|0x3
 block|,
 name|ArgFlags
 init|=
@@ -2369,6 +2436,10 @@ operator|&&
 literal|"Insufficiently aligned IdentifierInfo"
 argument_list|)
 expr_stmt|;
+name|InfoPtr
+operator||=
+name|MultiArg
+expr_stmt|;
 block|}
 name|IdentifierInfo
 operator|*
@@ -2380,6 +2451,8 @@ if|if
 condition|(
 name|getIdentifierInfoFlag
 argument_list|()
+operator|<
+name|MultiArg
 condition|)
 return|return
 name|reinterpret_cast
@@ -2399,6 +2472,29 @@ literal|0
 return|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|MultiKeywordSelector
+operator|*
+name|getMultiKeywordSelector
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|MultiKeywordSelector
+operator|*
+operator|>
+operator|(
+name|InfoPtr
+operator|&
+operator|~
+name|ArgFlags
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|unsigned
@@ -2707,11 +2803,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getAsString - Derive the full selector name (e.g. "foo:bar:") and return
+comment|/// \brief Derive the full selector name (e.g. "foo:bar:") and return
 end_comment
 
 begin_comment
 comment|/// it as an std::string.
+end_comment
+
+begin_comment
+comment|// FIXME: Add a print method that uses a raw_ostream.
 end_comment
 
 begin_expr_stmt
@@ -2725,7 +2825,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getMethodFamily - Derive the conventional family of this method.
+comment|/// \brief Derive the conventional family of this method.
 end_comment
 
 begin_expr_stmt
@@ -2784,7 +2884,7 @@ end_function
 
 begin_comment
 unit|};
-comment|/// SelectorTable - This table allows us to fully hide how we implement
+comment|/// \brief This table allows us to fully hide how we implement
 end_comment
 
 begin_comment
@@ -2802,12 +2902,10 @@ decl_stmt|;
 comment|// Actually a SelectorTableImpl
 name|SelectorTable
 argument_list|(
-specifier|const
-name|SelectorTable
-operator|&
+argument|const SelectorTable&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DISABLED: DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -2816,8 +2914,8 @@ specifier|const
 name|SelectorTable
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DISABLED: DO NOT IMPLEMENT
 name|public
 label|:
 name|SelectorTable
@@ -2827,9 +2925,10 @@ operator|~
 name|SelectorTable
 argument_list|()
 expr_stmt|;
-comment|/// getSelector - This can create any sort of selector.  NumArgs indicates
-comment|/// whether this is a no argument selector "foo", a single argument selector
-comment|/// "foo:" or multi-argument "foo:bar:".
+comment|/// \brief Can create any sort of selector.
+comment|///
+comment|/// \p NumArgs indicates whether this is a no argument selector "foo", a
+comment|/// single argument selector "foo:" or multi-argument "foo:bar:".
 name|Selector
 name|getSelector
 parameter_list|(
@@ -2876,14 +2975,15 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Return the total amount of memory allocated for managing selectors.
+comment|/// \brief Return the total amount of memory allocated for managing selectors.
 name|size_t
 name|getTotalMemory
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// constructSetterName - Return the setter name for the given
-comment|/// identifier, i.e. "set" + Name where the initial character of Name
+comment|/// \brief Return the setter name for the given identifier.
+comment|///
+comment|/// This is "set" + \p Name where the initial character of \p Name
 comment|/// has been capitalized.
 specifier|static
 name|Selector

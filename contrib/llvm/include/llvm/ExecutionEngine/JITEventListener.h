@@ -103,6 +103,9 @@ decl_stmt|;
 name|class
 name|IntelJITEventsWrapper
 decl_stmt|;
+name|class
+name|ObjectImage
+decl_stmt|;
 comment|/// JITEvent_EmittedFunctionDetails - Helper struct for containing information
 comment|/// about a generated machine code function.
 struct|struct
@@ -198,6 +201,36 @@ name|NotifyFreeingMachineCode
 parameter_list|(
 name|void
 modifier|*
+parameter_list|)
+block|{}
+comment|/// NotifyObjectEmitted - Called after an object has been successfully
+comment|/// emitted to memory.  NotifyFunctionEmitted will not be called for
+comment|/// individual functions in the object.
+comment|///
+comment|/// ELF-specific information
+comment|/// The ObjectImage contains the generated object image
+comment|/// with section headers updated to reflect the address at which sections
+comment|/// were loaded and with relocations performed in-place on debug sections.
+name|virtual
+name|void
+name|NotifyObjectEmitted
+parameter_list|(
+specifier|const
+name|ObjectImage
+modifier|&
+name|Obj
+parameter_list|)
+block|{}
+comment|/// NotifyFreeingObject - Called just before the memory associated with
+comment|/// a previously emitted object is released.
+name|virtual
+name|void
+name|NotifyFreeingObject
+parameter_list|(
+specifier|const
+name|ObjectImage
+modifier|&
+name|Obj
 parameter_list|)
 block|{}
 if|#

@@ -91,17 +91,14 @@ name|private
 label|:
 name|Binary
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// = delete
 name|Binary
 argument_list|(
-specifier|const
-name|Binary
-operator|&
-name|other
+argument|const Binary&other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// = delete
 name|unsigned
 name|int
 name|TypeID
@@ -206,21 +203,6 @@ return|return
 name|TypeID
 return|;
 block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Binary
-modifier|*
-name|v
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Convenience methods
 name|bool
 name|isObject
@@ -289,7 +271,7 @@ block|}
 empty_stmt|;
 comment|/// @brief Create a Binary from Source, autodetecting the file type.
 comment|///
-comment|/// @param Source The data to create the Binary from. Ownership is transfered
+comment|/// @param Source The data to create the Binary from. Ownership is transferred
 comment|///        to Result if successful. If an error is returned, Source is destroyed
 comment|///        by createBinary before returning.
 comment|/// @param Result A pointer to the resulting Binary if no error occured.

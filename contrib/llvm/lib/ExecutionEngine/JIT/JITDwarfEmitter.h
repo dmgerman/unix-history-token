@@ -86,7 +86,7 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -98,7 +98,7 @@ name|class
 name|JITDwarfEmitter
 block|{
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;

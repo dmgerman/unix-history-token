@@ -214,10 +214,12 @@ expr_stmt|;
 comment|/// WList - A set of queued nodes that need to be processed by the
 comment|///  worklist algorithm.  It is up to the implementation of WList to decide
 comment|///  the order that nodes are processed.
+name|OwningPtr
+operator|<
 name|WorkList
-modifier|*
+operator|>
 name|WList
-decl_stmt|;
+expr_stmt|;
 comment|/// BCounterFactory - A factory object for created BlockCounter objects.
 comment|///   These are used to record for key nodes in the ExplodedGraph the
 comment|///   number of times different CFGBlocks have been visited along a path.
@@ -235,12 +237,6 @@ comment|/// The locations where we stopped because the engine aborted analysis,
 comment|/// usually because it could not reason about something.
 name|BlocksAborted
 name|blocksAborted
-decl_stmt|;
-comment|/// The functions which have been analyzed through inlining. This is owned by
-comment|/// AnalysisConsumer. It can be null.
-name|SetOfConstDecls
-modifier|*
-name|AnalyzedCallees
 decl_stmt|;
 comment|/// The information about functions shared by the whole translation unit.
 comment|/// (This data is owned by AnalysisConsumer.)
@@ -346,14 +342,11 @@ name|private
 label|:
 name|CoreEngine
 argument_list|(
-specifier|const
-name|CoreEngine
-operator|&
+argument|const CoreEngine&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement.
-name|CoreEngine
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -361,10 +354,11 @@ specifier|const
 name|CoreEngine
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|ExplodedNode
 modifier|*
-name|generateCallExitNode
+name|generateCallExitBeginNode
 parameter_list|(
 name|ExplodedNode
 modifier|*
@@ -373,17 +367,12 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-comment|/// Construct a CoreEngine object to analyze the provided CFG using
-comment|///  a DFS exploration of the exploded graph.
+comment|/// Construct a CoreEngine object to analyze the provided CFG.
 name|CoreEngine
 argument_list|(
 name|SubEngine
 operator|&
 name|subengine
-argument_list|,
-name|SetOfConstDecls
-operator|*
-name|VisitedCallees
 argument_list|,
 name|FunctionSummariesTy
 operator|*
@@ -404,7 +393,7 @@ name|WList
 argument_list|(
 name|WorkList
 operator|::
-name|makeBFS
+name|makeDFS
 argument_list|()
 argument_list|)
 operator|,
@@ -416,23 +405,11 @@ name|getAllocator
 argument_list|()
 argument_list|)
 operator|,
-name|AnalyzedCallees
-argument_list|(
-name|VisitedCallees
-argument_list|)
-operator|,
 name|FunctionSummaries
 argument_list|(
 argument|FS
 argument_list|)
 block|{}
-operator|~
-name|CoreEngine
-argument_list|()
-block|{
-name|delete
-name|WList
-block|;   }
 comment|/// getGraph - Returns the exploded graph.
 name|ExplodedGraph
 operator|&
@@ -600,6 +577,9 @@ specifier|const
 block|{
 return|return
 name|WList
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|BlocksExhausted
@@ -718,6 +698,7 @@ comment|// TODO: Turn into a calss.
 struct|struct
 name|NodeBuilderContext
 block|{
+specifier|const
 name|CoreEngine
 modifier|&
 name|Eng
@@ -727,12 +708,14 @@ name|CFGBlock
 modifier|*
 name|Block
 decl_stmt|;
-name|ExplodedNode
+specifier|const
+name|LocationContext
 modifier|*
-name|Pred
+name|LC
 decl_stmt|;
 name|NodeBuilderContext
 argument_list|(
+specifier|const
 name|CoreEngine
 operator|&
 name|E
@@ -757,35 +740,16 @@ argument_list|(
 name|B
 argument_list|)
 operator|,
-name|Pred
+name|LC
 argument_list|(
-argument|N
+argument|N->getLocationContext()
 argument_list|)
 block|{
 name|assert
 argument_list|(
 name|B
 argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|!
-name|N
-operator|->
-name|isSink
-argument_list|()
-argument_list|)
 block|; }
-name|ExplodedNode
-operator|*
-name|getPred
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Pred
-return|;
-block|}
 comment|/// \brief Return the CFGBlock associated with this builder.
 specifier|const
 name|CFGBlock
@@ -801,7 +765,7 @@ block|}
 comment|/// \brief Returns the number of times the current basic block has been
 comment|/// visited on the exploded graph path.
 name|unsigned
-name|getCurrentBlockCount
+name|blockCount
 argument_list|()
 specifier|const
 block|{
@@ -815,10 +779,7 @@ argument_list|()
 operator|.
 name|getNumVisited
 argument_list|(
-name|Pred
-operator|->
-name|getLocationContext
-argument_list|()
+name|LC
 operator|->
 name|getCurrentStackFrame
 argument_list|()
@@ -1053,9 +1014,6 @@ name|NodeBuilder
 argument_list|()
 block|{}
 comment|/// \brief Generates a node in the ExplodedGraph.
-comment|///
-comment|/// When a node is marked as sink, the exploration from the node is stopped -
-comment|/// the node becomes the last node on the path.
 name|ExplodedNode
 operator|*
 name|generateNode
@@ -1065,8 +1023,6 @@ argument_list|,
 argument|ProgramStateRef State
 argument_list|,
 argument|ExplodedNode *Pred
-argument_list|,
-argument|bool MarkAsSink = false
 argument_list|)
 block|{
 return|return
@@ -1078,7 +1034,42 @@ name|State
 argument_list|,
 name|Pred
 argument_list|,
-name|MarkAsSink
+name|false
+argument_list|)
+return|;
+block|}
+comment|/// \brief Generates a sink in the ExplodedGraph.
+comment|///
+comment|/// When a node is marked as sink, the exploration from the node is stopped -
+comment|/// the node becomes the last node on the path and certain kinds of bugs are
+comment|/// suppressed.
+name|ExplodedNode
+modifier|*
+name|generateSink
+parameter_list|(
+specifier|const
+name|ProgramPoint
+modifier|&
+name|PP
+parameter_list|,
+name|ProgramStateRef
+name|State
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|)
+block|{
+return|return
+name|generateNodeImpl
+argument_list|(
+name|PP
+argument_list|,
+name|State
+argument_list|,
+name|Pred
+argument_list|,
+name|true
 argument_list|)
 return|;
 block|}
@@ -1331,11 +1322,11 @@ argument|ExplodedNode *Pred
 argument_list|,
 argument|const ProgramPointTag *Tag =
 literal|0
-argument_list|,
-argument|bool MarkAsSink = false
 argument_list|)
 block|{
+specifier|const
 name|ProgramPoint
+operator|&
 name|LocalLoc
 operator|=
 operator|(
@@ -1351,19 +1342,62 @@ operator|:
 name|Location
 operator|)
 block|;
-name|ExplodedNode
-operator|*
-name|N
-operator|=
-name|generateNodeImpl
+return|return
+name|NodeBuilder
+operator|::
+name|generateNode
 argument_list|(
 name|LocalLoc
 argument_list|,
 name|State
 argument_list|,
 name|Pred
+argument_list|)
+return|;
+block|}
+name|ExplodedNode
+operator|*
+name|generateSink
+argument_list|(
+argument|ProgramStateRef State
 argument_list|,
-name|MarkAsSink
+argument|ExplodedNode *Pred
+argument_list|,
+argument|const ProgramPointTag *Tag =
+literal|0
+argument_list|)
+block|{
+specifier|const
+name|ProgramPoint
+operator|&
+name|LocalLoc
+operator|=
+operator|(
+name|Tag
+condition|?
+name|Location
+operator|.
+name|withTag
+argument_list|(
+name|Tag
+argument_list|)
+else|:
+name|Location
+operator|)
+block|;
+name|ExplodedNode
+operator|*
+name|N
+operator|=
+name|NodeBuilder
+operator|::
+name|generateSink
+argument_list|(
+name|LocalLoc
+argument_list|,
+name|State
+argument_list|,
+name|Pred
 argument_list|)
 block|;
 if|if
@@ -1405,7 +1439,7 @@ block|}
 empty_stmt|;
 comment|/// \class StmtNodeBuilder
 comment|/// \brief This builder class is useful for generating nodes that resulted from
-comment|/// visiting a statement. The main difference from it's parent NodeBuilder is
+comment|/// visiting a statement. The main difference from its parent NodeBuilder is
 comment|/// that it creates a statement specific ProgramPoint.
 name|class
 name|StmtNodeBuilder
@@ -1550,6 +1584,16 @@ operator|~
 name|StmtNodeBuilder
 argument_list|()
 block|;
+name|using
+name|NodeBuilder
+operator|::
+name|generateNode
+block|;
+name|using
+name|NodeBuilder
+operator|::
+name|generateSink
+block|;
 name|ExplodedNode
 operator|*
 name|generateNode
@@ -1559,8 +1603,6 @@ argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
 argument|ProgramStateRef St
-argument_list|,
-argument|bool MarkAsSink = false
 argument_list|,
 argument|const ProgramPointTag *tag =
 literal|0
@@ -1590,41 +1632,65 @@ name|tag
 argument_list|)
 block|;
 return|return
-name|generateNodeImpl
+name|NodeBuilder
+operator|::
+name|generateNode
 argument_list|(
 name|L
 argument_list|,
 name|St
 argument_list|,
 name|Pred
-argument_list|,
-name|MarkAsSink
 argument_list|)
 return|;
 block|}
 name|ExplodedNode
 operator|*
-name|generateNode
+name|generateSink
 argument_list|(
-argument|const ProgramPoint&PP
+argument|const Stmt *S
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
-argument|ProgramStateRef State
+argument|ProgramStateRef St
 argument_list|,
-argument|bool MarkAsSink = false
+argument|const ProgramPointTag *tag =
+literal|0
+argument_list|,
+argument|ProgramPoint::Kind K = ProgramPoint::PostStmtKind
 argument_list|)
 block|{
-return|return
-name|generateNodeImpl
+specifier|const
+name|ProgramPoint
+operator|&
+name|L
+operator|=
+name|ProgramPoint
+operator|::
+name|getProgramPoint
 argument_list|(
-name|PP
+name|S
 argument_list|,
-name|State
+name|K
 argument_list|,
 name|Pred
+operator|->
+name|getLocationContext
+argument_list|()
 argument_list|,
-name|MarkAsSink
+name|tag
+argument_list|)
+block|;
+return|return
+name|NodeBuilder
+operator|::
+name|generateSink
+argument_list|(
+name|L
+argument_list|,
+name|St
+argument_list|,
+name|Pred
 argument_list|)
 return|;
 block|}

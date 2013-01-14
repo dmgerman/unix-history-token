@@ -198,29 +198,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TIME_WITH_SYS_TIME
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_SYS_TIME_H
 end_ifdef
 
@@ -230,26 +207,16 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

@@ -213,17 +213,6 @@ operator|)
 name|LocInfo
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LocInfoType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;  }
 end_decl_stmt

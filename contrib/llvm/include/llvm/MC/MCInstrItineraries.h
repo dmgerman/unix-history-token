@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSchedule.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -204,10 +210,10 @@ comment|///
 struct|struct
 name|InstrItinerary
 block|{
-name|unsigned
+name|int
 name|NumMicroOps
 decl_stmt|;
-comment|///< # of micro-ops, 0 means it's variable
+comment|///< # of micro-ops, -1 means it's variable
 name|unsigned
 name|FirstStage
 decl_stmt|;
@@ -236,6 +242,12 @@ block|{
 name|public
 label|:
 specifier|const
+name|MCSchedModel
+modifier|*
+name|SchedModel
+decl_stmt|;
+comment|///< Basic machine properties.
+specifier|const
 name|InstrStage
 modifier|*
 name|Stages
@@ -259,15 +271,19 @@ modifier|*
 name|Itineraries
 decl_stmt|;
 comment|///< Array of itineraries selected
-name|unsigned
-name|IssueWidth
-decl_stmt|;
-comment|///< Max issue per cycle. 0=Unknown.
 comment|/// Ctors.
 comment|///
 name|InstrItineraryData
 argument_list|()
 operator|:
+name|SchedModel
+argument_list|(
+operator|&
+name|MCSchedModel
+operator|::
+name|DefaultSchedModel
+argument_list|)
+operator|,
 name|Stages
 argument_list|(
 literal|0
@@ -287,14 +303,14 @@ name|Itineraries
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|IssueWidth
-argument_list|(
-literal|0
-argument_list|)
 block|{}
 name|InstrItineraryData
 argument_list|(
+specifier|const
+name|MCSchedModel
+operator|*
+name|SM
+argument_list|,
 specifier|const
 name|InstrStage
 operator|*
@@ -309,13 +325,13 @@ specifier|const
 name|unsigned
 operator|*
 name|F
-argument_list|,
-specifier|const
-name|InstrItinerary
-operator|*
-name|I
 argument_list|)
 operator|:
+name|SchedModel
+argument_list|(
+name|SM
+argument_list|)
+operator|,
 name|Stages
 argument_list|(
 name|S
@@ -333,12 +349,7 @@ argument_list|)
 operator|,
 name|Itineraries
 argument_list|(
-name|I
-argument_list|)
-operator|,
-name|IssueWidth
-argument_list|(
-literal|0
+argument|SchedModel->InstrItineraries
 argument_list|)
 block|{}
 comment|/// isEmpty - Returns true if there are no itineraries.
@@ -453,6 +464,12 @@ comment|/// getStageLatency - Return the total stage latency of the given
 comment|/// class.  The latency is the maximum completion time for any stage
 comment|/// in the itinerary.
 comment|///
+comment|/// InstrStages override the itinerary's MinLatency property. In fact, if the
+comment|/// stage latencies, which may be zero, are less than MinLatency,
+comment|/// getStageLatency returns a value less than MinLatency.
+comment|///
+comment|/// If no stages exist, MinLatency is used. If MinLatency is invalid (<0),
+comment|/// then it defaults to one cycle.
 name|unsigned
 name|getStageLatency
 argument_list|(
@@ -462,27 +479,24 @@ argument_list|)
 decl|const
 block|{
 comment|// If the target doesn't provide itinerary information, use a simple
-comment|// non-zero default value for all instructions.  Some target's provide a
-comment|// dummy (Generic) itinerary which should be handled as if it's itinerary is
-comment|// empty. We identify this by looking for a reference to stage zero (invalid
-comment|// stage). This is different from beginStage == endState != 0, which could
-comment|// be used for zero-latency pseudo ops.
+comment|// non-zero default value for all instructions.
 if|if
 condition|(
 name|isEmpty
 argument_list|()
-operator|||
-name|Itineraries
-index|[
-name|ItinClassIndx
-index|]
-operator|.
-name|FirstStage
-operator|==
-literal|0
 condition|)
 return|return
+name|SchedModel
+operator|->
+name|MinLatency
+operator|<
+literal|0
+condition|?
 literal|1
+else|:
+name|SchedModel
+operator|->
+name|MinLatency
 return|;
 comment|// Calculate the maximum completion time for any stage.
 name|unsigned
@@ -841,10 +855,11 @@ return|return
 name|UseCycle
 return|;
 block|}
-comment|/// isMicroCoded - Return true if the instructions in the given class decode
-comment|/// to more than one micro-ops.
-name|bool
-name|isMicroCoded
+comment|/// getNumMicroOps - Return the number of micro-ops that the given class
+comment|/// decodes to. Return -1 for classes that require dynamic lookup via
+comment|/// TargetInstrInfo.
+name|int
+name|getNumMicroOps
 argument_list|(
 name|unsigned
 name|ItinClassIndx
@@ -857,7 +872,7 @@ name|isEmpty
 argument_list|()
 condition|)
 return|return
-name|false
+literal|1
 return|;
 return|return
 name|Itineraries
@@ -866,8 +881,6 @@ name|ItinClassIndx
 index|]
 operator|.
 name|NumMicroOps
-operator|!=
-literal|1
 return|;
 block|}
 block|}

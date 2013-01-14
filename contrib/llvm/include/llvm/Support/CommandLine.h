@@ -169,11 +169,6 @@ modifier|*
 name|Overview
 init|=
 literal|0
-parameter_list|,
-name|bool
-name|ReadResponseFiles
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -199,11 +194,6 @@ modifier|*
 name|Overview
 init|=
 literal|0
-parameter_list|,
-name|bool
-name|ReadResponseFiles
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|///===---------------------------------------------------------------------===//
@@ -749,7 +739,7 @@ label|:
 name|explicit
 name|Option
 argument_list|(
-argument|enum NumOccurrencesFlag Occurrences
+argument|enum NumOccurrencesFlag OccurrencesFlag
 argument_list|,
 argument|enum OptionHidden Hidden
 argument_list|)
@@ -761,7 +751,12 @@ argument_list|)
 operator|,
 name|Occurrences
 argument_list|(
-name|Occurrences
+name|OccurrencesFlag
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|HiddenFlag
@@ -772,6 +767,11 @@ operator|,
 name|Formatting
 argument_list|(
 name|NormalFormatting
+argument_list|)
+operator|,
+name|Misc
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|Position
@@ -7754,6 +7754,8 @@ return|return
 name|true
 return|;
 comment|// Parse Error!
+name|this
+operator|->
 name|addValue
 argument_list|(
 name|Val
@@ -8618,6 +8620,7 @@ comment|/*ArgName*/
 argument_list|,
 argument|StringRef Arg
 argument_list|)
+name|LLVM_OVERRIDE
 block|{
 return|return
 name|AliasFor
@@ -8640,6 +8643,7 @@ name|size_t
 name|getOptionWidth
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 name|void
@@ -8648,6 +8652,7 @@ argument_list|(
 argument|size_t GlobalWidth
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 comment|// Aliases do not need to print their values.
 name|virtual
@@ -8661,6 +8666,7 @@ argument|bool
 comment|/*Force*/
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|{}
 name|void
 name|done

@@ -310,6 +310,41 @@ name|Inst
 argument_list|)
 block|;
 name|virtual
+name|void
+name|EmitBytes
+argument_list|(
+argument|StringRef Data
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitValueToAlignment
+argument_list|(
+argument|unsigned ByteAlignment
+argument_list|,
+argument|int64_t Value =
+literal|0
+argument_list|,
+argument|unsigned ValueSize =
+literal|1
+argument_list|,
+argument|unsigned MaxBytesToEmit =
+literal|0
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitCodeAlignment
+argument_list|(
+argument|unsigned ByteAlignment
+argument_list|,
+argument|unsigned MaxBytesToEmit =
+literal|0
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|EmitValueToOffset
 argument_list|(
@@ -354,6 +389,27 @@ specifier|const
 name|MCExpr
 operator|*
 name|Value
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitGPRel64Value
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitFill
+argument_list|(
+argument|uint64_t NumBytes
+argument_list|,
+argument|uint8_t FillValue
+argument_list|,
+argument|unsigned AddrSpace
 argument_list|)
 block|;
 name|virtual

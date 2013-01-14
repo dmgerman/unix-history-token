@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"DWARFDebugRangeList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -166,7 +172,7 @@ name|abbrevs
 parameter_list|)
 function_decl|;
 comment|/// extractDIEsIfNeeded - Parses a compile unit and indexes its DIEs if it
-comment|/// hasn't already been done.
+comment|/// hasn't already been done. Returns the number of DIEs parsed at this call.
 name|size_t
 name|extractDIEsIfNeeded
 parameter_list|(
@@ -174,6 +180,21 @@ name|bool
 name|cu_die_only
 parameter_list|)
 function_decl|;
+comment|/// extractRangeList - extracts the range list referenced by this compile
+comment|/// unit from .debug_ranges section. Returns true on success.
+comment|/// Requires that compile unit is already extracted.
+name|bool
+name|extractRangeList
+argument_list|(
+name|uint32_t
+name|RangeListOffset
+argument_list|,
+name|DWARFDebugRangeList
+operator|&
+name|RangeList
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|clear
 parameter_list|()
@@ -358,6 +379,12 @@ literal|0
 index|]
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|getCompilationDir
+parameter_list|()
+function_decl|;
 comment|/// setDIERelations - We read in all of the DIE entries into our flat list
 comment|/// of DIE entries and now we need to go back through all of them and set the
 comment|/// parent, sibling and child pointers for quick DIE navigation.
@@ -426,6 +453,16 @@ name|bool
 name|clear_dies_if_already_not_parsed
 parameter_list|)
 function_decl|;
+comment|/// getInlinedChainForAddress - fetches inlined chain for a given address.
+comment|/// Returns empty chain if there is no subprogram containing address.
+name|DWARFDebugInfoEntryMinimal
+operator|::
+name|InlinedChain
+name|getInlinedChainForAddress
+argument_list|(
+argument|uint64_t Address
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

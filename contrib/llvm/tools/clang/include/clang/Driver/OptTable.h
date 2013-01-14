@@ -55,6 +55,12 @@ directive|include
 file|"clang/Driver/OptSpecifier.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -62,86 +68,6 @@ block|{
 name|namespace
 name|driver
 block|{
-name|namespace
-name|options
-block|{
-enum|enum
-name|DriverFlag
-block|{
-name|DriverOption
-init|=
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-block|,
-name|HelpHidden
-init|=
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-block|,
-name|LinkerInput
-init|=
-operator|(
-literal|1
-operator|<<
-literal|2
-operator|)
-block|,
-name|NoArgumentUnused
-init|=
-operator|(
-literal|1
-operator|<<
-literal|3
-operator|)
-block|,
-name|NoForward
-init|=
-operator|(
-literal|1
-operator|<<
-literal|4
-operator|)
-block|,
-name|RenderAsInput
-init|=
-operator|(
-literal|1
-operator|<<
-literal|5
-operator|)
-block|,
-name|RenderJoined
-init|=
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-block|,
-name|RenderSeparate
-init|=
-operator|(
-literal|1
-operator|<<
-literal|7
-operator|)
-block|,
-name|Unsupported
-init|=
-operator|(
-literal|1
-operator|<<
-literal|8
-operator|)
-block|}
-enum|;
-block|}
 name|class
 name|Arg
 decl_stmt|;
@@ -154,7 +80,7 @@ decl_stmt|;
 name|class
 name|Option
 decl_stmt|;
-comment|/// OptTable - Provide access to the Option info table.
+comment|/// \brief Provide access to the Option info table.
 comment|///
 comment|/// The OptTable class provides a layer of indirection which allows Option
 comment|/// instance to be created lazily. In the common case, only a few options will
@@ -166,10 +92,19 @@ name|OptTable
 block|{
 name|public
 label|:
-comment|/// Info - Entry for a single option instance in the option data table.
+comment|/// \brief Entry for a single option instance in the option data table.
 struct|struct
 name|Info
 block|{
+comment|/// A null terminated array of prefix strings to apply to name while
+comment|/// matching.
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|Prefixes
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -184,6 +119,9 @@ specifier|const
 name|char
 modifier|*
 name|MetaVar
+decl_stmt|;
+name|unsigned
+name|ID
 decl_stmt|;
 name|unsigned
 name|char
@@ -209,7 +147,7 @@ block|}
 struct|;
 name|private
 label|:
-comment|/// The static option information table.
+comment|/// \brief The static option information table.
 specifier|const
 name|Info
 modifier|*
@@ -218,30 +156,31 @@ decl_stmt|;
 name|unsigned
 name|NumOptionInfos
 decl_stmt|;
-comment|/// The lazily constructed options table, indexed by option::ID - 1.
-name|mutable
-name|Option
-modifier|*
-modifier|*
-name|Options
+name|unsigned
+name|TheInputOptionID
 decl_stmt|;
-comment|/// Prebound input option instance.
-specifier|const
-name|Option
-modifier|*
-name|TheInputOption
-decl_stmt|;
-comment|/// Prebound unknown option instance.
-specifier|const
-name|Option
-modifier|*
-name|TheUnknownOption
+name|unsigned
+name|TheUnknownOptionID
 decl_stmt|;
 comment|/// The index of the first option which can be parsed (i.e., is not a
 comment|/// special option like 'input' or 'unknown', and is not an option group).
 name|unsigned
 name|FirstSearchableIndex
 decl_stmt|;
+comment|/// The union of all option prefixes. If an argument does not begin with
+comment|/// one of these, it is an input.
+name|llvm
+operator|::
+name|StringSet
+operator|<
+operator|>
+name|PrefixesUnion
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|PrefixChars
+expr_stmt|;
 name|private
 label|:
 specifier|const
@@ -287,15 +226,6 @@ literal|1
 index|]
 return|;
 block|}
-name|Option
-modifier|*
-name|CreateOption
-argument_list|(
-name|unsigned
-name|id
-argument_list|)
-decl|const
-decl_stmt|;
 name|protected
 label|:
 name|OptTable
@@ -311,7 +241,7 @@ operator|~
 name|OptTable
 argument_list|()
 expr_stmt|;
-comment|/// getNumOptions - Return the total number of option classes.
+comment|/// \brief Return the total number of option classes.
 name|unsigned
 name|getNumOptions
 argument_list|()
@@ -321,83 +251,20 @@ return|return
 name|NumOptionInfos
 return|;
 block|}
-comment|/// getOption - Get the given \arg id's Option instance, lazily creating it
+comment|/// \brief Get the given Opt's Option instance, lazily creating it
 comment|/// if necessary.
 comment|///
 comment|/// \return The option, or null for the INVALID option id.
 specifier|const
 name|Option
-modifier|*
 name|getOption
 argument_list|(
 name|OptSpecifier
 name|Opt
 argument_list|)
 decl|const
-block|{
-name|unsigned
-name|id
-init|=
-name|Opt
-operator|.
-name|getID
-argument_list|()
 decl_stmt|;
-if|if
-condition|(
-name|id
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-name|assert
-argument_list|(
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|id
-operator|-
-literal|1
-argument_list|)
-operator|<
-name|getNumOptions
-argument_list|()
-operator|&&
-literal|"Invalid ID."
-argument_list|)
-expr_stmt|;
-name|Option
-modifier|*
-modifier|&
-name|Entry
-init|=
-name|Options
-index|[
-name|id
-operator|-
-literal|1
-index|]
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|Entry
-condition|)
-name|Entry
-operator|=
-name|CreateOption
-argument_list|(
-name|id
-argument_list|)
-expr_stmt|;
-return|return
-name|Entry
-return|;
-block|}
-comment|/// getOptionName - Lookup the name of the given option.
+comment|/// \brief Lookup the name of the given option.
 specifier|const
 name|char
 modifier|*
@@ -417,7 +284,7 @@ operator|.
 name|Name
 return|;
 block|}
-comment|/// getOptionKind - Get the kind of the given option.
+comment|/// \brief Get the kind of the given option.
 name|unsigned
 name|getOptionKind
 argument_list|(
@@ -435,7 +302,7 @@ operator|.
 name|Kind
 return|;
 block|}
-comment|/// getOptionGroupID - Get the group id for the given option.
+comment|/// \brief Get the group id for the given option.
 name|unsigned
 name|getOptionGroupID
 argument_list|(
@@ -453,30 +320,7 @@ operator|.
 name|GroupID
 return|;
 block|}
-comment|/// isOptionHelpHidden - Should the help for the given option be hidden by
-comment|/// default.
-name|bool
-name|isOptionHelpHidden
-argument_list|(
-name|OptSpecifier
-name|id
-argument_list|)
-decl|const
-block|{
-return|return
-name|getInfo
-argument_list|(
-name|id
-argument_list|)
-operator|.
-name|Flags
-operator|&
-name|options
-operator|::
-name|HelpHidden
-return|;
-block|}
-comment|/// getOptionHelpText - Get the help text to use to describe this option.
+comment|/// \brief Get the help text to use to describe this option.
 specifier|const
 name|char
 modifier|*
@@ -496,7 +340,7 @@ operator|.
 name|HelpText
 return|;
 block|}
-comment|/// getOptionMetaVar - Get the meta-variable name to use when describing
+comment|/// \brief Get the meta-variable name to use when describing
 comment|/// this options values in the help text.
 specifier|const
 name|char
@@ -517,14 +361,14 @@ operator|.
 name|MetaVar
 return|;
 block|}
-comment|/// ParseOneArg - Parse a single argument; returning the new argument and
+comment|/// \brief Parse a single argument; returning the new argument and
 comment|/// updating Index.
 comment|///
-comment|/// \param [in] [out] Index - The current parsing position in the argument
+comment|/// \param [in,out] Index - The current parsing position in the argument
 comment|/// string list; on return this will be the index of the next argument
 comment|/// string to parse.
 comment|///
-comment|/// \return - The parsed argument, or 0 if the argument is missing values
+comment|/// \return The parsed argument, or 0 if the argument is missing values
 comment|/// (in which case Index still points at the conceptual next argument string
 comment|/// to parse).
 name|Arg
@@ -542,21 +386,21 @@ name|Index
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ParseArgs - Parse an list of arguments into an InputArgList.
+comment|/// \brief Parse an list of arguments into an InputArgList.
 comment|///
-comment|/// The resulting InputArgList will reference the strings in [ArgBegin,
-comment|/// ArgEnd), and their lifetime should extend past that of the returned
+comment|/// The resulting InputArgList will reference the strings in [\p ArgBegin,
+comment|/// \p ArgEnd), and their lifetime should extend past that of the returned
 comment|/// InputArgList.
 comment|///
 comment|/// The only error that can occur in this routine is if an argument is
-comment|/// missing values; in this case \arg MissingArgCount will be non-zero.
+comment|/// missing values; in this case \p MissingArgCount will be non-zero.
 comment|///
 comment|/// \param ArgBegin - The beginning of the argument vector.
 comment|/// \param ArgEnd - The end of the argument vector.
 comment|/// \param MissingArgIndex - On error, the index of the option which could
 comment|/// not be parsed.
 comment|/// \param MissingArgCount - On error, the number of missing options.
-comment|/// \return - An InputArgList; on error this will contain all the options
+comment|/// \return An InputArgList; on error this will contain all the options
 comment|/// which could be parsed.
 name|InputArgList
 modifier|*
@@ -586,12 +430,14 @@ name|MissingArgCount
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// PrintHelp - Render the help text for an option table.
+comment|/// \brief Render the help text for an option table.
 comment|///
 comment|/// \param OS - The stream to write the help text to.
 comment|/// \param Name - The name to use in the usage line.
 comment|/// \param Title - The title to use in the usage line.
-comment|/// \param ShowHidden - Whether help-hidden arguments should be shown.
+comment|/// \param FlagsToInclude - If non-zero, only include options with any
+comment|///                         of these flags set.
+comment|/// \param FlagsToExclude - Exclude options with any of these flags set.
 name|void
 name|PrintHelp
 argument_list|(
@@ -609,10 +455,17 @@ name|char
 operator|*
 name|Title
 argument_list|,
-name|bool
-name|ShowHidden
+name|unsigned
+name|short
+name|FlagsToInclude
 operator|=
-name|false
+literal|0
+argument_list|,
+name|unsigned
+name|short
+name|FlagsToExclude
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;

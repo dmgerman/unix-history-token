@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/CodeCompleteOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -69,6 +75,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|MemoryBuffer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
@@ -77,6 +93,9 @@ block|{
 enum|enum
 name|ActionKind
 block|{
+name|ASTDeclList
+block|,
+comment|///< Parse ASTs and list Decl nodes.
 name|ASTDump
 block|,
 comment|///< Parse ASTs and dump them.
@@ -148,7 +167,7 @@ block|,
 comment|///< -E mode.
 name|RewriteMacros
 block|,
-comment|///< Expand macros but not #includes.
+comment|///< Expand macros but not \#includes.
 name|RewriteObjC
 block|,
 comment|///< ObjC->C Rewriter.
@@ -199,7 +218,7 @@ name|IK_LLVM_IR
 block|}
 enum|;
 comment|/// \brief An input file for the front end.
-struct|struct
+name|class
 name|FrontendInputFile
 block|{
 comment|/// \brief The file name, or "-" to read from standard input.
@@ -207,6 +226,12 @@ name|std
 operator|::
 name|string
 name|File
+expr_stmt|;
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|Buffer
 expr_stmt|;
 comment|/// \brief The kind of input, e.g., C source, AST file, LLVM IR.
 name|InputKind
@@ -216,9 +241,16 @@ comment|/// \brief Whether we're dealing with a 'system' input (vs. a 'user' inp
 name|bool
 name|IsSystem
 decl_stmt|;
+name|public
+label|:
 name|FrontendInputFile
 argument_list|()
 operator|:
+name|Buffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Kind
 argument_list|(
 argument|IK_None
@@ -241,6 +273,11 @@ name|str
 argument_list|()
 argument_list|)
 operator|,
+name|Buffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Kind
 argument_list|(
 name|Kind
@@ -251,8 +288,121 @@ argument_list|(
 argument|IsSystem
 argument_list|)
 block|{ }
+name|FrontendInputFile
+argument_list|(
+argument|llvm::MemoryBuffer *buffer
+argument_list|,
+argument|InputKind Kind
+argument_list|,
+argument|bool IsSystem = false
+argument_list|)
+operator|:
+name|Buffer
+argument_list|(
+name|buffer
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|IsSystem
+argument_list|(
+argument|IsSystem
+argument_list|)
+block|{ }
+name|InputKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
 block|}
-struct|;
+name|bool
+name|isSystem
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSystem
+return|;
+block|}
+name|bool
+name|isEmpty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|File
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|Buffer
+operator|==
+literal|0
+return|;
+block|}
+name|bool
+name|isFile
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isBuffer
+argument_list|()
+return|;
+block|}
+name|bool
+name|isBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|!=
+literal|0
+return|;
+block|}
+name|StringRef
+name|getFile
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isFile
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|File
+return|;
+block|}
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isBuffer
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Buffer
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// FrontendOptions - Options for controlling the behavior of the frontend.
 name|class
 name|FrontendOptions
@@ -279,27 +429,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Show the -help text.
-name|unsigned
-name|ShowMacrosInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show macros in code completion
-comment|/// results.
-name|unsigned
-name|ShowCodePatternsInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show code patterns in code
-comment|/// completion results.
-name|unsigned
-name|ShowGlobalSymbolsInCodeCompletion
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show top-level decls in
-comment|/// code completion results.
 name|unsigned
 name|ShowStats
 range|:
@@ -361,6 +490,9 @@ comment|///< Skip over function bodies to
 comment|/// speed up parsing in cases you do
 comment|/// not need them (e.g. with code
 comment|/// completion).
+name|CodeCompleteOptions
+name|CodeCompleteOpts
+decl_stmt|;
 enum|enum
 block|{
 name|ARCMT_None
@@ -423,6 +555,12 @@ name|std
 operator|::
 name|string
 name|FixItSuffix
+expr_stmt|;
+comment|/// If given, filter dumped AST Decl nodes by this substring.
+name|std
+operator|::
+name|string
+name|ASTDumpFilter
 expr_stmt|;
 comment|/// If given, enable code completion at the provided location.
 name|ParsedSourceLocation
@@ -545,18 +683,6 @@ expr_stmt|;
 name|ShowHelp
 operator|=
 literal|0
-expr_stmt|;
-name|ShowMacrosInCodeCompletion
-operator|=
-literal|0
-expr_stmt|;
-name|ShowCodePatternsInCodeCompletion
-operator|=
-literal|0
-expr_stmt|;
-name|ShowGlobalSymbolsInCodeCompletion
-operator|=
-literal|1
 expr_stmt|;
 name|ShowStats
 operator|=

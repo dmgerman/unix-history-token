@@ -1559,8 +1559,8 @@ operator|:
 comment|/// This function returns status information about the file. The type of
 comment|/// path (file or directory) is updated to reflect the actual contents
 comment|/// of the file system.
-comment|/// @returns 0 on failure, with Error explaining why (if non-zero)
-comment|/// @returns a pointer to a FileStatus structure on success.
+comment|/// @returns 0 on failure, with Error explaining why (if non-zero),
+comment|/// otherwise returns a pointer to a FileStatus structure on success.
 comment|/// @brief Get file status.
 specifier|const
 name|FileStatus

@@ -126,6 +126,10 @@ name|TargetInstrInfo
 operator|&
 name|TII
 block|;
+name|mutable
+name|int
+name|CRSpillFrameIdx
+block|;
 name|public
 operator|:
 name|PPCRegisterInfo
@@ -149,6 +153,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind=
 literal|0
 argument_list|)
@@ -175,7 +181,7 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|unsigned
+name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
@@ -190,10 +196,25 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|avoidWriteAfterWrite
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
 comment|/// requiresRegisterScavenging - We require a register scavenger.
 comment|/// FIXME (64-bit): Should be inlined.
 name|bool
 name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -244,6 +265,17 @@ argument_list|,
 argument|int SPAdj
 argument_list|,
 argument|RegScavenger *RS
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasReservedSpillSlot
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|int&FrameIdx
 argument_list|)
 specifier|const
 block|;

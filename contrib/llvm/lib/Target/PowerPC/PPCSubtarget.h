@@ -138,6 +138,14 @@ name|DIR_970
 block|,
 name|DIR_A2
 block|,
+name|DIR_E500mc
+block|,
+name|DIR_E5500
+block|,
+name|DIR_PWR6
+block|,
+name|DIR_PWR7
+block|,
 name|DIR_64
 block|}
 enum|;
@@ -171,7 +179,7 @@ name|DarwinDirective
 block|;
 comment|/// Used by the ISel to turn in optimizations for POWER4-derived architectures
 name|bool
-name|IsGigaProcessor
+name|HasMFOCRF
 block|;
 name|bool
 name|Has64BitSupport
@@ -190,6 +198,9 @@ name|HasFSQRT
 block|;
 name|bool
 name|HasSTFIWX
+block|;
+name|bool
+name|HasISEL
 block|;
 name|bool
 name|IsBookE
@@ -272,23 +283,53 @@ return|return
 name|InstrItins
 return|;
 block|}
-comment|/// getTargetDataString - Return the pointer size and type alignment
+comment|/// getDataLayoutString - Return the pointer size and type alignment
 comment|/// properties of this subtarget.
 specifier|const
 name|char
 operator|*
-name|getTargetDataString
+name|getDataLayoutString
 argument_list|()
 specifier|const
 block|{
 comment|// Note, the alignment values for f64 and i64 on ppc64 in Darwin
 comment|// documentation are wrong; these are correct (i.e. "what gcc does").
+if|if
+condition|(
+name|isPPC64
+argument_list|()
+operator|&&
+name|isSVR4ABI
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|FreeBSD
+condition|)
+return|return
+literal|"E-p:64:64-f64:64:64-i64:64:64-f128:64:64-v128:128:128-n32:64"
+return|;
+else|else
+return|return
+literal|"E-p:64:64-f64:64:64-i64:64:64-f128:128:128-v128:128:128-n32:64"
+return|;
+block|}
 return|return
 name|isPPC64
 argument_list|()
-operator|?
+condition|?
 literal|"E-p:64:64-f64:64:64-i64:64:64-f128:64:128-n32:64"
-operator|:
+else|:
 literal|"E-p:32:32-f64:64:64-i64:64:64-f128:64:128-n32"
 return|;
 block|}
@@ -377,12 +418,21 @@ name|HasAltivec
 return|;
 block|}
 name|bool
-name|isGigaProcessor
+name|hasMFOCRF
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsGigaProcessor
+name|HasMFOCRF
+return|;
+block|}
+name|bool
+name|hasISEL
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasISEL
 return|;
 block|}
 name|bool

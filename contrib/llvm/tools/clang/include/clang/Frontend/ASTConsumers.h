@@ -115,6 +115,9 @@ parameter_list|(
 name|raw_ostream
 modifier|*
 name|OS
+parameter_list|,
+name|StringRef
+name|FilterString
 parameter_list|)
 function_decl|;
 comment|// AST dumper: dumps the raw AST in human-readable form to stderr; this is
@@ -122,6 +125,16 @@ comment|// intended for debugging.
 name|ASTConsumer
 modifier|*
 name|CreateASTDumper
+parameter_list|(
+name|StringRef
+name|FilterString
+parameter_list|)
+function_decl|;
+comment|// AST Decl node lister: prints qualified names of all filterable AST Decl
+comment|// nodes.
+name|ASTConsumer
+modifier|*
+name|CreateASTDeclNodeLister
 parameter_list|()
 function_decl|;
 comment|// AST XML-dumper: dumps out the AST to stderr in a very detailed XML

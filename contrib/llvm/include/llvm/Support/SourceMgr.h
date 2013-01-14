@@ -194,12 +194,10 @@ name|DiagContext
 decl_stmt|;
 name|SourceMgr
 argument_list|(
-specifier|const
-name|SourceMgr
-operator|&
+argument|const SourceMgr&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -208,8 +206,8 @@ specifier|const
 name|SourceMgr
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|SourceMgr
@@ -480,7 +478,37 @@ operator|-
 literal|1
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|getLineAndColumn
+argument_list|(
+name|Loc
+argument_list|,
+name|BufferID
+argument_list|)
+operator|.
+name|first
+return|;
+block|}
+comment|/// getLineAndColumn - Find the line and column number for the specified
+comment|/// location in the specified file.  This is not a fast method.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|getLineAndColumn
+argument_list|(
+argument|SMLoc Loc
+argument_list|,
+argument|int BufferID = -
+literal|1
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// PrintMessage - Emit a message about the specified location with the
 comment|/// specified string.
 comment|///
@@ -523,7 +551,7 @@ decl_stmt|;
 comment|/// GetMessage - Return an SMDiagnostic at the specified location with the
 comment|/// specified string.
 comment|///
-comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
+comment|/// @param Msg If non-null, the kind of message (e.g., "error") which is
 comment|/// prefixed to the message.
 name|SMDiagnostic
 name|GetMessage
@@ -655,7 +683,7 @@ name|SMDiagnostic
 argument_list|(
 argument|const std::string&filename
 argument_list|,
-argument|SourceMgr::DiagKind Kind
+argument|SourceMgr::DiagKind Knd
 argument_list|,
 argument|const std::string&Msg
 argument_list|)
@@ -684,7 +712,7 @@ argument_list|)
 operator|,
 name|Kind
 argument_list|(
-name|Kind
+name|Knd
 argument_list|)
 operator|,
 name|Message

@@ -76,12 +76,10 @@ name|MCAsmParserExtension
 block|{
 name|MCAsmParserExtension
 argument_list|(
-specifier|const
-name|MCAsmParserExtension
-operator|&
+argument|const MCAsmParserExtension&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -90,8 +88,8 @@ specifier|const
 name|MCAsmParserExtension
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MCAsmParser
 modifier|*
 name|Parser
@@ -167,8 +165,8 @@ operator|~
 name|MCAsmParserExtension
 argument_list|()
 expr_stmt|;
-comment|/// \brief Initialize the extension for parsing using the given \arg
-comment|/// Parser. The extension should use the AsmParser interfaces to register its
+comment|/// \brief Initialize the extension for parsing using the given \p Parser.
+comment|/// The extension should use the AsmParser interfaces to register its
 comment|/// parsing routines.
 name|virtual
 name|void

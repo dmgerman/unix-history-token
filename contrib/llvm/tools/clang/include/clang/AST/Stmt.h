@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTContext.h"
+file|"clang/AST/Attr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/Attr.h"
+file|"clang/Lex/Token.h"
 end_include
 
 begin_include
@@ -158,6 +158,9 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
+name|LabelDecl
+decl_stmt|;
+name|class
 name|SourceManager
 decl_stmt|;
 name|class
@@ -165,6 +168,9 @@ name|StringLiteral
 decl_stmt|;
 name|class
 name|SwitchStmt
+decl_stmt|;
+name|class
+name|VarDecl
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// ExprIterator - Iterators for iterating over Stmt* arrays that contain
@@ -1631,52 +1637,6 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-block|{
-name|printPretty
-argument_list|(
-name|OS
-argument_list|,
-operator|*
-operator|(
-name|ASTContext
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|Helper
-argument_list|,
-name|Policy
-argument_list|,
-name|Indentation
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|printPretty
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
-name|PrinterHelper
-operator|*
-name|Helper
-argument_list|,
-specifier|const
-name|PrintingPolicy
-operator|&
-name|Policy
-argument_list|,
-name|unsigned
-name|Indentation
-operator|=
-literal|0
-argument_list|)
-decl|const
 decl_stmt|;
 comment|/// viewAST - Visualize an AST rooted at this Stmt* using GraphViz.  Only
 comment|///   works on systems with GraphViz (Mac OS X) or dot+gv installed.
@@ -1724,20 +1684,6 @@ operator|->
 name|stripLabelLikeStatements
 argument_list|()
 operator|)
-return|;
-block|}
-comment|// Implement isa<T> support.
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|/// hasImplicitControlFlow - Some statements (e.g. short circuited operations)
@@ -1840,12 +1786,12 @@ return|;
 block|}
 comment|/// \brief Produce a unique representation of the given statement.
 comment|///
-comment|/// \brief ID once the profiling operation is complete, will contain
+comment|/// \param ID once the profiling operation is complete, will contain
 comment|/// the unique representation of the given statement.
 comment|///
-comment|/// \brief Context the AST context in which the statement resides
+comment|/// \param Context the AST context in which the statement resides
 comment|///
-comment|/// \brief Canonical whether the profile should be based on the canonical
+comment|/// \param Canonical whether the profile should be based on the canonical
 comment|/// representation of this statement (e.g., where non-type template
 comment|/// parameters are identified by index/level rather than their
 comment|/// declaration pointers) or the exact representation of the statement as
@@ -2093,17 +2039,6 @@ operator|==
 name|DeclStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DeclStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators over subexpressions.
 name|child_range
 name|children
@@ -2214,6 +2149,48 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|decl_iterator
+operator|>
+name|reverse_decl_iterator
+expr_stmt|;
+end_typedef
+
+begin_function
+name|reverse_decl_iterator
+name|decl_rbegin
+parameter_list|()
+block|{
+return|return
+name|reverse_decl_iterator
+argument_list|(
+name|decl_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|reverse_decl_iterator
+name|decl_rend
+parameter_list|()
+block|{
+return|return
+name|reverse_decl_iterator
+argument_list|(
+name|decl_begin
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -2342,17 +2319,6 @@ operator|==
 name|NullStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const NullStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -2402,7 +2368,7 @@ name|public
 operator|:
 name|CompoundStmt
 argument_list|(
-argument|ASTContext& C
+argument|ASTContext&C
 argument_list|,
 argument|Stmt **StmtStart
 argument_list|,
@@ -2412,78 +2378,39 @@ argument|SourceLocation LB
 argument_list|,
 argument|SourceLocation RB
 argument_list|)
+block|;
+comment|// \brief Build an empty compound statment with a location.
+name|explicit
+name|CompoundStmt
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
 operator|:
 name|Stmt
 argument_list|(
 name|CompoundStmtClass
 argument_list|)
 block|,
+name|Body
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|LBracLoc
 argument_list|(
-name|LB
+name|Loc
 argument_list|)
 block|,
 name|RBracLoc
 argument_list|(
-argument|RB
+argument|Loc
 argument_list|)
 block|{
 name|CompoundStmtBits
 operator|.
 name|NumStmts
 operator|=
-name|NumStmts
-block|;
-name|assert
-argument_list|(
-name|CompoundStmtBits
-operator|.
-name|NumStmts
-operator|==
-name|NumStmts
-operator|&&
-literal|"NumStmts doesn't fit in bits of CompoundStmtBits.NumStmts!"
-argument_list|)
-block|;
-if|if
-condition|(
-name|NumStmts
-operator|==
 literal|0
-condition|)
-block|{
-name|Body
-operator|=
-literal|0
-expr_stmt|;
-return|return;
-block|}
-name|Body
-operator|=
-name|new
-argument_list|(
-argument|C
-argument_list|)
-name|Stmt
-operator|*
-index|[
-name|NumStmts
-index|]
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|Body
-argument_list|,
-name|StmtStart
-argument_list|,
-name|NumStmts
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|Body
-argument_list|)
-argument_list|)
 block|;   }
 comment|// \brief Build an empty compound statement.
 name|explicit
@@ -2498,7 +2425,7 @@ name|CompoundStmtClass
 argument_list|,
 name|Empty
 argument_list|)
-decl_stmt|,
+block|,
 name|Body
 argument_list|(
 literal|0
@@ -2509,30 +2436,17 @@ operator|.
 name|NumStmts
 operator|=
 literal|0
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_function_decl
+block|;   }
 name|void
 name|setStmts
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
-parameter_list|,
-name|Stmt
-modifier|*
-modifier|*
-name|Stmts
-parameter_list|,
-name|unsigned
-name|NumStmts
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|Stmt **Stmts
+argument_list|,
+argument|unsigned NumStmts
+argument_list|)
+block|;
 name|bool
 name|body_empty
 argument_list|()
@@ -2546,9 +2460,6 @@ operator|==
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|size
 argument_list|()
@@ -2560,32 +2471,23 @@ operator|.
 name|NumStmts
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|Stmt
 modifier|*
 modifier|*
 name|body_iterator
 typedef|;
-end_typedef
-
-begin_function
 name|body_iterator
 name|body_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Body
 return|;
 block|}
-end_function
-
-begin_function
 name|body_iterator
 name|body_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Body
@@ -2594,19 +2496,16 @@ name|size
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|Stmt
-modifier|*
+operator|*
 name|body_back
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|!
 name|body_empty
 argument_list|()
-condition|?
+operator|?
 name|Body
 index|[
 name|size
@@ -2614,20 +2513,15 @@ argument_list|()
 operator|-
 literal|1
 index|]
-else|:
+operator|:
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|setLastStmt
-parameter_list|(
-name|Stmt
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|Stmt *S
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -2637,7 +2531,7 @@ argument_list|()
 operator|&&
 literal|"setLastStmt"
 argument_list|)
-expr_stmt|;
+block|;
 name|Body
 index|[
 name|size
@@ -2647,9 +2541,8 @@ literal|1
 index|]
 operator|=
 name|S
-expr_stmt|;
-block|}
-end_function
+block|;   }
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -2894,22 +2787,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CompoundStmt
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -3096,17 +2973,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|DefaultStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SwitchCase *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -3509,17 +3375,6 @@ operator|==
 name|CaseStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CaseStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -3703,17 +3558,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|DefaultStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DefaultStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -3928,17 +3772,6 @@ operator|==
 name|LabelStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LabelStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief Represents an attribute applied to a statement.
@@ -3959,24 +3792,28 @@ block|;
 name|SourceLocation
 name|AttrLoc
 block|;
-name|AttrVec
-name|Attrs
+name|unsigned
+name|NumAttrs
 block|;
-comment|// TODO: It can be done as Attr *Attrs[1]; and variable size array as in
-comment|// StringLiteral
+specifier|const
+name|Attr
+operator|*
+name|Attrs
+index|[
+literal|1
+index|]
+block|;
 name|friend
 name|class
 name|ASTStmtReader
 block|;
-name|public
-operator|:
 name|AttributedStmt
 argument_list|(
-argument|SourceLocation loc
+argument|SourceLocation Loc
 argument_list|,
-argument|const AttrVec&attrs
+argument|ArrayRef<const Attr*> Attrs
 argument_list|,
-argument|Stmt *substmt
+argument|Stmt *SubStmt
 argument_list|)
 operator|:
 name|Stmt
@@ -3986,33 +3823,104 @@ argument_list|)
 block|,
 name|SubStmt
 argument_list|(
-name|substmt
+name|SubStmt
 argument_list|)
 block|,
 name|AttrLoc
 argument_list|(
-name|loc
+name|Loc
 argument_list|)
 block|,
-name|Attrs
+name|NumAttrs
 argument_list|(
-argument|attrs
+argument|Attrs.size()
 argument_list|)
-block|{   }
-comment|// \brief Build an empty attributed statement.
+block|{
+name|memcpy
+argument_list|(
+name|this
+operator|->
+name|Attrs
+argument_list|,
+name|Attrs
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|Attrs
+operator|.
+name|size
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Attr
+operator|*
+argument_list|)
+argument_list|)
+block|;   }
 name|explicit
 name|AttributedStmt
 argument_list|(
 argument|EmptyShell Empty
+argument_list|,
+argument|unsigned NumAttrs
 argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-argument|AttributedStmtClass
+name|AttributedStmtClass
 argument_list|,
-argument|Empty
+name|Empty
 argument_list|)
-block|{   }
+block|,
+name|NumAttrs
+argument_list|(
+argument|NumAttrs
+argument_list|)
+block|{
+name|memset
+argument_list|(
+name|Attrs
+argument_list|,
+literal|0
+argument_list|,
+name|NumAttrs
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Attr
+operator|*
+argument_list|)
+argument_list|)
+block|;   }
+name|public
+operator|:
+specifier|static
+name|AttributedStmt
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|ArrayRef<const Attr*> Attrs
+argument_list|,
+argument|Stmt *SubStmt
+argument_list|)
+block|;
+comment|// \brief Build an empty attributed statement.
+specifier|static
+name|AttributedStmt
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned NumAttrs
+argument_list|)
+block|;
 name|SourceLocation
 name|getAttrLoc
 argument_list|()
@@ -4022,15 +3930,28 @@ return|return
 name|AttrLoc
 return|;
 block|}
+name|ArrayRef
+operator|<
 specifier|const
-name|AttrVec
-operator|&
+name|Attr
+operator|*
+operator|>
 name|getAttrs
 argument_list|()
 specifier|const
 block|{
 return|return
+name|ArrayRef
+operator|<
+specifier|const
+name|Attr
+operator|*
+operator|>
+operator|(
 name|Attrs
+expr|,
+name|NumAttrs
+operator|)
 return|;
 block|}
 name|Stmt
@@ -4102,17 +4023,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|AttributedStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AttributedStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -4491,17 +4401,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|IfStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const IfStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -4912,17 +4811,6 @@ operator|==
 name|SwitchStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SwitchStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// WhileStmt - This represents a 'while' stmt.
@@ -5184,17 +5072,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|WhileStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const WhileStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -5511,17 +5388,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|DoStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DoStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -5968,17 +5834,6 @@ operator|==
 name|ForStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ForStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -6155,17 +6010,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|GotoStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const GotoStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -6395,17 +6239,6 @@ operator|==
 name|IndirectGotoStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const IndirectGotoStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -6516,17 +6349,6 @@ operator|==
 name|ContinueStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ContinueStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -6627,17 +6449,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|BreakStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BreakStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -6849,17 +6660,6 @@ operator|==
 name|ReturnStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ReturnStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -6888,7 +6688,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// AsmStmt - This represents a GNU inline-assembly statement extension.
+comment|/// AsmStmt is the base class for GCCAsmStmt and MSAsmStmt.
 comment|///
 name|class
 name|AsmStmt
@@ -6896,23 +6696,20 @@ operator|:
 name|public
 name|Stmt
 block|{
+name|protected
+operator|:
 name|SourceLocation
 name|AsmLoc
-block|,
-name|RParenLoc
 block|;
-name|StringLiteral
-operator|*
-name|AsmStr
-block|;
+comment|/// \brief True if the assembly statement does not have any input or output
+comment|/// operands.
 name|bool
 name|IsSimple
 block|;
+comment|/// \brief If true, treat this inline assembly as having side effects.
+comment|/// This assembly statement should not be optimized, deleted or moved.
 name|bool
 name|IsVolatile
-block|;
-name|bool
-name|MSAsm
 block|;
 name|unsigned
 name|NumOutputs
@@ -6923,32 +6720,19 @@ block|;
 name|unsigned
 name|NumClobbers
 block|;
-comment|// FIXME: If we wanted to, we could allocate all of these in one big array.
 name|IdentifierInfo
 operator|*
 operator|*
 name|Names
-block|;
-name|StringLiteral
-operator|*
-operator|*
-name|Constraints
 block|;
 name|Stmt
 operator|*
 operator|*
 name|Exprs
 block|;
-name|StringLiteral
-operator|*
-operator|*
-name|Clobbers
-block|;
-name|public
-operator|:
 name|AsmStmt
 argument_list|(
-argument|ASTContext&C
+argument|StmtClass SC
 argument_list|,
 argument|SourceLocation asmloc
 argument_list|,
@@ -6956,37 +6740,62 @@ argument|bool issimple
 argument_list|,
 argument|bool isvolatile
 argument_list|,
-argument|bool msasm
-argument_list|,
 argument|unsigned numoutputs
 argument_list|,
 argument|unsigned numinputs
 argument_list|,
-argument|IdentifierInfo **names
-argument_list|,
-argument|StringLiteral **constraints
-argument_list|,
-argument|Expr **exprs
-argument_list|,
-argument|StringLiteral *asmstr
-argument_list|,
 argument|unsigned numclobbers
-argument_list|,
-argument|StringLiteral **clobbers
-argument_list|,
-argument|SourceLocation rparenloc
 argument_list|)
-block|;
+operator|:
+name|Stmt
+argument_list|(
+name|SC
+argument_list|)
+block|,
+name|AsmLoc
+argument_list|(
+name|asmloc
+argument_list|)
+block|,
+name|IsSimple
+argument_list|(
+name|issimple
+argument_list|)
+block|,
+name|IsVolatile
+argument_list|(
+name|isvolatile
+argument_list|)
+block|,
+name|NumOutputs
+argument_list|(
+name|numoutputs
+argument_list|)
+block|,
+name|NumInputs
+argument_list|(
+name|numinputs
+argument_list|)
+block|,
+name|NumClobbers
+argument_list|(
+argument|numclobbers
+argument_list|)
+block|{ }
+name|public
+operator|:
 comment|/// \brief Build an empty inline-assembly statement.
 name|explicit
 name|AsmStmt
 argument_list|(
+argument|StmtClass SC
+argument_list|,
 argument|EmptyShell Empty
 argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-name|AsmStmtClass
+name|SC
 argument_list|,
 name|Empty
 argument_list|)
@@ -6996,17 +6805,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|Constraints
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|Exprs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Clobbers
 argument_list|(
 literal|0
 argument_list|)
@@ -7030,44 +6829,6 @@ name|AsmLoc
 operator|=
 name|L
 block|; }
-name|SourceLocation
-name|getRParenLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RParenLoc
-return|;
-block|}
-name|void
-name|setRParenLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|RParenLoc
-operator|=
-name|L
-block|; }
-name|bool
-name|isVolatile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsVolatile
-return|;
-block|}
-name|void
-name|setVolatile
-argument_list|(
-argument|bool V
-argument_list|)
-block|{
-name|IsVolatile
-operator|=
-name|V
-block|; }
 name|bool
 name|isSimple
 argument_list|()
@@ -7088,23 +6849,522 @@ operator|=
 name|V
 block|; }
 name|bool
-name|isMSAsm
+name|isVolatile
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MSAsm
+name|IsVolatile
 return|;
 block|}
 name|void
-name|setMSAsm
+name|setVolatile
 argument_list|(
 argument|bool V
 argument_list|)
 block|{
-name|MSAsm
+name|IsVolatile
 operator|=
 name|V
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|()
+return|;
+block|}
+comment|//===--- Asm String Analysis ---===//
+comment|/// Assemble final IR asm string.
+name|std
+operator|::
+name|string
+name|generateAsmString
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
+comment|//===--- Output operands ---===//
+name|unsigned
+name|getNumOutputs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumOutputs
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getOutputIdentifier
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Names
+index|[
+name|i
+index|]
+return|;
+block|}
+name|StringRef
+name|getOutputName
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|IdentifierInfo
+modifier|*
+name|II
+init|=
+name|getOutputIdentifier
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+name|II
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+name|StringRef
+argument_list|()
+return|;
+block|}
+comment|/// getOutputConstraint - Return the constraint string for the specified
+comment|/// output operand.  All output constraints are known to be non-empty (either
+comment|/// '=' or '+').
+name|StringRef
+name|getOutputConstraint
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// isOutputPlusConstraint - Return true if the specified output constraint
+comment|/// is a "+" constraint (which is both an input and an output) or false if it
+comment|/// is an "=" constraint (just an output).
+name|bool
+name|isOutputPlusConstraint
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getOutputConstraint
+argument_list|(
+name|i
+argument_list|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'+'
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getOutputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getNumPlusOperands - Return the number of output operands that have a "+"
+comment|/// constraint.
+name|unsigned
+name|getNumPlusOperands
+argument_list|()
+specifier|const
+block|;
+comment|//===--- Input operands ---===//
+name|unsigned
+name|getNumInputs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumInputs
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getInputIdentifier
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Names
+index|[
+name|i
+operator|+
+name|NumOutputs
+index|]
+return|;
+block|}
+name|StringRef
+name|getInputName
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|IdentifierInfo
+modifier|*
+name|II
+init|=
+name|getInputIdentifier
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+name|II
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+name|StringRef
+argument_list|()
+return|;
+block|}
+comment|/// getInputConstraint - Return the specified input constraint.  Unlike output
+comment|/// constraints, these can be empty.
+name|StringRef
+name|getInputConstraint
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|Expr
+operator|*
+name|getInputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|//===--- Other ---===//
+name|unsigned
+name|getNumClobbers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumClobbers
+return|;
+block|}
+name|StringRef
+name|getClobber
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|GCCAsmStmtClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|MSAsmStmtClass
+return|;
+block|}
+comment|// Input expr iterators.
+typedef|typedef
+name|ExprIterator
+name|inputs_iterator
+typedef|;
+typedef|typedef
+name|ConstExprIterator
+name|const_inputs_iterator
+typedef|;
+name|inputs_iterator
+name|begin_inputs
+argument_list|()
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+return|;
+block|}
+name|inputs_iterator
+name|end_inputs
+argument_list|()
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+operator|+
+name|NumInputs
+return|;
+block|}
+name|const_inputs_iterator
+name|begin_inputs
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+return|;
+block|}
+name|const_inputs_iterator
+name|end_inputs
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+operator|+
+name|NumInputs
+return|;
+block|}
+comment|// Output expr iterators.
+typedef|typedef
+name|ExprIterator
+name|outputs_iterator
+typedef|;
+typedef|typedef
+name|ConstExprIterator
+name|const_outputs_iterator
+typedef|;
+name|outputs_iterator
+name|begin_outputs
+argument_list|()
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+return|;
+block|}
+name|outputs_iterator
+name|end_outputs
+argument_list|()
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+return|;
+block|}
+name|const_outputs_iterator
+name|begin_outputs
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+return|;
+block|}
+name|const_outputs_iterator
+name|end_outputs
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+operator|+
+name|NumInputs
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents a GCC inline-assembly statement extension.
+comment|///
+name|class
+name|GCCAsmStmt
+operator|:
+name|public
+name|AsmStmt
+block|{
+name|SourceLocation
+name|RParenLoc
+block|;
+name|StringLiteral
+operator|*
+name|AsmStr
+block|;
+comment|// FIXME: If we wanted to, we could allocate all of these in one big array.
+name|StringLiteral
+operator|*
+operator|*
+name|Constraints
+block|;
+name|StringLiteral
+operator|*
+operator|*
+name|Clobbers
+block|;
+name|public
+operator|:
+name|GCCAsmStmt
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|SourceLocation asmloc
+argument_list|,
+argument|bool issimple
+argument_list|,
+argument|bool isvolatile
+argument_list|,
+argument|unsigned numoutputs
+argument_list|,
+argument|unsigned numinputs
+argument_list|,
+argument|IdentifierInfo **names
+argument_list|,
+argument|StringLiteral **constraints
+argument_list|,
+argument|Expr **exprs
+argument_list|,
+argument|StringLiteral *asmstr
+argument_list|,
+argument|unsigned numclobbers
+argument_list|,
+argument|StringLiteral **clobbers
+argument_list|,
+argument|SourceLocation rparenloc
+argument_list|)
+block|;
+comment|/// \brief Build an empty inline-assembly statement.
+name|explicit
+name|GCCAsmStmt
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|AsmStmt
+argument_list|(
+name|GCCAsmStmtClass
+argument_list|,
+name|Empty
+argument_list|)
+block|,
+name|Constraints
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Clobbers
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|L
 block|; }
 comment|//===--- Asm String Analysis ---===//
 specifier|const
@@ -7308,63 +7568,17 @@ argument|unsigned&DiagOffs
 argument_list|)
 specifier|const
 block|;
+comment|/// Assemble final IR asm string.
+name|std
+operator|::
+name|string
+name|generateAsmString
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
 comment|//===--- Output operands ---===//
-name|unsigned
-name|getNumOutputs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumOutputs
-return|;
-block|}
-name|IdentifierInfo
-operator|*
-name|getOutputIdentifier
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Names
-index|[
-name|i
-index|]
-return|;
-block|}
-name|StringRef
-name|getOutputName
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|IdentifierInfo
-modifier|*
-name|II
-init|=
-name|getOutputIdentifier
-argument_list|(
-name|i
-argument_list|)
-condition|)
-return|return
-name|II
-operator|->
-name|getName
-argument_list|()
-return|;
-return|return
-name|StringRef
-argument_list|()
-return|;
-block|}
-comment|/// getOutputConstraint - Return the constraint string for the specified
-comment|/// output operand.  All output constraints are known to be non-empty (either
-comment|/// '=' or '+').
 name|StringRef
 name|getOutputConstraint
 argument_list|(
@@ -7421,7 +7635,7 @@ block|{
 return|return
 name|const_cast
 operator|<
-name|AsmStmt
+name|GCCAsmStmt
 operator|*
 operator|>
 operator|(
@@ -7434,93 +7648,7 @@ name|i
 argument_list|)
 return|;
 block|}
-comment|/// isOutputPlusConstraint - Return true if the specified output constraint
-comment|/// is a "+" constraint (which is both an input and an output) or false if it
-comment|/// is an "=" constraint (just an output).
-name|bool
-name|isOutputPlusConstraint
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getOutputConstraint
-argument_list|(
-name|i
-argument_list|)
-index|[
-literal|0
-index|]
-operator|==
-literal|'+'
-return|;
-block|}
-comment|/// getNumPlusOperands - Return the number of output operands that have a "+"
-comment|/// constraint.
-name|unsigned
-name|getNumPlusOperands
-argument_list|()
-specifier|const
-block|;
 comment|//===--- Input operands ---===//
-name|unsigned
-name|getNumInputs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumInputs
-return|;
-block|}
-name|IdentifierInfo
-operator|*
-name|getInputIdentifier
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Names
-index|[
-name|i
-operator|+
-name|NumOutputs
-index|]
-return|;
-block|}
-name|StringRef
-name|getInputName
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|IdentifierInfo
-modifier|*
-name|II
-init|=
-name|getInputIdentifier
-argument_list|(
-name|i
-argument_list|)
-condition|)
-return|return
-name|II
-operator|->
-name|getName
-argument_list|()
-return|;
-return|return
-name|StringRef
-argument_list|()
-return|;
-block|}
-comment|/// getInputConstraint - Return the specified input constraint.  Unlike output
-comment|/// constraints, these can be empty.
 name|StringRef
 name|getInputConstraint
 argument_list|(
@@ -7589,7 +7717,7 @@ block|{
 return|return
 name|const_cast
 operator|<
-name|AsmStmt
+name|GCCAsmStmt
 operator|*
 operator|>
 operator|(
@@ -7633,18 +7761,16 @@ argument|StringRef SymbolicName
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|getNumClobbers
-argument_list|()
+name|StringRef
+name|getClobber
+argument_list|(
+argument|unsigned i
+argument_list|)
 specifier|const
-block|{
-return|return
-name|NumClobbers
-return|;
-block|}
+block|;
 name|StringLiteral
 operator|*
-name|getClobber
+name|getClobberStringLiteral
 argument_list|(
 argument|unsigned i
 argument_list|)
@@ -7659,7 +7785,7 @@ block|}
 specifier|const
 name|StringLiteral
 operator|*
-name|getClobber
+name|getClobberStringLiteral
 argument_list|(
 argument|unsigned i
 argument_list|)
@@ -7700,152 +7826,378 @@ operator|->
 name|getStmtClass
 argument_list|()
 operator|==
-name|AsmStmtClass
+name|GCCAsmStmtClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents a Microsoft inline-assembly statement extension.
+comment|///
+name|class
+name|MSAsmStmt
+operator|:
+name|public
+name|AsmStmt
+block|{
+name|SourceLocation
+name|AsmLoc
+block|,
+name|LBraceLoc
+block|,
+name|EndLoc
+block|;
+name|std
+operator|::
+name|string
+name|AsmStr
+block|;
+name|unsigned
+name|NumAsmToks
+block|;
+name|Token
+operator|*
+name|AsmToks
+block|;
+name|StringRef
+operator|*
+name|Constraints
+block|;
+name|StringRef
+operator|*
+name|Clobbers
+block|;
+name|public
+operator|:
+name|MSAsmStmt
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|SourceLocation asmloc
+argument_list|,
+argument|SourceLocation lbraceloc
+argument_list|,
+argument|bool issimple
+argument_list|,
+argument|bool isvolatile
+argument_list|,
+argument|ArrayRef<Token> asmtoks
+argument_list|,
+argument|unsigned numoutputs
+argument_list|,
+argument|unsigned numinputs
+argument_list|,
+argument|ArrayRef<IdentifierInfo*> names
+argument_list|,
+argument|ArrayRef<StringRef> constraints
+argument_list|,
+argument|ArrayRef<Expr*> exprs
+argument_list|,
+argument|StringRef asmstr
+argument_list|,
+argument|ArrayRef<StringRef> clobbers
+argument_list|,
+argument|SourceLocation endloc
+argument_list|)
+block|;
+comment|/// \brief Build an empty MS-style inline-assembly statement.
+name|explicit
+name|MSAsmStmt
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|AsmStmt
+argument_list|(
+name|MSAsmStmtClass
+argument_list|,
+name|Empty
+argument_list|)
+block|,
+name|NumAsmToks
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|AsmToks
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Constraints
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Clobbers
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|SourceLocation
+name|getLBraceLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LBraceLoc
+return|;
+block|}
+name|void
+name|setLBraceLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|LBraceLoc
+operator|=
+name|L
+block|; }
+name|SourceLocation
+name|getEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EndLoc
+return|;
+block|}
+name|void
+name|setEndLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|EndLoc
+operator|=
+name|L
+block|; }
+name|bool
+name|hasBraces
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LBraceLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getNumAsmToks
+argument_list|()
+block|{
+return|return
+name|NumAsmToks
+return|;
+block|}
+name|Token
+operator|*
+name|getAsmToks
+argument_list|()
+block|{
+return|return
+name|AsmToks
+return|;
+block|}
+comment|//===--- Asm String Analysis ---===//
+specifier|const
+name|std
+operator|::
+name|string
+operator|*
+name|getAsmString
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|AsmStr
+return|;
+block|}
+name|std
+operator|::
+name|string
+operator|*
+name|getAsmString
+argument_list|()
+block|{
+return|return
+operator|&
+name|AsmStr
+return|;
+block|}
+name|void
+name|setAsmString
+argument_list|(
+argument|StringRef&E
+argument_list|)
+block|{
+name|AsmStr
+operator|=
+name|E
+operator|.
+name|str
+argument_list|()
+block|; }
+comment|/// Assemble final IR asm string.
+name|std
+operator|::
+name|string
+name|generateAsmString
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
+comment|//===--- Output operands ---===//
+name|StringRef
+name|getOutputConstraint
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Constraints
+index|[
+name|i
+index|]
+return|;
+block|}
+name|Expr
+operator|*
+name|getOutputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|;
+specifier|const
+name|Expr
+operator|*
+name|getOutputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MSAsmStmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getOutputExpr
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|//===--- Input operands ---===//
+name|StringRef
+name|getInputConstraint
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Constraints
+index|[
+name|i
+operator|+
+name|NumOutputs
+index|]
+return|;
+block|}
+name|Expr
+operator|*
+name|getInputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|;
+name|void
+name|setInputExpr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Expr *E
+argument_list|)
+block|;
+specifier|const
+name|Expr
+operator|*
+name|getInputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MSAsmStmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getInputExpr
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|//===--- Other ---===//
+name|StringRef
+name|getClobber
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Clobbers
+index|[
+name|i
+index|]
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|AsmLoc
+argument_list|,
+name|EndLoc
+argument_list|)
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const AsmStmt *
+argument|const Stmt *T
 argument_list|)
 block|{
 return|return
-name|true
-return|;
-block|}
-comment|// Input expr iterators.
-typedef|typedef
-name|ExprIterator
-name|inputs_iterator
-typedef|;
-typedef|typedef
-name|ConstExprIterator
-name|const_inputs_iterator
-typedef|;
-name|inputs_iterator
-name|begin_inputs
+name|T
+operator|->
+name|getStmtClass
 argument_list|()
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-operator|+
-name|NumOutputs
-return|;
-block|}
-name|inputs_iterator
-name|end_inputs
-argument_list|()
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-operator|+
-name|NumOutputs
-operator|+
-name|NumInputs
-return|;
-block|}
-name|const_inputs_iterator
-name|begin_inputs
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-operator|+
-name|NumOutputs
-return|;
-block|}
-name|const_inputs_iterator
-name|end_inputs
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-operator|+
-name|NumOutputs
-operator|+
-name|NumInputs
-return|;
-block|}
-comment|// Output expr iterators.
-typedef|typedef
-name|ExprIterator
-name|outputs_iterator
-typedef|;
-typedef|typedef
-name|ConstExprIterator
-name|const_outputs_iterator
-typedef|;
-name|outputs_iterator
-name|begin_outputs
-argument_list|()
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-return|;
-block|}
-name|outputs_iterator
-name|end_outputs
-argument_list|()
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-operator|+
-name|NumOutputs
-return|;
-block|}
-name|const_outputs_iterator
-name|begin_outputs
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-return|;
-block|}
-name|const_outputs_iterator
-name|end_outputs
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|Exprs
-index|[
-literal|0
-index|]
-operator|+
-name|NumOutputs
+operator|==
+name|MSAsmStmtClass
 return|;
 block|}
 name|child_range
@@ -7866,10 +8218,6 @@ name|Exprs
 index|[
 literal|0
 index|]
-operator|+
-name|NumOutputs
-operator|+
-name|NumInputs
 argument_list|)
 return|;
 block|}
@@ -8054,17 +8402,6 @@ operator|==
 name|SEHExceptStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|SEHExceptStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -8209,17 +8546,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|SEHFinallyStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|SEHFinallyStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -8430,17 +8756,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|SEHTryStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|SEHTryStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

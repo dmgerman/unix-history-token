@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -177,11 +183,11 @@ directive|include
 file|<vector>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SYS_STAT_H
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -335,6 +341,271 @@ name|available
 decl_stmt|;
 block|}
 struct|;
+enum|enum
+name|perms
+block|{
+name|no_perms
+init|=
+literal|0
+block|,
+name|owner_read
+init|=
+literal|0400
+block|,
+name|owner_write
+init|=
+literal|0200
+block|,
+name|owner_exe
+init|=
+literal|0100
+block|,
+name|owner_all
+init|=
+name|owner_read
+operator||
+name|owner_write
+operator||
+name|owner_exe
+block|,
+name|group_read
+init|=
+literal|040
+block|,
+name|group_write
+init|=
+literal|020
+block|,
+name|group_exe
+init|=
+literal|010
+block|,
+name|group_all
+init|=
+name|group_read
+operator||
+name|group_write
+operator||
+name|group_exe
+block|,
+name|others_read
+init|=
+literal|04
+block|,
+name|others_write
+init|=
+literal|02
+block|,
+name|others_exe
+init|=
+literal|01
+block|,
+name|others_all
+init|=
+name|others_read
+operator||
+name|others_write
+operator||
+name|others_exe
+block|,
+name|all_all
+init|=
+name|owner_all
+operator||
+name|group_all
+operator||
+name|others_all
+block|,
+name|set_uid_on_exe
+init|=
+literal|04000
+block|,
+name|set_gid_on_exe
+init|=
+literal|02000
+block|,
+name|sticky_bit
+init|=
+literal|01000
+block|,
+name|perms_mask
+init|=
+name|all_all
+operator||
+name|set_uid_on_exe
+operator||
+name|set_gid_on_exe
+operator||
+name|sticky_bit
+block|,
+name|perms_not_known
+init|=
+literal|0xFFFF
+block|,
+name|add_perms
+init|=
+literal|0x1000
+block|,
+name|remove_perms
+init|=
+literal|0x2000
+block|,
+name|symlink_perms
+init|=
+literal|0x4000
+block|}
+enum|;
+comment|// Helper functions so that you can use& and | to manipulate perms bits:
+specifier|inline
+name|perms
+name|operator
+operator||
+operator|(
+name|perms
+name|l
+operator|,
+name|perms
+name|r
+operator|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|perms
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|l
+operator|)
+operator||
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|r
+operator|)
+operator|)
+return|;
+block|}
+specifier|inline
+name|perms
+name|operator
+function|&(
+name|perms
+name|l
+function|,
+name|perms
+function|r
+block|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|perms
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|l
+operator|)
+operator|&
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|r
+operator|)
+operator|)
+return|;
+block|}
+specifier|inline
+name|perms
+operator|&
+name|operator
+operator||=
+operator|(
+name|perms
+operator|&
+name|l
+operator|,
+name|perms
+name|r
+operator|)
+block|{
+name|l
+operator|=
+name|l
+operator||
+name|r
+block|;
+return|return
+name|l
+return|;
+block|}
+specifier|inline
+name|perms
+operator|&
+name|operator
+operator|&=
+operator|(
+name|perms
+operator|&
+name|l
+operator|,
+name|perms
+name|r
+operator|)
+block|{
+name|l
+operator|=
+name|l
+operator|&
+name|r
+block|;
+return|return
+name|l
+return|;
+block|}
+specifier|inline
+name|perms
+name|operator
+operator|~
+operator|(
+name|perms
+name|x
+operator|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|perms
+operator|>
+operator|(
+operator|~
+name|static_cast
+operator|<
+name|unsigned
+name|short
+operator|>
+operator|(
+name|x
+operator|)
+operator|)
+return|;
+block|}
 comment|/// file_status - Represents the result of a call to stat and friends. It has
 comment|///               a platform specific member to store the result.
 name|class
@@ -347,10 +618,10 @@ argument_list|(
 name|LLVM_ON_UNIX
 argument_list|)
 name|dev_t
-name|st_dev
+name|fs_st_dev
 decl_stmt|;
 name|ino_t
-name|st_ino
+name|fs_st_ino
 decl_stmt|;
 elif|#
 directive|elif
@@ -409,19 +680,30 @@ function_decl|;
 name|file_type
 name|Type
 decl_stmt|;
+name|perms
+name|Perms
+decl_stmt|;
 name|public
 label|:
 name|explicit
 name|file_status
 argument_list|(
 argument|file_type v=file_type::status_error
+argument_list|,
+argument|perms prms=perms_not_known
 argument_list|)
 block|:
 name|Type
 argument_list|(
-argument|v
+name|v
+argument_list|)
+operator|,
+name|Perms
+argument_list|(
+argument|prms
 argument_list|)
 block|{}
+comment|// getters
 name|file_type
 name|type
 argument_list|()
@@ -431,6 +713,16 @@ return|return
 name|Type
 return|;
 block|}
+name|perms
+name|permissions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Perms
+return|;
+block|}
+comment|// setters
 name|void
 name|type
 parameter_list|(
@@ -441,6 +733,18 @@ block|{
 name|Type
 operator|=
 name|v
+expr_stmt|;
+block|}
+name|void
+name|permissions
+parameter_list|(
+name|perms
+name|p
+parameter_list|)
+block|{
+name|Perms
+operator|=
+name|p
 expr_stmt|;
 block|}
 block|}
@@ -709,7 +1013,7 @@ function_decl|;
 comment|/// @brief Get the current path.
 comment|///
 comment|/// @param result Holds the current path on return.
-comment|/// @results errc::success if the current path has been stored in result,
+comment|/// @returns errc::success if the current path has been stored in result,
 comment|///          otherwise a platform specific error_code.
 name|error_code
 name|current_path
@@ -727,7 +1031,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param existed Set to true if \a path existed, false if it did not.
 comment|///                undefined otherwise.
-comment|/// @results errc::success if path has been removed and existed has been
+comment|/// @returns errc::success if path has been removed and existed has been
 comment|///          successfully set, otherwise a platform specific error_code.
 name|error_code
 name|remove
@@ -747,7 +1051,7 @@ comment|///        removed as if by POSIX remove().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param num_removed Number of files removed.
-comment|/// @results errc::success if path has been removed and num_removed has been
+comment|/// @returns errc::success if path has been removed and num_removed has been
 comment|///          successfully set, otherwise a platform specific error_code.
 name|error_code
 name|remove_all
@@ -804,7 +1108,7 @@ comment|/// @{
 comment|/// @brief Does file exist?
 comment|///
 comment|/// @param status A file_status previously returned from stat.
-comment|/// @results True if the file represented by status exists, false if it does
+comment|/// @returns True if the file represented by status exists, false if it does
 comment|///          not.
 name|bool
 name|exists
@@ -818,7 +1122,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if the file represented by status exists, false if
 comment|///               it does not. Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|exists
@@ -867,7 +1171,7 @@ comment|/// @param B Input file_status.
 comment|///
 comment|/// assert(status_known(A) || status_known(B));
 comment|///
-comment|/// @results True if A and B both represent the same file system entity, false
+comment|/// @returns True if A and B both represent the same file system entity, false
 comment|///          otherwise.
 name|bool
 name|equivalent
@@ -887,7 +1191,7 @@ comment|/// @param A Input path A.
 comment|/// @param B Input path B.
 comment|/// @param result Set to true if stat(A) and stat(B) have the same device and
 comment|///               inode (or equivalent).
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|equivalent
@@ -907,6 +1211,40 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
+comment|/// @brief Simpler version of equivalent for clients that don't need to
+comment|///        differentiate between an error and false.
+specifier|inline
+name|bool
+name|equivalent
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|A
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|B
+parameter_list|)
+block|{
+name|bool
+name|result
+decl_stmt|;
+return|return
+operator|!
+name|equivalent
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|,
+name|result
+argument_list|)
+operator|&&
+name|result
+return|;
+block|}
 comment|/// @brief Get file size.
 comment|///
 comment|/// @param path Input path.
@@ -929,7 +1267,7 @@ function_decl|;
 comment|/// @brief Does status represent a directory?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @results status.type() == file_type::directory_file.
+comment|/// @returns status.type() == file_type::directory_file.
 name|bool
 name|is_directory
 parameter_list|(
@@ -942,7 +1280,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a directory, false if it is not.
 comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_directory
@@ -960,7 +1298,7 @@ function_decl|;
 comment|/// @brief Does status represent a regular file?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @results status_known(status)&& status.type() == file_type::regular_file.
+comment|/// @returns status_known(status)&& status.type() == file_type::regular_file.
 name|bool
 name|is_regular_file
 parameter_list|(
@@ -973,7 +1311,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a regular file, false if it is not.
 comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_regular_file
@@ -992,7 +1330,7 @@ comment|/// @brief Does this status represent something that exists but is not a
 comment|///        directory, regular file, or symlink?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @results exists(s)&& !is_regular_file(s)&& !is_directory(s)&&
+comment|/// @returns exists(s)&& !is_regular_file(s)&& !is_directory(s)&&
 comment|///          !is_symlink(s)
 name|bool
 name|is_other
@@ -1007,7 +1345,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path exists, but is not a directory, regular
 comment|///               file, or a symlink, false if it does not. Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_other
@@ -1025,7 +1363,7 @@ function_decl|;
 comment|/// @brief Does status represent a symlink?
 comment|///
 comment|/// @param status A file_status previously returned from stat.
-comment|/// @param result status.type() == symlink_file.
+comment|/// @returns status.type() == symlink_file.
 name|bool
 name|is_symlink
 parameter_list|(
@@ -1038,7 +1376,7 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a symlink, false if it is not.
 comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|is_symlink
@@ -1057,7 +1395,7 @@ comment|/// @brief Get file status as if by POSIX stat().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the file status.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|status
@@ -1072,10 +1410,27 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
-comment|/// @brief Is status available?
+comment|/// @brief Modifies permission bits on a file
 comment|///
 comment|/// @param path Input path.
-comment|/// @results True if status() != status_error.
+comment|/// @returns errc::success if permissions have been changed, otherwise a
+comment|///          platform specific error_code.
+name|error_code
+name|permissions
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|path
+parameter_list|,
+name|perms
+name|prms
+parameter_list|)
+function_decl|;
+comment|/// @brief Is status available?
+comment|///
+comment|/// @param s Input file status.
+comment|/// @returns True if status() != status_error.
 name|bool
 name|status_known
 parameter_list|(
@@ -1087,7 +1442,7 @@ comment|/// @brief Is status available?
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if status() != status_error.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|status_known
@@ -1115,11 +1470,11 @@ comment|///
 comment|/// clang-%%-%%-%%-%%-%%.s => /tmp/clang-a0-b1-c2-d3-e4.s
 comment|///
 comment|/// @param model Name to base unique path off of.
-comment|/// @param result_fs Set to the opened file's file descriptor.
+comment|/// @param result_fd Set to the opened file's file descriptor.
 comment|/// @param result_path Set to the opened file's absolute path.
-comment|/// @param makeAbsolute If true and @model is not an absolute path, a temp
+comment|/// @param makeAbsolute If true and \a model is not an absolute path, a temp
 comment|///        directory will be prepended.
-comment|/// @results errc::success if result_{fd,path} have been successfully set,
+comment|/// @returns errc::success if result_{fd,path} have been successfully set,
 comment|///          otherwise a platform specific error_code.
 name|error_code
 name|unique_file
@@ -1158,7 +1513,7 @@ comment|/// absolute and has the same capitalization as the file system.
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the canonicalized version of \a path.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|canonicalize
@@ -1180,7 +1535,7 @@ comment|/// @brief Are \a path's first bytes \a magic?
 comment|///
 comment|/// @param path Input path.
 comment|/// @param magic Byte sequence to compare \a path's first len(magic) bytes to.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|has_magic
@@ -1207,7 +1562,7 @@ comment|/// @param len Number of magic bytes to get.
 comment|/// @param result Set to the first \a len bytes in the file pointed to by
 comment|///               \a path. Or the entire file if file_size(path)< len, in which
 comment|///               case result.size() returns the size of the file.
-comment|/// @results errc::success if result has been successfully set,
+comment|/// @returns errc::success if result has been successfully set,
 comment|///          errc::value_too_large if len is larger then the file pointed to by
 comment|///          \a path, otherwise a platform specific error_code.
 name|error_code
@@ -1241,7 +1596,7 @@ comment|/// @brief Get and identify \a path's type based on its content.
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the type of file, or LLVMFileType::Unknown_FileType.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|identify_magic
@@ -1259,7 +1614,7 @@ function_decl|;
 comment|/// @brief Get library paths the system linker uses.
 comment|///
 comment|/// @param result Set to the list of system library paths.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|GetSystemLibraryPaths
@@ -1278,7 +1633,7 @@ comment|/// @brief Get bitcode library paths the system linker uses
 comment|///        + LLVM_LIB_SEARCH_PATH + LLVM_LIBDIR.
 comment|///
 comment|/// @param result Set to the list of bitcode library paths.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|GetBitcodeLibraryPaths
@@ -1302,7 +1657,7 @@ comment|/// c => /usr/lib/libc.so
 comment|///
 comment|/// @param short_name Library name one would give to the system linker.
 comment|/// @param result Set to the absolute path \a short_name represents.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|FindLibrary
@@ -1325,7 +1680,7 @@ comment|///
 comment|/// @param argv0 The program name as it was spelled on the command line.
 comment|/// @param MainAddr Address of some symbol in the executable (not in a library).
 comment|/// @param result Set to the absolute path of the current executable.
-comment|/// @results errc::success if result has been successfully set, otherwise a
+comment|/// @returns errc::success if result has been successfully set, otherwise a
 comment|///          platform specific error_code.
 name|error_code
 name|GetMainExecutable
@@ -1347,6 +1702,242 @@ operator|&
 name|result
 argument_list|)
 decl_stmt|;
+comment|/// This class represents a memory mapped file. It is based on
+comment|/// boost::iostreams::mapped_file.
+name|class
+name|mapped_file_region
+block|{
+name|mapped_file_region
+argument_list|()
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|mapped_file_region
+argument_list|(
+argument|mapped_file_region&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|mapped_file_region
+modifier|&
+name|operator
+init|=
+operator|(
+name|mapped_file_region
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
+name|public
+label|:
+enum|enum
+name|mapmode
+block|{
+name|readonly
+block|,
+comment|///< May only access map via const_data as read only.
+name|readwrite
+block|,
+comment|///< May access map via data and modify it. Written to path.
+name|priv
+comment|///< May modify via data, but changes are lost on destruction.
+block|}
+enum|;
+name|private
+label|:
+comment|/// Platform specific mapping state.
+name|mapmode
+name|Mode
+decl_stmt|;
+name|uint64_t
+name|Size
+decl_stmt|;
+name|void
+modifier|*
+name|Mapping
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LLVM_ON_WIN32
+name|int
+name|FileDescriptor
+decl_stmt|;
+name|void
+modifier|*
+name|FileHandle
+decl_stmt|;
+name|void
+modifier|*
+name|FileMappingHandle
+decl_stmt|;
+endif|#
+directive|endif
+name|error_code
+name|init
+parameter_list|(
+name|int
+name|FD
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|)
+function_decl|;
+name|public
+label|:
+typedef|typedef
+name|char
+name|char_type
+typedef|;
+if|#
+directive|if
+name|LLVM_USE_RVALUE_REFERENCES
+name|mapped_file_region
+argument_list|(
+name|mapped_file_region
+operator|&&
+argument_list|)
+expr_stmt|;
+name|mapped_file_region
+modifier|&
+name|operator
+init|=
+operator|(
+name|mapped_file_region
+operator|&&
+operator|)
+decl_stmt|;
+endif|#
+directive|endif
+comment|/// Construct a mapped_file_region at \a path starting at \a offset of length
+comment|/// \a length and with access \a mode.
+comment|///
+comment|/// \param path Path to the file to map. If it does not exist it will be
+comment|///             created.
+comment|/// \param mode How to map the memory.
+comment|/// \param length Number of bytes to map in starting at \a offset. If the file
+comment|///               is shorter than this, it will be extended. If \a length is
+comment|///               0, the entire file will be mapped.
+comment|/// \param offset Byte offset from the beginning of the file where the map
+comment|///               should begin. Must be a multiple of
+comment|///               mapped_file_region::alignment().
+comment|/// \param ec This is set to errc::success if the map was constructed
+comment|///           sucessfully. Otherwise it is set to a platform dependent error.
+name|mapped_file_region
+argument_list|(
+argument|const Twine&path
+argument_list|,
+argument|mapmode mode
+argument_list|,
+argument|uint64_t length
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|error_code&ec
+argument_list|)
+empty_stmt|;
+comment|/// \param fd An open file descriptor to map. mapped_file_region takes
+comment|///           ownership. It must have been opended in the correct mode.
+name|mapped_file_region
+argument_list|(
+argument|int fd
+argument_list|,
+argument|mapmode mode
+argument_list|,
+argument|uint64_t length
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|error_code&ec
+argument_list|)
+empty_stmt|;
+operator|~
+name|mapped_file_region
+argument_list|()
+expr_stmt|;
+name|mapmode
+name|flags
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint64_t
+name|size
+argument_list|()
+specifier|const
+expr_stmt|;
+name|char
+operator|*
+name|data
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Get a const view of the data. Modifying this memory has undefined
+comment|/// behaivor.
+specifier|const
+name|char
+operator|*
+name|const_data
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \returns The minimum alignment offset must be.
+specifier|static
+name|int
+name|alignment
+parameter_list|()
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// @brief Memory maps the contents of a file
+comment|///
+comment|/// @param path Path to file to map.
+comment|/// @param file_offset Byte offset in file where mapping should begin.
+comment|/// @param size Byte length of range of the file to map.
+comment|/// @param map_writable If true, the file will be mapped in r/w such
+comment|///        that changes to the mapped buffer will be flushed back
+comment|///        to the file.  If false, the file will be mapped read-only
+comment|///        and the buffer will be read-only.
+comment|/// @param result Set to the start address of the mapped buffer.
+comment|/// @returns errc::success if result has been successfully set, otherwise a
+comment|///          platform specific error_code.
+name|error_code
+name|map_file_pages
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|path
+parameter_list|,
+name|off_t
+name|file_offset
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|bool
+name|map_writable
+parameter_list|,
+name|void
+modifier|*
+modifier|&
+name|result
+parameter_list|)
+function_decl|;
+comment|/// @brief Memory unmaps the contents of a file
+comment|///
+comment|/// @param base Pointer to the start of the buffer.
+comment|/// @param size Byte length of the range to unmmap.
+comment|/// @returns errc::success if result has been successfully set, otherwise a
+comment|///          platform specific error_code.
+name|error_code
+name|unmap_file_pages
+parameter_list|(
+name|void
+modifier|*
+name|base
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Iterators
 comment|/// @{
@@ -2310,12 +2901,18 @@ block|}
 comment|// Other members as required by
 comment|// C++ Std, 24.1.1 Input iterators [input.iterators]
 block|}
-empty_stmt|;
-comment|/// @}
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace fs
 end_comment
 

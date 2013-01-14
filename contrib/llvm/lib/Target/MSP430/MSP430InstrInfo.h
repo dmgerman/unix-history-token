@@ -150,10 +150,6 @@ specifier|const
 name|MSP430RegisterInfo
 name|RI
 block|;
-name|MSP430TargetMachine
-operator|&
-name|TM
-block|;
 name|public
 operator|:
 name|explicit

@@ -114,7 +114,7 @@ name|false
 parameter_list|)
 function_decl|;
 comment|// Insert AddressSanitizer (address sanity checking) instrumentation
-name|ModulePass
+name|FunctionPass
 modifier|*
 name|createAddressSanitizerPass
 parameter_list|()
@@ -124,6 +124,20 @@ name|FunctionPass
 modifier|*
 name|createThreadSanitizerPass
 parameter_list|()
+function_decl|;
+comment|// BoundsChecking - This pass instruments the code to perform run-time bounds
+comment|// checking on loads, stores, and other memory intrinsics.
+comment|// Penalty is the maximum run-time that is acceptable for the user.
+comment|//
+name|FunctionPass
+modifier|*
+name|createBoundsCheckingPass
+parameter_list|(
+name|unsigned
+name|Penalty
+init|=
+literal|5
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

@@ -415,19 +415,6 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
-comment|/// CountOperands - The inputs to target nodes have any actual inputs first,
-comment|/// followed by an optional chain operand, then flag operands.  Compute
-comment|/// the number of actual operands that will go into the resulting
-comment|/// MachineInstr.
-specifier|static
-name|unsigned
-name|CountOperands
-parameter_list|(
-name|SDNode
-modifier|*
-name|Node
-parameter_list|)
-function_decl|;
 comment|/// EmitDbgValue - Generate machine instruction for a dbg_value node.
 comment|///
 name|MachineInstr

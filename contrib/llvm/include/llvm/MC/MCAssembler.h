@@ -168,12 +168,10 @@ name|MCAsmLayout
 block|;
 name|MCFragment
 argument_list|(
-specifier|const
-name|MCFragment
-operator|&
+argument|const MCFragment&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -182,8 +180,8 @@ specifier|const
 name|MCFragment
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 expr|enum
@@ -326,17 +324,6 @@ name|LayoutOrder
 operator|=
 name|Value
 block|; }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCFragment *O
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|void
 name|dump
 argument_list|()
@@ -461,7 +448,7 @@ name|Fixup
 operator|.
 name|getOffset
 argument_list|()
-operator|>
+operator|>=
 name|Fixups
 operator|.
 name|back
@@ -592,19 +579,6 @@ operator|::
 name|FT_Data
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MCDataFragment
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 end_decl_stmt
 
@@ -694,18 +668,21 @@ name|public
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|MCInstFragment
 argument_list|(
-argument|MCInst _Inst
+specifier|const
+name|MCInst
+operator|&
+name|_Inst
 argument_list|,
-argument|MCSectionData *SD =
+name|MCSectionData
+operator|*
+name|SD
+operator|=
 literal|0
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+operator|:
 name|MCFragment
 argument_list|(
 name|FT_Inst
@@ -796,7 +773,9 @@ begin_function
 name|void
 name|setInst
 parameter_list|(
+specifier|const
 name|MCInst
+modifier|&
 name|Value
 parameter_list|)
 block|{
@@ -952,22 +931,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MCInstFragment
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 unit|};
 name|class
@@ -989,7 +952,7 @@ comment|/// Value - Value to use for filling padding bytes.
 name|int64_t
 name|Value
 block|;
-comment|/// ValueSize - The size of the integer (in bytes) of \arg Value.
+comment|/// ValueSize - The size of the integer (in bytes) of \p Value.
 name|unsigned
 name|ValueSize
 block|;
@@ -1130,17 +1093,6 @@ operator|::
 name|FT_Align
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCAlignFragment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -1158,7 +1110,7 @@ comment|/// Value - Value to use for filling bytes.
 name|int64_t
 name|Value
 block|;
-comment|/// ValueSize - The size (in bytes) of \arg Value to use when filling, or 0 if
+comment|/// ValueSize - The size (in bytes) of \p Value to use when filling, or 0 if
 comment|/// this is a virtual fill fragment.
 name|unsigned
 name|ValueSize
@@ -1269,17 +1221,6 @@ operator|::
 name|FT_Fill
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCFillFragment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -1373,17 +1314,6 @@ operator|==
 name|MCFragment
 operator|::
 name|FT_Org
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCOrgFragment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1517,17 +1447,6 @@ operator|==
 name|MCFragment
 operator|::
 name|FT_LEB
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCLEBFragment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1664,17 +1583,6 @@ operator|::
 name|FT_Dwarf
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCDwarfLineAddrFragment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 name|class
@@ -1793,17 +1701,6 @@ operator|::
 name|FT_DwarfFrame
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCDwarfCallFrameFragment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|// FIXME: Should this be a separate class, or just merged into MCSection? Since
@@ -1824,12 +1721,10 @@ name|MCAsmLayout
 block|;
 name|MCSectionData
 argument_list|(
-specifier|const
-name|MCSectionData
-operator|&
+argument|const MCSectionData&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -1838,8 +1733,8 @@ specifier|const
 name|MCSectionData
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 typedef|typedef
@@ -2511,6 +2406,37 @@ operator|*
 name|SectionData
 block|; }
 block|;
+comment|// FIXME: Ditto this. Purely so the Streamer and the ObjectWriter can talk
+comment|// to one another.
+block|struct
+name|DataRegionData
+block|{
+comment|// This enum should be kept in sync w/ the mach-o definition in
+comment|// llvm/Object/MachOFormat.h.
+block|enum
+name|KindTy
+block|{
+name|Data
+operator|=
+literal|1
+block|,
+name|JumpTable8
+block|,
+name|JumpTable16
+block|,
+name|JumpTable32
+block|}
+name|Kind
+block|;
+name|MCSymbol
+operator|*
+name|Start
+block|;
+name|MCSymbol
+operator|*
+name|End
+block|; }
+block|;
 name|class
 name|MCAssembler
 block|{
@@ -2600,24 +2526,50 @@ name|indirect_symbol_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+operator|::
+name|const_iterator
+name|const_data_region_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+operator|::
+name|iterator
+name|data_region_iterator
+expr_stmt|;
+end_typedef
+
 begin_label
 name|private
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|MCAssembler
 argument_list|(
-specifier|const
-name|MCAssembler
-operator|&
+argument|const MCAssembler&
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
 
 begin_decl_stmt
 name|void
@@ -2628,12 +2580,9 @@ specifier|const
 name|MCAssembler
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
 
 begin_decl_stmt
 name|MCContext
@@ -2748,6 +2697,17 @@ operator|<
 name|IndirectSymbolData
 operator|>
 name|IndirectSymbols
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+name|DataRegions
 expr_stmt|;
 end_expr_stmt
 
@@ -2866,7 +2826,7 @@ comment|/// \return Whether the fixup value was fully resolved. This is true if 
 end_comment
 
 begin_comment
-comment|/// \arg Value result is fixed, otherwise the value may change due to
+comment|/// \p Value result is fixed, otherwise the value may change due to
 end_comment
 
 begin_comment
@@ -3097,7 +3057,7 @@ comment|/// Compute the effective fragment size assuming it is laid out at the g
 end_comment
 
 begin_comment
-comment|/// \arg SectionAddress and \arg FragmentOffset.
+comment|/// \p SectionAddress and \p FragmentOffset.
 end_comment
 
 begin_decl_stmt
@@ -3256,7 +3216,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \arg OS - The stream to output to.
+comment|/// \param OS The stream to output to.
 end_comment
 
 begin_comment
@@ -3369,7 +3329,7 @@ comment|/// Finish - Do final processing and write the object to the output stre
 end_comment
 
 begin_comment
-comment|/// \arg Writer is used for custom object writer (as the MCJIT does),
+comment|/// \p Writer is used for custom object writer (as the MCJIT does),
 end_comment
 
 begin_comment
@@ -3793,6 +3753,120 @@ specifier|const
 block|{
 return|return
 name|IndirectSymbols
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// @name Data Region List Access
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_comment
+comment|// FIXME: This is a total hack, this should not be here. Once things are
+end_comment
+
+begin_comment
+comment|// factored so that the streamer has direct access to the .o writer, it can
+end_comment
+
+begin_comment
+comment|// disappear.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|DataRegionData
+operator|>
+operator|&
+name|getDataRegions
+argument_list|()
+block|{
+return|return
+name|DataRegions
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|data_region_iterator
+name|data_region_begin
+parameter_list|()
+block|{
+return|return
+name|DataRegions
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_data_region_iterator
+name|data_region_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataRegions
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|data_region_iterator
+name|data_region_end
+parameter_list|()
+block|{
+return|return
+name|DataRegions
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_data_region_iterator
+name|data_region_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataRegions
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|size_t
+name|data_region_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataRegions
 operator|.
 name|size
 argument_list|()

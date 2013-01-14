@@ -96,7 +96,7 @@ block|{
 name|ForceInterpreterLinking
 argument_list|()
 block|{
-comment|// We must reference the passes in such a way that compilers will not
+comment|// We must reference the interpreter in such a way that compilers will not
 comment|// delete it all as dead code, even with whole program optimization,
 comment|// yet is effectively a NO-OP. As the compiler isn't smart enough
 comment|// to know that getenv() never returns -1, this will do the job.

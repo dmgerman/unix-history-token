@@ -205,6 +205,7 @@ operator|.
 name|data
 operator|==
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)

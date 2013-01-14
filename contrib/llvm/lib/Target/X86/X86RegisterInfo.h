@@ -134,6 +134,12 @@ comment|///
 name|unsigned
 name|FramePtr
 block|;
+comment|/// BasePtr - X86 physical register used as a base ptr in complex stack
+comment|/// frames. I.e., when we need a 3rd base, not just SP and FP, due to
+comment|/// variable size stack objects.
+name|unsigned
+name|BasePtr
+block|;
 name|public
 operator|:
 name|X86RegisterInfo
@@ -146,15 +152,6 @@ specifier|const
 name|TargetInstrInfo
 operator|&
 name|tii
-argument_list|)
-block|;
-comment|/// getX86RegNum - Returns the native X86 register number for the given LLVM
-comment|/// register identifier.
-specifier|static
-name|unsigned
-name|getX86RegNum
-argument_list|(
-argument|unsigned RegNo
 argument_list|)
 block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
@@ -178,6 +175,14 @@ specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 comment|///
+name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
 comment|/// class A so that each register in it has a sub-register of the
 comment|/// specified sub-register index which is in the specified register class B.
@@ -223,6 +228,8 @@ name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Kind =
 literal|0
 argument_list|)
@@ -270,12 +277,26 @@ argument|CallingConv::ID
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getNoPreservedMask
+argument_list|()
+specifier|const
+block|;
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
 comment|/// indicating if a register is a special register that has particular uses and
 comment|/// should be considered unavailable at all times, e.g. SP, RA. This is used by
 comment|/// register scavenger to determine what registers are free.
 name|BitVector
 name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasBasePointer
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -345,6 +366,15 @@ return|return
 name|StackPtr
 return|;
 block|}
+name|unsigned
+name|getBaseRegister
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BasePtr
+return|;
+block|}
 comment|// FIXME: Move to FrameInfok
 name|unsigned
 name|getSlotSize
@@ -369,20 +399,22 @@ block|; }
 decl_stmt|;
 comment|// getX86SubSuperRegister - X86 utility function. It returns the sub or super
 comment|// register of a specific X86 register.
-comment|// e.g. getX86SubSuperRegister(X86::EAX, EVT::i16) return X86:AX
+comment|// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) return X86:AX
 name|unsigned
 name|getX86SubSuperRegister
-parameter_list|(
+argument_list|(
 name|unsigned
-parameter_list|,
-name|EVT
-parameter_list|,
+argument_list|,
+name|MVT
+operator|::
+name|SimpleValueType
+argument_list|,
 name|bool
 name|High
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

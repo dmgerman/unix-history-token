@@ -495,6 +495,16 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|getSymbolValue
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint64_t&Val
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|getSectionNext
 argument_list|(
 argument|DataRefImpl Sec
@@ -596,6 +606,16 @@ block|;
 name|virtual
 name|error_code
 name|isSectionZeroInit
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionReadOnlyData
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|,
@@ -802,6 +822,33 @@ name|end_sections
 argument_list|()
 specifier|const
 block|;
+specifier|const
+name|coff_section
+operator|*
+name|getCOFFSection
+argument_list|(
+argument|section_iterator&It
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|coff_symbol
+operator|*
+name|getCOFFSymbol
+argument_list|(
+argument|symbol_iterator&It
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|coff_relocation
+operator|*
+name|getCOFFRelocation
+argument_list|(
+argument|relocation_iterator&It
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|uint8_t
 name|getBytesInAddress
@@ -905,6 +952,16 @@ argument|StringRef&Res
 argument_list|)
 specifier|const
 block|;
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|getSymbolAuxData
+argument_list|(
+argument|const coff_symbol *symbol
+argument_list|)
+specifier|const
+block|;
 name|error_code
 name|getSectionName
 argument_list|(
@@ -936,18 +993,6 @@ name|v
 operator|->
 name|isCOFF
 argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const COFFObjectFile *v
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

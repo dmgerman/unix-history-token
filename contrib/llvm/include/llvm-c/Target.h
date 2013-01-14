@@ -183,7 +183,7 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 define|\
-value|void LLVMInitialize##TargetName##AsmPrinter();
+value|void LLVMInitialize##TargetName##AsmPrinter(void);
 include|#
 directive|include
 file|"llvm/Config/AsmPrinters.def"
@@ -199,7 +199,7 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 define|\
-value|void LLVMInitialize##TargetName##AsmParser();
+value|void LLVMInitialize##TargetName##AsmParser(void);
 include|#
 directive|include
 file|"llvm/Config/AsmParsers.def"
@@ -215,7 +215,7 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 define|\
-value|void LLVMInitialize##TargetName##Disassembler();
+value|void LLVMInitialize##TargetName##Disassembler(void);
 include|#
 directive|include
 file|"llvm/Config/Disassemblers.def"
@@ -300,7 +300,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllAsmPrinters
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -322,7 +324,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllAsmParsers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -344,7 +348,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllDisassemblers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -396,7 +402,7 @@ endif|#
 directive|endif
 block|}
 comment|/*===-- Target Data -------------------------------------------------------===*/
-comment|/** Creates target data from a target layout string.     See the constructor llvm::TargetData::TargetData. */
+comment|/** Creates target data from a target layout string.     See the constructor llvm::DataLayout::DataLayout. */
 name|LLVMTargetDataRef
 name|LLVMCreateTargetData
 parameter_list|(
@@ -424,7 +430,7 @@ parameter_list|,
 name|LLVMPassManagerRef
 parameter_list|)
 function_decl|;
-comment|/** Converts target data to a target layout string. The string must be disposed     with LLVMDisposeMessage.     See the constructor llvm::TargetData::TargetData. */
+comment|/** Converts target data to a target layout string. The string must be disposed     with LLVMDisposeMessage.     See the constructor llvm::DataLayout::DataLayout. */
 name|char
 modifier|*
 name|LLVMCopyStringRepOfTargetData
@@ -432,7 +438,7 @@ parameter_list|(
 name|LLVMTargetDataRef
 parameter_list|)
 function_decl|;
-comment|/** Returns the byte order of a target, either LLVMBigEndian or     LLVMLittleEndian.     See the method llvm::TargetData::isLittleEndian. */
+comment|/** Returns the byte order of a target, either LLVMBigEndian or     LLVMLittleEndian.     See the method llvm::DataLayout::isLittleEndian. */
 name|enum
 name|LLVMByteOrdering
 name|LLVMByteOrder
@@ -440,21 +446,41 @@ parameter_list|(
 name|LLVMTargetDataRef
 parameter_list|)
 function_decl|;
-comment|/** Returns the pointer size in bytes for a target.     See the method llvm::TargetData::getPointerSize. */
+comment|/** Returns the pointer size in bytes for a target.     See the method llvm::DataLayout::getPointerSize. */
 name|unsigned
 name|LLVMPointerSize
 parameter_list|(
 name|LLVMTargetDataRef
 parameter_list|)
 function_decl|;
-comment|/** Returns the integer type that is the same size as a pointer on a target.     See the method llvm::TargetData::getIntPtrType. */
+comment|/** Returns the pointer size in bytes for a target for a specified     address space.     See the method llvm::DataLayout::getPointerSize. */
+name|unsigned
+name|LLVMPointerSizeForAS
+parameter_list|(
+name|LLVMTargetDataRef
+parameter_list|,
+name|unsigned
+name|AS
+parameter_list|)
+function_decl|;
+comment|/** Returns the integer type that is the same size as a pointer on a target.     See the method llvm::DataLayout::getIntPtrType. */
 name|LLVMTypeRef
 name|LLVMIntPtrType
 parameter_list|(
 name|LLVMTargetDataRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the size of a type in bytes for a target.     See the method llvm::TargetData::getTypeSizeInBits. */
+comment|/** Returns the integer type that is the same size as a pointer on a target.     This version allows the address space to be specified.     See the method llvm::DataLayout::getIntPtrType. */
+name|LLVMTypeRef
+name|LLVMIntPtrTypeForAS
+parameter_list|(
+name|LLVMTargetDataRef
+parameter_list|,
+name|unsigned
+name|AS
+parameter_list|)
+function_decl|;
+comment|/** Computes the size of a type in bytes for a target.     See the method llvm::DataLayout::getTypeSizeInBits. */
 name|unsigned
 name|long
 name|long
@@ -465,7 +491,7 @@ parameter_list|,
 name|LLVMTypeRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the storage size of a type in bytes for a target.     See the method llvm::TargetData::getTypeStoreSize. */
+comment|/** Computes the storage size of a type in bytes for a target.     See the method llvm::DataLayout::getTypeStoreSize. */
 name|unsigned
 name|long
 name|long
@@ -476,7 +502,7 @@ parameter_list|,
 name|LLVMTypeRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the ABI size of a type in bytes for a target.     See the method llvm::TargetData::getTypeAllocSize. */
+comment|/** Computes the ABI size of a type in bytes for a target.     See the method llvm::DataLayout::getTypeAllocSize. */
 name|unsigned
 name|long
 name|long
@@ -487,7 +513,7 @@ parameter_list|,
 name|LLVMTypeRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the ABI alignment of a type in bytes for a target.     See the method llvm::TargetData::getTypeABISize. */
+comment|/** Computes the ABI alignment of a type in bytes for a target.     See the method llvm::DataLayout::getTypeABISize. */
 name|unsigned
 name|LLVMABIAlignmentOfType
 parameter_list|(
@@ -496,7 +522,7 @@ parameter_list|,
 name|LLVMTypeRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the call frame alignment of a type in bytes for a target.     See the method llvm::TargetData::getTypeABISize. */
+comment|/** Computes the call frame alignment of a type in bytes for a target.     See the method llvm::DataLayout::getTypeABISize. */
 name|unsigned
 name|LLVMCallFrameAlignmentOfType
 parameter_list|(
@@ -505,7 +531,7 @@ parameter_list|,
 name|LLVMTypeRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the preferred alignment of a type in bytes for a target.     See the method llvm::TargetData::getTypeABISize. */
+comment|/** Computes the preferred alignment of a type in bytes for a target.     See the method llvm::DataLayout::getTypeABISize. */
 name|unsigned
 name|LLVMPreferredAlignmentOfType
 parameter_list|(
@@ -514,7 +540,7 @@ parameter_list|,
 name|LLVMTypeRef
 parameter_list|)
 function_decl|;
-comment|/** Computes the preferred alignment of a global variable in bytes for a target.     See the method llvm::TargetData::getPreferredAlignment. */
+comment|/** Computes the preferred alignment of a global variable in bytes for a target.     See the method llvm::DataLayout::getPreferredAlignment. */
 name|unsigned
 name|LLVMPreferredAlignmentOfGlobal
 parameter_list|(
@@ -554,7 +580,7 @@ name|unsigned
 name|Element
 parameter_list|)
 function_decl|;
-comment|/** Deallocates a TargetData.     See the destructor llvm::TargetData::~TargetData. */
+comment|/** Deallocates a TargetData.     See the destructor llvm::DataLayout::~DataLayout. */
 name|void
 name|LLVMDisposeTargetData
 parameter_list|(
@@ -573,13 +599,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
 decl_stmt|;
 specifier|inline
-name|TargetData
+name|DataLayout
 modifier|*
 name|unwrap
 parameter_list|(
@@ -590,7 +616,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-name|TargetData
+name|DataLayout
 operator|*
 operator|>
 operator|(
@@ -603,7 +629,7 @@ name|LLVMTargetDataRef
 name|wrap
 parameter_list|(
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|P
 parameter_list|)
@@ -616,7 +642,7 @@ operator|>
 operator|(
 name|const_cast
 operator|<
-name|TargetData
+name|DataLayout
 operator|*
 operator|>
 operator|(

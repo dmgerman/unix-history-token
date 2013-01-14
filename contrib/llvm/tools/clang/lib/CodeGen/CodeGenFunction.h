@@ -828,8 +828,7 @@ comment|/// same EH context as when the cleanup was pushed, i.e. the
 comment|/// immediately-enclosing context of the cleanup scope.  For
 comment|/// EH cleanups, this is run in a terminate context.
 comment|///
-comment|// \param IsForEHCleanup true if this is for an EH cleanup, false
-comment|///  if for a normal cleanup.
+comment|// \param flags cleanup kind.
 name|virtual
 name|void
 name|Emit
@@ -2601,12 +2600,10 @@ name|CodeGenTypeCache
 block|{
 name|CodeGenFunction
 argument_list|(
-specifier|const
-name|CodeGenFunction
-operator|&
+argument|const CodeGenFunction&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -2615,8 +2612,8 @@ specifier|const
 name|CodeGenFunction
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|CGCXXABI
@@ -2885,9 +2882,32 @@ name|AllocaInsertPt
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// BoundsChecking - Emit run-time bounds checks. Higher values mean
+end_comment
+
+begin_comment
+comment|/// potentially higher performance penalties.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|BoundsChecking
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Whether any type-checking sanitizers are enabled. If \c false,
+end_comment
+
+begin_comment
+comment|/// calls to EmitTypeCheck can be skipped.
+end_comment
+
 begin_decl_stmt
 name|bool
-name|CatchUndefined
+name|SanitizePerformTypeCheck
 decl_stmt|;
 end_decl_stmt
 
@@ -4019,14 +4039,11 @@ name|PerformCleanup
 decl_stmt|;
 name|RunCleanupsScope
 argument_list|(
-specifier|const
-name|RunCleanupsScope
-operator|&
+argument|const RunCleanupsScope&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
-name|RunCleanupsScope
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -4034,8 +4051,8 @@ specifier|const
 name|RunCleanupsScope
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 name|CodeGenFunction
@@ -4180,14 +4197,11 @@ name|PopDebugStack
 block|;
 name|LexicalScope
 argument_list|(
-specifier|const
-name|LexicalScope
-operator|&
+argument|const LexicalScope&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT THESE
-name|LexicalScope
-operator|&
+name|void
 name|operator
 operator|=
 operator|(
@@ -4195,6 +4209,7 @@ specifier|const
 name|LexicalScope
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|public
 operator|:
@@ -4425,7 +4440,9 @@ operator|::
 name|BasicBlock
 operator|*
 name|getEHResumeBlock
-argument_list|()
+argument_list|(
+argument|bool isCleanup
+argument_list|)
 block|;
 name|llvm
 operator|::
@@ -5428,13 +5445,35 @@ name|BasicBlock
 operator|*
 name|TrapBB
 block|;
+comment|/// Add a kernel metadata node to the named metadata node 'opencl.kernels'.
+comment|/// In the kernel metadata node, reference the kernel function and metadata
+comment|/// nodes for its optional attribute qualifiers (OpenCL 1.1 6.7.2):
+comment|/// - A node for the work_group_size_hint(X,Y,Z) qualifier contains string
+comment|///   "work_group_size_hint", and three 32-bit integers X, Y and Z.
+comment|/// - A node for the reqd_work_group_size(X,Y,Z) qualifier contains string
+comment|///   "reqd_work_group_size", and three 32-bit integers X, Y and Z.
+name|void
+name|EmitOpenCLKernelMetadata
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|)
+block|;
 name|public
 operator|:
 name|CodeGenFunction
 argument_list|(
-name|CodeGenModule
-operator|&
-name|cgm
+argument|CodeGenModule&cgm
+argument_list|,
+argument|bool suppressNewContext=false
 argument_list|)
 block|;
 operator|~
@@ -5465,6 +5504,34 @@ name|CGM
 operator|.
 name|getContext
 argument_list|()
+return|;
+block|}
+comment|/// Returns true if DebugInfo is actually initialized.
+name|bool
+name|maybeInitializeDebugInfo
+argument_list|()
+block|{
+if|if
+condition|(
+name|CGM
+operator|.
+name|getModuleDebugInfo
+argument_list|()
+condition|)
+block|{
+name|DebugInfo
+operator|=
+name|CGM
+operator|.
+name|getModuleDebugInfo
+argument_list|()
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
 return|;
 block|}
 name|CGDebugInfo
@@ -6090,6 +6157,11 @@ specifier|const
 name|ObjCPropertyImplDecl
 operator|*
 name|propImpl
+argument_list|,
+specifier|const
+name|ObjCMethodDecl
+operator|*
+name|GetterMothodDecl
 argument_list|,
 name|llvm
 operator|::
@@ -7211,7 +7283,7 @@ name|BasicBlock
 operator|*
 name|createBasicBlock
 argument_list|(
-argument|StringRef name =
+argument|const Twine&name =
 literal|""
 argument_list|,
 argument|llvm::Function *parent =
@@ -7908,7 +7980,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param IgnoreResult - True if the resulting value isn't used.
+comment|/// \param ignoreResult True if the resulting value isn't used.
 end_comment
 
 begin_function_decl
@@ -7921,7 +7993,7 @@ modifier|*
 name|E
 parameter_list|,
 name|AggValueSlot
-name|AggSlot
+name|aggSlot
 init|=
 name|AggValueSlot
 operator|::
@@ -7929,7 +8001,7 @@ name|ignored
 argument_list|()
 parameter_list|,
 name|bool
-name|IgnoreResult
+name|ignoreResult
 init|=
 name|false
 parameter_list|)
@@ -8043,6 +8115,73 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// EmitAggregateCopy - Emit an aggrate assignment.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The difference to EmitAggregateCopy is that tail padding is not copied.
+end_comment
+
+begin_comment
+comment|/// This is required for correctness when assigning non-POD structures in C++.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitAggregateAssign
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestPtr
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcPtr
+argument_list|,
+name|QualType
+name|EltTy
+argument_list|,
+name|bool
+name|isVolatile
+operator|=
+name|false
+argument_list|,
+name|CharUnits
+name|Alignment
+operator|=
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
+argument_list|)
+block|{
+name|EmitAggregateCopy
+argument_list|(
+name|DestPtr
+argument_list|,
+name|SrcPtr
+argument_list|,
+name|EltTy
+argument_list|,
+name|isVolatile
+argument_list|,
+name|Alignment
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// EmitAggregateCopy - Emit an aggrate copy.
 end_comment
 
@@ -8056,6 +8195,14 @@ end_comment
 
 begin_comment
 comment|/// volatile.
+end_comment
+
+begin_comment
+comment|/// \param isAssignment - If false, allow padding to be copied.  This often
+end_comment
+
+begin_comment
+comment|/// yields more efficient.
 end_comment
 
 begin_decl_stmt
@@ -8082,10 +8229,18 @@ name|isVolatile
 operator|=
 name|false
 argument_list|,
-name|unsigned
+name|CharUnits
 name|Alignment
 operator|=
-literal|0
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
+argument_list|,
+name|bool
+name|isAssignment
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9067,6 +9222,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitCXXUuidofExpr
+argument_list|(
+specifier|const
+name|CXXUuidofExpr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|void
 name|MaybeEmitStdInitializerListCleanup
@@ -9103,17 +9273,77 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Situations in which we might emit a check for the suitability of a
+end_comment
+
+begin_comment
+comment|///        pointer or glvalue.
+end_comment
+
+begin_enum
+enum|enum
+name|TypeCheckKind
+block|{
+comment|/// Checking the operand of a load. Must be suitably sized and aligned.
+name|TCK_Load
+block|,
+comment|/// Checking the destination of a store. Must be suitably sized and aligned.
+name|TCK_Store
+block|,
+comment|/// Checking the bound value in a reference binding. Must be suitably sized
+comment|/// and aligned, but is not required to refer to an object (until the
+comment|/// reference is used), per core issue 453.
+name|TCK_ReferenceBinding
+block|,
+comment|/// Checking the object expression in a non-static data member access. Must
+comment|/// be an object within its lifetime.
+name|TCK_MemberAccess
+block|,
+comment|/// Checking the 'this' pointer for a call to a non-static member function.
+comment|/// Must be an object within its lifetime.
+name|TCK_MemberCall
+block|,
+comment|/// Checking the 'this' pointer for a constructor call.
+name|TCK_ConstructorCall
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// \brief Emit a check that \p V is the address of storage of the
+end_comment
+
+begin_comment
+comment|/// appropriate size and alignment for an object of type \p Type.
+end_comment
+
 begin_decl_stmt
 name|void
-name|EmitCheck
+name|EmitTypeCheck
 argument_list|(
+name|TypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
+name|V
 argument_list|,
-name|unsigned
-name|Size
+name|QualType
+name|Type
+argument_list|,
+name|CharUnits
+name|Alignment
+operator|=
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -10265,19 +10495,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCheckedLValue - Same as EmitLValue but additionally we generate
+comment|/// \brief Same as EmitLValue but additionally we generate checking code to
 end_comment
 
 begin_comment
-comment|/// checking code to guard against undefined behavior.  This is only
+comment|/// guard against undefined behavior.  This is only suitable when we know
 end_comment
 
 begin_comment
-comment|/// suitable when we know that the address will be used to access the
-end_comment
-
-begin_comment
-comment|/// object.
+comment|/// that the address will be used to access the object.
 end_comment
 
 begin_function_decl
@@ -10288,6 +10514,9 @@ specifier|const
 name|Expr
 modifier|*
 name|E
+parameter_list|,
+name|TypeCheckKind
+name|TCK
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10832,6 +11061,18 @@ end_function_decl
 
 begin_function_decl
 name|LValue
+name|EmitInitListLValue
+parameter_list|(
+specifier|const
+name|InitListExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
 name|EmitConditionalOperatorLValue
 parameter_list|(
 specifier|const
@@ -11137,27 +11378,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|LValue
-name|EmitLValueForAnonRecordField
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Base
-argument_list|,
-specifier|const
-name|IndirectFieldDecl
-operator|*
-name|Field
-argument_list|,
-name|unsigned
-name|CVRQualifiers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|LValue
 name|EmitLValueForField
@@ -11224,27 +11444,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|LValue
-name|EmitLValueForBitfield
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Base
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|Field
-argument_list|,
-name|unsigned
-name|CVRQualifiers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|LValue
 name|EmitCXXConstructLValue
@@ -11287,6 +11486,18 @@ name|EmitCXXTypeidLValue
 parameter_list|(
 specifier|const
 name|CXXTypeidExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
+name|EmitCXXUuidofLValue
+parameter_list|(
+specifier|const
+name|CXXUuidofExpr
 modifier|*
 name|E
 parameter_list|)
@@ -11651,6 +11862,9 @@ name|CXXMethodDecl
 operator|*
 name|MD
 argument_list|,
+name|SourceLocation
+name|CallLoc
+argument_list|,
 name|llvm
 operator|::
 name|Value
@@ -11944,20 +12158,6 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitHexagonBuiltinExpr
-argument_list|(
-argument|unsigned BuiltinID
-argument_list|,
-argument|const CallExpr *E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
 name|EmitPPCBuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
@@ -12002,10 +12202,10 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitObjCNumericLiteral
+name|EmitObjCBoxedExpr
 argument_list|(
 specifier|const
-name|ObjCNumericLiteral
+name|ObjCBoxedExpr
 operator|*
 name|E
 argument_list|)
@@ -12350,6 +12550,22 @@ argument|bool mandatory
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|EmitARCDestroyStrong
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|addr
+argument_list|,
+name|bool
+name|precise
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -12794,11 +13010,6 @@ name|E
 parameter_list|,
 name|AggValueSlot
 name|AS
-parameter_list|,
-name|bool
-name|IgnoreResult
-init|=
-name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13067,28 +13278,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// EmitCXXGlobalDtorRegistration - Emits a call to register the global ptr
+comment|/// Call atexit() with a function that passes the given argument to
 end_comment
 
 begin_comment
-comment|/// with the C++ runtime so that its destructor will be called at exit.
+comment|/// the given function.
 end_comment
 
 begin_decl_stmt
 name|void
-name|EmitCXXGlobalDtorRegistration
+name|registerGlobalDtorWithAtExit
 argument_list|(
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|DtorFn
+name|fn
 argument_list|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|DeclPtr
+name|addr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -13563,7 +13774,7 @@ name|Cond
 argument_list|,
 name|llvm
 operator|::
-name|APInt
+name|APSInt
 operator|&
 name|Result
 argument_list|)
@@ -13607,22 +13818,144 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getTrapBB - Create a basic block that will call the trap intrinsic.  We'll
+comment|/// \brief Emit a description of a type in a format suitable for passing to
 end_comment
 
 begin_comment
-comment|/// generate a branch around the created basic block as necessary.
+comment|/// a runtime sanitizer handler.
 end_comment
 
 begin_expr_stmt
 name|llvm
 operator|::
-name|BasicBlock
+name|Constant
 operator|*
-name|getTrapBB
-argument_list|()
+name|EmitCheckTypeDescriptor
+argument_list|(
+argument|QualType T
+argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Convert a value into a format suitable for passing to a runtime
+end_comment
+
+begin_comment
+comment|/// sanitizer handler.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitCheckValue
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Emit a description of a source location in a format suitable for
+end_comment
+
+begin_comment
+comment|/// passing to a runtime sanitizer handler.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitCheckSourceLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Create a basic block that will call a handler function in a
+end_comment
+
+begin_comment
+comment|/// sanitizer runtime with the provided arguments, and create a conditional
+end_comment
+
+begin_comment
+comment|/// branch to it.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitCheck
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Checked
+argument_list|,
+name|StringRef
+name|CheckName
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|StaticArgs
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|DynamicArgs
+argument_list|,
+name|bool
+name|Recoverable
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Create a basic block that will call the trap intrinsic, and emit a
+end_comment
+
+begin_comment
+comment|/// conditional branch to it, for the -ftrapv checks.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitTrapvCheck
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Checked
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// EmitCallArg - Emit a single call argument.
@@ -13821,11 +14154,6 @@ operator|*
 name|EmitAsmInput
 argument_list|(
 specifier|const
-name|AsmStmt
-operator|&
-name|S
-argument_list|,
-specifier|const
 name|TargetInfo
 operator|::
 name|ConstraintInfo
@@ -13853,8 +14181,6 @@ name|Value
 operator|*
 name|EmitAsmInputLValue
 argument_list|(
-argument|const AsmStmt&S
-argument_list|,
 argument|const TargetInfo::ConstraintInfo&Info
 argument_list|,
 argument|LValue InputValue
@@ -14218,47 +14544,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// GetPointeeAlignment - Given an expression with a pointer type, find the
+comment|/// GetPointeeAlignment - Given an expression with a pointer type, emit the
 end_comment
 
 begin_comment
-comment|/// alignment of the type referenced by the pointer.  Skip over implicit
-end_comment
-
-begin_comment
-comment|/// casts.
-end_comment
-
-begin_function_decl
-name|unsigned
-name|GetPointeeAlignment
-parameter_list|(
-specifier|const
-name|Expr
-modifier|*
-name|Addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// GetPointeeAlignmentValue - Given an expression with a pointer type, find
-end_comment
-
-begin_comment
-comment|/// the alignment of the type referenced by the pointer.  Skip over implicit
-end_comment
-
-begin_comment
-comment|/// casts.  Return the alignment as an llvm::Value.
+comment|/// value and compute our best estimate of the alignment of the pointee.
 end_comment
 
 begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
 name|llvm
 operator|::
 name|Value
 operator|*
-name|GetPointeeAlignmentValue
+operator|,
+name|unsigned
+operator|>
+name|EmitPointerWithAlignment
 argument_list|(
 specifier|const
 name|Expr

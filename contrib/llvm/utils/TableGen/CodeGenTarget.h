@@ -44,11 +44,11 @@ comment|// functionality.  This makes it easier to access the data and provides 
 end_comment
 
 begin_comment
-comment|// place that needs to check it for validity.  All of these classes throw
+comment|// place that needs to check it for validity.  All of these classes abort
 end_comment
 
 begin_comment
-comment|// exceptions on error conditions.
+comment|// on error conditions.
 end_comment
 
 begin_comment
@@ -108,6 +108,9 @@ block|{
 struct_decl|struct
 name|CodeGenRegister
 struct_decl|;
+name|class
+name|CodeGenSchedModels
+decl_stmt|;
 name|class
 name|CodeGenTarget
 decl_stmt|;
@@ -252,6 +255,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|mutable
+name|CodeGenSchedModels
+modifier|*
+name|SchedModels
+decl_stmt|;
+name|mutable
 name|std
 operator|::
 name|vector
@@ -270,6 +278,10 @@ name|RecordKeeper
 operator|&
 name|Records
 argument_list|)
+expr_stmt|;
+operator|~
+name|CodeGenTarget
+argument_list|()
 expr_stmt|;
 name|Record
 operator|*
@@ -530,6 +542,15 @@ return|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+name|CodeGenSchedModels
+operator|&
+name|getSchedModels
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -732,6 +753,22 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isLittleEndianEncoding
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// guessInstructionProperties - should we just guess unset instruction
+end_comment
+
+begin_comment
+comment|/// properties?
+end_comment
+
+begin_expr_stmt
+name|bool
+name|guessInstructionProperties
 argument_list|()
 specifier|const
 expr_stmt|;

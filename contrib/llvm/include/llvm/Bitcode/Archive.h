@@ -151,44 +151,39 @@ comment|/// access to the flags. The flags are not user settable.
 expr|enum
 name|Flags
 block|{
-name|CompressedFlag
-operator|=
-literal|1
-block|,
-comment|///< Member is a normal compressed file
 name|SVR4SymbolTableFlag
 operator|=
-literal|2
+literal|1
 block|,
 comment|///< Member is a SVR4 symbol table
 name|BSD4SymbolTableFlag
 operator|=
-literal|4
+literal|2
 block|,
 comment|///< Member is a BSD4 symbol table
 name|LLVMSymbolTableFlag
 operator|=
-literal|8
+literal|4
 block|,
 comment|///< Member is an LLVM symbol table
 name|BitcodeFlag
 operator|=
-literal|16
+literal|8
 block|,
 comment|///< Member is bitcode
 name|HasPathFlag
 operator|=
-literal|64
+literal|16
 block|,
 comment|///< Member has a full or partial path
 name|HasLongFilenameFlag
 operator|=
-literal|128
+literal|32
 block|,
 comment|///< Member uses the long filename syntax
 name|StringTableFlag
 operator|=
-literal|256
+literal|64
 comment|///< Member is an ar(1) format string table
 block|}
 block|;
@@ -326,20 +321,6 @@ specifier|const
 block|{
 return|return
 name|data
-return|;
-block|}
-comment|/// This method determines if the member is a regular compressed file.
-comment|/// @returns true iff the archive member is a compressed regular file.
-comment|/// @brief Determine if the member is a compressed regular file.
-name|bool
-name|isCompressed
-argument_list|()
-specifier|const
-block|{
-return|return
-name|flags
-operator|&
-name|CompressedFlag
 return|;
 block|}
 comment|/// @returns true iff the member is a SVR4 (non-LLVM) symbol table
@@ -1176,8 +1157,8 @@ comment|/// archive members will have their path component stripped and the file
 comment|/// name will be truncated at 15 characters. If \p Compress is specified,
 comment|/// all archive members will be compressed before being written. If
 comment|/// \p PrintSymTab is true, the symbol table will be printed to std::cout.
-comment|/// @returns true if an error occurred, \p error set to error message
-comment|/// @returns false if the writing succeeded.
+comment|/// @returns true if an error occurred, \p error set to error message;
+comment|/// returns false if the writing succeeded.
 comment|/// @brief Write (possibly modified) archive contents to disk
 name|bool
 name|writeToDisk
@@ -1194,12 +1175,6 @@ operator|=
 name|false
 argument_list|,
 comment|///< Truncate the filename to 15 chars
-name|bool
-name|Compress
-operator|=
-name|false
-argument_list|,
-comment|///< Compress files
 name|std
 operator|::
 name|string
@@ -1364,8 +1339,8 @@ decl_stmt|;
 comment|/// Writes one ArchiveMember to an ofstream. If an error occurs, returns
 comment|/// false, otherwise true. If an error occurs and error is non-null then
 comment|/// it will be set to an error message.
-comment|/// @returns false Writing member succeeded
-comment|/// @returns true Writing member failed, \p error set to error message
+comment|/// @returns false if writing member succeeded,
+comment|/// returns true if writing member failed, \p error set to error message.
 name|bool
 name|writeMember
 argument_list|(
@@ -1390,10 +1365,6 @@ name|bool
 name|TruncateNames
 argument_list|,
 comment|///< Should names be truncated to 11 chars?
-name|bool
-name|ShouldCompress
-argument_list|,
-comment|///< Should the member be compressed?
 name|std
 operator|::
 name|string
@@ -1528,16 +1499,14 @@ name|private
 label|:
 name|Archive
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|///< Do not implement
 name|Archive
 argument_list|(
-specifier|const
-name|Archive
-operator|&
+argument|const Archive&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|///< Do not implement
 name|Archive
 modifier|&
 name|operator
@@ -1547,8 +1516,8 @@ specifier|const
 name|Archive
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|///< Do not implement
 comment|/// @}
 block|}
 empty_stmt|;

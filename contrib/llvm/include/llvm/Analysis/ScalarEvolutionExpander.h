@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/ScalarEvolutionExpressions.h"
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/ScalarEvolutionNormalization.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/IRBuilder.h"
 end_include
 
 begin_include
@@ -102,6 +102,17 @@ block|{
 name|class
 name|TargetLowering
 decl_stmt|;
+comment|/// Return true if the given expression is safe to expand in the sense that
+comment|/// all materialized values are safe to speculate.
+name|bool
+name|isSafeToExpand
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
 comment|/// SCEVExpander - This class uses information about analyze scalars to
 comment|/// rewrite expressions in canonical form.
 comment|///

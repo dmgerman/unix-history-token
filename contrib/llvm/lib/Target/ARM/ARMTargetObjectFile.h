@@ -72,9 +72,6 @@ name|MCSection
 operator|*
 name|AttributesSection
 block|;
-name|bool
-name|isAAPCS_ABI
-block|;
 name|public
 operator|:
 name|ARMElfTargetObjectFile
@@ -114,26 +111,8 @@ return|return
 name|AttributesSection
 return|;
 block|}
-specifier|const
-name|MCSection
-operator|*
-name|getStaticCtorSection
-argument_list|(
-argument|unsigned Priority
-argument_list|)
-specifier|const
-block|;
-specifier|const
-name|MCSection
-operator|*
-name|getStaticDtorSection
-argument_list|(
-argument|unsigned Priority
-argument_list|)
-specifier|const
-block|; }
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

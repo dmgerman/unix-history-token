@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -708,13 +714,11 @@ comment|/// Set pass P as the last user of the given analysis passes.
 name|void
 name|setLastUser
 argument_list|(
-specifier|const
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|Pass
 operator|*
 operator|>
-operator|&
 name|AnalysisPasses
 argument_list|,
 name|Pass

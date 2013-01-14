@@ -531,6 +531,8 @@ comment|/// \brief Construct an integral non-type template argument that
 comment|/// has been deduced, possibly from an array bound.
 name|DeducedTemplateArgument
 argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
 argument|const llvm::APSInt&Value
 argument_list|,
 argument|QualType ValueType
@@ -540,6 +542,8 @@ argument_list|)
 operator|:
 name|TemplateArgument
 argument_list|(
+name|Ctx
+argument_list|,
 name|Value
 argument_list|,
 name|ValueType
@@ -696,13 +700,11 @@ decl_stmt|;
 comment|// This class is non-copyable
 name|LocalInstantiationScope
 argument_list|(
-specifier|const
-name|LocalInstantiationScope
-operator|&
+argument|const LocalInstantiationScope&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-name|LocalInstantiationScope
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -710,6 +712,7 @@ specifier|const
 name|LocalInstantiationScope
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:
@@ -1273,8 +1276,9 @@ name|SubstIndex
 argument_list|(
 name|SemaRef
 argument_list|,
-operator|-
-literal|1
+name|SemaRef
+operator|.
+name|ArgumentPackSubstitutionIndex
 argument_list|)
 operator|,
 name|Owner

@@ -183,7 +183,8 @@ argument|unsigned OpNo
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier
+argument|const char *Modifier =
+literal|0
 argument_list|)
 block|;
 name|void

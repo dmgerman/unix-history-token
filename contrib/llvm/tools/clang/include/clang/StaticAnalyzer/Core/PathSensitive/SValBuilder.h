@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -275,16 +281,12 @@ argument_list|(
 name|Sym1
 operator|->
 name|getType
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 argument_list|,
 name|Sym2
 operator|->
 name|getType
-argument_list|(
-name|Context
-argument_list|)
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -317,7 +319,7 @@ name|Ty2
 argument_list|)
 operator|||
 operator|(
-name|Ty2
+name|Ty1
 operator|->
 name|isIntegerType
 argument_list|()
@@ -459,12 +461,9 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Handles generation of the value in case the builder is not smart enough to
-comment|/// handle the given binary expression. Depending on the state, decides to
-comment|/// either keep the expression or forget the history and generate an
-comment|/// UnknownVal.
+comment|/// Constructs a symbolic expression for two non-location values.
 name|SVal
-name|makeGenericVal
+name|makeSymExprValNN
 argument_list|(
 name|ProgramStateRef
 name|state
@@ -632,7 +631,7 @@ comment|// Forwarding methods to SymbolManager.
 specifier|const
 name|SymbolConjured
 modifier|*
-name|getConjuredSymbol
+name|conjureSymbol
 parameter_list|(
 specifier|const
 name|Stmt
@@ -661,7 +660,7 @@ block|{
 return|return
 name|SymMgr
 operator|.
-name|getConjuredSymbol
+name|conjureSymbol
 argument_list|(
 name|stmt
 argument_list|,
@@ -678,7 +677,7 @@ block|}
 specifier|const
 name|SymbolConjured
 modifier|*
-name|getConjuredSymbol
+name|conjureSymbol
 parameter_list|(
 specifier|const
 name|Expr
@@ -704,7 +703,7 @@ block|{
 return|return
 name|SymMgr
 operator|.
-name|getConjuredSymbol
+name|conjureSymbol
 argument_list|(
 name|expr
 argument_list|,
@@ -741,7 +740,7 @@ comment|/// The advantage of symbols derived/built from other symbols is that we
 comment|/// preserve the relation between related(or even equivalent) expressions, so
 comment|/// conjured symbols should be used sparingly.
 name|DefinedOrUnknownSVal
-name|getConjuredSymbolVal
+name|conjureSymbolVal
 parameter_list|(
 specifier|const
 name|void
@@ -763,7 +762,7 @@ name|count
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
-name|getConjuredSymbolVal
+name|conjureSymbolVal
 parameter_list|(
 specifier|const
 name|void
@@ -788,7 +787,7 @@ name|count
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
-name|getConjuredSymbolVal
+name|conjureSymbolVal
 parameter_list|(
 specifier|const
 name|Stmt
@@ -805,6 +804,26 @@ name|type
 parameter_list|,
 name|unsigned
 name|visitCount
+parameter_list|)
+function_decl|;
+comment|/// \brief Conjure a symbol representing heap allocated memory region.
+comment|///
+comment|/// Note, the expression should represent a location.
+name|DefinedOrUnknownSVal
+name|getConjuredHeapSymbolVal
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
+parameter_list|,
+name|unsigned
+name|Count
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal
@@ -1225,37 +1244,6 @@ argument_list|)
 return|;
 block|}
 name|NonLoc
-name|makeIntVal
-parameter_list|(
-name|uint64_t
-name|integer
-parameter_list|,
-name|unsigned
-name|bitWidth
-parameter_list|,
-name|bool
-name|isUnsigned
-parameter_list|)
-block|{
-return|return
-name|nonloc
-operator|::
-name|ConcreteInt
-argument_list|(
-name|BasicVals
-operator|.
-name|getValue
-argument_list|(
-name|integer
-argument_list|,
-name|bitWidth
-argument_list|,
-name|isUnsigned
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|NonLoc
 name|makeLocAsInteger
 parameter_list|(
 name|Loc
@@ -1516,6 +1504,40 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// Return a memory region for the 'this' object reference.
+name|loc
+operator|::
+name|MemRegionVal
+name|getCXXThis
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|StackFrameContext
+operator|*
+name|SFC
+argument_list|)
+expr_stmt|;
+comment|/// Return a memory region for the 'this' object reference.
+name|loc
+operator|::
+name|MemRegionVal
+name|getCXXThis
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|StackFrameContext
+operator|*
+name|SFC
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 name|SValBuilder

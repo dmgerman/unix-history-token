@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Threading.h"
 end_include
 
@@ -152,11 +158,9 @@ name|private
 label|:
 name|RWMutexImpl
 argument_list|(
-specifier|const
-name|RWMutexImpl
-operator|&
-name|original
+argument|const RWMutexImpl& original
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 name|void
 name|operator
@@ -166,6 +170,7 @@ specifier|const
 name|RWMutexImpl
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 comment|/// @}
 block|}

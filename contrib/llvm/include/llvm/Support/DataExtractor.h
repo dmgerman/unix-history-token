@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -216,8 +222,8 @@ comment|///     correctly. If the offset is out of bounds or there are not
 comment|///     enough bytes to extract this value, the offset will be left
 comment|///     unmodified.
 comment|///
-comment|/// @param[in] byte_size
-comment|///     The size in byte of the integer to extract.
+comment|/// @param[in] size
+comment|///     The size in bytes of the integer to extract.
 comment|///
 comment|/// @return
 comment|///     The sign extended signed integer value that was extracted,

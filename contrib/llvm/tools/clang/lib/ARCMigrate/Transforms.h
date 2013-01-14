@@ -61,6 +61,12 @@ directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SaveAndRestore.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -630,6 +636,15 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+name|bool
+name|isPlusOneAssign
+parameter_list|(
+specifier|const
+name|BinaryOperator
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
 comment|/// \brief 'Loc' is the end of a statement range. This returns the location
 comment|/// immediately after the semicolon following the statement.
 comment|/// If no semicolon is found or the location is inside a macro, the returned
@@ -710,6 +725,20 @@ name|MigrationPass
 operator|&
 name|Pass
 block|;
+name|Decl
+operator|*
+name|ParentD
+block|;
+typedef|typedef
+name|RecursiveASTVisitor
+operator|<
+name|BodyTransform
+operator|<
+name|BODY_TRANS
+operator|>
+expr|>
+name|base
+expr_stmt|;
 name|public
 operator|:
 name|BodyTransform
@@ -721,7 +750,12 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
-argument|pass
+name|pass
+argument_list|)
+operator|,
+name|ParentD
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
 name|bool
@@ -742,10 +776,41 @@ operator|.
 name|transformBody
 argument_list|(
 name|rootS
+argument_list|,
+name|ParentD
 argument_list|)
 expr_stmt|;
 return|return
 name|true
+return|;
+block|}
+name|bool
+name|TraverseObjCMethodDecl
+parameter_list|(
+name|ObjCMethodDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|SaveAndRestore
+operator|<
+name|Decl
+operator|*
+operator|>
+name|SetParent
+argument_list|(
+name|ParentD
+argument_list|,
+name|D
+argument_list|)
+expr_stmt|;
+return|return
+name|base
+operator|::
+name|TraverseObjCMethodDecl
+argument_list|(
+name|D
+argument_list|)
 return|;
 block|}
 block|}
@@ -835,11 +900,14 @@ name|exprs
 parameter_list|)
 function_decl|;
 block|}
-comment|// end namespace trans
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace trans
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace arcmt
 end_comment
 

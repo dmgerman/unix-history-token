@@ -126,12 +126,10 @@ name|CurPPCondPtr
 block|;
 name|PTHLexer
 argument_list|(
-specifier|const
-name|PTHLexer
-operator|&
+argument|const PTHLexer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -140,8 +138,8 @@ specifier|const
 name|PTHLexer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 comment|/// ReadToken - Used by PTHLexer to read tokens TokBuf.
 name|void
 name|ReadToken

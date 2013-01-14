@@ -447,6 +447,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// createDAGLinearizer - This creates a "no-scheduling" scheduler which
+end_comment
+
+begin_comment
+comment|/// linearize the DAG using topological order.
+end_comment
+
+begin_decl_stmt
+name|ScheduleDAGSDNodes
+modifier|*
+name|createDAGLinearizer
+argument_list|(
+name|SelectionDAGISel
+operator|*
+name|IS
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 unit|}
 comment|// end namespace llvm
 end_comment

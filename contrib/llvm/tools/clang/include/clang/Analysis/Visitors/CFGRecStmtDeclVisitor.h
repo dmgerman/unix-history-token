@@ -333,6 +333,10 @@ name|DISPATCH_CASE
 argument_list|(
 argument|Using
 argument_list|)
+name|DISPATCH_CASE
+argument_list|(
+argument|NamespaceAlias
+argument_list|)
 default|default:
 name|llvm_unreachable
 argument_list|(
@@ -404,6 +408,10 @@ argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(
 argument|Using
+argument_list|)
+name|DEFAULT_DISPATCH
+argument_list|(
+argument|NamespaceAlias
 argument_list|)
 name|void
 name|VisitCXXRecordDecl

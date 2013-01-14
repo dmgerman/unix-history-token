@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/AnalyzerOptions.h"
+file|"clang/StaticAnalyzer/Core/AnalyzerOptions.h"
 end_include
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/BugReporter/PathDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathDiagnosticConsumers.h"
 end_include
 
 begin_decl_stmt
@@ -124,11 +130,8 @@ name|LangOptions
 operator|&
 name|LangOpts
 block|;
-name|OwningPtr
-operator|<
-name|PathDiagnosticConsumer
-operator|>
-name|PD
+name|PathDiagnosticConsumers
+name|PathConsumers
 block|;
 comment|// Configurable components creators.
 name|StoreManagerCreator
@@ -140,77 +143,13 @@ block|;
 name|CheckerManager
 operator|*
 name|CheckerMgr
-block|;    enum
-name|AnalysisScope
-block|{
-name|ScopeTU
-block|,
-name|ScopeDecl
-block|}
-name|AScope
-block|;
-comment|/// \brief The maximum number of exploded nodes the analyzer will generate.
-name|unsigned
-name|MaxNodes
-block|;
-comment|/// \brief The maximum number of times the analyzer visits a block.
-name|unsigned
-name|MaxVisit
-block|;
-name|bool
-name|VisualizeEGDot
-block|;
-name|bool
-name|VisualizeEGUbi
-block|;
-name|AnalysisPurgeMode
-name|PurgeDead
-block|;
-comment|/// \brief The flag regulates if we should eagerly assume evaluations of
-comment|/// conditionals, thus, bifurcating the path.
-comment|///
-comment|/// EagerlyAssume - A flag indicating how the engine should handle
-comment|///   expressions such as: 'x = (y != 0)'.  When this flag is true then
-comment|///   the subexpression 'y != 0' will be eagerly assumed to be true or false,
-comment|///   thus evaluating it to the integers 0 or 1 respectively.  The upside
-comment|///   is that this can increase analysis precision until we have a better way
-comment|///   to lazily evaluate such logic.  The downside is that it eagerly
-comment|///   bifurcates paths.
-name|bool
-name|EagerlyAssume
-block|;
-name|bool
-name|TrimGraph
-block|;
-name|bool
-name|EagerlyTrimEGraph
 block|;
 name|public
 operator|:
-comment|// \brief inter-procedural analysis mode.
-name|AnalysisIPAMode
-name|IPAMode
+name|AnalyzerOptions
+operator|&
+name|options
 block|;
-comment|// Settings for inlining tuning.
-comment|/// \brief The inlining stack depth limit.
-name|unsigned
-name|InlineMaxStackDepth
-block|;
-comment|/// \brief The max number of basic blocks in a function being inlined.
-name|unsigned
-name|InlineMaxFunctionSize
-block|;
-comment|/// \brief The mode of function selection used during inlining.
-name|AnalysisInliningMode
-name|InliningMode
-block|;
-comment|/// \brief Do not re-analyze paths leading to exhausted nodes with a different
-comment|/// strategy. We get better code coverage when retry is enabled.
-name|bool
-name|NoRetryExhausted
-block|;
-name|public
-operator|:
 name|AnalysisManager
 argument_list|(
 argument|ASTContext&ctx
@@ -219,7 +158,7 @@ argument|DiagnosticsEngine&diags
 argument_list|,
 argument|const LangOptions&lang
 argument_list|,
-argument|PathDiagnosticConsumer *pd
+argument|const PathDiagnosticConsumers&Consumers
 argument_list|,
 argument|StoreManagerCreator storemgr
 argument_list|,
@@ -227,63 +166,13 @@ argument|ConstraintManagerCreator constraintmgr
 argument_list|,
 argument|CheckerManager *checkerMgr
 argument_list|,
-argument|unsigned maxnodes
-argument_list|,
-argument|unsigned maxvisit
-argument_list|,
-argument|bool vizdot
-argument_list|,
-argument|bool vizubi
-argument_list|,
-argument|AnalysisPurgeMode purge
-argument_list|,
-argument|bool eager
-argument_list|,
-argument|bool trim
-argument_list|,
-argument|bool useUnoptimizedCFG
-argument_list|,
-argument|bool addImplicitDtors
-argument_list|,
-argument|bool addInitializers
-argument_list|,
-argument|bool eagerlyTrimEGraph
-argument_list|,
-argument|AnalysisIPAMode ipa
-argument_list|,
-argument|unsigned inlineMaxStack
-argument_list|,
-argument|unsigned inlineMaxFunctionSize
-argument_list|,
-argument|AnalysisInliningMode inliningMode
-argument_list|,
-argument|bool NoRetry
-argument_list|)
-block|;
-comment|/// Construct a clone of the given AnalysisManager with the given ASTContext
-comment|/// and DiagnosticsEngine.
-name|AnalysisManager
-argument_list|(
-name|ASTContext
-operator|&
-name|ctx
-argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|diags
-argument_list|,
-name|AnalysisManager
-operator|&
-name|ParentAM
+argument|AnalyzerOptions&Options
 argument_list|)
 block|;
 operator|~
 name|AnalysisManager
 argument_list|()
-block|{
-name|FlushDiagnostics
-argument_list|()
-block|; }
+block|;
 name|void
 name|ClearContexts
 argument_list|()
@@ -373,119 +262,35 @@ return|return
 name|LangOpts
 return|;
 block|}
-name|virtual
+name|ArrayRef
+operator|<
 name|PathDiagnosticConsumer
 operator|*
-name|getPathDiagnosticConsumer
+operator|>
+name|getPathDiagnosticConsumers
 argument_list|()
 block|{
 return|return
-name|PD
-operator|.
-name|get
-argument_list|()
+name|PathConsumers
 return|;
 block|}
 name|void
 name|FlushDiagnostics
 argument_list|()
-block|{
-if|if
-condition|(
-name|PD
-operator|.
-name|get
-argument_list|()
-condition|)
-name|PD
-operator|->
-name|FlushDiagnostics
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|unsigned
-name|getMaxNodes
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MaxNodes
-return|;
-block|}
-name|unsigned
-name|getMaxVisit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MaxVisit
-return|;
-block|}
-name|bool
-name|shouldVisualizeGraphviz
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VisualizeEGDot
-return|;
-block|}
-name|bool
-name|shouldVisualizeUbigraph
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VisualizeEGUbi
-return|;
-block|}
+block|;
 name|bool
 name|shouldVisualize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VisualizeEGDot
+name|options
+operator|.
+name|visualizeExplodedGraphWithGraphViz
 operator|||
-name|VisualizeEGUbi
-return|;
-block|}
-name|bool
-name|shouldEagerlyTrimExplodedGraph
-argument_list|()
-specifier|const
-block|{
-return|return
-name|EagerlyTrimEGraph
-return|;
-block|}
-name|bool
-name|shouldTrimGraph
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TrimGraph
-return|;
-block|}
-name|AnalysisPurgeMode
-name|getPurgeMode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PurgeDead
-return|;
-block|}
-name|bool
-name|shouldEagerlyAssume
-argument_list|()
-specifier|const
-block|{
-return|return
-name|EagerlyAssume
+name|options
+operator|.
+name|visualizeExplodedGraphWithUbiGraph
 return|;
 block|}
 name|bool
@@ -494,11 +299,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
+name|options
+operator|.
 name|IPAMode
-operator|==
-name|Inlining
-operator|)
+operator|!=
+name|None
 return|;
 block|}
 name|CFG
@@ -580,26 +385,6 @@ operator|.
 name|getContext
 argument_list|(
 name|D
-argument_list|)
-return|;
-block|}
-name|AnalysisDeclContext
-operator|*
-name|getAnalysisDeclContext
-argument_list|(
-argument|const Decl *D
-argument_list|,
-argument|idx::TranslationUnit *TU
-argument_list|)
-block|{
-return|return
-name|AnaCtxMgr
-operator|.
-name|getContext
-argument_list|(
-name|D
-argument_list|,
-name|TU
 argument_list|)
 return|;
 block|}

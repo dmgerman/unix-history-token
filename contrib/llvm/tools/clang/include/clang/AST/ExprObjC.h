@@ -262,17 +262,6 @@ operator|==
 name|ObjCStringLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCStringLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -427,17 +416,6 @@ operator|==
 name|ObjCBoolLiteralExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCBoolLiteralExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -450,42 +428,43 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCNumericLiteral - used for objective-c numeric literals;
-comment|/// as in: @42 or @true (c++/objc++) or @__yes (c/objc)
+comment|/// ObjCBoxedExpr - used for generalized expression boxing.
+comment|/// as in: @(strdup("hello world")) or @(random())
+comment|/// Also used for boxing non-parenthesized numeric literals;
+comment|/// as in: @42 or \@true (c++/objc++) or \@__yes (c/objc).
 name|class
-name|ObjCNumericLiteral
+name|ObjCBoxedExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|/// Number - expression AST node for the numeric literal
 name|Stmt
 operator|*
-name|Number
+name|SubExpr
 block|;
 name|ObjCMethodDecl
 operator|*
-name|ObjCNumericLiteralMethod
+name|BoxingMethod
 block|;
-name|SourceLocation
-name|AtLoc
+name|SourceRange
+name|Range
 block|;
 name|public
 operator|:
-name|ObjCNumericLiteral
+name|ObjCBoxedExpr
 argument_list|(
-argument|Stmt *NL
+argument|Expr *E
 argument_list|,
 argument|QualType T
 argument_list|,
 argument|ObjCMethodDecl *method
 argument_list|,
-argument|SourceLocation L
+argument|SourceRange R
 argument_list|)
 operator|:
 name|Expr
 argument_list|(
-name|ObjCNumericLiteralClass
+name|ObjCBoxedExprClass
 argument_list|,
 name|T
 argument_list|,
@@ -493,46 +472,58 @@ name|VK_RValue
 argument_list|,
 name|OK_Ordinary
 argument_list|,
-name|false
+name|E
+operator|->
+name|isTypeDependent
+argument_list|()
 argument_list|,
-name|false
+name|E
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|,
-name|false
+name|E
+operator|->
+name|isInstantiationDependent
+argument_list|()
 argument_list|,
-name|false
+name|E
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
-name|Number
+name|SubExpr
 argument_list|(
-name|NL
+name|E
 argument_list|)
 block|,
-name|ObjCNumericLiteralMethod
+name|BoxingMethod
 argument_list|(
 name|method
 argument_list|)
 block|,
-name|AtLoc
+name|Range
 argument_list|(
-argument|L
+argument|R
 argument_list|)
 block|{}
 name|explicit
-name|ObjCNumericLiteral
+name|ObjCBoxedExpr
 argument_list|(
 argument|EmptyShell Empty
 argument_list|)
 operator|:
 name|Expr
 argument_list|(
-argument|ObjCNumericLiteralClass
+argument|ObjCBoxedExprClass
 argument_list|,
 argument|Empty
 argument_list|)
 block|{}
 name|Expr
 operator|*
-name|getNumber
+name|getSubExpr
 argument_list|()
 block|{
 return|return
@@ -541,14 +532,14 @@ operator|<
 name|Expr
 operator|>
 operator|(
-name|Number
+name|SubExpr
 operator|)
 return|;
 block|}
 specifier|const
 name|Expr
 operator|*
-name|getNumber
+name|getSubExpr
 argument_list|()
 specifier|const
 block|{
@@ -558,18 +549,18 @@ operator|<
 name|Expr
 operator|>
 operator|(
-name|Number
+name|SubExpr
 operator|)
 return|;
 block|}
 name|ObjCMethodDecl
 operator|*
-name|getObjCNumericLiteralMethod
+name|getBoxingMethod
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ObjCNumericLiteralMethod
+name|BoxingMethod
 return|;
 block|}
 name|SourceLocation
@@ -578,7 +569,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AtLoc
+name|Range
+operator|.
+name|getBegin
+argument_list|()
 return|;
 block|}
 name|SourceRange
@@ -588,18 +582,7 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
-name|AtLoc
-argument_list|,
-name|Number
-operator|->
-name|getSourceRange
-argument_list|()
-operator|.
-name|getEnd
-argument_list|()
-argument_list|)
+name|Range
 return|;
 block|}
 specifier|static
@@ -615,18 +598,7 @@ operator|->
 name|getStmtClass
 argument_list|()
 operator|==
-name|ObjCNumericLiteralClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCNumericLiteral *
-argument_list|)
-block|{
-return|return
-name|true
+name|ObjCBoxedExprClass
 return|;
 block|}
 comment|// Iterators
@@ -638,10 +610,10 @@ return|return
 name|child_range
 argument_list|(
 operator|&
-name|Number
+name|SubExpr
 argument_list|,
 operator|&
-name|Number
+name|SubExpr
 operator|+
 literal|1
 argument_list|)
@@ -753,17 +725,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCArrayLiteralClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCArrayLiteral *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|/// \brief Retrieve elements of array of literals.
@@ -1357,17 +1318,6 @@ operator|==
 name|ObjCDictionaryLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCDictionaryLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1417,9 +1367,9 @@ name|class
 name|ASTStmtWriter
 block|; }
 block|;
-comment|/// ObjCEncodeExpr, used for @encode in Objective-C.  @encode has the same type
-comment|/// and behavior as StringLiteral except that the string initializer is obtained
-comment|/// from ASTContext with the encoding type as an argument.
+comment|/// ObjCEncodeExpr, used for \@encode in Objective-C.  \@encode has the same
+comment|/// type and behavior as StringLiteral except that the string initializer is
+comment|/// obtained from ASTContext with the encoding type as an argument.
 name|class
 name|ObjCEncodeExpr
 operator|:
@@ -1620,17 +1570,6 @@ operator|==
 name|ObjCEncodeExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCEncodeExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1643,7 +1582,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCSelectorExpr used for @selector in Objective-C.
+comment|/// ObjCSelectorExpr used for \@selector in Objective-C.
 name|class
 name|ObjCSelectorExpr
 operator|:
@@ -1819,17 +1758,6 @@ operator|==
 name|ObjCSelectorExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCSelectorExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1859,6 +1787,8 @@ block|;
 name|SourceLocation
 name|AtLoc
 block|,
+name|ProtoLoc
+block|,
 name|RParenLoc
 block|;
 name|public
@@ -1870,6 +1800,8 @@ argument_list|,
 argument|ObjCProtocolDecl *protocol
 argument_list|,
 argument|SourceLocation at
+argument_list|,
+argument|SourceLocation protoLoc
 argument_list|,
 argument|SourceLocation rp
 argument_list|)
@@ -1901,6 +1833,11 @@ block|,
 name|AtLoc
 argument_list|(
 name|at
+argument_list|)
+block|,
+name|ProtoLoc
+argument_list|(
+name|protoLoc
 argument_list|)
 block|,
 name|RParenLoc
@@ -1941,6 +1878,15 @@ name|TheProtocol
 operator|=
 name|P
 block|; }
+name|SourceLocation
+name|getProtocolIdLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ProtoLoc
+return|;
+block|}
 name|SourceLocation
 name|getAtLoc
 argument_list|()
@@ -2010,17 +1956,6 @@ operator|==
 name|ObjCProtocolExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCProtocolExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -2031,7 +1966,14 @@ name|child_range
 argument_list|()
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|friend
+name|class
+name|ASTStmtWriter
+block|; }
 block|;
 comment|/// ObjCIvarRefExpr - A reference to an ObjC instance variable.
 name|class
@@ -2317,17 +2259,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCIvarRefExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCIvarRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -3444,17 +3375,6 @@ operator|==
 name|ObjCPropertyRefExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCPropertyRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -3914,17 +3834,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCSubscriptRefExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCSubscriptRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|Expr
@@ -4514,7 +4423,7 @@ comment|/// \param VK The value kind of this message.  A message returning
 comment|/// a l-value or r-value reference will be an l-value or x-value,
 comment|/// respectively.
 comment|///
-comment|/// \param LBrac The location of the open square bracket '['.
+comment|/// \param LBracLoc The location of the open square bracket '['.
 comment|///
 comment|/// \param SuperLoc The location of the "super" keyword.
 comment|///
@@ -4527,8 +4436,6 @@ comment|/// \param Method The Objective-C method against which this message
 comment|/// send was type-checked. May be NULL.
 comment|///
 comment|/// \param Args The message send arguments.
-comment|///
-comment|/// \param NumArgs The number of arguments.
 comment|///
 comment|/// \param RBracLoc The location of the closing square bracket ']'.
 specifier|static
@@ -4573,7 +4480,7 @@ comment|/// \param VK The value kind of this message.  A message returning
 comment|/// a l-value or r-value reference will be an l-value or x-value,
 comment|/// respectively.
 comment|///
-comment|/// \param LBrac The location of the open square bracket '['.
+comment|/// \param LBracLoc The location of the open square bracket '['.
 comment|///
 comment|/// \param Receiver The type of the receiver, including
 comment|/// source-location information.
@@ -4584,8 +4491,6 @@ comment|/// \param Method The Objective-C method against which this message
 comment|/// send was type-checked. May be NULL.
 comment|///
 comment|/// \param Args The message send arguments.
-comment|///
-comment|/// \param NumArgs The number of arguments.
 comment|///
 comment|/// \param RBracLoc The location of the closing square bracket ']'.
 specifier|static
@@ -4626,7 +4531,7 @@ comment|/// \param VK The value kind of this message.  A message returning
 comment|/// a l-value or r-value reference will be an l-value or x-value,
 comment|/// respectively.
 comment|///
-comment|/// \param LBrac The location of the open square bracket '['.
+comment|/// \param LBracLoc The location of the open square bracket '['.
 comment|///
 comment|/// \param Receiver The expression used to produce the object that
 comment|/// will receive this message.
@@ -4637,8 +4542,6 @@ comment|/// \param Method The Objective-C method against which this message
 comment|/// send was type-checked. May be NULL.
 comment|///
 comment|/// \param Args The message send arguments.
-comment|///
-comment|/// \param NumArgs The number of arguments.
 comment|///
 comment|/// \param RBracLoc The location of the closing square bracket ']'.
 specifier|static
@@ -4758,10 +4661,8 @@ operator|==
 name|SuperClass
 return|;
 block|}
-comment|/// \brief Returns the receiver of an instance message.
-comment|///
-comment|/// \brief Returns the object expression for an instance message, or
-comment|/// NULL for a message that is not an instance message.
+comment|/// \brief Returns the object expression (receiver) for an instance message,
+comment|/// or null for a message that is not an instance message.
 name|Expr
 operator|*
 name|getInstanceReceiver
@@ -4814,19 +4715,22 @@ comment|/// \brief Turn this message send into an instance message that
 comment|/// computes the receiver object with the given expression.
 name|void
 name|setInstanceReceiver
-argument_list|(
-argument|Expr *rec
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|rec
+parameter_list|)
 block|{
 name|Kind
 operator|=
 name|Instance
-block|;
+expr_stmt|;
 name|setReceiverPointer
 argument_list|(
 name|rec
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Returns the type of a class message send, or NULL if the
 comment|/// message is not a class message.
 name|QualType
@@ -4854,8 +4758,17 @@ name|QualType
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns a type-source information of a class message
+end_comment
+
+begin_comment
 comment|/// send, or NULL if the message is not a class message.
+end_comment
+
+begin_expr_stmt
 name|TypeSourceInfo
 operator|*
 name|getClassReceiverTypeInfo
@@ -4880,20 +4793,23 @@ name|getReceiverPointer
 argument_list|()
 operator|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 literal|0
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_function
-name|void
+begin_macro
+unit|}    void
 name|setClassReceiver
-parameter_list|(
-name|TypeSourceInfo
-modifier|*
-name|TSInfo
-parameter_list|)
+argument_list|(
+argument|TypeSourceInfo *TSInfo
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Kind
 operator|=
@@ -4905,7 +4821,7 @@ name|TSInfo
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/// \brief Retrieve the location of the 'super' keyword for a class
@@ -4947,6 +4863,53 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Retrieve the receiver type to which this message is being directed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine cross-cuts all of the different kinds of message
+end_comment
+
+begin_comment
+comment|/// sends to determine what the underlying (statically known) type
+end_comment
+
+begin_comment
+comment|/// of the receiver will be; use \c getReceiverKind() to determine
+end_comment
+
+begin_comment
+comment|/// whether the message is a class or an instance method, whether it
+end_comment
+
+begin_comment
+comment|/// is a send to super or not, etc.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The type of the receiver.
+end_comment
+
+begin_macro
+unit|QualType
+name|getReceiverType
+argument_list|()
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the Objective-C interface to which this message
 end_comment
 
@@ -4987,7 +4950,7 @@ comment|/// \returns The Objective-C interface if known, otherwise NULL.
 end_comment
 
 begin_expr_stmt
-unit|ObjCInterfaceDecl
+name|ObjCInterfaceDecl
 operator|*
 name|getReceiverInterface
 argument_list|()
@@ -5722,22 +5685,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ObjCMessageExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -6076,17 +6023,6 @@ operator|==
 name|ObjCIsaExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCIsaExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -6331,17 +6267,6 @@ operator|==
 name|ObjCIndirectCopyRestoreExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCIndirectCopyRestoreExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief An Objective-C "bridged" cast expression, which casts between
@@ -6517,17 +6442,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCBridgedCastExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCBridgedCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

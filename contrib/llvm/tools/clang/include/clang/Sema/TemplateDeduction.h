@@ -82,9 +82,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|ASTContext
-decl_stmt|;
-name|class
 name|TemplateArgumentList
 decl_stmt|;
 name|namespace
@@ -96,11 +93,6 @@ comment|/// TemplateDeductionResult value.
 name|class
 name|TemplateDeductionInfo
 block|{
-comment|/// \brief The context in which the template arguments are stored.
-name|ASTContext
-modifier|&
-name|Context
-decl_stmt|;
 comment|/// \brief The deduced template argument list.
 comment|///
 name|TemplateArgumentList
@@ -112,6 +104,10 @@ comment|/// deduction is occurring.
 name|SourceLocation
 name|Loc
 decl_stmt|;
+comment|/// \brief Have we suppressed an error during deduction?
+name|bool
+name|HasSFINAEDiagnostic
+decl_stmt|;
 comment|/// \brief Warnings (and follow-on notes) that were suppressed due to
 comment|/// SFINAE while performing template argument deduction.
 name|SmallVector
@@ -122,16 +118,13 @@ literal|4
 operator|>
 name|SuppressedDiagnostics
 expr_stmt|;
-comment|// do not implement these
 name|TemplateDeductionInfo
 argument_list|(
-specifier|const
-name|TemplateDeductionInfo
-operator|&
+argument|const TemplateDeductionInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-name|TemplateDeductionInfo
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -139,21 +132,15 @@ specifier|const
 name|TemplateDeductionInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:
 name|TemplateDeductionInfo
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|:
-name|Context
-argument_list|(
-name|Context
-argument_list|)
-operator|,
 name|Deduced
 argument_list|(
 literal|0
@@ -161,15 +148,14 @@ argument_list|)
 operator|,
 name|Loc
 argument_list|(
-argument|Loc
+name|Loc
+argument_list|)
+operator|,
+name|HasSFINAEDiagnostic
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
-operator|~
-name|TemplateDeductionInfo
-argument_list|()
-block|{
-comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
-block|}
 comment|/// \brief Returns the location at which template argument is
 comment|/// occurring.
 name|SourceLocation
@@ -201,6 +187,55 @@ return|return
 name|Result
 return|;
 block|}
+comment|/// \brief Take ownership of the SFINAE diagnostic.
+name|void
+name|takeSFINAEDiagnostic
+parameter_list|(
+name|PartialDiagnosticAt
+modifier|&
+name|PD
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|HasSFINAEDiagnostic
+argument_list|)
+expr_stmt|;
+name|PD
+operator|.
+name|first
+operator|=
+name|SuppressedDiagnostics
+operator|.
+name|front
+argument_list|()
+operator|.
+name|first
+expr_stmt|;
+name|PD
+operator|.
+name|second
+operator|.
+name|swap
+argument_list|(
+name|SuppressedDiagnostics
+operator|.
+name|front
+argument_list|()
+operator|.
+name|second
+argument_list|)
+expr_stmt|;
+name|SuppressedDiagnostics
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|HasSFINAEDiagnostic
+operator|=
+name|false
+expr_stmt|;
+block|}
 comment|/// \brief Provide a new template argument list that contains the
 comment|/// results of template argument deduction.
 name|void
@@ -211,25 +246,43 @@ modifier|*
 name|NewDeduced
 parameter_list|)
 block|{
-comment|// FIXME: if (Deduced) Deduced->Destroy(Context);
 name|Deduced
 operator|=
 name|NewDeduced
 expr_stmt|;
 block|}
-comment|/// \brief Add a new diagnostic to the set of diagnostics
+comment|/// \brief Is a SFINAE diagnostic available?
+name|bool
+name|hasSFINAEDiagnostic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSFINAEDiagnostic
+return|;
+block|}
+comment|/// \brief Set the diagnostic which caused the SFINAE failure.
 name|void
-name|addSuppressedDiagnostic
+name|addSFINAEDiagnostic
 parameter_list|(
 name|SourceLocation
 name|Loc
 parameter_list|,
-specifier|const
 name|PartialDiagnostic
-modifier|&
 name|PD
 parameter_list|)
 block|{
+comment|// Only collect the first diagnostic.
+if|if
+condition|(
+name|HasSFINAEDiagnostic
+condition|)
+return|return;
+name|SuppressedDiagnostics
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 name|SuppressedDiagnostics
 operator|.
 name|push_back
@@ -240,8 +293,73 @@ name|make_pair
 argument_list|(
 name|Loc
 argument_list|,
+name|PartialDiagnostic
+operator|::
+name|NullDiagnostic
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SuppressedDiagnostics
+operator|.
+name|back
+argument_list|()
+operator|.
+name|second
+operator|.
+name|swap
+argument_list|(
 name|PD
 argument_list|)
+expr_stmt|;
+name|HasSFINAEDiagnostic
+operator|=
+name|true
+expr_stmt|;
+block|}
+comment|/// \brief Add a new diagnostic to the set of diagnostics
+name|void
+name|addSuppressedDiagnostic
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|PartialDiagnostic
+name|PD
+parameter_list|)
+block|{
+if|if
+condition|(
+name|HasSFINAEDiagnostic
+condition|)
+return|return;
+name|SuppressedDiagnostics
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Loc
+argument_list|,
+name|PartialDiagnostic
+operator|::
+name|NullDiagnostic
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SuppressedDiagnostics
+operator|.
+name|back
+argument_list|()
+operator|.
+name|second
+operator|.
+name|swap
+argument_list|(
+name|PD
 argument_list|)
 expr_stmt|;
 block|}

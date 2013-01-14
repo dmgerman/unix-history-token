@@ -403,25 +403,6 @@ name|CheckInputsExist
 range|:
 literal|1
 decl_stmt|;
-comment|/// Use the clang compiler where possible.
-name|unsigned
-name|CCCUseClang
-range|:
-literal|1
-decl_stmt|;
-comment|/// Use clang for handling C++ and Objective-C++ inputs.
-name|unsigned
-name|CCCUseClangCXX
-range|:
-literal|1
-decl_stmt|;
-comment|/// Use clang as a preprocessor (clang's preprocessor will still be
-comment|/// used where an integrated CPP would).
-name|unsigned
-name|CCCUseClangCPP
-range|:
-literal|1
-decl_stmt|;
 name|public
 label|:
 comment|/// Use lazy precompiled headers for PCH support.
@@ -432,20 +413,6 @@ literal|1
 decl_stmt|;
 name|private
 label|:
-comment|/// Only use clang for the given architectures (only used when
-comment|/// non-empty).
-name|std
-operator|::
-name|set
-operator|<
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|ArchType
-operator|>
-name|CCCClangArchs
-expr_stmt|;
 comment|/// Certain options suppress the 'no input files' warning.
 name|bool
 name|SuppressMissingInputWarning
@@ -475,7 +442,7 @@ expr_stmt|;
 comment|/// \brief Cache of all the ToolChains in use by the driver.
 comment|///
 comment|/// This maps from the string representation of a triple to a ToolChain
-comment|/// created targetting that triple. The driver owns all the ToolChain objects
+comment|/// created targeting that triple. The driver owns all the ToolChain objects
 comment|/// stored in it, and will clean them up when torn down.
 name|mutable
 name|llvm
@@ -806,7 +773,7 @@ decl_stmt|;
 comment|/// BuildJobs - Bind actions to concrete tools and translate
 comment|/// arguments to form the list of jobs to run.
 comment|///
-comment|/// \arg C - The compilation that is being built.
+comment|/// \param C - The compilation that is being built.
 name|void
 name|BuildJobs
 argument_list|(
@@ -905,9 +872,9 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// GetFilePath - Lookup \arg Name in the list of file search paths.
+comment|/// GetFilePath - Lookup \p Name in the list of file search paths.
 comment|///
-comment|/// \arg TC - The tool chain for additional information on
+comment|/// \param TC - The tool chain for additional information on
 comment|/// directories to search.
 comment|//
 comment|// FIXME: This should be in CompilationInfo.
@@ -922,14 +889,10 @@ argument|const ToolChain&TC
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// GetProgramPath - Lookup \arg Name in the list of program search
-comment|/// paths.
+comment|/// GetProgramPath - Lookup \p Name in the list of program search paths.
 comment|///
-comment|/// \arg TC - The provided tool chain for additional information on
+comment|/// \param TC - The provided tool chain for additional information on
 comment|/// directories to search.
-comment|///
-comment|/// \arg WantFile - False when searching for an executable file, otherwise
-comment|/// true.  Defaults to false.
 comment|//
 comment|// FIXME: This should be in CompilationInfo.
 name|std
@@ -940,8 +903,6 @@ argument_list|(
 argument|const char *Name
 argument_list|,
 argument|const ToolChain&TC
-argument_list|,
-argument|bool WantFile = false
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -960,7 +921,7 @@ name|C
 parameter_list|)
 function_decl|;
 comment|/// ConstructAction - Construct the appropriate action to do for
-comment|/// \arg Phase on the \arg Input, taking in to account arguments
+comment|/// \p Phase on the \p Input, taking in to account arguments
 comment|/// like -fsyntax-only or --analyze.
 name|Action
 modifier|*
@@ -983,7 +944,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// BuildJobsForAction - Construct the jobs to perform for the
-comment|/// action \arg A.
+comment|/// action \p A.
 name|void
 name|BuildJobsForAction
 argument_list|(
@@ -1021,7 +982,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// GetNamedOutputPath - Return the name to use for the output of
-comment|/// the action \arg JA. The result is appended to the compilation's
+comment|/// the action \p JA. The result is appended to the compilation's
 comment|/// list of temporary or result files, as appropriate.
 comment|///
 comment|/// \param C - The compilation.

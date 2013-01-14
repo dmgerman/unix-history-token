@@ -1104,11 +1104,11 @@ init|=
 literal|163
 block|,
 comment|// NXP Semiconductors TriMedia architecture family
-name|EM_QDSP6
+name|EM_HEXAGON
 init|=
 literal|164
 block|,
-comment|// QUALCOMM DSP6 Processor
+comment|// Qualcomm Hexagon processor
 name|EM_8051
 init|=
 literal|165
@@ -1843,6 +1843,7 @@ init|=
 literal|21
 block|}
 enum|;
+comment|// ELF Relocation types for PPC32
 enum|enum
 block|{
 name|R_PPC_NONE
@@ -1905,6 +1906,58 @@ block|,
 name|R_PPC_REL32
 init|=
 literal|26
+block|,
+name|R_PPC_TPREL16_LO
+init|=
+literal|70
+block|,
+name|R_PPC_TPREL16_HA
+init|=
+literal|72
+block|}
+enum|;
+comment|// ELF Relocation types for PPC64
+enum|enum
+block|{
+name|R_PPC64_ADDR16_LO
+init|=
+literal|4
+block|,
+name|R_PPC64_ADDR16_HI
+init|=
+literal|5
+block|,
+name|R_PPC64_ADDR14
+init|=
+literal|7
+block|,
+name|R_PPC64_REL24
+init|=
+literal|10
+block|,
+name|R_PPC64_ADDR64
+init|=
+literal|38
+block|,
+name|R_PPC64_ADDR16_HIGHER
+init|=
+literal|39
+block|,
+name|R_PPC64_ADDR16_HIGHEST
+init|=
+literal|41
+block|,
+name|R_PPC64_TOC16
+init|=
+literal|47
+block|,
+name|R_PPC64_TOC
+init|=
+literal|51
+block|,
+name|R_PPC64_TOC16_DS
+init|=
+literal|63
 block|}
 enum|;
 comment|// ARM Specific e_flags
@@ -2730,6 +2783,438 @@ init|=
 literal|218
 block|}
 enum|;
+comment|// Hexagon Specific e_flags
+comment|// Release 5 ABI
+enum|enum
+block|{
+comment|// Object processor version flags, bits[3:0]
+name|EF_HEXAGON_MACH_V2
+init|=
+literal|0x00000001
+block|,
+comment|// Hexagon V2
+name|EF_HEXAGON_MACH_V3
+init|=
+literal|0x00000002
+block|,
+comment|// Hexagon V3
+name|EF_HEXAGON_MACH_V4
+init|=
+literal|0x00000003
+block|,
+comment|// Hexagon V4
+name|EF_HEXAGON_MACH_V5
+init|=
+literal|0x00000004
+block|,
+comment|// Hexagon V5
+comment|// Highest ISA version flags
+name|EF_HEXAGON_ISA_MACH
+init|=
+literal|0x00000000
+block|,
+comment|// Same as specified in bits[3:0]
+comment|// of e_flags
+name|EF_HEXAGON_ISA_V2
+init|=
+literal|0x00000010
+block|,
+comment|// Hexagon V2 ISA
+name|EF_HEXAGON_ISA_V3
+init|=
+literal|0x00000020
+block|,
+comment|// Hexagon V3 ISA
+name|EF_HEXAGON_ISA_V4
+init|=
+literal|0x00000030
+block|,
+comment|// Hexagon V4 ISA
+name|EF_HEXAGON_ISA_V5
+init|=
+literal|0x00000040
+comment|// Hexagon V5 ISA
+block|}
+enum|;
+comment|// Hexagon specific Section indexes for common small data
+comment|// Release 5 ABI
+enum|enum
+block|{
+name|SHN_HEXAGON_SCOMMON
+init|=
+literal|0xff00
+block|,
+comment|// Other access sizes
+name|SHN_HEXAGON_SCOMMON_1
+init|=
+literal|0xff01
+block|,
+comment|// Byte-sized access
+name|SHN_HEXAGON_SCOMMON_2
+init|=
+literal|0xff02
+block|,
+comment|// Half-word-sized access
+name|SHN_HEXAGON_SCOMMON_4
+init|=
+literal|0xff03
+block|,
+comment|// Word-sized access
+name|SHN_HEXAGON_SCOMMON_8
+init|=
+literal|0xff04
+comment|// Double-word-size access
+block|}
+enum|;
+comment|// ELF Relocation types for Hexagon
+comment|// Release 5 ABI
+enum|enum
+block|{
+name|R_HEX_NONE
+init|=
+literal|0
+block|,
+name|R_HEX_B22_PCREL
+init|=
+literal|1
+block|,
+name|R_HEX_B15_PCREL
+init|=
+literal|2
+block|,
+name|R_HEX_B7_PCREL
+init|=
+literal|3
+block|,
+name|R_HEX_LO16
+init|=
+literal|4
+block|,
+name|R_HEX_HI16
+init|=
+literal|5
+block|,
+name|R_HEX_32
+init|=
+literal|6
+block|,
+name|R_HEX_16
+init|=
+literal|7
+block|,
+name|R_HEX_8
+init|=
+literal|8
+block|,
+name|R_HEX_GPREL16_0
+init|=
+literal|9
+block|,
+name|R_HEX_GPREL16_1
+init|=
+literal|10
+block|,
+name|R_HEX_GPREL16_2
+init|=
+literal|11
+block|,
+name|R_HEX_GPREL16_3
+init|=
+literal|12
+block|,
+name|R_HEX_HL16
+init|=
+literal|13
+block|,
+name|R_HEX_B13_PCREL
+init|=
+literal|14
+block|,
+name|R_HEX_B9_PCREL
+init|=
+literal|15
+block|,
+name|R_HEX_B32_PCREL_X
+init|=
+literal|16
+block|,
+name|R_HEX_32_6_X
+init|=
+literal|17
+block|,
+name|R_HEX_B22_PCREL_X
+init|=
+literal|18
+block|,
+name|R_HEX_B15_PCREL_X
+init|=
+literal|19
+block|,
+name|R_HEX_B13_PCREL_X
+init|=
+literal|20
+block|,
+name|R_HEX_B9_PCREL_X
+init|=
+literal|21
+block|,
+name|R_HEX_B7_PCREL_X
+init|=
+literal|22
+block|,
+name|R_HEX_16_X
+init|=
+literal|23
+block|,
+name|R_HEX_12_X
+init|=
+literal|24
+block|,
+name|R_HEX_11_X
+init|=
+literal|25
+block|,
+name|R_HEX_10_X
+init|=
+literal|26
+block|,
+name|R_HEX_9_X
+init|=
+literal|27
+block|,
+name|R_HEX_8_X
+init|=
+literal|28
+block|,
+name|R_HEX_7_X
+init|=
+literal|29
+block|,
+name|R_HEX_6_X
+init|=
+literal|30
+block|,
+name|R_HEX_32_PCREL
+init|=
+literal|31
+block|,
+name|R_HEX_COPY
+init|=
+literal|32
+block|,
+name|R_HEX_GLOB_DAT
+init|=
+literal|33
+block|,
+name|R_HEX_JMP_SLOT
+init|=
+literal|34
+block|,
+name|R_HEX_RELATIVE
+init|=
+literal|35
+block|,
+name|R_HEX_PLT_B22_PCREL
+init|=
+literal|36
+block|,
+name|R_HEX_GOTREL_LO16
+init|=
+literal|37
+block|,
+name|R_HEX_GOTREL_HI16
+init|=
+literal|38
+block|,
+name|R_HEX_GOTREL_32
+init|=
+literal|39
+block|,
+name|R_HEX_GOT_LO16
+init|=
+literal|40
+block|,
+name|R_HEX_GOT_HI16
+init|=
+literal|41
+block|,
+name|R_HEX_GOT_32
+init|=
+literal|42
+block|,
+name|R_HEX_GOT_16
+init|=
+literal|43
+block|,
+name|R_HEX_DTPMOD_32
+init|=
+literal|44
+block|,
+name|R_HEX_DTPREL_LO16
+init|=
+literal|45
+block|,
+name|R_HEX_DTPREL_HI16
+init|=
+literal|46
+block|,
+name|R_HEX_DTPREL_32
+init|=
+literal|47
+block|,
+name|R_HEX_DTPREL_16
+init|=
+literal|48
+block|,
+name|R_HEX_GD_PLT_B22_PCREL
+init|=
+literal|49
+block|,
+name|R_HEX_GD_GOT_LO16
+init|=
+literal|50
+block|,
+name|R_HEX_GD_GOT_HI16
+init|=
+literal|51
+block|,
+name|R_HEX_GD_GOT_32
+init|=
+literal|52
+block|,
+name|R_HEX_GD_GOT_16
+init|=
+literal|53
+block|,
+name|R_HEX_IE_LO16
+init|=
+literal|54
+block|,
+name|R_HEX_IE_HI16
+init|=
+literal|55
+block|,
+name|R_HEX_IE_32
+init|=
+literal|56
+block|,
+name|R_HEX_IE_GOT_LO16
+init|=
+literal|57
+block|,
+name|R_HEX_IE_GOT_HI16
+init|=
+literal|58
+block|,
+name|R_HEX_IE_GOT_32
+init|=
+literal|59
+block|,
+name|R_HEX_IE_GOT_16
+init|=
+literal|60
+block|,
+name|R_HEX_TPREL_LO16
+init|=
+literal|61
+block|,
+name|R_HEX_TPREL_HI16
+init|=
+literal|62
+block|,
+name|R_HEX_TPREL_32
+init|=
+literal|63
+block|,
+name|R_HEX_TPREL_16
+init|=
+literal|64
+block|,
+name|R_HEX_6_PCREL_X
+init|=
+literal|65
+block|,
+name|R_HEX_GOTREL_32_6_X
+init|=
+literal|66
+block|,
+name|R_HEX_GOTREL_16_X
+init|=
+literal|67
+block|,
+name|R_HEX_GOTREL_11_X
+init|=
+literal|68
+block|,
+name|R_HEX_GOT_32_6_X
+init|=
+literal|69
+block|,
+name|R_HEX_GOT_16_X
+init|=
+literal|70
+block|,
+name|R_HEX_GOT_11_X
+init|=
+literal|71
+block|,
+name|R_HEX_DTPREL_32_6_X
+init|=
+literal|72
+block|,
+name|R_HEX_DTPREL_16_X
+init|=
+literal|73
+block|,
+name|R_HEX_DTPREL_11_X
+init|=
+literal|74
+block|,
+name|R_HEX_GD_GOT_32_6_X
+init|=
+literal|75
+block|,
+name|R_HEX_GD_GOT_16_X
+init|=
+literal|76
+block|,
+name|R_HEX_GD_GOT_11_X
+init|=
+literal|77
+block|,
+name|R_HEX_IE_32_6_X
+init|=
+literal|78
+block|,
+name|R_HEX_IE_16_X
+init|=
+literal|79
+block|,
+name|R_HEX_IE_GOT_32_6_X
+init|=
+literal|80
+block|,
+name|R_HEX_IE_GOT_16_X
+init|=
+literal|81
+block|,
+name|R_HEX_IE_GOT_11_X
+init|=
+literal|82
+block|,
+name|R_HEX_TPREL_32_6_X
+init|=
+literal|83
+block|,
+name|R_HEX_TPREL_16_X
+init|=
+literal|84
+block|,
+name|R_HEX_TPREL_11_X
+init|=
+literal|85
+block|}
+enum|;
 comment|// Section header.
 struct|struct
 name|Elf32_Shdr
@@ -2959,6 +3444,16 @@ init|=
 literal|0x60000000
 block|,
 comment|// Lowest operating system-specific type.
+name|SHT_GNU_ATTRIBUTES
+init|=
+literal|0x6ffffff5
+block|,
+comment|// Object attributes.
+name|SHT_GNU_HASH
+init|=
+literal|0x6ffffff6
+block|,
+comment|// GNU-style hash table.
 name|SHT_GNU_verdef
 init|=
 literal|0x6ffffffd
@@ -4061,6 +4556,21 @@ init|=
 literal|0x60000000
 block|,
 comment|// Lowest operating system-specific pt entry type.
+name|PT_HIOS
+init|=
+literal|0x6fffffff
+block|,
+comment|// Highest operating system-specific pt entry type.
+name|PT_LOPROC
+init|=
+literal|0x70000000
+block|,
+comment|// Lowest processor-specific program hdr entry type.
+name|PT_HIPROC
+init|=
+literal|0x7fffffff
+block|,
+comment|// Highest processor-specific program hdr entry type.
 comment|// x86-64 program header types.
 comment|// These all contain stack unwind tables.
 name|PT_GNU_EH_FRAME
@@ -4075,20 +4585,30 @@ name|PT_SUNW_UNWIND
 init|=
 literal|0x6464e550
 block|,
-name|PT_HIOS
+name|PT_GNU_STACK
 init|=
-literal|0x6fffffff
+literal|0x6474e551
 block|,
-comment|// Highest operating system-specific pt entry type.
-name|PT_LOPROC
+comment|// Indicates stack executability.
+name|PT_GNU_RELRO
+init|=
+literal|0x6474e552
+block|,
+comment|// Read-only after relocation.
+comment|// ARM program header types.
+name|PT_ARM_ARCHEXT
 init|=
 literal|0x70000000
 block|,
-comment|// Lowest processor-specific program hdr entry type.
-name|PT_HIPROC
+comment|// Platform architecture compatibility information
+comment|// These all contain stack unwind tables.
+name|PT_ARM_EXIDX
 init|=
-literal|0x7fffffff
-comment|// Highest processor-specific program hdr entry type.
+literal|0x70000001
+block|,
+name|PT_ARM_UNWIND
+init|=
+literal|0x70000001
 block|}
 enum|;
 comment|// Segment flag bits.
@@ -4358,7 +4878,42 @@ comment|// Start of processor specific tags.
 name|DT_HIPROC
 init|=
 literal|0x7FFFFFFF
+block|,
 comment|// End of processor specific tags.
+name|DT_RELACOUNT
+init|=
+literal|0x6FFFFFF9
+block|,
+comment|// ELF32_Rela count.
+name|DT_RELCOUNT
+init|=
+literal|0x6FFFFFFA
+block|,
+comment|// ELF32_Rel count.
+name|DT_FLAGS_1
+init|=
+literal|0X6FFFFFFB
+block|,
+comment|// Flags_1.
+name|DT_VERDEF
+init|=
+literal|0X6FFFFFFC
+block|,
+comment|// The address of the version definition table.
+name|DT_VERDEFNUM
+init|=
+literal|0X6FFFFFFD
+block|,
+comment|// The number of entries in DT_VERDEF.
+name|DT_VERNEED
+init|=
+literal|0X6FFFFFFE
+block|,
+comment|// The address of the version Dependency table.
+name|DT_VERNEEDNUM
+init|=
+literal|0X6FFFFFFF
+comment|// The number of entries in DT_VERNEED.
 block|}
 enum|;
 comment|// DT_FLAGS values.
@@ -4388,6 +4943,94 @@ name|DF_STATIC_TLS
 init|=
 literal|0x10
 comment|// Reject attempts to load dynamically.
+block|}
+enum|;
+comment|// State flags selectable in the `d_un.d_val' element of the DT_FLAGS_1 entry.
+enum|enum
+block|{
+name|DF_1_NOW
+init|=
+literal|0x00000001
+block|,
+comment|// Set RTLD_NOW for this object.
+name|DF_1_GLOBAL
+init|=
+literal|0x00000002
+block|,
+comment|// Set RTLD_GLOBAL for this object.
+name|DF_1_GROUP
+init|=
+literal|0x00000004
+block|,
+comment|// Set RTLD_GROUP for this object.
+name|DF_1_NODELETE
+init|=
+literal|0x00000008
+block|,
+comment|// Set RTLD_NODELETE for this object.
+name|DF_1_LOADFLTR
+init|=
+literal|0x00000010
+block|,
+comment|// Trigger filtee loading at runtime.
+name|DF_1_INITFIRST
+init|=
+literal|0x00000020
+block|,
+comment|// Set RTLD_INITFIRST for this object.
+name|DF_1_NOOPEN
+init|=
+literal|0x00000040
+block|,
+comment|// Set RTLD_NOOPEN for this object.
+name|DF_1_ORIGIN
+init|=
+literal|0x00000080
+block|,
+comment|// $ORIGIN must be handled.
+name|DF_1_DIRECT
+init|=
+literal|0x00000100
+block|,
+comment|// Direct binding enabled.
+name|DF_1_TRANS
+init|=
+literal|0x00000200
+block|,
+name|DF_1_INTERPOSE
+init|=
+literal|0x00000400
+block|,
+comment|// Object is used to interpose.
+name|DF_1_NODEFLIB
+init|=
+literal|0x00000800
+block|,
+comment|// Ignore default lib search path.
+name|DF_1_NODUMP
+init|=
+literal|0x00001000
+block|,
+comment|// Object can't be dldump'ed.
+name|DF_1_CONFALT
+init|=
+literal|0x00002000
+block|,
+comment|// Configuration alternative created.
+name|DF_1_ENDFILTEE
+init|=
+literal|0x00004000
+block|,
+comment|// Filtee terminates filters search.
+name|DF_1_DISPRELDNE
+init|=
+literal|0x00008000
+block|,
+comment|// Disp reloc applied at build time.
+name|DF_1_DISPRELPND
+init|=
+literal|0x00010000
+comment|// Disp reloc applied at run-time.
 block|}
 enum|;
 comment|// ElfXX_VerDef structure version (GNU versioning)
