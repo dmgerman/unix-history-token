@@ -303,11 +303,15 @@ name|cng_state
 decl_stmt|;
 define|#
 directive|define
-name|INTEL_SNGST_NEEDS_UPDATE
+name|INTEL_CNGST_UPDATED
+value|0
+define|#
+directive|define
+name|INTEL_CNGST_NEEDS_UPDATE
 value|1
 define|#
 directive|define
-name|INTEL_SNGST_MASTER_MISSING
+name|INTEL_CNGST_MASTER_MISSING
 value|2
 name|uint8_t
 name|cng_sub_state
@@ -12780,7 +12784,7 @@ name|mvol
 operator|->
 name|cng_state
 operator|=
-name|INTEL_SNGST_MASTER_MISSING
+name|INTEL_CNGST_MASTER_MISSING
 expr_stmt|;
 elseif|else
 if|if
@@ -12795,7 +12799,14 @@ name|mvol
 operator|->
 name|cng_state
 operator|=
-name|INTEL_SNGST_NEEDS_UPDATE
+name|INTEL_CNGST_NEEDS_UPDATE
+expr_stmt|;
+else|else
+name|mvol
+operator|->
+name|cng_state
+operator|=
+name|INTEL_CNGST_UPDATED
 expr_stmt|;
 block|}
 comment|/* Check for any recovery in progress. */
