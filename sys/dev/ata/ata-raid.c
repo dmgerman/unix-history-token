@@ -8066,6 +8066,14 @@ literal|"pci"
 argument_list|)
 decl_stmt|;
 name|devclass_t
+name|atapci_devclass
+init|=
+name|devclass_find
+argument_list|(
+literal|"atapci"
+argument_list|)
+decl_stmt|;
+name|devclass_t
 name|devclass
 init|=
 name|device_get_devclass
@@ -8085,6 +8093,10 @@ condition|(
 name|devclass
 operator|==
 name|pci_devclass
+operator|||
+name|devclass
+operator|==
+name|atapci_devclass
 condition|)
 block|{
 switch|switch
