@@ -843,6 +843,9 @@ comment|/* Xen */
 literal|"BHYVE"
 block|,
 comment|/* bhyve */
+literal|"Seabios"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
@@ -870,6 +873,9 @@ comment|/* Sun xVM VirtualBox */
 literal|"Parallels Virtual Platform"
 block|,
 comment|/* Parallels VM */
+literal|"KVM"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
