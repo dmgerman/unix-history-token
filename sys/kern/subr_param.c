@@ -1469,14 +1469,19 @@ operator|&
 name|nbuf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 */
+comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 * 	 * Clip callout to result of previous function of maxusers maximum 	 * 384.  This is still huge, but acceptable. 	 */
 name|ncallout
 operator|=
+name|imin
+argument_list|(
 literal|16
 operator|+
 name|maxproc
 operator|+
 name|maxfiles
+argument_list|,
+literal|18508
+argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
