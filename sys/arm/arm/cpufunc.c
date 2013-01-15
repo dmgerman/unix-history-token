@@ -2905,7 +2905,7 @@ comment|/* Other functions */
 name|cpufunc_nullop
 block|,
 comment|/* flush_prefetchbuf    */
-name|arm11_drain_writebuf
+name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
 name|cpufunc_nullop
@@ -2928,7 +2928,7 @@ comment|/* dataabt_fixup        */
 name|cpufunc_null_fixup
 block|,
 comment|/* prefetchabt_fixup    */
-name|arm11_context_switch
+name|armv7_context_switch
 block|,
 comment|/* context_switch       */
 name|cortexa_setup
