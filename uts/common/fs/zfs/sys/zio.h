@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -209,9 +209,12 @@ name|ZIO_COMPRESS_GZIP_9
 block|,
 name|ZIO_COMPRESS_ZLE
 block|,
+name|ZIO_COMPRESS_LZ4
+block|,
 name|ZIO_COMPRESS_FUNCTIONS
 block|}
 enum|;
+comment|/* N.B. when altering this value, also change BOOTFS_COMPRESS_VALID below */
 define|#
 directive|define
 name|ZIO_COMPRESS_ON_VALUE
@@ -227,7 +230,7 @@ parameter_list|(
 name|compress
 parameter_list|)
 define|\
-value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	((compress) == ZIO_COMPRESS_ON&&		\ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) ||	\ 	(compress) == ZIO_COMPRESS_OFF)
+value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	((compress) == ZIO_COMPRESS_ON&&		\ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) ||	\ 	(compress) == ZIO_COMPRESS_OFF)
 define|#
 directive|define
 name|ZIO_FAILURE_MODE_WAIT
