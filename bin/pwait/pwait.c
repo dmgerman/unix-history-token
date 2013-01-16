@@ -592,14 +592,11 @@ operator|-=
 name|n
 expr_stmt|;
 block|}
-name|free
+name|exit
 argument_list|(
-name|e
+name|EX_OK
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
