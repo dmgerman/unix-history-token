@@ -592,6 +592,11 @@ operator|-=
 name|n
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
