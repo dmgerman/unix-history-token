@@ -79,13 +79,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|int
-name|reg_shift
-init|=
-literal|2
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|REG_SHIFT
+value|2
+end_define
 
 begin_define
 define|#
@@ -197,16 +196,12 @@ begin_comment
 comment|/* I/O: Scratch Register */
 end_comment
 
-begin_comment
-comment|/*  * uart related funcs  */
-end_comment
-
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|uart_getreg
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|bas
 parameter_list|)
@@ -216,7 +211,7 @@ operator|*
 operator|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -234,11 +229,11 @@ specifier|static
 name|void
 name|uart_setreg
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|bas
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|)
 block|{
@@ -246,7 +241,7 @@ operator|*
 operator|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -254,9 +249,6 @@ name|bas
 operator|)
 operator|)
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|val
 expr_stmt|;
 block|}
@@ -276,7 +268,7 @@ operator|(
 name|uart_getreg
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -285,7 +277,7 @@ operator|+
 operator|(
 name|UART_LSR
 operator|<<
-name|reg_shift
+name|REG_SHIFT
 operator|)
 operator|)
 argument_list|)
@@ -302,7 +294,7 @@ operator|(
 name|uart_getreg
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|A10_UART_BASE
@@ -341,7 +333,7 @@ operator|(
 name|uart_getreg
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -350,7 +342,7 @@ operator|+
 operator|(
 name|UART_LSR
 operator|<<
-name|reg_shift
+name|REG_SHIFT
 operator|)
 operator|)
 argument_list|)
@@ -364,7 +356,7 @@ asm|__asm __volatile("nop");
 name|uart_setreg
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|A10_UART_BASE
@@ -493,7 +485,7 @@ block|{
 name|uart_setreg
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -502,7 +494,7 @@ operator|+
 operator|(
 name|UART_FCR
 operator|<<
-name|reg_shift
+name|REG_SHIFT
 operator|)
 operator|)
 argument_list|,
