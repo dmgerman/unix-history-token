@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -150,6 +150,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|AcpiDbDoOneSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbConvertToNode  *  * PARAMETERS:  InString            - String to convert  *  * RETURN:      Pointer to a NS node  *  * DESCRIPTION: Convert a string to a valid NS pointer. Handles numeric or  *              alphanumeric strings.  *  ******************************************************************************/
 end_comment
@@ -288,7 +299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSleep  *  * PARAMETERS:  ObjectArg           - Desired sleep state (0-5)  *  * RETURN:      Status  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSleep  *  * PARAMETERS:  ObjectArg           - Desired sleep state (0-5). NULL means  *                                    invoke all possible sleep states.  *  * RETURN:      Status  *  * DESCRIPTION: Simulate sleep/wake sequences  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -300,17 +311,61 @@ modifier|*
 name|ObjectArg
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|UINT8
 name|SleepState
+decl_stmt|;
+name|UINT32
+name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AcpiDbSleep
 argument_list|)
 expr_stmt|;
+comment|/* Null input (no arguments) means to invoke all sleep states */
+if|if
+condition|(
+operator|!
+name|ObjectArg
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Invoking all possible sleep states, 0-%d\n"
+argument_list|,
+name|ACPI_S_STATES_MAX
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|ACPI_S_STATES_MAX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|AcpiDbDoOneSleepState
+argument_list|(
+operator|(
+name|UINT8
+operator|)
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Convert argument to binary and invoke the sleep state */
 name|SleepState
 operator|=
 operator|(
@@ -325,9 +380,128 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|AcpiDbDoOneSleepState
+argument_list|(
+name|SleepState
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDoOneSleepState  *  * PARAMETERS:  SleepState          - Desired sleep state (0-5)  *  * RETURN:      Status  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AcpiDbDoOneSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|UINT8
+name|SleepTypeA
+decl_stmt|;
+name|UINT8
+name|SleepTypeB
+decl_stmt|;
+comment|/* Validate parameter */
+if|if
+condition|(
+name|SleepState
+operator|>
+name|ACPI_S_STATES_MAX
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Prepare to sleep ****\n"
+literal|"Sleep state %d out of range (%d max)\n"
+argument_list|,
+name|SleepState
+argument_list|,
+name|ACPI_S_STATES_MAX
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n---- Invoking sleep state S%d (%s):\n"
+argument_list|,
+name|SleepState
+argument_list|,
+name|AcpiGbl_SleepStateNames
+index|[
+name|SleepState
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Get the values for the sleep type registers (for display only) */
+name|Status
+operator|=
+name|AcpiGetSleepTypeData
+argument_list|(
+name|SleepState
+argument_list|,
+operator|&
+name|SleepTypeA
+argument_list|,
+operator|&
+name|SleepTypeB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not evaluate [%s] method, %s\n"
+argument_list|,
+name|AcpiGbl_SleepStateNames
+index|[
+name|SleepState
+index|]
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"Register values for sleep state S%d: Sleep-A: %.2X, Sleep-B: %.2X\n"
+argument_list|,
+name|SleepState
+argument_list|,
+name|SleepTypeA
+argument_list|,
+name|SleepTypeB
+argument_list|)
+expr_stmt|;
+comment|/* Invoke the various sleep/wake interfaces */
+name|AcpiOsPrintf
+argument_list|(
+literal|"**** Sleep: Prepare to sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -351,7 +525,9 @@ goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Going to sleep ****\n"
+literal|"**** Sleep: Going to sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -375,7 +551,9 @@ goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Prepare to return from sleep ****\n"
+literal|"**** Wake: Prepare to return from sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -399,7 +577,9 @@ goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Returning from sleep ****\n"
+literal|"**** Wake: Return from sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -421,11 +601,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+return|return;
 name|ErrorExit
 label|:
 name|ACPI_EXCEPTION
@@ -435,13 +611,10 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"During sleep test"
+literal|"During invocation of sleep state S%d"
+operator|,
+name|SleepState
 operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
 argument_list|)
 expr_stmt|;
 block|}

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -165,7 +165,7 @@ name|DualLicenseHeader
 index|[]
 init|=
 literal|"/*\n"
-literal|" * Copyright (C) 2000 - 2012, Intel Corp.\n"
+literal|" * Copyright (C) 2000 - 2013, Intel Corp.\n"
 literal|" * All rights reserved.\n"
 literal|" *\n"
 literal|" * Redistribution and use in source and binary forms, with or without\n"
@@ -3510,15 +3510,29 @@ name|CustomReplacements
 index|[]
 init|=
 block|{
+block|{
+literal|"(c) 1999 - 2012"
+block|,
+literal|"(c) 1999 - 2013"
+block|,
+name|REPLACE_WHOLE_WORD
+block|}
+block|,
+comment|/* Main ACPICA source */
+block|{
+literal|"(c) 2006 - 2012"
+block|,
+literal|"(c) 2006 - 2013"
+block|,
+name|REPLACE_WHOLE_WORD
+block|}
+block|,
+comment|/* Test suites */
 if|#
 directive|if
 literal|0
 block|{"SUPPORT, ASSISTANCE", "SUPPORT, ASSISTANCE",     REPLACE_WHOLE_WORD},
 comment|/* Fix intel header */
-block|{"(c) 1999 - 2012",     "(c) 1999 - 2012",         REPLACE_WHOLE_WORD},
-comment|/* Main ACPICA source */
-block|{"(c) 2006 - 2012",     "(c) 2006 - 2012",         REPLACE_WHOLE_WORD},
-comment|/* Test suites */
 block|{"(ACPI_INTEGER)", "(UINT64)",   REPLACE_WHOLE_WORD},     {"ACPI_INTEGER        ", "UINT64              ",   REPLACE_WHOLE_WORD},     {"ACPI_INTEGER", "UINT64",   REPLACE_WHOLE_WORD},     {"ACPI_INTEGER_MAX", "ACPI_UINT64_MAX",   REPLACE_WHOLE_WORD},     {"#include \"acpi.h\"",   "#include \"acpi.h\"\n#include \"accommon.h\"",  REPLACE_SUBSTRINGS},     {"AcpiTbSumTable", "AcpiTbSumTable",  REPLACE_WHOLE_WORD},     {"ACPI_SIG_BOOT", "ACPI_SIG_BOOT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_DBGP", "ACPI_SIG_DBGP",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_DSDT", "ACPI_SIG_DSDT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_ECDT", "ACPI_SIG_ECDT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_FACS", "ACPI_SIG_FACS",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_FADT", "ACPI_SIG_FADT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_HPET", "ACPI_SIG_HPET",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_MADT", "ACPI_SIG_MADT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_MCFG", "ACPI_SIG_MCFG",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_PSDT", "ACPI_SIG_PSDT",   REPLACE_WHOLE_WORD},     {"ACPI_NAME_RSDP", "ACPI_NAME_RSDP",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_RSDP", "ACPI_SIG_RSDP",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_RSDT", "ACPI_SIG_RSDT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SBST", "ACPI_SIG_SBST",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SLIT", "ACPI_SIG_SLIT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SPCR", "ACPI_SIG_SPCR",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SPIC", "ACPI_SIG_SPIC",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SPMI", "ACPI_SIG_SPMI",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SRAT", "ACPI_SIG_SRAT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_SSDT", "ACPI_SIG_SSDT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_TCPA", "ACPI_SIG_TCPA",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_WDRT", "ACPI_SIG_WDRT",   REPLACE_WHOLE_WORD},     {"ACPI_SIG_XSDT", "ACPI_SIG_XSDT",   REPLACE_WHOLE_WORD},      {"ACPI_ALLOCATE_ZEROED",    "ACPI_ALLOCATE_ZEROED",   REPLACE_WHOLE_WORD},     {"ACPI_ALLOCATE",           "ACPI_ALLOCATE",          REPLACE_WHOLE_WORD},     {"ACPI_FREE",               "ACPI_FREE",              REPLACE_WHOLE_WORD},      "ACPI_NATIVE_UINT",     "ACPI_NATIVE_UINT",         REPLACE_WHOLE_WORD,     "ACPI_NATIVE_UINT *",   "ACPI_NATIVE_UINT *",       REPLACE_WHOLE_WORD,     "ACPI_NATIVE_UINT",     "ACPI_NATIVE_UINT",         REPLACE_WHOLE_WORD,     "ACPI_NATIVE_INT",      "ACPI_NATIVE_INT",          REPLACE_WHOLE_WORD,     "ACPI_NATIVE_INT *",    "ACPI_NATIVE_INT *",        REPLACE_WHOLE_WORD,     "ACPI_NATIVE_INT",      "ACPI_NATIVE_INT",          REPLACE_WHOLE_WORD,
 endif|#
 directive|endif

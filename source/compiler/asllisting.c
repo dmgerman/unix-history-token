@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -241,6 +241,13 @@ name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ASL_LISTING_LINE_PREFIX
+value|":  "
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    LsDoListings  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Generate all requested listing files.  *  ******************************************************************************/
@@ -1458,9 +1465,11 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%8.8X...."
+literal|"%8.8X%s"
 argument_list|,
 name|Gbl_CurrentAmlOffset
+argument_list|,
+name|ASL_LISTING_LINE_PREFIX
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1550,6 +1559,43 @@ operator|->
 name|LineNumber
 operator|++
 expr_stmt|;
+comment|/* Ignore lines that are completely blank (but count the line above) */
+if|if
+condition|(
+name|FlReadFile
+argument_list|(
+name|ASL_FILE_SOURCE_OUTPUT
+argument_list|,
+operator|&
+name|FileByte
+argument_list|,
+literal|1
+argument_list|)
+operator|!=
+name|AE_OK
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|FileByte
+operator|==
+literal|'\n'
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/*      * This is a non-empty line, we will print the entire line with      * the line number and possibly other prefixes and transforms.      */
+comment|/* Line prefixes for special files, C and ASM output */
 if|if
 condition|(
 name|FileId
@@ -1590,7 +1636,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%12s %5d...."
+literal|"%12s %5d%s"
 argument_list|,
 name|Gbl_ListingNode
 operator|->
@@ -1599,6 +1645,8 @@ argument_list|,
 name|Gbl_ListingNode
 operator|->
 name|LineNumber
+argument_list|,
+name|ASL_LISTING_LINE_PREFIX
 argument_list|)
 expr_stmt|;
 block|}
@@ -1609,27 +1657,16 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%8d...."
+literal|"%8u%s"
 argument_list|,
 name|Gbl_SourceLine
+argument_list|,
+name|ASL_LISTING_LINE_PREFIX
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Read one line (up to a newline or EOF) */
-while|while
-condition|(
-name|FlReadFile
-argument_list|(
-name|ASL_FILE_SOURCE_OUTPUT
-argument_list|,
-operator|&
-name|FileByte
-argument_list|,
-literal|1
-argument_list|)
-operator|==
-name|AE_OK
-condition|)
+comment|/* Read the rest of this line (up to a newline or EOF) */
+do|do
 block|{
 if|if
 condition|(
@@ -1668,7 +1705,7 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-comment|/*              * Check if an error occurred on this source line during the compile.              * If so, we print the error message after the source line.              */
+comment|/*              * This line has been completed.              * Check if an error occurred on this source line during the compile.              * If so, we print the error message after the source line.              */
 name|LsCheckException
 argument_list|(
 name|Gbl_SourceLine
@@ -1683,6 +1720,21 @@ operator|)
 return|;
 block|}
 block|}
+do|while
+condition|(
+name|FlReadFile
+argument_list|(
+name|ASL_FILE_SOURCE_OUTPUT
+argument_list|,
+operator|&
+name|FileByte
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+name|AE_OK
+condition|)
+do|;
 comment|/* EOF on the input file was reached */
 return|return
 operator|(

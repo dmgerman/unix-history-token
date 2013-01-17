@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_comment
@@ -161,6 +161,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/* Buffer used by AcpiOsVprintf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_VPRINTF_BUFFER_SIZE
+value|512
+end_define
 
 begin_comment
 comment|/* Apple-specific */
@@ -403,7 +414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPrintf  *  * PARAMETERS:  fmt, ...            - Standard printf format  *  * RETURN:      None  *  * DESCRIPTION: Formatted output  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPrintf  *  * PARAMETERS:  fmt, ...            - Standard printf format  *  * RETURN:      None  *  * DESCRIPTION: Formatted output. Note: very similar to AcpiOsVprintf  *              (performance), changes should be tracked in both functions.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -422,45 +433,6 @@ block|{
 name|va_list
 name|Args
 decl_stmt|;
-name|va_start
-argument_list|(
-name|Args
-argument_list|,
-name|Fmt
-argument_list|)
-expr_stmt|;
-name|AcpiOsVprintf
-argument_list|(
-name|Fmt
-argument_list|,
-name|Args
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|Args
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsVprintf  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      None  *  * DESCRIPTION: Formatted output with argument list pointer  *  *****************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiOsVprintf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Fmt
-parameter_list|,
-name|va_list
-name|Args
-parameter_list|)
-block|{
 name|UINT8
 name|Flags
 decl_stmt|;
@@ -482,12 +454,24 @@ name|AcpiGbl_DebugFile
 condition|)
 block|{
 comment|/* Output file is open, send the output there */
+name|va_start
+argument_list|(
+name|Args
+argument_list|,
+name|Fmt
+argument_list|)
+expr_stmt|;
 name|vfprintf
 argument_list|(
 name|AcpiGbl_DebugFile
 argument_list|,
 name|Fmt
 argument_list|,
+name|Args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|Args
 argument_list|)
 expr_stmt|;
@@ -508,6 +492,13 @@ operator|&
 name|ACPI_DB_CONSOLE_OUTPUT
 condition|)
 block|{
+name|va_start
+argument_list|(
+name|Args
+argument_list|,
+name|Fmt
+argument_list|)
+expr_stmt|;
 name|vfprintf
 argument_list|(
 name|AcpiGbl_OutputFile
@@ -515,6 +506,102 @@ argument_list|,
 name|Fmt
 argument_list|,
 name|Args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|Args
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsVprintf  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      None  *  * DESCRIPTION: Formatted output with argument list pointer. Note: very  *              similar to AcpiOsPrintf, changes should be tracked in both  *              functions.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiOsVprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Fmt
+parameter_list|,
+name|va_list
+name|Args
+parameter_list|)
+block|{
+name|UINT8
+name|Flags
+decl_stmt|;
+name|char
+name|Buffer
+index|[
+name|ACPI_VPRINTF_BUFFER_SIZE
+index|]
+decl_stmt|;
+comment|/*      * We build the output string in a local buffer because we may be      * outputting the buffer twice. Using vfprintf is problematic because      * some implementations modify the args pointer/structure during      * execution. Thus, we use the local buffer for portability.      *      * Note: Since this module is intended for use by the various ACPICA      * utilities/applications, we can safely declare the buffer on the stack.      * Also, This function is used for relatively small error messages only.      */
+name|vsnprintf
+argument_list|(
+name|Buffer
+argument_list|,
+name|ACPI_VPRINTF_BUFFER_SIZE
+argument_list|,
+name|Fmt
+argument_list|,
+name|Args
+argument_list|)
+expr_stmt|;
+name|Flags
+operator|=
+name|AcpiGbl_DbOutputFlags
+expr_stmt|;
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_DB_REDIRECTABLE_OUTPUT
+condition|)
+block|{
+comment|/* Output is directable to either a file (if open) or the console */
+if|if
+condition|(
+name|AcpiGbl_DebugFile
+condition|)
+block|{
+comment|/* Output file is open, send the output there */
+name|fputs
+argument_list|(
+name|Buffer
+argument_list|,
+name|AcpiGbl_DebugFile
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* No redirection, send output to console (once only!) */
+name|Flags
+operator||=
+name|ACPI_DB_CONSOLE_OUTPUT
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_DB_CONSOLE_OUTPUT
+condition|)
+block|{
+name|fputs
+argument_list|(
+name|Buffer
+argument_list|,
+name|AcpiGbl_OutputFile
 argument_list|)
 expr_stmt|;
 block|}

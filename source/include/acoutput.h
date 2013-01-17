@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -1027,8 +1027,44 @@ value|((Level& AcpiDbgLevel)&& (Component& AcpiDbgLayer))
 end_define
 
 begin_comment
-comment|/*  * Master debug print macros  * Print message if and only if:  *    1) Debug print for the current component is enabled  *    2) Debug error level or trace level for the print statement is enabled  *  * November 2012: Moved the runtime check for whether to actually emit the  * debug message outside of the print function itself. This improves overall  * performance at a relatively small code cost. Implementation involves the  * use of variadic macros supported by C99.  */
+comment|/*  * Master debug print macros  * Print message if and only if:  *    1) Debug print for the current component is enabled  *    2) Debug error level or trace level for the print statement is enabled  *  * November 2012: Moved the runtime check for whether to actually emit the  * debug message outside of the print function itself. This improves overall  * performance at a relatively small code cost. Implementation involves the  * use of variadic macros supported by C99.  *  * Note: the ACPI_DO_WHILE0 macro is used to prevent some compilers from  * complaining about these constructs. On other compilers the do...while  * adds some extra code, so this feature is optional.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_USE_DO_WHILE_0
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DO_WHILE0
+parameter_list|(
+name|a
+parameter_list|)
+value|do a while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DO_WHILE0
+parameter_list|(
+name|a
+parameter_list|)
+value|a
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* DEBUG_PRINT functions */
@@ -1061,7 +1097,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG
+name|ACPI_DO_DEBUG_PRINT
 parameter_list|(
 name|Function
 parameter_list|,
@@ -1078,7 +1114,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (ACPI_IS_DEBUG_ENABLED (Level, Component)) \     { \         Function (Level, Line, Filename, Modulename, Component, __VA_ARGS__); \     }
+value|ACPI_DO_WHILE0 ({ \         if (ACPI_IS_DEBUG_ENABLED (Level, Component)) \         { \             Function (Level, Line, Filename, Modulename, Component, __VA_ARGS__); \         } \     })
 end_define
 
 begin_define
@@ -1099,7 +1135,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|ACPI_DEBUG (AcpiDebugPrint, Level, Line, Filename, Modulename, Component, __VA_ARGS__)
+value|ACPI_DO_DEBUG_PRINT (AcpiDebugPrint, Level, Line, \         Filename, Modulename, Component, __VA_ARGS__)
 end_define
 
 begin_define
@@ -1120,7 +1156,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|ACPI_DEBUG (AcpiDebugPrintRaw, Level, Line, Filename, Modulename, Component, __VA_ARGS__)
+value|ACPI_DO_DEBUG_PRINT (AcpiDebugPrintRaw, Level, Line, \         Filename, Modulename, Component, __VA_ARGS__)
 end_define
 
 begin_comment
@@ -1212,44 +1248,8 @@ value|AcpiUtTrackStackPtr()
 end_define
 
 begin_comment
-comment|/*  * Function exit tracing  *  * These macros include a return statement. This is usually considered  * bad form, but having a separate exit macro before the actual return  * is very ugly and difficult to maintain.  *  * One of the FUNCTION_TRACE macros above must be used in conjunction  * with these macros so that "_AcpiFunctionName" is defined.  *  * Note: the DO_WHILE0 macro is used to prevent some compilers from  * complaining about these constructs. On other compilers the do...while  * adds some extra code, so this feature is optional.  */
+comment|/*  * Function exit tracing  *  * These macros include a return statement. This is usually considered  * bad form, but having a separate exit macro before the actual return  * is very ugly and difficult to maintain.  *  * One of the FUNCTION_TRACE macros above must be used in conjunction  * with these macros so that "_AcpiFunctionName" is defined.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_USE_DO_WHILE_0
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_DO_WHILE0
-parameter_list|(
-name|a
-parameter_list|)
-value|do a while(0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_DO_WHILE0
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Exit trace helper macro */
