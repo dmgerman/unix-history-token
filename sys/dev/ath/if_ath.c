@@ -8114,6 +8114,7 @@ argument_list|,
 name|pending
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do a reset upon any becaon miss event. 	 * 	 * It may be a non-recognised RX clear hang which needs a reset 	 * to clear. 	 */
 if|if
 condition|(
 name|ath_hal_gethangstate
@@ -8133,6 +8134,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ath_reset
+argument_list|(
+name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
+argument_list|)
+expr_stmt|;
 name|if_printf
 argument_list|(
 name|ifp
@@ -8142,6 +8150,9 @@ argument_list|,
 name|hangs
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|ath_reset
 argument_list|(
 name|ifp
@@ -8149,8 +8160,6 @@ argument_list|,
 name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
-block|}
-else|else
 name|ieee80211_beacon_miss
 argument_list|(
 name|ifp
@@ -8158,6 +8167,7 @@ operator|->
 name|if_l2com
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -21241,23 +21251,32 @@ break|break;
 case|case
 name|IEEE80211_M_STA
 case|:
-comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 * However if it's due to a CSA -> RUN transition, 			 * force a beacon update so we pick up a lack of 			 * beacons from an AP in CAC and thus force a 			 * scan. 			 */
+comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 * However if it's due to a CSA -> RUN transition, 			 * force a beacon update so we pick up a lack of 			 * beacons from an AP in CAC and thus force a 			 * scan. 			 * 			 * And, there's also corner cases here where 			 * after a scan, the AP may have disappeared. 			 * In that case, we may not receive an actual 			 * beacon to update the beacon timer and thus we 			 * won't get notified of the missing beacons. 			 */
 name|sc
 operator|->
 name|sc_syncbeacon
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|csa_run_transition
-condition|)
+if|#
+directive|if
+literal|0
+block|if (csa_run_transition)
+endif|#
+directive|endif
 name|ath_beacon_config
 argument_list|(
 name|sc
 argument_list|,
 name|vap
 argument_list|)
+expr_stmt|;
+comment|/* 			 * PR: kern/175227 			 * 			 * Reconfigure beacons during reset; as otherwise 			 * we won't get the beacon timers reprogrammed 			 * after a reset and thus we won't pick up a 			 * beacon miss interrupt. 			 * 			 * Hopefully we'll see a beacon before the BMISS 			 * timer fires (too often), leading to a STA 			 * disassociation. 			 */
+name|sc
+operator|->
+name|sc_beacons
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
