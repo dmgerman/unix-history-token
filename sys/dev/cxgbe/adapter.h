@@ -2587,7 +2587,7 @@ parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|q =&pi->adapter->sge.txq[pi->first_txq]; \ 	for (iter = 0; iter< pi->ntxq; ++iter, ++q)
+value|for (q =&pi->adapter->sge.txq[pi->first_txq], iter = 0; \ 	    iter< pi->ntxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2602,7 +2602,7 @@ parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|q =&pi->adapter->sge.rxq[pi->first_rxq]; \ 	for (iter = 0; iter< pi->nrxq; ++iter, ++q)
+value|for (q =&pi->adapter->sge.rxq[pi->first_rxq], iter = 0; \ 	    iter< pi->nrxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2617,7 +2617,7 @@ parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|q =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq]; \ 	for (iter = 0; iter< pi->nofldtxq; ++iter, ++q)
+value|for (q =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq], iter = 0; \ 	    iter< pi->nofldtxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2632,7 +2632,7 @@ parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|q =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq]; \ 	for (iter = 0; iter< pi->nofldrxq; ++iter, ++q)
+value|for (q =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq], iter = 0; \ 	    iter< pi->nofldrxq; ++iter, ++q)
 end_define
 
 begin_comment
