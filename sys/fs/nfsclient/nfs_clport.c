@@ -3492,10 +3492,6 @@ decl_stmt|;
 name|nfsattrbit_t
 name|attrbits
 decl_stmt|;
-name|struct
-name|timeval
-name|curtime
-decl_stmt|;
 switch|switch
 condition|(
 name|nd
@@ -3699,12 +3695,6 @@ break|break;
 case|case
 name|ND_NFSV3
 case|:
-name|getmicrotime
-argument_list|(
-operator|&
-name|curtime
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vap
