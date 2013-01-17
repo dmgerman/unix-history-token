@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cons.h>
 end_include
 
@@ -88,6 +94,12 @@ include|#
 directive|include
 file|<dev/altera/jtag_uart/altera_jtag_uart.h>
 end_include
+
+begin_decl_stmt
+name|devclass_t
+name|altera_jtag_uart_devclass
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * One-byte buffer as we can't check whether the UART is readable without  * actually reading from it, synchronised by a spinlock; this lock also  * synchronises access to the I/O ports for non-atomic sequences.  These  * symbols are public so that the TTY layer can use them when working on an  * instance of the UART that is also a low-level console.  */

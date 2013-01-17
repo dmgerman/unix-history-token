@@ -163,32 +163,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Mount options that we support. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|nullfs_opts
-index|[]
-init|=
-block|{
-literal|"cache"
-block|,
-literal|"export"
-block|,
-literal|"from"
-block|,
-literal|"target"
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Mount null layer  */
 end_comment
 
@@ -293,22 +267,6 @@ condition|)
 return|return
 operator|(
 name|EOPNOTSUPP
-operator|)
-return|;
-if|if
-condition|(
-name|vfs_filteropt
-argument_list|(
-name|mp
-operator|->
-name|mnt_optnew
-argument_list|,
-name|nullfs_opts
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 comment|/* 	 * Update is a no-op 	 */

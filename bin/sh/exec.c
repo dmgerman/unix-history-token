@@ -246,10 +246,6 @@ name|cmdtype
 decl_stmt|;
 comment|/* index identifying command */
 name|char
-name|rehash
-decl_stmt|;
-comment|/* if set, cd done since entry created */
-name|char
 name|cmdname
 index|[]
 decl_stmt|;
@@ -269,6 +265,19 @@ name|CMDTABLESIZE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cmdtable_cd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cmdtable contains cd-dependent entries */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1362,17 +1371,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-if|if
-condition|(
-name|cmdp
-operator|->
-name|rehash
-condition|)
-name|out1c
-argument_list|(
-literal|'*'
-argument_list|)
-expr_stmt|;
 name|out1c
 argument_list|(
 literal|'\n'
@@ -1418,9 +1416,6 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|int
-name|prev
-decl_stmt|;
 name|char
 modifier|*
 name|fullname
@@ -1437,6 +1432,9 @@ name|i
 decl_stmt|;
 name|int
 name|spec
+decl_stmt|;
+name|int
+name|cd
 decl_stmt|;
 comment|/* If name contains a slash, don't use the hash table */
 if|if
@@ -1467,6 +1465,10 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+name|cd
+operator|=
+literal|0
+expr_stmt|;
 comment|/* If name is in the table, and not invalidated by cd, we're done */
 if|if
 condition|(
@@ -1482,12 +1484,6 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-operator|&&
-name|cmdp
-operator|->
-name|rehash
-operator|==
-literal|0
 condition|)
 block|{
 if|if
@@ -1580,41 +1576,6 @@ name|success
 goto|;
 block|}
 comment|/* We have to search path. */
-name|prev
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* where to start */
-if|if
-condition|(
-name|cmdp
-condition|)
-block|{
-comment|/* doing a rehash */
-if|if
-condition|(
-name|cmdp
-operator|->
-name|cmdtype
-operator|==
-name|CMDBUILTIN
-condition|)
-name|prev
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-else|else
-name|prev
-operator|=
-name|cmdp
-operator|->
-name|param
-operator|.
-name|index
-expr_stmt|;
-block|}
 name|e
 operator|=
 name|ENOENT
@@ -1676,43 +1637,19 @@ goto|;
 comment|/* ignore unimplemented options */
 block|}
 block|}
-comment|/* if rehash, don't redo absolute path names */
 if|if
 condition|(
 name|fullname
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'/'
-operator|&&
-name|idx
-operator|<=
-name|prev
 condition|)
-block|{
-if|if
-condition|(
-name|idx
-operator|<
-name|prev
-condition|)
-goto|goto
-name|loop
-goto|;
-name|TRACE
-argument_list|(
-operator|(
-literal|"searchexec \"%s\": no change\n"
-operator|,
-name|name
-operator|)
-argument_list|)
+name|cd
+operator|=
+literal|1
 expr_stmt|;
-goto|goto
-name|success
-goto|;
-block|}
 if|if
 condition|(
 name|stat
@@ -1953,20 +1890,6 @@ goto|goto
 name|success
 goto|;
 block|}
-comment|/* We failed.  If there was an entry for this command, delete it */
-if|if
-condition|(
-name|cmdp
-operator|&&
-name|cmdp
-operator|->
-name|cmdtype
-operator|!=
-name|CMDFUNCTION
-condition|)
-name|delete_cmd_entry
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|act
@@ -2026,11 +1949,13 @@ expr_stmt|;
 return|return;
 name|success
 label|:
-name|cmdp
-operator|->
-name|rehash
+if|if
+condition|(
+name|cd
+condition|)
+name|cmdtable_cd
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|entry
 operator|->
@@ -2139,7 +2064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when a cd is done.  Marks all commands so the next time they  * are executed they will be rehashed.  */
+comment|/*  * Called when a cd is done.  If any entry in cmdtable depends on the current  * directory, simply clear cmdtable completely.  */
 end_comment
 
 begin_function
@@ -2149,67 +2074,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|tblentry
-modifier|*
-modifier|*
-name|pp
-decl_stmt|;
-name|struct
-name|tblentry
-modifier|*
-name|cmdp
-decl_stmt|;
-for|for
-control|(
-name|pp
-operator|=
-name|cmdtable
-init|;
-name|pp
-operator|<
-operator|&
-name|cmdtable
-index|[
-name|CMDTABLESIZE
-index|]
-condition|;
-name|pp
-operator|++
-control|)
-block|{
-for|for
-control|(
-name|cmdp
-operator|=
-operator|*
-name|pp
-init|;
-name|cmdp
-condition|;
-name|cmdp
-operator|=
-name|cmdp
-operator|->
-name|next
-control|)
-block|{
 if|if
 condition|(
-name|cmdp
-operator|->
-name|cmdtype
-operator|==
-name|CMDNORMAL
+name|cmdtable_cd
 condition|)
-name|cmdp
-operator|->
-name|rehash
-operator|=
-literal|1
+name|clearcmdentry
+argument_list|()
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -2332,6 +2203,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|cmdtable_cd
+operator|=
+literal|0
+expr_stmt|;
 name|INTON
 expr_stmt|;
 block|}
@@ -2501,12 +2376,6 @@ operator|->
 name|cmdtype
 operator|=
 name|CMDUNKNOWN
-expr_stmt|;
-name|cmdp
-operator|->
-name|rehash
-operator|=
-literal|0
 expr_stmt|;
 name|strcpy
 argument_list|(

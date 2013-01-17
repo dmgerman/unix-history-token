@@ -3857,7 +3857,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Resume operation on filesystem. 	 */
-name|vfs_write_resume_flags
+name|vfs_write_resume
 argument_list|(
 name|vp
 operator|->

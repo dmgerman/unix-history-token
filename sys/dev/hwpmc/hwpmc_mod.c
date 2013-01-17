@@ -11546,6 +11546,9 @@ name|ev
 operator|=
 name|PMC_EV_SOFT_FIRST
 init|;
+operator|(
+name|int
+operator|)
 name|ev
 operator|<=
 name|PMC_EV_SOFT_LAST

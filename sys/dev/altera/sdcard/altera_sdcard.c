@@ -123,6 +123,12 @@ begin_comment
 comment|/*  * Device driver for the Altera University Program Secure Data Card IP Core,  * as described in the similarly named SOPC Builder IP Core specification.  * This soft core is not a full SD host controller interface (SDHCI) but  * instead provides a set of memory mapped registers and memory buffer that  * mildly abstract the SD Card protocol, but without providing DMA or  * interrupts.  However, it does hide the details of voltage and  * communications negotiation.  This driver implements disk(9), but due to the  * lack of interrupt support, must rely on timer-driven polling to determine  * when I/Os have completed.  *  * TODO:  *  * 1. Implement DISKFLAG_CANDELETE / SD Card sector erase support.  * 2. Implement d_ident from SD Card CID serial number field.  * 3. Handle read-only SD Cards.  * 4. Tune timeouts based on real-world SD Card speeds.  */
 end_comment
 
+begin_decl_stmt
+name|devclass_t
+name|altera_sdcard_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|altera_sdcard_attach

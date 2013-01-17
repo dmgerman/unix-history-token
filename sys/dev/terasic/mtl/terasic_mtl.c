@@ -125,6 +125,12 @@ begin_comment
 comment|/*  * Device driver for the Terasic Multitouch LCD (MTL).  Three separate  * sub-drivers that support, respectively, access to device control registers,  * the pixel frame buffer, and the text frame buffer.  The last of these is  * also hooked up to syscons.  *  * Eventually, the frame buffer control registers and touch screen input FIFO  * will end up being separate sub-drivers as well.  *  * Note: sub-driver detach routines must check whether or not they have  * attached as they may be called even if the attach routine hasn't been, on  * an error.  */
 end_comment
 
+begin_decl_stmt
+name|devclass_t
+name|terasic_mtl_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|terasic_mtl_attach

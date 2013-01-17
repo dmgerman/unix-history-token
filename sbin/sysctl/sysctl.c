@@ -1116,7 +1116,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"oid '%s' is a read only tunable%p"
+literal|"oid '%s' is a read only tunable%s"
 argument_list|,
 name|bufp
 argument_list|,

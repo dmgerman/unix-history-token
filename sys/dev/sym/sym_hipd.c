@@ -128,6 +128,12 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -340,7 +346,7 @@ define|#
 directive|define
 name|MEMORY_BARRIER
 parameter_list|()
-value|__do_dmb()
+value|dmb()
 end_define
 
 begin_else
@@ -13922,23 +13928,6 @@ expr_stmt|;
 comment|/* ret = ((4+fak)*div_10M[div])/np->clock_khz; */
 block|}
 comment|/* 	 *  Check against our hardware limits, or bugs :). 	 */
-if|if
-condition|(
-name|fak
-operator|<
-literal|0
-condition|)
-block|{
-name|fak
-operator|=
-literal|0
-expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fak
