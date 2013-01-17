@@ -413,8 +413,11 @@ decl_stmt|;
 name|uint32_t
 name|magic_8
 index|[
-literal|32
+literal|31
 index|]
+decl_stmt|;
+name|uint32_t
+name|backup_time
 decl_stmt|;
 name|uint16_t
 name|magic_9
@@ -1025,6 +1028,15 @@ argument_list|,
 name|meta
 operator|->
 name|sector_size
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"backup_time         %d\n"
+argument_list|,
+name|meta
+operator|->
+name|backup_time
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2020,6 +2032,12 @@ block|{
 name|meta
 operator|->
 name|total_sectors_high
+operator|=
+literal|0
+expr_stmt|;
+name|meta
+operator|->
+name|backup_time
 operator|=
 literal|0
 expr_stmt|;
@@ -4314,7 +4332,7 @@ index|[
 name|sdn
 index|]
 operator|->
-name|disk_rebuild
+name|disk_rebuild_high
 operator|<<
 literal|32
 operator|)
