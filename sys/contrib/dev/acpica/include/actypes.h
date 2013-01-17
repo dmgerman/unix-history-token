@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -629,7 +629,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to to tell the compiler in a per-variable manner that a variable  * is unused  */
+comment|/*  * Some compilers complain about unused variables. Sometimes we don't want to  * use all the variables (for example, _AcpiModuleName). This allows us  * to tell the compiler in a per-variable manner that a variable  * is unused  */
 end_comment
 
 begin_ifndef
@@ -792,7 +792,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PM_TIMER_FREQUENCY
+name|ACPI_PM_TIMER_FREQUENCY
 value|3579545
 end_define
 
@@ -919,6 +919,73 @@ end_typedef
 begin_comment
 comment|/* Actually a ptr to a NS Node */
 end_comment
+
+begin_comment
+comment|/* Time constants for timer calculations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSEC_PER_SEC
+value|1000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USEC_PER_MSEC
+value|1000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USEC_PER_SEC
+value|1000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_100NSEC_PER_USEC
+value|10L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_100NSEC_PER_MSEC
+value|10000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_100NSEC_PER_SEC
+value|10000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NSEC_PER_USEC
+value|1000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NSEC_PER_MSEC
+value|1000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NSEC_PER_SEC
+value|1000000000L
+end_define
 
 begin_comment
 comment|/* Owner IDs are used to track namespace nodes for selective deletion */
@@ -1958,7 +2025,7 @@ comment|/* Last typecode used within a NS Node */
 end_comment
 
 begin_comment
-comment|/*  * These are special object types that never appear in  * a Namespace node, only in an ACPI_OPERAND_OBJECT  */
+comment|/*  * These are special object types that never appear in  * a Namespace node, only in an object of ACPI_OPERAND_OBJECT  */
 end_comment
 
 begin_define
@@ -2921,6 +2988,20 @@ block|}
 name|ACPI_BUFFER
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Free a buffer created in an ACPI_BUFFER via ACPI_ALLOCATE_LOCAL_BUFFER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE_BUFFER
+parameter_list|(
+name|b
+parameter_list|)
+value|ACPI_FREE(b.Pointer)
+end_define
 
 begin_comment
 comment|/*  * NameType for AcpiGetName  */
