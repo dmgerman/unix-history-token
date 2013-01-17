@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_apic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_cpu.h"
 end_include
 
@@ -5103,6 +5109,22 @@ operator|<
 name|PMAP_CLFLUSH_THRESHOLD
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+comment|/* 		 * XXX: Some CPUs fault, hang, or trash the local APIC 		 * registers if we use CLFLUSH on the local APIC 		 * range.  The local APIC is always uncached, so we 		 * don't need to flush for that range anyway. 		 */
+if|if
+condition|(
+name|pmap_kextract
+argument_list|(
+name|sva
+argument_list|)
+operator|==
+name|lapic_paddr
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* 		 * Otherwise, do per-cache line flush.  Use the mfence 		 * instruction to insure that previous stores are 		 * included in the write-back.  The processor 		 * propagates flush to other processors in the cache 		 * coherence domain. 		 */
 name|mfence
 argument_list|()
