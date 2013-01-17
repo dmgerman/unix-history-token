@@ -1044,6 +1044,13 @@ operator|||
 name|force_update
 condition|)
 block|{
+name|uint16_t
+name|slot_flags
+init|=
+name|kring
+operator|->
+name|nkr_slot_flags
+decl_stmt|;
 for|for
 control|(
 name|n
@@ -1134,6 +1141,19 @@ operator|.
 name|len
 operator|=
 name|total_len
+expr_stmt|;
+name|kring
+operator|->
+name|ring
+operator|->
+name|slot
+index|[
+name|j
+index|]
+operator|.
+name|flags
+operator|=
+name|slot_flags
 expr_stmt|;
 comment|/*  sync was in re_newbuf() */
 name|bus_dmamap_sync
