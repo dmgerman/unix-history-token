@@ -148,7 +148,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] TXSTATUS\n"
+literal|"[%u] [%llu] TXSTATUS: TxDone=%d, TS=0x%08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -176,6 +176,33 @@ name|hdr
 operator|.
 name|threadid
 argument_list|)
+argument_list|,
+name|MF
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|9
+index|]
+argument_list|,
+name|AR_TxDone
+argument_list|)
+argument_list|,
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* ds_txstatus0 */
@@ -1535,7 +1562,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] RXSTATUS\n"
+literal|"[%u] [%llu] RXSTATUS: RxDone=%d, TS=0x%08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -1563,6 +1590,19 @@ name|hdr
 operator|.
 name|threadid
 argument_list|)
+argument_list|,
+name|MF
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus8
+argument_list|,
+name|AR_RxDone
+argument_list|)
+argument_list|,
+name|rxs
+operator|.
+name|ds_rxstatus2
 argument_list|)
 expr_stmt|;
 name|printf
