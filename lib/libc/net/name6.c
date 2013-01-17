@@ -574,6 +574,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|struct
@@ -689,6 +695,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Functions defined in RFC2553  *	getipnodebyname, getipnodebyaddr, freehostent  */
@@ -994,6 +1005,19 @@ condition|(
 name|af
 operator|==
 name|AF_INET6
+condition|)
+name|hp
+operator|=
+name|_hpreorder
+argument_list|(
+name|hp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|af
+operator|==
+name|AF_INET6
 operator|&&
 operator|(
 operator|(
@@ -1122,14 +1146,11 @@ operator|=
 name|options
 expr_stmt|;
 return|return
-name|_hpreorder
-argument_list|(
 name|_hpsort
 argument_list|(
 name|hp
 argument_list|,
 name|statp
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -3126,6 +3147,12 @@ name|hp
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_comment
 comment|/*  * _hpreorder: sort address by default address selection  */
@@ -5707,6 +5734,11 @@ return|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
