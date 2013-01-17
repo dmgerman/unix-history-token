@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -193,7 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * tunable_mbinit() has to be run before init_maxsockets() thus  * the SYSINIT order below is SI_ORDER_MIDDLE while init_maxsockets()  * runs at SI_ORDER_ANY.  *  * NB: This has to be done before VM init.  */
+comment|/*  * tunable_mbinit() has to be run before any mbuf allocations are done.  */
 end_comment
 
 begin_function
@@ -206,6 +212,66 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|quad_t
+name|realmem
+decl_stmt|,
+name|maxmbufmem
+decl_stmt|;
+comment|/* 	 * The default limit for all mbuf related memory is 1/2 of all 	 * available kernel memory (physical or kmem). 	 * At most it can be 3/4 of available kernel memory. 	 */
+name|realmem
+operator|=
+name|qmin
+argument_list|(
+operator|(
+name|quad_t
+operator|)
+name|physmem
+operator|*
+name|PAGE_SIZE
+argument_list|,
+name|vm_map_max
+argument_list|(
+name|kernel_map
+argument_list|)
+operator|-
+name|vm_map_min
+argument_list|(
+name|kernel_map
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|maxmbufmem
+operator|=
+name|realmem
+operator|/
+literal|2
+expr_stmt|;
+name|TUNABLE_QUAD_FETCH
+argument_list|(
+literal|"kern.maxmbufmem"
+argument_list|,
+operator|&
+name|maxmbufmem
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxmbufmem
+operator|>
+name|realmem
+operator|/
+literal|4
+operator|*
+literal|3
+condition|)
+name|maxmbufmem
+operator|=
+name|realmem
+operator|/
+literal|4
+operator|*
+literal|3
+expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.ipc.nmbclusters"
@@ -342,7 +408,7 @@ name|SYSINIT
 argument_list|(
 name|tunable_mbinit
 argument_list|,
-name|SI_SUB_TUNABLES
+name|SI_SUB_KMEM
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,
@@ -1163,17 +1229,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|mbuf_init
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 modifier|*
 name|mbuf_jumbo_alloc
 parameter_list|(
@@ -1190,7 +1245,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Ensure that MSIZE must be a power of 2. */
+comment|/* Ensure that MSIZE is a power of 2. */
 end_comment
 
 begin_expr_stmt
@@ -1220,22 +1275,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * Initialize FreeBSD Network buffer allocation.  */
 end_comment
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|mbuf
-argument_list|,
-name|SI_SUB_MBUF
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|mbuf_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -1672,6 +1711,22 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|mbuf
+argument_list|,
+name|SI_SUB_MBUF
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|mbuf_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * UMA backend page allocator for the jumbo frame zones.  *  * Allocates kernel virtual memory that is backed by contiguous physical  * pages.  */
