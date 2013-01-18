@@ -788,7 +788,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Could not stop the watchdog, not exitting"
+literal|"Could not stop the watchdog, not exiting"
 argument_list|)
 expr_stmt|;
 name|end_program
