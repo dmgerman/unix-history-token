@@ -124,6 +124,12 @@ name|uptr
 name|mmaped
 decl_stmt|;
 name|uptr
+name|munmaps
+decl_stmt|;
+name|uptr
+name|munmaped
+decl_stmt|;
+name|uptr
 name|mmaped_by_size
 index|[
 name|kNumberOfSizeClasses
@@ -169,6 +175,24 @@ name|void
 name|Print
 parameter_list|()
 function_decl|;
+block|}
+struct|;
+comment|// A cross-platform equivalent of malloc_statistics_t on Mac OS.
+struct|struct
+name|AsanMallocStats
+block|{
+name|uptr
+name|blocks_in_use
+decl_stmt|;
+name|uptr
+name|size_in_use
+decl_stmt|;
+name|uptr
+name|max_size_in_use
+decl_stmt|;
+name|uptr
+name|size_allocated
+decl_stmt|;
 block|}
 struct|;
 block|}

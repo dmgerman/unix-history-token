@@ -157,16 +157,13 @@ comment|// returns true if the old function existed.
 name|bool
 name|OverrideFunction
 parameter_list|(
-name|void
-modifier|*
+name|uptr
 name|old_func
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 name|new_func
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 modifier|*
 name|orig_old_func
 parameter_list|)
@@ -188,7 +185,7 @@ parameter_list|,
 name|new_func
 parameter_list|)
 define|\
-value|::__interception::OverrideFunction((void*)old_func, (void*)new_func, \                                        (void**)&REAL(old_func))
+value|::__interception::OverrideFunction( \           (::__interception::uptr)old_func, \           (::__interception::uptr)new_func, \           (::__interception::uptr*)((::__interception::uptr)&REAL(old_func)))
 end_define
 
 begin_define

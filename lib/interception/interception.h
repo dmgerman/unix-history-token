@@ -96,6 +96,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"sanitizer/common_interface_defs.h"
+end_include
+
+begin_comment
+comment|// These typedefs should be used only in the interceptor definitions to replace
+end_comment
+
+begin_comment
+comment|// the standard system types (e.g. SSIZE_T instead of ssize_t)
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__sanitizer
+operator|::
+name|uptr
+name|SIZE_T
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__sanitizer
+operator|::
+name|sptr
+name|SSIZE_T
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__sanitizer
+operator|::
+name|sptr
+name|PTRDIFF_T
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__sanitizer
+operator|::
+name|s64
+name|INTMAX_T
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__sanitizer
+operator|::
+name|u64
+name|OFF_T
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__sanitizer
+operator|::
+name|u64
+name|OFF64_T
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|// How to use this library:
 end_comment
@@ -308,6 +376,58 @@ begin_comment
 comment|// the "wrap_" prefix on Mac.
 end_comment
 
+begin_comment
+comment|// An alternative to function patching is to create a dylib containing a
+end_comment
+
+begin_comment
+comment|// __DATA,__interpose section that associates library functions with their
+end_comment
+
+begin_comment
+comment|// wrappers. When this dylib is preloaded before an executable using
+end_comment
+
+begin_comment
+comment|// DYLD_INSERT_LIBRARIES, it routes all the calls to interposed functions done
+end_comment
+
+begin_comment
+comment|// through stubs to the wrapper functions. Such a library is built with
+end_comment
+
+begin_comment
+comment|// -DMAC_INTERPOSE_FUNCTIONS=1.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|MAC_INTERPOSE_FUNCTIONS
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAC_INTERPOSE_FUNCTIONS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -349,8 +469,6 @@ directive|define
 name|DECLARE_WRAPPER
 parameter_list|(
 name|ret_type
-parameter_list|,
-name|convention
 parameter_list|,
 name|func
 parameter_list|,
@@ -453,8 +571,6 @@ name|DECLARE_WRAPPER
 parameter_list|(
 name|ret_type
 parameter_list|,
-name|convention
-parameter_list|,
 name|func
 parameter_list|,
 modifier|...
@@ -500,20 +616,25 @@ name|DECLARE_WRAPPER
 parameter_list|(
 name|ret_type
 parameter_list|,
-name|convention
-parameter_list|,
 name|func
 parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|extern "C" ret_type convention func(__VA_ARGS__) \     __attribute__((weak, alias("__interceptor_" #func), visibility("default")));
+value|extern "C" ret_type func(__VA_ARGS__) \     __attribute__((weak, alias("__interceptor_" #func), visibility("default")));
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|MAC_INTERPOSE_FUNCTIONS
+end_if
 
 begin_define
 define|#
@@ -557,8 +678,51 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|typedef ret_type (*FUNC_TYPE(func))(__VA_ARGS__); \   namespace __interception { \     extern FUNC_TYPE(func) PTR_TO_REAL(func); \   }
+value|typedef ret_type (*FUNC_TYPE(func))(__VA_ARGS__); \     namespace __interception { \       extern FUNC_TYPE(func) PTR_TO_REAL(func); \     }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// MAC_INTERPOSE_FUNCTIONS
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_REAL
+parameter_list|(
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|extern "C" ret_type func(__VA_ARGS__);
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// MAC_INTERPOSE_FUNCTIONS
+end_comment
 
 begin_define
 define|#
@@ -572,32 +736,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|DECLARE_REAL(ret_type, func, ##__VA_ARGS__) \   extern "C" ret_type WRAP(func)(__VA_ARGS__);
-end_define
-
-begin_comment
-comment|// FIXME(timurrrr): We might need to add DECLARE_REAL_EX etc to support
-end_comment
-
-begin_comment
-comment|// different calling conventions later.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFINE_REAL_EX
-parameter_list|(
-name|ret_type
-parameter_list|,
-name|convention
-parameter_list|,
-name|func
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|typedef ret_type (convention *FUNC_TYPE(func))(__VA_ARGS__); \   namespace __interception { \     FUNC_TYPE(func) PTR_TO_REAL(func); \   }
+value|DECLARE_REAL(ret_type, func, __VA_ARGS__) \   extern "C" ret_type WRAP(func)(__VA_ARGS__);
 end_define
 
 begin_comment
@@ -616,11 +755,12 @@ begin_comment
 comment|// foo with an interceptor for other function.
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_CONVENTION
-end_define
+begin_if
+if|#
+directive|if
+operator|!
+name|MAC_INTERPOSE_FUNCTIONS
+end_if
 
 begin_define
 define|#
@@ -634,25 +774,31 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|DEFINE_REAL_EX(ret_type, DEFAULT_CONVENTION, func, __VA_ARGS__)
+value|typedef ret_type (*FUNC_TYPE(func))(__VA_ARGS__); \     namespace __interception { \       FUNC_TYPE(func) PTR_TO_REAL(func); \     }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
-name|INTERCEPTOR_EX
+name|DEFINE_REAL
 parameter_list|(
 name|ret_type
-parameter_list|,
-name|convention
 parameter_list|,
 name|func
 parameter_list|,
 modifier|...
 parameter_list|)
-define|\
-value|DEFINE_REAL_EX(ret_type, convention, func, __VA_ARGS__) \   DECLARE_WRAPPER(ret_type, convention, func, __VA_ARGS__) \   extern "C" \   INTERCEPTOR_ATTRIBUTE \   ret_type convention WRAP(func)(__VA_ARGS__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -666,7 +812,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|INTERCEPTOR_EX(ret_type, DEFAULT_CONVENTION, func, __VA_ARGS__)
+value|DEFINE_REAL(ret_type, func, __VA_ARGS__) \   DECLARE_WRAPPER(ret_type, func, __VA_ARGS__) \   extern "C" \   INTERCEPTOR_ATTRIBUTE \   ret_type WRAP(func)(__VA_ARGS__)
 end_define
 
 begin_if
@@ -690,13 +836,68 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|INTERCEPTOR_EX(ret_type, __stdcall, func, __VA_ARGS__)
+value|typedef ret_type (__stdcall *FUNC_TYPE(func))(__VA_ARGS__); \     namespace __interception { \       FUNC_TYPE(func) PTR_TO_REAL(func); \     } \     DECLARE_WRAPPER(ret_type, func, __VA_ARGS__) \     extern "C" \     INTERCEPTOR_ATTRIBUTE \     ret_type __stdcall WRAP(func)(__VA_ARGS__)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// ISO C++ forbids casting between pointer-to-function and pointer-to-object,
+end_comment
+
+begin_comment
+comment|// so we use casting via an integral type __interception::uptr,
+end_comment
+
+begin_comment
+comment|// assuming that system is POSIX-compliant. Using other hacks seem
+end_comment
+
+begin_comment
+comment|// challenging, as we don't even pass function type to
+end_comment
+
+begin_comment
+comment|// INTERCEPT_FUNCTION macro, only its name.
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__interception
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|uptr
+typedef|;
+comment|// NOLINT
+else|#
+directive|else
+typedef|typedef
+name|unsigned
+name|long
+name|uptr
+typedef|;
+comment|// NOLINT
+endif|#
+directive|endif
+comment|// _WIN64
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __interception
+end_comment
 
 begin_define
 define|#

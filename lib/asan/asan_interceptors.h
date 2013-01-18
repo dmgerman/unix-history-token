@@ -172,6 +172,19 @@ argument|uptr maxlen
 argument_list|)
 end_macro
 
+begin_macro
+name|DECLARE_REAL
+argument_list|(
+argument|char*
+argument_list|,
+argument|strstr
+argument_list|,
+argument|const char *s1
+argument_list|,
+argument|const char *s2
+argument_list|)
+end_macro
+
 begin_struct_decl
 struct_decl|struct
 name|sigaction

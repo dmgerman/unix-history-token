@@ -117,5 +117,45 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_EABI__
+end_ifdef
+
+begin_comment
+comment|/* Returns: if (a<  b) returns -1 *           if (a == b) returns  0 *           if (a>  b) returns  1 */
+end_comment
+
+begin_function
+name|COMPILER_RT_ABI
+name|si_int
+name|__aeabi_lcmp
+parameter_list|(
+name|di_int
+name|a
+parameter_list|,
+name|di_int
+name|b
+parameter_list|)
+block|{
+return|return
+name|__cmpdi2
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

@@ -103,17 +103,14 @@ name|char
 modifier|*
 name|func_name
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 modifier|*
 name|func_addr
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 name|real
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 name|wrapper
 parameter_list|)
 function_decl|;
@@ -132,7 +129,7 @@ parameter_list|(
 name|func
 parameter_list|)
 define|\
-value|::__interception::GetRealFunctionAddress(#func, (void**)&REAL(func), \     (void*)&(func), (void*)&WRAP(func))
+value|::__interception::GetRealFunctionAddress( \           #func, (::__interception::uptr*)&REAL(func), \           (::__interception::uptr)&(func), \           (::__interception::uptr)&WRAP(func))
 end_define
 
 begin_endif

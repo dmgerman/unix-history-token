@@ -102,9 +102,13 @@ name|MutexTypeAnnotations
 block|,
 name|MutexTypeAtExit
 block|,
+name|MutexTypeMBlock
+block|,
+name|MutexTypeJavaMBlock
+block|,
 comment|// This must be the last.
 name|MutexTypeCount
-block|, }
+block|}
 enum|;
 name|class
 name|Mutex
@@ -139,6 +143,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|ReadUnlock
+parameter_list|()
+function_decl|;
+name|void
+name|CheckLocked
 parameter_list|()
 function_decl|;
 name|private

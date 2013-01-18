@@ -84,7 +84,7 @@ block|{
 if|#
 directive|if
 operator|(
-name|__WORDSIZE
+name|SANITIZER_WORDSIZE
 operator|==
 literal|64
 operator|)

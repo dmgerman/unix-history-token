@@ -96,6 +96,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+specifier|static
 name|long
 name|kIslandTemplate
 index|[]
@@ -170,6 +171,8 @@ value|16
 end_define
 
 begin_decl_stmt
+specifier|static
+name|unsigned
 name|char
 name|kIslandTemplate
 index|[]
@@ -261,6 +264,8 @@ value|kOriginalInstructionsSize + 6
 end_define
 
 begin_decl_stmt
+specifier|static
+name|unsigned
 name|char
 name|kIslandTemplate
 index|[]
@@ -447,6 +452,7 @@ name|)
 end_pragma
 
 begin_function_decl
+specifier|static
 name|mach_error_t
 name|allocateBranchIsland
 parameter_list|(
@@ -462,19 +468,11 @@ name|void
 modifier|*
 name|originalFunctionAddress
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
+specifier|static
 name|mach_error_t
 name|freeBranchIsland
 parameter_list|(
@@ -482,19 +480,11 @@ name|BranchIsland
 modifier|*
 name|island
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
+specifier|static
 name|mach_error_t
 name|defaultIslandMalloc
 parameter_list|(
@@ -510,19 +500,11 @@ name|void
 modifier|*
 name|hint
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
+specifier|static
 name|mach_error_t
 name|defaultIslandFree
 parameter_list|(
@@ -530,17 +512,8 @@ name|void
 modifier|*
 name|ptr
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_if
 if|#
@@ -557,6 +530,7 @@ argument_list|)
 end_if
 
 begin_function_decl
+specifier|static
 name|mach_error_t
 name|setBranchIslandTarget
 parameter_list|(
@@ -572,17 +546,8 @@ parameter_list|,
 name|long
 name|instruction
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#
@@ -604,6 +569,7 @@ argument_list|)
 end_if
 
 begin_function_decl
+specifier|static
 name|mach_error_t
 name|setBranchIslandTarget_i386
 parameter_list|(
@@ -620,17 +586,16 @@ name|char
 modifier|*
 name|instructions
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// Can't be made static because there's no C implementation for atomic_mov64
+end_comment
+
+begin_comment
+comment|// on i386.
+end_comment
 
 begin_function_decl
 name|void
@@ -685,17 +650,8 @@ name|uint8_t
 modifier|*
 name|originalInstructionSizes
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -721,17 +677,8 @@ name|uint8_t
 modifier|*
 name|instructionSizes
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(visibility
-parameter_list|(
-function_decl|"hidden"
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_ifdef
 ifdef|#
@@ -800,6 +747,7 @@ argument_list|)
 end_if
 
 begin_function
+specifier|static
 name|mach_error_t
 name|makeIslandExecutable
 parameter_list|(
@@ -904,6 +852,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|mach_error_t
 name|defaultIslandMalloc
 parameter_list|(
@@ -939,6 +888,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|mach_error_t
 name|defaultIslandFree
 parameter_list|(
@@ -2260,6 +2210,7 @@ comment|/** 	Implementation: Allocates memory for a branch island. 	 	@param	isl
 end_comment
 
 begin_function
+specifier|static
 name|mach_error_t
 name|allocateBranchIsland
 parameter_list|(
@@ -2578,6 +2529,7 @@ comment|/** 	Implementation: Deallocates memory for a branch island. 	 	@param	i
 end_comment
 
 begin_function
+specifier|static
 name|mach_error_t
 name|freeBranchIsland
 parameter_list|(
@@ -2717,6 +2669,7 @@ argument_list|)
 end_if
 
 begin_function
+specifier|static
 name|mach_error_t
 name|setBranchIslandTarget
 parameter_list|(
@@ -2880,6 +2833,7 @@ argument_list|)
 end_if
 
 begin_function
+specifier|static
 name|mach_error_t
 name|setBranchIslandTarget_i386
 parameter_list|(
@@ -2999,6 +2953,7 @@ argument_list|)
 end_elif
 
 begin_function
+specifier|static
 name|mach_error_t
 name|setBranchIslandTarget_i386
 parameter_list|(
@@ -3616,7 +3571,40 @@ block|}
 block|,
 comment|// call $imm
 block|{
+literal|0x4
+block|,
+block|{
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x0F
+block|,
+literal|0xBE
+block|,
+literal|0x55
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|// movsbl $imm(%ebp), %edx
+block|{
 literal|0x0
+block|,
+block|{
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|}
 block|}
 block|}
 decl_stmt|;
@@ -3856,6 +3844,23 @@ block|}
 block|}
 block|,
 comment|// push %rXX
+block|{
+literal|0x2
+block|,
+block|{
+literal|0xFF
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x84
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|// test %rX8,%rX8
 block|{
 literal|0x2
 block|,
@@ -4294,6 +4299,89 @@ block|}
 block|,
 comment|// mov %rdi,%r8
 block|{
+literal|0x4
+block|,
+block|{
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|}
+block|,
+block|{
+literal|0x40
+block|,
+literal|0x0F
+block|,
+literal|0xBE
+block|,
+literal|0xCE
+block|}
+block|}
+block|,
+comment|// movsbl %sil,%ecx
+block|{
+literal|0x7
+block|,
+block|{
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x48
+block|,
+literal|0x8D
+block|,
+literal|0x05
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|// lea $imm(%rip),%rax
+block|{
+literal|0x3
+block|,
+block|{
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|}
+block|,
+block|{
+literal|0x0F
+block|,
+literal|0xBE
+block|,
+literal|0xCE
+block|}
+block|}
+block|,
+comment|// movsbl, %dh, %ecx
+block|{
 literal|0x3
 block|,
 block|{
@@ -4354,6 +4442,14 @@ block|,
 comment|// test %rdx,%rdx
 block|{
 literal|0x0
+block|,
+block|{
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|}
 block|}
 block|}
 decl_stmt|;
@@ -5083,10 +5179,10 @@ operator|)
 decl_stmt|;
 operator|*
 operator|(
+operator|(
 name|uint8_t
 operator|*
 operator|)
-operator|(
 name|instructionsToFix
 operator|+
 literal|1

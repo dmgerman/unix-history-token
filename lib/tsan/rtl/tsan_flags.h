@@ -100,9 +100,22 @@ comment|// on the same address.
 name|bool
 name|suppress_equal_addresses
 decl_stmt|;
+comment|// Suppress weird race reports that can be seen if JVM is embed
+comment|// into the process.
+name|bool
+name|suppress_java
+decl_stmt|;
+comment|// Turns off bug reporting entirely (useful for benchmarking).
+name|bool
+name|report_bugs
+decl_stmt|;
 comment|// Report thread leaks at exit?
 name|bool
 name|report_thread_leaks
+decl_stmt|;
+comment|// Report destruction of a locked mutex?
+name|bool
+name|report_destroy_locked
 decl_stmt|;
 comment|// Report violations of async signal-safety
 comment|// (e.g. malloc() call from a signal handler).
@@ -130,9 +143,13 @@ comment|// Override exit status if something was reported.
 name|int
 name|exitcode
 decl_stmt|;
-comment|// Log fileno (1 - stdout, 2 - stderr).
-name|int
-name|log_fileno
+comment|// Write logs to "log_path.pid".
+comment|// The special values are "stdout" and "stderr".
+comment|// The default is "stderr".
+specifier|const
+name|char
+modifier|*
+name|log_path
 decl_stmt|;
 comment|// Sleep in main thread before exiting for that many ms
 comment|// (useful to catch "at exit" races).
@@ -161,9 +178,26 @@ comment|// Controls whether RunningOnValgrind() returns true or false.
 name|bool
 name|running_on_valgrind
 decl_stmt|;
-comment|// If set, uses in-process symbolizer from common sanitizer runtime.
-name|bool
-name|use_internal_symbolizer
+comment|// Path to external symbolizer.
+specifier|const
+name|char
+modifier|*
+name|external_symbolizer_path
+decl_stmt|;
+comment|// Per-thread history size, controls how many previous memory accesses
+comment|// are remembered per thread.  Possible values are [0..7].
+comment|// history_size=0 amounts to 32K memory accesses.  Each next value doubles
+comment|// the amount of memory accesses, up to history_size=7 that amounts to
+comment|// 4M memory accesses.  The default value is 2 (128K memory accesses).
+name|int
+name|history_size
+decl_stmt|;
+comment|// Controls level of synchronization implied by IO operations.
+comment|// 0 - no synchronization
+comment|// 1 - reasonable level of synchronization (write->read)
+comment|// 2 - global synchronization of all IO operations
+name|int
+name|io_sync
 decl_stmt|;
 block|}
 struct|;

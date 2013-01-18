@@ -77,7 +77,7 @@ name|void
 name|FinalizeSuppressions
 parameter_list|()
 function_decl|;
-name|bool
+name|uptr
 name|IsSuppressed
 parameter_list|(
 name|ReportType
@@ -100,7 +100,7 @@ block|,
 name|SuppressionThread
 block|,
 name|SuppressionSignal
-block|, }
+block|}
 enum|;
 struct|struct
 name|Suppression

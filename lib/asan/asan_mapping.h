@@ -85,25 +85,17 @@ operator|==
 literal|1
 end_if
 
-begin_extern
-extern|extern __attribute__((visibility(
-literal|"default"
-end_extern
-
 begin_decl_stmt
-unit|)))
+specifier|extern
+name|SANITIZER_INTERFACE_ATTRIBUTE
 name|uptr
 name|__asan_mapping_scale
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern __attribute__((visibility(
-literal|"default"
-end_extern
-
 begin_decl_stmt
-unit|)))
+specifier|extern
+name|SANITIZER_INTERFACE_ATTRIBUTE
 name|uptr
 name|__asan_mapping_offset
 decl_stmt|;
@@ -128,11 +120,11 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANDROID
-end_ifdef
+begin_if
+if|#
+directive|if
+name|ASAN_ANDROID
+end_if
 
 begin_define
 define|#
@@ -163,7 +155,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|__WORDSIZE
+name|SANITIZER_WORDSIZE
 operator|==
 literal|32
 end_if
@@ -180,12 +172,38 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|(1ULL<< 41)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
 value|(1ULL<< 44)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -236,10 +254,34 @@ end_define
 begin_if
 if|#
 directive|if
-name|__WORDSIZE
+name|SANITIZER_WORDSIZE
 operator|==
 literal|64
 end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uptr
+name|kHighMemEnd
+init|=
+literal|0x00000fffffffffffUL
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -251,13 +293,18 @@ literal|0x00007fffffffffffUL
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|// __WORDSIZE == 32
+comment|// SANITIZER_WORDSIZE == 32
 end_comment
 
 begin_decl_stmt
@@ -276,7 +323,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __WORDSIZE
+comment|// SANITIZER_WORDSIZE
 end_comment
 
 begin_define
@@ -328,11 +375,26 @@ name|kHighShadowEnd
 value|MEM_TO_SHADOW(kHighMemEnd)
 end_define
 
+begin_comment
+comment|// With the zero shadow base we can not actually map pages starting from 0.
+end_comment
+
+begin_comment
+comment|// This constant is somewhat arbitrary.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kZeroBaseShadowStart
+value|(1<< 18)
+end_define
+
 begin_define
 define|#
 directive|define
 name|kShadowGapBeg
-value|(kLowShadowEnd ? kLowShadowEnd + 1 : 16 * kPageSize)
+value|(kLowShadowEnd ? kLowShadowEnd + 1 \                                        : kZeroBaseShadowStart)
 end_define
 
 begin_define

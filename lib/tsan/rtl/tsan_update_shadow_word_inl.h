@@ -191,7 +191,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|OldIsRWStronger
+name|OldIsRWNotWeaker
 argument_list|(
 name|old
 argument_list|,
@@ -222,7 +222,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|OldIsRWWeaker
+name|OldIsRWWeakerOrEqual
 argument_list|(
 name|old
 argument_list|,

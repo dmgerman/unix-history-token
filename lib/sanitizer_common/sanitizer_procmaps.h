@@ -69,16 +69,84 @@ directive|include
 file|"sanitizer_internal_defs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sanitizer_mutex.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
+ifdef|#
+directive|ifdef
+name|_WIN32
 name|class
-name|ProcessMaps
+name|MemoryMappingLayout
 block|{
 name|public
 label|:
-name|ProcessMaps
+name|MemoryMappingLayout
+argument_list|()
+block|{}
+name|bool
+name|GetObjectNameAndOffset
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|,
+name|uptr
+modifier|*
+name|offset
+parameter_list|,
+name|char
+name|filename
+index|[]
+parameter_list|,
+name|uptr
+name|filename_size
+parameter_list|)
+block|{
+name|UNIMPLEMENTED
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+else|#
+directive|else
+comment|// _WIN32
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+struct|struct
+name|ProcSelfMapsBuff
+block|{
+name|char
+modifier|*
+name|data
+decl_stmt|;
+name|uptr
+name|mmaped_size
+decl_stmt|;
+name|uptr
+name|len
+decl_stmt|;
+block|}
+struct|;
+endif|#
+directive|endif
+comment|// defined(__linux__)
+name|class
+name|MemoryMappingLayout
+block|{
+name|public
+label|:
+name|MemoryMappingLayout
 argument_list|()
 expr_stmt|;
 name|bool
@@ -128,12 +196,24 @@ name|uptr
 name|filename_size
 parameter_list|)
 function_decl|;
+comment|// In some cases, e.g. when running under a sandbox on Linux, ASan is unable
+comment|// to obtain the memory mappings. It should fall back to pre-cached data
+comment|// instead of aborting.
+specifier|static
+name|void
+name|CacheMemoryMappings
+parameter_list|()
+function_decl|;
 operator|~
-name|ProcessMaps
+name|MemoryMappingLayout
 argument_list|()
 expr_stmt|;
 name|private
 label|:
+name|void
+name|LoadFromCache
+parameter_list|()
+function_decl|;
 comment|// Default implementation of GetObjectNameAndOffset.
 comment|// Quite slow, because it iterates through the whole process map for each
 comment|// lookup.
@@ -255,20 +335,23 @@ if|#
 directive|if
 name|defined
 name|__linux__
-name|char
-modifier|*
-name|proc_self_maps_buff_
-decl_stmt|;
-name|uptr
-name|proc_self_maps_buff_mmaped_size_
-decl_stmt|;
-name|uptr
-name|proc_self_maps_buff_len_
+name|ProcSelfMapsBuff
+name|proc_self_maps_
 decl_stmt|;
 name|char
 modifier|*
 name|current_
 decl_stmt|;
+comment|// Static mappings cache.
+specifier|static
+name|ProcSelfMapsBuff
+name|cached_proc_self_maps_
+decl_stmt|;
+specifier|static
+name|StaticSpinMutex
+name|cache_lock_
+decl_stmt|;
+comment|// protects cached_proc_self_maps_.
 elif|#
 directive|elif
 name|defined
@@ -301,6 +384,9 @@ decl_stmt|;
 name|u32
 name|current_magic_
 decl_stmt|;
+name|u32
+name|current_filetype_
+decl_stmt|;
 name|int
 name|current_load_cmd_count_
 decl_stmt|;
@@ -312,6 +398,9 @@ endif|#
 directive|endif
 block|}
 empty_stmt|;
+endif|#
+directive|endif
+comment|// _WIN32
 block|}
 end_decl_stmt
 

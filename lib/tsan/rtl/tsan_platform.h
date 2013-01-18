@@ -51,6 +51,10 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|/* C++ linux memory layout: 0000 0000 0000 - 03c0 0000 0000: protected 03c0 0000 0000 - 1000 0000 0000: shadow 1000 0000 0000 - 6000 0000 0000: protected 6000 0000 0000 - 6200 0000 0000: traces 6200 0000 0000 - 7d00 0000 0000: - 7d00 0000 0000 - 7e00 0000 0000: heap 7e00 0000 0000 - 7fff ffff ffff: modules and main thread stack  C++ COMPAT linux memory layout: 0000 0000 0000 - 0400 0000 0000: protected 0400 0000 0000 - 1000 0000 0000: shadow 1000 0000 0000 - 2900 0000 0000: protected 2900 0000 0000 - 2c00 0000 0000: modules 2c00 0000 0000 - 6000 0000 0000: - 6000 0000 0000 - 6200 0000 0000: traces 6200 0000 0000 - 7d00 0000 0000: - 7d00 0000 0000 - 7e00 0000 0000: heap 7e00 0000 0000 - 7f00 0000 0000: - 7f00 0000 0000 - 7fff ffff ffff: main thread stack  Go linux and darwin memory layout: 0000 0000 0000 - 0000 1000 0000: executable 0000 1000 0000 - 00f8 0000 0000: - 00f8 0000 0000 - 0118 0000 0000: heap 0118 0000 0000 - 1000 0000 0000: - 1000 0000 0000 - 1460 0000 0000: shadow 1460 0000 0000 - 6000 0000 0000: - 6000 0000 0000 - 6200 0000 0000: traces 6200 0000 0000 - 7fff ffff ffff: -  Go windows memory layout: 0000 0000 0000 - 0000 1000 0000: executable 0000 1000 0000 - 00f8 0000 0000: - 00f8 0000 0000 - 0118 0000 0000: heap 0118 0000 0000 - 0100 0000 0000: - 0100 0000 0000 - 0560 0000 0000: shadow 0560 0000 0000 - 0760 0000 0000: traces 0760 0000 0000 - 07ff ffff ffff: - */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -66,13 +70,27 @@ end_define
 begin_include
 include|#
 directive|include
-file|"tsan_rtl.h"
+file|"tsan_defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsan_trace.h"
 end_include
 
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__LP64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -99,6 +117,21 @@ name|kLinuxAppMemEnd
 init|=
 literal|0x00fcffffffffULL
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+specifier|static
+specifier|const
+name|uptr
+name|kLinuxShadowMsk
+init|=
+literal|0x010000000000ULL
+decl_stmt|;
+else|#
+directive|else
 specifier|static
 specifier|const
 name|uptr
@@ -106,6 +139,8 @@ name|kLinuxShadowMsk
 init|=
 literal|0x100000000000ULL
 decl_stmt|;
+endif|#
+directive|endif
 comment|// TSAN_COMPAT_SHADOW is intended for COMPAT virtual memory layout,
 comment|// when memory addresses are of the 0x2axxxxxxxxxx form.
 comment|// The option is enabled with 'setarch x86_64 -L'.
@@ -122,7 +157,7 @@ specifier|const
 name|uptr
 name|kLinuxAppMemBeg
 init|=
-literal|0x2a0000000000ULL
+literal|0x290000000000ULL
 decl_stmt|;
 specifier|static
 specifier|const
@@ -138,7 +173,7 @@ specifier|const
 name|uptr
 name|kLinuxAppMemBeg
 init|=
-literal|0x7ef000000000ULL
+literal|0x7cf000000000ULL
 decl_stmt|;
 specifier|static
 specifier|const
@@ -155,6 +190,34 @@ name|uptr
 name|kLinuxAppMemMsk
 init|=
 literal|0x7c0000000000ULL
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+specifier|const
+name|uptr
+name|kTraceMemBegin
+init|=
+literal|0x056000000000ULL
+decl_stmt|;
+else|#
+directive|else
+specifier|const
+name|uptr
+name|kTraceMemBegin
+init|=
+literal|0x600000000000ULL
+decl_stmt|;
+endif|#
+directive|endif
+specifier|const
+name|uptr
+name|kTraceMemSize
+init|=
+literal|0x020000000000ULL
 decl_stmt|;
 comment|// This has to be a macro to allow constant initialization of constants below.
 ifndef|#
@@ -200,11 +263,7 @@ argument_list|(
 name|kLinuxAppMemEnd
 argument_list|)
 operator||
-operator|(
-name|kPageSize
-operator|-
-literal|1
-operator|)
+literal|0xff
 decl_stmt|;
 specifier|static
 specifier|inline
@@ -274,24 +333,6 @@ operator|)
 operator|/
 name|kShadowCnt
 return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|TSAN_COMPAT_SHADOW
-argument_list|)
-operator|&&
-name|TSAN_COMPAT_SHADOW
-comment|// COMPAT mapping is not quite one-to-one.
-return|return
-operator|(
-name|shadow
-operator|/
-name|kShadowCnt
-operator|)
-operator||
-literal|0x280000000000ULL
-return|;
 else|#
 directive|else
 return|return
@@ -308,6 +349,7 @@ directive|endif
 block|}
 comment|// For COMPAT mapping returns an alternative address
 comment|// that mapped to the same shadow address.
+comment|// COMPAT mapping is not quite one-to-one.
 specifier|static
 specifier|inline
 name|uptr
@@ -326,9 +368,14 @@ argument_list|)
 operator|&&
 name|TSAN_COMPAT_SHADOW
 return|return
+operator|(
 name|addr
-operator||
+operator|&
+operator|~
 name|kLinuxAppMemMsk
+operator|)
+operator||
+literal|0x280000000000ULL
 return|;
 else|#
 directive|else
@@ -356,6 +403,45 @@ name|void
 name|FinalizePlatform
 parameter_list|()
 function_decl|;
+name|uptr
+name|ALWAYS_INLINE
+name|INLINE
+name|GetThreadTrace
+parameter_list|(
+name|int
+name|tid
+parameter_list|)
+block|{
+name|uptr
+name|p
+init|=
+name|kTraceMemBegin
+operator|+
+operator|(
+name|uptr
+operator|)
+name|tid
+operator|*
+name|kTraceSize
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Event
+argument_list|)
+decl_stmt|;
+name|DCHECK_LT
+argument_list|(
+name|p
+argument_list|,
+name|kTraceMemBegin
+operator|+
+name|kTraceMemSize
+argument_list|)
+expr_stmt|;
+return|return
+name|p
+return|;
+block|}
 name|void
 name|internal_start_thread
 parameter_list|(
@@ -372,6 +458,15 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+comment|// Says whether the addr relates to a global var.
+comment|// Guesses with high probability, may yield both false positives and negatives.
+name|bool
+name|IsGlobalVar
+parameter_list|(
+name|uptr
+name|addr
 parameter_list|)
 function_decl|;
 name|uptr
@@ -414,7 +509,7 @@ directive|else
 end_else
 
 begin_comment
-comment|// __LP64__
+comment|// defined(__LP64__) || defined(_WIN64)
 end_comment
 
 begin_error

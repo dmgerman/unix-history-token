@@ -103,8 +103,7 @@ name|char
 modifier|*
 name|func_name
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 modifier|*
 name|func_addr
 parameter_list|)
@@ -113,16 +112,13 @@ comment|// returns true if the old function existed, false on failure.
 name|bool
 name|OverrideFunction
 parameter_list|(
-name|void
-modifier|*
+name|uptr
 name|old_func
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 name|new_func
 parameter_list|,
-name|void
-modifier|*
+name|uptr
 modifier|*
 name|orig_old_func
 parameter_list|)
@@ -151,7 +147,7 @@ parameter_list|(
 name|func
 parameter_list|)
 define|\
-value|::__interception::GetRealFunctionAddress(#func, (void**)&REAL(func))
+value|::__interception::GetRealFunctionAddress( \         #func, (::__interception::uptr*)&REAL(func))
 end_define
 
 begin_else
@@ -167,7 +163,7 @@ parameter_list|(
 name|func
 parameter_list|)
 define|\
-value|::__interception::OverrideFunction((void*)func, (void*)WRAP(func), \                                        (void**)&REAL(func))
+value|::__interception::OverrideFunction( \         (::__interception::uptr)func, \         (::__interception::uptr)WRAP(func), \         (::__interception::uptr*)&REAL(func))
 end_define
 
 begin_endif

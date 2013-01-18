@@ -164,9 +164,24 @@ block|,
 name|MACOS_VERSION_SNOW_LEOPARD
 block|,
 name|MACOS_VERSION_LION
+block|,
+name|MACOS_VERSION_MOUNTAIN_LION
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|// Used by asan_malloc_mac.cc and asan_mac.cc
+end_comment
+
+begin_extern
+extern|extern
+literal|"C"
+name|void
+name|__CFInitialize
+parameter_list|()
+function_decl|;
+end_extern
 
 begin_decl_stmt
 name|namespace
@@ -177,7 +192,7 @@ name|GetMacosVersion
 parameter_list|()
 function_decl|;
 name|void
-name|ReplaceCFAllocator
+name|MaybeReplaceCFAllocator
 parameter_list|()
 function_decl|;
 block|}

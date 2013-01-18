@@ -83,7 +83,7 @@ name|uptr
 name|addr
 parameter_list|)
 function_decl|;
-name|ReportStack
+name|ReportLocation
 modifier|*
 name|SymbolizeData
 parameter_list|(
@@ -94,14 +94,6 @@ function_decl|;
 name|ReportStack
 modifier|*
 name|SymbolizeCodeAddr2Line
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|)
-function_decl|;
-name|ReportStack
-modifier|*
-name|SymbolizeDataAddr2Line
 parameter_list|(
 name|uptr
 name|addr

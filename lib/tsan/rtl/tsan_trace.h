@@ -77,30 +77,48 @@ directive|include
 file|"tsan_sync.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tsan_mutexset.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|__tsan
 block|{
 specifier|const
 name|int
-name|kTraceParts
+name|kTracePartSizeBits
 init|=
-literal|8
-decl_stmt|;
-specifier|const
-name|int
-name|kTraceSize
-init|=
-literal|128
-operator|*
-literal|1024
+literal|14
 decl_stmt|;
 specifier|const
 name|int
 name|kTracePartSize
 init|=
-name|kTraceSize
+literal|1
+operator|<<
+name|kTracePartSizeBits
+decl_stmt|;
+specifier|const
+name|int
+name|kTraceParts
+init|=
+literal|4
+operator|*
+literal|1024
+operator|*
+literal|1024
 operator|/
+name|kTracePartSize
+decl_stmt|;
+specifier|const
+name|int
+name|kTraceSize
+init|=
+name|kTracePartSize
+operator|*
 name|kTraceParts
 decl_stmt|;
 comment|// Must fit into 3 bits.
@@ -120,7 +138,7 @@ block|,
 name|EventTypeRLock
 block|,
 name|EventTypeRUnlock
-block|, }
+block|}
 enum|;
 comment|// Represents a thread event (from most significant bit):
 comment|// u64 typ  : 3;   // EventType.
@@ -140,13 +158,16 @@ name|u64
 name|epoch0
 decl_stmt|;
 comment|// Start epoch for the trace.
+name|MutexSet
+name|mset0
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|TSAN_GO
 name|uptr
 name|stack0buf
 index|[
-name|kShadowStackSize
+name|kTraceStackSize
 index|]
 decl_stmt|;
 endif|#
@@ -161,7 +182,7 @@ name|stack0
 argument_list|(
 name|stack0buf
 argument_list|,
-name|kShadowStackSize
+name|kTraceStackSize
 argument_list|)
 else|#
 directive|else
@@ -179,12 +200,6 @@ struct|;
 struct|struct
 name|Trace
 block|{
-name|Event
-name|events
-index|[
-name|kTraceSize
-index|]
-decl_stmt|;
 name|TraceHeader
 name|headers
 index|[

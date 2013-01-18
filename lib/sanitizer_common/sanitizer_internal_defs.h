@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sanitizer_interface_defs.h"
+file|"sanitizer/common_interface_defs.h"
 end_include
 
 begin_decl_stmt
@@ -118,21 +118,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN32
+name|_MSC_VER
 argument_list|)
 end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|DWORD
-typedef|;
-end_typedef
-
-begin_comment
-comment|// NOLINT
-end_comment
 
 begin_define
 define|#
@@ -202,13 +190,58 @@ directive|define
 name|NOTHROW
 end_define
 
+begin_define
+define|#
+directive|define
+name|LIKELY
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLIKELY
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNUSED
+end_define
+
+begin_define
+define|#
+directive|define
+name|USED
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREFETCH
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* _mm_prefetch(x, _MM_HINT_NTA) */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|// _WIN32
+comment|// _MSC_VER
 end_comment
 
 begin_define
@@ -271,54 +304,12 @@ name|THREADLOCAL
 value|__thread
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NOTHROW
 value|throw()
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NOTHROW
-value|__attribute__((__nothrow__))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// _WIN32
-end_comment
-
-begin_comment
-comment|// We have no equivalent of these on Windows.
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_WIN32
-end_ifndef
 
 begin_define
 define|#
@@ -354,10 +345,62 @@ name|USED
 value|__attribute__((used))
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_comment
+comment|// __builtin_prefetch(x) generates prefetchnt0 on x86
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PREFETCH
+parameter_list|(
+name|x
+parameter_list|)
+value|__asm__("prefetchnta (%0)" : : "r" (x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PREFETCH
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_prefetch(x)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// _MSC_VER
+end_comment
 
 begin_if
 if|#
@@ -367,6 +410,18 @@ argument_list|(
 name|_WIN32
 argument_list|)
 end_if
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|DWORD
+typedef|;
+end_typedef
+
+begin_comment
+comment|// NOLINT
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -430,20 +485,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|// If __WORDSIZE was undefined by the platform, define it in terms of the
-end_comment
-
-begin_comment
-comment|// compiler built-ins __LP64__ and _WIN64.
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__WORDSIZE
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -458,7 +499,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__WORDSIZE
+name|SANITIZER_WORDSIZE
 value|64
 end_define
 
@@ -470,7 +511,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__WORDSIZE
+name|SANITIZER_WORDSIZE
 value|32
 end_define
 
@@ -478,15 +519,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// __WORDSIZE
-end_comment
 
 begin_comment
 comment|// NOTE: Functions below must be defined in each run-time.
@@ -836,9 +868,19 @@ end_endif
 begin_define
 define|#
 directive|define
+name|UNREACHABLE
+parameter_list|(
+name|msg
+parameter_list|)
+value|do { \   CHECK(0&& msg); \   Die(); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UNIMPLEMENTED
 parameter_list|()
-value|CHECK("unimplemented"&& 0)
+value|UNREACHABLE("unimplemented")
 end_define
 
 begin_define
@@ -849,6 +891,16 @@ parameter_list|(
 name|pred
 parameter_list|)
 value|IMPL_COMPILER_ASSERT(pred, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARRAY_SIZE
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof(a)/sizeof((a)[0]))
 end_define
 
 begin_define
@@ -873,7 +925,7 @@ parameter_list|,
 name|line
 parameter_list|)
 define|\
-value|typedef char IMPL_PASTE(assertion_failed_##_, line)[2*(int)(pred)-1];
+value|typedef char IMPL_PASTE(assertion_failed_##_, line)[2*(int)(pred)-1]
 end_define
 
 begin_comment
@@ -884,10 +936,22 @@ begin_comment
 comment|// have stdint.h (like in Visual Studio 9).
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|__INT64_C
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__UINT64_C
+end_undef
+
 begin_if
 if|#
 directive|if
-name|__WORDSIZE
+name|SANITIZER_WORDSIZE
 operator|==
 literal|64
 end_if
@@ -943,7 +1007,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __WORDSIZE == 64
+comment|// SANITIZER_WORDSIZE == 64
 end_comment
 
 begin_undef
@@ -1022,6 +1086,119 @@ define|#
 directive|define
 name|UINT64_MAX
 value|(__UINT64_C(18446744073709551615))
+end_define
+
+begin_enum
+enum|enum
+name|LinkerInitialized
+block|{
+name|LINKER_INITIALIZED
+init|=
+literal|0
+block|}
+enum|;
+end_enum
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GET_CALLER_PC
+parameter_list|()
+value|(uptr)__builtin_return_address(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_CURRENT_FRAME
+parameter_list|()
+value|(uptr)__builtin_frame_address(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_extern
+extern|extern
+literal|"C"
+name|void
+modifier|*
+name|_ReturnAddress
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_extern
+
+begin_pragma
+pragma|#
+directive|pragma
+name|intrinsic
+name|(
+name|_ReturnAddress
+name|)
+end_pragma
+
+begin_define
+define|#
+directive|define
+name|GET_CALLER_PC
+parameter_list|()
+value|(uptr)_ReturnAddress()
+end_define
+
+begin_comment
+comment|// CaptureStackBackTrace doesn't need to know BP on Windows.
+end_comment
+
+begin_comment
+comment|// FIXME: This macro is still used when printing error reports though it's not
+end_comment
+
+begin_comment
+comment|// clear if the BP value is needed in the ASan reports on Windows.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_CURRENT_FRAME
+parameter_list|()
+value|(uptr)0xDEADBEEF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|HANDLE_EINTR
+parameter_list|(
+name|res
+parameter_list|,
+name|f
+parameter_list|)
+value|{                               \   do {                                                                  \     res = (f);                                                         \   } while (res == -1&& errno == EINTR); \   }
 end_define
 
 begin_endif

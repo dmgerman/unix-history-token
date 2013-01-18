@@ -231,13 +231,6 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|void
-name|Disable
-parameter_list|(
-name|unsigned
-name|tid
-parameter_list|)
-function_decl|;
 name|uptr
 name|size
 argument_list|()

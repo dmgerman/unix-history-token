@@ -189,6 +189,7 @@ operator|::
 name|Type
 name|v
 block|;
+comment|// FIXME(dvyukov): 64-bit load is not atomic on 32-bits.
 if|if
 condition|(
 name|mo
@@ -272,6 +273,7 @@ argument_list|)
 operator|)
 argument_list|)
 block|;
+comment|// FIXME(dvyukov): 64-bit store is not atomic on 32-bits.
 if|if
 condition|(
 name|mo

@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sanitizer_common/sanitizer_interface_defs.h"
+file|"sanitizer/common_interface_defs.h"
 end_include
 
 begin_comment
@@ -87,25 +87,6 @@ end_comment
 
 begin_comment
 comment|// 3) overriden from env variable ASAN_OPTIONS.
-end_comment
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-comment|// Can be overriden by user.
-specifier|const
-name|char
-operator|*
-name|__asan_default_options
-argument_list|()
-name|SANITIZER_WEAK_ATTRIBUTE
-expr_stmt|;
-block|}
-end_extern
-
-begin_comment
-comment|// extern "C"
 end_comment
 
 begin_decl_stmt
@@ -144,7 +125,11 @@ comment|// globals).
 name|int
 name|report_globals
 decl_stmt|;
-comment|// Max number of stack frames kept for each allocation.
+comment|// If set, attempts to catch initialization order issues.
+name|bool
+name|check_initialization_order
+decl_stmt|;
+comment|// Max number of stack frames kept for each allocation/deallocation.
 name|int
 name|malloc_context_size
 decl_stmt|;
@@ -216,6 +201,50 @@ comment|// By default, disable core dumper on 64-bit - it makes little sense
 comment|// to dump 16T+ core.
 name|bool
 name|disable_core
+decl_stmt|;
+comment|// Allow the tool to re-exec the program. This may interfere badly with the
+comment|// debugger.
+name|bool
+name|allow_reexec
+decl_stmt|;
+comment|// Strips this prefix from file paths in error reports.
+specifier|const
+name|char
+modifier|*
+name|strip_path_prefix
+decl_stmt|;
+comment|// If set, prints not only thread creation stacks for threads in error report,
+comment|// but also thread creation stacks for threads that created those threads,
+comment|// etc. up to main thread.
+name|bool
+name|print_full_thread_history
+decl_stmt|;
+comment|// ASan will write logs to "log_path.pid" instead of stderr.
+specifier|const
+name|char
+modifier|*
+name|log_path
+decl_stmt|;
+comment|// Use fast (frame-pointer-based) unwinder on fatal errors (if available).
+name|bool
+name|fast_unwind_on_fatal
+decl_stmt|;
+comment|// Use fast (frame-pointer-based) unwinder on malloc/free (if available).
+name|bool
+name|fast_unwind_on_malloc
+decl_stmt|;
+comment|// Poison (or not) the heap memory on [de]allocation. Zero value is useful
+comment|// for benchmarking the allocator or instrumentator.
+name|bool
+name|poison_heap
+decl_stmt|;
+comment|// Report errors on malloc/delete, new/free, new/delete[], etc.
+name|bool
+name|alloc_dealloc_mismatch
+decl_stmt|;
+comment|// Use stack depot instead of storing stacks in the redzones.
+name|bool
+name|use_stack_depot
 decl_stmt|;
 block|}
 struct|;

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"asan_lock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"asan_stack.h"
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"asan_thread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_common/sanitizer_mutex.h"
 end_include
 
 begin_decl_stmt
@@ -182,11 +182,15 @@ modifier|&
 name|GetCurrentThreadStats
 parameter_list|()
 function_decl|;
-comment|// Flushes all thread-local stats to accumulated stats, and returns
+comment|// Flushes all thread-local stats to accumulated stats, and makes
 comment|// a copy of accumulated stats.
-name|AsanStats
+name|void
 name|GetAccumulatedStats
-parameter_list|()
+parameter_list|(
+name|AsanStats
+modifier|*
+name|stats
+parameter_list|)
 function_decl|;
 name|uptr
 name|GetCurrentAllocatedBytes
@@ -199,6 +203,14 @@ function_decl|;
 name|uptr
 name|GetFreeBytes
 parameter_list|()
+function_decl|;
+name|void
+name|FillMallocStatistics
+parameter_list|(
+name|AsanMallocStats
+modifier|*
+name|malloc_stats
+parameter_list|)
 function_decl|;
 name|AsanThreadSummary
 modifier|*
@@ -260,10 +272,15 @@ decl_stmt|;
 name|AsanStats
 name|accumulated_stats_
 decl_stmt|;
+comment|// Required for malloc_zone_statistics() on OS X. This can't be stored in
+comment|// per-thread AsanStats.
+name|uptr
+name|max_malloced_memory_
+decl_stmt|;
 name|u32
 name|n_threads_
 decl_stmt|;
-name|AsanLock
+name|BlockingMutex
 name|mu_
 decl_stmt|;
 name|bool

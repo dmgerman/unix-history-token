@@ -63,6 +63,12 @@ directive|define
 name|TSAN_INTERFACE_ANN_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sanitizer/common_interface_defs.h>
+end_include
+
 begin_comment
 comment|// This header should NOT include any other headers.
 end_comment
@@ -85,20 +91,22 @@ endif|#
 directive|endif
 name|void
 name|__tsan_acquire
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|addr
-parameter_list|)
-function_decl|;
+argument_list|)
+name|SANITIZER_INTERFACE_ATTRIBUTE
+decl_stmt|;
 name|void
 name|__tsan_release
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|addr
-parameter_list|)
-function_decl|;
+argument_list|)
+name|SANITIZER_INTERFACE_ATTRIBUTE
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
