@@ -24,7 +24,7 @@ end_comment
 begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-argument|d2lz
+argument|f2lz
 argument_list|,
 argument|fixsfdi
 argument_list|)
