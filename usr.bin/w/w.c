@@ -384,6 +384,18 @@ comment|/* use AM/PM time */
 end_comment
 
 begin_decl_stmt
+name|int
+name|showthreads
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* will threads be shown? */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|use_comma
