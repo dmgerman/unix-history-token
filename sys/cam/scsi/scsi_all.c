@@ -14783,6 +14783,7 @@ name|SSQ_PRINT_SENSE
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 operator|(
@@ -14837,7 +14838,6 @@ name|action
 operator||=
 name|SS_FAIL
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
