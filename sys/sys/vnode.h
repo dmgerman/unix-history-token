@@ -4904,6 +4904,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|vfs_hash_index
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vfs_hash_insert
 parameter_list|(
