@@ -833,13 +833,13 @@ name|Length
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
 name|void
-operator|*
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|EndAml
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
