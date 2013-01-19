@@ -5981,6 +5981,8 @@ argument_list|)
 argument_list|,
 name|comm
 argument_list|,
+name|showthreads
+operator|&&
 name|ki
 operator|->
 name|ki_p

@@ -384,18 +384,6 @@ comment|/* use AM/PM time */
 end_comment
 
 begin_decl_stmt
-name|int
-name|showthreads
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* will threads be shown? */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|use_comma
@@ -572,7 +560,10 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1609,6 +1600,8 @@ name|kp
 operator|->
 name|ki_comm
 argument_list|,
+name|NULL
+argument_list|,
 name|MAXCOMLEN
 argument_list|)
 expr_stmt|;
@@ -2168,6 +2161,8 @@ argument_list|,
 name|dkp
 operator|->
 name|ki_comm
+argument_list|,
+name|NULL
 argument_list|,
 name|MAXCOMLEN
 argument_list|)

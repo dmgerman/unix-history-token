@@ -577,8 +577,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|showthreads
-operator|&&
 name|thread
 operator|!=
 name|NULL
