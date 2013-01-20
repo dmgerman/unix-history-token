@@ -491,7 +491,7 @@ name|rootshell
 operator|=
 literal|1
 expr_stmt|;
-name|init
+name|initvar
 argument_list|()
 expr_stmt|;
 name|setstackmark
