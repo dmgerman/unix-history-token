@@ -156,6 +156,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|wizard_makeparts
+parameter_list|(
+name|struct
+name|gmesh
+modifier|*
+name|mesh
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|disk
+parameter_list|,
+name|int
+name|interactive
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* gpart operations */
 end_comment

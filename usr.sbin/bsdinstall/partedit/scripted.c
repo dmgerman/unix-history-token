@@ -443,6 +443,27 @@ name|mesh
 argument_list|)
 expr_stmt|;
 comment|/* Create partitions */
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+block|{
+name|wizard_makeparts
+argument_list|(
+operator|&
+name|mesh
+argument_list|,
+name|disk
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finished
+goto|;
+block|}
 while|while
 condition|(
 operator|(
@@ -584,6 +605,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|finished
+label|:
 name|geom_deletetree
 argument_list|(
 operator|&

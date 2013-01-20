@@ -105,24 +105,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|wizard_makeparts
-parameter_list|(
-name|struct
-name|gmesh
-modifier|*
-name|mesh
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|part_wizard
@@ -244,6 +226,8 @@ operator|&
 name|mesh
 argument_list|,
 name|schemeroot
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1410,7 +1394,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|wizard_makeparts
 parameter_list|(
@@ -1423,6 +1406,9 @@ specifier|const
 name|char
 modifier|*
 name|disk
+parameter_list|,
+name|int
+name|interactive
 parameter_list|)
 block|{
 name|struct
@@ -1531,6 +1517,8 @@ name|lg_sectorsize
 expr_stmt|;
 if|if
 condition|(
+name|interactive
+operator|&&
 name|available
 operator|<
 name|MIN_FREE_SPACE
