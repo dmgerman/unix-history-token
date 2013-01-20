@@ -178,7 +178,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s --vm=<name>\n"
+literal|"Usage: %s --vm=<vmname>\n"
 literal|"       [--cpu=<vcpu_number>]\n"
 literal|"       [--create]\n"
 literal|"       [--destroy]\n"

@@ -523,7 +523,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-aehABHIP][-g<gdb port>][-z<hz>][-s<pci>]"
-literal|"[-S<pci>][-p pincpu][-n<pci>][-m lowmem][-M highmem]<vm>\n"
+literal|"[-S<pci>][-p pincpu][-n<pci>][-m lowmem][-M highmem]"
+literal|"<vmname>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
