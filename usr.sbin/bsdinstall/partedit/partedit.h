@@ -140,6 +140,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|scripted_editor
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* gpart operations */
 end_comment
