@@ -1055,6 +1055,10 @@ block|{
 if|if
 condition|(
 name|n2
+operator|!=
+name|NULL
+operator|&&
+name|n2
 operator|->
 name|type
 operator|==
@@ -1073,6 +1077,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|n2
+operator|!=
+name|NULL
+operator|&&
 name|n2
 operator|->
 name|type
