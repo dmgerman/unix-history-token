@@ -1272,6 +1272,7 @@ name|ACPI_DISASSEMBLER
 end_ifdef
 
 begin_function_decl
+name|ACPI_EXTERN
 name|BOOLEAN
 name|ACPI_INIT_GLOBAL
 parameter_list|(
