@@ -318,13 +318,6 @@ name|MSIX_TABLE_ENTRY_SIZE
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_MSIX_TABLE_SIZE
-value|2048
-end_define
-
 begin_struct
 struct|struct
 name|pci_devinst
@@ -400,11 +393,10 @@ name|pba_offset
 decl_stmt|;
 name|struct
 name|msix_table_entry
+modifier|*
 name|table
-index|[
-name|MAX_MSIX_TABLE_SIZE
-index|]
 decl_stmt|;
+comment|/* allocated at runtime */
 block|}
 name|pi_msix
 struct|;
@@ -475,11 +467,13 @@ name|uint16_t
 name|msgctrl
 decl_stmt|;
 name|uint32_t
-name|table_offset
+name|table_info
 decl_stmt|;
+comment|/* bar index and offset within it */
 name|uint32_t
-name|pba_offset
+name|pba_info
 decl_stmt|;
+comment|/* bar index and offset within it */
 block|}
 name|__packed
 struct|;
