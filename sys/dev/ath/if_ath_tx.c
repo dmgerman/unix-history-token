@@ -5281,6 +5281,18 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
+name|struct
+name|ath_node
+modifier|*
+name|an
+init|=
+name|ATH_NODE
+argument_list|(
+name|bf
+operator|->
+name|bf_node
+argument_list|)
+decl_stmt|;
 name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -5288,7 +5300,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tid
+name|an
 operator|->
 name|clrdmask
 operator|==
@@ -5303,7 +5315,7 @@ name|bfs_txflags
 operator||=
 name|HAL_TXDESC_CLRDMASK
 expr_stmt|;
-name|tid
+name|an
 operator|->
 name|clrdmask
 operator|=
@@ -11208,6 +11220,72 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Only set the clrdmask bit if none of the nodes are currently  * filtered.  *  * XXX TODO: go through all the callers and check to see  * which are being called in the context of looping over all  * TIDs (eg, if all tids are being paused, resumed, etc.)  * That'll avoid O(n^2) complexity here.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_tx_set_clrdmask
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|ATH_TX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|IEEE80211_TID_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|an
+operator|->
+name|an_tid
+index|[
+name|i
+index|]
+operator|.
+name|isfiltered
+operator|==
+literal|1
+condition|)
+break|break;
+block|}
+name|an
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Configure the per-TID node state.  *  * This likely belongs in if_ath_node.c but I can't think of anywhere  * else to put it just yet.  *  * This sets up the SLISTs and the mutex as appropriate.  */
 end_comment
 
@@ -11358,13 +11436,6 @@ name|cleanup_inprogress
 operator|=
 literal|0
 expr_stmt|;
-name|atid
-operator|->
-name|clrdmask
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Always start by setting this bit */
 if|if
 condition|(
 name|i
@@ -11388,6 +11459,13 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|an
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Always start by setting this bit */
 block|}
 end_function
 
@@ -11492,11 +11570,14 @@ name|paused
 condition|)
 return|return;
 comment|/* 	 * Override the clrdmask configuration for the next frame 	 * from this TID, just to get the ball rolling. 	 */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11774,11 +11855,15 @@ name|isfiltered
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX ath_tx_tid_resume() also calls ath_tx_set_clrdmask()! */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 comment|/* XXX this is really quite inefficient */
 while|while
@@ -12619,11 +12704,14 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Override the clrdmask configuration for the next frame, 	 * just to get the ball rolling. 	 */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate new BAW left edge, now that all frames have either 	 * succeeded or failed. 	 * 	 * XXX verify this is _actually_ the valid value to begin at! 	 */
 name|DPRINTF
@@ -13323,11 +13411,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Override the clrdmask configuration for the next frame 	 * in case there is some future transmission, just to get 	 * the ball rolling. 	 * 	 * This won't hurt things if the TID is about to be freed. 	 */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that it's completed, grab the TID lock and update 	 * the sequence number and BAW window. 	 * Because sequence numbers have been assigned to frames 	 * that haven't been sent yet, it's entirely possible 	 * we'll be called with some pending frames that have not 	 * been transmitted. 	 * 	 * The cleaner solution is to do the sequence number allocation 	 * when the packet is first transmitted - and thus the "retries" 	 * check above would be enough to update the BAW/seqno. 	 */
 comment|/* But don't do it for non-QoS TIDs */

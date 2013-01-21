@@ -388,10 +388,6 @@ name|int
 name|isfiltered
 decl_stmt|;
 comment|/* is this node currently filtered */
-name|int
-name|clrdmask
-decl_stmt|;
-comment|/* has clrdmask been set */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
@@ -488,6 +484,10 @@ name|uint32_t
 name|an_swq_depth
 decl_stmt|;
 comment|/* how many SWQ packets for this 					   node */
+name|int
+name|clrdmask
+decl_stmt|;
+comment|/* has clrdmask been set */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
