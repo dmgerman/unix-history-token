@@ -1022,7 +1022,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Execute the module load handler after the pci passthru driver has had  * a chance to claim devices. We need this information at the time we do  * iommu initialization.  */
+comment|/*  * vmm initialization has the following dependencies:  *  * - iommu initialization must happen after the pci passthru driver has had  *   a chance to attach to any passthru devices (after SI_SUB_CONFIGURE).  *  * - VT-x initialization requires smp_rendezvous() and therefore must happen  *   after SMP is fully functional (after SI_SUB_SMP).  */
 end_comment
 
 begin_expr_stmt
@@ -1032,7 +1032,7 @@ name|vmm
 argument_list|,
 name|vmm_kmod
 argument_list|,
-name|SI_SUB_CONFIGURE
+name|SI_SUB_SMP
 operator|+
 literal|1
 argument_list|,
