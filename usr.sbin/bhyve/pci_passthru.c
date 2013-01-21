@@ -1584,14 +1584,6 @@ name|table_count
 operator|*
 name|MSIX_TABLE_ENTRY_SIZE
 expr_stmt|;
-name|pi
-operator|->
-name|pi_msix
-operator|.
-name|table_size
-operator|=
-name|table_size
-expr_stmt|;
 name|idx
 operator|=
 name|pi
@@ -1603,14 +1595,12 @@ expr_stmt|;
 comment|/* Round up to page size */
 name|table_size
 operator|=
-operator|(
+name|roundup2
+argument_list|(
 name|table_size
-operator|+
-literal|0x1000
-operator|)
-operator|&
-operator|~
-literal|0xFFF
+argument_list|,
+literal|4096
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

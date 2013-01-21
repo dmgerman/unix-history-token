@@ -392,9 +392,6 @@ decl_stmt|;
 name|size_t
 name|table_offset
 decl_stmt|;
-name|size_t
-name|table_size
-decl_stmt|;
 name|int
 name|table_count
 decl_stmt|;
