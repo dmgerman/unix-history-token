@@ -1755,7 +1755,7 @@ name|uint8_t
 name|tt
 decl_stmt|;
 name|uint8_t
-name|reserved
+name|context_num
 decl_stmt|;
 block|}
 struct|;
