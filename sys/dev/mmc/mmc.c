@@ -1924,11 +1924,11 @@ for|for
 control|(
 name|i
 operator|=
-literal|30
+name|MMC_OCR_MAX_VOLTAGE_SHIFT
 init|;
 name|i
 operator|>=
-literal|0
+name|MMC_OCR_MIN_VOLTAGE_SHIFT
 condition|;
 name|i
 operator|--
