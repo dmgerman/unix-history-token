@@ -290,6 +290,12 @@ literal|2
 operator|+
 name|argc
 expr_stmt|;
+if|if
+condition|(
+name|environ
+operator|==
+name|NULL
+condition|)
 name|environ
 operator|=
 name|env

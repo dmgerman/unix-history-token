@@ -301,6 +301,12 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|environ
+operator|==
+name|NULL
+condition|)
 name|environ
 operator|=
 name|env
