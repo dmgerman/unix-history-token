@@ -5846,7 +5846,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot get disk size"
+literal|"cannot get disk size"
 argument_list|)
 expr_stmt|;
 comment|/* create a fake geometry for a file image */
@@ -6011,16 +6011,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot get sector size, %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"cannot get sector size"
 argument_list|)
 expr_stmt|;
 name|dlp
@@ -6057,14 +6052,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Cannot get number of sectors per track, %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"cannot get number of sectors per track"
 argument_list|)
 expr_stmt|;
 name|dlp
@@ -6098,14 +6088,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Cannot get number of heads, %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"cannot get number of heads"
 argument_list|)
 expr_stmt|;
 if|if
