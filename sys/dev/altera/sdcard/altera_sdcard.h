@@ -459,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|ALTERA_SDCARD_CSD_C_SIZE_MASK0
-value|0xc
+value|0xc0
 end_define
 
 begin_comment
