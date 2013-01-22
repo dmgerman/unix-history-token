@@ -814,7 +814,11 @@ name|ext2_update
 argument_list|(
 name|ovp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|ovp
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -1154,7 +1158,11 @@ name|ext2_update
 argument_list|(
 name|ovp
 argument_list|,
-literal|1
+operator|!
+name|DOINGASYNC
+argument_list|(
+name|ovp
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Having written the new inode to disk, save its new configuration 	 * and put back the old block pointers long enough to process them. 	 * Note that we save the new block configuration so we can check it 	 * when we are done. 	 */
@@ -2128,6 +2136,22 @@ name|b_flags
 operator||=
 name|B_INVAL
 expr_stmt|;
+if|if
+condition|(
+name|DOINGASYNC
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+block|{
+name|bdwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|error
 operator|=
 name|bwrite
@@ -2143,6 +2167,7 @@ name|allerror
 operator|=
 name|error
 expr_stmt|;
+block|}
 name|bap
 operator|=
 name|copy
