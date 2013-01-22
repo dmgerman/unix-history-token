@@ -447,7 +447,7 @@ index|[
 name|NIADDR
 index|]
 decl_stmt|;
-name|int32_t
+name|uint32_t
 name|oldblks
 index|[
 name|NDADDR
@@ -1743,9 +1743,16 @@ condition|(
 name|oip
 operator|->
 name|i_blocks
-operator|<
-literal|0
+operator|>
+name|blocksreleased
 condition|)
+name|oip
+operator|->
+name|i_blocks
+operator|-=
+name|blocksreleased
+expr_stmt|;
+else|else
 comment|/* sanity */
 name|oip
 operator|->
