@@ -99,6 +99,7 @@ sizeof|sizeof
 argument_list|(
 name|pkgngpath
 argument_list|)
+argument_list|,
 literal|"%s/local.sqlite"
 argument_list|,
 name|pkgngdir
@@ -106,6 +107,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|rc
 operator|>=
 sizeof|sizeof
