@@ -1732,12 +1732,6 @@ name|i_size
 operator|=
 name|length
 expr_stmt|;
-name|oip
-operator|->
-name|i_blocks
-operator|-=
-name|blocksreleased
-expr_stmt|;
 if|if
 condition|(
 name|oip
