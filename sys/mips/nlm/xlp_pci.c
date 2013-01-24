@@ -2348,7 +2348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enable byte swap in hardware. Program a link's PCIe SWAP regions  * from the link's IO and MEM address ranges.  */
+comment|/*  * Enable byte swap in hardware when compiled big-endian.  * Programs a link's PCIe SWAP regions from the link's IO and MEM address  * ranges.  */
 end_comment
 
 begin_function
@@ -2363,6 +2363,11 @@ name|int
 name|link
 parameter_list|)
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|uint64_t
 name|bbase
 decl_stmt|,
@@ -2490,6 +2495,8 @@ operator||
 literal|0xFFF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
