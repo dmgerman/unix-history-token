@@ -4859,6 +4859,9 @@ decl_stmt|;
 name|int
 name|frag_sz
 decl_stmt|;
+name|uint64_t
+name|desc
+decl_stmt|;
 comment|/*printf("m_data = %p len %d\n", m->m_data, len); */
 while|while
 condition|(
@@ -4926,12 +4929,7 @@ name|frag_sz
 operator|=
 name|len
 expr_stmt|;
-name|p2p
-operator|->
-name|frag
-index|[
-name|pos
-index|]
+name|desc
 operator|=
 name|nae_tx_desc
 argument_list|(
@@ -4944,6 +4942,18 @@ argument_list|,
 name|frag_sz
 argument_list|,
 name|paddr
+argument_list|)
+expr_stmt|;
+name|p2p
+operator|->
+name|frag
+index|[
+name|pos
+index|]
+operator|=
+name|htobe64
+argument_list|(
+name|desc
 argument_list|)
 expr_stmt|;
 name|pos
@@ -4980,12 +4990,15 @@ operator|-
 literal|1
 index|]
 operator||=
+name|htobe64
+argument_list|(
 operator|(
 name|uint64_t
 operator|)
 name|P2D_EOP
 operator|<<
 literal|62
+argument_list|)
 expr_stmt|;
 comment|/* stash useful pointers in the desc */
 name|p2p
@@ -6201,12 +6214,8 @@ name|len
 operator|=
 name|MCLBYTES
 expr_stmt|;
-name|m_adj
+name|KASSERT
 argument_list|(
-name|m_new
-argument_list|,
-name|NAE_CACHELINE_SIZE
-operator|-
 operator|(
 operator|(
 name|uintptr_t
@@ -6215,7 +6224,17 @@ name|m_new
 operator|->
 name|m_data
 operator|&
-literal|0x1f
+operator|(
+name|NAE_CACHELINE_SIZE
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"m_new->m_data is not cacheline aligned"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6285,26 +6304,21 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
 name|temp1
 operator|+
 literal|1536
-argument_list|)
+operator|)
 operator|!=
 name|temp2
-operator|,
+argument_list|,
 operator|(
 literal|"Alloced buffer is not contiguous"
 operator|)
-block|)
-function|;
-end_function
-
-begin_endif
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_return
 return|return
 operator|(
 operator|(
@@ -6316,10 +6330,11 @@ operator|->
 name|m_data
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|nlm_xlpge_mii_init
 parameter_list|(
@@ -8480,7 +8495,7 @@ index|[
 literal|1
 index|]
 operator|&
-literal|0xffffffffe0ULL
+literal|0xffffffffc0ULL
 expr_stmt|;
 name|length
 operator|=
