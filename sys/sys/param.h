@@ -525,10 +525,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* MSIZE */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
