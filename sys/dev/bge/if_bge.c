@@ -18667,7 +18667,6 @@ name|bge_flags
 operator|&
 name|BGE_FLAG_TBI
 condition|)
-block|{
 name|ifmedia_removeall
 argument_list|(
 operator|&
@@ -18676,8 +18675,15 @@ operator|->
 name|bge_ifmedia
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_miibus
+operator|!=
+name|NULL
+condition|)
 block|{
 name|bus_generic_detach
 argument_list|(
