@@ -7505,7 +7505,7 @@ name|NLM_SGMII_SPEED_10
 expr_stmt|;
 name|speed
 operator|=
-literal|"10-Mbps"
+literal|"10Mbps"
 expr_stmt|;
 block|}
 elseif|else
@@ -7529,7 +7529,7 @@ name|NLM_SGMII_SPEED_100
 expr_stmt|;
 name|speed
 operator|=
-literal|"100-Mbps"
+literal|"100Mbps"
 expr_stmt|;
 block|}
 else|else
@@ -7543,7 +7543,7 @@ name|NLM_SGMII_SPEED_1000
 expr_stmt|;
 name|speed
 operator|=
-literal|"1-Gbps"
+literal|"1Gbps"
 expr_stmt|;
 block|}
 if|if
@@ -7585,7 +7585,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Setup [complex=%d, port=%d] with speed=%s duplex=%s\n"
+literal|"Port [%d, %d] setup with speed=%s duplex=%s\n"
 argument_list|,
 name|sc
 operator|->
