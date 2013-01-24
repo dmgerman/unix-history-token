@@ -2318,6 +2318,11 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+name|nlm_mdio_reset_all
+argument_list|(
+name|nae_base
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Initialze SGMII PCS for blocks 0x%x\n"
@@ -4541,12 +4546,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|nlm_xlpge_mac_set_rx_mode
+else|else
+name|nlm_xlpge_port_enable
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|nlm_xlpge_port_enable
+name|nlm_xlpge_mac_set_rx_mode
 argument_list|(
 name|sc
 argument_list|)
