@@ -2533,7 +2533,7 @@ operator|->
 name|msr_bitmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * Guest KGSBASE is saved and restored in the guest MSR save area. 	 * Host KGSBASE is restored before returning to userland from the pcb. 	 * There will be a window of time when we are executing in the host 	 * kernel context with a value of KGSBASE from the guest. This is ok 	 * because the value of KGSBASE is inconsequential in kernel context. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 */
+comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * Guest KGSBASE is saved and restored in the guest MSR save area. 	 * Host KGSBASE is restored before returning to userland from the pcb. 	 * There will be a window of time when we are executing in the host 	 * kernel context with a value of KGSBASE from the guest. This is ok 	 * because the value of KGSBASE is inconsequential in kernel context. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 */
 if|if
 condition|(
 name|guest_msr_rw
@@ -2548,6 +2548,27 @@ argument_list|(
 name|vmx
 argument_list|,
 name|MSR_FSBASE
+argument_list|)
+operator|||
+name|guest_msr_rw
+argument_list|(
+name|vmx
+argument_list|,
+name|MSR_SYSENTER_CS_MSR
+argument_list|)
+operator|||
+name|guest_msr_rw
+argument_list|(
+name|vmx
+argument_list|,
+name|MSR_SYSENTER_ESP_MSR
+argument_list|)
+operator|||
+name|guest_msr_rw
+argument_list|(
+name|vmx
+argument_list|,
+name|MSR_SYSENTER_EIP_MSR
 argument_list|)
 operator|||
 name|guest_msr_rw
