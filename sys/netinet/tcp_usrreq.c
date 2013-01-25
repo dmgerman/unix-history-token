@@ -3449,6 +3449,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+else|else
 endif|#
 directive|endif
 name|tcp_output
