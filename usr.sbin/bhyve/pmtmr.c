@@ -154,9 +154,6 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
-name|uint32_t
-name|tmpf
-decl_stmt|;
 name|inited
 operator|=
 literal|1
@@ -173,7 +170,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|tmpf
+name|pmtmr_tscf
 argument_list|)
 expr_stmt|;
 name|sysctlbyname
@@ -181,7 +178,7 @@ argument_list|(
 literal|"machdep.tsc_freq"
 argument_list|,
 operator|&
-name|tmpf
+name|pmtmr_tscf
 argument_list|,
 operator|&
 name|len
@@ -190,10 +187,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|pmtmr_tscf
-operator|=
-name|tmpf
 expr_stmt|;
 name|pmtmr_tsc_old
 operator|=
@@ -208,11 +201,6 @@ name|pmtmr_tscf
 operator|*
 name|PMTMR_FREQ
 expr_stmt|;
-return|return
-operator|(
-name|pmtmr_old
-operator|)
-return|;
 block|}
 name|pthread_mutex_lock
 argument_list|(
