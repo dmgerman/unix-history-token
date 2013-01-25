@@ -8124,6 +8124,10 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
+operator|&&
+name|m
 operator|->
 name|m_flags
 operator|&
