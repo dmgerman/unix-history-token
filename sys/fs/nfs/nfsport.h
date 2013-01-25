@@ -2365,30 +2365,6 @@ value|9999999
 end_define
 
 begin_comment
-comment|/*  * Define these to use the time of day clock.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSGETTIME
-parameter_list|(
-name|t
-parameter_list|)
-value|(getmicrotime(t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSGETNANOTIME
-parameter_list|(
-name|t
-parameter_list|)
-value|(getnanotime(t))
-end_define
-
-begin_comment
 comment|/*  * These macros are defined to initialize and set the timer routine.  */
 end_comment
 
