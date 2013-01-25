@@ -1754,13 +1754,6 @@ operator|)
 return|;
 name|anonport
 operator|=
-name|inp
-operator|->
-name|inp_lport
-operator|==
-literal|0
-operator|&&
-operator|(
 name|nam
 operator|==
 name|NULL
@@ -1777,7 +1770,6 @@ operator|->
 name|sin_port
 operator|==
 literal|0
-operator|)
 expr_stmt|;
 name|error
 operator|=
