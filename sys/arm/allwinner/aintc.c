@@ -365,7 +365,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"a10,aintc"
+literal|"allwinner,sun4i-ic"
 argument_list|)
 condition|)
 return|return

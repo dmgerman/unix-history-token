@@ -119,7 +119,7 @@ name|fdt_is_compatible
 argument_list|(
 name|node
 argument_list|,
-literal|"a10,aintc"
+literal|"allwinner,sun4i-ic"
 argument_list|)
 condition|)
 return|return

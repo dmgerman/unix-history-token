@@ -600,7 +600,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"a10,timers"
+literal|"allwinner,sun4i-timer"
 argument_list|)
 condition|)
 return|return
