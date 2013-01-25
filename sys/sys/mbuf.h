@@ -66,30 +66,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  */
+comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MLEN
-value|(MSIZE - sizeof(struct m_hdr))
+value|((int)(MSIZE - sizeof(struct m_hdr)))
 end_define
-
-begin_comment
-comment|/* normal data len */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|MHLEN
-value|(MLEN - sizeof(struct pkthdr))
+value|((int)(MLEN - sizeof(struct pkthdr)))
 end_define
-
-begin_comment
-comment|/* data len w/pkthdr */
-end_comment
 
 begin_define
 define|#
@@ -97,21 +89,6 @@ directive|define
 name|MINCLSIZE
 value|(MHLEN + 1)
 end_define
-
-begin_comment
-comment|/* smallest amount to put in cluster */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_MAXCOMPRESS
-value|(MHLEN / 2)
-end_define
-
-begin_comment
-comment|/* max amount to copy for compression */
-end_comment
 
 begin_ifdef
 ifdef|#
