@@ -5810,6 +5810,10 @@ operator|!
 name|i
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|os_printk
 argument_list|(
 literal|"no controller detected."
@@ -6556,6 +6560,8 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|driver_name
 argument_list|)
 expr_stmt|;
@@ -6779,6 +6785,10 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|os_printk
 argument_list|(
 literal|"%s %s"
