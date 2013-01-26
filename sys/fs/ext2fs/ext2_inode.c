@@ -1737,7 +1737,7 @@ condition|(
 name|oip
 operator|->
 name|i_blocks
-operator|>
+operator|>=
 name|blocksreleased
 condition|)
 name|oip
