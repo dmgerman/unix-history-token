@@ -484,6 +484,14 @@ name|CPL_ERR_PERSIST_NEG_ADVICE
 init|=
 literal|36
 block|,
+name|CPL_ERR_KEEPALV_NEG_ADVICE
+init|=
+literal|37
+block|,
+name|CPL_ERR_WAIT_ARP_RPL
+init|=
+literal|41
+block|,
 name|CPL_ERR_ABORT_FAILED
 init|=
 literal|42

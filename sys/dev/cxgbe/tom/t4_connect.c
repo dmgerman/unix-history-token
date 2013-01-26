@@ -952,9 +952,10 @@ expr_stmt|;
 comment|/* Ignore negative advice */
 if|if
 condition|(
+name|negative_advice
+argument_list|(
 name|status
-operator|==
-name|CPL_ERR_RTX_NEG_ADVICE
+argument_list|)
 condition|)
 return|return
 operator|(
