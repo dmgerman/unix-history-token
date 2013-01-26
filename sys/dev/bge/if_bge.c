@@ -13058,7 +13058,7 @@ name|br
 operator|->
 name|br_name
 else|:
-literal|"NetXtreme Ethernet Controller"
+literal|"NetXtreme/NetLink Ethernet Controller"
 argument_list|)
 expr_stmt|;
 block|}
