@@ -5143,7 +5143,7 @@ name|ifp
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_TOE4
+name|IFCAP_TOE
 expr_stmt|;
 endif|#
 directive|endif
