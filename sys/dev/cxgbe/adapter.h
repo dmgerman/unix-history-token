@@ -2188,8 +2188,13 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|char
+name|cfg_file
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int
 name|cfcsum
 decl_stmt|;
 name|struct
