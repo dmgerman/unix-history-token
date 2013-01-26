@@ -5350,11 +5350,7 @@ name|m_len
 operator|+
 name|tspace
 operator|-
-sizeof|sizeof
-argument_list|(
-operator|*
-name|synqe
-argument_list|)
+name|len
 operator|)
 expr_stmt|;
 name|synqe
@@ -7274,9 +7270,10 @@ name|synqe
 operator|->
 name|refcnt
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 1 means extra hold */
 name|synqe
 operator|->
 name|l2e_idx
@@ -7469,6 +7466,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|release_synqe
+argument_list|(
+name|synqe
+argument_list|)
+expr_stmt|;
+comment|/* extra hold */
 name|REJECT_PASS_ACCEPT
 argument_list|()
 expr_stmt|;
@@ -7514,11 +7517,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Listening socket closed but tod_listen_stop did not abort 		 * this tid because there was no L2T entry for the tid at that 		 * time.  Abort it now.  The reply to the abort will clean up. 		 */
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_CXGBE
 argument_list|,
-literal|"%s: stid %u, tid %u, lctx %p, synqe %p, ABORT"
+literal|"%s: stid %u, tid %u, lctx %p, synqe %p (0x%x), ABORT"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7529,8 +7532,23 @@ argument_list|,
 name|lctx
 argument_list|,
 name|synqe
+argument_list|,
+name|synqe
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|synqe
+operator|->
+name|flags
+operator|&
+name|TPF_SYNQE_EXPANDED
+operator|)
+condition|)
 name|send_reset_synqe
 argument_list|(
 name|tod
@@ -7543,6 +7561,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|release_synqe
+argument_list|(
+name|synqe
+argument_list|)
+expr_stmt|;
+comment|/* extra hold */
 return|return
 operator|(
 name|__LINE__
@@ -7554,6 +7578,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|release_synqe
+argument_list|(
+name|synqe
+argument_list|)
+expr_stmt|;
+comment|/* extra hold */
 return|return
 operator|(
 literal|0
