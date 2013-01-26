@@ -298,6 +298,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Ask malloc() to map minimum-sized chunks of virtual address space at a time,  * so that mlockall() won't needlessly wire megabytes of unused memory into the  * process.  This must be done using the malloc_conf string so that it gets set  * up before the first allocation, which happens before entry to main().  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|malloc_conf
+init|=
+literal|"lg_chunk:0"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Periodically pat the watchdog, preventing it from firing.  */
 end_comment
 
@@ -788,7 +802,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Could not stop the watchdog, not exiting"
+literal|"Could not stop the watchdog, not exitting"
 argument_list|)
 expr_stmt|;
 name|end_program
