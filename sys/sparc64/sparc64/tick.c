@@ -1406,7 +1406,7 @@ name|rdstick
 argument_list|()
 expr_stmt|;
 else|else
-name|ipi_wait_unlocked
+name|ipi_wait
 argument_list|(
 name|ipi_rd
 argument_list|(
@@ -1461,7 +1461,7 @@ name|tick
 argument_list|)
 expr_stmt|;
 else|else
-name|ipi_wait_unlocked
+name|ipi_wait
 argument_list|(
 name|ipi_rd
 argument_list|(
