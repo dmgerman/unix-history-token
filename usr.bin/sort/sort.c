@@ -1844,16 +1844,11 @@ literal|100
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|strerror
+name|warnc
 argument_list|(
 name|EINVAL
-argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -2816,16 +2811,11 @@ name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: -k"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"-k"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2880,16 +2870,11 @@ name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: -k"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"-k"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3023,16 +3008,11 @@ name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: -k"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"-k"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3064,16 +3044,11 @@ name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: -k"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"-k"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4775,16 +4750,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errx
+name|errc
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: -k %s\n"
-argument_list|,
-name|strerror
-argument_list|(
 name|EINVAL
-argument_list|)
+argument_list|,
+literal|"-k %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -4884,16 +4856,13 @@ operator|!=
 literal|'\\'
 condition|)
 block|{
-name|errx
+name|errc
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
 name|EINVAL
-argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -5295,16 +5264,11 @@ name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"--batch-size: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"--batch-size"
 argument_list|)
 expr_stmt|;
 if|if
