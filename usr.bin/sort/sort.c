@@ -4534,12 +4534,6 @@ expr_stmt|;
 name|set_sort_opts
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|{ 		static int counter = 0; 		char fn[128]; 		sprintf(fn, "/var/tmp/debug.sort.%d", counter++); 		FILE* f = fopen(fn, "w"); 		fprintf(f, ">>sort>>"); 		for (int i = 0; i< argc; i++) { 			fprintf(f, "<%s>", argv[i]); 		} 		fprintf(f, "<<sort<<\n"); 		fclose(f); 	}
-endif|#
-directive|endif
 name|fix_obsolete_keys
 argument_list|(
 operator|&
