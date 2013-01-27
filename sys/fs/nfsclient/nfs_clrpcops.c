@@ -9219,7 +9219,7 @@ name|NFSM_STRSIZ
 argument_list|(
 name|retlen
 argument_list|,
-name|rsize
+name|len
 argument_list|)
 expr_stmt|;
 name|error
