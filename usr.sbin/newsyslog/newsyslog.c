@@ -655,7 +655,7 @@ name|sw_pidtype
 decl_stmt|;
 comment|/* "daemon" or "process group" */
 name|int
-name|run_cmd
+name|sw_runcmd
 decl_stmt|;
 comment|/* run command or send PID to signal */
 name|char
@@ -8763,7 +8763,7 @@ if|if
 condition|(
 name|swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|==
 literal|0
 operator|&&
@@ -8854,7 +8854,7 @@ if|if
 condition|(
 name|swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 condition|)
 name|printf
 argument_list|(
@@ -8911,7 +8911,7 @@ if|if
 condition|(
 name|swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 condition|)
 block|{
 name|asprintf
@@ -9283,7 +9283,7 @@ name|zwork
 operator|->
 name|zw_swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|==
 literal|0
 operator|&&
@@ -9694,7 +9694,7 @@ argument_list|)
 expr_stmt|;
 name|stmp
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|=
 literal|0
 expr_stmt|;
@@ -9723,7 +9723,7 @@ literal|0
 expr_stmt|;
 name|stmp
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|=
 literal|1
 expr_stmt|;
