@@ -8761,6 +8761,13 @@ name|tmp
 decl_stmt|;
 if|if
 condition|(
+name|swork
+operator|->
+name|run_cmd
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|!
 operator|(
 name|swork
@@ -8773,6 +8780,7 @@ operator|->
 name|sw_pid
 operator|==
 literal|0
+operator|)
 condition|)
 return|return;
 comment|/* no work to do... */
@@ -9678,6 +9686,19 @@ operator|&
 name|CE_PID2CMD
 condition|)
 block|{
+name|stmp
+operator|->
+name|sw_pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_pidok
+operator|=
+literal|0
+expr_stmt|;
 name|stmp
 operator|->
 name|run_cmd
