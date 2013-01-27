@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_periph.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam_sim.h>
 end_include
 
@@ -77,37 +83,6 @@ begin_include
 include|#
 directive|include
 file|<cam/cam_xpt_sim.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|GIANT_REQUIRED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_periph.h>
 end_include
 
 begin_include
@@ -425,29 +400,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|mpt_raid_sysctl_attach
-parameter_list|(
-name|x
-parameter_list|)
-value|do { } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|static
 name|void
@@ -459,11 +411,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -6709,11 +6656,6 @@ literal|"Low"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|mpt_vol_prt
 argument_list|(
 name|mpt
@@ -6734,30 +6676,6 @@ operator|)
 name|total
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|mpt_vol_prt
-argument_list|(
-name|mpt
-argument_list|,
-name|mpt_vol
-argument_list|,
-literal|"%llu of %llu "
-literal|"blocks remaining\n"
-argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|left
-argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|total
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Periodically report on sync progress. */
 name|mpt_schedule_raid_refresh
 argument_list|(
@@ -7042,18 +6960,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-name|MPT_LOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|MPT_LOCK_ASSERT
 argument_list|(
 name|mpt
@@ -7064,18 +6970,6 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7281,14 +7175,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
 
 begin_function
 specifier|static
@@ -8246,11 +8132,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
