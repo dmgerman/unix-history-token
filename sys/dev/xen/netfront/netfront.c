@@ -1057,16 +1057,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|NUM_ELEMENTS
-parameter_list|(
-name|x
-parameter_list|)
-value|(sizeof(x)/sizeof(*x))
-end_define
-
 begin_struct
 struct|struct
 name|net_device_stats
@@ -1501,10 +1491,6 @@ end_define
 
 begin_comment
 comment|/* Access macros for acquiring freeing slots in xn_free_{tx,rx}_idxs[]. */
-end_comment
-
-begin_comment
-comment|/*  * Access macros for acquiring freeing slots in tx_skbs[].  */
 end_comment
 
 begin_function
@@ -3371,7 +3357,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"netif_release_tx_bufs: tx_chain_cnt must be>= 0"
+literal|"%s: tx_chain_cnt must be>= 0"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -4123,7 +4111,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Check return status of HYPERVISOR_dom_mem_op(). */
 if|if
 condition|(
 name|unlikely
@@ -4138,18 +4125,7 @@ operator|.
 name|result
 operator|!=
 name|i
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"Unable to reduce memory reservation\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
+operator|||
 name|HYPERVISOR_memory_op
 argument_list|(
 name|XENMEM_decrease_reservation
@@ -4159,11 +4135,14 @@ name|reservation
 argument_list|)
 operator|!=
 name|i
+argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"Unable to reduce memory "
+literal|"%s: unable to reduce memory "
 literal|"reservation\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -5045,7 +5024,10 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"grant id %u still in use by the backend"
+literal|"%s: grant id %u still in use by the "
+literal|"backend"
+argument_list|,
+name|__func__
 argument_list|,
 name|id
 argument_list|)
@@ -6663,7 +6645,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"xn_start_locked: was allocated the freelist head!\n"
+literal|"%s: was allocated the freelist head!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -6685,7 +6669,9 @@ name|NET_TX_RING_SIZE
 condition|)
 name|panic
 argument_list|(
-literal|"xn_start_locked: tx_chain_cnt must be<= NET_TX_RING_SIZE\n"
+literal|"%s: tx_chain_cnt must be<= NET_TX_RING_SIZE\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -9513,11 +9499,7 @@ argument_list|,
 name|netfront_backend_changed
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9558,9 +9540,9 @@ name|netfront_driver
 argument_list|,
 name|netfront_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
