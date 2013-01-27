@@ -8850,6 +8850,27 @@ condition|(
 name|noaction
 condition|)
 block|{
+if|if
+condition|(
+name|swork
+operator|->
+name|run_cmd
+condition|)
+name|printf
+argument_list|(
+literal|"\tsh -c '%s %d'\n"
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
+argument_list|,
+name|swork
+operator|->
+name|sw_signum
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"\tkill -%d %d \t\t# %s\n"
@@ -8883,6 +8904,7 @@ argument_list|,
 name|secs
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
