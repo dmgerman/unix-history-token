@@ -203,6 +203,9 @@ block|,
 literal|"low"
 block|,
 comment|/* PIL_LOW */
+literal|"preempt"
+block|,
+comment|/* PIL_PREEMPT */
 literal|"ithrd"
 block|,
 comment|/* PIL_ITHREAD */
@@ -212,12 +215,6 @@ comment|/* PIL_RENDEZVOUS */
 literal|"ast"
 block|,
 comment|/* PIL_AST */
-literal|"stop"
-block|,
-comment|/* PIL_STOP */
-literal|"preempt"
-block|,
-comment|/* PIL_PREEMPT */
 literal|"stray"
 block|,
 literal|"stray"
@@ -234,6 +231,9 @@ comment|/* PIL_FILTER */
 literal|"bridge"
 block|,
 comment|/* PIL_BRIDGE */
+literal|"stop"
+block|,
+comment|/* PIL_STOP */
 literal|"tick"
 block|,
 comment|/* PIL_TICK */
