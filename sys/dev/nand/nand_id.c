@@ -84,6 +84,26 @@ block|}
 block|,
 block|{
 block|{
+name|NAND_MAN_SAMSUNG
+block|,
+literal|0xdc
+block|}
+block|,
+literal|"Samsung NAND 512MiB 3,3V 8-bit"
+block|,
+literal|0x200
+block|,
+literal|0x800
+block|,
+literal|0x40
+block|,
+literal|0x40
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
 name|NAND_MAN_HYNIX
 block|,
 literal|0x76
