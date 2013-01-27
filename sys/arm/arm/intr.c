@@ -175,6 +175,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 name|snprintf
 argument_list|(
 operator|&
@@ -196,6 +197,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -331,7 +333,9 @@ index|]
 argument_list|,
 name|INTRNAME_LEN
 argument_list|,
-literal|"%-*s"
+literal|"irq%d: %-*s"
+argument_list|,
+name|irq
 argument_list|,
 name|INTRNAME_LEN
 operator|-
