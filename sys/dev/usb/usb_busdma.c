@@ -1708,9 +1708,6 @@ name|page_offset_end
 operator|+=
 name|rem
 expr_stmt|;
-name|nseg
-operator|--
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -1754,9 +1751,7 @@ endif|#
 directive|endif
 while|while
 condition|(
-name|nseg
-operator|>
-literal|0
+literal|1
 condition|)
 block|{
 name|off
@@ -1791,6 +1786,13 @@ name|rem
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|nseg
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 name|pg
 operator|++
