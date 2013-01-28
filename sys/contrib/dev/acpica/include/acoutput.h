@@ -1176,12 +1176,12 @@ name|Name
 parameter_list|,
 name|Function
 parameter_list|,
-name|Cast
+name|Type
 parameter_list|,
 name|Param
 parameter_list|)
 define|\
-value|ACPI_FUNCTION_NAME (Name) \     Function (ACPI_DEBUG_PARAMETERS, Cast (Param))
+value|ACPI_FUNCTION_NAME (Name) \     Function (ACPI_DEBUG_PARAMETERS, (Type) (Param))
 end_define
 
 begin_comment
@@ -1209,7 +1209,7 @@ parameter_list|,
 name|Pointer
 parameter_list|)
 define|\
-value|ACPI_TRACE_ENTRY (Name, AcpiUtTracePtr, (void *), Pointer)
+value|ACPI_TRACE_ENTRY (Name, AcpiUtTracePtr, void *, Pointer)
 end_define
 
 begin_define
@@ -1222,7 +1222,7 @@ parameter_list|,
 name|Value
 parameter_list|)
 define|\
-value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceU32, (UINT32), Value)
+value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceU32, UINT32, Value)
 end_define
 
 begin_define
@@ -1235,7 +1235,7 @@ parameter_list|,
 name|String
 parameter_list|)
 define|\
-value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, (char *), String)
+value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, char *, String)
 end_define
 
 begin_define
@@ -1248,11 +1248,41 @@ value|AcpiUtTrackStackPtr()
 end_define
 
 begin_comment
-comment|/*  * Function exit tracing  *  * These macros include a return statement. This is usually considered  * bad form, but having a separate exit macro before the actual return  * is very ugly and difficult to maintain.  *  * One of the FUNCTION_TRACE macros above must be used in conjunction  * with these macros so that "_AcpiFunctionName" is defined.  */
+comment|/*  * Function exit tracing  *  * These macros include a return statement. This is usually considered  * bad form, but having a separate exit macro before the actual return  * is very ugly and difficult to maintain.  *  * One of the FUNCTION_TRACE macros above must be used in conjunction  * with these macros so that "_AcpiFunctionName" is defined.  *  * There are two versions of most of the return macros. The default version is  * safer, since it avoids side-effects by guaranteeing that the argument will  * not be evaluated twice.  *  * A less-safe version of the macros is provided for optional use if the  * compiler uses excessive CPU stack (for example, this may happen in the  * debug case if code optimzation is disabled.)  */
 end_comment
 
 begin_comment
 comment|/* Exit trace helper macro */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SIMPLE_RETURN_MACROS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_EXIT
+parameter_list|(
+name|Function
+parameter_list|,
+name|Type
+parameter_list|,
+name|Param
+parameter_list|)
+define|\
+value|ACPI_DO_WHILE0 ({ \         register Type _Param = (Type) (Param); \         Function (ACPI_DEBUG_PARAMETERS, _Param); \         return (_Param); \     })
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Use original less-safe macros */
 end_comment
 
 begin_define
@@ -1262,13 +1292,22 @@ name|ACPI_TRACE_EXIT
 parameter_list|(
 name|Function
 parameter_list|,
-name|Cast
+name|Type
 parameter_list|,
 name|Param
 parameter_list|)
 define|\
-value|ACPI_DO_WHILE0 ({ \         Function (ACPI_DEBUG_PARAMETERS, Cast (Param)); \         return ((Param)); \     })
+value|ACPI_DO_WHILE0 ({ \         Function (ACPI_DEBUG_PARAMETERS, (Type) (Param)); \         return (Param); \     })
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_SIMPLE_RETURN_MACROS */
+end_comment
 
 begin_comment
 comment|/* The actual exit macros */
@@ -1290,7 +1329,7 @@ parameter_list|(
 name|Status
 parameter_list|)
 define|\
-value|ACPI_TRACE_EXIT (AcpiUtStatusExit, (ACPI_STATUS), Status)
+value|ACPI_TRACE_EXIT (AcpiUtStatusExit, ACPI_STATUS, Status)
 end_define
 
 begin_define
@@ -1301,7 +1340,7 @@ parameter_list|(
 name|Pointer
 parameter_list|)
 define|\
-value|ACPI_TRACE_EXIT (AcpiUtPtrExit, (UINT8 *), Pointer)
+value|ACPI_TRACE_EXIT (AcpiUtPtrExit, void *, Pointer)
 end_define
 
 begin_define
@@ -1312,7 +1351,7 @@ parameter_list|(
 name|Value
 parameter_list|)
 define|\
-value|ACPI_TRACE_EXIT (AcpiUtValueExit, (UINT64), Value)
+value|ACPI_TRACE_EXIT (AcpiUtValueExit, UINT64, Value)
 end_define
 
 begin_comment

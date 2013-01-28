@@ -3952,9 +3952,6 @@ decl_stmt|;
 name|UINT16
 name|CurrentDepth
 decl_stmt|;
-name|UINT16
-name|LinkOffset
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
