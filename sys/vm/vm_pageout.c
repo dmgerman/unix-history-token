@@ -451,12 +451,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vm_pageout_stats_max
-init|=
-literal|0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|vm_pageout_stats_interval
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -464,8 +465,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vm_pageout_full_stats_interval
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -473,8 +472,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vm_pageout_algorithm
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -482,8 +479,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|defer_swap_pageouts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -491,8 +486,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|disable_swap_pageouts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -5634,7 +5627,9 @@ begin_function
 specifier|static
 name|void
 name|vm_pageout_page_stats
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|vm_pagequeue
@@ -6102,7 +6097,9 @@ begin_function
 specifier|static
 name|void
 name|vm_pageout
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|error
@@ -6570,7 +6567,9 @@ end_comment
 begin_function
 name|void
 name|pagedaemon_wakeup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6676,7 +6675,9 @@ begin_function
 specifier|static
 name|void
 name|vm_daemon
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|rlimit
