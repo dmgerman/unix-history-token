@@ -184,7 +184,7 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'M', 0, 'o', 0, 'd', 0, 'e', 0, 'm', 0, ' ', 0, \   'T', 0, 'e', 0, 's', 0, 't', 0, ' ', 0, \   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0, ' ', 0,
+value|'M', 0, 'o', 0, 'd', 0, 'e', 0, 'm', 0, ' ', 0, \   'T', 0, 'e', 0, 's', 0, 't', 0, ' ', 0, \   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0,
 end_define
 
 begin_define
