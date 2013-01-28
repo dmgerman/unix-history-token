@@ -1329,8 +1329,30 @@ comment|/* Period (dot) */
 end_comment
 
 begin_comment
-comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
+comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "DescriptorType" field is the second field in both structures.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_DESCRIPTOR_PTR
+parameter_list|(
+name|d
+parameter_list|)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.CommonPointer)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_DESCRIPTOR_PTR
+parameter_list|(
+name|d
+parameter_list|,
+name|p
+parameter_list|)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.CommonPointer = (p))
+end_define
 
 begin_define
 define|#
@@ -1351,7 +1373,7 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType = t)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType = (t))
 end_define
 
 begin_comment
