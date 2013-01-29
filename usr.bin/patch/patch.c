@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*-  *   * Copyright 1986, Larry Wall  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following condition is met:  * 1. Redistributions of source code must retain the above copyright notice,  * this condition and the following disclaimer.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * patch - a program to apply diffs to original files  *  * -C option added in 1998, original code by Marc Espie, based on FreeBSD  * behaviour  *  * $OpenBSD: patch.c,v 1.45 2007/04/18 21:52:24 sobrado Exp $  * $DragonFly: src/usr.bin/patch/patch.c,v 1.10 2008/08/10 23:39:56 joerg Exp $  *  */
+comment|/*-  * Copyright 1986, Larry Wall  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following condition is met:  * 1. Redistributions of source code must retain the above copyright notice,  * this condition and the following disclaimer.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * patch - a program to apply diffs to original files  *  * -C option added in 1998, original code by Marc Espie, based on FreeBSD  * behaviour  *  * $OpenBSD: patch.c,v 1.50 2012/05/15 19:32:02 millert Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -600,20 +596,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* buffer for stderr */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|serrbuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* how many input lines have been irretractibly output */
 end_comment
 
@@ -825,6 +807,9 @@ name|i
 decl_stmt|,
 name|fd
 decl_stmt|;
+name|bool
+name|patch_seen
+decl_stmt|;
 name|LINENUM
 name|where
 init|=
@@ -845,11 +830,14 @@ name|char
 modifier|*
 name|v
 decl_stmt|;
-name|setbuf
+name|setlinebuf
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|setlinebuf
 argument_list|(
 name|stderr
-argument_list|,
-name|serrbuf
 argument_list|)
 expr_stmt|;
 for|for
@@ -1222,6 +1210,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|patch_seen
+operator|=
+name|false
+expr_stmt|;
 for|for
 control|(
 name|open_patch_file
@@ -1240,6 +1232,10 @@ argument_list|()
 control|)
 block|{
 comment|/* for each patch in patch file */
+name|patch_seen
+operator|=
+name|true
+expr_stmt|;
 name|warn_on_invalid_line
 operator|=
 name|true
@@ -2023,35 +2019,42 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|skip_rest_of_patch
+operator|!
+name|check_only
 condition|)
-block|{
 name|say
 argument_list|(
-literal|"%d out of %d hunks ignored--saving rejects to %s\n"
+literal|"%d out of %d hunks %s--saving rejects to %s\n"
 argument_list|,
 name|failed
 argument_list|,
 name|hunk
 argument_list|,
+name|skip_rest_of_patch
+condition|?
+literal|"ignored"
+else|:
+literal|"failed"
+argument_list|,
 name|rejname
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|say
 argument_list|(
-literal|"%d out of %d hunks failed--saving rejects to %s\n"
+literal|"%d out of %d hunks %s\n"
 argument_list|,
 name|failed
 argument_list|,
 name|hunk
 argument_list|,
-name|rejname
+name|skip_rest_of_patch
+condition|?
+literal|"ignored"
+else|:
+literal|"failed"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2077,6 +2080,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|patch_seen
+condition|)
+name|error
+operator|=
+literal|2
+expr_stmt|;
 name|my_exit
 argument_list|(
 name|error

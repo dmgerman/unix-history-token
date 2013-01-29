@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*-  *  * Copyright (C) 1990 Free Software Foundation, Inc.  *   * This program is free software; you can redistribute it and/or modify it  * without restriction.  *   * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  *  * backupfile.c -- make Emacs style backup file names  *  * David MacKenzie<djm@ai.mit.edu>. Some algorithms adapted from GNU Emacs.  *  * $OpenBSD: backupfile.c,v 1.19 2006/03/11 19:41:30 otto Exp $  * $DragonFly: src/usr.bin/patch/backupfile.c,v 1.5 2008/08/11 00:05:06 joerg Exp $  */
+comment|/*-  * Copyright (C) 1990 Free Software Foundation, Inc.  *   * This program is free software; you can redistribute it and/or modify it  * without restriction.  *   * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  *  * backupfile.c -- make Emacs style backup file names  *  * David MacKenzie<djm@ai.mit.edu>. Some algorithms adapted from GNU Emacs.  *  * $OpenBSD: backupfile.c,v 1.20 2009/10/27 23:59:41 deraadt Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
