@@ -216,6 +216,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_misc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
