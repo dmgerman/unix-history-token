@@ -30914,6 +30914,14 @@ literal|0
 expr_stmt|;
 name|txq
 operator|->
+name|br
+operator|->
+name|br_drops
+operator|=
+literal|0
+expr_stmt|;
+name|txq
+operator|->
 name|no_dmamap
 operator|=
 literal|0
