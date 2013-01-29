@@ -685,7 +685,7 @@ decl_stmt|,
 modifier|*
 name|ebp
 decl_stmt|;
-name|int32_t
+name|uint32_t
 modifier|*
 name|bap
 decl_stmt|,
