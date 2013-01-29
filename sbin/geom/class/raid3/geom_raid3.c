@@ -340,7 +340,7 @@ literal|'n'
 block|,
 literal|"number"
 block|,
-name|NULL
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_NUMBER
 block|}
