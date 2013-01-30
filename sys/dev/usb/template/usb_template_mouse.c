@@ -151,6 +151,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb_cdc.h>
 end_include
 
@@ -186,18 +192,6 @@ end_enum
 begin_define
 define|#
 directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|STRING_PRODUCT
 define|\
 value|'M', 0, 'o', 0, 'u', 0, 's', 0, 'e', 0, ' ', 0, \   'T', 0, 'e', 0, 's', 0, 't', 0, ' ', 0, \   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0,
@@ -214,16 +208,6 @@ end_define
 begin_comment
 comment|/* make the real string descriptors */
 end_comment
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|string_lang
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -877,7 +861,7 @@ name|INDEX_LANG
 index|]
 operator|=
 operator|&
-name|string_lang
+name|usb_string_lang_en
 block|,
 index|[
 name|INDEX_MOUSE
@@ -904,7 +888,7 @@ block|{
 return|return
 operator|(
 operator|&
-name|string_lang
+name|usb_string_lang_en
 operator|)
 return|;
 block|}

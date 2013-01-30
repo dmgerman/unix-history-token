@@ -151,6 +151,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/template/usb_template.h>
 end_include
 
@@ -189,18 +195,6 @@ name|STRING_MTP_MAX
 block|, }
 enum|;
 end_enum
-
-begin_define
-define|#
-directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
 
 begin_define
 define|#
@@ -245,16 +239,6 @@ end_define
 begin_comment
 comment|/* make the real string descriptors */
 end_comment
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|string_lang
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -921,7 +905,7 @@ name|STRING_LANG_INDEX
 index|]
 operator|=
 operator|&
-name|string_lang
+name|usb_string_lang_en
 block|,
 index|[
 name|STRING_MTP_DATA_INDEX
@@ -1029,7 +1013,7 @@ block|{
 return|return
 operator|(
 operator|&
-name|string_lang
+name|usb_string_lang_en
 operator|)
 return|;
 block|}

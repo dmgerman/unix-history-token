@@ -157,6 +157,30 @@ begin_comment
 comment|/* USB_GLOBAL_INCLUDE_FILE */
 end_comment
 
+begin_decl_stmt
+specifier|const
+name|struct
+name|usb_string_lang
+name|usb_string_lang_en
+init|=
+block|{
+sizeof|sizeof
+argument_list|(
+name|usb_string_lang_en
+argument_list|)
+block|,
+name|UDESC_STRING
+block|,
+block|{
+literal|0x09
+block|,
+literal|0x04
+block|}
+comment|/* American English */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(

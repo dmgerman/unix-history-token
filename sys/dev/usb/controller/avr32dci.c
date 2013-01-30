@@ -5971,18 +5971,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|STRING_VENDOR
 define|\
 value|'A', 0, 'V', 0, 'R', 0, '3', 0, '2', 0
@@ -5995,16 +5983,6 @@ name|STRING_PRODUCT
 define|\
 value|'D', 0, 'C', 0, 'I', 0, ' ', 0, 'R', 0, \   'o', 0, 'o', 0, 't', 0, ' ', 0, 'H', 0, \   'U', 0, 'B', 0,
 end_define
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|avr32dci_langtab
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -6631,7 +6609,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|avr32dci_langtab
+name|usb_string_lang_en
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -6642,7 +6620,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|avr32dci_langtab
+name|usb_string_lang_en
 expr_stmt|;
 goto|goto
 name|tr_valid
