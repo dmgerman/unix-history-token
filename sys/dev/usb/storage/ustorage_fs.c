@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * NOTE: Much of the SCSI statemachine handling code derives from the  * Linux USB gadget stack.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -155,6 +172,15 @@ include|#
 directive|include
 file|<dev/usb/usb_debug.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_ifdef
 ifdef|#

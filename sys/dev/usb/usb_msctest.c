@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * The following file contains code that will detect USB autoinstall  * disks.  *  * TODO: Potentially we could add code to automatically detect USB  * mass storage quirks for not supported SCSI commands!  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -197,6 +214,15 @@ include|#
 directive|include
 file|<dev/usb/quirk/usb_quirk.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_enum
 enum|enum

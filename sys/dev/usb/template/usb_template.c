@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * This file contains sub-routines to build up USB descriptors from  * USB templates.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -215,6 +232,15 @@ include|#
 directive|include
 file|<dev/usb/template/usb_template.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_expr_stmt
 name|MODULE_DEPEND

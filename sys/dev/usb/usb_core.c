@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * USB specifications and other documentation can be found at  * http://www.usb.org/developers/docs/ and  * http://www.usb.org/developers/devclass_docs/  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -130,6 +147,15 @@ include|#
 directive|include
 file|<dev/usb/usbdi.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_expr_stmt
 name|MALLOC_DEFINE
