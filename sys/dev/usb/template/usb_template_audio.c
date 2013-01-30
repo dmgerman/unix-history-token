@@ -198,7 +198,7 @@ define|#
 directive|define
 name|STRING_AUDIO_PRODUCT
 define|\
-value|'A', 0, 'u', 0, 'd', 0, 'i', 0, 'o', 0, ' ', 0, \   'T', 0, 'e', 0, 's', 0, 't', 0, ' ', 0, \   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0,
+value|"A\0u\0d\0i\0o\0 \0T\0e\0s\0t\0 \0D\0e\0v\0i\0c\0e"
 end_define
 
 begin_define
@@ -206,7 +206,7 @@ define|#
 directive|define
 name|STRING_AUDIO_MIXER
 define|\
-value|'M', 0, 'i', 0, 'x', 0, 'e', 0, 'r', 0, ' ', 0, \   'i', 0, 'n', 0, 't', 0, 'e', 0, 'r', 0, 'f', 0, 'a', 0, 'c', 0, 'e', 0,
+value|"M\0i\0x\0e\0r\0 \0i\0n\0t\0e\0r\0f\0a\0c\0e"
 end_define
 
 begin_define
@@ -214,7 +214,7 @@ define|#
 directive|define
 name|STRING_AUDIO_RECORD
 define|\
-value|'R', 0, 'e', 0, 'c', 0, 'o', 0, 'r', 0, 'd', 0, ' ', 0, \   'i', 0, 'n', 0, 't', 0, 'e', 0, 'r', 0, 'f', 0, 'a', 0, 'c', 0, 'e', 0,
+value|"R\0e\0c\0o\0r\0d\0 \0i\0n\0t\0e\0r\0f\0a\0c\0e"
 end_define
 
 begin_define
@@ -222,7 +222,7 @@ define|#
 directive|define
 name|STRING_AUDIO_PLAYBACK
 define|\
-value|'P', 0, 'l', 0, 'a', 0, 'y', 0, 'b', 0, 'a', 0, 'c', 0, 'k', 0, ' ', 0, \   'i', 0, 'n', 0, 't', 0, 'e', 0, 'r', 0, 'f', 0, 'a', 0, 'c', 0, 'e', 0,
+value|"P\0l\0a\0y\0b\0a\0c\0k\0 \0i\0n\0t\0e\0r\0f\0a\0c\0e"
 end_define
 
 begin_comment

@@ -5973,7 +5973,7 @@ define|#
 directive|define
 name|STRING_VENDOR
 define|\
-value|'A', 0, 'V', 0, 'R', 0, '3', 0, '2', 0
+value|"A\0V\0R\0003\0002"
 end_define
 
 begin_define
@@ -5981,7 +5981,7 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'D', 0, 'C', 0, 'I', 0, ' ', 0, 'R', 0, \   'o', 0, 'o', 0, 't', 0, ' ', 0, 'H', 0, \   'U', 0, 'B', 0,
+value|"D\0C\0I\0 \0R\0o\0o\0t\0 \0H\0U\0B"
 end_define
 
 begin_expr_stmt

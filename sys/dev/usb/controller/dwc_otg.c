@@ -14199,7 +14199,7 @@ define|#
 directive|define
 name|STRING_VENDOR
 define|\
-value|'D', 0, 'W', 0, 'C', 0, 'O', 0, 'T', 0, 'G', 0
+value|"D\0W\0C\0O\0T\0G"
 end_define
 
 begin_define
@@ -14207,7 +14207,7 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'O', 0, 'T', 0, 'G', 0, ' ', 0, 'R', 0, \   'o', 0, 'o', 0, 't', 0, ' ', 0, 'H', 0, \   'U', 0, 'B', 0,
+value|"O\0T\0G\0 \0R\0o\0o\0t\0 \0H\0U\0B"
 end_define
 
 begin_expr_stmt

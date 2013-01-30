@@ -194,7 +194,7 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'M', 0, 'o', 0, 'u', 0, 's', 0, 'e', 0, ' ', 0, \   'T', 0, 'e', 0, 's', 0, 't', 0, ' ', 0, \   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0,
+value|"M\0o\0u\0s\0e\0 \0T\0e\0s\0t\0 \0D\0e\0v\0i\0c\0e"
 end_define
 
 begin_define
@@ -202,7 +202,7 @@ define|#
 directive|define
 name|STRING_MOUSE
 define|\
-value|'M', 0, 'o', 0, 'u', 0, 's', 0, 'e', 0, ' ', 0, \   'i', 0, 'n', 0, 't', 0, 'e', 0, 'r', 0, 'f', 0, 'a', 0, 'c', 0, 'e', 0,
+value|"M\0o\0u\0s\0e\0 \0i\0n\0t\0e\0r\0f\0a\0c\0e"
 end_define
 
 begin_comment

@@ -194,7 +194,7 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'K', 0, 'e', 0, 'y', 0, 'b', 0, 'o', 0, 'a', 0, 'r', 0, 'd', 0, ' ', 0, \   'T', 0, 'e', 0, 's', 0, 't', 0, ' ', 0, \   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0,
+value|"K\0e\0y\0b\0o\0a\0r\0d\0 \0T\0e\0s\0t\0 \0D\0e\0v\0i\0c\0e"
 end_define
 
 begin_define
@@ -202,7 +202,7 @@ define|#
 directive|define
 name|STRING_KEYBOARD
 define|\
-value|'K', 0, 'e', 0, 'y', 0, 'b', 0, 'o', 0, 'a', 0, 'r', 0, 'd', 0, ' ', 0, \   'i', 0, 'n', 0, 't', 0, 'e', 0, 'r', 0, 'f', 0, 'a', 0, 'c', 0, 'e', 0,
+value|"K\0e\0y\0b\0o\0a\0r\0d\0 \0i\0n\0t\0e\0r\0f\0a\0c\0e"
 end_define
 
 begin_comment
