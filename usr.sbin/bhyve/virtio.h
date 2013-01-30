@@ -50,6 +50,13 @@ name|VRING_AVAIL_F_NO_INTERRUPT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIRTIO_MSI_NO_VECTOR
+value|0xFFFF
+end_define
+
 begin_struct
 struct|struct
 name|virtio_desc
@@ -198,6 +205,20 @@ define|#
 directive|define
 name|VTCFG_R_ISR
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTCFG_R_CFGVEC
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTCFG_R_QVEC
+value|22
 end_define
 
 begin_define
