@@ -4532,8 +4532,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"short TD has no "
-literal|"alternate next\n"
+literal|"short TD has no alternate next\n"
 argument_list|)
 expr_stmt|;
 name|xhci_generic_done
