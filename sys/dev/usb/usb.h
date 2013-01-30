@@ -2949,7 +2949,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|struct name {				\   uByte bLength;			\   uByte bDescriptorType;		\   uByte bData[sizeof((uint8_t []){m})];	\ } __packed;				\ static const struct name name = {	\   .bLength = sizeof(struct name),	\   .bDescriptorType = UDESC_STRING,	\   .bData = { m },			\ }
+value|static const struct {			\   uByte bLength;			\   uByte bDescriptorType;		\   uByte bData[sizeof((uint8_t []){m})];	\ } __packed name = {			\   .bLength = sizeof(name),		\   .bDescriptorType = UDESC_STRING,	\   .bData = { m },			\ }
 end_define
 
 begin_struct
