@@ -565,7 +565,7 @@ name|tftp_log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Sending ERROR %d: %s"
+literal|"Sending ERROR %d"
 argument_list|,
 name|error
 argument_list|)
