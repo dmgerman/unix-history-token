@@ -80,6 +80,10 @@ decl_stmt|,
 name|rex_b
 range|:
 literal|1
+decl_stmt|,
+name|rex_present
+range|:
+literal|1
 decl_stmt|;
 name|uint8_t
 name|mod
