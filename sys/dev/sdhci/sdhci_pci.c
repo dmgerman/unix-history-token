@@ -2251,12 +2251,8 @@ argument_list|,
 name|sdhci_pci_write_multi_4
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
