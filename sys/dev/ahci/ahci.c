@@ -790,6 +790,10 @@ define|#
 directive|define
 name|AHCI_Q_ALTSIG
 value|2048
+define|#
+directive|define
+name|AHCI_Q_NOMSI
+value|4096
 block|}
 name|ahci_ids
 index|[]
@@ -802,7 +806,7 @@ literal|0x00
 block|,
 literal|"ATI IXP600"
 block|,
-literal|0
+name|AHCI_Q_NOMSI
 block|}
 block|,
 block|{
@@ -4951,6 +4955,18 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* Process hints. */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_NOMSI
+condition|)
+name|msi
+operator|=
+literal|0
+expr_stmt|;
 name|resource_int_value
 argument_list|(
 name|device_get_name
