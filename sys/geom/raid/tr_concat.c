@@ -501,6 +501,12 @@ block|{
 comment|/* 		 * Some metadata modules may not know CONCAT volume 		 * mediasize until all disks connected. Recalculate. 		 */
 if|if
 condition|(
+name|vol
+operator|->
+name|v_raid_level
+operator|==
+name|G_RAID_VOLUME_RL_CONCAT
+operator|&&
 name|G_RAID_VOLUME_S_ALIVE
 argument_list|(
 name|s
