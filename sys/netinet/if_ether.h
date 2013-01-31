@@ -149,6 +149,16 @@ name|arp_op
 value|ea_hdr.ar_op
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_comment
+comment|/* Can be used by third party software. */
+end_comment
+
 begin_struct
 struct|struct
 name|sockaddr_inarp
@@ -183,6 +193,15 @@ value|1
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !BURN_BRIDGES  */
+end_comment
 
 begin_comment
 comment|/*  * IP and ethernet specific routing flags  */

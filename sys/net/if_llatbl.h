@@ -631,17 +631,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LLE_PROXY
-value|0x0010
-end_define
-
-begin_comment
-comment|/* proxy entry ??? */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LLE_PUB
 value|0x0020
 end_define

@@ -1930,7 +1930,6 @@ name|overwrite
 goto|;
 block|}
 block|}
-comment|/* 		 * IPv4 arp command retries with sin_other = SIN_PROXY here. 		 */
 name|fprintf
 argument_list|(
 name|stderr
@@ -2416,7 +2415,6 @@ goto|goto
 name|delete
 goto|;
 block|}
-comment|/* 		 * IPv4 arp command retries with sin_other = SIN_PROXY here. 		 */
 name|fprintf
 argument_list|(
 name|stderr
