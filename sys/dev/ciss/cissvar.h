@@ -23,14 +23,14 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * Maximum number of logical drives we support.  */
+comment|/*  * Maximum number of logical drives we support.  * If the controller does not indicate a maximum  * value.  This is a compatibiliy value to support  * older ciss controllers (e.g. model 6i)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CISS_MAX_LOGICAL
-value|15
+value|16
 end_define
 
 begin_comment
