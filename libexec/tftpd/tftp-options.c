@@ -309,6 +309,9 @@ name|int
 name|peer
 parameter_list|)
 block|{
+name|int
+name|to
+decl_stmt|;
 if|if
 condition|(
 name|options
@@ -325,9 +328,8 @@ operator|(
 literal|0
 operator|)
 return|;
-name|int
 name|to
-init|=
+operator|=
 name|atoi
 argument_list|(
 name|options
@@ -337,7 +339,7 @@ index|]
 operator|.
 name|o_request
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|to
@@ -358,11 +360,13 @@ else|:
 name|LOG_WARNING
 argument_list|,
 literal|"Received bad value for timeout. "
-literal|"Should be between %d and %d, received %s"
+literal|"Should be between %d and %d, received %d"
 argument_list|,
 name|TIMEOUT_MIN
 argument_list|,
 name|TIMEOUT_MAX
+argument_list|,
+name|to
 argument_list|)
 expr_stmt|;
 name|send_error
@@ -757,7 +761,7 @@ name|LOG_ERR
 argument_list|,
 literal|"Invalid blocksize (%d bytes), "
 literal|"net.inet.udp.maxdgram sysctl limits it to "
-literal|"%d bytes.\n"
+literal|"%ld bytes.\n"
 argument_list|,
 name|size
 argument_list|,
@@ -785,7 +789,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"Invalid blocksize (%d bytes), "
 literal|"net.inet.udp.maxdgram sysctl limits it to "
-literal|"%d bytes.\n"
+literal|"%ld bytes.\n"
 argument_list|,
 name|size
 argument_list|,
@@ -1086,7 +1090,7 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"Invalid blocksize2 (%d bytes), net.inet.udp.maxdgram "
-literal|"sysctl limits it to %d bytes.\n"
+literal|"sysctl limits it to %ld bytes.\n"
 argument_list|,
 name|size
 argument_list|,

@@ -437,6 +437,25 @@ name|LOG_ERR
 argument_list|,
 literal|"%s block %d, attempt %d successful"
 argument_list|,
+name|packettype
+argument_list|(
+name|ntohs
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|tftphdr
+operator|*
+operator|)
+operator|(
+name|pkt
+operator|)
+operator|)
+operator|->
+name|th_opcode
+argument_list|)
+argument_list|)
+argument_list|,
 name|block
 argument_list|,
 name|i
