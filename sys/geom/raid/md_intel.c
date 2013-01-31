@@ -303,11 +303,15 @@ name|cng_state
 decl_stmt|;
 define|#
 directive|define
-name|INTEL_SNGST_NEEDS_UPDATE
+name|INTEL_CNGST_UPDATED
+value|0
+define|#
+directive|define
+name|INTEL_CNGST_NEEDS_UPDATE
 value|1
 define|#
 directive|define
-name|INTEL_SNGST_MASTER_MISSING
+name|INTEL_CNGST_MASTER_MISSING
 value|2
 name|uint8_t
 name|cng_sub_state
@@ -607,7 +611,7 @@ name|uint32_t
 name|cache_size
 decl_stmt|;
 name|uint32_t
-name|orig_family_num
+name|orig_config_id
 decl_stmt|;
 name|uint32_t
 name|pwr_cycle_count
@@ -703,6 +707,9 @@ name|mdio_base
 decl_stmt|;
 name|uint32_t
 name|mdio_config_id
+decl_stmt|;
+name|uint32_t
+name|mdio_orig_config_id
 decl_stmt|;
 name|uint32_t
 name|mdio_generation
@@ -1551,11 +1558,38 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"orig_family_num     0x%08x\n"
+literal|"error_log_pos       %u\n"
 argument_list|,
 name|meta
 operator|->
-name|orig_family_num
+name|error_log_pos
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cache_size          %u\n"
+argument_list|,
+name|meta
+operator|->
+name|cache_size
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"orig_config_id      0x%08x\n"
+argument_list|,
+name|meta
+operator|->
+name|orig_config_id
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"pwr_cycle_count     %u\n"
+argument_list|,
+name|meta
+operator|->
+name|pwr_cycle_count
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1569,7 +1603,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DISK#   serial disk_sectors disk_sectors_hi disk_id flags\n"
+literal|"DISK#   serial disk_sectors disk_sectors_hi disk_id flags owner\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1590,7 +1624,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"    %d<%.16s> %u %u 0x%08x 0x%08x\n"
+literal|"    %d<%.16s> %u %u 0x%08x 0x%08x %08x\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1638,6 +1672,15 @@ name|i
 index|]
 operator|.
 name|flags
+argument_list|,
+name|meta
+operator|->
+name|disk
+index|[
+name|i
+index|]
+operator|.
+name|owner_cfg_num
 argument_list|)
 expr_stmt|;
 block|}
@@ -1824,6 +1867,33 @@ argument_list|,
 name|mvol
 operator|->
 name|dirty
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" fs_state           %u\n"
+argument_list|,
+name|mvol
+operator|->
+name|fs_state
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" verify_errors      %u\n"
+argument_list|,
+name|mvol
+operator|->
+name|verify_errors
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" bad_blocks         %u\n"
+argument_list|,
+name|mvol
+operator|->
+name|bad_blocks
 argument_list|)
 expr_stmt|;
 for|for
@@ -3701,6 +3771,10 @@ expr_stmt|;
 name|meta
 operator|->
 name|config_id
+operator|=
+name|meta
+operator|->
+name|orig_config_id
 operator|=
 name|arc4random
 argument_list|()
@@ -6912,6 +6986,10 @@ name|mdi
 operator|->
 name|mdio_config_id
 operator|=
+name|mdi
+operator|->
+name|mdio_orig_config_id
+operator|=
 name|arc4random
 argument_list|()
 expr_stmt|;
@@ -7647,6 +7725,14 @@ operator|=
 name|meta
 operator|->
 name|config_id
+expr_stmt|;
+name|mdi
+operator|->
+name|mdio_orig_config_id
+operator|=
+name|meta
+operator|->
+name|orig_config_id
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -12248,6 +12334,14 @@ name|mdio_config_id
 expr_stmt|;
 name|meta
 operator|->
+name|orig_config_id
+operator|=
+name|mdi
+operator|->
+name|mdio_orig_config_id
+expr_stmt|;
+name|meta
+operator|->
 name|generation
 operator|=
 name|mdi
@@ -12717,7 +12811,7 @@ name|mvol
 operator|->
 name|cng_state
 operator|=
-name|INTEL_SNGST_MASTER_MISSING
+name|INTEL_CNGST_MASTER_MISSING
 expr_stmt|;
 elseif|else
 if|if
@@ -12732,7 +12826,14 @@ name|mvol
 operator|->
 name|cng_state
 operator|=
-name|INTEL_SNGST_NEEDS_UPDATE
+name|INTEL_CNGST_NEEDS_UPDATE
+expr_stmt|;
+else|else
+name|mvol
+operator|->
+name|cng_state
+operator|=
+name|INTEL_CNGST_UPDATED
 expr_stmt|;
 block|}
 comment|/* Check for any recovery in progress. */
