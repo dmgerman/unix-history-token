@@ -7706,11 +7706,8 @@ modifier|*
 name|kn
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|VOP_KQFILTER
 argument_list|(
 name|fp
@@ -7719,10 +7716,6 @@ name|f_vnode
 argument_list|,
 name|kn
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
