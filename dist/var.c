@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.171 2012/06/12 19:21:51 joerg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.172 2012/11/15 16:42:26 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.171 2012/06/12 19:21:51 joerg Exp $"
+literal|"$NetBSD: var.c,v 1.172 2012/11/15 16:42:26 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.171 2012/06/12 19:21:51 joerg Exp $"
+literal|"$NetBSD: var.c,v 1.172 2012/11/15 16:42:26 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9434,7 +9434,11 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"Applying :%c to \"%s\"\n"
+literal|"Applying[%s] :%c to \"%s\"\n"
+argument_list|,
+name|v
+operator|->
+name|name
 argument_list|,
 operator|*
 name|tstr
@@ -12101,7 +12105,11 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"Pattern for [%s] is [%s]\n"
+literal|"Pattern[%s] for [%s] is [%s]\n"
+argument_list|,
+name|v
+operator|->
+name|name
 argument_list|,
 name|nstr
 argument_list|,
@@ -13741,7 +13749,11 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"Result of :%c is \"%s\"\n"
+literal|"Result[%s] of :%c is \"%s\"\n"
+argument_list|,
+name|v
+operator|->
+name|name
 argument_list|,
 name|modifier
 argument_list|,
