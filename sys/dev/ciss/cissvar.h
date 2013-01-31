@@ -34,7 +34,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/*  * Maximum number of logical drives we support.  */
+comment|/*  * Maximum number of logical drives we support.  * If the controller does not indicate a maximum  * value.  This is a compatibiliy value to support  * older ciss controllers (e.g. model 6i)  */
 end_comment
 
 begin_define
