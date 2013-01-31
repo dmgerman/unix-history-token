@@ -6574,6 +6574,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|NNOT
+case|:
+name|cmdputs
+argument_list|(
+literal|"! "
+argument_list|)
+expr_stmt|;
+name|cmdtxt
+argument_list|(
+name|n
+operator|->
+name|nnot
+operator|.
+name|com
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|NCMD
 case|:
 for|for
