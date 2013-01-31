@@ -352,8 +352,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|G_RAID_DISK_S_FAILED
+name|G_RAID_DISK_S_DISABLED
 value|0x02
+end_define
+
+begin_comment
+comment|/* Disabled. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_RAID_DISK_S_FAILED
+value|0x03
 end_define
 
 begin_comment
@@ -364,7 +375,7 @@ begin_define
 define|#
 directive|define
 name|G_RAID_DISK_S_STALE_FAILED
-value|0x03
+value|0x04
 end_define
 
 begin_comment
@@ -375,7 +386,7 @@ begin_define
 define|#
 directive|define
 name|G_RAID_DISK_S_SPARE
-value|0x04
+value|0x05
 end_define
 
 begin_comment
@@ -386,7 +397,7 @@ begin_define
 define|#
 directive|define
 name|G_RAID_DISK_S_STALE
-value|0x05
+value|0x06
 end_define
 
 begin_comment
@@ -397,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|G_RAID_DISK_S_ACTIVE
-value|0x06
+value|0x07
 end_define
 
 begin_comment
