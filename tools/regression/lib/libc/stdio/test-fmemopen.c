@@ -56,7 +56,7 @@ name|void
 name|test_preexisting
 parameter_list|()
 block|{
-comment|/*  	 * use a pre-existing buffer 	 */
+comment|/*  	 * Use a pre-existing buffer. 	 */
 name|char
 name|buf
 index|[
@@ -99,7 +99,7 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-comment|/* open a FILE * using fmemopen */
+comment|/* Open a FILE * using fmemopen. */
 name|fp
 operator|=
 name|fmemopen
@@ -107,7 +107,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"w"
 argument_list|)
@@ -119,7 +121,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* write to the buffer */
+comment|/* Write to the buffer. */
 name|nofw
 operator|=
 name|fwrite
@@ -129,7 +131,9 @@ argument_list|,
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|str
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)
@@ -139,10 +143,12 @@ argument_list|(
 name|nofw
 operator|==
 sizeof|sizeof
+argument_list|(
 name|str
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* close the FILE * */
+comment|/* Close the FILE *. */
 name|rc
 operator|=
 name|fclose
@@ -157,7 +163,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* re-open the FILE * to read back the data */
+comment|/* Re-open the FILE * to read back the data. */
 name|fp
 operator|=
 name|fmemopen
@@ -165,7 +171,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
@@ -177,13 +185,15 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* read from the buffer */
+comment|/* Read from the buffer. */
 name|bzero
 argument_list|(
 name|buf2
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nofr
@@ -195,7 +205,9 @@ argument_list|,
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf2
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)
@@ -205,10 +217,12 @@ argument_list|(
 name|nofr
 operator|==
 sizeof|sizeof
+argument_list|(
 name|buf2
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* since a write on a FILE * retrieved by fmemopen 	 * will add a '\0' (if there's space), we can check 	 * the strings for equality */
+comment|/*  	 * Since a write on a FILE * retrieved by fmemopen 	 * will add a '\0' (if there's space), we can check 	 * the strings for equality. 	 */
 name|assert
 argument_list|(
 name|strcmp
@@ -221,7 +235,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* close the FILE * */
+comment|/* Close the FILE *. */
 name|rc
 operator|=
 name|fclose
@@ -236,7 +250,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* now open a FILE * on the first 4 bytes of the string */
+comment|/* Now open a FILE * on the first 4 bytes of the string. */
 name|fp
 operator|=
 name|fmemopen
@@ -255,7 +269,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* try to write more bytes than we shoud, we'll get a short count (4) */
+comment|/* 	 * Try to write more bytes than we shoud, we'll get a short count (4). 	 */
 name|nofw
 operator|=
 name|fwrite
@@ -265,7 +279,9 @@ argument_list|,
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|str2
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)
@@ -277,7 +293,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* close the FILE * */
+comment|/* Close the FILE *. */
 name|rc
 operator|=
 name|fclose
@@ -285,7 +301,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* check that the string was not modified after the first 4 bytes */
+comment|/* Check that the string was not modified after the first 4 bytes. */
 name|assert
 argument_list|(
 name|strcmp
@@ -306,7 +322,7 @@ name|void
 name|test_autoalloc
 parameter_list|()
 block|{
-comment|/*  	 * let fmemopen allocate the buffer 	 */
+comment|/*  	 * Let fmemopen allocate the buffer. 	 */
 name|char
 name|str
 index|[]
@@ -330,7 +346,7 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-comment|/* open a FILE * using fmemopen */
+comment|/* Open a FILE * using fmemopen. */
 name|fp
 operator|=
 name|fmemopen
@@ -339,7 +355,7 @@ name|NULL
 argument_list|,
 literal|512
 argument_list|,
-literal|"w"
+literal|"w+"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -385,7 +401,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* get the current position into the stream */
+comment|/* Get the current position into the stream. */
 name|pos
 operator|=
 name|ftell
@@ -400,7 +416,7 @@ operator|==
 literal|512
 argument_list|)
 expr_stmt|;
-comment|/* try to write past the end, we should get a short object count (0) */
+comment|/*  	 * Try to write past the end, we should get a short object count (0) 	 */
 name|nofw
 operator|=
 name|fwrite
@@ -421,7 +437,475 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* close the FILE * */
+comment|/* Close the FILE *. */
+name|rc
+operator|=
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rc
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_data_length
+parameter_list|()
+block|{
+comment|/* 	 * Here we test that a read operation doesn't go past the end of the 	 * data actually written, and that a SEEK_END seeks from the end of the 	 * data, not of the whole buffer. 	 */
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|512
+index|]
+init|=
+block|{
+literal|'\0'
+block|}
+decl_stmt|;
+name|char
+name|str
+index|[]
+init|=
+literal|"Test data length. "
+decl_stmt|;
+name|char
+name|str2
+index|[]
+init|=
+literal|"Do we have two sentences?"
+decl_stmt|;
+name|char
+name|str3
+index|[
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|str2
+argument_list|)
+operator|-
+literal|1
+index|]
+decl_stmt|;
+name|long
+name|pos
+decl_stmt|;
+name|size_t
+name|nofw
+decl_stmt|,
+name|nofr
+decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
+comment|/* Open a FILE * for updating our buffer. */
+name|fp
+operator|=
+name|fmemopen
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"w+"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|fp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Write our string into the buffer. */
+name|nofw
+operator|=
+name|fwrite
+argument_list|(
+name|str
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|nofw
+operator|==
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*  	 * Now seek to the end and check that ftell 	 * gives us sizeof(str). 	 */
+name|rc
+operator|=
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rc
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|pos
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|pos
+operator|==
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Close the FILE *. */
+name|rc
+operator|=
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rc
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Reopen the buffer for appending. */
+name|fp
+operator|=
+name|fmemopen
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"a+"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|fp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* We should now be writing after the first string. */
+name|nofw
+operator|=
+name|fwrite
+argument_list|(
+name|str2
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str2
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|nofw
+operator|==
+sizeof|sizeof
+argument_list|(
+name|str2
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Rewind the FILE *. */
+name|rc
+operator|=
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rc
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Make sure we're at the beginning. */
+name|pos
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|pos
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Read the whole buffer. */
+name|nofr
+operator|=
+name|fread
+argument_list|(
+name|str3
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|nofr
+operator|==
+sizeof|sizeof
+argument_list|(
+name|str3
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Make sure the two strings are there. */
+name|assert
+argument_list|(
+name|strncmp
+argument_list|(
+name|str3
+argument_list|,
+name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|strncmp
+argument_list|(
+name|str3
+operator|+
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|str2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str2
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Close the FILE *. */
+name|rc
+operator|=
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rc
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_binary
+parameter_list|()
+block|{
+comment|/* 	 * Make sure that NULL bytes are never appended when opening a buffer 	 * in binary mode. 	 */
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|char
+name|str
+index|[]
+init|=
+literal|"Test"
+decl_stmt|;
+name|size_t
+name|nofw
+decl_stmt|;
+name|int
+name|rc
+decl_stmt|,
+name|i
+decl_stmt|;
+comment|/* Pre-fill the buffer. */
+name|memset
+argument_list|(
+name|buf
+argument_list|,
+literal|'A'
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Open a FILE * in binary mode. */
+name|fp
+operator|=
+name|fmemopen
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"w+b"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|fp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Write some data into it. */
+name|nofw
+operator|=
+name|fwrite
+argument_list|(
+name|str
+argument_list|,
+literal|1
+argument_list|,
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|nofw
+operator|==
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Make sure that the buffer doesn't contain any NULL bytes. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|assert
+argument_list|(
+name|buf
+index|[
+name|i
+index|]
+operator|!=
+literal|'\0'
+argument_list|)
+expr_stmt|;
+comment|/* Close the FILE *. */
 name|rc
 operator|=
 name|fclose
@@ -450,6 +934,12 @@ name|test_autoalloc
 argument_list|()
 expr_stmt|;
 name|test_preexisting
+argument_list|()
+expr_stmt|;
+name|test_data_length
+argument_list|()
+expr_stmt|;
+name|test_binary
 argument_list|()
 expr_stmt|;
 return|return
