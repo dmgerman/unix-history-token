@@ -522,6 +522,19 @@ operator|=
 literal|3
 expr_stmt|;
 break|break;
+case|case
+literal|0x3E
+case|:
+comment|/* Per Intel document 325462-045US 01/2013. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_IVYBRIDGE_XEON
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
 block|}
 break|break;
 if|#
@@ -670,6 +683,9 @@ name|PMC_CPU_INTEL_WESTMERE
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
+case|:
+case|case
+name|PMC_CPU_INTEL_IVYBRIDGE_XEON
 case|:
 name|error
 operator|=
@@ -893,6 +909,9 @@ name|PMC_CPU_INTEL_WESTMERE
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
+case|:
+case|case
+name|PMC_CPU_INTEL_IVYBRIDGE_XEON
 case|:
 name|pmc_core_finalize
 argument_list|(
