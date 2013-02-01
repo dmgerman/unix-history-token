@@ -276,7 +276,7 @@ struct|;
 block|}
 name|pptdevs
 index|[
-literal|32
+literal|64
 index|]
 struct|;
 end_struct
