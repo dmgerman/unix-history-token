@@ -139,15 +139,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_MMIOSEGS
-value|(PCIR_MAX_BAR_0 + 1)
+name|MAX_MSIMSGS
+value|32
 end_define
+
+begin_comment
+comment|/*  * If the MSI-X table is located in the middle of a BAR then that MMIO  * region gets split into two segments - one segment above the MSI-X table  * and the other segment below the MSI-X table - with a hole in place of  * the MSI-X table so accesses to it can be trapped and emulated.  *  * So, allocate a MMIO segment for each BAR register + 1 additional segment.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_MSIMSGS
-value|32
+name|MAX_MMIOSEGS
+value|((PCIR_MAX_BAR_0 + 1) + 1)
 end_define
 
 begin_expr_stmt
