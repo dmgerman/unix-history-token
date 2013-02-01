@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*- Copyright (C) 2013 Pietro Cerutti<gahr@FreeBSD.org>  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 1. Redistributions of source code must retain the above copyright    notice, this list of conditions and the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright    notice, this list of conditions and the following disclaimer in the    documentation and/or other materials provided with the distribution.  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+comment|/*-  * Copyright (C) 2013 Pietro Cerutti<gahr@FreeBSD.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
 end_include
 
 begin_include
@@ -62,7 +68,7 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* pointer to the memory region */
-name|char
+name|bool
 name|own
 decl_stmt|;
 comment|/* did we allocate the buffer ourselves? */
@@ -189,7 +195,7 @@ name|flags
 decl_stmt|,
 name|rc
 decl_stmt|;
-comment|/*  	 * Retrieve the flags as used by open(2) from the mode argument, and 	 * validate them. 	 * */
+comment|/* 	 * Retrieve the flags as used by open(2) from the mode argument, and 	 * validate them. 	 */
 name|rc
 operator|=
 name|__sflags
@@ -217,7 +223,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*  	 * There's no point in requiring an automatically allocated buffer 	 * in write-only mode. 	 */
+comment|/* 	 * There's no point in requiring an automatically allocated buffer 	 * in write-only mode. 	 */
 if|if
 condition|(
 operator|!
@@ -242,7 +248,6 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* Allocate a cookie. */
 name|ck
 operator|=
 name|malloc
@@ -372,7 +377,7 @@ argument_list|)
 operator|!=
 name|NULL
 expr_stmt|;
-comment|/* 	 * The size of the current buffer contents is set depending on the 	 * mode: 	 * 	 * for append (text-mode), the position of the first NULL byte, or the 	 * size of the buffer if none is found 	 * 	 * for append (binary-mode), the size of the buffer 	 * 	 * for read, the size of the buffer 	 * 	 * for write, 0 	 */
+comment|/* 	 * The size of the current buffer contents is set depending on the 	 * mode: 	 *  	 * for append (text-mode), the position of the first NULL byte, or the 	 * size of the buffer if none is found 	 * 	 * for append (binary-mode), the size of the buffer 	 *  	 * for read, the size of the buffer 	 *  	 * for write, 0 	 */
 switch|switch
 condition|(
 name|mode
@@ -391,7 +396,7 @@ operator|->
 name|bin
 condition|)
 block|{
-comment|/*  			 * This isn't useful, since the buffer isn't 			 * allowed to grow. 			 */
+comment|/* 			 * This isn't useful, since the buffer isn't allowed 			 * to grow. 			 */
 name|ck
 operator|->
 name|off
@@ -445,15 +450,10 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* Actuall wrapper. */
 name|f
 operator|=
 name|funopen
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ck
 argument_list|,
 name|flags
@@ -513,10 +513,6 @@ name|setvbuf
 argument_list|(
 name|f
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|_IONBF
