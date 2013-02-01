@@ -598,6 +598,17 @@ begin_comment
 comment|/* L,N number of keepalives before close */
 end_comment
 
+begin_comment
+comment|/* Start of reserved space for third-party user-settable options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_VENDOR
+value|SO_VENDOR
+end_define
+
 begin_define
 define|#
 directive|define

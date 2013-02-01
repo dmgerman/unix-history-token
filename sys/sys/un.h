@@ -122,6 +122,17 @@ begin_comment
 comment|/* connects block until accepted */
 end_comment
 
+begin_comment
+comment|/* Start of reserved space for third-party socket options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_VENDOR
+value|SO_VENDOR
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
