@@ -3727,14 +3727,39 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/* Remove the extra 2 bytes of the csum */
 name|pktlen
 operator|-=
 literal|2
 expr_stmt|;
-comment|/* The checksum appears to be simplistically calculated 					 * over the udp/tcp header and data up to the end of the 					 * eth frame.  Which means if the eth frame is padded 					 * the csum calculation is incorrectly performed over 					 * the padding bytes as well. Therefore to be safe we 					 * ignore the H/W csum on frames less than or equal to 					 * 64 bytes. 					 */
+comment|/* The checksum appears to be simplistically calculated 					 * over the udp/tcp header and data up to the end of the 					 * eth frame.  Which means if the eth frame is padded 					 * the csum calculation is incorrectly performed over 					 * the padding bytes as well. Therefore to be safe we 					 * ignore the H/W csum on frames less than or equal to 					 * 64 bytes. 					 * 					 * Ignore H/W csum for non-IPv4 packets. 					 */
 if|if
 condition|(
+name|be16toh
+argument_list|(
+name|eh
+operator|->
+name|ether_type
+argument_list|)
+operator|==
+name|ETHERTYPE_IP
+operator|&&
 name|pktlen
 operator|>
 name|ETHER_MIN_LEN
