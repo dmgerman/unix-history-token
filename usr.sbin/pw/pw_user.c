@@ -2506,6 +2506,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|grp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|grp
 operator|->
