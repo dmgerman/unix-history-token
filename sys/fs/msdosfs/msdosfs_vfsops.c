@@ -2682,10 +2682,6 @@ if|if
 condition|(
 name|pmp
 operator|->
-name|pm_Sectors
-operator|||
-name|pmp
-operator|->
 name|pm_FATsecs
 operator|||
 name|getushort
