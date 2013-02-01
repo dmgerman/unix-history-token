@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.163 2012/07/03 21:03:40 sjg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.165 2013/01/26 15:52:59 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.163 2012/07/03 21:03:40 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.165 2013/01/26 15:52:59 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.163 2012/07/03 21:03:40 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.165 2013/01/26 15:52:59 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1753,6 +1753,8 @@ name|signo
 name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
+while|while
+condition|(
 name|write
 argument_list|(
 name|childExitJob
@@ -1763,7 +1765,15 @@ name|CHILD_EXIT
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 block|}
 end_function
 
@@ -1782,6 +1792,8 @@ name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 comment|/*      * Defer sending to SIGCONT to our stopped children until we return      * from the signal handler.      */
+while|while
+condition|(
 name|write
 argument_list|(
 name|childExitJob
@@ -1792,7 +1804,15 @@ name|DO_JOB_RESUME
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 block|}
 end_function
 
@@ -2151,13 +2171,6 @@ name|Job
 operator|*
 operator|)
 name|jobp
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-name|tmp
 decl_stmt|;
 name|int
 name|i
@@ -2863,35 +2876,6 @@ operator||=
 name|JOB_TRACED
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|Check_Cwd_Cmd
-argument_list|(
-name|cmd
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|DBPRINTF
-argument_list|(
-literal|"test -d %s&& "
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-name|DBPRINTF
-argument_list|(
-literal|"cd %s\n"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
 name|DBPRINTF
 argument_list|(
 name|cmdTemplate
@@ -2978,36 +2962,6 @@ argument_list|,
 name|commandShell
 operator|->
 name|echoOn
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|cp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|DBPRINTF
-argument_list|(
-literal|"test -d %s&& "
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-name|DBPRINTF
-argument_list|(
-literal|"cd %s\n"
-argument_list|,
-name|Var_Value
-argument_list|(
-literal|".OBJDIR"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|,
-operator|&
-name|tmp
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4028,9 +3982,8 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+while|while
+condition|(
 name|write
 argument_list|(
 name|streamID
@@ -4040,7 +3993,15 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 block|}
 operator|(
 name|void
@@ -6980,9 +6941,8 @@ name|nready
 operator|-=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
+while|while
+condition|(
 name|read
 argument_list|(
 name|childExitJob
@@ -6994,7 +6954,15 @@ name|token
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 if|if
 condition|(
 name|token
@@ -9527,6 +9495,8 @@ name|aborting
 index|]
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
 name|write
 argument_list|(
 name|tokenWaitJob
@@ -9538,7 +9508,15 @@ name|tok
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 block|}
 end_function
 
@@ -9888,6 +9866,8 @@ literal|1
 condition|)
 continue|continue;
 comment|/* And put the stopper back */
+while|while
+condition|(
 name|write
 argument_list|(
 name|tokenWaitJob
@@ -9899,7 +9879,15 @@ name|tok
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 name|Fatal
 argument_list|(
 literal|"A failure has been detected in another branch of the parallel make"
@@ -9917,6 +9905,8 @@ operator|==
 literal|0
 condition|)
 comment|/* We didn't want the token really */
+while|while
+condition|(
 name|write
 argument_list|(
 name|tokenWaitJob
@@ -9928,7 +9918,15 @@ name|tok
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 name|jobTokensRunning
 operator|++
 expr_stmt|;
