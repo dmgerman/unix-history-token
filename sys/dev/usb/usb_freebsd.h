@@ -107,6 +107,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_ID_SECTION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td

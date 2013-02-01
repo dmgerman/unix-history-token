@@ -683,11 +683,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KLD_MODULE
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|USB_HAVE_ID_SECTION
+operator|!=
+literal|0
+operator|)
+end_if
 
 begin_decl_stmt
 specifier|static
