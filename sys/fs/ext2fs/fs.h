@@ -303,26 +303,6 @@ parameter_list|)
 value|(EXT2_ADDR_PER_BLOCK(fs))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|inside
-index|[]
-decl_stmt|,
-name|around
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-modifier|*
-name|fragtbl
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

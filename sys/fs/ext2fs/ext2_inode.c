@@ -1568,7 +1568,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"itrunc: newspace"
+literal|"ext2_truncate: newspace"
 argument_list|)
 expr_stmt|;
 if|if
