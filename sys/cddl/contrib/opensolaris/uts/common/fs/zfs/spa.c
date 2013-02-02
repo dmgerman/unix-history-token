@@ -16942,10 +16942,8 @@ block|}
 comment|/* 	 * Multi-vdev root pool configuration discovery is not supported yet. 	 */
 name|nchildren
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-name|VERIFY
-argument_list|(
 name|nvlist_lookup_uint64
 argument_list|(
 name|best_cfg
@@ -16954,9 +16952,6 @@ name|ZPOOL_CONFIG_VDEV_CHILDREN
 argument_list|,
 operator|&
 name|nchildren
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|holes
