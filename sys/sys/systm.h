@@ -105,6 +105,18 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
+name|compiler_version
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system version */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
 name|copyright
 index|[]
 decl_stmt|;
