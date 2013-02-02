@@ -6250,14 +6250,6 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
-name|CPU_CLR_ATOMIC
-argument_list|(
-name|cpu
-argument_list|,
-operator|&
-name|started_cpus
-argument_list|)
-expr_stmt|;
 comment|/* Resume MCA and local APIC */
 name|mca_resume
 argument_list|()
@@ -6265,6 +6257,14 @@ expr_stmt|;
 name|lapic_setup
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|CPU_CLR_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|started_cpus
 argument_list|)
 expr_stmt|;
 block|}
