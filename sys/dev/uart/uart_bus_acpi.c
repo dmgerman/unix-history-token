@@ -129,6 +129,13 @@ argument_list|,
 name|uart_bus_detach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|uart_bus_resume
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
