@@ -1829,11 +1829,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Reset system clock while resuming.  XXX Remove once tested. */
@@ -12154,6 +12162,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX According to ACPI specification SCI_EN bit should be restored 	 * by ACPI platform (BIOS, firmware) to its pre-sleep state. 	 * Unfortunately some BIOSes fail to do that and that leads to 	 * unexpected and serious consequences during wake up like a system 	 * getting stuck in SMI handlers. 	 * This hack is picked up from Linux, which claims that it follows 	 * Windows behavior. 	 */
+if|if
+condition|(
+name|sleep_result
+operator|==
+literal|1
+operator|&&
+name|state
+operator|!=
+name|ACPI_STATE_S4
+condition|)
+name|AcpiWriteBitRegister
+argument_list|(
+name|ACPI_BITREG_SCI_ENABLE
+argument_list|,
+name|ACPI_ENABLE_EVENT
+argument_list|)
+expr_stmt|;
 name|AcpiLeaveSleepStatePrep
 argument_list|(
 name|state
@@ -12393,9 +12419,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 if|if
 condition|(
 operator|!
