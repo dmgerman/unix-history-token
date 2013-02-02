@@ -277,7 +277,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|mount
+name|domount
 parameter_list|(
 specifier|const
 name|char
@@ -1733,7 +1733,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|mount
+name|domount
 argument_list|(
 name|bootpath
 argument_list|)
@@ -1743,7 +1743,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"mount"
+literal|"domount"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2568,7 +2568,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mount
+name|domount
 parameter_list|(
 specifier|const
 name|char
@@ -2593,7 +2593,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mount: can't open device\n"
+literal|"domount: can't open device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2625,7 +2625,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mount: can't read superblock\n"
+literal|"domount: can't read superblock\n"
 argument_list|)
 expr_stmt|;
 return|return
