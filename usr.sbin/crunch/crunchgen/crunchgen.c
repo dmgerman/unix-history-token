@@ -483,14 +483,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|crunched_skel
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* helper routines for main() */
+end_comment
 
 begin_function_decl
 name|void
@@ -518,6 +513,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|crunched_skel
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
