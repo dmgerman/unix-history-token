@@ -1829,19 +1829,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/* Reset system clock while resuming.  XXX Remove once tested. */
@@ -12468,17 +12460,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 if|if
 condition|(
 operator|!
