@@ -441,7 +441,7 @@ name|SYSCTL_STRING
 argument_list|(
 name|_kern
 argument_list|,
-name|KERN_VERSION
+name|OID_AUTO
 argument_list|,
 name|compiler_version
 argument_list|,
