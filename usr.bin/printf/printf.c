@@ -1965,6 +1965,9 @@ block|{
 operator|*
 name|ip
 operator|=
+operator|*
+name|uip
+operator|=
 literal|0
 expr_stmt|;
 return|return
