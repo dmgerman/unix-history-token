@@ -53,8 +53,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_SS_FLOW_CONTROL
+value|(CPSW_SS_OFFSET + 0x24)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_PORT_OFFSET
 value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_PORT_P_MAX_BLKS
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_PORT_OFFSET + 0x08 + ((p) * 0x100))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_PORT_P_BLK_CNT
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_PORT_OFFSET + 0x0C + ((p) * 0x100))
 end_define
 
 begin_define
@@ -378,6 +405,10 @@ parameter_list|)
 value|(CPSW_ALE_OFFSET + 0x40 + ((p) * 0x04))
 end_define
 
+begin_comment
+comment|/* SL1 is at 0x0D80, SL2 is at 0x0DC0 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -398,6 +429,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_SL_MACSTATUS
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_SL_OFFSET + (0x40 * (p)) + 0x08)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_SL_SOFT_RESET
 parameter_list|(
 name|p
@@ -413,6 +454,26 @@ parameter_list|(
 name|p
 parameter_list|)
 value|(CPSW_SL_OFFSET + (0x40 * (p)) + 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_RX_PAUSE
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_SL_OFFSET + (0x40 * (p)) + 0x18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_TX_PAUSE
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_SL_OFFSET + (0x40 * (p)) + 0x1C)
 end_define
 
 begin_define
@@ -567,6 +628,87 @@ directive|define
 name|CPSW_CPPI_RAM_OFFSET
 value|0x2000
 end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_CPPI_RAM_SIZE
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_SOP
+value|(1<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_EOP
+value|(1<<14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_OWNER
+value|(1<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_EOQ
+value|(1<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_TDOWNCMPLT
+value|(1<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_PKT_ERR_MASK
+value|(3<< 4)
+end_define
+
+begin_struct
+struct|struct
+name|cpsw_cpdma_bd
+block|{
+specifier|volatile
+name|uint32_t
+name|next
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|bufptr
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|buflen
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|bufoff
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|pktlen
+decl_stmt|;
+specifier|volatile
+name|uint16_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
