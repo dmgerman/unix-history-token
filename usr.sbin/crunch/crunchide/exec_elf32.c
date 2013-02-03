@@ -1863,6 +1863,17 @@ name|NULL
 condition|)
 name|free
 argument_list|(
+name|strtabp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nstrtabp
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
 name|nstrtabp
 argument_list|)
 expr_stmt|;
