@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 2008 Hans Petter Selasky<hselasky@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
@@ -20,6 +10,23 @@ end_comment
 begin_comment
 comment|/*  * This file contains the USB templates for an USB Mass Storage Device.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -144,8 +151,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/template/usb_template.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_enum
 enum|enum
@@ -170,21 +192,9 @@ end_enum
 begin_define
 define|#
 directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|STRING_MSC_DATA
 define|\
-value|'U', 0, 'S', 0, 'B', 0, ' ', 0, \   'M', 0, 'a', 0, 's', 0, 's', 0, \   ' ', 0, 'S', 0, 't', 0, 'o', 0, \   'r', 0, 'a', 0, 'g', 0, 'e', 0, \   ' ', 0, 'I', 0, 'n', 0, 't', 0, \   'e', 0, 'r', 0, 'f', 0, 'a', 0, \   'c', 0, 'e', 0,
+value|"U\0S\0B\0 \0M\0a\0s\0s\0 \0S\0t\0o\0r\0a\0g\0e\0 " \   "\0I\0n\0t\0e\0r\0f\0a\0c\0e"
 end_define
 
 begin_define
@@ -192,7 +202,7 @@ define|#
 directive|define
 name|STRING_MSC_CONFIG
 define|\
-value|'D', 0, 'e', 0, 'f', 0, 'a', 0, \   'u', 0, 'l', 0, 't', 0, ' ', 0, \   'c', 0, 'o', 0, 'n', 0, 'f', 0, \   'i', 0, 'g', 0,
+value|"D\0e\0f\0a\0u\0l\0t\0 \0c\0o\0n\0f\0i\0g"
 end_define
 
 begin_define
@@ -200,7 +210,7 @@ define|#
 directive|define
 name|STRING_MSC_VENDOR
 define|\
-value|'F', 0, 'r', 0, 'e', 0, 'e', 0, \   'B', 0, 'S', 0, 'D', 0, ' ', 0, \   'f', 0, 'o', 0, 'u', 0, 'n', 0, \   'd', 0, 'a', 0, 't', 0, 'i', 0, \   'o', 0, 'n', 0,
+value|"F\0r\0e\0e\0B\0S\0D\0 \0f\0o\0u\0n\0d\0a\0t\0i\0o\0n"
 end_define
 
 begin_define
@@ -208,7 +218,7 @@ define|#
 directive|define
 name|STRING_MSC_PRODUCT
 define|\
-value|'U', 0, 'S', 0, 'B', 0, ' ', 0, \   'M', 0, 'e', 0, 'm', 0, 'o', 0, \   'r', 0, 'y', 0, ' ', 0, 'S', 0, \   't', 0, 'i', 0, 'c', 0, 'k', 0
+value|"U\0S\0B\0 \0M\0e\0m\0o\0r\0y\0 \0S\0t\0i\0c\0k"
 end_define
 
 begin_define
@@ -216,22 +226,12 @@ define|#
 directive|define
 name|STRING_MSC_SERIAL
 define|\
-value|'M', 0, 'a', 0, 'r', 0, 'c', 0, \   'h', 0, ' ', 0, '2', 0, '0', 0, \   '0', 0, '8', 0,
+value|"M\0a\0r\0c\0h\0 \0002\0000\0000\08"
 end_define
 
 begin_comment
 comment|/* make the real string descriptors */
 end_comment
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|string_lang
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -623,7 +623,7 @@ name|STRING_LANG_INDEX
 index|]
 operator|=
 operator|&
-name|string_lang
+name|usb_string_lang_en
 block|,
 index|[
 name|STRING_MSC_DATA_INDEX
@@ -671,7 +671,7 @@ block|{
 return|return
 operator|(
 operator|&
-name|string_lang
+name|usb_string_lang_en
 operator|)
 return|;
 block|}

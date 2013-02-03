@@ -7505,6 +7505,8 @@ condition|)
 name|vfs_write_resume
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -7521,7 +7523,7 @@ end_comment
 
 begin_function
 name|void
-name|vfs_write_resume_flags
+name|vfs_write_resume
 parameter_list|(
 name|struct
 name|mount
@@ -7684,26 +7686,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|vfs_write_resume
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-block|{
-name|vfs_write_resume_flags
-argument_list|(
-name|mp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Implement kqueues for files by translating it to vnode operation.  */
 end_comment
@@ -7724,11 +7706,8 @@ modifier|*
 name|kn
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|VOP_KQFILTER
 argument_list|(
 name|fp
@@ -7737,10 +7716,6 @@ name|f_vnode
 argument_list|,
 name|kn
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}

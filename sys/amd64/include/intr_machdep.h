@@ -273,7 +273,7 @@ name|u_int
 name|apic_id
 parameter_list|)
 function_decl|;
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|pic
 argument_list|)

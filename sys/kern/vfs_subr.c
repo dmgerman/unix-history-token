@@ -1208,6 +1208,17 @@ value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
 end_define
 
 begin_comment
+comment|/* Shift count for (uintptr_t)vp to initialize vp->v_hash. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vnsz2log
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Initialize the vnode management data structures.  *  * Reevaluate the following cap on the number of vnodes after the physical  * memory size exceeds 512GB.  In the limit, as the physical memory size  * grows, the ratio of physical pages to vnodes approaches sixteen to one.  */
 end_comment
 
@@ -1240,6 +1251,9 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
+name|u_int
+name|i
+decl_stmt|;
 name|int
 name|physvnodes
 decl_stmt|,
@@ -1451,6 +1465,30 @@ name|sync_wakeup
 argument_list|,
 literal|"syncer"
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnode
+argument_list|)
+condition|;
+name|i
+operator|<<=
+literal|1
+control|)
+name|vnsz2log
+operator|++
+expr_stmt|;
+name|vnsz2log
+operator|--
 expr_stmt|;
 block|}
 end_function
@@ -4369,6 +4407,18 @@ name|vp
 operator|->
 name|v_rl
 argument_list|)
+expr_stmt|;
+comment|/* 	 * For the filesystems which do not use vfs_hash_insert(), 	 * still initialize v_hash to have vfs_hash_index() useful. 	 * E.g., nullfs uses vfs_hash_index() on the lower vnode for 	 * its own hashing. 	 */
+name|vp
+operator|->
+name|v_hash
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|vp
+operator|>>
+name|vnsz2log
 expr_stmt|;
 operator|*
 name|vpp

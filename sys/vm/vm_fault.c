@@ -3266,6 +3266,14 @@ if|if
 condition|(
 name|hardfault
 condition|)
+block|{
+name|PCPU_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_io_faults
+argument_list|)
+expr_stmt|;
 name|curthread
 operator|->
 name|td_ru
@@ -3273,6 +3281,7 @@ operator|.
 name|ru_majflt
 operator|++
 expr_stmt|;
+block|}
 else|else
 name|curthread
 operator|->

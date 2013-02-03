@@ -23,6 +23,12 @@ directive|include
 file|"opt_wlan.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -4212,6 +4218,15 @@ name|superg_ioctl_set80211
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE80211_SUPPORT_SUPERG */
+end_comment
 
 end_unit
 

@@ -14,6 +14,23 @@ name|USB_DEBUG_VAR
 value|usb_proc_debug
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -175,6 +192,15 @@ include|#
 directive|include
 file|<sys/sched.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_if
 if|#

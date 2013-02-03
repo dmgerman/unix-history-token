@@ -200,6 +200,12 @@ name|usb_xfer_root
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|usb_string_lang
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* typedefs */
 end_comment
@@ -552,6 +558,15 @@ specifier|extern
 name|struct
 name|mtx
 name|usb_ref_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_string_lang
+name|usb_string_lang_en
 decl_stmt|;
 end_decl_stmt
 

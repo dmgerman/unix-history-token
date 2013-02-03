@@ -1366,6 +1366,29 @@ argument_list|(
 name|relocation_offset
 argument_list|)
 expr_stmt|;
+comment|/* Do relocation fixup on metadata of each module. */
+for|for
+control|(
+name|xp
+operator|=
+name|file_findfile
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+init|;
+name|xp
+operator|!=
+name|NULL
+condition|;
+name|xp
+operator|=
+name|xp
+operator|->
+name|f_next
+control|)
+block|{
 for|for
 control|(
 name|i
@@ -1391,7 +1414,7 @@ name|md
 operator|=
 name|file_findmetadata
 argument_list|(
-name|kfp
+name|xp
 argument_list|,
 name|mdt
 index|[
@@ -1437,6 +1460,7 @@ sizeof|sizeof
 name|vaddr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Only now copy actual modules and metadata */

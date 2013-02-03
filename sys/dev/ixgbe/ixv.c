@@ -1099,11 +1099,7 @@ argument_list|,
 name|ixv_shutdown
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

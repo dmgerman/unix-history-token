@@ -451,12 +451,27 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vm_pageout_stats_max
-init|=
-literal|0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_pageout_stats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|vm_pageout_stats_interval
-init|=
-literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_pageout_full_stats
 decl_stmt|;
 end_decl_stmt
 
@@ -464,8 +479,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vm_pageout_full_stats_interval
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -473,8 +486,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vm_pageout_algorithm
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -482,8 +493,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|defer_swap_pageouts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -491,8 +500,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|disable_swap_pageouts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -621,16 +628,16 @@ name|_vm
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pageout_full_stats_interval
+name|pageout_stats
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|vm_pageout_full_stats_interval
+name|vm_pageout_stats
 argument_list|,
 literal|0
 argument_list|,
-literal|"Interval for full stats scan"
+literal|"Number of partial stats scans"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -652,6 +659,48 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Interval for partial stats scan"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pageout_full_stats
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|vm_pageout_full_stats
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of full stats scans"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pageout_full_stats_interval
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vm_pageout_full_stats_interval
+argument_list|,
+literal|0
+argument_list|,
+literal|"Interval for full stats scan"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5634,7 +5683,9 @@ begin_function
 specifier|static
 name|void
 name|vm_pageout_page_stats
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|vm_pagequeue
@@ -5718,6 +5769,9 @@ operator|<
 name|vm_pageout_full_stats_interval
 condition|)
 block|{
+name|vm_pageout_stats
+operator|++
+expr_stmt|;
 name|tpcount
 operator|=
 operator|(
@@ -5746,6 +5800,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_pageout_full_stats
+operator|++
+expr_stmt|;
 name|fullintervalcount
 operator|=
 literal|0
@@ -6102,7 +6159,9 @@ begin_function
 specifier|static
 name|void
 name|vm_pageout
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|error
@@ -6570,7 +6629,9 @@ end_comment
 begin_function
 name|void
 name|pagedaemon_wakeup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6676,7 +6737,9 @@ begin_function
 specifier|static
 name|void
 name|vm_daemon
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|rlimit

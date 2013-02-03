@@ -11769,8 +11769,7 @@ name|recover_done_time
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|timespec
+name|time_t
 name|mytime
 decl_stmt|;
 specifier|static
@@ -13094,26 +13093,20 @@ name|lfh
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Call nfscl_cleanupkext() once per second to check for 		 * open/lock owners where the process has exited. 		 */
-name|NFSGETNANOTIME
-argument_list|(
-operator|&
 name|mytime
-argument_list|)
+operator|=
+name|NFSD_MONOSEC
 expr_stmt|;
 if|if
 condition|(
 name|prevsec
 operator|!=
 name|mytime
-operator|.
-name|tv_sec
 condition|)
 block|{
 name|prevsec
 operator|=
 name|mytime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|nfscl_cleanupkext
 argument_list|(
@@ -22734,7 +22727,7 @@ name|NFSCLDL_WRITE
 operator|)
 condition|)
 block|{
-name|NFSGETNANOTIME
+name|nanotime
 argument_list|(
 operator|&
 name|dp

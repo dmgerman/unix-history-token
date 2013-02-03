@@ -459,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|ALTERA_SDCARD_CSD_C_SIZE_MASK0
-value|0xc
+value|0xc0
 end_define
 
 begin_comment
@@ -946,6 +946,13 @@ name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|altera_sdcard_devclass
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

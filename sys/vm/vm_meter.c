@@ -1303,6 +1303,16 @@ end_expr_stmt
 begin_expr_stmt
 name|VM_STATS_VM
 argument_list|(
+name|v_io_faults
+argument_list|,
+literal|"Page faults requiring I/O"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VM_STATS_VM
+argument_list|(
 name|v_cow_faults
 argument_list|,
 literal|"Copy-on-write faults"

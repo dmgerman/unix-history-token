@@ -665,6 +665,12 @@ decl_stmt|;
 name|cap_rights_t
 name|ar_arg_rights
 decl_stmt|;
+name|char
+name|ar_jailname
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

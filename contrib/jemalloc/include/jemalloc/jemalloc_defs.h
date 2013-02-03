@@ -699,6 +699,14 @@ name|JEMALLOC_PURGE_MADVISE_FREE
 end_define
 
 begin_comment
+comment|/*  * Define if operating system has alloca.h header.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAS_ALLOCA_H */
+end_comment
+
+begin_comment
 comment|/* sizeof(void *) == 2^LG_SIZEOF_PTR. */
 end_comment
 

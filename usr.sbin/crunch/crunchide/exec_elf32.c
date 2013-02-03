@@ -22,7 +22,7 @@ literal|0
 end_if
 
 begin_endif
-unit|__RCSID("$NetBSD: exec_elf32.c,v 1.4 1997/08/12 06:07:24 mikel Exp $");
+unit|__RCSID("$NetBSD: exec_elf32.c,v 1.6 1999/09/20 04:12:16 christos Exp $");
 endif|#
 directive|endif
 end_endif
@@ -437,7 +437,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|rv
 operator|=
 name|read
@@ -448,7 +451,7 @@ name|buf
 argument_list|,
 name|size
 argument_list|)
-operator|)
+argument_list|)
 operator|!=
 name|size
 condition|)
@@ -538,7 +541,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|rv
 operator|=
 name|write
@@ -549,7 +555,7 @@ name|buf
 argument_list|,
 name|size
 argument_list|)
-operator|)
+argument_list|)
 operator|!=
 name|size
 condition|)
@@ -761,8 +767,13 @@ name|sb
 operator|.
 name|st_size
 operator|<
+call|(
+name|off_t
+call|)
+argument_list|(
 sizeof|sizeof
 name|eh
+argument_list|)
 condition|)
 return|return
 literal|0
@@ -1398,6 +1409,9 @@ name|bad
 goto|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|xreadatoff
 argument_list|(
 name|fd
@@ -1459,6 +1473,9 @@ name|bad
 goto|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|xreadatoff
 argument_list|(
 name|fd
@@ -1739,6 +1756,9 @@ name|bad
 goto|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|xwriteatoff
 argument_list|(
 name|fd
@@ -1844,6 +1864,17 @@ condition|)
 name|free
 argument_list|(
 name|strtabp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nstrtabp
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|nstrtabp
 argument_list|)
 expr_stmt|;
 return|return

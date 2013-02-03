@@ -6062,7 +6062,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	if (oldp != NULL&& oldlenp != NULL) {				\ 		if (*oldlenp != sizeof(t)) {				\ 			size_t	copylen = (sizeof(t)<= *oldlenp)	\ 			    ? sizeof(t) : *oldlenp;			\ 			memcpy(oldp, (void *)&v, copylen);		\ 			ret = EINVAL;					\ 			goto label_return;				\ 		} else							\ 			*(t *)oldp = v;					\ 	}								\ } while (0)
+value|do {						\ 	if (oldp != NULL&& oldlenp != NULL) {				\ 		if (*oldlenp != sizeof(t)) {				\ 			size_t	copylen = (sizeof(t)<= *oldlenp)	\ 			    ? sizeof(t) : *oldlenp;			\ 			memcpy(oldp, (void *)&(v), copylen);		\ 			ret = EINVAL;					\ 			goto label_return;				\ 		} else							\ 			*(t *)oldp = (v);				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -6074,7 +6074,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	if (newp != NULL) {						\ 		if (newlen != sizeof(t)) {				\ 			ret = EINVAL;					\ 			goto label_return;				\ 		}							\ 		v = *(t *)newp;						\ 	}								\ } while (0)
+value|do {						\ 	if (newp != NULL) {						\ 		if (newlen != sizeof(t)) {				\ 			ret = EINVAL;					\ 			goto label_return;				\ 		}							\ 		(v) = *(t *)newp;					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -6097,7 +6097,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	if (l)								\ 		malloc_mutex_lock(&ctl_mtx);				\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	if (l)								\ 		malloc_mutex_unlock(&ctl_mtx);				\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	if (l)								\ 		malloc_mutex_lock(&ctl_mtx);				\ 	READONLY();							\ 	oldval = (v);							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	if (l)								\ 		malloc_mutex_unlock(&ctl_mtx);				\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -6114,7 +6114,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = (v);							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -6129,7 +6129,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	malloc_mutex_lock(&ctl_mtx);					\ 	READONLY();							\ 	oldval = (v);							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	malloc_mutex_unlock(&ctl_mtx);					\ 	return (ret);							\ }
 end_define
 
 begin_comment
@@ -6150,7 +6150,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	if ((c) == false)						\ 		return (ENOENT);					\ 	READONLY();							\ 	oldval = (v);							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -6165,7 +6165,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	READONLY();							\ 	oldval = v;							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
+value|static int								\ n##_ctl(const size_t *mib, size_t miblen, void *oldp, size_t *oldlenp,	\     void *newp, size_t newlen)						\ {									\ 	int ret;							\ 	t oldval;							\ 									\ 	READONLY();							\ 	oldval = (v);							\ 	READ(oldval, t);						\ 									\ 	ret = 0;							\ label_return:								\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -8289,6 +8289,9 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|unsigned
+name|narenas
+decl_stmt|;
 name|malloc_mutex_lock
 argument_list|(
 operator|&
@@ -8312,13 +8315,17 @@ goto|goto
 name|label_return
 goto|;
 block|}
-name|READ
-argument_list|(
+name|narenas
+operator|=
 name|ctl_stats
 operator|.
 name|narenas
 operator|-
 literal|1
+expr_stmt|;
+name|READ
+argument_list|(
+name|narenas
 argument_list|,
 name|unsigned
 argument_list|)

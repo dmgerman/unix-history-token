@@ -618,28 +618,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_MAX_AUTOTUNE_NMBCLUSTERS
-end_ifndef
-
-begin_comment
-comment|/* old maxusers max value. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_AUTOTUNE_NMBCLUSTERS
-value|(1024 + VM_MAX_AUTOTUNE_MAXUSERS * 64)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif

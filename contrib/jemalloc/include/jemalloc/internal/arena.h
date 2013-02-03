@@ -561,20 +561,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arena_prof_accum
-parameter_list|(
-name|arena_t
-modifier|*
-name|arena
-parameter_list|,
-name|uint64_t
-name|accumbytes
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|arena_tcache_fill_small
 parameter_list|(
 name|arena_t
@@ -1283,6 +1269,48 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|arena_prof_accum_impl
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|uint64_t
+name|accumbytes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|arena_prof_accum_locked
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|uint64_t
+name|accumbytes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|arena_prof_accum
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|uint64_t
+name|accumbytes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|size_t
 name|arena_ptr_small_binind_get
 parameter_list|(
@@ -1447,7 +1475,7 @@ name|JEMALLOC_ARENA_INLINE_A
 end_ifdef
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|arena_chunk_map_t
 modifier|*
 name|arena_mapp_get
@@ -1491,7 +1519,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 modifier|*
 name|arena_mapbitsp_get
@@ -1521,7 +1549,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_get
 parameter_list|(
@@ -1548,7 +1576,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_unallocated_size_get
 parameter_list|(
@@ -1599,7 +1627,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_large_size_get
 parameter_list|(
@@ -1654,7 +1682,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_small_runind_get
 parameter_list|(
@@ -1704,7 +1732,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_binind_get
 parameter_list|(
@@ -1761,7 +1789,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_dirty_get
 parameter_list|(
@@ -1796,7 +1824,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_unzeroed_get
 parameter_list|(
@@ -1831,7 +1859,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_large_get
 parameter_list|(
@@ -1866,7 +1894,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_mapbits_allocated_get
 parameter_list|(
@@ -1901,7 +1929,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_mapbits_unallocated_set
 parameter_list|(
@@ -1983,7 +2011,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_mapbits_unallocated_size_set
 parameter_list|(
@@ -2054,7 +2082,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_mapbits_large_set
 parameter_list|(
@@ -2137,7 +2165,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_mapbits_large_binind_set
 parameter_list|(
@@ -2205,7 +2233,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_mapbits_small_set
 parameter_list|(
@@ -2302,7 +2330,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_mapbits_unzeroed_set
 parameter_list|(
@@ -2348,6 +2376,145 @@ end_function
 
 begin_function
 name|JEMALLOC_INLINE
+name|void
+name|arena_prof_accum_impl
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|uint64_t
+name|accumbytes
+parameter_list|)
+block|{
+name|cassert
+argument_list|(
+name|config_prof
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|prof_interval
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|arena
+operator|->
+name|prof_accumbytes
+operator|+=
+name|accumbytes
+expr_stmt|;
+if|if
+condition|(
+name|arena
+operator|->
+name|prof_accumbytes
+operator|>=
+name|prof_interval
+condition|)
+block|{
+name|prof_idump
+argument_list|()
+expr_stmt|;
+name|arena
+operator|->
+name|prof_accumbytes
+operator|-=
+name|prof_interval
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|JEMALLOC_INLINE
+name|void
+name|arena_prof_accum_locked
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|uint64_t
+name|accumbytes
+parameter_list|)
+block|{
+name|cassert
+argument_list|(
+name|config_prof
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prof_interval
+operator|==
+literal|0
+condition|)
+return|return;
+name|arena_prof_accum_impl
+argument_list|(
+name|arena
+argument_list|,
+name|accumbytes
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|JEMALLOC_INLINE
+name|void
+name|arena_prof_accum
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|uint64_t
+name|accumbytes
+parameter_list|)
+block|{
+name|cassert
+argument_list|(
+name|config_prof
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prof_interval
+operator|==
+literal|0
+condition|)
+return|return;
+name|malloc_mutex_lock
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|arena_prof_accum_impl
+argument_list|(
+name|arena
+argument_list|,
+name|accumbytes
+argument_list|)
+expr_stmt|;
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_ptr_small_binind_get
 parameter_list|(
@@ -3481,7 +3648,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|arena_malloc
@@ -3632,7 +3799,7 @@ comment|/* Return the size of the allocation pointed to by ptr. */
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|arena_salloc
 parameter_list|(
@@ -3910,7 +4077,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|arena_dalloc
 parameter_list|(

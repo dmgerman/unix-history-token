@@ -449,11 +449,22 @@ begin_comment
 comment|/* USB events */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -857,6 +868,12 @@ begin_comment
 comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectivly:  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_ID_SECTION
+end_if
+
 begin_define
 define|#
 directive|define
@@ -880,6 +897,44 @@ name|STRUCT_USB_DUAL_ID
 define|\
 value|struct usb_device_id __section("usb_dual_id")
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_HOST_ID
+define|\
+value|struct usb_device_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DEVICE_ID
+define|\
+value|struct usb_device_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DUAL_ID
+define|\
+value|struct usb_device_id
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_HAVE_ID_SECTION */
+end_comment
 
 begin_comment
 comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb_device_id".  */

@@ -6744,6 +6744,9 @@ operator|.
 name|pv_va
 argument_list|)
 expr_stmt|;
+name|arm_intrnames_init
+argument_list|()
+expr_stmt|;
 name|arm_vector_init
 argument_list|(
 name|ARM_VECTORS_HIGH

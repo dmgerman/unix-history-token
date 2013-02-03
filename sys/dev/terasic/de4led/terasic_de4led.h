@@ -172,6 +172,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|terasic_de4led_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

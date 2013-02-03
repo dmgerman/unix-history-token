@@ -3089,6 +3089,27 @@ name|ic_vaps
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+comment|/* 	 * Just ensure that we aren't being called when the last 	 * VAP is destroyed. 	 */
+if|if
+condition|(
+name|vap
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: called with no VAPs\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ni
 operator|=
 name|ieee80211_ref_node

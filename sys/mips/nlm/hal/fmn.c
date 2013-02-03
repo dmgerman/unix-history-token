@@ -109,13 +109,16 @@ name|int
 name|credit
 parameter_list|)
 block|{
-name|uint32_t
+name|uint64_t
 name|val
 decl_stmt|;
 name|val
 operator|=
 operator|(
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|credit
 operator|<<
 literal|24

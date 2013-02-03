@@ -1736,6 +1736,25 @@ literal|200809
 end_if
 
 begin_function_decl
+name|FILE
+modifier|*
+name|fmemopen
+parameter_list|(
+name|void
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|getdelim
 parameter_list|(

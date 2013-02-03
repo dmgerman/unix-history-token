@@ -19,6 +19,12 @@ directive|define
 name|_USB_PROCESS_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -36,6 +42,11 @@ include|#
 directive|include
 file|<sys/runq.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* defines */

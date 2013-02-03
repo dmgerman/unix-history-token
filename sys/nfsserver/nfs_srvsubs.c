@@ -5664,12 +5664,10 @@ break|break;
 case|case
 name|NFSV3SATTRTIME_TOSERVER
 case|:
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
-operator|(
 name|a
-operator|)
 operator|->
 name|va_atime
 argument_list|)
@@ -5761,12 +5759,10 @@ break|break;
 case|case
 name|NFSV3SATTRTIME_TOSERVER
 case|:
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
-operator|(
 name|a
-operator|)
 operator|->
 name|va_mtime
 argument_list|)

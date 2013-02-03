@@ -148,7 +148,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] TXSTATUS\n"
+literal|"[%u] [%llu] TXSTATUS: TxDone=%d, TS=0x%08x\n\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -175,6 +175,32 @@ operator|->
 name|hdr
 operator|.
 name|threadid
+argument_list|)
+argument_list|,
+name|MF
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status1
+argument_list|,
+name|AR_Done
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status0
+argument_list|,
+name|AR_SendTimestamp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -812,7 +838,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] RXSTATUS\n"
+literal|"[%u] [%llu] RXSTATUS: RxOK=%d TS=0x%08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -839,6 +865,24 @@ operator|->
 name|hdr
 operator|.
 name|threadid
+argument_list|)
+argument_list|,
+name|MF
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus1
+argument_list|,
+name|AR_Done
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus1
+argument_list|,
+name|AR_RcvTimestamp
 argument_list|)
 argument_list|)
 expr_stmt|;

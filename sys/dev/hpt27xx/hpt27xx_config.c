@@ -163,6 +163,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 name|driver_name
 index|[]
@@ -172,6 +173,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|driver_name_long
 index|[]
@@ -181,15 +183,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|driver_ver
 index|[]
 init|=
-literal|"v1.0 ("
-name|__DATE__
-literal|" "
-name|__TIME__
-literal|")"
+literal|"v1.0"
 decl_stmt|;
 end_decl_stmt
 

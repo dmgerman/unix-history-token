@@ -2003,11 +2003,7 @@ argument_list|,
 name|igb_resume
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -20629,7 +20625,7 @@ init|=
 literal|0
 init|;
 name|j
-operator|>
+operator|<
 name|i
 condition|;
 operator|++
@@ -20643,7 +20639,7 @@ name|adapter
 operator|->
 name|rx_rings
 index|[
-name|i
+name|j
 index|]
 expr_stmt|;
 name|IGB_RX_LOCK

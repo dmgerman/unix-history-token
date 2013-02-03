@@ -4270,7 +4270,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBUSY
+name|ENETDOWN
 operator|)
 return|;
 block|}
@@ -9372,7 +9372,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBUSY
+name|ENETDOWN
 operator|)
 return|;
 block|}

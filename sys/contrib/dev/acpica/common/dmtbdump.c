@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -1570,6 +1570,10 @@ name|ACPI_CSRT_GROUP
 modifier|*
 name|SubTable
 decl_stmt|;
+name|ACPI_CSRT_SHARED_INFO
+modifier|*
+name|SharedInfoTable
+decl_stmt|;
 name|ACPI_CSRT_DESCRIPTOR
 modifier|*
 name|SubSubTable
@@ -1620,6 +1624,7 @@ operator|->
 name|Length
 condition|)
 block|{
+comment|/* Resource group subtable */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -1652,6 +1657,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* Shared info subtable (One per resource group) */
 name|SubOffset
 operator|=
 sizeof|sizeof
@@ -1659,31 +1665,61 @@ argument_list|(
 name|ACPI_CSRT_GROUP
 argument_list|)
 expr_stmt|;
-comment|/* Shared resource group info buffer */
-name|AcpiDmDumpBuffer
+name|SharedInfoTable
+operator|=
+name|ACPI_ADD_PTR
 argument_list|(
-name|SubTable
+name|ACPI_CSRT_SHARED_INFO
 argument_list|,
+name|Table
+argument_list|,
+name|Offset
+operator|+
 name|SubOffset
-argument_list|,
-name|SubTable
-operator|->
-name|InfoLength
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
 argument_list|,
 name|Offset
 operator|+
 name|SubOffset
 argument_list|,
-literal|"Shared Data"
+name|SharedInfoTable
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_CSRT_SHARED_INFO
+argument_list|)
+argument_list|,
+name|AcpiDmTableInfoCsrt1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 name|SubOffset
 operator|+=
 name|SubTable
 operator|->
-name|InfoLength
+name|SharedInfoLength
 expr_stmt|;
-comment|/* Sub-Sub-tables (Resource Descriptors) */
+comment|/* Sub-Subtables (Resource Descriptors) */
 name|SubSubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -1741,7 +1777,7 @@ name|SubSubTable
 operator|->
 name|Length
 argument_list|,
-name|AcpiDmTableInfoCsrt1
+name|AcpiDmTableInfoCsrt2
 argument_list|)
 expr_stmt|;
 if|if
@@ -1791,7 +1827,7 @@ name|SubSubOffset
 operator|+=
 name|InfoLength
 expr_stmt|;
-comment|/* Point to next sub-sub-table */
+comment|/* Point to next sub-subtable */
 name|SubOffset
 operator|+=
 name|SubSubTable

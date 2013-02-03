@@ -170,11 +170,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+name|u_int
+name|vfs_hash_index
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vp
+operator|->
+name|v_hash
+operator|+
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_hashseed
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|struct
 name|vfs_hash_head
 modifier|*
-name|vfs_hash_index
+name|vfs_hash_bucket
 parameter_list|(
 specifier|const
 name|struct
@@ -265,7 +291,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|vp
 argument_list|,
-argument|vfs_hash_index(mp, hash)
+argument|vfs_hash_bucket(mp, hash)
 argument_list|,
 argument|v_hashlist
 argument_list|)
@@ -484,7 +510,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|vp2
 argument_list|,
-argument|vfs_hash_index(vp->v_mount, hash)
+argument|vfs_hash_bucket(vp->v_mount, hash)
 argument_list|,
 argument|v_hashlist
 argument_list|)
@@ -621,7 +647,7 @@ name|hash
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
-name|vfs_hash_index
+name|vfs_hash_bucket
 argument_list|(
 name|vp
 operator|->
@@ -677,7 +703,7 @@ argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
-name|vfs_hash_index
+name|vfs_hash_bucket
 argument_list|(
 name|vp
 operator|->

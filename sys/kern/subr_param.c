@@ -347,16 +347,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|quad_t
-name|maxmbufmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max mbuf memory */
-end_comment
-
-begin_decl_stmt
 name|pid_t
 name|pid_max
 init|=
@@ -843,6 +833,9 @@ comment|/* Xen */
 literal|"BHYVE"
 block|,
 comment|/* bhyve */
+literal|"Seabios"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
@@ -870,6 +863,9 @@ comment|/* Sun xVM VirtualBox */
 literal|"Parallels Virtual Platform"
 block|,
 comment|/* Parallels VM */
+literal|"KVM"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
@@ -1281,9 +1277,6 @@ name|long
 name|physpages
 parameter_list|)
 block|{
-name|quad_t
-name|realmem
-decl_stmt|;
 comment|/* Base parameters */
 name|maxusers
 operator|=
@@ -1463,14 +1456,19 @@ operator|&
 name|nbuf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 */
+comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 * 	 * Clip callout to result of previous function of maxusers maximum 	 * 384.  This is still huge, but acceptable. 	 */
 name|ncallout
 operator|=
+name|imin
+argument_list|(
 literal|16
 operator|+
 name|maxproc
 operator|+
 name|maxfiles
+argument_list|,
+literal|18508
+argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -1479,59 +1477,6 @@ argument_list|,
 operator|&
 name|ncallout
 argument_list|)
-expr_stmt|;
-comment|/* 	 * The default limit for all mbuf related memory is 1/2 of all 	 * available kernel memory (physical or kmem). 	 * At most it can be 3/4 of available kernel memory. 	 */
-name|realmem
-operator|=
-name|qmin
-argument_list|(
-operator|(
-name|quad_t
-operator|)
-name|physpages
-operator|*
-name|PAGE_SIZE
-argument_list|,
-name|VM_MAX_KERNEL_ADDRESS
-operator|-
-name|VM_MIN_KERNEL_ADDRESS
-argument_list|)
-expr_stmt|;
-name|maxmbufmem
-operator|=
-name|realmem
-operator|/
-literal|2
-expr_stmt|;
-name|TUNABLE_QUAD_FETCH
-argument_list|(
-literal|"kern.maxmbufmem"
-argument_list|,
-operator|&
-name|maxmbufmem
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maxmbufmem
-operator|>
-operator|(
-name|realmem
-operator|/
-literal|4
-operator|)
-operator|*
-literal|3
-condition|)
-name|maxmbufmem
-operator|=
-operator|(
-name|realmem
-operator|/
-literal|4
-operator|)
-operator|*
-literal|3
 expr_stmt|;
 comment|/* 	 * The default for maxpipekva is min(1/64 of the kernel address space, 	 * max(1/64 of main memory, 512KB)).  See sys_pipe.c for more details. 	 */
 name|maxpipekva

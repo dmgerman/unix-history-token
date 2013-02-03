@@ -2865,6 +2865,12 @@ name|int32_t
 name|ss_nf_temp_data
 decl_stmt|;
 comment|/* temperature data taken during nf scan */
+name|int
+name|ss_enabled
+decl_stmt|;
+name|int
+name|ss_active
+decl_stmt|;
 block|}
 name|HAL_SPECTRAL_PARAM
 typedef|;

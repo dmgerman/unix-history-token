@@ -1930,7 +1930,6 @@ name|overwrite
 goto|;
 block|}
 block|}
-comment|/* 		 * IPv4 arp command retries with sin_other = SIN_PROXY here. 		 */
 name|fprintf
 argument_list|(
 name|stderr
@@ -2416,7 +2415,6 @@ goto|goto
 name|delete
 goto|;
 block|}
-comment|/* 		 * IPv4 arp command retries with sin_other = SIN_PROXY here. 		 */
 name|fprintf
 argument_list|(
 name|stderr
@@ -4579,6 +4577,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ND6_IFF_NO_PREFER_IFACE
+name|SETFLAG
+argument_list|(
+literal|"no_prefer_iface"
+argument_list|,
+name|ND6_IFF_NO_PREFER_IFACE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SETVALUE
 argument_list|(
 literal|"basereachable"
@@ -4986,6 +4996,26 @@ condition|)
 name|printf
 argument_list|(
 literal|"auto_linklocal "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ND6_IFF_NO_PREFER_IFACE
+if|if
+condition|(
+operator|(
+name|ND
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_NO_PREFER_IFACE
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"no_prefer_iface "
 argument_list|)
 expr_stmt|;
 endif|#

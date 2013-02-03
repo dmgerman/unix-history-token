@@ -233,7 +233,7 @@ modifier|*
 name|sdl
 parameter_list|,
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|s_in
 parameter_list|,
@@ -282,9 +282,6 @@ parameter_list|(
 name|char
 modifier|*
 name|host
-parameter_list|,
-name|int
-name|do_proxy
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -350,7 +347,7 @@ name|int
 name|cmd
 parameter_list|,
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|dst
 parameter_list|,
@@ -381,7 +378,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|getaddr
 parameter_list|(
@@ -435,8 +432,6 @@ name|int
 name|flags
 decl_stmt|,
 name|doing_proxy
-decl_stmt|,
-name|proxy_only
 decl_stmt|;
 end_decl_stmt
 
@@ -779,8 +774,6 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|rtn
@@ -823,46 +816,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-if|if
-condition|(
-name|argc
-operator|==
-literal|2
-operator|&&
-name|strncmp
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"pub"
-argument_list|,
-literal|3
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|ch
-operator|=
-name|SIN_PROXY
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|argc
-operator|==
-literal|1
-condition|)
-name|ch
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|usage
-argument_list|()
-expr_stmt|;
 name|rtn
 operator|=
 name|delete
@@ -871,11 +824,8 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|ch
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|F_FILESET
@@ -1201,13 +1151,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a hostname, fills up a (static) struct sockaddr_inarp with  * the address of the host and returns a pointer to the  * structure.  */
+comment|/*  * Given a hostname, fills up a (static) struct sockaddr_in with  * the address of the host and returns a pointer to the  * structure.  */
 end_comment
 
 begin_function
 specifier|static
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|getaddr
 parameter_list|(
@@ -1223,7 +1173,7 @@ name|hp
 decl_stmt|;
 specifier|static
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 name|reply
 decl_stmt|;
 name|bzero
@@ -1413,12 +1363,12 @@ name|argv
 parameter_list|)
 block|{
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|addr
 decl_stmt|;
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|dst
 decl_stmt|;
@@ -1514,8 +1464,6 @@ return|;
 name|doing_proxy
 operator|=
 name|flags
-operator|=
-name|proxy_only
 operator|=
 name|expire_time
 operator|=
@@ -1649,10 +1597,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|proxy_only
-operator|=
-literal|1
-expr_stmt|;
+comment|/* 				 * Compatibility: in pre FreeBSD 8 times 				 * the "only" keyword used to mean that 				 * an ARP entry should be announced, but 				 * not installed into routing table. 				 */
 name|argc
 operator|--
 expr_stmt|;
@@ -1915,7 +1860,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 operator|*
 operator|)
 operator|(
@@ -2033,7 +1978,7 @@ name|host
 parameter_list|)
 block|{
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|addr
 decl_stmt|;
@@ -2127,13 +2072,10 @@ parameter_list|(
 name|char
 modifier|*
 name|host
-parameter_list|,
-name|int
-name|do_proxy
 parameter_list|)
 block|{
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|addr
 decl_stmt|,
@@ -2248,7 +2190,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 operator|*
 operator|)
 operator|(
@@ -2435,7 +2377,7 @@ modifier|*
 name|rtm
 decl_stmt|;
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|sin2
 decl_stmt|;
@@ -2668,7 +2610,7 @@ name|sin2
 operator|=
 operator|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 operator|*
 operator|)
 operator|(
@@ -2800,7 +2742,7 @@ modifier|*
 name|sdl
 parameter_list|,
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|addr
 parameter_list|,
@@ -3119,19 +3061,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|addr
-operator|->
-name|sin_other
-operator|&
-name|SIN_PROXY
-condition|)
-name|printf
-argument_list|(
-literal|" published (proxy only)"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|rtm
 operator|->
 name|rtm_flags
@@ -3313,7 +3242,7 @@ name|sdl
 name|__unused
 parameter_list|,
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|addr
 parameter_list|,
@@ -3349,14 +3278,9 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|delete
 argument_list|(
 name|ip
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3410,7 +3334,7 @@ name|int
 name|cmd
 parameter_list|,
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|dst
 parameter_list|,
@@ -3637,28 +3561,10 @@ operator||
 name|RTF_LLDATA
 operator|)
 expr_stmt|;
-name|dst
-operator|->
-name|sin_other
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|doing_proxy
 condition|)
-block|{
-if|if
-condition|(
-name|proxy_only
-condition|)
-name|dst
-operator|->
-name|sin_other
-operator|=
-name|SIN_PROXY
-expr_stmt|;
-else|else
 block|{
 name|rtm
 operator|->
@@ -3673,7 +3579,6 @@ operator|&=
 operator|~
 name|RTF_HOST
 expr_stmt|;
-block|}
 block|}
 comment|/* FALLTHROUGH */
 case|case

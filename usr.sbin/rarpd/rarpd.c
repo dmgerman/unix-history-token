@@ -3300,14 +3300,14 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 name|sin_inarp
 init|=
 block|{
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 argument_list|)
 block|,
 name|AF_INET
@@ -3321,11 +3321,7 @@ block|,
 block|{
 literal|0
 block|}
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3397,7 +3393,7 @@ name|int
 name|cc
 decl_stmt|;
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|ar
 decl_stmt|,
@@ -3552,7 +3548,7 @@ name|ar2
 operator|=
 operator|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 operator|*
 operator|)
 name|rtmsg

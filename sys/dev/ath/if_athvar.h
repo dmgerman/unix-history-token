@@ -388,10 +388,6 @@ name|int
 name|isfiltered
 decl_stmt|;
 comment|/* is this node currently filtered */
-name|int
-name|clrdmask
-decl_stmt|;
-comment|/* has clrdmask been set */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
@@ -488,6 +484,10 @@ name|uint32_t
 name|an_swq_depth
 decl_stmt|;
 comment|/* how many SWQ packets for this 					   node */
+name|int
+name|clrdmask
+decl_stmt|;
+comment|/* has clrdmask been set */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -857,6 +857,10 @@ name|int32_t
 name|bfs_txantenna
 decl_stmt|;
 comment|/* TX antenna config */
+name|uint16_t
+name|bfs_nextpktlen
+decl_stmt|;
+comment|/* length of next frag pkt */
 comment|/* Make this an 8 bit value? */
 name|enum
 name|ieee80211_protmode
@@ -1789,6 +1793,10 @@ index|[
 name|HAL_NUM_TX_QUEUES
 index|]
 decl_stmt|;
+comment|/* 	 * This is (currently) protected by the TX queue lock; 	 * it should migrate to a separate lock later 	 * so as to minimise contention. 	 */
+name|ath_bufhead
+name|sc_txbuf_list
+decl_stmt|;
 name|int
 name|sc_rx_statuslen
 decl_stmt|;
@@ -1886,6 +1894,12 @@ modifier|*
 name|sc_tq
 decl_stmt|;
 comment|/* private task queue */
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tx_tq
+decl_stmt|;
+comment|/* private TX task queue */
 name|struct
 name|ath_hal
 modifier|*
@@ -2420,6 +2434,11 @@ name|task
 name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
+name|struct
+name|task
+name|sc_txpkttask
+decl_stmt|;
+comment|/* tx frame processing */
 name|struct
 name|ath_descdma
 name|sc_txcompdma

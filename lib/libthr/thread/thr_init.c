@@ -1814,6 +1814,10 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Always use our rtld lock implementation. 		 * It is faster because it postpones signal handlers 		 * instead of calling sigprocmask(2). 		 */
+name|_thr_rtld_init
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function

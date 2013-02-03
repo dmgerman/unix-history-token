@@ -362,7 +362,7 @@ decl_stmt|;
 name|int
 name|cur_button
 init|=
-literal|0
+literal|5
 decl_stmt|,
 name|cur_part
 init|=

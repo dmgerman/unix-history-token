@@ -76,7 +76,9 @@ end_comment
 begin_function
 name|long
 name|networkdelta
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|hosttbl

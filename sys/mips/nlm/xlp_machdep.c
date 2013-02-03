@@ -612,6 +612,64 @@ end_function
 begin_function
 specifier|static
 name|void
+name|xlp_enable_blocks
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint64_t
+name|sysbase
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|XLP_MAX_NODES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|nlm_dev_exists
+argument_list|(
+name|XLP_IO_SYS_OFFSET
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+condition|)
+continue|continue;
+name|sysbase
+operator|=
+name|nlm_get_sys_regbase
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|nlm_sys_enable_block
+argument_list|(
+name|sysbase
+argument_list|,
+name|DFS_DEVICE_RSA
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|xlp_parse_mmu_options
 parameter_list|(
 name|void
@@ -1827,17 +1885,12 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* entry for kernel image, set by xlp_mem_init*/
+comment|/* for kernel image region, see xlp_mem_init */
 literal|0x0c000000
-block|,
-literal|0x0d000000
-block|,
-comment|/* uboot mess */
-literal|0x10000000
 block|,
 literal|0x14000000
 block|,
-comment|/* cms queue and other stuff */
+comment|/* uboot area, cms queue and other stuff */
 literal|0x1fc00000
 block|,
 literal|0x1fd00000
@@ -2516,6 +2569,9 @@ endif|#
 directive|endif
 comment|/* setup for the startup core */
 name|xlp_setup_mmu
+argument_list|()
+expr_stmt|;
+name|xlp_enable_blocks
 argument_list|()
 expr_stmt|;
 comment|/* Read/Guess/setup board information */

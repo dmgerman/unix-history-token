@@ -977,6 +977,14 @@ literal|"OFFLINE"
 operator|)
 return|;
 case|case
+name|G_RAID_DISK_S_DISABLED
+case|:
+return|return
+operator|(
+literal|"DISABLED"
+operator|)
+return|;
+case|case
 name|G_RAID_DISK_S_FAILED
 case|:
 return|return
@@ -2965,6 +2973,22 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|disk
+operator|->
+name|d_state
+operator|==
+name|G_RAID_DISK_S_DISABLED
+condition|)
+block|{
+name|s
+operator|=
+name|G_STATE_ACTIVE
+expr_stmt|;
+comment|/* XXX */
+block|}
+elseif|else
 if|if
 condition|(
 name|disk

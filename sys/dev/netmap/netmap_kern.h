@@ -336,7 +336,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->cur - ring->reserved  *  *	nr_hwavail	the number of slots "owned" by userspace.  *			nr_hwavail =:= ring->avail + ring->reserved  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  */
+comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->cur - ring->reserved  *  *	nr_hwavail	the number of slots "owned" by userspace.  *			nr_hwavail =:= ring->avail + ring->reserved  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  */
 end_comment
 
 begin_struct
@@ -366,6 +366,10 @@ comment|// Pending interrupt.
 name|u_int
 name|nkr_num_slots
 decl_stmt|;
+name|uint16_t
+name|nkr_slot_flags
+decl_stmt|;
+comment|/* initial value for flags */
 name|int
 name|nkr_hwofs
 decl_stmt|;
@@ -558,6 +562,34 @@ name|ring
 parameter_list|,
 name|int
 name|lock
+parameter_list|)
+function_decl|;
+comment|/* return configuration information */
+name|int
+function_decl|(
+modifier|*
+name|nm_config
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
+name|txr
+parameter_list|,
+name|u_int
+modifier|*
+name|txd
+parameter_list|,
+name|u_int
+modifier|*
+name|rxr
+parameter_list|,
+name|u_int
+modifier|*
+name|rxd
 parameter_list|)
 function_decl|;
 name|int

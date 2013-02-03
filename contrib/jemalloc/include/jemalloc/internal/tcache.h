@@ -704,7 +704,7 @@ end_macro
 begin_macro
 name|malloc_tsd_funcs
 argument_list|(
-argument|JEMALLOC_INLINE
+argument|JEMALLOC_ALWAYS_INLINE
 argument_list|,
 argument|tcache
 argument_list|,
@@ -732,7 +732,7 @@ end_macro
 begin_macro
 name|malloc_tsd_funcs
 argument_list|(
-argument|JEMALLOC_INLINE
+argument|JEMALLOC_ALWAYS_INLINE
 argument_list|,
 argument|tcache_enabled
 argument_list|,
@@ -959,7 +959,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|tcache_t
 modifier|*
 name|tcache_get
@@ -1127,7 +1127,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|tcache_event
 parameter_list|(
@@ -1174,7 +1174,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|tcache_alloc_easy
@@ -1256,7 +1256,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|tcache_alloc_small
@@ -1445,6 +1445,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|VALGRIND_MAKE_MEM_UNDEFINED
+argument_list|(
+name|ret
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1486,7 +1493,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|tcache_alloc_large
@@ -1710,6 +1717,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|VALGRIND_MAKE_MEM_UNDEFINED
+argument_list|(
+name|ret
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1747,7 +1761,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|tcache_dalloc_small
 parameter_list|(
@@ -1881,7 +1895,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|tcache_dalloc_large
 parameter_list|(

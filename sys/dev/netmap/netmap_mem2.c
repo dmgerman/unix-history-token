@@ -1327,7 +1327,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ND
+name|D
 argument_list|(
 literal|"address %p is not contained inside any cluster (%s)"
 argument_list|,
@@ -2118,6 +2118,10 @@ name|PAGE_SIZE
 operator|-
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|netmap_verbose
+condition|)
 name|D
 argument_list|(
 literal|"objsize %d clustsize %d objects %d"
@@ -2636,6 +2640,10 @@ operator|~
 literal|3
 expr_stmt|;
 comment|/* objs 0 and 1 is always busy */
+if|if
+condition|(
+name|netmap_verbose
+condition|)
 name|D
 argument_list|(
 literal|"Pre-allocated %d clusters (%d/%dKB) for '%s'"
@@ -2955,7 +2963,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|D
+name|ND
 argument_list|(
 literal|"busy (refcount %d)"
 argument_list|,
@@ -3295,6 +3303,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|na
+operator|->
+name|tx_rings
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -3379,11 +3395,34 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|na
+operator|->
+name|tx_rings
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|na
+operator|->
+name|tx_rings
+operator|=
+name|na
+operator|->
+name|rx_rings
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
 comment|/* call with NMA_LOCK held */
+end_comment
+
+begin_comment
+comment|/*  * Allocate the per-fd structure netmap_if.  * If this is the first instance, also allocate the krings, rings etc.  */
 end_comment
 
 begin_function
@@ -3423,32 +3462,47 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|ndesc
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|ntx
-init|=
-name|na
-operator|->
-name|num_tx_rings
-operator|+
-literal|1
-decl_stmt|;
-comment|/* shorthand, include stack ring */
-name|u_int
+decl_stmt|,
 name|nrx
-init|=
-name|na
-operator|->
-name|num_rx_rings
-operator|+
-literal|1
 decl_stmt|;
-comment|/* shorthand, include stack ring */
 name|struct
 name|netmap_kring
 modifier|*
 name|kring
 decl_stmt|;
+if|if
+condition|(
+name|netmap_update_config
+argument_list|(
+name|na
+argument_list|)
+condition|)
+block|{
+comment|/* configuration mismatch, report and fail */
+return|return
+name|NULL
+return|;
+block|}
+name|ntx
+operator|=
+name|na
+operator|->
+name|num_tx_rings
+operator|+
+literal|1
+expr_stmt|;
+comment|/* shorthand, include stack ring */
+name|nrx
+operator|=
+name|na
+operator|->
+name|num_rx_rings
+operator|+
+literal|1
+expr_stmt|;
+comment|/* shorthand, include stack ring */
 comment|/* 	 * the descriptor is followed inline by an array of offsets 	 * to the tx and rx rings in the shared memory region. 	 */
 name|len
 operator|=
@@ -3555,6 +3609,65 @@ goto|goto
 name|final
 goto|;
 block|}
+name|len
+operator|=
+operator|(
+name|ntx
+operator|+
+name|nrx
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|netmap_kring
+argument_list|)
+expr_stmt|;
+name|na
+operator|->
+name|tx_rings
+operator|=
+name|malloc
+argument_list|(
+name|len
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|na
+operator|->
+name|tx_rings
+operator|==
+name|NULL
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"Cannot allocate krings for %s"
+argument_list|,
+name|ifname
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
+name|na
+operator|->
+name|rx_rings
+operator|=
+name|na
+operator|->
+name|tx_rings
+operator|+
+name|ntx
+expr_stmt|;
 comment|/* 	 * First instance, allocate netmap rings and buffers for this card 	 * The rings are contiguous, but have variable size. 	 */
 for|for
 control|(
@@ -4249,6 +4362,10 @@ operator|.
 name|refcount
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|netmap_verbose
+condition|)
 name|D
 argument_list|(
 literal|"refcount = %d"

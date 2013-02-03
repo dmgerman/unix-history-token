@@ -2723,10 +2723,7 @@ name|char
 modifier|*
 name|string
 init|=
-name|strdup
-argument_list|(
 name|optarg
-argument_list|)
 decl_stmt|;
 while|while
 condition|(
@@ -3533,11 +3530,8 @@ name|char
 modifier|*
 name|string
 init|=
-name|strdup
-argument_list|(
 operator|*
 name|aargv
-argument_list|)
 decl_stmt|;
 while|while
 condition|(

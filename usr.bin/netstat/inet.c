@@ -3890,11 +3890,11 @@ argument_list|,
 literal|"\t%lu cookie%s received\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p3
 argument_list|(
 name|tcps_hc_added
 argument_list|,
-literal|"\t%lu hostcache entrie%s added\n"
+literal|"\t%lu hostcache entr%s added\n"
 argument_list|)
 expr_stmt|;
 name|p1a

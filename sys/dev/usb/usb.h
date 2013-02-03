@@ -32,11 +32,22 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"opt_usb.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Declare parent SYSCTL USB node. */
@@ -61,11 +72,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MALLOC_DECLARE
@@ -100,6 +122,12 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -111,6 +139,11 @@ include|#
 directive|include
 file|<dev/usb/usb_freebsd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2916,8 +2949,37 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|struct name {				\   uByte bLength;			\   uByte bDescriptorType;		\   uByte bData[sizeof((uint8_t []){m})];	\ } __packed;				\ static const struct name name = {	\   .bLength = sizeof(struct name),	\   .bDescriptorType = UDESC_STRING,	\   .bData = { m },			\ }
+value|static const struct {			\   uByte bLength;			\   uByte bDescriptorType;		\   uByte bData[sizeof((uint8_t []){m})];	\ } __packed name = {			\   .bLength = sizeof(name),		\   .bDescriptorType = UDESC_STRING,	\   .bData = { m },			\ }
 end_define
+
+begin_struct
+struct|struct
+name|usb_string_lang
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bData
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_string_lang
+name|usb_string_lang_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct

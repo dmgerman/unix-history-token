@@ -16994,7 +16994,7 @@ name|n_flag
 operator||=
 name|NACC
 expr_stmt|;
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|np
@@ -17067,7 +17067,7 @@ name|n_flag
 operator||=
 name|NUPD
 expr_stmt|;
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|np
@@ -17159,7 +17159,7 @@ name|NUPD
 operator|)
 condition|)
 block|{
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|ts
