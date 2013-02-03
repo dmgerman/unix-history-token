@@ -665,15 +665,6 @@ name|mt_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|vm_min_kernel_address
-init|=
-name|VM_MIN_KERNEL_ADDRESS
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
@@ -685,35 +676,14 @@ name|min_kernel_address
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|vm_min_kernel_address
+name|NULL
 argument_list|,
-literal|0
+name|VM_MIN_KERNEL_ADDRESS
 argument_list|,
 literal|"Min kernel address"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__sparc64__
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|vm_max_kernel_address
-init|=
-name|VM_MAX_KERNEL_ADDRESS
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_ULONG
@@ -726,11 +696,22 @@ name|max_kernel_address
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+ifndef|#
+directive|ifndef
+name|__sparc64__
+name|NULL
+argument_list|,
+name|VM_MAX_KERNEL_ADDRESS
+argument_list|,
+else|#
+directive|else
 operator|&
 name|vm_max_kernel_address
 argument_list|,
 literal|0
 argument_list|,
+endif|#
+directive|endif
 literal|"Max kernel address"
 argument_list|)
 expr_stmt|;
