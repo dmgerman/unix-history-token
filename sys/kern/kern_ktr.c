@@ -866,7 +866,7 @@ begin_if
 if|#
 directive|if
 name|KTR_ENTRIES
-operator|!=
+operator|>
 name|KTR_BOOT_ENTRIES
 end_if
 
