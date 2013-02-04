@@ -866,7 +866,7 @@ begin_if
 if|#
 directive|if
 name|KTR_ENTRIES
-operator|!=
+operator|>
 name|KTR_BOOT_ENTRIES
 end_if
 
@@ -914,6 +914,18 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|ktr_buf
+argument_list|,
+name|ktr_buf_init
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ktr_buf_init
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ktr_entries

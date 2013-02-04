@@ -2841,6 +2841,9 @@ name|printf
 argument_list|(
 literal|"%lc"
 argument_list|,
+operator|(
+name|wint_t
+operator|)
 operator|*
 name|tabchar
 argument_list|)

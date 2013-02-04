@@ -693,11 +693,20 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__ARM_EABI_UNWINDER__
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -839,42 +848,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-modifier|*
-name|__gxx_caught_object
-parameter_list|(
-name|_Unwind_Exception
-modifier|*
-name|eo
-parameter_list|)
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-name|eo
-operator|->
-name|barrier_cache
-operator|.
-name|bitpattern
-index|[
-literal|0
-index|]
-return|;
-block|}
-end_function
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|// !__ARM_EABI_UNWINDER__
+comment|// !__ARM_EABI_UNWINDER__ || __FreeBSD__
 end_comment
 
 begin_comment
@@ -983,6 +963,55 @@ name|c
 parameter_list|)
 value|c = __gxx_exception_class
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_EABI_UNWINDER__
+end_ifdef
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|__gxx_caught_object
+parameter_list|(
+name|_Unwind_Exception
+modifier|*
+name|eo
+parameter_list|)
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+name|eo
+operator|->
+name|barrier_cache
+operator|.
+name|bitpattern
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// !__ARM_EABI_UNWINDER__
+end_comment
 
 begin_comment
 comment|// GNU C++ personality routine, Version 0.
