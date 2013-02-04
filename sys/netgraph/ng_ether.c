@@ -1562,13 +1562,31 @@ index|]
 decl_stmt|;
 name|node_p
 name|node
-init|=
+decl_stmt|;
+comment|/* Only ethernet interfaces are of interest. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_ETHER
+operator|&&
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_L2VLAN
+condition|)
+return|return;
+comment|/* 	 * Just return if it's a new interface without an ng_ether companion. 	 */
+name|node
+operator|=
 name|IFP2NG
 argument_list|(
 name|ifp
 argument_list|)
-decl_stmt|;
-comment|/* 	 * Just return if it's a new interface without an ng_ether companion. 	 */
+expr_stmt|;
 if|if
 condition|(
 name|node
