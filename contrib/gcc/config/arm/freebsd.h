@@ -181,6 +181,12 @@ begin_comment
 comment|/* Default it to use ATPCS with soft-VFP.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
 begin_define
 define|#
 directive|define
