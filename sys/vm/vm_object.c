@@ -193,13 +193,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|VM_PINDEX_MAX
-value|((vm_pindex_t)(-1))
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2714,15 +2707,6 @@ operator|->
 name|handle
 expr_stmt|;
 comment|/* Point to the next available index. */
-if|if
-condition|(
-name|p
-operator|->
-name|pindex
-operator|==
-name|VM_PINDEX_MAX
-condition|)
-break|break;
 name|start
 operator|=
 name|p
@@ -2731,6 +2715,15 @@ name|pindex
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|<
+name|p
+operator|->
+name|pindex
+condition|)
+break|break;
 block|}
 name|vm_radix_reclaim_allnodes
 argument_list|(
@@ -6219,19 +6212,19 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 						 * Point to the next available 						 * index. 						 */
-if|if
-condition|(
-name|tmpindex
-operator|==
-name|VM_PINDEX_MAX
-condition|)
-break|break;
 name|start
 operator|=
 name|tmpindex
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|<
+name|tmpindex
+condition|)
+break|break;
 block|}
 name|mtx_unlock
 argument_list|(
