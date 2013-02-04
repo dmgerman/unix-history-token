@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -26,11 +26,51 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_CAST8
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT8, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST16
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT16, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST32
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT32, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST64
+parameter_list|(
+name|ptr
+parameter_list|)
+value|ACPI_CAST_PTR (UINT64, (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_GET8
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT8, ptr)
+value|(*ACPI_CAST8 (ptr))
 end_define
 
 begin_define
@@ -40,7 +80,7 @@ name|ACPI_GET16
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT16, ptr)
+value|(*ACPI_CAST16 (ptr))
 end_define
 
 begin_define
@@ -50,7 +90,7 @@ name|ACPI_GET32
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT32, ptr)
+value|(*ACPI_CAST32 (ptr))
 end_define
 
 begin_define
@@ -60,7 +100,7 @@ name|ACPI_GET64
 parameter_list|(
 name|ptr
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT64, ptr)
+value|(*ACPI_CAST64 (ptr))
 end_define
 
 begin_define
@@ -69,8 +109,10 @@ directive|define
 name|ACPI_SET8
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT8, ptr)
+value|(*ACPI_CAST8 (ptr) = (UINT8) (val))
 end_define
 
 begin_define
@@ -79,8 +121,10 @@ directive|define
 name|ACPI_SET16
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT16, ptr)
+value|(*ACPI_CAST16 (ptr) = (UINT16) (val))
 end_define
 
 begin_define
@@ -89,8 +133,10 @@ directive|define
 name|ACPI_SET32
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT32, ptr)
+value|(*ACPI_CAST32 (ptr) = (UINT32) (val))
 end_define
 
 begin_define
@@ -99,8 +145,10 @@ directive|define
 name|ACPI_SET64
 parameter_list|(
 name|ptr
+parameter_list|,
+name|val
 parameter_list|)
-value|*ACPI_CAST_PTR (UINT64, ptr)
+value|(*ACPI_CAST64 (ptr) = (UINT64) (val))
 end_define
 
 begin_comment
@@ -996,6 +1044,7 @@ name|Pos
 parameter_list|,
 name|Mask
 parameter_list|)
+define|\
 value|((Val<< Pos)& Mask)
 end_define
 
@@ -1012,6 +1061,7 @@ name|Mask
 parameter_list|,
 name|Val
 parameter_list|)
+define|\
 value|Reg = (Reg& (~(Mask))) | ACPI_REGISTER_PREPARE_BITS(Val, Pos, Mask)
 end_define
 
@@ -1026,12 +1076,283 @@ name|Mask
 parameter_list|,
 name|Source
 parameter_list|)
+define|\
 value|Target = ((Target& (~(Mask))) | (Source& Mask))
 end_define
 
 begin_comment
-comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
+comment|/* Generic bitfield macros and masks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_BITS
+parameter_list|(
+name|SourcePtr
+parameter_list|,
+name|Position
+parameter_list|,
+name|Mask
+parameter_list|)
+define|\
+value|((*SourcePtr>> Position)& Mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_BITS
+parameter_list|(
+name|TargetPtr
+parameter_list|,
+name|Position
+parameter_list|,
+name|Mask
+parameter_list|,
+name|Value
+parameter_list|)
+define|\
+value|(*TargetPtr |= ((Value& Mask)<< Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_1BIT_MASK
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_2BIT_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_3BIT_MASK
+value|0x00000007
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_4BIT_MASK
+value|0x0000000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_5BIT_MASK
+value|0x0000001F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_6BIT_MASK
+value|0x0000003F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_7BIT_MASK
+value|0x0000007F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_8BIT_MASK
+value|0x000000FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_16BIT_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_24BIT_MASK
+value|0x00FFFFFF
+end_define
+
+begin_comment
+comment|/* Macros to extract flag bits from position zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_1BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_1BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_2BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_2BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_3BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_3BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_4BIT_FLAG
+parameter_list|(
+name|Value
+parameter_list|)
+value|((Value)& ACPI_4BIT_MASK)
+end_define
+
+begin_comment
+comment|/* Macros to extract flag bits from position one and above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_1BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_1BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_2BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_2BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_3BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_3BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTRACT_4BIT_FLAG
+parameter_list|(
+name|Field
+parameter_list|,
+name|Position
+parameter_list|)
+value|(ACPI_GET_4BIT_FLAG ((Field)>> Position))
+end_define
+
+begin_comment
+comment|/* ACPI Pathname helpers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ROOT_PREFIX
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == (UINT8) 0x5C)
+end_define
+
+begin_comment
+comment|/* Backslash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_PARENT_PREFIX
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == (UINT8) 0x5E)
+end_define
+
+begin_comment
+comment|/* Carat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_PATH_SEPARATOR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == (UINT8) 0x2E)
+end_define
+
+begin_comment
+comment|/* Period (dot) */
+end_comment
+
+begin_comment
+comment|/*  * An object of type ACPI_NAMESPACE_NODE can appear in some contexts  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also  * appear. This macro is used to distinguish them.  *  * The "DescriptorType" field is the second field in both structures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_DESCRIPTOR_PTR
+parameter_list|(
+name|d
+parameter_list|)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.CommonPointer)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_DESCRIPTOR_PTR
+parameter_list|(
+name|d
+parameter_list|,
+name|p
+parameter_list|)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.CommonPointer = (p))
+end_define
 
 begin_define
 define|#
@@ -1052,7 +1373,7 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType = t)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType = (t))
 end_define
 
 begin_comment
@@ -1518,601 +1839,6 @@ end_endif
 
 begin_comment
 comment|/* ACPI_NO_ERROR_MESSAGES */
-end_comment
-
-begin_comment
-comment|/*  * Debug macros that are conditionally compiled  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG_OUTPUT
-end_ifdef
-
-begin_comment
-comment|/*  * Function entry tracing  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE
-parameter_list|(
-name|a
-parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTrace(ACPI_DEBUG_PARAMETERS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE_PTR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTracePtr(ACPI_DEBUG_PARAMETERS, (void *)b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE_U32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTraceU32(ACPI_DEBUG_PARAMETERS, (UINT32)b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE_STR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                             AcpiUtTraceStr(ACPI_DEBUG_PARAMETERS, (char *)b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_ENTRY
-parameter_list|()
-value|AcpiUtTrackStackPtr()
-end_define
-
-begin_comment
-comment|/*  * Function exit tracing.  * WARNING: These macros include a return statement. This is usually considered  * bad form, but having a separate exit macro is very ugly and difficult to maintain.  * One of the FUNCTION_TRACE macros above must be used in conjunction with these macros  * so that "_AcpiFunctionName" is defined.  *  * Note: the DO_WHILE0 macro is used to prevent some compilers from complaining  * about these constructs.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_USE_DO_WHILE_0
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_DO_WHILE0
-parameter_list|(
-name|a
-parameter_list|)
-value|do a while(0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_DO_WHILE0
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|return_VOID
-value|ACPI_DO_WHILE0 ({ \                                             AcpiUtExit (ACPI_DEBUG_PARAMETERS); \                                             return;})
-end_define
-
-begin_comment
-comment|/*  * There are two versions of most of the return macros. The default version is  * safer, since it avoids side-effects by guaranteeing that the argument will  * not be evaluated twice.  *  * A less-safe version of the macros is provided for optional use if the  * compiler uses excessive CPU stack (for example, this may happen in the  * debug case if code optimzation is disabled.)  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_SIMPLE_RETURN_MACROS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|return_ACPI_STATUS
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             register ACPI_STATUS _s = (s); \                                             AcpiUtStatusExit (ACPI_DEBUG_PARAMETERS, _s); \                                             return (_s); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_PTR
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             register void *_s = (void *) (s); \                                             AcpiUtPtrExit (ACPI_DEBUG_PARAMETERS, (UINT8 *) _s); \                                             return (_s); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_VALUE
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             register UINT64 _s = (s); \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, _s); \                                             return (_s); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_UINT8
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             register UINT8 _s = (UINT8) (s); \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, (UINT64) _s); \                                             return (_s); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_UINT32
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             register UINT32 _s = (UINT32) (s); \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, (UINT64) _s); \                                             return (_s); })
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Use original less-safe macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|return_ACPI_STATUS
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             AcpiUtStatusExit (ACPI_DEBUG_PARAMETERS, (s)); \                                             return((s)); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_PTR
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             AcpiUtPtrExit (ACPI_DEBUG_PARAMETERS, (UINT8 *) (s)); \                                             return((s)); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_VALUE
-parameter_list|(
-name|s
-parameter_list|)
-value|ACPI_DO_WHILE0 ({ \                                             AcpiUtValueExit (ACPI_DEBUG_PARAMETERS, (UINT64) (s)); \                                             return((s)); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_UINT8
-parameter_list|(
-name|s
-parameter_list|)
-value|return_VALUE(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_UINT32
-parameter_list|(
-name|s
-parameter_list|)
-value|return_VALUE(s)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_SIMPLE_RETURN_MACROS */
-end_comment
-
-begin_comment
-comment|/* Conditional execution */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_EXEC
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_ONLY_MEMBERS
-parameter_list|(
-name|a
-parameter_list|)
-value|a;
-end_define
-
-begin_define
-define|#
-directive|define
-name|_VERBOSE_STRUCTURES
-end_define
-
-begin_comment
-comment|/* Various object display routines for debug */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_STACK_ENTRY
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiExDumpOperand((a), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_OPERANDS
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|AcpiExDumpOperands(a, b, c)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_ENTRY
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|AcpiNsDumpEntry (a, b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_PATHNAME
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|AcpiNsDumpPathname(a, b, c, d)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_BUFFER
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|AcpiUtDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * This is the non-debug case -- make everything go away,  * leaving no executable debug code!  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_EXEC
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_ONLY_MEMBERS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE_PTR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE_U32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_TRACE_STR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_EXIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_STATUS_EXIT
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_VALUE_EXIT
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FUNCTION_ENTRY
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_STACK_ENTRY
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_OPERANDS
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_ENTRY
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_TABLES
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_PATHNAME
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DUMP_BUFFER
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_PRINT
-parameter_list|(
-name|pl
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_PRINT_RAW
-parameter_list|(
-name|pl
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_VOID
-value|return
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_ACPI_STATUS
-parameter_list|(
-name|s
-parameter_list|)
-value|return(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_VALUE
-parameter_list|(
-name|s
-parameter_list|)
-value|return(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_UINT8
-parameter_list|(
-name|s
-parameter_list|)
-value|return(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_UINT32
-parameter_list|(
-name|s
-parameter_list|)
-value|return(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|return_PTR
-parameter_list|(
-name|s
-parameter_list|)
-value|return(s)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUG_OUTPUT */
 end_comment
 
 begin_if

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -57,7 +57,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 modifier|*
 name|ReturnId
@@ -67,7 +67,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Hid
 decl_stmt|;
@@ -149,7 +149,7 @@ name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 operator|+
 operator|(
@@ -172,7 +172,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Area for the string starts after DEVICE_ID struct */
+comment|/* Area for the string starts after PNP_DEVICE_ID struct */
 name|Hid
 operator|->
 name|String
@@ -185,7 +185,7 @@ name|Hid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -259,6 +259,170 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_SUB  *  * PARAMETERS:  DeviceNode          - Node for the device  *              ReturnId            - Where the _SUB is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _SUB control method that returns the subsystem  *              ID of the device. The _SUB value is always a string containing  *              either a valid PNP or ACPI ID.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiUtExecute_SUB
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DeviceNode
+parameter_list|,
+name|ACPI_PNP_DEVICE_ID
+modifier|*
+modifier|*
+name|ReturnId
+parameter_list|)
+block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+decl_stmt|;
+name|ACPI_PNP_DEVICE_ID
+modifier|*
+name|Sub
+decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|UtExecute_SUB
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiUtEvaluateObject
+argument_list|(
+name|DeviceNode
+argument_list|,
+name|METHOD_NAME__SUB
+argument_list|,
+name|ACPI_BTYPE_STRING
+argument_list|,
+operator|&
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Get the size of the String to be returned, includes null terminator */
+name|Length
+operator|=
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|+
+literal|1
+expr_stmt|;
+comment|/* Allocate a buffer for the SUB */
+name|Sub
+operator|=
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_PNP_DEVICE_ID
+argument_list|)
+operator|+
+operator|(
+name|ACPI_SIZE
+operator|)
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Sub
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* Area for the string starts after PNP_DEVICE_ID struct */
+name|Sub
+operator|->
+name|String
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|char
+argument_list|,
+name|Sub
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_PNP_DEVICE_ID
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Simply copy existing string */
+name|ACPI_STRCPY
+argument_list|(
+name|Sub
+operator|->
+name|String
+argument_list|,
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Pointer
+argument_list|)
+expr_stmt|;
+name|Sub
+operator|->
+name|Length
+operator|=
+name|Length
+expr_stmt|;
+operator|*
+name|ReturnId
+operator|=
+name|Sub
+expr_stmt|;
+name|Cleanup
+label|:
+comment|/* On exit, we must delete the return object */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_UID  *  * PARAMETERS:  DeviceNode          - Node for the device  *              ReturnId            - Where the string UID is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _UID control method that returns the unique  *              ID of the device. The UID is either a 64-bit Integer (NOT an  *              EISAID) or a string. Always returns a string. A 64-bit integer  *              is converted to a decimal string.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
@@ -270,7 +434,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 modifier|*
 name|ReturnId
@@ -280,7 +444,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Uid
 decl_stmt|;
@@ -364,7 +528,7 @@ name|ACPI_ALLOCATE_ZEROED
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 operator|+
 operator|(
@@ -387,7 +551,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Area for the string starts after DEVICE_ID struct */
+comment|/* Area for the string starts after PNP_DEVICE_ID struct */
 name|Uid
 operator|->
 name|String
@@ -400,7 +564,7 @@ name|Uid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -485,7 +649,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 modifier|*
 modifier|*
 name|ReturnCidList
@@ -500,7 +664,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 modifier|*
 name|CidList
 decl_stmt|;
@@ -672,12 +836,12 @@ name|Cleanup
 goto|;
 block|}
 block|}
-comment|/*      * Now that we know the length of the CIDs, allocate return buffer:      * 1) Size of the base structure +      * 2) Size of the CID DEVICE_ID array +      * 3) Size of the actual CID strings      */
+comment|/*      * Now that we know the length of the CIDs, allocate return buffer:      * 1) Size of the base structure +      * 2) Size of the CID PNP_DEVICE_ID array +      * 3) Size of the actual CID strings      */
 name|CidListSize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 argument_list|)
 operator|+
 operator|(
@@ -689,7 +853,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 operator|)
 operator|+
@@ -716,7 +880,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Area for CID strings starts after the CID DEVICE_ID array */
+comment|/* Area for CID strings starts after the CID PNP_DEVICE_ID array */
 name|NextIdString
 operator|=
 name|ACPI_CAST_PTR
@@ -736,7 +900,7 @@ name|Count
 operator|*
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 operator|)
 expr_stmt|;

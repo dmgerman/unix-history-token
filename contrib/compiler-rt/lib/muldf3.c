@@ -63,15 +63,14 @@ directive|include
 file|"fp_lib.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|dmul
+argument|dmul
 argument_list|,
-name|muldf3
+argument|muldf3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI
@@ -446,11 +445,16 @@ comment|// a zero of the appropriate sign.  Mathematically there is no need to
 comment|// handle this case separately, but we make it a special case to
 comment|// simplify the shift logic.
 specifier|const
+name|unsigned
 name|int
 name|shift
 init|=
-literal|1
+literal|1U
 operator|-
+operator|(
+name|unsigned
+name|int
+operator|)
 name|productExponent
 decl_stmt|;
 if|if

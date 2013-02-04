@@ -100,8 +100,7 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|inl
 parameter_list|)
 block|{

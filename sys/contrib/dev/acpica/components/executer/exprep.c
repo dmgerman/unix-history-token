@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGenerateAccess  *  * PARAMETERS:  FieldBitOffset      - Start of field within parent region/buffer  *              FieldBitLength      - Length of field in bits  *              RegionLength        - Length of parent in bytes  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Generate an optimal access width for fields defined with the  *              AnyAcc keyword.  *  * NOTE: Need to have the RegionLength in order to check for boundary  *       conditions (end-of-region).  However, the RegionLength is a deferred  *       operation.  Therefore, to complete this implementation, the generation  *       of this access width must be deferred until the region length has  *       been evaluated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGenerateAccess  *  * PARAMETERS:  FieldBitOffset      - Start of field within parent region/buffer  *              FieldBitLength      - Length of field in bits  *              RegionLength        - Length of parent in bytes  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Generate an optimal access width for fields defined with the  *              AnyAcc keyword.  *  * NOTE: Need to have the RegionLength in order to check for boundary  *       conditions (end-of-region). However, the RegionLength is a deferred  *       operation. Therefore, to complete this implementation, the generation  *       of this access width must be deferred until the region length has  *       been evaluated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -594,7 +594,7 @@ name|Access
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 literal|0
 argument_list|)
@@ -622,7 +622,7 @@ name|ReturnByteAlignment
 operator|=
 name|ByteAlignment
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|BitLength
 argument_list|)
@@ -631,7 +631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldAttribute      - Special attributes (not used)  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields.  Note: This is very "sensitive"  *              code because we are solving the general case for field  *              alignment.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPrepCommonFieldObject  *  * PARAMETERS:  ObjDesc             - The field object  *              FieldFlags          - Access, LockRule, and UpdateRule.  *                                    The format of a FieldFlag is described  *                                    in the ACPI specification  *              FieldAttribute      - Special attributes (not used)  *              FieldBitPosition    - Field start position  *              FieldBitLength      - Field length in number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the areas of the field object that are common  *              to the various types of fields. Note: This is very "sensitive"  *              code because we are solving the general case for field  *              alignment.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -694,7 +694,7 @@ name|BitLength
 operator|=
 name|FieldBitLength
 expr_stmt|;
-comment|/*      * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary ByteAlignment (address granularity) of the access.      *      * For AnyAcc, the AccessBitWidth is the largest width that is both      * necessary and possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the ByteAlignment is always one      * byte.      *      * For all Buffer Fields, the ByteAlignment is always one byte.      *      * For all other access types (Byte, Word, Dword, Qword), the Bitwidth is      * the same (equivalent) as the ByteAlignment.      */
+comment|/*      * Decode the access type so we can compute offsets. The access type gives      * two pieces of information - the width of each field access and the      * necessary ByteAlignment (address granularity) of the access.      *      * For AnyAcc, the AccessBitWidth is the largest width that is both      * necessary and possible in an attempt to access the whole field in one      * I/O operation. However, for AnyAcc, the ByteAlignment is always one      * byte.      *      * For all Buffer Fields, the ByteAlignment is always one byte.      *      * For all other access types (Byte, Word, Dword, Qword), the Bitwidth is      * the same (equivalent) as the ByteAlignment.      */
 name|AccessBitWidth
 operator|=
 name|AcpiExDecodeFieldAccess
@@ -734,7 +734,7 @@ argument_list|(
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
-comment|/*      * BaseByteOffset is the address of the start of the field within the      * region.  It is the byte address of the first *datum* (field-width data      * unit) of the field. (i.e., the first datum that contains at least the      * first *bit* of the field.)      *      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8      * (Byte access), and it defines the addressing granularity of the parent      * region or buffer.      */
+comment|/*      * BaseByteOffset is the address of the start of the field within the      * region. It is the byte address of the first *datum* (field-width data      * unit) of the field. (i.e., the first datum that contains at least the      * first *bit* of the field.)      *      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8      * (Byte access), and it defines the addressing granularity of the parent      * region or buffer.      */
 name|NearestByteAddress
 operator|=
 name|ACPI_ROUND_BITS_DOWN_TO_BYTES

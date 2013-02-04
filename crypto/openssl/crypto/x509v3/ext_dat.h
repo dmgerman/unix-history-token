@@ -75,6 +75,8 @@ decl_stmt|,
 name|v3_cpols
 decl_stmt|,
 name|v3_crld
+decl_stmt|,
+name|v3_freshest_crl
 decl_stmt|;
 end_decl_stmt
 
@@ -124,14 +126,10 @@ name|X509V3_EXT_METHOD
 name|v3_name_constraints
 decl_stmt|,
 name|v3_inhibit_anyp
+decl_stmt|,
+name|v3_idp
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_RFC3779
-end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -142,17 +140,13 @@ name|v3_asid
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* This table will be searched using OBJ_bsearch so it *must* kept in  * order of the ext_nid values.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|standard_exts
@@ -322,7 +316,19 @@ name|v3_policy_mappings
 block|,
 operator|&
 name|v3_inhibit_anyp
-block|}
+block|,
+operator|&
+name|v3_idp
+block|,
+operator|&
+name|v3_alt
+index|[
+literal|2
+index|]
+block|,
+operator|&
+name|v3_freshest_crl
+block|, }
 decl_stmt|;
 end_decl_stmt
 

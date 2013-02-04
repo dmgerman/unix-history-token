@@ -353,7 +353,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"sendto(): short send (%d length, %d sent)"
+literal|"sendto(): short send (%zu length, %zd sent)"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -423,7 +423,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"recv(): short receive (%d length, %d received)"
+literal|"recv(): short receive (%zu length, %zd received)"
 argument_list|,
 sizeof|sizeof
 argument_list|(

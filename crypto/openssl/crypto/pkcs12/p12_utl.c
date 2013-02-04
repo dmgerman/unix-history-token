@@ -29,35 +29,6 @@ directive|include
 file|<openssl/pkcs12.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_SYS_NETWARE
-end_ifdef
-
-begin_comment
-comment|/* Rename these functions to avoid name clashes on NetWare OS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|uni2asc
-value|OPENSSL_uni2asc
-end_define
-
-begin_define
-define|#
-directive|define
-name|asc2uni
-value|OPENSSL_asc2uni
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Cheap and nasty Unicode stuff */
 end_comment
@@ -66,7 +37,7 @@ begin_function
 name|unsigned
 name|char
 modifier|*
-name|asc2uni
+name|OPENSSL_asc2uni
 parameter_list|(
 specifier|const
 name|char
@@ -219,7 +190,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|uni2asc
+name|OPENSSL_uni2asc
 parameter_list|(
 name|unsigned
 name|char

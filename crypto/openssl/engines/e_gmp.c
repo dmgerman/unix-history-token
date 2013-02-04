@@ -49,11 +49,22 @@ directive|include
 file|<openssl/engine.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RSA
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/rsa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2118,6 +2129,28 @@ else|#
 directive|else
 end_else
 
+begin_function_decl
+name|OPENSSL_EXPORT
+name|int
+name|bind_engine
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|id
+parameter_list|,
+specifier|const
+name|dynamic_fns
+modifier|*
+name|fns
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|OPENSSL_EXPORT
 name|int
@@ -2155,7 +2188,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL_NO_DYNAMIC_ENGINE */
+comment|/* !OPENSSL_NO_DYNAMIC_ENGINE */
 end_comment
 
 begin_endif

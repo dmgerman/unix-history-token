@@ -105,6 +105,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|asn1_primitive_clear
 parameter_list|(
@@ -449,6 +450,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -545,6 +548,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -571,6 +576,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -721,6 +728,8 @@ argument_list|,
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -1186,6 +1195,10 @@ name|ASN1_TYPE
 modifier|*
 name|typ
 decl_stmt|;
+name|ASN1_STRING
+modifier|*
+name|str
+decl_stmt|;
 name|int
 name|utype
 decl_stmt|;
@@ -1275,10 +1288,6 @@ return|;
 case|case
 name|V_ASN1_BOOLEAN
 case|:
-if|if
-condition|(
-name|it
-condition|)
 operator|*
 operator|(
 name|ASN1_BOOLEAN
@@ -1289,17 +1298,6 @@ operator|=
 name|it
 operator|->
 name|size
-expr_stmt|;
-else|else
-operator|*
-operator|(
-name|ASN1_BOOLEAN
-operator|*
-operator|)
-name|pval
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 return|return
 literal|1
@@ -1366,6 +1364,29 @@ name|typ
 expr_stmt|;
 break|break;
 default|default:
+name|str
+operator|=
+name|ASN1_STRING_type_new
+argument_list|(
+name|utype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|it
+operator|->
+name|itype
+operator|==
+name|ASN1_ITYPE_MSTRING
+operator|&&
+name|str
+condition|)
+name|str
+operator|->
+name|flags
+operator||=
+name|ASN1_STRING_FLAG_MSTRING
+expr_stmt|;
 operator|*
 name|pval
 operator|=
@@ -1373,10 +1394,7 @@ operator|(
 name|ASN1_VALUE
 operator|*
 operator|)
-name|ASN1_STRING_type_new
-argument_list|(
-name|utype
-argument_list|)
+name|str
 expr_stmt|;
 break|break;
 block|}
@@ -1395,6 +1413,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|asn1_primitive_clear
 parameter_list|(

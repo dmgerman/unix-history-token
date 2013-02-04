@@ -104,6 +104,16 @@ value|4
 name|uchar_t
 name|data_type
 decl_stmt|;
+define|#
+directive|define
+name|KSTAT_DESCLEN
+value|128
+name|char
+name|desc
+index|[
+name|KSTAT_DESCLEN
+index|]
+decl_stmt|;
 union|union
 block|{
 name|uint64_t

@@ -283,6 +283,17 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+comment|/// allOperandsUndef - Return true if the node has at least one operand
+comment|/// and all operands of the specified node are ISD::UNDEF.
+name|bool
+name|allOperandsUndef
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 block|}
 comment|// end llvm:ISD namespace
 comment|//===----------------------------------------------------------------------===//
@@ -577,6 +588,18 @@ specifier|inline
 specifier|const
 name|DebugLoc
 name|getDebugLoc
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|inline
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|inline
+name|void
+name|dumpr
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -911,13 +934,10 @@ name|Next
 decl_stmt|;
 name|SDUse
 argument_list|(
-specifier|const
-name|SDUse
-operator|&
-name|U
+argument|const SDUse&U
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
 name|void
 name|operator
 init|=
@@ -927,8 +947,8 @@ name|SDUse
 operator|&
 name|U
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|public
 label|:
 name|SDUse
@@ -2958,22 +2978,6 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|SDNode
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/// Profile - Gather unique data for the node.
 end_comment
@@ -3889,6 +3893,42 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+specifier|inline
+name|void
+name|SDValue
+operator|::
+name|dump
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Node
+operator|->
+name|dump
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|void
+name|SDValue
+operator|::
+name|dumpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Node
+operator|->
+name|dumpr
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|// Define inline functions from the SDUse class.
 end_comment
@@ -4580,6 +4620,20 @@ name|getPointerInfo
 argument_list|()
 return|;
 block|}
+comment|/// getAddressSpace - Return the address space for the associated pointer
+name|unsigned
+name|getAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerInfo
+argument_list|()
+operator|.
+name|getAddrSpace
+argument_list|()
+return|;
+block|}
 comment|/// refineAlignment - Update this MemSDNode's MachineMemOperand information
 comment|/// to reflect the alignment of NewMMO, if it has a greater alignment.
 comment|/// This must only be used when the new alignment applies to all users of
@@ -4635,17 +4689,6 @@ argument_list|)
 return|;
 block|}
 comment|// Methods to support isa and dyn_cast
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MemSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -4897,36 +4940,6 @@ name|SynchScope
 operator|&&
 literal|"Synch-scope encoding error!"
 argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|readMem
-argument_list|()
-operator|||
-name|getOrdering
-argument_list|()
-operator|<=
-name|Monotonic
-operator|)
-operator|&&
-literal|"Acquire/Release MachineMemOperand must be a load!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|writeMem
-argument_list|()
-operator|||
-name|getOrdering
-argument_list|()
-operator|<=
-name|Monotonic
-operator|)
-operator|&&
-literal|"Acquire/Release MachineMemOperand must be a store!"
-argument_list|)
 block|;   }
 name|public
 operator|:
@@ -5152,17 +5165,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const AtomicSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -5343,17 +5345,6 @@ argument|MMO
 argument_list|)
 block|{   }
 comment|// Methods to support isa and dyn_cast
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MemIntrinsicSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -5627,17 +5618,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ShuffleVectorSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -5795,17 +5775,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -5951,26 +5920,6 @@ block|{
 name|bool
 name|ignored
 block|;
-comment|// convert is not supported on this type
-if|if
-condition|(
-operator|&
-name|Value
-operator|->
-name|getValueAPF
-argument_list|()
-operator|.
-name|getSemantics
-argument_list|()
-operator|==
-operator|&
-name|APFloat
-operator|::
-name|PPCDoubleDouble
-condition|)
-return|return
-name|false
-return|;
 name|APFloat
 name|Tmp
 argument_list|(
@@ -6020,17 +5969,6 @@ argument_list|,
 argument|const APFloat& Val
 argument_list|)
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantFPSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -6135,17 +6073,6 @@ name|getAddressSpace
 argument_list|()
 specifier|const
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const GlobalAddressSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -6256,17 +6183,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const FrameIndexSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -6370,17 +6286,6 @@ specifier|const
 block|{
 return|return
 name|TargetFlags
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const JumpTableSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -6714,17 +6619,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ConstantPoolSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -6746,6 +6640,120 @@ operator|==
 name|ISD
 operator|::
 name|TargetConstantPool
+return|;
+block|}
+expr|}
+block|;
+comment|/// Completely target-dependent object reference.
+name|class
+name|TargetIndexSDNode
+operator|:
+name|public
+name|SDNode
+block|{
+name|unsigned
+name|char
+name|TargetFlags
+block|;
+name|int
+name|Index
+block|;
+name|int64_t
+name|Offset
+block|;
+name|friend
+name|class
+name|SelectionDAG
+block|;
+name|public
+operator|:
+name|TargetIndexSDNode
+argument_list|(
+argument|int Idx
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|int64_t Ofs
+argument_list|,
+argument|unsigned char TF
+argument_list|)
+operator|:
+name|SDNode
+argument_list|(
+name|ISD
+operator|::
+name|TargetIndex
+argument_list|,
+name|DebugLoc
+argument_list|()
+argument_list|,
+name|getSDVTList
+argument_list|(
+name|VT
+argument_list|)
+argument_list|)
+block|,
+name|TargetFlags
+argument_list|(
+name|TF
+argument_list|)
+block|,
+name|Index
+argument_list|(
+name|Idx
+argument_list|)
+block|,
+name|Offset
+argument_list|(
+argument|Ofs
+argument_list|)
+block|{}
+name|public
+operator|:
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
+return|;
+block|}
+name|int
+name|getIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
+return|;
+block|}
+name|int64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Offset
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|TargetIndex
 return|;
 block|}
 expr|}
@@ -6813,17 +6821,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const BasicBlockSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -6852,8 +6849,8 @@ comment|// These are constructed as SDNodes and then cast to BuildVectorSDNodes.
 name|explicit
 name|BuildVectorSDNode
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement
 name|public
 operator|:
 comment|/// isConstantSplat - Check if this is a constant splat, and if so, find the
@@ -6882,18 +6879,6 @@ argument_list|,
 argument|bool isBigEndian = false
 argument_list|)
 block|;
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const BuildVectorSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -6984,17 +6969,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const SrcValueSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -7074,17 +7048,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const MDNodeSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -7150,17 +7113,6 @@ specifier|const
 block|{
 return|return
 name|Reg
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const RegisterSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -7246,17 +7198,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const RegisterMaskSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -7284,6 +7225,9 @@ name|BlockAddress
 operator|*
 name|BA
 block|;
+name|int64_t
+name|Offset
+block|;
 name|unsigned
 name|char
 name|TargetFlags
@@ -7299,6 +7243,8 @@ argument_list|,
 argument|EVT VT
 argument_list|,
 argument|const BlockAddress *ba
+argument_list|,
+argument|int64_t o
 argument_list|,
 argument|unsigned char Flags
 argument_list|)
@@ -7321,6 +7267,11 @@ argument_list|(
 name|ba
 argument_list|)
 block|,
+name|Offset
+argument_list|(
+name|o
+argument_list|)
+block|,
 name|TargetFlags
 argument_list|(
 argument|Flags
@@ -7339,6 +7290,15 @@ return|return
 name|BA
 return|;
 block|}
+name|int64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Offset
+return|;
+block|}
 name|unsigned
 name|char
 name|getTargetFlags
@@ -7347,17 +7307,6 @@ specifier|const
 block|{
 return|return
 name|TargetFlags
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BlockAddressSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -7454,17 +7403,6 @@ specifier|const
 block|{
 return|return
 name|Label
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const EHLabelSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -7575,17 +7513,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ExternalSymbolSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -7665,17 +7592,6 @@ specifier|const
 block|{
 return|return
 name|Condition
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CondCodeSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -7778,17 +7694,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const CvtRndSatSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -7857,17 +7762,6 @@ specifier|const
 block|{
 return|return
 name|ValueType
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const VTSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -8066,17 +7960,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const LSBaseSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -8239,17 +8122,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const LoadSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -8405,17 +8277,6 @@ name|getOperand
 argument_list|(
 literal|3
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const StoreSDNode *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -8584,17 +8445,6 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const MachineSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
 argument|const SDNode *N
 argument_list|)
 block|{
@@ -8624,6 +8474,7 @@ block|,
 name|ptrdiff_t
 operator|>
 block|{
+specifier|const
 name|SDNode
 operator|*
 name|Node
@@ -8633,7 +8484,7 @@ name|Operand
 block|;
 name|SDNodeIterator
 argument_list|(
-argument|SDNode *N
+argument|const SDNode *N
 argument_list|,
 argument|unsigned Op
 argument_list|)
@@ -8826,7 +8677,7 @@ specifier|static
 name|SDNodeIterator
 name|begin
 argument_list|(
-argument|SDNode *N
+argument|const SDNode *N
 argument_list|)
 block|{
 return|return
@@ -8842,7 +8693,7 @@ specifier|static
 name|SDNodeIterator
 name|end
 argument_list|(
-argument|SDNode *N
+argument|const SDNode *N
 argument_list|)
 block|{
 return|return

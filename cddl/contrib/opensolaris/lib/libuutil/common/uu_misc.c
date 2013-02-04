@@ -13,6 +13,13 @@ directive|include
 file|"libuutil_common.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|HAVE_ASSFAIL
+value|1
+end_define
+
 begin_include
 include|#
 directive|include

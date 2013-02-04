@@ -70,6 +70,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|_fdt_check_prop_offset
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|fdt
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*

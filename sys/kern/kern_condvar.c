@@ -133,7 +133,7 @@ name|lock
 parameter_list|,
 name|td
 parameter_list|)
-value|do {					\ 	KASSERT((td) != NULL, ("%s: curthread NULL", __func__));	\ 	KASSERT(TD_IS_RUNNING(td), ("%s: not TDS_RUNNING", __func__));	\ 	KASSERT((cvp) != NULL, ("%s: cvp NULL", __func__));		\ 	KASSERT((lock) != NULL, ("%s: lock NULL", __func__));		\ } while (0)
+value|do {					\ 	KASSERT((td) != NULL, ("%s: td NULL", __func__));		\ 	KASSERT(TD_IS_RUNNING(td), ("%s: not TDS_RUNNING", __func__));	\ 	KASSERT((cvp) != NULL, ("%s: cvp NULL", __func__));		\ 	KASSERT((lock) != NULL, ("%s: lock NULL", __func__));		\ } while (0)
 end_define
 
 begin_comment

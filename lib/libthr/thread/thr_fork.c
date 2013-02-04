@@ -622,10 +622,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* reinitialize libc spinlocks. */
-name|_thr_spinlock_init
-argument_list|()
-expr_stmt|;
 comment|/* reinitalize library. */
 name|_libpthread_init
 argument_list|(

@@ -1276,6 +1276,15 @@ argument_list|,
 name|maxsockets
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|pcbinfo
+operator|->
+name|ipi_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1745,13 +1754,6 @@ operator|)
 return|;
 name|anonport
 operator|=
-name|inp
-operator|->
-name|inp_lport
-operator|==
-literal|0
-operator|&&
-operator|(
 name|nam
 operator|==
 name|NULL
@@ -1768,7 +1770,6 @@ operator|->
 name|sin_port
 operator|==
 literal|0
-operator|)
 expr_stmt|;
 name|error
 operator|=
@@ -5184,11 +5185,34 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 		 * If the inpcb has been freed, let the caller know, even if 		 * this isn't the last reference. 		 */
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_flags2
+operator|&
+name|INP_FREED
+condition|)
+block|{
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|KASSERT
 argument_list|(
 name|inp
@@ -5511,6 +5535,12 @@ operator|->
 name|inp_vflag
 operator|=
 literal|0
+expr_stmt|;
+name|inp
+operator|->
+name|inp_flags2
+operator||=
+name|INP_FREED
 expr_stmt|;
 name|crfree
 argument_list|(

@@ -938,6 +938,33 @@ name|CMD_RMJOB
 value|'\5'
 end_define
 
+begin_comment
+comment|/*  * seteuid() macros. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PRIV_START
+value|{ \     if (seteuid(euid) != 0) err(1, "seteuid failed"); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_END
+value|{ \     if (seteuid(uid) != 0) err(1, "seteuid failed"); \ }
+end_define
+
 begin_include
 include|#
 directive|include

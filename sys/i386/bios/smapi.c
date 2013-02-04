@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -1275,6 +1281,13 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|devs
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;

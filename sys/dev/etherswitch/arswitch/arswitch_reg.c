@@ -253,15 +253,7 @@ operator|)
 operator|&
 literal|0x1f
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|page
-operator|!=
-name|page
-condition|)
-block|{
+comment|/* 	 * The earlier code would only switch the page 	 * over if the page were different.  Experiments have 	 * shown that this is unstable. 	 * 	 * Hence, the page is always set here. 	 * 	 * See PR kern/172968 	 */
 name|MDIO_WRITEREG
 argument_list|(
 name|device_get_parent
@@ -282,7 +274,6 @@ name|page
 operator|=
 name|page
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -562,9 +553,13 @@ name|addr
 operator|+
 literal|2
 argument_list|,
+operator|(
 name|data
 operator|>>
 literal|16
+operator|)
+operator|&
+literal|0xffff
 argument_list|)
 operator|)
 return|;

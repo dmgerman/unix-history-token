@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -546,7 +546,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"Type override - [%4.4s] had invalid type (%s) "
-literal|"for Scope operator, changed to type ANY\n"
+literal|"for Scope operator, changed to type ANY"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -579,6 +579,30 @@ operator|=
 name|ACPI_TYPE_ANY
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+comment|/*              * Allow scope change to root during execution of module-level              * code. Root is typed METHOD during this time.              */
+if|if
+condition|(
+operator|(
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+comment|/*lint -fallthrough */
 default|default:
 comment|/* All other types are an error */
 name|ACPI_ERROR
@@ -603,11 +627,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_OPERAND_TYPE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -1489,11 +1513,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|AcpiExExitInterpreter
 argument_list|()

@@ -620,18 +620,6 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|flags
-operator|=
-name|RFFDG
-operator||
-name|RFPROC
-expr_stmt|;
-comment|/* validate that this is still an issue */
-else|#
-directive|else
 name|flags
 operator|=
 name|RFFDG
@@ -642,8 +630,6 @@ name|RFPPWAIT
 operator||
 name|RFMEM
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|fork1
@@ -941,14 +927,14 @@ literal|0
 operator|||
 name|pid
 operator|>
-name|PID_MAX
+name|pid_max
 operator|-
 literal|100
 condition|)
 comment|/* out of range */
 name|pid
 operator|=
-name|PID_MAX
+name|pid_max
 operator|-
 literal|100
 expr_stmt|;
@@ -1107,14 +1093,14 @@ if|if
 condition|(
 name|trypid
 operator|>=
-name|PID_MAX
+name|pid_max
 condition|)
 block|{
 name|trypid
 operator|=
 name|trypid
 operator|%
-name|PID_MAX
+name|pid_max
 expr_stmt|;
 if|if
 condition|(
@@ -2543,14 +2529,19 @@ operator|->
 name|p_orphans
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|p2
 operator|->
 name|p_itcallout
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|p2
+operator|->
+name|p_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If PF_FORK is set, the child process inherits the 	 * procfs ioctl flags from its parent. 	 */
@@ -4385,14 +4376,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

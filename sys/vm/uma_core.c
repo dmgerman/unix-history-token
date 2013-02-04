@@ -479,6 +479,7 @@ begin_struct
 struct|struct
 name|uma_zctor_args
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1308,6 +1309,47 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|zone_warnings
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vm.zone_warnings"
+argument_list|,
+operator|&
+name|zone_warnings
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|zone_warnings
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|zone_warnings
+argument_list|,
+literal|0
+argument_list|,
+literal|"Warn when UMA zones becomes full"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This routine checks to see whether or not it's safe to enable buckets.  */
 end_comment
@@ -1693,6 +1735,68 @@ argument_list|(
 name|ubz
 operator|->
 name|ubz_zone
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|zone_log_warning
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|struct
+name|timeval
+name|warninterval
+init|=
+block|{
+literal|300
+block|,
+literal|0
+block|}
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|zone_warnings
+operator|||
+name|zone
+operator|->
+name|uz_warning
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|ratecheck
+argument_list|(
+operator|&
+name|zone
+operator|->
+name|uz_ratecheck
+argument_list|,
+operator|&
+name|warninterval
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"[zone: %s] %s\n"
+argument_list|,
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|zone
+operator|->
+name|uz_warning
 argument_list|)
 expr_stmt|;
 block|}
@@ -4567,6 +4671,21 @@ name|keg
 operator|->
 name|uk_flags
 operator|&
+name|UMA_ZONE_OFFPAGE
+condition|)
+block|{
+name|shsize
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|keg
+operator|->
+name|uk_flags
+operator|&
 name|UMA_ZONE_REFCNT
 condition|)
 block|{
@@ -5049,7 +5168,9 @@ operator|<=
 name|uma_max_ipers
 argument_list|,
 operator|(
-literal|"keg_small_init: keg->uk_ipers too high(%d) increase max_ipers"
+literal|"%s: keg->uk_ipers too high(%d) increase max_ipers"
+operator|,
+name|__func__
 operator|,
 name|keg
 operator|->
@@ -5674,7 +5795,7 @@ directive|ifdef
 name|UMA_DEBUG
 name|printf
 argument_list|(
-literal|"UMA: %s(%p) size %d(%d) flags %d ipers %d ppera %d out %d free %d\n"
+literal|"UMA: %s(%p) size %d(%d) flags %#x ipers %d ppera %d out %d free %d\n"
 argument_list|,
 name|zone
 operator|->
@@ -5895,6 +6016,20 @@ operator|->
 name|uz_flags
 operator|=
 literal|0
+expr_stmt|;
+name|zone
+operator|->
+name|uz_warning
+operator|=
+name|NULL
+expr_stmt|;
+name|timevalclear
+argument_list|(
+operator|&
+name|zone
+operator|->
+name|uz_ratecheck
+argument_list|)
 expr_stmt|;
 name|keg
 operator|=
@@ -6858,7 +6993,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Calculated uma_max_ipers_slab (for OFFPAGE) is %d\n"
+literal|"Calculated uma_max_ipers_ref (for OFFPAGE) is %d\n"
 argument_list|,
 name|uma_max_ipers_ref
 argument_list|)
@@ -7477,6 +7612,7 @@ begin_function
 name|uma_zone_t
 name|uma_zcreate
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -8945,12 +9081,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|zone
 operator|->
 name|uz_flags
 operator||=
 name|UMA_ZFLAG_FULL
 expr_stmt|;
+name|zone_log_warning
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
@@ -9440,6 +9583,11 @@ name|zone
 operator|->
 name|uz_sleeps
 operator|++
+expr_stmt|;
+name|zone_log_warning
+argument_list|(
+name|zone
+argument_list|)
 expr_stmt|;
 name|msleep
 argument_list|(
@@ -11663,6 +11811,42 @@ comment|/* See uma.h */
 end_comment
 
 begin_function
+name|void
+name|uma_zone_set_warning
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|warning
+parameter_list|)
+block|{
+name|ZONE_LOCK
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+name|zone
+operator|->
+name|uz_warning
+operator|=
+name|warning
+expr_stmt|;
+name|ZONE_UNLOCK
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* See uma.h */
+end_comment
+
+begin_function
 name|int
 name|uma_zone_get_cur
 parameter_list|(
@@ -12828,7 +13012,7 @@ name|slab
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"keg: %s(%p) size %d(%d) flags %d ipers %d ppera %d "
+literal|"keg: %s(%p) size %d(%d) flags %#x ipers %d ppera %d "
 literal|"out %d free %d limit %d\n"
 argument_list|,
 name|keg
@@ -12966,7 +13150,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"zone: %s(%p) size %d flags %d\n"
+literal|"zone: %s(%p) size %d flags %#x\n"
 argument_list|,
 name|zone
 operator|->

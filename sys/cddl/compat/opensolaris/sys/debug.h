@@ -24,54 +24,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
 begin_empty
 empty|#include_next<sys/debug.h>
 end_empty
-
-begin_define
-define|#
-directive|define
-name|assfail
-parameter_list|(
-name|a
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|(panic("solaris assert: %s, file: %s, line: %d", (a), (f), (l)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|assfail3
-parameter_list|(
-name|a
-parameter_list|,
-name|lv
-parameter_list|,
-name|op
-parameter_list|,
-name|rv
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|panic("solaris assert: %s (0x%jx %s 0x%jx), file: %s, line: %d", \ 	    (a), (uintmax_t)(lv), (op), (uintmax_t)(rv), (f), (l))
-end_define
 
 begin_else
 else|#
@@ -86,10 +44,20 @@ begin_empty
 empty|#include_next<sys/debug.h>
 end_empty
 
+begin_include
+include|#
+directive|include
+file|<sys/assfail.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

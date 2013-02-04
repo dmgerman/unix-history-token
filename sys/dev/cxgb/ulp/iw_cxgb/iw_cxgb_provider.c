@@ -2590,6 +2590,8 @@ name|total_size
 decl_stmt|;
 name|int
 name|npages
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|ret

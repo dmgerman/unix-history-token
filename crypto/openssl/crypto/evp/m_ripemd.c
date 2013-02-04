@@ -66,6 +66,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"evp_locl.h"
+end_include
+
 begin_function
 specifier|static
 name|int

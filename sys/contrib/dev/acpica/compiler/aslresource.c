@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -717,7 +717,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -775,7 +777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsCreateResourceField  *  * PARAMETERS:  Op              - Resource field node  *              Name            - Name of the field (Used only to reference  *                                the field in the ASL, not in the AML)  *              ByteOffset      - Offset from the field start  *              BitOffset       - Additional bit offset  *              BitLength       - Number of bits in the field  *  * RETURN:      None, sets fields within the input node  *  * DESCRIPTION: Utility function to generate a named bit field within a  *              resource descriptor.  Mark a node as 1) a field in a resource  *              descriptor, and 2) set the value to be a BIT offset  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsCreateResourceField  *  * PARAMETERS:  Op              - Resource field node  *              Name            - Name of the field (Used only to reference  *                                the field in the ASL, not in the AML)  *              ByteOffset      - Offset from the field start  *              BitOffset       - Additional bit offset  *              BitLength       - Number of bits in the field  *  * RETURN:      None, sets fields within the input node  *  * DESCRIPTION: Utility function to generate a named bit field within a  *              resource descriptor. Mark a node as 1) a field in a resource  *              descriptor, and 2) set the value to be a BIT offset  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -850,7 +852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsSetFlagBits  *  * PARAMETERS:  *Flags          - Pointer to the flag byte  *              Op              - Flag initialization node  *              Position        - Bit position within the flag byte  *              Default         - Used if the node is DEFAULT.  *  * RETURN:      Sets bits within the *Flags output byte.  *  * DESCRIPTION: Set a bit in a cumulative flags word from an initialization  *              node.  Will use a default value if the node is DEFAULT, meaning  *              that no value was specified in the ASL.  Used to merge multiple  *              keywords into a single flags byte.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsSetFlagBits  *  * PARAMETERS:  *Flags          - Pointer to the flag byte  *              Op              - Flag initialization node  *              Position        - Bit position within the flag byte  *              Default         - Used if the node is DEFAULT.  *  * RETURN:      Sets bits within the *Flags output byte.  *  * DESCRIPTION: Set a bit in a cumulative flags word from an initialization  *              node. Will use a default value if the node is DEFAULT, meaning  *              that no value was specified in the ASL. Used to merge multiple  *              keywords into a single flags byte.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1883,7 +1885,9 @@ name|Rnode
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Point the previous node to the new node */
@@ -1934,13 +1938,15 @@ operator|=
 name|LastRnode
 expr_stmt|;
 return|return
+operator|(
 name|CurrentByteOffset
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoResourceTemplate  *  * PARAMETERS:  Op        - Parent of a resource template list  *  * RETURN:      None.  Sets input node to point to a list of AML code  *  * DESCRIPTION: Merge a list of resource descriptors into a single AML buffer,  *              in preparation for output to the AML output file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoResourceTemplate  *  * PARAMETERS:  Op        - Parent of a resource template list  *  * RETURN:      None. Sets input node to point to a list of AML code  *  * DESCRIPTION: Merge a list of resource descriptors into a single AML buffer,  *              in preparation for output to the AML output file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2072,7 +2078,7 @@ operator|&
 name|State
 argument_list|)
 expr_stmt|;
-comment|/*          * Update current byte offset to indicate the number of bytes from the          * start of the buffer.  Buffer can include multiple descriptors, we          * must keep track of the offset of not only each descriptor, but each          * element (field) within each descriptor as well.          */
+comment|/*          * Update current byte offset to indicate the number of bytes from the          * start of the buffer. Buffer can include multiple descriptors, we          * must keep track of the offset of not only each descriptor, but each          * element (field) within each descriptor as well.          */
 name|CurrentByteOffset
 operator|+=
 name|RsLinkDescriptorChain

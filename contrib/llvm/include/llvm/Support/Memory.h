@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/system_error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -163,6 +169,113 @@ name|Memory
 block|{
 name|public
 label|:
+enum|enum
+name|ProtectionFlags
+block|{
+name|MF_READ
+init|=
+literal|0x1000000
+block|,
+name|MF_WRITE
+init|=
+literal|0x2000000
+block|,
+name|MF_EXEC
+init|=
+literal|0x4000000
+block|}
+enum|;
+comment|/// This method allocates a block of memory that is suitable for loading
+comment|/// dynamically generated code (e.g. JIT). An attempt to allocate
+comment|/// \p NumBytes bytes of virtual memory is made.
+comment|/// \p NearBlock may point to an existing allocation in which case
+comment|/// an attempt is made to allocate more memory near the existing block.
+comment|/// The actual allocated address is not guaranteed to be near the requested
+comment|/// address.
+comment|/// \p Flags is used to set the initial protection flags for the block
+comment|/// of the memory.
+comment|/// \p EC [out] returns an object describing any error that occurs.
+comment|///
+comment|/// This method may allocate more than the number of bytes requested.  The
+comment|/// actual number of bytes allocated is indicated in the returned
+comment|/// MemoryBlock.
+comment|///
+comment|/// The start of the allocated block must be aligned with the
+comment|/// system allocation granularity (64K on Windows, page size on Linux).
+comment|/// If the address following \p NearBlock is not so aligned, it will be
+comment|/// rounded up to the next allocation granularity boundary.
+comment|///
+comment|/// \r a non-null MemoryBlock if the function was successful,
+comment|/// otherwise a null MemoryBlock is with \p EC describing the error.
+comment|///
+comment|/// @brief Allocate mapped memory.
+specifier|static
+name|MemoryBlock
+name|allocateMappedMemory
+parameter_list|(
+name|size_t
+name|NumBytes
+parameter_list|,
+specifier|const
+name|MemoryBlock
+modifier|*
+specifier|const
+name|NearBlock
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|error_code
+modifier|&
+name|EC
+parameter_list|)
+function_decl|;
+comment|/// This method releases a block of memory that was allocated with the
+comment|/// allocateMappedMemory method. It should not be used to release any
+comment|/// memory block allocated any other way.
+comment|/// \p Block describes the memory to be released.
+comment|///
+comment|/// \r error_success if the function was successful, or an error_code
+comment|/// describing the failure if an error occurred.
+comment|///
+comment|/// @brief Release mapped memory.
+specifier|static
+name|error_code
+name|releaseMappedMemory
+parameter_list|(
+name|MemoryBlock
+modifier|&
+name|Block
+parameter_list|)
+function_decl|;
+comment|/// This method sets the protection flags for a block of memory to the
+comment|/// state specified by /p Flags.  The behavior is not specified if the
+comment|/// memory was not allocated using the allocateMappedMemory method.
+comment|/// \p Block describes the memory block to be protected.
+comment|/// \p Flags specifies the new protection state to be assigned to the block.
+comment|/// \p ErrMsg [out] returns a string describing any error that occured.
+comment|///
+comment|/// If \p Flags is MF_WRITE, the actual behavior varies
+comment|/// with the operating system (i.e. MF_READ | MF_WRITE on Windows) and the
+comment|/// target architecture (i.e. MF_WRITE -> MF_READ | MF_WRITE on i386).
+comment|///
+comment|/// \r error_success if the function was successful, or an error_code
+comment|/// describing the failure if an error occurred.
+comment|///
+comment|/// @brief Set memory protection state.
+specifier|static
+name|error_code
+name|protectMappedMemory
+parameter_list|(
+specifier|const
+name|MemoryBlock
+modifier|&
+name|Block
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|)
+function_decl|;
 comment|/// This method allocates a block of Read/Write/Execute memory that is
 comment|/// suitable for executing dynamically generated code (e.g. JIT). An
 comment|/// attempt to allocate \p NumBytes bytes of virtual memory is made.

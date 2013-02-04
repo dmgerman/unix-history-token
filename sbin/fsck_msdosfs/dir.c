@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: dir.c,v 1.14 1998/08/25 19:18:15 ross Exp $"
+literal|"$NetBSD: dir.c,v 1.20 2006/06/05 16:51:18 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1016,6 +1016,9 @@ name|ret
 init|=
 name|FSOK
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|b1
 operator|=
 name|boot
@@ -1041,6 +1044,8 @@ name|buffer
 operator|=
 name|malloc
 argument_list|(
+name|len
+operator|=
 name|b1
 operator|>
 name|b2
@@ -1054,9 +1059,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"No space for directory buffer"
+literal|"No space for directory buffer (%zu)"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -1070,6 +1077,8 @@ name|delbuf
 operator|=
 name|malloc
 argument_list|(
+name|len
+operator|=
 name|b2
 argument_list|)
 operator|)
@@ -1082,9 +1091,11 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-name|perror
+name|perr
 argument_list|(
-literal|"No space for directory delbuf"
+literal|"No space for directory delbuf (%zu)"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -1113,7 +1124,7 @@ argument_list|(
 name|delbuf
 argument_list|)
 expr_stmt|;
-name|perror
+name|perr
 argument_list|(
 literal|"No space for directory entry"
 argument_list|)
@@ -1596,7 +1607,7 @@ operator|!=
 name|clsz
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to read directory"
 argument_list|)
@@ -1647,7 +1658,7 @@ operator|!=
 name|clsz
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to write directory"
 argument_list|)
@@ -2393,7 +2404,7 @@ operator|!=
 name|last
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to read directory"
 argument_list|)
@@ -4585,7 +4596,7 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"No space for directory"
 argument_list|)
@@ -4627,7 +4638,7 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"No space for todo list"
 argument_list|)
@@ -4741,7 +4752,7 @@ operator|!=
 name|last
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to write directory"
 argument_list|)
@@ -4875,7 +4886,7 @@ operator|!=
 name|last
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"Unable to write directory"
 argument_list|)
@@ -5151,7 +5162,7 @@ operator|!
 name|lfbuf
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"No space for buffer"
 argument_list|)
@@ -5308,7 +5319,7 @@ operator|->
 name|ClusterSize
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"could not read LOST.DIR"
 argument_list|)
@@ -5592,7 +5603,7 @@ operator|->
 name|ClusterSize
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
 literal|"could not write LOST.DIR"
 argument_list|)

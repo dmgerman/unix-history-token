@@ -128,6 +128,14 @@ value|0
 end_define
 
 begin_comment
+comment|/* Host triple LLVM will be executed on */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_HOSTTRIPLE */
+end_comment
+
+begin_comment
 comment|/* Installation directory for include files */
 end_comment
 
@@ -354,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|1
+value|2
 end_define
 
 begin_endif

@@ -102,14 +102,6 @@ file|"g_raid_tr_if.h"
 end_include
 
 begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_kern_geom_raid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
@@ -371,6 +363,11 @@ argument_list|(
 expr|struct
 name|g_raid_tr_raid5_object
 argument_list|)
+block|,
+operator|.
+name|trc_enable
+operator|=
+literal|1
 block|,
 operator|.
 name|trc_priority
@@ -2074,7 +2071,9 @@ end_function
 begin_expr_stmt
 name|G_RAID_TR_DECLARE
 argument_list|(
-name|g_raid_tr_raid5
+name|raid5
+argument_list|,
+literal|"RAID5"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

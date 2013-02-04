@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachObject  *  * PARAMETERS:  Node                - Parent Node  *              Object              - Object to be attached  *              Type                - Type of object, or ACPI_TYPE_ANY if not  *                                    known  *  * RETURN:      Status  *  * DESCRIPTION: Record the given object as the value associated with the  *              name whose ACPI_HANDLE is passed.  If Object is NULL  *              and Type is ACPI_TYPE_ANY, set the name as having no value.  *              Note: Future may require that the Node->Flags field be passed  *              as a parameter.  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachObject  *  * PARAMETERS:  Node                - Parent Node  *              Object              - Object to be attached  *              Type                - Type of object, or ACPI_TYPE_ANY if not  *                                    known  *  * RETURN:      Status  *  * DESCRIPTION: Record the given object as the value associated with the  *              name whose ACPI_HANDLE is passed. If Object is NULL  *              and Type is ACPI_TYPE_ANY, set the name as having no value.  *              Note: Future may require that the Node->Flags field be passed  *              as a parameter.  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -236,7 +236,7 @@ operator|->
 name|Object
 condition|)
 block|{
-comment|/*          * Value passed is a name handle and that name has a          * non-null value.  Use that name's value and type.          */
+comment|/*          * Value passed is a name handle and that name has a          * non-null value. Use that name's value and type.          */
 name|ObjDesc
 operator|=
 operator|(
@@ -744,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler to be associated with the data  *              Data            - Data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Low-level attach data.  Create and attach a Data object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler to be associated with the data  *              Data            - Data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Low-level attach data. Create and attach a Data object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -902,7 +902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler associated with the data  *  * RETURN:      Status  *  * DESCRIPTION: Low-level detach data.  Delete the data node, but the caller  *              is responsible for the actual data.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler associated with the data  *  * RETURN:      Status  *  * DESCRIPTION: Low-level detach data. Delete the data node, but the caller  *              is responsible for the actual data.  *  ******************************************************************************/
 end_comment
 
 begin_function

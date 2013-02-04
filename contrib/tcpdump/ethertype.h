@@ -426,6 +426,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ETHERTYPE_TIPC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_TIPC
+value|0x88ca
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ETHERTYPE_8021Q
 end_ifndef
 

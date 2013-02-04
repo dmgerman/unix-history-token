@@ -116,6 +116,28 @@ value|100
 end_define
 
 begin_comment
+comment|/*  * FreeBSD loader default dictionary cells  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BF_DICTSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BF_DICTSIZE
+value|10000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * BootForth   Interface to Ficl Forth interpreter.  */
 end_comment
 
@@ -557,6 +579,20 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+comment|/*      * If there was error during nested ficlExec(), we may no longer have      * valid environment to return.  Throw all exceptions from here.      */
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+name|vmThrow
+argument_list|(
+name|vm
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
 comment|/* This is going to be thrown!!! */
 name|stackPushINT
 argument_list|(
@@ -643,10 +679,9 @@ name|bf_sys
 operator|=
 name|ficlInitSystem
 argument_list|(
-literal|10000
+name|BF_DICTSIZE
 argument_list|)
 expr_stmt|;
-comment|/* Default dictionary ~4000 cells */
 name|bf_vm
 operator|=
 name|ficlNewVM

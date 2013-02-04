@@ -112,7 +112,7 @@ comment|/// \brief Callback invoked when performing code completion in a context
 comment|/// where the name of a macro is expected.
 comment|///
 comment|/// \param IsDefinition Whether this is the definition of a macro, e.g.,
-comment|/// in a #define.
+comment|/// in a \#define.
 name|virtual
 name|void
 name|CodeCompleteMacroName
@@ -122,7 +122,7 @@ name|IsDefinition
 parameter_list|)
 block|{ }
 comment|/// \brief Callback invoked when performing code completion in a preprocessor
-comment|/// expression, such as the condition of an #if or #elif directive.
+comment|/// expression, such as the condition of an \#if or \#elif directive.
 name|virtual
 name|void
 name|CodeCompletePreprocessorExpression
@@ -152,7 +152,7 @@ parameter_list|)
 block|{ }
 comment|/// \brief Callback invoked when performing code completion in a part of the
 comment|/// file where we expect natural language, e.g., a comment, string, or
-comment|/// #error directive.
+comment|/// \#error directive.
 name|virtual
 name|void
 name|CodeCompleteNaturalLanguage

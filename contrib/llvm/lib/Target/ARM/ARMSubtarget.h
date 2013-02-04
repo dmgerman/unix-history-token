@@ -127,6 +127,10 @@ block|,
 name|CortexA8
 block|,
 name|CortexA9
+block|,
+name|CortexA15
+block|,
+name|Swift
 block|}
 block|;
 comment|/// ARMProcFamily - ARM processor family: Cortex-A8, Cortex-A9, and others.
@@ -172,6 +176,11 @@ comment|/// specified. Use the method useNEONForSinglePrecisionFP() to
 comment|/// determine if NEON should actually be used.
 name|bool
 name|UseNEONForSinglePrecisionFP
+block|;
+comment|/// UseMulOps - True if non-microcoded fused integer multiply-add and
+comment|/// multiply-subtract instructions should be used.
+name|bool
+name|UseMulOps
 block|;
 comment|/// SlowFPVMLx - If the VFP2 / NEON instructions are available, indicates
 comment|/// whether the FP VML[AS] instructions are slow (if so, don't use them).
@@ -237,6 +246,10 @@ comment|/// HasHardwareDivide - True if subtarget supports [su]div
 name|bool
 name|HasHardwareDivide
 block|;
+comment|/// HasHardwareDivideInARM - True if subtarget supports [su]div in ARM mode
+name|bool
+name|HasHardwareDivideInARM
+block|;
 comment|/// HasT2ExtractPack - True if subtarget supports thumb2 extract/pack
 comment|/// instructions.
 name|bool
@@ -298,6 +311,12 @@ block|;
 comment|/// TargetTriple - What processor and OS we're targeting.
 name|Triple
 name|TargetTriple
+block|;
+comment|/// SchedModel - Processor specific instruction costs.
+specifier|const
+name|MCSchedModel
+operator|*
+name|SchedModel
 block|;
 comment|/// Selected instruction itineraries (one entry per itinerary class.)
 name|InstrItineraryData
@@ -457,6 +476,28 @@ name|CortexA9
 return|;
 block|}
 name|bool
+name|isCortexA15
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcFamily
+operator|==
+name|CortexA15
+return|;
+block|}
+name|bool
+name|isSwift
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcFamily
+operator|==
+name|Swift
+return|;
+block|}
+name|bool
 name|isCortexM3
 argument_list|()
 specifier|const
@@ -465,6 +506,19 @@ return|return
 name|CPUString
 operator|==
 literal|"cortex-m3"
+return|;
+block|}
+name|bool
+name|isLikeA9
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isCortexA9
+argument_list|()
+operator|||
+name|isCortexA15
+argument_list|()
 return|;
 block|}
 name|bool
@@ -535,6 +589,15 @@ name|HasHardwareDivide
 return|;
 block|}
 name|bool
+name|hasDivideInARMMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasHardwareDivideInARM
+return|;
+block|}
+name|bool
 name|hasT2ExtractPack
 argument_list|()
 specifier|const
@@ -550,6 +613,15 @@ specifier|const
 block|{
 return|return
 name|HasDataBarrier
+return|;
+block|}
+name|bool
+name|useMulOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseMulOps
 return|;
 block|}
 name|bool

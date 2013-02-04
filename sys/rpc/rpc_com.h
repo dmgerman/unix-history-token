@@ -479,7 +479,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|__rpc_xdr
+name|XDR
 struct_decl|;
 end_struct_decl
 
@@ -488,7 +488,7 @@ name|bool_t
 name|xdr_authunix_parms
 parameter_list|(
 name|struct
-name|__rpc_xdr
+name|XDR
 modifier|*
 name|xdrs
 parameter_list|,

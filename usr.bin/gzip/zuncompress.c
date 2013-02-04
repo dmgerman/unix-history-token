@@ -236,23 +236,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX zuncompress global */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|off_t
 name|total_compressed_bytes
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|size_t
 name|compressed_prelen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|compressed_pre

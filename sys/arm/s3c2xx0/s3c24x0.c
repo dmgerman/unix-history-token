@@ -1131,11 +1131,6 @@ name|S3C24X0_EXTIRQ_MIN
 argument_list|)
 expr_stmt|;
 block|}
-name|arm_unmask_irq
-argument_list|(
-name|irq
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(

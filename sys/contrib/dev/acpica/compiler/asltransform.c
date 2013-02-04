@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -154,7 +154,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrAmlGetNextTempName  *  * PARAMETERS:  Op              - Current parse op  *              TempCount       - Current temporary counter. Was originally  *                                per-module; Currently per method, could be  *                                expanded to per-scope.  *  * RETURN:      A pointer to name (allocated here).  *  * DESCRIPTION: Generate an ACPI name of the form _T_x.  These names are  *              reserved for use by the ASL compiler. (_T_0 through _T_Z)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrAmlGetNextTempName  *  * PARAMETERS:  Op              - Current parse op  *              TempCount       - Current temporary counter. Was originally  *                                per-module; Currently per method, could be  *                                expanded to per-scope.  *  * RETURN:      A pointer to name (allocated here).  *  * DESCRIPTION: Generate an ACPI name of the form _T_x. These names are  *              reserved for use by the ASL compiler. (_T_0 through _T_Z)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -538,7 +538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrTransformSubtree  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Prepare nodes to be output as AML data and operands.  The more  *              complex AML opcodes require processing of the child nodes  *              (arguments/operands).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrTransformSubtree  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Prepare nodes to be output as AML data and operands. The more  *              complex AML opcodes require processing of the child nodes  *              (arguments/operands).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -608,7 +608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrDoDefinitionBlock  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Find the end of the definition block and set a global to this  *              node.  It is used by the compiler to insert compiler-generated  *              names at the root level of the namespace.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrDoDefinitionBlock  *  * PARAMETERS:  Op        - Parse node  *  * RETURN:      None  *  * DESCRIPTION: Find the end of the definition block and set a global to this  *              node. It is used by the compiler to insert compiler-generated  *              names at the root level of the namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -698,7 +698,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrDoSwitch  *  * PARAMETERS:  StartNode        - Parse node for SWITCH  *  * RETURN:      None  *  *  * DESCRIPTION: Translate ASL SWITCH statement to if/else pairs.  There is  *              no actual AML opcode for SWITCH -- it must be simulated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrDoSwitch  *  * PARAMETERS:  StartNode        - Parse node for SWITCH  *  * RETURN:      None  *  *  * DESCRIPTION: Translate ASL SWITCH statement to if/else pairs. There is  *              no actual AML opcode for SWITCH -- it must be simulated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1449,7 +1449,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * The IF is a child of previous IF/ELSE.  It                  * is therefore without peer.                  */
+comment|/*                  * The IF is a child of previous IF/ELSE. It                  * is therefore without peer.                  */
 name|CurrentParentNode
 operator|->
 name|Asl
@@ -2023,7 +2023,7 @@ argument_list|,
 name|NewOp
 argument_list|)
 expr_stmt|;
-comment|/*      * Transform the Switch() into a While(One)-Break node.      * And create a Store() node which will be used to save the      * Switch() value.  The store is of the form: Store (Value, _T_x)      * where _T_x is the temp variable.      */
+comment|/*      * Transform the Switch() into a While(One)-Break node.      * And create a Store() node which will be used to save the      * Switch() value. The store is of the form: Store (Value, _T_x)      * where _T_x is the temp variable.      */
 name|TrAmlInitNode
 argument_list|(
 name|StartNode

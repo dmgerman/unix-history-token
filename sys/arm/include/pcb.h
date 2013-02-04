@@ -158,11 +158,27 @@ name|struct
 name|pcb_arm32
 name|un_32
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_VFP_SUPPORT
+name|struct
+name|vfp_state
+name|pcb_vfpstate
+decl_stmt|;
+comment|/* VP/NEON state */
+name|u_int
+name|pcb_vfpcpu
+decl_stmt|;
+comment|/* VP/NEON last cpu */
+else|#
+directive|else
 name|struct
 name|fpe_sp_state
 name|pcb_fpstate
 decl_stmt|;
 comment|/* Floating Point state */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

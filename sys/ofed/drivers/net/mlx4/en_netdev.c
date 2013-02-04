@@ -425,7 +425,6 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-empty_stmt|;
 name|u64
 modifier|*
 name|mcaddr

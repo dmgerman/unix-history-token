@@ -113,16 +113,6 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
-begin_comment
-comment|/* count xmits ourselves, rather than via drbr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_SLOW_STATS
-end_define
-
 begin_include
 include|#
 directive|include
@@ -596,11 +586,7 @@ argument_list|,
 name|mxge_shutdown
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9370,7 +9356,7 @@ name|m
 argument_list|,
 name|ETHER_VLAN_ENCAP_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11316,7 +11302,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -11522,7 +11508,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -14702,15 +14688,16 @@ argument_list|,
 name|LINK_STATE_UP
 argument_list|)
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
-literal|10UL
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -24044,13 +24031,14 @@ goto|goto
 name|abort_with_rings
 goto|;
 block|}
+name|if_initbaudrate
+argument_list|(
 name|ifp
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
-literal|10UL
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp

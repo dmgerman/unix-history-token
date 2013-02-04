@@ -151,6 +151,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2023,7 +2029,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"out of range UID/GID (%u/%u) ino=%u\n"
+literal|"out of range UID/GID (%u/%u) ino=%ju\n"
 argument_list|,
 name|DIP
 argument_list|(
@@ -2039,6 +2045,9 @@ argument_list|,
 name|di_gid
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -3209,8 +3218,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bad inode number %d to nextinode"
+literal|"bad inode number %ju to nextinode"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;
@@ -3352,8 +3364,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bad inode number %d to setinodebuf"
+literal|"bad inode number %ju to setinodebuf"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;

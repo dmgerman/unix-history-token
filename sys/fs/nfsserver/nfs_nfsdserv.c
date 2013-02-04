@@ -88,6 +88,44 @@ begin_comment
 comment|/* !APPLEKEXT */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_async
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_nfsd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|async
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs_async
+argument_list|,
+literal|0
+argument_list|,
+literal|"Tell client that writes were synced even though they were not"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This list defines the GSS mechanisms supported.  * (Don't ask me how you get these strings from the RFC stuff like  *  iso(1), org(3)... but someone did it, so I don't need to know.)  */
 end_comment
@@ -5606,11 +5644,16 @@ argument_list|(
 name|retlen
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If nfs_async is set, then pretend the write was FILESYNC. 		 * Warning: Doing this violates RFC1813 and runs a risk 		 * of data written by a client being lost when the server 		 * crashes/reboots. 		 */
 if|if
 condition|(
 name|stable
 operator|==
 name|NFSWRITE_UNSTABLE
+operator|&&
+name|nfs_async
+operator|==
+literal|0
 condition|)
 operator|*
 name|tl

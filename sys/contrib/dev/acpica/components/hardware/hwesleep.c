@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -140,7 +140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedSleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              Flags               - ACPI_EXECUTE_GTS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the extended FADT sleep  *              registers (V5 FADT).  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedSleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the extended FADT sleep  *              registers (V5 FADT).  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -149,9 +149,6 @@ name|AcpiHwExtendedSleep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -226,22 +223,6 @@ name|AcpiGbl_SystemAwakeAndRunning
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Optionally execute _GTS (Going To Sleep) */
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_EXECUTE_GTS
-condition|)
-block|{
-name|AcpiHwExecuteSleepMethod
-argument_list|(
-name|METHOD_PATHNAME__GTS
-argument_list|,
-name|SleepState
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Flush caches, as per ACPI specification */
 name|ACPI_FLUSH_CPU_CACHE
 argument_list|()
@@ -358,7 +339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - ACPI_EXECUTE_BFS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Perform first part of OS-independent ACPI cleanup after  *              a sleep. Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform first part of OS-independent ACPI cleanup after  *              a sleep. Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -367,9 +348,6 @@ name|AcpiHwExtendedWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -437,22 +415,6 @@ name|SleepControl
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Optionally execute _BFS (Back From Sleep) */
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_EXECUTE_BFS
-condition|)
-block|{
-name|AcpiHwExecuteSleepMethod
-argument_list|(
-name|METHOD_PATHNAME__BFS
-argument_list|,
-name|SleepState
-argument_list|)
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -462,7 +424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - Reserved, set to zero  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -471,9 +433,6 @@ name|AcpiHwExtendedWake
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE

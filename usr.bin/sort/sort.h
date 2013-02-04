@@ -149,7 +149,8 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|size_t
+name|unsigned
+name|int
 name|ncpu
 decl_stmt|;
 end_decl_stmt
@@ -200,7 +201,7 @@ begin_struct
 struct|struct
 name|sort_opts
 block|{
-name|wchar_t
+name|wint_t
 name|field_sep
 decl_stmt|;
 name|int

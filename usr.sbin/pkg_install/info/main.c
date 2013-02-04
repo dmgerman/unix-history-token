@@ -352,6 +352,9 @@ name|char
 modifier|*
 name|pkgs_split
 decl_stmt|;
+name|warnpkgng
+argument_list|()
+expr_stmt|;
 name|whead
 operator|=
 name|malloc

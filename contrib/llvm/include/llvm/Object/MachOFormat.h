@@ -196,6 +196,18 @@ block|,
 name|CSARM_V7
 init|=
 literal|9
+block|,
+name|CSARM_V7F
+init|=
+literal|10
+block|,
+name|CSARM_V7S
+init|=
+literal|11
+block|,
+name|CSARM_V7K
+init|=
+literal|12
 block|}
 enum|;
 comment|/// \brief PowerPC Machine Subtypes.
@@ -279,6 +291,10 @@ block|,
 name|RelocationInfoSize
 init|=
 literal|8
+block|,
+name|LinkeditLoadCommandSize
+init|=
+literal|16
 block|}
 enum|;
 comment|/// \brief Constants for header magic field.
@@ -388,6 +404,10 @@ block|,
 name|LCT_FunctionStarts
 init|=
 literal|0x26
+block|,
+name|LCT_DataInCode
+init|=
+literal|0x29
 block|}
 enum|;
 comment|/// \brief Load command structure.
@@ -708,6 +728,20 @@ name|Value
 decl_stmt|;
 block|}
 struct|;
+comment|// Despite containing a uint64_t, this structure is only 4-byte aligned within
+comment|// a MachO file.
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|4
+name|)
 struct|struct
 name|Symbol64TableEntry
 block|{
@@ -726,6 +760,47 @@ decl_stmt|;
 name|uint64_t
 name|Value
 decl_stmt|;
+block|}
+struct|;
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+comment|/// @}
+comment|/// @name Data-in-code Table Entry
+comment|/// @{
+comment|// See<mach-o/loader.h>.
+enum|enum
+name|DataRegionType
+block|{
+name|Data
+init|=
+literal|1
+block|,
+name|JumpTable8
+block|,
+name|JumpTable16
+block|,
+name|JumpTable32
+block|}
+enum|;
+struct|struct
+name|DataInCodeTableEntry
+block|{
+name|uint32_t
+name|Offset
+decl_stmt|;
+comment|/* from mach_header to start of data region */
+name|uint16_t
+name|Length
+decl_stmt|;
+comment|/* number of bytes in data region */
+name|uint16_t
+name|Kind
+decl_stmt|;
+comment|/* a DataRegionType value  */
 block|}
 struct|;
 comment|/// @}

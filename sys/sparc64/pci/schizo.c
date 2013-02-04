@@ -1073,7 +1073,6 @@ specifier|static
 specifier|const
 name|struct
 name|schizo_desc
-specifier|const
 name|schizo_compats
 index|[]
 init|=
@@ -6439,13 +6438,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|VIS_BLOCKSIZE
-value|64
-end_define
 
 begin_function
 specifier|static

@@ -34,152 +34,6 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/* file operations */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_MERGE_ACL
-value|0x00
-end_define
-
-begin_comment
-comment|/* merge acl's (-mM) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_REMOVE_DEF
-value|0x01
-end_define
-
-begin_comment
-comment|/* remove default acl's (-k) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_REMOVE_EXT
-value|0x02
-end_define
-
-begin_comment
-comment|/* remove extended acl's (-b) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_REMOVE_ACL
-value|0x03
-end_define
-
-begin_comment
-comment|/* remove acl's (-xX) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_REMOVE_BY_NUMBER
-value|0x04
-end_define
-
-begin_comment
-comment|/* remove acl's (-xX) by acl entry number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_ADD_ACL
-value|0x05
-end_define
-
-begin_comment
-comment|/* add acls entries at a given position */
-end_comment
-
-begin_comment
-comment|/* TAILQ entry for acl operations */
-end_comment
-
-begin_struct
-struct|struct
-name|sf_entry
-block|{
-name|uint
-name|op
-decl_stmt|;
-name|acl_t
-name|acl
-decl_stmt|;
-name|uint
-name|entry_number
-decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|sf_entry
-argument_list|)
-name|next
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|sf_entry
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|entrylist
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* TAILQ entry for files */
-end_comment
-
-begin_struct
-struct|struct
-name|sf_file
-block|{
-specifier|const
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|sf_file
-argument_list|)
-name|next
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|sf_file
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|filelist
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* files.c */
 end_comment
 
@@ -375,24 +229,28 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|uint
 name|have_mask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|uint
 name|need_mask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|uint
 name|have_stdin
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|uint
 name|n_flag
 decl_stmt|;

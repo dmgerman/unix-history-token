@@ -143,6 +143,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -399,6 +405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|file
@@ -406,6 +413,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|formats
 block|{
@@ -1479,13 +1487,31 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|nobody
 operator|->
 name|pw_uid
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|tftp_log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setuid failed"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|len
 operator|=
@@ -3520,12 +3546,18 @@ name|tftp_log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Sent %d bytes in %d seconds"
+literal|"Sent %jd bytes in %jd seconds"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ts
 operator|.
 name|amount
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -3683,8 +3715,11 @@ name|tftp_log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Download of %d bytes in %d blocks completed after %0.1f seconds\n"
+literal|"Download of %jd bytes in %d blocks completed after %0.1f seconds\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ts
 operator|.
 name|amount

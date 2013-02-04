@@ -4874,10 +4874,17 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|output_datalen
 argument_list|(
 name|buf

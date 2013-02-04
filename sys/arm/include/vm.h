@@ -16,7 +16,7 @@ name|_MACHINE_VM_H_
 end_define
 
 begin_comment
-comment|/* Memory attribute configuration is not (yet) implemented. */
+comment|/* Memory attribute configuration. */
 end_comment
 
 begin_define
@@ -24,6 +24,13 @@ define|#
 directive|define
 name|VM_MEMATTR_DEFAULT
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_UNCACHEABLE
+value|1
 end_define
 
 begin_endif

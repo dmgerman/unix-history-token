@@ -23,6 +23,12 @@ directive|include
 file|"opt_wlan.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -1731,7 +1737,7 @@ expr|struct
 name|ether_header
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2195,7 +2201,7 @@ argument_list|)
 operator|+
 literal|2
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2258,7 +2264,7 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2633,7 +2639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Age frames on the staging queue.  */
+comment|/*  * Age frames on the staging queue.  *  * This is called without the comlock held, but it does all its work  * behind the comlock.  Because of this, it's possible that the  * staging queue will be serviced between the function which called  * it and now; thus simply checking that the queue has work in it  * may fail.  *  * See PR kern/174283 for more details.  */
 end_comment
 
 begin_function
@@ -2655,15 +2661,6 @@ name|quanta
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_superg
-modifier|*
-name|sg
-init|=
-name|ic
-operator|->
-name|ic_superg
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -2681,19 +2678,12 @@ name|ieee80211_tx_ampdu
 modifier|*
 name|tap
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|sq
-operator|->
-name|head
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"stageq empty"
-operator|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|KASSERT(sq->head != NULL, ("stageq empty"));
+endif|#
+directive|endif
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -2792,11 +2782,6 @@ operator|->
 name|depth
 operator|--
 expr_stmt|;
-name|sg
-operator|->
-name|ff_stageqdepth
-operator|--
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2839,6 +2824,11 @@ name|void
 name|stageq_add
 parameter_list|(
 name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
 name|ieee80211_stageq
 modifier|*
 name|sq
@@ -2854,6 +2844,11 @@ name|age
 init|=
 name|ieee80211_ffagemax
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sq
@@ -2934,6 +2929,11 @@ name|void
 name|stageq_remove
 parameter_list|(
 name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
 name|ieee80211_stageq
 modifier|*
 name|sq
@@ -2952,6 +2952,11 @@ decl_stmt|,
 modifier|*
 name|mprev
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|mprev
 operator|=
 name|NULL
@@ -3394,6 +3399,8 @@ name|NULL
 condition|)
 name|stageq_remove
 argument_list|(
+name|ic
+argument_list|,
 name|sq
 argument_list|,
 name|mstaged
@@ -3454,6 +3461,8 @@ name|NULL
 expr_stmt|;
 name|stageq_remove
 argument_list|(
+name|ic
+argument_list|,
 name|sq
 argument_list|,
 name|mstaged
@@ -3557,15 +3566,12 @@ name|m
 expr_stmt|;
 name|stageq_add
 argument_list|(
+name|ic
+argument_list|,
 name|sq
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|sg
-operator|->
-name|ff_stageqdepth
-operator|++
 expr_stmt|;
 name|IEEE80211_UNLOCK
 argument_list|(
@@ -3655,6 +3661,9 @@ modifier|*
 name|m
 decl_stmt|,
 modifier|*
+name|next_m
+decl_stmt|,
+modifier|*
 name|head
 decl_stmt|;
 name|int
@@ -3722,6 +3731,8 @@ name|NULL
 expr_stmt|;
 name|stageq_remove
 argument_list|(
+name|ic
+argument_list|,
 operator|&
 name|sg
 operator|->
@@ -3750,23 +3761,24 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-for|for
-control|(
+comment|/* 	 * Free mbufs, taking care to not dereference the mbuf after 	 * we free it (hence grabbing m_nextpkt before we free it.) 	 */
 name|m
 operator|=
 name|head
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|m
 operator|!=
 name|NULL
-condition|;
-name|m
+condition|)
+block|{
+name|next_m
 operator|=
 name|m
 operator|->
 name|m_nextpkt
-control|)
-block|{
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -3776,6 +3788,10 @@ name|ieee80211_free_node
 argument_list|(
 name|ni
 argument_list|)
+expr_stmt|;
+name|m
+operator|=
+name|next_m
 expr_stmt|;
 block|}
 block|}
@@ -4202,6 +4218,15 @@ name|superg_ioctl_set80211
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE80211_SUPPORT_SUPERG */
+end_comment
 
 end_unit
 

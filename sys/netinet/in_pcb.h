@@ -2068,6 +2068,17 @@ begin_comment
 comment|/* SO_REUSEPORT option is set */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_FREED
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* inp itself is not valid */
+end_comment
+
 begin_comment
 comment|/*  * Flags passed to in_pcblookup*() functions.  */
 end_comment

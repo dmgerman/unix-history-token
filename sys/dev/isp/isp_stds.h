@@ -352,8 +352,82 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * FCP Response IU Bits of interest  * Source: NCITS T10, Project 1144D, Revision 08 (aka FCP2r08)  */
+comment|/*  * FCP Response IU and bits of interest  * Source: NCITS T10, Project 1828D, Revision 02b (aka FCP4r02b)  */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint8_t
+name|fcp_rsp_reserved
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint16_t
+name|fcp_rsp_status_qualifier
+decl_stmt|;
+comment|/* SAM-5 Status Qualifier */
+name|uint8_t
+name|fcp_rsp_bits
+decl_stmt|;
+name|uint8_t
+name|fcp_rsp_scsi_status
+decl_stmt|;
+comment|/* SAM-5 SCSI Status Byte */
+name|uint32_t
+name|fcp_rsp_resid
+decl_stmt|;
+name|uint32_t
+name|fcp_rsp_snslen
+decl_stmt|;
+name|uint32_t
+name|fcp_rsp_rsplen
+decl_stmt|;
+comment|/* 	 * In the bytes that follow, it's going to be 	 * FCP RESPONSE INFO (max 8 bytes, possibly 0) 	 * FCP SENSE INFO (if any) 	 * FCP BIDIRECTIONAL READ RESID (if any) 	 */
+name|uint8_t
+name|fcp_rsp_extra
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|fcp_rsp_iu_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MIN_FCP_RESPONSE_SIZE
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_BIDIR_RSP
+value|0x80
+end_define
+
+begin_comment
+comment|/* Bi-Directional response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FCP_BIDIR_RESID_UNDERFLOW
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_BIDIR_RESID_OVERFLOW
+value|0x20
+end_define
 
 begin_define
 define|#
@@ -465,6 +539,134 @@ value|9
 end_define
 
 begin_comment
+comment|/*  * R_CTL field definitions  *  * Bits 31-28 are ROUTING  * Bits 27-24 are INFORMATION  *  * These are nibble values, not bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_DATA
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_ELS
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_FC4_LINK
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_VDATA
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_EXENDED
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_BASIC
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_LINK
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_ROUTE_EXT_ROUTING
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_UNCATEGORIZED
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_SOLICITED_DATA
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_UNSOLICITED_CONTROL
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_SOLICITED_CONTROL
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_UNSOLICITED_DATA
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_DATA_DESCRIPTOR
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_UNSOLICITED_COMMAND
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_CTL_INFO_COMMAND_STATUS
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_RCTL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<< 4) | (b))
+end_define
+
+begin_comment
 comment|/* unconverted miscellany */
 end_comment
 
@@ -473,36 +675,29 @@ comment|/*  * Basic FC Link Service defines  */
 end_comment
 
 begin_comment
-comment|/*  * These are in the R_CTL field.  */
+comment|/* #define	ABTS	MAKE_RCTL(R_CTL_ROUTE_BASIC, R_CTL_INFO_SOLICITED_DATA) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ABTS
-value|0x81
-end_define
-
-begin_define
-define|#
-directive|define
 name|BA_ACC
-value|0x84
+value|MAKE_RCTL(R_CTL_ROUTE_BASIC, R_CTL_INFO_UNSOLICITED_DATA)
 end_define
 
 begin_comment
-comment|/* of ABORT SEQUENCE */
+comment|/* of ABORT */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BA_RJT
-value|0x85
+value|MAKE_RCTL(R_CTL_ROUTE_BASIC, R_CTL_INFO_DATA_DESCRIPTOR)
 end_define
 
 begin_comment
-comment|/* of ABORT SEQUENCE */
+comment|/* of ABORT */
 end_comment
 
 begin_comment
@@ -602,6 +797,84 @@ define|#
 directive|define
 name|RNC
 value|0x53
+end_define
+
+begin_comment
+comment|/*  * PRLI Word 3 definitions  * FPC4-r02b January, 2011  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_ENHANCED_DISCOVERY
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_REC_SUPPORT
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_TASK_RETRY_IDENTIFICATION_REQUESTED
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_RETRY
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_CONFIRMED_COMPLETION_ALLOWED
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_DATA_OVERLAY_ALLOWED
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_INITIATOR_FUNCTION
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_TARGET_FUNCTION
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_READ_FCP_XFER_RDY_DISABLED
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* definitely supposed to be set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRLI_WD3_WRITE_FCP_XFER_RDY_DISABLED
+value|(1<< 0)
 end_define
 
 begin_comment

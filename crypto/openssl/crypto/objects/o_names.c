@@ -85,15 +85,26 @@ begin_comment
 comment|/* I use the ex_data stuff to manage the identifiers for the obj_name_types  * that applications may define.  I only really use the free function field.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|DECLARE_LHASH_OF
+argument_list|(
+name|OBJ_NAME
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
-name|LHASH
-modifier|*
+name|LHASH_OF
+argument_list|(
+name|OBJ_NAME
+argument_list|)
+operator|*
 name|names_lh
-init|=
+operator|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -230,12 +241,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_expr_stmt
+specifier|static
+name|IMPLEMENT_LHASH_HASH_FN
+argument_list|(
+argument|obj_name
+argument_list|,
+argument|OBJ_NAME
+argument_list|)
+specifier|static
+name|IMPLEMENT_LHASH_COMP_FN
+argument_list|(
+argument|obj_name
+argument_list|,
+argument|OBJ_NAME
+argument_list|)
 name|int
 name|OBJ_NAME_init
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
 block|{
 if|if
 condition|(
@@ -251,18 +276,23 @@ return|;
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|names_lh
 operator|=
-name|lh_new
-argument_list|(
-name|obj_name_hash
-argument_list|,
-name|obj_name_cmp
-argument_list|)
+name|lh_OBJ_NAME_new
+argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|names_lh
@@ -270,57 +300,21 @@ operator|!=
 name|NULL
 operator|)
 return|;
-block|}
-end_function
+end_return
 
-begin_decl_stmt
-name|int
+begin_macro
+unit|}  int
 name|OBJ_NAME_new_index
 argument_list|(
-name|unsigned
-name|long
-argument_list|(
-operator|*
-name|hash_func
-argument_list|)
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|)
+argument|unsigned long (*hash_func)(const char *)
 argument_list|,
-name|int
-argument_list|(
-operator|*
-name|cmp_func
-argument_list|)
-argument_list|(
-specifier|const
-name|char
-operator|*
+argument|int (*cmp_func)(const char *, const char *)
 argument_list|,
-specifier|const
-name|char
-operator|*
+argument|void (*free_func)(const char *, int, const char *)
 argument_list|)
-argument_list|,
-name|void
-argument_list|(
-operator|*
-name|free_func
-argument_list|)
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|,
-name|int
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ret
@@ -510,7 +504,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_comment
 comment|/* static int obj_name_cmp(OBJ_NAME *a, OBJ_NAME *b) */
@@ -826,11 +820,7 @@ control|)
 block|{
 name|ret
 operator|=
-operator|(
-name|OBJ_NAME
-operator|*
-operator|)
-name|lh_retrieve
+name|lh_OBJ_NAME_retrieve
 argument_list|(
 name|names_lh
 argument_list|,
@@ -1006,11 +996,7 @@ name|data
 expr_stmt|;
 name|ret
 operator|=
-operator|(
-name|OBJ_NAME
-operator|*
-operator|)
-name|lh_insert
+name|lh_OBJ_NAME_insert
 argument_list|(
 name|names_lh
 argument_list|,
@@ -1081,7 +1067,7 @@ else|else
 block|{
 if|if
 condition|(
-name|lh_error
+name|lh_OBJ_NAME_error
 argument_list|(
 name|names_lh
 argument_list|)
@@ -1152,11 +1138,7 @@ name|type
 expr_stmt|;
 name|ret
 operator|=
-operator|(
-name|OBJ_NAME
-operator|*
-operator|)
-name|lh_delete
+name|lh_OBJ_NAME_delete
 argument_list|(
 name|names_lh
 argument_list|,
@@ -1271,7 +1253,7 @@ end_struct
 begin_function
 specifier|static
 name|void
-name|do_all_fn
+name|do_all_fn_doall_arg
 parameter_list|(
 specifier|const
 name|OBJ_NAME
@@ -1314,9 +1296,9 @@ name|IMPLEMENT_LHASH_DOALL_ARG_FN
 argument_list|(
 argument|do_all_fn
 argument_list|,
-argument|const OBJ_NAME *
+argument|const OBJ_NAME
 argument_list|,
-argument|struct doall *
+argument|struct doall
 argument_list|)
 name|void
 name|OBJ_NAME_do_all
@@ -1349,7 +1331,7 @@ name|arg
 operator|=
 name|arg
 block|;
-name|lh_doall_arg
+name|lh_OBJ_NAME_doall_arg
 argument_list|(
 name|names_lh
 argument_list|,
@@ -1357,6 +1339,9 @@ name|LHASH_DOALL_ARG_FN
 argument_list|(
 name|do_all_fn
 argument_list|)
+argument_list|,
+expr|struct
+name|doall
 argument_list|,
 operator|&
 name|d
@@ -1529,7 +1514,7 @@ name|names
 operator|=
 name|OPENSSL_malloc
 argument_list|(
-name|lh_num_items
+name|lh_OBJ_NAME_num_items
 argument_list|(
 name|names_lh
 argument_list|)
@@ -1631,7 +1616,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|names_lh_free
+name|names_lh_free_doall
 parameter_list|(
 name|OBJ_NAME
 modifier|*
@@ -1647,21 +1632,16 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
 name|free_type
 operator|<
 literal|0
-operator|)
 operator|||
-operator|(
 name|free_type
 operator|==
 name|onp
 operator|->
 name|type
-operator|)
 condition|)
-block|{
 name|OBJ_NAME_remove
 argument_list|(
 name|onp
@@ -1674,7 +1654,6 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_expr_stmt
@@ -1683,7 +1662,7 @@ name|IMPLEMENT_LHASH_DOALL_FN
 argument_list|(
 argument|names_lh_free
 argument_list|,
-argument|OBJ_NAME *
+argument|OBJ_NAME
 argument_list|)
 specifier|static
 name|void
@@ -1723,23 +1702,25 @@ end_expr_stmt
 begin_expr_stmt
 name|down_load
 operator|=
+name|lh_OBJ_NAME_down_load
+argument_list|(
 name|names_lh
-operator|->
-name|down_load
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|lh_OBJ_NAME_down_load
+argument_list|(
 name|names_lh
-operator|->
-name|down_load
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|lh_doall
+name|lh_OBJ_NAME_doall
 argument_list|(
 name|names_lh
 argument_list|,
@@ -1759,7 +1740,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|lh_free
+name|lh_OBJ_NAME_free
 argument_list|(
 name|names_lh
 argument_list|)
@@ -1781,9 +1762,10 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
+name|lh_OBJ_NAME_down_load
+argument_list|(
 name|names_lh
-operator|->
-name|down_load
+argument_list|)
 operator|=
 name|down_load
 expr_stmt|;

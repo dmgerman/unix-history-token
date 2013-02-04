@@ -161,6 +161,7 @@ value|7
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -176,6 +177,7 @@ comment|/* output file names */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfiles
 decl_stmt|;

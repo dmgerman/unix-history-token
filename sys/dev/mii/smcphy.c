@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for the internal PHY on the SMSC LAN91C111.  */
+comment|/*  * Driver for the SEEQ 80220 and 84220.  * (Originally developed for the internal PHY on the SMSC LAN91C111.)  */
 end_comment
 
 begin_include

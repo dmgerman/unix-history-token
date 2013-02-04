@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -123,7 +123,7 @@ argument_list|(
 name|NsLoadTable
 argument_list|)
 expr_stmt|;
-comment|/*      * Parse the table and load the namespace with all named      * objects found within.  Control methods are NOT parsed      * at this time.  In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
+comment|/*      * Parse the table and load the namespace with all named      * objects found within. Control methods are NOT parsed      * at this time. In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -250,7 +250,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now we can parse the control methods.  We always parse      * them here for a sanity check, and if configured for      * just-in-time parsing, we delete the control method      * parse trees.      */
+comment|/*      * Now we can parse the control methods. We always parse      * them here for a sanity check, and if configured for      * just-in-time parsing, we delete the control method      * parse trees.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -334,7 +334,7 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Load the namespace.  The DSDT is required,      * but the SSDT and PSDT tables are optional.      */
+comment|/*      * Load the namespace. The DSDT is required,      * but the SSDT and PSDT tables are optional.      */
 name|Status
 operator|=
 name|AcpiNsLoadTableByType
@@ -577,7 +577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  *  FUNCTION:       AcpiNsUnloadNameSpace  *  *  PARAMETERS:     Handle          - Root of namespace subtree to be deleted  *  *  RETURN:         Status  *  *  DESCRIPTION:    Shrinks the namespace, typically in response to an undocking  *                  event.  Deletes an entire subtree starting from (and  *                  including) the given handle.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  *  FUNCTION:       AcpiNsUnloadNameSpace  *  *  PARAMETERS:     Handle          - Root of namespace subtree to be deleted  *  *  RETURN:         Status  *  *  DESCRIPTION:    Shrinks the namespace, typically in response to an undocking  *                  event. Deletes an entire subtree starting from (and  *                  including) the given handle.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -412,7 +412,7 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
-name|getTargetData
+name|getDataLayout
 argument_list|()
 operator|->
 name|getABITypeAlignment
@@ -428,7 +428,7 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
-name|getTargetData
+name|getDataLayout
 argument_list|()
 operator|->
 name|getTypeSizeInBits
@@ -737,7 +737,7 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
-name|getTargetData
+name|getDataLayout
 argument_list|()
 operator|->
 name|getABITypeAlignment
@@ -753,7 +753,7 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
-name|getTargetData
+name|getDataLayout
 argument_list|()
 operator|->
 name|getTypeSizeInBits

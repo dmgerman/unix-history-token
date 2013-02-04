@@ -100,22 +100,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAC_OS_pre_X
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stat.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_POSIX_IO
+end_ifndef
 
 begin_include
 include|#
@@ -282,10 +271,15 @@ index|[
 name|BUFSIZE
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_POSIX_IO
 name|struct
 name|stat
 name|sb
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|,
@@ -310,6 +304,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_POSIX_IO
 ifdef|#
 directive|ifdef
 name|PURIFY
@@ -359,6 +356,8 @@ argument_list|,
 literal|0.0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bytes
@@ -410,28 +409,30 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|S_ISBLK
+name|S_IFBLK
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|S_ISCHR
+name|S_IFCHR
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_NO_POSIX_IO
 argument_list|)
 if|if
 condition|(
-name|S_ISBLK
-argument_list|(
 name|sb
 operator|.
 name|st_mode
-argument_list|)
-operator|||
-name|S_ISCHR
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
+operator|&
+operator|(
+name|S_IFBLK
+operator||
+name|S_IFCHR
+operator|)
 condition|)
 block|{
 comment|/* this file is a device. we don't want read an infinite number 	   * of bytes from a random device, nor do we want to use buffered 	   * I/O because we will waste system entropy.  	   */
@@ -449,6 +450,9 @@ else|:
 name|bytes
 expr_stmt|;
 comment|/* ok, is 2048 enough? */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SETVBUF_IONBF
 name|setvbuf
 argument_list|(
 name|in
@@ -461,6 +465,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* don't do buffered reads */
+endif|#
+directive|endif
+comment|/* ndef OPENSSL_NO_SETVBUF_IONBF */
 block|}
 endif|#
 directive|endif
@@ -631,6 +638,9 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_POSIX_IO
 name|struct
 name|stat
 name|sb
@@ -691,6 +701,8 @@ block|}
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -701,7 +713,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WIN32
+name|OPENSSL_NO_POSIX_IO
 argument_list|)
 operator|&&
 operator|!
@@ -710,7 +722,15 @@ argument_list|(
 name|OPENSSL_SYS_VMS
 argument_list|)
 block|{
-comment|/* For some reason Win32 can't write to files created this way */
+ifndef|#
+directive|ifndef
+name|O_BINARY
+define|#
+directive|define
+name|O_BINARY
+value|0
+endif|#
+directive|endif
 comment|/* chmod(..., 0600) is too late to protect the file, 	 * permissions should be restrictive from the start */
 name|int
 name|fd
@@ -719,7 +739,11 @@ name|open
 argument_list|(
 name|file
 argument_list|,
+name|O_WRONLY
+operator||
 name|O_CREAT
+operator||
+name|O_BINARY
 argument_list|,
 literal|0600
 argument_list|)
@@ -944,11 +968,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__OpenBSD__
-name|int
-name|ok
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|stat
 name|sb
@@ -1092,15 +1111,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-name|ok
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|buf
@@ -1119,7 +1129,10 @@ comment|/* given that all random loads just fail if the file can't be  	 * seen 
 if|if
 condition|(
 operator|!
-name|ok
+name|buf
+index|[
+literal|0
+index|]
 condition|)
 if|if
 condition|(

@@ -1204,7 +1204,7 @@ name|GXEMUL_DISK_DEV_WRITE
 argument_list|(
 name|GXEMUL_DISK_DEV_START
 argument_list|,
-name|GXEMUL_DISK_DEV_START_READ
+name|GXEMUL_DISK_DEV_START_WRITE
 argument_list|)
 expr_stmt|;
 switch|switch

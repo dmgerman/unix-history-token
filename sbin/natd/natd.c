@@ -5050,6 +5050,7 @@ name|char
 modifier|*
 name|end
 decl_stmt|;
+specifier|const
 name|CODE
 modifier|*
 name|fac_record
@@ -5638,7 +5639,6 @@ name|logIpfwDenied
 operator|=
 name|yesNoValue
 expr_stmt|;
-empty_stmt|;
 break|break;
 case|case
 name|PidFile

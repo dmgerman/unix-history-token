@@ -53,7 +53,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* "usb_parse_config()" commands */
+comment|/* "usb_config_parse()" commands */
 end_comment
 
 begin_define

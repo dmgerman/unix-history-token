@@ -431,7 +431,9 @@ index|]
 decl_stmt|;
 name|int
 name|eflags
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|regs
 index|[
 literal|4

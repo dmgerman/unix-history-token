@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/accommon.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acparser.h>
 end_include
 
 begin_include
@@ -211,7 +205,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayObjectPathname  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Object whose pathname is to be obtained  *  * RETURN:      Status  *  * DESCRIPTION: Diplay the pathname associated with a named object.  Two  *              versions. One searches the parse tree (for parser-only  *              applications suchas AcpiDump), and the other searches the  *              ACPI namespace (the parse tree is probably deleted)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayObjectPathname  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Object whose pathname is to be obtained  *  * RETURN:      Status  *  * DESCRIPTION: Diplay the pathname associated with a named object. Two  *              versions. One searches the parse tree (for parser-only  *              applications suchas AcpiDump), and the other searches the  *              ACPI namespace (the parse tree is probably deleted)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -303,7 +297,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * We can't get the pathname since the object              * is not in the namespace.  This can happen during single              * stepping where a dynamic named object is *about* to be created.              */
+comment|/*              * We can't get the pathname since the object              * is not in the namespace. This can happen during single              * stepping where a dynamic named object is *about* to be created.              */
 name|AcpiOsPrintf
 argument_list|(
 literal|"  [Path not found]"
@@ -419,7 +413,15 @@ block|}
 comment|/* Handle all Scope Prefix operators */
 while|while
 condition|(
-name|AcpiPsIsPrefixChar
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+name|ACPI_GET8
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+operator|||
+name|ACPI_IS_PARENT_PREFIX
 argument_list|(
 name|ACPI_GET8
 argument_list|(
@@ -667,6 +669,8 @@ name|String
 operator|)
 operator|&&
 operator|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
 name|NamePath
 operator|->
 name|Common
@@ -677,8 +681,7 @@ name|String
 index|[
 literal|0
 index|]
-operator|==
-literal|'\\'
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -983,7 +986,7 @@ operator|!
 name|TargetOp
 condition|)
 block|{
-comment|/*          * Didn't find the name in the parse tree.  This may be          * a problem, or it may simply be one of the predefined names          * (such as _OS_).  Rather than worry about looking up all          * the predefined names, just display the name as given          */
+comment|/*          * Didn't find the name in the parse tree. This may be          * a problem, or it may simply be one of the predefined names          * (such as _OS_). Rather than worry about looking up all          * the predefined names, just display the name as given          */
 name|AcpiOsPrintf
 argument_list|(
 literal|" /**** Name not found or not accessible from this scope ****/ "

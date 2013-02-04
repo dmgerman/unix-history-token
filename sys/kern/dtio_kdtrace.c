@@ -220,9 +220,9 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|genunix
+name|kernel
 init|=
-literal|"genunix"
+literal|"kernel"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,7 +445,7 @@ name|dtrace_probe_lookup
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -461,7 +461,7 @@ name|dtrace_probe_create
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -479,7 +479,7 @@ name|dtrace_probe_lookup
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -495,7 +495,7 @@ name|dtrace_probe_create
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -513,7 +513,7 @@ name|dtrace_probe_lookup
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -529,7 +529,7 @@ name|dtrace_probe_create
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -547,7 +547,7 @@ name|dtrace_probe_lookup
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,
@@ -563,7 +563,7 @@ name|dtrace_probe_create
 argument_list|(
 name|dtio_id
 argument_list|,
-name|genunix
+name|kernel
 argument_list|,
 name|NULL
 argument_list|,

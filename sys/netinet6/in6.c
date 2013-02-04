@@ -388,57 +388,51 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|in6_lifaddr_ioctl
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|socket
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_long
-operator|,
+parameter_list|,
 name|caddr_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ifnet
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|thread
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|in6_ifinit
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|in6_ifaddr
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|sockaddr_in6
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1360,7 +1354,7 @@ case|:
 case|case
 name|SIOCGETMIFCNT_IN6
 case|:
-comment|/*	 		 * XXX mrt_ioctl has a 3rd, unused, FIB argument in route.c. 		 * We cannot see how that would be needed, so do not adjust the 		 * KPI blindly; more likely should clean up the IPv4 variant. 		 */
+comment|/* 		 * XXX mrt_ioctl has a 3rd, unused, FIB argument in route.c. 		 * We cannot see how that would be needed, so do not adjust the 		 * KPI blindly; more likely should clean up the IPv4 variant. 		 */
 return|return
 operator|(
 name|mrt6_ioctl
@@ -4373,7 +4367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update parameters of an IPv6 interface address.  * If necessary, a new entry is created and linked into address chains.  * This function is separated from in6_control().  * XXX: should this be performed under splnet()?  */
+comment|/*  * Update parameters of an IPv6 interface address.  * If necessary, a new entry is created and linked into address chains.  * This function is separated from in6_control().  */
 end_comment
 
 begin_function
@@ -5085,6 +5079,23 @@ argument_list|,
 name|ia
 argument_list|,
 name|ia_link
+argument_list|)
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+name|IN6ADDR_HASH
+argument_list|(
+operator|&
+name|ifra
+operator|->
+name|ifra_addr
+operator|.
+name|sin6_addr
+argument_list|)
+argument_list|,
+name|ia
+argument_list|,
+name|ia6_hash
 argument_list|)
 expr_stmt|;
 name|IN6_IFADDR_WUNLOCK
@@ -6045,7 +6056,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
+comment|/* 		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
 if|if
 condition|(
 name|ifa0
@@ -6280,7 +6291,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
+comment|/* 		 * If no more IPv6 address exists on this interface then 		 * remove the multicast address route. 		 */
 if|if
 condition|(
 name|ifa0
@@ -6556,7 +6567,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback"  	 * is not needed. 	 */
+comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback" 	 * is not needed. 	 */
 if|if
 condition|(
 name|ia
@@ -6751,12 +6762,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
@@ -6803,6 +6808,13 @@ argument_list|,
 name|ia
 argument_list|,
 name|ia_link
+argument_list|)
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|ia
+argument_list|,
+name|ia6_hash
 argument_list|)
 expr_stmt|;
 name|IN6_IFADDR_WUNLOCK
@@ -6872,11 +6884,6 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* in6_ifaddrhead */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -8341,12 +8348,6 @@ name|ifacount
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -8428,24 +8429,12 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa
@@ -8457,7 +8446,7 @@ operator|->
 name|if_metric
 expr_stmt|;
 comment|/* we could do in(6)_socktrim here, but just omit it at this moment. */
-comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route.  	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share the same destination. 	 */
+comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route. 	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share the same destination. 	 */
 name|plen
 operator|=
 name|in6_mask2len
@@ -9355,13 +9344,13 @@ decl_stmt|;
 name|IN6_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
-name|TAILQ_FOREACH
+name|LIST_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&V_in6_ifaddrhead
+argument|IN6ADDR_HASH(in6)
 argument_list|,
-argument|ia_link
+argument|ia6_hash
 argument_list|)
 block|{
 if|if
@@ -9418,41 +9407,38 @@ decl_stmt|;
 name|IN6_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
-name|TAILQ_FOREACH
+name|LIST_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&V_in6_ifaddrhead
+argument|IN6ADDR_HASH(&sa6->sin6_addr)
 argument_list|,
-argument|ia_link
+argument|ia6_hash
 argument_list|)
 block|{
 if|if
 condition|(
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
-operator|&
+name|IA6_IN6
+argument_list|(
 name|ia
-operator|->
-name|ia_addr
-operator|.
-name|sin6_addr
+argument_list|)
 argument_list|,
 operator|&
 name|sa6
 operator|->
 name|sin6_addr
 argument_list|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|ia
 operator|->
 name|ia6_flags
 operator|&
 name|IN6_IFF_DEPRECATED
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|IN6_IFADDR_RUNLOCK
@@ -9465,7 +9451,8 @@ operator|)
 return|;
 comment|/* true */
 block|}
-comment|/* XXX: do we still have to go thru the rest of the list? */
+break|break;
+block|}
 block|}
 name|IN6_IFADDR_RUNLOCK
 argument_list|()
@@ -10896,7 +10883,7 @@ argument_list|)
 argument_list|,
 name|M_LLTABLE
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -10968,10 +10955,12 @@ name|CALLOUT_RETURNUNLOCKED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|&
 name|lle
 operator|->
 name|base
+operator|)
 return|;
 block|}
 end_function
@@ -11038,11 +11027,17 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * (flags& LLE_STATIC) means deleting all entries  	 * including static ND6 entries 	 */
+comment|/* 	 * (flags& LLE_STATIC) means deleting all entries 	 * including static ND6 entries. 	 */
+name|IF_AFDATA_WLOCK
+argument_list|(
+name|llt
+operator|->
+name|llt_ifp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -11073,17 +11068,13 @@ condition|(
 name|IN6_ARE_MASKED_ADDR_EQUAL
 argument_list|(
 operator|&
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
+name|satosin6
+argument_list|(
 name|L3_ADDR
 argument_list|(
 name|lle
 argument_list|)
-operator|)
+argument_list|)
 operator|->
 name|sin6_addr
 argument_list|,
@@ -11116,19 +11107,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|int
-name|canceled
-decl_stmt|;
-name|canceled
-operator|=
-name|callout_drain
-argument_list|(
-operator|&
-name|lle
-operator|->
-name|la_timer
-argument_list|)
-expr_stmt|;
 name|LLE_WLOCK
 argument_list|(
 name|lle
@@ -11136,7 +11114,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|canceled
+name|callout_stop
+argument_list|(
+operator|&
+name|lle
+operator|->
+name|la_timer
+argument_list|)
 condition|)
 name|LLE_REMREF
 argument_list|(
@@ -11151,6 +11135,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IF_AFDATA_WUNLOCK
+argument_list|(
+name|llt
+operator|->
+name|llt_ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11250,7 +11241,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-comment|/*  		 * Create an ND6 cache for an IPv6 neighbor  		 * that is not covered by our own prefix. 		 */
+comment|/* 		 * Create an ND6 cache for an IPv6 neighbor 		 * that is not covered by our own prefix. 		 */
 comment|/* XXX ifaof_ifpforaddr should take a const param */
 name|ifa
 operator|=
@@ -11650,6 +11641,12 @@ name|lle_head
 operator|=
 name|lleh
 expr_stmt|;
+name|lle
+operator|->
+name|la_flags
+operator||=
+name|LLE_LINKED
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 name|lleh
@@ -11694,7 +11691,7 @@ expr_stmt|;
 name|lle
 operator|->
 name|la_flags
-operator|=
+operator||=
 name|LLE_DELETED
 expr_stmt|;
 name|LLE_WUNLOCK
@@ -12001,6 +11998,18 @@ name|L3_ADDR_LEN
 argument_list|(
 name|lle
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|V_deembed_scopeid
+condition|)
+name|sa6_recoverscope
+argument_list|(
+operator|&
+name|ndpc
+operator|.
+name|sin6
 argument_list|)
 expr_stmt|;
 comment|/* publish */

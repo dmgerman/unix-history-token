@@ -8,6 +8,10 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*	Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T	*/
 end_comment
 
@@ -293,6 +297,13 @@ parameter_list|,
 name|z
 parameter_list|)
 value|VERIFY3_IMPL(x, y, z, uintptr_t)
+define|#
+directive|define
+name|VERIFY0
+parameter_list|(
+name|x
+parameter_list|)
+value|VERIFY3_IMPL(x, ==, 0, uintmax_t)
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -329,6 +340,13 @@ parameter_list|,
 name|z
 parameter_list|)
 value|VERIFY3_IMPL(x, y, z, uintptr_t)
+define|#
+directive|define
+name|ASSERT0
+parameter_list|(
+name|x
+parameter_list|)
+value|VERIFY3_IMPL(x, ==, 0, uintmax_t)
 else|#
 directive|else
 define|#
@@ -362,6 +380,13 @@ parameter_list|,
 name|y
 parameter_list|,
 name|z
+parameter_list|)
+value|((void)0)
+define|#
+directive|define
+name|ASSERT0
+parameter_list|(
+name|x
 parameter_list|)
 value|((void)0)
 endif|#

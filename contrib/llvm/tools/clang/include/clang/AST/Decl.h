@@ -346,20 +346,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TranslationUnitDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -433,7 +419,7 @@ block|}
 block|}
 empty_stmt|;
 comment|/// NamedDecl - This represents a decl with a name.  Many decls have names such
-comment|/// as ObjCMethodDecl, but not @class, etc.
+comment|/// as ObjCMethodDecl, but not \@class, etc.
 name|class
 name|NamedDecl
 range|:
@@ -749,15 +735,40 @@ function|const;
 name|class
 name|LinkageInfo
 block|{
-name|Linkage
+name|uint8_t
 name|linkage_
+range|:
+literal|2
 decl_stmt|;
-name|Visibility
+name|uint8_t
 name|visibility_
+range|:
+literal|2
 decl_stmt|;
-name|bool
+name|uint8_t
 name|explicit_
+range|:
+literal|1
 decl_stmt|;
+name|void
+name|setVisibility
+parameter_list|(
+name|Visibility
+name|V
+parameter_list|,
+name|bool
+name|E
+parameter_list|)
+block|{
+name|visibility_
+operator|=
+name|V
+expr_stmt|;
+name|explicit_
+operator|=
+name|E
+expr_stmt|;
+block|}
 name|public
 label|:
 name|LinkageInfo
@@ -801,7 +812,27 @@ name|explicit_
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|linkage
+argument_list|()
+operator|==
+name|L
+operator|&&
+name|visibility
+argument_list|()
+operator|==
+name|V
+operator|&&
+name|visibilityExplicit
+argument_list|()
+operator|==
+name|E
+operator|&&
+literal|"Enum truncated!"
+argument_list|)
+block|;     }
 specifier|static
 name|LinkageInfo
 name|external
@@ -866,6 +897,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|Linkage
+operator|)
 name|linkage_
 return|;
 block|}
@@ -875,6 +909,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|Visibility
+operator|)
 name|visibility_
 return|;
 block|}
@@ -897,25 +934,6 @@ block|{
 name|linkage_
 operator|=
 name|L
-expr_stmt|;
-block|}
-name|void
-name|setVisibility
-parameter_list|(
-name|Visibility
-name|V
-parameter_list|,
-name|bool
-name|E
-parameter_list|)
-block|{
-name|visibility_
-operator|=
-name|V
-expr_stmt|;
-name|explicit_
-operator|=
-name|E
 expr_stmt|;
 block|}
 name|void
@@ -969,46 +987,26 @@ init|=
 name|false
 parameter_list|)
 block|{
-comment|// If one has explicit visibility and the other doesn't, keep the
-comment|// explicit one.
+comment|// Never increase the visibility
 if|if
 condition|(
-name|visibilityExplicit
-argument_list|()
-operator|&&
-operator|!
-name|E
-condition|)
-return|return;
-if|if
-condition|(
-operator|!
-name|visibilityExplicit
-argument_list|()
-operator|&&
-name|E
-condition|)
-name|setVisibility
-argument_list|(
-name|V
-argument_list|,
-name|E
-argument_list|)
-expr_stmt|;
-comment|// If both are explicit or both are implicit, keep the minimum.
-name|setVisibility
-argument_list|(
-name|minVisibility
-argument_list|(
 name|visibility
 argument_list|()
-argument_list|,
+operator|<
 name|V
-argument_list|)
-argument_list|,
+condition|)
+return|return;
+comment|// If we have an explicit visibility, keep it
+if|if
+condition|(
 name|visibilityExplicit
 argument_list|()
-operator|||
+condition|)
+return|return;
+name|setVisibility
+argument_list|(
+name|V
+argument_list|,
 name|E
 argument_list|)
 expr_stmt|;
@@ -1038,6 +1036,7 @@ operator|<
 name|V
 condition|)
 return|return;
+comment|// FIXME: this
 comment|// If this visibility is explicit, keep it.
 if|if
 condition|(
@@ -1048,6 +1047,10 @@ operator|!
 name|E
 condition|)
 return|return;
+comment|// should be replaced with this
+comment|// Don't lose the explicit bit for nothing
+comment|//      if (visibility() == V&& visibilityExplicit())
+comment|//        return;
 name|setVisibility
 argument_list|(
 name|V
@@ -1133,28 +1136,6 @@ argument_list|(
 name|Other
 argument_list|)
 expr_stmt|;
-block|}
-name|friend
-name|LinkageInfo
-name|merge
-parameter_list|(
-name|LinkageInfo
-name|L
-parameter_list|,
-name|LinkageInfo
-name|R
-parameter_list|)
-block|{
-name|L
-operator|.
-name|merge
-argument_list|(
-name|R
-argument_list|)
-expr_stmt|;
-return|return
-name|L
-return|;
 block|}
 block|}
 empty_stmt|;
@@ -1273,20 +1254,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -1536,17 +1503,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LabelDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -2100,23 +2056,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|NamespaceDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -2335,17 +2274,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const ValueDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -2422,10 +2350,9 @@ operator|:
 comment|// Copy constructor and copy assignment are disabled.
 name|QualifierInfo
 argument_list|(
-specifier|const
-name|QualifierInfo
-operator|&
+argument|const QualifierInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|QualifierInfo
 operator|&
@@ -2436,6 +2363,7 @@ specifier|const
 name|QualifierInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|; }
 block|;
 comment|/// \brief Represents a ValueDecl that came out of a declarator.
@@ -2797,17 +2725,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const DeclaratorDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -2931,7 +2848,7 @@ name|StorageClass
 name|StorageClass
 expr_stmt|;
 comment|/// getStorageClassSpecifierString - Return the string used to
-comment|/// specify the storage class \arg SC.
+comment|/// specify the storage class \p SC.
 comment|///
 comment|/// It is illegal to call this function with SC == None.
 specifier|static
@@ -4967,7 +4884,7 @@ comment|/// \brief Determine whether this variable is the exception variable in 
 end_comment
 
 begin_comment
-comment|/// C++ catch statememt or an Objective-C @catch statement.
+comment|/// C++ catch statememt or an Objective-C \@catch statement.
 end_comment
 
 begin_expr_stmt
@@ -5159,7 +5076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Whether this variable is (C++0x) constexpr.
+comment|/// Whether this variable is (C++11) constexpr.
 end_comment
 
 begin_expr_stmt
@@ -5305,23 +5222,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|VarDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -5418,17 +5318,6 @@ name|setImplicit
 argument_list|()
 block|;   }
 comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImplicitParamDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -6240,23 +6129,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ParmVarDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -7528,7 +7400,7 @@ operator|=
 name|P
 expr_stmt|;
 block|}
-comment|/// Whether this is a (C++0x) constexpr function or constexpr constructor.
+comment|/// Whether this is a (C++11) constexpr function or constexpr constructor.
 name|bool
 name|isConstexpr
 argument_list|()
@@ -7544,12 +7416,7 @@ parameter_list|(
 name|bool
 name|IC
 parameter_list|)
-block|{
-name|IsConstexpr
-operator|=
-name|IC
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// \brief Whether this function has been deleted.
 comment|///
 comment|/// A function that is "deleted" (via the C++0x "= delete" syntax)
@@ -8411,20 +8278,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|FunctionDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -8541,15 +8394,16 @@ name|CachedFieldIndex
 operator|:
 literal|31
 block|;
-comment|/// \brief A pointer to either the in-class initializer for this field (if
-comment|/// the boolean value is false), or the bit width expression for this bit
-comment|/// field (if the boolean value is true).
+comment|/// \brief An InClassInitStyle value, and either a bit width expression (if
+comment|/// the InClassInitStyle value is ICIS_NoInit), or a pointer to the in-class
+comment|/// initializer for this field (otherwise).
 comment|///
 comment|/// We can safely combine these two because in-class initializers are not
 comment|/// permitted for bit-fields.
 comment|///
-comment|/// If the boolean is false and the initializer is null, then this field has
-comment|/// an in-class initializer which has not yet been parsed and attached.
+comment|/// If the InClassInitStyle is not ICIS_NoInit and the initializer is null,
+comment|/// then this field has an in-class initializer which has not yet been parsed
+comment|/// and attached.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -8557,9 +8411,9 @@ operator|<
 name|Expr
 operator|*
 block|,
-literal|1
+literal|2
 block|,
-name|bool
+name|unsigned
 operator|>
 name|InitializerOrBitWidth
 block|;
@@ -8585,7 +8439,7 @@ argument|Expr *BW
 argument_list|,
 argument|bool Mutable
 argument_list|,
-argument|bool HasInit
+argument|InClassInitStyle InitStyle
 argument_list|)
 operator|:
 name|DeclaratorDecl
@@ -8619,16 +8473,18 @@ name|InitializerOrBitWidth
 argument_list|(
 argument|BW
 argument_list|,
-argument|!HasInit
+argument|InitStyle
 argument_list|)
 block|{
 name|assert
 argument_list|(
-operator|!
 operator|(
+operator|!
 name|BW
-operator|&&
-name|HasInit
+operator|||
+name|InitStyle
+operator|==
+name|ICIS_NoInit
 operator|)
 operator|&&
 literal|"got initializer for bitfield"
@@ -8659,7 +8515,7 @@ argument|Expr *BW
 argument_list|,
 argument|bool Mutable
 argument_list|,
-argument|bool HasInit
+argument|InClassInitStyle InitStyle
 argument_list|)
 block|;
 specifier|static
@@ -8689,17 +8545,6 @@ return|return
 name|Mutable
 return|;
 block|}
-comment|/// \brief Set whether this field is mutable (C++ only).
-name|void
-name|setMutable
-argument_list|(
-argument|bool M
-argument_list|)
-block|{
-name|Mutable
-operator|=
-name|M
-block|; }
 comment|/// isBitfield - Determines whether this field is a bitfield.
 name|bool
 name|isBitField
@@ -8707,10 +8552,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|InitializerOrBitWidth
-operator|.
-name|getInt
+name|getInClassInitStyle
 argument_list|()
+operator|==
+name|ICIS_NoInit
 operator|&&
 name|InitializerOrBitWidth
 operator|.
@@ -8767,38 +8612,18 @@ argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
+comment|/// setBitWidth - Set the bit-field width for this member.
+comment|// Note: used by some clients (i.e., do not remove it).
 name|void
 name|setBitWidth
 argument_list|(
-argument|Expr *BW
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|InitializerOrBitWidth
-operator|.
-name|getPointer
-argument_list|()
-operator|&&
-literal|"bit width or initializer already set"
+name|Expr
+operator|*
+name|Width
 argument_list|)
 block|;
-name|InitializerOrBitWidth
-operator|.
-name|setPointer
-argument_list|(
-name|BW
-argument_list|)
-block|;
-name|InitializerOrBitWidth
-operator|.
-name|setInt
-argument_list|(
-literal|1
-argument_list|)
-block|;   }
-comment|/// removeBitWidth - Remove the bitfield width from this member.
+comment|/// removeBitWidth - Remove the bit-field width from this member.
+comment|// Note: used by some clients (i.e., do not remove it).
 name|void
 name|removeBitWidth
 argument_list|()
@@ -8808,7 +8633,7 @@ argument_list|(
 name|isBitField
 argument_list|()
 operator|&&
-literal|"no bit width to remove"
+literal|"no bitfield width to remove"
 argument_list|)
 block|;
 name|InitializerOrBitWidth
@@ -8818,7 +8643,27 @@ argument_list|(
 literal|0
 argument_list|)
 block|;   }
-comment|/// hasInClassInitializer - Determine whether this member has a C++0x in-class
+comment|/// getInClassInitStyle - Get the kind of (C++11) in-class initializer which
+comment|/// this field has.
+name|InClassInitStyle
+name|getInClassInitStyle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|InClassInitStyle
+operator|>
+operator|(
+name|InitializerOrBitWidth
+operator|.
+name|getInt
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// hasInClassInitializer - Determine whether this member has a C++11 in-class
 comment|/// initializer.
 name|bool
 name|hasInClassInitializer
@@ -8826,14 +8671,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|InitializerOrBitWidth
-operator|.
-name|getInt
+name|getInClassInitStyle
 argument_list|()
+operator|!=
+name|ICIS_NoInit
 return|;
 block|}
-comment|/// getInClassInitializer - Get the C++0x in-class initializer for this
+comment|/// getInClassInitializer - Get the C++11 in-class initializer for this
 comment|/// member, or null if one has not been set. If a valid declaration has an
 comment|/// in-class initializer, but this returns null, then we have not parsed and
 comment|/// attached it yet.
@@ -8855,7 +8699,7 @@ else|:
 literal|0
 return|;
 block|}
-comment|/// setInClassInitializer - Set the C++0x in-class initializer for this
+comment|/// setInClassInitializer - Set the C++11 in-class initializer for this
 comment|/// member.
 name|void
 name|setInClassInitializer
@@ -8865,7 +8709,7 @@ operator|*
 name|Init
 argument_list|)
 block|;
-comment|/// removeInClassInitializer - Remove the C++0x in-class initializer from this
+comment|/// removeInClassInitializer - Remove the C++11 in-class initializer from this
 comment|/// member.
 name|void
 name|removeInClassInitializer
@@ -8873,10 +8717,7 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
-operator|!
-name|InitializerOrBitWidth
-operator|.
-name|getInt
+name|hasInClassInitializer
 argument_list|()
 operator|&&
 literal|"no initializer to remove"
@@ -8893,7 +8734,7 @@ name|InitializerOrBitWidth
 operator|.
 name|setInt
 argument_list|(
-literal|1
+name|ICIS_NoInit
 argument_list|)
 block|;   }
 comment|/// getParent - Returns the parent of this field declaration, which
@@ -8958,17 +8799,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const FieldDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -8984,15 +8814,37 @@ operator|<=
 name|lastField
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|ASTDeclReader
 block|;
+name|friend
+name|class
+name|ASTDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EnumConstantDecl - An instance of this object exists for each enum constant
+end_comment
+
+begin_comment
 comment|/// that is defined.  For example, in "enum X {a,b}", each of a/b are
+end_comment
+
+begin_comment
 comment|/// EnumConstantDecl's, X is an instance of EnumDecl, and the type of a/b is a
+end_comment
+
+begin_comment
 comment|/// TagType for the X EnumDecl.
+end_comment
+
+begin_decl_stmt
 name|class
 name|EnumConstantDecl
-operator|:
+range|:
 name|public
 name|ValueDecl
 block|{
@@ -9175,17 +9027,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const EnumConstantDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -9201,13 +9042,25 @@ name|friend
 name|class
 name|StmtIteratorBase
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// IndirectFieldDecl - An instance of this class is created to represent a
+end_comment
+
+begin_comment
 comment|/// field injected from an anonymous union/struct into the parent scope.
+end_comment
+
+begin_comment
 comment|/// IndirectFieldDecl are always implicit.
+end_comment
+
+begin_decl_stmt
 name|class
 name|IndirectFieldDecl
-operator|:
+range|:
 name|public
 name|ValueDecl
 block|{
@@ -9403,17 +9256,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const IndirectFieldDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -9428,11 +9270,11 @@ block|}
 name|friend
 name|class
 name|ASTDeclReader
-block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
+unit|};
 comment|/// TypeDecl - Represents a declaration of a type.
 end_comment
 
@@ -9528,7 +9370,10 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|// Low-level accessor
+comment|// Low-level accessor. If you just want the type defined by this node,
+comment|// check out ASTContext::getTypeDeclType or one of
+comment|// ASTContext::getTypedefType, ASTContext::getRecordType, etc. if you
+comment|// already know the specific kind of node this is.
 specifier|const
 name|Type
 operator|*
@@ -9618,17 +9463,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -9895,23 +9729,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TypedefNameDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -10030,17 +9847,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const TypedefDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -10146,17 +9952,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const TypeAliasDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -10200,7 +9995,7 @@ comment|/// TagDeclKind - The TagKind enum.
 name|unsigned
 name|TagDeclKind
 operator|:
-literal|2
+literal|3
 block|;
 comment|/// IsCompleteDefinition - True if this is a definition ("struct foo
 comment|/// {};"), false if it is a declaration ("struct foo;").  It is not
@@ -10859,6 +10654,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// FIXME: Return StringRef;
+end_comment
+
 begin_expr_stmt
 specifier|const
 name|char
@@ -10920,6 +10719,21 @@ name|getTagKind
 argument_list|()
 operator|==
 name|TTK_Struct
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isInterface
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTagKind
+argument_list|()
+operator|==
+name|TTK_Interface
 return|;
 block|}
 end_expr_stmt
@@ -11173,23 +10987,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TagDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -12234,23 +12031,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|EnumDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -12678,23 +12458,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|RecordDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -12712,6 +12475,31 @@ name|lastRecord
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// isMsStrust - Get whether or not this is an ms_struct which can
+end_comment
+
+begin_comment
+comment|/// be turned on with an attribute, pragma, or -mms-bitfields
+end_comment
+
+begin_comment
+comment|/// commandline option.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isMsStruct
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|private
@@ -12899,17 +12687,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FileScopeAsmDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -13714,23 +13491,6 @@ end_function
 begin_function
 specifier|static
 name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|BlockDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
 name|classofKind
 parameter_list|(
 name|Kind
@@ -13843,11 +13603,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Import declarations can also be implicitly generated from #include/#import
+comment|/// Import declarations can also be implicitly generated from
 end_comment
 
 begin_comment
-comment|/// directives.
+comment|/// \#include/\#import directives.
 end_comment
 
 begin_decl_stmt
@@ -14030,17 +13790,6 @@ operator|->
 name|getKind
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImportDecl *D
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static

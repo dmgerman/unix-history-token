@@ -455,8 +455,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|mtag
@@ -469,11 +467,6 @@ name|PACKET_TAG_IPSEC_IN_DONE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -530,11 +523,6 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: can happen if error */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/*XXX error stat???*/
 name|DPRINTF
 argument_list|(
@@ -564,11 +552,6 @@ name|KEY_FREESP
 argument_list|(
 operator|&
 name|sp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -630,8 +613,6 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
@@ -672,11 +653,6 @@ name|PACKET_TAG_IPSEC_IN_DONE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -770,11 +746,6 @@ return|return
 literal|1
 return|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1016,7 +987,7 @@ operator|!=
 name|PACKET_TAG_IPSEC_OUT_CRYPTO_NEEDED
 condition|)
 continue|continue;
-comment|/* 			 * Check if policy has an SA associated with it. 			 * This can happen when an SP has yet to acquire 			 * an SA; e.g. on first reference.  If it occurs, 			 * then we let ipsec4_process_packet do its thing. 			 */
+comment|/* 			 * Check if policy has no SA associated with it. 			 * This can happen when an SP has yet to acquire 			 * an SA; e.g. on first reference.  If it occurs, 			 * then we let ipsec4_process_packet do its thing. 			 */
 if|if
 condition|(
 operator|(
@@ -1124,13 +1095,15 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX splx(s); */
 goto|goto
 name|done
 goto|;
 block|}
 block|}
-comment|/* 		 * Do delayed checksums now because we send before 		 * this is done in the normal processing path. 		 * XXX-BZ CSUM_DELAY_DATA_IPV6? 		 */
+comment|/* 		 * Do delayed checksums now because we send before 		 * this is done in the normal processing path. 		 * For IPv6 we do delayed checksums in ip6_output.c. 		 */
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1156,17 +1129,12 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 name|in_delayed_cksum
 argument_list|(
 operator|*
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 operator|*
 name|m
@@ -1180,6 +1148,8 @@ operator|~
 name|CSUM_DELAY_DATA
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * Preserve KAME behaviour: ENOENT can be returned 		 * when an SA acquire is in progress.  Don't propagate 		 * this to user-level; it confuses applications. 		 * 		 * XXX this will go away when the SADB is redone. 		 */
 if|if
 condition|(

@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -176,7 +176,7 @@ name|class
 name|ScalarEvolution
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -248,12 +248,10 @@ name|private
 operator|:
 name|SCEV
 argument_list|(
-specifier|const
-name|SCEV
-operator|&
+argument|const SCEV&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -262,8 +260,8 @@ specifier|const
 name|SCEV
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 comment|/// NoWrapFlags are bitfield indices into SubclassData.
@@ -531,18 +529,6 @@ argument_list|()
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVCouldNotCompute *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -740,7 +726,7 @@ name|LI
 block|;
 comment|/// TD - The target data information for the target we are targeting.
 comment|///
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 block|;
@@ -784,6 +770,14 @@ comment|/// ValueExprMap - This is a cache of the values we have analyzed so far
 comment|///
 name|ValueExprMapType
 name|ValueExprMap
+block|;
+comment|/// Mark predicate values currently being processed by isImpliedCond.
+name|DenseSet
+operator|<
+name|Value
+operator|*
+operator|>
+name|PendingLoopPredicates
 block|;
 comment|/// ExitLimit - Information about the number of loop iterations for
 comment|/// which a loop exit's branch condition evaluates to the not-taken path.
@@ -2866,23 +2860,14 @@ comment|///
 name|bool
 name|SimplifyICmpOperands
 argument_list|(
-name|ICmpInst
-operator|::
-name|Predicate
-operator|&
-name|Pred
+argument|ICmpInst::Predicate&Pred
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-operator|&
-name|LHS
+argument|const SCEV *&LHS
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-operator|&
-name|RHS
+argument|const SCEV *&RHS
+argument_list|,
+argument|unsigned Depth =
+literal|0
 argument_list|)
 block|;
 comment|/// getLoopDisposition - Return the "disposition" of the given SCEV with
@@ -3025,6 +3010,12 @@ argument_list|,
 argument|const Module* =
 literal|0
 argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|verifyAnalysis
+argument_list|()
 specifier|const
 block|;
 name|private

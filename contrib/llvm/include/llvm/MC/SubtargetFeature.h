@@ -172,6 +172,7 @@ modifier|*
 name|Key
 decl_stmt|;
 comment|// K-V key string
+specifier|const
 name|void
 modifier|*
 name|Value
@@ -308,24 +309,6 @@ name|FeatureTable
 parameter_list|,
 name|size_t
 name|FeatureTableSize
-parameter_list|)
-function_decl|;
-comment|/// Get scheduling itinerary of a CPU.
-name|void
-modifier|*
-name|getItinerary
-parameter_list|(
-specifier|const
-name|StringRef
-name|CPU
-parameter_list|,
-specifier|const
-name|SubtargetInfoKV
-modifier|*
-name|Table
-parameter_list|,
-name|size_t
-name|TableSize
 parameter_list|)
 function_decl|;
 comment|/// Print feature string.

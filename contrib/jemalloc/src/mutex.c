@@ -319,6 +319,7 @@ name|JEMALLOC_MUTEX_INIT_CB
 end_ifdef
 
 begin_function_decl
+name|JEMALLOC_EXPORT
 name|int
 name|_pthread_mutex_init_calloc_cb
 parameter_list|(

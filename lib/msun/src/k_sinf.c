@@ -91,17 +91,17 @@ begin_comment
 comment|/*  0.0000027183114939898219064 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INLINE_KERNEL_SINDF
-end_ifndef
+end_ifdef
 
 begin_function
-specifier|extern
+specifier|static
+name|__inline
 endif|#
 directive|endif
-name|__inline
 name|float
 name|__kernel_sindf
 parameter_list|(

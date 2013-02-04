@@ -4242,13 +4242,14 @@ name|if_resolvemulti
 operator|=
 name|ipoib_resolvemulti
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|dev
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
-literal|10UL
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dev
@@ -6498,7 +6499,7 @@ name|m
 argument_list|,
 name|IPOIB_HEADER_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

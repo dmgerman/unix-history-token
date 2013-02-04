@@ -1173,6 +1173,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|di
+operator|==
+name|NULL
+condition|)
+return|return;
 name|free
 argument_list|(
 name|di
@@ -1353,8 +1360,6 @@ operator|&
 name|di
 operator|->
 name|di_res
-argument_list|,
-name|fdt_immr_va
 argument_list|)
 condition|)
 block|{

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -205,7 +205,7 @@ operator|&
 name|ByteZeroMask
 operator|)
 expr_stmt|;
-name|return_UINT32
+name|return_VALUE
 argument_list|(
 name|PackageLength
 argument_list|)
@@ -214,7 +214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextPackageEnd  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to end-of-package +1  *  * DESCRIPTION: Get next package length and return a pointer past the end of  *              the package.  Consumes the package length field  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextPackageEnd  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to end-of-package +1  *  * DESCRIPTION: Get next package length and return a pointer past the end of  *              the package. Consumes the package length field  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,7 +263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamestring  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to the start of the name string (pointer points into  *              the AML.  *  * DESCRIPTION: Get next raw namestring within the AML stream.  Handles all name  *              prefix characters.  Set parser state to point past the string.  *              (Name is consumed from the AML.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamestring  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Pointer to the start of the name string (pointer points into  *              the AML.  *  * DESCRIPTION: Get next raw namestring within the AML stream. Handles all name  *              prefix characters. Set parser state to point past the string.  *              (Name is consumed from the AML.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -300,7 +300,13 @@ expr_stmt|;
 comment|/* Point past any namestring prefix characters (backslash or carat) */
 while|while
 condition|(
-name|AcpiPsIsPrefixChar
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+operator|*
+name|End
+argument_list|)
+operator|||
+name|ACPI_IS_PARENT_PREFIX
 argument_list|(
 operator|*
 name|End
@@ -400,7 +406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              PossibleMethodCall  - Whether the namepath can possibly be the  *                                    start of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method.  If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              PossibleMethodCall  - Whether the namepath can possibly be the  *                                    start of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method. If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2027,7 +2033,12 @@ argument_list|(
 name|Subop
 argument_list|)
 operator|||
-name|AcpiPsIsPrefixChar
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+name|Subop
+argument_list|)
+operator|||
+name|ACPI_IS_PARENT_PREFIX
 argument_list|(
 name|Subop
 argument_list|)

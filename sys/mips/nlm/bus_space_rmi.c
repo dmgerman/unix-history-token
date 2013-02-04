@@ -1152,7 +1152,10 @@ block|{
 operator|*
 name|bshp
 operator|=
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+argument_list|(
 name|addr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

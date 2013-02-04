@@ -15,6 +15,23 @@ begin_comment
 comment|/*  * This file contains the driver for the Mentor Graphics Inventra USB  * 2.0 High Speed Dual-Role controller.  *  * NOTE: The current implementation only supports Device Side Mode!  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -201,6 +218,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_include
 include|#
@@ -5860,17 +5886,33 @@ end_function
 begin_function
 specifier|static
 name|void
+name|musbotg_xfer_stall
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+name|musbotg_device_done
+argument_list|(
+name|xfer
+argument_list|,
+name|USB_ERR_STALLED
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|musbotg_set_stall
 parameter_list|(
 name|struct
 name|usb_device
 modifier|*
 name|udev
-parameter_list|,
-name|struct
-name|usb_xfer
-modifier|*
-name|xfer
 parameter_list|,
 name|struct
 name|usb_endpoint
@@ -5908,20 +5950,6 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfer
-condition|)
-block|{
-comment|/* cancel any ongoing transfers */
-name|musbotg_device_done
-argument_list|(
-name|xfer
-argument_list|,
-name|USB_ERR_STALLED
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* set FORCESTALL */
 name|sc
 operator|=
@@ -8789,21 +8817,9 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|STRING_VENDOR
 define|\
-value|'M', 0, 'e', 0, 'n', 0, 't', 0, 'o', 0, 'r', 0, ' ', 0, \   'G', 0, 'r', 0, 'a', 0, 'p', 0, 'h', 0, 'i', 0, 'c', 0, 's', 0
+value|"M\0e\0n\0t\0o\0r\0 \0G\0r\0a\0p\0h\0i\0c\0s"
 end_define
 
 begin_define
@@ -8811,18 +8827,8 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'O', 0, 'T', 0, 'G', 0, ' ', 0, 'R', 0, \   'o', 0, 'o', 0, 't', 0, ' ', 0, 'H', 0, \   'U', 0, 'B', 0,
+value|"O\0T\0G\0 \0R\0o\0o\0t\0 \0H\0U\0B"
 end_define
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|musbotg_langtab
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -9446,7 +9452,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|musbotg_langtab
+name|usb_string_lang_en
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -9457,7 +9463,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|musbotg_langtab
+name|usb_string_lang_en
 expr_stmt|;
 goto|goto
 name|tr_valid
@@ -10640,20 +10646,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|udev
-operator|->
-name|flags
-operator|.
-name|usb_mode
-operator|!=
-name|USB_MODE_DEVICE
-condition|)
-block|{
-comment|/* not supported */
-return|return;
-block|}
-if|if
-condition|(
 operator|(
 name|udev
 operator|->
@@ -10826,6 +10818,12 @@ name|get_hw_ep_profile
 operator|=
 operator|&
 name|musbotg_get_hw_ep_profile
+block|,
+operator|.
+name|xfer_stall
+operator|=
+operator|&
+name|musbotg_xfer_stall
 block|,
 operator|.
 name|set_stall

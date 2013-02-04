@@ -20,7 +20,7 @@ specifier|extern
 name|int
 name|start_tracing
 parameter_list|(
-name|int
+name|pid_t
 parameter_list|)
 function_decl|;
 end_function_decl

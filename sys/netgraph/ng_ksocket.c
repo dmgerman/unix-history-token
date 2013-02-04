@@ -4650,17 +4650,10 @@ name|uio
 name|auio
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 comment|/* so = priv->so; */
 comment|/* XXX could have derived this like so */
 name|KASSERT
@@ -4867,14 +4860,7 @@ name|hook
 operator|==
 name|NULL
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* Read and forward available mbuf's */
 name|auio
 operator|.
@@ -5208,11 +5194,6 @@ operator||=
 name|KSF_EOFSEEN
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

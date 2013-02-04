@@ -692,7 +692,7 @@ name|sb
 operator|->
 name|sb_upcallarg
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2541,7 +2541,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)
@@ -4151,7 +4151,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_CONTROL
 argument_list|,
@@ -4163,7 +4163,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_CONTROL
 argument_list|)

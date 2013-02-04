@@ -21,29 +21,6 @@ directive|include
 file|"ar5416/ar5416.h"
 end_include
 
-begin_enum
-enum|enum
-name|ar9285_ant_div_comb_lna_conf
-block|{
-name|ATH_ANT_DIV_COMB_LNA1_MINUS_LNA2
-init|=
-literal|0
-block|,
-name|ATH_ANT_DIV_COMB_LNA2
-init|=
-literal|1
-block|,
-name|ATH_ANT_DIV_COMB_LNA1
-init|=
-literal|2
-block|,
-name|ATH_ANT_DIV_COMB_LNA1_PLUS_LNA2
-init|=
-literal|3
-block|, }
-enum|;
-end_enum
-
 begin_struct
 struct|struct
 name|ar9285_ant_comb
@@ -102,12 +79,10 @@ decl_stmt|;
 name|int
 name|main_conf
 decl_stmt|;
-name|enum
-name|ar9285_ant_div_comb_lna_conf
+name|HAL_ANT_DIV_COMB_LNA_CONF
 name|first_quick_scan_conf
 decl_stmt|;
-name|enum
-name|ar9285_ant_div_comb_lna_conf
+name|HAL_ANT_DIV_COMB_LNA_CONF
 name|second_quick_scan_conf
 decl_stmt|;
 name|int

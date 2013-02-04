@@ -429,20 +429,8 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ARMConstantPoolValue *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
 specifier|inline
 name|raw_ostream
 operator|&
@@ -452,7 +440,7 @@ operator|(
 name|raw_ostream
 operator|&
 name|O
-expr|,
+operator|,
 specifier|const
 name|ARMConstantPoolValue
 operator|&
@@ -474,7 +462,7 @@ comment|/// ARMConstantPoolConstant - ARM-specific constant pool values for Cons
 comment|/// Functions, and BlockAddresses.
 name|class
 name|ARMConstantPoolConstant
-operator|:
+range|:
 name|public
 name|ARMConstantPoolValue
 block|{
@@ -645,17 +633,6 @@ name|isLSDA
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ARMConstantPoolConstant *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// ARMConstantPoolSymbol - ARM-specific constantpool values for external
@@ -769,17 +746,6 @@ name|isExtSymbol
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ARMConstantPoolSymbol *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// ARMConstantPoolMBB - ARM-specific constantpool value of a machine basic
@@ -887,17 +853,6 @@ name|ACPV
 operator|->
 name|isMachineBasicBlock
 argument_list|()
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ARMConstantPoolMBB *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

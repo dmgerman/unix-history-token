@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -44,6 +44,19 @@ argument_list|(
 literal|"aslcompile"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*  * Main parser entry  * External is here in case the parser emits the same external in the  * generated header. (Newer versions of Bison)  */
+end_comment
+
+begin_function_decl
+name|int
+name|AslCompilerparse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Local prototypes */
@@ -488,6 +501,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* Scan until comment close is found */
@@ -585,6 +600,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 name|Status
@@ -673,6 +690,8 @@ literal|1
 argument_list|,
 name|Handle
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* Ignore comment fields (allow non-ascii within) */
@@ -921,7 +940,9 @@ name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1107,8 +1128,10 @@ name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Interpret and generate all compile-time constants */
@@ -1248,7 +1271,9 @@ name|FullCompile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/*      * Create an internal namespace and use it as a symbol table      */
@@ -1294,7 +1319,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|LkCrossReferenceNamespace
+name|XfCrossReferenceNamespace
 argument_list|()
 expr_stmt|;
 if|if
@@ -1318,7 +1343,7 @@ argument_list|(
 name|AslGbl_NamespaceEvent
 argument_list|)
 expr_stmt|;
-comment|/*      * Semantic analysis.  This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
+comment|/*      * Semantic analysis. This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
 name|Event
 operator|=
 name|UtBeginEvent
@@ -1345,9 +1370,9 @@ name|RootNode
 argument_list|,
 name|ASL_WALK_VISIT_TWICE
 argument_list|,
-name|AnMethodAnalysisWalkBegin
+name|MtMethodAnalysisWalkBegin
 argument_list|,
-name|AnMethodAnalysisWalkEnd
+name|MtMethodAnalysisWalkEnd
 argument_list|,
 operator|&
 name|AnalysisWalkInfo
@@ -1545,7 +1570,9 @@ name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ErrorExit
 label|:
@@ -1581,14 +1608,14 @@ comment|/* Create listings and hex files */
 name|LsDoListings
 argument_list|()
 expr_stmt|;
-name|LsDoHexOutput
+name|HxDoHexOutput
 argument_list|()
 expr_stmt|;
 comment|/* Dump the namespace to the .nsp file if requested */
 operator|(
 name|void
 operator|)
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
 block|}
@@ -1685,13 +1712,13 @@ name|USec
 operator|=
 name|Delta
 operator|/
-literal|10
+name|ACPI_100NSEC_PER_USEC
 expr_stmt|;
 name|MSec
 operator|=
 name|Delta
 operator|/
-literal|10000
+name|ACPI_100NSEC_PER_MSEC
 expr_stmt|;
 comment|/* Round milliseconds up */
 if|if
@@ -1702,7 +1729,7 @@ operator|-
 operator|(
 name|MSec
 operator|*
-literal|1000
+name|ACPI_USEC_PER_MSEC
 operator|)
 operator|)
 operator|>=
@@ -1768,6 +1795,11 @@ parameter_list|)
 block|{
 name|UINT32
 name|i
+decl_stmt|;
+name|BOOLEAN
+name|DeleteAmlFile
+init|=
+name|FALSE
 decl_stmt|;
 name|AePrintErrorLog
 argument_list|(
@@ -1950,6 +1982,36 @@ argument_list|(
 name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
+comment|/*      * We will delete the AML file if there are errors and the      * force AML output option has not been used.      */
+if|if
+condition|(
+operator|(
+name|Gbl_ExceptionCount
+index|[
+name|ASL_ERROR
+index|]
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|!
+name|Gbl_IgnoreErrors
+operator|)
+operator|&&
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Handle
+condition|)
+block|{
+name|DeleteAmlFile
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* Close all open files */
 name|Gbl_Files
 index|[
@@ -1984,59 +2046,14 @@ block|}
 comment|/* Delete AML file if there are errors */
 if|if
 condition|(
-operator|(
-name|Gbl_ExceptionCount
-index|[
-name|ASL_ERROR
-index|]
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|!
-name|Gbl_IgnoreErrors
-operator|)
-operator|&&
-name|Gbl_Files
-index|[
-name|ASL_FILE_AML_OUTPUT
-index|]
-operator|.
-name|Handle
+name|DeleteAmlFile
 condition|)
 block|{
-if|if
-condition|(
-name|remove
+name|FlDeleteFile
 argument_list|(
-name|Gbl_Files
-index|[
 name|ASL_FILE_AML_OUTPUT
-index|]
-operator|.
-name|Filename
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|Gbl_Files
-index|[
-name|ASL_FILE_AML_OUTPUT
-index|]
-operator|.
-name|Filename
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"Could not delete AML file"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* Delete the preprocessor output file (.i) unless -li flag is set */
 if|if
@@ -2045,92 +2062,26 @@ operator|!
 name|Gbl_PreprocessorOutputFlag
 operator|&&
 name|Gbl_PreprocessFlag
-operator|&&
-name|Gbl_Files
-index|[
-name|ASL_FILE_PREPROCESSOR
-index|]
-operator|.
-name|Filename
 condition|)
 block|{
-if|if
-condition|(
-name|remove
+name|FlDeleteFile
 argument_list|(
-name|Gbl_Files
-index|[
 name|ASL_FILE_PREPROCESSOR
-index|]
-operator|.
-name|Filename
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|Gbl_Files
-index|[
-name|ASL_FILE_PREPROCESSOR
-index|]
-operator|.
-name|Filename
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"Could not delete preprocessor .i file"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      * This file is created during normal ASL/AML compiles. It is not      * created by the data table compiler.      *      * If the -ls flag is set, then the .SRC file should not be deleted.      * In this case, Gbl_SourceOutputFlag is set to TRUE.      *      * Note: Handles are cleared by FlCloseFile above, so we look at the      * filename instead, to determine if the .SRC file was actually      * created.      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
 if|if
 condition|(
 operator|!
 name|Gbl_SourceOutputFlag
-operator|&&
-name|Gbl_Files
-index|[
-name|ASL_FILE_SOURCE_OUTPUT
-index|]
-operator|.
-name|Filename
 condition|)
 block|{
-if|if
-condition|(
-name|remove
+name|FlDeleteFile
 argument_list|(
-name|Gbl_Files
-index|[
 name|ASL_FILE_SOURCE_OUTPUT
-index|]
-operator|.
-name|Filename
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|Gbl_Files
-index|[
-name|ASL_FILE_SOURCE_OUTPUT
-index|]
-operator|.
-name|Filename
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"Could not delete SRC file"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function

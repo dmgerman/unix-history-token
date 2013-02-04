@@ -363,11 +363,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|member2struct
+name|__containerof
 argument_list|(
-name|tom_data
-argument_list|,
 name|tod
+argument_list|,
+expr|struct
+name|tom_data
 argument_list|,
 name|tod
 argument_list|)

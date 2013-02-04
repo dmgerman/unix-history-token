@@ -562,7 +562,8 @@ name|e_t
 operator|->
 name|markedpkt_rtt
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 operator|-
 operator|*
 name|pmeasurenext
@@ -590,7 +591,8 @@ name|e_t
 operator|->
 name|markedpkt_rtt
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 operator|-
 name|txsi
 operator|->
@@ -1269,7 +1271,8 @@ name|e_t
 operator|->
 name|rtt
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 operator|-
 name|txsi
 operator|->
@@ -1776,7 +1779,8 @@ name|txsi
 operator|->
 name|tx_ts
 operator|=
-name|ticks
+name|tcp_ts_getticks
+argument_list|()
 expr_stmt|;
 name|txsi
 operator|->

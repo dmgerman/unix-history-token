@@ -48,7 +48,7 @@ name|JEMALLOC_H_EXTERNS
 end_ifdef
 
 begin_function_decl
-name|void
+name|bool
 name|pages_purge
 parameter_list|(
 name|void

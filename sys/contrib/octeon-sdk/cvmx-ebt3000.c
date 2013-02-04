@@ -7,16 +7,43 @@ begin_comment
 comment|/**  * @file  *  * Interface to the EBT3000 specific devices  *  *<hr>$Revision: 70030 $<hr>  *  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|"cvmx-config.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"cvmx.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-ebt3000.h"
 end_include
 
 begin_include
@@ -37,13 +64,13 @@ name|val
 parameter_list|)
 block|{
 comment|/* Note: phys_to_ptr won't work here, as we are most likely going to access the boot bus. */
-name|void
+name|char
 modifier|*
 name|led_base
 init|=
 name|CASTPTR
 argument_list|(
-name|void
+name|char
 argument_list|,
 name|CVMX_ADD_SEG32
 argument_list|(
@@ -151,7 +178,7 @@ name|str
 parameter_list|)
 block|{
 comment|/* Note: phys_to_ptr won't work here, as we are most likely going to access the boot bus. */
-name|void
+name|char
 modifier|*
 name|led_base
 decl_stmt|;
@@ -168,7 +195,7 @@ name|led_base
 operator|=
 name|CASTPTR
 argument_list|(
-name|void
+name|char
 argument_list|,
 name|CVMX_ADD_SEG32
 argument_list|(

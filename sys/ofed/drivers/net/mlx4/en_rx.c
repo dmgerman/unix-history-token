@@ -2112,7 +2112,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-empty_stmt|;
 block|}
 return|return
 literal|0

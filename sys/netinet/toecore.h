@@ -492,7 +492,7 @@ name|toedev
 modifier|*
 parameter_list|,
 name|struct
-name|tcpcb
+name|inpcb
 modifier|*
 parameter_list|,
 name|int

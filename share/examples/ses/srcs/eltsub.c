@@ -166,7 +166,7 @@ name|sprintf
 argument_list|(
 name|rbuf
 argument_list|,
-literal|"Enclosure Eervices Controller Electronics"
+literal|"Enclosure Services Controller Electronics"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -574,9 +574,48 @@ name|sprintf
 argument_list|(
 name|ebuf
 argument_list|,
-literal|"status: %s (0x%02x 0x%02x 0x%02x 0x%02x)"
+literal|"status: %s%s%s%s (0x%02x 0x%02x 0x%02x 0x%02x)"
 argument_list|,
 name|scode
+argument_list|,
+operator|(
+name|cstat
+index|[
+literal|0
+index|]
+operator|&
+literal|0x40
+operator|)
+condition|?
+literal|", Prd.Fail"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|cstat
+index|[
+literal|0
+index|]
+operator|&
+literal|0x20
+operator|)
+condition|?
+literal|", Disabled"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|cstat
+index|[
+literal|0
+index|]
+operator|&
+literal|0x10
+operator|)
+condition|?
+literal|", Swapped"
+else|:
+literal|""
 argument_list|,
 name|cstat
 index|[

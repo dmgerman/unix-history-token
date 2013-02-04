@@ -128,6 +128,12 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -326,6 +332,21 @@ directive|define
 name|MEMORY_BARRIER
 parameter_list|()
 value|__asm__ volatile("membar #Sync" : : : "memory")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__arm__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|dmb()
 end_define
 
 begin_else
@@ -13907,23 +13928,6 @@ expr_stmt|;
 comment|/* ret = ((4+fak)*div_10M[div])/np->clock_khz; */
 block|}
 comment|/* 	 *  Check against our hardware limits, or bugs :). 	 */
-if|if
-condition|(
-name|fak
-operator|<
-literal|0
-condition|)
-block|{
-name|fak
-operator|=
-literal|0
-expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fak
@@ -33821,13 +33825,13 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|BUS_SPACE_MAXSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 name|SYM_CONF_MAX_SG
 argument_list|,
 name|SYM_CONF_DMA_BOUNDARY
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|busdma_lock_mutex
 argument_list|,

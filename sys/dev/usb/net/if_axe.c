@@ -463,6 +463,15 @@ argument_list|)
 block|,
 name|AXE_DEV
 argument_list|(
+name|DLINK
+argument_list|,
+name|DUBE100C1
+argument_list|,
+name|AXE_FLAG_772B
+argument_list|)
+block|,
+name|AXE_DEV
+argument_list|(
 name|GOODWAY
 argument_list|,
 name|GWUSB2E
@@ -5607,7 +5616,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,

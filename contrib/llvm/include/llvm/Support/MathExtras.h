@@ -1871,7 +1871,6 @@ parameter_list|)
 function_decl|;
 comment|/// MinAlign - A and B are either alignments or offsets.  Return the minimum
 comment|/// alignment that may be assumed after adding the two together.
-specifier|static
 specifier|inline
 name|uint64_t
 name|MinAlign
@@ -1901,7 +1900,6 @@ return|;
 block|}
 comment|/// NextPowerOf2 - Returns the next power of two (in 64-bits)
 comment|/// that is strictly greater than A.  Returns zero on overflow.
-specifier|static
 specifier|inline
 name|uint64_t
 name|NextPowerOf2
@@ -1964,14 +1962,15 @@ operator|+
 literal|1
 return|;
 block|}
-comment|/// RoundUpToAlignment - Returns the next integer (mod 2**64) that is
-comment|/// greater than or equal to \arg Value and is a multiple of \arg
-comment|/// Align. Align must be non-zero.
+comment|/// Returns the next integer (mod 2**64) that is greater than or equal to
+comment|/// \p Value and is a multiple of \p Align. \p Align must be non-zero.
 comment|///
 comment|/// Examples:
-comment|/// RoundUpToAlignment(5, 8) = 8
-comment|/// RoundUpToAlignment(17, 8) = 24
-comment|/// RoundUpToAlignment(~0LL, 8) = 0
+comment|/// \code
+comment|///   RoundUpToAlignment(5, 8) = 8
+comment|///   RoundUpToAlignment(17, 8) = 24
+comment|///   RoundUpToAlignment(~0LL, 8) = 0
+comment|/// \endcode
 specifier|inline
 name|uint64_t
 name|RoundUpToAlignment
@@ -1999,9 +1998,9 @@ operator|*
 name|Align
 return|;
 block|}
-comment|/// OffsetToAlignment - Return the offset to the next integer (mod 2**64) that
-comment|/// is greater than or equal to \arg Value and is a multiple of \arg
-comment|/// Align. Align must be non-zero.
+comment|/// Returns the offset to the next integer (mod 2**64) that is greater than
+comment|/// or equal to \p Value and is a multiple of \p Align. \p Align must be
+comment|/// non-zero.
 specifier|inline
 name|uint64_t
 name|OffsetToAlignment
@@ -2081,6 +2080,38 @@ name|B
 operator|)
 return|;
 block|}
+comment|/// \brief Sign extend number in the bottom B bits of X to a 32-bit int.
+comment|/// Requires 0< B<= 32.
+specifier|inline
+name|int32_t
+name|SignExtend32
+parameter_list|(
+name|uint32_t
+name|X
+parameter_list|,
+name|unsigned
+name|B
+parameter_list|)
+block|{
+return|return
+name|int32_t
+argument_list|(
+name|X
+operator|<<
+operator|(
+literal|32
+operator|-
+name|B
+operator|)
+argument_list|)
+operator|>>
+operator|(
+literal|32
+operator|-
+name|B
+operator|)
+return|;
+block|}
 comment|/// SignExtend64 - Sign extend B-bit number x to 64-bit int.
 comment|/// Usage int64_t r = SignExtend64<5>(x);
 name|template
@@ -2099,6 +2130,38 @@ return|return
 name|int64_t
 argument_list|(
 name|x
+operator|<<
+operator|(
+literal|64
+operator|-
+name|B
+operator|)
+argument_list|)
+operator|>>
+operator|(
+literal|64
+operator|-
+name|B
+operator|)
+return|;
+block|}
+comment|/// \brief Sign extend number in the bottom B bits of X to a 64-bit int.
+comment|/// Requires 0< B<= 64.
+specifier|inline
+name|int64_t
+name|SignExtend64
+parameter_list|(
+name|uint64_t
+name|X
+parameter_list|,
+name|unsigned
+name|B
+parameter_list|)
+block|{
+return|return
+name|int64_t
+argument_list|(
+name|X
 operator|<<
 operator|(
 literal|64

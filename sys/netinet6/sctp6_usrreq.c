@@ -23,6 +23,12 @@ directive|include
 file|<netinet/sctp_os.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -47,14 +53,11 @@ directive|include
 file|<netinet/sctp_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -157,14 +160,11 @@ directive|include
 file|<netipsec/ipsec.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -201,7 +201,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|sctp6_input
+name|sctp6_input_with_port
 parameter_list|(
 name|struct
 name|mbuf
@@ -213,8 +213,8 @@ name|int
 modifier|*
 name|offp
 parameter_list|,
-name|int
-name|proto
+name|uint16_t
+name|port
 parameter_list|)
 block|{
 name|struct
@@ -274,11 +274,6 @@ name|mflowid
 decl_stmt|;
 name|uint8_t
 name|use_mflowid
-decl_stmt|;
-name|uint16_t
-name|port
-init|=
-literal|0
 decl_stmt|;
 name|iphlen
 operator|=
@@ -926,6 +921,40 @@ block|}
 return|return
 operator|(
 name|IPPROTO_DONE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|sctp6_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|i_pak
+parameter_list|,
+name|int
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
+name|SCTP_UNUSED
+parameter_list|)
+block|{
+return|return
+operator|(
+name|sctp6_input_with_port
+argument_list|(
+name|i_pak
+argument_list|,
+name|offp
+argument_list|,
+literal|0
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6020,6 +6049,11 @@ name|sctp_soreceive
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

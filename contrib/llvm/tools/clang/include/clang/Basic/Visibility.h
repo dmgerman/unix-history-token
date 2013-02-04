@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the Visibility enumeration and various utility
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// functions.
+comment|/// \brief Defines the clang::Visibility enumeration and various utility
 end_comment
 
 begin_comment
-comment|//
+comment|/// functions.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -67,10 +71,12 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// \link Describes the different kinds of visibility that a
-comment|/// declaration may have.  Visibility determines how a declaration
-comment|/// interacts with the dynamic linker.  It may also affect whether the
-comment|/// symbol can be found by runtime symbol lookup APIs.
+comment|/// \brief Describes the different kinds of visibility that a declaration
+comment|/// may have.
+comment|///
+comment|/// Visibility determines how a declaration interacts with the dynamic
+comment|/// linker.  It may also affect whether the symbol can be found by runtime
+comment|/// symbol lookup APIs.
 comment|///
 comment|/// Visibility is not described in any language standard and
 comment|/// (nonetheless) sometimes has odd behavior.  Not all platforms

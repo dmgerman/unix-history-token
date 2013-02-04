@@ -221,8 +221,6 @@ name|getpwuid
 block|,
 name|getpwnam
 block|,
-name|pwdb
-block|,
 name|setgrent
 block|,
 name|endgrent
@@ -232,9 +230,7 @@ block|,
 name|getgrgid
 block|,
 name|getgrnam
-block|,
-name|grdb
-block|}
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -256,8 +252,6 @@ name|vgetpwuid
 block|,
 name|vgetpwnam
 block|,
-name|vpwdb
-block|,
 name|vsetgrent
 block|,
 name|vendgrent
@@ -267,9 +261,7 @@ block|,
 name|vgetgrgid
 block|,
 name|vgetgrnam
-block|,
-name|vgrdb
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

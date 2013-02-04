@@ -834,18 +834,13 @@ name|g_new_providerf
 argument_list|(
 name|gp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gp
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * XXX: Disable this for now.  Appearantly UFS no longer 		 * XXX: issues BIO_DELETE requests correctly, with the obvious 		 * XXX: outcome that userdata is trashed. 		 */
-block|pp->flags |= G_PF_CANDELETE;
-endif|#
-directive|endif
 name|pp
 operator|->
 name|stripesize

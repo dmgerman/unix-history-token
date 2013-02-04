@@ -430,7 +430,6 @@ specifier|static
 specifier|const
 name|struct
 name|at45d_flash_ident
-specifier|const
 name|at45d_flash_devices
 index|[]
 init|=

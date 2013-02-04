@@ -1099,6 +1099,7 @@ index|]
 operator|=
 name|val
 expr_stmt|;
+return|return;
 block|}
 comment|/* 	 * True IDE access.  lower 8 bits on a 16-bit bus (see above). 	 */
 specifier|volatile
@@ -1290,19 +1291,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|//#define OCTEON_VISUAL_CF_0 1
-ifdef|#
-directive|ifdef
-name|OCTEON_VISUAL_CF_0
-name|octeon_led_write_char
-argument_list|(
-literal|0
-argument_list|,
-literal|'R'
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ptr_8
 operator|=
 operator|(
@@ -1477,18 +1465,6 @@ name|lba
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|OCTEON_VISUAL_CF_0
-name|octeon_led_write_char
-argument_list|(
-literal|0
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -1534,19 +1510,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|//#define OCTEON_VISUAL_CF_1 1
-ifdef|#
-directive|ifdef
-name|OCTEON_VISUAL_CF_1
-name|octeon_led_write_char
-argument_list|(
-literal|1
-argument_list|,
-literal|'W'
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|lba
 operator|=
 name|start_sector
@@ -1719,18 +1682,6 @@ name|lba
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|OCTEON_VISUAL_CF_1
-name|octeon_led_write_char
-argument_list|(
-literal|1
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2305,26 +2256,6 @@ block|{
 name|uint8_t
 name|status
 decl_stmt|;
-comment|//#define OCTEON_VISUAL_CF_2 1
-ifdef|#
-directive|ifdef
-name|OCTEON_VISUAL_CF_2
-specifier|static
-name|int
-name|where0
-init|=
-literal|0
-decl_stmt|;
-name|octeon_led_run_wheel
-argument_list|(
-operator|&
-name|where0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|bus_type
@@ -2481,18 +2412,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|OCTEON_VISUAL_CF_2
-name|octeon_led_write_char
-argument_list|(
-literal|2
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2566,8 +2485,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|==
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 return|return
 operator|(
@@ -2638,8 +2561,12 @@ name|phys_base
 decl_stmt|;
 if|if
 condition|(
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|==
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 return|return;
 name|phys_base
@@ -2649,6 +2576,13 @@ argument_list|()
 operator|->
 name|compact_flash_common_base_addr
 expr_stmt|;
+if|if
+condition|(
+name|phys_base
+operator|==
+literal|0
+condition|)
+return|return;
 name|base_addr
 operator|=
 name|cvmx_phys_to_ptr
@@ -2978,8 +2912,12 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|==
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 return|return
 operator|(

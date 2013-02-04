@@ -98,16 +98,14 @@ specifier|const
 name|SDNodeOrdering
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement.
 name|SDNodeOrdering
 argument_list|(
-specifier|const
-name|SDNodeOrdering
-operator|&
+argument|const SDNodeOrdering&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement.
 name|public
 label|:
 name|SDNodeOrdering

@@ -65,6 +65,11 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_VOS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_BEOS
+argument_list|)
 end_if
 
 begin_function

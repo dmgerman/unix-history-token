@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -937,7 +937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsObjStackPop  *  * PARAMETERS:  PopCount            - Number of objects/entries to pop  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Pop this walk's object stack.  Objects on the stack are NOT  *              deleted by this routine.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsObjStackPop  *  * PARAMETERS:  PopCount            - Number of objects/entries to pop  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Pop this walk's object stack. Objects on the stack are NOT  *              deleted by this routine.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1274,7 +1274,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsPopWalkState  *  * PARAMETERS:  Thread      - Current thread state  *  * RETURN:      A WalkState object popped from the thread's stack  *  * DESCRIPTION: Remove and return the walkstate object that is at the head of  *              the walk stack for the given walk list.  NULL indicates that  *              the list is empty.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsPopWalkState  *  * PARAMETERS:  Thread      - Current thread state  *  * RETURN:      A WalkState object popped from the thread's stack  *  * DESCRIPTION: Remove and return the walkstate object that is at the head of  *              the walk stack for the given walk list. NULL indicates that  *              the list is empty.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1327,7 +1327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateWalkState  *  * PARAMETERS:  OwnerId         - ID for object creation  *              Origin          - Starting point for this walk  *              MethodDesc      - Method object  *              Thread          - Current thread state  *  * RETURN:      Pointer to the new walk state.  *  * DESCRIPTION: Allocate and initialize a new walk state.  The current walk  *              state is set to this new state.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsCreateWalkState  *  * PARAMETERS:  OwnerId         - ID for object creation  *              Origin          - Starting point for this walk  *              MethodDesc      - Method object  *              Thread          - Current thread state  *  * RETURN:      Pointer to the new walk state.  *  * DESCRIPTION: Allocate and initialize a new walk state. The current walk  *              state is set to this new state.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1704,7 +1704,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*          * Setup the current scope.          * Find a Named Op that has a namespace node associated with it.          * search upwards from this Op.  Current scope is the first          * Op with a namespace node.          */
+comment|/*          * Setup the current scope.          * Find a Named Op that has a namespace node associated with it.          * search upwards from this Op. Current scope is the first          * Op with a namespace node.          */
 name|ExtraOp
 operator|=
 name|ParserState
@@ -1846,7 +1846,8 @@ operator|!
 name|WalkState
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1868,7 +1869,8 @@ name|WalkState
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/* There should not be any open scopes */
 if|if

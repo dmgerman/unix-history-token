@@ -303,6 +303,10 @@ name|SCTP_DEBUG_TIMER4
 argument_list|,
 literal|"Error count for %p now %d thresh:%d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|net
 argument_list|,
 name|net
@@ -592,6 +596,10 @@ name|SCTP_DEBUG_TIMER4
 argument_list|,
 literal|"Overall error count for %p now %d thresh:%u state:%x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|stcb
 operator|->
@@ -666,7 +674,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -2019,6 +2027,10 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"Found chk:%p tsn:%x<= last_acked_seq:%x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|chk
 argument_list|,
 name|chk
@@ -2034,6 +2046,53 @@ operator|->
 name|last_acked_seq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|chk
+operator|->
+name|sent
+operator|!=
+name|SCTP_DATAGRAM_NR_ACKED
+condition|)
+block|{
+if|if
+condition|(
+name|asoc
+operator|->
+name|strmout
+index|[
+name|chk
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|stream_number
+index|]
+operator|.
+name|chunks_on_queues
+operator|>
+literal|0
+condition|)
+block|{
+name|asoc
+operator|->
+name|strmout
+index|[
+name|chk
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|stream_number
+index|]
+operator|.
+name|chunks_on_queues
+operator|--
+expr_stmt|;
+block|}
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2154,6 +2213,10 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"chk:%p TSN:%x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|chk
 argument_list|,
 name|chk
@@ -3624,6 +3687,10 @@ name|SCTP_DEBUG_TIMER4
 argument_list|,
 literal|"Audit total flight due to negative value net:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|net
 argument_list|)
 expr_stmt|;
@@ -3665,6 +3732,10 @@ name|SCTP_DEBUG_TIMER4
 argument_list|,
 literal|"Net:%p c-f cwnd:%d ssthresh:%d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lnets
 argument_list|,
 name|lnets
@@ -4919,7 +4990,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,

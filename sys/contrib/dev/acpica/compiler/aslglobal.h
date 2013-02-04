@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__ASLGLOBAL_H
 end_define
 
 begin_comment
-comment|/*  * Global variables.  Defined in aslmain.c only, externed in all other files  */
+comment|/*  * Global variables. Defined in aslmain.c only, externed in all other files  */
 end_comment
 
 begin_undef
@@ -76,6 +76,269 @@ name|b
 parameter_list|)
 value|(a)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_DECLARE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+name|UINT32
+name|Gbl_ExceptionCount
+index|[
+name|ASL_NUM_REPORT_LEVELS
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|AslHexLookup
+index|[]
+init|=
+block|{
+literal|'0'
+block|,
+literal|'1'
+block|,
+literal|'2'
+block|,
+literal|'3'
+block|,
+literal|'4'
+block|,
+literal|'5'
+block|,
+literal|'6'
+block|,
+literal|'7'
+block|,
+literal|'8'
+block|,
+literal|'9'
+block|,
+literal|'A'
+block|,
+literal|'B'
+block|,
+literal|'C'
+block|,
+literal|'D'
+block|,
+literal|'E'
+block|,
+literal|'F'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Table below must match ASL_FILE_TYPES in asltypes.h */
+end_comment
+
+begin_decl_stmt
+name|ASL_FILE_INFO
+name|Gbl_Files
+index|[
+name|ASL_NUM_FILES
+index|]
+init|=
+block|{
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"stdout:       "
+block|,
+literal|"Standard Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"stderr:       "
+block|,
+literal|"Standard Error"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Table Input:  "
+block|,
+literal|"Source Input"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Binary Output:"
+block|,
+literal|"AML Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Source Output:"
+block|,
+literal|"Source Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Preprocessor: "
+block|,
+literal|"Preprocessor Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Listing File: "
+block|,
+literal|"Listing Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Hex Dump:     "
+block|,
+literal|"Hex Table Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Namespace:    "
+block|,
+literal|"Namespace Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Debug File:   "
+block|,
+literal|"Debug Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"ASM Source:   "
+block|,
+literal|"Assembly Code Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"C Source:     "
+block|,
+literal|"C Code Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"ASM Include:  "
+block|,
+literal|"Assembly Header Output"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"C Include:    "
+block|,
+literal|"C Header Output"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|UINT32
+name|Gbl_ExceptionCount
+index|[
+name|ASL_NUM_REPORT_LEVELS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|AslHexLookup
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ASL_FILE_INFO
+name|Gbl_Files
+index|[
+name|ASL_NUM_FILES
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -142,12 +405,12 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|ASL_LINE_BUFFER_SIZE
-value|(4096 * 4)
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+value|(1024 * 32)
 end_define
 
 begin_comment
-comment|/* 16K */
+comment|/* 32K */
 end_comment
 
 begin_define
@@ -178,12 +441,40 @@ end_comment
 begin_decl_stmt
 name|ASL_EXTERN
 name|char
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
 name|Gbl_CurrentLineBuffer
-index|[
-name|ASL_LINE_BUFFER_SIZE
-index|]
+argument_list|,
+name|NULL
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|char
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_LineBufPtr
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|ASL_EXTERN
+name|UINT32
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_LineBufferSize
+parameter_list|,
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|ASL_EXTERN
@@ -241,19 +532,6 @@ argument_list|(
 name|Gbl_CurrentLineOffset
 argument_list|,
 literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ASL_EXTERN
-name|char
-name|ASL_INIT_GLOBAL
-argument_list|(
-operator|*
-name|Gbl_LineBufPtr
-argument_list|,
-name|Gbl_CurrentLineBuffer
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -346,18 +624,6 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_DisassembleAll
-parameter_list|,
-name|FALSE
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ASL_EXTERN
-name|BOOLEAN
-name|ASL_INIT_GLOBAL
-parameter_list|(
-name|Gbl_Acpi2
 parameter_list|,
 name|FALSE
 parameter_list|)
@@ -755,16 +1021,6 @@ end_function_decl
 begin_comment
 comment|/* Files */
 end_comment
-
-begin_decl_stmt
-name|ASL_EXTERN
-name|ASL_FILE_INFO
-name|Gbl_Files
-index|[
-name|ASL_NUM_FILES
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|ASL_EXTERN
@@ -1268,14 +1524,6 @@ name|TableHeader
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|AslHexLookup
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Event timing */
 end_comment
@@ -1354,55 +1602,6 @@ name|ASL_MSG_BUFFER_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_DECLARE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|UINT32
-name|Gbl_ExceptionCount
-index|[
-name|ASL_NUM_REPORT_LEVELS
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|Gbl_ExceptionCount
-index|[
-name|ASL_NUM_REPORT_LEVELS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

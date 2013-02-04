@@ -134,7 +134,7 @@ name|ctx
 parameter_list|)
 value|HMAC_CTX_cleanup(ctx)
 comment|/* deprecated */
-name|void
+name|int
 name|HMAC_Init
 parameter_list|(
 name|HMAC_CTX
@@ -156,7 +156,7 @@ name|md
 parameter_list|)
 function_decl|;
 comment|/* deprecated */
-name|void
+name|int
 name|HMAC_Init_ex
 parameter_list|(
 name|HMAC_CTX
@@ -181,7 +181,7 @@ modifier|*
 name|impl
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|HMAC_Update
 parameter_list|(
 name|HMAC_CTX
@@ -198,7 +198,7 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|HMAC_Final
 parameter_list|(
 name|HMAC_CTX
@@ -252,6 +252,18 @@ name|unsigned
 name|int
 modifier|*
 name|md_len
+parameter_list|)
+function_decl|;
+name|int
+name|HMAC_CTX_copy
+parameter_list|(
+name|HMAC_CTX
+modifier|*
+name|dctx
+parameter_list|,
+name|HMAC_CTX
+modifier|*
+name|sctx
 parameter_list|)
 function_decl|;
 name|void

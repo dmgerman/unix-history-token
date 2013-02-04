@@ -8,7 +8,11 @@ comment|/*  * Originally written by Bodo Moeller for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/**  * \file crypto/ec/ec.h Include file for the OpenSSL EC functions  * \author Originally written by Bodo Moeller for the OpenSSL project  */
+end_comment
+
+begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -123,18 +127,21 @@ name|OPENSSL_ECC_MAX_FIELD_BITS
 value|661
 endif|#
 directive|endif
+comment|/** Enum for the point conversion form as defined in X9.62 (ECDSA)  *  for the encoding of a elliptic curve point (x,y) */
 typedef|typedef
 enum|enum
 block|{
-comment|/* values as defined in X9.62 (ECDSA) and elsewhere */
+comment|/** the point is encoded as z||x, where the octet z specifies  	 *  which solution of the quadratic equation y is  */
 name|POINT_CONVERSION_COMPRESSED
 init|=
 literal|2
 block|,
+comment|/** the point is encoded as z||x||y, where z is the octet 0x02  */
 name|POINT_CONVERSION_UNCOMPRESSED
 init|=
 literal|4
 block|,
+comment|/** the point is encoded as z||x||y, where the octet z specifies          *  which solution of the quadratic equation y is  */
 name|POINT_CONVERSION_HYBRID
 init|=
 literal|6
@@ -157,7 +164,10 @@ name|struct
 name|ec_point_st
 name|EC_POINT
 typedef|;
-comment|/* EC_METHODs for curves over GF(p).  * EC_GFp_simple_method provides the basis for the optimized methods.  */
+comment|/********************************************************************/
+comment|/*               EC_METHODs for curves over GF(p)                   */
+comment|/********************************************************************/
+comment|/** Returns the basic GFp ec methods which provides the basis for the  *  optimized methods.   *  \return  EC_METHOD object  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -166,6 +176,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/** Returns GFp methods using montgomery multiplication.  *  \return  EC_METHOD object  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -174,6 +185,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/** Returns GFp methods using optimized methods for NIST recommended curves  *  \return  EC_METHOD object  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -182,7 +194,45 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* EC_METHOD for curves over GF(2^m).  */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC_NISTP_64_GCC_128
+comment|/** Returns 64-bit optimized methods for nistp224  *  \return  EC_METHOD object  */
+specifier|const
+name|EC_METHOD
+modifier|*
+name|EC_GFp_nistp224_method
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/** Returns 64-bit optimized methods for nistp256  *  \return  EC_METHOD object  */
+specifier|const
+name|EC_METHOD
+modifier|*
+name|EC_GFp_nistp256_method
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/** Returns 64-bit optimized methods for nistp521  *  \return  EC_METHOD object  */
+specifier|const
+name|EC_METHOD
+modifier|*
+name|EC_GFp_nistp521_method
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+comment|/********************************************************************/
+comment|/*           EC_METHOD for curves over GF(2^m)                      */
+comment|/********************************************************************/
+comment|/** Returns the basic GF2m ec method   *  \return  EC_METHOD object  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -191,6 +241,12 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/********************************************************************/
+comment|/*                   EC_GROUP functions                             */
+comment|/********************************************************************/
+comment|/** Creates a new EC_GROUP object  *  \param   meth  EC_METHOD to use  *  \return  newly created EC_GROUP object or NULL in case of an error.  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_new
@@ -198,33 +254,42 @@ parameter_list|(
 specifier|const
 name|EC_METHOD
 modifier|*
+name|meth
 parameter_list|)
 function_decl|;
+comment|/** Frees a EC_GROUP object  *  \param  group  EC_GROUP object to be freed.  */
 name|void
 name|EC_GROUP_free
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Clears and frees a EC_GROUP object  *  \param  group  EC_GROUP object to be cleared and freed.  */
 name|void
 name|EC_GROUP_clear_free
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Copies EC_GROUP objects. Note: both EC_GROUPs must use the same EC_METHOD.  *  \param  dst  destination EC_GROUP object  *  \param  src  source EC_GROUP object  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_GROUP_copy
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|dst
 parameter_list|,
 specifier|const
 name|EC_GROUP
 modifier|*
+name|src
 parameter_list|)
 function_decl|;
+comment|/** Creates a new EC_GROUP object and copies the copies the content  *  form src to the newly created EC_KEY object  *  \param  src  source EC_GROUP object  *  \return newly created EC_GROUP object or NULL in case of an error.  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_dup
@@ -232,8 +297,10 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|src
 parameter_list|)
 function_decl|;
+comment|/** Returns the EC_METHOD of the EC_GROUP object.  *  \param  group  EC_GROUP object   *  \return EC_METHOD used in this EC_GROUP object.  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -242,21 +309,26 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Returns the field type of the EC_METHOD.  *  \param  meth  EC_METHOD object  *  \return NID of the underlying field type OID.  */
 name|int
 name|EC_METHOD_get_field_type
 parameter_list|(
 specifier|const
 name|EC_METHOD
 modifier|*
+name|meth
 parameter_list|)
 function_decl|;
+comment|/** Sets the generator and it's order/cofactor of a EC_GROUP object.  *  \param  group      EC_GROUP object   *  \param  generator  EC_POINT object with the generator.  *  \param  order      the order of the group generated by the generator.  *  \param  cofactor   the index of the sub-group generated by the generator  *                     in the group of all points on the elliptic curve.  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_set_generator
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
@@ -274,6 +346,7 @@ modifier|*
 name|cofactor
 parameter_list|)
 function_decl|;
+comment|/** Returns the generator of a EC_GROUP object.  *  \param  group  EC_GROUP object  *  \return the currently used generator (possibly NULL).  */
 specifier|const
 name|EC_POINT
 modifier|*
@@ -282,14 +355,17 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Gets the order of a EC_GROUP  *  \param  group  EC_GROUP object  *  \param  order  BIGNUM to which the order is copied  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_get_order
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -297,14 +373,17 @@ name|order
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Gets the cofactor of a EC_GROUP  *  \param  group     EC_GROUP object  *  \param  cofactor  BIGNUM to which the cofactor is copied  *  \param  ctx       BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_get_cofactor
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -312,24 +391,29 @@ name|cofactor
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Sets the name of a EC_GROUP object  *  \param  group  EC_GROUP object  *  \param  nid    NID of the curve name OID  */
 name|void
 name|EC_GROUP_set_curve_name
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|int
 name|nid
 parameter_list|)
 function_decl|;
+comment|/** Returns the curve name of a EC_GROUP object  *  \param  group  EC_GROUP object  *  \return NID of the curve name OID or 0 if not set.  */
 name|int
 name|EC_GROUP_get_curve_name
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
 name|void
@@ -337,6 +421,7 @@ name|EC_GROUP_set_asn1_flag
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|int
 name|flag
@@ -348,6 +433,7 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
 name|void
@@ -400,11 +486,13 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+comment|/** Sets the parameter of a ec over GFp defined by y^2 = x^3 + a*x + b  *  \param  group  EC_GROUP object  *  \param  p      BIGNUM with the prime number  *  \param  a      BIGNUM with parameter a of the equation  *  \param  b      BIGNUM with parameter b of the equation  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_set_curve_GFp
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -423,14 +511,17 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Gets the parameter of the ec over GFp defined by y^2 = x^3 + a*x + b  *  \param  group  EC_GROUP object  *  \param  p      BIGNUM for the prime number  *  \param  a      BIGNUM for parameter a of the equation  *  \param  b      BIGNUM for parameter b of the equation  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_get_curve_GFp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -446,13 +537,19 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+comment|/** Sets the parameter of a ec over GF2m defined by y^2 + x*y = x^3 + a*x^2 + b  *  \param  group  EC_GROUP object  *  \param  p      BIGNUM with the polynomial defining the underlying field  *  \param  a      BIGNUM with parameter a of the equation  *  \param  b      BIGNUM with parameter b of the equation  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_set_curve_GF2m
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -471,14 +568,17 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Gets the parameter of the ec over GF2m defined by y^2 + x*y = x^3 + a*x^2 + b  *  \param  group  EC_GROUP object  *  \param  p      BIGNUM for the polynomial defining the underlying field  *  \param  a      BIGNUM for parameter a of the equation  *  \param  b      BIGNUM for parameter b of the equation  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_get_curve_GF2m
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -494,18 +594,22 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
-comment|/* returns the number of bits needed to represent a field element */
+endif|#
+directive|endif
+comment|/** Returns the number of bits needed to represent a field element   *  \param  group  EC_GROUP object  *  \return number of bits needed to represent a field element  */
 name|int
 name|EC_GROUP_get_degree
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_check() returns 1 if 'group' defines a valid group, 0 otherwise */
+comment|/** Checks whether the parameter in the EC_GROUP define a valid ec group  *  \param  group  EC_GROUP object  *  \param  ctx    BN_CTX object (optional)  *  \return 1 if group is a valid ec group and 0 otherwise  */
 name|int
 name|EC_GROUP_check
 parameter_list|(
@@ -519,35 +623,41 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_check_discriminant() returns 1 if the discriminant of the  * elliptic curve is not zero, 0 otherwise */
+comment|/** Checks whether the discriminant of the elliptic curve is zero or not  *  \param  group  EC_GROUP object  *  \param  ctx    BN_CTX object (optional)  *  \return 1 if the discriminant is not zero and 0 otherwise  */
 name|int
 name|EC_GROUP_check_discriminant
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_cmp() returns 0 if both groups are equal and 1 otherwise */
+comment|/** Compares two EC_GROUP objects  *  \param  a    first EC_GROUP object  *  \param  b    second EC_GROUP object  *  \param  ctx  BN_CTX object (optional)  *  \return 0 if both groups are equal and 1 otherwise  */
 name|int
 name|EC_GROUP_cmp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|a
 parameter_list|,
 specifier|const
 name|EC_GROUP
 modifier|*
+name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 comment|/* EC_GROUP_new_GF*() calls EC_GROUP_new() and EC_GROUP_set_GF*()  * after choosing an appropriate EC_METHOD */
+comment|/** Creates a new EC_GROUP object with the specified parameters defined  *  over GFp (defined by the equation y^2 = x^3 + a*x + b)  *  \param  p    BIGNUM with the prime number  *  \param  a    BIGNUM with the parameter a of the equation  *  \param  b    BIGNUM with the parameter b of the equation  *  \param  ctx  BN_CTX object (optional)  *  \return newly created EC_GROUP object with the specified parameters  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_new_curve_GFp
@@ -569,8 +679,13 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+comment|/** Creates a new EC_GROUP object with the specified parameters defined  *  over GF2m (defined by the equation y^2 + x*y = x^3 + a*x^2 + b)  *  \param  p    BIGNUM with the polynomial defining the underlying field  *  \param  a    BIGNUM with the parameter a of the equation  *  \param  b    BIGNUM with the parameter b of the equation  *  \param  ctx  BN_CTX object (optional)  *  \return newly created EC_GROUP object with the specified parameters  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_new_curve_GF2m
@@ -592,9 +707,12 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_new_by_curve_name() creates a EC_GROUP structure  * specified by a curve name (in form of a NID) */
+endif|#
+directive|endif
+comment|/** Creates a EC_GROUP object with a curve specified by a NID  *  \param  nid  NID of the OID of the curve name  *  \return newly created EC_GROUP object with specified curve or NULL  *          if an error occurred  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_new_by_curve_name
@@ -603,7 +721,9 @@ name|int
 name|nid
 parameter_list|)
 function_decl|;
-comment|/* handling of internal curves */
+comment|/********************************************************************/
+comment|/*               handling of internal curves                        */
+comment|/********************************************************************/
 typedef|typedef
 struct|struct
 block|{
@@ -630,7 +750,10 @@ name|size_t
 name|nitems
 parameter_list|)
 function_decl|;
-comment|/* EC_POINT functions */
+comment|/********************************************************************/
+comment|/*                    EC_POINT functions                            */
+comment|/********************************************************************/
+comment|/** Creates a new EC_POINT object for the specified EC_GROUP  *  \param  group  EC_GROUP the underlying EC_GROUP object  *  \return newly created EC_POINT object or NULL if an error occurred  */
 name|EC_POINT
 modifier|*
 name|EC_POINT_new
@@ -638,33 +761,42 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Frees a EC_POINT object  *  \param  point  EC_POINT object to be freed  */
 name|void
 name|EC_POINT_free
 parameter_list|(
 name|EC_POINT
 modifier|*
+name|point
 parameter_list|)
 function_decl|;
+comment|/** Clears and frees a EC_POINT object  *  \param  point  EC_POINT object to be cleared and freed  */
 name|void
 name|EC_POINT_clear_free
 parameter_list|(
 name|EC_POINT
 modifier|*
+name|point
 parameter_list|)
 function_decl|;
+comment|/** Copies EC_POINT object  *  \param  dst  destination EC_POINT object  *  \param  src  source EC_POINT object  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_copy
 parameter_list|(
 name|EC_POINT
 modifier|*
+name|dst
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|src
 parameter_list|)
 function_decl|;
+comment|/** Creates a new EC_POINT object and copies the content of the supplied  *  EC_POINT  *  \param  src    source EC_POINT object  *  \param  group  underlying the EC_GROUP object  *  \return newly created EC_POINT object or NULL if an error occurred   */
 name|EC_POINT
 modifier|*
 name|EC_POINT_dup
@@ -672,12 +804,15 @@ parameter_list|(
 specifier|const
 name|EC_POINT
 modifier|*
+name|src
 parameter_list|,
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Returns the EC_METHOD used in EC_POINT object   *  \param  point  EC_POINT object  *  \return the EC_METHOD used  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -686,28 +821,35 @@ parameter_list|(
 specifier|const
 name|EC_POINT
 modifier|*
+name|point
 parameter_list|)
 function_decl|;
+comment|/** Sets a point to infinity (neutral element)  *  \param  group  underlying EC_GROUP object  *  \param  point  EC_POINT to set to infinity  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_set_to_infinity
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|point
 parameter_list|)
 function_decl|;
+comment|/** Sets the jacobian projective coordinates of a EC_POINT over GFp  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM with the x-coordinate  *  \param  y      BIGNUM with the y-coordinate  *  \param  z      BIGNUM with the z-coordinate  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_set_Jprojective_coordinates_GFp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -726,18 +868,22 @@ name|z
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Gets the jacobian projective coordinates of a EC_POINT over GFp  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM for the x-coordinate  *  \param  y      BIGNUM for the y-coordinate  *  \param  z      BIGNUM for the z-coordinate  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_get_Jprojective_coordinates_GFp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -753,17 +899,21 @@ name|z
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Sets the affine coordinates of a EC_POINT over GFp  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM with the x-coordinate  *  \param  y      BIGNUM with the y-coordinate  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_set_affine_coordinates_GFp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -777,18 +927,22 @@ name|y
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Gets the affine coordinates of a EC_POINT over GFp  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM for the x-coordinate  *  \param  y      BIGNUM for the y-coordinate  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_get_affine_coordinates_GFp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -800,17 +954,21 @@ name|y
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Sets the x9.62 compressed coordinates of a EC_POINT over GFp  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM with x-coordinate  *  \param  y_bit  integer with the y-Bit (either 0 or 1)  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_set_compressed_coordinates_GFp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -822,17 +980,24 @@ name|y_bit
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+comment|/** Sets the affine coordinates of a EC_POINT over GF2m  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM with the x-coordinate  *  \param  y      BIGNUM with the y-coordinate  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_set_affine_coordinates_GF2m
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -846,18 +1011,22 @@ name|y
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Gets the affine coordinates of a EC_POINT over GF2m  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM for the x-coordinate  *  \param  y      BIGNUM for the y-coordinate  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_get_affine_coordinates_GF2m
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -869,17 +1038,21 @@ name|y
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Sets the x9.62 compressed coordinates of a EC_POINT over GF2m  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  x      BIGNUM with x-coordinate  *  \param  y_bit  integer with the y-Bit (either 0 or 1)  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_set_compressed_coordinates_GF2m
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -891,18 +1064,24 @@ name|y_bit
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/** Encodes a EC_POINT object to a octet string  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  form   point conversion form  *  \param  buf    memory buffer for the result. If NULL the function returns  *                 required buffer size.  *  \param  len    length of the memory buffer  *  \param  ctx    BN_CTX object (optional)  *  \return the length of the encoded octet string or 0 if an error occurred  */
 name|size_t
 name|EC_POINT_point2oct
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 name|point_conversion_form_t
 name|form
@@ -917,17 +1096,21 @@ name|len
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Decodes a EC_POINT from a octet string  *  \param  group  underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \param  buf    memory buffer with the encoded ec point  *  \param  len    length of the encoded ec point  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_oct2point
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|unsigned
@@ -940,6 +1123,7 @@ name|len
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 comment|/* other interfaces to point2oct/oct2point: */
@@ -1022,12 +1206,17 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/********************************************************************/
+comment|/*         functions for doing EC_POINT arithmetic                  */
+comment|/********************************************************************/
+comment|/** Computes the sum of two EC_POINT   *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result (r = a + b)  *  \param  a      EC_POINT object with the first summand  *  \param  b      EC_POINT object with the second summand  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_add
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
@@ -1045,14 +1234,17 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Computes the double of a EC_POINT  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result (r = 2 * a)  *  \param  a      EC_POINT object   *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_dbl
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
@@ -1065,55 +1257,69 @@ name|a
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Computes the inverse of a EC_POINT  *  \param  group  underlying EC_GROUP object  *  \param  a      EC_POINT object to be inverted (it's used for the result as well)  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_invert
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|a
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Checks whether the point is the neutral element of the group  *  \param  group  the underlying EC_GROUP object  *  \param  p      EC_POINT object  *  \return 1 if the point is the neutral element and 0 otherwise  */
 name|int
 name|EC_POINT_is_at_infinity
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|p
 parameter_list|)
 function_decl|;
+comment|/** Checks whether the point is on the curve   *  \param  group  underlying EC_GROUP object  *  \param  point  EC_POINT object to check  *  \param  ctx    BN_CTX object (optional)  *  \return 1 if point if on the curve and 0 otherwise  */
 name|int
 name|EC_POINT_is_on_curve
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|point
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Compares two EC_POINTs   *  \param  group  underlying EC_GROUP object  *  \param  a      first EC_POINT object  *  \param  b      second EC_POINT object  *  \param  ctx    BN_CTX object (optional)  *  \return 0 if both points are equal and a value != 0 otherwise  */
 name|int
 name|EC_POINT_cmp
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 specifier|const
 name|EC_POINT
@@ -1127,6 +1333,7 @@ name|b
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 name|int
@@ -1161,12 +1368,14 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/** Computes r = generator * n sum_{i=0}^num p[i] * m[i]  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result  *  \param  n      BIGNUM with the multiplier for the group generator (optional)  *  \param  num    number futher summands  *  \param  p      array of size num of EC_POINT objects  *  \param  m      array of size num of BIGNUM objects  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINTs_mul
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
@@ -1175,6 +1384,7 @@ parameter_list|,
 specifier|const
 name|BIGNUM
 modifier|*
+name|n
 parameter_list|,
 name|size_t
 name|num
@@ -1182,23 +1392,28 @@ parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|p
 index|[]
 parameter_list|,
 specifier|const
 name|BIGNUM
 modifier|*
+name|m
 index|[]
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
+comment|/** Computes r = generator * n + q * m  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result  *  \param  n      BIGNUM with the multiplier for the group generator (optional)  *  \param  q      EC_POINT object with the first factor of the second summand  *  \param  m      BIGNUM with the second factor of the second summand  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_mul
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
@@ -1207,40 +1422,49 @@ parameter_list|,
 specifier|const
 name|BIGNUM
 modifier|*
+name|n
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|q
 parameter_list|,
 specifier|const
 name|BIGNUM
 modifier|*
+name|m
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_precompute_mult() stores multiples of generator for faster point multiplication */
+comment|/** Stores multiples of generator for faster point multiplication  *  \param  group  EC_GROUP object  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_precompute_mult
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_have_precompute_mult() reports whether such precomputation has been done */
+comment|/** Reports whether a precomputation has been done  *  \param  group  EC_GROUP object  *  \return 1 if a pre-computation has been done and 0 otherwise  */
 name|int
 name|EC_GROUP_have_precompute_mult
 parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
-comment|/* ASN1 stuff */
+comment|/********************************************************************/
+comment|/*                       ASN1 stuff                                 */
+comment|/********************************************************************/
 comment|/* EC_GROUP_get_basis_type() returns the NID of the basis type  * used to represent the field elements */
 name|int
 name|EC_GROUP_get_basis_type
@@ -1250,6 +1474,9 @@ name|EC_GROUP
 modifier|*
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|int
 name|EC_GROUP_get_trinomial_basis
 parameter_list|(
@@ -1286,6 +1513,8 @@ modifier|*
 name|k3
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|OPENSSL_EC_NAMED_CURVE
@@ -1406,7 +1635,9 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* the EC_KEY stuff */
+comment|/********************************************************************/
+comment|/*                      EC_KEY functions                            */
+comment|/********************************************************************/
 typedef|typedef
 name|struct
 name|ec_key_st
@@ -1421,6 +1652,16 @@ define|#
 directive|define
 name|EC_PKEY_NO_PUBKEY
 value|0x002
+comment|/* some values for the flags field */
+define|#
+directive|define
+name|EC_FLAG_NON_FIPS_ALLOW
+value|0x1
+define|#
+directive|define
+name|EC_FLAG_FIPS_CHECKED
+value|0x2
+comment|/** Creates a new EC_KEY object.  *  \return EC_KEY object or NULL if an error occurred.  */
 name|EC_KEY
 modifier|*
 name|EC_KEY_new
@@ -1428,6 +1669,38 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|int
+name|EC_KEY_get_flags
+parameter_list|(
+specifier|const
+name|EC_KEY
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+name|void
+name|EC_KEY_set_flags
+parameter_list|(
+name|EC_KEY
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+name|void
+name|EC_KEY_clear_flags
+parameter_list|(
+name|EC_KEY
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+comment|/** Creates a new EC_KEY object using a named curve as underlying  *  EC_GROUP object.  *  \param  nid  NID of the named curve.  *  \return EC_KEY object or NULL if an error occurred.   */
 name|EC_KEY
 modifier|*
 name|EC_KEY_new_by_curve_name
@@ -1436,25 +1709,31 @@ name|int
 name|nid
 parameter_list|)
 function_decl|;
+comment|/** Frees a EC_KEY object.  *  \param  key  EC_KEY object to be freed.  */
 name|void
 name|EC_KEY_free
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Copies a EC_KEY object.  *  \param  dst  destination EC_KEY object  *  \param  src  src EC_KEY object  *  \return dst or NULL if an error occurred.  */
 name|EC_KEY
 modifier|*
 name|EC_KEY_copy
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|dst
 parameter_list|,
 specifier|const
 name|EC_KEY
 modifier|*
+name|src
 parameter_list|)
 function_decl|;
+comment|/** Creates a new EC_KEY object and copies the content from src to it.  *  \param  src  the source EC_KEY object  *  \return newly created EC_KEY object or NULL if an error occurred.  */
 name|EC_KEY
 modifier|*
 name|EC_KEY_dup
@@ -1462,15 +1741,19 @@ parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|src
 parameter_list|)
 function_decl|;
+comment|/** Increases the internal reference count of a EC_KEY object.  *  \param  key  EC_KEY object  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_up_ref
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Returns the EC_GROUP object of a EC_KEY object  *  \param  key  EC_KEY object  *  \return the EC_GROUP object (possibly NULL).  */
 specifier|const
 name|EC_GROUP
 modifier|*
@@ -1479,19 +1762,24 @@ parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Sets the EC_GROUP of a EC_KEY object.  *  \param  key    EC_KEY object  *  \param  group  EC_GROUP to use in the EC_KEY object (note: the EC_KEY  *                 object will use an own copy of the EC_GROUP).  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_set_group
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|)
 function_decl|;
+comment|/** Returns the private key of a EC_KEY object.  *  \param  key  EC_KEY object  *  \return a BIGNUM with the private key (possibly NULL).  */
 specifier|const
 name|BIGNUM
 modifier|*
@@ -1500,19 +1788,24 @@ parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Sets the private key of a EC_KEY object.  *  \param  key  EC_KEY object  *  \param  prv  BIGNUM with the private key (note: the EC_KEY object  *               will use an own copy of the BIGNUM).  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_set_private_key
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 specifier|const
 name|BIGNUM
 modifier|*
+name|prv
 parameter_list|)
 function_decl|;
+comment|/** Returns the public key of a EC_KEY object.  *  \param  key  the EC_KEY object  *  \return a EC_POINT object with the public key (possibly NULL)  */
 specifier|const
 name|EC_POINT
 modifier|*
@@ -1521,17 +1814,21 @@ parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Sets the public key of a EC_KEY object.  *  \param  key  EC_KEY object  *  \param  pub  EC_POINT object with the public key (note: the EC_KEY object  *               will use an own copy of the EC_POINT object).  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_set_public_key
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 specifier|const
 name|EC_POINT
 modifier|*
+name|pub
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -1540,6 +1837,7 @@ parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
 name|void
@@ -1661,35 +1959,59 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/** Creates a table of pre-computed multiples of the generator to   *  accelerate further EC_KEY operations.  *  \param  key  EC_KEY object  *  \param  ctx  BN_CTX object (optional)  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_precompute_mult
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 name|BN_CTX
 modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_KEY_generate_key() creates a ec private (public) key */
+comment|/** Creates a new ec private (and optional a new public) key.  *  \param  key  EC_KEY object  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_generate_key
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
-comment|/* EC_KEY_check_key() */
+comment|/** Verifies that a private and/or public key is valid.  *  \param  key  the EC_KEY object  *  \return 1 on success and 0 otherwise.  */
 name|int
 name|EC_KEY_check_key
 parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
-comment|/* de- and encoding functions for SEC1 ECPrivateKey */
+comment|/** Sets a public key from affine coordindates performing  *  neccessary NIST PKV tests.  *  \param  key  the EC_KEY object  *  \param  x    public key x coordinate  *  \param  y    public key y coordinate  *  \return 1 on success and 0 otherwise.  */
+name|int
+name|EC_KEY_set_public_key_affine_coordinates
+parameter_list|(
+name|EC_KEY
+modifier|*
+name|key
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|x
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|y
+parameter_list|)
+function_decl|;
+comment|/********************************************************************/
+comment|/*        de- and encoding functions for SEC1 ECPrivateKey          */
+comment|/********************************************************************/
+comment|/** Decodes a private key from a memory buffer.  *  \param  key  a pointer to a EC_KEY object which should be used (or NULL)  *  \param  in   pointer to memory with the DER encoded private key  *  \param  len  length of the DER encoded private key  *  \return the decoded private key or NULL if an error occurred.  */
 name|EC_KEY
 modifier|*
 name|d2i_ECPrivateKey
@@ -1697,7 +2019,7 @@ parameter_list|(
 name|EC_KEY
 modifier|*
 modifier|*
-name|a
+name|key
 parameter_list|,
 specifier|const
 name|unsigned
@@ -1710,12 +2032,13 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
+comment|/** Encodes a private key object and stores the result in a buffer.  *  \param  key  the EC_KEY object to encode  *  \param  out  the buffer for the result (if NULL the function returns number  *               of bytes needed).  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|i2d_ECPrivateKey
 parameter_list|(
 name|EC_KEY
 modifier|*
-name|a
+name|key
 parameter_list|,
 name|unsigned
 name|char
@@ -1724,7 +2047,10 @@ modifier|*
 name|out
 parameter_list|)
 function_decl|;
-comment|/* de- and encoding functions for EC parameters */
+comment|/********************************************************************/
+comment|/*        de- and encoding functions for EC parameters              */
+comment|/********************************************************************/
+comment|/** Decodes ec parameter from a memory buffer.  *  \param  key  a pointer to a EC_KEY object which should be used (or NULL)  *  \param  in   pointer to memory with the DER encoded ec parameters  *  \param  len  length of the DER encoded ec parameters  *  \return a EC_KEY object with the decoded parameters or NULL if an error  *          occurred.  */
 name|EC_KEY
 modifier|*
 name|d2i_ECParameters
@@ -1732,7 +2058,7 @@ parameter_list|(
 name|EC_KEY
 modifier|*
 modifier|*
-name|a
+name|key
 parameter_list|,
 specifier|const
 name|unsigned
@@ -1745,12 +2071,13 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
+comment|/** Encodes ec parameter and stores the result in a buffer.  *  \param  key  the EC_KEY object with ec paramters to encode  *  \param  out  the buffer for the result (if NULL the function returns number  *               of bytes needed).  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|i2d_ECParameters
 parameter_list|(
 name|EC_KEY
 modifier|*
-name|a
+name|key
 parameter_list|,
 name|unsigned
 name|char
@@ -1759,7 +2086,11 @@ modifier|*
 name|out
 parameter_list|)
 function_decl|;
-comment|/* de- and encoding functions for EC public key  * (octet string, not DER -- hence 'o2i' and 'i2o') */
+comment|/********************************************************************/
+comment|/*         de- and encoding functions for EC public key             */
+comment|/*         (octet string, not DER -- hence 'o2i' and 'i2o')         */
+comment|/********************************************************************/
+comment|/** Decodes a ec public key from a octet string.  *  \param  key  a pointer to a EC_KEY object which should be used  *  \param  in   memory buffer with the encoded public key  *  \param  len  length of the encoded public key  *  \return EC_KEY object with decoded public key or NULL if an error  *          occurred.  */
 name|EC_KEY
 modifier|*
 name|o2i_ECPublicKey
@@ -1767,7 +2098,7 @@ parameter_list|(
 name|EC_KEY
 modifier|*
 modifier|*
-name|a
+name|key
 parameter_list|,
 specifier|const
 name|unsigned
@@ -1780,12 +2111,13 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
+comment|/** Encodes a ec public key in an octet string.  *  \param  key  the EC_KEY object with the public key  *  \param  out  the buffer for the result (if NULL the function returns number  *               of bytes needed).  *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|i2o_ECPublicKey
 parameter_list|(
 name|EC_KEY
 modifier|*
-name|a
+name|key
 parameter_list|,
 name|unsigned
 name|char
@@ -1797,6 +2129,7 @@ function_decl|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_BIO
+comment|/** Prints out the ec parameters on human readable form.  *  \param  bp   BIO object to which the information is printed  *  \param  key  EC_KEY object  *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|ECParameters_print
 parameter_list|(
@@ -1807,9 +2140,10 @@ parameter_list|,
 specifier|const
 name|EC_KEY
 modifier|*
-name|x
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Prints out the contents of a EC_KEY object  *  \param  bp   BIO object to which the information is printed  *  \param  key  EC_KEY object  *  \param  off  line offset   *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|EC_KEY_print
 parameter_list|(
@@ -1820,7 +2154,7 @@ parameter_list|,
 specifier|const
 name|EC_KEY
 modifier|*
-name|x
+name|key
 parameter_list|,
 name|int
 name|off
@@ -1831,6 +2165,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_FP_API
+comment|/** Prints out the ec parameters on human readable form.  *  \param  fp   file descriptor to which the information is printed  *  \param  key  EC_KEY object  *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|ECParameters_print_fp
 parameter_list|(
@@ -1841,9 +2176,10 @@ parameter_list|,
 specifier|const
 name|EC_KEY
 modifier|*
-name|x
+name|key
 parameter_list|)
 function_decl|;
+comment|/** Prints out the contents of a EC_KEY object  *  \param  fp   file descriptor to which the information is printed  *  \param  key  EC_KEY object  *  \param  off  line offset   *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|EC_KEY_print_fp
 parameter_list|(
@@ -1854,7 +2190,7 @@ parameter_list|,
 specifier|const
 name|EC_KEY
 modifier|*
-name|x
+name|key
 parameter_list|,
 name|int
 name|off
@@ -1899,6 +2235,20 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_ec_paramgen_curve_nid
+parameter_list|(
+name|ctx
+parameter_list|,
+name|nid
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_PARAMGEN, \ 				EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID, nid, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID
+value|(EVP_PKEY_ALG_CTRL + 1)
 comment|/* BEGIN ERROR CODES */
 comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
@@ -1909,6 +2259,10 @@ parameter_list|)
 function_decl|;
 comment|/* Error codes for the EC functions. */
 comment|/* Function codes. */
+define|#
+directive|define
+name|EC_F_BN_TO_FELEM
+value|224
 define|#
 directive|define
 name|EC_F_COMPUTE_WNAF
@@ -1925,6 +2279,38 @@ define|#
 directive|define
 name|EC_F_D2I_ECPRIVATEKEY
 value|146
+define|#
+directive|define
+name|EC_F_DO_EC_KEY_PRINT
+value|221
+define|#
+directive|define
+name|EC_F_ECKEY_PARAM2TYPE
+value|223
+define|#
+directive|define
+name|EC_F_ECKEY_PARAM_DECODE
+value|212
+define|#
+directive|define
+name|EC_F_ECKEY_PRIV_DECODE
+value|213
+define|#
+directive|define
+name|EC_F_ECKEY_PRIV_ENCODE
+value|214
+define|#
+directive|define
+name|EC_F_ECKEY_PUB_DECODE
+value|215
+define|#
+directive|define
+name|EC_F_ECKEY_PUB_ENCODE
+value|216
+define|#
+directive|define
+name|EC_F_ECKEY_TYPE2PARAM
+value|220
 define|#
 directive|define
 name|EC_F_ECPARAMETERS_PRINT
@@ -2045,6 +2431,42 @@ define|#
 directive|define
 name|EC_F_EC_GFP_MONT_GROUP_SET_CURVE_GFP
 value|135
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP224_GROUP_SET_CURVE
+value|225
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP224_POINTS_MUL
+value|228
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP224_POINT_GET_AFFINE_COORDINATES
+value|226
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP256_GROUP_SET_CURVE
+value|230
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP256_POINTS_MUL
+value|231
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP256_POINT_GET_AFFINE_COORDINATES
+value|232
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP521_GROUP_SET_CURVE
+value|233
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP521_POINTS_MUL
+value|234
+define|#
+directive|define
+name|EC_F_EC_GFP_NISTP521_POINT_GET_AFFINE_COORDINATES
+value|235
 define|#
 directive|define
 name|EC_F_EC_GFP_NIST_FIELD_MUL
@@ -2215,12 +2637,12 @@ name|EC_F_EC_KEY_PRINT_FP
 value|181
 define|#
 directive|define
-name|EC_F_EC_POINTS_MAKE_AFFINE
-value|136
+name|EC_F_EC_KEY_SET_PUBLIC_KEY_AFFINE_COORDINATES
+value|229
 define|#
 directive|define
-name|EC_F_EC_POINTS_MUL
-value|138
+name|EC_F_EC_POINTS_MAKE_AFFINE
+value|136
 define|#
 directive|define
 name|EC_F_EC_POINT_ADD
@@ -2339,8 +2761,48 @@ name|EC_F_I2O_ECPUBLICKEY
 value|151
 define|#
 directive|define
+name|EC_F_NISTP224_PRE_COMP_NEW
+value|227
+define|#
+directive|define
+name|EC_F_NISTP256_PRE_COMP_NEW
+value|236
+define|#
+directive|define
+name|EC_F_NISTP521_PRE_COMP_NEW
+value|237
+define|#
+directive|define
 name|EC_F_O2I_ECPUBLICKEY
 value|152
+define|#
+directive|define
+name|EC_F_OLD_EC_PRIV_DECODE
+value|222
+define|#
+directive|define
+name|EC_F_PKEY_EC_CTRL
+value|197
+define|#
+directive|define
+name|EC_F_PKEY_EC_CTRL_STR
+value|198
+define|#
+directive|define
+name|EC_F_PKEY_EC_DERIVE
+value|217
+define|#
+directive|define
+name|EC_F_PKEY_EC_KEYGEN
+value|199
+define|#
+directive|define
+name|EC_F_PKEY_EC_PARAMGEN
+value|219
+define|#
+directive|define
+name|EC_F_PKEY_EC_SIGN
+value|218
 comment|/* Reason codes. */
 define|#
 directive|define
@@ -2352,12 +2814,24 @@ name|EC_R_ASN1_UNKNOWN_FIELD
 value|116
 define|#
 directive|define
+name|EC_R_BIGNUM_OUT_OF_RANGE
+value|144
+define|#
+directive|define
 name|EC_R_BUFFER_TOO_SMALL
 value|100
 define|#
 directive|define
+name|EC_R_COORDINATES_OUT_OF_RANGE
+value|146
+define|#
+directive|define
 name|EC_R_D2I_ECPKPARAMETERS_FAILURE
 value|117
+define|#
+directive|define
+name|EC_R_DECODE_ERROR
+value|142
 define|#
 directive|define
 name|EC_R_DISCRIMINANT_IS_ZERO
@@ -2369,7 +2843,11 @@ value|119
 define|#
 directive|define
 name|EC_R_FIELD_TOO_LARGE
-value|138
+value|143
+define|#
+directive|define
+name|EC_R_GF2M_NOT_SUPPORTED
+value|147
 define|#
 directive|define
 name|EC_R_GROUP2PKPARAMETERS_FAILURE
@@ -2394,6 +2872,14 @@ define|#
 directive|define
 name|EC_R_INVALID_COMPRESSION_BIT
 value|109
+define|#
+directive|define
+name|EC_R_INVALID_CURVE
+value|141
+define|#
+directive|define
+name|EC_R_INVALID_DIGEST_TYPE
+value|138
 define|#
 directive|define
 name|EC_R_INVALID_ENCODING
@@ -2424,6 +2910,10 @@ name|EC_R_INVALID_TRINOMIAL_BASIS
 value|137
 define|#
 directive|define
+name|EC_R_KEYS_NOT_SET
+value|140
+define|#
+directive|define
 name|EC_R_MISSING_PARAMETERS
 value|124
 define|#
@@ -2450,6 +2940,10 @@ define|#
 directive|define
 name|EC_R_NO_FIELD_MOD
 value|133
+define|#
+directive|define
+name|EC_R_NO_PARAMETERS_SET
+value|139
 define|#
 directive|define
 name|EC_R_PASSED_NULL_PARAMETER
@@ -2490,6 +2984,10 @@ define|#
 directive|define
 name|EC_R_UNSUPPORTED_FIELD
 value|131
+define|#
+directive|define
+name|EC_R_WRONG_CURVE_PARAMETERS
+value|145
 define|#
 directive|define
 name|EC_R_WRONG_ORDER

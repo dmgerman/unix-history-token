@@ -1664,6 +1664,11 @@ name|if_hdrlen
 operator|=
 literal|0
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|vnet0
+argument_list|)
+expr_stmt|;
 name|if_attach
 argument_list|(
 name|ifp
@@ -1762,6 +1767,9 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1793,11 +1801,23 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
+comment|/* 	 * This detaches the main interface, but not the vaps. 	 * Each VAP may be in a separate VIMAGE. 	 */
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|if_detach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+comment|/* 	 * The VAP is responsible for setting and clearing 	 * the VIMAGE context. 	 */
 while|while
 condition|(
 operator|(
@@ -1880,6 +1900,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX VNET needed? */
 name|ifmedia_removeall
 argument_list|(
 operator|&
@@ -2785,6 +2806,13 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IEEE80211_DPRINTF
 argument_list|(
 name|vap
@@ -3024,6 +3052,9 @@ name|if_free
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

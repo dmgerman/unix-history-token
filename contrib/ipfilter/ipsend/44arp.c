@@ -367,7 +367,7 @@ modifier|*
 name|rtm
 decl_stmt|;
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
@@ -590,7 +590,7 @@ name|sin
 operator|=
 operator|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 operator|*
 operator|)
 operator|(

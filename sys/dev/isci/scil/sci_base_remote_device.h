@@ -55,7 +55,7 @@ block|,
 comment|/**     * This state indicates that the remote device has successfully been     * stopped.  In this state no new IO operations are permitted.     * This state is entered from the INITIAL state.     * This state is entered from the STOPPING state.     */
 name|SCI_BASE_REMOTE_DEVICE_STATE_STOPPED
 block|,
-comment|/**     * This state indicates the the remote device is in the process of     * becoming ready (i.e. starting).  In this state no new IO operations     * are permitted.     * This state is entered from the STOPPED state.     */
+comment|/**     * This state indicates the remote device is in the process of     * becoming ready (i.e. starting).  In this state no new IO operations     * are permitted.     * This state is entered from the STOPPED state.     */
 name|SCI_BASE_REMOTE_DEVICE_STATE_STARTING
 block|,
 comment|/**     * This state indicates the remote device is now ready.  Thus, the user     * is able to perform IO operations on the remote device.     * This state is entered from the STARTING state.     */

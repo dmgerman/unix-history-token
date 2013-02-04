@@ -1292,6 +1292,7 @@ operator|-
 name|MipsTLBMiss
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: Why don't we install the XTLB handler for all 64-bit 	 * architectures? 	 */
 if|#
 directive|if
 name|defined
@@ -1308,6 +1309,12 @@ name|defined
 argument_list|(
 name|CPU_NLM
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_BERI
+argument_list|)
+comment|/* Fake, but sufficient, for the 32-bit with 64-bit hardware addresses  */
 name|bcopy
 argument_list|(
 name|MipsTLBMiss

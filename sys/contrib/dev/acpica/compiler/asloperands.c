@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -393,6 +393,16 @@ operator|!=
 name|PARSEOP_DEFAULT_ARG
 condition|)
 block|{
+comment|/* This is a ByteConstExpr, so eval the constant now */
+name|OpcAmlConstantWalk
+argument_list|(
+name|Next
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Next
@@ -645,7 +655,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-comment|/*      * Generate the flags byte.  The various fields are already      * in the right bit position via translation from the      * keywords by the parser.      */
+comment|/*      * Generate the flags byte. The various fields are already      * in the right bit position via translation from the      * keywords by the parser.      */
 name|FieldFlags
 operator|=
 call|(
@@ -831,7 +841,7 @@ operator|==
 name|CurrentBitOffset
 condition|)
 block|{
-comment|/*                  * Offset is redundant; we don't need to output an                  * offset opcode.  Just set these nodes to default                  */
+comment|/*                  * Offset is redundant; we don't need to output an                  * offset opcode. Just set these nodes to default                  */
 name|Next
 operator|->
 name|Asl
@@ -1131,7 +1141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoRegion  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Tries to get the length of the region.  Can only do this at  *              compile time if the length is a constant.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoRegion  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Tries to get the length of the region. Can only do this at  *              compile time if the length is a constant.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1230,7 +1240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoBuffer  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the BUFFER ASL keyword.  We  *              build a single raw byte buffer from the initialization nodes,  *              each parse node contains a buffer byte.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoBuffer  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the BUFFER ASL keyword. We  *              build a single raw byte buffer from the initialization nodes,  *              each parse node contains a buffer byte.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1369,7 +1379,7 @@ break|break;
 case|case
 name|PARSEOP_STRING_LITERAL
 case|:
-comment|/*          * Only one initializer, the string.  Buffer must be big enough to hold          * the string plus the null termination byte          */
+comment|/*          * Only one initializer, the string. Buffer must be big enough to hold          * the string plus the null termination byte          */
 name|BufferLength
 operator|=
 name|strlen
@@ -1535,7 +1545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnDoPackage  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the PACKAGE ASL keyword.  NOTE:  *              can only be called after constants have been folded, to ensure  *              that the PackageLength operand has been fully reduced.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnDoPackage  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Construct the AML operands for the PACKAGE ASL keyword. NOTE:  *              can only be called after constants have been folded, to ensure  *              that the PackageLength operand has been fully reduced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2177,7 +2187,7 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
-comment|/*      * These nodes get stuffed into the table header.  They are special      * cased when the table is written to the output file.      *      * Mark all of these nodes as non-usable so they won't get output      * as AML opcodes!      */
+comment|/*      * These nodes get stuffed into the table header. They are special      * cased when the table is written to the output file.      *      * Mark all of these nodes as non-usable so they won't get output      * as AML opcodes!      */
 comment|/* Get AML filename. Use it if non-null */
 name|Child
 operator|=
@@ -2534,7 +2544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtGetArg  *  * PARAMETERS:  Op              - Get an argument for this op  *              Argn            - Nth argument to get  *  * RETURN:      The argument (as an Op object).  NULL if argument does not exist  *  * DESCRIPTION: Get the specified op's argument (peer)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtGetArg  *  * PARAMETERS:  Op              - Get an argument for this op  *              Argn            - Nth argument to get  *  * RETURN:      The argument (as an Op object). NULL if argument does not exist  *  * DESCRIPTION: Get the specified op's argument (peer)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2767,7 +2777,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpnGenerateAmlOperands  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Prepare nodes to be output as AML data and operands.  The more  *              complex AML opcodes require processing of the child nodes  *              (arguments/operands).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpnGenerateAmlOperands  *  * PARAMETERS:  Op        - The parent parse node  *  * RETURN:      None  *  * DESCRIPTION: Prepare nodes to be output as AML data and operands. The more  *              complex AML opcodes require processing of the child nodes  *              (arguments/operands).  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1050,7 +1050,7 @@ name|ssd
 operator|->
 name|gd_selector
 operator|=
-name|_ucode32sel
+name|_ucodesel
 expr_stmt|;
 name|ssd
 operator|->

@@ -6318,7 +6318,6 @@ operator||=
 name|MLY_BTL_RESCAN
 expr_stmt|;
 break|break;
-break|break;
 case|case
 literal|'s'
 case|:

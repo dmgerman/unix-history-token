@@ -107,16 +107,6 @@ directive|include
 file|"octebusvar.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|octeon_is_simulation
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1138,9 +1128,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|!=
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 block|{
 name|cvmx_gmxx_rxx_int_en_t
@@ -1292,9 +1285,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|!=
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 block|{
 name|cvmx_gmxx_rxx_int_en_t

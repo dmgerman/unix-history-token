@@ -210,7 +210,8 @@ name|rep
 argument_list|,
 name|kindset
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 init|;
 name|hid_get_item

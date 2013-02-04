@@ -238,6 +238,12 @@ literal|"CARP"
 block|}
 block|,
 block|{
+name|IPPROTO_PFSYNC
+block|,
+literal|"pfsync"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

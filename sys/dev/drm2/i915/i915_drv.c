@@ -2555,7 +2555,7 @@ operator|)
 condition|)
 name|DELAY
 argument_list|(
-literal|10000
+literal|10
 argument_list|)
 expr_stmt|;
 name|I915_WRITE_NOTRACE
@@ -2594,7 +2594,7 @@ literal|0
 condition|)
 name|DELAY
 argument_list|(
-literal|10000
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -2635,7 +2635,7 @@ operator|)
 condition|)
 name|DELAY
 argument_list|(
-literal|10000
+literal|10
 argument_list|)
 expr_stmt|;
 name|I915_WRITE_NOTRACE
@@ -2680,7 +2680,7 @@ literal|0
 condition|)
 name|DELAY
 argument_list|(
-literal|10000
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -2937,7 +2937,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|10000
+literal|10
 argument_list|)
 expr_stmt|;
 name|fifo

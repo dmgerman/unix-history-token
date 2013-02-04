@@ -254,9 +254,8 @@ end_comment
 
 begin_expr_stmt
 specifier|static
-name|LIST_HEAD
+name|SLIST_HEAD
 argument_list|(
-argument|idlisthead
 argument_list|,
 argument|idtab
 argument_list|)
@@ -298,7 +297,7 @@ comment|/* identifier */
 end_comment
 
 begin_macro
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|idtab
 argument_list|)
@@ -974,7 +973,7 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
-name|LIST_INIT
+name|SLIST_INIT
 argument_list|(
 operator|&
 name|idlist
@@ -1183,11 +1182,7 @@ name|struct
 name|idtab
 modifier|*
 name|tt
-decl_stmt|,
-modifier|*
-name|ttx
 decl_stmt|;
-comment|/* idlist entry */
 comment|/* the machine stopped */
 if|if
 condition|(
@@ -1205,43 +1200,32 @@ name|SHUTDOWN_TIME
 condition|)
 block|{
 comment|/* everybody just logged out */
-for|for
-control|(
+while|while
+condition|(
+operator|(
 name|tt
 operator|=
-name|LIST_FIRST
+name|SLIST_FIRST
 argument_list|(
 operator|&
 name|idlist
 argument_list|)
-init|;
-name|tt
-condition|;
-control|)
+operator|)
+operator|!=
+name|NULL
+condition|)
 block|{
-name|LIST_REMOVE
+name|SLIST_REMOVE_HEAD
 argument_list|(
-name|tt
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-name|ttx
-operator|=
-name|tt
-expr_stmt|;
-name|tt
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|tt
+operator|&
+name|idlist
 argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|ttx
+name|tt
 argument_list|)
 expr_stmt|;
 block|}
@@ -1349,7 +1333,7 @@ name|DEAD_PROCESS
 condition|)
 return|return;
 comment|/* find associated identifier */
-name|LIST_FOREACH
+name|SLIST_FOREACH
 argument_list|(
 argument|tt
 argument_list|,
@@ -1431,7 +1415,7 @@ operator|->
 name|ut_id
 argument_list|)
 expr_stmt|;
-name|LIST_INSERT_HEAD
+name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|idlist

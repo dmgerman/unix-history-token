@@ -19,6 +19,12 @@ directive|define
 name|_USB_ENDIAN_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -30,6 +36,11 @@ include|#
 directive|include
 file|<sys/endian.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Declare the basic USB record types. USB records have an alignment  * of 1 byte and are always packed.  */

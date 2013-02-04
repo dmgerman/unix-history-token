@@ -148,13 +148,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|__vdso_clock_gettime
-end_pragma
-
 begin_function_decl
 name|int
 name|__vdso_gettimeofday
@@ -172,13 +165,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|__vdso_gettimeofday
-end_pragma
-
 begin_function_decl
 name|u_int
 name|__vdso_gettc
@@ -192,12 +178,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|__vdso_gettc
-end_pragma
+begin_function_decl
+name|int
+name|__vdso_gettimekeep
+parameter_list|(
+name|struct
+name|vdso_timekeep
+modifier|*
+modifier|*
+name|tk
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

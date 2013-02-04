@@ -505,6 +505,35 @@ name|DEFAULT_UMUTEX
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|umutex
+name|_suspend_all_lock
+init|=
+name|DEFAULT_UMUTEX
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pthread
+modifier|*
+name|_single_thread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_suspend_all_cycle
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_suspend_all_waiters
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|__pthread_cond_wait
@@ -1785,6 +1814,10 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Always use our rtld lock implementation. 		 * It is faster because it postpones signal handlers 		 * instead of calling sigprocmask(2). 		 */
+name|_thr_rtld_init
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -2029,6 +2062,12 @@ operator|&
 name|_thr_event_lock
 argument_list|)
 expr_stmt|;
+name|_thr_umutex_init
+argument_list|(
+operator|&
+name|_suspend_all_lock
+argument_list|)
+expr_stmt|;
 name|_thr_once_init
 argument_list|()
 expr_stmt|;
@@ -2043,6 +2082,14 @@ argument_list|()
 expr_stmt|;
 name|_sleepq_init
 argument_list|()
+expr_stmt|;
+name|_single_thread
+operator|=
+name|NULL
+expr_stmt|;
+name|_suspend_all_waiters
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Avoid reinitializing some things if they don't need to be, 	 * e.g. after a fork(). 	 */
 if|if

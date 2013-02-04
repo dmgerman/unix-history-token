@@ -1318,6 +1318,13 @@ argument_list|,
 name|machine
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|compiler_version
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1948,6 +1955,7 @@ name|p_nice
 operator|=
 name|NZERO
 expr_stmt|;
+comment|/* pid_max cannot be greater than PID_MAX */
 name|td
 operator|->
 name|td_tid
@@ -2092,14 +2100,19 @@ name|td_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|p
 operator|->
 name|p_itcallout
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|p
+operator|->
+name|p_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init_mtx

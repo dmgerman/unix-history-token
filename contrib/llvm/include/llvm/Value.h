@@ -71,6 +71,12 @@ directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -227,16 +233,14 @@ specifier|const
 name|Value
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|Value
 argument_list|(
-specifier|const
-name|Value
-operator|&
+argument|const Value&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
 name|protected
 label|:
 comment|/// printCustom - Value subclasses can override this to implement custom
@@ -357,7 +361,7 @@ expr_stmt|;
 comment|/// setName() - Change the name of the value, choosing a new unique name if
 comment|/// the provided name is taken.
 comment|///
-comment|/// \arg Name - The new name; or "" if the value's name should be removed.
+comment|/// \param Name The new name; or "" if the value's name should be removed.
 name|void
 name|setName
 parameter_list|(
@@ -760,22 +764,6 @@ block|{
 return|return
 name|HasValueHandle
 return|;
-block|}
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-comment|// Values are always values.
 block|}
 comment|/// stripPointerCasts - This method strips off any unneeded pointer casts and
 comment|/// all-zero GEPs from the specified value, returning the original uncasted

@@ -107,6 +107,7 @@ name|_POSIX_SOURCE
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|sigjmp_buf
 name|env
 decl_stmt|;
@@ -118,6 +119,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|env
 decl_stmt|;
@@ -146,6 +148,7 @@ comment|/* stdin buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|shcmd
@@ -157,6 +160,7 @@ comment|/* shell command buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|shcmdsz
 decl_stmt|;
@@ -167,6 +171,7 @@ comment|/* shell command buffer size */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|shcmdi
 decl_stmt|;
@@ -225,6 +230,7 @@ comment|/* if set, use crypt(3) for i/o */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|garrulous
 init|=
@@ -279,6 +285,7 @@ comment|/* if set, signals set "sigflags" */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|red
 init|=
@@ -315,6 +322,7 @@ comment|/* if set, signals received while mutex set */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sigactive
 init|=
@@ -327,6 +335,7 @@ comment|/* if set, signal handlers are enabled */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|old_filename
 index|[
@@ -372,6 +381,7 @@ comment|/* script line number */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -384,6 +394,7 @@ comment|/* command-line prompt */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -398,10 +409,11 @@ comment|/* default command-line prompt */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
+modifier|*
 name|usage
-index|[]
 init|=
 literal|"usage: %s [-] [-sx] [-p string] [file]\n"
 decl_stmt|;
@@ -1191,7 +1203,12 @@ name|long
 name|first_addr
 decl_stmt|,
 name|second_addr
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
 name|addr_cnt
 decl_stmt|;
 end_decl_stmt
@@ -5974,6 +5991,7 @@ comment|/* max number of marks */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|line_t
 modifier|*
 name|mark
@@ -5988,6 +6006,7 @@ comment|/* line markers */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|markno
 decl_stmt|;

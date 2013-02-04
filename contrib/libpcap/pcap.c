@@ -4033,6 +4033,13 @@ argument_list|)
 block|,
 name|DLT_CHOICE
 argument_list|(
+name|DLT_PFSYNC
+argument_list|,
+literal|"Packet filter state syncing"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
 name|DLT_PRISM_HEADER
 argument_list|,
 literal|"802.11 plus Prism header"

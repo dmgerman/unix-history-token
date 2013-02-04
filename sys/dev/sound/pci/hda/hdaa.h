@@ -991,7 +991,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|hdaa_subvendor_id
+name|hdaa_card_id
 parameter_list|(
 name|devinfo
 parameter_list|)

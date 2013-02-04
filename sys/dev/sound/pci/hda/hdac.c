@@ -266,6 +266,26 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_LPT1
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_LPT2
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
@@ -829,6 +849,96 @@ block|{
 name|HDA_ATI_RV770
 block|,
 literal|"ATI RV770"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV810
+block|,
+literal|"ATI RV810"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV830
+block|,
+literal|"ATI RV830"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV840
+block|,
+literal|"ATI RV840"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV870
+block|,
+literal|"ATI RV870"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV910
+block|,
+literal|"ATI RV910"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV930
+block|,
+literal|"ATI RV930"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV940
+block|,
+literal|"ATI RV940"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_RV970
+block|,
+literal|"ATI RV970"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_ATI_R1000
+block|,
+literal|"ATI R1000"
 block|,
 literal|0
 block|,
@@ -5157,6 +5267,8 @@ expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(dev,
+literal|"PCI card vendor: 0x%04x, device: 0x%04x\n"
+argument|, 		    pci_get_subvendor(dev), pci_get_subdevice(dev)); 		device_printf(dev,
 literal|"HDA Driver Revision: %s\n"
 argument|, 		    HDA_DRV_TEST_REV);
 argument_list|)

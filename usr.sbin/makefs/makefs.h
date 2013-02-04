@@ -254,6 +254,10 @@ name|int
 name|sectorsize
 decl_stmt|;
 comment|/* sector size */
+name|int
+name|sparse
+decl_stmt|;
+comment|/* sparse image, don't fill it with zeros */
 name|void
 modifier|*
 name|fs_specific

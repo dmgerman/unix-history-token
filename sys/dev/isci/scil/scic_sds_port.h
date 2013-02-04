@@ -76,7 +76,7 @@ struct_decl|;
 struct_decl|struct
 name|SCIC_SDS_REQUEST
 struct_decl|;
-comment|/**  * @struct SCIC_SDS_PORT  *  * The core port object provides the the abstraction for an SCU port.  */
+comment|/**  * @struct SCIC_SDS_PORT  *  * The core port object provides the abstraction for an SCU port.  */
 typedef|typedef
 struct|struct
 name|SCIC_SDS_PORT

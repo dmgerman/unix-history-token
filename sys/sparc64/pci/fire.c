@@ -1193,7 +1193,6 @@ specifier|static
 specifier|const
 name|struct
 name|fire_desc
-specifier|const
 name|fire_compats
 index|[]
 init|=
@@ -7962,13 +7961,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|VIS_BLOCKSIZE
-value|64
-end_define
 
 begin_function
 specifier|static

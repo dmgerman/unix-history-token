@@ -1967,6 +1967,8 @@ operator|=
 name|new
 argument_list|(
 argument|C
+argument_list|,
+argument|llvm::alignOf<T>()
 argument_list|)
 name|T
 index|[
@@ -2032,15 +2034,9 @@ expr_stmt|;
 block|}
 end_if
 
-begin_expr_stmt
-name|C
-operator|.
-name|Deallocate
-argument_list|(
-name|Begin
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|// ASTContext never frees any memory.
+end_comment
 
 begin_expr_stmt
 name|Begin

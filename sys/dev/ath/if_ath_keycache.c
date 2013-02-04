@@ -1055,6 +1055,28 @@ name|kv_type
 operator|=
 name|HAL_CIPHER_CLR
 expr_stmt|;
+comment|/* 	 * If we're installing a clear cipher key and 	 * the hardware doesn't support that, just succeed. 	 * Leave it up to the net80211 layer to figure it out. 	 */
+if|if
+condition|(
+name|hk
+operator|.
+name|kv_type
+operator|==
+name|HAL_CIPHER_CLR
+operator|&&
+name|sc
+operator|->
+name|sc_hasclrkey
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * XXX TODO: check this: 	 *  	 * Group keys on hardware that supports multicast frame 	 * key search should only be done in adhoc/hostap mode, 	 * not STA mode. 	 * 	 * XXX TODO: what about mesh, tdma? 	 */
 if|#
 directive|if
@@ -1708,6 +1730,30 @@ name|i
 decl_stmt|,
 name|keyix
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_hasclrkey
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Map to slot 0 for the AR5210. 		 */
+operator|*
+name|txkeyix
+operator|=
+operator|*
+name|rxkeyix
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* XXX try i,i+32,i+64,i+32+64 to minimize key pair conflicts */
 for|for
 control|(

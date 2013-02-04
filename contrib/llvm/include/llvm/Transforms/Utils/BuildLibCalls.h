@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IRBuilder.h"
+file|"llvm/IRBuilder.h"
 end_include
 
 begin_decl_stmt
@@ -77,7 +77,7 @@ name|class
 name|Value
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -116,9 +116,46 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+argument_list|)
+decl_stmt|;
+comment|/// EmitStrNLen - Emit a call to the strnlen function to the builder, for the
+comment|/// specified pointer.  Ptr is required to be some pointer type, MaxLen must
+comment|/// be of size_t type, and the return value has 'intptr_t' type.
+name|Value
+modifier|*
+name|EmitStrNLen
+argument_list|(
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|Value
+operator|*
+name|MaxLen
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|DataLayout
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitStrChr - Emit a call to the strchr function to the builder, for the
@@ -142,9 +179,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitStrNCmp - Emit a call to the strncmp function to the builder.
@@ -171,9 +213,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitStrCpy - Emit a call to the strcpy function to the builder, for the
@@ -197,9 +244,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|,
 name|StringRef
 name|Name
@@ -232,9 +284,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|,
 name|StringRef
 name|Name
@@ -272,9 +329,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitMemChr - Emit a call to the memchr function.  This assumes that Ptr is
@@ -302,9 +364,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitMemCmp - Emit a call to the memcmp function.
@@ -331,9 +398,14 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitUnaryFloatFnCall - Emit a call to the unary function named 'Name'
@@ -381,14 +453,20 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitPutS - Emit a call to the puts function.  This assumes that Str is
 comment|/// some pointer.
-name|void
+name|Value
+modifier|*
 name|EmitPutS
 argument_list|(
 name|Value
@@ -402,14 +480,20 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitFPutC - Emit a call to the fputc function.  This assumes that Char is
 comment|/// an i32, and File is a pointer to FILE.
-name|void
+name|Value
+modifier|*
 name|EmitFPutC
 argument_list|(
 name|Value
@@ -427,14 +511,20 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 decl_stmt|;
 comment|/// EmitFPutS - Emit a call to the puts function.  Str is required to be a
 comment|/// pointer and File is a pointer to FILE.
-name|void
+name|Value
+modifier|*
 name|EmitFPutS
 argument_list|(
 name|Value
@@ -452,7 +542,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -464,7 +554,8 @@ argument_list|)
 decl_stmt|;
 comment|/// EmitFWrite - Emit a call to the fwrite function.  This assumes that Ptr is
 comment|/// a pointer, Size is an 'intptr_t', and File is a pointer to FILE.
-name|void
+name|Value
+modifier|*
 name|EmitFWrite
 argument_list|(
 name|Value
@@ -486,7 +577,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 argument_list|,
@@ -550,9 +641,14 @@ modifier|*
 name|CI
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 parameter_list|)
 function_decl|;
 block|}

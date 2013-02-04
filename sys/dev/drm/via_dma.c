@@ -2114,6 +2114,9 @@ argument_list|,
 name|pause_addr_lo
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|VIA_READ
 argument_list|(
 name|VIA_REG_TRANSPACE
@@ -2628,6 +2631,9 @@ operator||
 name|HC_HAGPCMNT_MASK
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|VIA_READ
 argument_list|(
 name|VIA_REG_TRANSPACE

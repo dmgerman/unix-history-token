@@ -91,9 +91,17 @@ name|class
 name|DeclGroup
 block|{
 comment|// FIXME: Include a TypeSpecifier object.
+union|union
+block|{
 name|unsigned
 name|NumDecls
 decl_stmt|;
+name|Decl
+modifier|*
+name|Aligner
+decl_stmt|;
+block|}
+union|;
 name|private
 label|:
 name|DeclGroup

@@ -642,6 +642,12 @@ return|return
 literal|"DW_FORM_flag"
 return|;
 case|case
+name|DW_FORM_flag_present
+case|:
+return|return
+literal|"DW_FORM_flag_present"
+return|;
+case|case
 name|DW_FORM_indirect
 case|:
 return|return
@@ -2249,6 +2255,9 @@ name|DW_FORM_data8
 case|:
 case|case
 name|DW_FORM_flag
+case|:
+case|case
+name|DW_FORM_flag_present
 case|:
 name|printf
 argument_list|(

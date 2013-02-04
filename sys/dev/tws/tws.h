@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|TWS_DRIVER_VERSION_STRING
-value|"10.80.00.003"
+value|"10.80.00.005"
 end_define
 
 begin_define
@@ -905,10 +905,11 @@ name|u_int32_t
 name|seq_id
 decl_stmt|;
 comment|/* Sequence id */
-name|int
+name|void
+modifier|*
 name|chan
 decl_stmt|;
-comment|/* wait channel */
+comment|/* IOCTL req wait channel */
 name|struct
 name|tws_circular_q
 name|aen_q
@@ -962,6 +963,15 @@ name|bus_dma_tag_t
 name|data_tag
 decl_stmt|;
 comment|/* data DMA tag */
+name|void
+modifier|*
+name|ioctl_data_mem
+decl_stmt|;
+comment|/* ioctl dmable memory */
+name|bus_dmamap_t
+name|ioctl_data_map
+decl_stmt|;
+comment|/* ioctl data map */
 name|struct
 name|tws_request
 modifier|*

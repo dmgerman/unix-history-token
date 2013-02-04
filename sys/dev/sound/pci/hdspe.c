@@ -548,6 +548,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 block|}
 name|snd_mtxunlock
 argument_list|(

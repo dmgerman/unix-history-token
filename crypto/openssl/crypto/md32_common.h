@@ -966,11 +966,14 @@ name|c
 operator|->
 name|Nh
 operator|+=
-operator|(
+call|(
+name|HASH_LONG
+call|)
+argument_list|(
 name|len
 operator|>>
 literal|29
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* might cause compiler warning on 16-bit */
 name|c
@@ -1154,6 +1157,10 @@ name|c
 operator|->
 name|num
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|len
 expr_stmt|;
 name|memcpy

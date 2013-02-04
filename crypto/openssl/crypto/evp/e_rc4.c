@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"evp_locl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/objects.h>
 end_include
 
@@ -41,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/rc4.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"evp_locl.h"
 end_include
 
 begin_comment
@@ -130,8 +130,7 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|inl
 parameter_list|)
 function_decl|;
@@ -321,8 +320,7 @@ name|char
 modifier|*
 name|in
 parameter_list|,
-name|unsigned
-name|int
+name|size_t
 name|inl
 parameter_list|)
 block|{

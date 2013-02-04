@@ -182,12 +182,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6lu %8"
+literal|"%6ju %8"
 name|PRId64
 literal|" "
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|sb
 operator|->

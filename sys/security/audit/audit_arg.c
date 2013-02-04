@@ -1687,6 +1687,8 @@ name|audit_arg_upath1
 argument_list|(
 name|td
 argument_list|,
+name|AT_FDCWD
+argument_list|,
 operator|(
 operator|(
 expr|struct
@@ -2574,9 +2576,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|ar
 operator|=
 name|currecord
@@ -2609,15 +2608,6 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -2637,11 +2627,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2821,6 +2806,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|char
 modifier|*
 name|upath
@@ -2854,6 +2842,8 @@ name|audit_canon_path
 argument_list|(
 name|td
 argument_list|,
+name|dirfd
+argument_list|,
 name|upath
 argument_list|,
 operator|*
@@ -2871,6 +2861,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|dirfd
 parameter_list|,
 name|char
 modifier|*
@@ -2897,6 +2890,8 @@ return|return;
 name|audit_arg_upath
 argument_list|(
 name|td
+argument_list|,
+name|dirfd
 argument_list|,
 name|upath
 argument_list|,
@@ -2927,6 +2922,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|char
 modifier|*
 name|upath
@@ -2952,6 +2950,8 @@ return|return;
 name|audit_arg_upath
 argument_list|(
 name|td
+argument_list|,
+name|dirfd
 argument_list|,
 name|upath
 argument_list|,
@@ -3000,14 +3000,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Assume that if the caller is calling audit_arg_vnode() on a 	 * non-MPSAFE vnode, then it will have acquired Giant. 	 */
-name|VFS_ASSERT_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
@@ -3492,9 +3484,6 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|td
@@ -3550,15 +3539,6 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -3578,11 +3558,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|fdrop

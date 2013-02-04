@@ -253,6 +253,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|eight
 decl_stmt|,
@@ -261,6 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|deftty
@@ -268,6 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -276,12 +279,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|noescape
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|escapechar
 init|=
@@ -302,6 +307,7 @@ value|ioctl(fd, TIOCGWINSZ, wp)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|winsize
 name|winsize
@@ -309,6 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|catch_child
 parameter_list|(
@@ -318,6 +325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|copytochild
 parameter_list|(
@@ -326,27 +334,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+specifier|_Noreturn
 name|void
 name|doit
-argument_list|(
+parameter_list|(
 name|long
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|done
-argument_list|(
-name|int
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
+specifier|static
+specifier|_Noreturn
+name|void
+name|done
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|echo
 parameter_list|(
@@ -356,6 +367,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int
 name|getescape
 parameter_list|(
@@ -367,6 +379,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|lostpeer
 parameter_list|(
@@ -376,6 +389,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mode
 parameter_list|(
@@ -385,6 +399,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|msg
 parameter_list|(
@@ -396,6 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|oob
 parameter_list|(
@@ -405,6 +421,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|reader
 parameter_list|(
@@ -414,6 +431,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sendwindow
 parameter_list|(
@@ -423,6 +441,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setsignal
 parameter_list|(
@@ -432,6 +451,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sigwinch
 parameter_list|(
@@ -441,6 +461,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|stop
 parameter_list|(
@@ -449,17 +470,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+specifier|_Noreturn
 name|void
 name|usage
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|writer
 parameter_list|(
@@ -469,6 +492,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|writeroob
 parameter_list|(
@@ -1251,12 +1275,14 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|child
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|doit
 parameter_list|(
@@ -1397,6 +1423,7 @@ comment|/* trap a signal, unless it is being ignored. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|setsignal
 parameter_list|(
@@ -1448,6 +1475,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|done
 parameter_list|(
@@ -1523,6 +1551,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dosigwinch
 decl_stmt|;
@@ -1537,6 +1566,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|writeroob
 parameter_list|(
@@ -1578,6 +1608,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|catch_child
 parameter_list|(
@@ -1661,6 +1692,7 @@ comment|/*  * writer: write to remote: 0 -> line.  * ~.				terminate  * ~^Z				s
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|writer
 parameter_list|(
@@ -1935,6 +1967,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|echo
 parameter_list|(
@@ -2046,6 +2079,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stop
 parameter_list|(
@@ -2122,6 +2156,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigwinch
 parameter_list|(
@@ -2179,6 +2214,7 @@ comment|/*  * Send the window size to the server via the magic escape  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sendwindow
 parameter_list|(
@@ -2325,12 +2361,14 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|rcvtop
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rcvcnt
 decl_stmt|,
@@ -2339,12 +2377,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|ppid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|rcvbuf
 index|[
@@ -2360,6 +2400,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|oob
 parameter_list|(
@@ -2711,6 +2752,7 @@ comment|/* reader: read from remote: line -> 1 */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|reader
 parameter_list|(
@@ -2935,6 +2977,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mode
 parameter_list|(
@@ -3088,6 +3131,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lostpeer
 parameter_list|(
@@ -3128,6 +3172,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|copytochild
 parameter_list|(
@@ -3150,6 +3195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|msg
 parameter_list|(
@@ -3175,6 +3221,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -3204,6 +3251,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int
 name|getescape
 parameter_list|(

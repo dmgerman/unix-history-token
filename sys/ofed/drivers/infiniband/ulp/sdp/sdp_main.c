@@ -3893,7 +3893,7 @@ name|m
 argument_list|,
 name|SDP_HEAD_SIZE
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mtod
@@ -3945,7 +3945,7 @@ name|m_collapse
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|SDP_MAX_SEND_SGES
 argument_list|)
@@ -5086,7 +5086,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5914,7 +5914,7 @@ literal|0
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -21,6 +21,23 @@ begin_comment
 comment|/*  * The use of printf()-family functions can be troublesome  * for space-constrained applications.  In addition, correctly  * implementing this function in terms of vsnprintf() requires  * two calls (one to determine the size, another to format the  * result), which in turn requires duplicating the argument list  * using va_copy, which isn't yet universally available.<sigh>  *  * So, I've implemented a bare minimum of printf()-like capability  * here.  This is only used to format error messages, so doesn't  * require any floating-point support or field-width handling.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -408,6 +425,9 @@ name|archive_strappend_char
 argument_list|(
 name|as
 argument_list|,
+operator|(
+name|char
+operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -512,6 +532,8 @@ name|pw
 operator|=
 literal|L"(null)"
 expr_stmt|;
+if|if
+condition|(
 name|archive_string_append_from_wcs
 argument_list|(
 name|as
@@ -522,6 +544,19 @@ name|wcslen
 argument_list|(
 name|pw
 argument_list|)
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOMEM
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -579,6 +614,8 @@ name|pw
 operator|=
 literal|L"(null)"
 expr_stmt|;
+if|if
+condition|(
 name|archive_string_append_from_wcs
 argument_list|(
 name|as
@@ -589,6 +626,19 @@ name|wcslen
 argument_list|(
 name|pw
 argument_list|)
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOMEM
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 break|break;

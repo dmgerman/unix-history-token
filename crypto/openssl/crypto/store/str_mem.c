@@ -33,7 +33,8 @@ begin_comment
 comment|/* The memory store is currently highly experimental.  It's meant to become    a base store used by other stores for internal caching (for full caching    support, aging needs to be added).     The database use is meant to support as much attribute association as    possible, while providing for as small search ranges as possible.    This is currently provided for by sorting the entries by numbers that    are composed of bits set at the positions indicated by attribute type    codes.  This provides for ranges determined by the highest attribute    type code value.  A better idea might be to sort by values computed    from the range of attributes associated with the object (basically,    the difference between the highest and lowest attribute type code)    and it's distance from a base (basically, the lowest associated    attribute type code). */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|mem_object_data_st
 block|{
@@ -49,18 +50,29 @@ name|int
 name|references
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|MEM_OBJECT_DATA
+typedef|;
+end_typedef
+
+begin_macro
+name|DECLARE_STACK_OF
+argument_list|(
+argument|MEM_OBJECT_DATA
+argument_list|)
+end_macro
 
 begin_struct
 struct|struct
 name|mem_data_st
 block|{
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|MEM_OBJECT_DATA
+argument_list|)
+operator|*
 name|data
-decl_stmt|;
-comment|/* A stack of mem_object_data_st, 				   sorted with STORE_ATTR_INFO_compare(). */
+expr_stmt|;
+comment|/* sorted with 					  * STORE_ATTR_INFO_compare(). */
 name|unsigned
 name|int
 name|compute_components
@@ -72,6 +84,13 @@ block|}
 struct|;
 end_struct
 
+begin_macro
+name|DECLARE_STACK_OF
+argument_list|(
+argument|STORE_ATTR_INFO
+argument_list|)
+end_macro
+
 begin_struct
 struct|struct
 name|mem_ctx_st
@@ -80,19 +99,22 @@ name|int
 name|type
 decl_stmt|;
 comment|/* The type we're searching for */
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|STORE_ATTR_INFO
+argument_list|)
+operator|*
 name|search_attributes
-decl_stmt|;
-comment|/* Sets of attributes to search for. 				     Each element is a STORE_ATTR_INFO. */
+expr_stmt|;
+comment|/* Sets of 				     attributes to search for.  Each 				     element is a STORE_ATTR_INFO. */
 name|int
 name|search_index
 decl_stmt|;
-comment|/* which of the search attributes we found a match 				   for, -1 when we still haven't found any */
+comment|/* which of the search attributes we 				   found a match for, -1 when we still 				   haven't found any */
 name|int
 name|index
 decl_stmt|;
-comment|/* -1 as long as we're searching for the first */
+comment|/* -1 as long as we're searching for                                     the first */
 block|}
 struct|;
 end_struct
@@ -850,27 +872,8 @@ name|context
 operator|->
 name|search_attributes
 operator|=
-name|sk_new
+name|sk_STORE_ATTR_INFO_new
 argument_list|(
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-argument_list|,
-specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-argument_list|)
-operator|)
 name|STORE_ATTR_INFO_compare
 argument_list|)
 expr_stmt|;
@@ -894,16 +897,12 @@ name|err
 goto|;
 block|}
 block|}
-name|sk_push
+name|sk_STORE_ATTR_INFO_push
 argument_list|(
 name|context
 operator|->
 name|search_attributes
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|attrs
 argument_list|)
 expr_stmt|;
@@ -1084,7 +1083,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sk_num
+name|sk_STORE_ATTR_INFO_num
 argument_list|(
 name|context
 operator|->
@@ -1099,11 +1098,7 @@ name|key
 operator|.
 name|attr_info
 operator|=
-operator|(
-name|STORE_ATTR_INFO
-operator|*
-operator|)
-name|sk_value
+name|sk_STORE_ATTR_INFO_value
 argument_list|(
 name|context
 operator|->
@@ -1114,16 +1109,12 @@ argument_list|)
 expr_stmt|;
 name|srch
 operator|=
-name|sk_find_ex
+name|sk_MEM_OBJECT_DATA_find_ex
 argument_list|(
 name|store
 operator|->
 name|data
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|key
 argument_list|)
@@ -1160,11 +1151,7 @@ name|key
 operator|.
 name|attr_info
 operator|=
-operator|(
-name|STORE_ATTR_INFO
-operator|*
-operator|)
-name|sk_value
+name|sk_STORE_ATTR_INFO_value
 argument_list|(
 name|context
 operator|->
@@ -1185,7 +1172,7 @@ name|search_index
 init|;
 name|srch
 operator|<
-name|sk_num
+name|sk_MEM_OBJECT_DATA_num
 argument_list|(
 name|store
 operator|->
@@ -1198,11 +1185,7 @@ name|key
 operator|.
 name|attr_info
 argument_list|,
-operator|(
-name|STORE_ATTR_INFO
-operator|*
-operator|)
-name|sk_value
+name|sk_MEM_OBJECT_DATA_value
 argument_list|(
 name|store
 operator|->
@@ -1210,6 +1193,8 @@ name|data
 argument_list|,
 name|srch
 argument_list|)
+operator|->
+name|attr_info
 argument_list|)
 operator|&&
 operator|!
@@ -1222,11 +1207,7 @@ name|key
 operator|.
 name|attr_info
 argument_list|,
-operator|(
-name|STORE_ATTR_INFO
-operator|*
-operator|)
-name|sk_value
+name|sk_MEM_OBJECT_DATA_value
 argument_list|(
 name|store
 operator|->
@@ -1234,6 +1215,8 @@ name|data
 argument_list|,
 name|srch
 argument_list|)
+operator|->
+name|attr_info
 argument_list|)
 operator|)
 condition|;
@@ -1253,12 +1236,7 @@ name|cres
 condition|)
 return|return
 operator|(
-operator|(
-expr|struct
-name|mem_object_data_st
-operator|*
-operator|)
-name|sk_value
+name|sk_MEM_OBJECT_DATA_value
 argument_list|(
 name|store
 operator|->
@@ -1327,7 +1305,7 @@ name|context
 operator|->
 name|search_attributes
 condition|)
-name|sk_free
+name|sk_STORE_ATTR_INFO_free
 argument_list|(
 name|context
 operator|->
@@ -1384,7 +1362,7 @@ name|context
 operator|->
 name|search_index
 operator|==
-name|sk_num
+name|sk_STORE_ATTR_INFO_num
 argument_list|(
 name|context
 operator|->

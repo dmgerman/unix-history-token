@@ -3826,7 +3826,9 @@ literal|0
 condition|)
 block|{
 comment|/* Enable station power save mode */
-name|ieee80211_sta_pwrsave
+name|vap
+operator|->
+name|iv_sta_ps
 argument_list|(
 name|vap
 argument_list|,
@@ -4540,7 +4542,9 @@ condition|(
 name|scandone
 condition|)
 block|{
-name|ieee80211_sta_pwrsave
+name|vap
+operator|->
+name|iv_sta_ps
 argument_list|(
 name|vap
 argument_list|,

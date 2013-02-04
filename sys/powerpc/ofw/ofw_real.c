@@ -872,14 +872,6 @@ name|ofw_real_mode
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pmap
-name|ofw_pmap
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * After the VM is up, allocate a wired, low memory bounce page.  */
 end_comment

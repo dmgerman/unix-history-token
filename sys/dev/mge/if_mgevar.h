@@ -264,6 +264,12 @@ decl_stmt|;
 name|int
 name|mge_ver
 decl_stmt|;
+name|int
+name|mge_intr_cnt
+decl_stmt|;
+name|uint8_t
+name|mge_hw_csum
+decl_stmt|;
 name|struct
 name|mge_softc
 modifier|*

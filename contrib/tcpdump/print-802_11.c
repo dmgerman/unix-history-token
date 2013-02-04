@@ -1709,7 +1709,7 @@ name|status_text
 index|[]
 init|=
 block|{
-literal|"Succesful"
+literal|"Successful"
 block|,
 comment|/*  0 */
 literal|"Unspecified failure"

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisassemble  *  * PARAMETERS:  WalkState       - Current state  *              Origin          - Starting object  *              NumOpcodes      - Max number of opcodes to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Disassemble parser object and its children.  This is the  *              main entry point of the disassembler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisassemble  *  * PARAMETERS:  WalkState       - Current state  *              Origin          - Starting object  *              NumOpcodes      - Max number of opcodes to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Disassemble parser object and its children. This is the  *              main entry point of the disassembler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -949,11 +949,47 @@ operator|)
 condition|)
 block|{
 comment|/*              * This is a first-level element of a term list,              * indent a new line              */
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+condition|)
+block|{
+case|case
+name|AML_NOOP_OP
+case|:
+comment|/*                  * Optionally just ignore this opcode. Some tables use                  * NoOp opcodes for "padding" out packages that the BIOS                  * changes dynamically. This can leave hundreds or                  * thousands of NoOp opcodes that if disassembled,                  * cannot be compiled because they are syntactically                  * incorrect.                  */
+if|if
+condition|(
+name|AcpiGbl_IgnoreNoopOperator
+condition|)
+block|{
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_IGNORE
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Fallthrough */
+default|default:
 name|AcpiDmIndent
 argument_list|(
 name|Level
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|Info
 operator|->
 name|LastLevel
@@ -1895,7 +1931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmAscendingOp  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Second visitation of a parse object, during ascent of parse  *              tree.  Close out any parameter lists and complete the opcode.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmAscendingOp  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Second visitation of a parse object, during ascent of parse  *              tree. Close out any parameter lists and complete the opcode.  *  ******************************************************************************/
 end_comment
 
 begin_function

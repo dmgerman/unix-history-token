@@ -1600,12 +1600,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Add BSP as an interrupt target. 	 */
-name|intr_add_cpu
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -7960,10 +7954,7 @@ if|if
 condition|(
 name|pcb
 operator|==
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 condition|)
 block|{
 comment|/* 			 * Clear the debug registers on the running 			 * CPU, otherwise they will end up affecting 			 * the next process we switch to. 			 */

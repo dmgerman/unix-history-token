@@ -139,10 +139,10 @@ modifier|*
 modifier|*
 name|fns
 decl_stmt|;
-name|int
+name|size_t
 name|count
 decl_stmt|;
-name|int
+name|size_t
 name|sz
 decl_stmt|;
 name|bool

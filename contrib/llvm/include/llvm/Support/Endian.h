@@ -180,7 +180,7 @@ operator|,
 name|alignment
 name|align
 operator|>
-specifier|static
+specifier|inline
 name|value_type
 name|read_le
 argument_list|(
@@ -236,7 +236,7 @@ operator|,
 name|alignment
 name|align
 operator|>
-specifier|static
+specifier|inline
 name|void
 name|write_le
 argument_list|(
@@ -290,7 +290,7 @@ operator|,
 name|alignment
 name|align
 operator|>
-specifier|static
+specifier|inline
 name|value_type
 name|read_be
 argument_list|(
@@ -349,7 +349,7 @@ operator|,
 name|alignment
 name|align
 operator|>
-specifier|static
+specifier|inline
 name|void
 name|write_be
 argument_list|(

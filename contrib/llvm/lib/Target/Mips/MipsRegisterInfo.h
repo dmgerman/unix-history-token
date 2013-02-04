@@ -91,38 +91,29 @@ name|class
 name|MipsSubtarget
 decl_stmt|;
 name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
 name|Type
 decl_stmt|;
-name|struct
+name|class
 name|MipsRegisterInfo
 range|:
 name|public
 name|MipsGenRegisterInfo
 block|{
+name|protected
+operator|:
 specifier|const
 name|MipsSubtarget
 operator|&
 name|Subtarget
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
+name|public
+operator|:
 name|MipsRegisterInfo
 argument_list|(
 specifier|const
 name|MipsSubtarget
 operator|&
 name|Subtarget
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
@@ -154,7 +145,7 @@ name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction* MF =
+argument|const MachineFunction *MF =
 literal|0
 argument_list|)
 specifier|const
@@ -183,14 +174,11 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|void
-name|eliminateCallFramePseudoInstr
+name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
 argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -231,6 +219,26 @@ name|unsigned
 name|getEHHandlerRegister
 argument_list|()
 specifier|const
+block|;
+name|private
+operator|:
+name|virtual
+name|void
+name|eliminateFI
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|uint64_t StackSize
+argument_list|,
+argument|int64_t SPOffset
+argument_list|)
+specifier|const
+operator|=
+literal|0
 block|; }
 decl_stmt|;
 block|}

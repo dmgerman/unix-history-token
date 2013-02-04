@@ -6311,6 +6311,9 @@ name|archive_entry_set_dev
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|mtree_atol10
 argument_list|(
 operator|&
@@ -6365,6 +6368,9 @@ name|archive_entry_set_rdevmajor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|mtree_atol
 argument_list|(
 operator|&
@@ -6376,6 +6382,9 @@ name|archive_entry_set_rdevminor
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|dev_t
+operator|)
 name|mtree_atol
 argument_list|(
 operator|&
@@ -6812,6 +6821,9 @@ name|archive_entry_set_perm
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|mode_t
+operator|)
 name|mtree_atol8
 argument_list|(
 operator|&
@@ -6866,6 +6878,10 @@ name|archive_entry_set_nlink
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|mtree_atol10
 argument_list|(
 operator|&
@@ -7592,6 +7608,10 @@ name|offset
 condition|)
 name|bytes_to_read
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|mtree
 operator|->
 name|cur_size
@@ -7599,6 +7619,7 @@ operator|-
 name|mtree
 operator|->
 name|offset
+argument_list|)
 expr_stmt|;
 else|else
 name|bytes_to_read

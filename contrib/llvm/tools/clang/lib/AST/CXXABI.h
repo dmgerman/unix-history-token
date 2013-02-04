@@ -109,11 +109,14 @@ comment|/// Returns the default calling convention for C++ methods.
 name|virtual
 name|CallingConv
 name|getDefaultMethodCallConv
-argument_list|()
-specifier|const
-operator|=
+argument_list|(
+name|bool
+name|isVariadic
+argument_list|)
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|// Returns whether the given class is nearly empty, with just virtual pointers
 comment|// and no data except possibly virtual bases.
 name|virtual

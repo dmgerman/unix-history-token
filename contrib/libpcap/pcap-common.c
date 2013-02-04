@@ -177,12 +177,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINKTYPE_TOKEN_RING
+name|LINKTYPE_IEEE802_5
 value|DLT_IEEE802
 end_define
 
 begin_comment
-comment|/* DLT_IEEE802 is used for Token Ring */
+comment|/* DLT_IEEE802 is used for 802.5 Token Ring */
 end_comment
 
 begin_define
@@ -489,23 +489,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_PRISM_HEADER
+name|LINKTYPE_IEEE802_11_PRISM
 value|119
 end_define
 
 begin_comment
-comment|/* 802.11+Prism II monitor mode */
+comment|/* 802.11 plus Prism II monitor mode radio metadata header */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LINKTYPE_AIRONET_HEADER
+name|LINKTYPE_IEEE802_11_AIRONET
 value|120
 end_define
 
 begin_comment
-comment|/* FreeBSD Aironet driver stuff */
+comment|/* 802.11 plus FreeBSD Aironet driver radio metadata header */
 end_comment
 
 begin_comment
@@ -581,12 +581,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_IEEE802_11_RADIO
+name|LINKTYPE_IEEE802_11_RADIOTAP
 value|127
 end_define
 
 begin_comment
-comment|/* 802.11 plus BSD radio header */
+comment|/* 802.11 plus radiotap radio metadata header */
 end_comment
 
 begin_comment
@@ -871,18 +871,18 @@ value|162
 end_define
 
 begin_comment
-comment|/*  * For future use with 802.11 captures - defined by AbsoluteValue  * Systems to store a number of bits of link-layer information  * including radio information:  *  *	http://www.shaftnet.org/~pizza/software/capturefrm.txt  *  * but could and arguably should also be used by non-AVS Linux  * 802.11 drivers; that may happen in the future.  */
+comment|/*  * For future use with 802.11 captures - defined by AbsoluteValue  * Systems to store a number of bits of link-layer information  * including radio information:  *  *	http://www.shaftnet.org/~pizza/software/capturefrm.txt  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LINKTYPE_IEEE802_11_RADIO_AVS
+name|LINKTYPE_IEEE802_11_AVS
 value|163
 end_define
 
 begin_comment
-comment|/* 802.11 plus AVS radio header */
+comment|/* 802.11 plus AVS radio metadata header */
 end_comment
 
 begin_comment
@@ -897,7 +897,7 @@ value|164
 end_define
 
 begin_comment
-comment|/*  * Reserved for BACnet MS/TP.  */
+comment|/*  * BACnet MS/TP frames.  */
 end_comment
 
 begin_define
@@ -1719,11 +1719,55 @@ name|LINKTYPE_IPOIB
 value|242
 end_define
 
+begin_comment
+comment|/*  * MPEG-2 transport stream (ISO 13818-1/ITU-T H.222.0).  *  * Requested by Guy Martin<gmsoft@tuxicoman.be>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_MPEG_2_TS
+value|243
+end_define
+
+begin_comment
+comment|/*  * ng4T GmbH's UMTS Iub/Iur-over-ATM and Iub/Iur-over-IP format as  * used by their ng40 protocol tester.  *  * Requested by Jens Grimmer<jens.grimmer@ng4t.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_NG40
+value|244
+end_define
+
+begin_comment
+comment|/*  * Pseudo-header giving adapter number and flags, followed by an NFC  * (Near-Field Communications) Logical Link Control Protocol (LLCP) PDU,  * as specified by NFC Forum Logical Link Control Protocol Technical  * Specification LLCP 1.1.  *  * Requested by Mike Wakerly<mikey@google.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_NFC_LLCP
+value|245
+end_define
+
+begin_comment
+comment|/*  * pfsync output; DLT_PFSYNC is 18, which collides with DLT_CIP in  * SuSE 6.3, on OpenBSD, NetBSD, DragonFly BSD, and Mac OS X, and  * is 121, which collides with DLT_HHDLC, in FreeBSD.  We pick a  * shiny new link-layer header type value that doesn't collide with  * anything, in the hopes that future pfsync savefiles, if any,  * won't require special hacks to distinguish from other savefiles.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_PFSYNC
+value|246
+end_define
+
 begin_define
 define|#
 directive|define
 name|LINKTYPE_MATCHING_MAX
-value|242
+value|246
 end_define
 
 begin_comment
@@ -1786,7 +1830,7 @@ block|,
 block|{
 name|DLT_IEEE802
 block|,
-name|LINKTYPE_TOKEN_RING
+name|LINKTYPE_IEEE802_5
 block|}
 block|,
 block|{
@@ -1813,6 +1857,12 @@ block|,
 name|LINKTYPE_FDDI
 block|}
 block|,
+block|{
+name|DLT_SYMANTEC_FIREWALL
+block|,
+name|LINKTYPE_SYMANTEC_FIREWALL
+block|}
+block|,
 comment|/* 	 * These DLT_* codes have different values on different 	 * platforms; we map them to LINKTYPE_* codes that 	 * have values that should never be equal to any DLT_* 	 * code. 	 */
 ifdef|#
 directive|ifdef
@@ -1826,12 +1876,6 @@ block|}
 block|,
 endif|#
 directive|endif
-block|{
-name|DLT_SYMANTEC_FIREWALL
-block|,
-name|LINKTYPE_SYMANTEC_FIREWALL
-block|}
-block|,
 block|{
 name|DLT_ATM_RFC1483
 block|,
@@ -1908,6 +1952,18 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Map DLT_PFSYNC, whatever it might be, to LINKTYPE_PFSYNC. 	 */
+if|if
+condition|(
+name|dlt
+operator|==
+name|DLT_PFSYNC
+condition|)
+return|return
+operator|(
+name|LINKTYPE_PFSYNC
+operator|)
+return|;
 comment|/* 	 * Map the values in the matching range. 	 */
 if|if
 condition|(
@@ -1988,6 +2044,18 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Map LINKTYPE_PFSYNC to DLT_PFSYNC, whatever it might be. 	 * LINKTYPE_PFSYNC is in the matching range, to make sure 	 * it's as safe from reuse as we can arrange, so we do 	 * this test first. 	 */
+if|if
+condition|(
+name|linktype
+operator|==
+name|LINKTYPE_PFSYNC
+condition|)
+return|return
+operator|(
+name|DLT_PFSYNC
+operator|)
+return|;
 comment|/* 	 * Map the values in the matching range. 	 */
 if|if
 condition|(

@@ -41,6 +41,7 @@ end_include
 
 begin_function
 name|int
+name|__noinline
 name|t1_bkpt_t
 parameter_list|()
 block|{
@@ -91,6 +92,8 @@ operator|&
 name|phdl
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
 name|proc_bkptset
 argument_list|(
 name|phdl
@@ -103,6 +106,9 @@ argument_list|,
 operator|&
 name|saved
 argument_list|)
+operator|==
+literal|0
+argument_list|)
 expr_stmt|;
 name|proc_continue
 argument_list|(
@@ -111,13 +117,12 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|WIFSTOPPED
-argument_list|(
 name|proc_wstatus
 argument_list|(
 name|phdl
 argument_list|)
-argument_list|)
+operator|==
+name|PS_STOP
 argument_list|)
 expr_stmt|;
 name|proc_bkptexec
@@ -132,7 +137,7 @@ argument_list|(
 name|phdl
 argument_list|)
 expr_stmt|;
-name|proc_wait
+name|proc_wstatus
 argument_list|(
 name|phdl
 argument_list|)

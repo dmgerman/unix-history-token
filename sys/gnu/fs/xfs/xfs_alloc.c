@@ -6890,10 +6890,16 @@ expr_stmt|;
 block|}
 comment|/* 	 * Can't allocate from the freelist for some reason. 	 */
 else|else
+block|{
+name|fbno
+operator|=
+name|NULLAGBLOCK
+expr_stmt|;
 name|flen
 operator|=
 literal|0
 expr_stmt|;
+block|}
 comment|/* 	 * Can't do the allocation, give up. 	 */
 if|if
 condition|(

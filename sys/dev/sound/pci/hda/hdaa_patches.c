@@ -488,7 +488,7 @@ argument_list|)
 expr_stmt|;
 name|subid
 operator|=
-name|hdaa_subvendor_id
+name|hdaa_card_id
 argument_list|(
 name|w
 operator|->
@@ -956,6 +956,43 @@ if|if
 condition|(
 name|id
 operator|==
+name|HDA_CODEC_AD1984A
+operator|&&
+name|subid
+operator|==
+name|LENOVO_X300_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|17
+case|:
+comment|/* Headphones with redirection */
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+case|case
+literal|20
+case|:
+comment|/* Two mics together */
+name|patch
+operator|=
+literal|"as=2 seq=15"
+expr_stmt|;
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
 name|HDA_CODEC_AD1986A
 operator|&&
 operator|(
@@ -1308,6 +1345,31 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * Clear "digital" flag from digital mic input, as its signal then goes 	 * to "analog" mixer and this separation just limits functionaity. 	 */
+if|if
+condition|(
+name|hdaa_codec_id
+argument_list|(
+name|devinfo
+argument_list|)
+operator|==
+name|HDA_CODEC_AD1984A
+operator|&&
+name|w
+operator|->
+name|nid
+operator|==
+literal|23
+condition|)
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+operator|&=
+operator|~
+name|HDA_PARAM_AUDIO_WIDGET_CAP_DIGITAL_MASK
+expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|if (w->param.widget_cap != orig) { 			device_printf(w->devinfo->dev,
@@ -1363,7 +1425,7 @@ argument_list|)
 expr_stmt|;
 name|subid
 operator|=
-name|hdaa_subvendor_id
+name|hdaa_card_id
 argument_list|(
 name|devinfo
 argument_list|)
@@ -2159,6 +2221,42 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+name|HDA_CODEC_ALC269
+case|:
+comment|/* 		 * ASUS EeePC 1001px has strange variant of ALC269 CODEC, 		 * that mutes speaker if unused mixer at NID 15 is muted. 		 * Probably CODEC incorrectly reports internal connections. 		 * Hide that muter from the driver.  There are several CODECs 		 * sharing this ID and I have not enough information about 		 * them to implement more universal solution. 		 */
+if|if
+condition|(
+name|subid
+operator|==
+literal|0x84371043
+condition|)
+block|{
+name|w
+operator|=
+name|hdaa_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|param
+operator|.
+name|inamp_cap
+operator|=
+literal|0
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|HDA_CODEC_CX20582
 case|:
 case|case
@@ -2388,7 +2486,7 @@ argument_list|)
 expr_stmt|;
 name|subid
 operator|=
-name|hdaa_subvendor_id
+name|hdaa_card_id
 argument_list|(
 name|devinfo
 argument_list|)
@@ -2441,6 +2539,10 @@ literal|0x01
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Fall though */
+case|case
+name|HDA_CODEC_VT1818S
+case|:
 comment|/* Don't bypass mixer. */
 name|hda_command
 argument_list|(

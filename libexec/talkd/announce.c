@@ -143,14 +143,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|hostname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Announce an invitation to talk.  */
 end_comment

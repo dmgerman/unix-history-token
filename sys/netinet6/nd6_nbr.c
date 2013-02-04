@@ -1846,7 +1846,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1866,7 +1866,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3422,6 +3422,15 @@ name|la_flags
 operator||=
 name|LLE_VALID
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|ln
+argument_list|,
+name|LLENTRY_RESOLVED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is_solicited
@@ -3674,6 +3683,15 @@ operator|->
 name|la_flags
 operator||=
 name|LLE_VALID
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|ln
+argument_list|,
+name|LLENTRY_RESOLVED
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * If solicited, make the state REACHABLE. 			 * If not solicited and the link-layer address was 			 * changed, make it STALE. 			 */
@@ -4235,7 +4253,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4255,7 +4273,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5880,9 +5898,6 @@ operator|->
 name|dad_vnet
 argument_list|)
 expr_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -5910,12 +5925,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 comment|/* Sanity check */
 if|if
 condition|(
@@ -6257,11 +6266,6 @@ block|}
 block|}
 name|done
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;

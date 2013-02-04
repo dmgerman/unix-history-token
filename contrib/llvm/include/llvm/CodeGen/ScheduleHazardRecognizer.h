@@ -135,6 +135,8 @@ return|;
 block|}
 comment|/// atIssueLimit - Return true if no more instructions may be issued in this
 comment|/// cycle.
+comment|///
+comment|/// FIXME: remove this once MachineScheduler is the only client.
 name|virtual
 name|bool
 name|atIssueLimit
@@ -162,6 +164,8 @@ name|m
 parameter_list|,
 name|int
 name|Stalls
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return

@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines C++ overloaded operators.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines an enumeration for C++ overloaded operators.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -63,14 +67,14 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// OverloadedOperatorKind - Enumeration specifying the different kinds of
-comment|/// C++ overloaded operators.
+comment|/// \brief Enumeration specifying the different kinds of C++ overloaded
+comment|/// operators.
 enum|enum
 name|OverloadedOperatorKind
 block|{
 name|OO_None
 block|,
-comment|//< Not an overloaded operator
+comment|///< Not an overloaded operator
 define|#
 directive|define
 name|OVERLOADED_OPERATOR

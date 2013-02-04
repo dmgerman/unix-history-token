@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -68,7 +68,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObjectTyped  *  * PARAMETERS:  Handle              - Object handle (optional)  *              Pathname            - Object pathname (optional)  *              ExternalParams      - List of parameters to pass to method,  *                                    terminated by NULL.  May be NULL  *                                    if no parameters are being passed.  *              ReturnBuffer        - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *              ReturnType          - Expected type of return object  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObjectTyped  *  * PARAMETERS:  Handle              - Object handle (optional)  *              Pathname            - Object pathname (optional)  *              ExternalParams      - List of parameters to pass to method,  *                                    terminated by NULL. May be NULL  *                                    if no parameters are being passed.  *              ReturnBuffer        - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *              ReturnType          - Expected type of return object  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary. One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -296,7 +296,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              Pathname            - Object pathname (optional)  *              ExternalParams      - List of parameters to pass to method,  *                                    terminated by NULL.  May be NULL  *                                    if no parameters are being passed.  *              ReturnBuffer        - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              Pathname            - Object pathname (optional)  *              ExternalParams      - List of parameters to pass to method,  *                                    terminated by NULL. May be NULL  *                                    if no parameters are being passed.  *              ReturnBuffer        - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary. One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -513,7 +513,7 @@ name|Pathname
 operator|)
 operator|&&
 operator|(
-name|AcpiNsValidRootPrefix
+name|ACPI_IS_ROOT_PREFIX
 argument_list|(
 name|Pathname
 index|[
@@ -1017,11 +1017,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Lock the namespace around the walk. The namespace will be      * unlocked/locked around each call to the user function - since the user      * function must be allowed to make ACPICA calls itself (for example, it      * will typically execute control methods during device enumeration.)      */
 name|Status
@@ -1139,11 +1139,11 @@ decl_stmt|;
 name|UINT32
 name|Flags
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Hid
 decl_stmt|;
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 modifier|*
 name|Cid
 decl_stmt|;
@@ -1472,7 +1472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetDevices  *  * PARAMETERS:  HID                 - HID to search for. Can be NULL.  *              UserFunction        - Called when a matching object is found  *              Context             - Passed to user function  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object of type  *              Device is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              This is a wrapper for WalkNamespace, but the callback performs  *              additional filtering. Please see AcpiNsGetDeviceCallback.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetDevices  *  * PARAMETERS:  HID                 - HID to search for. Can be NULL.  *              UserFunction        - Called when a matching object is found  *              Context             - Passed to user function  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object of type  *              Device is found. If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              This is a wrapper for WalkNamespace, but the callback performs  *              additional filtering. Please see AcpiNsGetDeviceCallback.  *  ******************************************************************************/
 end_comment
 
 begin_function

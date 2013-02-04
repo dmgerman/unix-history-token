@@ -760,14 +760,6 @@ name|sc
 operator|->
 name|ef_ifp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -776,11 +768,6 @@ expr_stmt|;
 name|if_free
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -842,8 +829,6 @@ operator|)
 name|data
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|EFDEBUG
@@ -860,11 +845,6 @@ expr_stmt|;
 name|error
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -926,11 +906,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -1848,7 +1823,7 @@ name|ETHER_HDR_LEN
 operator|+
 literal|3
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Ensure that ethernet header and next three bytes 		 * will fit into single mbuf 		 */
@@ -1940,7 +1915,7 @@ name|m
 argument_list|,
 literal|8
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|type

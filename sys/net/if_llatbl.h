@@ -367,7 +367,7 @@ name|LLE_ADDREF
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt>= 0,				\ 		("negative refcnt %d", (lle)->lle_refcnt));	\ 	(lle)->lle_refcnt++;					\ } while (0)
+value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt>= 0,				\ 	    ("negative refcnt %d on lle %p",			\ 	    (lle)->lle_refcnt, (lle)));				\ 	(lle)->lle_refcnt++;					\ } while (0)
 end_define
 
 begin_define
@@ -377,7 +377,7 @@ name|LLE_REMREF
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt> 1,				\ 		("bogus refcnt %d", (lle)->lle_refcnt));	\ 	(lle)->lle_refcnt--;					\ } while (0)
+value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt> 0,				\ 	    ("bogus refcnt %d on lle %p",			\ 	    (lle)->lle_refcnt, (lle)));				\ 	(lle)->lle_refcnt--;					\ } while (0)
 end_define
 
 begin_define
@@ -387,9 +387,9 @@ name|LLE_FREE_LOCKED
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {				\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
+value|do {				\ 	if ((lle)->lle_refcnt == 1)				\ 		(lle)->lle_free((lle)->lle_tbl, (lle));		\ 	else {							\ 		LLE_REMREF(lle);				\ 		LLE_WUNLOCK(lle);				\ 	}							\
 comment|/* guard against invalid refs */
-value|\ 	lle = NULL;						\ } while (0)
+value|\ 	(lle) = NULL;						\ } while (0)
 end_define
 
 begin_define
@@ -631,23 +631,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LLE_PROXY
-value|0x0010
-end_define
-
-begin_comment
-comment|/* proxy entry ??? */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LLE_PUB
 value|0x0020
 end_define
 
 begin_comment
 comment|/* publish entry ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLE_LINKED
+value|0x0040
+end_define
+
+begin_comment
+comment|/* linked to lookup structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLE_EXCLUSIVE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* return lle xlocked  */
 end_comment
 
 begin_define
@@ -670,17 +681,6 @@ end_define
 
 begin_comment
 comment|/* create on a lookup miss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLE_EXCLUSIVE
-value|0x2000
-end_define
-
-begin_comment
-comment|/* return lle xlocked  */
 end_comment
 
 begin_define
@@ -778,12 +778,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|llentry_update
-parameter_list|(
 name|struct
 name|llentry
 modifier|*
+name|llentry_alloc
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
@@ -792,10 +793,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockaddr_storage
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -849,6 +846,56 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_enum
+enum|enum
+block|{
+name|LLENTRY_RESOLVED
+block|,
+name|LLENTRY_TIMEDOUT
+block|,
+name|LLENTRY_DELETED
+block|,
+name|LLENTRY_EXPIRED
+block|, }
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|lle_event_fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|lle_event
+argument_list|,
+name|lle_event_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

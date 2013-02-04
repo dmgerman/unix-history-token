@@ -23,8 +23,14 @@ directive|include
 file|"ec_lcl.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+end_ifndef
+
 begin_comment
-comment|/* Compute the x-coordinate x/z for the point 2*(x/z) in Montgomery projective   * coordinates.  * Uses algorithm Mdouble in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation".  * modified to not require precomputation of c=b^{2^{m-1}}.  */
+comment|/* Compute the x-coordinate x/z for the point 2*(x/z) in Montgomery projective   * coordinates.  * Uses algorithm Mdouble in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  * modified to not require precomputation of c=b^{2^{m-1}}.  */
 end_comment
 
 begin_function
@@ -247,7 +253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the x-coordinate x1/z1 for the point (x1/z1)+(x2/x2) in Montgomery   * projective coordinates.  * Uses algorithm Madd in appendix of   *     Lopex, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation".  */
+comment|/* Compute the x-coordinate x1/z1 for the point (x1/z1)+(x2/x2) in Montgomery   * projective coordinates.  * Uses algorithm Madd in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  */
 end_comment
 
 begin_function
@@ -503,7 +509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the x, y affine coordinates from the point (x1, z1) (x2, z2)   * using Montgomery point multiplication algorithm Mxy() in appendix of   *     Lopex, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation".  * Returns:  *     0 on error  *     1 if return value should be the point at infinity  *     2 otherwise  */
+comment|/* Compute the x, y affine coordinates from the point (x1, z1) (x2, z2)   * using Montgomery point multiplication algorithm Mxy() in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  * Returns:  *     0 on error  *     1 if return value should be the point at infinity  *     2 otherwise  */
 end_comment
 
 begin_function
@@ -1053,7 +1059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computes scalar*point and stores the result in r.  * point can not equal r.  * Uses algorithm 2P of  *     Lopex, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation".  */
+comment|/* Computes scalar*point and stores the result in r.  * point can not equal r.  * Uses algorithm 2P of  *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  */
 end_comment
 
 begin_function
@@ -1104,11 +1110,11 @@ init|=
 literal|0
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|BN_ULONG
 name|mask
+decl_stmt|,
+name|word
 decl_stmt|;
 if|if
 condition|(
@@ -1323,45 +1329,35 @@ name|top
 operator|-
 literal|1
 expr_stmt|;
-name|j
-operator|=
-name|BN_BITS2
-operator|-
-literal|1
-expr_stmt|;
 name|mask
 operator|=
 name|BN_TBIT
 expr_stmt|;
-while|while
-condition|(
-operator|!
-operator|(
+name|word
+operator|=
 name|scalar
 operator|->
 name|d
 index|[
 name|i
 index|]
+expr_stmt|;
+while|while
+condition|(
+operator|!
+operator|(
+name|word
 operator|&
 name|mask
 operator|)
 condition|)
-block|{
 name|mask
 operator|>>=
 literal|1
 expr_stmt|;
-name|j
-operator|--
-expr_stmt|;
-block|}
 name|mask
 operator|>>=
 literal|1
-expr_stmt|;
-name|j
-operator|--
 expr_stmt|;
 comment|/* if top most bit was at word break, go to next word */
 if|if
@@ -1373,12 +1369,6 @@ block|{
 name|i
 operator|--
 expr_stmt|;
-name|j
-operator|=
-name|BN_BITS2
-operator|-
-literal|1
-expr_stmt|;
 name|mask
 operator|=
 name|BN_TBIT
@@ -1395,25 +1385,23 @@ name|i
 operator|--
 control|)
 block|{
-for|for
-control|(
-init|;
-name|j
-operator|>=
-literal|0
-condition|;
-name|j
-operator|--
-control|)
-block|{
-if|if
-condition|(
+name|word
+operator|=
 name|scalar
 operator|->
 name|d
 index|[
 name|i
 index|]
+expr_stmt|;
+while|while
+condition|(
+name|mask
+condition|)
+block|{
+if|if
+condition|(
+name|word
 operator|&
 name|mask
 condition|)
@@ -1513,12 +1501,6 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
-name|j
-operator|=
-name|BN_BITS2
-operator|-
-literal|1
-expr_stmt|;
 name|mask
 operator|=
 name|BN_TBIT
@@ -2103,6 +2085,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

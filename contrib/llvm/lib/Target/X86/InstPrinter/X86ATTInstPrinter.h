@@ -197,7 +197,17 @@ argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
-name|print_pcrel_imm
+name|printAVXCC
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned Op
+argument_list|,
+argument|raw_ostream&OS
+argument_list|)
+block|;
+name|void
+name|printPCRelImm
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

@@ -27,6 +27,23 @@ directive|include
 file|<float.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ieeefp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -179,6 +196,9 @@ name|x
 operator|)
 operator|)
 return|;
+name|ENTERI
+argument_list|()
+expr_stmt|;
 comment|/* Optimize the case where x is already within range. */
 if|if
 condition|(
@@ -202,16 +222,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|s
 condition|?
 operator|-
 name|hi
 else|:
 name|hi
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|e0
 operator|=
@@ -280,11 +300,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|hi
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -152,12 +152,10 @@ name|MCContext
 block|{
 name|MCContext
 argument_list|(
-specifier|const
-name|MCContext
-operator|&
+argument|const MCContext&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MCContext
 modifier|&
 name|operator
@@ -167,8 +165,8 @@ specifier|const
 name|MCContext
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 typedef|typedef
@@ -493,6 +491,17 @@ modifier|*
 name|CreateTempSymbol
 parameter_list|()
 function_decl|;
+comment|/// getUniqueSymbolID() - Return a unique identifier for use in constructing
+comment|/// symbol names.
+name|unsigned
+name|getUniqueSymbolID
+parameter_list|()
+block|{
+return|return
+name|NextUniqueID
+operator|++
+return|;
+block|}
 comment|/// CreateDirectionalLocalSymbol - Create the definition of a directional
 comment|/// local symbol for numbered label (used for "1:" definitions).
 name|MCSymbol
@@ -545,6 +554,17 @@ modifier|*
 name|LookupSymbol
 argument_list|(
 name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|LookupSymbol
+argument_list|(
+specifier|const
+name|Twine
+operator|&
 name|Name
 argument_list|)
 decl|const

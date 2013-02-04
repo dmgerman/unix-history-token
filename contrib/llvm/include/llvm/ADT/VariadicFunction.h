@@ -798,7 +798,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|ResultT operator()(Param0T P0, Param1T P1, \                      LLVM_COMMA_JOIN ## N(const ArgT&A)) const { \     const ArgT *const Args[] = { LLVM_COMMA_JOIN ## N(&A) }; \     return Func(P0, P1, makeAraryRef(Args)); \   }
+value|ResultT operator()(Param0T P0, Param1T P1, \                      LLVM_COMMA_JOIN ## N(const ArgT&A)) const { \     const ArgT *const Args[] = { LLVM_COMMA_JOIN ## N(&A) }; \     return Func(P0, P1, makeArrayRef(Args)); \   }
 name|LLVM_DEFINE_OVERLOAD
 argument_list|(
 literal|1

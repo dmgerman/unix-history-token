@@ -71,7 +71,7 @@ block|{
 name|uint32_t
 name|pm_iap_config
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|pm_iap_rsp
 decl_stmt|;
 block|}
@@ -160,8 +160,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IA_OFFCORE_RSP_MASK
-value|0xF7FF
+name|IA_OFFCORE_RSP_MASK_I7WM
+value|0x000000F7FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA_OFFCORE_RSP_MASK_SBIB
+value|0x3F807F8FFF
 end_define
 
 begin_ifdef
@@ -375,7 +382,7 @@ block|{
 name|uint32_t
 name|pm_iap_evsel
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|pm_iap_rsp
 decl_stmt|;
 block|}

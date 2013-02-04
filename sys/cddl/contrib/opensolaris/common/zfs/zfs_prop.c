@@ -388,6 +388,12 @@ name|ZFS_ACL_PASSTHROUGH
 block|}
 block|,
 block|{
+literal|"restricted"
+block|,
+name|ZFS_ACL_RESTRICTED
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -836,7 +842,7 @@ name|PROP_INHERIT
 argument_list|,
 name|ZFS_TYPE_FILESYSTEM
 argument_list|,
-literal|"discard | groupmask | passthrough"
+literal|"discard | groupmask | passthrough | restricted"
 argument_list|,
 literal|"ACLMODE"
 argument_list|,

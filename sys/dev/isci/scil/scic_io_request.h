@@ -370,7 +370,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**    * Function pointer to get the function in the the smp request    */
+comment|/**    * Function pointer to get the function in the smp request    */
 name|U8
 function_decl|(
 modifier|*
@@ -381,7 +381,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**    * Function pointer to get the "allocated response length" in the the smp request    */
+comment|/**    * Function pointer to get the "allocated response length" in the smp request    */
 name|U8
 function_decl|(
 modifier|*
@@ -645,7 +645,7 @@ name|SCI_IO_REQUEST_HANDLE_T
 name|scic_io_request
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This method will return the address of the device to host register  *        fis region for the io request object.  *  * @param[in] scic_io_request This parameter specifies teh handle to the io  *       request object from which to get the device to host register fis  *       buffer.  *  * @return The address fo the device to host register fis ending the io  *         request.  *  * @note This function is only valid for SATA requests.  */
+comment|/**  * @brief This method will return the address of the device to host register  *        fis region for the io request object.  *  * @param[in] scic_io_request This parameter specifies the handle to the io  *       request object from which to get the device to host register fis  *       buffer.  *  * @return The address fo the device to host register fis ending the io  *         request.  *  * @note This function is only valid for SATA requests.  */
 name|void
 modifier|*
 name|scic_stp_io_request_get_d2h_reg_address

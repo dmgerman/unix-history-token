@@ -62,33 +62,11 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500001
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/bio.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_include
 include|#
@@ -114,99 +92,6 @@ directive|include
 file|<sys/errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsipi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/scsipi/scsi_disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/physio_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/scsi_low.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/tmc18c30reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/Cbus/dev/tmc18c30var.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -217,18 +102,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/physio_proc.h>
 end_include
 
 begin_include
@@ -248,15 +121,6 @@ include|#
 directive|include
 file|<dev/stg/tmc18c30var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_comment
 comment|/***************************************************  * USER SETTINGS  ***************************************************/
@@ -1368,7 +1232,7 @@ operator|->
 name|sc_busimg
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|10
 argument_list|)
@@ -1432,7 +1296,7 @@ argument_list|,
 name|BCTL_RST
 argument_list|)
 expr_stmt|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|100000
 argument_list|)
@@ -1709,11 +1573,6 @@ expr_stmt|;
 name|stghw_init
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|SOFT_INTR_REQUIRED
-argument_list|(
-name|slp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2027,43 +1886,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|stgprint
-parameter_list|(
-name|aux
-parameter_list|,
-name|name
-parameter_list|)
-name|void
-modifier|*
-name|aux
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"%s: scsibus "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-name|UNCONF
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|stgattachsubr
 parameter_list|(
@@ -2345,13 +2167,13 @@ name|sl_error
 operator||=
 name|PDMAERR
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s len %x>= datalen %x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"len %x>= datalen %x\n"
 argument_list|,
 name|len
 argument_list|,
@@ -2390,13 +2212,13 @@ name|sl_error
 operator||=
 name|PDMAERR
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: len %x left in fifo\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"len %x left in fifo\n"
 argument_list|,
 name|len
 argument_list|)
@@ -2411,13 +2233,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s data phase miss\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"data phase miss\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -2671,7 +2493,7 @@ operator|<=
 literal|0
 condition|)
 break|break;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -2719,13 +2541,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: read padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"read padding required\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2839,13 +2661,13 @@ name|tout
 operator|<=
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: pio read timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"pio read timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3117,7 +2939,7 @@ operator|/
 literal|2
 condition|)
 block|{
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -3232,13 +3054,13 @@ name|tout
 operator|<=
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: pio write timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"pio write timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3346,19 +3168,19 @@ condition|)
 return|return
 literal|1
 return|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 name|STG_DELAY_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: %s stg_negate_signal timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"%s stg_negate_signal timeout\n"
 argument_list|,
 name|s
 argument_list|)
@@ -3488,19 +3310,19 @@ condition|)
 return|return
 literal|1
 return|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 name|STG_DELAY_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: stg_expect_signal timeout\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"stg_expect_signal timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3829,13 +3651,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected termination\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected termination\n"
 argument_list|)
 expr_stmt|;
 name|stg_disconnected
@@ -3893,7 +3715,7 @@ name|BSTAT_SEL
 operator|)
 condition|)
 block|{
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -3933,19 +3755,19 @@ goto|goto
 name|reselect_start
 goto|;
 block|}
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: reselction timeout I\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"reselction timeout I\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4062,19 +3884,19 @@ condition|)
 goto|goto
 name|reselected
 goto|;
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: reselction timeout II\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"reselction timeout II\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4497,14 +4319,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 name|STGHW_SELECT_INTERVAL
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4672,11 +4494,6 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|physio_proc
-modifier|*
-name|pp
-decl_stmt|;
-name|struct
 name|buf
 modifier|*
 name|bp
@@ -4839,13 +4656,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: st %x ist %x\n\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"st %x ist %x\n\n"
 argument_list|,
 name|status
 argument_list|,
@@ -4861,8 +4678,10 @@ name|stg_debug
 operator|>
 literal|1
 condition|)
-name|SCSI_LOW_DEBUGGER
+name|kdb_enter
 argument_list|(
+name|KDB_WHY_CAM
+argument_list|,
 literal|"stg"
 argument_list|)
 expr_stmt|;
@@ -5340,13 +5159,13 @@ operator|!=
 name|MESSAGE_IN_PHASE
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected phase after reselect\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected phase after reselect\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -5494,13 +5313,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: CMDOUT short\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"CMDOUT short\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5538,13 +5357,6 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5576,11 +5388,6 @@ argument_list|,
 name|ti
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|physio_proc_leave
-argument_list|(
-name|pp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5617,13 +5424,6 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
-name|pp
-operator|=
-name|physio_proc_enter
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5655,11 +5455,6 @@ argument_list|,
 name|ti
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|physio_proc_leave
-argument_list|(
-name|pp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5738,13 +5533,13 @@ name|tmc_rdata
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: STATIN: data mismatch\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"STATIN: data mismatch\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5850,13 +5645,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: MSGOUT short\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"MSGOUT short\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5968,13 +5763,13 @@ name|tmc_rdata
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: MSGIN: data mismatch\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"MSGIN: data mismatch\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6015,13 +5810,13 @@ break|break;
 case|case
 name|BUSFREE_PHASE
 case|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected disconnect\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected disconnect\n"
 argument_list|)
 expr_stmt|;
 name|stg_disconnected
@@ -6039,13 +5834,13 @@ name|sl_error
 operator||=
 name|FATALIO
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unknown phase bus %x intr %x\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unknown phase bus %x intr %x\n"
 argument_list|,
 name|status
 argument_list|,
@@ -6165,13 +5960,13 @@ condition|)
 return|return
 literal|0
 return|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected bus free detected\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"unexpected bus free detected\n"
 argument_list|)
 expr_stmt|;
 name|slp
@@ -6277,13 +6072,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: write padding required\n"
-argument_list|,
 name|slp
 operator|->
-name|sl_xname
+name|sl_dev
+argument_list|,
+literal|"write padding required\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6345,7 +6140,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|SCSI_LOW_DELAY
+name|DELAY
 argument_list|(
 literal|1
 argument_list|)

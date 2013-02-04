@@ -493,7 +493,7 @@ name|int
 name|sim_mode
 parameter_list|,
 name|int
-name|verbose
+name|printerrors
 parameter_list|,
 name|int
 name|retry_count
@@ -1030,7 +1030,7 @@ name|int
 name|sim_mode
 parameter_list|,
 name|int
-name|verbose
+name|printerrors
 parameter_list|,
 name|int
 name|retry_count
@@ -1337,7 +1337,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|printerrors
 condition|)
 name|cam_error_print
 argument_list|(
@@ -1385,7 +1385,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|printerrors
 condition|)
 name|cam_error_print
 argument_list|(
@@ -1861,7 +1861,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|printerrors
 condition|)
 name|cam_error_print
 argument_list|(
@@ -1995,7 +1995,7 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
-name|verbose
+name|printerrors
 parameter_list|,
 name|int
 name|retry_count
@@ -2222,7 +2222,7 @@ name|img_size
 argument_list|,
 name|sim_mode
 argument_list|,
-name|verbose
+name|printerrors
 argument_list|,
 name|retry_count
 argument_list|,

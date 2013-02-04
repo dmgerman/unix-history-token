@@ -2173,6 +2173,22 @@ name|u64
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DW_FORM_flag_present
+case|:
+comment|/* This form has no value encoded in the DIE. */
+name|avref
+operator|.
+name|u
+index|[
+literal|0
+index|]
+operator|.
+name|u64
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|DWARF_SET_ERROR
 argument_list|(
@@ -2872,7 +2888,6 @@ name|die_offset
 init|=
 name|offset
 decl_stmt|;
-empty_stmt|;
 name|abnum
 operator|=
 name|dwarf_read_uleb128

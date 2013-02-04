@@ -862,7 +862,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1007,7 +1007,7 @@ name|m
 argument_list|,
 name|fsize
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m_tag_copy_chain
@@ -1039,7 +1039,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

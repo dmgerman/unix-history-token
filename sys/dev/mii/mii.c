@@ -2685,7 +2685,6 @@ specifier|static
 name|unsigned
 specifier|const
 name|char
-specifier|const
 name|nibbletab
 index|[
 literal|16

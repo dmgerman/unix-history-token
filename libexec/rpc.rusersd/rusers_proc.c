@@ -123,6 +123,12 @@ directive|include
 file|<rpcsvc/rnusers.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -171,27 +177,6 @@ name|MAXUSERS
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|from_inetd
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|rusers_service
-parameter_list|(
-name|struct
-name|svc_req
-modifier|*
-parameter_list|,
-name|SVCXPRT
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_ifdef
 ifdef|#

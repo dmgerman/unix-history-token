@@ -490,6 +490,7 @@ unit|static
 name|int
 name|i2r_ASIdentifiers
 parameter_list|(
+specifier|const
 name|X509V3_EXT_METHOD
 modifier|*
 name|method
@@ -2427,6 +2428,7 @@ name|void
 modifier|*
 name|v2i_ASIdentifiers
 argument_list|(
+specifier|const
 expr|struct
 name|v3_ext_method
 operator|*
@@ -3408,8 +3410,6 @@ decl_stmt|;
 name|X509
 modifier|*
 name|x
-init|=
-name|NULL
 decl_stmt|;
 name|OPENSSL_assert
 argument_list|(
@@ -3461,6 +3461,10 @@ name|i
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|x
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -3866,6 +3870,13 @@ block|}
 block|}
 block|}
 comment|/*    * Trust anchor can't inherit.    */
+name|OPENSSL_assert
+argument_list|(
+name|x
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|x

@@ -236,7 +236,7 @@ block|}
 else|else
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -313,7 +313,7 @@ block|}
 else|else
 name|drq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bt_init_softc
 argument_list|(
@@ -617,7 +617,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -797,7 +797,10 @@ condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent	*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignemnt	*/
 literal|1
@@ -831,11 +834,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -936,11 +938,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt

@@ -105,11 +105,69 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/md5.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|MD5Init
+parameter_list|(
+name|c
+parameter_list|)
+value|MD5_Init(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5Update
+parameter_list|(
+name|c
+parameter_list|,
+name|data
+parameter_list|,
+name|len
+parameter_list|)
+value|MD5_Update(c, data, len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5Final
+parameter_list|(
+name|md
+parameter_list|,
+name|c
+parameter_list|)
+value|MD5_Final(md, c)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<md5.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -149,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|MAX_REDIRECT
-value|5
+value|20
 end_define
 
 begin_comment
@@ -201,8 +259,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HTTP_USE_PROXY
+value|305
+end_define
+
+begin_define
+define|#
+directive|define
 name|HTTP_TEMP_REDIRECT
 value|307
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTTP_PERM_REDIRECT
+value|308
 end_define
 
 begin_define
@@ -240,7 +312,7 @@ name|HTTP_REDIRECT
 parameter_list|(
 name|xyz
 parameter_list|)
-value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_SEE_OTHER)
+value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_USE_PROXY \ 			    || (xyz) == HTTP_SEE_OTHER)
 end_define
 
 begin_define
@@ -7293,13 +7365,8 @@ name|url
 operator|=
 name|URL
 expr_stmt|;
-comment|/* if the A flag is set, we only get one try */
 name|n
 operator|=
-name|noredirect
-condition|?
-literal|1
-else|:
 name|MAX_REDIRECT
 expr_stmt|;
 name|i
@@ -8241,6 +8308,9 @@ case|:
 case|case
 name|HTTP_SEE_OTHER
 case|:
+case|case
+name|HTTP_USE_PROXY
+case|:
 comment|/* 			 * Not so fine, but we still have to read the 			 * headers to get the new location. 			 */
 break|break;
 case|case
@@ -8461,6 +8531,36 @@ name|err
 argument_list|)
 condition|)
 break|break;
+comment|/* 				 * if the A flag is set, we don't follow 				 * temporary redirects. 				 */
+if|if
+condition|(
+name|noredirect
+operator|&&
+name|conn
+operator|->
+name|err
+operator|!=
+name|HTTP_MOVED_PERM
+operator|&&
+name|conn
+operator|->
+name|err
+operator|!=
+name|HTTP_PERM_REDIRECT
+operator|&&
+name|conn
+operator|->
+name|err
+operator|!=
+name|HTTP_USE_PROXY
+condition|)
+block|{
+name|n
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|new

@@ -288,10 +288,6 @@ comment|/// \code
 comment|///   using llvm::hash_value;
 comment|///   llvm::hash_code code = hash_value(x);
 comment|/// \endcode
-comment|///
-comment|/// Also note that there are two numerical values which are reserved, and the
-comment|/// implementation ensures will never be produced for real hash_codes. These
-comment|/// can be used as sentinels within hashing data structures.
 name|class
 name|hash_code
 block|{
@@ -2162,48 +2158,36 @@ argument_list|,
 argument|InputIteratorT last
 argument_list|)
 block|{
-typedef|typedef
-name|typename
-name|std
-operator|::
-name|iterator_traits
-operator|<
-name|InputIteratorT
-operator|>
-operator|::
-name|value_type
-name|ValueT
-expr_stmt|;
 specifier|const
 name|size_t
 name|seed
 operator|=
 name|get_execution_seed
 argument_list|()
-expr_stmt|;
+block|;
 name|char
 name|buffer
 index|[
 literal|64
 index|]
-decl_stmt|,
-modifier|*
+block|,
+operator|*
 name|buffer_ptr
-init|=
+operator|=
 name|buffer
-decl_stmt|;
+block|;
 name|char
-modifier|*
+operator|*
 specifier|const
 name|buffer_end
-init|=
+operator|=
 name|buffer_ptr
 operator|+
 name|array_lengthof
 argument_list|(
 name|buffer
 argument_list|)
-decl_stmt|;
+block|;
 while|while
 condition|(
 name|first
@@ -3787,7 +3771,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Implementation details for implementatinos of hash_value overloads provided
+comment|// Implementation details for implementations of hash_value overloads provided
 end_comment
 
 begin_comment

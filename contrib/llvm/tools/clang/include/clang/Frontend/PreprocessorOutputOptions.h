@@ -71,7 +71,7 @@ name|ShowLineMarkers
 range|:
 literal|1
 decl_stmt|;
-comment|///< Show #line markers.
+comment|///< Show \#line markers.
 name|unsigned
 name|ShowMacroComments
 range|:
@@ -84,6 +84,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Print macro definitions.
+name|unsigned
+name|RewriteIncludes
+range|:
+literal|1
+decl_stmt|;
+comment|///< Preprocess include directives only.
 name|public
 label|:
 name|PreprocessorOutputOptions
@@ -106,6 +112,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ShowMacros
+operator|=
+literal|0
+expr_stmt|;
+name|RewriteIncludes
 operator|=
 literal|0
 expr_stmt|;

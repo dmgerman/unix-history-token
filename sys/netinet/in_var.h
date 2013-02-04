@@ -495,7 +495,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_ifaddr *ia; */
 define|\
-value|{									\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ }
+value|do {									\ 	IN_IFADDR_RLOCK();						\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ 	IN_IFADDR_RUNLOCK();						\ } while (0)
 end_define
 
 begin_endif
@@ -1421,6 +1421,12 @@ name|ip_moptions
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|radix_node_head
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|imo_multi_filter
@@ -1879,6 +1885,19 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_setmatchfunc
+parameter_list|(
+name|struct
+name|radix_node_head
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

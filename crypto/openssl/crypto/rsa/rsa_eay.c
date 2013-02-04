@@ -41,21 +41,11 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|RSA_NULL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_FIPS
-argument_list|)
-end_if
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -844,6 +834,9 @@ name|got_write_lock
 init|=
 literal|0
 decl_stmt|;
+name|CRYPTO_THREADID
+name|cur
+decl_stmt|;
 name|CRYPTO_r_lock
 argument_list|(
 name|CRYPTO_LOCK_RSA
@@ -907,15 +900,25 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|CRYPTO_THREADID_current
+argument_list|(
+operator|&
+name|cur
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|BN_BLINDING_get_thread_id
+operator|!
+name|CRYPTO_THREADID_cmp
+argument_list|(
+operator|&
+name|cur
+argument_list|,
+name|BN_BLINDING_thread_id
 argument_list|(
 name|ret
 argument_list|)
-operator|==
-name|CRYPTO_thread_id
-argument_list|()
+argument_list|)
 condition|)
 block|{
 comment|/* rsa->blinding is ours! */

@@ -28,6 +28,7 @@ file|"ed.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|rhbuf
@@ -39,6 +40,7 @@ comment|/* rhs substitution buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rhbufsz
 decl_stmt|;
@@ -49,6 +51,7 @@ comment|/* rhs substitution buffer size */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rhbufi
 decl_stmt|;
@@ -425,6 +428,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|rbuf
@@ -436,6 +440,7 @@ comment|/* substitute_matching_text buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rbufsz
 decl_stmt|;

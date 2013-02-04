@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -328,7 +332,7 @@ name|tl
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|txg_list_empty
 parameter_list|(
 name|txg_list_t

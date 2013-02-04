@@ -493,18 +493,22 @@ define|#
 directive|define
 name|C_PRESENTIN
 value|(1<<0)
+comment|/* console can provide input */
 define|#
 directive|define
 name|C_PRESENTOUT
 value|(1<<1)
+comment|/* console can provide output */
 define|#
 directive|define
 name|C_ACTIVEIN
 value|(1<<2)
+comment|/* user wants input from console */
 define|#
 directive|define
 name|C_ACTIVEOUT
 value|(1<<3)
+comment|/* user wants output to console */
 name|void
 function_decl|(
 modifier|*

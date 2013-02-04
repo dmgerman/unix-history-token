@@ -342,12 +342,26 @@ comment|///
 comment|/// This particular cast kind is used for the conversion from a C++11
 comment|/// lambda expression to a block pointer.
 name|CK_CopyAndAutoreleaseBlockObject
+block|,
+comment|// Convert a builtin function to a function pointer; only allowed in the
+comment|// callee of a call expression.
+name|CK_BuiltinFnToFnPtr
 block|}
 enum|;
-define|#
-directive|define
+specifier|static
+specifier|const
+name|CastKind
 name|CK_Invalid
-value|((CastKind) -1)
+init|=
+name|static_cast
+operator|<
+name|CastKind
+operator|>
+operator|(
+operator|-
+literal|1
+operator|)
+decl_stmt|;
 enum|enum
 name|BinaryOperatorKind
 block|{

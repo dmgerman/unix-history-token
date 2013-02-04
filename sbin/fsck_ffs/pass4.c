@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -402,7 +408,7 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"BAD STATE %d FOR INODE I=%d"
+literal|"BAD STATE %d FOR INODE I=%ju"
 argument_list|,
 name|inoinfo
 argument_list|(
@@ -411,6 +417,9 @@ argument_list|)
 operator|->
 name|ino_state
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;

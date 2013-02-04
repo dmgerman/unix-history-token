@@ -1996,7 +1996,7 @@ name|xfs_fsops
 argument_list|,
 name|xfs
 argument_list|,
-literal|0
+name|VFCF_READONLY
 argument_list|)
 expr_stmt|;
 end_expr_stmt

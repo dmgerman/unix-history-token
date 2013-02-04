@@ -862,6 +862,7 @@ operator|->
 name|egptr
 argument_list|()
 condition|)
+block|{
 if|if
 condition|(
 name|__testin
@@ -907,6 +908,7 @@ name|pptr
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

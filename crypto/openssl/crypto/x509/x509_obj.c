@@ -105,6 +105,7 @@ init|=
 name|NULL
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|hex
 index|[

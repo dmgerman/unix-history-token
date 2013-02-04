@@ -216,6 +216,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|off_t
+name|mediasize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* device size */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|sectorsize
 decl_stmt|;

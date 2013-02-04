@@ -3,17 +3,17 @@ begin_comment
 comment|/* ===-- powitf2.cpp - Implement __powitf2 ---------------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __powitf2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_ARCH_PPC
-end_if
-
 begin_include
 include|#
 directive|include
 file|"int_lib.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|_ARCH_PPC
+end_if
 
 begin_comment
 comment|/* Returns: a ^ b */

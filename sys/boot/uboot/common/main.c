@@ -822,7 +822,7 @@ name|currdev
 operator|.
 name|d_disk
 operator|.
-name|pnum
+name|slice
 operator|=
 literal|0
 expr_stmt|;

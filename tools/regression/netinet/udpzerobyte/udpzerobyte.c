@@ -283,7 +283,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"Protocol %s recv(sock_receive, NULL, 0) before: %d"
+literal|"Protocol %s recv(sock_receive, NULL, 0) before: %zd"
 argument_list|,
 name|domainstr
 argument_list|,
@@ -397,7 +397,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"Protocol %s recv(sock_receive, NULL, 0) after: %d"
+literal|"Protocol %s recv(sock_receive, NULL, 0) after: %zd"
 argument_list|,
 name|domainstr
 argument_list|,

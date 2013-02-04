@@ -27,6 +27,23 @@ directive|include
 file|<float.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ieeefp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -169,6 +186,9 @@ name|x
 operator|)
 operator|)
 return|;
+name|ENTERI
+argument_list|()
+expr_stmt|;
 comment|/* Optimize the case where x is already within range. */
 if|if
 condition|(
@@ -178,8 +198,8 @@ name|e
 operator|<
 name|M_PI_4
 condition|)
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|__kernel_cosl
 argument_list|(
 name|z
@@ -188,8 +208,8 @@ name|e
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|e0
 operator|=
 name|__ieee754_rem_pio2l
@@ -279,11 +299,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|hi
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

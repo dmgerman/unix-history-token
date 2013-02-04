@@ -141,6 +141,12 @@ directive|include
 file|<compat/linux/linux_mib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_misc.h>
+end_include
+
 begin_comment
 comment|/* DTrace init */
 end_comment

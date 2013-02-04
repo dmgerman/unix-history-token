@@ -60,7 +60,7 @@ define|#
 directive|define
 name|INSTRUCTION_SPECIFIER_FIELDS
 define|\
-value|bool                    filtered;        \   InstructionContext      insnContext;     \   std::string             name;            \                                            \   InstructionSpecifier() {                 \     filtered = false;                      \     insnContext = IC;                      \     name = "";                             \     modifierType = MODIFIER_NONE;          \     modifierBase = 0;                      \     memset(operands, 0, sizeof(operands)); \   }
+value|struct OperandSpecifier operands[X86_MAX_OPERANDS]; \   bool                    filtered;        \   InstructionContext      insnContext;     \   std::string             name;            \                                            \   InstructionSpecifier() {                 \     filtered = false;                      \     insnContext = IC;                      \     name = "";                             \     modifierType = MODIFIER_NONE;          \     modifierBase = 0;                      \     memset(operands, 0, sizeof(operands)); \   }
 end_define
 
 begin_define

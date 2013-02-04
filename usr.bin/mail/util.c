@@ -1325,11 +1325,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

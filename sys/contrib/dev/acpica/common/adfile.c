@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -199,7 +199,9 @@ name|ACPI_TABLE_FILE_SUFFIX
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FilenameBuf
+operator|)
 return|;
 block|}
 end_function
@@ -227,12 +229,12 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
-name|fp
+name|File
 decl_stmt|;
 name|ACPI_SIZE
 name|Actual
 decl_stmt|;
-name|fp
+name|File
 operator|=
 name|fopen
 argument_list|(
@@ -244,12 +246,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fp
+name|File
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Couldn't open %s\n"
+literal|"Could not open file %s\n"
 argument_list|,
 name|Filename
 argument_list|)
@@ -267,19 +269,34 @@ name|fwrite
 argument_list|(
 name|Buffer
 argument_list|,
+literal|1
+argument_list|,
 operator|(
 name|size_t
 operator|)
 name|Length
 argument_list|,
-literal|1
-argument_list|,
-name|fp
+name|File
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Actual
+operator|!=
+name|Length
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not write to file %s\n"
+argument_list|,
+name|Filename
+argument_list|)
+expr_stmt|;
+block|}
 name|fclose
 argument_list|(
-name|fp
+name|File
 argument_list|)
 expr_stmt|;
 return|return
@@ -356,7 +373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlGenerateFilename  *  * PARAMETERS:  InputFilename       - Original ASL source filename  *              Suffix              - New extension.  *  * RETURN:      New filename containing the original base + the new suffix  *  * DESCRIPTION: Generate a new filename from the ASL source filename and a new  *              extension.  Used to create the *.LST, *.TXT, etc. files.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlGenerateFilename  *  * PARAMETERS:  InputFilename       - Original ASL source filename  *              Suffix              - New extension.  *  * RETURN:      New filename containing the original base + the new suffix  *  * DESCRIPTION: Generate a new filename from the ASL source filename and a new  *              extension. Used to create the *.LST, *.TXT, etc. files.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -460,7 +477,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|NewFilename
+operator|)
 return|;
 block|}
 end_function

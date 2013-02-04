@@ -696,6 +696,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|time_t
 name|time_second
 init|=
@@ -704,6 +705,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|time_t
 name|time_uptime
 init|=
@@ -842,6 +844,18 @@ name|void
 name|cpu_tick_calibrate
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dtrace_getnanotime
+parameter_list|(
+name|struct
+name|timespec
+modifier|*
+name|tsp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4209,6 +4223,64 @@ end_endif
 begin_comment
 comment|/* FFCLOCK */
 end_comment
+
+begin_comment
+comment|/*  * This is a clone of getnanotime and used for walltimestamps.  * The dtrace_ prefix prevents fbt from creating probes for  * it so walltimestamp can be safely used in all fbt probes.  */
+end_comment
+
+begin_function
+name|void
+name|dtrace_getnanotime
+parameter_list|(
+name|struct
+name|timespec
+modifier|*
+name|tsp
+parameter_list|)
+block|{
+name|struct
+name|timehands
+modifier|*
+name|th
+decl_stmt|;
+name|u_int
+name|gen
+decl_stmt|;
+do|do
+block|{
+name|th
+operator|=
+name|timehands
+expr_stmt|;
+name|gen
+operator|=
+name|th
+operator|->
+name|th_generation
+expr_stmt|;
+operator|*
+name|tsp
+operator|=
+name|th
+operator|->
+name|th_nanotime
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|gen
+operator|==
+literal|0
+operator|||
+name|gen
+operator|!=
+name|th
+operator|->
+name|th_generation
+condition|)
+do|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * System clock currently providing time to the system. Modifiable via sysctl  * when the FFCLOCK option is defined.  */

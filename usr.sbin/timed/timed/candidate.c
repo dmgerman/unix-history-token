@@ -55,13 +55,11 @@ begin_function
 name|int
 name|election
 parameter_list|(
-name|net
-parameter_list|)
 name|struct
 name|netinfo
 modifier|*
 name|net
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|tsp

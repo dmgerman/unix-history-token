@@ -227,7 +227,7 @@ operator|)
 return|;
 comment|/* tie - return highest pid */
 block|}
-comment|/*  	 * weed out zombies 	 */
+comment|/* 	 * weed out zombies 	 */
 switch|switch
 condition|(
 name|TESTAB

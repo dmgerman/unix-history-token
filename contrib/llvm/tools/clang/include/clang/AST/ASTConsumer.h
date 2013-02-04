@@ -76,6 +76,9 @@ name|class
 name|HandleTagDeclDefinition
 decl_stmt|;
 name|class
+name|PPMutationListener
+decl_stmt|;
+name|class
 name|ASTMutationListener
 decl_stmt|;
 name|class
@@ -94,6 +97,9 @@ name|VarDecl
 decl_stmt|;
 name|class
 name|FunctionDecl
+decl_stmt|;
+name|class
+name|ImportDecl
 decl_stmt|;
 comment|/// ASTConsumer - This is an abstract interface that should be implemented by
 comment|/// clients that read ASTs.  This abstraction layer allows the client to be
@@ -206,6 +212,18 @@ name|DeclGroupRef
 name|D
 parameter_list|)
 function_decl|;
+comment|/// \brief Handle an ImportDecl that was implicitly created due to an
+comment|/// inclusion directive.
+comment|/// The default implementation passes it to HandleTopLevelDecl.
+name|virtual
+name|void
+name|HandleImplicitImportDecl
+parameter_list|(
+name|ImportDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|/// CompleteTentativeDefinition - Callback invoked at the end of a translation
 comment|/// unit to notify the consumer that the given tentative definition should be
 comment|/// completed.
@@ -256,6 +274,19 @@ name|bool
 name|DefinitionRequired
 parameter_list|)
 block|{}
+comment|/// \brief If the consumer is interested in preprocessor entities getting
+comment|/// modified after their initial creation, it should return a pointer to
+comment|/// a PPMutationListener here.
+name|virtual
+name|PPMutationListener
+modifier|*
+name|GetPPMutationListener
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// \brief If the consumer is interested in entities getting modified after
 comment|/// their initial creation, it should return a pointer to
 comment|/// an ASTMutationListener here.
@@ -287,20 +318,6 @@ name|void
 name|PrintStats
 parameter_list|()
 block|{}
-comment|// Support isa/cast/dyn_cast
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ASTConsumer
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

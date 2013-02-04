@@ -90,7 +90,7 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|Mangler
@@ -117,7 +117,7 @@ modifier|&
 name|Context
 decl_stmt|;
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|&
 name|TD
 decl_stmt|;
@@ -149,7 +149,7 @@ operator|&
 name|context
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|&
 name|td
 argument_list|)

@@ -13,6 +13,12 @@ directive|include
 file|<openssl/opensslconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -46,23 +52,6 @@ include|#
 directive|include
 file|<openssl/opensslv.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/fips.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|const

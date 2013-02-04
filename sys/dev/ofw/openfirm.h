@@ -259,6 +259,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|OF_hasprop
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|propname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|OF_searchprop
 parameter_list|(

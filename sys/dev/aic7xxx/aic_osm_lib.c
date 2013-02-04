@@ -86,17 +86,6 @@ argument_list|,
 argument|pending_links
 argument_list|)
 block|{
-name|union
-name|ccb
-modifier|*
-name|ccb
-decl_stmt|;
-name|ccb
-operator|=
-name|list_scb
-operator|->
-name|io_ctx
-expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&

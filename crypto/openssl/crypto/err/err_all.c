@@ -54,6 +54,12 @@ directive|include
 file|<openssl/bio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/comp.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -228,22 +234,11 @@ directive|include
 file|<openssl/err.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<openssl/fips.h>
+file|<openssl/ts.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -284,6 +279,23 @@ include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -350,6 +362,9 @@ expr_stmt|;
 name|ERR_load_CRYPTO_strings
 argument_list|()
 expr_stmt|;
+name|ERR_load_COMP_strings
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC
@@ -393,6 +408,9 @@ expr_stmt|;
 name|ERR_load_DSO_strings
 argument_list|()
 expr_stmt|;
+name|ERR_load_TS_strings
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
@@ -407,14 +425,6 @@ expr_stmt|;
 name|ERR_load_UI_strings
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-name|ERR_load_FIPS_strings
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_CMS
@@ -432,6 +442,14 @@ expr_stmt|;
 endif|#
 directive|endif
 name|ERR_load_COMP_strings
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+name|ERR_load_FIPS_strings
 argument_list|()
 expr_stmt|;
 endif|#

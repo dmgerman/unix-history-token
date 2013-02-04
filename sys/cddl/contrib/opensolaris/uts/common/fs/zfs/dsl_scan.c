@@ -2008,6 +2008,11 @@ name|txg
 argument_list|,
 name|bpp
 argument_list|,
+name|BP_GET_PSIZE
+argument_list|(
+name|bpp
+argument_list|)
+argument_list|,
 name|pio
 operator|->
 name|io_flags
@@ -7290,6 +7295,11 @@ name|tx
 argument_list|)
 argument_list|,
 name|bp
+argument_list|,
+name|BP_GET_PSIZE
+argument_list|(
+name|bp
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)

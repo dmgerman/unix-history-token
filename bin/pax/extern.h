@@ -1199,6 +1199,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|chdname
@@ -1494,6 +1495,13 @@ specifier|const
 name|char
 modifier|*
 name|argv0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|sigset_t
+name|s_mask
 decl_stmt|;
 end_decl_stmt
 

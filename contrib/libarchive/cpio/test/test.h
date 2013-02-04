@@ -908,7 +908,24 @@ parameter_list|,
 name|contents
 parameter_list|)
 define|\
-value|assertion_make_file(__FILE__, __LINE__, path, mode, contents)
+value|assertion_make_file(__FILE__, __LINE__, path, mode, -1, contents)
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertMakeBinFile
+parameter_list|(
+name|path
+parameter_list|,
+name|mode
+parameter_list|,
+name|csize
+parameter_list|,
+name|contents
+parameter_list|)
+define|\
+value|assertion_make_file(__FILE__, __LINE__, path, mode, csize, contents)
 end_define
 
 begin_define
@@ -935,6 +952,17 @@ name|linkto
 parameter_list|)
 define|\
 value|assertion_make_symlink(__FILE__, __LINE__, newfile, linkto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertNodump
+parameter_list|(
+name|path
+parameter_list|)
+define|\
+value|assertion_nodump(__FILE__, __LINE__, path)
 end_define
 
 begin_define
@@ -1579,8 +1607,10 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1622,6 +1652,23 @@ specifier|const
 name|char
 modifier|*
 name|newpath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|assertion_nodump
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 specifier|const
 name|char
@@ -1801,6 +1848,19 @@ end_comment
 begin_function_decl
 name|int
 name|canGunzip
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this filesystem can handle nodump flags. */
+end_comment
+
+begin_function_decl
+name|int
+name|canNodump
 parameter_list|(
 name|void
 parameter_list|)

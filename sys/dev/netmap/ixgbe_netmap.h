@@ -44,34 +44,6 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ix_write_len
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_dev_netmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ix_write_len
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ix_write_len
-argument_list|,
-literal|0
-argument_list|,
-literal|"write rx len"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ix_rx_miss
 decl_stmt|,
 name|ix_rx_miss_bufs
@@ -617,7 +589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * Userspace has filled tx slots up to ring->cur (excluded).  * The last unused slot previously known to the kernel was kring->nkr_hwcur,  * and the last interrupt reported kring->nr_hwavail slots available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nkr_hwcur)  * from both avail and nr_hwavail, and set ring->nkr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  *  * do_lock is set iff the function is called from the ioctl handler.  * In this case, grab a lock around the body, and also reclaim transmitted  * buffers irrespective of interrupt mitigation.  */
+comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * ring->cur holds the userspace view of the current ring index.  Userspace  * has filled the tx slots from the previous call's ring->cur up to but not  * including ring->cur for this call.  In this function the kernel updates  * kring->nr_hwcur to ring->cur, thus slots [kring->nr_hwcur, ring->cur) are  * now ready to transmit.  At the last interrupt kring->nr_hwavail slots were  * available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nr_hwcur)  * from both avail and nr_hwavail, and set ring->nr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  *  * do_lock is set iff the function is called from the ioctl handler.  * In this case, grab a lock around the body, and also reclaim transmitted  * buffers irrespective of interrupt mitigation.  */
 end_comment
 
 begin_function
@@ -717,7 +689,7 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* 	 * ixgbe can generate an interrupt on every tx packet, but it 	 * seems very expensive, so we interrupt once every half ring, 	 * or when requested with NS_REPORT 	 */
-name|int
+name|u_int
 name|report_frequency
 init|=
 name|kring
@@ -1644,7 +1616,6 @@ operator|||
 name|force_update
 condition|)
 block|{
-comment|/* XXX apparently the length field in advanced descriptors 		 * does not include the CRC irrespective of the setting 		 * of CRCSTRIP. The data sheets say differently. 		 * Very strange. 		 */
 name|int
 name|crclen
 init|=
@@ -1653,6 +1624,13 @@ condition|?
 literal|0
 else|:
 literal|4
+decl_stmt|;
+name|uint16_t
+name|slot_flags
+init|=
+name|kring
+operator|->
+name|nkr_slot_flags
 decl_stmt|;
 name|l
 operator|=
@@ -1740,16 +1718,6 @@ argument_list|)
 operator|-
 name|crclen
 expr_stmt|;
-if|if
-condition|(
-name|ix_write_len
-condition|)
-name|D
-argument_list|(
-literal|"rx[%d] len %d"
-argument_list|,
-name|j
-argument_list|,
 name|ring
 operator|->
 name|slot
@@ -1757,8 +1725,9 @@ index|[
 name|j
 index|]
 operator|.
-name|len
-argument_list|)
+name|flags
+operator|=
+name|slot_flags
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(

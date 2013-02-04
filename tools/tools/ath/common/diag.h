@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"if_athioctl.h"
 end_include
 

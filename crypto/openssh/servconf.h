@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.99 2011/06/22 21:57:01 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.103 2012/07/10 02:19:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRIVSEP_SANDBOX
+name|PRIVSEP_NOSANDBOX
 value|2
 end_define
 
@@ -625,6 +625,11 @@ name|char
 modifier|*
 name|authorized_principals_file
 decl_stmt|;
+name|char
+modifier|*
+name|version_addendum
+decl_stmt|;
+comment|/* Appended to SSH banner */
 name|int
 name|hpn_disabled
 decl_stmt|;
@@ -652,6 +657,45 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Information about the incoming connection as used by Match */
+end_comment
+
+begin_struct
+struct|struct
+name|connection_info
+block|{
+specifier|const
+name|char
+modifier|*
+name|user
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|host
+decl_stmt|;
+comment|/* possibly resolved hostname */
+specifier|const
+name|char
+modifier|*
+name|address
+decl_stmt|;
+comment|/* remote address */
+specifier|const
+name|char
+modifier|*
+name|laddress
+decl_stmt|;
+comment|/* local address */
+name|int
+name|lport
+decl_stmt|;
+comment|/* local port */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * These are string config options that must be copied between the  * Match sub-config and the main config, and must be sent from the  * privsep slave to the privsep master. We use a macro to ensure all  * the options are copied and the copies are done in the correct order.  */
 end_comment
 
@@ -660,8 +704,21 @@ define|#
 directive|define
 name|COPY_MATCH_STRING_OPTS
 parameter_list|()
-value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 	} while (0)
+value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 	} while (0)
 end_define
+
+begin_function_decl
+name|struct
+name|connection_info
+modifier|*
+name|get_connection_info
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -702,16 +759,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
+name|struct
+name|connection_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -745,16 +794,8 @@ parameter_list|,
 name|Buffer
 modifier|*
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
+name|struct
+name|connection_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -767,16 +808,33 @@ parameter_list|(
 name|ServerOptions
 modifier|*
 parameter_list|,
-specifier|const
-name|char
+name|struct
+name|connection_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|parse_server_match_testspec
+parameter_list|(
+name|struct
+name|connection_info
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
-parameter_list|,
-specifier|const
-name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|server_match_spec_complete
+parameter_list|(
+name|struct
+name|connection_info
 modifier|*
 parameter_list|)
 function_decl|;

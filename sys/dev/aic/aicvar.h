@@ -83,6 +83,16 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|aic_scb
+argument_list|)
+name|link
+expr_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 name|u_int8_t
 name|flags
 decl_stmt|;
@@ -179,14 +189,14 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|int
-name|unit
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
-name|bus_space_tag_t
-name|tag
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
+name|struct
+name|resource
+modifier|*
+name|res
 decl_stmt|;
 name|bus_dma_tag_t
 name|dmat
@@ -209,6 +219,13 @@ argument_list|)
 name|pending_ccbs
 operator|,
 name|nexus_ccbs
+expr_stmt|;
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|aic_scb
+argument_list|)
+name|free_scbs
 expr_stmt|;
 name|struct
 name|aic_scb
@@ -439,7 +456,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1((aic)->tag, (aic)->bsh, (port))
+value|bus_read_1((aic)->res, (port))
 end_define
 
 begin_define
@@ -454,7 +471,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1((aic)->tag, (aic)->bsh, (port), (value))
+value|bus_write_1((aic)->res, (port), (value))
 end_define
 
 begin_define
@@ -471,7 +488,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1((aic)->tag, (aic)->bsh, (port), (addr), (count))
+value|bus_read_multi_1((aic)->res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -488,7 +505,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1((aic)->tag, (aic)->bsh, (port), (addr), (count))
+value|bus_write_multi_1((aic)->res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -505,7 +522,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2((aic)->tag, (aic)->bsh, (port), \ 		(u_int16_t *)(addr), (count))
+value|bus_read_multi_2((aic)->res, (port), (u_int16_t *)(addr), (count))
 end_define
 
 begin_define
@@ -522,7 +539,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2((aic)->tag, (aic)->bsh, (port), \ 		(u_int16_t *)(addr), (count))
+value|bus_write_multi_2((aic)->res, (port), (u_int16_t *)(addr), (count))
 end_define
 
 begin_define
@@ -539,7 +556,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_4((aic)->tag, (aic)->bsh, (port), \ 		(u_int32_t *)(addr), (count))
+value|bus_read_multi_4((aic)->res, (port), (u_int32_t *)(addr), (count))
 end_define
 
 begin_define
@@ -556,7 +573,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_4((aic)->tag, (aic)->bsh, (port), \ 		(u_int32_t *)(addr), (count))
+value|bus_write_multi_4((aic)->res, (port), (u_int32_t *)(addr), (count))
 end_define
 
 begin_function_decl

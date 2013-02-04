@@ -53,7 +53,7 @@ value|0
 define|#
 directive|define
 name|CAST_LONG
-value|unsigned long
+value|unsigned int
 define|#
 directive|define
 name|CAST_BLOCK

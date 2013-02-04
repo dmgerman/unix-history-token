@@ -320,7 +320,7 @@ name|rt_msghdr
 name|hdr
 decl_stmt|;
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 name|dst
 decl_stmt|;
 name|struct
@@ -509,7 +509,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_inarp
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|arpmsg
@@ -531,14 +531,6 @@ operator|=
 name|addr
 operator|.
 name|s_addr
-expr_stmt|;
-name|arpmsg
-operator|.
-name|dst
-operator|.
-name|sin_other
-operator|=
-name|SIN_PROXY
 expr_stmt|;
 name|arpmsg
 operator|.

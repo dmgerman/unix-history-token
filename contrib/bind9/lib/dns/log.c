@@ -311,6 +311,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|"dns/crypto"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

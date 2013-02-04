@@ -319,7 +319,6 @@ modifier|*
 name|vr_name
 decl_stmt|;
 block|}
-decl|const
 name|vr_devs
 index|[]
 init|=
@@ -999,7 +998,6 @@ name|int
 name|value
 decl_stmt|;
 block|}
-decl|const
 name|vr_tx_threshold_tables
 index|[]
 init|=
@@ -6051,7 +6049,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -8893,7 +8891,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -8974,7 +8972,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -9029,7 +9027,7 @@ name|m_defrag
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -9160,7 +9158,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|VR_MAXFRAGS
 argument_list|)

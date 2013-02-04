@@ -52,6 +52,13 @@ name|HAL_BUS_HANDLE
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|HAL_DMA_ADDR
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define

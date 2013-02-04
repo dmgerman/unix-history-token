@@ -349,6 +349,8 @@ operator|(
 name|NFSSVC_CBADDSOCK
 operator||
 name|NFSSVC_NFSCBD
+operator||
+name|NFSSVC_DUMPMNTOPTS
 operator|)
 operator|)
 operator|&&
@@ -437,6 +439,10 @@ operator||
 name|NFSSVC_DUMPLOCKS
 operator||
 name|NFSSVC_BACKUPSTABLE
+operator||
+name|NFSSVC_SUSPENDNFSD
+operator||
+name|NFSSVC_RESUMENFSD
 operator|)
 operator|)
 operator|&&

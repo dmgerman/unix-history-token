@@ -1331,7 +1331,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_perm
 argument_list|(
@@ -1386,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_perm
 argument_list|(
@@ -1441,7 +1441,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_perm
 argument_list|(
@@ -1825,7 +1825,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_perm
 argument_list|(
@@ -1889,7 +1889,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_perm
 argument_list|(
@@ -1953,7 +1953,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0777
+literal|0666
 argument_list|,
 name|archive_entry_perm
 argument_list|(
@@ -2656,7 +2656,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|read_open_memory2
+name|read_open_memory_minimal
 argument_list|(
 name|a
 argument_list|,

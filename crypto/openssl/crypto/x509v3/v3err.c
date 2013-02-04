@@ -4,7 +4,7 @@ comment|/* crypto/x509v3/v3err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -66,6 +66,15 @@ name|X509V3_str_functs
 index|[]
 init|=
 block|{
+block|{
+name|ERR_FUNC
+argument_list|(
+name|X509V3_F_A2I_GENERAL_NAME
+argument_list|)
+block|,
+literal|"A2I_GENERAL_NAME"
+block|}
+block|,
 block|{
 name|ERR_FUNC
 argument_list|(
@@ -145,6 +154,15 @@ name|X509V3_F_DO_I2V_NAME_CONSTRAINTS
 argument_list|)
 block|,
 literal|"DO_I2V_NAME_CONSTRAINTS"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|X509V3_F_GNAMES_FROM_SECTNAME
+argument_list|)
+block|,
+literal|"GNAMES_FROM_SECTNAME"
 block|}
 block|,
 block|{
@@ -294,6 +312,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|X509V3_F_SET_DIST_POINT_NAME
+argument_list|)
+block|,
+literal|"SET_DIST_POINT_NAME"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|X509V3_F_STRING_TO_HEX
 argument_list|)
 block|,
@@ -424,6 +451,15 @@ name|X509V3_F_V2I_GENERAL_NAME_EX
 argument_list|)
 block|,
 literal|"v2i_GENERAL_NAME_ex"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|X509V3_F_V2I_IDP
+argument_list|)
+block|,
+literal|"V2I_IDP"
 block|}
 block|,
 block|{
@@ -679,6 +715,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|X509V3_R_DISTPOINT_ALREADY_SET
+argument_list|)
+block|,
+literal|"distpoint already set"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|X509V3_R_DUPLICATE_ZONE_ID
 argument_list|)
 block|,
@@ -791,6 +836,15 @@ name|X509V3_R_INCORRECT_POLICY_SYNTAX_TAG
 argument_list|)
 block|,
 literal|"incorrect policy syntax tag"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|X509V3_R_INVALID_MULTIPLE_RDNS
+argument_list|)
+block|,
+literal|"invalid multiple rdns"
 block|}
 block|,
 block|{
@@ -1093,10 +1147,10 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
-name|X509V3_R_POLICY_LANGUAGE_ALREADTY_DEFINED
+name|X509V3_R_POLICY_LANGUAGE_ALREADY_DEFINED
 argument_list|)
 block|,
-literal|"policy language alreadty defined"
+literal|"policy language already defined"
 block|}
 block|,
 block|{
@@ -1111,10 +1165,10 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
-name|X509V3_R_POLICY_PATH_LENGTH_ALREADTY_DEFINED
+name|X509V3_R_POLICY_PATH_LENGTH_ALREADY_DEFINED
 argument_list|)
 block|,
-literal|"policy path length alreadty defined"
+literal|"policy path length already defined"
 block|}
 block|,
 block|{
@@ -1205,6 +1259,15 @@ name|X509V3_R_UNSUPPORTED_OPTION
 argument_list|)
 block|,
 literal|"unsupported option"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|X509V3_R_UNSUPPORTED_TYPE
+argument_list|)
+block|,
+literal|"unsupported type"
 block|}
 block|,
 block|{

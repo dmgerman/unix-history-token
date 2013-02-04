@@ -64,7 +64,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.976 2011/03/15 23:14:36 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.981 2012/06/14 23:54:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -10140,6 +10140,30 @@ argument_list|,
 name|authinfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|75
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"main: where=after_getauthinfo, RealHostAddr=%s"
+argument_list|,
+name|anynet_ntoa
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* at this point we are in a child: reset state */
 name|sm_rpool_free
 argument_list|(
@@ -11247,9 +11271,12 @@ argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|MainEnvelope
 operator|.
 name|e_msgsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|macdefine

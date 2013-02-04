@@ -413,11 +413,16 @@ operator|=
 name|tid_buffer
 index|[
 name|tid_head
-operator|++
 index|]
 expr_stmt|;
 name|tid_head
-operator|%=
+operator|=
+operator|(
+name|tid_head
+operator|+
+literal|1
+operator|)
+operator|%
 name|TID_BUFFER_SIZE
 expr_stmt|;
 name|mtx_unlock
@@ -473,7 +478,6 @@ operator|=
 name|tid_buffer
 index|[
 name|tid_head
-operator|++
 index|]
 expr_stmt|;
 name|tid_head
@@ -490,13 +494,18 @@ block|}
 name|tid_buffer
 index|[
 name|tid_tail
-operator|++
 index|]
 operator|=
 name|tid
 expr_stmt|;
 name|tid_tail
-operator|%=
+operator|=
+operator|(
+name|tid_tail
+operator|+
+literal|1
+operator|)
+operator|%
 name|TID_BUFFER_SIZE
 expr_stmt|;
 name|mtx_unlock
@@ -1041,7 +1050,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* leave one number for thread0 */
+comment|/* 	 * pid_max cannot be greater than PID_MAX. 	 * leave one number for thread0. 	 */
 name|tid_unrhdr
 operator|=
 name|new_unrhdr
@@ -2365,19 +2374,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"curthread is NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2782,7 +2778,7 @@ operator|==
 name|SINGLE_EXIT
 condition|)
 block|{
-comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost  to revert to being a non-threaded 		 * process. 		 */
+comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost to revert to being a non-threaded 		 * process. 		 */
 name|p
 operator|->
 name|p_singlethread

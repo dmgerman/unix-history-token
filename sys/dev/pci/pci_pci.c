@@ -3476,6 +3476,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * XXX If the secondary bus number is zero, we should assign a bus number      *     since the BIOS hasn't, then initialise the bridge.  A simple      *     bus_alloc_resource with the a couple of busses seems like the right      *     approach, but we don't know what busses the BIOS might have already      *     assigned to other bridges on this bus that probe later than we do.      *      *     If the subordinate bus number is less than the secondary bus number,      *     we should pick a better value.  One sensible alternative would be to      *     pick 255; the only tradeoff here is that configuration transactions      *     would be more widely routed than absolutely necessary.  We could      *     then do a walk of the tree later and fix it.      */
+comment|/*      * Always enable busmastering on bridges so that transactions      * initiated on the secondary bus are passed through to the      * primary bus.      */
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

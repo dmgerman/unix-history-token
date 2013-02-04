@@ -280,6 +280,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|ucode_handler
 block|{

@@ -239,7 +239,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s: send: returned %d"
+literal|"%s: send: returned %zd"
 argument_list|,
 name|testname
 argument_list|,
@@ -318,7 +318,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s: write: returned %d"
+literal|"%s: write: returned %zd"
 argument_list|,
 name|testname
 argument_list|,

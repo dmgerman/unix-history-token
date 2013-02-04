@@ -36,6 +36,9 @@ decl_stmt|;
 name|int
 name|partition
 decl_stmt|;
+name|off_t
+name|offset
+decl_stmt|;
 block|}
 name|biosdisk
 struct|;

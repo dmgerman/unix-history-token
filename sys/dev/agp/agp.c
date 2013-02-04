@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -135,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
 end_include
 
 begin_include

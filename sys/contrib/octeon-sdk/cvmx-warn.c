@@ -105,11 +105,23 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+name|printf
+argument_list|(
+literal|"WARNING: "
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"WARNING:\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vprintf
 argument_list|(
 name|format

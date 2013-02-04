@@ -614,7 +614,9 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -628,16 +630,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|rp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rio_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|rp
 operator|->
 name|rio_flags

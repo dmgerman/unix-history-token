@@ -496,7 +496,7 @@ begin_define
 define|#
 directive|define
 name|GDB_NM_FILE
-value|config/ia64/nm-fbsd.h
+value|config/powerpc/nm-fbsd.h
 end_define
 
 begin_endif

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -706,7 +712,7 @@ argument_list|,
 argument|const uint64_t bigVal[]
 argument_list|)
 empty_stmt|;
-comment|/// This constructor interprets the string \arg str in the given radix. The
+comment|/// This constructor interprets the string \p str in the given radix. The
 comment|/// interpretation stops when the first character that is not suitable for the
 comment|/// radix is encountered, or the end of the string. Acceptable radix values
 comment|/// are 2, 8, 10, 16, and 36. It is an error for the value implied by the
@@ -772,6 +778,37 @@ name|that
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|LLVM_USE_RVALUE_REFERENCES
+comment|/// @brief Move Constructor.
+name|APInt
+argument_list|(
+name|APInt
+operator|&&
+name|that
+argument_list|)
+operator|:
+name|BitWidth
+argument_list|(
+name|that
+operator|.
+name|BitWidth
+argument_list|)
+operator|,
+name|VAL
+argument_list|(
+argument|that.VAL
+argument_list|)
+block|{
+name|that
+operator|.
+name|BitWidth
+operator|=
+literal|0
+block|;   }
+endif|#
+directive|endif
 comment|/// @brief Destructor.
 operator|~
 name|APInt
@@ -975,53 +1012,11 @@ operator|&&
 literal|"N == 0 ???"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|N
-operator|>=
-name|getBitWidth
-argument_list|()
-condition|)
 return|return
-name|true
-return|;
-if|if
-condition|(
-name|isSingleWord
+name|getActiveBits
 argument_list|()
-condition|)
-return|return
-name|isUIntN
-argument_list|(
+operator|<=
 name|N
-argument_list|,
-name|VAL
-argument_list|)
-return|;
-return|return
-name|APInt
-argument_list|(
-name|N
-argument_list|,
-name|makeArrayRef
-argument_list|(
-name|pVal
-argument_list|,
-name|getNumWords
-argument_list|()
-argument_list|)
-argument_list|)
-operator|.
-name|zext
-argument_list|(
-name|getBitWidth
-argument_list|()
-argument_list|)
-operator|==
-operator|(
-operator|*
-name|this
-operator|)
 return|;
 block|}
 comment|/// @brief Check if this APInt has an N-bits signed integer value.
@@ -1771,6 +1766,88 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Determine if two APInts have the same value, after zero-extending
+end_comment
+
+begin_comment
+comment|/// one of them (if needed!) to ensure that the bit-widths match.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isSameValue
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|I1
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|I2
+parameter_list|)
+block|{
+if|if
+condition|(
+name|I1
+operator|.
+name|getBitWidth
+argument_list|()
+operator|==
+name|I2
+operator|.
+name|getBitWidth
+argument_list|()
+condition|)
+return|return
+name|I1
+operator|==
+name|I2
+return|;
+if|if
+condition|(
+name|I1
+operator|.
+name|getBitWidth
+argument_list|()
+operator|>
+name|I2
+operator|.
+name|getBitWidth
+argument_list|()
+condition|)
+return|return
+name|I1
+operator|==
+name|I2
+operator|.
+name|zext
+argument_list|(
+name|I1
+operator|.
+name|getBitWidth
+argument_list|()
+argument_list|)
+return|;
+return|return
+name|I1
+operator|.
+name|zext
+argument_list|(
+name|I2
+operator|.
+name|getBitWidth
+argument_list|()
+argument_list|)
+operator|==
+name|I2
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Overload to compute a hash_code for an APInt value.
 end_comment
 
@@ -2161,8 +2238,78 @@ argument_list|)
 return|;
 end_return
 
-begin_comment
+begin_if
 unit|}
+if|#
+directive|if
+name|LLVM_USE_RVALUE_REFERENCES
+end_if
+
+begin_comment
+comment|/// @brief Move assignment operator.
+end_comment
+
+begin_expr_stmt
+unit|APInt
+operator|&
+name|operator
+operator|=
+operator|(
+name|APInt
+operator|&&
+name|that
+operator|)
+block|{
+if|if
+condition|(
+operator|!
+name|isSingleWord
+argument_list|()
+condition|)
+name|delete
+index|[]
+name|pVal
+decl_stmt|;
+name|BitWidth
+operator|=
+name|that
+operator|.
+name|BitWidth
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VAL
+operator|=
+name|that
+operator|.
+name|VAL
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|that
+operator|.
+name|BitWidth
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/// The RHS value is assigned to *this. If the significant bits in RHS exceed
 end_comment
 
@@ -2965,7 +3112,7 @@ block|{
 if|if
 condition|(
 name|shiftAmt
-operator|==
+operator|>=
 name|BitWidth
 condition|)
 return|return
@@ -3489,6 +3636,7 @@ name|Remainder
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|APInt
 operator|::
 name|udivrem
@@ -3508,6 +3656,7 @@ operator|=
 operator|-
 name|Quotient
 expr_stmt|;
+block|}
 name|Remainder
 operator|=
 operator|-
@@ -5430,7 +5579,7 @@ comment|/// This method determines how many bits are required to hold the APInt
 end_comment
 
 begin_comment
-comment|/// equivalent of the string given by \arg str.
+comment|/// equivalent of the string given by \p str.
 end_comment
 
 begin_comment
@@ -5464,11 +5613,11 @@ comment|/// of zeros from the most significant bit to the first one bit.
 end_comment
 
 begin_comment
-comment|/// @returns BitWidth if the value is zero.
+comment|/// @returns BitWidth if the value is zero, otherwise
 end_comment
 
 begin_comment
-comment|/// @returns the number of zeros from the most significant bit to the first
+comment|/// returns the number of zeros from the most significant bit to the first
 end_comment
 
 begin_comment
@@ -5526,11 +5675,11 @@ comment|/// of ones from the most significant bit to the first zero bit.
 end_comment
 
 begin_comment
-comment|/// @returns 0 if the high order bit is not set
+comment|/// @returns 0 if the high order bit is not set, otherwise
 end_comment
 
 begin_comment
-comment|/// @returns the number of 1 bits from the most significant to the least
+comment|/// returns the number of 1 bits from the most significant to the least
 end_comment
 
 begin_comment
@@ -5588,11 +5737,11 @@ comment|/// the number of zeros from the least significant bit to the first set 
 end_comment
 
 begin_comment
-comment|/// @returns BitWidth if the value is zero.
+comment|/// @returns BitWidth if the value is zero, otherwise
 end_comment
 
 begin_comment
-comment|/// @returns the number of zeros from the least significant bit to the first
+comment|/// returns the number of zeros from the least significant bit to the first
 end_comment
 
 begin_comment
@@ -5624,11 +5773,11 @@ comment|/// the number of ones from the least significant bit to the first zero 
 end_comment
 
 begin_comment
-comment|/// @returns BitWidth if the value is all ones.
+comment|/// @returns BitWidth if the value is all ones, otherwise
 end_comment
 
 begin_comment
-comment|/// @returns the number of ones from the least significant bit to the first
+comment|/// returns the number of ones from the least significant bit to the first
 end_comment
 
 begin_comment
@@ -5679,11 +5828,11 @@ comment|/// of 1 bits in the APInt value.
 end_comment
 
 begin_comment
-comment|/// @returns 0 if the value is zero.
+comment|/// @returns 0 if the value is zero, otherwise returns the number of set
 end_comment
 
 begin_comment
-comment|/// @returns the number of set bits.
+comment|/// bits.
 end_comment
 
 begin_comment
@@ -8016,6 +8165,26 @@ end_decl_stmt
 begin_comment
 comment|// End of APIntOps namespace
 end_comment
+
+begin_comment
+comment|// See friend declaration above. This additional declaration is required in
+end_comment
+
+begin_comment
+comment|// order to compile LLVM with IBM xlC compiler.
+end_comment
+
+begin_function_decl
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

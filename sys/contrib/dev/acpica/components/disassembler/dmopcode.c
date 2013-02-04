@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
 begin_ifdef
@@ -546,6 +540,14 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Tag
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Match the name in the info table */
 for|for
 control|(
@@ -1452,7 +1454,7 @@ break|break;
 case|case
 name|AML_BUFFER_OP
 case|:
-comment|/*          * Determine the type of buffer.  We can have one of the following:          *          * 1) ResourceTemplate containing Resource Descriptors.          * 2) Unicode String buffer          * 3) ASCII String buffer          * 4) Raw data buffer (if none of the above)          *          * Since there are no special AML opcodes to differentiate these          * types of buffers, we have to closely look at the data in the          * buffer to determine the type.          */
+comment|/*          * Determine the type of buffer. We can have one of the following:          *          * 1) ResourceTemplate containing Resource Descriptors.          * 2) Unicode String buffer          * 3) ASCII String buffer          * 4) Raw data buffer (if none of the above)          *          * Since there are no special AML opcodes to differentiate these          * types of buffers, we have to closely look at the data in the          * buffer to determine the type.          */
 if|if
 condition|(
 operator|!
@@ -1463,6 +1465,8 @@ name|Status
 operator|=
 name|AcpiDmIsResourceTemplate
 argument_list|(
+name|WalkState
+argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
@@ -1542,6 +1546,29 @@ operator|.
 name|DisasmOpcode
 operator|=
 name|ACPI_DASM_STRING
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Buffer"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|AcpiDmIsPldBuffer
+argument_list|(
+name|Op
+argument_list|)
+condition|)
+block|{
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|=
+name|ACPI_DASM_PLD_METHOD
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(

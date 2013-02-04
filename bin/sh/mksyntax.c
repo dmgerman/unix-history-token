@@ -674,13 +674,6 @@ argument_list|,
 name|hfile
 argument_list|)
 expr_stmt|;
-name|fputs
-argument_list|(
-literal|"#include<ctype.h>\n"
-argument_list|,
-name|hfile
-argument_list|)
-expr_stmt|;
 comment|/* Generate the #define statements in the header file */
 name|fputs
 argument_list|(

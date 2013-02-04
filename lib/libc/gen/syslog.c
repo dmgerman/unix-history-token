@@ -1244,6 +1244,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

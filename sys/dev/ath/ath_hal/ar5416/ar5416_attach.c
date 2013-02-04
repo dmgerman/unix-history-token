@@ -234,7 +234,7 @@ block|,
 operator|.
 name|maxSpurImmunityLevel
 operator|=
-literal|2
+literal|7
 block|,
 operator|.
 name|cycPwrThr1
@@ -245,6 +245,16 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|8
+block|,
+literal|10
+block|,
+literal|12
+block|,
+literal|14
+block|,
+literal|16
 block|}
 block|,
 operator|.
@@ -691,6 +701,12 @@ name|ar5416GetTsf64
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setTsf64
+operator|=
+name|ar5416SetTsf64
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetTsf
 operator|=
 name|ar5416ResetTsf
@@ -758,6 +774,12 @@ name|ar5416GetDfsThresh
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getDfsDefaultThresh
+operator|=
+name|ar5416GetDfsDefaultThresh
+expr_stmt|;
+name|ah
+operator|->
 name|ah_procRadarEvent
 operator|=
 name|ar5416ProcessRadarEvent
@@ -767,6 +789,43 @@ operator|->
 name|ah_isFastClockEnabled
 operator|=
 name|ar5416IsFastClockEnabled
+expr_stmt|;
+comment|/* Spectral Scan Functions */
+name|ah
+operator|->
+name|ah_spectralConfigure
+operator|=
+name|ar5416ConfigureSpectralScan
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralGetConfig
+operator|=
+name|ar5416GetSpectralParams
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralStart
+operator|=
+name|ar5416StartSpectralScan
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralStop
+operator|=
+name|ar5416StopSpectralScan
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralIsEnabled
+operator|=
+name|ar5416IsSpectralEnabled
+expr_stmt|;
+name|ah
+operator|->
+name|ah_spectralIsActive
+operator|=
+name|ar5416IsSpectralActive
 expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
@@ -903,6 +962,64 @@ operator|->
 name|ah_setInterrupts
 operator|=
 name|ar5416SetInterrupts
+expr_stmt|;
+comment|/* Bluetooth Coexistence functions */
+name|ah
+operator|->
+name|ah_btCoexSetInfo
+operator|=
+name|ar5416SetBTCoexInfo
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetConfig
+operator|=
+name|ar5416BTCoexConfig
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetQcuThresh
+operator|=
+name|ar5416BTCoexSetQcuThresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetWeights
+operator|=
+name|ar5416BTCoexSetWeights
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetBmissThresh
+operator|=
+name|ar5416BTCoexSetupBmissThresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btcoexSetParameter
+operator|=
+name|ar5416BTCoexSetParameter
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexDisable
+operator|=
+name|ar5416BTCoexDisable
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexEnable
+operator|=
+name|ar5416BTCoexEnable
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_btCoexSetDiversity
+operator|=
+name|ar5416BTCoexAntennaDiversity
 expr_stmt|;
 name|ahp
 operator|->
@@ -4900,13 +5017,13 @@ name|halBurstSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* 	 * This is disabled for now; the net80211 layer needs to be 	 * taught when it is and isn't appropriate to enable FF processing 	 * with 802.11n NICs (it tries to enable both A-MPDU and 	 * fast frames, with very tragic crash-y results.) 	 */
 name|pCap
 operator|->
 name|halFastFramesSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
-comment|/* XXX? */
 name|pCap
 operator|->
 name|halChapTuningSupport
@@ -4936,6 +5053,20 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 comment|/* XXX fixed in later revs? */
+name|pCap
+operator|->
+name|halNumMRRetries
+operator|=
+literal|4
+expr_stmt|;
+comment|/* Hardware supports 4 MRR */
+name|pCap
+operator|->
+name|halNumTxMaps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Single TX ptr per descr */
 name|pCap
 operator|->
 name|halVEOLSupport
@@ -4968,6 +5099,13 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* Broken in Owl */
+name|pCap
+operator|->
+name|halSpectralScanSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+comment|/* AR9280 and later */
 if|if
 condition|(
 name|ath_hal_eepromGet
@@ -5022,21 +5160,19 @@ name|halKeyCacheSize
 operator|=
 name|AR5416_KEYTABLE_SIZE
 expr_stmt|;
-comment|/* XXX not needed */
+comment|/* XXX Which chips? */
 name|pCap
 operator|->
 name|halChanHalfRate
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
-comment|/* XXX ? */
 name|pCap
 operator|->
 name|halChanQuarterRate
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
-comment|/* XXX ? */
 name|pCap
 operator|->
 name|halTstampPrecision

@@ -309,6 +309,25 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* On some U4 systems, there is a phantom MPIC in the mac-io cell */
+if|if
+condition|(
+name|OF_finddevice
+argument_list|(
+literal|"/u4"
+argument_list|)
+operator|!=
+operator|(
+name|phandle_t
+operator|)
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev

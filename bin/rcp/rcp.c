@@ -206,6 +206,7 @@ value|"46dfprt"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|passwd
 modifier|*
@@ -214,18 +215,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|port
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|userid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|errs
 decl_stmt|,
@@ -235,9 +239,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pflag
-decl_stmt|,
 name|iamremote
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pflag
 decl_stmt|,
 name|iamrecursive
 decl_stmt|,
@@ -246,6 +255,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -288,6 +298,7 @@ value|64
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|cmd
 index|[

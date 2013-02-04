@@ -4480,7 +4480,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5831,7 +5831,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verifies transmitter, updates lifetime, precursor list and process data  * locally, if data is is proxy with AE = 10 it could mean data should go  * on another mesh path or data should be forwarded to the DS.  *  *> 0 means we have forwarded data and no need to process locally  * == 0 means we want to process locally (and we may have forwarded data  *< 0 means there was an error and data should be discarded  */
+comment|/*  * Verifies transmitter, updates lifetime, precursor list and process data  * locally, if data is proxy with AE = 10 it could mean data should go  * on another mesh path or data should be forwarded to the DS.  *  *> 0 means we have forwarded data and no need to process locally  * == 0 means we want to process locally (and we may have forwarded data  *< 0 means there was an error and data should be discarded  */
 end_comment
 
 begin_function

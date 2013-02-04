@@ -177,7 +177,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"fill_blocks: write(%d) returned %d"
+literal|"fill_blocks: write(%d) returned %zd"
 argument_list|,
 name|BLOCKSIZE
 argument_list|,

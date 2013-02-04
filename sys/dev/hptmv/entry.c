@@ -15315,7 +15315,7 @@ if|if
 condition|(
 name|pCmd
 operator|->
-name|cf_data_in
+name|cf_data_out
 condition|)
 block|{
 name|bus_dmamap_sync

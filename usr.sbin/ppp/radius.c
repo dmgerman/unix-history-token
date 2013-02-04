@@ -4151,7 +4151,6 @@ name|file
 operator|=
 literal|'\0'
 expr_stmt|;
-empty_stmt|;
 name|log_Printf
 argument_list|(
 name|LogDEBUG

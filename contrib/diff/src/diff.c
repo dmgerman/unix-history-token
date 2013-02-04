@@ -549,7 +549,7 @@ specifier|const
 name|shortopts
 index|[]
 init|=
-literal|"0123456789abBcC:dD:eEfF:hHiI:lL:nNpPqrsS:tTuU:vwW:x:X:y"
+literal|"0123456789abBcC:dD:eEfF:hHiI:lL:nNopPqrsS:tTuU:vwW:x:X:y"
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,13 +1317,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|bindtextdomain
-argument_list|(
-name|PACKAGE
-argument_list|,
-name|LOCALEDIR
-argument_list|)
-expr_stmt|;
 name|textdomain
 argument_list|(
 name|PACKAGE
@@ -1351,14 +1344,26 @@ expr_stmt|;
 name|re_set_syntax
 argument_list|(
 name|RE_SYNTAX_GREP
-operator||
-name|RE_NO_POSIX_BACKTRACKING
 argument_list|)
 expr_stmt|;
 name|excluded
 operator|=
 name|new_exclude
 argument_list|()
+expr_stmt|;
+name|prepend_default_options
+argument_list|(
+name|getenv
+argument_list|(
+literal|"DIFF_OPTIONS"
+argument_list|)
+argument_list|,
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
 expr_stmt|;
 comment|/* Decode the options.  */
 while|while
@@ -1883,6 +1888,16 @@ case|:
 name|new_file
 operator|=
 name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+comment|/* Output in the old tradition style.  */
+name|specify_style
+argument_list|(
+name|OUTPUT_NORMAL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4099,19 +4114,6 @@ operator|!=
 name|style
 condition|)
 block|{
-if|if
-condition|(
-name|output_style
-operator|!=
-name|OUTPUT_UNSPECIFIED
-condition|)
-name|try_help
-argument_list|(
-literal|"conflicting output style options"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|output_style
 operator|=
 name|style

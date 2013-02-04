@@ -304,7 +304,7 @@ define|#
 directive|define
 name|INSTRUCTION_SPECIFIER_FIELDS
 define|\
-value|const char*             name;
+value|uint16_t operands;
 end_define
 
 begin_define
@@ -312,7 +312,7 @@ define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|unsigned instructionIDs;
+value|uint16_t instructionIDs;
 end_define
 
 begin_include

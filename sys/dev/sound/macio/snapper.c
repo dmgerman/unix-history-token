@@ -875,7 +875,7 @@ value|0x03
 end_define
 
 begin_comment
-comment|/*  20 bit */
+comment|/*  24 bit */
 end_comment
 
 begin_define

@@ -2067,6 +2067,38 @@ literal|"NVIDIA GT240"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIAGTS450
+block|,
+literal|0
+block|,
+literal|"NVIDIA GTS450"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGT440
+block|,
+literal|0
+block|,
+literal|"NVIDIA GT440"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGTX550
+block|,
+literal|0
+block|,
+literal|"NVIDIA GTX550"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGTX570
+block|,
+literal|0
+block|,
+literal|"NVIDIA GTX570"
+block|}
+block|,
+block|{
 name|HDA_CODEC_INTELIP
 block|,
 literal|0
@@ -2720,7 +2752,7 @@ name|codec
 operator|->
 name|fgcnt
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Root Node at nid=0: %d subnodes %d-%d\n"
@@ -3165,6 +3197,13 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|HDA_BOOTVERBOSE
+argument_list|(
+argument|device_printf(dev,
+literal|"Subsystem ID: 0x%08x\n"
+argument|, 		    hda_get_subsystem_id(dev));
+argument_list|)
+empty_stmt|;
 name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,

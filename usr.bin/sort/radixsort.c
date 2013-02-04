@@ -682,7 +682,7 @@ name|sort_list_item
 modifier|*
 name|item
 parameter_list|,
-name|int
+name|size_t
 name|indx
 parameter_list|)
 block|{

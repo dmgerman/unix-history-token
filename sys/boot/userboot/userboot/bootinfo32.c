@@ -455,8 +455,6 @@ decl_stmt|;
 name|int
 name|bootdevnr
 decl_stmt|,
-name|i
-decl_stmt|,
 name|howto
 decl_stmt|;
 name|char

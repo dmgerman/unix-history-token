@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<ddb/ddb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpuregs.h>
 end_include
 
 begin_define
@@ -239,13 +251,6 @@ begin_comment
 comment|/*  * I/O routines lifted from Deimos.  *  * XXXRW: Should be using FreeBSD's bus routines here, but they are not  * available until later in the boot.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MIPS_XKPHYS_UNCACHED_BASE
-value|0x9000000000000000
-end_define
-
 begin_typedef
 typedef|typedef
 name|uint64_t
@@ -272,9 +277,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+argument_list|(
 name|phys
-operator||
-name|MIPS_XKPHYS_UNCACHED_BASE
+argument_list|)
 operator|)
 return|;
 block|}
@@ -579,13 +585,21 @@ name|cp
 operator|->
 name|cn_name
 argument_list|,
-literal|"gxcons"
+literal|"ttyu0"
 argument_list|)
 expr_stmt|;
 name|cp
 operator|->
 name|cn_pri
 operator|=
+operator|(
+name|boothowto
+operator|&
+name|RB_SERIAL
+operator|)
+condition|?
+name|CN_REMOTE
+else|:
 name|CN_NORMAL
 expr_stmt|;
 block|}
@@ -760,7 +774,7 @@ name|NULL
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"gxcons"
+literal|"ttyu0"
 argument_list|)
 expr_stmt|;
 name|callout_init

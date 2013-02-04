@@ -193,17 +193,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|in_dowait
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are we in dowait()? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 specifier|volatile
 name|sig_atomic_t
 name|breakwaitcmd

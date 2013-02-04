@@ -3,17 +3,17 @@ begin_comment
 comment|/* ===-- clzti2.c - Implement __clzti2 -------------------------------------===  *  *      	       The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __clzti2 for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
-
 begin_include
 include|#
 directive|include
 file|"int_lib.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|__x86_64
+end_if
 
 begin_comment
 comment|/* Returns: the number of leading 0-bits */

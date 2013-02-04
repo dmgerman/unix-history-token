@@ -4349,6 +4349,10 @@ name|__archive_write_nulls
 argument_list|(
 name|a
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|ustar
 operator|->
 name|entry_bytes_remaining
@@ -4356,6 +4360,7 @@ operator|+
 name|ustar
 operator|->
 name|entry_padding
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ustar
@@ -4424,6 +4429,9 @@ name|entry_bytes_remaining
 condition|)
 name|s
 operator|=
+operator|(
+name|size_t
+operator|)
 name|ustar
 operator|->
 name|entry_bytes_remaining

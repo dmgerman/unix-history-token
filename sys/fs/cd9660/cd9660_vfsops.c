@@ -619,7 +619,7 @@ name|iso_mnt
 modifier|*
 name|imp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|td
 operator|=
@@ -980,7 +980,7 @@ name|iso_volume_descriptor
 modifier|*
 name|vdp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|iso_primary_descriptor
@@ -1795,8 +1795,6 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
-name|MNTK_MPSAFE
-operator||
 name|MNTK_LOOKUP_SHARED
 operator||
 name|MNTK_EXTENDED_SHARED

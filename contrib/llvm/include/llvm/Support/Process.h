@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Support/Process.h ------------------------------------*- C++ -*-===//
+comment|//===- llvm/Support/Process.h -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -197,6 +197,16 @@ name|int
 name|fd
 parameter_list|)
 function_decl|;
+comment|/// This function determines if the given file descriptor is displayd and
+comment|/// supports colors.
+specifier|static
+name|bool
+name|FileDescriptorHasColors
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+function_decl|;
 comment|/// This function determines the number of columns in the window
 comment|/// if standard output is connected to a "tty" or "console"
 comment|/// window. If standard output is not connected to a tty or
@@ -288,6 +298,13 @@ specifier|const
 name|char
 modifier|*
 name|ResetColor
+parameter_list|()
+function_decl|;
+comment|/// Get the result of a process wide random number generator. The
+comment|/// generator will be automatically seeded in non-deterministic fashion.
+specifier|static
+name|unsigned
+name|GetRandomNumber
 parameter_list|()
 function_decl|;
 comment|/// @}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.101 2011/05/04 21:15:29 djm Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.103 2011/10/18 23:37:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -458,6 +458,9 @@ specifier|const
 name|char
 modifier|*
 name|filename
+parameter_list|,
+name|int
+name|key_only
 parameter_list|)
 block|{
 name|Key
@@ -481,6 +484,8 @@ index|]
 decl_stmt|,
 modifier|*
 name|certpath
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|fd
@@ -858,6 +863,14 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Skip trying to load the cert if requested */
+if|if
+condition|(
+name|key_only
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* Now try to add the certificate flavour too */
 name|xasprintf
 argument_list|(
@@ -1036,6 +1049,12 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|certpath
+operator|!=
+name|NULL
+condition|)
 name|xfree
 argument_list|(
 name|certpath
@@ -1566,6 +1585,9 @@ parameter_list|,
 name|int
 name|deleting
 parameter_list|,
+name|int
+name|key_only
+parameter_list|,
 name|char
 modifier|*
 name|file
@@ -1602,6 +1624,8 @@ argument_list|(
 name|ac
 argument_list|,
 name|file
+argument_list|,
+name|key_only
 argument_list|)
 operator|==
 operator|-
@@ -1660,6 +1684,27 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -k          Load only keys and not certificates.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -c          Require confirmation to sign using identities\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -t life     Set lifetime (in seconds) when adding identities.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -d          Delete identity.\n"
 argument_list|)
 expr_stmt|;
@@ -1682,20 +1727,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"  -X          Unlock agent.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t life     Set lifetime (in seconds) when adding identities.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -c          Require confirmation to sign using identities\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1761,6 +1792,10 @@ decl_stmt|,
 name|ret
 init|=
 literal|0
+decl_stmt|,
+name|key_only
+init|=
+literal|0
 decl_stmt|;
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
@@ -1819,7 +1854,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lLcdDxXe:s:t:"
+literal|"klLcdDxXe:s:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -1832,6 +1867,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'k'
+case|:
+name|key_only
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -2155,6 +2198,8 @@ name|ac
 argument_list|,
 name|deleting
 argument_list|,
+name|key_only
+argument_list|,
 name|buf
 argument_list|)
 operator|==
@@ -2204,6 +2249,8 @@ argument_list|(
 name|ac
 argument_list|,
 name|deleting
+argument_list|,
+name|key_only
 argument_list|,
 name|argv
 index|[

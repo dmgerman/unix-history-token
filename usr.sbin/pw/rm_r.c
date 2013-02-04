@@ -166,9 +166,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|file
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|file
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,

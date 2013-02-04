@@ -1787,6 +1787,11 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2239,6 +2244,11 @@ name|EZFS_NOSPC
 argument_list|,
 name|fmt
 argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;

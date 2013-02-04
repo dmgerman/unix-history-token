@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -259,11 +265,37 @@ begin_comment
 comment|/*  * Is a textdump scheduled?  If so, the shutdown code will invoke our dumpsys  * routine instead of the machine-dependent kernel dump routine.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEXTDUMP_PREFERRED
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|textdump_pending
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|textdump_pending
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -717,6 +749,24 @@ name|ustar_header
 modifier|*
 name|uhp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TEXTDUMP_VERBOSE
+if|if
+condition|(
+name|textdump_error
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"textdump: creating '%s'.\n"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uhp
 operator|=
 operator|(
@@ -977,6 +1027,22 @@ operator|->
 name|mediaoffset
 argument_list|,
 name|TEXTDUMP_BLOCKSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|textdump_error
+condition|)
+name|printf
+argument_list|(
+literal|"textdump_writeblock: offset %jd, error %d\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|offset
+argument_list|,
+name|textdump_error
 argument_list|)
 expr_stmt|;
 return|return
@@ -1693,7 +1759,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Insufficient space on dump partition.\n"
+literal|"Insufficient space on dump partition for minimal textdump.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1895,7 +1961,7 @@ name|ENOSPC
 condition|)
 name|printf
 argument_list|(
-literal|"Insufficient space on dump partition\n"
+literal|"Textdump: Insufficient space on dump partition\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1907,7 +1973,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"Error %d writing dump\n"
+literal|"Textdump: Error %d writing dump\n"
 argument_list|,
 name|textdump_error
 argument_list|)
@@ -1939,7 +2005,7 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"textdump [unset|set|status]\n"
+literal|"textdump [unset|set|status|dump]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2070,10 +2136,35 @@ literal|"textdump unset\n"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|db_tok_string
+argument_list|,
+literal|"dump"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|textdump_pending
+operator|=
+literal|1
+expr_stmt|;
+name|doadump
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|db_textdump_usage
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 

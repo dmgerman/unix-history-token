@@ -435,6 +435,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_drm.h"
 end_include
 
@@ -3465,6 +3471,19 @@ name|drm_ioctl_desc_t
 modifier|*
 name|ioctls
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+name|drm_ioctl_desc_t
+modifier|*
+name|compat_ioctls
+decl_stmt|;
+name|int
+modifier|*
+name|compat_ioctls_nr
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|max_ioctl
 decl_stmt|;

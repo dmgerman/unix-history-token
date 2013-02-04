@@ -30,6 +30,9 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ARM_TP_ADDRESS
 operator|*
 operator|(
 operator|(
@@ -43,6 +46,17 @@ operator|)
 operator|=
 name|tp
 expr_stmt|;
+else|#
+directive|else
+name|sysarch
+argument_list|(
+name|ARM_SET_TP
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

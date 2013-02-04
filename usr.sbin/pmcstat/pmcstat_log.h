@@ -412,6 +412,7 @@ comment|/*  * Top mode global options.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|float
 name|pmcstat_threshold
 decl_stmt|;
@@ -422,6 +423,7 @@ comment|/* Threshold to filter node. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|pmcstat_pmcinfilter
 decl_stmt|;

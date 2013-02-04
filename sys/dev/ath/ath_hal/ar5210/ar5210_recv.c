@@ -270,11 +270,9 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 name|OS_REG_READ
 argument_list|(
@@ -306,11 +304,9 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-name|OS_REG_WRITE
+name|ar5210UpdateDiagReg
 argument_list|(
 name|ah
-argument_list|,
-name|AR_DIAG_SW
 argument_list|,
 name|OS_REG_READ
 argument_list|(

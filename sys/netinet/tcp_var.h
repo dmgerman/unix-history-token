@@ -2405,6 +2405,16 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|tcp_do_initcwnd10
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|tcp_sendspace
 argument_list|)
 expr_stmt|;
@@ -2497,6 +2507,13 @@ define|#
 directive|define
 name|V_tcp_do_rfc3390
 value|VNET(tcp_do_rfc3390)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_do_initcwnd10
+value|VNET(tcp_do_initcwnd10)
 end_define
 
 begin_define

@@ -233,6 +233,13 @@ name|CAP_MKFIFO
 value|0x0000000000800000ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|CAP_MKNOD
+value|0x0080000000000000ULL
+end_define
+
 begin_comment
 comment|/* Lookups - used to constrain *at() calls. */
 end_comment
@@ -502,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MASK_VALID
-value|0x007fffffffffffffULL
+value|0x00ffffffffffffffULL
 end_define
 
 begin_ifdef

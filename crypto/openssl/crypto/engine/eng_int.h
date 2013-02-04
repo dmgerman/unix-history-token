@@ -239,6 +239,47 @@ parameter_list|)
 value|engine_table_select_tmp(t,n,__FILE__,__LINE__)
 endif|#
 directive|endif
+typedef|typedef
+name|void
+argument_list|(
+argument|engine_table_doall_cb
+argument_list|)
+operator|(
+name|int
+name|nid
+operator|,
+name|STACK_OF
+argument_list|(
+name|ENGINE
+argument_list|)
+operator|*
+name|sk
+operator|,
+name|ENGINE
+operator|*
+name|def
+operator|,
+name|void
+operator|*
+name|arg
+operator|)
+expr_stmt|;
+name|void
+name|engine_table_doall
+parameter_list|(
+name|ENGINE_TABLE
+modifier|*
+name|table
+parameter_list|,
+name|engine_table_doall_cb
+modifier|*
+name|cb
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
 comment|/* Internal versions of API functions that have control over locking. These are  * used between C files when functionality needs to be shared but the caller may  * already be controlling of the CRYPTO_LOCK_ENGINE lock. */
 name|int
 name|engine_unlocked_init
@@ -280,6 +321,23 @@ name|e
 parameter_list|)
 function_decl|;
 comment|/* NB: Bitwise OR-able values for the "flags" variable in ENGINE are now exposed  * in engine.h. */
+comment|/* Free up dynamically allocated public key methods associated with ENGINE */
+name|void
+name|engine_pkey_meths_free
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+name|void
+name|engine_pkey_asn1_meths_free
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
 comment|/* This is a structure for storing implementations of various crypto  * algorithms and functions. */
 struct|struct
 name|engine_st
@@ -336,6 +394,14 @@ decl_stmt|;
 comment|/* Digest handling is via this callback */
 name|ENGINE_DIGESTS_PTR
 name|digests
+decl_stmt|;
+comment|/* Public key handling via this callback */
+name|ENGINE_PKEY_METHS_PTR
+name|pkey_meths
+decl_stmt|;
+comment|/* ASN1 public key handling via this callback */
+name|ENGINE_PKEY_ASN1_METHS_PTR
+name|pkey_asn1_meths
 decl_stmt|;
 name|ENGINE_GEN_INT_FUNC_PTR
 name|destroy

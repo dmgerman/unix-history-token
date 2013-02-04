@@ -75,7 +75,7 @@ block|,
 comment|/**     * This state indicates that the controller has been successfully     * initialized.  In this state no new IO operations are permitted.     * This state is entered from the INITIALIZING state.     */
 name|SCI_BASE_CONTROLLER_STATE_INITIALIZED
 block|,
-comment|/**     * This state indicates the the controller is in the process of becoming     * ready (i.e. starting).  In this state no new IO operations are permitted.     * This state is entered from the INITIALIZED state.     */
+comment|/**     * This state indicates the controller is in the process of becoming     * ready (i.e. starting).  In this state no new IO operations are permitted.     * This state is entered from the INITIALIZED state.     */
 name|SCI_BASE_CONTROLLER_STATE_STARTING
 block|,
 comment|/**     * This state indicates the controller is now ready.  Thus, the user     * is able to perform IO operations on the controller.     * This state is entered from the STARTING state.     */

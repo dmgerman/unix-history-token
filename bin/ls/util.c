@@ -497,7 +497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The fts system makes it difficult to replace fts_name with a different-  * sized string, so we just calculate the real length here and do the  * conversion in prn_octal()  *  * XXX when using f_octal_escape (-b) rather than f_octal (-B), the  * length computed by len_octal may be too big. I just can't be buggered  * to fix this as an efficient fix would involve a lookup table. Same goes  * for the rather inelegant code in prn_octal.  *  *                                              DES 1998/04/23  */
+comment|/*  * The fts system makes it difficult to replace fts_name with a different-  * sized string, so we just calculate the real length here and do the  * conversion in prn_octal()  *  * XXX when using f_octal_escape (-b) rather than f_octal (-B), the  * length computed by len_octal may be too big. I just can't be buggered  * to fix this as an efficient fix would involve a lookup table. Same goes  * for the rather inelegant code in prn_octal.  *  *						DES 1998/04/23  */
 end_comment
 
 begin_function
@@ -817,10 +817,17 @@ name|goodchar
 operator|&&
 name|f_octal_escape
 operator|&&
+if|#
+directive|if
+name|WCHAR_MIN
+operator|<
+literal|0
 name|wc
 operator|>=
 literal|0
 operator|&&
+endif|#
+directive|endif
 name|wc
 operator|<=
 operator|(
@@ -1039,10 +1046,10 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|COLORLS
-literal|"usage: ls [-ABCFGHILPRSTUWZabcdfghiklmnopqrstuwx1] [-D format]"
+literal|"usage: ls [-ABCFGHILPRSTUWZabcdfghiklmnopqrstuwxy1,] [-D format]"
 else|#
 directive|else
-literal|"usage: ls [-ABCFHILPRSTUWZabcdfghiklmnopqrstuwx1] [-D format]"
+literal|"usage: ls [-ABCFHILPRSTUWZabcdfghiklmnopqrstuwxy1,] [-D format]"
 endif|#
 directive|endif
 literal|" [file ...]\n"

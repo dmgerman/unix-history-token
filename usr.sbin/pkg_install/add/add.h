@@ -152,6 +152,8 @@ name|make_hierarchy
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|Boolean
 parameter_list|)
 function_decl|;
 end_function_decl

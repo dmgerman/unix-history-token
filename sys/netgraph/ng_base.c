@@ -7464,6 +7464,12 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
+name|item
+operator|->
+name|depth
+operator|=
+literal|1
+expr_stmt|;
 name|NG_QUEUE_LOCK
 argument_list|(
 name|ngq
@@ -8361,12 +8367,6 @@ condition|(
 name|queue
 condition|)
 block|{
-name|item
-operator|->
-name|depth
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Put it on the queue for that node*/
 name|ng_queue_rw
 argument_list|(

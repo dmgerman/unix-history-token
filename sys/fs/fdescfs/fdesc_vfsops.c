@@ -313,22 +313,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX -- don't mark as local to work around fts() problems */
 comment|/*mp->mnt_flag |= MNT_LOCAL;*/
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator||=
-name|MNTK_MPSAFE
-expr_stmt|;
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|vfs_getnewfsid
 argument_list|(
 name|mp

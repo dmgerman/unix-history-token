@@ -106,6 +106,7 @@ modifier|*
 name|contents
 parameter_list|)
 function_decl|;
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|kssl_map_enc

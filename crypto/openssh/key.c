@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.97 2011/05/17 07:13:31 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.99 2012/05/23 03:28:28 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1613,6 +1613,20 @@ name|EVP_sha1
 argument_list|()
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_SHA256
+case|case
+name|SSH_FP_SHA256
+case|:
+name|md
+operator|=
+name|EVP_sha256
+argument_list|()
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|fatal
 argument_list|(
@@ -6891,31 +6905,6 @@ block|{
 name|error
 argument_list|(
 literal|"%s: parse error"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
-name|kidlen
-operator|!=
-name|strlen
-argument_list|(
-name|key
-operator|->
-name|cert
-operator|->
-name|key_id
-argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"%s: key ID contains \\0 character"
 argument_list|,
 name|__func__
 argument_list|)

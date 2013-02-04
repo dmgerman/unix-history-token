@@ -972,6 +972,19 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|lfence
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("lfence" : : : "memory");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|mfence
 parameter_list|(
 name|void

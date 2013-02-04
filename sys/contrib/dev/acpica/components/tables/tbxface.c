@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -230,7 +230,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiReallocateRootTable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Reallocate Root Table List into dynamic memory. Copies the  *              root list from the previously provided scratch area. Should  *              be called once dynamic memory allocation is available in the  *              kernel  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiReallocateRootTable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Reallocate Root Table List into dynamic memory. Copies the  *              root list from the previously provided scratch area. Should  *              be called once dynamic memory allocation is available in the  *              kernel.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -240,15 +240,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_TABLE_DESC
-modifier|*
-name|Tables
-decl_stmt|;
-name|ACPI_SIZE
-name|NewSize
-decl_stmt|;
-name|ACPI_SIZE
-name|CurrentSize
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -271,93 +264,20 @@ name|AE_SUPPORT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get the current size of the root table and add the default      * increment to create the new table size.      */
-name|CurrentSize
-operator|=
-operator|(
-name|ACPI_SIZE
-operator|)
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_DESC
-argument_list|)
-expr_stmt|;
-name|NewSize
-operator|=
-name|CurrentSize
-operator|+
-operator|(
-name|ACPI_ROOT_TABLE_SIZE_INCREMENT
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_DESC
-argument_list|)
-operator|)
-expr_stmt|;
-comment|/* Create new array and copy the old array */
-name|Tables
-operator|=
-name|ACPI_ALLOCATE_ZEROED
-argument_list|(
-name|NewSize
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Tables
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-name|ACPI_MEMCPY
-argument_list|(
-name|Tables
-argument_list|,
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-argument_list|,
-name|CurrentSize
-argument_list|)
-expr_stmt|;
-comment|/*      * Update the root table descriptor. The new size will be the current      * number of tables plus the increment, independent of the reserved      * size of the original table list.      */
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-operator|=
-name|Tables
-expr_stmt|;
-name|AcpiGbl_RootTableList
-operator|.
-name|MaxTableCount
-operator|=
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
-operator|+
-name|ACPI_ROOT_TABLE_SIZE_INCREMENT
-expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
 name|Flags
-operator|=
-name|ACPI_ROOT_ORIGIN_ALLOCATED
-operator||
+operator||=
 name|ACPI_ROOT_ALLOW_RESIZE
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiTbResizeRootTableList
+argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -527,7 +447,9 @@ name|Header
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 name|ACPI_MEMCPY
@@ -556,7 +478,9 @@ block|}
 else|else
 block|{
 return|return
+operator|(
 name|AE_NOT_FOUND
+operator|)
 return|;
 block|}
 block|}

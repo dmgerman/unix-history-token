@@ -61,11 +61,27 @@ name|EC_GROUP
 modifier|*
 name|ret
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_BN_ASM_MONT
+argument_list|)
+comment|/* 	 * This might appear controversial, but the fact is that generic 	 * prime method was observed to deliver better performance even 	 * for NIST primes on a range of platforms, e.g.: 60%-15% 	 * improvement on IA-64, ~25% on ARM, 30%-90% on P4, 20%-25% 	 * in 32-bit build and 35%--12% in 64-bit build on Core2... 	 * Coefficients are relative to optimized bn_nist.c for most 	 * intensive ECDSA verify and ECDH operations for 192- and 521- 	 * bit keys respectively. Choice of these boundary values is 	 * arguable, because the dependency of improvement coefficient 	 * from key length is not a "monotone" curve. For example while 	 * 571-bit result is 23% on ARM, 384-bit one is -1%. But it's 	 * generally faster, sometimes "respectfully" faster, sometimes 	 * "tolerably" slower... What effectively happens is that loop 	 * with bn_mul_add_words is put against bn_mul_mont, and the 	 * latter "wins" on short vectors. Correct solution should be 	 * implementing dedicated NxN multiplication subroutines for 	 * small N. But till it materializes, let's stick to generic 	 * prime method... 	 *<appro> 	 */
+name|meth
+operator|=
+name|EC_GFp_mont_method
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|meth
 operator|=
 name|EC_GFp_nist_method
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 name|EC_GROUP_new
@@ -214,6 +230,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+end_ifndef
+
 begin_function
 name|EC_GROUP
 modifier|*
@@ -300,6 +322,11 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

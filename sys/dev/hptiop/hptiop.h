@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * HighPoint RR3xxx/4xxx RAID Driver for FreeBSD  * Copyright (C) 2007-2008 HighPoint Technologies, Inc. All Rights Reserved.  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * HighPoint RR3xxx/4xxx RAID Driver for FreeBSD  * Copyright (C) 2007-2012 HighPoint Technologies, Inc. All Rights Reserved.  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -447,6 +447,300 @@ end_struct
 begin_define
 define|#
 directive|define
+name|CL_POINTER_TOGGLE
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_TO_F0_DRBL_MSG_A_BIT
+value|0x02000000
+end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_struct
+struct|struct
+name|hpt_iopmu_mvfrey
+block|{
+name|u_int32_t
+name|reserved
+index|[
+literal|0x4000
+operator|/
+literal|4
+index|]
+decl_stmt|;
+comment|/* hpt_frey_com_reg */
+name|u_int32_t
+name|inbound_base
+decl_stmt|;
+comment|/* 0x4000 : 0 */
+name|u_int32_t
+name|inbound_base_high
+decl_stmt|;
+comment|/* 4 */
+name|u_int32_t
+name|reserved2
+index|[
+operator|(
+literal|0x18
+operator|-
+literal|8
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|inbound_write_ptr
+decl_stmt|;
+comment|/* 0x18 */
+name|u_int32_t
+name|inbound_read_ptr
+decl_stmt|;
+comment|/* 0x1c */
+name|u_int32_t
+name|reserved3
+index|[
+operator|(
+literal|0x2c
+operator|-
+literal|0x20
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|inbound_conf_ctl
+decl_stmt|;
+comment|/* 0x2c */
+name|u_int32_t
+name|reserved4
+index|[
+operator|(
+literal|0x50
+operator|-
+literal|0x30
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|outbound_base
+decl_stmt|;
+comment|/* 0x50 */
+name|u_int32_t
+name|outbound_base_high
+decl_stmt|;
+comment|/* 0x54 */
+name|u_int32_t
+name|outbound_shadow_base
+decl_stmt|;
+comment|/* 0x58 */
+name|u_int32_t
+name|outbound_shadow_base_high
+decl_stmt|;
+comment|/* 0x5c */
+name|u_int32_t
+name|reserved5
+index|[
+operator|(
+literal|0x68
+operator|-
+literal|0x60
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|outbound_write
+decl_stmt|;
+comment|/* 0x68 */
+name|u_int32_t
+name|reserved6
+index|[
+operator|(
+literal|0x70
+operator|-
+literal|0x6c
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|outbound_read
+decl_stmt|;
+comment|/* 0x70 */
+name|u_int32_t
+name|reserved7
+index|[
+operator|(
+literal|0x88
+operator|-
+literal|0x74
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|isr_cause
+decl_stmt|;
+comment|/* 0x88 */
+name|u_int32_t
+name|isr_enable
+decl_stmt|;
+comment|/* 0x8c */
+name|u_int32_t
+name|reserved8
+index|[
+operator|(
+literal|0x10200
+operator|-
+literal|0x4090
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+comment|/* hpt_frey_intr_ctl intr_ctl */
+name|u_int32_t
+name|main_int_cuase
+decl_stmt|;
+comment|/* 0x10200: 0 */
+name|u_int32_t
+name|main_irq_enable
+decl_stmt|;
+comment|/* 4 */
+name|u_int32_t
+name|main_fiq_enable
+decl_stmt|;
+comment|/* 8 */
+name|u_int32_t
+name|pcie_f0_int_enable
+decl_stmt|;
+comment|/* 0xc */
+name|u_int32_t
+name|pcie_f1_int_enable
+decl_stmt|;
+comment|/* 0x10 */
+name|u_int32_t
+name|pcie_f2_int_enable
+decl_stmt|;
+comment|/* 0x14 */
+name|u_int32_t
+name|pcie_f3_int_enable
+decl_stmt|;
+comment|/* 0x18 */
+name|u_int32_t
+name|reserved9
+index|[
+operator|(
+literal|0x10400
+operator|-
+literal|0x1021c
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+comment|/* hpt_frey_msg_drbl */
+name|u_int32_t
+name|f0_to_cpu_msg_a
+decl_stmt|;
+comment|/* 0x10400: 0 */
+name|u_int32_t
+name|reserved10
+index|[
+operator|(
+literal|0x20
+operator|-
+literal|4
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|cpu_to_f0_msg_a
+decl_stmt|;
+comment|/* 0x20 */
+name|u_int32_t
+name|reserved11
+index|[
+operator|(
+literal|0x80
+operator|-
+literal|0x24
+operator|)
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|f0_doorbell
+decl_stmt|;
+comment|/* 0x80 */
+name|u_int32_t
+name|f0_doorbell_enable
+decl_stmt|;
+comment|/* 0x84 */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mvfrey_inlist_entry
+block|{
+name|u_int64_t
+name|addr
+decl_stmt|;
+name|u_int32_t
+name|intrfc_len
+decl_stmt|;
+name|u_int32_t
+name|reserved
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mvfrey_outlist_entry
+block|{
+name|u_int32_t
+name|val
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
+
+begin_define
+define|#
+directive|define
 name|MVIOP_IOCTLCFG_SIZE
 value|0x800
 end_define
@@ -556,6 +850,13 @@ name|MVIOP_REQUEST_NUMBER_START_BIT
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|MVFREYIOPMU_QUEUE_REQUEST_RESULT_BIT
+value|0x40000000
+end_define
+
 begin_enum
 enum|enum
 name|hpt_iopmu_message
@@ -574,6 +875,8 @@ block|,
 name|IOPMU_INBOUND_MSG0_STOP_BACKGROUND_TASK
 block|,
 name|IOPMU_INBOUND_MSG0_START_BACKGROUND_TASK
+block|,
+name|IOPMU_INBOUND_MSG0_RESET_COMM
 block|,
 name|IOPMU_INBOUND_MSG0_MAX
 init|=
@@ -635,6 +938,17 @@ name|IOP_REQUEST_FLAG_OUTPUT_CONTEXT
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOP_REQUEST_FLAG_ADDR_BITS
+value|0x40
+end_define
+
+begin_comment
+comment|/* flags[31:16] is phy_addr[47:32] */
+end_comment
+
 begin_enum
 enum|enum
 name|hpt_iop_request_type
@@ -680,6 +994,15 @@ name|IOP_RESULT_CHECK_CONDITION
 block|, }
 enum|;
 end_enum
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
 
 begin_struct
 struct|struct
@@ -1099,6 +1422,57 @@ decl_stmt|;
 block|}
 name|mv
 struct|;
+struct|struct
+block|{
+name|struct
+name|hpt_iop_request_get_config
+modifier|*
+name|config
+decl_stmt|;
+name|struct
+name|hpt_iopmu_mvfrey
+modifier|*
+name|mu
+decl_stmt|;
+name|int
+name|internal_mem_size
+decl_stmt|;
+name|int
+name|list_count
+decl_stmt|;
+name|struct
+name|mvfrey_inlist_entry
+modifier|*
+name|inlist
+decl_stmt|;
+name|u_int64_t
+name|inlist_phy
+decl_stmt|;
+name|u_int32_t
+name|inlist_wptr
+decl_stmt|;
+name|struct
+name|mvfrey_outlist_entry
+modifier|*
+name|outlist
+decl_stmt|;
+name|u_int64_t
+name|outlist_phy
+decl_stmt|;
+name|u_int32_t
+modifier|*
+name|outlist_cptr
+decl_stmt|;
+comment|/* copy pointer shadow */
+name|u_int64_t
+name|outlist_cptr_phy
+decl_stmt|;
+name|u_int32_t
+name|outlist_rptr
+decl_stmt|;
+block|}
+name|mvfrey
+struct|;
 block|}
 name|u
 union|;
@@ -1224,6 +1598,12 @@ decl_stmt|;
 name|u_int32_t
 name|config_done
 decl_stmt|;
+comment|/* can be negative value */
+name|u_int32_t
+name|initialized
+range|:
+literal|1
+decl_stmt|;
 comment|/* other resources */
 name|struct
 name|cam_sim
@@ -1276,10 +1656,41 @@ block|}
 struct|;
 end_struct
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
+
+begin_enum
+enum|enum
+name|hptiop_family
+block|{
+name|INTEL_BASED_IOP
+init|=
+literal|0
+block|,
+name|MV_BASED_IOP
+block|,
+name|MVFREY_BASED_IOP
+block|,
+name|UNKNOWN_BASED_IOP
+init|=
+literal|0xf
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|hptiop_adapter_ops
 block|{
+name|enum
+name|hptiop_family
+name|family
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -1467,6 +1878,18 @@ name|struct
 name|hpt_iop_ioctl_param
 modifier|*
 name|pParams
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|reset_comm
+function_decl|)
+parameter_list|(
+name|struct
+name|hpt_iop_hba
+modifier|*
+name|hba
 parameter_list|)
 function_decl|;
 block|}

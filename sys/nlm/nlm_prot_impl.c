@@ -7324,9 +7324,6 @@ modifier|*
 name|vs_vp
 decl_stmt|;
 name|int
-name|vs_vfslocked
-decl_stmt|;
-name|int
 name|vs_vnlocked
 decl_stmt|;
 block|}
@@ -7417,17 +7414,6 @@ name|ESTALE
 operator|)
 return|;
 block|}
-name|vs
-operator|->
-name|vs_vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vs
-operator|->
-name|vs_mp
-argument_list|)
-expr_stmt|;
 comment|/* accmode == 0 means don't check, since it is an unlock. */
 if|if
 condition|(
@@ -7754,13 +7740,6 @@ argument_list|(
 name|vs
 operator|->
 name|vs_mp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vs
-operator|->
-name|vs_vfslocked
 argument_list|)
 expr_stmt|;
 block|}

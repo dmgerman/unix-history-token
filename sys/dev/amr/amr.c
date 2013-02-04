@@ -529,22 +529,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Status monitoring  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|amr_periodic
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Interface-specific shims  */
 end_comment
 
@@ -1476,8 +1460,6 @@ name|amr_state
 operator||=
 name|AMR_STATE_INTEN
 expr_stmt|;
-comment|/*      * Start the timeout routine.      */
-comment|/*    sc->amr_timeout = timeout(amr_periodic, sc, hz);*/
 return|return;
 block|}
 end_function
@@ -1673,18 +1655,6 @@ argument_list|,
 name|sc
 operator|->
 name|amr_pass
-argument_list|)
-expr_stmt|;
-comment|/* cancel status timeout */
-name|untimeout
-argument_list|(
-name|amr_periodic
-argument_list|,
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|amr_timeout
 argument_list|)
 expr_stmt|;
 comment|/* throw away any command buffers */
@@ -2340,7 +2310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bug-for-bug compatibility with Linux!  * Some apps will send commands with inlen and outlen set to 0,  * even though they expect data to be transfered to them from the  * card.  Linux accidentally allows this by allocating a 4KB  * buffer for the transfer anyways, but it then throws it away  * without copying it back to the app.  *   * The amr(4) firmware relies on this feature.  In fact, it assumes  * the buffer is always a power of 2 up to a max of 64k.  There is  * also at least one case where it assumes a buffer less than 16k is  * greater than 16k.  Force a minimum buffer size of 32k and round  * sizes between 32k and 64k up to 64k as a workaround.  */
+comment|/*  * Bug-for-bug compatibility with Linux!  * Some apps will send commands with inlen and outlen set to 0,  * even though they expect data to be transfered to them from the  * card.  Linux accidentally allows this by allocating a 4KB  * buffer for the transfer anyways, but it then throws it away  * without copying it back to the app.  *   * The amr(4) firmware relies on this feature.  In fact, it assumes  * the buffer is always a power of 2 up to a max of 64k.  There is  * also at least one case where it assumes a buffer less than 16k is  * greater than 16k.  However, forcing all buffers to a size of 32k  * causes stalls in the firmware.  Force each command smaller than  * 64k up to the next power of two except that commands between 8k  * and 16k are rounded up to 32k instead of 16k.  */
 end_comment
 
 begin_function
@@ -2354,6 +2324,36 @@ name|long
 name|len
 parameter_list|)
 block|{
+if|if
+condition|(
+name|len
+operator|<=
+literal|4
+operator|*
+literal|1024
+condition|)
+return|return
+operator|(
+literal|4
+operator|*
+literal|1024
+operator|)
+return|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|8
+operator|*
+literal|1024
+condition|)
+return|return
+operator|(
+literal|8
+operator|*
+literal|1024
+operator|)
+return|;
 if|if
 condition|(
 name|len
@@ -4068,6 +4068,19 @@ argument_list|(
 name|au_length
 argument_list|)
 expr_stmt|;
+name|dp
+operator|=
+name|malloc
+argument_list|(
+name|real_length
+argument_list|,
+name|M_AMR
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|au_length
@@ -4082,34 +4095,6 @@ operator|!=
 literal|0x06
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|dp
-operator|=
-name|malloc
-argument_list|(
-name|real_length
-argument_list|,
-name|M_AMR
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4516,12 +4501,6 @@ argument_list|,
 name|au_buffer
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|!=
-name|NULL
-condition|)
 name|debug
 argument_list|(
 literal|2
@@ -4604,65 +4583,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                 Status Monitoring  ********************************************************************************  ********************************************************************************/
-end_comment
-
-begin_comment
-comment|/********************************************************************************  * Perform a periodic check of the controller status  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|amr_periodic
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-block|{
-name|struct
-name|amr_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|amr_softc
-operator|*
-operator|)
-name|data
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* XXX perform periodic status checks here */
-comment|/* compensate for missed interrupts */
-name|amr_done
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* reschedule */
-name|sc
-operator|->
-name|amr_timeout
-operator|=
-name|timeout
-argument_list|(
-name|amr_periodic
-argument_list|,
-name|sc
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sysexits.h>
 end_include
 
@@ -288,6 +294,20 @@ modifier|*
 name|test_cmd
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Ask malloc() to map minimum-sized chunks of virtual address space at a time,  * so that mlockall() won't needlessly wire megabytes of unused memory into the  * process.  This must be done using the malloc_conf string so that it gets set  * up before the first allocation, which happens before entry to main().  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|malloc_conf
+init|=
+literal|"lg_chunk:0"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,6 +556,22 @@ argument_list|(
 literal|"madvise failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mlockall
+argument_list|(
+name|MCL_CURRENT
+operator||
+name|MCL_FUTURE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"mlockall failed"
+argument_list|)
+expr_stmt|;
 name|watchdog_loop
 argument_list|()
 expr_stmt|;
@@ -766,7 +802,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Could not stop the watchdog, not exitting"
+literal|"Could not stop the watchdog, not exiting"
 argument_list|)
 expr_stmt|;
 name|end_program
@@ -1125,18 +1161,11 @@ expr_stmt|;
 else|else
 name|timeout
 operator|=
-literal|1.0
-operator|+
-name|log
+name|flsll
 argument_list|(
 name|a
 operator|*
 literal|1e9
-argument_list|)
-operator|/
-name|log
-argument_list|(
-literal|2.0
 argument_list|)
 expr_stmt|;
 if|if

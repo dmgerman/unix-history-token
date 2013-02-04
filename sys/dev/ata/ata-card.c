@@ -142,7 +142,6 @@ specifier|static
 specifier|const
 name|struct
 name|pccard_product
-specifier|const
 name|ata_pccard_products
 index|[]
 init|=

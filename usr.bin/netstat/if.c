@@ -290,6 +290,122 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pfsyncacts
+index|[]
+init|=
+block|{
+comment|/* PFSYNC_ACT_CLR */
+literal|"clear all request"
+block|,
+comment|/* PFSYNC_ACT_INS */
+literal|"state insert"
+block|,
+comment|/* PFSYNC_ACT_INS_ACK */
+literal|"state inserted ack"
+block|,
+comment|/* PFSYNC_ACT_UPD */
+literal|"state update"
+block|,
+comment|/* PFSYNC_ACT_UPD_C */
+literal|"compressed state update"
+block|,
+comment|/* PFSYNC_ACT_UPD_REQ */
+literal|"uncompressed state request"
+block|,
+comment|/* PFSYNC_ACT_DEL */
+literal|"state delete"
+block|,
+comment|/* PFSYNC_ACT_DEL_C */
+literal|"compressed state delete"
+block|,
+comment|/* PFSYNC_ACT_INS_F */
+literal|"fragment insert"
+block|,
+comment|/* PFSYNC_ACT_DEL_F */
+literal|"fragment delete"
+block|,
+comment|/* PFSYNC_ACT_BUS */
+literal|"bulk update mark"
+block|,
+comment|/* PFSYNC_ACT_TDB */
+literal|"TDB replay counter update"
+block|,
+comment|/* PFSYNC_ACT_EOF */
+literal|"end of frame mark"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|pfsync_acts_stats
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|uint64_t
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|PFSYNC_ACT_MAX
+condition|;
+name|i
+operator|++
+operator|,
+name|a
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|a
+operator|||
+name|sflag
+operator|<=
+literal|1
+condition|)
+name|printf
+argument_list|(
+name|fmt
+argument_list|,
+operator|*
+name|a
+argument_list|,
+name|pfsyncacts
+index|[
+name|i
+index|]
+argument_list|,
+name|plural
+argument_list|(
+operator|*
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Dump pfsync statistics structure.  */
 end_comment
@@ -419,15 +535,6 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f, plural(pfsyncstat.f))
-define|#
-directive|define
-name|p2
-parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|)
-value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f)
 name|p
 argument_list|(
 name|pfsyncs_ipackets
@@ -440,6 +547,19 @@ argument_list|(
 name|pfsyncs_ipackets6
 argument_list|,
 literal|"\t%ju packet%s received (IPv6)\n"
+argument_list|)
+expr_stmt|;
+name|pfsync_acts_stats
+argument_list|(
+literal|"\t    %ju %s%s received\n"
+argument_list|,
+operator|&
+name|pfsyncstat
+operator|.
+name|pfsyncs_iacts
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|p
@@ -526,26 +646,36 @@ argument_list|,
 literal|"\t%ju packet%s sent (IPv6)\n"
 argument_list|)
 expr_stmt|;
-name|p2
+name|pfsync_acts_stats
+argument_list|(
+literal|"\t    %ju %s%s sent\n"
+argument_list|,
+operator|&
+name|pfsyncstat
+operator|.
+name|pfsyncs_oacts
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|p
 argument_list|(
 name|pfsyncs_onomem
 argument_list|,
-literal|"\t\t%ju send failed due to mbuf memory error\n"
+literal|"\t\t%ju failure%s due to mbuf memory error\n"
 argument_list|)
 expr_stmt|;
-name|p2
+name|p
 argument_list|(
 name|pfsyncs_oerrors
 argument_list|,
-literal|"\t\t%ju send error\n"
+literal|"\t\t%ju send error%s\n"
 argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
 name|p
-undef|#
-directive|undef
-name|p2
 block|}
 end_function
 

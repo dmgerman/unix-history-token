@@ -868,6 +868,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SC_SPD_SPEED_GEN3
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SC_IPM_MASK
 value|0x00000f00
 end_define
@@ -2237,6 +2244,10 @@ define|#
 directive|define
 name|ATA_R_DIRECT
 value|0x00001000
+define|#
+directive|define
+name|ATA_R_NEEDRESULT
+value|0x00002000
 define|#
 directive|define
 name|ATA_R_ATAPI16
@@ -4051,6 +4062,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_INW_STRM
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|bus_read_stream_2((res), (offset))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_INL
 parameter_list|(
 name|res
@@ -4157,6 +4181,21 @@ name|value
 parameter_list|)
 define|\
 value|bus_write_2((res), (offset), (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTW_STRM
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_write_stream_2((res), (offset), (value))
 end_define
 
 begin_define
@@ -4271,6 +4310,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_IDX_INW_STRM
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|)
+define|\
+value|ATA_INW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_IDX_INL
 parameter_list|(
 name|ch
@@ -4377,6 +4429,21 @@ name|value
 parameter_list|)
 define|\
 value|ATA_OUTW(ch->r_io[idx].res, ch->r_io[idx].offset, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTW_STRM
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|ATA_OUTW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, value)
 end_define
 
 begin_define

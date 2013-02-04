@@ -200,6 +200,12 @@ name|usb_xfer_root
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|usb_string_lang
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* typedefs */
 end_comment
@@ -489,6 +495,10 @@ name|usb_frcount_t
 name|aframes
 decl_stmt|;
 comment|/* actual number of USB frames 					 * transferred */
+name|usb_stream_t
+name|stream_id
+decl_stmt|;
+comment|/* USB3.0 specific field */
 name|uint16_t
 name|max_packet_size
 decl_stmt|;
@@ -548,6 +558,15 @@ specifier|extern
 name|struct
 name|mtx
 name|usb_ref_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_string_lang
+name|usb_string_lang_en
 decl_stmt|;
 end_decl_stmt
 

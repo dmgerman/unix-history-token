@@ -90,7 +90,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|ripemd160_block_host_order
+name|ripemd160_block_data_order
 value|ripemd160_block_asm_data_order
 end_define
 

@@ -94,6 +94,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|more_than_one
 init|=

@@ -359,7 +359,7 @@ name|ARRAY_SIZE
 parameter_list|(
 name|x
 parameter_list|)
-value|(sizeof(x) / sizeof((x)[0]))
+value|nitems(x)
 end_define
 
 begin_define
@@ -628,56 +628,56 @@ begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL
-value|PCIR_EXPRESS_DEVICE_CTL
+value|PCIER_DEVICE_CTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL_PAYLOAD
-value|PCIM_EXP_CTL_MAX_PAYLOAD
+value|PCIEM_CTL_MAX_PAYLOAD
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL_READRQ
-value|PCIM_EXP_CTL_MAX_READ_REQUEST
+value|PCIEM_CTL_MAX_READ_REQUEST
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKCTL
-value|PCIR_EXPRESS_LINK_CTL
+value|PCIER_LINK_CTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKSTA
-value|PCIR_EXPRESS_LINK_STA
+value|PCIER_LINK_STA
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKSTA_CLS
-value|PCIM_LINK_STA_SPEED
+value|PCIEM_LINK_STA_SPEED
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKSTA_NLW
-value|PCIM_LINK_STA_WIDTH
+value|PCIEM_LINK_STA_WIDTH
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL2
-value|0x28
+value|PCIER_DEVICE_CTL2
 end_define
 
 begin_function

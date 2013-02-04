@@ -2036,7 +2036,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|LLDP_TIA_NETWORK_POLICY_U_BIT
+name|LLDP_TIA_NETWORK_POLICY_X_BIT
 value|(1<< 5)
 end_define
 
@@ -2050,7 +2050,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LLDP_TIA_NETWORK_POLICY_X_BIT
+name|LLDP_TIA_NETWORK_POLICY_U_BIT
 value|(1<< 7)
 end_define
 

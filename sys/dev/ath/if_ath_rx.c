@@ -395,6 +395,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_alq.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only until recently)  *   and we are not scanning (ANI is disabled)  *   NB: older hal's add rx filter bits out of sight and we need to  *	 blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, mesh, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  *   - when operating in mesh mode to detect neighbors  * o accept control frames:  *   - when in monitor mode  * XXX HT protection for 11n  */
 end_comment
@@ -625,6 +642,17 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_PHYRADAR
 expr_stmt|;
+comment|/* 	 * Enable spectral PHY errors if requested by the 	 * spectral module. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dospectral
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYRADAR
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -711,7 +739,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -1680,6 +1708,71 @@ name|CHAN_HT
 expr_stmt|;
 if|if
 condition|(
+name|rs
+operator|->
+name|rs_status
+operator|&
+name|HAL_RXERR_PHY
+condition|)
+block|{
+comment|/* 		 * PHY error - make sure the channel flags 		 * reflect the actual channel configuration, 		 * not the received frame. 		 */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT40U
+argument_list|(
+name|sc
+operator|->
+name|sc_curchan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_chan_flags
+operator||=
+name|CHAN_HT40U
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT40D
+argument_list|(
+name|sc
+operator|->
+name|sc_curchan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_chan_flags
+operator||=
+name|CHAN_HT40D
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT20
+argument_list|(
+name|sc
+operator|->
+name|sc_curchan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_chan_flags
+operator||=
+name|CHAN_HT20
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|sc
 operator|->
 name|sc_rx_th
@@ -2285,6 +2378,27 @@ operator|.
 name|ast_rx_badcrypt
 operator|++
 expr_stmt|;
+block|}
+comment|/* 		 * Similar as above - if the failure was a keymiss 		 * just punt it up to the upper layers for now. 		 */
+if|if
+condition|(
+name|rs
+operator|->
+name|rs_status
+operator|&
+name|HAL_RXERR_KEYMISS
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_keymiss
+operator|++
+expr_stmt|;
+goto|goto
+name|rx_accept
+goto|;
 block|}
 if|if
 condition|(
@@ -3198,6 +3312,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|ATH_RX_MAX
+value|128
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -3291,6 +3412,11 @@ name|npkts
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|kickpcu
+init|=
+literal|0
+decl_stmt|;
 comment|/* XXX we must not hold the ATH_LOCK here */
 name|ATH_UNLOCK_ASSERT
 argument_list|(
@@ -3311,6 +3437,12 @@ name|sc
 operator|->
 name|sc_rxproc_cnt
 operator|++
+expr_stmt|;
+name|kickpcu
+operator|=
+name|sc
+operator|->
+name|sc_kickpcu
 expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
@@ -3360,6 +3492,17 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+comment|/* 		 * Don't process too many packets at a time; give the 		 * TX thread time to also run - otherwise the TX 		 * latency can jump by quite a bit, causing throughput 		 * degredation. 		 */
+if|if
+condition|(
+operator|!
+name|kickpcu
+operator|&&
+name|npkts
+operator|>=
+name|ATH_RX_MAX
+condition|)
+break|break;
 name|bf
 operator|=
 name|TAILQ_FIRST
@@ -3540,6 +3683,44 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_RXSTATUS
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_EDMA_RXSTATUS
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_statuslen
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|ds
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 if|if
 condition|(
 name|status
@@ -3637,9 +3818,13 @@ name|sc_lastrx
 operator|=
 name|tsf
 expr_stmt|;
-name|CTR2
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_RXPROC
+argument_list|,
+literal|2
 argument_list|,
 literal|"ath_rx_proc: npkts=%d, ngood=%d"
 argument_list|,
@@ -3689,9 +3874,13 @@ operator|->
 name|sc_kickpcu
 condition|)
 block|{
-name|CTR0
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_ERR
+name|sc
+argument_list|,
+name|ATH_KTR_ERROR
+argument_list|,
+literal|0
 argument_list|,
 literal|"ath_rx_proc: kickpcu"
 argument_list|)
@@ -3710,6 +3899,12 @@ name|npkts
 argument_list|)
 expr_stmt|;
 comment|/* XXX rxslink? */
+if|#
+directive|if
+literal|0
+block|ath_startrecv(sc);
+else|#
+directive|else
 comment|/* 		 * XXX can we hold the PCU lock here? 		 * Are there any net80211 buffer calls involved? 		 */
 name|bf
 operator|=
@@ -3750,6 +3945,8 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* re-enable PCU/DMA engine */
+endif|#
+directive|endif
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -3819,6 +4016,25 @@ block|}
 undef|#
 directive|undef
 name|PA2DESC
+comment|/* 	 * If we hit the maximum number of frames in this round, 	 * reschedule for another immediate pass.  This gives 	 * the TX and TX completion routines time to run, which 	 * will reduce latency. 	 */
+if|if
+condition|(
+name|npkts
+operator|>=
+name|ATH_RX_MAX
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rxtask
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
@@ -3836,6 +4052,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|ATH_RX_MAX
+end_undef
 
 begin_comment
 comment|/*  * Only run the RX proc if it's not already running.  * Since this may get run as part of the reset/flush path,  * the task can't clash with an existing, running tasklet.  */
@@ -3861,9 +4083,13 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|CTR1
+name|ATH_KTR
 argument_list|(
-name|ATH_KTR_INTR
+name|sc
+argument_list|,
+name|ATH_KTR_RXPROC
+argument_list|,
+literal|1
 argument_list|,
 literal|"ath_rx_proc: pending=%d"
 argument_list|,
@@ -4416,17 +4642,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ath_descdma_setup
@@ -4444,6 +4659,12 @@ operator|->
 name|sc_rxbuf
 argument_list|,
 literal|"rx"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
+argument_list|)
 argument_list|,
 name|ath_rxbuf
 argument_list|,
@@ -4480,17 +4701,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4534,13 +4744,16 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
+comment|/* Sensible legacy defaults */
+comment|/* 	 * XXX this should be changed to properly support the 	 * exact RX descriptor size for each HAL. 	 */
 name|sc
 operator|->
-name|sc_dev
-argument_list|,
-literal|"DMA setup: legacy\n"
+name|sc_rx_statuslen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ath_desc
 argument_list|)
 expr_stmt|;
 name|sc

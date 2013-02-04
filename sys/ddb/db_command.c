@@ -2300,6 +2300,19 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|textdump_pending
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"textdump_pending set.\n"
+literal|"run \"textdump unset\" first or \"textdump dump\" for a textdump.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|error
 operator|=
 name|doadump

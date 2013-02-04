@@ -62,7 +62,7 @@ end_include
 
 begin_function
 name|int
-name|EVP_PKEY_decrypt
+name|EVP_PKEY_decrypt_old
 parameter_list|(
 name|unsigned
 name|char
@@ -105,7 +105,7 @@ endif|#
 directive|endif
 name|EVPerr
 argument_list|(
-name|EVP_F_EVP_PKEY_DECRYPT
+name|EVP_F_EVP_PKEY_DECRYPT_OLD
 argument_list|,
 name|EVP_R_PUBLIC_KEY_NOT_RSA
 argument_list|)

@@ -1014,6 +1014,16 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
+comment|/* Skip deleted entries. */
+if|if
+condition|(
+name|map
+operator|->
+name|entry_p
+operator|==
+name|NULL
+condition|)
+continue|continue;
 for|for
 control|(
 name|found
@@ -1252,6 +1262,16 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
+comment|/* Skip deleted entries. */
+if|if
+condition|(
+name|map
+operator|->
+name|entry_p
+operator|==
+name|NULL
+condition|)
+continue|continue;
 if|if
 condition|(
 name|sscanf

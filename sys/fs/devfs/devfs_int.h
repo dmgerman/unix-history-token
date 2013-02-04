@@ -159,7 +159,7 @@ name|cdev2priv
 parameter_list|(
 name|c
 parameter_list|)
-value|member2struct(cdev_priv, cdp_c, c)
+value|__containerof(c, struct cdev_priv, cdp_c)
 end_define
 
 begin_function_decl

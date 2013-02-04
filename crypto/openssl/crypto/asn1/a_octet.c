@@ -30,6 +30,7 @@ name|ASN1_OCTET_STRING
 modifier|*
 name|ASN1_OCTET_STRING_dup
 parameter_list|(
+specifier|const
 name|ASN1_OCTET_STRING
 modifier|*
 name|x
@@ -48,10 +49,12 @@ begin_function
 name|int
 name|ASN1_OCTET_STRING_cmp
 parameter_list|(
+specifier|const
 name|ASN1_OCTET_STRING
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|ASN1_OCTET_STRING
 modifier|*
 name|b

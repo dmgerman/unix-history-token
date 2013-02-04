@@ -95,6 +95,32 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|// The po_iterator_storage template provides access to the set of already
+comment|// visited nodes during the po_iterator's depth-first traversal.
+comment|//
+comment|// The default implementation simply contains a set of visited nodes, while
+comment|// the Extended=true version uses a reference to an external set.
+comment|//
+comment|// It is possible to prune the depth-first traversal in several ways:
+comment|//
+comment|// - When providing an external set that already contains some graph nodes,
+comment|//   those nodes won't be visited again. This is useful for restarting a
+comment|//   post-order traversal on a graph with nodes that aren't dominated by a
+comment|//   single node.
+comment|//
+comment|// - By providing a custom SetType class, unwanted graph nodes can be excluded
+comment|//   by having the insert() function return false. This could for example
+comment|//   confine a CFG traversal to blocks in a specific loop.
+comment|//
+comment|// - Finally, by specializing the po_iterator_storage template itself, graph
+comment|//   edges can be pruned by returning false in the insertEdge() function. This
+comment|//   could be used to remove loop back-edges from the CFG seen by po_iterator.
+comment|//
+comment|// A specialized po_iterator_storage class can observe both the pre-order and
+comment|// the post-order. The insertEdge() function is called in a pre-order, while
+comment|// the finishPostorder() function is called just before the po_iterator moves
+comment|// on to the next node.
+comment|/// Default po_iterator_storage implementation with an internal set object.
 name|template
 operator|<
 name|class
@@ -103,37 +129,52 @@ operator|,
 name|bool
 name|External
 operator|>
-comment|// Non-external set
 name|class
 name|po_iterator_storage
 block|{
-name|public
-operator|:
 name|SetType
 name|Visited
-block|; }
-expr_stmt|;
-comment|/// DFSetTraits - Allow the SetType used to record depth-first search results to
-comment|/// optionally record node postorder.
+block|;
+name|public
+operator|:
+comment|// Return true if edge destination should be visited.
 name|template
 operator|<
-name|class
-name|SetType
+name|typename
+name|NodeType
 operator|>
-expr|struct
-name|DFSetTraits
+name|bool
+name|insertEdge
+argument_list|(
+argument|NodeType *From
+argument_list|,
+argument|NodeType *To
+argument_list|)
 block|{
-specifier|static
+return|return
+name|Visited
+operator|.
+name|insert
+argument_list|(
+name|To
+argument_list|)
+return|;
+block|}
+comment|// Called after all children of BB have been visited.
+name|template
+operator|<
+name|typename
+name|NodeType
+operator|>
 name|void
 name|finishPostorder
 argument_list|(
-argument|typename SetType::iterator::value_type
-argument_list|,
-argument|SetType&
+argument|NodeType *BB
 argument_list|)
 block|{}
-block|}
-expr_stmt|;
+expr|}
+block|;
+comment|/// Specialization of po_iterator_storage that references an external set.
 name|template
 operator|<
 name|class
@@ -143,10 +184,14 @@ name|class
 name|po_iterator_storage
 operator|<
 name|SetType
-operator|,
+block|,
 name|true
 operator|>
 block|{
+name|SetType
+operator|&
+name|Visited
+block|;
 name|public
 operator|:
 name|po_iterator_storage
@@ -174,16 +219,50 @@ argument_list|(
 argument|S.Visited
 argument_list|)
 block|{}
-name|SetType
-operator|&
+comment|// Return true if edge destination should be visited, called with From = 0 for
+comment|// the root node.
+comment|// Graph edges can be pruned by specializing this function.
+name|template
+operator|<
+name|class
+name|NodeType
+operator|>
+name|bool
+name|insertEdge
+argument_list|(
+argument|NodeType *From
+argument_list|,
+argument|NodeType *To
+argument_list|)
+block|{
+return|return
 name|Visited
-block|; }
-expr_stmt|;
+operator|.
+name|insert
+argument_list|(
+name|To
+argument_list|)
+return|;
+block|}
+comment|// Called after all children of BB have been visited.
+name|template
+operator|<
+name|class
+name|NodeType
+operator|>
+name|void
+name|finishPostorder
+argument_list|(
+argument|NodeType *BB
+argument_list|)
+block|{}
+expr|}
+block|;
 name|template
 operator|<
 name|class
 name|GraphT
-operator|,
+block|,
 name|class
 name|SetType
 operator|=
@@ -199,15 +278,15 @@ operator|>
 operator|::
 name|NodeType
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
-operator|,
+block|,
 name|bool
 name|ExtStorage
 operator|=
 name|false
-operator|,
+block|,
 name|class
 name|GT
 operator|=
@@ -227,20 +306,20 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|typename
 name|GT
 operator|::
 name|NodeType
-operator|,
+block|,
 name|ptrdiff_t
 operator|>
-operator|,
+block|,
 name|public
 name|po_iterator_storage
 operator|<
 name|SetType
-operator|,
+block|,
 name|ExtStorage
 operator|>
 block|{
@@ -291,7 +370,7 @@ operator|*
 operator|,
 name|ChildItTy
 operator|>
-expr|>
+block|>
 name|VisitStack
 expr_stmt|;
 name|void
@@ -337,10 +416,15 @@ if|if
 condition|(
 name|this
 operator|->
-name|Visited
-operator|.
-name|insert
+name|insertEdge
 argument_list|(
+name|VisitStack
+operator|.
+name|back
+argument_list|()
+operator|.
+name|first
+argument_list|,
 name|BB
 argument_list|)
 condition|)
@@ -376,10 +460,14 @@ argument_list|)
 block|{
 name|this
 operator|->
-name|Visited
-operator|.
-name|insert
+name|insertEdge
 argument_list|(
+operator|(
+name|NodeType
+operator|*
+operator|)
+literal|0
+argument_list|,
 name|BB
 argument_list|)
 block|;
@@ -436,10 +524,14 @@ if|if
 condition|(
 name|this
 operator|->
-name|Visited
-operator|.
-name|insert
+name|insertEdge
 argument_list|(
+operator|(
+name|NodeType
+operator|*
+operator|)
+literal|0
+argument_list|,
 name|BB
 argument_list|)
 condition|)
@@ -682,11 +774,8 @@ operator|(
 operator|)
 block|{
 comment|// Preincrement
-name|DFSetTraits
-operator|<
-name|SetType
-operator|>
-operator|::
+name|this
+operator|->
 name|finishPostorder
 argument_list|(
 name|VisitStack
@@ -695,10 +784,6 @@ name|back
 argument_list|()
 operator|.
 name|first
-argument_list|,
-name|this
-operator|->
-name|Visited
 argument_list|)
 block|;
 name|VisitStack
@@ -1117,7 +1202,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//Provide global definitions of external inverse postorder iterators...
+comment|// Provide global definitions of external inverse postorder iterators...
 end_comment
 
 begin_expr_stmt
@@ -1179,7 +1264,6 @@ block|,
 name|true
 operator|>
 operator|(
-operator|&
 name|V
 operator|)
 block|{}
@@ -1210,7 +1294,6 @@ block|,
 name|true
 operator|>
 operator|(
-operator|&
 name|V
 operator|)
 block|{}

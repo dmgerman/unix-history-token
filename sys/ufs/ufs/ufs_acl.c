@@ -585,10 +585,13 @@ comment|/* 		 * A short (or long) read, meaning that for 		 * some reason the AC
 name|printf
 argument_list|(
 literal|"ufs_getacl_nfs4(): Loaded invalid ACL ("
-literal|"%d bytes), inumber %d on %s\n"
+literal|"%d bytes), inumber %ju on %s\n"
 argument_list|,
 name|len
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -627,8 +630,11 @@ block|{
 name|printf
 argument_list|(
 literal|"ufs_getacl_nfs4(): Loaded invalid ACL "
-literal|"(failed acl_nfs4_check), inumber %d on %s\n"
+literal|"(failed acl_nfs4_check), inumber %ju on %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -902,10 +908,13 @@ comment|/* 		 * A short (or long) read, meaning that for some reason 		 * the AC
 name|printf
 argument_list|(
 literal|"ufs_get_oldacl(): Loaded invalid ACL "
-literal|"(len = %d), inumber %d on %s\n"
+literal|"(len = %d), inumber %ju on %s\n"
 argument_list|,
 name|len
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number

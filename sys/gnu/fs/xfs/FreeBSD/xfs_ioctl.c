@@ -3354,10 +3354,6 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|error
-operator|=
-name|error
-expr_stmt|;
 break|break;
 block|}
 name|fa
@@ -3506,10 +3502,6 @@ block|if (likely(!error)) 			__vn_revalidate(vp, vattr);
 comment|/* update flags */
 endif|#
 directive|endif
-name|error
-operator|=
-name|error
-expr_stmt|;
 break|break;
 block|}
 case|case
@@ -3550,10 +3542,6 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|error
-operator|=
-name|error
-expr_stmt|;
 break|break;
 block|}
 name|fa
@@ -3746,10 +3734,6 @@ block|if (likely(!error)) 			__vn_revalidate(vp, vattr);
 comment|/* update flags */
 endif|#
 directive|endif
-name|error
-operator|=
-name|error
-expr_stmt|;
 break|break;
 block|}
 if|#

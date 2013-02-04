@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fsutil.c,v 1.7 1998/07/30 17:41:03 thorpej Exp $	*/
+comment|/*	$NetBSD: fsutil.c,v 1.15 2006/06/05 16:52:05 christos Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: fsutil.c,v 1.7 1998/07/30 17:41:03 thorpej Exp $"
+literal|"$NetBSD: fsutil.c,v 1.15 2006/06/05 16:52:05 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -375,24 +375,38 @@ end_function
 
 begin_function
 name|void
-name|perror
+name|perr
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|s
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 block|{
-name|pfatal
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
-literal|"%s (%s)"
+name|ap
 argument_list|,
-name|s
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
+name|fmt
 argument_list|)
+expr_stmt|;
+name|vmsg
+argument_list|(
+literal|1
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
@@ -473,14 +487,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"/"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Can't stat root\n"
+literal|"Can't stat `/'"
 argument_list|)
 expr_stmt|;
 return|return
@@ -502,12 +511,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-name|origname
-argument_list|)
-expr_stmt|;
-name|printf
+name|perr
 argument_list|(
 literal|"Can't stat %s\n"
 argument_list|,
@@ -531,12 +535,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|perror
-argument_list|(
-name|origname
-argument_list|)
-expr_stmt|;
-name|printf
+name|perr
 argument_list|(
 literal|"%s is not a char device\n"
 argument_list|,
@@ -589,7 +588,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|devname
+name|dev_name
 decl_stmt|;
 name|struct
 name|statfs
@@ -680,7 +679,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|devname
+name|dev_name
 operator|=
 name|statfsp
 operator|->
@@ -689,7 +688,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|devname
+name|dev_name
 operator|!=
 literal|'/'
 condition|)
@@ -705,7 +704,7 @@ name|strcat
 argument_list|(
 name|device
 argument_list|,
-name|devname
+name|dev_name
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -747,7 +746,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|devname
+name|dev_name
 argument_list|,
 operator|&
 name|mntdevstat

@@ -1015,27 +1015,17 @@ name|RMPCONN
 modifier|*
 name|rtmp
 decl_stmt|;
-name|struct
-name|timeval
+name|time_t
 name|now
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|gettimeofday
-argument_list|(
-operator|&
+comment|/* 	 *  For each active connection, if RMP_TIMEOUT seconds have passed 	 *  since the last packet was sent, delete the connection. 	 */
 name|now
-argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  For each active connection, if RMP_TIMEOUT seconds have passed 	 *  since the last packet was sent, delete the connection. 	 */
 for|for
 control|(
 name|rtmp
@@ -1065,8 +1055,6 @@ name|RMP_TIMEOUT
 operator|)
 operator|<
 name|now
-operator|.
-name|tv_sec
 condition|)
 block|{
 name|syslog

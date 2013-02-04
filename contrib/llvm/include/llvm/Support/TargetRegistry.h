@@ -419,6 +419,9 @@ name|T
 parameter_list|,
 name|StringRef
 name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -530,6 +533,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|II
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo
@@ -920,7 +928,7 @@ comment|/// @{
 comment|/// createMCAsmInfo - Create a MCAsmInfo implementation for the specified
 comment|/// target triple.
 comment|///
-comment|/// \arg Triple - This argument is used to determine the target machine
+comment|/// \param Triple This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
@@ -1075,12 +1083,12 @@ return|;
 block|}
 comment|/// createMCSubtargetInfo - Create a MCSubtargetInfo implementation.
 comment|///
-comment|/// \arg Triple - This argument is used to determine the target machine
+comment|/// \param Triple This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
-comment|/// \arg CPU - This specifies the name of the target CPU.
-comment|/// \arg Features - This specifies the string representation of the
+comment|/// \param CPU This specifies the name of the target CPU.
+comment|/// \param Features This specifies the string representation of the
 comment|/// additional target features.
 name|MCSubtargetInfo
 modifier|*
@@ -1117,9 +1125,9 @@ argument_list|)
 return|;
 block|}
 comment|/// createTargetMachine - Create a target specific machine implementation
-comment|/// for the specified \arg Triple.
+comment|/// for the specified \p Triple.
 comment|///
-comment|/// \arg Triple - This argument is used to determine the target machine
+comment|/// \param Triple This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
@@ -1202,14 +1210,16 @@ return|;
 block|}
 comment|/// createMCAsmBackend - Create a target specific assembly parser.
 comment|///
-comment|/// \arg Triple - The target triple string.
-comment|/// \arg Backend - The target independent assembler object.
+comment|/// \param Triple The target triple string.
 name|MCAsmBackend
 modifier|*
 name|createMCAsmBackend
 argument_list|(
 name|StringRef
 name|Triple
+argument_list|,
+name|StringRef
+name|CPU
 argument_list|)
 decl|const
 block|{
@@ -1228,6 +1238,8 @@ operator|*
 name|this
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -1271,7 +1283,7 @@ return|;
 block|}
 comment|/// createMCAsmParser - Create a target specific assembly parser.
 comment|///
-comment|/// \arg Parser - The target independent parser implementation to use for
+comment|/// \param Parser The target independent parser implementation to use for
 comment|/// parsing and lexing.
 name|MCTargetAsmParser
 modifier|*
@@ -1432,6 +1444,11 @@ operator|&
 name|II
 argument_list|,
 specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -1455,6 +1472,8 @@ name|MCCodeEmitterCtorFn
 argument_list|(
 name|II
 argument_list|,
+name|MRI
+argument_list|,
 name|STI
 argument_list|,
 name|Ctx
@@ -1463,13 +1482,13 @@ return|;
 block|}
 comment|/// createMCObjectStreamer - Create a target specific MCStreamer.
 comment|///
-comment|/// \arg TT - The target triple.
-comment|/// \arg Ctx - The target context.
-comment|/// \arg TAB - The target assembler backend object. Takes ownership.
-comment|/// \arg _OS - The stream object.
-comment|/// \arg _Emitter - The target independent assembler object.Takes ownership.
-comment|/// \arg RelaxAll - Relax all fixups?
-comment|/// \arg NoExecStack - Mark file as not needing a executable stack.
+comment|/// \param TT The target triple.
+comment|/// \param Ctx The target context.
+comment|/// \param TAB The target assembler backend object. Takes ownership.
+comment|/// \param _OS The stream object.
+comment|/// \param _Emitter The target independent assembler object.Takes ownership.
+comment|/// \param RelaxAll Relax all fixups?
+comment|/// \param NoExecStack Mark file as not needing a executable stack.
 name|MCStreamer
 modifier|*
 name|createMCObjectStreamer
@@ -1872,6 +1891,77 @@ operator|::
 name|string
 operator|&
 name|Triple
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// lookupTarget - Lookup a target based on an architecture name
+end_comment
+
+begin_comment
+comment|/// and a target triple.  If the architecture name is non-empty,
+end_comment
+
+begin_comment
+comment|/// then the lookup is done by architecture.  Otherwise, the target
+end_comment
+
+begin_comment
+comment|/// triple is used.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ArchName - The architecture to use for finding a target.
+end_comment
+
+begin_comment
+comment|/// \param TheTriple - The triple to use for finding a target.  The
+end_comment
+
+begin_comment
+comment|/// triple is updated with canonical architecture name if a lookup
+end_comment
+
+begin_comment
+comment|/// by architecture is done.
+end_comment
+
+begin_comment
+comment|/// \param Error - On failure, an error string describing why no target was
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|Target
+modifier|*
+name|lookupTarget
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ArchName
+argument_list|,
+name|Triple
+operator|&
+name|TheTriple
 argument_list|,
 name|std
 operator|::
@@ -4169,6 +4259,8 @@ argument_list|(
 argument|const Target&T
 argument_list|,
 argument|StringRef Triple
+argument_list|,
+argument|StringRef CPU
 argument_list|)
 block|{
 return|return
@@ -4178,6 +4270,8 @@ argument_list|(
 name|T
 argument_list|,
 name|Triple
+argument_list|,
+name|CPU
 argument_list|)
 return|;
 block|}
@@ -4495,6 +4589,8 @@ operator|*
 name|Allocator
 argument_list|(
 argument|const MCInstrInfo&II
+argument_list|,
+argument|const MCRegisterInfo&MRI
 argument_list|,
 argument|const MCSubtargetInfo&STI
 argument_list|,

@@ -129,7 +129,7 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|int
+name|u_int
 modifier|*
 modifier|*
 name|paup_gids
@@ -183,7 +183,7 @@ argument_list|,
 name|MAX_MACHINE_NAME
 argument_list|)
 operator|&&
-name|xdr_int
+name|xdr_u_int
 argument_list|(
 name|xdrs
 argument_list|,
@@ -195,7 +195,7 @@ name|aup_uid
 operator|)
 argument_list|)
 operator|&&
-name|xdr_int
+name|xdr_u_int
 argument_list|(
 name|xdrs
 argument_list|,
@@ -229,13 +229,13 @@ name|NGRPS
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_int
 argument_list|)
 argument_list|,
 operator|(
 name|xdrproc_t
 operator|)
-name|xdr_int
+name|xdr_u_int
 argument_list|)
 condition|)
 block|{

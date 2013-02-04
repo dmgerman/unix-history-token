@@ -944,11 +944,11 @@ comment|/* branch stmt */
 name|int
 name|mark
 decl_stmt|;
-name|int
+name|u_int
 name|longjt
 decl_stmt|;
 comment|/* jt branch requires long jump */
-name|int
+name|u_int
 name|longjf
 decl_stmt|;
 comment|/* jf branch requires long jump */
@@ -1697,7 +1697,7 @@ name|struct
 name|block
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 parameter_list|)
 function_decl|;

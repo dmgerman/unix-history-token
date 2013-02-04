@@ -218,7 +218,7 @@ decl_stmt|;
 block|}
 name|sas_address
 union|;
-comment|/**          * These are the per PHY equalization settings associated with the the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
+comment|/**          * These are the per PHY equalization settings associated with the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
 comment|/**          * AFE_TX_AMP_CTRL0.  This register is associated with AFE_LUTCR          * LUTSel=00b. It contains the Tx Equalization settings that will be          * used if a SATA 1.5Gbs or SATA 3.0Gbs device is direct-attached.          */
 name|U32
 name|afe_tx_amp_control0
@@ -321,7 +321,7 @@ decl_stmt|;
 block|}
 name|sas_address
 union|;
-comment|/**          * These are the per PHY equalization settings associated with the the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
+comment|/**          * These are the per PHY equalization settings associated with the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
 comment|/**          * AFE_TX_AMP_CTRL0.  This register is associated with AFE_LUTCR          * LUTSel=00b. It contains the Tx Equalization settings that will be          * used if a SATA 1.5Gbs or SATA 3.0Gbs device is direct-attached.          */
 name|U32
 name|afe_tx_amp_control0
@@ -424,7 +424,7 @@ decl_stmt|;
 block|}
 name|sas_address
 union|;
-comment|/**          * These are the per PHY equalization settings associated with the the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
+comment|/**          * These are the per PHY equalization settings associated with the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
 comment|/**          * AFE_TX_AMP_CTRL0.  This register is associated with AFE_LUTCR          * LUTSel=00b. It contains the Tx Equalization settings that will be          * used if a SATA 1.5Gbs or SATA 3.0Gbs device is direct-attached.          */
 name|U32
 name|afe_tx_amp_control0
@@ -527,7 +527,7 @@ decl_stmt|;
 block|}
 name|sas_address
 union|;
-comment|/**          * These are the per PHY equalization settings associated with the the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
+comment|/**          * These are the per PHY equalization settings associated with the          * AFE XCVR Tx Amplitude and Equalization Control Register Set          * (0 thru 3).          *          * Operational Note: The following Look-Up-Table registers are engaged          * by the AFE block after the following:          *  - Software programs the Link Layer AFE Look Up Table Control          *    Registers (AFE_LUTCR).          *  - Software sets AFE XCVR Tx Control Register Tx Equalization          *    Enable bit.          */
 comment|/**          * AFE_TX_AMP_CTRL0.  This register is associated with AFE_LUTCR          * LUTSel=00b. It contains the Tx Equalization settings that will be          * used if a SATA 1.5Gbs or SATA 3.0Gbs device is direct-attached.          */
 name|U32
 name|afe_tx_amp_control0

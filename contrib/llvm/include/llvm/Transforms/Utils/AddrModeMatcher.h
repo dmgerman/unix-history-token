@@ -82,6 +82,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/AddressingMode.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -119,8 +125,6 @@ name|struct
 name|ExtAddrMode
 range|:
 name|public
-name|TargetLowering
-operator|::
 name|AddrMode
 block|{
 name|Value

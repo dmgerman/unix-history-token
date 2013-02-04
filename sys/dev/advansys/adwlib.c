@@ -30,6 +30,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -37,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -706,6 +730,21 @@ block|{
 name|adw_idle_cmd_status_t
 name|status
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|adw
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|adw_idle_cmd_send
@@ -949,9 +988,11 @@ name|panic
 argument_list|(
 literal|"%s: Timedout Reading EEPROM"
 argument_list|,
-name|adw_name
+name|device_get_nameunit
 argument_list|(
 name|adw
+operator|->
+name|device
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1817,14 +1858,13 @@ operator|->
 name|mcode_chksum
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Firmware load failed!\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"Firmware load failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2103,24 +2143,22 @@ operator|==
 literal|0x3F07
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Illegal Cable Config!\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"Illegal Cable Config!\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: Internal cable is reversed!\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"Internal cable is reversed!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2162,15 +2200,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: A Single Ended Device is attached to our "
-literal|"differential bus!\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"A Single Ended Device is "
+literal|"attached to our differential bus!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2193,25 +2230,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: A High Voltage Differential Device "
-literal|"is attached to this controller.\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"A High Voltage Differential Device "
+literal|"is attached to this controller.\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: HVD devices are not supported.\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"HVD devices are not supported.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2462,25 +2497,22 @@ operator|==
 literal|3
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Illegal Cable Config!\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"Illegal Cable Config!\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: Only Two Ports may be used at "
-literal|"a time!\n"
-argument_list|,
-name|adw_name
+name|device_printf
 argument_list|(
 name|adw
-argument_list|)
+operator|->
+name|device
+argument_list|,
+literal|"Only Two Ports may be used at a time!\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3278,13 +3310,20 @@ decl_stmt|;
 name|adw_idle_cmd_status_t
 name|status
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
+if|if
+condition|(
+operator|!
+name|dumping
+condition|)
+name|mtx_assert
+argument_list|(
+operator|&
+name|adw
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear the idle command status which is set by the microcode 	 * to a non-zero value to indicate when the command is completed. 	 */
 name|adw_lram_write_16
@@ -3364,17 +3403,14 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: Idle Command Timed Out!\n"
+literal|"%s: Idle Command Timed Out!"
 argument_list|,
-name|adw_name
+name|device_get_nameunit
 argument_list|(
 name|adw
+operator|->
+name|device
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return

@@ -72,6 +72,9 @@ define|#
 directive|define
 name|P_INITPGID
 value|0
+ifndef|#
+directive|ifndef
+name|_IDTYPE_T_DECLARED
 comment|/*  *	The following defines the values for an identifier type.  It  *	specifies the interpretation of an id value.  An idtype and  *	id together define a simple set of processes.  */
 typedef|typedef
 enum|enum
@@ -143,6 +146,11 @@ comment|/* Processor set identifier		*/
 block|}
 name|idtype_t
 typedef|;
+define|#
+directive|define
+name|_IDTYPE_T_DECLARED
+endif|#
+directive|endif
 comment|/*  *	The following defines the operations which can be performed to  *	combine two simple sets of processes to form another set of  *	processes.  */
 if|#
 directive|if

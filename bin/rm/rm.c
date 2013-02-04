@@ -117,6 +117,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1853,10 +1859,13 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s (inode %u): not overwritten due to multiple links"
+literal|"%s (inode %ju): not overwritten due to multiple links"
 argument_list|,
 name|file
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sbp
 operator|->
 name|st_ino

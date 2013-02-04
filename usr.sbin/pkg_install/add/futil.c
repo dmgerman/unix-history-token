@@ -46,6 +46,9 @@ parameter_list|(
 name|char
 modifier|*
 name|dir
+parameter_list|,
+name|Boolean
+name|set_perm
 parameter_list|)
 block|{
 name|char
@@ -162,6 +165,10 @@ return|return
 name|FAIL
 return|;
 block|}
+if|if
+condition|(
+name|set_perm
+condition|)
 name|apply_perms
 argument_list|(
 name|NULL

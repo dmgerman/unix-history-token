@@ -3,99 +3,177 @@ begin_comment
 comment|/*-  * Copyright (c) 2008 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__SDHCI_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__SDHCI_H__
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_BLOCK_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_BOUNDARY
+value|0
+end_define
+
 begin_comment
-comment|/*  * PCI registers  */
+comment|/* DMA reload every 4K */
+end_comment
+
+begin_comment
+comment|/* Controller doesn't honor resets unless we touch the clock register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCI_SDHCI_IFPIO
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_SDHCI_IFDMA
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_SDHCI_IFVENDOR
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_SLOT_INFO
-value|0x40
+name|SDHCI_QUIRK_CLOCK_BEFORE_RESET
+value|(1<<0)
 end_define
 
 begin_comment
-comment|/* 8 bits */
+comment|/* Controller really supports DMA */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCI_SLOT_INFO_SLOTS
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x>> 4)& 7) + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_SLOT_INFO_FIRST_BAR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 7)
+name|SDHCI_QUIRK_FORCE_DMA
+value|(1<<1)
 end_define
 
 begin_comment
-comment|/*  * RICOH specific PCI registers  */
+comment|/* Controller has unusable DMA engine */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDHC_PCI_MODE_KEY
-value|0xf9
+name|SDHCI_QUIRK_BROKEN_DMA
+value|(1<<2)
 end_define
+
+begin_comment
+comment|/* Controller doesn't like to be reset when there is no card inserted. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SDHC_PCI_MODE
-value|0x150
+name|SDHCI_QUIRK_NO_CARD_NO_RESET
+value|(1<<3)
 end_define
+
+begin_comment
+comment|/* Controller has flaky internal state so reset it on each ios change */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SDHC_PCI_MODE_SD20
-value|0x10
+name|SDHCI_QUIRK_RESET_ON_IOS
+value|(1<<4)
 end_define
+
+begin_comment
+comment|/* Controller can only DMA chunk sizes that are a multiple of 32 bits */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SDHC_PCI_BASE_FREQ_KEY
-value|0xfc
+name|SDHCI_QUIRK_32BIT_DMA_SIZE
+value|(1<<5)
 end_define
+
+begin_comment
+comment|/* Controller needs to be reset after each request to stay stable */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SDHC_PCI_BASE_FREQ
-value|0xe1
+name|SDHCI_QUIRK_RESET_AFTER_REQUEST
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/* Controller has an off-by-one issue with timeout value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_INCR_TIMEOUT_CONTROL
+value|(1<<7)
+end_define
+
+begin_comment
+comment|/* Controller has broken read timings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BROKEN_TIMINGS
+value|(1<<8)
+end_define
+
+begin_comment
+comment|/* Controller needs lowered frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_LOWER_FREQUENCY
+value|(1<<9)
+end_define
+
+begin_comment
+comment|/* Data timeout is invalid, should use SD clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
+value|(1<<10)
+end_define
+
+begin_comment
+comment|/* Timeout value is invalid, should be overriden */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
+value|(1<<11)
+end_define
+
+begin_comment
+comment|/* SDHCI_CAPABILITIES is invalid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_MISSING_CAPS
+value|(1<<12)
 end_define
 
 begin_comment
@@ -523,8 +601,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_DIVIDER_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_DIVIDER_MASK_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_DIVIDER_SHIFT
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_DIVIDER_HI_MASK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_DIVIDER_HI_SHIFT
+value|6
 end_define
 
 begin_define
@@ -817,6 +923,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_CLOCK_V3_BASE_MASK
+value|0x0000FF00
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_CLOCK_BASE_SHIFT
 value|8
 end_define
@@ -939,6 +1052,365 @@ directive|define
 name|SDHCI_SPEC_VER_SHIFT
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_100
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_200
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_300
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|sdhci_slot
+block|{
+name|u_int
+name|quirks
+decl_stmt|;
+comment|/* Chip specific quirks */
+name|u_int
+name|caps
+decl_stmt|;
+comment|/* Override SDHCI_CAPABILITIES */
+name|device_t
+name|bus
+decl_stmt|;
+comment|/* Bus device */
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Slot device */
+name|u_char
+name|num
+decl_stmt|;
+comment|/* Slot number */
+name|u_char
+name|opt
+decl_stmt|;
+comment|/* Slot options */
+name|u_char
+name|version
+decl_stmt|;
+define|#
+directive|define
+name|SDHCI_HAVE_DMA
+value|1
+name|uint32_t
+name|max_clk
+decl_stmt|;
+comment|/* Max possible freq */
+name|uint32_t
+name|timeout_clk
+decl_stmt|;
+comment|/* Timeout freq */
+name|bus_dma_tag_t
+name|dmatag
+decl_stmt|;
+name|bus_dmamap_t
+name|dmamap
+decl_stmt|;
+name|u_char
+modifier|*
+name|dmamem
+decl_stmt|;
+name|bus_addr_t
+name|paddr
+decl_stmt|;
+comment|/* DMA buffer address */
+name|struct
+name|task
+name|card_task
+decl_stmt|;
+comment|/* Card presence check task */
+name|struct
+name|callout
+name|card_callout
+decl_stmt|;
+comment|/* Card insert delay callout */
+name|struct
+name|mmc_host
+name|host
+decl_stmt|;
+comment|/* Host parameters */
+name|struct
+name|mmc_request
+modifier|*
+name|req
+decl_stmt|;
+comment|/* Current request */
+name|struct
+name|mmc_command
+modifier|*
+name|curcmd
+decl_stmt|;
+comment|/* Current command of current request */
+name|uint32_t
+name|intmask
+decl_stmt|;
+comment|/* Current interrupt mask */
+name|uint32_t
+name|clock
+decl_stmt|;
+comment|/* Current clock freq. */
+name|size_t
+name|offset
+decl_stmt|;
+comment|/* Data buffer offset */
+name|uint8_t
+name|hostctrl
+decl_stmt|;
+comment|/* Current host control register */
+name|u_char
+name|power
+decl_stmt|;
+comment|/* Current power */
+name|u_char
+name|bus_busy
+decl_stmt|;
+comment|/* Bus busy status */
+name|u_char
+name|cmd_done
+decl_stmt|;
+comment|/* CMD command part done flag */
+name|u_char
+name|data_done
+decl_stmt|;
+comment|/* DAT command part done flag */
+name|u_char
+name|flags
+decl_stmt|;
+comment|/* Request execution flags */
+define|#
+directive|define
+name|CMD_STARTED
+value|1
+define|#
+directive|define
+name|STOP_STARTED
+value|2
+define|#
+directive|define
+name|SDHCI_USE_DMA
+value|4
+comment|/* Use DMA for this req. */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* Slot mutex */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|sdhci_generic_read_ivar
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|which
+parameter_list|,
+name|uintptr_t
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_write_ivar
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|which
+parameter_list|,
+name|uintptr_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_init_slot
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|,
+name|int
+name|num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sdhci_start_slot
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_cleanup_slot
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_suspend
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_resume
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_update_ios
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_request
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|,
+name|struct
+name|mmc_request
+modifier|*
+name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_get_ro
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_acquire_host
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_release_host
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sdhci_generic_intr
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __SDHCI_H__ */
+end_comment
 
 end_unit
 

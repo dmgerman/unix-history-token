@@ -433,6 +433,19 @@ name|NUM_PREDEF_IDENT_IDS
 init|=
 literal|1
 decl_stmt|;
+comment|/// \brief An ID number that refers to a macro in an AST file.
+typedef|typedef
+name|uint32_t
+name|MacroID
+typedef|;
+comment|/// \brief The number of predefined macro IDs.
+specifier|const
+name|unsigned
+name|int
+name|NUM_PREDEF_MACRO_IDS
+init|=
+literal|1
+decl_stmt|;
 comment|/// \brief An ID number that refers to an ObjC selector in an AST file.
 typedef|typedef
 name|uint32_t
@@ -626,6 +639,101 @@ name|PREPROCESSOR_DETAIL_BLOCK_ID
 block|,
 comment|/// \brief The block containing the submodule structure.
 name|SUBMODULE_BLOCK_ID
+block|,
+comment|/// \brief The block containing comments.
+name|COMMENTS_BLOCK_ID
+block|,
+comment|/// \brief The control block, which contains all of the
+comment|/// information that needs to be validated prior to committing
+comment|/// to loading the AST file.
+name|CONTROL_BLOCK_ID
+block|,
+comment|/// \brief The block of input files, which were used as inputs
+comment|/// to create this AST file.
+comment|///
+comment|/// This block is part of the control block.
+name|INPUT_FILES_BLOCK_ID
+block|}
+enum|;
+comment|/// \brief Record types that occur within the control block.
+enum|enum
+name|ControlRecordTypes
+block|{
+comment|/// \brief AST file metadata, including the AST file version number
+comment|/// and information about the compiler used to build this AST file.
+name|METADATA
+init|=
+literal|1
+block|,
+comment|/// \brief Record code for the list of other AST files imported by
+comment|/// this AST file.
+name|IMPORTS
+init|=
+literal|2
+block|,
+comment|/// \brief Record code for the language options table.
+comment|///
+comment|/// The record with this code contains the contents of the
+comment|/// LangOptions structure. We serialize the entire contents of
+comment|/// the structure, and let the reader decide which options are
+comment|/// actually important to check.
+name|LANGUAGE_OPTIONS
+init|=
+literal|3
+block|,
+comment|/// \brief Record code for the target options table.
+name|TARGET_OPTIONS
+init|=
+literal|4
+block|,
+comment|/// \brief Record code for the original file that was used to
+comment|/// generate the AST file, including both its file ID and its
+comment|/// name.
+name|ORIGINAL_FILE
+init|=
+literal|5
+block|,
+comment|/// \brief The directory that the PCH was originally created in.
+name|ORIGINAL_PCH_DIR
+init|=
+literal|6
+block|,
+comment|/// \brief Offsets into the input-files block where input files
+comment|/// reside.
+name|INPUT_FILE_OFFSETS
+init|=
+literal|7
+block|,
+comment|/// \brief Record code for the diagnostic options table.
+name|DIAGNOSTIC_OPTIONS
+init|=
+literal|8
+block|,
+comment|/// \brief Record code for the filesystem options table.
+name|FILE_SYSTEM_OPTIONS
+init|=
+literal|9
+block|,
+comment|/// \brief Record code for the headers search options table.
+name|HEADER_SEARCH_OPTIONS
+init|=
+literal|10
+block|,
+comment|/// \brief Record code for the preprocessor options table.
+name|PREPROCESSOR_OPTIONS
+init|=
+literal|11
+block|}
+enum|;
+comment|/// \brief Record types that occur within the input-files block
+comment|/// inside the control block.
+enum|enum
+name|InputFileRecordTypes
+block|{
+comment|/// \brief An input file.
+name|INPUT_FILE
+init|=
+literal|1
 block|}
 enum|;
 comment|/// \brief Record types that occur within the AST block itself.
@@ -662,22 +770,6 @@ name|DECL_OFFSET
 init|=
 literal|2
 block|,
-comment|/// \brief Record code for the language options table.
-comment|///
-comment|/// The record with this code contains the contents of the
-comment|/// LangOptions structure. We serialize the entire contents of
-comment|/// the structure, and let the reader decide which options are
-comment|/// actually important to check.
-name|LANGUAGE_OPTIONS
-init|=
-literal|3
-block|,
-comment|/// \brief AST file metadata, including the AST file version number
-comment|/// and the target triple used to build the AST file.
-name|METADATA
-init|=
-literal|4
-block|,
 comment|/// \brief Record code for the table of offsets of each
 comment|/// identifier ID.
 comment|///
@@ -686,7 +778,7 @@ comment|/// the IDENTIFIER_TABLE record. Each offset points to the
 comment|/// NULL-terminated string that corresponds to that identifier.
 name|IDENTIFIER_OFFSET
 init|=
-literal|5
+literal|3
 block|,
 comment|/// \brief Record code for the identifier table.
 comment|///
@@ -702,7 +794,7 @@ comment|/// IdentifierInfo pointers (for already-resolved identifier
 comment|/// IDs).
 name|IDENTIFIER_TABLE
 init|=
-literal|6
+literal|4
 block|,
 comment|/// \brief Record code for the array of external definitions.
 comment|///
@@ -714,7 +806,7 @@ comment|/// read, since their presence can affect the semantics of the
 comment|/// program (e.g., for code generation).
 name|EXTERNAL_DEFINITIONS
 init|=
-literal|7
+literal|5
 block|,
 comment|/// \brief Record code for the set of non-builtin, special
 comment|/// types.
@@ -725,47 +817,47 @@ comment|/// __builtin_va_list). The SPECIAL_TYPE_* constants provide
 comment|/// offsets into this record.
 name|SPECIAL_TYPES
 init|=
-literal|8
+literal|6
 block|,
 comment|/// \brief Record code for the extra statistics we gather while
 comment|/// generating an AST file.
 name|STATISTICS
 init|=
-literal|9
+literal|7
 block|,
 comment|/// \brief Record code for the array of tentative definitions.
 name|TENTATIVE_DEFINITIONS
 init|=
-literal|10
+literal|8
 block|,
 comment|/// \brief Record code for the array of locally-scoped external
 comment|/// declarations.
 name|LOCALLY_SCOPED_EXTERNAL_DECLS
 init|=
-literal|11
+literal|9
 block|,
 comment|/// \brief Record code for the table of offsets into the
 comment|/// Objective-C method pool.
 name|SELECTOR_OFFSETS
 init|=
-literal|12
+literal|10
 block|,
 comment|/// \brief Record code for the Objective-C method pool,
 name|METHOD_POOL
 init|=
-literal|13
+literal|11
 block|,
 comment|/// \brief The value of the next __COUNTER__ to dispense.
 comment|/// [PP_COUNTER_VALUE, Val]
 name|PP_COUNTER_VALUE
 init|=
-literal|14
+literal|12
 block|,
 comment|/// \brief Record code for the table of offsets into the block
 comment|/// of source-location information.
 name|SOURCE_LOCATION_OFFSETS
 init|=
-literal|15
+literal|13
 block|,
 comment|/// \brief Record code for the set of source location entries
 comment|/// that need to be preloaded by the AST reader.
@@ -775,95 +867,66 @@ comment|/// predefines buffer and for any file entries that need to be
 comment|/// preloaded.
 name|SOURCE_LOCATION_PRELOADS
 init|=
-literal|16
-block|,
-comment|/// \brief Record code for the stat() cache.
-name|STAT_CACHE
-init|=
-literal|17
+literal|14
 block|,
 comment|/// \brief Record code for the set of ext_vector type names.
 name|EXT_VECTOR_DECLS
 init|=
-literal|18
-block|,
-comment|/// \brief Record code for the original file that was used to
-comment|/// generate the AST file.
-name|ORIGINAL_FILE_NAME
-init|=
-literal|19
-block|,
-comment|/// \brief Record code for the file ID of the original file used to
-comment|/// generate the AST file.
-name|ORIGINAL_FILE_ID
-init|=
-literal|20
-block|,
-comment|/// \brief Record code for the version control branch and revision
-comment|/// information of the compiler used to build this AST file.
-name|VERSION_CONTROL_BRANCH_REVISION
-init|=
-literal|21
+literal|16
 block|,
 comment|/// \brief Record code for the array of unused file scoped decls.
 name|UNUSED_FILESCOPED_DECLS
 init|=
-literal|22
+literal|17
 block|,
 comment|/// \brief Record code for the table of offsets to entries in the
 comment|/// preprocessing record.
 name|PPD_ENTITIES_OFFSETS
 init|=
-literal|23
+literal|18
 block|,
 comment|/// \brief Record code for the array of VTable uses.
 name|VTABLE_USES
 init|=
-literal|24
+literal|19
 block|,
 comment|/// \brief Record code for the array of dynamic classes.
 name|DYNAMIC_CLASSES
 init|=
-literal|25
-block|,
-comment|/// \brief Record code for the list of other AST files imported by
-comment|/// this AST file.
-name|IMPORTS
-init|=
-literal|26
+literal|20
 block|,
 comment|/// \brief Record code for referenced selector pool.
 name|REFERENCED_SELECTOR_POOL
 init|=
-literal|27
+literal|21
 block|,
 comment|/// \brief Record code for an update to the TU's lexically contained
 comment|/// declarations.
 name|TU_UPDATE_LEXICAL
 init|=
-literal|28
+literal|22
 block|,
 comment|/// \brief Record code for the array describing the locations (in the
 comment|/// LOCAL_REDECLARATIONS record) of the redeclaration chains, indexed by
 comment|/// the first known ID.
 name|LOCAL_REDECLARATIONS_MAP
 init|=
-literal|29
+literal|23
 block|,
 comment|/// \brief Record code for declarations that Sema keeps references of.
 name|SEMA_DECL_REFS
 init|=
-literal|30
+literal|24
 block|,
 comment|/// \brief Record code for weak undeclared identifiers.
 name|WEAK_UNDECLARED_IDENTIFIERS
 init|=
-literal|31
+literal|25
 block|,
 comment|/// \brief Record code for pending implicit instantiations.
 name|PENDING_IMPLICIT_INSTANTIATIONS
 init|=
-literal|32
+literal|26
 block|,
 comment|/// \brief Record code for a decl replacement block.
 comment|///
@@ -872,79 +935,68 @@ comment|/// written to a dependent AST file, its ID and offset must be added to
 comment|/// the replacement block.
 name|DECL_REPLACEMENTS
 init|=
-literal|33
+literal|27
 block|,
 comment|/// \brief Record code for an update to a decl context's lookup table.
 comment|///
 comment|/// In practice, this should only be used for the TU and namespaces.
 name|UPDATE_VISIBLE
 init|=
-literal|34
+literal|28
 block|,
 comment|/// \brief Record for offsets of DECL_UPDATES records for declarations
 comment|/// that were modified after being deserialized and need updates.
 name|DECL_UPDATE_OFFSETS
 init|=
-literal|35
+literal|29
 block|,
 comment|/// \brief Record of updates for a declaration that was modified after
 comment|/// being deserialized.
 name|DECL_UPDATES
 init|=
-literal|36
+literal|30
 block|,
 comment|/// \brief Record code for the table of offsets to CXXBaseSpecifier
 comment|/// sets.
 name|CXX_BASE_SPECIFIER_OFFSETS
 init|=
-literal|37
+literal|31
 block|,
-comment|/// \brief Record code for #pragma diagnostic mappings.
+comment|/// \brief Record code for \#pragma diagnostic mappings.
 name|DIAG_PRAGMA_MAPPINGS
 init|=
-literal|38
+literal|32
 block|,
 comment|/// \brief Record code for special CUDA declarations.
 name|CUDA_SPECIAL_DECL_REFS
 init|=
-literal|39
+literal|33
 block|,
 comment|/// \brief Record code for header search information.
 name|HEADER_SEARCH_TABLE
 init|=
-literal|40
+literal|34
 block|,
-comment|/// \brief The directory that the PCH was originally created in.
-name|ORIGINAL_PCH_DIR
-init|=
-literal|41
-block|,
-comment|/// \brief Record code for floating point #pragma options.
+comment|/// \brief Record code for floating point \#pragma options.
 name|FP_PRAGMA_OPTIONS
 init|=
-literal|42
+literal|35
 block|,
 comment|/// \brief Record code for enabled OpenCL extensions.
 name|OPENCL_EXTENSIONS
 init|=
-literal|43
+literal|36
 block|,
 comment|/// \brief The list of delegating constructor declarations.
 name|DELEGATING_CTORS
 init|=
-literal|44
-block|,
-comment|/// \brief Record code for the table of offsets into the block
-comment|/// of file source-location information.
-name|FILE_SOURCE_LOCATION_OFFSETS
-init|=
-literal|45
+literal|37
 block|,
 comment|/// \brief Record code for the set of known namespaces, which are used
 comment|/// for typo correction.
 name|KNOWN_NAMESPACES
 init|=
-literal|46
+literal|38
 block|,
 comment|/// \brief Record code for the remapping information used to relate
 comment|/// loaded modules to the various offsets and IDs(e.g., source location
@@ -952,35 +1004,35 @@ comment|/// offests, declaration and type IDs) that are used in that module to
 comment|/// refer to other modules.
 name|MODULE_OFFSET_MAP
 init|=
-literal|47
+literal|39
 block|,
 comment|/// \brief Record code for the source manager line table information,
-comment|/// which stores information about #line directives.
+comment|/// which stores information about \#line directives.
 name|SOURCE_MANAGER_LINE_TABLE
 init|=
-literal|48
+literal|40
 block|,
 comment|/// \brief Record code for map of Objective-C class definition IDs to the
 comment|/// ObjC categories in a module that are attached to that class.
 name|OBJC_CATEGORIES_MAP
 init|=
-literal|49
+literal|41
 block|,
 comment|/// \brief Record code for a file sorted array of DeclIDs in a module.
 name|FILE_SORTED_DECLS
 init|=
-literal|50
+literal|42
 block|,
 comment|/// \brief Record code for an array of all of the (sub)modules that were
 comment|/// imported by the AST file.
 name|IMPORTED_MODULES
 init|=
-literal|51
+literal|43
 block|,
 comment|/// \brief Record code for the set of merged declarations in an AST file.
 name|MERGED_DECLARATIONS
 init|=
-literal|52
+literal|44
 block|,
 comment|/// \brief Record code for the array of redeclaration chains.
 comment|///
@@ -988,7 +1040,7 @@ comment|/// This array can only be interpreted properly using the local
 comment|/// redeclarations map.
 name|LOCAL_REDECLARATIONS
 init|=
-literal|53
+literal|45
 block|,
 comment|/// \brief Record code for the array of Objective-C categories (including
 comment|/// extensions).
@@ -996,6 +1048,23 @@ comment|///
 comment|/// This array can only be interpreted properly using the Objective-C
 comment|/// categories map.
 name|OBJC_CATEGORIES
+init|=
+literal|46
+block|,
+comment|/// \brief Record code for the table of offsets of each macro ID.
+comment|///
+comment|/// The offset table contains offsets into the blob stored in
+comment|/// the preprocessor block. Each offset points to the corresponding
+comment|/// macro definition.
+name|MACRO_OFFSET
+init|=
+literal|47
+block|,
+comment|/// \brief Record of updates for a macro that was modified after
+comment|/// being deserialized.
+name|MACRO_UPDATES
+init|=
+literal|48
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1042,8 +1111,8 @@ init|=
 literal|1
 block|,
 comment|/// \brief A function-like macro definition.
-comment|/// [PP_MACRO_FUNCTION_LIKE,<ObjectLikeStuff>, IsC99Varargs, IsGNUVarars,
-comment|///  NumArgs, ArgIdentInfoID* ]
+comment|/// [PP_MACRO_FUNCTION_LIKE, \<ObjectLikeStuff>, IsC99Varargs,
+comment|/// IsGNUVarars, NumArgs, ArgIdentInfoID* ]
 name|PP_MACRO_FUNCTION_LIKE
 init|=
 literal|2
@@ -1102,27 +1171,47 @@ name|SUBMODULE_HEADER
 init|=
 literal|3
 block|,
+comment|/// \brief Specifies a top-level header that falls into this (sub)module.
+name|SUBMODULE_TOPHEADER
+init|=
+literal|4
+block|,
 comment|/// \brief Specifies an umbrella directory.
 name|SUBMODULE_UMBRELLA_DIR
 init|=
-literal|4
+literal|5
 block|,
 comment|/// \brief Specifies the submodules that are imported by this
 comment|/// submodule.
 name|SUBMODULE_IMPORTS
 init|=
-literal|5
+literal|6
 block|,
 comment|/// \brief Specifies the submodules that are re-exported from this
 comment|/// submodule.
 name|SUBMODULE_EXPORTS
 init|=
-literal|6
+literal|7
 block|,
 comment|/// \brief Specifies a required feature.
 name|SUBMODULE_REQUIRES
 init|=
-literal|7
+literal|8
+block|,
+comment|/// \brief Specifies a header that has been explicitly excluded
+comment|/// from this submodule.
+name|SUBMODULE_EXCLUDED_HEADER
+init|=
+literal|9
+block|}
+enum|;
+comment|/// \brief Record types used within a comments block.
+enum|enum
+name|CommentRecordTypes
+block|{
+name|COMMENTS_RAW_COMMENT
+init|=
+literal|0
 block|}
 enum|;
 comment|/// \defgroup ASTAST AST file AST constants
@@ -1135,7 +1224,7 @@ comment|/// \brief Predefined type IDs.
 comment|///
 comment|/// These type IDs correspond to predefined types in the AST
 comment|/// context, such as built-in types (int) and special place-holder
-comment|/// types (the<overload> and<dependent> type markers). Such
+comment|/// types (the \<overload> and \<dependent> type markers). Such
 comment|/// types are never actually serialized, since they will be built
 comment|/// by the AST context when it is created.
 enum|enum
@@ -1320,6 +1409,16 @@ comment|/// \brief The pseudo-object placeholder type.
 name|PREDEF_TYPE_PSEUDO_OBJECT
 init|=
 literal|35
+block|,
+comment|/// \brief The __va_list_tag placeholder type.
+name|PREDEF_TYPE_VA_LIST_TAG
+init|=
+literal|36
+block|,
+comment|/// \brief The placeholder type for builtin functions.
+name|PREDEF_TYPE_BUILTIN_FN
+init|=
+literal|37
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1553,50 +1652,45 @@ comment|/// SPECIAL_TYPES record.
 enum|enum
 name|SpecialTypeIDs
 block|{
-comment|/// \brief __builtin_va_list
-name|SPECIAL_TYPE_BUILTIN_VA_LIST
-init|=
-literal|0
-block|,
 comment|/// \brief CFConstantString type
 name|SPECIAL_TYPE_CF_CONSTANT_STRING
 init|=
-literal|1
+literal|0
 block|,
 comment|/// \brief C FILE typedef type
 name|SPECIAL_TYPE_FILE
 init|=
-literal|2
+literal|1
 block|,
 comment|/// \brief C jmp_buf typedef type
 name|SPECIAL_TYPE_JMP_BUF
 init|=
-literal|3
+literal|2
 block|,
 comment|/// \brief C sigjmp_buf typedef type
 name|SPECIAL_TYPE_SIGJMP_BUF
 init|=
-literal|4
+literal|3
 block|,
 comment|/// \brief Objective-C "id" redefinition type
 name|SPECIAL_TYPE_OBJC_ID_REDEFINITION
 init|=
-literal|5
+literal|4
 block|,
 comment|/// \brief Objective-C "Class" redefinition type
 name|SPECIAL_TYPE_OBJC_CLASS_REDEFINITION
 init|=
-literal|6
+literal|5
 block|,
 comment|/// \brief Objective-C "SEL" redefinition type
 name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
 init|=
-literal|7
+literal|6
 block|,
 comment|/// \brief C ucontext_t typedef type
 name|SPECIAL_TYPE_UCONTEXT_T
 init|=
-literal|8
+literal|7
 block|}
 enum|;
 comment|/// \brief The number of special type IDs.
@@ -1604,7 +1698,7 @@ specifier|const
 name|unsigned
 name|NumSpecialTypeIDs
 init|=
-literal|9
+literal|8
 decl_stmt|;
 comment|/// \brief Predefined declaration IDs.
 comment|///
@@ -1659,6 +1753,11 @@ comment|/// \brief The internal 'instancetype' typedef.
 name|PREDEF_DECL_OBJC_INSTANCETYPE_ID
 init|=
 literal|8
+block|,
+comment|/// \brief The internal '__builtin_va_list' typedef.
+name|PREDEF_DECL_BUILTIN_VA_LIST_ID
+init|=
+literal|9
 block|}
 enum|;
 comment|/// \brief The number of declaration IDs that are predefined.
@@ -1670,7 +1769,7 @@ name|unsigned
 name|int
 name|NUM_PREDEF_DECL_IDS
 init|=
-literal|9
+literal|10
 decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
@@ -1759,7 +1858,7 @@ comment|/// The record itself is a blob that is an array of declaration IDs,
 comment|/// in the order in which those declarations were added to the
 comment|/// declaration context. This data is used when iterating over
 comment|/// the contents of a DeclContext, e.g., via
-comment|/// DeclContext::decls_begin()/DeclContext::decls_end().
+comment|/// DeclContext::decls_begin() and DeclContext::decls_end().
 name|DECL_CONTEXT_LEXICAL
 block|,
 comment|/// \brief A record that stores the set of declarations that are
@@ -1859,6 +1958,10 @@ comment|/// \brief A NonTypeTemplateParmDecl record that stores an expanded
 comment|/// non-type template parameter pack.
 name|DECL_EXPANDED_NON_TYPE_TEMPLATE_PARM_PACK
 block|,
+comment|/// \brief A TemplateTemplateParmDecl record that stores an expanded
+comment|/// template template parameter pack.
+name|DECL_EXPANDED_TEMPLATE_TEMPLATE_PARM_PACK
+block|,
 comment|/// \brief A ClassScopeFunctionSpecializationDecl record a class scope
 comment|/// function specialization. (Microsoft extension).
 name|DECL_CLASS_SCOPE_FUNCTION_SPECIALIZATION
@@ -1940,8 +2043,11 @@ block|,
 comment|/// \brief A DeclStmt record.
 name|STMT_DECL
 block|,
-comment|/// \brief An AsmStmt record.
-name|STMT_ASM
+comment|/// \brief A GCC-style AsmStmt record.
+name|STMT_GCCASM
+block|,
+comment|/// \brief A MS-style AsmStmt record.
+name|STMT_MSASM
 block|,
 comment|/// \brief A PredefinedExpr record.
 name|EXPR_PREDEFINED
@@ -2052,7 +2158,7 @@ comment|// Objective-C
 comment|/// \brief An ObjCStringLiteral record.
 name|EXPR_OBJC_STRING_LITERAL
 block|,
-name|EXPR_OBJC_NUMERIC_LITERAL
+name|EXPR_OBJC_BOXED_EXPRESSION
 block|,
 name|EXPR_OBJC_ARRAY_LITERAL
 block|,
@@ -2085,7 +2191,7 @@ block|,
 comment|/// \brief An ObjCIsa Expr record.
 name|EXPR_OBJC_ISA
 block|,
-comment|/// \breif An ObjCIndirectCopyRestoreExpr record.
+comment|/// \brief An ObjCIndirectCopyRestoreExpr record.
 name|EXPR_OBJC_INDIRECT_COPY_RESTORE
 block|,
 comment|/// \brief An ObjCForCollectionStmt record.
@@ -2242,6 +2348,9 @@ comment|// SubstNonTypeTemplateParmExpr
 name|EXPR_SUBST_NON_TYPE_TEMPLATE_PARM_PACK
 block|,
 comment|// SubstNonTypeTemplateParmPackExpr
+name|EXPR_FUNCTION_PARM_PACK
+block|,
+comment|// FunctionParmPackExpr
 name|EXPR_MATERIALIZE_TEMPORARY
 block|,
 comment|// MaterializeTemporaryExpr

@@ -240,12 +240,27 @@ begin_comment
 comment|/* ARM_USE_SMALL_ALLOC */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_MAXUSER_ADDRESS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
 value|KERNBASE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_MAXUSER_ADDRESS */
+end_comment
 
 begin_endif
 endif|#
@@ -332,6 +347,24 @@ define|#
 directive|define
 name|VM_KMEM_SIZE
 value|(12*1024*1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_SCALE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_SCALE
+value|(2)
 end_define
 
 begin_endif

@@ -10357,13 +10357,14 @@ operator|&
 operator|~
 name|IFCAP_LRO
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|ifp
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
-literal|10UL
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -16064,11 +16065,21 @@ operator||
 name|BXE_INFO_UNLOAD
 argument_list|)
 expr_stmt|;
+comment|/* Stop the controller, but only if it was ever started. 	 * Stopping an uninitialized controller can cause 	 * IPMI bus errors on some systems. 	 */
 name|BXE_CORE_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|state
+operator|!=
+name|BXE_STATE_CLOSED
+condition|)
+block|{
 name|bxe_stop_locked
 argument_list|(
 name|sc
@@ -16076,6 +16087,7 @@ argument_list|,
 name|UNLOAD_NORMAL
 argument_list|)
 expr_stmt|;
+block|}
 name|BXE_CORE_UNLOCK
 argument_list|(
 name|sc
@@ -16743,7 +16755,7 @@ name|BXE_BR_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 operator|&
 name|fp
@@ -37943,7 +37955,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -40209,6 +40221,30 @@ break|break;
 block|}
 comment|/* The transmit frame was enqueued successfully. */
 name|tx_count
+operator|++
+expr_stmt|;
+comment|/* Update stats */
+name|ifp
+operator|->
+name|if_obytes
+operator|+=
+name|next
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|next
+operator|->
+name|m_flags
+operator|&
+name|M_MCAST
+condition|)
+name|ifp
+operator|->
+name|if_omcasts
 operator|++
 expr_stmt|;
 comment|/* Send a copy of the frame to any BPF listeners. */
@@ -43846,7 +43882,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -44576,7 +44612,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -45321,7 +45357,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -69342,7 +69378,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 argument_list|,
-literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP\4CSUM_IP_FRAGS"
+literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP"
 literal|"\5CSUM_FRAGMENT\6CSUM_TSO\11CSUM_IP_CHECKED"
 literal|"\12CSUM_IP_VALID\13CSUM_DATA_VALID"
 literal|"\14CSUM_PSEUDO_HDR"

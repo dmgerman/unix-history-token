@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log.  The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AeAddToErrorLog  *  * PARAMETERS:  Enode       - An error node to add to the log  *  * RETURN:      None  *  * DESCRIPTION: Add a new error node to the error log. The error log is  *              ordered by the "logical" line number (cumulative line number  *              including all include files.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,6 +263,11 @@ name|BOOLEAN
 name|PrematureEOF
 init|=
 name|FALSE
+decl_stmt|;
+name|UINT32
+name|Total
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -546,8 +551,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|RActual
+operator|!=
+literal|1
 condition|)
 block|{
 name|fprintf
@@ -566,6 +572,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 name|RActual
@@ -577,8 +584,16 @@ name|SourceByte
 operator|!=
 literal|'\n'
 operator|)
+operator|&&
+operator|(
+name|Total
+operator|<
+literal|256
+operator|)
 condition|)
 block|{
+if|if
+condition|(
 name|fwrite
 argument_list|(
 operator|&
@@ -590,7 +605,17 @@ literal|1
 argument_list|,
 name|OutputFile
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[*** iASL: Write error on output file ***]\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|RActual
 operator|=
 name|fread
@@ -605,6 +630,52 @@ argument_list|,
 name|SourceFile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|RActual
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"[*** iASL: Read error on source code temp file %s ***]"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|Total
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Total
+operator|>=
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"\n[*** iASL: Long input line, an error occurred at column %u ***]"
+argument_list|,
+name|Enode
+operator|->
+name|Column
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -834,6 +905,25 @@ operator|!
 name|PrematureEOF
 condition|)
 block|{
+if|if
+condition|(
+name|Total
+operator|>=
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"    %s"
+argument_list|,
+name|MainMessage
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|SourceColumn
 operator|=
 name|Enode
@@ -924,6 +1014,7 @@ argument_list|,
 name|MainMessage
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -1497,9 +1588,6 @@ name|Gbl_NextError
 operator|=
 name|Gbl_ErrorLog
 expr_stmt|;
-name|CmDoOutputFiles
-argument_list|()
-expr_stmt|;
 name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
@@ -1790,7 +1878,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

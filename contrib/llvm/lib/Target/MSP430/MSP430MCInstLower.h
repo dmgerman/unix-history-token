@@ -77,9 +77,6 @@ decl_stmt|;
 name|class
 name|MachineOperand
 decl_stmt|;
-name|class
-name|Mangler
-decl_stmt|;
 comment|/// MSP430MCInstLower - This class is used to lower an MachineInstr
 comment|/// into an MCInst.
 name|class
@@ -89,10 +86,6 @@ block|{
 name|MCContext
 modifier|&
 name|Ctx
-decl_stmt|;
-name|Mangler
-modifier|&
-name|Mang
 decl_stmt|;
 name|AsmPrinter
 modifier|&
@@ -106,10 +99,6 @@ name|MCContext
 operator|&
 name|ctx
 argument_list|,
-name|Mangler
-operator|&
-name|mang
-argument_list|,
 name|AsmPrinter
 operator|&
 name|printer
@@ -118,11 +107,6 @@ operator|:
 name|Ctx
 argument_list|(
 name|ctx
-argument_list|)
-operator|,
-name|Mang
-argument_list|(
-name|mang
 argument_list|)
 operator|,
 name|Printer

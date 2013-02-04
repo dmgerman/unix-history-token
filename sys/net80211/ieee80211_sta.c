@@ -193,6 +193,12 @@ directive|include
 file|<net80211/ieee80211_ratectl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_sta.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1443,7 +1449,9 @@ break|break;
 case|case
 name|IEEE80211_S_SLEEP
 case|:
-name|ieee80211_sta_pwrsave
+name|vap
+operator|->
+name|iv_sta_ps
 argument_list|(
 name|vap
 argument_list|,
@@ -1570,7 +1578,9 @@ break|break;
 case|case
 name|IEEE80211_S_SLEEP
 case|:
-name|ieee80211_sta_pwrsave
+name|vap
+operator|->
+name|iv_sta_ps
 argument_list|(
 name|vap
 argument_list|,
@@ -4412,7 +4422,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ieee80211_parse_wmeparams
 parameter_list|(
@@ -5801,7 +5810,7 @@ directive|if
 literal|0
 block|int aid = IEEE80211_AID(ni->ni_associd); 				int ix = aid / NBBY; 				int min = tim->tim_bitctl&~ 1; 				int max = tim->tim_len + min - 4; 				if ((tim->tim_bitctl&1) || 				    (min<= ix&& ix<= max&& 				     isset(tim->tim_bitmap - min, aid))) {
 comment|/*  					 * XXX Do not let bg scan kick off 					 * we are expecting data. 					 */
-block|ic->ic_lastdata = ticks; 					ieee80211_sta_pwrsave(vap, 0); 				}
+block|ic->ic_lastdata = ticks; 					vap->iv_sta_ps(vap, 0); 				}
 endif|#
 directive|endif
 name|ni

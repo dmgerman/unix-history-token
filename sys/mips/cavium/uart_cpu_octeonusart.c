@@ -111,7 +111,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|oct_read64
+name|cvmx_read64_uint64
 argument_list|(
 name|handle
 operator|+
@@ -140,7 +140,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|oct_read64
+name|cvmx_read64_uint64
 argument_list|(
 name|handle
 operator|+
@@ -169,7 +169,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|oct_read64
+name|cvmx_read64_uint64
 argument_list|(
 name|handle
 operator|+
@@ -198,7 +198,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|oct_read64
+name|cvmx_read64_uint64
 argument_list|(
 name|handle
 operator|+
@@ -228,7 +228,7 @@ name|uint8_t
 name|value
 parameter_list|)
 block|{
-name|oct_write64
+name|cvmx_write64_uint64
 argument_list|(
 name|bsh
 operator|+
@@ -259,7 +259,7 @@ name|uint16_t
 name|value
 parameter_list|)
 block|{
-name|oct_write64
+name|cvmx_write64_uint64
 argument_list|(
 name|bsh
 operator|+
@@ -290,7 +290,7 @@ name|uint32_t
 name|value
 parameter_list|)
 block|{
-name|oct_write64
+name|cvmx_write64_uint64
 argument_list|(
 name|bsh
 operator|+
@@ -321,7 +321,7 @@ name|uint64_t
 name|value
 parameter_list|)
 block|{
-name|oct_write64
+name|cvmx_write64_uint64
 argument_list|(
 name|bsh
 operator|+

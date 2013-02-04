@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the FileSystemOptions interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::FileSystemOptions interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment

@@ -326,6 +326,8 @@ argument_list|()
 block|;
 if|if
 condition|(
+name|Primary
+operator|->
 name|hasExternalVisibleStorage
 argument_list|()
 condition|)
@@ -405,6 +407,8 @@ argument_list|()
 block|;
 if|if
 condition|(
+name|Primary
+operator|->
 name|hasExternalVisibleStorage
 argument_list|()
 condition|)

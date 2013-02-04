@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -44,9 +44,6 @@ name|AcpiHwSleepDispatch
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|,
 name|UINT32
 name|FunctionId
@@ -417,7 +414,7 @@ do|do
 block|{
 name|AcpiOsStall
 argument_list|(
-literal|1000
+name|ACPI_USEC_PER_MSEC
 argument_list|)
 expr_stmt|;
 name|Status
@@ -487,9 +484,6 @@ parameter_list|(
 name|UINT8
 name|SleepState
 parameter_list|,
-name|UINT8
-name|Flags
-parameter_list|,
 name|UINT32
 name|FunctionId
 parameter_list|)
@@ -532,8 +526,6 @@ operator|->
 name|ExtendedFunction
 argument_list|(
 name|SleepState
-argument_list|,
-name|Flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -547,8 +539,6 @@ operator|->
 name|LegacyFunction
 argument_list|(
 name|SleepState
-argument_list|,
-name|Flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -567,8 +557,6 @@ operator|->
 name|ExtendedFunction
 argument_list|(
 name|SleepState
-argument_list|,
-name|Flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -766,7 +754,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnterSleepState  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              Flags               - ACPI_EXECUTE_GTS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnterSleepState  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -775,9 +763,6 @@ name|AcpiEnterSleepState
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -828,8 +813,6 @@ name|AcpiHwSleepDispatch
 argument_list|(
 name|SleepState
 argument_list|,
-name|Flags
-argument_list|,
 name|ACPI_SLEEP_FUNCTION_ID
 argument_list|)
 expr_stmt|;
@@ -849,7 +832,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepStatePrep  *  * PARAMETERS:  SleepState          - Which sleep state we are exiting  *              Flags               - ACPI_EXECUTE_BFS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep. Called with interrupts DISABLED.  *              We break wake/resume into 2 stages so that OSPM can handle  *              various OS-specific tasks between the two steps.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepStatePrep  *  * PARAMETERS:  SleepState          - Which sleep state we are exiting  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep. Called with interrupts DISABLED.  *              We break wake/resume into 2 stages so that OSPM can handle  *              various OS-specific tasks between the two steps.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -858,9 +841,6 @@ name|AcpiLeaveSleepStatePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -876,8 +856,6 @@ operator|=
 name|AcpiHwSleepDispatch
 argument_list|(
 name|SleepState
-argument_list|,
-name|Flags
 argument_list|,
 name|ACPI_WAKE_PREP_FUNCTION_ID
 argument_list|)
@@ -922,8 +900,6 @@ operator|=
 name|AcpiHwSleepDispatch
 argument_list|(
 name|SleepState
-argument_list|,
-literal|0
 argument_list|,
 name|ACPI_WAKE_FUNCTION_ID
 argument_list|)

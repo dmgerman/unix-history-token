@@ -538,90 +538,6 @@ comment|///
 name|unsigned
 name|DAGSize
 block|;
-comment|/// ISelPosition - Node iterator marking the current position of
-comment|/// instruction selection as it procedes through the topologically-sorted
-comment|/// node list.
-name|SelectionDAG
-operator|::
-name|allnodes_iterator
-name|ISelPosition
-block|;
-comment|/// ISelUpdater - helper class to handle updates of the
-comment|/// instruction selection graph.
-name|class
-name|ISelUpdater
-operator|:
-name|public
-name|SelectionDAG
-operator|::
-name|DAGUpdateListener
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|SelectionDAG
-operator|::
-name|allnodes_iterator
-operator|&
-name|ISelPosition
-block|;
-name|public
-operator|:
-name|explicit
-name|ISelUpdater
-argument_list|(
-name|SelectionDAG
-operator|::
-name|allnodes_iterator
-operator|&
-name|isp
-argument_list|)
-operator|:
-name|ISelPosition
-argument_list|(
-argument|isp
-argument_list|)
-block|{}
-comment|/// NodeDeleted - Handle nodes deleted from the graph. If the
-comment|/// node being deleted is the current ISelPosition node, update
-comment|/// ISelPosition.
-comment|///
-name|virtual
-name|void
-name|NodeDeleted
-argument_list|(
-argument|SDNode *N
-argument_list|,
-argument|SDNode *E
-argument_list|)
-block|{
-if|if
-condition|(
-name|ISelPosition
-operator|==
-name|SelectionDAG
-operator|::
-name|allnodes_iterator
-argument_list|(
-name|N
-argument_list|)
-condition|)
-operator|++
-name|ISelPosition
-expr_stmt|;
-block|}
-comment|/// NodeUpdated - Ignore updates for now.
-name|virtual
-name|void
-name|NodeUpdated
-argument_list|(
-argument|SDNode *N
-argument_list|)
-block|{}
-expr|}
-block|;
 comment|/// ReplaceUses - replace all uses of the old node F with the use
 comment|/// of the new node T.
 name|void
@@ -632,12 +548,6 @@ argument_list|,
 argument|SDValue T
 argument_list|)
 block|{
-name|ISelUpdater
-name|ISU
-argument_list|(
-name|ISelPosition
-argument_list|)
-block|;
 name|CurDAG
 operator|->
 name|ReplaceAllUsesOfValueWith
@@ -645,9 +555,6 @@ argument_list|(
 name|F
 argument_list|,
 name|T
-argument_list|,
-operator|&
-name|ISU
 argument_list|)
 block|;   }
 comment|/// ReplaceUses - replace all uses of the old nodes F with the use
@@ -662,12 +569,6 @@ argument_list|,
 argument|unsigned Num
 argument_list|)
 block|{
-name|ISelUpdater
-name|ISU
-argument_list|(
-name|ISelPosition
-argument_list|)
-block|;
 name|CurDAG
 operator|->
 name|ReplaceAllUsesOfValuesWith
@@ -677,9 +578,6 @@ argument_list|,
 name|T
 argument_list|,
 name|Num
-argument_list|,
-operator|&
-name|ISU
 argument_list|)
 block|;   }
 comment|/// ReplaceUses - replace all uses of the old node F with the use
@@ -692,12 +590,6 @@ argument_list|,
 argument|SDNode *T
 argument_list|)
 block|{
-name|ISelUpdater
-name|ISU
-argument_list|(
-name|ISelPosition
-argument_list|)
-block|;
 name|CurDAG
 operator|->
 name|ReplaceAllUsesWith
@@ -705,9 +597,6 @@ argument_list|(
 name|F
 argument_list|,
 name|T
-argument_list|,
-operator|&
-name|ISU
 argument_list|)
 block|;   }
 comment|/// SelectInlineAsmMemoryOperands - Calls to this are automatically generated
@@ -982,7 +871,8 @@ argument_list|,
 argument|bool isMorphNodeTo
 argument_list|)
 block|;  }
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

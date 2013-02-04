@@ -339,31 +339,6 @@ name|NUM_KERNEL_PTS
 value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
-begin_comment
-comment|/* Define various stack sizes in pages */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRQ_STACK_SIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ABT_STACK_SIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|UND_STACK_SIZE
-value|1
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -392,24 +367,6 @@ name|kernel_pt_table
 index|[
 name|NUM_KERNEL_PTS
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-name|__pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcpu
-modifier|*
-name|pcpup
-init|=
-operator|&
-name|__pcpu
 decl_stmt|;
 end_decl_stmt
 
@@ -648,6 +605,10 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|freemempos
 operator|=
 literal|0xa0200000
@@ -662,7 +623,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_pa, (np));				\ 	(var).pv_va = (var).pv_pa + 0x20000000;
+value|alloc_pages((var).pv_pa, (np));		\ 	(var).pv_va = (var).pv_pa + 0x20000000;
 define|#
 directive|define
 name|alloc_pages
@@ -673,10 +634,6 @@ name|np
 parameter_list|)
 define|\
 value|freemempos -= (np * PAGE_SIZE);		\ 	(var) = freemempos;		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1352,43 +1309,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
-name|set_stackptr
+name|set_stackptrs
 argument_list|(
-name|PSR_IRQ32_MODE
-argument_list|,
-name|irqstack
-operator|.
-name|pv_va
-operator|+
-name|IRQ_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_ABT32_MODE
-argument_list|,
-name|abtstack
-operator|.
-name|pv_va
-operator|+
-name|ABT_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_UND32_MODE
-argument_list|,
-name|undstack
-operator|.
-name|pv_va
-operator|+
-name|UND_STACK_SIZE
-operator|*
-name|PAGE_SIZE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
@@ -1470,6 +1393,7 @@ name|afterkern
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * ARM_USE_SMALL_ALLOC uses dump_avail, so it must be filled before 	 * calling pmap_bootstrap. 	 */
 name|dump_avail
 index|[
 literal|0

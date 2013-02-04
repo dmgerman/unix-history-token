@@ -484,6 +484,14 @@ name|CPL_ERR_PERSIST_NEG_ADVICE
 init|=
 literal|36
 block|,
+name|CPL_ERR_KEEPALV_NEG_ADVICE
+init|=
+literal|37
+block|,
+name|CPL_ERR_WAIT_ARP_RPL
+init|=
+literal|41
+block|,
 name|CPL_ERR_ABORT_FAILED
 init|=
 literal|42
@@ -3496,6 +3504,30 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|cpl_set_tcb_field_core
+block|{
+name|union
+name|opcode_tid
+name|ot
+decl_stmt|;
+name|__be16
+name|reply_ctrl
+decl_stmt|;
+name|__be16
+name|word_cookie
+decl_stmt|;
+name|__be64
+name|mask
+decl_stmt|;
+name|__be64
+name|val
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* cpl_set_tcb_field.word_cookie fields */
 end_comment
@@ -6243,6 +6275,21 @@ name|cpl_rx_data_ack
 block|{
 name|WR_HDR
 expr_stmt|;
+name|union
+name|opcode_tid
+name|ot
+decl_stmt|;
+name|__be32
+name|credit_dack
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cpl_rx_data_ack_core
+block|{
 name|union
 name|opcode_tid
 name|ot
@@ -10539,7 +10586,9 @@ block|,
 name|FW6_TYPE_OFLD_CONNECTION_WR_RPL
 init|=
 literal|3
-block|, }
+block|,
+name|NUM_FW6_TYPES
+block|}
 enum|;
 end_enum
 

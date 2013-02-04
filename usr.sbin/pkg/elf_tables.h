@@ -32,6 +32,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|_elf_corres
 name|mach_corres
@@ -97,6 +98,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|_elf_corres
 name|wordsize_corres
@@ -126,6 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|_elf_corres
 name|endian_corres
@@ -142,29 +145,6 @@ block|{
 name|ELFDATA2LSB
 block|,
 literal|"el"
-block|}
-block|,
-block|{
-operator|-
-literal|1
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|_elf_corres
-name|os_corres
-index|[]
-init|=
-block|{
-block|{
-name|ELFOSABI_FREEBSD
-block|,
-literal|"freebsd"
 block|}
 block|,
 block|{

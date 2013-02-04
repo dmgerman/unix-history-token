@@ -83,16 +83,6 @@ directive|include
 file|"ethernet-headers.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|octeon_is_simulation
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|cvm_oct_sgmii_init

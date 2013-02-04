@@ -449,11 +449,22 @@ begin_comment
 comment|/* USB events */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -564,11 +575,14 @@ begin_struct
 struct|struct
 name|usb_endpoint
 block|{
+comment|/* queue of USB transfers */
 name|struct
 name|usb_xfer_queue
 name|endpoint_q
+index|[
+name|USB_MAX_EP_STREAMS
+index|]
 decl_stmt|;
-comment|/* queue of USB transfers */
 name|struct
 name|usb_endpoint_descriptor
 modifier|*
@@ -640,6 +654,10 @@ name|uint8_t
 name|usb_uframe
 decl_stmt|;
 comment|/* USB microframe */
+comment|/* USB endpoint mode, see USB_EP_MODE_XXX */
+name|uint8_t
+name|ep_mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -813,6 +831,10 @@ name|usb_xfer_flags
 name|flags
 decl_stmt|;
 comment|/* transfer flags */
+name|usb_stream_t
+name|stream_id
+decl_stmt|;
+comment|/* USB3.0 specific */
 name|enum
 name|usb_hc_mode
 name|usb_mode
@@ -846,6 +868,12 @@ begin_comment
 comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectivly:  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_ID_SECTION
+end_if
+
 begin_define
 define|#
 directive|define
@@ -869,6 +897,44 @@ name|STRUCT_USB_DUAL_ID
 define|\
 value|struct usb_device_id __section("usb_dual_id")
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_HOST_ID
+define|\
+value|struct usb_device_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DEVICE_ID
+define|\
+value|struct usb_device_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DUAL_ID
+define|\
+value|struct usb_device_id
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_HAVE_ID_SECTION */
+end_comment
 
 begin_comment
 comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb_device_id".  */
@@ -1863,6 +1929,43 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|usb_error_t
+name|usbd_set_endpoint_mode
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb_endpoint
+modifier|*
+name|ep
+parameter_list|,
+name|uint8_t
+name|ep_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|usbd_get_endpoint_mode
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb_endpoint
+modifier|*
+name|ep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|usb_device_id
@@ -2301,10 +2404,22 @@ parameter_list|(
 name|struct
 name|usb_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|usb_frcount_t
-name|frindex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|usbd_xfer_get_frame_buffer
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+parameter_list|,
+name|usb_frcount_t
 parameter_list|)
 function_decl|;
 end_function_decl

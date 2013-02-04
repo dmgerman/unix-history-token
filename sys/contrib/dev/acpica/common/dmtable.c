@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -615,20 +615,6 @@ literal|"Alert Standard Format table"
 block|}
 block|,
 block|{
-name|ACPI_SIG_BOOT
-block|,
-name|AcpiDmTableInfoBoot
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|TemplateBoot
-block|,
-literal|"Simple Boot Flag Table"
-block|}
-block|,
-block|{
 name|ACPI_SIG_BERT
 block|,
 name|AcpiDmTableInfoBert
@@ -657,6 +643,20 @@ literal|"Boot Graphics Resource Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_BOOT
+block|,
+name|AcpiDmTableInfoBoot
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateBoot
+block|,
+literal|"Simple Boot Flag Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_CPEP
 block|,
 name|NULL
@@ -668,6 +668,34 @@ block|,
 name|TemplateCpep
 block|,
 literal|"Corrected Platform Error Polling table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_CSRT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpCsrt
+block|,
+name|DtCompileCsrt
+block|,
+name|TemplateCsrt
+block|,
+literal|"Core System Resource Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_DBG2
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpDbg2
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Debug Port table type 2"
 block|}
 block|,
 block|{
@@ -751,7 +779,7 @@ name|DtCompileFadt
 block|,
 name|TemplateFadt
 block|,
-literal|"Fixed ACPI Description Table"
+literal|"Fixed ACPI Description Table (FADT)"
 block|}
 block|,
 block|{
@@ -835,7 +863,7 @@ name|DtCompileMadt
 block|,
 name|TemplateMadt
 block|,
-literal|"Multiple APIC Description Table"
+literal|"Multiple APIC Description Table (MADT)"
 block|}
 block|,
 block|{
@@ -1046,6 +1074,20 @@ block|,
 name|TemplateTcpa
 block|,
 literal|"Trusted Computing Platform Alliance table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_TPM2
+block|,
+name|AcpiDmTableInfoTpm2
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateTpm2
+block|,
+literal|"Trusted Platform Module hardware interface table"
 block|}
 block|,
 block|{
@@ -1308,6 +1350,51 @@ name|Table
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Gbl_VerboseTemplates
+condition|)
+block|{
+comment|/* Dump the raw table data */
+name|Length
+operator|=
+name|Table
+operator|->
+name|Length
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n/*\n%s: Length %d (0x%X)\n\n"
+argument_list|,
+name|ACPI_RAW_TABLE_DATA_HEADER
+argument_list|,
+name|Length
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
+name|AcpiUtDumpBuffer
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|UINT8
+argument_list|,
+name|Table
+argument_list|)
+argument_list|,
+name|Length
+argument_list|,
+name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS, RSDP, and S3PT.      */
@@ -1541,7 +1628,7 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer2
+name|AcpiUtDumpBuffer
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1553,6 +1640,8 @@ argument_list|,
 name|Length
 argument_list|,
 name|DB_BYTE_DISPLAY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -3049,21 +3049,6 @@ argument_list|,
 name|ata_io
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-name|SATI_COMPLETE
-condition|)
-block|{
-name|status
-operator|=
-name|sati_check_data_io
-argument_list|(
-name|sequence
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 endif|#
 directive|endif
@@ -3425,7 +3410,7 @@ name|ata_io
 parameter_list|)
 block|{
 comment|// Decode the sequence type to determine how to handle the termination
-comment|// of the the translation method.
+comment|// of the translation method.
 switch|switch
 condition|(
 name|sequence

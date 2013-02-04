@@ -548,7 +548,7 @@ name|void
 name|lh_stats
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -610,7 +610,7 @@ name|void
 name|lh_node_stats
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -672,7 +672,7 @@ name|void
 name|lh_node_usage_stats
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -739,7 +739,7 @@ name|void
 name|lh_stats_bio
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -938,7 +938,7 @@ name|void
 name|lh_node_stats_bio
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,
@@ -1021,7 +1021,7 @@ name|void
 name|lh_node_usage_stats_bio
 parameter_list|(
 specifier|const
-name|LHASH
+name|_LHASH
 modifier|*
 name|lh
 parameter_list|,

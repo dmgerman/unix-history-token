@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.h,v 1.33 2010/10/28 11:22:09 djm Exp $ */
+comment|/* $OpenBSD: key.h,v 1.34 2012/05/23 03:28:28 djm Exp $ */
 end_comment
 
 begin_comment
@@ -96,6 +96,8 @@ block|{
 name|SSH_FP_SHA1
 block|,
 name|SSH_FP_MD5
+block|,
+name|SSH_FP_SHA256
 block|}
 enum|;
 end_enum

@@ -25,6 +25,28 @@ directive|include
 file|<machine/swi.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_EABI__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTRAP
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|mov ip, r7;					\ 			ldr r7, =SYS_ ## x;				\ 			swi 0;						\ 			mov r7, ip
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -34,6 +56,11 @@ name|x
 parameter_list|)
 value|swi 0 | SYS_ ## x
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

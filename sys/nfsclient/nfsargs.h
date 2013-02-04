@@ -441,6 +441,17 @@ begin_comment
 comment|/* Don't flush attrcache on open */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_PNFS
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Enable pNFS support */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

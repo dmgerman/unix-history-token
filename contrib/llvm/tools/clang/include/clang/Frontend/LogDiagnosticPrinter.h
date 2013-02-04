@@ -125,9 +125,12 @@ name|LangOptions
 operator|*
 name|LangOpts
 block|;
-specifier|const
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
 name|DiagnosticOptions
-operator|*
+operator|>
 name|DiagOpts
 block|;
 name|SourceLocation
@@ -165,7 +168,7 @@ name|LogDiagnosticPrinter
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|const DiagnosticOptions&Diags
+argument|DiagnosticOptions *Diags
 argument_list|,
 argument|bool OwnsOutputStream = false
 argument_list|)

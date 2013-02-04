@@ -733,12 +733,6 @@ comment|/// designators.  This class is mostly a helper for InitListDesignations
 name|class
 name|Designation
 block|{
-comment|/// InitIndex - The index of the initializer expression this is for.  For
-comment|/// example, if the initializer were "{ A, .foo=B, C }" a Designation would
-comment|/// exist with InitIndex=1, because element #1 has a designation.
-name|unsigned
-name|InitIndex
-decl_stmt|;
 comment|/// Designators - The actual designators for this initializer.
 name|SmallVector
 operator|<
@@ -748,32 +742,15 @@ literal|2
 operator|>
 name|Designators
 expr_stmt|;
-name|Designation
-argument_list|(
-argument|unsigned Idx
-argument_list|)
-block|:
-name|InitIndex
-argument_list|(
-argument|Idx
-argument_list|)
-block|{}
 name|public
 label|:
-name|Designation
-argument_list|()
-operator|:
-name|InitIndex
-argument_list|(
-literal|4000
-argument_list|)
-block|{}
 comment|/// AddDesignator - Add a designator to the end of this list.
 name|void
 name|AddDesignator
-argument_list|(
-argument|Designator D
-argument_list|)
+parameter_list|(
+name|Designator
+name|D
+parameter_list|)
 block|{
 name|Designators
 operator|.
@@ -781,7 +758,8 @@ name|push_back
 argument_list|(
 name|D
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|bool
 name|empty
 argument_list|()

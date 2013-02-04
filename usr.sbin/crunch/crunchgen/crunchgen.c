@@ -393,6 +393,7 @@ begin_function_decl
 name|void
 name|status
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -429,6 +430,7 @@ begin_function_decl
 name|int
 name|is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -440,6 +442,7 @@ begin_function_decl
 name|int
 name|is_nonempty_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -510,6 +513,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|crunched_skel
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -1046,7 +1058,7 @@ name|parse_line
 parameter_list|(
 name|char
 modifier|*
-name|line
+name|pline
 parameter_list|,
 name|int
 modifier|*
@@ -1605,7 +1617,7 @@ name|parse_line
 parameter_list|(
 name|char
 modifier|*
-name|line
+name|pline
 parameter_list|,
 name|int
 modifier|*
@@ -1626,7 +1638,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|line
+name|pline
 expr_stmt|;
 operator|*
 name|fc
@@ -1642,6 +1654,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1688,6 +1704,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -3908,6 +3928,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -3933,6 +3957,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -3965,6 +3993,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -4456,12 +4488,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|crunched_skel
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -4775,6 +4801,10 @@ literal|'_'
 operator|||
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -5874,6 +5904,7 @@ begin_function
 name|void
 name|status
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -6233,6 +6264,7 @@ begin_function
 name|int
 name|is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -6273,6 +6305,7 @@ begin_function
 name|int
 name|is_nonempty_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname

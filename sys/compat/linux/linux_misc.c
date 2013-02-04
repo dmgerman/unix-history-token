@@ -1224,11 +1224,10 @@ name|aresid
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
+decl_stmt|,
 name|locked
 decl_stmt|,
-name|vfslocked
+name|writecount
 decl_stmt|;
 name|LCONVPATHEXIST
 argument_list|(
@@ -1270,10 +1269,6 @@ name|a_out
 operator|=
 name|NULL
 expr_stmt|;
-name|vfslocked
-operator|=
-literal|0
-expr_stmt|;
 name|locked
 operator|=
 literal|0
@@ -1294,8 +1289,6 @@ operator||
 name|FOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|MPSAFE
 operator||
 name|AUDITVNODE1
 argument_list|,
@@ -1332,14 +1325,6 @@ name|ni
 operator|.
 name|ni_vp
 expr_stmt|;
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|ni
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -1354,11 +1339,30 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Writable? */
+name|error
+operator|=
+name|VOP_GET_WRITECOUNT
+argument_list|(
+name|vp
+argument_list|,
+operator|&
+name|writecount
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_writecount
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|cleanup
+goto|;
+if|if
+condition|(
+name|writecount
+operator|!=
+literal|0
 condition|)
 block|{
 name|error
@@ -1758,11 +1762,10 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Prevent more writers. 	 * XXX: Note that if any of the VM operations fail below we don't 	 * clear this flag. 	 */
+name|VOP_SET_TEXT
+argument_list|(
 name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Lock no longer needed 	 */
 name|locked
@@ -1774,11 +1777,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if file_offset page aligned. Currently we cannot handle 	 * misalinged file offsets, and so we read in the entire image 	 * (what a waste). 	 */
@@ -2103,7 +2101,6 @@ if|if
 condition|(
 name|locked
 condition|)
-block|{
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -2111,12 +2108,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Release the temporary mapping. */
 if|if
 condition|(

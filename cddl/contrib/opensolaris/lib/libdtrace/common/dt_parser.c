@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Copyright (c) 2011, Joyent Inc. All rights reserved.  */
 end_comment
 
 begin_pragma
@@ -3589,6 +3589,9 @@ modifier|*
 name|dnp
 parameter_list|)
 block|{
+name|ctf_id_t
+name|base
+decl_stmt|;
 if|if
 condition|(
 name|dnp
@@ -3630,6 +3633,37 @@ name|dnp
 operator|->
 name|dn_ident
 argument_list|)
+operator|)
+return|;
+name|base
+operator|=
+name|ctf_type_resolve
+argument_list|(
+name|dnp
+operator|->
+name|dn_ctfp
+argument_list|,
+name|dnp
+operator|->
+name|dn_type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctf_type_kind
+argument_list|(
+name|dnp
+operator|->
+name|dn_ctfp
+argument_list|,
+name|base
+argument_list|)
+operator|==
+name|CTF_K_FORWARD
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 return|return

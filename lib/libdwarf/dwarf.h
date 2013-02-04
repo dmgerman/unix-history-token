@@ -1054,6 +1054,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DW_FORM_flag_present
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
 name|DW_OP_addr
 value|0x03
 end_define

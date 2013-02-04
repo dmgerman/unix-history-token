@@ -4407,7 +4407,7 @@ block|}
 end_function
 
 begin_function
-name|isc_result_t
+name|void
 name|dns_db_rpz_findips
 parameter_list|(
 name|dns_rpz_zone_t
@@ -4449,16 +4449,9 @@ operator|->
 name|methods
 operator|->
 name|rpz_findips
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|ISC_R_NOTIMPLEMENTED
-operator|)
-return|;
-return|return
-operator|(
 call|(
 name|db
 operator|->
@@ -4483,8 +4476,7 @@ name|st
 argument_list|,
 name|query_qname
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

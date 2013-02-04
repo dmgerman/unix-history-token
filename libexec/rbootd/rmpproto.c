@@ -1853,12 +1853,7 @@ name|rconn
 operator|->
 name|tstamp
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

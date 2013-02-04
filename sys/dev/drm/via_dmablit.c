@@ -836,6 +836,9 @@ operator||
 name|VIA_DMA_CSR_TS
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|VIA_READ
 argument_list|(
 name|VIA_PCI_DMA_CSR0

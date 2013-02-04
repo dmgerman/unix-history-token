@@ -326,17 +326,6 @@ begin_comment
 comment|/* Is a named pipe. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PIPE_SAMEWGEN
-value|0x2000
-end_define
-
-begin_comment
-comment|/* same write generation for named pipes. */
-end_comment
-
 begin_comment
 comment|/*  * Per-pipe data structure.  * Two of these are linked together to produce bi-directional pipes.  */
 end_comment
@@ -405,6 +394,10 @@ name|int
 name|pipe_present
 decl_stmt|;
 comment|/* still present? */
+name|int
+name|pipe_wgen
+decl_stmt|;
+comment|/* writer generation for named pipe */
 name|ino_t
 name|pipe_ino
 decl_stmt|;
@@ -535,6 +528,18 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pipeselwakeup
+parameter_list|(
+name|struct
+name|pipe
+modifier|*
+name|cpipe
 parameter_list|)
 function_decl|;
 end_function_decl

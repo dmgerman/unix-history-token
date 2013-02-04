@@ -262,6 +262,9 @@ name|cmp
 init|=
 literal|0
 decl_stmt|;
+name|warnpkgng
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|argc

@@ -119,6 +119,9 @@ modifier|*
 name|tcb
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ARM_TP_ADDRESS
 operator|*
 operator|(
 operator|(
@@ -132,6 +135,18 @@ operator|)
 operator|=
 name|tcb
 expr_stmt|;
+comment|/* avoids a system call */
+else|#
+directive|else
+name|sysarch
+argument_list|(
+name|ARM_SET_TP
+argument_list|,
+name|tcb
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -150,6 +165,9 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ARM_TP_ADDRESS
 return|return
 operator|(
 operator|*
@@ -164,11 +182,34 @@ name|ARM_TP_ADDRESS
 operator|)
 operator|)
 return|;
-block|}
+else|#
+directive|else
+block|struct
+name|tcb
+operator|*
+name|tcb
+expr_stmt|;
 end_expr_stmt
 
+begin_asm
+asm|__asm __volatile("mrc  p15, 0, %0, c13, c0, 3"		\ 	   		 : "=r" (tcb));
+end_asm
+
+begin_return
+return|return
+operator|(
+name|tcb
+operator|)
+return|;
+end_return
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
-specifier|extern
+unit|}  extern
 name|struct
 name|pthread
 modifier|*

@@ -252,6 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|toplevel
 decl_stmt|;
@@ -303,6 +304,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|port

@@ -411,7 +411,7 @@ name|XENHVM
 end_ifndef
 
 begin_comment
-comment|/*  * STI/CLI equivalents. These basically set and clear the virtual  * event_enable flag in teh shared_info structure. Note that when  * the enable bit is set, there may be pending events to be handled.  * We may therefore call into do_hypervisor_callback() directly.  */
+comment|/*  * STI/CLI equivalents. These basically set and clear the virtual  * event_enable flag in the shared_info structure. Note that when  * the enable bit is set, there may be pending events to be handled.  * We may therefore call into do_hypervisor_callback() directly.  */
 end_comment
 
 begin_define

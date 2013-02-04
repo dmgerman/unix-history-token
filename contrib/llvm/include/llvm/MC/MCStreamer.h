@@ -153,12 +153,10 @@ name|Context
 decl_stmt|;
 name|MCStreamer
 argument_list|(
-specifier|const
-name|MCStreamer
-operator|&
+argument|const MCStreamer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MCStreamer
 modifier|&
 name|operator
@@ -168,8 +166,8 @@ specifier|const
 name|MCStreamer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|bool
 name|EmitEHFrame
 decl_stmt|;
@@ -243,33 +241,8 @@ literal|4
 operator|>
 name|SectionStack
 expr_stmt|;
-name|unsigned
-name|UniqueCodeBeginSuffix
-decl_stmt|;
-name|unsigned
-name|UniqueDataBeginSuffix
-decl_stmt|;
 name|protected
 label|:
-comment|/// Indicator of whether the previous data-or-code indicator was for
-comment|/// code or not.  Used to determine when we need to emit a new indicator.
-enum|enum
-name|DataType
-block|{
-name|Data
-block|,
-name|Code
-block|,
-name|JumpTable8
-block|,
-name|JumpTable16
-block|,
-name|JumpTable32
-block|}
-enum|;
-name|DataType
-name|RegionIndicator
-decl_stmt|;
 name|MCStreamer
 argument_list|(
 name|MCContext
@@ -906,146 +879,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// EmitDataRegion - Emit a label that marks the beginning of a data
-end_comment
-
-begin_comment
-comment|/// region.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitDataRegion
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitJumpTable8Region - Emit a label that marks the beginning of a
-end_comment
-
-begin_comment
-comment|/// jump table composed of 8-bit offsets.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitJumpTable8Region
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitJumpTable16Region - Emit a label that marks the beginning of a
-end_comment
-
-begin_comment
-comment|/// jump table composed of 16-bit offsets.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitJumpTable16Region
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitJumpTable32Region - Emit a label that marks the beginning of a
-end_comment
-
-begin_comment
-comment|/// jump table composed of 32-bit offsets.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $d.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitJumpTable32Region
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitCodeRegion - Emit a label that marks the beginning of a code
-end_comment
-
-begin_comment
-comment|/// region.
-end_comment
-
-begin_comment
-comment|/// On ELF targets, this corresponds to an assembler statement such as:
-end_comment
-
-begin_comment
-comment|///   $a.1:
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitCodeRegion
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// ForceCodeRegion - Forcibly sets the current region mode to code.  Used
-end_comment
-
-begin_comment
-comment|/// at function entry points.
-end_comment
-
-begin_function
-name|void
-name|ForceCodeRegion
-parameter_list|()
-block|{
-name|RegionIndicator
-operator|=
-name|Code
-expr_stmt|;
-block|}
-end_function
-
 begin_function_decl
 name|virtual
 name|void
@@ -1064,7 +897,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitAssemblerFlag - Note in the output the specified @p Flag
+comment|/// EmitAssemblerFlag - Note in the output the specified @p Flag.
 end_comment
 
 begin_function_decl
@@ -1079,6 +912,21 @@ init|=
 literal|0
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// EmitDataRegion - Note in the output the specified region @p Kind.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitDataRegion
+parameter_list|(
+name|MCDataRegionType
+name|Kind
+parameter_list|)
+block|{}
+end_function
 
 begin_comment
 comment|/// EmitThumbFunc - Note in the output that the specified @p Func is
@@ -1549,7 +1397,7 @@ name|Symbol
 init|=
 literal|0
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|Size
 init|=
 literal|0
@@ -1632,7 +1480,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// EmitBytes - Emit the bytes in \arg Data into the output.
+comment|/// EmitBytes - Emit the bytes in \p Data into the output.
 end_comment
 
 begin_comment
@@ -2917,6 +2765,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// PPC-related methods.
+end_comment
+
+begin_comment
+comment|/// FIXME: Eventually replace it with some "target MC streamer" and move
+end_comment
+
+begin_comment
+comment|/// these methods there.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitTCEntry
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// FinishImpl - Streamer specific finalization.
 end_comment
 
@@ -2999,7 +2872,7 @@ comment|/// \param CE - If given, a code emitter to use to show the instruction
 end_comment
 
 begin_comment
-comment|/// encoding inline with the assembly. This method takes ownership of \arg CE.
+comment|/// encoding inline with the assembly. This method takes ownership of \p CE.
 end_comment
 
 begin_comment
@@ -3015,7 +2888,7 @@ comment|/// information in conjunction with encoding information. This method ta
 end_comment
 
 begin_comment
-comment|/// ownership of \arg TAB.
+comment|/// ownership of \p TAB.
 end_comment
 
 begin_comment
@@ -3028,18 +2901,6 @@ end_comment
 
 begin_comment
 comment|/// the assembly.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param DecodeLSDA - If true, emit comments that translates the LSDA into a
-end_comment
-
-begin_comment
-comment|/// human readable format. Only usable with CFI.
 end_comment
 
 begin_function_decl
@@ -3106,7 +2967,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Takes ownership of \arg TAB and \arg CE.
+comment|/// Takes ownership of \p TAB and \p CE.
 end_comment
 
 begin_function_decl
@@ -3151,7 +3012,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Takes ownership of \arg TAB and \arg CE.
+comment|/// Takes ownership of \p TAB and \p CE.
 end_comment
 
 begin_function_decl
@@ -3234,7 +3095,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Takes ownership of \arg TAB and \arg CE.
+comment|/// Takes ownership of \p TAB and \p CE.
 end_comment
 
 begin_function_decl

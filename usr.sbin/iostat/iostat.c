@@ -2723,6 +2723,8 @@ decl_stmt|;
 name|long
 name|double
 name|busy_pct
+decl_stmt|,
+name|busy_time
 decl_stmt|;
 name|u_int64_t
 name|queue_len
@@ -2736,6 +2738,8 @@ name|double
 name|blocks_per_second
 decl_stmt|,
 name|ms_per_transaction
+decl_stmt|,
+name|total_duration
 decl_stmt|;
 name|int
 name|firstline
@@ -2791,17 +2795,23 @@ name|Iflag
 operator|==
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"device     r/s   w/s    kr/s    kw/s qlen svc_t  %%b  "
+literal|"device     r/s   w/s    kr/s    kw/s qlen "
+literal|"svc_t  %%b  "
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"device     r/i   w/i    kr/i    kw/i qlen svc_t  %%b  "
+literal|"device           r/i         w/i         kr/i"
+literal|"         kw/i qlen   tsvc_t/i      sb/i  "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Tflag
@@ -3008,6 +3018,16 @@ name|DSM_QUEUE_LENGTH
 argument_list|,
 operator|&
 name|queue_len
+argument_list|,
+name|DSM_TOTAL_DURATION
+argument_list|,
+operator|&
+name|total_duration
+argument_list|,
+name|DSM_TOTAL_BUSY_TIME
+argument_list|,
+operator|&
+name|busy_time
 argument_list|,
 name|DSM_NONE
 argument_list|)
@@ -3234,9 +3254,10 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%-8.8s %5.1Lf %5.1Lf %7.1Lf %7.1Lf %4"
+literal|"%-8.8s %11.1Lf %11.1Lf "
+literal|"%12.1Lf %12.1Lf %4"
 name|PRIu64
-literal|" %5.1Lf %3.0Lf "
+literal|" %10.1Lf %9.1Lf "
 argument_list|,
 name|devname
 argument_list|,
@@ -3270,9 +3291,9 @@ literal|1024
 argument_list|,
 name|queue_len
 argument_list|,
-name|ms_per_transaction
+name|total_duration
 argument_list|,
-name|busy_pct
+name|busy_time
 argument_list|)
 expr_stmt|;
 if|if

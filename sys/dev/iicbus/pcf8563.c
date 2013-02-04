@@ -259,6 +259,7 @@ name|sc_addr
 operator|=
 name|PCF8563_ADDR
 expr_stmt|;
+comment|/* 	 * NB: PCF8563_R_SECOND_VL doesn't automatically clear when VDD 	 * rises above Vlow again and needs to be cleared manually. 	 * However, apparently this needs all of the time registers to be 	 * set, i.e. pcf8563_settime(), and not just PCF8563_R_SECOND in 	 * order for PCF8563_R_SECOND_VL to stick.  Thus, we just issue a 	 * warning here rather than failing with ENXIO in case it is set. 	 * Note that pcf8563_settime() will also clear PCF8563_R_SECOND_VL 	 * as a side-effect. 	 */
 name|msgs
 index|[
 literal|0
@@ -332,7 +333,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -342,12 +342,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|sc_year0

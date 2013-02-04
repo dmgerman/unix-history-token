@@ -1134,6 +1134,11 @@ modifier|*
 name|ctx
 decl_stmt|;
 name|char
+name|sysctl_desc
+index|[
+literal|40
+index|]
+decl_stmt|,
 name|sysctl_name
 index|[
 literal|32
@@ -1385,6 +1390,26 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|sysctl_desc
+argument_list|,
+literal|"%s %s"
+argument_list|,
+name|sc
+operator|->
+name|sc_sensors
+index|[
+name|i
+index|]
+operator|.
+name|therm
+operator|.
+name|name
+argument_list|,
+literal|"(C)"
+argument_list|)
+expr_stmt|;
 name|oid
 operator|=
 name|SYSCTL_ADD_NODE
@@ -1435,7 +1460,7 @@ name|max6690_sensor_sysctl
 argument_list|,
 literal|"IK"
 argument_list|,
-literal|"Sensor Temp in Â°C"
+name|sysctl_desc
 argument_list|)
 expr_stmt|;
 block|}

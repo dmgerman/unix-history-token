@@ -3377,7 +3377,12 @@ name|n
 expr_stmt|;
 endif|#
 directive|endif
-else|else
+if|if
+condition|(
+name|sc_height
+operator|<=
+literal|0
+condition|)
 name|sc_height
 operator|=
 name|DEF_SC_HEIGHT
@@ -3437,7 +3442,12 @@ name|n
 expr_stmt|;
 endif|#
 directive|endif
-else|else
+if|if
+condition|(
+name|sc_width
+operator|<=
+literal|0
+condition|)
 name|sc_width
 operator|=
 name|DEF_SC_WIDTH

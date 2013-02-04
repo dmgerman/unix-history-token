@@ -1184,33 +1184,17 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Get the time again, as close as possible to 			 * adjusting it, to minimise drift. 			 * XXX we'd better not fail between here and 			 * restoring disrtcset, since we don't clean up 			 * anything. 			 */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
 name|NULL
 argument_list|)
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"gettimeofday: %m"
-argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 name|tv
 operator|.
 name|tv_sec

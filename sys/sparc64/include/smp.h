@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -387,14 +393,6 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mtx
-name|ipi_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|ipi_cache_args
 name|ipi_cache_args
 decl_stmt|;
@@ -688,7 +686,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|ica
@@ -788,7 +786,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|ica
@@ -892,7 +890,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|CPU_SETOF
@@ -1026,7 +1024,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|ita
@@ -1159,7 +1157,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|ita
@@ -1301,7 +1299,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|ita
@@ -1395,7 +1393,7 @@ empty_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|ipi_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 name|sched_unpin
@@ -1601,6 +1599,7 @@ parameter_list|(
 name|void
 modifier|*
 name|cookie
+name|__unused
 parameter_list|)
 block|{  }
 end_function

@@ -141,6 +141,7 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// current_pos - Return the current position within the stream,
 comment|/// not counting the bytes currently in the buffer.
@@ -149,18 +150,15 @@ name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|{
-comment|// This has the same effect as calling TheStream.current_pos(),
-comment|// but that interface is private.
+comment|// Our current position in the stream is all the contents which have been
+comment|// written to the underlying stream (*not* the current position of the
+comment|// underlying stream).
 return|return
 name|TheStream
 operator|->
 name|tell
-argument_list|()
-operator|-
-name|TheStream
-operator|->
-name|GetNumBytesInBuffer
 argument_list|()
 return|;
 block|}

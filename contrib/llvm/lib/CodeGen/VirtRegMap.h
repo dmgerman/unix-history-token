@@ -213,12 +213,10 @@ argument_list|)
 block|;
 name|VirtRegMap
 argument_list|(
-specifier|const
-name|VirtRegMap
-operator|&
+argument|const VirtRegMap&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -227,8 +225,8 @@ specifier|const
 name|VirtRegMap
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 specifier|static
@@ -642,19 +640,6 @@ name|virtReg
 parameter_list|,
 name|int
 name|frameIndex
-parameter_list|)
-function_decl|;
-comment|/// rewrite - Rewrite all instructions in MF to use only physical registers
-comment|/// by mapping all virtual register operands to their assigned physical
-comment|/// registers.
-comment|///
-comment|/// @param Indexes Optionally remove deleted instructions from indexes.
-name|void
-name|rewrite
-parameter_list|(
-name|SlotIndexes
-modifier|*
-name|Indexes
 parameter_list|)
 function_decl|;
 name|void

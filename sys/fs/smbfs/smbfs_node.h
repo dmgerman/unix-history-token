@@ -160,6 +160,10 @@ decl_stmt|;
 name|long
 name|n_ino
 decl_stmt|;
+name|long
+name|n_parentino
+decl_stmt|;
+comment|/* parent inode number */
 name|int
 name|n_dosattr
 decl_stmt|;
@@ -171,6 +175,13 @@ name|int
 name|n_rwstate
 decl_stmt|;
 comment|/* granted access mode */
+name|int
+name|n_rplen
+decl_stmt|;
+name|char
+modifier|*
+name|n_rpath
+decl_stmt|;
 name|u_char
 name|n_nmlen
 decl_stmt|;
@@ -198,6 +209,27 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|smbcmp
+block|{
+name|struct
+name|vnode
+modifier|*
+name|n_parent
+decl_stmt|;
+name|int
+name|n_nmlen
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|n_name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -216,6 +248,16 @@ parameter_list|(
 name|np
 parameter_list|)
 value|((struct vnode *)(np)->n_vnode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBFS_DNP_SEP
+parameter_list|(
+name|dnp
+parameter_list|)
+value|((dnp->n_rplen> 1) ? '\\' : '\0')
 end_define
 
 begin_struct_decl

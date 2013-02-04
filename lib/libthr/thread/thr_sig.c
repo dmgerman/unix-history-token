@@ -1563,6 +1563,13 @@ return|return;
 if|if
 condition|(
 name|curthread
+operator|==
+name|_single_thread
+condition|)
+return|return;
+if|if
+condition|(
+name|curthread
 operator|->
 name|force_exit
 condition|)

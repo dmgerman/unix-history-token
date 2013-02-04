@@ -168,6 +168,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * irq_mapping_update_lock: in order to allow an interrupt to occur in a critical  *	section, to set pcpu->ipending (etc...) properly, we  * 	must be able to get the icu lock, so it can't be  *	under witness.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -175,6 +179,21 @@ name|mtx
 name|irq_mapping_update_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|irq_mapping_update_lock
+argument_list|,
+operator|&
+name|irq_mapping_update_lock
+argument_list|,
+literal|"xp"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -5053,25 +5072,6 @@ argument_list|,
 name|evtchn_init
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*      * irq_mapping_update_lock: in order to allow an interrupt to occur in a critical      * 	        section, to set pcpu->ipending (etc...) properly, we      *	        must be able to get the icu lock, so it can't be      *	        under witness.      */
-end_comment
-
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|irq_mapping_update_lock
-argument_list|,
-operator|&
-name|irq_mapping_update_lock
-argument_list|,
-literal|"xp"
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 end_expr_stmt

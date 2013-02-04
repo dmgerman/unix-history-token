@@ -1424,11 +1424,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|m_addr_changed
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|netisr_queue
@@ -1712,7 +1707,7 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2187,7 +2182,7 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2403,6 +2398,7 @@ name|ip6_nxt
 operator|=
 name|IPPROTO_IPV6
 expr_stmt|;
+break|break;
 block|}
 default|default:
 goto|goto

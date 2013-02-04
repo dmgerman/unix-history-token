@@ -1859,6 +1859,10 @@ name|adw_sg_block
 modifier|*
 name|sg_blocks
 decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 name|bus_addr_t
 name|sg_busaddr
 decl_stmt|;
@@ -2366,11 +2370,10 @@ begin_struct
 struct|struct
 name|adw_softc
 block|{
-name|bus_space_tag_t
-name|tag
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
+name|struct
+name|resource
+modifier|*
+name|res
 decl_stmt|;
 name|adw_state
 name|state
@@ -2467,6 +2470,10 @@ name|char
 name|channel
 decl_stmt|;
 name|struct
+name|mtx
+name|lock
+decl_stmt|;
+name|struct
 name|cam_path
 modifier|*
 name|path
@@ -2525,13 +2532,6 @@ name|initiator_id
 decl_stmt|;
 name|u_int
 name|init_level
-decl_stmt|;
-name|u_int
-name|unit
-decl_stmt|;
-name|char
-modifier|*
-name|name
 decl_stmt|;
 name|cam_status
 name|last_reset
@@ -2615,7 +2615,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1((adw)->tag, (adw)->bsh, port)
+value|bus_read_1((adw)->res, port)
 end_define
 
 begin_define
@@ -2628,7 +2628,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_2((adw)->tag, (adw)->bsh, port)
+value|bus_read_2((adw)->res, port)
 end_define
 
 begin_define
@@ -2641,7 +2641,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_4((adw)->tag, (adw)->bsh, port)
+value|bus_read_4((adw)->res, port)
 end_define
 
 begin_define
@@ -2656,7 +2656,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1((adw)->tag, (adw)->bsh, port, value)
+value|bus_write_1((adw)->res, port, value)
 end_define
 
 begin_define
@@ -2671,7 +2671,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2((adw)->tag, (adw)->bsh, port, value)
+value|bus_write_2((adw)->res, port, value)
 end_define
 
 begin_define
@@ -2686,7 +2686,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_4((adw)->tag, (adw)->bsh, port, value)
+value|bus_write_4((adw)->res, port, value)
 end_define
 
 begin_define
@@ -2703,24 +2703,8 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_set_multi_2((adw)->tag, (adw)->bsh, port, value, count)
+value|bus_set_multi_2((adw)->res, port, value, count)
 end_define
-
-begin_function_decl
-specifier|static
-name|__inline
-specifier|const
-name|char
-modifier|*
-name|adw_name
-parameter_list|(
-name|struct
-name|adw_softc
-modifier|*
-name|adw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -2968,30 +2952,6 @@ argument|u_int32_t baddr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-specifier|static
-name|__inline
-specifier|const
-name|char
-modifier|*
-name|adw_name
-parameter_list|(
-name|struct
-name|adw_softc
-modifier|*
-name|adw
-parameter_list|)
-block|{
-return|return
-operator|(
-name|adw
-operator|->
-name|name
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static

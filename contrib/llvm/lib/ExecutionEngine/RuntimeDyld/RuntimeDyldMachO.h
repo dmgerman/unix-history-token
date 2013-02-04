@@ -182,7 +182,8 @@ name|ObjSectionToIDMap
 operator|&
 name|ObjSectionToID
 argument_list|,
-name|LocalSymbolMap
+specifier|const
+name|SymbolTableMap
 operator|&
 name|Symbols
 argument_list|,
@@ -197,9 +198,9 @@ name|virtual
 name|void
 name|resolveRelocation
 argument_list|(
-argument|uint8_t *LocalAddress
+argument|const SectionEntry&Section
 argument_list|,
-argument|uint64_t FinalAddress
+argument|uint64_t Offset
 argument_list|,
 argument|uint64_t Value
 argument_list|,
@@ -223,7 +224,7 @@ block|{}
 name|bool
 name|isCompatibleFormat
 argument_list|(
-argument|const MemoryBuffer *InputBuffer
+argument|const ObjectBuffer *Buffer
 argument_list|)
 specifier|const
 block|; }

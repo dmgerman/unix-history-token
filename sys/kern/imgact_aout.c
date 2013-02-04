@@ -442,6 +442,13 @@ define|\
 value|(AOUT32_USRSTACK - sizeof(struct freebsd32_ps_strings))
 end_define
 
+begin_define
+define|#
+directive|define
+name|AOUT32_MINUSER
+value|FREEBSD32_MINUSER
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -559,7 +566,7 @@ block|,
 operator|.
 name|sv_minuser
 operator|=
-literal|0
+name|AOUT32_MINUSER
 block|,
 operator|.
 name|sv_maxuser

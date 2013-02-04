@@ -445,11 +445,83 @@ literal|"no explicit policy"
 operator|)
 return|;
 case|case
+name|X509_V_ERR_DIFFERENT_CRL_SCOPE
+case|:
+return|return
+operator|(
+literal|"Different CRL scope"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNSUPPORTED_EXTENSION_FEATURE
+case|:
+return|return
+operator|(
+literal|"Unsupported extension feature"
+operator|)
+return|;
+case|case
 name|X509_V_ERR_UNNESTED_RESOURCE
 case|:
 return|return
 operator|(
 literal|"RFC 3779 resource not subset of parent's resources"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_PERMITTED_VIOLATION
+case|:
+return|return
+operator|(
+literal|"permitted subtree violation"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_EXCLUDED_VIOLATION
+case|:
+return|return
+operator|(
+literal|"excluded subtree violation"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_SUBTREE_MINMAX
+case|:
+return|return
+operator|(
+literal|"name constraints minimum and maximum not supported"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE
+case|:
+return|return
+operator|(
+literal|"unsupported name constraint type"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNSUPPORTED_CONSTRAINT_SYNTAX
+case|:
+return|return
+operator|(
+literal|"unsupported or invalid name constraint syntax"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNSUPPORTED_NAME_SYNTAX
+case|:
+return|return
+operator|(
+literal|"unsupported or invalid name syntax"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_CRL_PATH_VALIDATION_ERROR
+case|:
+return|return
+operator|(
+literal|"CRL path validation error"
 operator|)
 return|;
 default|default:

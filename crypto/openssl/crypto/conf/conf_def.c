@@ -455,10 +455,6 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-operator|(
-name|CONF
-operator|*
-operator|)
 name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
@@ -536,10 +532,6 @@ name|conf
 operator|->
 name|meth_data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|CONF_type_default
 expr_stmt|;
 name|conf
@@ -867,8 +859,6 @@ decl_stmt|,
 modifier|*
 name|buf
 decl_stmt|;
-comment|/*	STACK_OF(CONF_VALUE) *section_sk=NULL;*/
-comment|/*	STACK_OF(CONF_VALUE) *ts=NULL;*/
 name|char
 modifier|*
 name|start
@@ -1002,7 +992,6 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*	section_sk=(STACK_OF(CONF_VALUE) *)sv->value;*/
 name|bufnum
 operator|=
 literal|0
@@ -1432,7 +1421,6 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*			section_sk=(STACK_OF(CONF_VALUE) *)sv->value;*/
 continue|continue;
 block|}
 else|else
@@ -1770,16 +1758,12 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*				ts=(STACK_OF(CONF_VALUE) *)tv->value;*/
 block|}
 else|else
-block|{
 name|tv
 operator|=
 name|sv
 expr_stmt|;
-comment|/*				ts=section_sk;*/
-block|}
 if|#
 directive|if
 literal|1
@@ -3291,7 +3275,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|dump_value
+name|dump_value_doall_arg
 parameter_list|(
 name|CONF_VALUE
 modifier|*
@@ -3348,9 +3332,9 @@ name|IMPLEMENT_LHASH_DOALL_ARG_FN
 argument_list|(
 argument|dump_value
 argument_list|,
-argument|CONF_VALUE *
+argument|CONF_VALUE
 argument_list|,
-argument|BIO *
+argument|BIO
 argument_list|)
 specifier|static
 name|int
@@ -3361,7 +3345,7 @@ argument_list|,
 argument|BIO *out
 argument_list|)
 block|{
-name|lh_doall_arg
+name|lh_CONF_VALUE_doall_arg
 argument_list|(
 name|conf
 operator|->
@@ -3371,6 +3355,8 @@ name|LHASH_DOALL_ARG_FN
 argument_list|(
 name|dump_value
 argument_list|)
+argument_list|,
+name|BIO
 argument_list|,
 name|out
 argument_list|)

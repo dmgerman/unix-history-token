@@ -914,7 +914,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1334,7 +1334,7 @@ block|{
 comment|/* Drop any packet received for a device that 			   doesn't exist */
 name|DEBUGPRINT
 argument_list|(
-literal|"Port %d not controlled by Linux, packet dropped\n"
+literal|"Port %d not controlled by FreeBSD, packet dropped\n"
 argument_list|,
 name|work
 operator|->

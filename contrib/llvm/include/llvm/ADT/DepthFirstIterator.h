@@ -932,7 +932,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// getPath - Return the n'th node in the path from the the entry node to the
+comment|/// getPath - Return the n'th node in the path from the entry node to the
 comment|/// current node.
 name|NodeType
 modifier|*

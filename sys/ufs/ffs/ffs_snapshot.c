@@ -3779,8 +3779,11 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_snapshot: %d already on list"
+literal|"ffs_snapshot: %ju already on list"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -3859,16 +3862,10 @@ argument_list|(
 name|vp
 operator|->
 name|v_mount
-argument_list|)
-expr_stmt|;
-name|vn_start_write
-argument_list|(
-name|NULL
 argument_list|,
-operator|&
-name|wrtmp
-argument_list|,
-name|V_WAIT
+name|VR_START_WRITE
+operator||
+name|VR_NO_SUSPCLR
 argument_list|)
 expr_stmt|;
 if|if
@@ -9305,8 +9302,11 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"ffs_snapgone: lost snapshot vnode %d\n"
+literal|"ffs_snapgone: lost snapshot vnode %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -10260,7 +10260,7 @@ decl_stmt|,
 modifier|*
 name|savedcbp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|thread
@@ -10689,10 +10689,13 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"%s %d lbn %jd from inum %d\n"
+literal|"%s %ju lbn %jd from inum %ju\n"
 argument_list|,
 literal|"Grabonremove: snapino"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -10702,6 +10705,9 @@ name|intmax_t
 operator|)
 name|lbn
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;
@@ -10932,10 +10938,13 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d lbn %jd %s %d size %ld to blkno %jd\n"
+literal|"%s%ju lbn %jd %s %ju size %ld to blkno %jd\n"
 argument_list|,
 literal|"Copyonremove: snapino "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -10947,6 +10956,9 @@ name|lbn
 argument_list|,
 literal|"for inum"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|,
 name|size
@@ -11573,8 +11585,11 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_snapshot_mount: %d already on list"
+literal|"ffs_snapshot_mount: %ju already on list"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -12711,7 +12726,7 @@ decl_stmt|,
 modifier|*
 name|savedcbp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|thread
@@ -12735,7 +12750,7 @@ name|vnode
 modifier|*
 name|vp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|ufs2_daddr_t
 name|lbn
@@ -13345,8 +13360,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Copyonwrite: snapino %d lbn %jd for "
+literal|"Copyonwrite: snapino %ju lbn %jd for "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -13373,8 +13391,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"inum %d"
+literal|"inum %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|VTOI
 argument_list|(
 name|bp

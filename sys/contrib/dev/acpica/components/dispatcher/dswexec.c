@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -360,6 +360,9 @@ name|Cleanup
 goto|;
 block|}
 comment|/* Truncate the predicate to 32-bits if necessary */
+operator|(
+name|void
+operator|)
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|LocalObjDesc
@@ -489,7 +492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecBeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              OutOp           - Where to return op if a new one is created  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the execution of control  *              methods.  This is where most operators and operands are  *              dispatched to the interpreter.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecBeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              OutOp           - Where to return op if a new one is created  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the execution of control  *              methods. This is where most operators and operands are  *              dispatched to the interpreter.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -784,7 +787,7 @@ operator|&
 name|ACPI_WALK_METHOD
 condition|)
 block|{
-comment|/*              * Found a named object declaration during method execution;              * we must enter this object into the namespace.  The created              * object is temporary and will be deleted upon completion of              * the execution of this method.              *              * Note 10/2010: Except for the Scope() op. This opcode does              * not actually create a new object, it refers to an existing              * object. However, for Scope(), we want to indeed open a              * new scope.              */
+comment|/*              * Found a named object declaration during method execution;              * we must enter this object into the namespace. The created              * object is temporary and will be deleted upon completion of              * the execution of this method.              *              * Note 10/2010: Except for the Scope() op. This opcode does              * not actually create a new object, it refers to an existing              * object. However, for Scope(), we want to indeed open a              * new scope.              */
 if|if
 condition|(
 name|Op
@@ -882,7 +885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecEndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the execution of control  *              methods.  The only thing we really need to do here is to  *              notice the beginning of IF, ELSE, and WHILE blocks.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecEndOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Ascending callback used during the execution of control  *              methods. The only thing we really need to do here is to  *              notice the beginning of IF, ELSE, and WHILE blocks.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1145,7 +1148,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * Dispatch the request to the appropriate interpreter handler              * routine.  There is one routine per opcode "type" based upon the              * number of opcode arguments and return type.              */
+comment|/*              * Dispatch the request to the appropriate interpreter handler              * routine. There is one routine per opcode "type" based upon the              * number of opcode arguments and return type.              */
 name|Status
 operator|=
 name|AcpiGbl_OpTypeDispatch
@@ -1938,6 +1941,9 @@ break|break;
 block|}
 block|}
 comment|/*      * ACPI 2.0 support for 64-bit integers: Truncate numeric      * result value if we are executing from a 32-bit ACPI table      */
+operator|(
+name|void
+operator|)
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|WalkState

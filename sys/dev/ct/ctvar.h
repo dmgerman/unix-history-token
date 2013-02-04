@@ -108,23 +108,6 @@ name|ct_bus_access_handle
 name|sc_ch
 decl_stmt|;
 comment|/* bus access handle */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|bus_dma_tag_t
-name|sc_dmat
-decl_stmt|;
-comment|/* data DMA tag */
-name|void
-modifier|*
-name|sc_ih
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|struct
 name|resource
 modifier|*
@@ -157,9 +140,6 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|int
 name|sc_chiprev
 decl_stmt|;
@@ -380,20 +360,6 @@ name|ctattachsubr
 parameter_list|(
 name|struct
 name|ct_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ctprint
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|char
 modifier|*
 parameter_list|)
 function_decl|;

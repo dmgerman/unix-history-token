@@ -31,15 +31,11 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_SHA1
-argument_list|)
-end_if
+end_ifndef
 
 begin_function
 name|unsigned

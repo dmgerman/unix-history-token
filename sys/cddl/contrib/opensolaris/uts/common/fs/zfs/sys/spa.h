@@ -947,6 +947,12 @@ modifier|*
 name|zplprops
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 specifier|extern
 name|int
 name|spa_import_rootpool
@@ -960,6 +966,20 @@ modifier|*
 name|devid
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+specifier|extern
+name|int
+name|spa_import_rootpool
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|spa_import
@@ -1422,22 +1442,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/*  * DEFERRED_FREE must be large enough that regular blocks are not  * deferred.  XXX so can't we change it back to 1?  */
-define|#
-directive|define
-name|SYNC_PASS_DEFERRED_FREE
-value|2
-comment|/* defer frees after this pass */
-define|#
-directive|define
-name|SYNC_PASS_DONT_COMPRESS
-value|4
-comment|/* don't compress after this pass */
-define|#
-directive|define
-name|SYNC_PASS_REWRITE
-value|1
-comment|/* rewrite new bps after this pass */
 comment|/* spa namespace global mutex */
 specifier|extern
 name|kmutex_t

@@ -84,7 +84,7 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 comment|/// hexdigit - Return the hexadecimal character for the
-comment|/// given number \arg X (which should be less than 16).
+comment|/// given number \p X (which should be less than 16).
 specifier|static
 specifier|inline
 name|char
@@ -652,6 +652,10 @@ name|Result
 operator|*
 literal|33
 operator|+
+operator|(
+name|unsigned
+name|char
+operator|)
 name|Str
 index|[
 name|i
@@ -660,6 +664,76 @@ expr_stmt|;
 return|return
 name|Result
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Returns the English suffix for an ordinal integer (-st, -nd, -rd, -th).
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|StringRef
+name|getOrdinalSuffix
+parameter_list|(
+name|unsigned
+name|Val
+parameter_list|)
+block|{
+comment|// It is critically important that we do this perfectly for
+comment|// user-written sequences with over 100 elements.
+switch|switch
+condition|(
+name|Val
+operator|%
+literal|100
+condition|)
+block|{
+case|case
+literal|11
+case|:
+case|case
+literal|12
+case|:
+case|case
+literal|13
+case|:
+return|return
+literal|"th"
+return|;
+default|default:
+switch|switch
+condition|(
+name|Val
+operator|%
+literal|10
+condition|)
+block|{
+case|case
+literal|1
+case|:
+return|return
+literal|"st"
+return|;
+case|case
+literal|2
+case|:
+return|return
+literal|"nd"
+return|;
+case|case
+literal|3
+case|:
+return|return
+literal|"rd"
+return|;
+default|default:
+return|return
+literal|"th"
+return|;
+block|}
+block|}
 block|}
 end_function
 

@@ -1825,6 +1825,7 @@ comment|/*  * do_setcmd3 - pass ipfw control cmd to kernel  * @optname: option n
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|do_setcmd3
 parameter_list|(
@@ -4758,9 +4759,14 @@ name|want
 parameter_list|,
 name|int
 name|cmd
-name|__unused
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|cmd
+expr_stmt|;
+comment|/* UNUSED */
 if|if
 condition|(
 name|co
@@ -19719,6 +19725,11 @@ decl_stmt|;
 name|uint32_t
 name|tables_max
 decl_stmt|;
+name|mask
+operator|=
+literal|0
+expr_stmt|;
+comment|// XXX uninitialized ?
 name|len
 operator|=
 sizeof|sizeof
@@ -21105,7 +21116,12 @@ expr_stmt|;
 name|xent
 operator|=
 operator|(
-name|void
+name|ipfw_table_xentry
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
 operator|*
 operator|)
 name|xent
@@ -21113,6 +21129,7 @@ operator|+
 name|xent
 operator|->
 name|len
+operator|)
 expr_stmt|;
 block|}
 name|free

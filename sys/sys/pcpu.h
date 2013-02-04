@@ -41,7 +41,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_rmlock.h>
 end_include
 
 begin_include
@@ -381,30 +405,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and can define rm_queue in _rm_lock.h  */
-end_comment
-
-begin_struct
-struct|struct
-name|rm_queue
-block|{
-name|struct
-name|rm_queue
-modifier|*
-specifier|volatile
-name|rmq_next
-decl_stmt|;
-name|struct
-name|rm_queue
-modifier|*
-specifier|volatile
-name|rmq_prev
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  The members are accessed via the PCPU_GET/SET/PTR  * macros defined in<machine/pcpu.h>.  Machine dependent fields are  * defined in the PCPU_MD_FIELDS macro defined in<machine/pcpu.h>.  */
 end_comment
 
@@ -495,11 +495,11 @@ name|int
 name|pc_domain
 decl_stmt|;
 comment|/* Memory domain. */
-comment|/* 	 * Stuff for read mostly lock 	 * 	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue
 name|pc_rm_queue
 decl_stmt|;
+comment|/* rmlock list of trackers */
 name|uintptr_t
 name|pc_dynamic
 decl_stmt|;

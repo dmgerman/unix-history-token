@@ -2737,12 +2737,6 @@ name|mnt_flag
 operator||=
 name|MNT_LOCAL
 expr_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator||=
-name|MNTK_MPSAFE
-expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
@@ -13737,7 +13731,7 @@ name|waitok
 decl_stmt|;
 name|error
 operator|=
-name|getmq_read
+name|getmq_write
 argument_list|(
 name|td
 argument_list|,
@@ -13921,7 +13915,7 @@ name|waitok
 decl_stmt|;
 name|error
 operator|=
-name|getmq_write
+name|getmq_read
 argument_list|(
 name|td
 argument_list|,

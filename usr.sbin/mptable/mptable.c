@@ -63,7 +63,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1024,7 +1024,7 @@ specifier|static
 name|int
 name|busses
 index|[
-literal|16
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1034,7 +1034,7 @@ specifier|static
 name|int
 name|apics
 index|[
-literal|16
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2853,7 +2853,7 @@ argument_list|(
 literal|"MP Config Base Table Entries:\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* initialze tables */
+comment|/* initialize tables */
 for|for
 control|(
 name|x
@@ -2862,17 +2862,43 @@ literal|0
 init|;
 name|x
 operator|<
-literal|16
+operator|(
+name|int
+operator|)
+name|nitems
+argument_list|(
+name|busses
+argument_list|)
 condition|;
-operator|++
 name|x
+operator|++
 control|)
-block|{
 name|busses
 index|[
 name|x
 index|]
 operator|=
+literal|0xff
+expr_stmt|;
+for|for
+control|(
+name|x
+operator|=
+literal|0
+init|;
+name|x
+operator|<
+operator|(
+name|int
+operator|)
+name|nitems
+argument_list|(
+name|apics
+argument_list|)
+condition|;
+name|x
+operator|++
+control|)
 name|apics
 index|[
 name|x
@@ -2880,7 +2906,6 @@ index|]
 operator|=
 literal|0xff
 expr_stmt|;
-block|}
 name|ncpu
 operator|=
 literal|0

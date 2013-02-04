@@ -21,15 +21,14 @@ begin_comment
 comment|/* seee eeee emmm mmmm mmmm mmmm mmmm mmmm */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|d2lz
+argument|f2lz
 argument_list|,
-name|fixsfdi
+argument|fixsfdi
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI

@@ -323,6 +323,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_POSIX_CPUTIME
+value|200112L
+end_define
+
+begin_define
+define|#
+directive|define
 name|_POSIX_READER_WRITER_LOCKS
 value|200112L
 end_define

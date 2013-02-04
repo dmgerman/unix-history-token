@@ -90,13 +90,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -115,7 +121,7 @@ comment|//===-------------------------------------------------------------------
 comment|/// RefCountedBase - A generic base class for objects that wish to
 comment|///  have their lifetimes managed using reference counts. Classes
 comment|///  subclass RefCountedBase to obtain such functionality, and are
-comment|///  typically handled with IntrusivePtr "smart pointers" (see below)
+comment|///  typically handled with IntrusiveRefCntPtr "smart pointers" (see below)
 comment|///  which automatically handle the management of reference counts.
 comment|///  Objects that subclass RefCountedBase should not be allocated on
 comment|///  the stack, as invoking "delete" (which is called when the
@@ -401,6 +407,55 @@ block|{
 name|retain
 argument_list|()
 block|;     }
+if|#
+directive|if
+name|LLVM_USE_RVALUE_REFERENCES
+name|IntrusiveRefCntPtr
+argument_list|(
+name|IntrusiveRefCntPtr
+operator|&&
+name|S
+argument_list|)
+operator|:
+name|Obj
+argument_list|(
+argument|S.Obj
+argument_list|)
+block|{
+name|S
+operator|.
+name|Obj
+operator|=
+literal|0
+block|;     }
+name|template
+operator|<
+name|class
+name|X
+operator|>
+name|IntrusiveRefCntPtr
+argument_list|(
+name|IntrusiveRefCntPtr
+operator|<
+name|X
+operator|>
+operator|&&
+name|S
+argument_list|)
+operator|:
+name|Obj
+argument_list|(
+argument|S.getPtr()
+argument_list|)
+block|{
+name|S
+operator|.
+name|Obj
+operator|=
+literal|0
+block|;     }
+endif|#
+directive|endif
 name|template
 operator|<
 name|class
@@ -430,68 +485,11 @@ operator|&
 name|operator
 operator|=
 operator|(
-specifier|const
 name|IntrusiveRefCntPtr
-operator|&
 name|S
 operator|)
 block|{
-name|replace
-argument_list|(
-name|S
-operator|.
-name|getPtr
-argument_list|()
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|X
-operator|>
-name|IntrusiveRefCntPtr
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|IntrusiveRefCntPtr
-operator|<
-name|X
-operator|>
-operator|&
-name|S
-operator|)
-block|{
-name|replace
-argument_list|(
-name|S
-operator|.
-name|getPtr
-argument_list|()
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|IntrusiveRefCntPtr
-modifier|&
-name|operator
-init|=
-operator|(
-name|T
-operator|*
-name|S
-operator|)
-block|{
-name|replace
+name|swap
 argument_list|(
 name|S
 argument_list|)
@@ -686,29 +684,6 @@ operator|::
 name|release
 argument_list|(
 name|Obj
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|replace
-parameter_list|(
-name|T
-modifier|*
-name|S
-parameter_list|)
-block|{
-name|this_type
-argument_list|(
-name|S
-argument_list|)
-operator|.
-name|swap
-argument_list|(
-operator|*
-name|this
 argument_list|)
 expr_stmt|;
 block|}

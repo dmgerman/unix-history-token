@@ -141,6 +141,17 @@ begin_comment
 comment|/* kernel-only part of ifnet(9) */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|edscname
+index|[]
+init|=
+literal|"edsc"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Software configuration of an interface specific to this device type.  */
 end_comment
@@ -161,8 +172,17 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Simple cloning methods.  * IFC_SIMPLE_DECLARE() expects precisely these names.  */
+comment|/*  * Attach to the interface cloning framework.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|edsc_cloner
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -254,23 +274,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_EDSC
 argument_list|,
-literal|"edsc"
+name|edscname
 argument_list|,
 literal|"Ethernet discard interface"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Attach to the interface cloning framework under the name of "edsc".  * The second argument is the number of units to be created from  * the outset.  It's also the minimum number of units allowed.  * We don't want any units created as soon as the driver is loaded.  */
-end_comment
-
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|edsc
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -374,9 +380,7 @@ name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|edscname
 argument_list|,
 name|unit
 argument_list|)
@@ -764,11 +768,18 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* 		 * Connect to the network interface cloning framework. 		 */
-name|if_clone_attach
-argument_list|(
-operator|&
+comment|/* 		 * Connect to the network interface cloning framework. 		 * The last argument is the number of units to be created 		 * from the outset.  It's also the minimum number of units 		 * allowed.  We don't want any units created as soon as the 		 * driver is loaded. 		 */
 name|edsc_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|edscname
+argument_list|,
+name|edsc_clone_create
+argument_list|,
+name|edsc_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -778,7 +789,6 @@ case|:
 comment|/* 		 * Disconnect from the cloning framework. 		 * Existing interfaces will be disposed of properly. 		 */
 name|if_clone_detach
 argument_list|(
-operator|&
 name|edsc_cloner
 argument_list|)
 expr_stmt|;

@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the Module class, which describes a module in the source
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// code.
+comment|/// \brief Defines the clang::Module class, which describes a module in the
 end_comment
 
 begin_comment
-comment|//
+comment|/// source code.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -97,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
@@ -223,6 +233,13 @@ name|unsigned
 operator|>
 name|SubModuleIndex
 expr_stmt|;
+comment|/// \brief The AST file if this is a top-level module which has a
+comment|/// corresponding serialized AST file, or null otherwise.
+specifier|const
+name|FileEntry
+modifier|*
+name|ASTFile
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief The headers that are part of this module.
@@ -237,6 +254,32 @@ operator|,
 literal|2
 operator|>
 name|Headers
+expr_stmt|;
+comment|/// \brief The headers that are explicitly excluded from this module.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|ExcludedHeaders
+expr_stmt|;
+comment|/// \brief The top-level headers associated with this module.
+name|llvm
+operator|::
+name|SmallSetVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|TopHeaders
 expr_stmt|;
 comment|/// \brief The set of language features required to use this module.
 comment|///
@@ -377,7 +420,7 @@ operator|>
 name|Exports
 expr_stmt|;
 comment|/// \brief Describes an exported module that has not yet been resolved
-comment|/// (perhaps because tASThe module it refers to has not yet been loaded).
+comment|/// (perhaps because the module it refers to has not yet been loaded).
 struct|struct
 name|UnresolvedExportDecl
 block|{
@@ -436,6 +479,11 @@ argument_list|)
 operator|,
 name|Umbrella
 argument_list|()
+operator|,
+name|ASTFile
+argument_list|(
+literal|0
+argument_list|)
 operator|,
 name|IsAvailable
 argument_list|(
@@ -663,6 +711,56 @@ operator|->
 name|Name
 return|;
 block|}
+comment|/// \brief The serialized AST file for this module, if one was created.
+specifier|const
+name|FileEntry
+operator|*
+name|getASTFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTopLevelModule
+argument_list|()
+operator|->
+name|ASTFile
+return|;
+block|}
+comment|/// \brief Set the serialized AST file for the top-level module of this module.
+name|void
+name|setASTFile
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|getASTFile
+argument_list|()
+operator|==
+literal|0
+operator|||
+name|getASTFile
+argument_list|()
+operator|==
+name|File
+operator|)
+operator|&&
+literal|"file path changed"
+argument_list|)
+expr_stmt|;
+name|getTopLevelModule
+argument_list|()
+operator|->
+name|ASTFile
+operator|=
+name|File
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the directory for which this module serves as the
 comment|/// umbrella.
 specifier|const
@@ -716,7 +814,7 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// \briaf Add the given feature requirement to the list of features
+comment|/// \brief Add the given feature requirement to the list of features
 comment|/// required by this module.
 comment|///
 comment|/// \param Feature The feature that is required by this module (and
@@ -824,6 +922,15 @@ name|SubModules
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+specifier|static
+name|StringRef
+name|getModuleInputBufferName
+parameter_list|()
+block|{
+return|return
+literal|"<module-includes>"
 return|;
 block|}
 comment|/// \brief Print the module map for this module to the given stream.

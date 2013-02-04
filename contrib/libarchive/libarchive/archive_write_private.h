@@ -286,7 +286,7 @@ comment|/* Dev/ino of the archive being written. */
 name|int
 name|skip_file_set
 decl_stmt|;
-name|dev_t
+name|int64_t
 name|skip_file_dev
 decl_stmt|;
 name|int64_t

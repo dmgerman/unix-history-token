@@ -1014,6 +1014,14 @@ name|digests
 expr_stmt|;
 name|dest
 operator|->
+name|pkey_meths
+operator|=
+name|src
+operator|->
+name|pkey_meths
+expr_stmt|;
+name|dest
+operator|->
 name|destroy
 operator|=
 name|src

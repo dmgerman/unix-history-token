@@ -534,6 +534,17 @@ begin_comment
 comment|/* changed dst to local */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_IP_NEXTHOP
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* explicit ip nexthop */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -748,6 +759,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|drop_redirect
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -821,6 +842,13 @@ define|#
 directive|define
 name|V_rsvp_on
 value|VNET(rsvp_on)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_drop_redirect
+value|VNET(drop_redirect)
 end_define
 
 begin_function_decl
@@ -909,9 +937,6 @@ name|mtu
 parameter_list|,
 name|u_long
 name|if_hwassist_flags
-parameter_list|,
-name|int
-name|sw_csum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1480,29 +1505,12 @@ end_typedef
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-name|ip_fw_chk_ptr_t
-argument_list|,
-name|ip_fw_chk_ptr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|ip_fw_ctl_ptr_t
 argument_list|,
 name|ip_fw_ctl_ptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ip_fw_chk_ptr
-value|VNET(ip_fw_chk_ptr)
-end_define
 
 begin_define
 define|#

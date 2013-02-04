@@ -121,6 +121,7 @@ name|uint16_t
 name|edd_params_off
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -168,6 +169,7 @@ name|uint8_t
 name|checksum
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -184,6 +186,7 @@ name|edd_device_path_v3
 name|device_path
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -234,6 +237,7 @@ name|uint8_t
 name|checksum
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -250,6 +254,7 @@ name|edd_device_path_v4
 name|device_path
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 

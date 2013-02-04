@@ -115,7 +115,7 @@ name|class
 name|CallSite
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|namespace
 name|InlineConstants
@@ -157,6 +157,14 @@ name|int
 name|NoreturnPenalty
 init|=
 literal|10000
+decl_stmt|;
+comment|/// Do not inline functions which allocate this many bytes on the stack
+comment|/// when the caller is recursive.
+specifier|const
+name|unsigned
+name|TotalAllocaSizeRecursiveCaller
+init|=
+literal|1024
 decl_stmt|;
 block|}
 comment|/// \brief Represents the cost of inlining a function.
@@ -367,9 +375,9 @@ comment|/// InlineCostAnalyzer - Cost analyzer used by inliner.
 name|class
 name|InlineCostAnalyzer
 block|{
-comment|// TargetData if available, or null.
+comment|// DataLayout if available, or null.
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -384,9 +392,9 @@ literal|0
 argument_list|)
 block|{}
 name|void
-name|setTargetData
+name|setDataLayout
 argument_list|(
-argument|const TargetData *TData
+argument|const DataLayout *TData
 argument_list|)
 block|{
 name|TD
@@ -432,17 +440,6 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// callIsSmall - If a call is likely to lower to a single target instruction,
-comment|/// or is otherwise deemed small return true.
-name|bool
-name|callIsSmall
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|Callee
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

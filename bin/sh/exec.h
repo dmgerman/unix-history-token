@@ -276,6 +276,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|isfunc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|typecmd_impl
 parameter_list|(
 name|int

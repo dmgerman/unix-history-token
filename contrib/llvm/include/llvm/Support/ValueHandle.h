@@ -201,15 +201,12 @@ literal|2
 operator|>
 name|VP
 expr_stmt|;
-name|explicit
 name|ValueHandleBase
-parameter_list|(
-specifier|const
-name|ValueHandleBase
-modifier|&
-parameter_list|)
-function_decl|;
-comment|// DO NOT IMPLEMENT.
+argument_list|(
+argument|const ValueHandleBase&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 name|public
 label|:
 name|explicit
@@ -611,7 +608,7 @@ block|}
 end_function
 
 begin_label
-name|private
+name|public
 label|:
 end_label
 
@@ -646,6 +643,11 @@ name|New
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_label
+name|private
+label|:
+end_label
 
 begin_comment
 comment|// Internal implementation details.
@@ -1864,7 +1866,7 @@ name|virtual
 operator|~
 name|CallbackVH
 argument_list|()
-block|;
+block|{}
 name|void
 name|setValPtr
 argument_list|(
@@ -1927,12 +1929,7 @@ name|virtual
 name|void
 name|deleted
 argument_list|()
-block|{
-name|setValPtr
-argument_list|(
-name|NULL
-argument_list|)
-block|;   }
+block|;
 comment|/// Called when this->getValPtr()->replaceAllUsesWith(new_value) is called,
 comment|/// _before_ any of the uses have actually been replaced.  If WeakVH were
 comment|/// implemented as a CallbackVH, it would use this method to call
@@ -1941,13 +1938,22 @@ name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-argument|Value *
+name|Value
+operator|*
 argument_list|)
-block|{}
-expr|}
-block|;
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Specialize simplify_type to allow CallbackVH to participate in
+end_comment
+
+begin_comment
 comment|// dyn_cast, isa, etc.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1955,7 +1961,10 @@ name|From
 operator|>
 expr|struct
 name|simplify_type
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1989,8 +1998,14 @@ name|CVH
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2007,10 +2022,11 @@ specifier|const
 name|CallbackVH
 operator|>
 block|{}
-block|;  }
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

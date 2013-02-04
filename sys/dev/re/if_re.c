@@ -380,7 +380,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_type
-specifier|const
 name|re_devs
 index|[]
 init|=
@@ -493,7 +492,6 @@ specifier|static
 specifier|const
 name|struct
 name|rl_hwrev
-specifier|const
 name|re_hwrevs
 index|[]
 init|=
@@ -3443,7 +3441,7 @@ name|MGETHDR
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6483,7 +6481,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CAP
+name|PCIER_LINK_CAP
 argument_list|,
 literal|2
 argument_list|)
@@ -6493,7 +6491,7 @@ condition|(
 operator|(
 name|cap
 operator|&
-name|PCIM_LINK_CAP_ASPM
+name|PCIEM_LINK_CAP_ASPM
 operator|)
 operator|!=
 literal|0
@@ -6509,7 +6507,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -6519,7 +6517,7 @@ condition|(
 operator|(
 name|ctl
 operator|&
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 operator|)
 operator|!=
 literal|0
@@ -6528,7 +6526,7 @@ block|{
 name|ctl
 operator|&=
 operator|~
-literal|0x0003
+name|PCIEM_LINK_CTL_ASPMC
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -6538,7 +6536,7 @@ name|sc
 operator|->
 name|rl_expcap
 operator|+
-name|PCIR_EXPRESS_LINK_CTL
+name|PCIER_LINK_CTL
 argument_list|,
 name|ctl
 argument_list|,
@@ -9230,7 +9228,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -9584,7 +9582,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -10536,7 +10534,10 @@ name|ifp
 argument_list|)
 operator|->
 name|rx_rings
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|nr_kflags
 operator||=
 name|NKR_PENDINTR
@@ -10550,7 +10551,10 @@ name|ifp
 argument_list|)
 operator|->
 name|rx_rings
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|si
 argument_list|,
 name|PI_NET
@@ -13101,7 +13105,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -13161,7 +13165,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13298,7 +13302,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|RL_NTXSEGS
 argument_list|)

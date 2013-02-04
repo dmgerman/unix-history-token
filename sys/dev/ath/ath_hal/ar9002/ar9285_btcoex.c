@@ -258,7 +258,7 @@ operator|->
 name|ah_btCoexMode2
 argument_list|)
 expr_stmt|;
-comment|/* Program SWCOM talbe to make sure RF switch always parks at WLAN side */
+comment|/* 		 * Program SWCOM table to make sure RF switch always parks 		 * at WLAN side 		 */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -309,7 +309,7 @@ operator|->
 name|ah_btCoexMode2
 argument_list|)
 expr_stmt|;
-comment|/* Program SWCOM talbe to make sure RF switch always parks at BT side */
+comment|/* 		 * Program SWCOM table to make sure RF switch always 		 * parks at BT side 		 */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -349,7 +349,7 @@ name|AR_PHY_9285_ANT_DIV_CTL_ALL
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Clear ant_fast_div_bias [14:9] since for Janus the main LNA is always LNA1. */
+comment|/* 	 * Clear ant_fast_div_bias [14:9] since for Janus the main LNA is 	 * always LNA1. 	 */
 name|regVal
 operator|&=
 operator|(

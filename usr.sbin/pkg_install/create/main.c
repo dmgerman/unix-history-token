@@ -469,6 +469,9 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
+name|warnpkgng
+argument_list|()
+expr_stmt|;
 name|pkgs
 operator|=
 name|start

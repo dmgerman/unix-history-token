@@ -420,6 +420,9 @@ decl_stmt|;
 name|int
 name|sc_nsensors
 decl_stmt|;
+name|int
+name|init_done
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1130,6 +1133,18 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|struct
+name|ad7417_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|adc741x_config
 operator|=
 literal|0
@@ -1234,6 +1249,12 @@ operator|-
 literal|1
 operator|)
 return|;
+name|sc
+operator|->
+name|init_done
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2159,7 +2180,7 @@ literal|"temp"
 expr_stmt|;
 name|desc
 operator|=
-literal|"Sensor temp in C"
+literal|"sensor unit (C)"
 expr_stmt|;
 block|}
 else|else
@@ -2170,7 +2191,7 @@ literal|"volt"
 expr_stmt|;
 name|desc
 operator|=
-literal|"Sensor Volt in V"
+literal|"sensor unit (mV)"
 expr_stmt|;
 block|}
 comment|/* I use i to pass the sensor id. */
@@ -2931,7 +2952,14 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Init the ADC. */
+comment|/* Init the ADC if not already done.*/
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|init_done
+condition|)
 if|if
 condition|(
 name|ad7417_init_adc

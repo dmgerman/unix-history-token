@@ -112,10 +112,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|pa
-decl_stmt|;
 name|ssize_t
 name|res
 decl_stmt|,

@@ -489,6 +489,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|compress_types
@@ -654,7 +655,7 @@ name|sw_pidtype
 decl_stmt|;
 comment|/* "daemon" or "process group" */
 name|int
-name|run_cmd
+name|sw_runcmd
 decl_stmt|;
 comment|/* run command or send PID to signal */
 name|char
@@ -766,16 +767,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|swlisthead
 argument_list|,
 argument|sigwork_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|swhead
 operator|=
 name|SLIST_HEAD_INITIALIZER
@@ -785,16 +784,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|zwlisthead
 argument_list|,
 argument|zipwork_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|zwhead
 operator|=
 name|SLIST_HEAD_INITIALIZER
@@ -825,6 +822,7 @@ comment|/* -D Show details of 'trim_at' code */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|archtodir
 init|=
@@ -837,6 +835,7 @@ comment|/* Archive old logfiles to other directory */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|createlogs
 decl_stmt|;
@@ -867,6 +866,7 @@ comment|/* Print out what's going on */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|needroot
 init|=
@@ -891,6 +891,7 @@ comment|/* Don't do anything, just show it */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|norotate
 init|=
@@ -903,6 +904,7 @@ comment|/* Don't rotate */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nosignal
 decl_stmt|;
@@ -913,6 +915,7 @@ comment|/* Do not send any signals */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|enforcepid
 init|=
@@ -925,6 +928,7 @@ comment|/* If PID file does not exist or empty, do nothing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|force
 init|=
@@ -937,6 +941,7 @@ comment|/* Force the trim no matter what */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rotatereq
 init|=
@@ -961,6 +966,7 @@ comment|/*    the run command). */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|requestor
@@ -972,6 +978,7 @@ comment|/* The name given on a -R request */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|timefnamefmt
@@ -981,10 +988,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Use time based filenames instead of .0 etc */
+comment|/* Use time based filenames instead of .0 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|archdirname
@@ -996,6 +1004,7 @@ comment|/* Directory path to old logfiles archive */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|destdir
@@ -1009,6 +1018,7 @@ comment|/* Directory to treat at root for logs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1033,6 +1043,7 @@ comment|/* A "timenow" value set via -D option */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ptime_data
 modifier|*
@@ -1052,6 +1063,7 @@ value|16
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|daytime
 index|[
@@ -1061,10 +1073,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The current time in human readable form, 				 * used for rotation-tracking messages. */
+comment|/* The current time in human readable form, 				  * used for rotation-tracking messages. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|hostname
 index|[
@@ -1078,6 +1091,7 @@ comment|/* hostname */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3325,7 +3339,7 @@ case|:
 name|noaction
 operator|++
 expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
 literal|'r'
 case|:
@@ -7425,7 +7439,7 @@ argument_list|(
 name|errbuf
 argument_list|)
 argument_list|,
-literal|"Could not delet old logfile '%s'"
+literal|"Could not delete old logfile '%s'"
 argument_list|,
 name|oldlogs
 index|[
@@ -8585,6 +8599,14 @@ argument_list|,
 name|file1
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ttouch %s\t\t"
+literal|"# Update mtime for 'when'-interval processing\n"
+argument_list|,
+name|file1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -8616,6 +8638,14 @@ operator|->
 name|log
 argument_list|,
 name|file1
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Interval-based rotations are done using the mtime of 			 * the most recently archived log, so make sure it gets 			 * updated during a rotation. 			 */
+name|utimes
+argument_list|(
+name|file1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8731,6 +8761,13 @@ name|tmp
 decl_stmt|;
 if|if
 condition|(
+name|swork
+operator|->
+name|sw_runcmd
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|!
 operator|(
 name|swork
@@ -8743,6 +8780,7 @@ operator|->
 name|sw_pid
 operator|==
 literal|0
+operator|)
 condition|)
 return|return;
 comment|/* no work to do... */
@@ -8812,6 +8850,27 @@ condition|(
 name|noaction
 condition|)
 block|{
+if|if
+condition|(
+name|swork
+operator|->
+name|sw_runcmd
+condition|)
+name|printf
+argument_list|(
+literal|"\tsh -c '%s %d'\n"
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
+argument_list|,
+name|swork
+operator|->
+name|sw_signum
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"\tkill -%d %d \t\t# %s\n"
@@ -8845,13 +8904,14 @@ argument_list|,
 name|secs
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
 condition|(
 name|swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 condition|)
 block|{
 name|asprintf
@@ -9223,7 +9283,7 @@ name|zwork
 operator|->
 name|zw_swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|==
 literal|0
 operator|&&
@@ -9634,7 +9694,7 @@ argument_list|)
 expr_stmt|;
 name|stmp
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|=
 literal|0
 expr_stmt|;
@@ -9650,7 +9710,20 @@ condition|)
 block|{
 name|stmp
 operator|->
-name|run_cmd
+name|sw_pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_pidok
+operator|=
+literal|0
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_runcmd
 operator|=
 literal|1
 expr_stmt|;

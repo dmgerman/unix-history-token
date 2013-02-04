@@ -1287,6 +1287,12 @@ name|c
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ac
+expr_stmt|;
+comment|/* UNUSED */
 while|while
 condition|(
 operator|(
@@ -1611,6 +1617,12 @@ name|c
 init|=
 literal|0
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ac
+expr_stmt|;
+comment|/* UNUSED */
 while|while
 condition|(
 operator|(
@@ -1780,9 +1792,6 @@ expr_stmt|;
 comment|/* 	 * Extract local address. 	 */
 if|if
 condition|(
-operator|(
-name|sep
-operator|=
 name|strchr
 argument_list|(
 operator|*
@@ -1791,7 +1800,6 @@ name|av
 argument_list|,
 literal|','
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
@@ -1932,9 +1940,6 @@ expr_stmt|;
 comment|/* 	 * Extract public port and optionally address. 	 */
 if|if
 condition|(
-operator|(
-name|sep
-operator|=
 name|strchr
 argument_list|(
 operator|*
@@ -1943,7 +1948,6 @@ name|av
 argument_list|,
 literal|':'
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
@@ -2089,9 +2093,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|sep
-operator|=
 name|strchr
 argument_list|(
 operator|*
@@ -2100,7 +2101,6 @@ name|av
 argument_list|,
 literal|':'
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)

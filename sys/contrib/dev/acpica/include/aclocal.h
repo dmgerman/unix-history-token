@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -811,7 +811,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Bitmapped ACPI types.  Used internally only  */
+comment|/*  * Bitmapped ACPI types. Used internally only  */
 end_comment
 
 begin_define
@@ -1880,7 +1880,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Thread state - one per thread across multiple walk states.  Multiple walk  * states are created when there are nested control methods executing.  */
+comment|/*  * Thread state - one per thread across multiple walk states. Multiple walk  * states are created when there are nested control methods executing.  */
 end_comment
 
 begin_typedef
@@ -2313,12 +2313,20 @@ begin_comment
 comment|/* Op name (debug only) */
 end_comment
 
+begin_comment
+comment|/* Flags for DisasmFlags field  above */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_BUFFER
 value|0x00
 end_define
+
+begin_comment
+comment|/* Buffer is a simple data buffer */
+end_comment
 
 begin_define
 define|#
@@ -2327,12 +2335,20 @@ name|ACPI_DASM_RESOURCE
 value|0x01
 end_define
 
+begin_comment
+comment|/* Buffer is a Resource Descriptor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_STRING
 value|0x02
 end_define
+
+begin_comment
+comment|/* Buffer is a ASCII string */
+end_comment
 
 begin_define
 define|#
@@ -2341,40 +2357,75 @@ name|ACPI_DASM_UNICODE
 value|0x03
 end_define
 
+begin_comment
+comment|/* Buffer is a Unicode string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_PLD_METHOD
+value|0x04
+end_define
+
+begin_comment
+comment|/* Buffer is a _PLD method bit-packed buffer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_EISAID
-value|0x04
+value|0x05
 end_define
+
+begin_comment
+comment|/* Integer is an EISAID */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_MATCHOP
-value|0x05
+value|0x06
 end_define
+
+begin_comment
+comment|/* Parent opcode is a Match() operator */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_PREFIX
-value|0x06
+value|0x07
 end_define
+
+begin_comment
+comment|/* Start of a LNotEqual (etc.) pair of opcodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_SUFFIX
-value|0x07
+value|0x08
 end_define
+
+begin_comment
+comment|/* End  of a LNotEqual (etc.) pair of opcodes */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_DASM_IGNORE
-value|0x08
+value|0x09
 end_define
+
+begin_comment
+comment|/* Not used at this time */
+end_comment
 
 begin_comment
 comment|/*  * Generic operation (for example:  If, While, Store)  */
@@ -3255,6 +3306,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_OSI_WIN_8
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_ALWAYS_ILLEGAL
 value|0x00
 end_define
@@ -3680,6 +3738,9 @@ typedef|typedef
 struct|struct
 name|acpi_db_method_info
 block|{
+name|ACPI_HANDLE
+name|Method
+decl_stmt|;
 name|ACPI_HANDLE
 name|MainThreadGate
 decl_stmt|;

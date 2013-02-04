@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999-2000 Damien Miller.  All rights reserved.  *  *
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.h,v 1.5 2005/09/27 12:46:32 dtucker Exp $ */
+comment|/* $Id: entropy.h,v 1.6 2011/09/09 01:29:41 dtucker Exp $ */
 end_comment
 
 begin_ifndef
@@ -28,15 +28,6 @@ end_include
 begin_function_decl
 name|void
 name|seed_rng
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|init_rng
 parameter_list|(
 name|void
 parameter_list|)

@@ -2145,7 +2145,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5415,9 +5415,14 @@ name|off
 expr_stmt|;
 name|igmplen
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
+operator|-
+name|off
 expr_stmt|;
 comment|/* 	 * Validate lengths. 	 */
 if|if
@@ -7881,7 +7886,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -8045,6 +8050,8 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8055,6 +8062,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|igmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip
@@ -10090,7 +10098,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -10119,7 +10127,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -10675,7 +10683,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -10703,7 +10711,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -11432,7 +11440,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -11460,7 +11468,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -13251,7 +13259,7 @@ name|m
 argument_list|,
 name|hdrlen
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13421,15 +13429,21 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|hdrlen
 operator|+
 name|igmpreclen
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 name|IP_DF
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

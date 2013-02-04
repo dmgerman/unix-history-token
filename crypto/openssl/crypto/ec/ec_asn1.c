@@ -113,6 +113,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
+end_ifndef
+
 begin_function
 name|int
 name|EC_GROUP_get_trinomial_basis
@@ -378,6 +384,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* some structures needed for the asn1 encoding */
@@ -1417,6 +1428,23 @@ block|}
 block|}
 else|else
 comment|/* nid == NID_X9_62_characteristic_two_field */
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_EC2M
+block|{
+name|ECerr
+argument_list|(
+name|EC_F_EC_ASN1_GROUP2FIELDID
+argument_list|,
+name|EC_R_GF2M_NOT_SUPPORTED
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+else|#
+directive|else
 block|{
 name|int
 name|field_type
@@ -1753,6 +1781,8 @@ goto|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 name|ok
 operator|=
 literal|1
@@ -1942,6 +1972,9 @@ name|err
 goto|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 comment|/* nid == NID_X9_62_characteristic_two_field */
 block|{
@@ -1974,6 +2007,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|len_1
 operator|=
 operator|(
@@ -3326,6 +3361,23 @@ name|tmp
 operator|==
 name|NID_X9_62_characteristic_two_field
 condition|)
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_EC2M
+block|{
+name|ECerr
+argument_list|(
+name|EC_F_EC_ASN1_PARAMETERS2GROUP
+argument_list|,
+name|EC_R_GF2M_NOT_SUPPORTED
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+else|#
+directive|else
 block|{
 name|X9_62_CHARACTERISTIC_TWO
 modifier|*
@@ -3735,6 +3787,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -4597,6 +4651,11 @@ argument_list|(
 name|EC_F_D2I_ECPKPARAMETERS
 argument_list|,
 name|EC_R_PKPARAMETERS2GROUP_FAILURE
+argument_list|)
+expr_stmt|;
+name|ECPKPARAMETERS_free
+argument_list|(
+name|params
 argument_list|)
 expr_stmt|;
 return|return

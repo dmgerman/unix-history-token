@@ -29,7 +29,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1((ida)->tag, (ida)->bsh, port)
+value|bus_read_1((ida)->regs, port)
 end_define
 
 begin_define
@@ -42,7 +42,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_2((ida)->tag, (ida)->bsh, port)
+value|bus_read_2((ida)->regs, port)
 end_define
 
 begin_define
@@ -55,7 +55,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_4((ida)->tag, (ida)->bsh, port)
+value|bus_read_4((ida)->regs, port)
 end_define
 
 begin_define
@@ -70,7 +70,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1((ida)->tag, (ida)->bsh, port, val)
+value|bus_write_1((ida)->regs, port, val)
 end_define
 
 begin_define
@@ -85,7 +85,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2((ida)->tag, (ida)->bsh, port, val)
+value|bus_write_2((ida)->regs, port, val)
 end_define
 
 begin_define
@@ -100,7 +100,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((ida)->tag, (ida)->bsh, port, val)
+value|bus_write_4((ida)->regs, port, val)
 end_define
 
 begin_struct
@@ -235,7 +235,10 @@ init|=
 literal|0x0001
 block|,
 comment|/* waiting for completion */
-block|}
+name|QCB_TIMEDOUT
+init|=
+literal|0x0002
+block|, }
 name|qcb_state
 typedef|;
 end_typedef
@@ -286,6 +289,12 @@ begin_comment
 comment|/* drive "number" for controller */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ida_softc
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ida_qcb
@@ -294,6 +303,11 @@ name|struct
 name|ida_hardware_qcb
 modifier|*
 name|hwqcb
+decl_stmt|;
+name|struct
+name|ida_softc
+modifier|*
+name|ida
 decl_stmt|;
 name|qcb_state
 name|state
@@ -330,15 +344,12 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* bio associated with qcb */
+name|int
+name|error
+decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_struct_decl
-struct_decl|struct
-name|ida_softc
-struct_decl|;
-end_struct_decl
 
 begin_struct
 struct|struct
@@ -446,15 +457,23 @@ begin_comment
 comment|/* interrupts enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IDA_QFROZEN
+value|0x08
+end_define
+
+begin_comment
+comment|/* request queue frozen */
+end_comment
+
 begin_struct
 struct|struct
 name|ida_softc
 block|{
 name|device_t
 name|dev
-decl_stmt|;
-name|int
-name|unit
 decl_stmt|;
 name|struct
 name|callout
@@ -488,11 +507,13 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-name|bus_space_tag_t
-name|tag
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
-name|bus_space_handle_t
-name|bsh
+name|struct
+name|intr_config_hook
+name|ich
 decl_stmt|;
 comment|/* various DMA tags */
 name|bus_dma_tag_t
@@ -512,12 +533,6 @@ name|hwqcb_busaddr
 decl_stmt|;
 name|bus_dma_tag_t
 name|sg_dmat
-decl_stmt|;
-name|int
-name|num_drives
-decl_stmt|;
-name|int
-name|num_qcbs
 decl_stmt|;
 name|int
 name|flags
@@ -699,19 +714,6 @@ begin_function_decl
 specifier|extern
 name|int
 name|ida_init
-parameter_list|(
-name|struct
-name|ida_softc
-modifier|*
-name|ida
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ida_attach
 parameter_list|(
 name|struct
 name|ida_softc

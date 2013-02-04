@@ -585,15 +585,12 @@ operator|*
 operator|)
 name|client_data
 decl_stmt|;
-name|off_t
+name|int64_t
 name|skip
 init|=
-operator|(
-name|off_t
-operator|)
 name|request
 decl_stmt|;
-name|off_t
+name|int64_t
 name|old_offset
 decl_stmt|,
 name|new_offset

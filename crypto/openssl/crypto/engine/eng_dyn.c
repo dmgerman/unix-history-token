@@ -363,10 +363,13 @@ name|int
 name|dir_load
 decl_stmt|;
 comment|/* A stack of directories from which ENGINEs could be loaded */
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|OPENSSL_STRING
+argument_list|)
+operator|*
 name|dirs
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -390,7 +393,7 @@ specifier|static
 name|void
 name|int_free_str
 parameter_list|(
-name|void
+name|char
 modifier|*
 name|s
 parameter_list|)
@@ -503,7 +506,7 @@ name|ctx
 operator|->
 name|dirs
 condition|)
-name|sk_pop_free
+name|sk_OPENSSL_STRING_pop_free
 argument_list|(
 name|ctx
 operator|->
@@ -647,7 +650,7 @@ name|c
 operator|->
 name|dirs
 operator|=
-name|sk_new_null
+name|sk_OPENSSL_STRING_new_null
 argument_list|()
 expr_stmt|;
 if|if
@@ -1466,7 +1469,7 @@ return|return
 literal|0
 return|;
 block|}
-name|sk_insert
+name|sk_OPENSSL_STRING_insert
 argument_list|(
 name|ctx
 operator|->
@@ -1555,10 +1558,9 @@ operator|->
 name|dir_load
 operator|||
 operator|(
-operator|(
 name|num
 operator|=
-name|sk_num
+name|sk_OPENSSL_STRING_num
 argument_list|(
 name|ctx
 operator|->
@@ -1567,7 +1569,6 @@ argument_list|)
 operator|)
 operator|<
 literal|1
-operator|)
 condition|)
 return|return
 literal|0
@@ -1591,7 +1592,7 @@ name|char
 modifier|*
 name|s
 init|=
-name|sk_value
+name|sk_OPENSSL_STRING_value
 argument_list|(
 name|ctx
 operator|->

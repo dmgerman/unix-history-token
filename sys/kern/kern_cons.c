@@ -1607,7 +1607,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-empty_stmt|;
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|c

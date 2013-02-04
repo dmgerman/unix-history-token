@@ -99,6 +99,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -305,19 +311,15 @@ operator|=
 name|geteuid
 argument_list|()
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 comment|/* be safe */
 name|progname
-operator|=
+init|=
 name|argv
 index|[
 literal|0
 index|]
-expr_stmt|;
+decl_stmt|;
 name|gethostname
 argument_list|(
 name|local_host

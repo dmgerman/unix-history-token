@@ -135,6 +135,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tlb_invalidate_range
+parameter_list|(
+name|struct
+name|pmap
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|tlb_save
 parameter_list|(
 name|void

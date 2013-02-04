@@ -911,6 +911,13 @@ name|bad
 goto|;
 block|}
 block|}
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -922,6 +929,13 @@ literal|0
 block|device_printf(sc->dev,"hdspe is running\n");
 endif|#
 directive|endif
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;

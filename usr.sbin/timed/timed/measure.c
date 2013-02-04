@@ -124,7 +124,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Measures the differences between machines' clocks using  * ICMP timestamp messages.  */
+comment|/*  * Measures the differences between machines' clocks using  * ICMP timestamp messages.  * maxmsec	wait this many msec at most  * wmsec	msec to wait for an answer  * print	print complaints on stderr  */
 end_comment
 
 begin_function
@@ -132,37 +132,24 @@ name|int
 comment|/* status val defined in globals.h */
 name|measure
 parameter_list|(
-name|maxmsec
-parameter_list|,
-name|wmsec
-parameter_list|,
-name|hname
-parameter_list|,
-name|addr
-parameter_list|,
-name|print
-parameter_list|)
 name|u_long
 name|maxmsec
-decl_stmt|;
-comment|/* wait this many msec at most */
+parameter_list|,
 name|u_long
 name|wmsec
-decl_stmt|;
-comment|/* msec to wait for an answer */
+parameter_list|,
 name|char
 modifier|*
 name|hname
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|print
-decl_stmt|;
-comment|/* print complaints on stderr */
+parameter_list|)
 block|{
 name|int
 name|length
@@ -471,7 +458,7 @@ argument_list|(
 operator|&
 name|tdone
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mstotvround
@@ -519,7 +506,7 @@ argument_list|(
 operator|&
 name|tcur
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * keep sending until we have sent the max 		 */
@@ -734,12 +721,7 @@ argument_list|(
 operator|&
 name|tcur
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1218,18 +1200,14 @@ begin_function
 name|void
 name|mstotvround
 parameter_list|(
-name|res
-parameter_list|,
-name|x
-parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|res
-decl_stmt|;
+parameter_list|,
 name|long
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1318,21 +1296,16 @@ begin_function
 name|void
 name|timevaladd
 parameter_list|(
-name|tv1
-parameter_list|,
-name|tv2
-parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|tv1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
 name|tv2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|tv1
 operator|->
@@ -1393,32 +1366,27 @@ literal|1000000
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|timevalsub
 parameter_list|(
-name|res
-parameter_list|,
-name|tv1
-parameter_list|,
-name|tv2
-parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|res
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
 name|tv1
-decl_stmt|,
+parameter_list|,
+name|struct
+name|timeval
 modifier|*
 name|tv2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|res
 operator|->
@@ -1487,7 +1455,7 @@ literal|1000000
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

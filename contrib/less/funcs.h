@@ -389,6 +389,14 @@ end_function_decl
 begin_function_decl
 name|public
 name|void
+name|ch_set_eof
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
+name|void
 name|ch_init
 parameter_list|()
 function_decl|;

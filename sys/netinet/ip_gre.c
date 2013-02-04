@@ -1126,16 +1126,19 @@ name|len
 operator|-=
 name|msiz
 expr_stmt|;
-comment|/* 	 * On FreeBSD, rip_input() supplies us with ip->ip_len 	 * already converted into host byteorder and also decreases 	 * it by the lengh of IP header, however, ip_input() expects 	 * that this field is in the original format (network byteorder 	 * and full size of IP packet), so that adjust accordingly. 	 */
+comment|/* 	 * On FreeBSD, rip_input() supplies us with ip->ip_len 	 * decreased by the lengh of IP header, however, ip_input() 	 * expects it to be full size of IP packet, so adjust accordingly. 	 */
 name|ip
 operator|->
 name|ip_len
 operator|=
 name|htons
 argument_list|(
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(

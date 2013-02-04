@@ -6704,9 +6704,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|locked
-decl_stmt|;
 name|vm_map_t
 name|map
 decl_stmt|;
@@ -7116,23 +7113,9 @@ name|last_vp
 operator|=
 name|vp
 expr_stmt|;
-name|locked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|locked
 argument_list|)
 expr_stmt|;
 name|vp
@@ -11563,6 +11546,9 @@ name|ev
 operator|=
 name|PMC_EV_SOFT_FIRST
 init|;
+operator|(
+name|int
+operator|)
 name|ev
 operator|<=
 name|PMC_EV_SOFT_LAST
@@ -15959,8 +15945,8 @@ argument_list|(
 name|td
 operator|->
 name|td_pinned
-operator|>
-literal|0
+operator|==
+literal|1
 argument_list|,
 operator|(
 literal|"[pmc,%d] invalid td_pinned value"

@@ -353,7 +353,7 @@ name|sh
 operator|->
 name|snoop_packetlen
 expr_stmt|;
-comment|/* 	 * XXX - Sigh, snoop_packetlen is a 16 bit quantity.  If we 	 * got a short length, but read a full sized snoop pakcet, 	 * assume we overflowed and add back the 64K... 	 */
+comment|/* 	 * XXX - Sigh, snoop_packetlen is a 16 bit quantity.  If we 	 * got a short length, but read a full sized snoop packet, 	 * assume we overflowed and add back the 64K... 	 */
 if|if
 condition|(
 name|cc

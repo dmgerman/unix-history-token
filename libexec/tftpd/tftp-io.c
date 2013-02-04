@@ -161,6 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
 struct|struct
 name|errmsg
 block|{
@@ -287,12 +288,6 @@ name|errmsg
 modifier|*
 name|pe
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXPKTSIZE
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|error
@@ -340,7 +335,7 @@ name|ebuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|ebuf
 argument_list|)
 argument_list|,
 literal|"error %d"
@@ -441,6 +436,25 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"%s block %d, attempt %d successful"
+argument_list|,
+name|packettype
+argument_list|(
+name|ntohs
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|tftphdr
+operator|*
+operator|)
+operator|(
+name|pkt
+operator|)
+operator|)
+operator|->
+name|th_opcode
+argument_list|)
+argument_list|)
 argument_list|,
 name|block
 argument_list|,
@@ -570,7 +584,7 @@ name|tftp_log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Sending ERROR %d: %s"
+literal|"Sending ERROR %d"
 argument_list|,
 name|error
 argument_list|)
@@ -1777,6 +1791,7 @@ comment|/*  * Receive a packet  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|timeoutbuf
 decl_stmt|;

@@ -22,8 +22,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *	Manages physical address maps.  *  *	In addition to hardware address maps, this  *	module is called upon to provide software-use-only  *	maps which may or may not be stored in the same  *	form as hardware maps.  These pseudo-maps are  *	used to store intermediate results from copy  *	operations to and from address spaces.  *  *	Since the information managed by this module is  *	also stored by the logical address mapping module,  *	this module may throw away valid virtual-to-physical  *	mappings at almost any time.  However, invalidations  *	of virtual-to-physical mappings must be done as  *	requested.  *  *	In order to cope with hardware architectures which  *	make virtual-to-physical map invalidates expensive,  *	this module may delay invalidate or reduced protection  *	operations until such time as they are actually  *	necessary.  This module is given full information as  *	to which processors are currently using which maps,  *	and to when physical maps must be made correct.  */
+comment|/*  *	Manages physical address maps.  *  *	Since the information managed by this module is  *	also stored by the logical address mapping module,  *	this module may throw away valid virtual-to-physical  *	mappings at almost any time.  However, invalidations  *	of virtual-to-physical mappings must be done as  *	requested.  *  *	In order to cope with hardware architectures which  *	make virtual-to-physical map invalidates expensive,  *	this module may delay invalidate or reduced protection  *	operations until such time as they are actually  *	necessary.  This module is given full information as  *	to which processors are currently using which maps,  *	and to when physical maps must be made correct.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_apic.h"
+end_include
 
 begin_include
 include|#
@@ -238,6 +244,35 @@ include|#
 directive|include
 file|<vm/uma.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -797,45 +832,13 @@ begin_comment
 comment|/* cache mode to PAT index conversion */
 end_comment
 
-begin_comment
-comment|/*  * Isolate the global pv list lock from data and other locks to prevent false  * sharing within the cache.  */
-end_comment
-
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
-block|{
 name|struct
-name|rwlock
-name|lock
-decl_stmt|;
-name|char
-name|padding
-index|[
-name|CACHE_LINE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rwlock
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|pvh_global
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
+name|rwlock_padalign
 name|pvh_global_lock
-value|pvh_global.lock
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Data for the pv entry allocation mechanism  */
@@ -1770,8 +1773,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|_pmap_unwire_pte_hold
+name|void
+name|_pmap_unwire_ptp
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -2292,7 +2295,7 @@ operator|<<
 name|PDRSHIFT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
+comment|/* 	 * PADDR1 and PADDR2 are used by pmap_pte_quick() and pmap_pte(), 	 * respectively. 	 */
 name|SYSMAP
 argument_list|(
 argument|pt_entry_t *
@@ -5149,6 +5152,22 @@ operator|<
 name|PMAP_CLFLUSH_THRESHOLD
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+comment|/* 		 * XXX: Some CPUs fault, hang, or trash the local APIC 		 * registers if we use CLFLUSH on the local APIC 		 * range.  The local APIC is always uncached, so we 		 * don't need to flush for that range anyway. 		 */
+if|if
+condition|(
+name|pmap_kextract
+argument_list|(
+name|sva
+argument_list|)
+operator|==
+name|lapic_paddr
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* 		 * Otherwise, do per-cache line flush.  Use the mfence 		 * instruction to insure that previous stores are 		 * included in the write-back.  The processor 		 * propagates flush to other processors in the cache 		 * coherence domain. 		 */
 name|mfence
 argument_list|()
@@ -7114,14 +7133,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine unholds page table pages, and if the hold count  * drops to zero, then it decrements the wire count.  */
+comment|/*  * Decrements a page table page's wire count, which is used to record the  * number of valid page table entries within the page.  If the wire count  * drops to zero, then the page table page is unmapped.  Returns TRUE if the  * page table page was unmapped and FALSE otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
-name|int
-name|pmap_unwire_pte_hold
+specifier|inline
+name|boolean_t
+name|pmap_unwire_ptp
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -7147,9 +7166,8 @@ name|wire_count
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|_pmap_unwire_pte_hold
+block|{
+name|_pmap_unwire_ptp
 argument_list|(
 name|pmap
 argument_list|,
@@ -7157,12 +7175,17 @@ name|m
 argument_list|,
 name|free
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
 operator|)
 return|;
+block|}
 else|else
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
@@ -7170,8 +7193,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|_pmap_unwire_pte_hold
+name|void
+name|_pmap_unwire_ptp
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -7246,11 +7269,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -7603,7 +7621,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pmap_unwire_pte_hold
+name|pmap_unwire_ptp
 argument_list|(
 name|pmap
 argument_list|,
@@ -8562,10 +8580,7 @@ name|lazyptd
 condition|)
 name|load_cr3
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_cr3
 argument_list|)
@@ -8609,10 +8624,7 @@ name|lazyptd
 condition|)
 name|load_cr3
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_cr3
 argument_list|)
@@ -8895,10 +8907,7 @@ condition|)
 block|{
 name|load_cr3
 argument_list|(
-name|PCPU_GET
-argument_list|(
 name|curpcb
-argument_list|)
 operator|->
 name|pcb_cr3
 argument_list|)
@@ -9943,9 +9952,6 @@ operator|&
 name|newtail
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -10163,18 +10169,44 @@ condition|)
 continue|continue;
 name|pte
 operator|=
-name|pmap_pte_quick
+name|pmap_pte
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+name|tpte
+operator|=
+operator|*
+name|pte
+expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|tpte
+operator|&
+name|PG_W
+operator|)
+operator|==
+literal|0
+condition|)
+name|tpte
+operator|=
+name|pte_load_clear
+argument_list|(
 name|pte
+argument_list|)
+expr_stmt|;
+name|pmap_pte_release
+argument_list|(
+name|pte
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tpte
 operator|&
 name|PG_W
 operator|)
@@ -10182,11 +10214,19 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|tpte
-operator|=
-name|pte_load_clear
+name|KASSERT
 argument_list|(
-name|pte
+name|tpte
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_pv_reclaim: pmap %p va %x zero pte"
+operator|,
+name|pmap
+operator|,
+name|va
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10534,9 +10574,6 @@ block|}
 block|}
 name|out
 label|:
-name|sched_unpin
-argument_list|()
-expr_stmt|;
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
@@ -13260,6 +13297,21 @@ argument_list|(
 name|ptq
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|oldpte
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_remove_pte: pmap %p va %x zero pte"
+operator|,
+name|pmap
+operator|,
+name|va
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oldpte
@@ -14088,6 +14140,23 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|tpte
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_remove_all: pmap %p va %x zero pte"
+operator|,
+name|pmap
+operator|,
+name|pv
+operator|->
+name|pv_va
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tpte
@@ -14719,6 +14788,9 @@ goto|goto
 name|resume
 goto|;
 block|}
+name|sched_pin
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -17177,7 +17249,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|pmap_unwire_pte_hold
+name|pmap_unwire_ptp
 argument_list|(
 name|pmap
 argument_list|,
@@ -18299,7 +18371,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|pmap_unwire_pte_hold
+name|pmap_unwire_ptp
 argument_list|(
 name|dst_pmap
 argument_list|,
@@ -19523,6 +19595,25 @@ argument_list|,
 argument|npc
 argument_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|pc
+operator|->
+name|pc_pmap
+operator|==
+name|pmap
+argument_list|,
+operator|(
+literal|"Wrong pmap %p %p"
+operator|,
+name|pmap
+operator|,
+name|pc
+operator|->
+name|pc_pmap
+operator|)
+argument_list|)
+expr_stmt|;
 name|allfree
 operator|=
 literal|1
@@ -22558,8 +22649,6 @@ name|vm_offset_t
 name|base
 decl_stmt|,
 name|offset
-decl_stmt|,
-name|tmpva
 decl_stmt|;
 if|if
 condition|(
@@ -22598,38 +22687,6 @@ operator|+
 name|size
 argument_list|,
 name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|tmpva
-operator|=
-name|base
-init|;
-name|tmpva
-operator|<
-operator|(
-name|base
-operator|+
-name|size
-operator|)
-condition|;
-name|tmpva
-operator|+=
-name|PAGE_SIZE
-control|)
-name|pmap_kremove
-argument_list|(
-name|tmpva
-argument_list|)
-expr_stmt|;
-name|pmap_invalidate_range
-argument_list|(
-name|kernel_pmap
-argument_list|,
-name|va
-argument_list|,
-name|tmpva
 argument_list|)
 expr_stmt|;
 name|kmem_free

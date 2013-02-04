@@ -3107,7 +3107,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"file isn't dynamically-linked"
+literal|"Skipping %s: not dynamically-linked"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 break|break;

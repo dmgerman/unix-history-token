@@ -208,16 +208,14 @@ name|PMCC_PROGRAM_NAME
 value|"pmccontrol"
 end_define
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|STAILQ_HEAD
 argument_list|(
 argument|pmcc_op_list
 argument_list|,
 argument|pmcc_op
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|head
 operator|=
 name|STAILQ_HEAD_INITIALIZER
@@ -340,6 +338,7 @@ name|DEBUG
 end_if
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|debug_stream
@@ -396,28 +395,6 @@ end_endif
 begin_comment
 comment|/* !DEBUG */
 end_comment
-
-begin_decl_stmt
-name|int
-name|pmc_syscall
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PMC_CALL
-parameter_list|(
-name|cmd
-parameter_list|,
-name|params
-parameter_list|)
-define|\
-value|if ((error = syscall(pmc_syscall, PMC_OP_##cmd, (params))) != 0)	\ {									\ 	DEBUG_MSG("ERROR: syscall [" #cmd "]");				\ 	exit(EX_OSERR);							\ }
-end_define
 
 begin_if
 if|#

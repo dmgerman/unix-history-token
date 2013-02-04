@@ -293,33 +293,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__clang__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|JEMALLOC_TLS_MODEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_TLS_MODEL
-end_define
-
-begin_comment
-comment|/* clang does not support tls_model yet. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

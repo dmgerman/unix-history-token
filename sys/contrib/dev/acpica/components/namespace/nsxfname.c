@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -67,11 +67,11 @@ name|char
 modifier|*
 name|AcpiNsCopyDeviceId
 parameter_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Dest
 parameter_list|,
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Source
 parameter_list|,
@@ -83,7 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetHandle  *  * PARAMETERS:  Parent          - Object to search under (search scope).  *              Pathname        - Pointer to an asciiz string containing the  *                                name  *              RetHandle       - Where the return handle is returned  *  * RETURN:      Status  *  * DESCRIPTION: This routine will search for a caller specified name in the  *              name space.  The caller can restrict the search region by  *              specifying a non NULL parent.  The parent value is itself a  *              namespace handle.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetHandle  *  * PARAMETERS:  Parent          - Object to search under (search scope).  *              Pathname        - Pointer to an asciiz string containing the  *                                name  *              RetHandle       - Where the return handle is returned  *  * RETURN:      Status  *  * DESCRIPTION: This routine will search for a caller specified name in the  *              name space. The caller can restrict the search region by  *              specifying a non NULL parent. The parent value is itself a  *              namespace handle.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -164,7 +164,7 @@ block|}
 comment|/*      * Valid cases are:      * 1) Fully qualified pathname      * 2) Parent + Relative pathname      *      * Error for<null Parent + relative path>      */
 if|if
 condition|(
-name|AcpiNsValidRootPrefix
+name|ACPI_IS_ROOT_PREFIX
 argument_list|(
 name|Pathname
 index|[
@@ -267,7 +267,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetName  *  * PARAMETERS:  Handle          - Handle to be converted to a pathname  *              NameType        - Full pathname or single segment  *              Buffer          - Buffer for returned path  *  * RETURN:      Pointer to a string containing the fully qualified Name.  *  * DESCRIPTION: This routine returns the fully qualified name associated with  *              the Handle parameter.  This and the AcpiPathnameToHandle are  *              complementary functions.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetName  *  * PARAMETERS:  Handle          - Handle to be converted to a pathname  *              NameType        - Full pathname or single segment  *              Buffer          - Buffer for returned path  *  * RETURN:      Pointer to a string containing the fully qualified Name.  *  * DESCRIPTION: This routine returns the fully qualified name associated with  *              the Handle parameter. This and the AcpiPathnameToHandle are  *              complementary functions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -416,7 +416,7 @@ name|UnlockAndExit
 goto|;
 block|}
 comment|/* Just copy the ACPI name from the Node and zero terminate it */
-name|ACPI_STRNCPY
+name|ACPI_MOVE_NAME
 argument_list|(
 name|Buffer
 operator|->
@@ -426,8 +426,6 @@ name|AcpiUtGetNodeName
 argument_list|(
 name|Node
 argument_list|)
-argument_list|,
-name|ACPI_NAME_SIZE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -475,7 +473,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsCopyDeviceId  *  * PARAMETERS:  Dest                - Pointer to the destination DEVICE_ID  *              Source              - Pointer to the source DEVICE_ID  *              StringArea          - Pointer to where to copy the dest string  *  * RETURN:      Pointer to the next string area  *  * DESCRIPTION: Copy a single DEVICE_ID, including the string data.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsCopyDeviceId  *  * PARAMETERS:  Dest                - Pointer to the destination PNP_DEVICE_ID  *              Source              - Pointer to the source PNP_DEVICE_ID  *              StringArea          - Pointer to where to copy the dest string  *  * RETURN:      Pointer to the next string area  *  * DESCRIPTION: Copy a single PNP_DEVICE_ID, including the string data.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -484,11 +482,11 @@ name|char
 modifier|*
 name|AcpiNsCopyDeviceId
 parameter_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Dest
 parameter_list|,
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Source
 parameter_list|,
@@ -497,7 +495,7 @@ modifier|*
 name|StringArea
 parameter_list|)
 block|{
-comment|/* Create the destination DEVICE_ID */
+comment|/* Create the destination PNP_DEVICE_ID */
 name|Dest
 operator|->
 name|String
@@ -539,7 +537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle              - Object Handle  *              ReturnBuffer        - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  * For Device and Processor objects, run the Device _HID, _UID, _CID, _STA,  * _ADR, _SxW, and _SxD methods.  *  * Note: Allocates the return buffer, must be freed by the caller.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle              - Object Handle  *              ReturnBuffer        - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  * For Device and Processor objects, run the Device _HID, _UID, _CID, _SUB,  * _STA, _ADR, _SxW, and _SxD methods.  *  * Note: Allocates the return buffer, must be freed by the caller.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -563,21 +561,27 @@ name|ACPI_DEVICE_INFO
 modifier|*
 name|Info
 decl_stmt|;
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 modifier|*
 name|CidList
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Hid
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 modifier|*
 name|Uid
+init|=
+name|NULL
+decl_stmt|;
+name|ACPI_PNP_DEVICE_ID
+modifier|*
+name|Sub
 init|=
 name|NULL
 decl_stmt|;
@@ -641,9 +645,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|Cleanup
-goto|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
 name|Node
 operator|=
@@ -750,7 +756,7 @@ name|ACPI_TYPE_PROCESSOR
 operator|)
 condition|)
 block|{
-comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the Device _HID, _UID, and _CID methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
+comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the Device _HID, _UID, _SUB, and _CID methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
 comment|/* Execute the Device._HID method */
 name|Status
 operator|=
@@ -811,6 +817,36 @@ operator||=
 name|ACPI_VALID_UID
 expr_stmt|;
 block|}
+comment|/* Execute the Device._SUB method */
+name|Status
+operator|=
+name|AcpiUtExecute_SUB
+argument_list|(
+name|Node
+argument_list|,
+operator|&
+name|Sub
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|InfoSize
+operator|+=
+name|Sub
+operator|->
+name|Length
+expr_stmt|;
+name|Valid
+operator||=
+name|ACPI_VALID_SUB
+expr_stmt|;
+block|}
 comment|/* Execute the Device._CID method */
 name|Status
 operator|=
@@ -840,7 +876,7 @@ name|ListSize
 operator|-
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID_LIST
+name|ACPI_PNP_DEVICE_ID_LIST
 argument_list|)
 operator|)
 expr_stmt|;
@@ -1021,7 +1057,7 @@ condition|(
 name|CidList
 condition|)
 block|{
-comment|/* Point past the CID DEVICE_ID array */
+comment|/* Point past the CID PNP_DEVICE_ID array */
 name|NextIdString
 operator|+=
 operator|(
@@ -1034,12 +1070,12 @@ name|Count
 operator|*
 sizeof|sizeof
 argument_list|(
-name|ACPI_DEVICE_ID
+name|ACPI_PNP_DEVICE_ID
 argument_list|)
 operator|)
 expr_stmt|;
 block|}
-comment|/*      * Copy the HID, UID, and CIDs to the return buffer. The variable-length      * strings are copied to the reserved area at the end of the buffer.      *      * For HID and CID, check if the ID is a PCI Root Bridge.      */
+comment|/*      * Copy the HID, UID, SUB, and CIDs to the return buffer.      * The variable-length strings are copied to the reserved area      * at the end of the buffer.      *      * For HID and CID, check if the ID is a PCI Root Bridge.      */
 if|if
 condition|(
 name|Hid
@@ -1092,6 +1128,26 @@ operator|->
 name|UniqueId
 argument_list|,
 name|Uid
+argument_list|,
+name|NextIdString
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Sub
+condition|)
+block|{
+name|NextIdString
+operator|=
+name|AcpiNsCopyDeviceId
+argument_list|(
+operator|&
+name|Info
+operator|->
+name|SubsystemId
+argument_list|,
+name|Sub
 argument_list|,
 name|NextIdString
 argument_list|)
@@ -1249,6 +1305,17 @@ block|{
 name|ACPI_FREE
 argument_list|(
 name|Uid
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Sub
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|Sub
 argument_list|)
 expr_stmt|;
 block|}

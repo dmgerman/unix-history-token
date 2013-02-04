@@ -490,6 +490,7 @@ comment|/*  * Return the type of a reserved cluster as text  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|rsrvdcltype

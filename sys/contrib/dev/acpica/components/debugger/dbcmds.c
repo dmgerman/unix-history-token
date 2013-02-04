@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -150,8 +150,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|AcpiDbDoOneSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbConvertToNode  *  * PARAMETERS:  InString        - String to convert  *  * RETURN:      Pointer to a NS node  *  * DESCRIPTION: Convert a string to a valid NS pointer.  Handles numeric or  *              alpha strings.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbConvertToNode  *  * PARAMETERS:  InString            - String to convert  *  * RETURN:      Pointer to a NS node  *  * DESCRIPTION: Convert a string to a valid NS pointer. Handles numeric or  *              alphanumeric strings.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -259,8 +270,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Alpha argument */
-comment|/* The parameter is a name string that must be resolved to a          * Named obj          */
+comment|/*          * Alpha argument: The parameter is a name string that must be          * resolved to a Namespace object.          */
 name|Node
 operator|=
 name|AcpiDbLocalNsLookup
@@ -289,7 +299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSleep  *  * PARAMETERS:  ObjectArg       - Desired sleep state (0-5)  *  * RETURN:      Status  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSleep  *  * PARAMETERS:  ObjectArg           - Desired sleep state (0-5). NULL means  *                                    invoke all possible sleep states.  *  * RETURN:      Status  *  * DESCRIPTION: Simulate sleep/wake sequences  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -301,17 +311,61 @@ modifier|*
 name|ObjectArg
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|UINT8
 name|SleepState
+decl_stmt|;
+name|UINT32
+name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AcpiDbSleep
 argument_list|)
 expr_stmt|;
+comment|/* Null input (no arguments) means to invoke all sleep states */
+if|if
+condition|(
+operator|!
+name|ObjectArg
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Invoking all possible sleep states, 0-%d\n"
+argument_list|,
+name|ACPI_S_STATES_MAX
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|ACPI_S_STATES_MAX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|AcpiDbDoOneSleepState
+argument_list|(
+operator|(
+name|UINT8
+operator|)
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Convert argument to binary and invoke the sleep state */
 name|SleepState
 operator|=
 operator|(
@@ -326,9 +380,128 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|AcpiDbDoOneSleepState
+argument_list|(
+name|SleepState
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDoOneSleepState  *  * PARAMETERS:  SleepState          - Desired sleep state (0-5)  *  * RETURN:      Status  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AcpiDbDoOneSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|UINT8
+name|SleepTypeA
+decl_stmt|;
+name|UINT8
+name|SleepTypeB
+decl_stmt|;
+comment|/* Validate parameter */
+if|if
+condition|(
+name|SleepState
+operator|>
+name|ACPI_S_STATES_MAX
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Prepare to sleep ****\n"
+literal|"Sleep state %d out of range (%d max)\n"
+argument_list|,
+name|SleepState
+argument_list|,
+name|ACPI_S_STATES_MAX
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n---- Invoking sleep state S%d (%s):\n"
+argument_list|,
+name|SleepState
+argument_list|,
+name|AcpiGbl_SleepStateNames
+index|[
+name|SleepState
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Get the values for the sleep type registers (for display only) */
+name|Status
+operator|=
+name|AcpiGetSleepTypeData
+argument_list|(
+name|SleepState
+argument_list|,
+operator|&
+name|SleepTypeA
+argument_list|,
+operator|&
+name|SleepTypeB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not evaluate [%s] method, %s\n"
+argument_list|,
+name|AcpiGbl_SleepStateNames
+index|[
+name|SleepState
+index|]
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"Register values for sleep state S%d: Sleep-A: %.2X, Sleep-B: %.2X\n"
+argument_list|,
+name|SleepState
+argument_list|,
+name|SleepTypeA
+argument_list|,
+name|SleepTypeB
+argument_list|)
+expr_stmt|;
+comment|/* Invoke the various sleep/wake interfaces */
+name|AcpiOsPrintf
+argument_list|(
+literal|"**** Sleep: Prepare to sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -352,7 +525,9 @@ goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Going to sleep ****\n"
+literal|"**** Sleep: Going to sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -360,8 +535,6 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|SleepState
-argument_list|,
-name|ACPI_NO_OPTIONAL_METHODS
 argument_list|)
 expr_stmt|;
 if|if
@@ -378,7 +551,9 @@ goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Prepare to return from sleep ****\n"
+literal|"**** Wake: Prepare to return from sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -386,8 +561,6 @@ operator|=
 name|AcpiLeaveSleepStatePrep
 argument_list|(
 name|SleepState
-argument_list|,
-name|ACPI_NO_OPTIONAL_METHODS
 argument_list|)
 expr_stmt|;
 if|if
@@ -404,7 +577,9 @@ goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Returning from sleep ****\n"
+literal|"**** Wake: Return from sleep (S%d) ****\n"
+argument_list|,
+name|SleepState
 argument_list|)
 expr_stmt|;
 name|Status
@@ -426,11 +601,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+return|return;
 name|ErrorExit
 label|:
 name|ACPI_EXCEPTION
@@ -440,15 +611,12 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"During sleep test"
+literal|"During invocation of sleep state S%d"
+operator|,
+name|SleepState
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
 block|}
 end_function
 
@@ -508,7 +676,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayTableInfo  *  * PARAMETERS:  TableArg        - String with name of table to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Display information about loaded tables.  Current  *              implementation displays all loaded tables.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayTableInfo  *  * PARAMETERS:  TableArg            - Name of table to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Display information about loaded tables. Current  *              implementation displays all loaded tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -808,7 +976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSendNotify  *  * PARAMETERS:  Name            - Name of ACPI object to send the notify to  *              Value           - Value of the notify to send.  *  * RETURN:      None  *  * DESCRIPTION: Send an ACPI notification.  The value specified is sent to the  *              named object as an ACPI notify.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSendNotify  *  * PARAMETERS:  Name                - Name of ACPI object where to send notify  *              Value               - Value of the notify to send.  *  * RETURN:      None  *  * DESCRIPTION: Send an ACPI notification. The value specified is sent to the  *              named object as an ACPI notify.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1115,7 +1283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayTemplate  *  * PARAMETERS:  BufferArg           - Buffer name or addrss  *  * RETURN:      None  *  * DESCRIPTION: Dump a buffer that contains a resource template  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayTemplate  *  * PARAMETERS:  BufferArg           - Buffer name or address  *  * RETURN:      None  *  * DESCRIPTION: Dump a buffer that contains a resource template  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1135,7 +1303,7 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|ACPI_BUFFER
-name|ReturnObj
+name|ReturnBuffer
 decl_stmt|;
 comment|/* Translate BufferArg to an Named object */
 name|Node
@@ -1185,13 +1353,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
 name|ACPI_DEBUG_BUFFER_SIZE
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
@@ -1207,7 +1375,7 @@ operator|->
 name|Object
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 name|AcpiDbSetOutputDestination
@@ -1250,7 +1418,7 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_RESOURCE
 argument_list|,
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 argument_list|)
@@ -1263,7 +1431,7 @@ argument_list|(
 literal|"\nRaw data buffer:\n"
 argument_list|)
 expr_stmt|;
-name|AcpiUtDumpBuffer
+name|AcpiUtDebugDumpBuffer
 argument_list|(
 operator|(
 name|UINT8
@@ -1564,7 +1732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmTestResourceConversion  *  * PARAMETERS:  Node            - Parent device node  *              Name            - resource method name (_CRS)  *  * RETURN:      Status  *  * DESCRIPTION: Compare the original AML with a conversion of the AML to  *              internal resource list, then back to AML.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmTestResourceConversion  *  * PARAMETERS:  Node                - Parent device node  *              Name                - resource method name (_CRS)  *  * RETURN:      Status  *  * DESCRIPTION: Compare the original AML with a conversion of the AML to  *              internal resource list, then back to AML.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1585,10 +1753,10 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|ACPI_BUFFER
-name|ReturnObj
+name|ReturnBuffer
 decl_stmt|;
 name|ACPI_BUFFER
-name|ResourceObj
+name|ResourceBuffer
 decl_stmt|;
 name|ACPI_BUFFER
 name|NewAml
@@ -1608,13 +1776,13 @@ name|Length
 operator|=
 name|ACPI_ALLOCATE_LOCAL_BUFFER
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
 name|ACPI_ALLOCATE_LOCAL_BUFFER
 expr_stmt|;
-name|ResourceObj
+name|ResourceBuffer
 operator|.
 name|Length
 operator|=
@@ -1632,7 +1800,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1669,7 +1837,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|ResourceObj
+name|ResourceBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1699,7 +1867,7 @@ name|Status
 operator|=
 name|AcpiRsCreateAmlResources
 argument_list|(
-name|ResourceObj
+name|ResourceBuffer
 operator|.
 name|Pointer
 argument_list|,
@@ -1732,7 +1900,7 @@ block|}
 comment|/* Compare original AML to the newly created AML resource list */
 name|OriginalAml
 operator|=
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 expr_stmt|;
@@ -1777,7 +1945,7 @@ name|Exit2
 label|:
 name|ACPI_FREE
 argument_list|(
-name|ResourceObj
+name|ResourceBuffer
 operator|.
 name|Pointer
 argument_list|)
@@ -1786,7 +1954,7 @@ name|Exit1
 label|:
 name|ACPI_FREE
 argument_list|(
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 argument_list|)
@@ -1800,7 +1968,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbResourceCallback  *  * PARAMETERS:  ACPI_WALK_RESOURCE_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Simple callback to exercise AcpiWalkResources  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbResourceCallback  *  * PARAMETERS:  ACPI_WALK_RESOURCE_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Simple callback to exercise AcpiWalkResources and  *              AcpiWalkResourceBuffer.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1883,7 +2051,7 @@ modifier|*
 name|ParentPath
 decl_stmt|;
 name|ACPI_BUFFER
-name|ReturnObj
+name|ReturnBuffer
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -2017,13 +2185,13 @@ name|ParentPath
 argument_list|)
 expr_stmt|;
 comment|/* Prepare for a return object of arbitrary size */
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2051,7 +2219,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2076,13 +2244,13 @@ goto|goto
 name|GetCrs
 goto|;
 block|}
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2095,7 +2263,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2144,13 +2312,13 @@ argument_list|(
 literal|"Evaluating _CRS\n"
 argument_list|)
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2167,7 +2335,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2192,7 +2360,7 @@ goto|goto
 name|GetPrs
 goto|;
 block|}
-comment|/* This code is here to exercise the AcpiWalkResources interface */
+comment|/* This code exercises the AcpiWalkResources interface */
 name|Status
 operator|=
 name|AcpiWalkResources
@@ -2228,18 +2396,18 @@ goto|goto
 name|GetPrs
 goto|;
 block|}
-comment|/* Get the _CRS resource list */
-name|ReturnObj
+comment|/* Get the _CRS resource list (test ALLOCATE buffer) */
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
-name|AcpiGbl_DbBuffer
+name|NULL
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
-name|ACPI_DEBUG_BUFFER_SIZE
+name|ACPI_ALLOCATE_LOCAL_BUFFER
 expr_stmt|;
 name|Status
 operator|=
@@ -2248,7 +2416,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2273,6 +2441,41 @@ goto|goto
 name|GetPrs
 goto|;
 block|}
+comment|/* This code exercises the AcpiWalkResourceBuffer interface */
+name|Status
+operator|=
+name|AcpiWalkResourceBuffer
+argument_list|(
+operator|&
+name|ReturnBuffer
+argument_list|,
+name|AcpiDbResourceCallback
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"AcpiWalkResourceBuffer failed: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|EndCrs
+goto|;
+block|}
 comment|/* Dump the _CRS resource list */
 name|AcpiRsDumpResourceList
 argument_list|(
@@ -2280,15 +2483,16 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_RESOURCE
 argument_list|,
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Perform comparison of original AML to newly created AML. This tests both          * the AML->Resource conversion and the Resource->Aml conversion.          */
-name|Status
-operator|=
+comment|/*          * Perform comparison of original AML to newly created AML. This          * tests both the AML->Resource conversion and the Resource->AML          * conversion.          */
+operator|(
+name|void
+operator|)
 name|AcpiDmTestResourceConversion
 argument_list|(
 name|Node
@@ -2304,7 +2508,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2326,9 +2530,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
-name|GetPrs
+name|EndCrs
 goto|;
 block|}
+name|EndCrs
+label|:
+name|ACPI_FREE_BUFFER
+argument_list|(
+name|ReturnBuffer
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* _PRS */
 name|GetPrs
@@ -2343,13 +2554,13 @@ argument_list|(
 literal|"Evaluating _PRS\n"
 argument_list|)
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2366,7 +2577,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2391,13 +2602,13 @@ goto|goto
 name|GetAei
 goto|;
 block|}
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2410,7 +2621,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2459,13 +2670,13 @@ argument_list|(
 literal|"Evaluating _AEI\n"
 argument_list|)
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2482,7 +2693,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2507,13 +2718,13 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Pointer
 operator|=
 name|AcpiGbl_DbBuffer
 expr_stmt|;
-name|ReturnObj
+name|ReturnBuffer
 operator|.
 name|Length
 operator|=
@@ -2526,7 +2737,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|ReturnObj
+name|ReturnBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2578,7 +2789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayResources  *  * PARAMETERS:  ObjectArg       - String object name or object pointer.  *                                "*" means "display resources for all devices"  *  * RETURN:      None  *  * DESCRIPTION: Display the resource objects associated with a device.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayResources  *  * PARAMETERS:  ObjectArg           - String object name or object pointer.  *                                    "*" means "display resources for all  *                                    devices"  *  * RETURN:      None  *  * DESCRIPTION: Display the resource objects associated with a device.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2716,7 +2927,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGenerateGpe  *  * PARAMETERS:  GpeArg          - Raw GPE number, ascii string  *              BlockArg        - GPE block number, ascii string  *                                0 or 1 for FADT GPE blocks  *  * RETURN:      None  *  * DESCRIPTION: Generate a GPE  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGenerateGpe  *  * PARAMETERS:  GpeArg              - Raw GPE number, ascii string  *              BlockArg            - GPE block number, ascii string  *                                    0 or 1 for FADT GPE blocks  *  * RETURN:      None  *  * DESCRIPTION: Simulate firing of a GPE  *  ******************************************************************************/
 end_comment
 
 begin_function

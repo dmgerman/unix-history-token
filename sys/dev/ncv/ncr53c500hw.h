@@ -27,12 +27,6 @@ directive|define
 name|__NCR53C500HW_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<compat/netbsd/dvcfg.h>
-end_include
-
 begin_define
 define|#
 directive|define

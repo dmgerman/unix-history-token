@@ -783,7 +783,7 @@ name|sprintf
 argument_list|(
 name|command_errbuf
 argument_list|,
-literal|"can't open '%s': %s\n"
+literal|"can't open '%s': %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -973,7 +973,7 @@ argument_list|(
 name|command_errbuf
 argument_list|,
 literal|"file '%s' line %d: memory allocation "
-literal|"failure - aborting\n"
+literal|"failure - aborting"
 argument_list|,
 name|filename
 argument_list|,

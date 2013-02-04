@@ -93,13 +93,16 @@ name|pv_entry
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pv_chunk
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|md_page
 block|{
-name|int
-name|pv_list_count
-decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -125,9 +128,9 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|pv_entry
+argument|pv_chunk
 argument_list|)
-name|pm_pvlist
+name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
 name|uint32_t
@@ -272,10 +275,6 @@ typedef|typedef
 struct|struct
 name|pv_entry
 block|{
-name|pmap_t
-name|pv_pmap
-decl_stmt|;
-comment|/* pmap where mapping lies */
 name|vm_offset_t
 name|pv_va
 decl_stmt|;
@@ -285,12 +284,6 @@ argument_list|(
 argument|pv_entry
 argument_list|)
 name|pv_list
-expr_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|pv_entry
-argument_list|)
-name|pv_plist
 expr_stmt|;
 block|}
 typedef|*

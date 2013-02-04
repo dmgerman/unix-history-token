@@ -4,11 +4,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_comment
-comment|/*  * Parse the AML and build an operation tree as most interpreters,  * like Perl, do.  Parsing is done by hand rather than with a YACC  * generated parser to tightly constrain stack and dynamic memory  * usage.  At the same time, parsing is kept flexible and the code  * fairly compact by parsing based on a list of AML opcode  * templates in AmlOpInfo[]  */
+comment|/*  * Parse the AML and build an operation tree as most interpreters,  * like Perl, do. Parsing is done by hand rather than with a YACC  * generated parser to tightly constrain stack and dynamic memory  * usage. At the same time, parsing is kept flexible and the code  * fairly compact by parsing based on a list of AML opcode  * templates in AmlOpInfo[]  */
 end_comment
 
 begin_include
@@ -329,7 +329,7 @@ break|break;
 case|case
 name|AML_CLASS_CREATE
 case|:
-comment|/*              * These opcodes contain TermArg operands.  The current              * op must be replaced by a placeholder return op              */
+comment|/*              * These opcodes contain TermArg operands. The current              * op must be replaced by a placeholder return op              */
 name|ReplacementOp
 operator|=
 name|AcpiPsAllocOp
@@ -352,7 +352,7 @@ break|break;
 case|case
 name|AML_CLASS_NAMED_OBJECT
 case|:
-comment|/*              * These opcodes contain TermArg operands.  The current              * op must be replaced by a placeholder return op              */
+comment|/*              * These opcodes contain TermArg operands. The current              * op must be replaced by a placeholder return op              */
 if|if
 condition|(
 operator|(
@@ -960,7 +960,7 @@ break|break;
 case|case
 name|AE_CTRL_FALSE
 case|:
-comment|/*          * Either an IF/WHILE Predicate was false or we encountered a BREAK          * opcode.  In both cases, we do not execute the rest of the          * package;  We simply close out the parent (finishing the walk of          * this branch of the tree) and continue execution at the parent          * level.          */
+comment|/*          * Either an IF/WHILE Predicate was false or we encountered a BREAK          * opcode. In both cases, we do not execute the rest of the          * package;  We simply close out the parent (finishing the walk of          * this branch of the tree) and continue execution at the parent          * level.          */
 name|ParserState
 operator|->
 name|Aml
@@ -1227,7 +1227,7 @@ name|AcpiGbl_CurrentWalkList
 operator|=
 name|Thread
 expr_stmt|;
-comment|/*      * Execute the walk loop as long as there is a valid Walk State.  This      * handles nested control method invocations without recursion.      */
+comment|/*      * Execute the walk loop as long as there is a valid Walk State. This      * handles nested control method invocations without recursion.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

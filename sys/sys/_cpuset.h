@@ -97,6 +97,25 @@ name|cpuset_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|CPUSET_FSET
+define|\
+value|[ 0 ... (_NCPUWORDS - 1) ] = (-1L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUSET_T_INITIALIZER
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|{ .__bits = { x } }
+end_define
+
 begin_endif
 endif|#
 directive|endif

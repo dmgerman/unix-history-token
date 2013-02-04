@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20120711
+value|0x20130117
 end_define
 
 begin_include
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/actbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acbuffer.h>
 end_include
 
 begin_comment
@@ -433,6 +439,25 @@ name|Length
 parameter_list|,
 name|BOOLEAN
 name|Warn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDecodePldBuffer
+parameter_list|(
+name|UINT8
+modifier|*
+name|InBuffer
+parameter_list|,
+name|ACPI_SIZE
+name|Length
+parameter_list|,
+name|ACPI_PLD_INFO
+modifier|*
+modifier|*
+name|ReturnBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1310,6 +1335,24 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiWalkResourceBuffer
+parameter_list|(
+name|ACPI_BUFFER
+modifier|*
+name|Buffer
+parameter_list|,
+name|ACPI_WALK_RESOURCE_CALLBACK
+name|UserFunction
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiWalkResources
 parameter_list|(
 name|ACPI_HANDLE
@@ -1485,9 +1528,6 @@ name|AcpiEnterSleepState
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1505,9 +1545,6 @@ name|AcpiLeaveSleepStatePrep
 parameter_list|(
 name|UINT8
 name|SleepState
-parameter_list|,
-name|UINT8
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

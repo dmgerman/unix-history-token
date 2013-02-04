@@ -358,6 +358,8 @@ name|entry_id_new
 decl_stmt|,
 name|have_entry
 decl_stmt|,
+name|had_entry
+decl_stmt|,
 name|entry_number
 init|=
 literal|0
@@ -466,6 +468,10 @@ operator|=
 name|ACL_NEXT_ENTRY
 expr_stmt|;
 name|have_entry
+operator|=
+literal|0
+expr_stmt|;
+name|had_entry
 operator|=
 literal|0
 expr_stmt|;
@@ -806,6 +812,8 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+name|had_entry
+operator|=
 name|have_entry
 operator|=
 literal|1
@@ -830,7 +838,7 @@ block|}
 comment|/* if this entry has not been found, it must be new */
 if|if
 condition|(
-name|have_entry
+name|had_entry
 operator|==
 literal|0
 condition|)

@@ -186,6 +186,12 @@ literal|"IOMemory"
 block|}
 block|,
 block|{
+name|VIRTIO_ID_SCSI
+block|,
+literal|"SCSI"
+block|}
+block|,
+block|{
 name|VIRTIO_ID_9P
 block|,
 literal|"9P Transport"

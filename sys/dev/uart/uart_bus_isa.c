@@ -129,6 +129,13 @@ argument_list|,
 name|uart_bus_detach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|uart_bus_resume
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -292,6 +299,13 @@ name|NULL
 block|}
 block|,
 comment|/* BRIB400 - Boca 56k PnP */
+block|{
+literal|0x0010320d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* CIR1000 - Cirrus Logic V34 */
 block|{
 literal|0x0030320d
 block|,

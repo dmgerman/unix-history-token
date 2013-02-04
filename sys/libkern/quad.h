@@ -290,6 +290,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* ARM EABI support functions. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_EABI__
+end_ifdef
+
+begin_function_decl
+name|int
+name|__aeabi_ulcmp
+parameter_list|(
+name|unsigned
+name|long
+name|long
+parameter_list|,
+name|unsigned
+name|long
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

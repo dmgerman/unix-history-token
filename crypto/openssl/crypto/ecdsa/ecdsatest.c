@@ -985,6 +985,9 @@ condition|)
 goto|goto
 name|x962_err
 goto|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 if|if
 condition|(
 operator|!
@@ -1021,6 +1024,8 @@ condition|)
 goto|goto
 name|x962_err
 goto|;
+endif|#
+directive|endif
 name|ret
 operator|=
 literal|1
@@ -2429,9 +2434,9 @@ expr_stmt|;
 name|CRYPTO_cleanup_all_ex_data
 argument_list|()
 expr_stmt|;
-name|ERR_remove_state
+name|ERR_remove_thread_state
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ERR_free_strings

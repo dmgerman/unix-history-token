@@ -148,10 +148,9 @@ name|Error
 expr_stmt|;
 name|LockFileManager
 argument_list|(
-specifier|const
-name|LockFileManager
-operator|&
+argument|const LockFileManager&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 name|LockFileManager
 modifier|&
@@ -162,6 +161,7 @@ specifier|const
 name|LockFileManager
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 specifier|static
 name|Optional

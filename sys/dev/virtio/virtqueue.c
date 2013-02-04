@@ -2263,7 +2263,7 @@ index|[
 name|used_idx
 index|]
 expr_stmt|;
-name|mb
+name|rmb
 argument_list|()
 expr_stmt|;
 name|desc_idx
@@ -2718,7 +2718,7 @@ index|]
 operator|=
 name|desc_idx
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|vq
@@ -3441,9 +3441,11 @@ name|dxp
 operator|->
 name|ndescs
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+name|dxp
+operator|->
+name|ndescs
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3504,7 +3506,7 @@ name|dxp
 operator|->
 name|ndescs
 operator|==
-literal|1
+literal|0
 argument_list|,
 literal|"failed to free entire desc chain, remaining: %d"
 argument_list|,
@@ -3512,14 +3514,6 @@ name|dxp
 operator|->
 name|ndescs
 argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|dxp
-operator|->
-name|ndescs
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * We must append the existing free chain, if any, to the end of 	 * newly freed chain. If the virtqueue was completely used, then 	 * head would be VQ_RING_DESC_CHAIN_END (ASSERTed above). 	 */
 name|dp

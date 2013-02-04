@@ -1195,7 +1195,7 @@ literal|"Usage: %s -f device -n node_name [-s speed -d -h]\n"
 expr|\
 literal|"Where:\n"
 expr|\
-literal|"\t-f device    tty device name, ex. /dev/cuad1\n"
+literal|"\t-f device    tty device name, ex. /dev/cuau1\n"
 expr|\
 literal|"\t-n node_name set Netgraph node name to node_name\n"
 expr|\

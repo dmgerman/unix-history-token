@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Metadata.h"
+file|"llvm/DebugInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DebugInfo.h"
+file|"llvm/Metadata.h"
 end_include
 
 begin_include

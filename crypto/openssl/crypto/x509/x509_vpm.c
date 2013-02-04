@@ -91,6 +91,7 @@ name|trust
 operator|=
 literal|0
 expr_stmt|;
+comment|/*param->inh_flags = X509_VP_FLAG_DEFAULT;*/
 name|param
 operator|->
 name|inh_flags
@@ -1000,7 +1001,7 @@ block|,
 block|{
 literal|"pkcs7"
 block|,
-comment|/* S/MIME signing parameters */
+comment|/* S/MIME sign parameters */
 literal|0
 block|,
 comment|/* Check time */
@@ -1027,7 +1028,7 @@ block|,
 block|{
 literal|"smime_sign"
 block|,
-comment|/* S/MIME signing parameters */
+comment|/* S/MIME sign parameters */
 literal|0
 block|,
 comment|/* Check time */
@@ -1127,28 +1128,16 @@ name|int
 name|table_cmp
 parameter_list|(
 specifier|const
-name|void
-modifier|*
-name|pa
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|pb
-parameter_list|)
-block|{
-specifier|const
 name|X509_VERIFY_PARAM
 modifier|*
 name|a
-init|=
-name|pa
-decl_stmt|,
+parameter_list|,
+specifier|const
+name|X509_VERIFY_PARAM
 modifier|*
 name|b
-init|=
-name|pb
-decl_stmt|;
+parameter_list|)
+block|{
 return|return
 name|strcmp
 argument_list|(
@@ -1163,6 +1152,30 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|DECLARE_OBJ_BSEARCH_CMP_FN
+argument_list|(
+name|X509_VERIFY_PARAM
+argument_list|,
+name|X509_VERIFY_PARAM
+argument_list|,
+name|table
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|IMPLEMENT_OBJ_BSEARCH_CMP_FN
+argument_list|(
+name|X509_VERIFY_PARAM
+argument_list|,
+name|X509_VERIFY_PARAM
+argument_list|,
+name|table
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1367,25 +1380,11 @@ argument_list|)
 return|;
 block|}
 return|return
-operator|(
-specifier|const
-name|X509_VERIFY_PARAM
-operator|*
-operator|)
-name|OBJ_bsearch
+name|OBJ_bsearch_table
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|pm
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|default_table
 argument_list|,
 sizeof|sizeof
@@ -1397,13 +1396,6 @@ sizeof|sizeof
 argument_list|(
 name|X509_VERIFY_PARAM
 argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|X509_VERIFY_PARAM
-argument_list|)
-argument_list|,
-name|table_cmp
 argument_list|)
 return|;
 block|}

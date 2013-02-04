@@ -2925,7 +2925,6 @@ decl_stmt|,
 modifier|*
 name|sl2
 decl_stmt|;
-empty_stmt|;
 name|char
 modifier|*
 name|s

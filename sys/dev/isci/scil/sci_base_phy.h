@@ -55,7 +55,7 @@ block|,
 comment|/**     * This state indicates that the phy is in the process of becomming     * ready.  In this state no new IO operations are permitted on this phy.     * This state is entered from the STOPPED state.     * This state is entered from the READY state.     * This state is entered from the RESETTING state.     */
 name|SCI_BASE_PHY_STATE_STARTING
 block|,
-comment|/**     * This state indicates the the phy is now ready.  Thus, the user     * is able to perform IO operations utilizing this phy as long as it     * is currently part of a valid port.     * This state is entered from the STARTING state.     */
+comment|/**     * This state indicates the phy is now ready.  Thus, the user     * is able to perform IO operations utilizing this phy as long as it     * is currently part of a valid port.     * This state is entered from the STARTING state.     */
 name|SCI_BASE_PHY_STATE_READY
 block|,
 comment|/**     * This state indicates that the phy is in the process of being reset.     * In this state no new IO operations are permitted on this phy.     * This state is entered from the READY state.     */

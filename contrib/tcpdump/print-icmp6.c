@@ -3789,7 +3789,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %us"
+literal|" %ums"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(

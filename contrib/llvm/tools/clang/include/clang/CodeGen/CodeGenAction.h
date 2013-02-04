@@ -111,7 +111,7 @@ name|OwnsVMContext
 block|;
 name|protected
 operator|:
-comment|/// Create a new code generation action.  If the optional \arg _VMContext
+comment|/// Create a new code generation action.  If the optional \p _VMContext
 comment|/// parameter is supplied, the action uses it without taking ownership,
 comment|/// otherwise it creates a fresh LLVM context and takes ownership.
 name|CodeGenAction

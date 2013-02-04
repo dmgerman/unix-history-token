@@ -229,7 +229,7 @@ expr_stmt|;
 else|else
 name|prefixes
 operator|=
-literal|"\0\0Ki\0Mi\0Gi\0Ti\0Pi\0Ei"
+literal|"\0\0\0Ki\0Mi\0Gi\0Ti\0Pi\0Ei"
 expr_stmt|;
 block|}
 else|else

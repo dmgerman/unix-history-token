@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterClassInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -101,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/RegisterClassInfo.h"
 end_include
 
 begin_include

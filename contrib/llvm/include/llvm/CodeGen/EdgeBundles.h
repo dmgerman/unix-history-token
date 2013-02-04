@@ -184,6 +184,7 @@ name|getBlocks
 argument_list|(
 argument|unsigned Bundle
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Blocks

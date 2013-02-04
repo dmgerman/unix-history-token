@@ -45,7 +45,7 @@ name|data
 decl_stmt|;
 comment|/* Length of the location expression.  */
 name|unsigned
-name|short
+name|long
 name|size
 decl_stmt|;
 comment|/* The objfile containing the symbol whose location we're computing.  */
@@ -74,7 +74,7 @@ name|data
 decl_stmt|;
 comment|/* Length of the location list.  */
 name|unsigned
-name|short
+name|long
 name|size
 decl_stmt|;
 comment|/* The objfile containing the symbol whose location we're computing.  */

@@ -1186,9 +1186,6 @@ name|int
 name|iov
 decl_stmt|;
 name|int
-name|vfslocked
-decl_stmt|;
-name|int
 name|wrapearly
 decl_stmt|;
 name|KASSERT
@@ -1450,15 +1447,6 @@ operator|=
 name|td
 expr_stmt|;
 comment|/* 	 * Do all of the junk required to write now. 	 */
-name|vfslocked
-operator|=
-name|VFS_LOCK_GIANT
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|vn_start_write
 argument_list|(
 name|vp
@@ -1525,11 +1513,6 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|mp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|ALQ_LOCK
@@ -1764,9 +1747,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -1799,8 +1779,6 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -1845,14 +1823,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|vfslocked
-operator|=
-name|NDHASGIANT
-argument_list|(
-operator|&
-name|nd
-argument_list|)
-expr_stmt|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -1869,11 +1839,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 name|alq

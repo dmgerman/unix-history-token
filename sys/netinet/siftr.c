@@ -3691,9 +3691,12 @@ argument_list|(
 operator|*
 name|m
 argument_list|,
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 argument_list|,
 name|ip_hl
 argument_list|)

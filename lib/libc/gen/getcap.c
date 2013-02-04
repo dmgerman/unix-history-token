@@ -1030,6 +1030,8 @@ operator|*
 name|db_p
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -2492,7 +2494,7 @@ argument_list|(
 operator|*
 name|dbp
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==
@@ -2633,7 +2635,7 @@ argument_list|(
 operator|*
 name|dbp
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==

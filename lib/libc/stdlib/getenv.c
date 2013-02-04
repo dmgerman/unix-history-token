@@ -2551,6 +2551,9 @@ decl_stmt|;
 name|size_t
 name|nameLen
 decl_stmt|;
+name|int
+name|newEnvActive
+decl_stmt|;
 comment|/* Check for malformed name. */
 if|if
 condition|(
@@ -2609,13 +2612,18 @@ literal|1
 operator|)
 return|;
 comment|/* Deactivate specified variable. */
+comment|/* Remove all occurrences. */
 name|envNdx
 operator|=
 name|envVarsTotal
 operator|-
 literal|1
 expr_stmt|;
-if|if
+name|newEnvActive
+operator|=
+name|envActive
+expr_stmt|;
+while|while
 condition|(
 name|__findenv
 argument_list|(
@@ -2655,14 +2663,24 @@ argument_list|(
 name|envNdx
 argument_list|)
 expr_stmt|;
-name|__rebuild_environ
-argument_list|(
-name|envActive
-operator|-
-literal|1
-argument_list|)
+name|envNdx
+operator|--
+expr_stmt|;
+name|newEnvActive
+operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|newEnvActive
+operator|!=
+name|envActive
+condition|)
+name|__rebuild_environ
+argument_list|(
+name|newEnvActive
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

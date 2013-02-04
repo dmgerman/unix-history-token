@@ -855,10 +855,16 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"Skipping inode %d>= maxino %d\n"
+literal|"Skipping inode %ju>= maxino %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|maxino
 argument_list|)
 expr_stmt|;
@@ -1857,8 +1863,11 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"corrupted directory, inumber %d\n"
+literal|"corrupted directory, inumber %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -1890,12 +1899,18 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"corrupted directory entry, d_ino %d>= %d\n"
+literal|"corrupted directory entry, d_ino %ju>= %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dp
 operator|->
 name|d_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|maxino
 argument_list|)
 expr_stmt|;

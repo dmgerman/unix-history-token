@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -271,6 +271,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtDeleteObjectDesc
+argument_list|(
+name|MutexDesc
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -306,7 +311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              WalkState           - current state, NULL if not yet executing  *                                    a method.  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution.  Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsBeginMethodExecution  *  * PARAMETERS:  MethodNode          - Node of the method  *              ObjDesc             - The method object  *              WalkState           - current state, NULL if not yet executing  *                                    a method.  *  * RETURN:      Status  *  * DESCRIPTION: Prepare a method for execution. Parses the method if necessary,  *              increments the thread count, and waits at the method semaphore  *              for clearance to execute.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -906,11 +911,13 @@ operator|!
 name|Info
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|Info
 operator|->
@@ -1104,7 +1111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsRestartControlMethod  *  * PARAMETERS:  WalkState           - State for preempted method (caller)  *              ReturnDesc          - Return value from the called method  *  * RETURN:      Status  *  * DESCRIPTION: Restart a method that was preempted by another (nested) method  *              invocation.  Handle the return value (if any) from the callee.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsRestartControlMethod  *  * PARAMETERS:  WalkState           - State for preempted method (caller)  *              ReturnDesc          - Return value from the called method  *  * RETURN:      Status  *  * DESCRIPTION: Restart a method that was preempted by another (nested) method  *              invocation. Handle the return value (if any) from the callee.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1270,7 +1277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsTerminateControlMethod  *  * PARAMETERS:  MethodDesc          - Method object  *              WalkState           - State associated with the method  *  * RETURN:      None  *  * DESCRIPTION: Terminate a control method.  Delete everything that the method  *              created, delete all locals and arguments, and delete the parse  *              tree if requested.  *  * MUTEX:       Interpreter is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsTerminateControlMethod  *  * PARAMETERS:  MethodDesc          - Method object  *              WalkState           - State associated with the method  *  * RETURN:      None  *  * DESCRIPTION: Terminate a control method. Delete everything that the method  *              created, delete all locals and arguments, and delete the parse  *              tree if requested.  *  * MUTEX:       Interpreter is locked  *  ******************************************************************************/
 end_comment
 
 begin_function

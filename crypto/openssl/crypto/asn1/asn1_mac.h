@@ -177,6 +177,18 @@ define|\
 value|if ((c.slen != 0)&& ((M_ASN1_next& (~V_ASN1_CONSTRUCTED)) \ 		== (V_ASN1_UNIVERSAL|(type)))) \ 		{ \ 		M_ASN1_D2I_get(b,func); \ 		}
 define|#
 directive|define
+name|M_ASN1_D2I_get_int_opt
+parameter_list|(
+name|b
+parameter_list|,
+name|func
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|if ((c.slen != 0)&& ((M_ASN1_next& (~V_ASN1_CONSTRUCTED)) \ 		== (V_ASN1_UNIVERSAL|(type)))) \ 		{ \ 		M_ASN1_D2I_get_int(b,func); \ 		}
+define|#
+directive|define
 name|M_ASN1_D2I_get_imp
 parameter_list|(
 name|b

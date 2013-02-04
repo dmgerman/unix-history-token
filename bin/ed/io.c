@@ -27,13 +27,6 @@ directive|include
 file|"ed.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|scripted
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* read_file: read a named file/pipe into the buffer; return line count */
 end_comment
@@ -203,13 +196,7 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|des
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|sbuf
@@ -221,6 +208,7 @@ comment|/* file i/o buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sbufsz
 decl_stmt|;
@@ -1589,20 +1577,6 @@ directive|define
 name|ESCCHARS
 value|"abfnrtv\\"
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rows
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cols
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* put_tty_line: print text to stdout */

@@ -83,16 +83,6 @@ directive|include
 file|"ethernet-headers.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|octeon_is_simulation
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|uint64_t
@@ -1118,9 +1108,12 @@ expr_stmt|;
 comment|/* 	 * Set the link state unless we are using MII. 	 */
 if|if
 condition|(
-operator|!
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|!=
+name|CVMX_BOARD_TYPE_SIM
 operator|&&
 name|priv
 operator|->
@@ -1292,8 +1285,12 @@ decl_stmt|;
 comment|/* 	 * If this is a simulation, do nothing. 	 */
 if|if
 condition|(
-name|octeon_is_simulation
+name|cvmx_sysinfo_get
 argument_list|()
+operator|->
+name|board_type
+operator|==
+name|CVMX_BOARD_TYPE_SIM
 condition|)
 return|return;
 comment|/* 	 * If there is a device-specific poll method, use it. 	 */

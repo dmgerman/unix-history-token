@@ -1875,10 +1875,13 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"getino(cg=%d ino=%d)"
+literal|"getino(cg=%d ino=%ju)"
 argument_list|,
 name|cg
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;
@@ -2042,10 +2045,13 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"putino(cg=%d ino=%d)"
+literal|"putino(cg=%d ino=%ju)"
 argument_list|,
 name|cg
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

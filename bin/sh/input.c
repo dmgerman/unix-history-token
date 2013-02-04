@@ -171,10 +171,6 @@ begin_comment
 comment|/* value of parsenleft when EOF pushed back */
 end_comment
 
-begin_macro
-name|MKINIT
-end_macro
-
 begin_struct
 struct|struct
 name|strpush
@@ -208,10 +204,6 @@ end_struct
 begin_comment
 comment|/*  * The parsefile structure pointed to by the global variable parsefile  * contains information about the current file being read.  */
 end_comment
-
-begin_macro
-name|MKINIT
-end_macro
 
 begin_struct
 struct|struct
@@ -309,18 +301,7 @@ comment|/* copy of parsefile->nextc */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
-name|struct
-name|parsefile
-name|basepf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* top level input file */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 name|basebuf
 index|[
@@ -339,6 +320,27 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|parsefile
+name|basepf
+init|=
+block|{
+comment|/* top level input file */
+operator|.
+name|nextc
+operator|=
+name|basebuf
+block|,
+operator|.
+name|buf
+operator|=
+name|basebuf
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|parsefile
 modifier|*
 name|parsefile
 init|=
@@ -349,18 +351,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* current input file */
-end_comment
-
-begin_decl_stmt
-name|int
-name|init_editline
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* editline library initialized? */
 end_comment
 
 begin_decl_stmt
@@ -425,87 +415,45 @@ name|INCLUDE
 literal|"input.h"
 name|INCLUDE
 literal|"error.h"
-name|MKINIT
-name|char
-name|basebuf
-index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
-name|INIT
-end_macro
-
-begin_block
-block|{
-name|basepf
-operator|.
-name|nextc
-operator|=
-name|basepf
-operator|.
-name|buf
-operator|=
-name|basebuf
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|RESET
-end_macro
-
-begin_block
 block|{
 name|popallfiles
 argument_list|()
-expr_stmt|;
+block|;
 name|parselleft
 operator|=
 name|parsenleft
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|/* clear input buffer */
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Read a line from the script.  */
-end_comment
-
-begin_function
 name|char
-modifier|*
+operator|*
 name|pfgets
-parameter_list|(
-name|char
-modifier|*
-name|line
-parameter_list|,
-name|int
-name|len
-parameter_list|)
+argument_list|(
+argument|char *line
+argument_list|,
+argument|int len
+argument_list|)
 block|{
 name|char
-modifier|*
+operator|*
 name|p
-init|=
+operator|=
 name|line
-decl_stmt|;
+block|;
 name|int
 name|nleft
-init|=
+operator|=
 name|len
-decl_stmt|;
+block|;
 name|int
 name|c
-decl_stmt|;
+block|;
 while|while
 condition|(
 operator|--
@@ -543,6 +491,9 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|c
@@ -550,35 +501,43 @@ operator|==
 literal|'\n'
 condition|)
 break|break;
-block|}
-operator|*
+end_if
+
+begin_expr_stmt
+unit|} 	*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|line
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Read a character from the script, returning PEOF on end of file.  * Nul characters in the input are silently discarded.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|pgetc
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|pgetc_macro
 argument_list|()
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -1238,7 +1197,8 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|void
+name|struct
+name|alias
 modifier|*
 name|ap
 parameter_list|)
@@ -1320,25 +1280,13 @@ name|sp
 operator|->
 name|ap
 operator|=
-operator|(
-expr|struct
-name|alias
-operator|*
-operator|)
 name|ap
 expr_stmt|;
 if|if
 condition|(
 name|ap
 condition|)
-operator|(
-operator|(
-expr|struct
-name|alias
-operator|*
-operator|)
 name|ap
-operator|)
 operator|->
 name|flag
 operator||=

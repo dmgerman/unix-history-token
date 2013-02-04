@@ -677,13 +677,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-comment|/* revoke setgid privileges */
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The original bcd prompts with a "%" when reading from stdin, 	 * but this seems kind of silly.  So this one doesn't. 	 */
 if|if
 condition|(

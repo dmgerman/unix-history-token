@@ -2551,6 +2551,17 @@ literal|3344
 operator|-
 name|freq
 return|;
+if|if
+condition|(
+name|sku
+operator|==
+name|SKU_XC900M
+condition|)
+return|return
+literal|1517
+operator|+
+name|freq
+return|;
 name|HALDEBUG
 argument_list|(
 name|AH_NULL
@@ -3066,6 +3077,9 @@ name|SKU_XR9
 case|:
 case|case
 name|SKU_GZ901
+case|:
+case|case
+name|SKU_XC900M
 case|:
 comment|/* 		 * Map 900MHz sku's.  The frequencies will be mapped 		 * according to the sku to compensate for the down-converter. 		 * We use the FCC for these sku's as the mapped channel 		 * list is known compatible (will need to change if/when 		 * vendors do different mapping in different locales). 		 */
 name|status

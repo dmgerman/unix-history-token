@@ -157,16 +157,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|sethead
 argument_list|,
 argument|_setT
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|sethead
 expr_stmt|;
 end_expr_stmt

@@ -3150,16 +3150,34 @@ name|tv_nsec
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Nominal jitter is due to PPS signal noise and interrupt 	 * latency. If it exceeds the popcorn threshold, the sample is 	 * discarded. otherwise, if so enabled, the time offset is 	 * updated. We can tolerate a modest loss of data here without 	 * much degrading time accuracy. 	 */
+comment|/* 	 * Nominal jitter is due to PPS signal noise and interrupt 	 * latency. If it exceeds the popcorn threshold, the sample is 	 * discarded. otherwise, if so enabled, the time offset is 	 * updated. We can tolerate a modest loss of data here without 	 * much degrading time accuracy. 	 * 	 * The measurements being checked here were made with the system 	 * timecounter, so the popcorn threshold is not allowed to fall below 	 * the number of nanoseconds in two ticks of the timecounter.  For a 	 * timecounter running faster than 1 GHz the lower bound is 2ns, just 	 * to avoid a nonsensical threshold of zero. 	*/
 if|if
 condition|(
 name|u_nsec
 operator|>
-operator|(
+name|lmax
+argument_list|(
 name|pps_jitter
 operator|<<
 name|PPS_POPCORN
+argument_list|,
+literal|2
+operator|*
+operator|(
+name|NANOSECOND
+operator|/
+operator|(
+name|long
 operator|)
+name|qmin
+argument_list|(
+name|NANOSECOND
+argument_list|,
+name|tc_getfrequency
+argument_list|()
+argument_list|)
+operator|)
+argument_list|)
 condition|)
 block|{
 name|time_status

@@ -121,6 +121,9 @@ range|:
 name|public
 name|TargetLoweringObjectFile
 block|{
+name|bool
+name|UseInitArray
+block|;
 name|public
 operator|:
 name|virtual
@@ -218,6 +221,12 @@ argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
+block|;
+name|void
+name|InitializeELF
+argument_list|(
+argument|bool UseInitArray_
+argument_list|)
 block|;
 name|virtual
 specifier|const

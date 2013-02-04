@@ -210,7 +210,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-cfp:ru:"
+literal|"cfp:ru:"
 argument_list|)
 operator|)
 operator|!=

@@ -675,12 +675,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_NEEDSGIANT
+name|B_02000000
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* Buffer's vnode needs giant. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -1579,11 +1579,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|BUF_LOCKFREE
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1775,17 +1770,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|buf_maxio
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nominal maximum I/O for buffer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -1795,29 +1779,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* The buffer headers. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|buffers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The buffer contents. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bufpages
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of memory pages in the buffer pool. */
 end_comment
 
 begin_decl_stmt

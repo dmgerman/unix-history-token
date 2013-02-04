@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -950,12 +956,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"failed.\n"
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|error
 expr_stmt|;
 name|WARN
 argument_list|(

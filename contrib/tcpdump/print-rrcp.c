@@ -469,7 +469,7 @@ name|tok2strbuf
 argument_list|(
 name|proto_values
 argument_list|,
-literal|"RRCP-0x%02d"
+literal|"RRCP-0x%02x"
 argument_list|,
 name|rrcp_proto
 argument_list|,
@@ -518,7 +518,7 @@ name|tok2strbuf
 argument_list|(
 name|opcode_values
 argument_list|,
-literal|"unknown opcode (0x%02d)"
+literal|"unknown opcode (0x%02x)"
 argument_list|,
 name|rrcp_opcode
 argument_list|,

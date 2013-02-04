@@ -432,6 +432,9 @@ name|err
 goto|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 else|else
 block|{
 if|if
@@ -463,6 +466,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|buflen
 operator|=
 operator|(

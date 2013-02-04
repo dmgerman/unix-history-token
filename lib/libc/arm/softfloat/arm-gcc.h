@@ -315,7 +315,7 @@ name|FLOAT64_DEMANGLE
 parameter_list|(
 name|a
 parameter_list|)
-value|(((a)<< 32) | ((a)>> 32))
+value|((((a)& 0xfffffffful)<< 32) | ((a)>> 32))
 end_define
 
 begin_define

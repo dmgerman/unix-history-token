@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -161,12 +167,10 @@ argument_list|)
 block|{}
 name|MCDwarfFile
 argument_list|(
-specifier|const
-name|MCDwarfFile
-operator|&
+argument|const MCDwarfFile&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -175,8 +179,8 @@ specifier|const
 name|MCDwarfFile
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// getName - Get the base name of this MCDwarfFile.
@@ -199,7 +203,7 @@ return|return
 name|DirIndex
 return|;
 block|}
-comment|/// print - Print the value to the stream \arg OS.
+comment|/// print - Print the value to the stream \p OS.
 name|void
 name|print
 argument_list|(
@@ -572,12 +576,10 @@ name|private
 label|:
 name|MCLineSection
 argument_list|(
-specifier|const
-name|MCLineSection
-operator|&
+argument|const MCLineSection&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -586,8 +588,8 @@ specifier|const
 name|MCLineSection
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|// Constructor to create an MCLineSection with an empty MCLineEntries

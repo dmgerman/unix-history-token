@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_include
@@ -380,7 +380,7 @@ name|GenericValue
 name|ExitValue
 decl_stmt|;
 comment|// The return value of the called function
-name|TargetData
+name|DataLayout
 name|TD
 decl_stmt|;
 name|IntrinsicLowering

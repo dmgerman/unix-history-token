@@ -470,6 +470,8 @@ name|aceerr
 operator|=
 name|nfsv4_strtogid
 argument_list|(
+name|nd
+argument_list|,
 name|name
 argument_list|,
 name|len
@@ -508,6 +510,8 @@ name|aceerr
 operator|=
 name|nfsv4_strtouid
 argument_list|(
+name|nd
+argument_list|,
 name|name
 argument_list|,
 name|len

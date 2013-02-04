@@ -532,11 +532,7 @@ literal|0
 block|DEVMETHOD(device_shutdown,	amdsbwd_detach),
 endif|#
 directive|endif
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1090,23 +1090,6 @@ operator|>
 expr|>
 name|NumeredTypesMapTy
 expr_stmt|;
-comment|/// findUsedStructTypes - Walk the entire module and find all of the
-comment|/// struct types that are in use, returning them in a vector.
-name|void
-name|findUsedStructTypes
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|StructType
-operator|*
-operator|>
-operator|&
-name|StructTypes
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getTypeByName - Return the type with the specified name, or null if there
 comment|/// is none by that name.
 name|StructType
@@ -1655,6 +1638,48 @@ operator|&
 name|Module
 operator|::
 name|AliasList
+return|;
+block|}
+comment|/// Get the Module's list of named metadata (constant).
+specifier|const
+name|NamedMDListType
+operator|&
+name|getNamedMDList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamedMDList
+return|;
+block|}
+comment|/// Get the Module's list of named metadata.
+name|NamedMDListType
+modifier|&
+name|getNamedMDList
+parameter_list|()
+block|{
+return|return
+name|NamedMDList
+return|;
+block|}
+specifier|static
+name|ilist
+operator|<
+name|NamedMDNode
+operator|>
+name|Module
+operator|::
+operator|*
+name|getSublistAccess
+argument_list|(
+argument|NamedMDNode*
+argument_list|)
+block|{
+return|return
+operator|&
+name|Module
+operator|::
+name|NamedMDList
 return|;
 block|}
 comment|/// Get the symbol table of global variable and function identifiers

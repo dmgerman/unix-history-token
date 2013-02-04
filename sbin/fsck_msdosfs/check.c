@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: check.c,v 1.10 2000/04/25 23:02:51 jdolecek Exp $"
+literal|"$NetBSD: check.c,v 1.14 2006/06/05 16:51:18 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -224,9 +224,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|perr
 argument_list|(
-literal|"Can't open"
+literal|"Can't open `%s'"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return

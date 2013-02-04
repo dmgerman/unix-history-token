@@ -33,11 +33,11 @@ directive|include
 file|<sys/mqueue.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|sigevent
-struct_decl|;
-end_struct_decl
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
 
 begin_struct_decl
 struct_decl|struct

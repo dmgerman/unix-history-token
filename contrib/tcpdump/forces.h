@@ -1479,6 +1479,8 @@ name|TTLV_T2
 block|,
 name|B_FULLD
 operator||
+name|B_SPARD
+operator||
 name|B_RESTV
 block|,
 literal|" GetResp"

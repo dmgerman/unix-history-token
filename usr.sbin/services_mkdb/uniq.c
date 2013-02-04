@@ -69,24 +69,11 @@ directive|include
 file|<fcntl.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|HASHINFO
-name|hinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|uniq
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 begin_function_decl
 specifier|static

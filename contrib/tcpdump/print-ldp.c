@@ -729,7 +729,7 @@ value|0x03
 end_define
 
 begin_comment
-comment|/* From draft-martini-l2circuit-trans-mpls-13.txt */
+comment|/* From RFC 4906; should probably be updated to RFC 4447 (e.g., VC -> PW) */
 end_comment
 
 begin_define
@@ -946,6 +946,17 @@ begin_comment
 comment|/*   * ldp tlv header  *  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |U|F|        Type               |            Length             |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                             Value                             |  * ~                                                               ~  * |                                                               |  * |                               +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TLV_TCHECK
+parameter_list|(
+name|minlen
+parameter_list|)
+define|\
+value|TCHECK2(*tptr, minlen); if (tlv_tlen< minlen) goto badtlv;
+end_define
+
 begin_function
 name|int
 name|ldp_tlv_print
@@ -1114,6 +1125,11 @@ block|{
 case|case
 name|LDP_TLV_COMMON_HELLO
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      Hold Time: %us, Flags: [%s Hello%s]"
@@ -1158,6 +1174,11 @@ break|break;
 case|case
 name|LDP_TLV_IPV4_TRANSPORT_ADDR
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      IPv4 Transport Address: %s"
@@ -1175,6 +1196,11 @@ name|INET6
 case|case
 name|LDP_TLV_IPV6_TRANSPORT_ADDR
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      IPv6 Transport Address: %s"
@@ -1191,6 +1217,11 @@ directive|endif
 case|case
 name|LDP_TLV_CONFIG_SEQ_NUMBER
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      Sequence Number: %u"
@@ -1205,6 +1236,11 @@ break|break;
 case|case
 name|LDP_TLV_ADDRESS_LIST
 case|:
+name|TLV_TCHECK
+argument_list|(
+name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
+argument_list|)
+expr_stmt|;
 name|af
 operator|=
 name|EXTRACT_16BITS
@@ -1253,6 +1289,18 @@ name|in_addr
 argument_list|)
 condition|)
 block|{
+name|TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -1298,6 +1346,18 @@ name|in6_addr
 argument_list|)
 condition|)
 block|{
+name|TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -1336,6 +1396,11 @@ break|break;
 case|case
 name|LDP_TLV_COMMON_SESSION
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      Version: %u, Keepalive: %us, Flags: [Downstream %s, Loop Detection %s]"
@@ -1387,6 +1452,11 @@ break|break;
 case|case
 name|LDP_TLV_FEC
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|fec_type
 operator|=
 operator|*
@@ -1412,6 +1482,10 @@ name|tptr
 operator|+=
 literal|1
 expr_stmt|;
+name|tlv_tlen
+operator|-=
+literal|1
+expr_stmt|;
 switch|switch
 condition|(
 name|fec_type
@@ -1424,6 +1498,11 @@ break|break;
 case|case
 name|LDP_FEC_PREFIX
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 name|af
 operator|=
 name|EXTRACT_16BITS
@@ -1433,7 +1512,11 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|2
+name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
+expr_stmt|;
+name|tlv_tlen
+operator|-=
+name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
 expr_stmt|;
 if|if
 condition|(
@@ -1448,6 +1531,8 @@ name|decode_prefix4
 argument_list|(
 name|tptr
 argument_list|,
+name|tlv_tlen
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -1456,6 +1541,42 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|2
+condition|)
+goto|goto
+name|trunc
+goto|;
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|3
+condition|)
+name|printf
+argument_list|(
+literal|": IPv4 prefix (goes past end of TLV)"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|": IPv4 prefix (invalid length)"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|": IPv4 prefix %s"
@@ -1481,6 +1602,8 @@ name|decode_prefix6
 argument_list|(
 name|tptr
 argument_list|,
+name|tlv_tlen
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -1489,6 +1612,42 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|2
+condition|)
+goto|goto
+name|trunc
+goto|;
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|3
+condition|)
+name|printf
+argument_list|(
+literal|": IPv4 prefix (goes past end of TLV)"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|": IPv6 prefix (invalid length)"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|": IPv6 prefix %s"
@@ -1499,6 +1658,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+else|else
+name|printf
+argument_list|(
+literal|": Address family %u prefix"
+argument_list|,
+name|af
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LDP_FEC_HOSTADDRESS
@@ -1507,20 +1674,12 @@ break|break;
 case|case
 name|LDP_FEC_MARTINI_VC
 case|:
-if|if
-condition|(
-operator|!
-name|TTEST2
+comment|/* 	     * According to RFC 4908, the VC info Length field can be zero, 	     * in which case not only are there no interface parameters, 	     * there's no VC ID. 	     */
+name|TLV_TCHECK
 argument_list|(
-operator|*
-name|tptr
-argument_list|,
-literal|11
+literal|7
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|vc_info_len
 operator|=
 operator|*
@@ -1529,6 +1688,60 @@ name|tptr
 operator|+
 literal|2
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|vc_info_len
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|": %s, %scontrol word, group-ID %u, VC-info-length: %u"
+argument_list|,
+name|tok2str
+argument_list|(
+name|l2vpn_encaps_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|tptr
+argument_list|)
+operator|&
+literal|0x7fff
+argument_list|)
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|tptr
+argument_list|)
+operator|&
+literal|0x8000
+condition|?
+literal|""
+else|:
+literal|"no "
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+name|tptr
+operator|+
+literal|3
+argument_list|)
+argument_list|,
+name|vc_info_len
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* Make sure we have the VC ID as well */
+name|TLV_TCHECK
+argument_list|(
+literal|11
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1579,29 +1792,32 @@ expr_stmt|;
 if|if
 condition|(
 name|vc_info_len
-operator|==
-literal|0
-condition|)
-comment|/* infinite loop protection */
-break|break;
-name|tptr
-operator|+=
-literal|11
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|TTEST2
-argument_list|(
-operator|*
-name|tptr
-argument_list|,
-name|vc_info_len
-argument_list|)
+operator|<
+literal|4
 condition|)
 goto|goto
 name|trunc
 goto|;
+comment|/* minimum 4, for the VC ID */
+name|vc_info_len
+operator|-=
+literal|4
+expr_stmt|;
+comment|/* subtract out the VC ID, giving the length of the interface parameters */
+comment|/* Skip past the fixed information and the VC ID */
+name|tptr
+operator|+=
+literal|11
+expr_stmt|;
+name|tlv_tlen
+operator|-=
+literal|11
+expr_stmt|;
+name|TLV_TCHECK
+argument_list|(
+name|vc_info_len
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|vc_info_len
@@ -1795,6 +2011,11 @@ break|break;
 case|case
 name|LDP_TLV_GENERIC_LABEL
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      Label: %u"
@@ -1811,6 +2032,11 @@ break|break;
 case|case
 name|LDP_TLV_STATUS
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 name|ui
 operator|=
 name|EXTRACT_32BITS
@@ -1873,6 +2099,11 @@ break|break;
 case|case
 name|LDP_TLV_FT_SESSION
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 name|ft_flags
 operator|=
 name|EXTRACT_16BITS
@@ -1973,6 +2204,11 @@ break|break;
 case|case
 name|LDP_TLV_MTU
 case|:
+name|TLV_TCHECK
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t      MTU: %u"
@@ -2051,6 +2287,21 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|badtlv
+label|:
+name|printf
+argument_list|(
+literal|"\n\t\t TLV contents go past end of TLV"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|tlv_len
+operator|+
+literal|4
+operator|)
+return|;
+comment|/* Type& Length fields not included */
 block|}
 end_function
 
@@ -2314,10 +2565,7 @@ literal|0
 condition|)
 block|{
 comment|/* did we capture enough for fully decoding the msg header ? */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -2328,10 +2576,7 @@ expr|struct
 name|ldp_msg_header
 argument_list|)
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|ldp_msg_header
 operator|=
 operator|(
@@ -2439,20 +2684,14 @@ literal|4
 expr_stmt|;
 comment|/* Type& Length fields not included */
 comment|/* did we capture enough for fully decoding the message ? */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 name|msg_len
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|hexdump
 operator|=
 name|FALSE

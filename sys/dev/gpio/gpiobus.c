@@ -1270,7 +1270,6 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
-comment|// struct gpiobus_ivar *devi = GPIOBUS_IVAR(child);
 name|snprintf
 argument_list|(
 name|buf
@@ -1620,7 +1619,7 @@ name|sc_owner
 condition|)
 name|panic
 argument_list|(
-literal|"rb_cpldbus: cannot serialize the access to device."
+literal|"gpiobus: cannot serialize the access to device."
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1670,7 +1669,7 @@ name|sc_owner
 condition|)
 name|panic
 argument_list|(
-literal|"rb_cpldbus: releasing unowned bus."
+literal|"gpiobus: releasing unowned bus."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1683,7 +1682,7 @@ name|child
 condition|)
 name|panic
 argument_list|(
-literal|"rb_cpldbus: you don't own the bus. game over."
+literal|"gpiobus: you don't own the bus. game over."
 argument_list|)
 expr_stmt|;
 name|sc

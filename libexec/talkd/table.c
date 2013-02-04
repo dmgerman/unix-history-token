@@ -130,13 +130,7 @@ value|((TABLE_ENTRY *)0)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|tp
@@ -185,6 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|TABLE_ENTRY
 modifier|*
 name|table

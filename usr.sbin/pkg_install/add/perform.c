@@ -2590,6 +2590,8 @@ condition|(
 name|make_hierarchy
 argument_list|(
 name|LogDir
+argument_list|,
+name|FALSE
 argument_list|)
 condition|)
 block|{

@@ -3330,9 +3330,6 @@ case|:
 case|case
 name|FILE_SEARCH
 case|:
-ifndef|#
-directive|ifndef
-name|COMPILE_ONLY
 comment|/* Check for override */
 if|if
 condition|(
@@ -3413,8 +3410,6 @@ name|flag
 operator||=
 name|TEXTTEST
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|FILE_DEFAULT

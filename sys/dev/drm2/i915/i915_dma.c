@@ -2785,7 +2785,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|i915_batchbuffer
 parameter_list|(
@@ -3037,7 +3036,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|i915_cmdbuffer
 parameter_list|(
@@ -3375,7 +3373,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|i915_getparam
 parameter_list|(
@@ -6953,6 +6950,32 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|drm_ioctl_desc_t
+name|i915_compat_ioctls
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|i915_compat_ioctls_nr
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|drm_driver_info
@@ -7064,6 +7087,22 @@ name|ioctls
 operator|=
 name|i915_ioctls
 block|,
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+operator|.
+name|compat_ioctls
+operator|=
+name|i915_compat_ioctls
+block|,
+operator|.
+name|compat_ioctls_nr
+operator|=
+operator|&
+name|i915_compat_ioctls_nr
+block|,
+endif|#
+directive|endif
 operator|.
 name|max_ioctl
 operator|=

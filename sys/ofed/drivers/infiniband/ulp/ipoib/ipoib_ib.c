@@ -1509,7 +1509,7 @@ name|m_defrag
 argument_list|(
 name|mb
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

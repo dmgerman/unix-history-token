@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -376,7 +376,7 @@ name|SA_HDR_SIZE
 parameter_list|(
 name|hdr
 parameter_list|)
-value|BF32_GET_SB(hdr->sa_layout_info, 10, 16, 3, 0)
+value|BF32_GET_SB(hdr->sa_layout_info, 10, 6, 3, 0)
 end_define
 
 begin_define

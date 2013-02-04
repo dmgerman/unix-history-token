@@ -177,6 +177,7 @@ block|{
 name|long
 name|t
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|m
@@ -188,6 +189,7 @@ end_typedef
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|table2string
@@ -195,6 +197,7 @@ parameter_list|(
 name|long
 name|s
 parameter_list|,
+specifier|const
 name|OCSP_TBLSTR
 modifier|*
 name|ts
@@ -203,6 +206,7 @@ name|int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|OCSP_TBLSTR
 modifier|*
 name|p
@@ -242,6 +246,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|OCSP_response_status_str
@@ -251,6 +256,7 @@ name|s
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|OCSP_TBLSTR
 name|rstat_tbl
 index|[]
@@ -307,6 +313,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|OCSP_cert_status_str
@@ -316,6 +323,7 @@ name|s
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|OCSP_TBLSTR
 name|cstat_tbl
 index|[]
@@ -354,6 +362,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|OCSP_crl_reason_str
@@ -362,6 +371,8 @@ name|long
 name|s
 parameter_list|)
 block|{
+specifier|static
+specifier|const
 name|OCSP_TBLSTR
 name|reason_tbl
 index|[]

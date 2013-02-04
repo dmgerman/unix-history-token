@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_ifdef
@@ -92,6 +98,18 @@ name|void
 name|Usage
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ACPI_SYSTEM_XFACE
+name|AslSignalHandler
+parameter_list|(
+name|int
+name|Sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:P^r:s|t|T:G^v^w|x:z"
+value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
@@ -212,6 +230,13 @@ argument_list|(
 literal|"-I<dir>"
 argument_list|,
 literal|"Specify additional include directory"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<sig>|ALL|*"
+argument_list|,
+literal|"Create table template file for ACPI<Sig>"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -317,14 +342,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML Output Files:\n"
+literal|"\nAML and Data Output Files:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-sa -sc"
 argument_list|,
-literal|"Create AML in assembler or C source file (*.asm or *.c)"
+literal|"Create assembler or C source file (*.asm or *.c)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -338,7 +363,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-ta -tc -ts"
 argument_list|,
-literal|"Create AML in assembler, C, or ASL hex table (*.hex)"
+literal|"Create assembler, C, or ASL hex table (*.hex)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -379,6 +404,13 @@ argument_list|(
 literal|"-cr"
 argument_list|,
 literal|"Disable Resource Descriptor error checking"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-in"
+argument_list|,
+literal|"Ignore NoOp operators"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -428,13 +460,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-T<sig>|ALL|*"
-argument_list|,
-literal|"Create table template file(s) for<Sig>"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-vt"
 argument_list|,
 literal|"Create verbose templates (full disassembly)"
@@ -461,6 +486,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-db"
+argument_list|,
+literal|"Do not translate Buffers to Resource Templates"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-dc [file]"
 argument_list|,
 literal|"Disassemble AML and immediately compile it"
@@ -482,23 +514,23 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-m"
-argument_list|,
-literal|"Do not translate Buffers to Resource Templates"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-2"
-argument_list|,
-literal|"Emit ACPI 2.0 compatible ASL code"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-g"
 argument_list|,
 literal|"Get ACPI tables and write to files (*.dat)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-in"
+argument_list|,
+literal|"Ignore NoOp opcodes"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vt"
+argument_list|,
+literal|"Dump binary table data in hex format within output file"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -615,7 +647,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  filename prefix.  The filename prefix is obtained via one of the\n"
+literal|"  filename prefix. The filename prefix is obtained via one of the\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -677,6 +709,95 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AslSignalHandler  *  * PARAMETERS:  Sig                 - Signal that invoked this handler  *  * RETURN:      None  *  * DESCRIPTION: Control-C handler. Delete any intermediate files and any  *              output files that may be left in an indeterminate state.  *  *****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ACPI_SYSTEM_XFACE
+name|AslSignalHandler
+parameter_list|(
+name|int
+name|Sig
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|signal
+argument_list|(
+name|Sig
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Aborting\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* Close all open files */
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* the .i file is same as source file */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_INPUT
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlCloseFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Delete any output files */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_AML_OUTPUT
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlDeleteFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslInitialize  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Initialize compiler globals  *  ******************************************************************************/
 end_comment
 
@@ -706,10 +827,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|AcpiDbgLevel
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -778,6 +895,14 @@ operator|.
 name|Filename
 operator|=
 literal|"STDERR"
+expr_stmt|;
+comment|/* Allocate the line buffer(s) */
+name|Gbl_LineBufferSize
+operator|/=
+literal|2
+expr_stmt|;
+name|UtExpandLineBuffers
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -906,8 +1031,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Must save the current GetOpt globals */
@@ -1088,15 +1215,6 @@ return|;
 block|}
 break|break;
 case|case
-literal|'2'
-case|:
-comment|/* ACPI 2.0 compatibility mode */
-name|Gbl_Acpi2
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 literal|'b'
 case|:
 comment|/* Debug output options */
@@ -1213,6 +1331,15 @@ operator|=
 name|FALSE
 expr_stmt|;
 name|Gbl_DisassembleAll
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+comment|/* Do not convert buffers to resource descriptors */
+name|AcpiGbl_NoResourceDisassembly
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1441,6 +1568,15 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'n'
+case|:
+comment|/* Compiler/Disassembler: Ignore the NOOP operator */
+name|AcpiGbl_IgnoreNoopOperator
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1524,10 +1660,41 @@ break|break;
 case|case
 literal|'m'
 case|:
-comment|/* Do not convert buffers to resource descriptors */
-name|AcpiGbl_NoResourceDisassembly
+comment|/* Set line buffer size */
+name|Gbl_LineBufferSize
 operator|=
-name|TRUE
+operator|(
+name|UINT32
+operator|)
+name|strtoul
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|*
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_LineBufferSize
+operator|<
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+condition|)
+block|{
+name|Gbl_LineBufferSize
+operator|=
+name|ASL_DEFAULT_LINE_BUFFER_SIZE
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"Line Buffer Size: %u\n"
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2222,9 +2389,20 @@ decl_stmt|;
 name|int
 name|Index2
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|AslSignalHandler
+argument_list|)
+expr_stmt|;
 name|AcpiGbl_ExternalFileList
 operator|=
 name|NULL
+expr_stmt|;
+name|AcpiDbgLevel
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2244,12 +2422,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Init and command line */
-name|AslInitialize
-argument_list|()
-expr_stmt|;
-name|PrInitializePreprocessor
-argument_list|()
-expr_stmt|;
 name|Index1
 operator|=
 name|Index2
@@ -2260,6 +2432,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+name|AslInitialize
+argument_list|()
+expr_stmt|;
+name|PrInitializePreprocessor
+argument_list|()
 expr_stmt|;
 comment|/* Options that have no additional parameters or pathnames */
 if|if

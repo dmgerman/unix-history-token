@@ -193,6 +193,11 @@ name|cdev_pager_ops
 modifier|*
 name|ops
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|dev
+decl_stmt|;
 block|}
 name|devp
 struct|;
@@ -235,6 +240,28 @@ end_struct
 
 begin_comment
 comment|/*  * Flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_FICTITIOUS
+value|0x0001
+end_define
+
+begin_comment
+comment|/* (c) contains fictitious pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_UNMANAGED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* (c) contains unmanaged pages */
 end_comment
 
 begin_define

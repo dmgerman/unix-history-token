@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004, 2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.80 2009/11/06 00:57:08 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2004, 2006, 2008, 2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.82 2012/11/16 20:25:04 ca Exp $  */
 end_comment
 
 begin_comment
@@ -313,6 +313,14 @@ typedef|typedef
 name|int
 name|bool
 typedef|;
+define|#
+directive|define
+name|false
+value|0
+define|#
+directive|define
+name|true
+value|1
 define|#
 directive|define
 name|__bool_true_false_are_defined
@@ -755,6 +763,11 @@ directive|define
 name|SMFIF_SETSYMLIST
 value|0x00000100L
 comment|/* **  Macro "places"; **  Notes: **  - must be coordinated with libmilter/engine.c and sendmail/milter.c **  - the order MUST NOT be changed as it would break compatibility between **	different versions. It's ok to append new entries however **	(hence the list is not sorted by the SMT protocol steps). */
+define|#
+directive|define
+name|SMFIM_NOMACROS
+value|(-1)
+comment|/* Do NOT use, internal only */
 define|#
 directive|define
 name|SMFIM_FIRST

@@ -8263,7 +8263,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -8406,7 +8406,7 @@ index|[
 name|idx
 index|]
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -10600,7 +10600,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -10618,7 +10618,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10746,7 +10746,7 @@ index|[
 name|SADB_X_EXT_POLICY
 index|]
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -16714,7 +16714,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -16732,7 +16732,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -18306,24 +18306,14 @@ expr_stmt|;
 name|IN_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|ia
-operator|=
-name|V_in_ifaddrhead
-operator|.
-name|tqh_first
-init|;
-name|ia
-condition|;
-name|ia
-operator|=
-name|ia
-operator|->
-name|ia_link
-operator|.
-name|tqe_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ia
+argument_list|,
+argument|&V_in_ifaddrhead
+argument_list|,
+argument|ia_link
+argument_list|)
 block|{
 if|if
 condition|(
@@ -18749,14 +18739,30 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC_NAT_T
-comment|/* 		 * If NAT-T is enabled, check ports for tunnel mode. 		 * Do not check ports if they are set to zero in the SPD. 		 * Also do not do it for transport mode, as there is no 		 * port information available in the SP. 		 */
+comment|/* 		 * If NAT-T is enabled, check ports for tunnel mode. 		 * Do not check ports if they are set to zero in the SPD. 		 * Also do not do it for native transport mode, as there 		 * is no port information available in the SP. 		 */
 if|if
 condition|(
+operator|(
 name|saidx1
 operator|->
 name|mode
 operator|==
 name|IPSEC_MODE_TUNNEL
+operator|||
+operator|(
+name|saidx1
+operator|->
+name|mode
+operator|==
+name|IPSEC_MODE_TRANSPORT
+operator|&&
+name|saidx1
+operator|->
+name|proto
+operator|==
+name|IPPROTO_ESP
+operator|)
+operator|)
 operator|&&
 name|saidx1
 operator|->
@@ -22171,7 +22177,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -22187,7 +22193,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -28448,7 +28454,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -28980,7 +28986,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -29018,7 +29024,7 @@ name|m
 argument_list|,
 name|l
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -29189,7 +29195,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -29227,7 +29233,7 @@ name|m
 argument_list|,
 name|l
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -29381,7 +29387,7 @@ name|m
 argument_list|,
 name|l
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -31529,7 +31535,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -31545,7 +31551,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -32126,9 +32132,6 @@ name|sav
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|satype
 decl_stmt|;
 name|struct
@@ -32155,13 +32158,6 @@ name|sadb_lifetime
 modifier|*
 name|lt
 decl_stmt|;
-comment|/* XXX: Why do we lock ? */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
-comment|/*called from softclock()*/
 name|IPSEC_ASSERT
 argument_list|(
 name|sav
@@ -32757,11 +32753,6 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|key_sendup_mbuf
 argument_list|(
@@ -32781,11 +32772,6 @@ condition|)
 name|m_freem
 argument_list|(
 name|result
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -34280,7 +34266,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -34302,7 +34288,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -36925,7 +36911,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -36942,7 +36928,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

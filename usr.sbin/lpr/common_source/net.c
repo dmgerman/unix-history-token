@@ -82,6 +82,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -210,15 +216,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Create a TCP connection to host "rhost" at port "rport".  * If rport == 0, then use the printer service port.  * Most of this code comes from rcmd.c.  */
 end_comment
@@ -266,7 +263,7 @@ operator|-
 literal|1
 decl_stmt|;
 name|int
-name|err
+name|error
 decl_stmt|,
 name|refused
 init|=
@@ -317,7 +314,7 @@ name|ai_protocol
 operator|=
 literal|0
 expr_stmt|;
-name|err
+name|error
 operator|=
 name|getaddrinfo
 argument_list|(
@@ -342,7 +339,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 name|fatal
 argument_list|(
@@ -352,7 +349,7 @@ literal|"%s\n"
 argument_list|,
 name|gai_strerror
 argument_list|(
-name|err
+name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -387,13 +384,9 @@ name|res
 expr_stmt|;
 name|retry
 label|:
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|s
-operator|=
+init|=
 name|rresvport_af
 argument_list|(
 operator|&
@@ -403,12 +396,8 @@ name|ai
 operator|->
 name|ai_family
 argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|s
@@ -501,7 +490,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|error
 operator|=
 name|errno
 expr_stmt|;
@@ -515,7 +504,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|err
+name|error
 expr_stmt|;
 comment|/* 		 * This used to decrement lport, but the current semantics 		 * of rresvport do not provide such a function (in fact, 		 * rresvport should guarantee that the chosen port will 		 * never result in an EADDRINUSE). 		 */
 if|if
@@ -651,12 +640,12 @@ name|rr
 decl_stmt|;
 name|char
 modifier|*
-name|err
+name|error
 decl_stmt|;
 name|int
 name|ncommonaddrs
 decl_stmt|,
-name|error
+name|errno
 decl_stmt|;
 name|char
 name|h1
@@ -763,7 +752,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|error
+name|errno
 operator|=
 name|getaddrinfo
 argument_list|(
@@ -785,7 +774,7 @@ block|{
 name|asprintf
 argument_list|(
 operator|&
-name|err
+name|error
 argument_list|,
 literal|"unable to get official name "
 literal|"for local machine %s: %s"
@@ -794,12 +783,12 @@ name|lclhost
 argument_list|,
 name|gai_strerror
 argument_list|(
-name|error
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+name|error
 return|;
 block|}
 comment|/* get the official name of RM */
@@ -837,7 +826,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|error
+name|errno
 operator|=
 name|getaddrinfo
 argument_list|(
@@ -861,7 +850,7 @@ block|{
 name|asprintf
 argument_list|(
 operator|&
-name|err
+name|error
 argument_list|,
 literal|"unable to get address list for "
 literal|"remote machine %s: %s"
@@ -872,7 +861,7 @@ name|remote_host
 argument_list|,
 name|gai_strerror
 argument_list|(
-name|error
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -882,7 +871,7 @@ name|local_res
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+name|error
 return|;
 block|}
 name|ncommonaddrs

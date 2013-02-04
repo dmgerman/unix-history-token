@@ -243,7 +243,6 @@ specifier|static
 specifier|const
 name|struct
 name|ata_chip_id
-specifier|const
 name|ids
 index|[]
 init|=

@@ -657,6 +657,12 @@ argument_list|(
 name|la
 argument_list|)
 expr_stmt|;
+name|entry
+operator|->
+name|la
+operator|=
+name|la
+expr_stmt|;
 if|if
 condition|(
 name|la
@@ -686,12 +692,6 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
-name|entry
-operator|->
-name|la
-operator|=
-name|la
-expr_stmt|;
 name|rule_index
 operator|=
 name|entry

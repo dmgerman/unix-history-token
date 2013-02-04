@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.28 2011/06/22 22:08:42 djm Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.29 2011/09/09 22:46:44 djm Exp $ */
 end_comment
 
 begin_comment
@@ -315,6 +315,17 @@ end_define
 
 begin_comment
 comment|/* Disable mux but not conn */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_CANCEL_FWD
+value|7
+end_define
+
+begin_comment
+comment|/* Cancel forwarding(s) */
 end_comment
 
 begin_function_decl

@@ -3070,6 +3070,7 @@ name|speed
 operator|&
 name|IXGBE_LINK_SPEED_10GB_FULL
 condition|)
+block|{
 if|if
 condition|(
 name|orig_autoc
@@ -3102,6 +3103,7 @@ name|autoc
 operator||=
 name|IXGBE_AUTOC_KR_SUPP
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|speed

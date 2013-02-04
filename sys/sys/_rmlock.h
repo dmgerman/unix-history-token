@@ -16,16 +16,6 @@ name|_SYS__RMLOCK_H_
 end_define
 
 begin_comment
-comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and  can define rm_queue in _rm_lock.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
-end_include
-
-begin_comment
 comment|/*  * Mostly reader/occasional writer lock.  */
 end_comment
 
@@ -38,6 +28,26 @@ name|rm_priotracker
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_struct
+struct|struct
+name|rm_queue
+block|{
+name|struct
+name|rm_queue
+modifier|*
+specifier|volatile
+name|rmq_next
+decl_stmt|;
+name|struct
+name|rm_queue
+modifier|*
+specifier|volatile
+name|rmq_prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct

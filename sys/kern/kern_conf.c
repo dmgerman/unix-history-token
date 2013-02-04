@@ -1271,12 +1271,6 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-comment|/* XXX: does dead_strategy need this ? */
-operator|.
 name|d_open
 operator|=
 name|dead_open
@@ -3418,6 +3412,25 @@ name|to
 operator|++
 control|)
 block|{
+comment|/* 		 * Spaces and double quotation marks cause 		 * problems for the devctl(4) protocol. 		 * Reject names containing those characters. 		 */
+if|if
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|from
+argument_list|)
+operator|||
+operator|*
+name|from
+operator|==
+literal|'"'
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* Treat multiple sequential slashes as single. */
 while|while
 condition|(
@@ -7227,22 +7240,7 @@ argument_list|)
 expr_stmt|;
 name|SI_FLAG
 argument_list|(
-name|SI_DEVOPEN
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
-name|SI_CONSOPEN
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
 name|SI_DUMPDEV
-argument_list|)
-expr_stmt|;
-name|SI_FLAG
-argument_list|(
-name|SI_CANDELETE
 argument_list|)
 expr_stmt|;
 name|SI_FLAG

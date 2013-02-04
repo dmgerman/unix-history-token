@@ -32,11 +32,22 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"opt_usb.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Declare parent SYSCTL USB node. */
@@ -61,11 +72,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MALLOC_DECLARE
@@ -100,6 +122,12 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -111,6 +139,11 @@ include|#
 directive|include
 file|<dev/usb/usb_freebsd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -355,12 +388,6 @@ begin_comment
 comment|/* force resume */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/* These are the values from the USB specification. */
 end_comment
@@ -368,7 +395,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESET_DELAY
+name|USB_PORT_RESET_DELAY_SPEC
 value|10
 end_define
 
@@ -379,7 +406,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_ROOT_RESET_DELAY
+name|USB_PORT_ROOT_RESET_DELAY_SPEC
 value|50
 end_define
 
@@ -390,7 +417,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESET_RECOVERY
+name|USB_PORT_RESET_RECOVERY_SPEC
 value|10
 end_define
 
@@ -401,7 +428,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_POWERUP_DELAY
+name|USB_PORT_POWERUP_DELAY_SPEC
 value|100
 end_define
 
@@ -412,7 +439,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESUME_DELAY
+name|USB_PORT_RESUME_DELAY_SPEC
 value|20
 end_define
 
@@ -423,7 +450,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_SET_ADDRESS_SETTLE
+name|USB_SET_ADDRESS_SETTLE_SPEC
 value|2
 end_define
 
@@ -434,7 +461,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_DELAY
+name|USB_RESUME_DELAY_SPEC
 value|(20*5)
 end_define
 
@@ -445,7 +472,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_WAIT
+name|USB_RESUME_WAIT_SPEC
 value|10
 end_define
 
@@ -456,7 +483,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_RECOVERY
+name|USB_RESUME_RECOVERY_SPEC
 value|10
 end_define
 
@@ -467,18 +494,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_EXTRA_POWER_UP_TIME
+name|USB_EXTRA_POWER_UP_TIME_SPEC
 value|0
 end_define
 
 begin_comment
 comment|/* ms */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/* Allow for marginal and non-conforming devices. */
@@ -593,11 +615,6 @@ end_define
 begin_comment
 comment|/* ms */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2860,6 +2877,20 @@ decl_stmt|;
 name|uByte
 name|bmAttributes
 decl_stmt|;
+define|#
+directive|define
+name|UE_GET_BULK_STREAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0F)
+define|#
+directive|define
+name|UE_GET_SS_ISO_MULT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x03)
 name|uWord
 name|wBytesPerInterval
 decl_stmt|;
@@ -2918,8 +2949,37 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|struct name {				\   uByte bLength;			\   uByte bDescriptorType;		\   uByte bData[sizeof((uint8_t []){m})];	\ } __packed;				\ static const struct name name = {	\   .bLength = sizeof(struct name),	\   .bDescriptorType = UDESC_STRING,	\   .bData = { m },			\ }
+value|static const struct {			\   uByte bLength;			\   uByte bDescriptorType;		\   uByte bData[sizeof((uint8_t []){m})];	\ } __packed name = {			\   .bLength = sizeof(name),		\   .bDescriptorType = UDESC_STRING,	\   .bData = { m },			\ }
 end_define
+
+begin_struct
+struct|struct
+name|usb_string_lang
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bData
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_string_lang
+name|usb_string_lang_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -3562,7 +3622,7 @@ value|(USB_REV_3_0+1)
 end_define
 
 begin_comment
-comment|/*  * Supported host contoller modes.  */
+comment|/*  * Supported host controller modes.  */
 end_comment
 
 begin_enum
@@ -3589,7 +3649,7 @@ value|(USB_MODE_DUAL+1)
 end_define
 
 begin_comment
-comment|/*  * The "USB_MODE" macros defines all the supported device states.  */
+comment|/*  * The "USB_STATE" enums define all the supported device states.  */
 end_comment
 
 begin_enum
@@ -3615,6 +3675,32 @@ directive|define
 name|USB_STATE_MAX
 value|(USB_STATE_CONFIGURED+1)
 end_define
+
+begin_comment
+comment|/*  * The "USB_EP_MODE" macros define all the currently supported  * endpoint modes.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_ep_mode
+block|{
+name|USB_EP_MODE_DEFAULT
+block|,
+name|USB_EP_MODE_STREAMS
+block|,
+comment|/* USB3.0 specific */
+name|USB_EP_MODE_HW_MASS_STORAGE
+block|,
+name|USB_EP_MODE_HW_SERIAL
+block|,
+name|USB_EP_MODE_HW_ETHERNET_CDC
+block|,
+name|USB_EP_MODE_HW_ETHERNET_NCM
+block|,
+name|USB_EP_MODE_MAX
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

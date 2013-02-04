@@ -235,16 +235,7 @@ value|((a)>= (b) ? (a) : (b))
 end_define
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|qfname
-init|=
-name|QUOTAFILENAME
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -290,6 +281,7 @@ comment|/* must be power of two */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|fileusage
 modifier|*
@@ -304,6 +296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|struct
 name|fileusage
 modifier|*
@@ -317,6 +310,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|fileusage
 modifier|*
@@ -333,6 +327,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|highid
 index|[
@@ -346,6 +341,7 @@ comment|/* highest addid()'ed identifier per type */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflag
 decl_stmt|;
@@ -356,6 +352,7 @@ comment|/* verbose */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aflag
 decl_stmt|;
@@ -366,6 +363,7 @@ comment|/* all filesystems */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nflag
 decl_stmt|;
@@ -376,6 +374,7 @@ comment|/* display user/group by id */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hflag
 decl_stmt|;

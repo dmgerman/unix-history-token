@@ -276,6 +276,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|BIO_ACCEPT
 modifier|*
 name|BIO_ACCEPT_new
@@ -286,6 +287,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|BIO_ACCEPT_free
 parameter_list|(
@@ -443,6 +445,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|BIO_ACCEPT
 modifier|*
 name|BIO_ACCEPT_new
@@ -512,6 +515,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|BIO_ACCEPT_free
 parameter_list|(

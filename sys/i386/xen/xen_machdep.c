@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -879,6 +885,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -889,6 +901,11 @@ name|XPQUEUE_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1593,6 +1610,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rwlock
+name|pvh_global_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|_xen_queue_pt_update
@@ -1621,12 +1646,12 @@ argument_list|(
 name|gdtset
 argument_list|)
 condition|)
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
-name|vm_page_queue_mtx
+name|pvh_global_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT

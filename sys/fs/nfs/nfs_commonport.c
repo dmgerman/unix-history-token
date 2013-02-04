@@ -81,12 +81,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/uma_int.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -166,6 +160,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nfs_numnfscbd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfscl_debuglevel
 init|=
 literal|0
 decl_stmt|;
@@ -310,6 +312,27 @@ name|nfsv4_callbackaddr
 argument_list|)
 argument_list|,
 literal|"NFSv4 callback addr for server to use"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debuglevel
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfscl_debuglevel
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug level for new nfs client"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -542,6 +565,78 @@ argument_list|,
 literal|"NFSD rollback"
 argument_list|,
 literal|"New NFS local lock rollback"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSLAYOUT
+argument_list|,
+literal|"NFSCL layout"
+argument_list|,
+literal|"NFSv4.1 Layout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSFLAYOUT
+argument_list|,
+literal|"NFSCL flayout"
+argument_list|,
+literal|"NFSv4.1 File Layout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSDEVINFO
+argument_list|,
+literal|"NFSCL devinfo"
+argument_list|,
+literal|"NFSv4.1 Device Info"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSSOCKREQ
+argument_list|,
+literal|"NFSCL sockreq"
+argument_list|,
+literal|"NFS Sock Req"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSCLDS
+argument_list|,
+literal|"NFSCL session"
+argument_list|,
+literal|"NFSv4.1 Session"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSLAYRECALL
+argument_list|,
+literal|"NFSCL layrecall"
+argument_list|,
+literal|"NFSv4.1 Layout Recall"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -938,8 +1033,6 @@ argument_list|,
 name|FOLLOW
 operator||
 name|LOCKLEAF
-operator||
-name|MPSAFE
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,

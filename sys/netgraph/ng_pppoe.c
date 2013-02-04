@@ -1722,7 +1722,7 @@ name|m_dup
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3280,7 +3280,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -4688,7 +4688,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY
@@ -5140,7 +5140,7 @@ operator|*
 name|wh
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5639,7 +5639,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_FWD_NEW_DATA
@@ -6004,7 +6004,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -6627,7 +6627,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_FWD_NEW_DATA
@@ -6910,7 +6910,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_FWD_NEW_DATA
@@ -7768,7 +7768,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -8236,7 +8236,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY

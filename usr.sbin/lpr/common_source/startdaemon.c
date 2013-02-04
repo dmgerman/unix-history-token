@@ -114,15 +114,6 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Tell the printer daemon that there are new files in the spool directory.  */
 end_comment
@@ -223,13 +214,9 @@ parameter_list|)
 value|(strlen((unp)->sun_path) + 2)
 endif|#
 directive|endif
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|connectres
-operator|=
+init|=
 name|connect
 argument_list|(
 name|s
@@ -248,12 +235,8 @@ operator|&
 name|un
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|connectres

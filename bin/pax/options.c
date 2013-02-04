@@ -338,6 +338,13 @@ name|getline_error
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|chdname
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

@@ -330,6 +330,8 @@ operator|=
 name|set_dumper
 argument_list|(
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

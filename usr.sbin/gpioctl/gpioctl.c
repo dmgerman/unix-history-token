@@ -82,6 +82,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|flag_desc
 name|gpio_flags

@@ -23605,6 +23605,7 @@ comment|/* vec_vperm */
 end_comment
 
 begin_function
+specifier|static
 name|vector
 name|signed
 name|char
@@ -23654,6 +23655,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|unsigned
 name|char
@@ -23703,6 +23705,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|bool
 name|char
@@ -23752,6 +23755,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -23797,6 +23801,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|unsigned
 name|short
@@ -23846,6 +23851,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|bool
 name|short
@@ -23895,6 +23901,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -23940,6 +23947,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -23977,6 +23985,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|unsigned
 name|int
@@ -24026,6 +24035,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|bool
 name|int
@@ -24075,6 +24085,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -24124,6 +24135,7 @@ comment|/* vec_re */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|vector
 name|float
 name|__attribute__
@@ -24153,6 +24165,7 @@ comment|/* vec_vrefp */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|vector
 name|float
 name|__attribute__

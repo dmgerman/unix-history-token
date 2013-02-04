@@ -624,7 +624,7 @@ block|,
 operator|.
 name|sv_minuser
 operator|=
-literal|0
+name|FREEBSD32_MINUSER
 block|,
 operator|.
 name|sv_maxuser

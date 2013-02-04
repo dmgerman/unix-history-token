@@ -54,11 +54,22 @@ begin_comment
 comment|/* Get _mm_malloc () and _mm_free ().  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC_HOSTED__
+end_if
+
 begin_include
 include|#
 directive|include
 file|<mm_malloc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The Intel API is flexible enough that we must allow aliasing with other    vector types, and their scalar components.  */

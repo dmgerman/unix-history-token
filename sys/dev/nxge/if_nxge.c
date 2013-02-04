@@ -12434,7 +12434,7 @@ name|m_defrag
 argument_list|(
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12870,7 +12870,7 @@ name|mp
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -12910,7 +12910,7 @@ name|mp
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -14405,11 +14405,7 @@ argument_list|,
 name|xge_shutdown
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

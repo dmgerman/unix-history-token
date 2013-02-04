@@ -284,7 +284,7 @@ name|struct
 name|dtnfsclient_rpc
 name|dtnfsclient_rpcs
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -772,7 +772,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When tracing on a procedure is enabled, the DTrace ID for an RPC event is  * stored in one of these two NFS client-allocated arrays; 0 indicates that  * the event is not being traced so probes should not be called.  *  * For simplicity, we allocate both v2, v3 and v4 arrays as NFS_NPROCS + 1, and  * the v2, v3 arrays are simply sparse.  */
+comment|/*  * When tracing on a procedure is enabled, the DTrace ID for an RPC event is  * stored in one of these two NFS client-allocated arrays; 0 indicates that  * the event is not being traced so probes should not be called.  *  * For simplicity, we allocate both v2, v3 and v4 arrays as NFSV41_NPROCS + 1,  * and the v2, v3 arrays are simply sparse.  */
 end_comment
 
 begin_decl_stmt
@@ -780,7 +780,7 @@ specifier|extern
 name|uint32_t
 name|nfscl_nfs2_start_probes
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -792,7 +792,7 @@ specifier|extern
 name|uint32_t
 name|nfscl_nfs2_done_probes
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -804,7 +804,7 @@ specifier|extern
 name|uint32_t
 name|nfscl_nfs3_start_probes
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -816,7 +816,7 @@ specifier|extern
 name|uint32_t
 name|nfscl_nfs3_done_probes
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -828,7 +828,7 @@ specifier|extern
 name|uint32_t
 name|nfscl_nfs4_start_probes
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -840,7 +840,7 @@ specifier|extern
 name|uint32_t
 name|nfscl_nfs4_done_probes
 index|[
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 index|]
@@ -871,7 +871,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 condition|;
@@ -1591,7 +1591,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 condition|;
@@ -1733,7 +1733,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 condition|;
@@ -1875,7 +1875,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_NPROCS
+name|NFSV41_NPROCS
 operator|+
 literal|1
 condition|;

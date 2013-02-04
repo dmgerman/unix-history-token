@@ -114,9 +114,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Decl
-decl_stmt|;
-name|class
 name|DiagnosticBuilder
 decl_stmt|;
 name|class
@@ -127,6 +124,9 @@ name|PrintingPolicy
 struct_decl|;
 name|class
 name|TypeSourceInfo
+decl_stmt|;
+name|class
+name|ValueDecl
 decl_stmt|;
 comment|/// \brief Represents a template argument within a class template
 comment|/// specialization.
@@ -145,13 +145,16 @@ name|Null
 init|=
 literal|0
 block|,
-comment|/// The template argument is a type. Its value is stored in the
-comment|/// TypeOrValue field.
+comment|/// The template argument is a type.
 name|Type
 block|,
-comment|/// The template argument is a declaration that was provided for a pointer
-comment|/// or reference non-type template parameter.
+comment|/// The template argument is a declaration that was provided for a pointer,
+comment|/// reference, or pointer to member non-type template parameter.
 name|Declaration
+block|,
+comment|/// The template argument is a null pointer or null pointer to member that
+comment|/// was provided for a non-type template parameter.
+name|NullPtr
 block|,
 comment|/// The template argument is an integral value stored in an llvm::APSInt
 comment|/// that was provided for an integral non-type template parameter.
@@ -187,16 +190,44 @@ name|TypeOrValue
 decl_stmt|;
 struct|struct
 block|{
-name|char
-name|Value
-index|[
-sizeof|sizeof
-argument_list|(
-name|llvm
-operator|::
-name|APSInt
-argument_list|)
-index|]
+name|ValueDecl
+modifier|*
+name|D
+decl_stmt|;
+name|bool
+name|ForRefParam
+decl_stmt|;
+block|}
+name|DeclArg
+struct|;
+struct|struct
+block|{
+comment|// We store a decomposed APSInt with the data allocated by ASTContext if
+comment|// BitWidth> 64. The memory may be shared between multiple
+comment|// TemplateArgument instances.
+union|union
+block|{
+name|uint64_t
+name|VAL
+decl_stmt|;
+comment|///< Used to store the<= 64 bits integer value.
+specifier|const
+name|uint64_t
+modifier|*
+name|pVal
+decl_stmt|;
+comment|///< Used to store the>64 bits integer value.
+block|}
+union|;
+name|unsigned
+name|BitWidth
+range|:
+literal|31
+decl_stmt|;
+name|unsigned
+name|IsUnsigned
+range|:
+literal|1
 decl_stmt|;
 name|void
 modifier|*
@@ -260,11 +291,13 @@ comment|/// \brief Construct a template type argument.
 name|TemplateArgument
 argument_list|(
 argument|QualType T
+argument_list|,
+argument|bool isNullPtr = false
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-argument|Type
+argument|isNullPtr ? NullPtr : Type
 argument_list|)
 block|{
 name|TypeOrValue
@@ -285,9 +318,9 @@ comment|/// declaration, which is either an external declaration or a
 comment|/// template declaration.
 name|TemplateArgument
 argument_list|(
-name|Decl
-operator|*
-name|D
+argument|ValueDecl *D
+argument_list|,
+argument|bool ForRefParam
 argument_list|)
 operator|:
 name|Kind
@@ -295,42 +328,56 @@ argument_list|(
 argument|Declaration
 argument_list|)
 block|{
-name|TypeOrValue
-operator|=
-name|reinterpret_cast
-operator|<
-name|uintptr_t
-operator|>
-operator|(
+name|assert
+argument_list|(
 name|D
-operator|)
+operator|&&
+literal|"Expected decl"
+argument_list|)
+block|;
+name|DeclArg
+operator|.
+name|D
+operator|=
+name|D
+block|;
+name|DeclArg
+operator|.
+name|ForRefParam
+operator|=
+name|ForRefParam
 block|;   }
-comment|/// \brief Construct an integral constant template argument.
+comment|/// \brief Construct an integral constant template argument. The memory to
+comment|/// store the value is allocated with Ctx.
 name|TemplateArgument
 argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
 argument|const llvm::APSInt&Value
 argument_list|,
 argument|QualType Type
 argument_list|)
-operator|:
+expr_stmt|;
+comment|/// \brief Construct an integral constant template argument with the same
+comment|/// value as Other but a different type.
+name|TemplateArgument
+argument_list|(
+argument|const TemplateArgument&Other
+argument_list|,
+argument|QualType Type
+argument_list|)
+block|:
 name|Kind
 argument_list|(
 argument|Integral
 argument_list|)
 block|{
-comment|// FIXME: Large integral values will get leaked. Do something
-comment|// similar to what we did with IntegerLiteral.
-name|new
-argument_list|(
-argument|Integer.Value
-argument_list|)
-name|llvm
-operator|::
-name|APSInt
-argument_list|(
-name|Value
-argument_list|)
-block|;
+name|Integer
+operator|=
+name|Other
+operator|.
+name|Integer
+expr_stmt|;
 name|Integer
 operator|.
 name|Type
@@ -339,7 +386,8 @@ name|Type
 operator|.
 name|getAsOpaquePtr
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Construct a template argument that is a template.
 comment|///
 comment|/// This form of template argument is generally used for template template
@@ -352,7 +400,7 @@ name|TemplateArgument
 argument_list|(
 argument|TemplateName Name
 argument_list|)
-operator|:
+block|:
 name|Kind
 argument_list|(
 argument|Template
@@ -366,13 +414,14 @@ name|Name
 operator|.
 name|getAsVoidPointer
 argument_list|()
-block|;
+expr_stmt|;
 name|TemplateArg
 operator|.
 name|NumExpansions
 operator|=
 literal|0
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Construct a template argument that is a template pack expansion.
 comment|///
 comment|/// This form of template argument is generally used for template template
@@ -390,7 +439,7 @@ argument|TemplateName Name
 argument_list|,
 argument|llvm::Optional<unsigned> NumExpansions
 argument_list|)
-operator|:
+block|:
 name|Kind
 argument_list|(
 argument|TemplateExpansion
@@ -404,7 +453,7 @@ name|Name
 operator|.
 name|getAsVoidPointer
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|NumExpansions
@@ -485,337 +534,23 @@ name|NumArgs
 operator|=
 name|NumArgs
 block|;   }
-comment|/// \brief Copy constructor for a template argument.
+specifier|static
 name|TemplateArgument
-argument_list|(
-specifier|const
-name|TemplateArgument
-operator|&
-name|Other
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-argument|Other.Kind
-argument_list|)
-block|{
-comment|// FIXME: Large integral values will get leaked. Do something
-comment|// similar to what we did with IntegerLiteral.
-if|if
-condition|(
-name|Kind
-operator|==
-name|Integral
-condition|)
-block|{
-name|new
-argument_list|(
-argument|Integer.Value
-argument_list|)
-name|llvm
-operator|::
-name|APSInt
-argument_list|(
-operator|*
-name|Other
-operator|.
-name|getAsIntegral
+name|getEmptyPack
 argument_list|()
-argument_list|)
-expr_stmt|;
-name|Integer
-operator|.
-name|Type
-operator|=
-name|Other
-operator|.
-name|Integer
-operator|.
-name|Type
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Kind
-operator|==
-name|Pack
-condition|)
 block|{
-name|Args
-operator|.
-name|NumArgs
-operator|=
-name|Other
-operator|.
-name|Args
-operator|.
-name|NumArgs
-expr_stmt|;
-name|Args
-operator|.
-name|Args
-operator|=
-name|Other
-operator|.
-name|Args
-operator|.
-name|Args
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Kind
-operator|==
-name|Template
-operator|||
-name|Kind
-operator|==
-name|TemplateExpansion
-condition|)
-block|{
-name|TemplateArg
-operator|.
-name|Name
-operator|=
-name|Other
-operator|.
-name|TemplateArg
-operator|.
-name|Name
-expr_stmt|;
-name|TemplateArg
-operator|.
-name|NumExpansions
-operator|=
-name|Other
-operator|.
-name|TemplateArg
-operator|.
-name|NumExpansions
-expr_stmt|;
-block|}
-else|else
-name|TypeOrValue
-operator|=
-name|Other
-operator|.
-name|TypeOrValue
-expr_stmt|;
-block|}
+return|return
 name|TemplateArgument
-modifier|&
-name|operator
-init|=
+argument_list|(
 operator|(
-specifier|const
 name|TemplateArgument
-operator|&
-name|Other
+operator|*
 operator|)
-block|{
-name|using
-name|llvm
-operator|::
-name|APSInt
-block|;
-if|if
-condition|(
-name|Kind
-operator|==
-name|Other
-operator|.
-name|Kind
-operator|&&
-name|Kind
-operator|==
-name|Integral
-condition|)
-block|{
-comment|// Copy integral values.
-operator|*
-name|this
-operator|->
-name|getAsIntegral
-argument_list|()
-operator|=
-operator|*
-name|Other
-operator|.
-name|getAsIntegral
-argument_list|()
-expr_stmt|;
-name|Integer
-operator|.
-name|Type
-operator|=
-name|Other
-operator|.
-name|Integer
-operator|.
-name|Type
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|// Destroy the current integral value, if that's what we're holding.
-if|if
-condition|(
-name|Kind
-operator|==
-name|Integral
-condition|)
-name|getAsIntegral
-argument_list|()
-operator|->
-operator|~
-name|APSInt
-argument_list|()
-expr_stmt|;
-name|Kind
-operator|=
-name|Other
-operator|.
-name|Kind
-decl_stmt|;
-if|if
-condition|(
-name|Other
-operator|.
-name|Kind
-operator|==
-name|Integral
-condition|)
-block|{
-name|new
-argument_list|(
-argument|Integer.Value
+literal|0
+argument_list|,
+literal|0
 argument_list|)
-name|llvm
-operator|::
-name|APSInt
-argument_list|(
-operator|*
-name|Other
-operator|.
-name|getAsIntegral
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|Integer
-operator|.
-name|Type
-operator|=
-name|Other
-operator|.
-name|Integer
-operator|.
-name|Type
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Other
-operator|.
-name|Kind
-operator|==
-name|Pack
-condition|)
-block|{
-name|Args
-operator|.
-name|NumArgs
-operator|=
-name|Other
-operator|.
-name|Args
-operator|.
-name|NumArgs
-expr_stmt|;
-name|Args
-operator|.
-name|Args
-operator|=
-name|Other
-operator|.
-name|Args
-operator|.
-name|Args
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Kind
-operator|==
-name|Template
-operator|||
-name|Kind
-operator|==
-name|TemplateExpansion
-condition|)
-block|{
-name|TemplateArg
-operator|.
-name|Name
-operator|=
-name|Other
-operator|.
-name|TemplateArg
-operator|.
-name|Name
-expr_stmt|;
-name|TemplateArg
-operator|.
-name|NumExpansions
-operator|=
-name|Other
-operator|.
-name|TemplateArg
-operator|.
-name|NumExpansions
-expr_stmt|;
-block|}
-else|else
-block|{
-name|TypeOrValue
-operator|=
-name|Other
-operator|.
-name|TypeOrValue
-expr_stmt|;
-block|}
-return|return
-operator|*
-name|this
 return|;
-block|}
-operator|~
-name|TemplateArgument
-argument_list|()
-block|{
-name|using
-name|llvm
-operator|::
-name|APSInt
-block|;
-if|if
-condition|(
-name|Kind
-operator|==
-name|Integral
-condition|)
-name|getAsIntegral
-argument_list|()
-operator|->
-operator|~
-name|APSInt
-argument_list|()
-expr_stmt|;
 block|}
 comment|/// \brief Create a new template argument pack by copying the given set of
 comment|/// template arguments.
@@ -889,22 +624,21 @@ name|isPackExpansion
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Retrieve the template argument as a type.
+comment|/// \brief Retrieve the type for a type template argument.
 name|QualType
 name|getAsType
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 name|Kind
-operator|!=
+operator|==
 name|Type
-condition|)
-return|return
-name|QualType
-argument_list|()
-return|;
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
 return|return
 name|QualType
 operator|::
@@ -921,117 +655,97 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Retrieve the template argument as a declaration.
-end_comment
-
-begin_expr_stmt
-name|Decl
+comment|/// \brief Retrieve the declaration for a declaration non-type
+comment|/// template argument.
+name|ValueDecl
 operator|*
 name|getAsDecl
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 name|Kind
-operator|!=
+operator|==
 name|Declaration
-condition|)
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
 return|return
-literal|0
+name|DeclArg
+operator|.
+name|D
 return|;
-end_expr_stmt
-
-begin_return
+block|}
+comment|/// \brief Retrieve whether a declaration is binding to a
+comment|/// reference parameter in a declaration non-type template argument.
+name|bool
+name|isDeclForReferenceParam
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Declaration
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
 return|return
+name|DeclArg
+operator|.
+name|ForRefParam
+return|;
+block|}
+comment|/// \brief Retrieve the type for null non-type template argument.
+name|QualType
+name|getNullPtrType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|NullPtr
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
+return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
 name|reinterpret_cast
 operator|<
-name|Decl
+name|void
 operator|*
 operator|>
 operator|(
 name|TypeOrValue
 operator|)
+argument_list|)
 return|;
-end_return
-
-begin_comment
-unit|}
-comment|/// \brief Retrieve the template argument as a template name.
-end_comment
-
-begin_macro
-unit|TemplateName
+block|}
+comment|/// \brief Retrieve the template name for a template name argument.
+name|TemplateName
 name|getAsTemplate
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
-if|if
-condition|(
-name|Kind
-operator|!=
-name|Template
-condition|)
-return|return
-name|TemplateName
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|TemplateName
-operator|::
-name|getFromVoidPointer
+name|assert
 argument_list|(
-name|TemplateArg
-operator|.
-name|Name
-argument_list|)
-return|;
-end_return
-
-begin_comment
-unit|}
-comment|/// \brief Retrieve the template argument as a template name; if the argument
-end_comment
-
-begin_comment
-comment|/// is a pack expansion, return the pattern as a template name.
-end_comment
-
-begin_macro
-unit|TemplateName
-name|getAsTemplateOrTemplatePattern
-argument_list|()
-end_macro
-
-begin_expr_stmt
-specifier|const
-block|{
-if|if
-condition|(
 name|Kind
-operator|!=
+operator|==
 name|Template
 operator|&&
-name|Kind
-operator|!=
-name|TemplateExpansion
-condition|)
-return|return
-name|TemplateName
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
+literal|"Unexpected kind"
+argument_list|)
+block|;
 return|return
 name|TemplateName
 operator|::
@@ -1042,19 +756,43 @@ operator|.
 name|Name
 argument_list|)
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
+comment|/// \brief Retrieve the template argument as a template name; if the argument
+comment|/// is a pack expansion, return the pattern as a template name.
+name|TemplateName
+name|getAsTemplateOrTemplatePattern
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Kind
+operator|==
+name|Template
+operator|||
+name|Kind
+operator|==
+name|TemplateExpansion
+operator|)
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
+return|return
+name|TemplateName
+operator|::
+name|getFromVoidPointer
+argument_list|(
+name|TemplateArg
+operator|.
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// \brief Retrieve the number of expansions that a template template argument
-end_comment
-
-begin_comment
 comment|/// expansion will produce, if known.
-end_comment
-
-begin_expr_stmt
-unit|llvm
+name|llvm
 operator|::
 name|Optional
 operator|<
@@ -1064,101 +802,107 @@ name|getNumTemplateExpansions
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the template argument as an integral value.
-end_comment
-
-begin_expr_stmt
+comment|// FIXME: Provide a way to read the integral data without copying the value.
 name|llvm
 operator|::
 name|APSInt
-operator|*
-name|getAsIntegral
-argument_list|()
-block|{
-if|if
-condition|(
-name|Kind
-operator|!=
-name|Integral
-condition|)
-return|return
-literal|0
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|reinterpret_cast
-operator|<
-name|llvm
-operator|::
-name|APSInt
-operator|*
-operator|>
-operator|(
-operator|&
-name|Integer
-operator|.
-name|Value
-index|[
-literal|0
-index|]
-operator|)
-return|;
-end_return
-
-begin_expr_stmt
-unit|}    const
-name|llvm
-operator|::
-name|APSInt
-operator|*
 name|getAsIntegral
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Integral
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
+name|using
+name|namespace
+name|llvm
+block|;
+if|if
+condition|(
+name|Integer
+operator|.
+name|BitWidth
+operator|<=
+literal|64
+condition|)
 return|return
-name|const_cast
-operator|<
-name|TemplateArgument
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getAsIntegral
-argument_list|()
+name|APSInt
+argument_list|(
+name|APInt
+argument_list|(
+name|Integer
+operator|.
+name|BitWidth
+argument_list|,
+name|Integer
+operator|.
+name|VAL
+argument_list|)
+argument_list|,
+name|Integer
+operator|.
+name|IsUnsigned
+argument_list|)
+return|;
+name|unsigned
+name|NumWords
+operator|=
+name|APInt
+operator|::
+name|getNumWords
+argument_list|(
+name|Integer
+operator|.
+name|BitWidth
+argument_list|)
+expr_stmt|;
+return|return
+name|APSInt
+argument_list|(
+name|APInt
+argument_list|(
+name|Integer
+operator|.
+name|BitWidth
+argument_list|,
+name|makeArrayRef
+argument_list|(
+name|Integer
+operator|.
+name|pVal
+argument_list|,
+name|NumWords
+argument_list|)
+argument_list|)
+argument_list|,
+name|Integer
+operator|.
+name|IsUnsigned
+argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the type of the integral value.
-end_comment
-
-begin_expr_stmt
 name|QualType
 name|getIntegralType
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 name|Kind
-operator|!=
+operator|==
 name|Integral
-condition|)
-return|return
-name|QualType
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
 return|return
 name|QualType
 operator|::
@@ -1169,17 +913,13 @@ operator|.
 name|Type
 argument_list|)
 return|;
-end_return
-
-begin_macro
-unit|}    void
+block|}
+name|void
 name|setIntegralType
-argument_list|(
-argument|QualType T
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1187,7 +927,7 @@ name|Kind
 operator|==
 name|Integral
 operator|&&
-literal|"Cannot set the integral type of a non-integral template argument"
+literal|"Unexpected kind"
 argument_list|)
 expr_stmt|;
 name|Integer
@@ -1200,31 +940,22 @@ name|getAsOpaquePtr
 argument_list|()
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/// \brief Retrieve the template argument as an expression.
-end_comment
-
-begin_expr_stmt
 name|Expr
 operator|*
 name|getAsExpr
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 name|Kind
-operator|!=
+operator|==
 name|Expression
-condition|)
-return|return
-literal|0
-return|;
-end_expr_stmt
-
-begin_return
+operator|&&
+literal|"Unexpected kind"
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -1235,31 +966,16 @@ operator|(
 name|TypeOrValue
 operator|)
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Iterator that traverses the elements of a template argument pack.
-end_comment
-
-begin_decl_stmt
-unit|typedef
+typedef|typedef
 specifier|const
 name|TemplateArgument
 modifier|*
 name|pack_iterator
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+typedef|;
 comment|/// \brief Iterator referencing the first argument of a template argument
-end_comment
-
-begin_comment
 comment|/// pack.
-end_comment
-
-begin_expr_stmt
 name|pack_iterator
 name|pack_begin
 argument_list|()
@@ -1278,17 +994,8 @@ operator|.
 name|Args
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Iterator referencing one past the last argument of a template
-end_comment
-
-begin_comment
 comment|/// argument pack.
-end_comment
-
-begin_expr_stmt
 name|pack_iterator
 name|pack_end
 argument_list|()
@@ -1311,17 +1018,8 @@ operator|.
 name|NumArgs
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The number of template arguments in the given template argument
-end_comment
-
-begin_comment
 comment|/// pack.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|pack_size
 argument_list|()
@@ -1340,17 +1038,8 @@ operator|.
 name|NumArgs
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Determines whether two template arguments are superficially the
-end_comment
-
-begin_comment
+comment|/// \brief Determines whether two template arguments are superficially the
 comment|/// same.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|structurallyEquals
 argument_list|(
@@ -1361,37 +1050,14 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief When the template argument is a pack expansion, returns
-end_comment
-
-begin_comment
 comment|/// the pattern of the pack expansion.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Ellipsis Will be set to the location of the ellipsis.
-end_comment
-
-begin_expr_stmt
 name|TemplateArgument
 name|getPackExpansionPattern
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Print this template argument to the given output stream.
-end_comment
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1406,13 +1072,7 @@ name|Out
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Used to insert TemplateArguments into FoldingSets.
-end_comment
-
-begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
@@ -1429,10 +1089,14 @@ name|Context
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|/// Location information for a TemplateArgument.
 end_comment
 
@@ -1941,6 +1605,62 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|Expr
+operator|*
+name|getSourceNullPtrExpression
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Argument
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|NullPtr
+argument_list|)
+block|;
+return|return
+name|LocInfo
+operator|.
+name|getAsExpr
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getSourceIntegralExpression
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Argument
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|Integral
+argument_list|)
+block|;
+return|return
+name|LocInfo
+operator|.
+name|getAsExpr
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|NestedNameSpecifierLoc
 name|getTemplateQualifierLoc
 argument_list|()
@@ -2286,20 +2006,30 @@ begin_struct
 struct|struct
 name|ASTTemplateArgumentListInfo
 block|{
-comment|/// \brief The source location of the left angle bracket ('<');
+comment|/// \brief The source location of the left angle bracket ('<').
 name|SourceLocation
 name|LAngleLoc
 decl_stmt|;
-comment|/// \brief The source location of the right angle bracket ('>');
+comment|/// \brief The source location of the right angle bracket ('>').
 name|SourceLocation
 name|RAngleLoc
 decl_stmt|;
+union|union
+block|{
 comment|/// \brief The number of template arguments in TemplateArgs.
 comment|/// The actual template arguments (if any) are stored after the
 comment|/// ExplicitTemplateArgumentList structure.
 name|unsigned
 name|NumTemplateArgs
 decl_stmt|;
+comment|/// Force ASTTemplateArgumentListInfo to the right alignment
+comment|/// for the following array of TemplateArgumentLocs.
+name|void
+modifier|*
+name|Aligner
+decl_stmt|;
+block|}
+union|;
 comment|/// \brief Retrieve the template arguments
 name|TemplateArgumentLoc
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.85 2011/03/29 18:54:17 stevesk Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.86 2011/09/05 05:59:08 djm Exp $ */
 end_comment
 
 begin_comment
@@ -4818,7 +4818,7 @@ name|IPTOS_DSCP_AF13
 block|}
 block|,
 block|{
-literal|"af14"
+literal|"af21"
 block|,
 name|IPTOS_DSCP_AF21
 block|}

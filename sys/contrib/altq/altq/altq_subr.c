@@ -1922,11 +1922,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|IFQ_UNLOCK
-argument_list|(
-name|ifq
-argument_list|)
-expr_stmt|;
 name|tbr
 operator|=
 name|malloc
@@ -1939,7 +1934,9 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1949,7 +1946,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* can not happen */
 name|IFQ_UNLOCK
 argument_list|(
 name|ifq
@@ -1961,17 +1957,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|tbr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tb_regulator
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|tbr
 operator|->
 name|tbr_rate
@@ -2045,11 +2030,6 @@ operator|->
 name|tbr_lastop
 operator|=
 name|ALTDQ_REMOVE
-expr_stmt|;
-name|IFQ_LOCK
-argument_list|(
-name|ifq
-argument_list|)
 expr_stmt|;
 name|otbr
 operator|=

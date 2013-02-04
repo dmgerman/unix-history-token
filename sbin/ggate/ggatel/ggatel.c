@@ -112,6 +112,7 @@ file|"ggate.h"
 end_include
 
 begin_enum
+specifier|static
 enum|enum
 block|{
 name|UNSET

@@ -557,8 +557,10 @@ condition|(
 operator|(
 name|priv
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -574,19 +576,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|priv
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|priv
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sp
 operator|=
 operator|&
@@ -911,6 +900,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -1443,6 +1434,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -1854,6 +1847,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -2400,6 +2395,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -4718,6 +4715,8 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

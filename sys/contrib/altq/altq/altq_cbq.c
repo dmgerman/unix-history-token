@@ -1415,7 +1415,9 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1429,16 +1431,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|cbqp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cbq_state_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|CALLOUT_INIT
 argument_list|(
 operator|&

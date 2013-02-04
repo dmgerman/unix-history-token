@@ -9,6 +9,20 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|crc_total
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|crc32_total
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|int

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2004 Scott Long  * Copyright (c) 2005, 2008 Marius 
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: ncr53c9x.c,v 1.143 2011/07/31 18:39:00 jakllsch Exp $	*/
+comment|/*	$NetBSD: ncr53c9x.c,v 1.145 2012/06/18 21:23:56 martin Exp $	*/
 end_comment
 
 begin_comment
@@ -900,7 +900,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s, %dMHz, SCSI ID %d\n"
+literal|"%s, %d MHz, SCSI ID %d\n"
 argument_list|,
 name|ncr53c9x_variant_names
 index|[
@@ -3851,23 +3851,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|sc
-operator|->
-name|sc_cmdlen
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_cmdp
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|cmd
 goto|;
-block|}
 comment|/* Program the SCSI counter. */
 name|NCR_SET_COUNT
 argument_list|(
@@ -3935,6 +3921,12 @@ name|cmd
 label|:
 comment|/* 	 * Who am I?  This is where we tell the target that we are 	 * happy for it to disconnect etc. 	 */
 comment|/* Now get the command into the FIFO. */
+name|sc
+operator|->
+name|sc_cmdlen
+operator|=
+literal|0
+expr_stmt|;
 name|ncr53c9x_wrfifo
 argument_list|(
 name|sc
@@ -8213,9 +8205,9 @@ modifier|*
 name|pb
 decl_stmt|;
 name|int
-name|lun
+name|len
 decl_stmt|,
-name|plen
+name|lun
 decl_stmt|;
 name|NCR_LOCK_ASSERT
 argument_list|(
@@ -8391,7 +8383,7 @@ name|sc_imess
 operator|+
 literal|1
 expr_stmt|;
-name|plen
+name|len
 operator|=
 name|sc
 operator|->
@@ -8407,7 +8399,7 @@ name|sc
 operator|->
 name|sc_imess
 expr_stmt|;
-name|plen
+name|len
 operator|=
 name|sc
 operator|->
@@ -8420,7 +8412,7 @@ name|__verify_msg_format
 argument_list|(
 name|pb
 argument_list|,
-name|plen
+name|len
 argument_list|)
 condition|)
 goto|goto
@@ -9020,6 +9012,117 @@ name|ecb
 operator|->
 name|dleft
 expr_stmt|;
+break|break;
+case|case
+name|MSG_IGN_WIDE_RESIDUE
+case|:
+name|NCR_MSGS
+argument_list|(
+operator|(
+literal|"ignore wide residue (%d bytes)"
+operator|,
+name|sc
+operator|->
+name|sc_imess
+index|[
+literal|1
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_imess
+index|[
+literal|1
+index|]
+operator|!=
+literal|1
+condition|)
+block|{
+name|xpt_print_path
+argument_list|(
+name|ecb
+operator|->
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"unexpected MESSAGE IGNORE WIDE "
+literal|"RESIDUE (%d bytes); sending REJECT\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_imess
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+goto|goto
+name|reject
+goto|;
+block|}
+comment|/* 			 * If there was a last transfer of an even number of 			 * bytes, wipe the "done" memory and adjust by one 			 * byte (sc->sc_imess[1]). 			 */
+name|len
+operator|=
+name|sc
+operator|->
+name|sc_dleft
+operator|-
+name|ecb
+operator|->
+name|dleft
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|len
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ecb
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ECB_TENTATIVE_DONE
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|sc
+operator|->
+name|sc_dp
+operator|-
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dleft
+operator|--
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|MSG_EXTENDED
@@ -10440,6 +10543,12 @@ block|}
 name|cmd
 label|:
 comment|/* 	 * XXX FIFO size 	 */
+name|sc
+operator|->
+name|sc_cmdlen
+operator|=
+literal|0
+expr_stmt|;
 name|ncr53c9x_flushfifo
 argument_list|(
 name|sc
@@ -12412,8 +12521,10 @@ name|sc_cmdlen
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* Hope for the best... */
 break|break;
+block|}
 block|}
 elseif|else
 if|if
@@ -13269,23 +13380,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|sc
-operator|->
-name|sc_cmdlen
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_cmdp
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|cmd
 goto|;
-block|}
 comment|/* Program the SCSI counter. */
 name|NCR_SET_COUNT
 argument_list|(
@@ -13329,6 +13426,12 @@ break|break;
 block|}
 name|cmd
 label|:
+name|sc
+operator|->
+name|sc_cmdlen
+operator|=
+literal|0
+expr_stmt|;
 name|ncr53c9x_wrfifo
 argument_list|(
 name|sc
@@ -13579,7 +13682,7 @@ goto|goto
 name|finish
 goto|;
 block|}
-comment|/* Target returned to data phase: wipe "done" memory */
+comment|/* Target returned to data phase: wipe "done" memory. */
 name|ecb
 operator|->
 name|flags
@@ -13717,7 +13820,7 @@ expr_stmt|;
 return|return;
 name|shortcut
 label|:
-comment|/* 	 * The idea is that many of the SCSI operations take very little 	 * time, and going away and getting interrupted is too high an 	 * overhead to pay.  For example, selecting, sending a message 	 * and command and then doing some work can be done in one "pass". 	 * 	 * The delay is a heuristic.  It is 2 when at 20MHz, 2 at 25MHz and 1 	 * at 40MHz. This needs testing. 	 */
+comment|/* 	 * The idea is that many of the SCSI operations take very little 	 * time, and going away and getting interrupted is too high an 	 * overhead to pay.  For example, selecting, sending a message 	 * and command and then doing some work can be done in one "pass". 	 * 	 * The delay is a heuristic.  It is 2 when at 20 MHz, 2 at 25 MHz and 	 * 1 at 40 MHz.  This needs testing. 	 */
 name|microtime
 argument_list|(
 operator|&

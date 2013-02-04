@@ -1489,7 +1489,6 @@ operator|>=
 name|len
 condition|)
 break|break;
-empty_stmt|;
 block|}
 operator|*
 name|sent

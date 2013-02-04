@@ -556,8 +556,11 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"inoinfo: inumber %d out of range"
+literal|"inoinfo: inumber %ju out of range"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inum
 argument_list|)
 expr_stmt|;
@@ -1204,9 +1207,6 @@ name|bp
 operator|->
 name|b_bno
 argument_list|,
-operator|(
-name|long
-operator|)
 name|bp
 operator|->
 name|b_size
@@ -2156,7 +2156,7 @@ parameter_list|,
 name|ufs2_daddr_t
 name|blk
 parameter_list|,
-name|long
+name|ssize_t
 name|size
 parameter_list|)
 block|{
@@ -2214,9 +2214,6 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|size
 argument_list|)
 operator|==
@@ -2295,9 +2292,6 @@ name|fd
 argument_list|,
 name|cp
 argument_list|,
-operator|(
-name|int
-operator|)
 name|dev_bsize
 argument_list|)
 operator|!=

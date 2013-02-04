@@ -70,6 +70,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIRTIO_ID_SCSI
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIRTIO_ID_9P
 value|0x09
 end_define
@@ -493,6 +500,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_undef
+undef|#
+directive|undef
+name|VIRTIO_RDWR_DEVICE_CONFIG
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -556,6 +569,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_undef
+undef|#
+directive|undef
+name|VIRTIO_READ_IVAR
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -578,6 +597,12 @@ name|VIRTIO_IVAR_FEATURE_DESC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|VIRTIO_WRITE_IVAR
+end_undef
 
 begin_endif
 endif|#

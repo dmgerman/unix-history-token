@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IRBuilder.h"
+file|"llvm/IRBuilder.h"
 end_include
 
 begin_decl_stmt

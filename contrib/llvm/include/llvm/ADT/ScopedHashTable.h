@@ -428,15 +428,14 @@ operator|(
 name|ScopedHashTableScope
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|ScopedHashTableScope
 argument_list|(
-name|ScopedHashTableScope
-operator|&
+argument|ScopedHashTableScope&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 name|ScopedHashTableScope

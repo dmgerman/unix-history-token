@@ -222,13 +222,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|FAITHNAME
-value|"faith"
-end_define
-
 begin_struct
 struct|struct
 name|faith_softc
@@ -337,13 +330,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|faithname
+index|[]
+init|=
+literal|"faith"
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_FAITH
 argument_list|,
-name|FAITHNAME
+name|faithname
 argument_list|,
 literal|"Firewall Assisted Tunnel Interface"
 argument_list|)
@@ -378,15 +382,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|IFC_SIMPLE_DECLARE
-argument_list|(
-name|faith
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|struct
+name|if_clone
+modifier|*
+name|faith_cloner
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -425,10 +428,17 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|if_clone_attach
-argument_list|(
-operator|&
 name|faith_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|faithname
+argument_list|,
+name|faith_clone_create
+argument_list|,
+name|faith_clone_destroy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -455,7 +465,6 @@ endif|#
 directive|endif
 name|if_clone_detach
 argument_list|(
-operator|&
 name|faith_cloner
 argument_list|)
 expr_stmt|;
@@ -603,9 +612,7 @@ name|sc
 operator|->
 name|sc_ifp
 argument_list|,
-name|ifc
-operator|->
-name|ifc_name
+name|faithname
 argument_list|,
 name|unit
 argument_list|)

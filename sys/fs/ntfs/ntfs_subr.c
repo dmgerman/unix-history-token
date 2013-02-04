@@ -379,8 +379,11 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntvattrrele: ino: %d, type: 0x%x\n"
+literal|"ntfs_ntvattrrele: ino: %ju, type: 0x%x\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|vap
 operator|->
 name|va_ip
@@ -507,8 +510,11 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_findvattr: node not loaded, ino: %d\n"
+literal|"ntfs_findvattr: node not loaded, ino: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -531,8 +537,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntfs_findvattr: FAILED TO LOAD INO: %d\n"
+literal|"ntfs_findvattr: FAILED TO LOAD INO: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -771,9 +780,12 @@ argument_list|(
 operator|(
 literal|"ntfs_ntvattrget: "
 expr|\
-literal|"ino: %d, type: 0x%x, name: %s, vcn: %d\n"
+literal|"ino: %ju, type: 0x%x, name: %s, vcn: %d\n"
 operator|,
 expr|\
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -783,7 +795,7 @@ operator|,
 name|name
 operator|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|vcn
 operator|)
@@ -804,9 +816,12 @@ argument_list|(
 operator|(
 literal|"ntfs_ntvattrget: "
 expr|\
-literal|"ino: %d, type: 0x%x, vcn: %d\n"
+literal|"ino: %ju, type: 0x%x, vcn: %d\n"
 operator|,
 expr|\
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -814,7 +829,7 @@ operator|,
 name|type
 operator|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|vcn
 operator|)
@@ -873,9 +888,12 @@ argument_list|(
 operator|(
 literal|"ntfs_ntvattrget: UNEXISTED ATTRIBUTE: "
 expr|\
-literal|"ino: %d, type: 0x%x, name: %s, vcn: %d\n"
+literal|"ino: %ju, type: 0x%x, name: %s, vcn: %d\n"
 operator|,
 expr|\
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -885,7 +903,7 @@ operator|,
 name|name
 operator|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|vcn
 operator|)
@@ -974,9 +992,12 @@ argument_list|(
 operator|(
 literal|"ntfs_ntvattrget: "
 expr|\
-literal|"attrlist: ino: %d, attr: 0x%x, vcn: %d\n"
+literal|"attrlist: ino: %ju, attr: 0x%x, vcn: %d\n"
 operator|,
 expr|\
+operator|(
+name|uintmax_t
+operator|)
 name|aalp
 operator|->
 name|al_inumber
@@ -987,7 +1008,7 @@ name|al_type
 operator|,
 expr|\
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|aalp
 operator|->
@@ -1070,8 +1091,11 @@ continue|continue;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntvattrget: attribute in ino: %d\n"
+literal|"ntfs_ntvattrget: attribute in ino: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|aalp
 operator|->
 name|al_inumber
@@ -1112,8 +1136,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntfs_ntvattrget: CAN'T VGET INO: %d\n"
+literal|"ntfs_ntvattrget: CAN'T VGET INO: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|aalp
 operator|->
 name|al_inumber
@@ -1183,9 +1210,12 @@ argument_list|(
 operator|(
 literal|"ntfs_ntvattrget: UNEXISTED ATTRIBUTE: "
 expr|\
-literal|"ino: %d, type: 0x%x, name: %.*s, vcn: %d\n"
+literal|"ino: %ju, type: 0x%x, name: %.*s, vcn: %d\n"
 operator|,
 expr|\
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -1200,7 +1230,7 @@ operator|,
 name|name
 operator|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|vcn
 operator|)
@@ -1268,8 +1298,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_loadntnode: loading ino: %d\n"
+literal|"ntfs_loadntnode: loading ino: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -1498,10 +1531,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntfs_loadntnode: BAD MFT RECORD %d\n"
+literal|"ntfs_loadntnode: BAD MFT RECORD %ju\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uintmax_t
 operator|)
 name|ip
 operator|->
@@ -1515,8 +1548,11 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_loadntnode: load attrs for ino: %d\n"
+literal|"ntfs_loadntnode: load attrs for ino: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -1632,8 +1668,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntfs_loadntnode: failed to load attr ino: %d\n"
+literal|"ntfs_loadntnode: failed to load attr ino: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -1709,8 +1748,11 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntget: get ntnode %d: %p, usecount: %d\n"
+literal|"ntfs_ntget: get ntnode %ju: %p, usecount: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2042,8 +2084,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntput: rele ntnode %d: %p, usecount: %d\n"
+literal|"ntfs_ntput: rele ntnode %ju: %p, usecount: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2083,8 +2128,11 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"ntfs_ntput: ino: %d usecount: %d \n"
+literal|"ntfs_ntput: ino: %ju usecount: %d \n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2128,8 +2176,11 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntput: deallocating ntnode: %d\n"
+literal|"ntfs_ntput: deallocating ntnode: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2276,8 +2327,11 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntref: ino %d, usecount: %d\n"
+literal|"ntfs_ntref: ino %ju, usecount: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2310,8 +2364,11 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntrele: rele ntnode %d: %p, usecount: %d\n"
+literal|"ntfs_ntrele: rele ntnode %ju: %p, usecount: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -2347,8 +2404,11 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ntfs_ntrele: ino: %d usecount: %d \n"
+literal|"ntfs_ntrele: ino: %ju usecount: %d \n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -3696,8 +3756,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_fget: ino: %d, attrtype: 0x%x, attrname: %s\n"
+literal|"ntfs_fget: ino: %ju, attrtype: 0x%x, attrname: %s\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -3955,10 +4018,13 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_frele: fnode: %p for %d: %p\n"
+literal|"ntfs_frele: fnode: %p for %ju: %p\n"
 operator|,
 name|fp
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -5442,8 +5508,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntreaddir: read ino: %d, num: %d\n"
+literal|"ntfs_ntreaddir: read ino: %ju, num: %d\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -6308,8 +6377,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_times: ino: %d...\n"
+literal|"ntfs_times: ino: %ju...\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -6446,8 +6518,11 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_filesize: ino: %d\n"
+literal|"ntfs_filesize: ino: %ju\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -7492,8 +7567,11 @@ decl_stmt|;
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_readattr: reading %d: 0x%x, from %d size %d bytes\n"
+literal|"ntfs_readattr: reading %ju: 0x%x, from %jd size %zu bytes\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -7501,13 +7579,10 @@ operator|,
 name|attrnum
 operator|,
 operator|(
-name|u_int32_t
+name|intmax_t
 operator|)
 name|roff
 operator|,
-operator|(
-name|u_int32_t
-operator|)
 name|rsize
 operator|)
 argument_list|)

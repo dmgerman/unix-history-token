@@ -718,17 +718,6 @@ value|(1<< 2)
 end_define
 
 begin_comment
-comment|/*  * Sleep flags.  See actypes.h for available flags.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|acpi_sleep_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
 end_comment
 
@@ -2475,7 +2464,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_TASKS
-value|32
+value|MAX(32, MAXCPU * 2)
 end_define
 
 begin_endif

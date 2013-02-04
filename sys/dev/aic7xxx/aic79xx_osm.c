@@ -1058,6 +1058,10 @@ name|sim
 operator|=
 name|NULL
 expr_stmt|;
+name|path
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Create a thread to perform all recovery. 	 */
 if|if
 condition|(

@@ -7,6 +7,23 @@ begin_comment
 comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -241,6 +258,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_if
 if|#
@@ -690,6 +716,8 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|ugen_debug
@@ -1341,6 +1369,16 @@ index|[
 literal|0
 index|]
 operator|.
+name|stream_id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX support more stream ID's */
+name|usb_config
+index|[
+literal|0
+index|]
+operator|.
 name|direction
 operator|=
 name|UE_DIR_TX
@@ -1762,6 +1800,16 @@ name|bEndpointAddress
 operator|&
 name|UE_ADDR
 expr_stmt|;
+name|usb_config
+index|[
+literal|0
+index|]
+operator|.
+name|stream_id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX support more stream ID's */
 name|usb_config
 index|[
 literal|0
@@ -6637,6 +6685,11 @@ modifier|*
 name|popen
 decl_stmt|;
 name|struct
+name|usb_fs_open_stream
+modifier|*
+name|popen_stream
+decl_stmt|;
+name|struct
 name|usb_fs_close
 modifier|*
 name|pclose
@@ -6911,6 +6964,9 @@ expr_stmt|;
 break|break;
 case|case
 name|USB_FS_OPEN
+case|:
+case|case
+name|USB_FS_OPEN_STREAM
 case|:
 if|if
 condition|(
@@ -7244,6 +7300,25 @@ operator|=
 name|USB_MODE_DUAL
 expr_stmt|;
 comment|/* both modes */
+if|if
+condition|(
+name|cmd
+operator|==
+name|USB_FS_OPEN_STREAM
+condition|)
+name|usb_config
+index|[
+literal|0
+index|]
+operator|.
+name|stream_id
+operator|=
+name|u
+operator|.
+name|popen_stream
+operator|->
+name|stream_id
+expr_stmt|;
 if|if
 condition|(
 name|usb_config

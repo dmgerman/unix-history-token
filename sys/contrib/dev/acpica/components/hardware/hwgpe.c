@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwGetGpeRegisterBit  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE  *              GpeRegisterInfo     - Info block for the GPE register  *  * RETURN:      Register mask with a one in the GPE bit position  *  * DESCRIPTION: Compute the register mask for this GPE. One bit is set in the  *              correct position for the input GPE.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwGetGpeRegisterBit  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE  *  * RETURN:      Register mask with a one in the GPE bit position  *  * DESCRIPTION: Compute the register mask for this GPE. One bit is set in the  *              correct position for the input GPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -87,10 +87,6 @@ parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|,
-name|ACPI_GPE_REGISTER_INFO
-modifier|*
-name|GpeRegisterInfo
 parameter_list|)
 block|{
 return|return
@@ -105,7 +101,9 @@ name|GpeEventInfo
 operator|->
 name|GpeNumber
 operator|-
-name|GpeRegisterInfo
+name|GpeEventInfo
+operator|->
+name|RegisterInfo
 operator|->
 name|BaseGpeNumber
 operator|)
@@ -199,8 +197,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -259,7 +255,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid GPE Action, %u\n"
+literal|"Invalid GPE Action, %u"
 operator|,
 name|Action
 operator|)
@@ -343,8 +339,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 name|Status
@@ -430,8 +424,6 @@ operator|=
 name|AcpiHwGetGpeRegisterBit
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 comment|/* GPE currently enabled? (enabled for runtime?) */

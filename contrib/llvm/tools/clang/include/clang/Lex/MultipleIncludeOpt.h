@@ -32,11 +32,15 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the MultipleIncludeOpt interface.
+comment|/// \file
+end_comment
+
+begin_comment
+comment|/// \brief Defines the MultipleIncludeOpt interface.
 end_comment
 
 begin_comment
@@ -66,9 +70,10 @@ block|{
 name|class
 name|IdentifierInfo
 decl_stmt|;
-comment|/// MultipleIncludeOpt - This class implements the simple state machine that the
-comment|/// Lexer class uses to detect files subject to the 'multiple-include'
-comment|/// optimization.  The public methods in this class are triggered by various
+comment|/// \brief Implements the simple state machine that the Lexer class uses to
+comment|/// detect files subject to the 'multiple-include' optimization.
+comment|///
+comment|/// The public methods in this class are triggered by various
 comment|/// events that occur when a file is lexed, and after the entire file is lexed,
 comment|/// information about which macro (if any) controls the header is returned.
 name|class
@@ -76,9 +81,9 @@ name|MultipleIncludeOpt
 block|{
 comment|/// ReadAnyTokens - This is set to false when a file is first opened and true
 comment|/// any time a token is returned to the client or a (non-multiple-include)
-comment|/// directive is parsed.  When the final #endif is parsed this is reset back
-comment|/// to false, that way any tokens before the first #ifdef or after the last
-comment|/// #endif can be easily detected.
+comment|/// directive is parsed.  When the final \#endif is parsed this is reset back
+comment|/// to false, that way any tokens before the first \#ifdef or after the last
+comment|/// \#endif can be easily detected.
 name|bool
 name|ReadAnyTokens
 decl_stmt|;
@@ -132,7 +137,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/// getHasReadAnyTokensVal - This is used for the #ifndef hande-shake at the
+comment|/// getHasReadAnyTokensVal - This is used for the \#ifndef hande-shake at the
 comment|/// top of the file when reading preprocessor directives.  Otherwise, reading
 comment|/// the "ifndef x" would count as reading tokens.
 name|bool
@@ -165,14 +170,13 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// EnterTopLevelIFNDEF - When entering a top-level #ifndef directive (or the
-comment|/// "#if !defined" equivalent) without any preceding tokens, this method is
-comment|/// called.
+comment|/// \brief Called when entering a top-level \#ifndef directive (or the
+comment|/// "\#if !defined" equivalent) without any preceding tokens.
 comment|///
 comment|/// Note, we don't care about the input value of 'ReadAnyTokens'.  The caller
 comment|/// ensures that this is only called if there are no tokens read before the
-comment|/// #ifndef.  The caller is required to do this, because reading the #if line
-comment|/// obviously reads in in tokens.
+comment|/// \#ifndef.  The caller is required to do this, because reading the \#if
+comment|/// line obviously reads in in tokens.
 name|void
 name|EnterTopLevelIFNDEF
 parameter_list|(
@@ -213,20 +217,18 @@ operator|=
 name|M
 expr_stmt|;
 block|}
-comment|/// EnterTopLevelConditional - This is invoked when a top level conditional
-comment|/// (except #ifndef) is found.
+comment|/// \brief Invoked when a top level conditional (except \#ifndef) is found.
 name|void
 name|EnterTopLevelConditional
 parameter_list|()
 block|{
-comment|/// If a conditional directive (except #ifndef) is found at the top level,
-comment|/// there is a chunk of the file not guarded by the controlling macro.
+comment|// If a conditional directive (except #ifndef) is found at the top level,
+comment|// there is a chunk of the file not guarded by the controlling macro.
 name|Invalidate
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// ExitTopLevelConditional - This method is called when the lexer exits the
-comment|/// top-level conditional.
+comment|/// \brief Called when the lexer exits the top-level conditional.
 name|void
 name|ExitTopLevelConditional
 parameter_list|()
@@ -250,8 +252,8 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-comment|/// GetControllingMacroAtEndOfFile - Once the entire file has been lexed, if
-comment|/// there is a controlling macro, return it.
+comment|/// \brief Once the entire file has been lexed, if there is a controlling
+comment|/// macro, return it.
 specifier|const
 name|IdentifierInfo
 operator|*

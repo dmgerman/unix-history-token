@@ -192,6 +192,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_sta.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -687,9 +693,18 @@ name|ieee80211_create_ibss
 argument_list|(
 name|vap
 argument_list|,
+name|ieee80211_ht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
 name|vap
 operator|->
 name|iv_des_chan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_ht
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -913,7 +928,9 @@ break|break;
 case|case
 name|IEEE80211_S_SLEEP
 case|:
-name|ieee80211_sta_pwrsave
+name|vap
+operator|->
+name|iv_sta_ps
 argument_list|(
 name|vap
 argument_list|,
@@ -2925,6 +2942,11 @@ decl_stmt|,
 modifier|*
 name|xrates
 decl_stmt|;
+name|int
+name|ht_state_change
+init|=
+literal|0
+decl_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -3163,6 +3185,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * This isn't enabled yet - otherwise it would 			 * update the HT parameters and channel width 			 * from any node, which could lead to lots of 			 * strange behaviour if the 11n nodes aren't 			 * exactly configured to match. 			 */
+if|#
+directive|if
+literal|0
+block|if (scan.htcap != NULL&& scan.htinfo != NULL&& 			    (vap->iv_flags_ht& IEEE80211_FHT_HT)) { 				if (ieee80211_ht_updateparams(ni, 				    scan.htcap, scan.htinfo)) 					ht_state_change = 1; 			}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ni
@@ -3186,6 +3215,15 @@ operator|=
 name|nf
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ht_state_change
+condition|)
+name|ieee80211_update_chw
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 block|}

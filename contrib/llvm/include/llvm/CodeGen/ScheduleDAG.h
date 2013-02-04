@@ -131,6 +131,9 @@ decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
+struct_decl|struct
+name|MCSchedClassDesc
+struct_decl|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
@@ -184,6 +187,22 @@ name|Order
 comment|///< Any other ordering dependency.
 block|}
 enum|;
+enum|enum
+name|OrderKind
+block|{
+name|Barrier
+block|,
+comment|///< An unknown scheduling barrier.
+name|MayAliasMem
+block|,
+comment|///< Nonvolatile load/Store instructions that may alias.
+name|MustAliasMem
+block|,
+comment|///< Nonvolatile load/Store instructions that must alias.
+name|Artificial
+comment|///< Arbitrary weak DAG edge (no actual dependence).
+block|}
+enum|;
 name|private
 label|:
 comment|/// Dep - A pointer to the depending/depended-on SUnit, and an enum
@@ -209,33 +228,10 @@ name|unsigned
 name|Reg
 decl_stmt|;
 comment|/// Order - Additional information about Order dependencies.
-struct|struct
-block|{
-comment|/// isNormalMemory - True if both sides of the dependence
-comment|/// access memory in non-volatile and fully modeled ways.
-name|bool
-name|isNormalMemory
-range|:
-literal|1
+name|unsigned
+name|OrdKind
 decl_stmt|;
-comment|/// isMustAlias - True if both sides of the dependence are known to
-comment|/// access the same memory.
-name|bool
-name|isMustAlias
-range|:
-literal|1
-decl_stmt|;
-comment|/// isArtificial - True if this is an artificial dependency, meaning
-comment|/// it is not necessary for program correctness, and may be safely
-comment|/// deleted if necessary.
-name|bool
-name|isArtificial
-range|:
-literal|1
-decl_stmt|;
-block|}
-name|Order
-struct|;
+comment|// enum OrderKind
 block|}
 name|Contents
 union|;
@@ -244,6 +240,13 @@ comment|/// the value of the Latency field of the predecessor, however advanced
 comment|/// models may provide additional information about specific edges.
 name|unsigned
 name|Latency
+decl_stmt|;
+comment|/// Record MinLatency seperately from "expected" Latency.
+comment|///
+comment|/// FIXME: this field is not packed on LP64. Convert to 16-bit DAG edge
+comment|/// latency after introducing saturating truncation.
+name|unsigned
+name|MinLatency
 decl_stmt|;
 name|public
 label|:
@@ -267,17 +270,7 @@ argument|SUnit *S
 argument_list|,
 argument|Kind kind
 argument_list|,
-argument|unsigned latency =
-literal|1
-argument_list|,
-argument|unsigned Reg =
-literal|0
-argument_list|,
-argument|bool isNormalMemory = false
-argument_list|,
-argument|bool isMustAlias = false
-argument_list|,
-argument|bool isArtificial = false
+argument|unsigned Reg
 argument_list|)
 operator|:
 name|Dep
@@ -289,17 +282,18 @@ argument_list|)
 operator|,
 name|Contents
 argument_list|()
-operator|,
-name|Latency
-argument_list|(
-argument|latency
-argument_list|)
 block|{
 switch|switch
 condition|(
 name|kind
 condition|)
 block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Reg given for non-register dependence!"
+argument_list|)
+expr_stmt|;
 case|case
 name|Anti
 case|:
@@ -315,81 +309,76 @@ operator|&&
 literal|"SDep::Anti and SDep::Output must use a non-zero Reg!"
 argument_list|)
 expr_stmt|;
-comment|// fall through
+name|Contents
+operator|.
+name|Reg
+operator|=
+name|Reg
+expr_stmt|;
+name|Latency
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|Data
 case|:
-name|assert
-argument_list|(
-operator|!
-name|isMustAlias
-operator|&&
-literal|"isMustAlias only applies with SDep::Order!"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|!
-name|isArtificial
-operator|&&
-literal|"isArtificial only applies with SDep::Order!"
-argument_list|)
-expr_stmt|;
 name|Contents
 operator|.
 name|Reg
 operator|=
 name|Reg
 expr_stmt|;
-break|break;
-case|case
-name|Order
-case|:
-name|assert
-argument_list|(
-name|Reg
-operator|==
-literal|0
-operator|&&
-literal|"Reg given for non-register dependence!"
-argument_list|)
-expr_stmt|;
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isNormalMemory
+name|Latency
 operator|=
-name|isNormalMemory
-expr_stmt|;
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isMustAlias
-operator|=
-name|isMustAlias
-expr_stmt|;
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isArtificial
-operator|=
-name|isArtificial
+literal|1
 expr_stmt|;
 break|break;
 block|}
+name|MinLatency
+operator|=
+name|Latency
+expr_stmt|;
 block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
 name|SDep
-operator|&
-name|Other
-operator|)
+argument_list|(
+argument|SUnit *S
+argument_list|,
+argument|OrderKind kind
+argument_list|)
+operator|:
+name|Dep
+argument_list|(
+name|S
+argument_list|,
+name|Order
+argument_list|)
+operator|,
+name|Contents
+argument_list|()
+operator|,
+name|Latency
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|MinLatency
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|Contents
+operator|.
+name|OrdKind
+operator|=
+name|kind
+block|;     }
+comment|/// Return true if the specified SDep is equivalent except for latency.
+name|bool
+name|overlaps
+argument_list|(
+argument|const SDep&Other
+argument_list|)
 specifier|const
 block|{
 if|if
@@ -399,12 +388,6 @@ operator|!=
 name|Other
 operator|.
 name|Dep
-operator|||
-name|Latency
-operator|!=
-name|Other
-operator|.
-name|Latency
 condition|)
 return|return
 name|false
@@ -443,45 +426,13 @@ case|:
 return|return
 name|Contents
 operator|.
-name|Order
-operator|.
-name|isNormalMemory
+name|OrdKind
 operator|==
 name|Other
 operator|.
 name|Contents
 operator|.
-name|Order
-operator|.
-name|isNormalMemory
-operator|&&
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isMustAlias
-operator|==
-name|Other
-operator|.
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isMustAlias
-operator|&&
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isArtificial
-operator|==
-name|Other
-operator|.
-name|Contents
-operator|.
-name|Order
-operator|.
-name|isArtificial
+name|OrdKind
 return|;
 block|}
 name|llvm_unreachable
@@ -489,6 +440,36 @@ argument_list|(
 literal|"Invalid dependency kind!"
 argument_list|)
 expr_stmt|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SDep
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|overlaps
+argument_list|(
+name|Other
+argument_list|)
+operator|&&
+name|Latency
+operator|==
+name|Other
+operator|.
+name|Latency
+operator|&&
+name|MinLatency
+operator|==
+name|Other
+operator|.
+name|MinLatency
+return|;
 block|}
 name|bool
 name|operator
@@ -532,6 +513,31 @@ name|Lat
 parameter_list|)
 block|{
 name|Latency
+operator|=
+name|Lat
+expr_stmt|;
+block|}
+comment|/// getMinLatency - Return the minimum latency for this edge. Minimum
+comment|/// latency is used for scheduling groups, while normal (expected) latency
+comment|/// is for instruction cost and critical path.
+name|unsigned
+name|getMinLatency
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinLatency
+return|;
+block|}
+comment|/// setMinLatency - Set the minimum latency for this edge.
+name|void
+name|setMinLatency
+parameter_list|(
+name|unsigned
+name|Lat
+parameter_list|)
+block|{
+name|MinLatency
 operator|=
 name|Lat
 expr_stmt|;
@@ -607,11 +613,19 @@ argument_list|()
 operator|==
 name|Order
 operator|&&
+operator|(
 name|Contents
 operator|.
-name|Order
+name|OrdKind
+operator|==
+name|MayAliasMem
+operator|||
+name|Contents
 operator|.
-name|isNormalMemory
+name|OrdKind
+operator|==
+name|MustAliasMem
+operator|)
 return|;
 block|}
 comment|/// isMustAlias - Test if this is an Order dependence that is marked
@@ -630,9 +644,9 @@ name|Order
 operator|&&
 name|Contents
 operator|.
-name|Order
-operator|.
-name|isMustAlias
+name|OrdKind
+operator|==
+name|MustAliasMem
 return|;
 block|}
 comment|/// isArtificial - Test if this is an Order dependence that is marked
@@ -650,9 +664,9 @@ name|Order
 operator|&&
 name|Contents
 operator|.
-name|Order
-operator|.
-name|isArtificial
+name|OrdKind
+operator|==
+name|Artificial
 return|;
 block|}
 comment|/// isAssignedRegDep - Test if this is a Data dependence that is
@@ -840,6 +854,12 @@ decl_stmt|;
 comment|// If not this, the node from which
 comment|// this node was cloned.
 comment|// (SD scheduling only)
+specifier|const
+name|MCSchedClassDesc
+modifier|*
+name|SchedClass
+decl_stmt|;
+comment|// NULL or resolved SchedClass.
 comment|// Preds/Succs - The SUnits before/after us in the graph.
 name|SmallVector
 operator|<
@@ -1045,6 +1065,14 @@ decl_stmt|;
 comment|// Node height.
 name|public
 label|:
+name|unsigned
+name|TopReadyCycle
+decl_stmt|;
+comment|// Cycle relative to start when node is ready.
+name|unsigned
+name|BotReadyCycle
+decl_stmt|;
+comment|// Cycle relative to end when node is ready.
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -1076,6 +1104,11 @@ literal|0
 argument_list|)
 operator|,
 name|OrigNode
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SchedClass
 argument_list|(
 literal|0
 argument_list|)
@@ -1208,6 +1241,16 @@ literal|0
 argument_list|)
 operator|,
 name|Height
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
 argument_list|(
 literal|0
 argument_list|)
@@ -1246,6 +1289,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|SchedClass
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|NodeNum
 argument_list|(
 name|nodenum
@@ -1378,6 +1426,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|CopyDstRC
 argument_list|(
 name|NULL
@@ -1403,6 +1461,11 @@ literal|0
 argument_list|)
 operator|,
 name|OrigNode
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SchedClass
 argument_list|(
 literal|0
 argument_list|)
@@ -1536,6 +1599,16 @@ literal|0
 argument_list|)
 operator|,
 name|Height
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TopReadyCycle
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BotReadyCycle
 argument_list|(
 literal|0
 argument_list|)
@@ -2557,52 +2630,6 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-name|protected
-label|:
-comment|/// ComputeLatency - Compute node latency.
-comment|///
-name|virtual
-name|void
-name|computeLatency
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// ComputeOperandLatency - Override dependence edge latency using
-comment|/// operand use/def information
-comment|///
-name|virtual
-name|void
-name|computeOperandLatency
-argument_list|(
-name|SUnit
-operator|*
-argument_list|,
-name|SUnit
-operator|*
-argument_list|,
-name|SDep
-operator|&
-argument_list|)
-decl|const
-block|{ }
-comment|/// ForceUnitLatencies - Return true if all scheduling edges should be given
-comment|/// a latency value of one.  The default is to return false; schedulers may
-comment|/// override this as needed.
-name|virtual
-name|bool
-name|forceUnitLatencies
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 name|private
 label|:
 comment|// Return the MCInstrDesc of this SDNode or NULL.

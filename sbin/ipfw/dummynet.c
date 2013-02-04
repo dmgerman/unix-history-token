@@ -3517,7 +3517,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|j
 decl_stmt|;
 name|char
@@ -6183,24 +6184,10 @@ name|v
 index|[
 literal|1
 index|]
-operator|<
-literal|0
-operator|||
-name|v
-index|[
-literal|1
-index|]
 operator|>=
 name|DN_MAX_ID
 operator|-
 literal|1
-operator|||
-name|v
-index|[
-literal|0
-index|]
-operator|<
-literal|0
 operator|||
 name|v
 index|[
@@ -6300,20 +6287,26 @@ name|int
 name|ret
 decl_stmt|,
 name|i
-decl_stmt|,
-name|l
 decl_stmt|;
 name|int
 name|n
 decl_stmt|;
 comment|/* # of ranges */
-name|int
+name|u_int
 name|buflen
+decl_stmt|,
+name|l
 decl_stmt|;
-name|int
+name|u_int
 name|max_size
 decl_stmt|;
 comment|/* largest obj passed up */
+operator|(
+name|void
+operator|)
+name|show_counters
+expr_stmt|;
+comment|// XXX unused, but we should use it.
 name|ac
 operator|--
 expr_stmt|;

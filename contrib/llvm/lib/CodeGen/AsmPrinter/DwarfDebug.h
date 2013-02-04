@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DIE.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
@@ -80,18 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DIE.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -111,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/UniqueVector.h"
 end_include
 
 begin_include
@@ -964,15 +964,6 @@ name|true
 return|;
 if|if
 condition|(
-name|Var
-operator|.
-name|getTag
-argument_list|()
-operator|==
-name|dwarf
-operator|::
-name|DW_TAG_arg_variable
-operator|&&
 name|getType
 argument_list|()
 operator|.
@@ -990,8 +981,49 @@ end_decl_stmt
 
 begin_expr_stmt
 name|bool
+name|isObjectPointer
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Var
+operator|.
+name|isObjectPointer
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|getType
+argument_list|()
+operator|.
+name|isObjectPointer
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+end_if
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_macro
+unit|}      bool
 name|variableHasComplexAddress
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 name|assert
@@ -1106,6 +1138,10 @@ name|MachineModuleInfo
 modifier|*
 name|MMI
 decl_stmt|;
+comment|/// DIEValueAllocator - All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attributes used to construct specific Dwarf sections.
 comment|//
@@ -1161,6 +1197,9 @@ comment|/// separated by a zero byte, mapped to a unique id.
 name|StringMap
 operator|<
 name|unsigned
+operator|,
+name|BumpPtrAllocator
+operator|&
 operator|>
 name|SourceIdMap
 expr_stmt|;
@@ -1177,7 +1216,10 @@ operator|*
 operator|,
 name|unsigned
 operator|>
-expr|>
+operator|,
+name|BumpPtrAllocator
+operator|&
+operator|>
 name|StringPool
 expr_stmt|;
 name|unsigned
@@ -1185,7 +1227,7 @@ name|NextStringPoolNumber
 decl_stmt|;
 comment|/// SectionMap - Provides a unique id per text section.
 comment|///
-name|UniqueVector
+name|SetVector
 operator|<
 specifier|const
 name|MCSection
@@ -1234,7 +1276,7 @@ operator|>
 expr|>
 name|ScopeVariables
 expr_stmt|;
-comment|/// AbstractVariables - Collection on abstract variables.
+comment|/// AbstractVariables - Collection of abstract variables.
 name|DenseMap
 operator|<
 specifier|const
@@ -1446,10 +1488,6 @@ name|FunctionDebugFrameInfo
 operator|>
 name|DebugFrames
 expr_stmt|;
-comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
-name|BumpPtrAllocator
-name|DIEValueAllocator
-decl_stmt|;
 comment|// Section Symbols: these are assembler temporary labels that are emitted at
 comment|// the beginning of each supported dwarf section.  These are used to form
 comment|// section offsets and are created by EmitSectionLabels.
@@ -1485,6 +1523,13 @@ comment|// As an optimization, there is no need to emit an entry in the director
 comment|// table for the same directory as DW_at_comp_dir.
 name|StringRef
 name|CompilationDir
+decl_stmt|;
+comment|// A holder for the DarwinGDBCompat flag so that the compile unit can use it.
+name|bool
+name|isDarwinGDBCompat
+decl_stmt|;
+name|bool
+name|hasDwarfAccelTables
 decl_stmt|;
 name|private
 label|:
@@ -1570,20 +1615,6 @@ parameter_list|,
 name|LexicalScope
 modifier|*
 name|Scope
-parameter_list|)
-function_decl|;
-comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
-name|DIE
-modifier|*
-name|constructVariableDIE
-parameter_list|(
-name|DbgVariable
-modifier|*
-name|DV
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|S
 parameter_list|)
 function_decl|;
 comment|/// constructScopeDIE - Construct a DIE for this scope.
@@ -2050,15 +2081,6 @@ name|StringRef
 name|FullName
 parameter_list|)
 function_decl|;
-comment|/// createSubprogramDIE - Create new DIE using SP.
-name|DIE
-modifier|*
-name|createSubprogramDIE
-parameter_list|(
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
 comment|/// getStringPool - returns the entry into the start of the pool.
 name|MCSymbol
 modifier|*
@@ -2075,6 +2097,24 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
+comment|/// useDarwinGDBCompat - returns whether or not to limit some of our debug
+comment|/// output to the limitations of darwin gdb.
+name|bool
+name|useDarwinGDBCompat
+parameter_list|()
+block|{
+return|return
+name|isDarwinGDBCompat
+return|;
+block|}
+name|bool
+name|useDwarfAccelTables
+parameter_list|()
+block|{
+return|return
+name|hasDwarfAccelTables
+return|;
+block|}
 block|}
 end_decl_stmt
 

@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -208,19 +214,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* active control file name */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uid_t
-name|uid
-decl_stmt|,
-name|euid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* real and effective user id's */
 end_comment
 
 begin_function_decl
@@ -434,11 +427,7 @@ operator|=
 name|root
 expr_stmt|;
 block|}
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 name|chdir
@@ -484,11 +473,7 @@ argument_list|,
 literal|"cannot access spool directory"
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 if|if
 condition|(
 name|nitems
@@ -512,13 +497,9 @@ name|current
 argument_list|)
 condition|)
 block|{
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|assassinated
-operator|=
+init|=
 name|kill
 argument_list|(
 name|cur_daemon
@@ -527,12 +508,8 @@ name|SIGINT
 argument_list|)
 operator|==
 literal|0
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 if|if
 condition|(
 operator|!
@@ -633,11 +610,7 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 operator|(
@@ -681,11 +654,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 if|if
 condition|(
 operator|!
@@ -857,11 +826,7 @@ name|file
 argument_list|)
 condition|)
 return|return;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 operator|(
@@ -886,11 +851,7 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 while|while
 condition|(
 name|getline
@@ -985,23 +946,15 @@ argument_list|,
 name|local_host
 argument_list|)
 expr_stmt|;
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 name|ret
-operator|=
+init|=
 name|unlink
 argument_list|(
 name|file
 argument_list|)
-expr_stmt|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
 name|printf
 argument_list|(
 name|ret
@@ -1012,7 +965,7 @@ literal|"%s dequeued\n"
 argument_list|,
 name|file
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 block|}
 end_function
 
@@ -1112,11 +1065,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * get the owner's name from the control file. 	 */
-name|seteuid
-argument_list|(
-name|euid
-argument_list|)
-expr_stmt|;
+name|PRIV_START
 if|if
 condition|(
 operator|(
@@ -1137,11 +1086,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
+name|PRIV_END
 while|while
 condition|(
 name|getline

@@ -100,6 +100,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_ROOT_MOUNT_HOLD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_ID_SECTION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td
@@ -249,6 +263,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_MAX_EP_STREAMS
+value|8
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_MAX_FS_ISOC_FRAMES_PER_XFER
 value|(120)
 end_define
@@ -372,6 +397,17 @@ end_typedef
 
 begin_comment
 comment|/* see "USB_HW_POWER_XXX" */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|usb_stream_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* stream ID */
 end_comment
 
 begin_endif

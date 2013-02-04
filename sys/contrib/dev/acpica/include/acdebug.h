@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -33,7 +33,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|CommandInfo
+name|acpi_db_command_info
 block|{
 name|char
 modifier|*
@@ -45,14 +45,38 @@ name|MinArgs
 decl_stmt|;
 comment|/* Minimum arguments required */
 block|}
-name|COMMAND_INFO
+name|ACPI_DB_COMMAND_INFO
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|ArgumentInfo
+name|acpi_db_command_help
+block|{
+name|UINT8
+name|LineCount
+decl_stmt|;
+comment|/* Number of help lines */
+name|char
+modifier|*
+name|Invocation
+decl_stmt|;
+comment|/* Command Invocation */
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+comment|/* Command Description */
+block|}
+name|ACPI_DB_COMMAND_HELP
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_db_argument_info
 block|{
 name|char
 modifier|*
@@ -60,14 +84,14 @@ name|Name
 decl_stmt|;
 comment|/* Argument Name */
 block|}
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_execute_walk
+name|acpi_db_execute_walk
 block|{
 name|UINT32
 name|Count
@@ -76,7 +100,7 @@ name|UINT32
 name|MaxCount
 decl_stmt|;
 block|}
-name|ACPI_EXECUTE_WALK
+name|ACPI_DB_EXECUTE_WALK
 typedef|;
 end_typedef
 
@@ -295,6 +319,80 @@ argument_list|(
 argument|void AcpiDbGenerateGpe (     char                    *GpeArg,     char                    *BlockArg)
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*  * dbconvert - miscellaneous conversion routines  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDbHexCharToValue
+parameter_list|(
+name|int
+name|HexChar
+parameter_list|,
+name|UINT8
+modifier|*
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDbConvertToPackage
+parameter_list|(
+name|char
+modifier|*
+name|String
+parameter_list|,
+name|ACPI_OBJECT
+modifier|*
+name|Object
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDbConvertToObject
+parameter_list|(
+name|ACPI_OBJECT_TYPE
+name|Type
+parameter_list|,
+name|char
+modifier|*
+name|String
+parameter_list|,
+name|ACPI_OBJECT
+modifier|*
+name|Object
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT8
+modifier|*
+name|AcpiDbEncodePldBuffer
+parameter_list|(
+name|ACPI_PLD_INFO
+modifier|*
+name|PldInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDbDumpPldBuffer
+parameter_list|(
+name|ACPI_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * dbmethod - control method commands  */
@@ -659,6 +757,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|AcpiDbDeleteObjects
+parameter_list|(
+name|UINT32
+name|Count
+parameter_list|,
+name|ACPI_OBJECT
+modifier|*
+name|Objects
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -693,7 +805,7 @@ name|char
 modifier|*
 name|UserArgument
 parameter_list|,
-name|ARGUMENT_INFO
+name|ACPI_DB_ARGUMENT_INFO
 modifier|*
 name|Arguments
 parameter_list|)

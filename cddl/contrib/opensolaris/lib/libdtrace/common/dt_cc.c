@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -10333,7 +10333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Open all of the .d library files found in the specified directory and  * compile each one in topological order to cache its inlines and translators,  * etc.  We silently ignore any missing directories and other files found  * therein. We only fail (and thereby fail dt_load_libs()) if we fail to  * compile a library and the error is something other than #pragma D depends_on.  * Dependency errors are silently ignored to permit a library directory to  * contain libraries which may not be accessible depending on our privileges.  */
+comment|/*  * Open all the .d library files found in the specified directory and  * compile each one of them.  We silently ignore any missing directories and  * other files found therein.  We only fail (and thereby fail dt_load_libs()) if  * we fail to compile a library and the error is something other than #pragma D  * depends_on.  Dependency errors are silently ignored to permit a library  * directory to contain libraries which may not be accessible depending on our  * privileges.  */
 end_comment
 
 begin_function
@@ -10360,6 +10360,9 @@ specifier|const
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|end
 decl_stmt|;
 name|DIR
 modifier|*
@@ -10370,10 +10373,6 @@ name|fname
 index|[
 name|PATH_MAX
 index|]
-decl_stmt|;
-name|dtrace_prog_t
-modifier|*
-name|pgp
 decl_stmt|;
 name|FILE
 modifier|*
@@ -10511,6 +10510,90 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Skip files whose name match an already processed library 		 */
+for|for
+control|(
+name|dld
+operator|=
+name|dt_list_next
+argument_list|(
+operator|&
+name|dtp
+operator|->
+name|dt_lib_dep
+argument_list|)
+init|;
+name|dld
+operator|!=
+name|NULL
+condition|;
+name|dld
+operator|=
+name|dt_list_next
+argument_list|(
+name|dld
+argument_list|)
+control|)
+block|{
+name|end
+operator|=
+name|strrchr
+argument_list|(
+name|dld
+operator|->
+name|dtld_library
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+comment|/* dt_lib_depend_add ensures this */
+name|assert
+argument_list|(
+name|end
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|end
+operator|+
+literal|1
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|dld
+operator|!=
+name|NULL
+condition|)
+block|{
+name|dt_dprintf
+argument_list|(
+literal|"skipping library %s, already processed "
+literal|"library with the same name: %s"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dld
+operator|->
+name|dtld_library
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|dtp
 operator|->
 name|dt_filetag
@@ -10533,9 +10616,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|err
-goto|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* preserve dt_errno */
 name|rv
 operator|=
 name|dt_compile
@@ -10588,9 +10675,13 @@ name|D_PRAGMA_DEPEND
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|err
-goto|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* preserve dt_errno */
 if|if
 condition|(
 name|dtp
@@ -10637,6 +10728,40 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Perform a topological sorting of all the libraries found across the entire  * dt_lib_path.  Once sorted, compile each one in topological order to cache its  * inlines and translators, etc.  We silently ignore any missing directories and  * other files found therein. We only fail (and thereby fail dt_load_libs()) if  * we fail to compile a library and the error is something other than #pragma D  * depends_on.  Dependency errors are silently ignored to permit a library  * directory to contain libraries which may not be accessible depending on our  * privileges.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|dt_load_libs_sort
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+name|dtp
+parameter_list|)
+block|{
+name|dtrace_prog_t
+modifier|*
+name|pgp
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|dt_lib_depend_t
+modifier|*
+name|dld
+decl_stmt|;
 comment|/* 	 * Finish building the graph containing the library dependencies 	 * and perform a topological sort to generate an ordered list 	 * for compilation. 	 */
 if|if
 condition|(
@@ -10881,16 +11006,20 @@ name|dt_cflags
 operator||=
 name|DTRACE_C_NOLIBS
 expr_stmt|;
+comment|/* 	 * /usr/lib/dtrace is always at the head of the list. The rest of the 	 * list is specified in the precedence order the user requested. Process 	 * everything other than the head first. DTRACE_C_NOLIBS has already 	 * been spcified so dt_vopen will ensure that there is always one entry 	 * in dt_lib_path. 	 */
 for|for
 control|(
 name|dirp
 operator|=
 name|dt_list_next
 argument_list|(
+name|dt_list_next
+argument_list|(
 operator|&
 name|dtp
 operator|->
 name|dt_lib_path
+argument_list|)
 argument_list|)
 init|;
 name|dirp
@@ -10935,6 +11064,62 @@ return|;
 comment|/* errno is set for us */
 block|}
 block|}
+comment|/* Handle /usr/lib/dtrace */
+name|dirp
+operator|=
+name|dt_list_next
+argument_list|(
+operator|&
+name|dtp
+operator|->
+name|dt_lib_path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dt_load_libs_dir
+argument_list|(
+name|dtp
+argument_list|,
+name|dirp
+operator|->
+name|dir_path
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|dtp
+operator|->
+name|dt_cflags
+operator|&=
+operator|~
+name|DTRACE_C_NOLIBS
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* errno is set for us */
+block|}
+if|if
+condition|(
+name|dt_load_libs_sort
+argument_list|(
+name|dtp
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* errno is set for us */
 return|return
 operator|(
 literal|0

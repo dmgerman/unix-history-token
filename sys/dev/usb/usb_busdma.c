@@ -7,6 +7,23 @@ begin_comment
 comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -193,6 +210,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_if
 if|#
@@ -1385,14 +1411,6 @@ comment|/* alignment */
 name|align
 argument_list|,
 comment|/* boundary  */
-operator|(
-name|align
-operator|==
-literal|1
-operator|)
-condition|?
-name|USB_PAGE_SIZE
-else|:
 literal|0
 argument_list|,
 comment|/* lowaddr   */
@@ -1641,6 +1659,9 @@ decl_stmt|;
 name|usb_size_t
 name|rem
 decl_stmt|;
+name|bus_size_t
+name|off
+decl_stmt|;
 name|uint8_t
 name|owned
 decl_stmt|;
@@ -1664,6 +1685,10 @@ goto|goto
 name|done
 goto|;
 block|}
+name|off
+operator|=
+literal|0
+expr_stmt|;
 name|pg
 operator|=
 name|pc
@@ -1709,9 +1734,6 @@ name|page_offset_end
 operator|+=
 name|rem
 expr_stmt|;
-name|nseg
-operator|--
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -1755,17 +1777,49 @@ endif|#
 directive|endif
 while|while
 condition|(
-name|nseg
-operator|>
-literal|0
+literal|1
 condition|)
 block|{
+name|off
+operator|+=
+name|USB_PAGE_SIZE
+expr_stmt|;
+if|if
+condition|(
+name|off
+operator|>=
+operator|(
+name|segs
+operator|->
+name|ds_len
+operator|+
+name|rem
+operator|)
+condition|)
+block|{
+comment|/* page crossing */
 name|nseg
 operator|--
 expr_stmt|;
 name|segs
 operator|++
 expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+name|rem
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|nseg
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
 name|pg
 operator|++
 expr_stmt|;
@@ -1773,9 +1827,13 @@ name|pg
 operator|->
 name|physaddr
 operator|=
+operator|(
 name|segs
 operator|->
 name|ds_addr
+operator|+
+name|off
+operator|)
 operator|&
 operator|~
 operator|(

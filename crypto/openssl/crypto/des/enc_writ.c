@@ -71,6 +71,20 @@ modifier|*
 name|iv
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_NO_POSIX_IO
+argument_list|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|_LIBC
@@ -516,6 +530,9 @@ operator|(
 name|len
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* OPENSSL_NO_POSIX_IO */
 block|}
 end_function
 

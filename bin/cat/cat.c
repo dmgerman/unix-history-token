@@ -139,6 +139,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -160,18 +166,14 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|int
 name|bflag
 decl_stmt|,
 name|eflag
+decl_stmt|,
+name|lflag
 decl_stmt|,
 name|nflag
 decl_stmt|,
@@ -274,29 +276,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Memory strategy threshold, in pages: if physmem is larger then this, use a   * large buffer */
+comment|/*  * Memory strategy threshold, in pages: if physmem is larger than this,  * use a large buffer.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PHYSPAGES_THRESHOLD
-value|(32*1024)
+value|(32 * 1024)
 end_define
 
 begin_comment
-comment|/* Maximum buffer size in bytes - do not allow it to grow larger than this */
+comment|/* Maximum buffer size in bytes - do not allow it to grow larger than this. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BUFSIZE_MAX
-value|(2*1024*1024)
+value|(2 * 1024 * 1024)
 end_define
 
 begin_comment
-comment|/* Small (default) buffer size in bytes. It's inefficient for this to be  * smaller than MAXPHYS */
+comment|/*  * Small (default) buffer size in bytes. It's inefficient for this to be  * smaller than MAXPHYS.  */
 end_comment
 
 begin_define
@@ -322,6 +324,10 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+name|struct
+name|flock
+name|stdout_lock
+decl_stmt|;
 name|setlocale
 argument_list|(
 name|LC_CTYPE
@@ -340,7 +346,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"benstuv"
+literal|"belnstuv"
 argument_list|)
 operator|)
 operator|!=
@@ -373,6 +379,14 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* -e implies -v */
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'n'
@@ -429,6 +443,58 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|lflag
+condition|)
+block|{
+name|stdout_lock
+operator|.
+name|l_len
+operator|=
+literal|0
+expr_stmt|;
+name|stdout_lock
+operator|.
+name|l_start
+operator|=
+literal|0
+expr_stmt|;
+name|stdout_lock
+operator|.
+name|l_type
+operator|=
+name|F_WRLCK
+expr_stmt|;
+name|stdout_lock
+operator|.
+name|l_whence
+operator|=
+name|SEEK_SET
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+name|F_SETLKW
+argument_list|,
+operator|&
+name|stdout_lock
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"stdout"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bflag
@@ -493,7 +559,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cat [-benstuv] [file ...]\n"
+literal|"usage: cat [-belnstuv] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -520,9 +586,9 @@ name|cooked
 parameter_list|)
 block|{
 name|int
+name|fd
+decl_stmt|,
 name|i
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -532,6 +598,10 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -550,9 +620,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|fd
-decl_stmt|;
 if|if
 condition|(
 name|path
@@ -1096,9 +1163,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
-argument_list|,
-name|filename
+literal|"stdout"
 argument_list|)
 expr_stmt|;
 if|if

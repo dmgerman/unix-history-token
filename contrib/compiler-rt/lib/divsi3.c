@@ -27,15 +27,14 @@ begin_comment
 comment|/* Returns: a / b */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|idiv
+argument|idiv
 argument_list|,
-name|divsi3
+argument|divsi3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI
@@ -110,14 +109,18 @@ operator|^=
 name|s_b
 expr_stmt|;
 comment|/* sign of quotient */
+comment|/*      * On CPUs without unsigned hardware division support,      *  this calls __udivsi3 (notice the cast to su_int).      * On CPUs with unsigned hardware division support,      *  this uses the unsigned division instruction.      */
 return|return
 operator|(
-name|__udivsi3
-argument_list|(
+operator|(
+name|su_int
+operator|)
 name|a
-argument_list|,
+operator|/
+operator|(
+name|su_int
+operator|)
 name|b
-argument_list|)
 operator|^
 name|s_a
 operator|)

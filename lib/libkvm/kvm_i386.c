@@ -1232,11 +1232,6 @@ name|PTD
 operator|=
 name|PTD
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|kd
 operator|->
 name|vmst

@@ -746,6 +746,15 @@ name|unsigned
 name|NumBits
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|NumBits
+operator|<=
+literal|32
+operator|&&
+literal|"Too many bits to emit!"
+argument_list|)
+expr_stmt|;
 name|uint32_t
 name|Threshold
 init|=
@@ -823,6 +832,15 @@ name|unsigned
 name|NumBits
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|NumBits
+operator|<=
+literal|32
+operator|&&
+literal|"Too many bits to emit!"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -843,7 +861,7 @@ argument_list|,
 name|NumBits
 argument_list|)
 return|;
-name|uint64_t
+name|uint32_t
 name|Threshold
 init|=
 literal|1U

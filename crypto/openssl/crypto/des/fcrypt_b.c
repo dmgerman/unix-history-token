@@ -191,7 +191,7 @@ literal|32
 condition|;
 name|i
 operator|+=
-literal|8
+literal|4
 control|)
 block|{
 name|D_ENCRYPT
@@ -215,30 +215,6 @@ argument_list|,
 name|i
 operator|+
 literal|2
-argument_list|)
-expr_stmt|;
-comment|/*  2 */
-name|D_ENCRYPT
-argument_list|(
-name|l
-argument_list|,
-name|r
-argument_list|,
-name|i
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
-comment|/*  1 */
-name|D_ENCRYPT
-argument_list|(
-name|r
-argument_list|,
-name|l
-argument_list|,
-name|i
-operator|+
-literal|6
 argument_list|)
 expr_stmt|;
 comment|/*  2 */

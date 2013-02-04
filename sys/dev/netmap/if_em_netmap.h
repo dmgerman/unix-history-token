@@ -685,7 +685,7 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* generate an interrupt approximately every half ring */
-name|int
+name|u_int
 name|report_frequency
 init|=
 name|kring
@@ -1363,6 +1363,13 @@ operator|||
 name|force_update
 condition|)
 block|{
+name|uint16_t
+name|slot_flags
+init|=
+name|kring
+operator|->
+name|nkr_slot_flags
+decl_stmt|;
 for|for
 control|(
 name|n
@@ -1423,6 +1430,17 @@ name|curr
 operator|->
 name|length
 argument_list|)
+expr_stmt|;
+name|ring
+operator|->
+name|slot
+index|[
+name|j
+index|]
+operator|.
+name|flags
+operator|=
+name|slot_flags
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(

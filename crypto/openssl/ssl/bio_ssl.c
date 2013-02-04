@@ -1641,7 +1641,15 @@ break|break;
 case|case
 name|BIO_CTRL_POP
 case|:
-comment|/* ugly bit of a hack */
+comment|/* Only detach if we are the BIO explicitly being popped */
+if|if
+condition|(
+name|b
+operator|==
+name|ptr
+condition|)
+block|{
+comment|/* Shouldn't happen in practice because the 			 * rbio and wbio are the same when pushed. 			 */
 if|if
 condition|(
 name|ssl
@@ -1652,8 +1660,6 @@ name|ssl
 operator|->
 name|wbio
 condition|)
-comment|/* we are in trouble :-( */
-block|{
 name|BIO_free_all
 argument_list|(
 name|ssl
@@ -1661,7 +1667,6 @@ operator|->
 name|wbio
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|b
@@ -1670,7 +1675,6 @@ name|next_bio
 operator|!=
 name|NULL
 condition|)
-block|{
 name|CRYPTO_add
 argument_list|(
 operator|&
@@ -1680,12 +1684,12 @@ name|next_bio
 operator|->
 name|references
 argument_list|,
+operator|-
 literal|1
 argument_list|,
 name|CRYPTO_LOCK_BIO
 argument_list|)
 expr_stmt|;
-block|}
 name|ssl
 operator|->
 name|wbio
@@ -1698,6 +1702,7 @@ name|rbio
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|BIO_C_DO_STATE_MACHINE
@@ -2363,6 +2368,9 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SOCK
 name|BIO
 modifier|*
 name|ret
@@ -2452,17 +2460,8 @@ argument_list|(
 name|con
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-name|NULL
-condition|)
-name|BIO_free
-argument_list|(
-name|ret
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL

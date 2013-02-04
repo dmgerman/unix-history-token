@@ -8,6 +8,10 @@ comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
+begin_comment
 comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the Eric Young open source  * license provided above.  *  * The binary polynomial arithmetic software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
@@ -56,6 +60,12 @@ directive|include
 file|<openssl/ossl_typ.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -71,6 +81,9 @@ directive|endif
 comment|/* These preprocessor symbols control various aspects of the bignum headers and  * library code. They're not defined by any "normal" configuration, as they are  * intended for development and testing purposes. NB: defining all three can be  * useful for debugging application code as well as openssl itself.  *  * BN_DEBUG - turn on various debugging alterations to the bignum code  * BN_DEBUG_RAND - uses random poisoning of unused words to trip up  * mismanagement of bignum internals. You must also define BN_DEBUG.  */
 comment|/* #define BN_DEBUG */
 comment|/* #define BN_DEBUG_RAND */
+ifndef|#
+directive|ifndef
+name|OPENSSL_SMALL_FOOTPRINT
 define|#
 directive|define
 name|BN_MUL_COMBA
@@ -80,6 +93,8 @@ name|BN_SQR_COMBA
 define|#
 directive|define
 name|BN_RECURSION
+endif|#
+directive|endif
 comment|/* This next option uses the C libraries (2 word)/(1 word) function.  * If it is not defined, I use my C version (which is slower).  * The reason for this flag is that when the particular C compiler  * library routine is used, and the library is linked with a different  * compiler, the library is missing.  This mostly happens when the  * library is built with gcc and then linked using normal cc.  This would  * be a common occurrence because gcc normally produces code that is  * 2 times faster than system compilers for the big number stuff.  * For machines with only one compiler (or shared libraries), this should  * be on.  Again this in only really a problem on machines  * using "long long's", are 32bit, and are not using my assembler code. */
 if|#
 directive|if
@@ -185,6 +200,14 @@ define|#
 directive|define
 name|BN_DEC_NUM
 value|19
+define|#
+directive|define
+name|BN_HEX_FMT1
+value|"%lX"
+define|#
+directive|define
+name|BN_HEX_FMT2
+value|"%016lX"
 endif|#
 directive|endif
 comment|/* This is where the long long data type is 64 bits, but long is 32.  * For machines where there are 64bit registers, this is the mode to use.  * IRIX, on R4000 and above should use this mode, along with the relevant  * assembler code :-).  Do NOT define BN_LLONG.  */
@@ -257,6 +280,14 @@ define|#
 directive|define
 name|BN_DEC_NUM
 value|19
+define|#
+directive|define
+name|BN_HEX_FMT1
+value|"%llX"
+define|#
+directive|define
+name|BN_HEX_FMT2
+value|"%016llX"
 endif|#
 directive|endif
 ifdef|#
@@ -269,7 +300,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WIN32
+name|_WIN32
 argument_list|)
 operator|&&
 operator|!
@@ -281,12 +312,20 @@ define|#
 directive|define
 name|BN_ULLONG
 value|unsigned __int64
+define|#
+directive|define
+name|BN_MASK
+value|(0xffffffffffffffffI64)
 else|#
 directive|else
 define|#
 directive|define
 name|BN_ULLONG
 value|unsigned long long
+define|#
+directive|define
+name|BN_MASK
+value|(0xffffffffffffffffLL)
 endif|#
 directive|endif
 endif|#
@@ -294,11 +333,11 @@ directive|endif
 define|#
 directive|define
 name|BN_ULONG
-value|unsigned long
+value|unsigned int
 define|#
 directive|define
 name|BN_LONG
-value|long
+value|int
 define|#
 directive|define
 name|BN_BITS
@@ -315,22 +354,6 @@ define|#
 directive|define
 name|BN_BITS4
 value|16
-ifdef|#
-directive|ifdef
-name|OPENSSL_SYS_WIN32
-comment|/* VC++ doesn't like the LL suffix */
-define|#
-directive|define
-name|BN_MASK
-value|(0xffffffffffffffffL)
-else|#
-directive|else
-define|#
-directive|define
-name|BN_MASK
-value|(0xffffffffffffffffLL)
-endif|#
-directive|endif
 define|#
 directive|define
 name|BN_MASK2
@@ -358,179 +381,61 @@ value|(1000000000L)
 define|#
 directive|define
 name|BN_DEC_FMT1
-value|"%lu"
+value|"%u"
 define|#
 directive|define
 name|BN_DEC_FMT2
-value|"%09lu"
+value|"%09u"
 define|#
 directive|define
 name|BN_DEC_NUM
 value|9
+define|#
+directive|define
+name|BN_HEX_FMT1
+value|"%X"
+define|#
+directive|define
+name|BN_HEX_FMT2
+value|"%08X"
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|SIXTEEN_BIT
-ifndef|#
-directive|ifndef
-name|BN_DIV2W
+comment|/* 2011-02-22 SMS.  * In various places, a size_t variable or a type cast to size_t was  * used to perform integer-only operations on pointers.  This failed on  * VMS with 64-bit pointers (CC /POINTER_SIZE = 64) because size_t is  * still only 32 bits.  What's needed in these cases is an integer type  * with the same size as a pointer, which size_t is not certain to be.   * The only fix here is VMS-specific.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_SYS_VMS
+argument_list|)
+if|#
+directive|if
+name|__INITIAL_POINTER_SIZE
+operator|==
+literal|64
 define|#
 directive|define
-name|BN_DIV2W
+name|PTR_SIZE_INT
+value|long long
+else|#
+directive|else
+comment|/* __INITIAL_POINTER_SIZE == 64 */
+define|#
+directive|define
+name|PTR_SIZE_INT
+value|int
 endif|#
 directive|endif
+comment|/* __INITIAL_POINTER_SIZE == 64 [else] */
+else|#
+directive|else
+comment|/* defined(OPENSSL_SYS_VMS) */
 define|#
 directive|define
-name|BN_ULLONG
-value|unsigned long
-define|#
-directive|define
-name|BN_ULONG
-value|unsigned short
-define|#
-directive|define
-name|BN_LONG
-value|short
-define|#
-directive|define
-name|BN_BITS
-value|32
-define|#
-directive|define
-name|BN_BYTES
-value|2
-define|#
-directive|define
-name|BN_BITS2
-value|16
-define|#
-directive|define
-name|BN_BITS4
-value|8
-define|#
-directive|define
-name|BN_MASK
-value|(0xffffffff)
-define|#
-directive|define
-name|BN_MASK2
-value|(0xffff)
-define|#
-directive|define
-name|BN_MASK2l
-value|(0xff)
-define|#
-directive|define
-name|BN_MASK2h1
-value|(0xff80)
-define|#
-directive|define
-name|BN_MASK2h
-value|(0xff00)
-define|#
-directive|define
-name|BN_TBIT
-value|(0x8000)
-define|#
-directive|define
-name|BN_DEC_CONV
-value|(100000)
-define|#
-directive|define
-name|BN_DEC_FMT1
-value|"%u"
-define|#
-directive|define
-name|BN_DEC_FMT2
-value|"%05u"
-define|#
-directive|define
-name|BN_DEC_NUM
-value|5
+name|PTR_SIZE_INT
+value|size_t
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|EIGHT_BIT
-ifndef|#
-directive|ifndef
-name|BN_DIV2W
-define|#
-directive|define
-name|BN_DIV2W
-endif|#
-directive|endif
-define|#
-directive|define
-name|BN_ULLONG
-value|unsigned short
-define|#
-directive|define
-name|BN_ULONG
-value|unsigned char
-define|#
-directive|define
-name|BN_LONG
-value|char
-define|#
-directive|define
-name|BN_BITS
-value|16
-define|#
-directive|define
-name|BN_BYTES
-value|1
-define|#
-directive|define
-name|BN_BITS2
-value|8
-define|#
-directive|define
-name|BN_BITS4
-value|4
-define|#
-directive|define
-name|BN_MASK
-value|(0xffff)
-define|#
-directive|define
-name|BN_MASK2
-value|(0xff)
-define|#
-directive|define
-name|BN_MASK2l
-value|(0xf)
-define|#
-directive|define
-name|BN_MASK2h1
-value|(0xf8)
-define|#
-directive|define
-name|BN_MASK2h
-value|(0xf0)
-define|#
-directive|define
-name|BN_TBIT
-value|(0x80)
-define|#
-directive|define
-name|BN_DEC_CONV
-value|(100)
-define|#
-directive|define
-name|BN_DEC_FMT1
-value|"%u"
-define|#
-directive|define
-name|BN_DEC_FMT2
-value|"%02u"
-define|#
-directive|define
-name|BN_DEC_NUM
-value|2
-endif|#
-directive|endif
+comment|/* defined(OPENSSL_SYS_VMS) [else] */
 define|#
 directive|define
 name|BN_DEFAULT_BITS
@@ -654,20 +559,13 @@ name|BIGNUM
 name|Ni
 decl_stmt|;
 comment|/* R*(1/R mod N) - N*Ni = 1 	                * (Ni is only stored for bignum algorithm) */
-if|#
-directive|if
-literal|0
-comment|/* OpenSSL 0.9.9 preview: */
-block|BN_ULONG n0[2];
-comment|/* least significant word(s) of Ni */
-else|#
-directive|else
 name|BN_ULONG
 name|n0
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* least significant word of Ni */
-endif|#
-directive|endif
+comment|/* least significant word(s) of Ni; 	                  (type changed with 0.9.9, was "BN_ULONG n0;" before) */
 name|int
 name|flags
 decl_stmt|;
@@ -2127,6 +2025,20 @@ name|str
 parameter_list|)
 function_decl|;
 name|int
+name|BN_asc2bn
+parameter_list|(
+name|BIGNUM
+modifier|*
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+name|int
 name|BN_gcd
 parameter_list|(
 name|BIGNUM
@@ -2669,7 +2581,6 @@ name|BIGNUM
 modifier|*
 name|Ai
 parameter_list|,
-comment|/* const */
 name|BIGNUM
 modifier|*
 name|mod
@@ -2766,6 +2677,9 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
 name|unsigned
 name|long
 name|BN_BLINDING_get_thread_id
@@ -2783,6 +2697,16 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|long
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+name|CRYPTO_THREADID
+modifier|*
+name|BN_BLINDING_thread_id
+parameter_list|(
+name|BN_BLINDING
+modifier|*
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -2817,7 +2741,6 @@ name|BIGNUM
 modifier|*
 name|e
 parameter_list|,
-comment|/* const */
 name|BIGNUM
 modifier|*
 name|m
@@ -3012,6 +2935,9 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 comment|/* Functions for arithmetic over binary polynomials represented by BIGNUMs.   *  * The BIGNUM::neg property of BIGNUMs representing binary polynomials is  * ignored.  *  * Note that input arguments are not const so that their bit arrays can  * be expanded to the appropriate size if needed.  */
 name|int
 name|BN_GF2m_add
@@ -3261,7 +3187,6 @@ modifier|*
 name|a
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3286,7 +3211,6 @@ modifier|*
 name|b
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3310,7 +3234,6 @@ modifier|*
 name|a
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3334,7 +3257,6 @@ modifier|*
 name|b
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3363,7 +3285,6 @@ modifier|*
 name|b
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3392,7 +3313,6 @@ modifier|*
 name|b
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3416,7 +3336,6 @@ modifier|*
 name|a
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3440,7 +3359,6 @@ modifier|*
 name|a
 parameter_list|,
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3459,7 +3377,6 @@ name|BIGNUM
 modifier|*
 name|a
 parameter_list|,
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3472,7 +3389,6 @@ name|int
 name|BN_GF2m_arr2poly
 parameter_list|(
 specifier|const
-name|unsigned
 name|int
 name|p
 index|[]
@@ -3482,6 +3398,8 @@ modifier|*
 name|a
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 comment|/* faster mod functions for the 'NIST primes'   * 0<= a< p^2 */
 name|int
 name|BN_nist_mod_192
@@ -3789,7 +3707,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|{ \         BN_ULONG *ftl; \ 	if ((a)->top> 0) \ 		{ \ 		for (ftl=&((a)->d[(a)->top-1]); (a)->top> 0; (a)->top--) \ 		if (*(ftl--)) break; \ 		} \ 	bn_pollute(a); \ 	}
+value|{ \         BN_ULONG *ftl; \ 	int tmp_top = (a)->top; \ 	if (tmp_top> 0) \ 		{ \ 		for (ftl=&((a)->d[tmp_top-1]); tmp_top> 0; tmp_top--) \ 			if (*(ftl--)) break; \ 		(a)->top = tmp_top; \ 		} \ 	bn_pollute(a); \ 	}
 name|BN_ULONG
 name|bn_mul_add_words
 parameter_list|(

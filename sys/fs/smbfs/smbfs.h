@@ -228,7 +228,6 @@ name|smb_share
 modifier|*
 name|sm_share
 decl_stmt|;
-comment|/*	struct simplelock	sm_npslock;*/
 name|struct
 name|smbnode
 modifier|*
@@ -239,22 +238,6 @@ index|]
 decl_stmt|;
 name|int
 name|sm_caseopt
-decl_stmt|;
-name|struct
-name|sx
-name|sm_hashlock
-decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-name|smbnode_hashhead
-argument_list|,
-name|smbnode
-argument_list|)
-operator|*
-name|sm_hash
-expr_stmt|;
-name|u_long
-name|sm_hashlen
 decl_stmt|;
 name|int
 name|sm_didrele

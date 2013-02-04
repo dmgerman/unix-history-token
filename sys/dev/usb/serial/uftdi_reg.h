@@ -183,6 +183,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UFTDI_TYPE_AUTO
+value|(UFTDI_TYPE_SIO | UFTDI_TYPE_8U232AM)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UFTDI_FLAG_MASK
 value|0x0000ff00
 end_define
@@ -434,7 +441,7 @@ value|(0 | ( FTDI_SIO_SET_RTS_MASK<< 8))
 end_define
 
 begin_comment
-comment|/*  *   BmRequestType:  0100 0000b  *   bRequest:       FTDI_SIO_SET_FLOW_CTRL  *   wValue:         Xoff/Xon  *   wIndex:         Protocol/Port - hIndex is protocl / lIndex is port  *   wLength:        0  *   Data:           None  *  * hIndex protocol is:  *   B0 Output handshaking using RTS/CTS  *       0 = disabled  *       1 = enabled  *   B1 Output handshaking using DTR/DSR  *       0 = disabled  *       1 = enabled  *   B2 Xon/Xoff handshaking  *       0 = disabled  *       1 = enabled  *  * A value of zero in the hIndex field disables handshaking  *  * If Xon/Xoff handshaking is specified, the hValue field should contain the  * XOFF character and the lValue field contains the XON character.  */
+comment|/*  *   BmRequestType:  0100 0000b  *   bRequest:       FTDI_SIO_SET_FLOW_CTRL  *   wValue:         Xoff/Xon  *   wIndex:         Protocol/Port - hIndex is protocol / lIndex is port  *   wLength:        0  *   Data:           None  *  * hIndex protocol is:  *   B0 Output handshaking using RTS/CTS  *       0 = disabled  *       1 = enabled  *   B1 Output handshaking using DTR/DSR  *       0 = disabled  *       1 = enabled  *   B2 Xon/Xoff handshaking  *       0 = disabled  *       1 = enabled  *  * A value of zero in the hIndex field disables handshaking  *  * If Xon/Xoff handshaking is specified, the hValue field should contain the  * XOFF character and the lValue field contains the XON character.  */
 end_comment
 
 begin_comment

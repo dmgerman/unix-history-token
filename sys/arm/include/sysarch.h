@@ -33,6 +33,45 @@ begin_comment
 comment|/*  * The ARM_TP_ADDRESS points to a special purpose page, which is used as local  * store for the ARM per-thread data and Restartable Atomic Sequences support.  * Put it just above the "high" vectors' page.  * The cpu_switch() code assumes ARM_RAS_START is ARM_TP_ADDRESS + 4, and  * ARM_RAS_END is ARM_TP_ADDRESS + 8, so if that ever changes, be sure to  * update the cpu_switch() (and cpu_throw()) code as well.  * In addition, code in arm/include/atomic.h and arm/include/asmacros.h  * assumes that ARM_RAS_END is at ARM_RAS_START+4, so be sure to update those  * if ARM_RAS_END moves in relation to ARM_RAS_START (look for occurrances  * of ldr/str rm,[rn, #4]).  */
 end_comment
 
+begin_comment
+comment|/* ARM_TP_ADDRESS is needed for processors that don't support  * the exclusive-access opcodes introduced with ARMv6K. */
+end_comment
+
+begin_comment
+comment|/* TODO: #if !defined(_HAVE_ARMv6K_INSTRUCTIONS) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ARM_ARCH_7__
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__ARM_ARCH_7A__
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__ARM_ARCH_6K__
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__ARM_ARCH_6ZK__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -53,6 +92,11 @@ directive|define
 name|ARM_RAS_END
 value|(ARM_TP_ADDRESS + 8)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

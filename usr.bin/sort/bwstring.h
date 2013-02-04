@@ -543,7 +543,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|size_t
 name|bwsfwrite
 parameter_list|(
 name|struct

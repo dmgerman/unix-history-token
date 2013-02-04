@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_low_pisa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/stg/tmc18c30reg.h>
 end_include
 

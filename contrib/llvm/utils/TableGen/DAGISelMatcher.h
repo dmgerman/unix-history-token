@@ -157,7 +157,7 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
-comment|/// Matcher - Base class for all the the DAG ISel Matcher representation
+comment|/// Matcher - Base class for all the DAG ISel Matcher representation
 comment|/// nodes.
 name|class
 name|Matcher
@@ -373,20 +373,6 @@ argument_list|()
 block|{
 return|return
 name|Next
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Matcher
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|bool

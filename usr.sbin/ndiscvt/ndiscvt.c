@@ -1247,6 +1247,21 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"reading .SYS file '%s' failed"
+argument_list|,
+name|sysfile
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fp

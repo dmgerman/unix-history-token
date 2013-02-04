@@ -46,6 +46,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -84,11 +90,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
 name|void
-name|private_RC4_set_key
+name|RC4_set_key
 parameter_list|(
 name|RC4_KEY
 modifier|*
@@ -104,10 +107,8 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 name|void
-name|RC4_set_key
+name|private_RC4_set_key
 parameter_list|(
 name|RC4_KEY
 modifier|*
@@ -130,8 +131,7 @@ name|RC4_KEY
 modifier|*
 name|key
 parameter_list|,
-name|unsigned
-name|long
+name|size_t
 name|len
 parameter_list|,
 specifier|const

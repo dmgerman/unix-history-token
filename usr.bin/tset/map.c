@@ -75,14 +75,8 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|speed_t
-name|Ospeed
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
+specifier|static
 name|speed_t
 name|tset_baudrate
 parameter_list|(
@@ -173,6 +167,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|MAP
 modifier|*
 name|cur
@@ -898,6 +893,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|SPEEDS
 name|speeds
 index|[]
@@ -937,6 +933,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|speed_t
 name|tset_baudrate
 parameter_list|(

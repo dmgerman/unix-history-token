@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86COFFMachineModuleInfo.h - X86 COFF MMI Impl ----------*- C++ -*-===//
+comment|//===-- X86coffmachinemoduleinfo.h - X86 COFF MMI Impl ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ name|class
 name|X86MachineFunctionInfo
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 comment|/// X86COFFMachineModuleInfo - This is a MachineModuleInfoImpl implementation
 comment|/// for X86 COFF targets.

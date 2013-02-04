@@ -492,7 +492,9 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
 if|if
 condition|(

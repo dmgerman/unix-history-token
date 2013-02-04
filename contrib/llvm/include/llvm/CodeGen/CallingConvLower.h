@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFrameInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
@@ -1222,6 +1228,16 @@ decl_stmt|;
 name|StackOffset
 operator|+=
 name|Size
+expr_stmt|;
+name|MF
+operator|.
+name|getFrameInfo
+argument_list|()
+operator|->
+name|ensureMaxAlignment
+argument_list|(
+name|Align
+argument_list|)
 expr_stmt|;
 return|return
 name|Result

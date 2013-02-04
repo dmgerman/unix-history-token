@@ -1338,6 +1338,20 @@ argument_list|,
 name|fssize
 argument_list|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_providersize
+operator|=
+name|dbtofsb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|mediasize
+operator|/
+name|sectorsize
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Before the filesystem is finally initialized, mark it 	 * as incompletely initialized. 	 */
 name|sblock
 operator|.
@@ -6277,8 +6291,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fsinit: inode value out of range (%d).\n"
+literal|"fsinit: inode value out of range (%ju).\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

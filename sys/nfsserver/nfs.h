@@ -1178,9 +1178,6 @@ name|vnode
 modifier|*
 modifier|*
 parameter_list|,
-name|int
-modifier|*
-parameter_list|,
 name|struct
 name|nfsrv_descript
 modifier|*

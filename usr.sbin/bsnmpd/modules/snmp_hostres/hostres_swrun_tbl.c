@@ -1213,7 +1213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Get all visible proceses including the kernel visible threads  */
+comment|/**  * Get all visible processes including the kernel visible threads  */
 end_comment
 
 begin_function

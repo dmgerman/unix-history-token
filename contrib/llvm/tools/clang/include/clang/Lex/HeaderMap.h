@@ -65,6 +65,12 @@ directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -92,7 +98,7 @@ struct_decl|struct
 name|HMapHeader
 struct_decl|;
 comment|/// This class represents an Apple concept known as a 'header map'.  To the
-comment|/// #include file resolution process, it basically acts like a directory of
+comment|/// \#include file resolution process, it basically acts like a directory of
 comment|/// symlinks to files.  Its advantages are that it is dense and more efficient
 comment|/// to create and process than a directory of symlinks.
 name|class
@@ -100,12 +106,10 @@ name|HeaderMap
 block|{
 name|HeaderMap
 argument_list|(
-specifier|const
-name|HeaderMap
-operator|&
+argument|const HeaderMap&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -114,8 +118,8 @@ specifier|const
 name|HeaderMap
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 specifier|const
 name|llvm
 operator|::

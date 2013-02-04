@@ -51,12 +51,6 @@ directive|include
 file|<ftw.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
 begin_function
 name|int
 name|ftw
@@ -129,10 +123,6 @@ condition|(
 name|nfds
 operator|<
 literal|1
-operator|||
-name|nfds
-operator|>
-name|OPEN_MAX
 condition|)
 block|{
 name|errno
