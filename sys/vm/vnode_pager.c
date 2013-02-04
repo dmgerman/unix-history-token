@@ -1556,12 +1556,9 @@ operator|&&
 operator|(
 name|m
 operator|=
-name|vm_radix_lookup
+name|vm_page_lookup
 argument_list|(
-operator|&
 name|object
-operator|->
-name|rtree
 argument_list|,
 name|OFF_TO_IDX
 argument_list|(
@@ -1596,15 +1593,6 @@ name|PAGE_SIZE
 operator|-
 name|base
 decl_stmt|;
-name|MPASS
-argument_list|(
-name|m
-operator|->
-name|object
-operator|==
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Clear out partial-page garbage in case 			 * the page has been mapped. 			 */
 name|pmap_zero_page_area
 argument_list|(

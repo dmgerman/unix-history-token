@@ -3037,12 +3037,9 @@ operator|(
 operator|(
 name|vpg
 operator|=
-name|vm_radix_lookup
+name|vm_page_lookup
 argument_list|(
-operator|&
 name|vobj
-operator|->
-name|rtree
 argument_list|,
 name|idx
 argument_list|)

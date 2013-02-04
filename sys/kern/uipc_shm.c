@@ -1241,12 +1241,9 @@ name|retry
 label|:
 name|m
 operator|=
-name|vm_radix_lookup
+name|vm_page_lookup
 argument_list|(
-operator|&
 name|object
-operator|->
-name|rtree
 argument_list|,
 name|idx
 argument_list|)

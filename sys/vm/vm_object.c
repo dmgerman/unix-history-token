@@ -1148,11 +1148,14 @@ name|OBJT_VNODE
 case|:
 if|if
 condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
 name|object
 operator|->
-name|resident_page_count
-operator|==
-literal|0
+name|memq
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -6518,7 +6521,7 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Here, the variable "p" is either (1) the page with the least pindex 	 * greater than or equal to the parameter "start" or (2) NULL. 	 */
+comment|/* 	 * Here, the variable "p" is either (1) the page with the least pindex 	 * greater than or equal to the parameter "start" or (2) NULL.  	 */
 for|for
 control|(
 init|;
@@ -8323,7 +8326,7 @@ operator|++
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"(off=0x%jx,page=0x%jx,obj=%p,flags=0x%X)"
+literal|"(off=0x%jx,page=0x%jx)"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -8339,14 +8342,6 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
-name|p
-operator|->
-name|object
-argument_list|,
-name|p
-operator|->
-name|flags
 argument_list|)
 expr_stmt|;
 block|}

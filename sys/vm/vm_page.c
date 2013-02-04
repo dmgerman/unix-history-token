@@ -1055,7 +1055,7 @@ argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|,
-literal|"vm page queue free mutex"
+literal|"vm page free queue"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1064,7 +1064,6 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-comment|/* Setup page locks. */
 for|for
 control|(
 name|i
