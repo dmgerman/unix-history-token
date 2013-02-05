@@ -4337,8 +4337,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|rootino
-decl_stmt|,
 name|namlen
 decl_stmt|;
 name|struct
@@ -4371,10 +4369,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|rootino
-operator|=
-name|EXT2_ROOTINO
-expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -4385,7 +4379,7 @@ name|target
 operator|->
 name|i_number
 operator|==
-name|rootino
+name|EXT2_ROOTINO
 condition|)
 goto|goto
 name|out
@@ -4519,7 +4513,7 @@ name|dirbuf
 operator|.
 name|dotdot_ino
 operator|==
-name|rootino
+name|EXT2_ROOTINO
 condition|)
 break|break;
 name|vput
