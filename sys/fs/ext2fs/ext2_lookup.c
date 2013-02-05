@@ -4369,10 +4369,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|target
@@ -4381,9 +4377,15 @@ name|i_number
 operator|==
 name|EXT2_ROOTINO
 condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 for|for
 control|(
 init|;
