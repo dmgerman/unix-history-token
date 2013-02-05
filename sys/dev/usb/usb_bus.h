@@ -74,11 +74,16 @@ name|struct
 name|usb_bus_stat
 name|stats_ok
 decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_ROOT_MOUNT_HOLD
 name|struct
 name|root_hold_token
 modifier|*
 name|bus_roothold
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
 name|struct
 name|usb_process
