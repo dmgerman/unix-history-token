@@ -104,6 +104,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_BUS_GIANT_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|(usb_process + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_NON_GIANT_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|(usb_process + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_EXPLORE_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|(usb_process + 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_CONTROL_XFER_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|(usb_process + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCTL_DECL
 parameter_list|(
 modifier|...

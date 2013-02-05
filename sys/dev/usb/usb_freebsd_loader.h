@@ -114,6 +114,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_PER_BUS_PROCESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td
