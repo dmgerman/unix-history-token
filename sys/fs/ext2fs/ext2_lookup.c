@@ -242,7 +242,7 @@ parameter_list|(
 name|ft
 parameter_list|)
 define|\
-value|((ft)> sizeof(ext2_ft_to_dt) / sizeof(ext2_ft_to_dt[0]) ?	\     DT_UNKNOWN : ext2_ft_to_dt[(ft)])
+value|((ft)> nitems(ext2_ft_to_dt) ? DT_UNKNOWN : ext2_ft_to_dt[(ft)])
 end_define
 
 begin_decl_stmt
@@ -309,7 +309,7 @@ parameter_list|(
 name|dt
 parameter_list|)
 define|\
-value|((dt)> sizeof(dt_to_ext2_ft) / sizeof(dt_to_ext2_ft[0]) ?	\     EXT2_FT_UNKNOWN : dt_to_ext2_ft[(dt)])
+value|((dt)> nitems(dt_to_ext2_ft) ? EXT2_FT_UNKNOWN : dt_to_ext2_ft[(dt)])
 end_define
 
 begin_function_decl
