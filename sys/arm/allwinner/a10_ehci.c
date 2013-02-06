@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/gpio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -150,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"gpio_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"a10_clk.h"
 end_include
 
@@ -214,6 +226,13 @@ define|#
 directive|define
 name|SW_AHB_INCR8
 value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_USB2_PWR
+value|227
 end_define
 
 begin_define
@@ -333,6 +352,9 @@ argument_list|)
 decl_stmt|;
 name|bus_space_handle_t
 name|bsh
+decl_stmt|;
+name|device_t
+name|sc_gpio_dev
 decl_stmt|;
 name|int
 name|err
@@ -634,6 +656,37 @@ argument_list|,
 literal|"Allwinner"
 argument_list|)
 expr_stmt|;
+comment|/* Get the GPIO device, we need this to give power to USB */
+name|sc_gpio_dev
+operator|=
+name|devclass_get_device
+argument_list|(
+name|devclass_find
+argument_list|(
+literal|"gpio"
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc_gpio_dev
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"Error: failed to get the GPIO device\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 name|err
 operator|=
 name|bus_setup_intr
@@ -697,6 +750,25 @@ expr_stmt|;
 comment|/* Enable clock for USB */
 name|a10_clk_usb_activate
 argument_list|()
+expr_stmt|;
+comment|/* Give power to USB */
+name|GPIO_PIN_SETFLAGS
+argument_list|(
+name|sc_gpio_dev
+argument_list|,
+name|GPIO_USB2_PWR
+argument_list|,
+name|GPIO_PIN_OUTPUT
+argument_list|)
+expr_stmt|;
+name|GPIO_PIN_SET
+argument_list|(
+name|sc_gpio_dev
+argument_list|,
+name|GPIO_USB2_PWR
+argument_list|,
+name|GPIO_PIN_HIGH
+argument_list|)
 expr_stmt|;
 comment|/* Enable passby */
 name|reg_value
