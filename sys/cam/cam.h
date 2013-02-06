@@ -175,6 +175,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)>> 8)
+define|#
+directive|define
+name|CAM_RL_TO_PRIORITY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
 name|u_int32_t
 name|generation
 decl_stmt|;
