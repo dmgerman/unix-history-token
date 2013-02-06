@@ -498,10 +498,6 @@ name|blkptr_t
 modifier|*
 name|bp
 parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
-parameter_list|,
 specifier|const
 name|zbookmark_t
 modifier|*
@@ -656,15 +652,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|dsl_read
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
 name|spa
 argument_list|,
 name|bp
-argument_list|,
-name|pbuf
 argument_list|,
 name|arc_getbuf_func
 argument_list|,

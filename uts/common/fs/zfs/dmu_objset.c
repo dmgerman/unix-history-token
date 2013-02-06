@@ -1047,10 +1047,9 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX when bprewrite scrub can change the bp, 		 * and this is called from dmu_objset_open_ds_os, the bp 		 * could change, and we'll need a lock. 		 */
 name|err
 operator|=
-name|dsl_read_nolock
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
@@ -5648,13 +5647,7 @@ argument_list|,
 name|ZB_ROOT_BLKID
 argument_list|)
 expr_stmt|;
-name|VERIFY3U
-argument_list|(
-literal|0
-argument_list|,
-operator|==
-argument_list|,
-name|arc_release_bp
+name|arc_release
 argument_list|(
 name|os
 operator|->
@@ -5664,18 +5657,6 @@ operator|&
 name|os
 operator|->
 name|os_phys_buf
-argument_list|,
-name|os
-operator|->
-name|os_rootbp
-argument_list|,
-name|os
-operator|->
-name|os_spa
-argument_list|,
-operator|&
-name|zb
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dmu_write_policy
@@ -8895,7 +8876,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|dsl_read_nolock
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
