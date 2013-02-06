@@ -89,12 +89,12 @@ name|struct
 name|vm_radix
 name|rtree
 decl_stmt|;
-comment|/* root of the resident page radix index tree */
+comment|/* root of the resident page radix trie*/
 name|struct
 name|vm_radix
 name|cache
 decl_stmt|;
-comment|/* root of the cache page radix index tree */
+comment|/* (o + f) root of the cache page radix trie */
 name|vm_pindex_t
 name|size
 decl_stmt|;
