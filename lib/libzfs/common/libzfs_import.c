@@ -2072,13 +2072,11 @@ operator|!
 name|config_seen
 condition|)
 block|{
-comment|/* 				 * Copy the relevant pieces of data to the pool 				 * configuration: 				 * 				 *	version 				 *	pool guid 				 *	name 				 *	pool txg (if available) 				 *	comment (if available) 				 *	pool state 				 *	hostid (if available) 				 *	hostname (if available) 				 */
+comment|/* 				 * Copy the relevant pieces of data to the pool 				 * configuration: 				 * 				 *	version 				 *	pool guid 				 *	name 				 *	comment (if available) 				 *	pool state 				 *	hostid (if available) 				 *	hostname (if available) 				 */
 name|uint64_t
 name|state
 decl_stmt|,
 name|version
-decl_stmt|,
-name|pool_txg
 decl_stmt|;
 name|char
 modifier|*
@@ -2138,29 +2136,6 @@ argument_list|,
 name|ZPOOL_CONFIG_POOL_NAME
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nvlist_lookup_uint64
-argument_list|(
-name|tmp
-argument_list|,
-name|ZPOOL_CONFIG_POOL_TXG
-argument_list|,
-operator|&
-name|pool_txg
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|fnvlist_add_uint64
-argument_list|(
-name|config
-argument_list|,
-name|ZPOOL_CONFIG_POOL_TXG
-argument_list|,
-name|pool_txg
 argument_list|)
 expr_stmt|;
 if|if
