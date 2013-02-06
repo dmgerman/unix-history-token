@@ -689,13 +689,6 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
-argument_list|(
-name|object
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|__predict_true
