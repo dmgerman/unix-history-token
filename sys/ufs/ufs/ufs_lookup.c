@@ -5904,10 +5904,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 init|;
