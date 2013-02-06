@@ -60,7 +60,7 @@ name|msleep
 parameter_list|(
 name|x
 parameter_list|)
-value|pause("t4hw", (x) * hz / 1000)
+value|do { \ 	if (cold) \ 		DELAY((x) * 1000); \ 	else \ 		pause("t4hw", (x) * hz / 1000); \ } while (0)
 end_define
 
 begin_comment
