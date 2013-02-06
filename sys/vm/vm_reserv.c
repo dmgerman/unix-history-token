@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_radix.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_reserv.h>
 end_include
 
