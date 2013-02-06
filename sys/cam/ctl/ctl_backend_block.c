@@ -1777,17 +1777,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|beio
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|beio
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|beio
 operator|->
 name|softc
