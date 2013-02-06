@@ -7246,7 +7246,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|vm_object_cache_is_empty
 parameter_list|(
 name|vm_object_t

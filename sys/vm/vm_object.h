@@ -705,6 +705,15 @@ end_function_decl
 
 begin_function_decl
 name|boolean_t
+name|vm_object_cache_is_empty
+parameter_list|(
+name|vm_object_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
 name|vm_object_coalesce
 parameter_list|(
 name|vm_object_t
@@ -716,15 +725,6 @@ parameter_list|,
 name|vm_size_t
 parameter_list|,
 name|boolean_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vm_object_cache_is_empty
-parameter_list|(
-name|vm_object_t
 parameter_list|)
 function_decl|;
 end_function_decl
