@@ -804,6 +804,9 @@ comment|/* Bochs */
 literal|"Xen"
 block|,
 comment|/* Xen */
+literal|"Seabios"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
@@ -831,6 +834,9 @@ comment|/* Sun xVM VirtualBox */
 literal|"Parallels Virtual Platform"
 block|,
 comment|/* Parallels VM */
+literal|"KVM"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
