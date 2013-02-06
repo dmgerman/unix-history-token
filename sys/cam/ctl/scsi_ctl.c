@@ -1286,8 +1286,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|sim
@@ -2275,8 +2274,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|en_lun_ccb
@@ -2754,8 +2752,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|en_lun_ccb
@@ -7094,8 +7091,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|sim
