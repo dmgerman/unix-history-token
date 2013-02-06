@@ -7308,7 +7308,8 @@ name|sep
 operator|->
 name|se_fd
 argument_list|,
-literal|64
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|enable
