@@ -8095,12 +8095,12 @@ argument_list|)
 expr_stmt|;
 name|usb_proc_mwait
 argument_list|(
-operator|&
+name|USB_BUS_NON_GIANT_PROC
+argument_list|(
 name|udev
 operator|->
 name|bus
-operator|->
-name|non_giant_callback_proc
+argument_list|)
 argument_list|,
 operator|&
 name|udev

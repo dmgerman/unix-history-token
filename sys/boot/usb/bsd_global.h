@@ -206,6 +206,17 @@ directive|include
 file|<dev/usb/template/usb_template.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|usb_process
+name|usb_process
+index|[
+name|USB_PROC_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

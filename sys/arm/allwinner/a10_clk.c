@@ -182,10 +182,12 @@ define|#
 directive|define
 name|ccm_read_4
 parameter_list|(
+name|sc
+parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(a10_ccm_sc->bst, a10_ccm_sc->bsh, reg)
+value|bus_space_read_4((sc)->bst, (sc)->bsh, (reg))
 end_define
 
 begin_define
@@ -193,12 +195,14 @@ define|#
 directive|define
 name|ccm_write_4
 parameter_list|(
+name|sc
+parameter_list|,
 name|reg
 parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(a10_ccm_sc->bst, a10_ccm_sc->bsh, reg, val)
+value|bus_space_write_4((sc)->bst, (sc)->bsh, (reg), (val))
 end_define
 
 begin_function
@@ -435,8 +439,6 @@ name|a10_ccm_sc
 decl_stmt|;
 name|uint32_t
 name|reg_value
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -452,6 +454,8 @@ name|reg_value
 operator|=
 name|ccm_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_AHB_GATING0
 argument_list|)
 expr_stmt|;
@@ -467,6 +471,8 @@ expr_stmt|;
 comment|/* AHB clock gate ehci1 */
 name|ccm_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_AHB_GATING0
 argument_list|,
 name|reg_value
@@ -477,6 +483,8 @@ name|reg_value
 operator|=
 name|ccm_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_USB_CLK
 argument_list|)
 expr_stmt|;
@@ -502,6 +510,8 @@ expr_stmt|;
 comment|/* disable reset for USB2 */
 name|ccm_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_USB_CLK
 argument_list|,
 name|reg_value
@@ -531,8 +541,6 @@ name|a10_ccm_sc
 decl_stmt|;
 name|uint32_t
 name|reg_value
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -548,6 +556,8 @@ name|reg_value
 operator|=
 name|ccm_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_USB_CLK
 argument_list|)
 expr_stmt|;
@@ -577,6 +587,8 @@ expr_stmt|;
 comment|/* reset for USB2 */
 name|ccm_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_USB_CLK
 argument_list|,
 name|reg_value
@@ -587,6 +599,8 @@ name|reg_value
 operator|=
 name|ccm_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_AHB_GATING0
 argument_list|)
 expr_stmt|;
@@ -604,6 +618,8 @@ expr_stmt|;
 comment|/* disable AHB clock gate ehci1 */
 name|ccm_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|CCM_AHB_GATING0
 argument_list|,
 name|reg_value

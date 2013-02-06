@@ -1969,11 +1969,7 @@ name|struct
 name|usb_bus
 name|sc_bus
 decl_stmt|;
-comment|/* configure process */
-name|struct
-name|usb_process
-name|sc_config_proc
-decl_stmt|;
+comment|/* configure message */
 name|struct
 name|usb_bus_msg
 name|sc_config_msg

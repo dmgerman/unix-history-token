@@ -4932,6 +4932,13 @@ name|prog_t
 modifier|*
 name|p
 decl_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"LD?= ld\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|subtract_strlst
@@ -5747,7 +5754,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\tld -dc -r -o %s.lo %s_stub.o $(%s_OBJPATHS)"
+literal|"\t$(LD) -dc -r -o %s.lo %s_stub.o $(%s_OBJPATHS)"
 argument_list|,
 name|p
 operator|->

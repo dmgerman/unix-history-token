@@ -1092,7 +1092,7 @@ name|MAX
 argument_list|(
 name|KERNBASE
 operator|+
-name|NKPT
+name|nkpt
 operator|*
 name|NBPDR
 argument_list|,
@@ -1876,7 +1876,7 @@ name|MAX
 argument_list|(
 name|KERNBASE
 operator|+
-name|NKPT
+name|nkpt
 operator|*
 name|NBPDR
 argument_list|,
