@@ -477,12 +477,18 @@ comment|/* trace() argument has void type */
 name|D_TRACE_DYN
 block|,
 comment|/* trace() argument has dynamic type */
+name|D_TRACE_AGG
+block|,
+comment|/* trace() argument is an aggregation */
 name|D_PRINT_VOID
 block|,
 comment|/* print() argument has void type */
 name|D_PRINT_DYN
 block|,
 comment|/* print() argument has dynamic type */
+name|D_PRINT_AGG
+block|,
+comment|/* print() argument is an aggregation */
 name|D_TRACEMEM_ADDR
 block|,
 comment|/* tracemem() address bad type */

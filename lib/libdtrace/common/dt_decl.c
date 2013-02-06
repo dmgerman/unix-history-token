@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1023,31 +1023,6 @@ name|dd_name
 operator|=
 name|name
 expr_stmt|;
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-operator|&&
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'`'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|xyerror
-argument_list|(
-name|D_DECL_SCOPE
-argument_list|,
-literal|"D scoping operator may not be used "
-literal|"in a type name\n"
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|dt_decl_check
