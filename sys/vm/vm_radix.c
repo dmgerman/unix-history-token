@@ -1061,8 +1061,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|void
-modifier|*
+name|vm_page_t
 name|vm_radix_match
 parameter_list|(
 name|void
@@ -1082,16 +1081,15 @@ name|child
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
+call|(
+name|vm_page_t
+call|)
+argument_list|(
 name|c
 operator|&
 operator|~
 name|VM_RADIX_FLAGS
-operator|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1255,7 +1253,7 @@ comment|/*  * Inserts the key-value pair in to the radix tree.  Returns errno.  
 end_comment
 
 begin_function
-name|int
+name|void
 name|vm_radix_insert
 parameter_list|(
 name|struct
@@ -1266,9 +1264,8 @@ parameter_list|,
 name|vm_pindex_t
 name|index
 parameter_list|,
-name|void
-modifier|*
-name|val
+name|vm_page_t
+name|page
 parameter_list|)
 block|{
 name|struct
@@ -1296,7 +1293,7 @@ name|KFRMT64
 argument_list|(
 name|index
 argument_list|)
-literal|", val %p"
+literal|", page %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1310,7 +1307,7 @@ argument_list|(
 name|index
 argument_list|)
 argument_list|,
-name|val
+name|page
 argument_list|)
 expr_stmt|;
 if|if
@@ -1467,11 +1464,11 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+name|panic
+argument_list|(
+literal|"vm_radix_insert: failed allocation"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 			 * Store the new pointer with a memory barrier so 			 * that it is visible before the new root. 			 */
 if|if
@@ -1639,11 +1636,11 @@ operator|->
 name|rn_count
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+name|panic
+argument_list|(
+literal|"vm_radix_insert: failed allocation"
+argument_list|)
+expr_stmt|;
 block|}
 name|rnode
 operator|->
@@ -1764,7 +1761,7 @@ index|[
 name|slot
 index|]
 operator|=
-name|val
+name|page
 expr_stmt|;
 name|rnode
 operator|->
@@ -1814,9 +1811,6 @@ operator|->
 name|rn_count
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -1825,8 +1819,7 @@ comment|/*  * Returns the value stored at the index.  If the index is not presen
 end_comment
 
 begin_function
-name|void
-modifier|*
+name|vm_page_t
 name|vm_radix_lookup
 parameter_list|(
 name|struct
@@ -2336,8 +2329,7 @@ comment|/*  * Look up any entry at a position bigger than or equal to index.  */
 end_comment
 
 begin_function
-name|void
-modifier|*
+name|vm_page_t
 name|vm_radix_lookup_ge
 parameter_list|(
 name|struct
@@ -2346,17 +2338,16 @@ modifier|*
 name|rtree
 parameter_list|,
 name|vm_pindex_t
-name|start
+name|index
 parameter_list|)
 block|{
+name|vm_page_t
+name|page
+decl_stmt|;
 name|struct
 name|vm_radix_node
 modifier|*
 name|rnode
-decl_stmt|;
-name|void
-modifier|*
-name|val
 decl_stmt|;
 name|int
 name|slot
@@ -2368,19 +2359,19 @@ argument_list|,
 literal|"lookupn: tree %p, "
 name|KFRMT64
 argument_list|(
-name|start
+name|index
 argument_list|)
 argument_list|,
 name|rtree
 argument_list|,
 name|KSPLT64L
 argument_list|(
-name|start
+name|index
 argument_list|)
 argument_list|,
 name|KSPLT64H
 argument_list|(
-name|start
+name|index
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2407,7 +2398,7 @@ argument_list|(
 name|rtree
 argument_list|,
 operator|&
-name|start
+name|index
 argument_list|)
 operator|)
 operator|!=
@@ -2418,7 +2409,7 @@ name|slot
 operator|=
 name|vm_radix_slot
 argument_list|(
-name|start
+name|index
 argument_list|,
 literal|0
 argument_list|)
@@ -2433,11 +2424,11 @@ condition|;
 name|slot
 operator|++
 operator|,
-name|start
+name|index
 operator|++
 control|)
 block|{
-name|val
+name|page
 operator|=
 name|vm_radix_match
 argument_list|(
@@ -2451,18 +2442,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|val
+name|page
 operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 				 * The start address can wrap at the 				 * VM_RADIX_MAXVAL value. 				 * We need to make sure that start address 				 * point to the next chunk (even if wrapping) 				 * to stay consistent with default scanning 				 * behaviour. Also, because of the nature 				 * of the wrapping, the wrap up checks must 				 * be done after all the necessary controls 				 * on start are completed. 				 */
+comment|/* 				 * The index address can wrap at the 				 * VM_RADIX_MAXVAL value. 				 * We need to make sure that index address 				 * point to the next chunk (even if wrapping) 				 * to stay consistent with default scanning 				 * behaviour. Also, because of the nature 				 * of the wrapping, the wrap up checks must 				 * be done after all the necessary controls 				 * on index are completed. 				 */
 if|if
 condition|(
 operator|(
 name|VM_RADIX_MAXVAL
 operator|-
-name|start
+name|index
 operator|)
 operator|==
 literal|0
@@ -2489,22 +2480,22 @@ name|rtree
 argument_list|,
 name|KSPLT64L
 argument_list|(
-name|start
+name|index
 argument_list|)
 argument_list|,
 name|KSPLT64H
 argument_list|(
-name|start
+name|index
 argument_list|)
 argument_list|,
 name|slot
 argument_list|,
-name|val
+name|page
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|val
+name|page
 operator|)
 return|;
 block|}
@@ -2513,7 +2504,7 @@ argument_list|(
 operator|(
 name|VM_RADIX_MAXVAL
 operator|-
-name|start
+name|index
 operator|)
 operator|!=
 literal|0
@@ -2533,8 +2524,7 @@ comment|/*  * Look up any entry at a position less than or equal to index.  */
 end_comment
 
 begin_function
-name|void
-modifier|*
+name|vm_page_t
 name|vm_radix_lookup_le
 parameter_list|(
 name|struct
@@ -2562,9 +2552,8 @@ decl_stmt|;
 name|vm_pindex_t
 name|inc
 decl_stmt|;
-name|void
-modifier|*
-name|val
+name|vm_page_t
+name|page
 decl_stmt|;
 name|int
 name|slot
@@ -2851,7 +2840,7 @@ name|index
 operator|--
 control|)
 block|{
-name|val
+name|page
 operator|=
 name|vm_radix_match
 argument_list|(
@@ -2865,11 +2854,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|val
+name|page
 condition|)
 return|return
 operator|(
-name|val
+name|page
 operator|)
 return|;
 block|}

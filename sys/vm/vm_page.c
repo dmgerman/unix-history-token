@@ -2886,8 +2886,6 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|vm_radix_insert
 argument_list|(
 operator|&
@@ -2898,13 +2896,6 @@ argument_list|,
 name|pindex
 argument_list|,
 name|m
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vm_page_insert: unable to insert the new page"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Show that the object has one more resident page. 	 */
@@ -3753,8 +3744,6 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|vm_radix_insert
 argument_list|(
 operator|&
@@ -3769,13 +3758,6 @@ operator|-
 name|offidxstart
 argument_list|,
 name|m
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vm_page_cache_transfer: failed vm_radix_insert"
 argument_list|)
 expr_stmt|;
 name|m
@@ -7844,8 +7826,6 @@ operator|.
 name|v_cache_count
 operator|++
 expr_stmt|;
-if|if
-condition|(
 name|vm_radix_insert
 argument_list|(
 operator|&
@@ -7858,13 +7838,6 @@ operator|->
 name|pindex
 argument_list|,
 name|m
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vm_page_cache: vm_radix_insert failed"
 argument_list|)
 expr_stmt|;
 if|#
