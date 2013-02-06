@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -168,6 +168,18 @@ name|int
 name|metaslab_smo_bonus_pct
 init|=
 literal|150
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Should we be willing to write data to degraded vdevs?  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zfs_write_to_degraded
+init|=
+name|B_FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -6203,7 +6215,7 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* 		 * Avoid writing single-copy data to a failing vdev 		 */
+comment|/* 		 * Avoid writing single-copy data to a failing vdev 		 * unless the user instructs us that it is okay. 		 */
 if|if
 condition|(
 operator|(
@@ -6229,6 +6241,17 @@ operator|&&
 name|dshift
 operator|==
 literal|3
+operator|&&
+operator|!
+operator|(
+name|zfs_write_to_degraded
+operator|&&
+name|vd
+operator|->
+name|vdev_state
+operator|==
+name|VDEV_STATE_DEGRADED
+operator|)
 condition|)
 block|{
 name|all_zero
