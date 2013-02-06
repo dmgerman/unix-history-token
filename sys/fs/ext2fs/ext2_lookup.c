@@ -242,7 +242,7 @@ parameter_list|(
 name|ft
 parameter_list|)
 define|\
-value|((ft)> sizeof(ext2_ft_to_dt) / sizeof(ext2_ft_to_dt[0]) ?	\     DT_UNKNOWN : ext2_ft_to_dt[(ft)])
+value|((ft)< nitems(ext2_ft_to_dt) ? ext2_ft_to_dt[(ft)] : DT_UNKNOWN)
 end_define
 
 begin_decl_stmt
@@ -309,7 +309,7 @@ parameter_list|(
 name|dt
 parameter_list|)
 define|\
-value|((dt)> sizeof(dt_to_ext2_ft) / sizeof(dt_to_ext2_ft[0]) ?	\     EXT2_FT_UNKNOWN : dt_to_ext2_ft[(dt)])
+value|((dt)< nitems(dt_to_ext2_ft) ? dt_to_ext2_ft[(dt)] : EXT2_FT_UNKNOWN)
 end_define
 
 begin_function_decl
@@ -4337,8 +4337,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|rootino
-decl_stmt|,
 name|namlen
 decl_stmt|;
 name|struct
@@ -4371,25 +4369,23 @@ goto|goto
 name|out
 goto|;
 block|}
-name|rootino
-operator|=
-name|EXT2_ROOTINO
-expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|target
 operator|->
 name|i_number
 operator|==
-name|rootino
+name|EXT2_ROOTINO
 condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 for|for
 control|(
 init|;
@@ -4519,7 +4515,7 @@ name|dirbuf
 operator|.
 name|dotdot_ino
 operator|==
-name|rootino
+name|EXT2_ROOTINO
 condition|)
 break|break;
 name|vput

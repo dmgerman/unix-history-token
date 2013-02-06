@@ -3990,9 +3990,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|DPRINTF
 argument_list|(
-literal|"usb_msc_eject: unknown eject method (%d)\n"
+literal|"Unknown eject method (%d)\n"
 argument_list|,
 name|method
 argument_list|)

@@ -3356,7 +3356,7 @@ name|ip
 operator|->
 name|i_nlink
 operator|>=
-name|LINK_MAX
+name|EXT2_LINK_MAX
 condition|)
 block|{
 name|error
@@ -3773,7 +3773,7 @@ name|ip
 operator|->
 name|i_nlink
 operator|>=
-name|LINK_MAX
+name|EXT2_LINK_MAX
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -4168,7 +4168,7 @@ name|dp
 operator|->
 name|i_nlink
 operator|>=
-name|LINK_MAX
+name|EXT2_LINK_MAX
 condition|)
 block|{
 name|error
@@ -5085,7 +5085,7 @@ name|dp
 operator|->
 name|i_nlink
 operator|>=
-name|LINK_MAX
+name|EXT2_LINK_MAX
 condition|)
 block|{
 name|error
@@ -6546,7 +6546,7 @@ name|ap
 operator|->
 name|a_retval
 operator|=
-name|LINK_MAX
+name|EXT2_LINK_MAX
 expr_stmt|;
 return|return
 operator|(

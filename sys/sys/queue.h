@@ -39,19 +39,23 @@ begin_struct
 struct|struct
 name|qm_trace
 block|{
+name|unsigned
+name|long
+name|lastline
+decl_stmt|;
+name|unsigned
+name|long
+name|prevline
+decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lastfile
 decl_stmt|;
-name|int
-name|lastline
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|prevfile
-decl_stmt|;
-name|int
-name|prevline
 decl_stmt|;
 block|}
 struct|;
@@ -62,6 +66,13 @@ define|#
 directive|define
 name|TRACEBUF
 value|struct qm_trace trace;
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACEBUF_INITIALIZER
+value|{ __FILE__, __LINE__, NULL, 0 } ,
 end_define
 
 begin_define
@@ -144,6 +155,12 @@ begin_define
 define|#
 directive|define
 name|TRACEBUF
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACEBUF_INITIALIZER
 end_define
 
 begin_define
@@ -972,7 +989,7 @@ parameter_list|(
 name|head
 parameter_list|)
 define|\
-value|{ NULL,&(head).tqh_first }
+value|{ NULL,&(head).tqh_first, TRACEBUF_INITIALIZER }
 end_define
 
 begin_define

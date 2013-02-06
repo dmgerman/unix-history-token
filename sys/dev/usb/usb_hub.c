@@ -7089,10 +7089,10 @@ if|if
 condition|(
 name|usb_proc_msignal
 argument_list|(
-operator|&
+name|USB_BUS_EXPLORE_PROC
+argument_list|(
 name|bus
-operator|->
-name|explore_proc
+argument_list|)
 argument_list|,
 operator|&
 name|bus
