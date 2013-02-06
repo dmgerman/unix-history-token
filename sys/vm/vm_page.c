@@ -3801,11 +3801,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Returns a pointer to the cached page associated with the given object  *	and offset, NULL otherwise.  *  *	The object must be locked.  */
+comment|/*  *	Returns TRUE if a cached page is associated with the given object and  *	offset, and FALSE otherwise.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
-name|vm_page_t
+name|boolean_t
 name|vm_page_is_cached
 parameter_list|(
 name|vm_object_t
@@ -3826,6 +3826,18 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vm_object_cache_is_empty
+argument_list|(
+name|object
+argument_list|)
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3850,6 +3862,8 @@ expr_stmt|;
 return|return
 operator|(
 name|m
+operator|!=
+name|NULL
 operator|)
 return|;
 block|}
