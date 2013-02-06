@@ -1945,7 +1945,7 @@ name|contract_data
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: WWPN %#jx port %u path %u target %u %s\n"
+literal|"%s: WWPN %#jx port 0x%06x path %u target %u %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2397,6 +2397,8 @@ argument_list|)
 argument_list|,
 name|M_CTLFE
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -2584,6 +2586,8 @@ argument_list|)
 argument_list|,
 name|M_CTLFE
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
