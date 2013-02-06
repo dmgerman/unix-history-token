@@ -3338,7 +3338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Convert all of the given object's cached pages that have a  *	pindex within the given range into free pages.  If the value  *	zero is given for "end", then the range's upper bound is  *	infinity.  If the given object is backed by a vnode and it  *	transitions from having one or more cached pages to none, the  *	vnode's hold count is reduced.  */
+comment|/*  *	Convert all of the given object's cached pages that have a  *	pindex within the given range into free pages.  If the value  *	zero is given for "end", then the range's upper bound is  *	infinity.  If the given object is backed by a vnode and it  *	transitions from having one or more cached pages to none, the  *	vnode's hold count is reduced.   */
 end_comment
 
 begin_function
