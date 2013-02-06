@@ -4502,6 +4502,27 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|td
+operator|->
+name|alt_next
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"short TD has no alternate next\n"
+argument_list|)
+expr_stmt|;
+name|xhci_generic_done
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|DPRINTF
 argument_list|(
 literal|"TD has short pkt\n"
