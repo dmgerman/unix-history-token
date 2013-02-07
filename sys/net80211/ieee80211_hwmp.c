@@ -9654,7 +9654,7 @@ operator|>=
 name|ieee80211_hwmp_maxpreq_retries
 condition|)
 block|{
-name|IEEE80211_DISCARD_MAC
+name|IEEE80211_NOTE_MAC
 argument_list|(
 name|vap
 argument_list|,
@@ -9664,14 +9664,18 @@ name|rt
 operator|->
 name|rt_dest
 argument_list|,
-name|NULL
-argument_list|,
 literal|"%s"
 argument_list|,
-literal|"no valid path , max number of discovery, send GATE"
+literal|"max number of discovery, send queued frames to GATE"
 argument_list|)
 expr_stmt|;
-comment|/* TODO: send to known gates */
+name|ieee80211_mesh_forward_to_gates
+argument_list|(
+name|vap
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats
@@ -9679,13 +9683,6 @@ operator|.
 name|is_mesh_fwd_nopath
 operator|++
 expr_stmt|;
-name|rt
-operator|->
-name|rt_flags
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Mark invalid */
 return|return ;
 comment|/* XXX: flush queue? */
 block|}
@@ -10059,6 +10056,36 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_DISCOVER
+condition|)
+block|{
+name|IEEE80211_NOTE_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|dest
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"already discovering queue frame until path found"
+argument_list|)
+expr_stmt|;
+name|sendpreq
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|rt
 operator|->
@@ -10108,7 +10135,10 @@ argument_list|,
 literal|"too frequent discovery requeust"
 argument_list|)
 expr_stmt|;
-comment|/* XXX: stats? */
+name|sendpreq
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|done
 goto|;
