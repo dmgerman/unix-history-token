@@ -335,26 +335,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|ieee80211_node
-modifier|*
-name|mesh_find_txnode
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-parameter_list|,
-specifier|const
-name|uint8_t
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|mesh_transmit_to_gate
 parameter_list|(
@@ -4814,11 +4794,10 @@ comment|/*  * Iterate the routing table and locate the next hop.  */
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
-name|mesh_find_txnode
+name|ieee80211_mesh_find_txnode
 parameter_list|(
 name|struct
 name|ieee80211vap
@@ -5043,7 +5022,7 @@ argument_list|)
 expr_stmt|;
 name|ni
 operator|=
-name|mesh_find_txnode
+name|ieee80211_mesh_find_txnode
 argument_list|(
 name|vap
 argument_list|,
@@ -6131,7 +6110,7 @@ else|else
 block|{
 name|ni
 operator|=
-name|mesh_find_txnode
+name|ieee80211_mesh_find_txnode
 argument_list|(
 name|vap
 argument_list|,

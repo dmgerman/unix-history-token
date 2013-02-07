@@ -2285,6 +2285,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|ieee80211_node
+modifier|*
+name|ieee80211_mesh_find_txnode
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Return non-zero if proxy operation is enabled.  */
 end_comment
