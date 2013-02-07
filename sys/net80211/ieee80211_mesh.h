@@ -2249,6 +2249,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|ieee80211_mesh_gate_route
+modifier|*
+name|ieee80211_mesh_mark_gate
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Return non-zero if proxy operation is enabled.  */
 end_comment
