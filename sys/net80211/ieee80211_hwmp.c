@@ -6075,19 +6075,26 @@ name|ppreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We have a valid route to this node. 		 */
+comment|/* 		 * We have a valid route to this node. 		 * NB: if target is proxy dont reply. 		 */
 if|if
 condition|(
 name|rttarg
 operator|!=
 name|NULL
 operator|&&
-operator|(
 name|rttarg
 operator|->
 name|rt_flags
 operator|&
 name|IEEE80211_MESHRT_FLAGS_VALID
+operator|&&
+operator|!
+operator|(
+name|rttarg
+operator|->
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_PROXY
 operator|)
 condition|)
 block|{
