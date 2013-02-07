@@ -3102,6 +3102,7 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|vm_radix_lookup
 argument_list|(
 operator|&
@@ -3111,6 +3112,7 @@ name|rtree
 argument_list|,
 name|pindex
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
