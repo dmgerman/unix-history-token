@@ -8227,9 +8227,10 @@ name|ieee80211_mesh_rt_flush_peer
 argument_list|(
 name|vap
 argument_list|,
-name|rt
-operator|->
-name|rt_dest
+name|PERR_DADDR
+argument_list|(
+name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
