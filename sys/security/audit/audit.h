@@ -1111,6 +1111,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_SOCKADDR
+parameter_list|(
+name|td
+parameter_list|,
+name|sa
+parameter_list|)
+value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_sockaddr((td), (sa));				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_SUID
 parameter_list|(
 name|suid
@@ -1500,6 +1512,17 @@ parameter_list|,
 name|sotype
 parameter_list|,
 name|soprotocol
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_SOCKADDR
+parameter_list|(
+name|td
+parameter_list|,
+name|sa
 parameter_list|)
 end_define
 

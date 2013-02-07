@@ -880,6 +880,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_TX_IC_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_TXSTATUS_LOCK_INIT
 argument_list|(
 name|sc
@@ -918,6 +923,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ATH_RX_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_TX_IC_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -1129,6 +1139,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|ATH_RX_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_TX_IC_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)

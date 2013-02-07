@@ -1112,6 +1112,13 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_SOCKADDR
+argument_list|(
+name|td
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getsock_cap
@@ -2225,6 +2232,13 @@ goto|goto
 name|done
 goto|;
 block|}
+name|AUDIT_ARG_SOCKADDR
+argument_list|(
+name|td
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|name
@@ -2580,6 +2594,13 @@ decl_stmt|;
 name|AUDIT_ARG_FD
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+name|AUDIT_ARG_SOCKADDR
+argument_list|(
+name|td
+argument_list|,
+name|sa
 argument_list|)
 expr_stmt|;
 name|error
@@ -3767,10 +3788,21 @@ name|msg_name
 operator|!=
 name|NULL
 condition|)
+block|{
+name|AUDIT_ARG_SOCKADDR
+argument_list|(
+name|td
+argument_list|,
+name|mp
+operator|->
+name|msg_name
+argument_list|)
+expr_stmt|;
 name|rights
 operator||=
 name|CAP_CONNECT
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|getsock_cap
@@ -4758,7 +4790,7 @@ decl_stmt|,
 modifier|*
 name|control
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|caddr_t
 name|ctlbuf
@@ -4778,7 +4810,7 @@ name|sockaddr
 modifier|*
 name|fromsa
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5018,13 +5050,7 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|mp
@@ -5037,13 +5063,7 @@ condition|?
 operator|&
 name|control
 else|:
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|mp
@@ -5083,6 +5103,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fromsa
+operator|!=
+name|NULL
+condition|)
+name|AUDIT_ARG_SOCKADDR
+argument_list|(
+name|td
+argument_list|,
+name|fromsa
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -5158,7 +5191,7 @@ literal|0
 operator|||
 name|fromsa
 operator|==
-literal|0
+name|NULL
 condition|)
 name|len
 operator|=
@@ -11183,7 +11216,7 @@ name|td
 decl_stmt|;
 name|struct
 name|sctp_generic_sendmsg_args
-comment|/* { 		int sd,  		caddr_t msg,  		int mlen,  		caddr_t to,  		__socklen_t tolen,  		struct sctp_sndrcvinfo *sinfo,  		int flags 	} */
+comment|/* { 		int sd, 		caddr_t msg, 		int mlen, 		caddr_t to, 		__socklen_t tolen, 		struct sctp_sndrcvinfo *sinfo, 		int flags 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11780,7 +11813,7 @@ name|td
 decl_stmt|;
 name|struct
 name|sctp_generic_sendmsg_iov_args
-comment|/* { 		int sd,  		struct iovec *iov,  		int iovlen,  		caddr_t to,  		__socklen_t tolen,  		struct sctp_sndrcvinfo *sinfo,  		int flags 	} */
+comment|/* { 		int sd, 		struct iovec *iov, 		int iovlen, 		caddr_t to, 		__socklen_t tolen, 		struct sctp_sndrcvinfo *sinfo, 		int flags 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -12474,7 +12507,7 @@ name|td
 decl_stmt|;
 name|struct
 name|sctp_generic_recvmsg_args
-comment|/* { 		int sd,  		struct iovec *iov,  		int iovlen, 		struct sockaddr *from,  		__socklen_t *fromlenaddr, 		struct sctp_sndrcvinfo *sinfo,  		int *msg_flags 	} */
+comment|/* { 		int sd, 		struct iovec *iov, 		int iovlen, 		struct sockaddr *from, 		__socklen_t *fromlenaddr, 		struct sctp_sndrcvinfo *sinfo, 		int *msg_flags 	} */
 modifier|*
 name|uap
 decl_stmt|;
