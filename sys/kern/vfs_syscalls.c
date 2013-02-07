@@ -5168,16 +5168,6 @@ goto|goto
 name|success
 goto|;
 block|}
-if|if
-condition|(
-name|error
-operator|==
-name|ERESTART
-condition|)
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
