@@ -960,13 +960,13 @@ literal|"forward frame from DS SA(%6D), DA(%6D)\n"
 argument_list|,
 name|eh
 operator|->
-name|ether_dhost
+name|ether_shost
 argument_list|,
 literal|":"
 argument_list|,
 name|eh
 operator|->
-name|ether_shost
+name|ether_dhost
 argument_list|,
 literal|":"
 argument_list|)
