@@ -47,7 +47,7 @@ comment|/* ored with CTLBACKQ code if in quotes */
 end_comment
 
 begin_comment
-comment|/*	CTLBACKQ | CTLQUOTE == '\205' */
+comment|/*	CTLBACKQ | CTLQUOTE == '\373' */
 end_comment
 
 begin_define
