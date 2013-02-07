@@ -1647,7 +1647,9 @@ expr_stmt|;
 else|else
 name|CPU_SET
 argument_list|(
-name|cpu
+name|ie
+operator|->
+name|ie_cpu
 argument_list|,
 operator|&
 name|mask

@@ -616,6 +616,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Kick the frame TX task.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -628,7 +632,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* XXX eventually try sc_tx_tq? */
 name|taskqueue_enqueue
 argument_list|(
 name|sc
@@ -639,6 +642,37 @@ operator|&
 name|sc
 operator|->
 name|sc_txpkttask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Kick the software TX queue task.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ath_tx_swq_kick
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|sc
+operator|->
+name|sc_tx_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txqtask
 argument_list|)
 expr_stmt|;
 block|}
