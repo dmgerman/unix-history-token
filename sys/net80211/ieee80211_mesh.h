@@ -1427,6 +1427,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_MESH_GT_RT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Basic forwarding information:  * o Destination MAC  * o Next-hop MAC  * o Precursor list (not implemented yet)  * o Path timeout  * The rest is part of the active Mesh path selection protocol.  * XXX: to be moved out later.  */
 end_comment
@@ -1542,6 +1550,38 @@ name|cast
 parameter_list|)
 value|((cast *)rt->rt_priv)
 end_define
+
+begin_comment
+comment|/*  * Stored information about known mesh gates.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_mesh_gate_route
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|ieee80211_mesh_gate_route
+argument_list|)
+name|gr_next
+expr_stmt|;
+name|uint8_t
+name|gr_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|gr_lastseq
+decl_stmt|;
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+name|gr_route
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -1859,6 +1899,13 @@ decl_stmt|;
 name|ieee80211_mesh_seq
 name|ms_gateseq
 decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ieee80211_mesh_gate_route
+argument_list|)
+name|ms_known_gates
+expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
