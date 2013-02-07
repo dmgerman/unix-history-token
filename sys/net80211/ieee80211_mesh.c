@@ -6152,6 +6152,31 @@ return|;
 comment|/* dont process locally */
 block|}
 comment|/* 		 * All other cases: forward of MSDUs from the MBSS to DS indiv. 		 * addressed according to 13.11.3.2. 		 */
+name|IEEE80211_NOTE_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_OUTPUT
+argument_list|,
+name|qwh
+operator|->
+name|i_addr2
+argument_list|,
+literal|"forward frame to DS, SA(%6D) DA(%6D)"
+argument_list|,
+name|mc10
+operator|->
+name|mc_addr6
+argument_list|,
+literal|":"
+argument_list|,
+name|mc10
+operator|->
+name|mc_addr5
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
