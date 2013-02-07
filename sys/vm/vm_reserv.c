@@ -1217,7 +1217,7 @@ argument_list|(
 name|msucc
 operator|->
 name|pindex
-operator|!=
+operator|>=
 name|pindex
 argument_list|,
 operator|(
@@ -1994,7 +1994,7 @@ argument_list|(
 name|msucc
 operator|->
 name|pindex
-operator|!=
+operator|<=
 name|pindex
 argument_list|,
 operator|(
