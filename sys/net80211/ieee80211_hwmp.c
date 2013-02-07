@@ -5400,11 +5400,11 @@ operator|->
 name|preq_lifetime
 argument_list|)
 expr_stmt|;
-comment|/* path to orig is valid now */
+comment|/* Path to orig is valid now. 		 * NB: we know it can't be Proxy, and if it is GATE 		 * it will be marked below. 		 */
 name|rtorig
 operator|->
 name|rt_flags
-operator||=
+operator|=
 name|IEEE80211_MESHRT_FLAGS_VALID
 expr_stmt|;
 block|}
