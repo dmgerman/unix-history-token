@@ -11618,18 +11618,10 @@ argument_list|,
 name|tid
 argument_list|)
 expr_stmt|;
-comment|/* Punt some frames to the hardware if needed */
-comment|//ath_txq_sched(sc, sc->sc_ac2q[tid->ac]);
-name|taskqueue_enqueue
+comment|/* 	 * Queue the software TX scheduler. 	 */
+name|ath_tx_swq_kick
 argument_list|(
 name|sc
-operator|->
-name|sc_tx_tq
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_txqtask
 argument_list|)
 expr_stmt|;
 block|}

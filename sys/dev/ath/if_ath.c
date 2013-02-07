@@ -17112,22 +17112,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Kick the TXQ scheduler */
+comment|/* Kick the software TXQ scheduler */
 if|if
 condition|(
 name|dosched
 condition|)
 block|{
-name|taskqueue_enqueue
+name|ath_tx_swq_kick
 argument_list|(
 name|sc
-operator|->
-name|sc_tx_tq
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_txqtask
 argument_list|)
 expr_stmt|;
 block|}
