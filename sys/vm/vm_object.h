@@ -90,11 +90,6 @@ name|vm_radix
 name|rtree
 decl_stmt|;
 comment|/* root of the resident page radix trie*/
-name|struct
-name|vm_radix
-name|cache
-decl_stmt|;
-comment|/* (o + f) root of the cache page radix trie */
 name|vm_pindex_t
 name|size
 decl_stmt|;
@@ -160,6 +155,11 @@ argument_list|)
 name|rvq
 expr_stmt|;
 comment|/* list of reservations */
+name|struct
+name|vm_radix
+name|cache
+decl_stmt|;
+comment|/* (o + f) root of the cache page radix trie */
 name|void
 modifier|*
 name|handle
