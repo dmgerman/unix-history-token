@@ -3469,6 +3469,16 @@ break|break;
 case|case
 name|IEEE80211_ACTION_MESH_GANN
 case|:
+name|IEEE80211_VERIFY_LENGTH
+argument_list|(
+argument|efrm - frm
+argument_list|,
+argument|sizeof(struct ieee80211_meshgann_ie)
+argument_list|,
+argument|return EINVAL
+argument_list|)
+empty_stmt|;
+break|break;
 case|case
 name|IEEE80211_ACTION_MESH_CC
 case|:
