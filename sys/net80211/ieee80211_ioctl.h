@@ -1103,6 +1103,10 @@ define|#
 directive|define
 name|IEEE80211_MESHRT_FLAGS_PROXY
 value|0x04
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_GATE
+value|0x08
 name|uint8_t
 name|imr_dest
 index|[
