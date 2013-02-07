@@ -1836,6 +1836,11 @@ directive|define
 name|IEEE80211_MESHFLAGS_FWD
 value|0x04
 comment|/* forward packets */
+define|#
+directive|define
+name|IEEE80211_MESHFLAGS_ROOT
+value|0x08
+comment|/* configured as root */
 name|uint8_t
 name|ms_flags
 decl_stmt|;
@@ -1846,6 +1851,13 @@ decl_stmt|;
 name|struct
 name|callout
 name|ms_cleantimer
+decl_stmt|;
+name|struct
+name|callout
+name|ms_gatetimer
+decl_stmt|;
+name|ieee80211_mesh_seq
+name|ms_gateseq
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
@@ -2088,6 +2100,21 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+modifier|*
+name|ieee80211_add_meshgate
+parameter_list|(
+name|uint8_t
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_meshgann_ie
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
