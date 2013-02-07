@@ -5476,7 +5476,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Forwarding information for transmitter mesh STA 	 * [OPTIONAL: if metric improved] 	 */
-comment|/* 	 * Check if the PREQ is addressed to us. 	 * or a Proxy currently supplied by us. 	 */
+comment|/* 	 * Check if the PREQ is addressed to us. 	 * or a Proxy currently gated by us. 	 */
 if|if
 condition|(
 name|IEEE80211_ADDR_EQ
@@ -5492,9 +5492,26 @@ argument_list|)
 argument_list|)
 operator|||
 operator|(
+name|ms
+operator|->
+name|ms_flags
+operator|&
+name|IEEE80211_MESHFLAGS_GATE
+operator|&&
 name|rttarg
 operator|!=
 name|NULL
+operator|&&
+name|IEEE80211_ADDR_EQ
+argument_list|(
+name|vap
+operator|->
+name|iv_myaddr
+argument_list|,
+name|rttarg
+operator|->
+name|rt_mesh_gate
+argument_list|)
 operator|&&
 name|rttarg
 operator|->
@@ -5540,6 +5557,12 @@ operator|.
 name|prep_hopcount
 operator|=
 literal|0
+expr_stmt|;
+name|prep
+operator|.
+name|prep_metric
+operator|=
+name|IEEE80211_MESHLMETRIC_INITIALVAL
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
@@ -5617,6 +5640,14 @@ name|rttarg
 operator|->
 name|rt_nhops
 expr_stmt|;
+name|prep
+operator|.
+name|prep_metric
+operator|=
+name|rttarg
+operator|->
+name|rt_metric
+expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|prep
@@ -5653,12 +5684,6 @@ operator|=
 name|preq
 operator|->
 name|preq_lifetime
-expr_stmt|;
-name|prep
-operator|.
-name|prep_metric
-operator|=
-name|IEEE80211_MESHLMETRIC_INITIALVAL
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
