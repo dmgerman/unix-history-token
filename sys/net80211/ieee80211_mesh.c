@@ -651,6 +651,44 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|ieee80211_mesh_backofftimeout
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_net_wlan_mesh
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|backofftimeout
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_mesh_backofftimeout
+argument_list|,
+literal|0
+argument_list|,
+name|ieee80211_sysctl_msecs_ticks
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Backoff timeout (msec). This is to throutles peering forever when "
+literal|"not receving answer or is rejected by a neighbor"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|ieee80211_mesh_maxretries
 init|=
 literal|2
@@ -676,6 +714,39 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum retries during peer link establishment"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ieee80211_mesh_maxholding
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan_mesh
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxholding
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_mesh_maxholding
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum times we are allowed to transition to HOLDING state before "
+literal|"backinoff during peer link establishment"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2642,6 +2713,13 @@ operator|=
 name|msecs_to_ticks
 argument_list|(
 literal|40
+argument_list|)
+expr_stmt|;
+name|ieee80211_mesh_backofftimeout
+operator|=
+name|msecs_to_ticks
+argument_list|(
+literal|5000
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Register action frame handlers. 	 */
@@ -8246,7 +8324,7 @@ name|scan
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Automatically peer with discovered nodes if possible. 		 * XXX backoff on repeated failure 		 */
+comment|/* 		 * Automatically peer with discovered nodes if possible. 		 */
 if|if
 condition|(
 name|ni
@@ -8281,6 +8359,16 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Wait for backoff callout to reset counter */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_mlhcnt
+operator|>=
+name|ieee80211_mesh_maxholding
+condition|)
+return|return;
 name|ni
 operator|->
 name|ni_mlpid
@@ -12179,6 +12267,38 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|mesh_peer_backoff_cb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+init|=
+operator|(
+expr|struct
+name|ieee80211_node
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+comment|/* After backoff timeout, try to peer automatically again. */
+name|ni
+operator|->
+name|ni_mlhcnt
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Mesh Peer Link Management FSM timeout handling.  */
 end_comment
@@ -12387,6 +12507,33 @@ break|break;
 case|case
 name|IEEE80211_NODE_MESH_HOLDING
 case|:
+name|ni
+operator|->
+name|ni_mlhcnt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_mlhcnt
+operator|>=
+name|ieee80211_mesh_maxholding
+condition|)
+name|callout_reset
+argument_list|(
+operator|&
+name|ni
+operator|->
+name|ni_mlhtimer
+argument_list|,
+name|ieee80211_mesh_backofftimeout
+argument_list|,
+name|mesh_peer_backoff_cb
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
 name|mesh_linkchange
 argument_list|(
 name|ni
@@ -13577,6 +13724,16 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|ni
+operator|->
+name|ni_mlhtimer
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -13618,6 +13775,14 @@ operator|&
 name|ni
 operator|->
 name|ni_mltimer
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|ni
+operator|->
+name|ni_mlhtimer
 argument_list|)
 expr_stmt|;
 comment|/* NB: short-circuit callbacks after mesh_vdetach */
