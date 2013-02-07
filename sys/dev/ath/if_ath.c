@@ -10667,7 +10667,7 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* XXX recursive TX completion -> TX? */
-name|ATH_TX_UNLOCK_ASSERT
+name|ATH_TX_IC_UNLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -10868,7 +10868,7 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Don't stuff the non-fragment frame onto the fragment 	 * queue. ath_txfrag_cleanup() should only be called on fragments - 	 * ie, the _extra_ ieee80211_node references - and not the single 	 * node reference already done as part of the net08211 TX call 	 * into the driver. 	 */
-name|ATH_TX_LOCK
+name|ATH_TX_IC_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11016,7 +11016,7 @@ operator|->
 name|m_nextpkt
 expr_stmt|;
 block|}
-name|ATH_TX_UNLOCK
+name|ATH_TX_IC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11137,7 +11137,7 @@ name|txlist
 argument_list|)
 expr_stmt|;
 comment|/* Grab lock */
-name|ATH_TX_LOCK
+name|ATH_TX_IC_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11157,7 +11157,7 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 comment|/* Unlock */
-name|ATH_TX_UNLOCK
+name|ATH_TX_IC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11313,7 +11313,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Grab the frames to transmit from the tx queue 	 */
 comment|/* Copy everything out of sc_txbuf_list into txlist */
-name|ATH_TX_LOCK
+name|ATH_TX_IC_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11331,18 +11331,17 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ATH_TX_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * For now, the ath_tx_start() code sits behind the same lock; 	 * worry about serialising this in a taskqueue later. 	 */
-name|ATH_TX_LOCK
+name|ATH_TX_IC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to transmit each frame. 	 * 	 * In the old code path - if a TX fragment fails, subsequent 	 * fragments in that group would be aborted. 	 * 	 * It would be nice to chain together TX fragments in this 	 * way so they can be aborted together. 	 */
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bf
