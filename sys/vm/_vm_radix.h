@@ -16,7 +16,7 @@ name|__VM_RADIX_H_
 end_define
 
 begin_comment
-comment|/*  * Radix tree root.  The height and pointer are set together to permit  * coherent lookups while the root is modified.  */
+comment|/*  * Radix tree root.  */
 end_comment
 
 begin_struct
@@ -26,7 +26,6 @@ block|{
 name|uintptr_t
 name|rt_root
 decl_stmt|;
-comment|/* root + height */
 block|}
 struct|;
 end_struct
