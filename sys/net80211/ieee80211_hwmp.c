@@ -8004,12 +8004,6 @@ condition|(
 name|rt
 operator|==
 name|NULL
-operator|||
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|IEEE80211_MESHRT_FLAGS_VALID
 condition|)
 continue|continue;
 if|if
