@@ -1013,13 +1013,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_MIN_BLOCK_SIZE
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
 name|EXT2_MAX_BLOCK_SIZE
 value|4096
 end_define
