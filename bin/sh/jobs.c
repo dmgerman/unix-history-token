@@ -5225,9 +5225,11 @@ decl_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"dowait(%d) called\n"
+literal|"dowait(%d, %p) called\n"
 operator|,
-name|block
+name|mode
+operator|,
+name|job
 operator|)
 argument_list|)
 expr_stmt|;

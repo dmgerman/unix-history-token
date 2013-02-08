@@ -279,7 +279,7 @@ comment|/* gen[i] = gen>> (8 * i) */
 block|}
 name|zfid_short_t
 typedef|;
-comment|/*  * Filesystems under .zfs/snapshot have a total file ID size of 22 bytes  * (including the length field).  This makes files under .zfs/snapshot  * accessible by NFSv3 and NFSv4, but not NFSv2.  *  * For files under .zfs/snapshot, we partition up the available space  * as follows:  *	2 bytes		fid length (required)  *	6 bytes		object number (48 bits)  *	4 bytes		generation number (32 bits)  *	6 bytes		objset id (48 bits)  *	4 bytes		currently just zero (32 bits)  *  * We reserve only 48 bits for the object number and objset id, as these are  * the limits currently defined and imposed by the DMU.  */
+comment|/*  * Filesystems under .zfs/snapshot have a total file ID size of 22[*] bytes  * (including the length field).  This makes files under .zfs/snapshot  * accessible by NFSv3 and NFSv4, but not NFSv2.  *  * For files under .zfs/snapshot, we partition up the available space  * as follows:  *	2 bytes		fid length (required)  *	6 bytes		object number (48 bits)  *	4 bytes		generation number (32 bits)  *	6 bytes		objset id (48 bits)  *	4 bytes[**]	currently just zero (32 bits)  *  * We reserve only 48 bits for the object number and objset id, as these are  * the limits currently defined and imposed by the DMU.  *  * [*] 20 bytes on FreeBSD to fit into the size of struct fid.  * [**] 2 bytes on FreeBSD for the above reason.  */
 typedef|typedef
 struct|struct
 name|zfid_long

@@ -2808,7 +2808,11 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
+operator|(
 name|P_PPWAIT
+operator||
+name|P_PPTRACE
+operator|)
 expr_stmt|;
 name|cv_broadcast
 argument_list|(
