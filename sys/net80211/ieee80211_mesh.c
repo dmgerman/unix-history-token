@@ -152,6 +152,23 @@ directive|include
 file|<net80211/ieee80211_action.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_superg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
