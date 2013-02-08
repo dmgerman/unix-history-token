@@ -4706,7 +4706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Routine to mark a FAT16 or FAT32 volume as "clean" or "dirty" by  * manipulating the upper bit of the FAT entry for cluster 1.  Note that  * this bit is not defined for FAT12 volumes, which are always assumed to  * be dirty.  *  * The fatentry() routine only works on cluster numbers that a file could  * occupy, so it won't manipulate the entry for cluster 1.  So we have to do  * it here.  The code was stolen from fatentry() and tailored for cluster 1.  *  * Inputs:  *	pmp	The MS-DOS volume to mark  *	dirty	Non-zero if the volume should be marked dirty; zero if it  *		should be marked clean  *  * Result:  *	0	Success  *	EROFS	Volume is read-only  *	?	(other errors from called routines)  */
+comment|/*-  * Routine to mark a FAT16 or FAT32 volume as "clean" or "dirty" by  * manipulating the upper bit of the FAT entry for cluster 1.  Note that  * this bit is not defined for FAT12 volumes, which are always assumed to  * be clean.  *  * The fatentry() routine only works on cluster numbers that a file could  * occupy, so it won't manipulate the entry for cluster 1.  So we have to do  * it here.  The code was stolen from fatentry() and tailored for cluster 1.  *  * Inputs:  *	pmp	The MS-DOS volume to mark  *	dirty	Non-zero if the volume should be marked dirty; zero if it  *		should be marked clean  *  * Result:  *	0	Success  *	EROFS	Volume is read-only  *	?	(other errors from called routines)  */
 end_comment
 
 begin_function
