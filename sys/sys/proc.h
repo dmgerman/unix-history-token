@@ -3112,6 +3112,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_PPTRACE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* PT_TRACEME by vforked child. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_STOPPED
 value|(P_STOPPED_SIG|P_STOPPED_SINGLE|P_STOPPED_TRACE)
 end_define
@@ -4170,6 +4181,18 @@ end_comment
 
 begin_function_decl
 name|struct
+name|proc
+modifier|*
+name|pfind_locked
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
 name|pgrp
 modifier|*
 name|pgfind
@@ -4798,11 +4821,6 @@ name|status
 parameter_list|,
 name|int
 name|options
-parameter_list|,
-name|struct
-name|rusage
-modifier|*
-name|rusage
 parameter_list|)
 function_decl|;
 end_function_decl

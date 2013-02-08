@@ -106,6 +106,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Limit the timers to their specific resolutions: 	 * 	 * + Timer 0 - 0..15 0xffff TU 	 * + Timer 1 - 0..18 0x7ffff TU/8 	 * + Timer 2 - 0..24 0x1ffffff TU/8 	 * + Timer 3 - 0..15 0xffff TU 	 */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -115,6 +116,8 @@ argument_list|,
 name|bt
 operator|->
 name|bt_nexttbtt
+operator|&
+literal|0xffff
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -126,6 +129,8 @@ argument_list|,
 name|bt
 operator|->
 name|bt_nextdba
+operator|&
+literal|0x7ffff
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -137,8 +142,11 @@ argument_list|,
 name|bt
 operator|->
 name|bt_nextswba
+operator|&
+literal|0x1ffffff
 argument_list|)
 expr_stmt|;
+comment|/* XXX force nextatim to be non-zero? */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -148,6 +156,8 @@ argument_list|,
 name|bt
 operator|->
 name|bt_nextatim
+operator|&
+literal|0xffff
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the Beacon register after setting all timers. 	 */

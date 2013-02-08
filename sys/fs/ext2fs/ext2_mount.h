@@ -78,10 +78,6 @@ modifier|*
 name|um_e2fs
 decl_stmt|;
 comment|/* EXT2FS */
-define|#
-directive|define
-name|em_e2fsb
-value|um_e2fs->e2fs
 name|u_long
 name|um_nindir
 decl_stmt|;

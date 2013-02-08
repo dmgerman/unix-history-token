@@ -2265,6 +2265,13 @@ name|ADD_FROM_PCPU
 argument_list|(
 name|i
 argument_list|,
+name|v_io_faults
+argument_list|)
+expr_stmt|;
+name|ADD_FROM_PCPU
+argument_list|(
+name|i
+argument_list|,
 name|v_cow_faults
 argument_list|)
 expr_stmt|;
@@ -2490,6 +2497,13 @@ argument_list|(
 name|vm
 argument_list|,
 name|v_vm_faults
+argument_list|)
+expr_stmt|;
+name|GET_VM_STATS
+argument_list|(
+name|vm
+argument_list|,
+name|v_io_faults
 argument_list|)
 expr_stmt|;
 name|GET_VM_STATS
@@ -5181,6 +5195,18 @@ argument_list|,
 name|sum
 operator|.
 name|v_vm_faults
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u page faults requiring I/O\n"
+argument_list|,
+name|sum
+operator|.
+name|v_io_faults
 argument_list|)
 expr_stmt|;
 operator|(

@@ -1603,7 +1603,7 @@ argument_list|,
 name|gettext
 argument_list|(
 literal|"\nThe feature@ properties must be "
-literal|"appended with a feature name.\nSee zpool-features(5).\n"
+literal|"appended with a feature name.\nSee zpool-features(7).\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3894,9 +3894,13 @@ goto|goto
 name|errout
 goto|;
 block|}
-comment|/* 	 * Check the validity of the mountpoint and direct the user to use the 	 * '-m' mountpoint option if it looks like its in use. 	 */
+comment|/* 	 * Check the validity of the mountpoint and direct the user to use the 	 * '-m' mountpoint option if it looks like its in use. 	 * Ignore the checks if the '-f' option is given. 	 */
 if|if
 condition|(
+operator|!
+name|force
+operator|&&
+operator|(
 name|mountpoint
 operator|==
 name|NULL
@@ -3919,6 +3923,7 @@ name|ZFS_MOUNTPOINT_NONE
 argument_list|)
 operator|!=
 literal|0
+operator|)
 operator|)
 condition|)
 block|{
@@ -18256,7 +18261,7 @@ argument_list|(
 literal|"action: Enable all features using "
 literal|"'zpool upgrade'. Once this is done,\n\tthe pool may no "
 literal|"longer be accessible by software that does not support\n\t"
-literal|"the features. See zpool-features(5) for details.\n"
+literal|"the features. See zpool-features(7) for details.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -20297,7 +20302,7 @@ literal|"Once a\nfeature is enabled the "
 literal|"pool may become incompatible with "
 literal|"software\nthat does not support "
 literal|"the feature. See "
-literal|"zpool-features(5) for "
+literal|"zpool-features(7) for "
 literal|"details.\n\n"
 argument_list|)
 argument_list|)

@@ -789,15 +789,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|uma_zone
-modifier|*
-name|socket_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|so_gen_t
 name|so_gencnt
 decl_stmt|;

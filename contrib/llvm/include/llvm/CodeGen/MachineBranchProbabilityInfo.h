@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/BranchProbability.h"
 end_include
 
@@ -81,12 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|MachineBasicBlock
-decl_stmt|;
 name|class
 name|MachineBranchProbabilityInfo
 range|:
@@ -160,6 +160,17 @@ argument_list|(
 argument|const MachineBasicBlock *Src
 argument_list|,
 argument|const MachineBasicBlock *Dst
+argument_list|)
+specifier|const
+block|;
+comment|// Same thing, but using a const_succ_iterator from Src. This is faster when
+comment|// the iterator is already available.
+name|uint32_t
+name|getEdgeWeight
+argument_list|(
+argument|const MachineBasicBlock *Src
+argument_list|,
+argument|MachineBasicBlock::const_succ_iterator Dst
 argument_list|)
 specifier|const
 block|;

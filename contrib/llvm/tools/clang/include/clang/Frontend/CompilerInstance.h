@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceManager.h"
 end_include
 
@@ -380,6 +386,12 @@ name|OutputFile
 operator|>
 name|OutputFiles
 block|;
+name|CompilerInstance
+argument_list|(
+argument|const CompilerInstance&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+block|;
 name|void
 name|operator
 operator|=
@@ -388,16 +400,8 @@ specifier|const
 name|CompilerInstance
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
-name|CompilerInstance
-argument_list|(
-specifier|const
-name|CompilerInstance
-operator|&
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 name|CompilerInstance
@@ -490,24 +494,9 @@ block|;
 comment|/// }
 comment|/// @name Forwarding Methods
 comment|/// {
-name|AnalyzerOptions
-operator|&
+name|AnalyzerOptionsRef
 name|getAnalyzerOpts
 argument_list|()
-block|{
-return|return
-name|Invocation
-operator|->
-name|getAnalyzerOpts
-argument_list|()
-return|;
-block|}
-specifier|const
-name|AnalyzerOptions
-operator|&
-name|getAnalyzerOpts
-argument_list|()
-specifier|const
 block|{
 return|return
 name|Invocation
@@ -1135,7 +1124,7 @@ argument_list|()
 return|;
 block|}
 comment|/// setASTConsumer - Replace the current AST consumer; the compiler instance
-comment|/// takes ownership of \arg Value.
+comment|/// takes ownership of \p Value.
 name|void
 name|setASTConsumer
 argument_list|(
@@ -1248,7 +1237,7 @@ argument_list|()
 return|;
 block|}
 comment|/// setCodeCompletionConsumer - Replace the current code completion consumer;
-comment|/// the compiler instance takes ownership of \arg Value.
+comment|/// the compiler instance takes ownership of \p Value.
 name|void
 name|setCodeCompletionConsumer
 argument_list|(
@@ -1351,7 +1340,7 @@ argument_list|)
 block|;
 comment|/// Create a DiagnosticsEngine object with a the TextDiagnosticPrinter.
 comment|///
-comment|/// The \arg Argc and \arg Argv arguments are used only for logging purposes,
+comment|/// The \p Argc and \p Argv arguments are used only for logging purposes,
 comment|/// when the diagnostic options indicate that the compiler should output
 comment|/// logging information.
 comment|///
@@ -1361,8 +1350,7 @@ comment|/// object, if using directly the caller is responsible for
 comment|/// releasing the returned DiagnosticsEngine's client eventually.
 comment|///
 comment|/// \param Opts - The diagnostic options; note that the created text
-comment|/// diagnostic object contains a reference to these options and its lifetime
-comment|/// must extend past that of the diagnostic engine.
+comment|/// diagnostic object contains a reference to these options.
 comment|///
 comment|/// \param Client If non-NULL, a diagnostic client that will be
 comment|/// attached to (and, then, owned by) the returned DiagnosticsEngine
@@ -1379,7 +1367,7 @@ name|DiagnosticsEngine
 operator|>
 name|createDiagnostics
 argument_list|(
-argument|const DiagnosticOptions&Opts
+argument|DiagnosticOptions *Opts
 argument_list|,
 argument|int Argc
 argument_list|,
@@ -1430,8 +1418,6 @@ argument|StringRef Path
 argument_list|,
 argument|bool DisablePCHValidation
 argument_list|,
-argument|bool DisableStatCache
-argument_list|,
 argument|bool AllowPCHWithCompilerErrors
 argument_list|,
 argument|void *DeserializationListener
@@ -1450,8 +1436,6 @@ argument_list|,
 argument|const std::string&Sysroot
 argument_list|,
 argument|bool DisablePCHValidation
-argument_list|,
-argument|bool DisableStatCache
 argument_list|,
 argument|bool AllowPCHWithCompilerErrors
 argument_list|,
@@ -1472,8 +1456,7 @@ name|createCodeCompletionConsumer
 argument_list|()
 block|;
 comment|/// Create a code completion consumer to print code completion results, at
-comment|/// \arg Filename, \arg Line, and \arg Column, to the given output stream \arg
-comment|/// OS.
+comment|/// \p Filename, \p Line, and \p Column, to the given output stream \p OS.
 specifier|static
 name|CodeCompleteConsumer
 operator|*
@@ -1558,15 +1541,15 @@ argument_list|)
 block|;
 comment|/// Create a new output file, optionally deriving the output path name.
 comment|///
-comment|/// If \arg OutputPath is empty, then createOutputFile will derive an output
-comment|/// path location as \arg BaseInput, with any suffix removed, and \arg
-comment|/// Extension appended. If OutputPath is not stdout and \arg UseTemporary
+comment|/// If \p OutputPath is empty, then createOutputFile will derive an output
+comment|/// path location as \p BaseInput, with any suffix removed, and \p Extension
+comment|/// appended. If \p OutputPath is not stdout and \p UseTemporary
 comment|/// is true, createOutputFile will create a new temporary file that must be
-comment|/// renamed to OutputPath in the end.
+comment|/// renamed to \p OutputPath in the end.
 comment|///
 comment|/// \param OutputPath - If given, the path to the output file.
 comment|/// \param Error [out] - On failure, the error message.
-comment|/// \param BaseInput - If \arg OutputPath is empty, the input path name to use
+comment|/// \param BaseInput - If \p OutputPath is empty, the input path name to use
 comment|/// for deriving the output path.
 comment|/// \param Extension - The extension to use for derived output names.
 comment|/// \param Binary - The mode to open the file in.
@@ -1575,7 +1558,7 @@ comment|/// llvm::sys::RemoveFileOnSignal. Note that this is not safe for
 comment|/// multithreaded use, as the underlying signal mechanism is not reentrant
 comment|/// \param UseTemporary - Create a new temporary file that must be renamed to
 comment|/// OutputPath in the end.
-comment|/// \param CreateMissingDirectories - When \arg UseTemporary is true, create
+comment|/// \param CreateMissingDirectories - When \p UseTemporary is true, create
 comment|/// missing directories in the output path.
 comment|/// \param ResultPathName [out] - If given, the result path name will be
 comment|/// stored here on success.
@@ -1623,9 +1606,10 @@ comment|/// \return True on success.
 name|bool
 name|InitializeSourceManager
 argument_list|(
-argument|StringRef InputFile
-argument_list|,
-argument|SrcMgr::CharacteristicKind Kind = SrcMgr::C_User
+specifier|const
+name|FrontendInputFile
+operator|&
+name|Input
 argument_list|)
 block|;
 comment|/// InitializeSourceManager - Initialize the source manager to set InputFile
@@ -1636,17 +1620,27 @@ specifier|static
 name|bool
 name|InitializeSourceManager
 argument_list|(
-argument|StringRef InputFile
+specifier|const
+name|FrontendInputFile
+operator|&
+name|Input
 argument_list|,
-argument|SrcMgr::CharacteristicKind Kind
+name|DiagnosticsEngine
+operator|&
+name|Diags
 argument_list|,
-argument|DiagnosticsEngine&Diags
+name|FileManager
+operator|&
+name|FileMgr
 argument_list|,
-argument|FileManager&FileMgr
+name|SourceManager
+operator|&
+name|SourceMgr
 argument_list|,
-argument|SourceManager&SourceMgr
-argument_list|,
-argument|const FrontendOptions&Opts
+specifier|const
+name|FrontendOptions
+operator|&
+name|Opts
 argument_list|)
 block|;
 comment|/// }

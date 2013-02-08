@@ -66,23 +66,17 @@ begin_function
 name|void
 name|xmit
 parameter_list|(
-name|type
-parameter_list|,
-name|seq
-parameter_list|,
-name|addr
-parameter_list|)
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|seq
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -175,7 +169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Acksend implements reliable datagram transmission by using sequence  * numbers and retransmission when necessary.  * If `name' is ANYADDR, this routine implements reliable broadcast.  *  * Because this function calls readmsg(), none of its args may be in  *	a message provided by readmsg().  */
+comment|/*  * Acksend implements reliable datagram transmission by using sequence  * numbers and retransmission when necessary.  * If `name' is ANYADDR, this routine implements reliable broadcast.  *  * Because this function calls readmsg(), none of its args may be in  *	a message provided by readmsg().  * message		this message  * addr			to here  * ack			look for this ack  * net			receive from this network  * bad			1=losing patience  */
 end_comment
 
 begin_function
@@ -184,48 +178,31 @@ name|tsp
 modifier|*
 name|acksend
 parameter_list|(
-name|message
-parameter_list|,
-name|addr
-parameter_list|,
-name|name
-parameter_list|,
-name|ack
-parameter_list|,
-name|net
-parameter_list|,
-name|bad
-parameter_list|)
 name|struct
 name|tsp
 modifier|*
 name|message
-decl_stmt|;
-comment|/* this message */
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
-decl_stmt|;
-comment|/* to here */
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|ack
-decl_stmt|;
-comment|/* look for this ack */
+parameter_list|,
 name|struct
 name|netinfo
 modifier|*
 name|net
-decl_stmt|;
-comment|/* receive from this network */
+parameter_list|,
 name|int
 name|bad
-decl_stmt|;
-comment|/* 1=losing patience */
+parameter_list|)
 block|{
 name|struct
 name|timeval

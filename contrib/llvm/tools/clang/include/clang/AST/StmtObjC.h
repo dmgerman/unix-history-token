@@ -341,17 +341,6 @@ operator|==
 name|ObjCForCollectionStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCForCollectionStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -593,17 +582,6 @@ operator|==
 name|ObjCAtCatchStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtCatchStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -755,17 +733,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCAtFinallyStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtFinallyStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_range
@@ -1210,17 +1177,6 @@ operator|==
 name|ObjCAtTryStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtTryStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -1486,17 +1442,6 @@ operator|==
 name|ObjCAtSynchronizedStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtSynchronizedStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -1679,17 +1624,6 @@ operator|==
 name|ObjCAtThrowStmtClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAtThrowStmt *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -1841,17 +1775,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCAutoreleasePoolStmtClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCAutoreleasePoolStmt *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_range

@@ -276,7 +276,7 @@ if|if
 condition|(
 name|errno
 operator|!=
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 condition|)
 name|warn
 argument_list|(

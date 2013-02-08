@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -39,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_function
@@ -83,8 +95,16 @@ operator|)
 return|;
 end_return
 
+begin_pragma
+unit|}
+pragma|#
+directive|pragma
+name|weak
+name|__vdso_gettc
+end_pragma
+
 begin_macro
-unit|}  u_int
+unit|u_int
 name|__vdso_gettc
 argument_list|(
 argument|const struct vdso_timehands *th
@@ -112,6 +132,43 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|__vdso_gettimekeep
+end_pragma
+
+begin_function
+name|int
+name|__vdso_gettimekeep
+parameter_list|(
+name|struct
+name|vdso_timekeep
+modifier|*
+modifier|*
+name|tk
+parameter_list|)
+block|{
+return|return
+operator|(
+name|_elf_aux_info
+argument_list|(
+name|AT_TIMEKEEP
+argument_list|,
+name|tk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tk
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

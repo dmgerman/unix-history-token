@@ -15,12 +15,6 @@ directive|define
 name|_DEV_ATH_AR5210DESC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"ah_desc.h"
-end_include
-
 begin_comment
 comment|/*  * Defintions for the DMA descriptors used by the Atheros  * AR5210/AR5211 and AR5110 Wireless Lan controller parts.  */
 end_comment
@@ -247,6 +241,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_FrmType_S
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_Frm_Normal
 value|0x00000000
 end_define
@@ -375,6 +376,13 @@ end_define
 begin_comment
 comment|/* lower 13bit of duration */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_RTSDuration_S
+value|19
+end_define
 
 begin_comment
 comment|/* RX ds_ctl1 */

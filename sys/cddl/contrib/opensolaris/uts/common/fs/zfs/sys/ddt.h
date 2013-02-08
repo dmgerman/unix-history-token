@@ -501,7 +501,7 @@ modifier|*
 name|walk
 parameter_list|)
 function_decl|;
-name|uint64_t
+name|int
 function_decl|(
 modifier|*
 name|ddt_op_count
@@ -513,6 +513,10 @@ name|os
 parameter_list|,
 name|uint64_t
 name|object
+parameter_list|,
+name|uint64_t
+modifier|*
+name|count
 parameter_list|)
 function_decl|;
 block|}
@@ -569,7 +573,7 @@ name|dde
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint64_t
+name|int
 name|ddt_object_count
 parameter_list|(
 name|ddt_t
@@ -582,7 +586,11 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|cls
+name|class
+parameter_list|,
+name|uint64_t
+modifier|*
+name|count
 parameter_list|)
 function_decl|;
 specifier|extern

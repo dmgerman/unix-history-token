@@ -1442,22 +1442,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/*  * DEFERRED_FREE must be large enough that regular blocks are not  * deferred.  XXX so can't we change it back to 1?  */
-define|#
-directive|define
-name|SYNC_PASS_DEFERRED_FREE
-value|2
-comment|/* defer frees after this pass */
-define|#
-directive|define
-name|SYNC_PASS_DONT_COMPRESS
-value|4
-comment|/* don't compress after this pass */
-define|#
-directive|define
-name|SYNC_PASS_REWRITE
-value|1
-comment|/* rewrite new bps after this pass */
 comment|/* spa namespace global mutex */
 specifier|extern
 name|kmutex_t

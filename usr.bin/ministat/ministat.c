@@ -3919,7 +3919,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ministat [-C column] [-c confidence] [-d delimiter(s)] [-ns] [-w width] [file [file ...]]\n"
+literal|"Usage: ministat [-C column] [-c confidence] [-d delimiter(s)] [-Ans] [-w width] [file [file ...]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3967,6 +3967,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"}\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-A : print statistics only. suppress the graph.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -4077,6 +4084,11 @@ name|termwidth
 init|=
 literal|74
 decl_stmt|;
+name|int
+name|suppress_plot
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|isatty
@@ -4161,7 +4173,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"C:c:d:snw:"
+literal|"AC:c:d:snw:"
 argument_list|)
 operator|)
 operator|!=
@@ -4173,6 +4185,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|suppress_plot
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'C'
 case|:
@@ -4504,6 +4524,9 @@ if|if
 condition|(
 operator|!
 name|flag_n
+operator|&&
+operator|!
+name|suppress_plot
 condition|)
 block|{
 name|SetupPlot

@@ -2566,7 +2566,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-name|CAM_PRIORITY_DEV
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6870,6 +6870,12 @@ operator|||
 name|softc
 operator|->
 name|tur
+operator|||
+name|periph
+operator|->
+name|immediate_priority
+operator|!=
+name|CAM_PRIORITY_NONE
 condition|)
 block|{
 comment|/* Have more work to do, so ensure we stay scheduled */
@@ -6877,7 +6883,14 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
+name|min
+argument_list|(
 name|CAM_PRIORITY_NORMAL
+argument_list|,
+name|periph
+operator|->
+name|immediate_priority
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -14659,6 +14672,12 @@ operator|!
 name|softc
 operator|->
 name|tur
+operator|&&
+name|softc
+operator|->
+name|outstanding_cmds
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -14681,7 +14700,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-name|CAM_PRIORITY_DEV
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}

@@ -41,6 +41,7 @@ end_include
 
 begin_function
 name|int
+name|__noinline
 name|t1_bkpt_t
 parameter_list|()
 block|{

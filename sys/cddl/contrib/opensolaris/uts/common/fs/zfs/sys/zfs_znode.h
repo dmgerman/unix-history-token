@@ -628,11 +628,6 @@ name|boolean_t
 name|z_is_sa
 decl_stmt|;
 comment|/* are we native sa? */
-comment|/* FreeBSD-specific field. */
-name|struct
-name|task
-name|z_task
-decl_stmt|;
 block|}
 name|znode_t
 typedef|;

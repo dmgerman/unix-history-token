@@ -391,12 +391,10 @@ name|ExposesReturnsTwice
 decl_stmt|;
 name|MachineFunction
 argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
+argument|const MachineFunction&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -405,8 +403,8 @@ specifier|const
 name|MachineFunction
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|MachineFunction
@@ -469,6 +467,13 @@ return|return
 name|Fn
 return|;
 block|}
+comment|/// getName - Return the name of the corresponding LLVM function.
+comment|///
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getFunctionNumber - Return a unique ID for the current function.
 comment|///
 name|unsigned

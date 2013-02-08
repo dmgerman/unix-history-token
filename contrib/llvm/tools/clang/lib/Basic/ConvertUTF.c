@@ -711,12 +711,6 @@ begin_comment
 comment|/* The interface converts a whole buffer to avoid function-call overhead.  * Constants have been gathered. Loops& conditionals have been removed as  * much as possible for efficiency, in favor of drop-through switches.  * (See "Note A" at the bottom of the file for equivalent code.)  * If your compiler supports it, the "isLegalUTF8" call can be turned  * into an inline function.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CLANG_NEEDS_THESE_ONE_DAY
-end_ifdef
-
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
@@ -1678,11 +1672,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
@@ -2125,6 +2114,10 @@ operator|--
 name|srcptr
 operator|)
 operator|)
+operator|<
+literal|0x80
+operator|||
+name|a
 operator|>
 literal|0xBF
 condition|)
@@ -2299,6 +2292,33 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
+comment|/*  * Exported function to return the total number of bytes in a codepoint  * represented in UTF-8, given the value of the first byte.  */
+end_comment
+
+begin_function
+name|unsigned
+name|getNumBytesForUTF8
+parameter_list|(
+name|UTF8
+name|first
+parameter_list|)
+block|{
+return|return
+name|trailingBytesForUTF8
+index|[
+name|first
+index|]
+operator|+
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* --------------------------------------------------------------------- */
+end_comment
+
+begin_comment
 comment|/*  * Exported function to return whether a UTF-8 string is legal or not.  * This is not used here; it's just exported.  */
 end_comment
 
@@ -2308,6 +2328,7 @@ name|isLegalUTF8String
 parameter_list|(
 specifier|const
 name|UTF8
+modifier|*
 modifier|*
 name|source
 parameter_list|,
@@ -2319,6 +2340,7 @@ parameter_list|)
 block|{
 while|while
 condition|(
+operator|*
 name|source
 operator|!=
 name|sourceEnd
@@ -2329,6 +2351,7 @@ name|length
 init|=
 name|trailingBytesForUTF8
 index|[
+operator|*
 operator|*
 name|source
 index|]
@@ -2341,11 +2364,13 @@ name|length
 operator|>
 name|sourceEnd
 operator|-
+operator|*
 name|source
 operator|||
 operator|!
 name|isLegalUTF8
 argument_list|(
+operator|*
 name|source
 argument_list|,
 name|length
@@ -2354,6 +2379,7 @@ condition|)
 return|return
 name|false
 return|;
+operator|*
 name|source
 operator|+=
 name|length

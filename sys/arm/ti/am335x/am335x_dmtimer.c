@@ -640,7 +640,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"AM335x Timecouter"
+literal|"AM335x Timecounter"
 block|,
 operator|.
 name|tc_get_timecount

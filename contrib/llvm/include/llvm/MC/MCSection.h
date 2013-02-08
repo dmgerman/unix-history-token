@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_decl_stmt
@@ -105,12 +105,10 @@ name|private
 label|:
 name|MCSection
 argument_list|(
-specifier|const
-name|MCSection
-operator|&
+argument|const MCSection&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -119,8 +117,8 @@ specifier|const
 name|MCSection
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 name|MCSection
@@ -222,19 +220,6 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MCSection
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

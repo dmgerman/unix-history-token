@@ -519,8 +519,8 @@ argument_list|)
 block|;
 comment|/// WriteSegmentLoadCommand - Write a segment load command.
 comment|///
-comment|/// \arg NumSections - The number of sections in this segment.
-comment|/// \arg SectionDataSize - The total size of the sections.
+comment|/// \param NumSections The number of sections in this segment.
+comment|/// \param SectionDataSize The total size of the sections.
 name|void
 name|WriteSegmentLoadCommand
 argument_list|(
@@ -744,6 +744,19 @@ name|void
 name|computeSectionAddresses
 argument_list|(
 specifier|const
+name|MCAssembler
+operator|&
+name|Asm
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|)
+block|;
+name|void
+name|markAbsoluteVariableSymbols
+argument_list|(
 name|MCAssembler
 operator|&
 name|Asm

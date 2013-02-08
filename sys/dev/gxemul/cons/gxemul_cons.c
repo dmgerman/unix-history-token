@@ -71,6 +71,12 @@ directive|include
 file|<ddb/ddb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpuregs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -245,13 +251,6 @@ begin_comment
 comment|/*  * I/O routines lifted from Deimos.  *  * XXXRW: Should be using FreeBSD's bus routines here, but they are not  * available until later in the boot.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MIPS_XKPHYS_UNCACHED_BASE
-value|0x9000000000000000
-end_define
-
 begin_typedef
 typedef|typedef
 name|uint64_t
@@ -278,9 +277,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+argument_list|(
 name|phys
-operator||
-name|MIPS_XKPHYS_UNCACHED_BASE
+argument_list|)
 operator|)
 return|;
 block|}

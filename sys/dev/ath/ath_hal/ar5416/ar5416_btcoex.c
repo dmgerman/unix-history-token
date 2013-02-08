@@ -670,7 +670,6 @@ comment|/*  * There is no antenna diversity for Owl, Kiwi, etc.  *  * Kite will 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ar5416BTCoexAntennaDiversity
 parameter_list|(
@@ -1285,14 +1284,13 @@ operator|->
 name|ah_btPriorityGpioSelect
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|AR_SREV_KITE
+comment|/* 		 * Configure the antenna diversity setup. 		 * It's a no-op for AR9287; AR9285 overrides this 		 * as required. 		 */
+name|AH5416
 argument_list|(
 name|ah
 argument_list|)
-condition|)
-name|ar5416BTCoexAntennaDiversity
+operator|->
+name|ah_btCoexSetDiversity
 argument_list|(
 name|ah
 argument_list|)

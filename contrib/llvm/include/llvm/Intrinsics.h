@@ -185,6 +185,10 @@ comment|///
 name|AttrListPtr
 name|getAttributes
 parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
 name|ID
 name|id
 parameter_list|)

@@ -386,6 +386,18 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+name|void
+name|EmitMapTable
+parameter_list|(
+name|RecordKeeper
+modifier|&
+name|RK
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

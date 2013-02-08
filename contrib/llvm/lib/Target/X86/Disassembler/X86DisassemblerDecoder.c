@@ -499,6 +499,52 @@ operator|)
 index|]
 return|;
 case|case
+name|MODRM_SPLITMISC
+case|:
+if|if
+condition|(
+name|modFromModRM
+argument_list|(
+name|modRM
+argument_list|)
+operator|==
+literal|0x3
+condition|)
+return|return
+name|modRMTable
+index|[
+name|dec
+operator|->
+name|instructionIDs
+operator|+
+operator|(
+name|modRM
+operator|&
+literal|0x3f
+operator|)
+operator|+
+literal|8
+index|]
+return|;
+return|return
+name|modRMTable
+index|[
+name|dec
+operator|->
+name|instructionIDs
+operator|+
+operator|(
+operator|(
+name|modRM
+operator|&
+literal|0x38
+operator|)
+operator|>>
+literal|3
+operator|)
+index|]
+return|;
+case|case
 name|MODRM_FULL
 case|:
 return|return
@@ -663,7 +709,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|static int name(struct InternalInstruction* insn, type* ptr) {  \     type combined = 0;                                            \     unsigned offset;                                              \     for (offset = 0; offset< sizeof(type); ++offset) {           \       uint8_t byte;                                               \       int ret = insn->reader(insn->readerArg,                     \&byte,                               \                              insn->readerCursor + offset);        \       if (ret)                                                    \         return ret;                                               \       combined = combined | ((type)byte<< ((type)offset * 8));   \     }                                                             \     *ptr = combined;                                              \     insn->readerCursor += sizeof(type);                           \     return 0;                                                     \   }
+value|static int name(struct InternalInstruction* insn, type* ptr) {  \     type combined = 0;                                            \     unsigned offset;                                              \     for (offset = 0; offset< sizeof(type); ++offset) {           \       uint8_t byte;                                               \       int ret = insn->reader(insn->readerArg,                     \&byte,                               \                              insn->readerCursor + offset);        \       if (ret)                                                    \         return ret;                                               \       combined = combined | ((uint64_t)byte<< (offset * 8));     \     }                                                             \     *ptr = combined;                                              \     insn->readerCursor += sizeof(type);                           \     return 0;                                                     \   }
 end_define
 
 begin_comment
@@ -2717,7 +2763,7 @@ end_comment
 begin_function
 specifier|static
 name|BOOL
-name|is16BitEquvalent
+name|is16BitEquivalent
 parameter_list|(
 specifier|const
 name|char
@@ -2895,6 +2941,7 @@ name|InternalInstruction
 modifier|*
 name|insn
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|miiArg
@@ -3403,7 +3450,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is16BitEquvalent
+name|is16BitEquivalent
 argument_list|(
 name|specName
 argument_list|,
@@ -6232,6 +6279,7 @@ parameter_list|,
 name|byteReader_t
 name|reader
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|readerArg
@@ -6243,6 +6291,7 @@ name|void
 modifier|*
 name|loggerArg
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|miiArg

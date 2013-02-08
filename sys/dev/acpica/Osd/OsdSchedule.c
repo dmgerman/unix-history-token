@@ -665,6 +665,9 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|int
 name|pri
 decl_stmt|;
@@ -737,8 +740,8 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|return_ACPI_STATUS
-argument_list|(
+name|status
+operator|=
 name|acpi_task_enqueue
 argument_list|(
 name|pri
@@ -747,6 +750,10 @@ name|Function
 argument_list|,
 name|Context
 argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|status
 argument_list|)
 expr_stmt|;
 block|}

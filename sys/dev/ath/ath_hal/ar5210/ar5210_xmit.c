@@ -2245,7 +2245,11 @@ name|ads
 operator|->
 name|ds_ctl1
 operator||=
+operator|(
 name|rtsctsDuration
+operator|<<
+name|AR_RTSDuration_S
+operator|)
 operator|&
 name|AR_RTSDuration
 expr_stmt|;

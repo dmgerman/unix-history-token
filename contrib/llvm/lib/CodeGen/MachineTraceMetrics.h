@@ -209,6 +209,12 @@ directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/TargetSchedule.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -262,11 +268,6 @@ operator|*
 name|TRI
 block|;
 specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
-block|;
-specifier|const
 name|MachineRegisterInfo
 operator|*
 name|MRI
@@ -275,6 +276,9 @@ specifier|const
 name|MachineLoopInfo
 operator|*
 name|Loops
+block|;
+name|TargetSchedModel
+name|SchedModel
 block|;
 name|public
 operator|:
@@ -549,6 +553,38 @@ name|HasValidInstrHeights
 operator|=
 name|false
 block|; }
+comment|/// Determine if this block belongs to the same trace as TBI and comes
+comment|/// before it in the trace.
+comment|/// Also returns true when TBI == this.
+name|bool
+name|isEarlierInSameTrace
+argument_list|(
+argument|const TraceBlockInfo&TBI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|hasValidDepth
+argument_list|()
+operator|&&
+name|TBI
+operator|.
+name|hasValidDepth
+argument_list|()
+operator|&&
+name|Head
+operator|==
+name|TBI
+operator|.
+name|Head
+operator|&&
+name|InstrDepth
+operator|<=
+name|TBI
+operator|.
+name|InstrDepth
+return|;
+block|}
 comment|// Data-dependency-related information. Per-instruction depth and height
 comment|// are computed from data dependencies in the current trace, using
 comment|// itinerary data.
@@ -840,18 +876,11 @@ block|;
 name|void
 name|addLiveIns
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|DefMI
+argument|const MachineInstr *DefMI
 argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
-operator|>
-name|Trace
+argument|unsigned DefOp
+argument_list|,
+argument|ArrayRef<const MachineBasicBlock*> Trace
 argument_list|)
 block|;
 name|protected

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#46 $  */
+comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bin/auditd/auditd.c#50 $  */
 end_comment
 
 begin_include
@@ -229,7 +229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * LaunchD flag (Mac OS X and, maybe, FreeBSD only.)  See launchd(8) and   * http://wiki.freebsd.org/launchd for more information.  *  *      In order for auditd to work "on demand" with launchd(8) it can't:  *              call daemon(3)  *              call fork and having the parent process exit  *              change uids or gids.  *              set up the current working directory or chroot.  *              set the session id  *              change stdio to /dev/null.  *              call setrusage(2)  *              call setpriority(2)  *              Ignore SIGTERM.  *      auditd (in 'launchd mode') is launched on demand so it must catch  *      SIGTERM to exit cleanly.  */
+comment|/*  * LaunchD flag (Mac OS X and, maybe, FreeBSD only.)  See launchd(8) and  * http://wiki.freebsd.org/launchd for more information.  *  *	In order for auditd to work "on demand" with launchd(8) it can't:  *		call daemon(3)  *		call fork and having the parent process exit  *		change uids or gids.  *		set up the current working directory or chroot.  *		set the session id  *		change stdio to /dev/null.  *		call setrusage(2)  *		call setpriority(2)  *		Ignore SIGTERM.  *	auditd (in 'launchd mode') is launched on demand so it must catch  *	SIGTERM to exit cleanly.  */
 end_comment
 
 begin_decl_stmt
@@ -406,9 +406,6 @@ name|char
 modifier|*
 name|oldname
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 comment|/* If lastfile is NULL try to get it from the 'current' link.  */
 if|if
 condition|(
@@ -428,24 +425,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|lastfile
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
 name|oldname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|strdup
 argument_list|(
-name|len
+name|lastfile
 argument_list|)
 expr_stmt|;
 if|if
@@ -460,15 +444,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|strlcpy
-argument_list|(
-name|oldname
-argument_list|,
-name|lastfile
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 comment|/* Rename the last file -- append timestamp. */
 if|if
 condition|(
@@ -497,7 +472,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rename
+name|auditd_rename
 argument_list|(
 name|oldname
 argument_list|,
@@ -517,7 +492,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/*  				 * Remove the 'current' symlink since the link 				 * is now invalid.  				 */
+comment|/* 				 * Remove the 'current' symlink since the link 				 * is now invalid. 				 */
 operator|(
 name|void
 operator|)
@@ -593,11 +568,16 @@ decl_stmt|;
 name|char
 modifier|*
 name|newfile
+decl_stmt|,
+modifier|*
+name|name
 decl_stmt|;
 name|char
 name|TS
 index|[
 name|TIMESTAMP_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|time_t
@@ -611,7 +591,10 @@ name|tt
 argument_list|,
 name|TS
 argument_list|,
-name|TIMESTAMP_LEN
+sizeof|sizeof
+argument_list|(
+name|TS
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -622,6 +605,69 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* 	 * If prefix and suffix are the same, it means that records are 	 * being produced too fast. We don't want to rename now, because 	 * next trail file can get the same name and once that one is 	 * terminated also within one second it will overwrite the current 	 * one. Just keep writing to the same trail and wait for the next 	 * trigger from the kernel. 	 * FREEBSD KERNEL WAS UPDATED TO KEEP SENDING TRIGGERS, WHICH MIGHT 	 * NOT BE THE CASE FOR OTHER OSES. 	 * If the kernel will not keep sending triggers, trail file will not 	 * be terminated. 	 */
+if|if
+condition|(
+name|lastfile
+operator|==
+name|NULL
+condition|)
+block|{
+name|name
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|name
+operator|=
+name|strrchr
+argument_list|(
+name|lastfile
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+operator|!=
+name|NULL
+condition|)
+name|name
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+name|TS
+argument_list|,
+name|TIMESTAMP_LEN
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|auditd_log_debug
+argument_list|(
+literal|"Not ready to terminate trail file yet."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|err
 operator|=
 name|auditd_swap_trail
@@ -856,6 +902,34 @@ block|{
 name|int
 name|err
 decl_stmt|;
+comment|/* Configure trail files distribution. */
+name|err
+operator|=
+name|auditd_set_dist
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|auditd_log_err
+argument_list|(
+literal|"auditd_set_dist() %s: %m"
+argument_list|,
+name|auditd_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|auditd_log_debug
+argument_list|(
+literal|"Configured trail files distribution."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|do_trail_file
@@ -920,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close auditd pid file and trigger mechanism.   */
+comment|/*  * Close auditd pid file and trigger mechanism.  */
 end_comment
 
 begin_function
@@ -1013,6 +1087,8 @@ name|char
 name|TS
 index|[
 name|TIMESTAMP_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -1096,7 +1172,10 @@ name|tt
 argument_list|,
 name|TS
 argument_list|,
-name|TIMESTAMP_LEN
+sizeof|sizeof
+argument_list|(
+name|TS
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -1528,7 +1607,7 @@ operator|=
 name|auditd_get_state
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Message processing is done here.  	 */
+comment|/* 	 * Message processing is done here. 	 */
 switch|switch
 condition|(
 name|trigger
@@ -2055,7 +2134,7 @@ argument_list|(
 literal|"Set audit trail size in kernel."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Configure audit trail volume minimum free percentage of blocks in  	 * kernel. 	 */
+comment|/* 	 * Configure audit trail volume minimum free percentage of blocks in 	 * kernel. 	 */
 name|err
 operator|=
 name|auditd_set_minfree
@@ -2088,7 +2167,7 @@ argument_list|(
 literal|"Set audit trail min free percent in kernel."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Configure host address in the audit kernel information.  	 */
+comment|/* 	 * Configure host address in the audit kernel information. 	 */
 name|err
 operator|=
 name|auditd_set_host
@@ -2443,7 +2522,7 @@ block|}
 name|setup
 argument_list|()
 expr_stmt|;
-comment|/* 	 * auditd_wait_for_events() shouldn't return unless something is wrong.  	 */
+comment|/* 	 * auditd_wait_for_events() shouldn't return unless something is wrong. 	 */
 name|auditd_wait_for_events
 argument_list|()
 expr_stmt|;

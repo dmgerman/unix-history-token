@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: realpath.c,v 1.2 2010/04/21 17:47:49 sjg Exp $ */
+comment|/* $Id: realpath.c,v 1.3 2013/01/25 17:06:09 sjg Exp $ */
 end_comment
 
 begin_comment
-comment|/* from: $NetBSD: getcwd.c,v 1.45 2007/10/26 19:48:14 christos Exp $	*/
+comment|/* from: $NetBSD: getcwd.c,v 1.53 2012/06/21 23:29:23 enami Exp $	*/
 end_comment
 
 begin_comment
@@ -109,8 +109,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__restrict
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__restrict
+end_define
+
 begin_comment
-comment|/*  * char *realpath(const char *path, char resolved[MAXPATHLEN]);  *  * Find the real name of path, by removing all ".", ".." and symlink  * components.  Returns (resolved) on success, or (NULL) on failure,  * in which case the path which caused trouble is left in (resolved).  */
+comment|/* restrict */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * char *realpath(const char *path, char *resolved);  *  * Find the real name of path, by removing all ".", ".." and symlink  * components.  Returns (resolved) on success, or (NULL) on failure,  * in which case the path which caused trouble is left in (resolved).  */
 end_comment
 
 begin_function
@@ -121,10 +142,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|path
 parameter_list|,
 name|char
 modifier|*
+name|__restrict
 name|resolved
 parameter_list|)
 block|{
@@ -136,8 +159,6 @@ name|int
 name|idx
 init|=
 literal|0
-decl_stmt|,
-name|n
 decl_stmt|,
 name|nlnk
 init|=
@@ -159,27 +180,63 @@ index|]
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|,
+modifier|*
+name|fres
 decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|ssize_t
+name|n
+decl_stmt|;
+comment|/* POSIX sez we must test for this */
 if|if
 condition|(
-operator|!
-name|path
-operator|||
-operator|!
-name|resolved
-operator|||
 name|path
 operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|resolved
+operator|==
+name|NULL
+condition|)
+block|{
+name|fres
+operator|=
+name|resolved
+operator|=
+name|malloc
+argument_list|(
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|resolved
+operator|==
+name|NULL
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
+block|}
+else|else
+name|fres
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Build real path one by one with paying an attention to ., 	 * .. and symbolic link. 	 */
 comment|/* 	 * `p' is where we'll put a new component with prepending 	 * a delimiter. 	 */
 name|p
@@ -191,23 +248,21 @@ condition|(
 operator|*
 name|path
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 operator|*
 name|p
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|errno
 operator|=
 name|ENOENT
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* If relative path, start from current working directory. */
 if|if
@@ -245,13 +300,11 @@ index|[
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|len
 operator|=
@@ -289,7 +342,7 @@ condition|(
 operator|*
 name|path
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 if|if
@@ -307,12 +360,10 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|resolved
-operator|)
 return|;
 block|}
 comment|/* Find the end of this component. */
@@ -334,7 +385,7 @@ operator|&&
 operator|*
 name|q
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 do|;
 comment|/* Test . or .. */
@@ -396,7 +447,7 @@ name|p
 operator|!=
 literal|'/'
 condition|)
-empty_stmt|;
+continue|continue;
 name|path
 operator|=
 name|q
@@ -443,13 +494,11 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|p
 index|[
@@ -483,7 +532,7 @@ operator|-
 name|path
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * If this component is a symlink, toss it and prepend link 	 * target to unresolved path. 	 */
 if|if
@@ -499,13 +548,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|S_ISLNK
@@ -528,11 +573,9 @@ name|errno
 operator|=
 name|ELOOP
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|n
 operator|=
@@ -562,11 +605,9 @@ name|n
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|n
@@ -578,11 +619,9 @@ name|errno
 operator|=
 name|ENOENT
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Append unresolved path to link target and switch to it. */
 if|if
@@ -613,11 +652,9 @@ name|errno
 operator|=
 name|ENAMETOOLONG
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|memcpy
 argument_list|(
@@ -684,11 +721,9 @@ name|errno
 operator|=
 name|ENOTDIR
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Advance both resolved and unresolved path. */
 name|p
@@ -706,6 +741,16 @@ expr_stmt|;
 goto|goto
 name|loop
 goto|;
+name|out
+label|:
+name|free
+argument_list|(
+name|fres
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 

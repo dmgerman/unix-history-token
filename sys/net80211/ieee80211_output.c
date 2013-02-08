@@ -950,6 +950,27 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_OUTPUT
+argument_list|,
+literal|"forward frame from DS SA(%6D), DA(%6D)\n"
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+literal|":"
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
 name|ieee80211_mesh_proxy_check
 argument_list|(
 name|vap
@@ -2563,7 +2584,7 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2981,7 +3002,7 @@ name|m
 argument_list|,
 name|hdrlen
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4912,7 +4933,7 @@ name|hdrspace
 operator|+
 name|meshhdrsize
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6289,7 +6310,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -6301,7 +6322,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -8378,7 +8399,7 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11602,7 +11623,7 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -11766,7 +11787,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -11907,7 +11928,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -13386,7 +13407,7 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|KASSERT

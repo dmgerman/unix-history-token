@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cond.c,v 1.64 2012/06/12 19:21:50 joerg Exp $	*/
+comment|/*	$NetBSD: cond.c,v 1.67 2012/11/03 13:59:27 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: cond.c,v 1.64 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: cond.c,v 1.67 2012/11/03 13:59:27 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cond.c,v 1.64 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: cond.c,v 1.67 2012/11/03 13:59:27 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3786,6 +3786,11 @@ directive|define
 name|MAXIF
 value|128
 comment|/* maximum depth of .if'ing */
+define|#
+directive|define
+name|MAXIF_BUMP
+value|32
+comment|/* how much to grow by */
 enum|enum
 name|if_states
 block|{
@@ -3808,16 +3813,17 @@ enum|;
 specifier|static
 name|enum
 name|if_states
+modifier|*
 name|cond_state
-index|[
-name|MAXIF
-operator|+
-literal|1
-index|]
 init|=
-block|{
-name|IF_ACTIVE
-block|}
+name|NULL
+decl_stmt|;
+specifier|static
+name|unsigned
+name|int
+name|max_if_depth
+init|=
+name|MAXIF
 decl_stmt|;
 specifier|const
 name|struct
@@ -3843,6 +3849,33 @@ name|level
 operator|=
 name|PARSE_FATAL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cond_state
+condition|)
+block|{
+name|cond_state
+operator|=
+name|bmake_malloc
+argument_list|(
+name|max_if_depth
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cond_state
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cond_state
+index|[
+literal|0
+index|]
+operator|=
+name|IF_ACTIVE
+expr_stmt|;
+block|}
 comment|/* skip leading character (the '.') and any whitespace */
 for|for
 control|(
@@ -3924,15 +3957,6 @@ comment|/* Return state for previous conditional */
 name|cond_depth
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|cond_depth
-operator|>
-name|MAXIF
-condition|)
-return|return
-name|COND_SKIP
-return|;
 return|return
 name|cond_state
 index|[
@@ -3982,15 +4006,6 @@ return|return
 name|COND_PARSE
 return|;
 block|}
-if|if
-condition|(
-name|cond_depth
-operator|>
-name|MAXIF
-condition|)
-return|return
-name|COND_SKIP
-return|;
 name|state
 operator|=
 name|cond_state
@@ -4162,16 +4177,6 @@ return|return
 name|COND_PARSE
 return|;
 block|}
-if|if
-condition|(
-name|cond_depth
-operator|>
-name|MAXIF
-condition|)
-comment|/* Error reported when we saw the .if ... */
-return|return
-name|COND_SKIP
-return|;
 name|state
 operator|=
 name|cond_state
@@ -4234,25 +4239,32 @@ comment|/* Normal .if */
 if|if
 condition|(
 name|cond_depth
+operator|+
+literal|1
 operator|>=
-name|MAXIF
+name|max_if_depth
 condition|)
 block|{
-name|cond_depth
-operator|++
+comment|/* 	     * This is rare, but not impossible. 	     * In meta mode, dirdeps.mk (only runs at level 0) 	     * can need more than the default. 	     */
+name|max_if_depth
+operator|+=
+name|MAXIF_BUMP
 expr_stmt|;
-name|Parse_Error
+name|cond_state
+operator|=
+name|bmake_realloc
 argument_list|(
-name|PARSE_FATAL
+name|cond_state
 argument_list|,
-literal|"Too many nested if's. %d max."
-argument_list|,
-name|MAXIF
+name|max_if_depth
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cond_state
+argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|COND_SKIP
-return|;
 block|}
 name|state
 operator|=

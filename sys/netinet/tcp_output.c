@@ -609,7 +609,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Wrapper for the TCP established ouput helper hook.  */
+comment|/*  * Wrapper for the TCP established output helper hook.  */
 end_comment
 
 begin_function
@@ -3076,7 +3076,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3120,7 +3120,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3377,7 +3377,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

@@ -289,11 +289,6 @@ block|;
 name|bool
 name|satisfied
 block|;
-specifier|const
-name|ExplodedNode
-operator|*
-name|StoreSite
-block|;
 name|public
 operator|:
 comment|/// \brief Convenience method to create a visitor given only the MemRegion.
@@ -350,12 +345,7 @@ argument_list|)
 block|,
 name|satisfied
 argument_list|(
-name|false
-argument_list|)
-block|,
-name|StoreSite
-argument_list|(
-literal|0
+argument|false
 argument_list|)
 block|{
 name|assert
@@ -452,6 +442,15 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+block|;
+comment|/// Return the tag associated with this visitor.  This tag will be used
+comment|/// to make all PathDiagnosticPieces created by this visitor.
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getTag
+argument_list|()
 block|;
 name|PathDiagnosticPiece
 operator|*
@@ -566,6 +565,15 @@ operator|&
 name|x
 argument_list|)
 block|;   }
+comment|/// Return the tag associated with this visitor.  This tag will be used
+comment|/// to make all PathDiagnosticPieces created by this visitor.
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getTag
+argument_list|()
+block|;
 name|virtual
 name|PathDiagnosticPiece
 operator|*
@@ -750,11 +758,73 @@ name|prunable
 argument_list|)
 block|; }
 block|;
-name|namespace
-name|bugreporter
+comment|/// \brief When a region containing undefined value or '0' value is passed
+comment|/// as an argument in a call, marks the call as interesting.
+comment|///
+comment|/// As a result, BugReporter will not prune the path through the function even
+comment|/// if the region's contents are not modified/accessed by the call.
+name|class
+name|UndefOrNullArgVisitor
+operator|:
+name|public
+name|BugReporterVisitorImpl
+operator|<
+name|UndefOrNullArgVisitor
+operator|>
 block|{
+comment|/// The interesting memory region this visitor is tracking.
+specifier|const
+name|MemRegion
+operator|*
+name|R
+block|;
+name|public
+operator|:
+name|UndefOrNullArgVisitor
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|InR
+argument_list|)
+operator|:
+name|R
+argument_list|(
+argument|InR
+argument_list|)
+block|{}
+name|virtual
 name|void
-name|addTrackNullOrUndefValueVisitor
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|{
+specifier|static
+name|int
+name|Tag
+operator|=
+literal|0
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+operator|&
+name|Tag
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|R
+argument_list|)
+block|;   }
+name|PathDiagnosticPiece
+operator|*
+name|VisitNode
 argument_list|(
 specifier|const
 name|ExplodedNode
@@ -762,13 +832,47 @@ operator|*
 name|N
 argument_list|,
 specifier|const
-name|Stmt
+name|ExplodedNode
 operator|*
-name|S
+name|PrevN
+argument_list|,
+name|BugReporterContext
+operator|&
+name|BRC
 argument_list|,
 name|BugReport
-operator|*
-name|R
+operator|&
+name|BR
+argument_list|)
+block|; }
+block|;
+name|namespace
+name|bugreporter
+block|{
+comment|/// Attempts to add visitors to trace a null or undefined value back to its
+comment|/// point of origin, whether it is a symbol constrained to null or an explicit
+comment|/// assignment.
+comment|///
+comment|/// \param N A node "downstream" from the evaluation of the statement.
+comment|/// \param S The statement whose value is null or undefined.
+comment|/// \param R The bug report to which visitors should be attached.
+comment|/// \param IsArg Whether the statement is an argument to an inlined function.
+comment|///              If this is the case, \p N \em must be the CallEnter node for
+comment|///              the function.
+comment|///
+comment|/// \return Whether or not the function was able to add visitors for this
+comment|///         statement. Note that returning \c true does not actually imply
+comment|///         that any visitors were added.
+name|bool
+name|trackNullOrUndefValue
+argument_list|(
+argument|const ExplodedNode *N
+argument_list|,
+argument|const Stmt *S
+argument_list|,
+argument|BugReport&R
+argument_list|,
+argument|bool IsArg = false
 argument_list|)
 block|;
 specifier|const
@@ -803,7 +907,16 @@ name|ExplodedNode
 operator|*
 name|N
 argument_list|)
-block|;  }
+block|;
+name|bool
+name|isDeclRefExprToReference
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|)
+block|;   }
 comment|// end namespace clang
 block|}
 comment|// end namespace ento

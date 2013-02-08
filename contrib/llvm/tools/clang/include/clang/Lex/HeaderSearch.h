@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -122,6 +128,9 @@ name|FileEntry
 decl_stmt|;
 name|class
 name|FileManager
+decl_stmt|;
+name|class
+name|HeaderSearchOptions
 decl_stmt|;
 name|class
 name|IdentifierInfo
@@ -345,13 +354,18 @@ name|IsUserSpecifiedSystemFramework
 decl_stmt|;
 block|}
 struct|;
+comment|/// \brief Header-search options used to initialize this header search.
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|HeaderSearchOptions
+operator|>
+name|HSOpts
+expr_stmt|;
 name|FileManager
 modifier|&
 name|FileMgr
-decl_stmt|;
-name|DiagnosticsEngine
-modifier|&
-name|Diags
 decl_stmt|;
 comment|/// \#include search path information.  Requests for \#include "x" search the
 comment|/// directory of the \#including file first, then each directory in SearchDirs
@@ -553,18 +567,12 @@ decl_stmt|,
 name|NumSubFrameworkLookups
 decl_stmt|;
 comment|// HeaderSearch doesn't support default or copy construction.
-name|explicit
 name|HeaderSearch
-parameter_list|()
-function_decl|;
-name|explicit
-name|HeaderSearch
-parameter_list|(
-specifier|const
-name|HeaderSearch
-modifier|&
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const HeaderSearch&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 name|void
 name|operator
 init|=
@@ -573,6 +581,7 @@ specifier|const
 name|HeaderSearch
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|friend
 name|class
@@ -582,6 +591,14 @@ name|public
 label|:
 name|HeaderSearch
 argument_list|(
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|HeaderSearchOptions
+operator|>
+name|HSOpts
+argument_list|,
 name|FileManager
 operator|&
 name|FM
@@ -605,6 +622,19 @@ operator|~
 name|HeaderSearch
 argument_list|()
 expr_stmt|;
+comment|/// \brief Retrieve the header-search options with which this header search
+comment|/// was initialized.
+name|HeaderSearchOptions
+operator|&
+name|getHeaderSearchOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|HSOpts
+return|;
+block|}
 name|FileManager
 operator|&
 name|getFileMgr
@@ -876,6 +906,24 @@ block|{
 return|return
 name|ModuleCachePath
 return|;
+block|}
+comment|/// \brief Consider modules when including files from this directory.
+name|void
+name|setDirectoryHasModuleMap
+parameter_list|(
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
+parameter_list|)
+block|{
+name|DirectoryHasModuleMap
+index|[
+name|Dir
+index|]
+operator|=
+name|true
+expr_stmt|;
 block|}
 comment|/// \brief Forget everything we know about headers so far.
 name|void

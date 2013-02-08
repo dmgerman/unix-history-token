@@ -3474,6 +3474,12 @@ return|;
 comment|/* We demand that serdev devices use filter_only interrupts. */
 if|if
 condition|(
+name|port
+operator|->
+name|p_type
+operator|==
+name|PUC_TYPE_SERIAL
+operator|&&
 name|ihand
 operator|!=
 name|NULL

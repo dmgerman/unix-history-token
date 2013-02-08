@@ -11749,7 +11749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Fully release a reserved resource  *  * Fully releases a resouce reserved via resource_list_reserve().  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device whose reserved resource is being released  * @param type		the type of resource to release  * @param rid		the resource identifier  * @param res		the resource to release  *   * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
+comment|/**  * @brief Fully release a reserved resource  *  * Fully releases a resource reserved via resource_list_reserve().  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device whose reserved resource is being released  * @param type		the type of resource to release  * @param rid		the resource identifier  * @param res		the resource to release  *   * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
 end_comment
 
 begin_function

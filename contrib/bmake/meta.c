@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.25 2012/06/27 17:22:58 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.26 2013/01/19 04:23:37 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -3712,7 +3712,7 @@ modifier|*
 name|fp
 decl_stmt|;
 name|Boolean
-name|ignoreOODATE
+name|needOODATE
 init|=
 name|FALSE
 decl_stmt|;
@@ -5172,7 +5172,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|ignoreOODATE
+name|needOODATE
 condition|)
 block|{
 if|if
@@ -5184,7 +5184,7 @@ argument_list|,
 literal|"$?"
 argument_list|)
 condition|)
-name|ignoreOODATE
+name|needOODATE
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5220,14 +5220,14 @@ index|]
 operator|==
 literal|'$'
 condition|)
-name|ignoreOODATE
+name|needOODATE
 operator|=
 name|TRUE
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|ignoreOODATE
+name|needOODATE
 operator|&&
 name|DEBUG
 argument_list|(
@@ -5384,7 +5384,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ignoreOODATE
+name|needOODATE
 operator|&&
 operator|!
 operator|(
@@ -5637,17 +5637,10 @@ if|if
 condition|(
 name|oodate
 operator|&&
-name|ignoreOODATE
+name|needOODATE
 condition|)
 block|{
-comment|/* 	 * Target uses .OODATE, so we need to re-compute it. 	 * We need to clean up what Make_DoAllVar() did. 	 */
-name|Var_Delete
-argument_list|(
-name|ALLSRC
-argument_list|,
-name|gn
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Target uses .OODATE which is empty; or we wouldn't be here. 	 * We have decided it is oodate, so .OODATE needs to be set. 	 * All we can sanely do is set it to .ALLSRC. 	 */
 name|Var_Delete
 argument_list|(
 name|OODATE
@@ -5655,12 +5648,33 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
+name|Var_Set
+argument_list|(
+name|OODATE
+argument_list|,
+name|Var_Value
+argument_list|(
+name|ALLSRC
+argument_list|,
 name|gn
-operator|->
-name|flags
-operator|&=
-operator|~
-name|DONE_ALLSRC
+argument_list|,
+operator|&
+name|cp
+argument_list|)
+argument_list|,
+name|gn
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+name|free
+argument_list|(
+name|cp
+argument_list|)
 expr_stmt|;
 block|}
 return|return

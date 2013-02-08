@@ -782,6 +782,12 @@ begin_comment
 comment|/*   * Device driver for the Intel StrataFlash NOR flash device.  This  * implementation is known to work with 256Mb instances of the device, but may  * also work with other 64/128/512Mb parts without much work.  Multiple  * device instances should be used when multiple parts are in the same  * physical package, due to variable block size support in the StrataFlash  * part.  */
 end_comment
 
+begin_decl_stmt
+name|devclass_t
+name|isf_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|uint16_t

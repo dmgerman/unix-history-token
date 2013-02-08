@@ -224,6 +224,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_mib.h>
 end_include
 

@@ -1795,8 +1795,6 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
-name|MNTK_MPSAFE
-operator||
 name|MNTK_LOOKUP_SHARED
 operator||
 name|MNTK_EXTENDED_SHARED

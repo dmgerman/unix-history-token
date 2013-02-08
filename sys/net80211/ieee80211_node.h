@@ -699,6 +699,15 @@ name|uint8_t
 name|ni_mltval
 decl_stmt|;
 comment|/* link mesh timer value */
+name|struct
+name|callout
+name|ni_mlhtimer
+decl_stmt|;
+comment|/* link mesh backoff timer */
+name|uint8_t
+name|ni_mlhcnt
+decl_stmt|;
+comment|/* link mesh holding counter */
 comment|/* 11n state */
 name|uint16_t
 name|ni_htcap

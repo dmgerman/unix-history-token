@@ -186,7 +186,8 @@ name|MCSection
 modifier|*
 name|CompactUnwindSection
 decl_stmt|;
-comment|/// DwarfAccelNamesSection, DwarfAccelObjCSection
+comment|/// DwarfAccelNamesSection, DwarfAccelObjCSection,
+comment|/// DwarfAccelNamespaceSection, DwarfAccelTypesSection -
 comment|/// If we use the DWARF accelerated hash tables then we want toe emit these
 comment|/// sections.
 specifier|const

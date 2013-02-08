@@ -560,7 +560,10 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1597,6 +1600,8 @@ name|kp
 operator|->
 name|ki_comm
 argument_list|,
+name|NULL
+argument_list|,
 name|MAXCOMLEN
 argument_list|)
 expr_stmt|;
@@ -2156,6 +2161,8 @@ argument_list|,
 name|dkp
 operator|->
 name|ki_comm
+argument_list|,
+name|NULL
 argument_list|,
 name|MAXCOMLEN
 argument_list|)

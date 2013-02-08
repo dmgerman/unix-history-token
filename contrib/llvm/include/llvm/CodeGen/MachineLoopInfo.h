@@ -275,16 +275,14 @@ specifier|const
 name|MachineLoopInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|MachineLoopInfo
 argument_list|(
-specifier|const
-name|MachineLoopInfo
-operator|&
+argument|const MachineLoopInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|public
 operator|:
 specifier|static

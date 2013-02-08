@@ -857,7 +857,7 @@ name|NG_ATMLLC_HEADER_LEN
 operator|+
 literal|2
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -979,7 +979,7 @@ name|NG_ATMLLC_HEADER_LEN
 operator|+
 literal|3
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

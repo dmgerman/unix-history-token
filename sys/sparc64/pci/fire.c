@@ -1193,7 +1193,6 @@ specifier|static
 specifier|const
 name|struct
 name|fire_desc
-specifier|const
 name|fire_compats
 index|[]
 init|=

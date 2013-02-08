@@ -205,6 +205,20 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
+comment|/// Adjust SP by Amount bytes.
+name|void
+name|adjustStackPtr
+argument_list|(
+argument|unsigned SP
+argument_list|,
+argument|int64_t Amount
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|virtual

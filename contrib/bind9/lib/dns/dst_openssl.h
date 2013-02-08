@@ -107,6 +107,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dst__openssl_toresult2
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|funcname
+parameter_list|,
+name|isc_result_t
+name|fallback
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef

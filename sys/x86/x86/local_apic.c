@@ -1073,6 +1073,10 @@ literal|"local APIC not aligned on a page boundary"
 operator|)
 argument_list|)
 expr_stmt|;
+name|lapic_paddr
+operator|=
+name|addr
+expr_stmt|;
 name|lapic
 operator|=
 name|pmap_mapdev
@@ -1084,10 +1088,6 @@ argument_list|(
 name|lapic_t
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|lapic_paddr
-operator|=
-name|addr
 expr_stmt|;
 name|setidt
 argument_list|(
@@ -6111,6 +6111,18 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* 	 * Local APIC must be registered before other PICs and pseudo PICs 	 * for proper suspend/resume order. 	 */
+ifndef|#
+directive|ifndef
+name|XEN
+name|intr_register_pic
+argument_list|(
+operator|&
+name|lapic_pic
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|retval
 operator|=
 name|best_enum
@@ -6145,12 +6157,6 @@ comment|/* 	 * Finish setting up the local APIC on the BSP once we know how to 	
 name|lapic_setup
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-name|intr_register_pic
-argument_list|(
-operator|&
-name|lapic_pic
 argument_list|)
 expr_stmt|;
 if|if

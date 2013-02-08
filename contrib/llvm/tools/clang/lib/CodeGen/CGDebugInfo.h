@@ -184,6 +184,21 @@ operator|::
 name|DIType
 name|VTablePtrType
 expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|ClassTy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|ObjTy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|SelTy
+expr_stmt|;
 comment|/// TypeCache - Cache of previously constructed Types.
 name|llvm
 operator|::

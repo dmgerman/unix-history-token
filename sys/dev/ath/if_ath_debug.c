@@ -758,19 +758,6 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-comment|/* 	 * Assume the TX map size is 4 for now and only walk 	 * the appropriate number of segments. 	 */
-name|n
-operator|=
-operator|(
-name|bf
-operator|->
-name|bf_nseg
-operator|/
-literal|4
-operator|)
-operator|+
-literal|1
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Q%u[%3u] (nseg=%d)"
@@ -792,6 +779,23 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * XXX For now, assume the txmap size is 4. 		 */
+comment|/* 		 * Assume the TX map size is 4 for now and only walk 		 * the appropriate number of segments. 		 */
+name|n
+operator|=
+operator|(
+operator|(
+name|bf
+operator|->
+name|bf_nseg
+operator|-
+literal|1
+operator|)
+operator|/
+literal|4
+operator|)
+operator|+
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i

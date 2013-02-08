@@ -947,6 +947,7 @@ name|NULL
 condition|)
 block|{
 comment|/* Use output file */
+comment|/* 		 * Set close-on-exec ('e'), so that the output file is not 		 * shared with the traced process. 		 */
 if|if
 condition|(
 operator|(
@@ -958,44 +959,19 @@ name|fopen
 argument_list|(
 name|fname
 argument_list|,
-literal|"w"
+literal|"we"
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"cannot open %s"
 argument_list|,
 name|fname
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Set FD_CLOEXEC, so that the output file is not shared with 		 * the traced process. 		 */
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|fileno
-argument_list|(
-name|trussinfo
-operator|->
-name|outfile
-argument_list|)
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|warn
-argument_list|(
-literal|"fcntl()"
 argument_list|)
 expr_stmt|;
 block|}

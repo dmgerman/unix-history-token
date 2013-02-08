@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -161,11 +167,6 @@ comment|/// CalleeSavedrRegs - A bitvector of callee saved registers for the tar
 comment|///
 name|BitVector
 name|CalleeSavedRegs
-decl_stmt|;
-comment|/// ReservedRegs - A bitvector of reserved registers.
-comment|///
-name|BitVector
-name|ReservedRegs
 decl_stmt|;
 comment|/// RegsAvailable - The current state of all the physical registers immediately
 comment|/// before MBBI. One bit per physical register. If bit is set that means it's
@@ -412,9 +413,9 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ReservedRegs
-operator|.
-name|test
+name|MRI
+operator|->
+name|isReserved
 argument_list|(
 name|Reg
 argument_list|)
@@ -439,9 +440,7 @@ argument_list|(
 name|Reg
 argument_list|)
 operator|||
-name|ReservedRegs
-operator|.
-name|test
+name|isReserved
 argument_list|(
 name|Reg
 argument_list|)

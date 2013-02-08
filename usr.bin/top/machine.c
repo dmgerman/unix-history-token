@@ -940,6 +940,8 @@ literal|"ivcsw"
 block|,
 literal|"jid"
 block|,
+literal|"pid"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -3921,7 +3923,7 @@ specifier|static
 name|char
 name|fmt
 index|[
-literal|128
+literal|512
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -4019,6 +4021,12 @@ name|char
 modifier|*
 modifier|*
 name|args
+decl_stmt|;
+specifier|const
+name|int
+name|cmdlen
+init|=
+literal|128
 decl_stmt|;
 comment|/* find and remember the next proc structure */
 name|hp
@@ -4313,7 +4321,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|cmdlengthdelta
+name|cmdlen
 operator|+
 literal|1
 argument_list|)
@@ -4329,7 +4337,7 @@ name|warn
 argument_list|(
 literal|"malloc(%d)"
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 operator|+
 literal|1
 argument_list|)
@@ -4372,7 +4380,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"%s{%s}"
 argument_list|,
@@ -4392,7 +4400,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -4428,7 +4436,7 @@ name|kd
 argument_list|,
 name|pp
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|)
 operator|)
 operator|==
@@ -4465,7 +4473,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"[%s{%s}]"
 argument_list|,
@@ -4485,7 +4493,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"[%s]"
 argument_list|,
@@ -4520,7 +4528,7 @@ name|len
 decl_stmt|;
 name|argbuflen
 operator|=
-name|cmdlengthdelta
+name|cmdlen
 operator|*
 literal|4
 expr_stmt|;
@@ -4751,7 +4759,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"%s (%s){%s}"
 argument_list|,
@@ -4771,7 +4779,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -4808,7 +4816,7 @@ name|snprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|,
 literal|"%s{%s}"
 argument_list|,
@@ -4826,7 +4834,7 @@ name|cmdbuf
 argument_list|,
 name|argbuf
 argument_list|,
-name|cmdlengthdelta
+name|cmdlen
 argument_list|)
 expr_stmt|;
 block|}

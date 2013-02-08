@@ -162,6 +162,18 @@ block|,
 comment|// resulting in - R_MIPS_HIGHEST
 name|fixup_Mips_HIGHEST
 block|,
+comment|// resulting in - R_MIPS_GOT_HI16
+name|fixup_Mips_GOT_HI16
+block|,
+comment|// resulting in - R_MIPS_GOT_LO16
+name|fixup_Mips_GOT_LO16
+block|,
+comment|// resulting in - R_MIPS_CALL_HI16
+name|fixup_Mips_CALL_HI16
+block|,
+comment|// resulting in - R_MIPS_CALL_LO16
+name|fixup_Mips_CALL_LO16
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

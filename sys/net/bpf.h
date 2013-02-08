@@ -3031,7 +3031,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Rotate the packet buffers in descriptor d.  Move the store buffer into the  * hold slot, and the free buffer ino the store slot.  Zero the length of the  * new store buffer.  Descriptor lock should be held.  */
+comment|/*  * Rotate the packet buffers in descriptor d.  Move the store buffer into the  * hold slot, and the free buffer ino the store slot.  Zero the length of the  * new store buffer.  Descriptor lock should be held. Hold buffer must  * not be marked "in use".  */
 end_comment
 
 begin_define

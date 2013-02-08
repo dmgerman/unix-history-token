@@ -536,6 +536,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|driver_name
 index|[]
@@ -544,6 +545,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|driver_name_long
 index|[]
@@ -552,6 +554,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|driver_ver
 index|[]

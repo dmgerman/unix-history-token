@@ -77,6 +77,14 @@ name|m_at
 parameter_list|,
 name|int
 name|cnt_inits_to
+parameter_list|,
+name|uint16_t
+modifier|*
+name|padding_len
+parameter_list|,
+name|uint16_t
+modifier|*
+name|chunk_len
 parameter_list|)
 function_decl|;
 end_function_decl

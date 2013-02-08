@@ -128,19 +128,6 @@ end_union_decl
 
 begin_function_decl
 name|void
-name|expandhere
-parameter_list|(
-name|union
-name|node
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|expandarg
 parameter_list|(
 name|union

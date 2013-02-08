@@ -370,28 +370,6 @@ parameter_list|)
 value|( \ 	((unsigned long)(l4)<< PML4SHIFT) | \ 	((unsigned long)(l3)<< PDPSHIFT) | \ 	((unsigned long)(l2)<< PDRSHIFT) | \ 	((unsigned long)(l1)<< PAGE_SHIFT))
 end_define
 
-begin_comment
-comment|/* Initial number of kernel page tables. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPT
-value|32
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -401,17 +379,6 @@ end_define
 
 begin_comment
 comment|/* number of kernel PML4 slots */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NKPDPE
-value|howmany(NKPT, NPDEPG)
-end_define
-
-begin_comment
-comment|/* number of kernel PDP slots */
 end_comment
 
 begin_define
@@ -689,6 +656,17 @@ directive|define
 name|PML4pml4e
 value|((pd_entry_t *)(addr_PML4pml4e))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nkpt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Initial number of kernel page tables */
+end_comment
 
 begin_decl_stmt
 specifier|extern

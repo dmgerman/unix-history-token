@@ -269,17 +269,21 @@ operator|.
 name|Next
 return|;
 block|}
-comment|/// UsedPhysRegs - This is a bit vector that is computed and set by the
+comment|/// UsedRegUnits - This is a bit vector that is computed and set by the
 comment|/// register allocator, and must be kept up to date by passes that run after
 comment|/// register allocation (though most don't modify this).  This is used
 comment|/// so that the code generator knows which callee save registers to save and
 comment|/// for other target specific uses.
-comment|/// This vector only has bits set for registers explicitly used, not their
-comment|/// aliases.
+comment|/// This vector has bits set for register units that are modified in the
+comment|/// current function. It doesn't include registers clobbered by function
+comment|/// calls with register mask operands.
 name|BitVector
-name|UsedPhysRegs
+name|UsedRegUnits
 decl_stmt|;
-comment|/// UsedPhysRegMask - Additional used physregs, but including aliases.
+comment|/// UsedPhysRegMask - Additional used physregs including aliases.
+comment|/// This bit vector represents all the registers clobbered by function calls.
+comment|/// It can model things that UsedRegUnits can't, such as function calls that
+comment|/// clobber ymm7 but preserve the low half in xmm7.
 name|BitVector
 name|UsedPhysRegMask
 decl_stmt|;
@@ -289,11 +293,6 @@ comment|/// vector is the frozen set of reserved registers when register allocat
 comment|/// started.
 name|BitVector
 name|ReservedRegs
-decl_stmt|;
-comment|/// AllocatableRegs - From TRI->getAllocatableSet.
-name|mutable
-name|BitVector
-name|AllocatableRegs
 decl_stmt|;
 comment|/// LiveIns/LiveOuts - Keep track of the physical registers that are
 comment|/// livein/liveout of the function.  Live in values are typically arguments in
@@ -325,12 +324,10 @@ name|LiveOuts
 expr_stmt|;
 name|MachineRegisterInfo
 argument_list|(
-specifier|const
-name|MachineRegisterInfo
-operator|&
+argument|const MachineRegisterInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -339,8 +336,8 @@ specifier|const
 name|MachineRegisterInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|explicit
@@ -1160,35 +1157,14 @@ comment|//===-------------------------------------------------------------------
 comment|// Physical Register Use Info
 comment|//===--------------------------------------------------------------------===//
 comment|/// isPhysRegUsed - Return true if the specified register is used in this
-comment|/// function.  This only works after register allocation.
+comment|/// function. Also check for clobbered aliases and registers clobbered by
+comment|/// function calls with register mask operands.
+comment|///
+comment|/// This only works after register allocation. It is primarily used by
+comment|/// PrologEpilogInserter to determine which callee-saved registers need
+comment|/// spilling.
 name|bool
 name|isPhysRegUsed
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-name|UsedPhysRegs
-operator|.
-name|test
-argument_list|(
-name|Reg
-argument_list|)
-operator|||
-name|UsedPhysRegMask
-operator|.
-name|test
-argument_list|(
-name|Reg
-argument_list|)
-return|;
-block|}
-comment|/// isPhysRegOrOverlapUsed - Return true if Reg or any overlapping register
-comment|/// is used in this function.
-name|bool
-name|isPhysRegOrOverlapUsed
 argument_list|(
 name|unsigned
 name|Reg
@@ -1209,32 +1185,30 @@ name|true
 return|;
 for|for
 control|(
-name|MCRegAliasIterator
-name|AI
+name|MCRegUnitIterator
+name|Units
 argument_list|(
 name|Reg
 argument_list|,
 name|TRI
-argument_list|,
-name|true
 argument_list|)
 init|;
-name|AI
+name|Units
 operator|.
 name|isValid
 argument_list|()
 condition|;
 operator|++
-name|AI
+name|Units
 control|)
 if|if
 condition|(
-name|UsedPhysRegs
+name|UsedRegUnits
 operator|.
 name|test
 argument_list|(
 operator|*
-name|AI
+name|Units
 argument_list|)
 condition|)
 return|return
@@ -1253,28 +1227,31 @@ name|unsigned
 name|Reg
 parameter_list|)
 block|{
-name|UsedPhysRegs
+for|for
+control|(
+name|MCRegUnitIterator
+name|Units
+argument_list|(
+name|Reg
+argument_list|,
+name|TRI
+argument_list|)
+init|;
+name|Units
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|Units
+control|)
+name|UsedRegUnits
 operator|.
 name|set
 argument_list|(
-name|Reg
+operator|*
+name|Units
 argument_list|)
-expr_stmt|;
-block|}
-comment|/// addPhysRegsUsed - Mark the specified registers used in this function.
-comment|/// This should only be called during and after register allocation.
-name|void
-name|addPhysRegsUsed
-parameter_list|(
-specifier|const
-name|BitVector
-modifier|&
-name|Regs
-parameter_list|)
-block|{
-name|UsedPhysRegs
-operator||=
-name|Regs
 expr_stmt|;
 block|}
 comment|/// addPhysRegsUsedFromRegMask - Mark any registers not in RegMask as used.
@@ -1305,18 +1282,37 @@ name|unsigned
 name|Reg
 parameter_list|)
 block|{
-name|UsedPhysRegs
+name|UsedPhysRegMask
 operator|.
 name|reset
 argument_list|(
 name|Reg
 argument_list|)
 expr_stmt|;
-name|UsedPhysRegMask
+for|for
+control|(
+name|MCRegUnitIterator
+name|Units
+argument_list|(
+name|Reg
+argument_list|,
+name|TRI
+argument_list|)
+init|;
+name|Units
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|Units
+control|)
+name|UsedRegUnits
 operator|.
 name|reset
 argument_list|(
-name|Reg
+operator|*
+name|Units
 argument_list|)
 expr_stmt|;
 block|}
@@ -1375,6 +1371,81 @@ operator|||
 name|ReservedRegs
 operator|.
 name|test
+argument_list|(
+name|PhysReg
+argument_list|)
+return|;
+block|}
+comment|/// getReservedRegs - Returns a reference to the frozen set of reserved
+comment|/// registers. This method should always be preferred to calling
+comment|/// TRI::getReservedRegs() when possible.
+specifier|const
+name|BitVector
+operator|&
+name|getReservedRegs
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|reservedRegsFrozen
+argument_list|()
+operator|&&
+literal|"Reserved registers haven't been frozen yet. "
+literal|"Use TRI::getReservedRegs()."
+argument_list|)
+block|;
+return|return
+name|ReservedRegs
+return|;
+block|}
+comment|/// isReserved - Returns true when PhysReg is a reserved register.
+comment|///
+comment|/// Reserved registers may belong to an allocatable register class, but the
+comment|/// target has explicitly requested that they are not used.
+comment|///
+name|bool
+name|isReserved
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+name|getReservedRegs
+argument_list|()
+operator|.
+name|test
+argument_list|(
+name|PhysReg
+argument_list|)
+return|;
+block|}
+comment|/// isAllocatable - Returns true when PhysReg belongs to an allocatable
+comment|/// register class and it hasn't been reserved.
+comment|///
+comment|/// Allocatable registers may show up in the allocation order of some virtual
+comment|/// register, so a register allocator needs to track its liveness and
+comment|/// availability.
+name|bool
+name|isAllocatable
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+name|TRI
+operator|->
+name|isInAllocatableClass
+argument_list|(
+name|PhysReg
+argument_list|)
+operator|&&
+operator|!
+name|isReserved
 argument_list|(
 name|PhysReg
 argument_list|)

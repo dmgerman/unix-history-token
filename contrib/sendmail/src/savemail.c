@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.314 2009/12/18 17:08:01 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.315 2012/02/27 17:43:03 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1735,6 +1735,9 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|int
+name|ret
+decl_stmt|;
 specifier|register
 name|ENVELOPE
 modifier|*
@@ -2870,7 +2873,6 @@ argument_list|,
 name|SM_DELIVER
 argument_list|)
 expr_stmt|;
-comment|/* restore state */
 operator|(
 name|void
 operator|)
@@ -2883,21 +2885,12 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
-name|sm_rpool_free
-argument_list|(
-name|ee
-operator|->
-name|e_rpool
-argument_list|)
-expr_stmt|;
-name|CurEnv
-operator|=
-name|oldcur
-expr_stmt|;
-name|returndepth
-operator|--
-expr_stmt|;
 comment|/* check for delivery errors */
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ee
@@ -2918,9 +2911,14 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
-return|return
+block|{
+name|ret
+operator|=
 literal|0
-return|;
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|q
@@ -2949,13 +2947,32 @@ operator|->
 name|q_state
 argument_list|)
 condition|)
-return|return
+block|{
+name|ret
+operator|=
 literal|0
-return|;
+expr_stmt|;
+break|break;
 block|}
+block|}
+block|}
+comment|/* restore state */
+name|sm_rpool_free
+argument_list|(
+name|ee
+operator|->
+name|e_rpool
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|=
+name|oldcur
+expr_stmt|;
+name|returndepth
+operator|--
+expr_stmt|;
 return|return
-operator|-
-literal|1
+name|ret
 return|;
 block|}
 end_function

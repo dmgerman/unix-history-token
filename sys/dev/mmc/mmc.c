@@ -1924,11 +1924,11 @@ for|for
 control|(
 name|i
 operator|=
-literal|30
+name|MMC_OCR_MAX_VOLTAGE_SHIFT
 init|;
 name|i
 operator|>=
-literal|0
+name|MMC_OCR_MIN_VOLTAGE_SHIFT
 condition|;
 name|i
 operator|--
@@ -5004,7 +5004,7 @@ operator|->
 name|card_id_string
 argument_list|)
 argument_list|,
-literal|"%s%s %s %d.%d SN %d MFG %02d/%04d by %d %s"
+literal|"%s%s %s %d.%d SN %u MFG %02d/%04d by %d %s"
 argument_list|,
 name|ivar
 operator|->

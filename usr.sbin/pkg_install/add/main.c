@@ -854,9 +854,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|warnpkgng
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1720,6 +1717,9 @@ name|Chroot
 argument_list|)
 expr_stmt|;
 block|}
+name|warnpkgng
+argument_list|()
+expr_stmt|;
 comment|/* Make sure the sub-execs we invoke get found */
 name|setenv
 argument_list|(

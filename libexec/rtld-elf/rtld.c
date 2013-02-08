@@ -8684,6 +8684,8 @@ argument_list|(
 name|ld_elf_hints_path
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|==
@@ -10759,6 +10761,8 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|==
@@ -10789,9 +10793,13 @@ else|else
 block|{
 name|fd
 operator|=
-name|dup
+name|fcntl
 argument_list|(
 name|fd_u
+argument_list|,
+name|F_DUPFD_CLOEXEC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

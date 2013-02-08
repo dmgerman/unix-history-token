@@ -1312,10 +1312,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * AMD BIOS And Kernel Developer's Guides for CPU families starting with 10h  * have a requirement that all accesses to the memory mapped PCI configuration  * space are done using AX class of registers.  * Since other vendors do not currently have any contradicting requirements  * the AMD access pattern is applied universally.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1334,6 +1330,10 @@ parameter_list|)
 define|\
 value|((base)				+	\ 	((((bus)& 0xff)<< 20)		|	\ 	(((slot)& 0x1f)<< 15)		|	\ 	(((func)& 0x7)<< 12)		|	\ 	((reg)& 0xfff)))
 end_define
+
+begin_comment
+comment|/*  * AMD BIOS And Kernel Developer's Guides for CPU families starting with 10h  * have a requirement that all accesses to the memory mapped PCI configuration  * space are done using AX class of registers.  * Since other vendors do not currently have any contradicting requirements  * the AMD access pattern is applied universally.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1356,7 +1356,6 @@ name|unsigned
 name|bytes
 parameter_list|)
 block|{
-specifier|volatile
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -1417,12 +1416,13 @@ block|{
 case|case
 literal|4
 case|:
-asm|__asm __volatile("mov %1, %%eax" : "=a" (data)
+asm|__asm("movl %1, %0" : "=a" (data)
 block|:
 literal|"m"
 operator|(
 operator|*
 operator|(
+specifier|volatile
 name|uint32_t
 operator|*
 operator|)
@@ -1434,12 +1434,13 @@ break|break;
 case|case
 literal|2
 case|:
-asm|__asm __volatile("movzwl %1, %%eax" : "=a" (data)
+asm|__asm("movzwl %1, %0" : "=a" (data)
 block|:
 literal|"m"
 operator|(
 operator|*
 operator|(
+specifier|volatile
 name|uint16_t
 operator|*
 operator|)
@@ -1460,7 +1461,7 @@ case|:
 end_case
 
 begin_asm
-asm|__asm __volatile("movzbl %1, %%eax" : "=a" (data)
+asm|__asm("movzbl %1, %0" : "=a" (data)
 end_asm
 
 begin_expr_stmt
@@ -1469,6 +1470,7 @@ literal|"m"
 operator|(
 operator|*
 operator|(
+specifier|volatile
 name|uint8_t
 operator|*
 operator|)
@@ -1517,7 +1519,6 @@ name|unsigned
 name|bytes
 parameter_list|)
 block|{
-specifier|volatile
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -1567,7 +1568,7 @@ block|{
 case|case
 literal|4
 case|:
-asm|__asm __volatile("mov %%eax, %0" : "=m" (*(uint32_t *)va)
+asm|__asm("movl %1, %0" : "=m" (*(volatile uint32_t *)va)
 block|:
 literal|"a"
 operator|(
@@ -1579,10 +1580,13 @@ break|break;
 case|case
 literal|2
 case|:
-asm|__asm __volatile("mov %%ax, %0" : "=m" (*(uint16_t *)va)
+asm|__asm("movw %1, %0" : "=m" (*(volatile uint16_t *)va)
 block|:
 literal|"a"
 operator|(
+operator|(
+name|uint16_t
+operator|)
 name|data
 operator|)
 block|)
@@ -1600,13 +1604,16 @@ case|:
 end_case
 
 begin_asm
-asm|__asm __volatile("mov %%al, %0" : "=m" (*(uint8_t *)va)
+asm|__asm("movb %1, %0" : "=m" (*(volatile uint8_t *)va)
 end_asm
 
 begin_expr_stmt
 unit|:
 literal|"a"
 operator|(
+operator|(
+name|uint8_t
+operator|)
 name|data
 operator|)
 end_expr_stmt

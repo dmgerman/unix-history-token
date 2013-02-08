@@ -1611,6 +1611,21 @@ comment|/* 		 * XXX: This is a TODO.  We should probably merge the MIP6 		 * cas
 comment|/* Rule 5: Prefer outgoing interface */
 if|if
 condition|(
+operator|!
+operator|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_NO_PREFER_IFACE
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|ia_best
 operator|->
 name|ia_ifp
@@ -1647,6 +1662,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Rule 6: Prefer matching label 		 * Note that best_policy should be non-NULL here. 		 */
 if|if
 condition|(
@@ -2426,7 +2442,7 @@ name|rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2453,7 +2469,7 @@ operator|->
 name|sin6_addr
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

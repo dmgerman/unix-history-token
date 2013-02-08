@@ -4189,6 +4189,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|WidenVecRes_Ternary
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|WidenVecRes_Binary
 parameter_list|(
 name|SDNode
@@ -4245,7 +4253,7 @@ modifier|*
 name|N
 parameter_list|,
 name|unsigned
-name|ResNo
+name|OpNo
 parameter_list|)
 function_decl|;
 name|SDValue

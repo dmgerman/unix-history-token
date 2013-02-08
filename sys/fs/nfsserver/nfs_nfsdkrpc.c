@@ -1249,14 +1249,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|NFSGETTIME
-argument_list|(
-operator|&
-name|nd
-operator|->
-name|nd_starttime
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Two cases: 	 * 1 - For NFSv2 over UDP, if we are near our malloc/mget 	 *     limit, just drop the request. There is no 	 *     NFSERR_RESOURCE or NFSERR_DELAY for NFSv2 and the 	 *     client will timeout/retry over UDP in a little while. 	 * 2 - nd_repstat == 0&& nd_mreq == NULL, which 	 *     means a normal nfs rpc, so check the cache 	 */
 if|if
 condition|(

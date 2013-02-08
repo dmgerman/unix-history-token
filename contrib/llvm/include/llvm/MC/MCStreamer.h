@@ -153,12 +153,10 @@ name|Context
 decl_stmt|;
 name|MCStreamer
 argument_list|(
-specifier|const
-name|MCStreamer
-operator|&
+argument|const MCStreamer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|MCStreamer
 modifier|&
 name|operator
@@ -168,8 +166,8 @@ specifier|const
 name|MCStreamer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|bool
 name|EmitEHFrame
 decl_stmt|;
@@ -1482,7 +1480,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// EmitBytes - Emit the bytes in \arg Data into the output.
+comment|/// EmitBytes - Emit the bytes in \p Data into the output.
 end_comment
 
 begin_comment
@@ -2767,6 +2765,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// PPC-related methods.
+end_comment
+
+begin_comment
+comment|/// FIXME: Eventually replace it with some "target MC streamer" and move
+end_comment
+
+begin_comment
+comment|/// these methods there.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitTCEntry
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// FinishImpl - Streamer specific finalization.
 end_comment
 
@@ -2849,7 +2872,7 @@ comment|/// \param CE - If given, a code emitter to use to show the instruction
 end_comment
 
 begin_comment
-comment|/// encoding inline with the assembly. This method takes ownership of \arg CE.
+comment|/// encoding inline with the assembly. This method takes ownership of \p CE.
 end_comment
 
 begin_comment
@@ -2865,7 +2888,7 @@ comment|/// information in conjunction with encoding information. This method ta
 end_comment
 
 begin_comment
-comment|/// ownership of \arg TAB.
+comment|/// ownership of \p TAB.
 end_comment
 
 begin_comment
@@ -2878,18 +2901,6 @@ end_comment
 
 begin_comment
 comment|/// the assembly.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param DecodeLSDA - If true, emit comments that translates the LSDA into a
-end_comment
-
-begin_comment
-comment|/// human readable format. Only usable with CFI.
 end_comment
 
 begin_function_decl
@@ -2956,7 +2967,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Takes ownership of \arg TAB and \arg CE.
+comment|/// Takes ownership of \p TAB and \p CE.
 end_comment
 
 begin_function_decl
@@ -3001,7 +3012,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Takes ownership of \arg TAB and \arg CE.
+comment|/// Takes ownership of \p TAB and \p CE.
 end_comment
 
 begin_function_decl
@@ -3084,7 +3095,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Takes ownership of \arg TAB and \arg CE.
+comment|/// Takes ownership of \p TAB and \p CE.
 end_comment
 
 begin_function_decl

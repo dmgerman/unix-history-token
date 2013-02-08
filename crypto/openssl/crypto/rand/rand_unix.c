@@ -467,7 +467,14 @@ begin_elif
 elif|#
 directive|elif
 name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 end_elif
 
 begin_function
@@ -569,7 +576,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !defined(__OpenBSD__) */
+comment|/* !defined(__FreeBSD__)&& !defined(__OpenBSD__) */
 end_comment
 
 begin_function
@@ -1392,7 +1399,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__OpenBSD__) */
+comment|/* defined(__FreeBSD__) || defined(__OpenBSD__) */
 end_comment
 
 begin_endif

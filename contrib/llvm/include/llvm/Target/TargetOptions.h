@@ -410,6 +410,11 @@ name|RealignStack
 range|:
 literal|1
 decl_stmt|;
+comment|/// SSPBufferSize - The minimum size of buffers that will receive stack
+comment|/// smashing protection when -fstack-protection is used.
+name|unsigned
+name|SSPBufferSize
+decl_stmt|;
 comment|/// EnableFastISel - This flag enables fast-path instruction selection
 comment|/// which trades away generated code quality in favor of reducing
 comment|/// compile time.

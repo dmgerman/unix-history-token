@@ -261,7 +261,6 @@ decl_stmt|;
 name|class
 name|ASTReader
 decl_stmt|;
-comment|/// \namespace
 comment|/// \brief Public enums and private classes that are part of the
 comment|/// SourceManager implementation.
 comment|///
@@ -730,6 +729,7 @@ name|ContentCache
 operator|&
 name|RHS
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1904,12 +1904,13 @@ expr_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
-parameter_list|(
+argument_list|(
 specifier|const
 name|SourceManager
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
 name|void
 name|operator
 init|=
@@ -1918,6 +1919,7 @@ specifier|const
 name|SourceManager
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:
@@ -1997,6 +1999,15 @@ operator|::
 name|MemoryBuffer
 operator|*
 name|Buffer
+argument_list|,
+name|SrcMgr
+operator|::
+name|CharacteristicKind
+name|Kind
+operator|=
+name|SrcMgr
+operator|::
+name|C_User
 argument_list|)
 block|{
 name|assert
@@ -2014,6 +2025,8 @@ operator|=
 name|createFileIDForMemBuffer
 argument_list|(
 name|Buffer
+argument_list|,
+name|Kind
 argument_list|)
 expr_stmt|;
 return|return
@@ -2223,6 +2236,15 @@ name|MemoryBuffer
 operator|*
 name|Buffer
 argument_list|,
+name|SrcMgr
+operator|::
+name|CharacteristicKind
+name|FileCharacter
+operator|=
+name|SrcMgr
+operator|::
+name|C_User
+argument_list|,
 name|int
 name|LoadedID
 operator|=
@@ -2250,9 +2272,7 @@ argument_list|)
 argument_list|,
 name|IncludeLoc
 argument_list|,
-name|SrcMgr
-operator|::
-name|C_User
+name|FileCharacter
 argument_list|,
 name|LoadedID
 argument_list|,
@@ -6212,6 +6232,30 @@ name|MacroArgsCache
 argument_list|,
 name|FileID
 name|FID
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|associateFileChunkWithMacroArgExp
+argument_list|(
+name|MacroArgsMap
+operator|&
+name|MacroArgsCache
+argument_list|,
+name|FileID
+name|FID
+argument_list|,
+name|SourceLocation
+name|SpellLoc
+argument_list|,
+name|SourceLocation
+name|ExpansionLoc
+argument_list|,
+name|unsigned
+name|ExpansionLength
 argument_list|)
 decl|const
 decl_stmt|;

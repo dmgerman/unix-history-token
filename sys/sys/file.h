@@ -900,6 +900,13 @@ name|FOFFSET_LOCK_WAITING
 value|0x2
 end_define
 
+begin_define
+define|#
+directive|define
+name|FDEVFS_VNODE
+value|0x4
+end_define
+
 begin_endif
 endif|#
 directive|endif

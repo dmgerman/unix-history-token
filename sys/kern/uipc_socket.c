@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the 
 end_comment
 
 begin_comment
-comment|/*  * Comments on the socket life cycle:  *  * soalloc() sets of socket layer state for a socket, called only by  * socreate() and sonewconn().  Socket layer private.  *  * sodealloc() tears down socket layer state for a socket, called only by  * sofree() and sonewconn().  Socket layer private.  *  * pru_attach() associates protocol layer state with an allocated socket;  * called only once, may fail, aborting socket allocation.  This is called  * from socreate() and sonewconn().  Socket layer private.  *  * pru_detach() disassociates protocol layer state from an attached socket,  * and will be called exactly once for sockets in which pru_attach() has  * been successfully called.  If pru_attach() returned an error,  * pru_detach() will not be called.  Socket layer private.  *  * pru_abort() and pru_close() notify the protocol layer that the last  * consumer of a socket is starting to tear down the socket, and that the  * protocol should terminate the connection.  Historically, pru_abort() also  * detached protocol state from the socket state, but this is no longer the  * case.  *  * socreate() creates a socket and attaches protocol state.  This is a public  * interface that may be used by socket layer consumers to create new  * sockets.  *  * sonewconn() creates a socket and attaches protocol state.  This is a  * public interface  that may be used by protocols to create new sockets when  * a new connection is received and will be available for accept() on a  * listen socket.  *  * soclose() destroys a socket after possibly waiting for it to disconnect.  * This is a public interface that socket consumers should use to close and  * release a socket when done with it.  *  * soabort() destroys a socket without waiting for it to disconnect (used  * only for incoming connections that are already partially or fully  * connected).  This is used internally by the socket layer when clearing  * listen socket queues (due to overflow or close on the listen socket), but  * is also a public interface protocols may use to abort connections in  * their incomplete listen queues should they no longer be required.  Sockets  * placed in completed connection listen queues should not be aborted for  * reasons described in the comment above the soclose() implementation.  This  * is not a general purpose close routine, and except in the specific  * circumstances described here, should not be used.  *  * sofree() will free a socket and its protocol state if all references on  * the socket have been released, and is the public interface to attempt to  * free a socket when a reference is removed.  This is a socket layer private  * interface.  *  * NOTE: In addition to socreate() and soclose(), which provide a single  * socket reference to the consumer to be managed as required, there are two  * calls to explicitly manage socket references, soref(), and sorele().  * Currently, these are generally required only when transitioning a socket  * from a listen queue to a file descriptor, in order to prevent garbage  * collection of the socket at an untimely moment.  For a number of reasons,  * these interfaces are not preferred, and should be avoided.  *   * NOTE: With regard to VNETs the general rule is that callers do not set  * curvnet. Exceptions to this rule include soabort(), sodisconnect(),  * sofree() (and with that sorele(), sotryfree()), as well as sonewconn()  * and sorflush(), which are usually called from a pre-set VNET context.  * sopoll() currently does not need a VNET context to be set.  */
+comment|/*  * Comments on the socket life cycle:  *  * soalloc() sets of socket layer state for a socket, called only by  * socreate() and sonewconn().  Socket layer private.  *  * sodealloc() tears down socket layer state for a socket, called only by  * sofree() and sonewconn().  Socket layer private.  *  * pru_attach() associates protocol layer state with an allocated socket;  * called only once, may fail, aborting socket allocation.  This is called  * from socreate() and sonewconn().  Socket layer private.  *  * pru_detach() disassociates protocol layer state from an attached socket,  * and will be called exactly once for sockets in which pru_attach() has  * been successfully called.  If pru_attach() returned an error,  * pru_detach() will not be called.  Socket layer private.  *  * pru_abort() and pru_close() notify the protocol layer that the last  * consumer of a socket is starting to tear down the socket, and that the  * protocol should terminate the connection.  Historically, pru_abort() also  * detached protocol state from the socket state, but this is no longer the  * case.  *  * socreate() creates a socket and attaches protocol state.  This is a public  * interface that may be used by socket layer consumers to create new  * sockets.  *  * sonewconn() creates a socket and attaches protocol state.  This is a  * public interface  that may be used by protocols to create new sockets when  * a new connection is received and will be available for accept() on a  * listen socket.  *  * soclose() destroys a socket after possibly waiting for it to disconnect.  * This is a public interface that socket consumers should use to close and  * release a socket when done with it.  *  * soabort() destroys a socket without waiting for it to disconnect (used  * only for incoming connections that are already partially or fully  * connected).  This is used internally by the socket layer when clearing  * listen socket queues (due to overflow or close on the listen socket), but  * is also a public interface protocols may use to abort connections in  * their incomplete listen queues should they no longer be required.  Sockets  * placed in completed connection listen queues should not be aborted for  * reasons described in the comment above the soclose() implementation.  This  * is not a general purpose close routine, and except in the specific  * circumstances described here, should not be used.  *  * sofree() will free a socket and its protocol state if all references on  * the socket have been released, and is the public interface to attempt to  * free a socket when a reference is removed.  This is a socket layer private  * interface.  *  * NOTE: In addition to socreate() and soclose(), which provide a single  * socket reference to the consumer to be managed as required, there are two  * calls to explicitly manage socket references, soref(), and sorele().  * Currently, these are generally required only when transitioning a socket  * from a listen queue to a file descriptor, in order to prevent garbage  * collection of the socket at an untimely moment.  For a number of reasons,  * these interfaces are not preferred, and should be avoided.  *  * NOTE: With regard to VNETs the general rule is that callers do not set  * curvnet. Exceptions to this rule include soabort(), sodisconnect(),  * sofree() (and with that sorele(), sotryfree()), as well as sonewconn()  * and sorflush(), which are usually called from a pre-set VNET context.  * sopoll() currently does not need a VNET context to be set.  */
 end_comment
 
 begin_include
@@ -858,6 +858,7 @@ comment|/*  * Initialize the socket subsystem and set up the socket  * memory al
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|socket_zone
 decl_stmt|;
@@ -879,6 +880,8 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|maxsockets
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|socket_zone
@@ -924,11 +927,20 @@ argument_list|,
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+name|maxsockets
+operator|=
 name|uma_zone_set_max
 argument_list|(
 name|socket_zone
 argument_list|,
 name|maxsockets
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|socket_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
@@ -989,12 +1001,7 @@ name|imax
 argument_list|(
 name|maxsockets
 argument_list|,
-name|imax
-argument_list|(
 name|maxfiles
-argument_list|,
-name|nmbclusters
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1067,48 +1074,16 @@ condition|(
 name|newmaxsockets
 operator|>
 name|maxsockets
+operator|&&
+name|newmaxsockets
+operator|<=
+name|maxfiles
 condition|)
 block|{
 name|maxsockets
 operator|=
 name|newmaxsockets
 expr_stmt|;
-if|if
-condition|(
-name|maxsockets
-operator|>
-operator|(
-operator|(
-name|maxfiles
-operator|/
-literal|4
-operator|)
-operator|*
-literal|3
-operator|)
-condition|)
-block|{
-name|maxfiles
-operator|=
-operator|(
-name|maxsockets
-operator|*
-literal|5
-operator|)
-operator|/
-literal|4
-expr_stmt|;
-name|maxfilesperproc
-operator|=
-operator|(
-name|maxfiles
-operator|*
-literal|9
-operator|)
-operator|/
-literal|10
-expr_stmt|;
-block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|maxsockets_change
@@ -1671,7 +1646,47 @@ condition|(
 name|prp
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+comment|/* No support for domain. */
+if|if
+condition|(
+name|pffinddomain
+argument_list|(
+name|dom
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EAFNOSUPPORT
+operator|)
+return|;
+comment|/* No support for socket type. */
+if|if
+condition|(
+name|proto
+operator|==
+literal|0
+operator|&&
+name|type
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EPROTOTYPE
+operator|)
+return|;
+return|return
+operator|(
+name|EPROTONOSUPPORT
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|prp
 operator|->
 name|pr_usrreqs
@@ -2475,6 +2490,42 @@ expr_stmt|;
 name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;
+comment|/* 	 * The accept socket may be tearing down but we just 	 * won a race on the ACCEPT_LOCK. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|head
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+condition|)
+block|{
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_head
+operator|=
+name|NULL
+expr_stmt|;
+name|sofree
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+comment|/* NB: returns ACCEPT_UNLOCK'ed. */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|connstatus
@@ -3410,6 +3461,9 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -3424,8 +3478,13 @@ name|socket
 modifier|*
 name|sp
 decl_stmt|;
-name|ACCEPT_LOCK
-argument_list|()
+comment|/* 		 * Prevent new additions to the accept queues due 		 * to ACCEPT_LOCK races while we are draining them. 		 */
+name|so
+operator|->
+name|so_options
+operator|&=
+operator|~
+name|SO_ACCEPTCONN
 expr_stmt|;
 while|while
 condition|(
@@ -3545,13 +3604,45 @@ name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;
 block|}
-name|ACCEPT_UNLOCK
-argument_list|()
+name|KASSERT
+argument_list|(
+operator|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_comp
+argument_list|)
+operator|)
+argument_list|,
+operator|(
+literal|"%s: so_comp populated"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_incomp
+argument_list|)
+operator|)
+argument_list|,
+operator|(
+literal|"%s: so_incomp populated"
+operator|,
+name|__func__
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
-name|ACCEPT_LOCK
-argument_list|()
-expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -3585,6 +3676,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* NB: Returns with ACCEPT_UNLOCK(). */
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
@@ -4083,7 +4175,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-comment|/*  * sosend_copyin() is only used if zero copy sockets are enabled.  Otherwise  * sosend_dgram() and sosend_generic() use m_uiotombuf().  *   * sosend_copyin() accepts a uio and prepares an mbuf chain holding part or  * all of the data referenced by the uio.  If desired, it uses zero-copy.  * *space will be updated to reflect data copied in.  *  * NB: If atomic I/O is requested, the caller must already have checked that  * space can hold resid bytes.  *  * NB: In the event of an error, the caller may need to free the partial  * chain pointed to by *mpp.  The contents of both *uio and *space may be  * modified even in the case of an error.  */
+comment|/*  * sosend_copyin() is only used if zero copy sockets are enabled.  Otherwise  * sosend_dgram() and sosend_generic() use m_uiotombuf().  *  * sosend_copyin() accepts a uio and prepares an mbuf chain holding part or  * all of the data referenced by the uio.  If desired, it uses zero-copy.  * *space will be updated to reflect data copied in.  *  * NB: If atomic I/O is requested, the caller must already have checked that  * space can hold resid bytes.  *  * NB: In the event of an error, the caller may need to free the partial  * chain pointed to by *mpp.  The contents of both *uio and *space may be  * modified even in the case of an error.  */
 specifier|static
 name|int
 name|sosend_copyin
@@ -4305,7 +4397,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4366,7 +4458,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6245,7 +6337,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6467,7 +6559,7 @@ name|sb_mb
 operator|=
 name|nextrecord
 expr_stmt|;
-comment|/*          * Now update any dependent socket buffer fields to reflect the new          * state.  This is an expanded inline of SB_EMPTY_FIXUP(), with the 	 * addition of a second clause that takes care of the case where 	 * sb_mb has been updated, but remains the last record.          */
+comment|/* 	 * Now update any dependent socket buffer fields to reflect the new 	 * state.  This is an expanded inline of SB_EMPTY_FIXUP(), with the 	 * addition of a second clause that takes care of the case where 	 * sb_mb has been updated, but remains the last record. 	 */
 if|if
 condition|(
 name|sb
@@ -7802,7 +7894,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If the type of mbuf has changed since the last mbuf 		 * examined ('type'), end the receive operation. 	 	 */
+comment|/* 		 * If the type of mbuf has changed since the last mbuf 		 * examined ('type'), end the receive operation. 		 */
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
 operator|&
@@ -8299,7 +8391,7 @@ name|MSG_DONTWAIT
 condition|)
 name|copy_flag
 operator|=
-name|M_DONTWAIT
+name|M_NOWAIT
 expr_stmt|;
 else|else
 name|copy_flag
@@ -8310,7 +8402,7 @@ if|if
 condition|(
 name|copy_flag
 operator|==
-name|M_WAIT
+name|M_WAITOK
 condition|)
 name|SOCKBUF_UNLOCK
 argument_list|(
@@ -8338,7 +8430,7 @@ if|if
 condition|(
 name|copy_flag
 operator|==
-name|M_WAIT
+name|M_WAITOK
 condition|)
 name|SOCKBUF_LOCK
 argument_list|(
@@ -8356,7 +8448,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*  						 * m_copym() couldn't 						 * allocate an mbuf.  Adjust 						 * uio_resid back (it was 						 * adjusted down by len 						 * bytes, which we didn't end 						 * up "copying" over).  						 */
+comment|/* 						 * m_copym() couldn't 						 * allocate an mbuf.  Adjust 						 * uio_resid back (it was 						 * adjusted down by len 						 * bytes, which we didn't end 						 * up "copying" over). 						 */
 name|uio
 operator|->
 name|uio_resid
@@ -9630,7 +9722,7 @@ literal|0
 argument_list|,
 name|len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10970,7 +11062,6 @@ name|pru_flush
 operator|!=
 name|NULL
 condition|)
-block|{
 call|(
 modifier|*
 name|pr
@@ -10985,7 +11076,6 @@ argument_list|,
 name|how
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|how
@@ -13136,9 +13226,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -13167,9 +13257,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13248,9 +13338,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -13289,9 +13379,9 @@ name|sopt_td
 operator|!=
 name|NULL
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15432,7 +15522,7 @@ name|so_accf
 operator|->
 name|so_accept_filter_arg
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

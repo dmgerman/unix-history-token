@@ -122,7 +122,7 @@ name|HiddenGVStubs
 block|;
 name|virtual
 name|void
-name|Anchor
+name|anchor
 argument_list|()
 block|;
 comment|// Out of line virtual method.
@@ -256,7 +256,7 @@ name|GVStubs
 block|;
 name|virtual
 name|void
-name|Anchor
+name|anchor
 argument_list|()
 block|;
 comment|// Out of line virtual method.

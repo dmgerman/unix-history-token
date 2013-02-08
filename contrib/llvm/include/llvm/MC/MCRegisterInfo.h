@@ -1073,6 +1073,18 @@ return|return
 name|NumRegs
 return|;
 block|}
+comment|/// getNumSubRegIndices - Return the number of sub-register indices
+comment|/// understood by the target. Index 0 is reserved for the no-op sub-register,
+comment|/// while 1 to getNumSubRegIndices() - 1 represent real sub-registers.
+name|unsigned
+name|getNumSubRegIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumSubRegIndices
+return|;
+block|}
 comment|/// getNumRegUnits - Return the number of (native) register units in the
 comment|/// target. Register units are numbered from 0 to getNumRegUnits() - 1. They
 comment|/// can be accessed through MCRegUnitIterator defined below.
@@ -1165,6 +1177,7 @@ comment|/// getRegClass - Returns the register class associated with the enumera
 comment|/// value.  See class MCOperandInfo.
 specifier|const
 name|MCRegisterClass
+modifier|&
 name|getRegClass
 argument_list|(
 name|unsigned

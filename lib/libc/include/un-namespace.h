@@ -1104,6 +1104,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|wait6
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|waitpid
 end_undef
 

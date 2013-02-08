@@ -152,13 +152,13 @@ comment|// May only be subclassed.
 name|GCMetadataPrinter
 argument_list|()
 expr_stmt|;
-comment|// Do not implement.
+name|private
+label|:
 name|GCMetadataPrinter
 argument_list|(
-specifier|const
-name|GCMetadataPrinter
-operator|&
+argument|const GCMetadataPrinter&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 name|GCMetadataPrinter
 modifier|&
@@ -169,6 +169,7 @@ specifier|const
 name|GCMetadataPrinter
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:

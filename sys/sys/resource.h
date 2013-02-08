@@ -179,6 +179,33 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_struct
+struct|struct
+name|__wrusage
+block|{
+name|struct
+name|rusage
+name|wru_self
+decl_stmt|;
+name|struct
+name|rusage
+name|wru_children
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Resource limits  */
 end_comment

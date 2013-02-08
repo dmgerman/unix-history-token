@@ -3382,6 +3382,7 @@ operator|*
 operator|)
 name|sa
 decl_stmt|;
+comment|/* 		 * The sa6->sin6_scope_id must be filled here because 		 * this sockaddr is extracted from kmem(4) directly 		 * and has KAME-specific embedded scope id in 		 * sa6->sin6_addr.s6_addr[2]. 		 */
 name|in6_fillscopeid
 argument_list|(
 name|sa6

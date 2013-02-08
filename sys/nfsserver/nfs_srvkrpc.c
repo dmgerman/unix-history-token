@@ -887,7 +887,7 @@ name|MGET
 argument_list|(
 name|mreq
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -910,7 +910,7 @@ name|MCLGET
 argument_list|(
 name|mreq
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1171,7 +1171,7 @@ argument_list|(
 operator|&
 name|mreq
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Note: we want rq_addr, not svc_getrpccaller for nd_nam2 - 	 * NFS_SRVMAXDATA uses a NULL value for nd_nam2 to detect TCP 	 * mounts. 	 */

@@ -543,12 +543,10 @@ name|Self
 decl_stmt|;
 name|Builder
 argument_list|(
-specifier|const
-name|Builder
-operator|&
+argument|const Builder&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|Builder
 modifier|&
 name|operator
@@ -558,8 +556,8 @@ specifier|const
 name|Builder
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|explicit

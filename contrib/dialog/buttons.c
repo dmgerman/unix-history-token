@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: buttons.c,v 1.90 2012/07/01 20:42:05 tom Exp $  *  *  buttons.c -- draw buttons, e.g., OK/Cancel  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: buttons.c,v 1.86 2011/06/28 10:46:46 tom Exp $  *  *  buttons.c -- draw buttons, e.g., OK/Cancel  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -453,9 +453,6 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -477,9 +474,6 @@ argument_list|,
 literal|"<"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -569,9 +563,6 @@ name|cmp
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -602,9 +593,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -648,9 +636,6 @@ name|first
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -1506,9 +1491,6 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -2183,7 +2165,7 @@ name|char
 modifier|*
 name|labels
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 name|int
@@ -2198,21 +2180,6 @@ operator|++
 index|]
 operator|=
 name|my_ok_label
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dialog_vars
-operator|.
-name|extra_button
-condition|)
-name|labels
-index|[
-name|n
-operator|++
-index|]
-operator|=
-name|my_extra_label
 argument_list|()
 expr_stmt|;
 if|if
@@ -2450,15 +2417,6 @@ operator|=
 name|DLG_EXIT_HELP
 expr_stmt|;
 block|}
-name|dlg_trace_msg
-argument_list|(
-literal|"# dlg_ok_buttoncode(%d) = %d\n"
-argument_list|,
-name|button
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
 return|return
 name|result
 return|;
@@ -2568,7 +2526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the button-index for the "OK" or "Cancel" button, according to  * whether --defaultno is given.  If --nocancel was given, we always return  * the index for the first button (usually "OK" unless --nook was used).  */
+comment|/*  * Find the button-index for the "OK" or "Cancel" button, according to  * whether --defaultno is given.  If --nocancel was given, we always return  * the index for "OK".  */
 end_comment
 
 begin_function
@@ -2608,94 +2566,6 @@ operator|++
 name|result
 expr_stmt|;
 block|}
-name|dlg_trace_msg
-argument_list|(
-literal|"# dlg_defaultno_button() = %d\n"
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Find the button-index for a button named with --default-button. If the  * option was not specified, or if the selected button does not exist, return  * the index of the first button (usually "OK" unless --nook was used).  */
-end_comment
-
-begin_function
-name|int
-name|dlg_default_button
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|n
-decl_stmt|;
-name|int
-name|result
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|dialog_vars
-operator|.
-name|default_button
-operator|>=
-literal|0
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-operator|(
-name|n
-operator|=
-name|dlg_ok_buttoncode
-argument_list|(
-name|i
-argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|n
-operator|==
-name|dialog_vars
-operator|.
-name|default_button
-condition|)
-block|{
-name|result
-operator|=
-name|i
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
-name|dlg_trace_msg
-argument_list|(
-literal|"# dlg_default_button() = %d\n"
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
 return|return
 name|result
 return|;

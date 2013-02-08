@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -227,6 +233,13 @@ name|unsigned
 operator|>
 name|SubModuleIndex
 expr_stmt|;
+comment|/// \brief The AST file if this is a top-level module which has a
+comment|/// corresponding serialized AST file, or null otherwise.
+specifier|const
+name|FileEntry
+modifier|*
+name|ASTFile
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief The headers that are part of this module.
@@ -241,6 +254,32 @@ operator|,
 literal|2
 operator|>
 name|Headers
+expr_stmt|;
+comment|/// \brief The headers that are explicitly excluded from this module.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|ExcludedHeaders
+expr_stmt|;
+comment|/// \brief The top-level headers associated with this module.
+name|llvm
+operator|::
+name|SmallSetVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|TopHeaders
 expr_stmt|;
 comment|/// \brief The set of language features required to use this module.
 comment|///
@@ -440,6 +479,11 @@ argument_list|)
 operator|,
 name|Umbrella
 argument_list|()
+operator|,
+name|ASTFile
+argument_list|(
+literal|0
+argument_list|)
 operator|,
 name|IsAvailable
 argument_list|(
@@ -667,6 +711,56 @@ operator|->
 name|Name
 return|;
 block|}
+comment|/// \brief The serialized AST file for this module, if one was created.
+specifier|const
+name|FileEntry
+operator|*
+name|getASTFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTopLevelModule
+argument_list|()
+operator|->
+name|ASTFile
+return|;
+block|}
+comment|/// \brief Set the serialized AST file for the top-level module of this module.
+name|void
+name|setASTFile
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|getASTFile
+argument_list|()
+operator|==
+literal|0
+operator|||
+name|getASTFile
+argument_list|()
+operator|==
+name|File
+operator|)
+operator|&&
+literal|"file path changed"
+argument_list|)
+expr_stmt|;
+name|getTopLevelModule
+argument_list|()
+operator|->
+name|ASTFile
+operator|=
+name|File
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the directory for which this module serves as the
 comment|/// umbrella.
 specifier|const
@@ -828,6 +922,15 @@ name|SubModules
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+specifier|static
+name|StringRef
+name|getModuleInputBufferName
+parameter_list|()
+block|{
+return|return
+literal|"<module-includes>"
 return|;
 block|}
 comment|/// \brief Print the module map for this module to the given stream.

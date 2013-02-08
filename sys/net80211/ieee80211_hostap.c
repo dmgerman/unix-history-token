@@ -1402,7 +1402,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10118,21 +10118,38 @@ name|vap
 operator|->
 name|iv_ifp
 expr_stmt|;
-name|IF_ENQUEUE
-argument_list|(
-operator|&
+comment|/* 	 * Free any node ref which this mbuf may have. 	 * 	 * Much like psq_mfree(), we assume that M_ENCAP nodes have 	 * node references. 	 */
+if|if
+condition|(
 name|ifp
 operator|->
-name|if_snd
+name|if_transmit
+argument_list|(
+name|ifp
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|if_start
-argument_list|(
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * XXX m is invalid (freed) at this point, determine M_ENCAP 		 * an alternate way. 		 */
+if|if
+condition|(
 name|ifp
+operator|==
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_ifp
+condition|)
+name|ieee80211_free_node
+argument_list|(
+name|ni
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

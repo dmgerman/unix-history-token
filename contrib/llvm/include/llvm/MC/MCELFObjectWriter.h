@@ -367,6 +367,27 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
+specifier|const
+name|MCSymbol
+modifier|*
+name|undefinedExplicitRelSym
+argument_list|(
+specifier|const
+name|MCValue
+operator|&
+name|Target
+argument_list|,
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|bool
+name|IsPCRel
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
 name|void
 name|adjustFixupOffset
 parameter_list|(
@@ -403,7 +424,8 @@ comment|/// @name Accessors
 comment|/// @{
 name|uint8_t
 name|getOSABI
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|OSABI
@@ -411,7 +433,8 @@ return|;
 block|}
 name|uint16_t
 name|getEMachine
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|EMachine
@@ -419,7 +442,8 @@ return|;
 block|}
 name|bool
 name|hasRelocationAddend
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|HasRelocationAddend

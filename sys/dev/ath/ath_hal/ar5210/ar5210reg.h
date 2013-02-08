@@ -3195,6 +3195,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_DIAG_SW_DIS_CRYPTO
+value|(AR_DIAG_SW_DIS_ENC | AR_DIAG_SW_DIS_DEC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_DIAG_SW_BITS
 define|\
 value|"\20\1DIS_WEP_ACK\2DIS_ACK\3DIS_CTS\4DIS_ENC\5DIS_DEC\6DIS_TX"\ 	"\7DIS_RX\10LOOP_BACK\11CORR_FCS\12CHAN_INFO\13EN_SCRAM_SEED"\ 	"\22DIS_SEQ_INC\24FRAME_NV0"

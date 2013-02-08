@@ -136,11 +136,14 @@ argument_list|,
 name|uart_bus_detach
 argument_list|)
 block|,
-block|{
-literal|0
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|uart_bus_resume
+argument_list|)
 block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -197,6 +200,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|pci_id
 name|pci_ns8250_ids
@@ -883,6 +887,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 specifier|static
 name|struct
 name|pci_id
@@ -892,6 +897,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|pci_id
 modifier|*
@@ -1055,6 +1061,7 @@ name|uart_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|const
 name|struct
 name|pci_id
 modifier|*
@@ -1151,9 +1158,9 @@ name|uart_pci_driver
 argument_list|,
 name|uart_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

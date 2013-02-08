@@ -731,6 +731,8 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;

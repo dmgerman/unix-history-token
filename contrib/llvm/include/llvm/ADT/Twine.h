@@ -113,7 +113,7 @@ comment|/// Twines support a special 'null' value, which always concatenates to 
 comment|/// itself, and renders as an empty string. This can be returned from APIs to
 comment|/// effectively nullify any concatenations performed on the result.
 comment|///
-comment|/// \b Implementation \n
+comment|/// \b Implementation
 comment|///
 comment|/// Given the nature of a Twine, it is not possible for the Twine's
 comment|/// concatenation method to construct interior nodes; the result must be
@@ -136,7 +136,7 @@ comment|///    binary (otherwise it could have been folded into the parent).
 comment|///
 comment|/// These invariants are check by \see isValid().
 comment|///
-comment|/// \b Efficiency Considerations \n
+comment|/// \b Efficiency Considerations
 comment|///
 comment|/// The Twine is designed to yield efficient and small code for common
 comment|/// situations. For this reason, the concat() method is inlined so that
@@ -873,7 +873,7 @@ operator|(
 name|Val
 operator|)
 block|;     }
-comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
+comment|/// Construct a twine to print \p Val as an unsigned decimal integer.
 name|explicit
 name|Twine
 argument_list|(
@@ -896,7 +896,7 @@ name|decUI
 operator|=
 name|Val
 block|;     }
-comment|/// Construct a twine to print \arg Val as a signed decimal integer.
+comment|/// Construct a twine to print \p Val as a signed decimal integer.
 name|explicit
 name|Twine
 argument_list|(
@@ -919,7 +919,7 @@ name|decI
 operator|=
 name|Val
 block|;     }
-comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
+comment|/// Construct a twine to print \p Val as an unsigned decimal integer.
 name|explicit
 name|Twine
 argument_list|(
@@ -943,7 +943,7 @@ operator|=
 operator|&
 name|Val
 block|;     }
-comment|/// Construct a twine to print \arg Val as a signed decimal integer.
+comment|/// Construct a twine to print \p Val as a signed decimal integer.
 name|explicit
 name|Twine
 argument_list|(
@@ -970,7 +970,7 @@ operator|=
 operator|&
 name|Val
 block|;     }
-comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
+comment|/// Construct a twine to print \p Val as an unsigned decimal integer.
 name|explicit
 name|Twine
 argument_list|(
@@ -994,7 +994,7 @@ operator|=
 operator|&
 name|Val
 block|;     }
-comment|/// Construct a twine to print \arg Val as a signed decimal integer.
+comment|/// Construct a twine to print \p Val as a signed decimal integer.
 name|explicit
 name|Twine
 argument_list|(
@@ -1143,7 +1143,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|// Construct a twine to print \arg Val as an unsigned hexadecimal integer.
+comment|// Construct a twine to print \p Val as an unsigned hexadecimal integer.
 end_comment
 
 begin_function
@@ -1495,11 +1495,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// print - Write the concatenated string represented by this twine to the
+comment|/// Write the concatenated string represented by this twine to the
 end_comment
 
 begin_comment
-comment|/// stream \arg OS.
+comment|/// stream \p OS.
 end_comment
 
 begin_decl_stmt
@@ -1515,7 +1515,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// dump - Dump the concatenated string represented by this twine to stderr.
+comment|/// Dump the concatenated string represented by this twine to stderr.
 end_comment
 
 begin_expr_stmt
@@ -1527,7 +1527,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// print - Write the representation of this twine to the stream \arg OS.
+comment|/// Write the representation of this twine to the stream \p OS.
 end_comment
 
 begin_decl_stmt
@@ -1543,7 +1543,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// dumpRepr - Dump the representation of this twine to stderr.
+comment|/// Dump the representation of this twine to stderr.
 end_comment
 
 begin_expr_stmt

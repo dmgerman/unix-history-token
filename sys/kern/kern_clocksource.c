@@ -1650,6 +1650,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
+if|if
+condition|(
+name|smp_started
+condition|)
+block|{
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
@@ -1704,6 +1709,7 @@ name|c
 operator|=
 name|cpu
 expr_stmt|;
+block|}
 block|}
 block|}
 endif|#

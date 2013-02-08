@@ -5086,7 +5086,7 @@ name|MGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5095,7 +5095,7 @@ name|MCLGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|nmp
@@ -5664,12 +5664,10 @@ break|break;
 case|case
 name|NFSV3SATTRTIME_TOSERVER
 case|:
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
-operator|(
 name|a
-operator|)
 operator|->
 name|va_atime
 argument_list|)
@@ -5761,12 +5759,10 @@ break|break;
 case|case
 name|NFSV3SATTRTIME_TOSERVER
 case|:
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
-operator|(
 name|a
-operator|)
 operator|->
 name|va_mtime
 argument_list|)

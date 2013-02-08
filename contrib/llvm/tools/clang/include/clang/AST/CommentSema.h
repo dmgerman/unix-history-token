@@ -111,6 +111,9 @@ decl_stmt|;
 name|class
 name|SourceMgr
 decl_stmt|;
+name|class
+name|Preprocessor
+decl_stmt|;
 name|namespace
 name|comments
 block|{
@@ -122,12 +125,10 @@ name|Sema
 block|{
 name|Sema
 argument_list|(
-specifier|const
-name|Sema
-operator|&
+argument|const Sema&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -136,8 +137,8 @@ specifier|const
 name|Sema
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 comment|/// Allocator for AST nodes.
 name|llvm
 operator|::
@@ -155,32 +156,20 @@ name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
-specifier|const
 name|CommandTraits
 modifier|&
 name|Traits
+decl_stmt|;
+specifier|const
+name|Preprocessor
+modifier|*
+name|PP
 decl_stmt|;
 comment|/// Information about the declaration this comment is attached to.
 name|DeclInfo
 modifier|*
 name|ThisDeclInfo
 decl_stmt|;
-comment|/// Comment AST nodes that correspond to \c ParamVars for which we have
-comment|/// found a \\param command or NULL if no documentation was found so far.
-comment|///
-comment|/// Has correct size and contains valid values if \c DeclInfo->IsFilled is
-comment|/// true.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ParamCommandComment
-operator|*
-operator|,
-literal|8
-operator|>
-name|ParamVarDocs
-expr_stmt|;
 comment|/// Comment AST nodes that correspond to parameter names in
 comment|/// \c TemplateParameters.
 comment|///
@@ -257,10 +246,14 @@ name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|,
-specifier|const
 name|CommandTraits
 operator|&
 name|Traits
+argument_list|,
+specifier|const
+name|Preprocessor
+operator|*
+name|PP
 argument_list|)
 expr_stmt|;
 name|void
@@ -385,8 +378,8 @@ parameter_list|,
 name|SourceLocation
 name|LocEnd
 parameter_list|,
-name|StringRef
-name|Name
+name|unsigned
+name|CommandID
 parameter_list|)
 function_decl|;
 name|void
@@ -427,8 +420,8 @@ parameter_list|,
 name|SourceLocation
 name|LocEnd
 parameter_list|,
-name|StringRef
-name|Name
+name|unsigned
+name|CommandID
 parameter_list|)
 function_decl|;
 name|void
@@ -487,8 +480,8 @@ parameter_list|,
 name|SourceLocation
 name|LocEnd
 parameter_list|,
-name|StringRef
-name|Name
+name|unsigned
+name|CommandID
 parameter_list|)
 function_decl|;
 name|void
@@ -530,8 +523,8 @@ parameter_list|,
 name|SourceLocation
 name|CommandLocEnd
 parameter_list|,
-name|StringRef
-name|CommandName
+name|unsigned
+name|CommandID
 parameter_list|)
 function_decl|;
 name|InlineCommandComment
@@ -544,8 +537,8 @@ parameter_list|,
 name|SourceLocation
 name|CommandLocEnd
 parameter_list|,
-name|StringRef
-name|CommandName
+name|unsigned
+name|CommandID
 parameter_list|,
 name|SourceLocation
 name|ArgLocBegin
@@ -568,7 +561,21 @@ name|SourceLocation
 name|LocEnd
 parameter_list|,
 name|StringRef
-name|Name
+name|CommandName
+parameter_list|)
+function_decl|;
+name|InlineContentComment
+modifier|*
+name|actOnUnknownCommand
+parameter_list|(
+name|SourceLocation
+name|LocBegin
+parameter_list|,
+name|SourceLocation
+name|LocEnd
+parameter_list|,
+name|unsigned
+name|CommandID
 parameter_list|)
 function_decl|;
 name|TextComment
@@ -592,8 +599,8 @@ parameter_list|(
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|StringRef
-name|Name
+name|unsigned
+name|CommandID
 parameter_list|)
 function_decl|;
 name|VerbatimBlockLineComment
@@ -635,8 +642,8 @@ parameter_list|(
 name|SourceLocation
 name|LocBegin
 parameter_list|,
-name|StringRef
-name|Name
+name|unsigned
+name|CommandID
 parameter_list|,
 name|SourceLocation
 name|TextBegin
@@ -730,6 +737,26 @@ specifier|const
 name|BlockCommandComment
 modifier|*
 name|Command
+parameter_list|)
+function_decl|;
+name|void
+name|checkDeprecatedCommand
+parameter_list|(
+specifier|const
+name|BlockCommandComment
+modifier|*
+name|Comment
+parameter_list|)
+function_decl|;
+comment|/// Resolve parameter names to parameter indexes in function declaration.
+comment|/// Emit diagnostics about unknown parametrs.
+name|void
+name|resolveParamCommandIndexes
+parameter_list|(
+specifier|const
+name|FullComment
+modifier|*
+name|FC
 parameter_list|)
 function_decl|;
 name|bool
@@ -828,20 +855,6 @@ argument|StringRef Name
 argument_list|)
 specifier|const
 expr_stmt|;
-name|bool
-name|isHTMLEndTagOptional
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
-name|bool
-name|isHTMLEndTagForbidden
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
 block|}
 empty_stmt|;
 block|}

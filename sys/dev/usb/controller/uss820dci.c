@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * This file contains the driver for the USS820 series USB Device  * Controller  *  * NOTE: The datasheet does not document everything.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -197,6 +214,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_include
 include|#
@@ -7080,21 +7106,9 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|STRING_VENDOR
 define|\
-value|'A', 0, 'G', 0, 'E', 0, 'R', 0, 'E', 0
+value|"A\0G\0E\0R\0E"
 end_define
 
 begin_define
@@ -7102,18 +7116,8 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'D', 0, 'C', 0, 'I', 0, ' ', 0, 'R', 0, \   'o', 0, 'o', 0, 't', 0, ' ', 0, 'H', 0, \   'U', 0, 'B', 0,
+value|"D\0C\0I\0 \0R\0o\0o\0t\0 \0H\0U\0B"
 end_define
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|uss820dci_langtab
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -7737,7 +7741,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|uss820dci_langtab
+name|usb_string_lang_en
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -7748,7 +7752,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|uss820dci_langtab
+name|usb_string_lang_en
 expr_stmt|;
 goto|goto
 name|tr_valid

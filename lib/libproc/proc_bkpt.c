@@ -130,6 +130,33 @@ name|BREAKPOINT_INSTR_SZ
 value|4
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_INSTR
+value|0x7fe00008
+end_define
+
+begin_comment
+comment|/* trap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_INSTR_SZ
+value|4
+end_define
+
 begin_else
 else|#
 directive|else

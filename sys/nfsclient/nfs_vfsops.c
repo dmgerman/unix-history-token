@@ -6933,11 +6933,7 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
-operator|(
-name|MNTK_MPSAFE
-operator||
 name|MNTK_LOOKUP_SHARED
-operator|)
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(

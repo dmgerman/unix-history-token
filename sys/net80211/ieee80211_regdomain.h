@@ -1044,6 +1044,12 @@ init|=
 literal|0x029a
 block|,
 comment|/* Zcomax GZ-901 (900MHz/GSM) */
+name|SKU_XC900M
+init|=
+literal|0x029b
+block|,
+comment|/* Xagyl XC900M (900MHz/GSM) */
+comment|/* 					   * The XC900M by default uses the 					   * same mapping as the XR9.  It 					   * can optionally use a slightly 					   * offset channel spacing (905MHz- 					   * 925MHz) versus the XR9 (907MHz- 					   * 922MHz), giving an extra channel. 					   * This requires a jumper on the 					   * NIC to be changed. 					   */
 block|}
 enum|;
 end_enum

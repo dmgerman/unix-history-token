@@ -16,8 +16,14 @@ file|"fpmath.h"
 end_include
 
 begin_comment
-comment|/*  * XXX These routines belong in libm, but they must remain in libc for  *     binary compat until we can bump libm's major version number.  */
+comment|/*  * XXX These routines belong in libm, but they must remain in libc for  *     binary compat until we can bump libm's major version number.  *  * Note this only applies to the dynamic versions of libm and libc, so  * for the static and profiled versions we stub out the definitions.  * Otherwise you cannot link statically to libm and libc at the same  * time, when calling both functions.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
 
 begin_expr_stmt
 name|__weak_reference
@@ -128,6 +134,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PIC */
+end_comment
 
 end_unit
 

@@ -986,7 +986,21 @@ condition|(
 name|ypclnt
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"ypclnt_new failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|ypclnt_connect
 argument_list|(
 name|ypclnt

@@ -2314,6 +2314,30 @@ literal|1
 block|, 	}
 block|,
 block|{
+literal|0x13fe
+block|,
+literal|0x1600
+block|,
+literal|0x1602
+block|,
+literal|0x0002
+block|,
+literal|"Advantech PCI-1602"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
 literal|0x1407
 block|,
 literal|0x0100

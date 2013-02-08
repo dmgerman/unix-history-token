@@ -627,8 +627,8 @@ name|Quantity
 return|;
 block|}
 comment|/// RoundUpToAlignment - Returns the next integer (mod 2**64) that is
-comment|/// greater than or equal to this quantity and is a multiple of \arg
-comment|/// Align. Align must be non-zero.
+comment|/// greater than or equal to this quantity and is a multiple of \p Align.
+comment|/// Align must be non-zero.
 name|CharUnits
 name|RoundUpToAlignment
 parameter_list|(

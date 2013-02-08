@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_apic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_cpu.h"
 end_include
 
@@ -238,6 +244,35 @@ include|#
 directive|include
 file|<vm/uma.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -797,45 +832,13 @@ begin_comment
 comment|/* cache mode to PAT index conversion */
 end_comment
 
-begin_comment
-comment|/*  * Isolate the global pv list lock from data and other locks to prevent false  * sharing within the cache.  */
-end_comment
-
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
-block|{
 name|struct
-name|rwlock
-name|lock
-decl_stmt|;
-name|char
-name|padding
-index|[
-name|CACHE_LINE_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rwlock
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|pvh_global
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
+name|rwlock_padalign
 name|pvh_global_lock
-value|pvh_global.lock
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Data for the pv entry allocation mechanism  */
@@ -5135,6 +5138,22 @@ operator|<
 name|PMAP_CLFLUSH_THRESHOLD
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+comment|/* 		 * XXX: Some CPUs fault, hang, or trash the local APIC 		 * registers if we use CLFLUSH on the local APIC 		 * range.  The local APIC is always uncached, so we 		 * don't need to flush for that range anyway. 		 */
+if|if
+condition|(
+name|pmap_kextract
+argument_list|(
+name|sva
+argument_list|)
+operator|==
+name|lapic_paddr
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* 		 * Otherwise, do per-cache line flush.  Use the mfence 		 * instruction to insure that previous stores are 		 * included in the write-back.  The processor 		 * propagates flush to other processors in the cache 		 * coherence domain. 		 */
 name|mfence
 argument_list|()

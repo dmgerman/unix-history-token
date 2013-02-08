@@ -1160,6 +1160,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_PHY_ERR_MASK_REG
+value|0x8338
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_PCU_TXBUF_CTRL
 value|0x8340
 end_define

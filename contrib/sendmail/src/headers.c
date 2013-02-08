@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.317 2008/08/27 20:11:55 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.318 2012/06/14 23:54:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4802,9 +4802,12 @@ name|e_from
 operator|.
 name|q_paddr
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|e
 operator|->
 name|e_msgsize
+argument_list|)
 argument_list|,
 name|e
 operator|->
@@ -5043,9 +5046,12 @@ name|e_id
 argument_list|,
 literal|"size=%ld, class=%ld, nrcpts=%d"
 argument_list|,
+name|PRT_NONNEGL
+argument_list|(
 name|e
 operator|->
 name|e_msgsize
+argument_list|)
 argument_list|,
 name|e
 operator|->

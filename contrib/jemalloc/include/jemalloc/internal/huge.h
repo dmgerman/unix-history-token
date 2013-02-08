@@ -158,6 +158,9 @@ name|alignment
 parameter_list|,
 name|bool
 name|zero
+parameter_list|,
+name|bool
+name|try_tcache_dalloc
 parameter_list|)
 function_decl|;
 end_function_decl

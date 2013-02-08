@@ -784,6 +784,18 @@ expr_stmt|;
 block|}
 name|public
 label|:
+comment|/// addFlag - Add a flag that is true to the DIE.
+name|void
+name|addFlag
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|)
+function_decl|;
 comment|/// addUInt - Add an unsigned integer attribute data and value.
 comment|///
 name|void
@@ -1243,8 +1255,8 @@ name|DITemplateTypeParameter
 name|TP
 parameter_list|)
 function_decl|;
-comment|/// getOrCreateTemplateValueParameterDIE - Find existing DIE or create new DIE
-comment|/// for the given DITemplateValueParameter.
+comment|/// getOrCreateTemplateValueParameterDIE - Find existing DIE or create
+comment|/// new DIE for the given DITemplateValueParameter.
 name|DIE
 modifier|*
 name|getOrCreateTemplateValueParameterDIE

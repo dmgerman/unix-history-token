@@ -981,7 +981,7 @@ argument_list|(
 operator|&
 name|tap_cdevsw
 argument_list|,
-literal|0
+name|unit
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -4589,7 +4589,7 @@ name|m_uiotombuf
 argument_list|(
 name|uio
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|0
 argument_list|,

@@ -201,15 +201,12 @@ literal|2
 operator|>
 name|VP
 expr_stmt|;
-name|explicit
 name|ValueHandleBase
-parameter_list|(
-specifier|const
-name|ValueHandleBase
-modifier|&
-parameter_list|)
-function_decl|;
-comment|// DO NOT IMPLEMENT.
+argument_list|(
+argument|const ValueHandleBase&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 name|public
 label|:
 name|explicit

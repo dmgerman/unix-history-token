@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Hashing.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -110,6 +104,9 @@ name|TargetMachine
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|hash_code
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -182,6 +179,9 @@ name|char
 name|OpKind
 decl_stmt|;
 comment|// MachineOperandType
+comment|// This union is discriminated by OpKind.
+union|union
+block|{
 comment|/// SubReg - Subregister number, only valid for MO_Register.  A value of 0
 comment|/// indicates the MO_Register has no subReg.
 name|unsigned
@@ -192,6 +192,17 @@ comment|/// TargetFlags - This is a set of target-specific operand flags.
 name|unsigned
 name|char
 name|TargetFlags
+decl_stmt|;
+block|}
+union|;
+comment|/// TiedTo - Non-zero when this register operand is tied to another register
+comment|/// operand. The encoding of this field is described in the block comment
+comment|/// before MachineInstr::tieOperands().
+name|unsigned
+name|char
+name|TiedTo
+range|:
+literal|4
 decl_stmt|;
 comment|/// IsDef/IsImp/IsKill/IsDead flags - These are only valid for MO_Register
 comment|/// operands.
@@ -439,6 +450,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isReg
+argument_list|()
+operator|?
+literal|0
+operator|:
 name|TargetFlags
 return|;
 block|}
@@ -450,6 +466,15 @@ name|char
 name|F
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isReg
+argument_list|()
+operator|&&
+literal|"Register operands can't have target flags"
+argument_list|)
+expr_stmt|;
 name|TargetFlags
 operator|=
 name|F
@@ -463,6 +488,15 @@ name|char
 name|F
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isReg
+argument_list|()
+operator|&&
+literal|"Register operands can't have target flags"
+argument_list|)
+expr_stmt|;
 name|TargetFlags
 operator||=
 name|F
@@ -883,6 +917,23 @@ argument_list|)
 block|;
 return|return
 name|IsEarlyClobber
+return|;
+block|}
+name|bool
+name|isTied
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|TiedTo
 return|;
 block|}
 name|bool
@@ -1430,8 +1481,9 @@ literal|"Wrong MachineOperand accessor"
 argument_list|)
 block|;
 return|return
-operator|(
 name|int64_t
+argument_list|(
+name|uint64_t
 argument_list|(
 name|Contents
 operator|.
@@ -1441,7 +1493,7 @@ name|OffsetHi
 argument_list|)
 operator|<<
 literal|32
-operator|)
+argument_list|)
 operator||
 name|SmallContents
 operator|.
@@ -1995,6 +2047,12 @@ name|isEarlyClobber
 expr_stmt|;
 name|Op
 operator|.
+name|TiedTo
+operator|=
+literal|0
+expr_stmt|;
+name|Op
+operator|.
 name|IsDebug
 operator|=
 name|isDebug
@@ -2366,6 +2424,9 @@ name|BlockAddress
 modifier|*
 name|BA
 parameter_list|,
+name|int64_t
+name|Offset
+parameter_list|,
 name|unsigned
 name|char
 name|TargetFlags
@@ -2397,10 +2458,9 @@ name|Op
 operator|.
 name|setOffset
 argument_list|(
-literal|0
+name|Offset
 argument_list|)
 expr_stmt|;
-comment|// Offset is always 0.
 name|Op
 operator|.
 name|setTargetFlags
@@ -2590,6 +2650,17 @@ return|return
 name|OS
 return|;
 block|}
+comment|// See friend declaration above. This additional declaration is required in
+comment|// order to compile LLVM with IBM xlC compiler.
+name|hash_code
+name|hash_value
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

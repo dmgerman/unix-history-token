@@ -69,6 +69,12 @@ directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/ExprEngine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramStateTrait.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -76,6 +82,73 @@ block|{
 name|namespace
 name|ento
 block|{
+comment|/// Declares an immutable map of type \p NameTy, suitable for placement into
+comment|/// the ProgramState. This is implementing using llvm::ImmutableMap.
+comment|///
+comment|/// \code
+comment|/// State = State->set<Name>(K, V);
+comment|/// const Value *V = State->get<Name>(K); // Returns NULL if not in the map.
+comment|/// State = State->remove<Name>(K);
+comment|/// NameTy Map = State->get<Name>();
+comment|/// \endcode
+comment|///
+comment|/// The macro should not be used inside namespaces, or for traits that must
+comment|/// be accessible from more than one translation unit.
+define|#
+directive|define
+name|REGISTER_MAP_WITH_PROGRAMSTATE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Key
+parameter_list|,
+name|Value
+parameter_list|)
+define|\
+value|REGISTER_TRAIT_WITH_PROGRAMSTATE(Name, \                                      CLANG_ENTO_PROGRAMSTATE_MAP(Key, Value))
+comment|/// Declares an immutable set of type \p NameTy, suitable for placement into
+comment|/// the ProgramState. This is implementing using llvm::ImmutableSet.
+comment|///
+comment|/// \code
+comment|/// State = State->add<Name>(E);
+comment|/// State = State->remove<Name>(E);
+comment|/// bool Present = State->contains<Name>(E);
+comment|/// NameTy Set = State->get<Name>();
+comment|/// \endcode
+comment|///
+comment|/// The macro should not be used inside namespaces, or for traits that must
+comment|/// be accessible from more than one translation unit.
+define|#
+directive|define
+name|REGISTER_SET_WITH_PROGRAMSTATE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Elem
+parameter_list|)
+define|\
+value|REGISTER_TRAIT_WITH_PROGRAMSTATE(Name, llvm::ImmutableSet<Elem>)
+comment|/// Declares an immutable list of type \p NameTy, suitable for placement into
+comment|/// the ProgramState. This is implementing using llvm::ImmutableList.
+comment|///
+comment|/// \code
+comment|/// State = State->add<Name>(E); // Adds to the /end/ of the list.
+comment|/// bool Present = State->contains<Name>(E);
+comment|/// NameTy List = State->get<Name>();
+comment|/// \endcode
+comment|///
+comment|/// The macro should not be used inside namespaces, or for traits that must
+comment|/// be accessible from more than one translation unit.
+define|#
+directive|define
+name|REGISTER_LIST_WITH_PROGRAMSTATE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Elem
+parameter_list|)
+define|\
+value|REGISTER_TRAIT_WITH_PROGRAMSTATE(Name, llvm::ImmutableList<Elem>)
 name|class
 name|CheckerContext
 block|{
@@ -200,6 +273,26 @@ name|getStoreManager
 argument_list|()
 return|;
 block|}
+specifier|const
+name|AnalyzerOptions
+operator|::
+name|ConfigTable
+operator|&
+name|getConfig
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Eng
+operator|.
+name|getAnalysisManager
+argument_list|()
+operator|.
+name|options
+operator|.
+name|Config
+return|;
+block|}
 comment|/// \brief Returns the previous node in the exploded graph, which includes
 comment|/// the state of the program before the checker ran. Note, checkers should
 comment|/// not retain the node in their state since the nodes might get invalidated.
@@ -237,7 +330,7 @@ block|}
 comment|/// \brief Returns the number of times the current block has been visited
 comment|/// along the analyzed path.
 name|unsigned
-name|getCurrentBlockCount
+name|blockCount
 argument_list|()
 specifier|const
 block|{
@@ -247,7 +340,7 @@ operator|.
 name|getContext
 argument_list|()
 operator|.
-name|getCurrentBlockCount
+name|blockCount
 argument_list|()
 return|;
 block|}
@@ -305,6 +398,20 @@ return|return
 name|Pred
 operator|->
 name|getStackFrame
+argument_list|()
+return|;
+block|}
+comment|/// Return true if the current LocationContext has no caller context.
+name|bool
+name|inTopFrame
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocationContext
+argument_list|()
+operator|->
+name|inTopFrame
 argument_list|()
 return|;
 block|}
@@ -484,7 +591,8 @@ block|}
 comment|/// \brief Generates a new transition in the program state graph
 comment|/// (ExplodedGraph). Uses the default CheckerContext predecessor node.
 comment|///
-comment|/// @param State The state of the generated node.
+comment|/// @param State The state of the generated node. If not specified, the state
+comment|///        will not be changed, but the new node will have the checker's tag.
 comment|/// @param Tag The tag is used to uniquely identify the creation site. If no
 comment|///        tag is specified, a default tag, unique to the given checker,
 comment|///        will be used. Tags are used to prevent states generated at
@@ -495,6 +603,8 @@ name|addTransition
 parameter_list|(
 name|ProgramStateRef
 name|State
+init|=
+literal|0
 parameter_list|,
 specifier|const
 name|ProgramPointTag
@@ -508,27 +618,17 @@ return|return
 name|addTransitionImpl
 argument_list|(
 name|State
+condition|?
+name|State
+else|:
+name|getState
+argument_list|()
 argument_list|,
 name|false
 argument_list|,
 literal|0
 argument_list|,
 name|Tag
-argument_list|)
-return|;
-block|}
-comment|/// \brief Generates a default transition (containing checker tag but no
-comment|/// checker state changes).
-name|ExplodedNode
-modifier|*
-name|addTransition
-parameter_list|()
-block|{
-return|return
-name|addTransition
-argument_list|(
-name|getState
-argument_list|()
 argument_list|)
 return|;
 block|}
@@ -539,8 +639,6 @@ comment|/// @param State The state of the generated node.
 comment|/// @param Pred The transition will be generated from the specified Pred node
 comment|///             to the newly generated node.
 comment|/// @param Tag The tag to uniquely identify the creation site.
-comment|/// @param IsSink Mark the new node as sink, which will stop exploration of
-comment|///               the given path.
 name|ExplodedNode
 modifier|*
 name|addTransition
@@ -558,11 +656,6 @@ modifier|*
 name|Tag
 init|=
 literal|0
-parameter_list|,
-name|bool
-name|IsSink
-init|=
-name|false
 parameter_list|)
 block|{
 return|return
@@ -570,7 +663,7 @@ name|addTransitionImpl
 argument_list|(
 name|State
 argument_list|,
-name|IsSink
+name|false
 argument_list|,
 name|Pred
 argument_list|,
@@ -578,14 +671,27 @@ name|Tag
 argument_list|)
 return|;
 block|}
-comment|/// \brief Generate a sink node. Generating sink stops exploration of the
+comment|/// \brief Generate a sink node. Generating a sink stops exploration of the
 comment|/// given path.
 name|ExplodedNode
 modifier|*
 name|generateSink
 parameter_list|(
 name|ProgramStateRef
-name|state
+name|State
+init|=
+literal|0
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|ProgramPointTag
+modifier|*
+name|Tag
 init|=
 literal|0
 parameter_list|)
@@ -593,20 +699,24 @@ block|{
 return|return
 name|addTransitionImpl
 argument_list|(
-name|state
+name|State
 condition|?
-name|state
+name|State
 else|:
 name|getState
 argument_list|()
 argument_list|,
 name|true
+argument_list|,
+name|Pred
+argument_list|,
+name|Tag
 argument_list|)
 return|;
 block|}
 comment|/// \brief Emit the diagnostics report.
 name|void
-name|EmitReport
+name|emitReport
 parameter_list|(
 name|BugReport
 modifier|*
@@ -622,7 +732,7 @@ operator|.
 name|getBugReporter
 argument_list|()
 operator|.
-name|EmitReport
+name|emitReport
 argument_list|(
 name|R
 argument_list|)
@@ -652,6 +762,44 @@ name|FunDecl
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Get the identifier of the called function (path-sensitive).
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|getCalleeIdentifier
+argument_list|(
+specifier|const
+name|CallExpr
+operator|*
+name|CE
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FunDecl
+init|=
+name|getCalleeDecl
+argument_list|(
+name|CE
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|FunDecl
+condition|)
+return|return
+name|FunDecl
+operator|->
+name|getIdentifier
+argument_list|()
+return|;
+else|else
+return|return
+literal|0
+return|;
+block|}
 comment|/// \brief Get the name of the called function (path-sensitive).
 name|StringRef
 name|getCalleeName
@@ -680,20 +828,16 @@ name|FunDecl
 argument_list|)
 return|;
 block|}
-comment|/// Given a function declaration and a name checks if this is a C lib
-comment|/// function with the given name.
-name|bool
-name|isCLibraryFunction
-parameter_list|(
-specifier|const
-name|FunctionDecl
-modifier|*
-name|FD
-parameter_list|,
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
+comment|/// \brief Returns true if the callee is an externally-visible function in the
+comment|/// top-level namespace, such as \c malloc.
+comment|///
+comment|/// If a name is provided, the function must additionally match the given
+comment|/// name.
+comment|///
+comment|/// Note that this deliberately excludes C++ library functions in the \c std
+comment|/// namespace, but will include C library functions accessed through the
+comment|/// \c std namespace. This also does not check if the function is declared
+comment|/// as 'extern "C"', or if it uses C++ name mangling.
 specifier|static
 name|bool
 name|isCLibraryFunction
@@ -705,10 +849,9 @@ name|FD
 parameter_list|,
 name|StringRef
 name|Name
-parameter_list|,
-name|ASTContext
-modifier|&
-name|Context
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// \brief Depending on wither the location corresponds to a macro, return
@@ -781,14 +924,12 @@ name|Changed
 operator|=
 name|true
 expr_stmt|;
-name|ExplodedNode
-modifier|*
-name|node
+specifier|const
+name|ProgramPoint
+modifier|&
+name|LocalLoc
 init|=
-name|NB
-operator|.
-name|generateNode
-argument_list|(
+operator|(
 name|Tag
 condition|?
 name|Location
@@ -799,18 +940,52 @@ name|Tag
 argument_list|)
 else|:
 name|Location
+operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|P
+condition|)
+name|P
+operator|=
+name|Pred
+expr_stmt|;
+name|ExplodedNode
+modifier|*
+name|node
+decl_stmt|;
+if|if
+condition|(
+name|MarkAsSink
+condition|)
+name|node
+operator|=
+name|NB
+operator|.
+name|generateSink
+argument_list|(
+name|LocalLoc
 argument_list|,
 name|State
 argument_list|,
 name|P
-condition|?
-name|P
-else|:
-name|Pred
-argument_list|,
-name|MarkAsSink
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+else|else
+name|node
+operator|=
+name|NB
+operator|.
+name|generateNode
+argument_list|(
+name|LocalLoc
+argument_list|,
+name|State
+argument_list|,
+name|P
+argument_list|)
+expr_stmt|;
 return|return
 name|node
 return|;

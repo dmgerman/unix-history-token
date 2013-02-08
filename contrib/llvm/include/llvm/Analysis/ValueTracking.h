@@ -89,7 +89,7 @@ name|class
 name|APInt
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|StringRef
@@ -123,7 +123,7 @@ modifier|&
 name|KnownOne
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -166,7 +166,7 @@ modifier|&
 name|KnownOne
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -191,7 +191,7 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -220,7 +220,7 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -254,7 +254,7 @@ modifier|&
 name|Mask
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -282,7 +282,7 @@ modifier|*
 name|Op
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -399,7 +399,7 @@ modifier|&
 name|Offset
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|&
 name|TD
 parameter_list|)
@@ -421,7 +421,7 @@ modifier|&
 name|Offset
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|&
 name|TD
 parameter_list|)
@@ -497,7 +497,7 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -522,7 +522,7 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -571,7 +571,7 @@ operator|&
 name|Objects
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -621,7 +621,7 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=

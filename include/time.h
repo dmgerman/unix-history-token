@@ -414,6 +414,13 @@ name|CLOCK_THREAD_CPUTIME_ID
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLOCK_PROCESS_CPUTIME_ID
+value|15
+end_define
+
 begin_endif
 endif|#
 directive|endif

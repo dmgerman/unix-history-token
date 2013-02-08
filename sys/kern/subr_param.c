@@ -830,6 +830,12 @@ comment|/* Bochs */
 literal|"Xen"
 block|,
 comment|/* Xen */
+literal|"BHYVE"
+block|,
+comment|/* bhyve */
+literal|"Seabios"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
@@ -857,6 +863,9 @@ comment|/* Sun xVM VirtualBox */
 literal|"Parallels Virtual Platform"
 block|,
 comment|/* Parallels VM */
+literal|"KVM"
+block|,
+comment|/* KVM */
 name|NULL
 block|}
 decl_stmt|;
@@ -1312,29 +1321,28 @@ name|maxusers
 operator|=
 literal|32
 expr_stmt|;
-comment|/* 		 * Clips maxusers to 384 on machines with<= 4GB RAM or 32bit. 		 * Scales it down 6x for large memory machines. 		 */
+ifdef|#
+directive|ifdef
+name|VM_MAX_AUTOTUNE_MAXUSERS
+if|if
+condition|(
+name|maxusers
+operator|>
+name|VM_MAX_AUTOTUNE_MAXUSERS
+condition|)
+name|maxusers
+operator|=
+name|VM_MAX_AUTOTUNE_MAXUSERS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*                  * Scales down the function in which maxusers grows once                  * we hit 384.                  */
 if|if
 condition|(
 name|maxusers
 operator|>
 literal|384
 condition|)
-block|{
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|<=
-literal|4
-condition|)
-name|maxusers
-operator|=
-literal|384
-expr_stmt|;
-else|else
 name|maxusers
 operator|=
 literal|384
@@ -1346,12 +1354,11 @@ operator|-
 literal|384
 operator|)
 operator|/
-literal|6
+literal|8
 operator|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * The following can be overridden after boot via sysctl.  Note: 	 * unless overriden, these macros are ultimately based on maxusers. 	 */
+comment|/* 	 * The following can be overridden after boot via sysctl.  Note: 	 * unless overriden, these macros are ultimately based on maxusers. 	 * Limit maxproc so that kmap entries cannot be exhausted by 	 * processes. 	 */
 name|maxproc
 operator|=
 name|NPROC
@@ -1364,7 +1371,6 @@ operator|&
 name|maxproc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Limit maxproc so that kmap entries cannot be exhausted by 	 * processes. 	 */
 if|if
 condition|(
 name|maxproc
@@ -1381,18 +1387,6 @@ name|physpages
 operator|/
 literal|12
 expr_stmt|;
-name|maxfiles
-operator|=
-name|MAXFILES
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"kern.maxfiles"
-argument_list|,
-operator|&
-name|maxfiles
-argument_list|)
-expr_stmt|;
 name|maxprocperuid
 operator|=
 operator|(
@@ -1403,15 +1397,51 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
+comment|/* 	 * The default limit for maxfiles is 1/12 of the number of 	 * physical page but not less than 16 times maxusers. 	 * At most it can be 1/6 the number of physical pages. 	 */
+name|maxfiles
+operator|=
+name|imax
+argument_list|(
+name|MAXFILES
+argument_list|,
+name|physpages
+operator|/
+literal|8
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxfiles"
+argument_list|,
+operator|&
+name|maxfiles
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxfiles
+operator|>
+operator|(
+name|physpages
+operator|/
+literal|4
+operator|)
+condition|)
+name|maxfiles
+operator|=
+name|physpages
+operator|/
+literal|4
+expr_stmt|;
 name|maxfilesperproc
 operator|=
 operator|(
 name|maxfiles
-operator|*
-literal|9
-operator|)
 operator|/
 literal|10
+operator|)
+operator|*
+literal|9
 expr_stmt|;
 comment|/* 	 * Cannot be changed after boot. 	 */
 name|nbuf
@@ -1426,13 +1456,19 @@ operator|&
 name|nbuf
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 * 	 * Clip callout to result of previous function of maxusers maximum 	 * 384.  This is still huge, but acceptable. 	 */
 name|ncallout
 operator|=
+name|imin
+argument_list|(
 literal|16
 operator|+
 name|maxproc
 operator|+
 name|maxfiles
+argument_list|,
+literal|18508
+argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -1452,6 +1488,14 @@ literal|64
 operator|)
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+name|TUNABLE_LONG_FETCH
+argument_list|(
+literal|"kern.ipc.maxpipekva"
+argument_list|,
+operator|&
+name|maxpipekva
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1488,14 +1532,6 @@ name|VM_MIN_KERNEL_ADDRESS
 operator|)
 operator|/
 literal|64
-expr_stmt|;
-name|TUNABLE_LONG_FETCH
-argument_list|(
-literal|"kern.ipc.maxpipekva"
-argument_list|,
-operator|&
-name|maxpipekva
-argument_list|)
 expr_stmt|;
 block|}
 end_function

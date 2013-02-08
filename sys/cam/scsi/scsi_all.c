@@ -14783,6 +14783,7 @@ name|SSQ_PRINT_SENSE
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 operator|(
@@ -14837,7 +14838,6 @@ name|action
 operator||=
 name|SS_FAIL
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -15014,7 +15014,7 @@ argument_list|(
 name|cdb_string
 argument_list|)
 argument_list|,
-literal|"%x "
+literal|"%02hhx "
 argument_list|,
 name|cdb_ptr
 index|[

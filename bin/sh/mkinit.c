@@ -202,7 +202,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* name of event (e.g. INIT) */
+comment|/* name of event (e.g. RESET) */
 specifier|const
 name|char
 modifier|*
@@ -235,15 +235,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|init
-index|[]
-init|=
-literal|"\ /*\n\  * Initialization code.\n\  */\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|reset
 index|[]
 init|=
@@ -258,24 +249,6 @@ name|event
 index|[]
 init|=
 block|{
-block|{
-literal|"INIT"
-block|,
-literal|"init"
-block|,
-name|init
-block|,
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-block|,
 block|{
 literal|"RESET"
 block|,

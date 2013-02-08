@@ -655,7 +655,7 @@ name|sw_pidtype
 decl_stmt|;
 comment|/* "daemon" or "process group" */
 name|int
-name|run_cmd
+name|sw_runcmd
 decl_stmt|;
 comment|/* run command or send PID to signal */
 name|char
@@ -3339,7 +3339,7 @@ case|:
 name|noaction
 operator|++
 expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
 literal|'r'
 case|:
@@ -7439,7 +7439,7 @@ argument_list|(
 name|errbuf
 argument_list|)
 argument_list|,
-literal|"Could not delet old logfile '%s'"
+literal|"Could not delete old logfile '%s'"
 argument_list|,
 name|oldlogs
 index|[
@@ -8599,6 +8599,14 @@ argument_list|,
 name|file1
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ttouch %s\t\t"
+literal|"# Update mtime for 'when'-interval processing\n"
+argument_list|,
+name|file1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -8630,6 +8638,14 @@ operator|->
 name|log
 argument_list|,
 name|file1
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Interval-based rotations are done using the mtime of 			 * the most recently archived log, so make sure it gets 			 * updated during a rotation. 			 */
+name|utimes
+argument_list|(
+name|file1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8745,6 +8761,13 @@ name|tmp
 decl_stmt|;
 if|if
 condition|(
+name|swork
+operator|->
+name|sw_runcmd
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|!
 operator|(
 name|swork
@@ -8757,6 +8780,7 @@ operator|->
 name|sw_pid
 operator|==
 literal|0
+operator|)
 condition|)
 return|return;
 comment|/* no work to do... */
@@ -8826,6 +8850,27 @@ condition|(
 name|noaction
 condition|)
 block|{
+if|if
+condition|(
+name|swork
+operator|->
+name|sw_runcmd
+condition|)
+name|printf
+argument_list|(
+literal|"\tsh -c '%s %d'\n"
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
+argument_list|,
+name|swork
+operator|->
+name|sw_signum
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"\tkill -%d %d \t\t# %s\n"
@@ -8859,13 +8904,14 @@ argument_list|,
 name|secs
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
 condition|(
 name|swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 condition|)
 block|{
 name|asprintf
@@ -9237,7 +9283,7 @@ name|zwork
 operator|->
 name|zw_swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|==
 literal|0
 operator|&&
@@ -9648,7 +9694,7 @@ argument_list|)
 expr_stmt|;
 name|stmp
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|=
 literal|0
 expr_stmt|;
@@ -9664,7 +9710,20 @@ condition|)
 block|{
 name|stmp
 operator|->
-name|run_cmd
+name|sw_pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_pidok
+operator|=
+literal|0
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_runcmd
 operator|=
 literal|1
 expr_stmt|;

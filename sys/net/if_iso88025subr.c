@@ -1351,7 +1351,7 @@ name|m
 argument_list|,
 literal|3
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m
@@ -1535,7 +1535,7 @@ name|m
 argument_list|,
 name|LLC_SNAPFRAMELEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1626,7 +1626,7 @@ name|ISO88025_HDR_LEN
 operator|+
 name|rif_len
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

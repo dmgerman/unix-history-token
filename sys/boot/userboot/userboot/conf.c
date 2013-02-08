@@ -71,6 +71,9 @@ operator|&
 name|ufs_fsops
 block|,
 operator|&
+name|cd9660_fsops
+block|,
+operator|&
 name|gzipfs_fsops
 block|,
 name|NULL

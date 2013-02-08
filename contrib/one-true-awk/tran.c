@@ -2142,6 +2142,18 @@ operator||=
 name|NUM
 expr_stmt|;
 comment|/* mark number ok */
+if|if
+condition|(
+name|f
+operator|==
+operator|-
+literal|0
+condition|)
+comment|/* who would have thought this possible? */
+name|f
+operator|=
+literal|0
+expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(

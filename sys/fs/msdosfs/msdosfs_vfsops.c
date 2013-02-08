@@ -2682,10 +2682,6 @@ if|if
 condition|(
 name|pmp
 operator|->
-name|pm_Sectors
-operator|||
-name|pmp
-operator|->
 name|pm_FATsecs
 operator|||
 name|getushort
@@ -3623,12 +3619,6 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator||=
-name|MNTK_MPSAFE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(

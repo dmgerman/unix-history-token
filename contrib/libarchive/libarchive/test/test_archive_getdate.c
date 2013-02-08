@@ -124,6 +124,23 @@ argument_list|,
 literal|919253460
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|get_date
+argument_list|(
+name|now
+argument_list|,
+literal|"now - 2 hours"
+argument_list|)
+argument_list|,
+name|get_date
+argument_list|(
+name|now
+argument_list|,
+literal|"2 hours ago"
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* It's important that we handle ctime() format. */
 name|assertEqualInt
 argument_list|(

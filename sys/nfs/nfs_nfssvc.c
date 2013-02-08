@@ -349,6 +349,8 @@ operator|(
 name|NFSSVC_CBADDSOCK
 operator||
 name|NFSSVC_NFSCBD
+operator||
+name|NFSSVC_DUMPMNTOPTS
 operator|)
 operator|)
 operator|&&

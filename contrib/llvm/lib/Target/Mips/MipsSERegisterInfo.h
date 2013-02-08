@@ -74,11 +74,19 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MipsSEInstrInfo
+decl_stmt|;
+name|class
 name|MipsSERegisterInfo
 range|:
 name|public
 name|MipsRegisterInfo
 block|{
+specifier|const
+name|MipsSEInstrInfo
+operator|&
+name|TII
+block|;
 name|public
 operator|:
 name|MipsSERegisterInfo
@@ -89,10 +97,24 @@ operator|&
 name|Subtarget
 argument_list|,
 specifier|const
-name|TargetInstrInfo
+name|MipsSEInstrInfo
 operator|&
 name|TII
 argument_list|)
+block|;
+name|bool
+name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
 block|;
 name|void
 name|eliminateCallFramePseudoInstr

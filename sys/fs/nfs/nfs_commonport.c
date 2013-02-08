@@ -569,6 +569,78 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSLAYOUT
+argument_list|,
+literal|"NFSCL layout"
+argument_list|,
+literal|"NFSv4.1 Layout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSFLAYOUT
+argument_list|,
+literal|"NFSCL flayout"
+argument_list|,
+literal|"NFSv4.1 File Layout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSDEVINFO
+argument_list|,
+literal|"NFSCL devinfo"
+argument_list|,
+literal|"NFSv4.1 Device Info"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSSOCKREQ
+argument_list|,
+literal|"NFSCL sockreq"
+argument_list|,
+literal|"NFS Sock Req"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSCLDS
+argument_list|,
+literal|"NFSCL session"
+argument_list|,
+literal|"NFSv4.1 Session"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSLAYRECALL
+argument_list|,
+literal|"NFSCL layrecall"
+argument_list|,
+literal|"NFSv4.1 Layout Recall"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Definition of mutex locks.  * newnfsd_mtx is used in nfsrvd_nfsd() to protect the nfs socket list  * and assorted other nfsd structures.  */
 end_comment

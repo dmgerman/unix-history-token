@@ -1395,14 +1395,11 @@ decl_stmt|;
 comment|// Actually a CXXOperatorIdName*
 name|DeclarationNameTable
 argument_list|(
-specifier|const
-name|DeclarationNameTable
-operator|&
+argument|const DeclarationNameTable&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// NONCOPYABLE
-name|DeclarationNameTable
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -1410,8 +1407,8 @@ specifier|const
 name|DeclarationNameTable
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// NONCOPYABLE
 name|public
 label|:
 name|DeclarationNameTable

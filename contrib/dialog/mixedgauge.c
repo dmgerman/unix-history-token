@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: mixedgauge.c,v 1.29 2011/10/20 23:35:31 tom Exp $  *  *  mixedgauge.c -- implements the mixedgauge dialog  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is inspired by a patch from Kiran Cherupally  *  (but different interface design).  */
+comment|/*  *  $Id: mixedgauge.c,v 1.24 2011/06/27 08:16:38 tom Exp $  *  *  mixedgauge.c -- implements the mixedgauge dialog  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is inspired by a patch from Kiran Cherupally  *  (but different interface design).  */
 end_comment
 
 begin_include
@@ -409,6 +409,12 @@ operator|-
 literal|2
 decl_stmt|;
 name|int
+name|rm
+init|=
+name|limit_x
+decl_stmt|;
+comment|/* right margin */
+name|int
 name|lm
 init|=
 name|limit_x
@@ -460,6 +466,14 @@ condition|(
 name|win
 condition|)
 block|{
+name|rm
+operator|-=
+operator|(
+literal|2
+operator|*
+name|MARGIN
+operator|)
+expr_stmt|;
 name|bm
 operator|-=
 operator|(
@@ -649,9 +663,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -739,9 +750,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -925,21 +933,6 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|win
-operator|!=
-literal|0
-condition|)
-name|wmove
-argument_list|(
-name|win
-argument_list|,
-name|last_y
-argument_list|,
-name|last_x
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1012,9 +1005,6 @@ argument_list|(
 name|win
 argument_list|)
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -1048,9 +1038,6 @@ operator|&
 name|attr
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|win
@@ -1140,9 +1127,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|dlg
@@ -1275,9 +1259,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|dlg
@@ -1359,13 +1340,6 @@ block|}
 name|myprint_status
 argument_list|(
 name|dlg
-argument_list|)
-expr_stmt|;
-name|dlg_trace_win
-argument_list|(
-name|dlg
-operator|->
-name|dialog
 argument_list|)
 expr_stmt|;
 block|}
@@ -1790,7 +1764,7 @@ operator|->
 name|dialog
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box2
+name|dlg_draw_box
 argument_list|(
 name|dlg
 operator|->
@@ -1811,8 +1785,6 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
-argument_list|,
-name|border2_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -1913,9 +1885,6 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wattrset
 argument_list|(
 name|dlg

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -168,7 +174,7 @@ name|class
 name|TargetLoweringObjectFile
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -323,11 +329,11 @@ name|getObjFileLowering
 argument_list|()
 specifier|const
 block|;
-comment|/// getTargetData - Return information about data layout.
+comment|/// getDataLayout - Return information about data layout.
 specifier|const
-name|TargetData
+name|DataLayout
 operator|&
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|;
@@ -1059,6 +1065,8 @@ argument|StringRef Str
 argument_list|,
 argument|const MDNode *LocMDNode =
 literal|0
+argument_list|,
+argument|InlineAsm::AsmDialect AsmDialect = InlineAsm::AD_ATT
 argument_list|)
 specifier|const
 block|;

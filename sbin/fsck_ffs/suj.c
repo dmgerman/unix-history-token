@@ -2623,7 +2623,7 @@ condition|(
 name|brec
 operator|->
 name|jb_frags
-operator|!=
+operator|<
 name|frags
 condition|)
 return|return
@@ -2789,7 +2789,7 @@ name|srec
 operator|->
 name|sr_rec
 expr_stmt|;
-comment|/* 		 * If the block overlaps but does not match 		 * exactly it's a new allocation.  If it matches 		 * exactly this record refers to the current 		 * location. 		 */
+comment|/* 		 * If the block overlaps but does not match 		 * exactly this record refers to the current 		 * location. 		 */
 if|if
 condition|(
 name|blk_overlaps
@@ -3190,11 +3190,13 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Freeing %d frags at blk %jd\n"
+literal|"Freeing %d frags at blk %jd mask 0x%x\n"
 argument_list|,
 name|frags
 argument_list|,
 name|bno
+argument_list|,
+name|mask
 argument_list|)
 expr_stmt|;
 name|cg
@@ -5738,11 +5740,10 @@ name|int
 name|frags
 parameter_list|)
 block|{
-name|int
-name|mask
-decl_stmt|;
-name|mask
-operator|=
+name|blk_free
+argument_list|(
+name|blk
+argument_list|,
 name|blk_freemask
 argument_list|(
 name|blk
@@ -5753,25 +5754,6 @@ name|lbn
 argument_list|,
 name|frags
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"blk %jd freemask 0x%X\n"
-argument_list|,
-name|blk
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-name|blk_free
-argument_list|(
-name|blk
-argument_list|,
-name|mask
 argument_list|,
 name|frags
 argument_list|)
@@ -5821,19 +5803,6 @@ argument_list|,
 name|lbn
 argument_list|,
 name|frags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"blk %jd freemask 0x%X\n"
-argument_list|,
-name|blk
-argument_list|,
-name|mask
 argument_list|)
 expr_stmt|;
 name|resid
@@ -11334,6 +11303,32 @@ operator|!=
 name|oldseq
 condition|)
 block|{
+name|TAILQ_FOREACH
+argument_list|(
+argument|seg
+argument_list|,
+argument|&allsegs
+argument_list|,
+argument|ss_next
+argument_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%jd, "
+argument_list|,
+name|seg
+operator|->
+name|ss_rec
+operator|.
+name|jsr_seq
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|err_suj
 argument_list|(
 literal|"Journal file sequence mismatch %jd != %jd\n"

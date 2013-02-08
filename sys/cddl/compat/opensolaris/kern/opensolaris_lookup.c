@@ -286,6 +286,15 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|error
+operator|=
+name|vfs_busy
+argument_list|(
+name|vfsp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 		 * tvp is NULL for *cvpp vnode, which we can't unlock. 		 */
 if|if
 condition|(
@@ -304,6 +313,15 @@ argument_list|(
 name|cvp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 		 * The read lock must be held across the call to VFS_ROOT() to 		 * prevent a concurrent unmount from destroying the vfs. 		 */
 name|error
 operator|=
@@ -315,6 +333,11 @@ name|lktype
 argument_list|,
 operator|&
 name|tvp
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|vfsp
 argument_list|)
 expr_stmt|;
 if|if

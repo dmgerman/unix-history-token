@@ -1708,7 +1708,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|GRXSTSRD_PID_MDATA
+name|GRXSTSRD_DPID_MDATA
 value|(3<<15)
 end_define
 

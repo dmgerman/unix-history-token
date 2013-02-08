@@ -68,6 +68,9 @@ decl_stmt|;
 name|class
 name|Decl
 decl_stmt|;
+name|class
+name|Preprocessor
+decl_stmt|;
 name|namespace
 name|comments
 block|{
@@ -357,6 +360,8 @@ operator|*
 name|parse
 argument_list|(
 argument|const ASTContext&Context
+argument_list|,
+argument|const Preprocessor *PP
 argument_list|,
 argument|const Decl *D
 argument_list|)
@@ -683,8 +688,8 @@ operator|*
 operator|>
 name|Comments
 block|;
-name|RawComment
-name|LastComment
+name|SourceLocation
+name|PrevCommentEndLoc
 block|;
 name|bool
 name|OnlyWhitespaceSeen

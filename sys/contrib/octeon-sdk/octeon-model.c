@@ -65,6 +65,21 @@ name|defined
 argument_list|(
 name|CVMX_BUILD_FOR_STANDALONE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
 end_if
 
 begin_include
@@ -73,6 +88,11 @@ directive|include
 file|<octeon-app-init.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -80,7 +100,7 @@ file|"cvmx-sysinfo.h"
 end_include
 
 begin_comment
-comment|/**  * This function checks to see if the software is compatible with the  * chip it is running on.  This is called in the application startup code  * and does not need to be called directly by the application.  * Does not return if software is incompatible.  *  * @param chip_id chip id that the software is being run on.  *  * @return 0: runtime checking or exact version match  *         1: chip is newer revision than compiled for, but software will run properly.  */
+comment|/**  * This function checks to see if the software is compatible with the  * chip it is running on.  This is called in the application startup code  * and does not need to be called directly by the application.  * Does not return if software is incompatible, unless compiled for the  * FreeBSD kernel, in which case it returns -1.  *  * @param chip_id chip id that the software is being run on.  *  * @return 0: runtime checking or exact version match  *         1: chip is newer revision than compiled for, but software will run properly.  *        -1: software is incompatible  */
 end_comment
 
 begin_decl_stmt
@@ -206,12 +226,29 @@ argument_list|(
 literal|"Refusing to run on older revision than program was compiled for.\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
 name|exit
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{

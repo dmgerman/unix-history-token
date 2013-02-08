@@ -443,6 +443,17 @@ begin_comment
 comment|/* Fatal error parsing some list-option. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pid_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* kern.max_pid */
+end_comment
+
 begin_enum
 specifier|static
 enum|enum
@@ -683,6 +694,9 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -781,6 +795,16 @@ begin_function_decl
 specifier|static
 name|void
 name|sizevars
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pidmax_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1150,6 +1174,9 @@ index|[
 literal|2
 index|]
 argument_list|)
+expr_stmt|;
+name|pidmax_init
+argument_list|()
 expr_stmt|;
 name|all
 operator|=
@@ -3456,17 +3483,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|BSD_PID_MAX
-value|99999
-end_define
-
-begin_comment
-comment|/* Copy of PID_MAX from sys/proc.h. */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -3571,7 +3587,7 @@ literal|0
 operator|||
 name|tempid
 operator|>
-name|BSD_PID_MAX
+name|pid_max
 condition|)
 block|{
 name|warnx
@@ -3645,12 +3661,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|BSD_PID_MAX
-end_undef
 
 begin_comment
 comment|/*-  * The user can specify a device via one of three formats:  *     1) fully qualified, e.g.:     /dev/ttyp0 /dev/console	/dev/pts/0  *     2) missing "/dev", e.g.:      ttyp0      console		pts/0  *     3) two-letters, e.g.:         p0         co		0  *        (matching letters that would be seen in the "TT" column)  */
@@ -5938,6 +5948,10 @@ name|char
 modifier|*
 name|comm
 parameter_list|,
+name|char
+modifier|*
+name|thread
+parameter_list|,
 name|int
 name|maxlen
 parameter_list|)
@@ -5966,6 +5980,20 @@ name|termwidth
 argument_list|)
 argument_list|,
 name|comm
+argument_list|,
+name|showthreads
+operator|&&
+name|ki
+operator|->
+name|ki_p
+operator|->
+name|ki_numthreads
+operator|>
+literal|1
+condition|?
+name|thread
+else|:
+name|NULL
 argument_list|,
 name|maxlen
 argument_list|)
@@ -6085,6 +6113,12 @@ name|ki_p
 operator|->
 name|ki_comm
 argument_list|,
+name|ki
+operator|->
+name|ki_p
+operator|->
+name|ki_tdname
+argument_list|,
 name|MAXCOMLEN
 argument_list|)
 argument_list|)
@@ -6154,6 +6188,12 @@ argument_list|(
 name|kvm_getenvv
 argument_list|,
 name|ki
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|,
 operator|(
 name|char
@@ -6724,6 +6764,57 @@ operator|(
 name|newopts
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|pidmax_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|size_t
+name|intsize
+decl_stmt|;
+name|intsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|pid_max
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.pid_max"
+argument_list|,
+operator|&
+name|pid_max
+argument_list|,
+operator|&
+name|intsize
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"unable to read kern.pid_max"
+argument_list|)
+expr_stmt|;
+name|pid_max
+operator|=
+literal|99999
+expr_stmt|;
+block|}
 block|}
 end_function
 

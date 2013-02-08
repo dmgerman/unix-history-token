@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_bus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -343,7 +337,6 @@ literal|"SiS 746 host to AGP bridge"
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 name|NULL
 return|;

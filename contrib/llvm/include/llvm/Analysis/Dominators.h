@@ -2016,7 +2016,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// properlyDominates - Returns true iff this dominates N and this != N.
+comment|/// properlyDominates - Returns true iff A dominates B and A != B.
 end_comment
 
 begin_comment

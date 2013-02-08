@@ -86,6 +86,9 @@ name|class
 name|MacroDefinition
 decl_stmt|;
 name|class
+name|MacroInfo
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -123,6 +126,21 @@ argument_list|,
 name|IdentifierInfo
 operator|*
 name|II
+argument_list|)
+block|{ }
+comment|/// \brief A macro was read from the AST file.
+name|virtual
+name|void
+name|MacroRead
+argument_list|(
+name|serialization
+operator|::
+name|MacroID
+name|ID
+argument_list|,
+name|MacroInfo
+operator|*
+name|MI
 argument_list|)
 block|{ }
 comment|/// \brief A type was deserialized from the AST file. The ID here has the
@@ -184,17 +202,6 @@ name|MacroDefinition
 operator|*
 name|MD
 argument_list|)
-block|{ }
-comment|/// \brief A macro definition that had previously been deserialized
-comment|/// (and removed via IdentifierRead) has now been made visible.
-name|virtual
-name|void
-name|MacroVisible
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|)
 block|{ }
 comment|/// \brief A module definition was read from the AST file.
 name|virtual

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_phys.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -1086,7 +1092,7 @@ name|MAX
 argument_list|(
 name|KERNBASE
 operator|+
-name|NKPT
+name|nkpt
 operator|*
 name|NBPDR
 argument_list|,
@@ -1870,7 +1876,7 @@ name|MAX
 argument_list|(
 name|KERNBASE
 operator|+
-name|NKPT
+name|nkpt
 operator|*
 name|NBPDR
 argument_list|,

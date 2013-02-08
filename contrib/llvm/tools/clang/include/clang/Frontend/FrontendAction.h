@@ -291,9 +291,7 @@ argument_list|(
 operator|!
 name|CurrentInput
 operator|.
-name|File
-operator|.
-name|empty
+name|isEmpty
 argument_list|()
 operator|&&
 literal|"No current file!"
@@ -317,10 +315,7 @@ name|CurrentInput
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getCurrentFile
 argument_list|()
 specifier|const
@@ -330,9 +325,7 @@ argument_list|(
 operator|!
 name|CurrentInput
 operator|.
-name|File
-operator|.
-name|empty
+name|isEmpty
 argument_list|()
 operator|&&
 literal|"No current file!"
@@ -341,7 +334,8 @@ block|;
 return|return
 name|CurrentInput
 operator|.
-name|File
+name|getFile
+argument_list|()
 return|;
 block|}
 name|InputKind
@@ -354,9 +348,7 @@ argument_list|(
 operator|!
 name|CurrentInput
 operator|.
-name|File
-operator|.
-name|empty
+name|isEmpty
 argument_list|()
 operator|&&
 literal|"No current file!"
@@ -365,7 +357,8 @@ block|;
 return|return
 name|CurrentInput
 operator|.
-name|Kind
+name|getKind
+argument_list|()
 return|;
 block|}
 name|ASTUnit
@@ -489,8 +482,8 @@ block|}
 comment|/// @}
 comment|/// @name Public Action Interface
 comment|/// @{
-comment|/// BeginSourceFile - Prepare the action for processing the input file \arg
-comment|/// Filename; this is run after the options and frontend have been
+comment|/// BeginSourceFile - Prepare the action for processing the input file
+comment|/// \p Input; this is run after the options and frontend have been
 comment|/// initialized, but prior to executing any per-file processing.
 comment|///
 comment|/// \param CI - The compiler instance this action is being run from. The

@@ -172,6 +172,10 @@ comment|// isLinux - Target system is Linux. Is false we consider ELFOS for now.
 name|bool
 name|IsLinux
 block|;
+comment|// UseSmallSection - Small section is used.
+name|bool
+name|UseSmallSection
+block|;
 comment|/// Features related to the presence of specific instructions.
 comment|// HasSEInReg - SEB and SEH (signext in register) instructions.
 name|bool
@@ -201,6 +205,12 @@ block|;
 comment|// InMips16 -- can process Mips16 instructions
 name|bool
 name|InMips16Mode
+block|;
+comment|// HasDSP, HasDSPR2 -- supports DSP ASE.
+name|bool
+name|HasDSP
+block|,
+name|HasDSPR2
 block|;
 comment|// IsAndroid -- target is android
 name|bool
@@ -288,6 +298,8 @@ argument_list|,
 argument|const std::string&FS
 argument_list|,
 argument|bool little
+argument_list|,
+argument|Reloc::Model RM
 argument_list|)
 block|;
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
@@ -436,6 +448,24 @@ name|InMips16Mode
 return|;
 block|}
 name|bool
+name|hasDSP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDSP
+return|;
+block|}
+name|bool
+name|hasDSPR2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDSPR2
+return|;
+block|}
+name|bool
 name|isAndroid
 argument_list|()
 specifier|const
@@ -451,6 +481,15 @@ specifier|const
 block|{
 return|return
 name|IsLinux
+return|;
+block|}
+name|bool
+name|useSmallSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSmallSection
 return|;
 block|}
 name|bool

@@ -1173,6 +1173,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|di
+operator|==
+name|NULL
+condition|)
+return|return;
 name|free
 argument_list|(
 name|di

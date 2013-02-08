@@ -103,6 +103,9 @@ name|class
 name|ObjCIvarDecl
 decl_stmt|;
 name|class
+name|CXXBasePath
+decl_stmt|;
+name|class
 name|StackFrameContext
 decl_stmt|;
 name|namespace
@@ -215,12 +218,15 @@ name|SVal
 name|V
 parameter_list|)
 function_decl|;
+comment|/// \brief Create a new store with the specified binding removed.
+comment|/// \param ST the original store, that is the basis for the new store.
+comment|/// \param L the location whose binding should be removed.
 name|virtual
 name|StoreRef
-name|Remove
+name|killBinding
 parameter_list|(
 name|Store
-name|St
+name|ST
 parameter_list|,
 name|Loc
 name|L
@@ -228,21 +234,27 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// BindCompoundLiteral - Return the store that has the bindings currently
-comment|///  in 'store' plus the bindings for the CompoundLiteral.  'R' is the region
-comment|///  for the compound literal and 'BegInit' and 'EndInit' represent an
-comment|///  array of initializer values.
+comment|/// \brief Create a new store that binds a value to a compound literal.
+comment|///
+comment|/// \param ST The original store whose bindings are the basis for the new
+comment|///        store.
+comment|///
+comment|/// \param CL The compound literal to bind (the binding key).
+comment|///
+comment|/// \param LC The LocationContext for the binding.
+comment|///
+comment|/// \param V The value to bind to the compound literal.
 name|virtual
 name|StoreRef
-name|BindCompoundLiteral
+name|bindCompoundLiteral
 parameter_list|(
 name|Store
-name|store
+name|ST
 parameter_list|,
 specifier|const
 name|CompoundLiteralExpr
 modifier|*
-name|cl
+name|CL
 parameter_list|,
 specifier|const
 name|LocationContext
@@ -250,7 +262,7 @@ modifier|*
 name|LC
 parameter_list|,
 name|SVal
-name|v
+name|V
 parameter_list|)
 init|=
 literal|0
@@ -425,12 +437,13 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Evaluates DerivedToBase casts.
+comment|/// Evaluates a chain of derived-to-base casts through the path specified in
+comment|/// \p Cast.
 name|SVal
 name|evalDerivedToBase
 parameter_list|(
 name|SVal
-name|derived
+name|Derived
 parameter_list|,
 specifier|const
 name|CastExpr
@@ -438,19 +451,29 @@ modifier|*
 name|Cast
 parameter_list|)
 function_decl|;
-comment|/// Evaluates a derived-to-base cast through a single level of derivation.
-name|virtual
+comment|/// Evaluates a chain of derived-to-base casts through the specified path.
 name|SVal
 name|evalDerivedToBase
 parameter_list|(
 name|SVal
-name|derived
+name|Derived
+parameter_list|,
+specifier|const
+name|CXXBasePath
+modifier|&
+name|CastPath
+parameter_list|)
+function_decl|;
+comment|/// Evaluates a derived-to-base cast through a single level of derivation.
+name|SVal
+name|evalDerivedToBase
+parameter_list|(
+name|SVal
+name|Derived
 parameter_list|,
 name|QualType
-name|derivedPtrType
+name|DerivedPtrType
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Evaluates C++ dynamic_cast cast.
 comment|/// The callback may result in the following 3 scenarios:
@@ -460,22 +483,19 @@ comment|///  - We don't know (base is a symbolic region and we don't have
 comment|///    enough info to determine if the cast will succeed at run time).
 comment|/// The function returns an SVal representing the derived class; it's
 comment|/// valid only if Failed flag is set to false.
-name|virtual
 name|SVal
 name|evalDynamicCast
 parameter_list|(
 name|SVal
-name|base
+name|Base
 parameter_list|,
 name|QualType
-name|derivedPtrType
+name|DerivedPtrType
 parameter_list|,
 name|bool
 modifier|&
 name|Failed
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 specifier|const
 name|ElementRegion
@@ -523,39 +543,6 @@ parameter_list|,
 name|SymbolReaper
 modifier|&
 name|SymReaper
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|StoreRef
-name|BindDecl
-parameter_list|(
-name|Store
-name|store
-parameter_list|,
-specifier|const
-name|VarRegion
-modifier|*
-name|VR
-parameter_list|,
-name|SVal
-name|initVal
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|StoreRef
-name|BindDeclWithNoInit
-parameter_list|(
-name|Store
-name|store
-parameter_list|,
-specifier|const
-name|VarRegion
-modifier|*
-name|VR
 parameter_list|)
 init|=
 literal|0

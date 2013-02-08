@@ -352,8 +352,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// getArgsForToolChain - Return the derived argument list for the
-comment|/// tool chain \arg TC (or the default tool chain, if TC is not
-comment|/// specified).
+comment|/// tool chain \p TC (or the default tool chain, if TC is not specified).
 comment|///
 comment|/// \param BoundArch - The bound architecture name, or 0.
 specifier|const
@@ -488,6 +487,26 @@ name|Terminator
 argument_list|,
 name|bool
 name|Quote
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// PrintDiagnosticJob - Print one job in -### format, but with the
+comment|/// superfluous options removed, which are not necessary for
+comment|/// reproducing the crash.
+comment|///
+comment|/// \param OS - The stream to print on.
+comment|/// \param J - The job to print.
+name|void
+name|PrintDiagnosticJob
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|Job
+operator|&
+name|J
 argument_list|)
 decl|const
 decl_stmt|;

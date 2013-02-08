@@ -139,6 +139,9 @@ name|class
 name|BalancedDelimiterTracker
 decl_stmt|;
 name|class
+name|CorrectionCandidateCallback
+decl_stmt|;
+name|class
 name|DeclGroupRef
 decl_stmt|;
 name|class
@@ -489,6 +492,21 @@ name|IdentifierInfo
 operator|*
 name|Ident_override
 block|;
+comment|// C++ type trait keywords that have can be reverted to identifiers and
+comment|// still used as type traits.
+name|llvm
+operator|::
+name|SmallDenseMap
+operator|<
+name|IdentifierInfo
+operator|*
+block|,
+name|tok
+operator|::
+name|TokenKind
+operator|>
+name|RevertableTypeTraits
+block|;
 name|OwningPtr
 operator|<
 name|PragmaHandler
@@ -595,6 +613,16 @@ block|,
 literal|16
 operator|>
 name|TemplateIds
+block|;
+comment|/// \brief Identifiers which have been declared within a tentative parse.
+name|SmallVector
+operator|<
+name|IdentifierInfo
+operator|*
+block|,
+literal|8
+operator|>
+name|TentativelyDeclaredIdentifiers
 block|;
 name|IdentifierInfo
 operator|*
@@ -783,7 +811,9 @@ modifier|*
 name|ExprArg
 typedef|;
 typedef|typedef
-name|ASTMultiPtr
+name|llvm
+operator|::
+name|MutableArrayRef
 operator|<
 name|Stmt
 operator|*
@@ -908,6 +938,68 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
+comment|/// ConsumeToken - Consume the current 'peek token' and lex the next one.
+comment|/// This does not work with all kinds of tokens: strings and specific other
+comment|/// tokens must be consumed with custom methods below.  This returns the
+comment|/// location of the consumed token.
+name|SourceLocation
+name|ConsumeToken
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isTokenStringLiteral
+argument_list|()
+operator|&&
+operator|!
+name|isTokenParen
+argument_list|()
+operator|&&
+operator|!
+name|isTokenBracket
+argument_list|()
+operator|&&
+operator|!
+name|isTokenBrace
+argument_list|()
+operator|&&
+literal|"Should consume special tokens with Consume*Token"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Tok
+operator|.
+name|is
+argument_list|(
+name|tok
+operator|::
+name|code_completion
+argument_list|)
+condition|)
+return|return
+name|handleUnexpectedCodeCompletionToken
+argument_list|()
+return|;
+name|PrevTokLocation
+operator|=
+name|Tok
+operator|.
+name|getLocation
+argument_list|()
+expr_stmt|;
+name|PP
+operator|.
+name|Lex
+argument_list|(
+name|Tok
+argument_list|)
+expr_stmt|;
+return|return
+name|PrevTokLocation
+return|;
+block|}
 name|private
 label|:
 comment|//===--------------------------------------------------------------------===//
@@ -1051,68 +1143,6 @@ name|bool
 name|isTokenEqualOrEqualTypo
 parameter_list|()
 function_decl|;
-comment|/// ConsumeToken - Consume the current 'peek token' and lex the next one.
-comment|/// This does not work with all kinds of tokens: strings and specific other
-comment|/// tokens must be consumed with custom methods below.  This returns the
-comment|/// location of the consumed token.
-name|SourceLocation
-name|ConsumeToken
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isTokenStringLiteral
-argument_list|()
-operator|&&
-operator|!
-name|isTokenParen
-argument_list|()
-operator|&&
-operator|!
-name|isTokenBracket
-argument_list|()
-operator|&&
-operator|!
-name|isTokenBrace
-argument_list|()
-operator|&&
-literal|"Should consume special tokens with Consume*Token"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Tok
-operator|.
-name|is
-argument_list|(
-name|tok
-operator|::
-name|code_completion
-argument_list|)
-condition|)
-return|return
-name|handleUnexpectedCodeCompletionToken
-argument_list|()
-return|;
-name|PrevTokLocation
-operator|=
-name|Tok
-operator|.
-name|getLocation
-argument_list|()
-expr_stmt|;
-name|PP
-operator|.
-name|Lex
-argument_list|(
-name|Tok
-argument_list|)
-expr_stmt|;
-return|return
-name|PrevTokLocation
-return|;
-block|}
 comment|/// ConsumeAnyToken - Dispatch to the right Consume* method based on the
 comment|/// current token type.  This should only be used in cases where the type of
 comment|/// the token really isn't known, e.g. in error recovery.
@@ -1450,6 +1480,48 @@ name|void
 name|HandlePragmaPack
 parameter_list|()
 function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma ms_struct...
+name|void
+name|HandlePragmaMSStruct
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma align...
+name|void
+name|HandlePragmaAlign
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma weak id...
+name|void
+name|HandlePragmaWeak
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma weak id = id...
+name|void
+name|HandlePragmaWeakAlias
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma redefine_extname...
+name|void
+name|HandlePragmaRedefineExtname
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma STDC FP_CONTRACT...
+name|void
+name|HandlePragmaFPContract
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma OPENCL EXTENSION...
+name|void
+name|HandlePragmaOpenCLExtension
+parameter_list|()
+function_decl|;
 comment|/// GetLookAheadToken - This peeks ahead N tokens and returns that token
 comment|/// without consuming any tokens.  LookAhead(0) returns 'Tok', LookAhead(1)
 comment|/// returns the token after Tok, etc.
@@ -1495,6 +1567,8 @@ literal|1
 argument_list|)
 return|;
 block|}
+name|public
+label|:
 comment|/// NextToken - This peeks ahead one token and returns it without
 comment|/// consuming it.
 specifier|const
@@ -1534,6 +1608,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|private
+label|:
 specifier|static
 name|void
 name|setTypeAnnotation
@@ -1635,6 +1711,8 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+name|public
+label|:
 comment|// If NeedType is true, then TryAnnotateTypeOrScopeToken will try harder to
 comment|// find a type name by attempting typo correction.
 name|bool
@@ -1652,12 +1730,75 @@ name|false
 parameter_list|)
 function_decl|;
 name|bool
+name|TryAnnotateTypeOrScopeTokenAfterScopeSpec
+parameter_list|(
+name|bool
+name|EnteringContext
+parameter_list|,
+name|bool
+name|NeedType
+parameter_list|,
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|bool
+name|IsNewScope
+parameter_list|)
+function_decl|;
+name|bool
 name|TryAnnotateCXXScopeToken
 parameter_list|(
 name|bool
 name|EnteringContext
 init|=
 name|false
+parameter_list|)
+function_decl|;
+name|private
+label|:
+enum|enum
+name|AnnotatedNameKind
+block|{
+comment|/// Annotation has failed and emitted an error.
+name|ANK_Error
+block|,
+comment|/// The identifier is a tentatively-declared name.
+name|ANK_TentativeDecl
+block|,
+comment|/// The identifier is a template name. FIXME: Add an annotation for that.
+name|ANK_TemplateName
+block|,
+comment|/// The identifier can't be resolved.
+name|ANK_Unresolved
+block|,
+comment|/// Annotation was successful.
+name|ANK_Success
+block|}
+enum|;
+name|AnnotatedNameKind
+name|TryAnnotateName
+parameter_list|(
+name|bool
+name|IsAddressOfOperand
+parameter_list|,
+name|CorrectionCandidateCallback
+modifier|*
+name|CCC
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Push a tok::annot_cxxscope token onto the token stream.
+name|void
+name|AnnotateScopeToken
+parameter_list|(
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|bool
+name|IsNewAnnotation
 parameter_list|)
 function_decl|;
 comment|/// TryAltiVecToken - Check for context-sensitive AltiVec identifier tokens,
@@ -1821,6 +1962,9 @@ decl_stmt|;
 name|Token
 name|PrevTok
 decl_stmt|;
+name|size_t
+name|PrevTentativelyDeclaredIdentifierCount
+decl_stmt|;
 name|unsigned
 name|short
 name|PrevParenCount
@@ -1852,6 +1996,15 @@ operator|=
 name|P
 operator|.
 name|Tok
+block|;
+name|PrevTentativelyDeclaredIdentifierCount
+operator|=
+name|P
+operator|.
+name|TentativelyDeclaredIdentifiers
+operator|.
+name|size
+argument_list|()
 block|;
 name|PrevParenCount
 operator|=
@@ -1895,6 +2048,15 @@ argument_list|)
 block|;
 name|P
 operator|.
+name|TentativelyDeclaredIdentifiers
+operator|.
+name|resize
+argument_list|(
+name|PrevTentativelyDeclaredIdentifierCount
+argument_list|)
+block|;
+name|P
+operator|.
 name|PP
 operator|.
 name|CommitBacktrackedTokens
@@ -1927,6 +2089,15 @@ operator|.
 name|Tok
 operator|=
 name|PrevTok
+block|;
+name|P
+operator|.
+name|TentativelyDeclaredIdentifiers
+operator|.
+name|resize
+argument_list|(
+name|PrevTentativelyDeclaredIdentifierCount
+argument_list|)
 block|;
 name|P
 operator|.
@@ -2141,6 +2312,8 @@ init|=
 name|TST_unspecified
 parameter_list|)
 function_decl|;
+name|public
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Scope manipulation
 comment|/// ParseScope - Introduces a new scope for parsing. The kind of
@@ -2158,14 +2331,11 @@ name|Self
 decl_stmt|;
 name|ParseScope
 argument_list|(
-specifier|const
-name|ParseScope
-operator|&
+argument|const ParseScope&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// do not implement
-name|ParseScope
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -2173,8 +2343,8 @@ specifier|const
 name|ParseScope
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// do not implement
 name|public
 label|:
 comment|// ParseScope - Construct a new object to manage a scope in the
@@ -2258,6 +2428,8 @@ name|void
 name|ExitScope
 parameter_list|()
 function_decl|;
+name|private
+label|:
 comment|/// \brief RAII object used to modify the scope flags for the current scope.
 name|class
 name|ParseScopeFlags
@@ -2271,12 +2443,10 @@ name|OldFlags
 decl_stmt|;
 name|ParseScopeFlags
 argument_list|(
-specifier|const
-name|ParseScopeFlags
-operator|&
+argument|const ParseScopeFlags&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// do not implement
 name|void
 name|operator
 init|=
@@ -2285,8 +2455,8 @@ specifier|const
 name|ParseScopeFlags
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// do not implement
 name|public
 label|:
 name|ParseScopeFlags
@@ -2368,6 +2538,8 @@ name|SourceLocation
 name|AtLoc
 parameter_list|)
 function_decl|;
+name|public
+label|:
 comment|/// SkipUntil - Read tokens until we get to the specified token, then consume
 comment|/// it (unless DontConsume is true).  Because we cannot guarantee that the
 comment|/// token will ever occur, this skips to the next token, or to some likely
@@ -2566,6 +2738,8 @@ name|void
 name|SkipMalformedDecl
 parameter_list|()
 function_decl|;
+name|private
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Lexing and parsing of C++ inline methods.
 struct_decl|struct
@@ -2748,19 +2922,47 @@ argument_list|)
 block|; }
 block|}
 decl_stmt|;
-comment|/// A list of late parsed attributes.  Used by ParseGNUAttributes.
-typedef|typedef
+comment|// A list of late-parsed attributes.  Used by ParseGNUAttributes.
+name|class
+name|LateParsedAttrList
+range|:
+name|public
 name|llvm
 operator|::
 name|SmallVector
 operator|<
 name|LateParsedAttribute
 operator|*
-operator|,
-literal|2
-operator|>
+decl_stmt|, 2>
+block|{
+name|public
+label|:
 name|LateParsedAttrList
-expr_stmt|;
+argument_list|(
+argument|bool PSoon = false
+argument_list|)
+block|:
+name|ParseSoon
+argument_list|(
+argument|PSoon
+argument_list|)
+block|{ }
+name|bool
+name|parseSoon
+parameter_list|()
+block|{
+return|return
+name|ParseSoon
+return|;
+block|}
+name|private
+label|:
+name|bool
+name|ParseSoon
+decl_stmt|;
+comment|// Are we planning to parse these shortly after creation?
+block|}
+empty_stmt|;
 comment|/// Contains the lexed tokens of a member function definition
 comment|/// which needs to be parsed at the end of the class declaration
 comment|/// after parsing all other member declarations.
@@ -3025,6 +3227,8 @@ argument_list|(
 argument|Decl *TagOrTemplate
 argument_list|,
 argument|bool TopLevelClass
+argument_list|,
+argument|bool IsInterface
 argument_list|)
 block|:
 name|TopLevelClass
@@ -3035,6 +3239,11 @@ operator|,
 name|TemplateScope
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|IsInterface
+argument_list|(
+name|IsInterface
 argument_list|)
 operator|,
 name|TagOrTemplate
@@ -3054,6 +3263,12 @@ comment|/// scope. When true, TagOrTemplate is a template declaration;
 comment|/// othewise, it is a tag declaration.
 name|bool
 name|TemplateScope
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this class is an __interface.
+name|bool
+name|IsInterface
 range|:
 literal|1
 decl_stmt|;
@@ -3131,6 +3346,8 @@ argument_list|,
 argument|Decl *TagOrTemplate
 argument_list|,
 argument|bool TopLevelClass
+argument_list|,
+argument|bool IsInterface
 argument_list|)
 block|:
 name|P
@@ -3145,7 +3362,7 @@ argument_list|)
 operator|,
 name|State
 argument_list|(
-argument|P.PushParsingClass(TagOrTemplate, TopLevelClass)
+argument|P.PushParsingClass(TagOrTemplate, TopLevelClass, IsInterface)
 argument_list|)
 block|{     }
 comment|/// \brief Pop this class of the stack.
@@ -3413,6 +3630,8 @@ argument_list|(
 argument|Decl *TagOrTemplate
 argument_list|,
 argument|bool TopLevelClass
+argument_list|,
+argument|bool IsInterface
 argument_list|)
 expr_stmt|;
 name|void
@@ -4140,6 +4359,8 @@ modifier|*
 name|ParseObjCMethodDefinition
 parameter_list|()
 function_decl|;
+name|public
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// C99 6.5: Expressions.
 comment|/// TypeCastState - State whether an expression is or may be a type cast.
@@ -4183,6 +4404,8 @@ init|=
 name|NotTypeCast
 parameter_list|)
 function_decl|;
+name|private
+label|:
 name|ExprResult
 name|ParseExpressionWithLeadingAt
 parameter_list|(
@@ -4242,6 +4465,11 @@ name|isTypeCast
 init|=
 name|NotTypeCast
 parameter_list|)
+function_decl|;
+comment|/// Returns true if the next token cannot start an expression.
+name|bool
+name|isNotExpressionStart
+parameter_list|()
 function_decl|;
 comment|/// Returns true if the next token would start a postfix-expression
 comment|/// suffix.
@@ -4564,6 +4792,10 @@ name|IsTypename
 init|=
 name|false
 parameter_list|)
+function_decl|;
+name|void
+name|CheckForLParenAfterColonColon
+parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C++0x 5.1.2: Lambda expressions
@@ -5009,6 +5241,39 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C99 6.8: Statements and Blocks.
+comment|/// A SmallVector of statements, with stack size 32 (as that is the only one
+comment|/// used.)
+typedef|typedef
+name|SmallVector
+operator|<
+name|Stmt
+operator|*
+operator|,
+literal|32
+operator|>
+name|StmtVector
+expr_stmt|;
+comment|/// A SmallVector of expressions, with stack size 12 (the maximum used.)
+typedef|typedef
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+operator|,
+literal|12
+operator|>
+name|ExprVector
+expr_stmt|;
+comment|/// A SmallVector of types.
+typedef|typedef
+name|SmallVector
+operator|<
+name|ParsedType
+operator|,
+literal|12
+operator|>
+name|TypeVector
+expr_stmt|;
 name|StmtResult
 name|ParseStatement
 parameter_list|(
@@ -5021,9 +5286,6 @@ parameter_list|)
 block|{
 name|StmtVector
 name|Stmts
-argument_list|(
-name|Actions
-argument_list|)
 decl_stmt|;
 return|return
 name|ParseStatementOrDeclaration
@@ -5121,6 +5383,10 @@ parameter_list|,
 name|unsigned
 name|ScopeFlags
 parameter_list|)
+function_decl|;
+name|void
+name|ParseCompoundStatementLeadingPragmas
+parameter_list|()
 function_decl|;
 name|StmtResult
 name|ParseCompoundStatementBody
@@ -5346,11 +5612,21 @@ name|ParseCXXTryBlockCommon
 parameter_list|(
 name|SourceLocation
 name|TryLoc
+parameter_list|,
+name|bool
+name|FnTry
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|StmtResult
 name|ParseCXXCatchBlock
-parameter_list|()
+parameter_list|(
+name|bool
+name|FnCatch
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// MS: SEH Statements and Blocks
@@ -5835,6 +6111,36 @@ name|Tok
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return true if we know that we are definitely looking at a
+comment|/// decl-specifier, and isn't part of an expression such as a function-style
+comment|/// cast. Return false if it's no a decl-specifier, or we're not sure.
+name|bool
+name|isKnownToBeDeclarationSpecifier
+parameter_list|()
+block|{
+if|if
+condition|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|CPlusPlus
+condition|)
+return|return
+name|isCXXDeclarationSpecifier
+argument_list|()
+operator|==
+name|TPResult
+operator|::
+name|True
+argument_list|()
+return|;
+return|return
+name|isDeclarationSpecifier
+argument_list|(
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// isDeclarationStatement - Disambiguates between a declaration or an
 comment|/// expression statement, when parsing function bodies.
 comment|/// Returns true for declaration, false for expression.
@@ -6189,6 +6495,17 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// \brief Determine whether an identifier has been tentatively declared as a
+comment|/// non-type. Such tentative declarations should not be found to name a type
+comment|/// during a tentative parse, but also should not be annotated as a non-type.
+name|bool
+name|isTentativelyDeclared
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+function_decl|;
 comment|// "Tentative parsing" functions, used for disambiguation. If a parsing error
 comment|// is encountered they will return TPResult::Error().
 comment|// Returning TPResult::True()/False() indicates that the ambiguity was
@@ -6254,6 +6571,8 @@ name|TPResult
 name|TryParseBracketDeclarator
 parameter_list|()
 function_decl|;
+name|public
+label|:
 name|TypeResult
 name|ParseTypeName
 argument_list|(
@@ -6285,6 +6604,8 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+name|private
+label|:
 name|void
 name|ParseBlockId
 parameter_list|(
@@ -6372,6 +6693,17 @@ expr_stmt|;
 block|}
 name|void
 name|DiagnoseProhibitedAttributes
+parameter_list|(
+name|ParsedAttributesWithRange
+modifier|&
+name|attrs
+parameter_list|)
+function_decl|;
+comment|// Forbid C++11 attributes that appear on certain syntactic
+comment|// locations which standard permits but we don't supported yet,
+comment|// for example, attributes appertain to decl specifiers.
+name|void
+name|ProhibitCXX11Attributes
 parameter_list|(
 name|ParsedAttributesWithRange
 modifier|&
@@ -6497,23 +6829,35 @@ parameter_list|)
 function_decl|;
 name|void
 name|ParseGNUAttributeArgs
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|*
+operator|*
 name|AttrName
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|AttrNameLoc
-parameter_list|,
+argument_list|,
 name|ParsedAttributes
-modifier|&
+operator|&
 name|Attrs
-parameter_list|,
+argument_list|,
 name|SourceLocation
-modifier|*
+operator|*
 name|EndLoc
-parameter_list|)
-function_decl|;
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
 name|void
 name|MaybeParseCXX0XAttributes
 parameter_list|(
@@ -6999,6 +7343,9 @@ parameter_list|(
 name|VirtSpecifiers
 modifier|&
 name|VS
+parameter_list|,
+name|bool
+name|IsInterface
 parameter_list|)
 function_decl|;
 name|bool
@@ -7731,6 +8078,8 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
+name|public
+label|:
 name|bool
 name|ParseUnqualifiedId
 parameter_list|(
@@ -7759,6 +8108,8 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
+name|private
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// C++ 14: Templates [temp]
 comment|// C++ 14.1: Template Parameters [temp.param]

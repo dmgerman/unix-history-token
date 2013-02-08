@@ -81,6 +81,16 @@ comment|/// fixup_ppc_lo14 - A 14-bit fixup corresponding to lo16(_foo) for inst
 comment|/// like 'std'.
 name|fixup_ppc_lo14
 block|,
+comment|/// fixup_ppc_toc - Insert value of TOC base (.TOC.).
+name|fixup_ppc_toc
+block|,
+comment|/// fixup_ppc_toc16 - A 16-bit signed fixup relative to the TOC base.
+name|fixup_ppc_toc16
+block|,
+comment|/// fixup_ppc_toc16_ds - A 14-bit signed fixup relative to the TOC base with
+comment|/// implied 2 zero bits
+name|fixup_ppc_toc16_ds
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

@@ -66,6 +66,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/PointerLikeTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -85,18 +103,6 @@ begin_include
 include|#
 directive|include
 file|<iterator>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
 begin_decl_stmt
@@ -491,8 +497,8 @@ name|SmallPtrSetImpl
 operator|&
 name|RHS
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT.
 name|protected
 label|:
 comment|/// swap - Swaps the elements of two sets.

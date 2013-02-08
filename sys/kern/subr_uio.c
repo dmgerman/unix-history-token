@@ -1687,12 +1687,6 @@ name|iov_base
 operator|=
 name|c
 expr_stmt|;
-name|iov
-operator|->
-name|iov_base
-operator|=
-name|iov_base
-expr_stmt|;
 break|break;
 case|case
 name|UIO_NOCOPY

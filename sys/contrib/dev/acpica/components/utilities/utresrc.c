@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -285,6 +285,12 @@ block|{
 literal|"Exclusive"
 block|,
 literal|"Shared"
+block|,
+literal|"ExclusiveAndWake"
+block|,
+comment|/* ACPI 5.0 */
+literal|"SharedAndWake"
+comment|/* ACPI 5.0 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -975,52 +981,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * For the iASL compiler/disassembler, we don't want any error messages  * because the disassembler uses the resource validation code to determine  * if Buffer objects are actually Resource Templates.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_ASL_COMPILER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_ERROR
-parameter_list|(
-name|plist
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_ERROR
-parameter_list|(
-name|plist
-parameter_list|)
-value|ACPI_ERROR(plist)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkAmlResources  *  * PARAMETERS:  Aml             - Pointer to the raw AML resource template  *              AmlLength       - Length of the entire template  *              UserFunction    - Called once for each descriptor found. If  *                                NULL, a pointer to the EndTag is returned  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Walk a raw AML resource list(buffer). User function called  *              once for each resource found.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkAmlResources  *  * PARAMETERS:  WalkState           - Current walk info  * PARAMETERS:  Aml                 - Pointer to the raw AML resource template  *              AmlLength           - Length of the entire template  *              UserFunction        - Called once for each descriptor found. If  *                                    NULL, a pointer to the EndTag is returned  *              Context             - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Walk a raw AML resource list(buffer). User function called  *              once for each resource found.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiUtWalkAmlResources
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|UINT8
 modifier|*
 name|Aml
@@ -1032,6 +1003,7 @@ name|ACPI_WALK_AML_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
+modifier|*
 modifier|*
 name|Context
 parameter_list|)
@@ -1108,6 +1080,8 @@ name|Status
 operator|=
 name|AcpiUtValidateResource
 argument_list|(
+name|WalkState
+argument_list|,
 name|Aml
 argument_list|,
 operator|&
@@ -1210,11 +1184,6 @@ name|UserFunction
 condition|)
 block|{
 operator|*
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 name|Context
 operator|=
 name|Aml
@@ -1248,6 +1217,8 @@ name|void
 operator|)
 name|AcpiUtValidateResource
 argument_list|(
+name|WalkState
+argument_list|,
 name|EndTag
 argument_list|,
 operator|&
@@ -1293,13 +1264,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateResource  *  * PARAMETERS:  Aml             - Pointer to the raw AML resource descriptor  *              ReturnIndex     - Where the resource index is returned. NULL  *                                if the index is not required.  *  * RETURN:      Status, and optionally the Index into the global resource tables  *  * DESCRIPTION: Validate an AML resource descriptor by checking the Resource  *              Type and Resource Length. Returns an index into the global  *              resource information/dispatch tables for later use.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateResource  *  * PARAMETERS:  WalkState           - Current walk info  *              Aml                 - Pointer to the raw AML resource descriptor  *              ReturnIndex         - Where the resource index is returned. NULL  *                                    if the index is not required.  *  * RETURN:      Status, and optionally the Index into the global resource tables  *  * DESCRIPTION: Validate an AML resource descriptor by checking the Resource  *              Type and Resource Length. Returns an index into the global  *              resource information/dispatch tables for later use.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiUtValidateResource
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|void
 modifier|*
 name|Aml
@@ -1532,7 +1507,12 @@ name|AML_RESOURCE_MAX_SERIALBUSTYPE
 operator|)
 condition|)
 block|{
-name|ACPI_RESOURCE_ERROR
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
+name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1547,6 +1527,7 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_INVALID_RESOURCE_TYPE
@@ -1573,7 +1554,12 @@ operator|)
 return|;
 name|InvalidResource
 label|:
-name|ACPI_RESOURCE_ERROR
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
+name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1584,6 +1570,7 @@ name|ResourceType
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_INVALID_RESOURCE_TYPE
@@ -1591,7 +1578,12 @@ operator|)
 return|;
 name|BadResourceLength
 label|:
-name|ACPI_RESOURCE_ERROR
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
+name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
@@ -1607,6 +1599,7 @@ name|MinimumResourceLength
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_BAD_RESOURCE_LENGTH
@@ -1887,6 +1880,8 @@ name|Status
 operator|=
 name|AcpiUtWalkAmlResources
 argument_list|(
+name|NULL
+argument_list|,
 name|ObjDesc
 operator|->
 name|Buffer
@@ -1901,6 +1896,11 @@ name|Length
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 name|EndTag
 argument_list|)
 expr_stmt|;

@@ -712,6 +712,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Space reserved for new socket options added by third-party vendors.  * This range applies to all socket option levels.  New socket options  * in FreeBSD should always use an option value less than SO_VENDOR.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SO_VENDOR
+value|0x80000000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Structure used for manipulating linger option.  */
 end_comment
 

@@ -1687,6 +1687,8 @@ name|audit_arg_upath1
 argument_list|(
 name|td
 argument_list|,
+name|AT_FDCWD
+argument_list|,
 operator|(
 operator|(
 expr|struct
@@ -2804,6 +2806,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|char
 modifier|*
 name|upath
@@ -2837,6 +2842,8 @@ name|audit_canon_path
 argument_list|(
 name|td
 argument_list|,
+name|dirfd
+argument_list|,
 name|upath
 argument_list|,
 operator|*
@@ -2854,6 +2861,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|dirfd
 parameter_list|,
 name|char
 modifier|*
@@ -2880,6 +2890,8 @@ return|return;
 name|audit_arg_upath
 argument_list|(
 name|td
+argument_list|,
+name|dirfd
 argument_list|,
 name|upath
 argument_list|,
@@ -2910,6 +2922,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|char
 modifier|*
 name|upath
@@ -2935,6 +2950,8 @@ return|return;
 name|audit_arg_upath
 argument_list|(
 name|td
+argument_list|,
+name|dirfd
 argument_list|,
 name|upath
 argument_list|,

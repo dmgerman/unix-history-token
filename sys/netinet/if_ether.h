@@ -149,6 +149,16 @@ name|arp_op
 value|ea_hdr.ar_op
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_comment
+comment|/* Can be used by third party software. */
+end_comment
+
 begin_struct
 struct|struct
 name|sockaddr_inarp
@@ -183,6 +193,15 @@ value|1
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !BURN_BRIDGES  */
+end_comment
 
 begin_comment
 comment|/*  * IP and ethernet specific routing flags  */
@@ -352,56 +371,6 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_enum
-enum|enum
-block|{
-name|LLENTRY_RESOLVED
-block|,
-name|LLENTRY_TIMEDOUT
-block|,
-name|LLENTRY_DELETED
-block|,
-name|LLENTRY_EXPIRED
-block|, }
-enum|;
-end_enum
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|lle_event_fn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|llentry
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_expr_stmt
-name|EVENTHANDLER_DECLARE
-argument_list|(
-name|lle_event
-argument_list|,
-name|lle_event_fn
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#

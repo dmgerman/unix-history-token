@@ -5168,18 +5168,8 @@ goto|goto
 name|success
 goto|;
 block|}
-if|if
-condition|(
-name|error
-operator|==
-name|ERESTART
-condition|)
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
 goto|goto
-name|bad_unlocked
+name|bad
 goto|;
 block|}
 name|td
@@ -5350,7 +5340,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|bad_unlocked
+name|bad
 goto|;
 block|}
 elseif|else
@@ -5377,7 +5367,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|bad_unlocked
+name|bad
 goto|;
 block|}
 comment|/* 	 * Release our private reference, leaving the one associated with 	 * the descriptor table intact. 	 */
@@ -5403,8 +5393,6 @@ literal|0
 operator|)
 return|;
 name|bad
-label|:
-name|bad_unlocked
 label|:
 name|KASSERT
 argument_list|(

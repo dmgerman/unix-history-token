@@ -152,12 +152,10 @@ name|MCInstrInfo
 block|{
 name|TargetInstrInfo
 argument_list|(
-specifier|const
-name|TargetInstrInfo
-operator|&
+argument|const TargetInstrInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -166,8 +164,8 @@ specifier|const
 name|TargetInstrInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 name|TargetInstrInfo
@@ -982,6 +980,13 @@ literal|"Target must implement TargetInstrInfo::optimizeSelect!"
 argument_list|)
 block|;   }
 comment|/// copyPhysReg - Emit instructions to copy a pair of physical registers.
+comment|///
+comment|/// This function should support copies within any legal register class as
+comment|/// well as any cross-class copies created during instruction selection.
+comment|///
+comment|/// The source and destination registers may overlap, which may require a
+comment|/// careful implementation when multiple copy instructions are required for
+comment|/// large registers. See for example the ARM target.
 name|virtual
 name|void
 name|copyPhysReg
@@ -1741,52 +1746,6 @@ argument|bool FindMin = false
 argument_list|)
 specifier|const
 block|;
-comment|/// computeOperandLatency - Compute and return the latency of the given data
-comment|/// dependent def and use. DefMI must be a valid def. UseMI may be NULL for
-comment|/// an unknown use. If the subtarget allows, this may or may not need to call
-comment|/// getOperandLatency().
-comment|///
-comment|/// FindMin may be set to get the minimum vs. expected latency. Minimum
-comment|/// latency is used for scheduling groups, while expected latency is for
-comment|/// instruction cost and critical path.
-name|unsigned
-name|computeOperandLatency
-argument_list|(
-argument|const InstrItineraryData *ItinData
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|,
-argument|const MachineInstr *DefMI
-argument_list|,
-argument|const MachineInstr *UseMI
-argument_list|,
-argument|unsigned Reg
-argument_list|,
-argument|bool FindMin
-argument_list|)
-specifier|const
-block|;
-comment|/// getOutputLatency - Compute and return the output dependency latency of a
-comment|/// a given pair of defs which both target the same register. This is usually
-comment|/// one.
-name|virtual
-name|unsigned
-name|getOutputLatency
-argument_list|(
-argument|const InstrItineraryData *ItinData
-argument_list|,
-argument|const MachineInstr *DefMI
-argument_list|,
-argument|unsigned DefIdx
-argument_list|,
-argument|const MachineInstr *DepMI
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|1
-return|;
-block|}
 comment|/// getInstrLatency - Compute the instruction latency of a given instruction.
 comment|/// If the instruction has higher cost when predicated, it's returned via
 comment|/// PredCost.
@@ -1824,6 +1783,17 @@ argument_list|(
 argument|const MCSchedModel *SchedModel
 argument_list|,
 argument|const MachineInstr *DefMI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|computeDefOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|bool FindMin
 argument_list|)
 specifier|const
 block|;

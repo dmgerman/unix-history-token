@@ -153,6 +153,10 @@ name|HAL_DEBUG_PRINT_REG
 init|=
 literal|0x08000000
 block|,
+name|HAL_DEBUG_FCS_RTT
+init|=
+literal|0x10000000
+block|,
 name|HAL_DEBUG_UNMASKABLE
 init|=
 literal|0x80000000

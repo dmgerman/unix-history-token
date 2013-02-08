@@ -1838,6 +1838,11 @@ name|INC_ISIPV6
 decl_stmt|;
 endif|#
 directive|endif
+name|hdrlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Keep compiler happy */
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -1847,7 +1852,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

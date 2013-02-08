@@ -367,6 +367,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|US_PER_SEC
+value|1000000U
+end_define
+
+begin_comment
+comment|/*  * The maximum time we will wait for a single query.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SINGLE_QUERY_TIMEOUT
+value|9U
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_SINGLE_QUERY_TIMEOUT_US
+value|(MAX_SINGLE_QUERY_TIMEOUT*US_PER_SEC)
+end_define
+
+begin_comment
+comment|/*  * We need to allow a individual query time to complete / timeout.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINIMUM_QUERY_TIMEOUT
+value|(MAX_SINGLE_QUERY_TIMEOUT + 1U)
+end_define
+
+begin_comment
+comment|/* The default time in seconds for the whole query to live. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -377,12 +417,8 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_QUERY_TIMEOUT
-value|30
+value|MINIMUM_QUERY_TIMEOUT
 end_define
-
-begin_comment
-comment|/* The default time in seconds for the whole query to live. */
-end_comment
 
 begin_endif
 endif|#
@@ -3182,11 +3218,11 @@ if|if
 condition|(
 name|rtt
 operator|>
-literal|10000000
+name|MAX_SINGLE_QUERY_TIMEOUT_US
 condition|)
 name|rtt
 operator|=
-literal|10000000
+name|MAX_SINGLE_QUERY_TIMEOUT_US
 expr_stmt|;
 comment|/* 			 * Replace the current RTT with our value. 			 */
 name|factor
@@ -5550,12 +5586,34 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 	 * Double the round-trip time. 	 */
+comment|/* 	 * Add a fudge factor to the expected rtt based on the current 	 * estimate. 	 */
+if|if
+condition|(
 name|rtt
-operator|*=
-literal|2
+operator|<
+literal|50000
+condition|)
+name|rtt
+operator|+=
+literal|50000
 expr_stmt|;
-comment|/* 	 * Always wait for at least the doubled round-trip time. 	 */
+elseif|else
+if|if
+condition|(
+name|rtt
+operator|<
+literal|100000
+condition|)
+name|rtt
+operator|+=
+literal|100000
+expr_stmt|;
+else|else
+name|rtt
+operator|+=
+literal|200000
+expr_stmt|;
+comment|/* 	 * Always wait for at least the expected rtt. 	 */
 if|if
 condition|(
 name|us
@@ -5571,23 +5629,23 @@ if|if
 condition|(
 name|us
 operator|>
-literal|10000000
+name|MAX_SINGLE_QUERY_TIMEOUT_US
 condition|)
 name|us
 operator|=
-literal|10000000
+name|MAX_SINGLE_QUERY_TIMEOUT_US
 expr_stmt|;
 name|seconds
 operator|=
 name|us
 operator|/
-literal|1000000
+name|US_PER_SEC
 expr_stmt|;
 name|us
 operator|-=
 name|seconds
 operator|*
-literal|1000000
+name|US_PER_SEC
 expr_stmt|;
 name|isc_interval_set
 argument_list|(
@@ -5681,6 +5739,7 @@ name|addrinfo
 operator|->
 name|srtt
 expr_stmt|;
+comment|/* 	 * A forwarder needs to make multiple queries. Give it at least 	 * a second to do these in. 	 */
 if|if
 condition|(
 name|ISFORWARDER
@@ -35488,13 +35547,13 @@ name|fctx
 operator|->
 name|duration
 operator|/
-literal|1000000
+name|US_PER_SEC
 argument_list|,
 name|fctx
 operator|->
 name|duration
 operator|%
-literal|1000000
+name|US_PER_SEC
 argument_list|,
 name|isc_result_totext
 argument_list|(
@@ -38899,6 +38958,16 @@ condition|)
 name|seconds
 operator|=
 name|MAXIMUM_QUERY_TIMEOUT
+expr_stmt|;
+if|if
+condition|(
+name|seconds
+operator|<
+name|MINIMUM_QUERY_TIMEOUT
+condition|)
+name|seconds
+operator|=
+name|MINIMUM_QUERY_TIMEOUT
 expr_stmt|;
 name|resolver
 operator|->

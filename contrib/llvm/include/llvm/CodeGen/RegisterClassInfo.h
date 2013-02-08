@@ -381,57 +381,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// isReserved - Returns true when PhysReg is a reserved register.
-comment|///
-comment|/// Reserved registers may belong to an allocatable register class, but the
-comment|/// target has explicitly requested that they are not used.
-comment|///
-name|bool
-name|isReserved
-argument_list|(
-name|unsigned
-name|PhysReg
-argument_list|)
-decl|const
-block|{
-return|return
-name|Reserved
-operator|.
-name|test
-argument_list|(
-name|PhysReg
-argument_list|)
-return|;
-block|}
-comment|/// isAllocatable - Returns true when PhysReg belongs to an allocatable
-comment|/// register class and it hasn't been reserved.
-comment|///
-comment|/// Allocatable registers may show up in the allocation order of some virtual
-comment|/// register, so a register allocator needs to track its liveness and
-comment|/// availability.
-name|bool
-name|isAllocatable
-argument_list|(
-name|unsigned
-name|PhysReg
-argument_list|)
-decl|const
-block|{
-return|return
-name|TRI
-operator|->
-name|isInAllocatableClass
-argument_list|(
-name|PhysReg
-argument_list|)
-operator|&&
-operator|!
-name|isReserved
-argument_list|(
-name|PhysReg
-argument_list|)
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

@@ -2463,17 +2463,9 @@ operator|->
 name|sc_ah
 decl_stmt|;
 comment|/* NB: only at DTIM */
-name|ATH_TXQ_LOCK
+name|ATH_TX_LOCK
 argument_list|(
-name|cabq
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_LOCK
-argument_list|(
-operator|&
-name|avp
-operator|->
-name|av_mcastq
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2574,17 +2566,9 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
+name|ATH_TX_UNLOCK
 argument_list|(
-operator|&
-name|avp
-operator|->
-name|av_mcastq
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|cabq
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3105,6 +3089,27 @@ name|ic_vaps
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+comment|/* 	 * Just ensure that we aren't being called when the last 	 * VAP is destroyed. 	 */
+if|if
+condition|(
+name|vap
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: called with no VAPs\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ni
 operator|=
 name|ieee80211_ref_node

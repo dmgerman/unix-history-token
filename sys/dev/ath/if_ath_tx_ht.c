@@ -1639,6 +1639,29 @@ name|ndelim
 operator|+=
 name|ATH_AGGR_ENCRYPTDELIM
 expr_stmt|;
+comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_use_ent
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_ent_cfg
+operator|&
+name|AH_ENT_RTSCTS_DELIM_WAR
+operator|)
+operator|&&
+name|ndelim
+operator|<
+name|AH_FIRST_DESC_NDELIMS
+condition|)
+name|ndelim
+operator|=
+name|AH_FIRST_DESC_NDELIMS
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -2405,7 +2428,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void ath_rateseries_print(struct ath_softc *sc, HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< ATH_RC_NUM; i++) { 		device_printf(sc->sc_dev ,"series %d: rate %x; tries %d; " 		    "pktDuration %d; chSel %d; rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].RateFlags); 	} }
+unit|static void ath_rateseries_print(struct ath_softc *sc, HAL_11N_RATE_SERIES *series) { 	int i; 	for (i = 0; i< ATH_RC_NUM; i++) { 		device_printf(sc->sc_dev ,"series %d: rate %x; tries %d; " 		    "pktDuration %d; chSel %d; txpowcap %d, rateFlags %x\n", 		    i, 		    series[i].Rate, 		    series[i].Tries, 		    series[i].PktDuration, 		    series[i].ChSel, 		    series[i].tx_power_cap, 		    series[i].RateFlags); 	} }
 endif|#
 directive|endif
 end_endif
@@ -2517,7 +2540,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(sc, series);
+block|ath_rateseries_print(sc, series);
 endif|#
 directive|endif
 comment|/* Set rate scenario */
@@ -2638,16 +2661,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* XXX also for AR5416 burst */
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|tid
-operator|->
-name|ac
-index|]
 argument_list|)
 expr_stmt|;
 name|tap
@@ -2740,7 +2756,6 @@ name|bf_next
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Don't unlock the tid lock until we're sure we are going 		 * to queue this frame. 		 */
 comment|/* 		 * If the frame doesn't have a sequence number that we're 		 * tracking in the BAW (eg NULL QOS data frame), we can't 		 * aggregate it. Stop the aggregation process; the sender 		 * can then TX what's in the list thus far and then 		 * TX the frame individually. 		 */
 if|if
 condition|(
@@ -2865,6 +2880,13 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * If the current frame has an RTS/CTS configuration 		 * that differs from the first frame, override the 		 * subsequent frame with this config. 		 */
+if|if
+condition|(
+name|bf
+operator|!=
+name|bf_first
+condition|)
+block|{
 name|bf
 operator|->
 name|bf_state
@@ -2896,6 +2918,7 @@ operator||
 name|HAL_TXDESC_CTSENA
 operator|)
 expr_stmt|;
+block|}
 comment|/* 		 * If the packet has a sequence number, do not 		 * step outside of the block-ack window. 		 */
 if|if
 condition|(

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/SourceMgr.h"
 end_include
 
@@ -211,6 +217,32 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|RecTy
 block|{
+name|public
+label|:
+comment|/// \brief Subclass discriminator (for dyn_cast<> et al.)
+enum|enum
+name|RecTyKind
+block|{
+name|BitRecTyKind
+block|,
+name|BitsRecTyKind
+block|,
+name|IntRecTyKind
+block|,
+name|StringRecTyKind
+block|,
+name|ListRecTyKind
+block|,
+name|DagRecTyKind
+block|,
+name|RecordRecTyKind
+block|}
+enum|;
+name|private
+label|:
+name|RecTyKind
+name|Kind
+decl_stmt|;
 name|ListRecTy
 modifier|*
 name|ListTy
@@ -222,9 +254,25 @@ parameter_list|()
 function_decl|;
 name|public
 label|:
-name|RecTy
+name|RecTyKind
+name|getRecTyKind
 argument_list|()
-operator|:
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+name|RecTy
+argument_list|(
+argument|RecTyKind K
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+name|K
+argument_list|)
+operator|,
 name|ListTy
 argument_list|(
 literal|0
@@ -687,9 +735,30 @@ name|Shared
 block|;
 name|BitRecTy
 argument_list|()
+operator|:
+name|RecTy
+argument_list|(
+argument|BitRecTyKind
+argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|BitRecTyKind
+return|;
+block|}
 specifier|static
 name|BitRecTy
 operator|*
@@ -912,6 +981,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -923,6 +993,7 @@ return|return
 literal|"bit"
 return|;
 block|}
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -1039,6 +1110,11 @@ argument_list|(
 argument|unsigned Sz
 argument_list|)
 operator|:
+name|RecTy
+argument_list|(
+name|BitsRecTyKind
+argument_list|)
+block|,
 name|Size
 argument_list|(
 argument|Sz
@@ -1046,6 +1122,22 @@ argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|BitsRecTyKind
+return|;
+block|}
 specifier|static
 name|BitsRecTy
 operator|*
@@ -1258,6 +1350,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -1265,6 +1358,7 @@ name|getAsString
 argument_list|()
 specifier|const
 block|;
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -1387,9 +1481,30 @@ name|Shared
 block|;
 name|IntRecTy
 argument_list|()
+operator|:
+name|RecTy
+argument_list|(
+argument|IntRecTyKind
+argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|IntRecTyKind
+return|;
+block|}
 specifier|static
 name|IntRecTy
 operator|*
@@ -1608,6 +1723,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -1619,6 +1735,7 @@ return|return
 literal|"int"
 return|;
 block|}
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -1735,9 +1852,30 @@ name|Shared
 block|;
 name|StringRecTy
 argument_list|()
+operator|:
+name|RecTy
+argument_list|(
+argument|StringRecTyKind
+argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|StringRecTyKind
+return|;
+block|}
 specifier|static
 name|StringRecTy
 operator|*
@@ -1946,6 +2084,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -1957,6 +2096,7 @@ return|return
 literal|"string"
 return|;
 block|}
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -2082,6 +2222,11 @@ operator|*
 name|T
 argument_list|)
 operator|:
+name|RecTy
+argument_list|(
+name|ListRecTyKind
+argument_list|)
+block|,
 name|Ty
 argument_list|(
 argument|T
@@ -2097,6 +2242,22 @@ argument_list|()
 block|;
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|ListRecTyKind
+return|;
+block|}
 specifier|static
 name|ListRecTy
 operator|*
@@ -2327,6 +2488,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -2334,6 +2496,7 @@ name|getAsString
 argument_list|()
 specifier|const
 block|;
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -2458,9 +2621,30 @@ name|Shared
 block|;
 name|DagRecTy
 argument_list|()
+operator|:
+name|RecTy
+argument_list|(
+argument|DagRecTyKind
+argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|DagRecTyKind
+return|;
+block|}
 specifier|static
 name|DagRecTy
 operator|*
@@ -2669,6 +2853,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -2680,6 +2865,7 @@ return|return
 literal|"dag"
 return|;
 block|}
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -2803,6 +2989,11 @@ operator|*
 name|R
 argument_list|)
 operator|:
+name|RecTy
+argument_list|(
+name|RecordRecTyKind
+argument_list|)
+block|,
 name|Rec
 argument_list|(
 argument|R
@@ -2814,6 +3005,22 @@ name|Record
 block|;
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const RecTy *RT
+argument_list|)
+block|{
+return|return
+name|RT
+operator|->
+name|getRecTyKind
+argument_list|()
+operator|==
+name|RecordRecTyKind
+return|;
+block|}
 specifier|static
 name|RecordRecTy
 operator|*
@@ -3039,6 +3246,7 @@ name|FI
 argument_list|)
 return|;
 block|}
+name|virtual
 name|std
 operator|::
 name|string
@@ -3046,6 +3254,7 @@ name|getAsString
 argument_list|()
 specifier|const
 block|;
+name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
@@ -3165,14 +3374,75 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|Init
 block|{
+name|protected
+operator|:
+comment|/// \brief Discriminator enum (for isa<>, dyn_cast<>, et al.)
+comment|///
+comment|/// This enum is laid out by a preorder traversal of the inheritance
+comment|/// hierarchy, and does not contain an entry for abstract classes, as per
+comment|/// the recommendation in docs/HowToSetUpLLVMStyleRTTI.rst.
+comment|///
+comment|/// We also explicitly include "first" and "last" values for each
+comment|/// interior node of the inheritance tree, to make it easier to read the
+comment|/// corresponding classof().
+comment|///
+comment|/// We could pack these a bit tighter by not having the IK_FirstXXXInit
+comment|/// and IK_LastXXXInit be their own values, but that would degrade
+comment|/// readability for really no benefit.
+expr|enum
+name|InitKind
+block|{
+name|IK_BitInit
+block|,
+name|IK_BitsInit
+block|,
+name|IK_FirstTypedInit
+block|,
+name|IK_DagInit
+block|,
+name|IK_DefInit
+block|,
+name|IK_FieldInit
+block|,
+name|IK_IntInit
+block|,
+name|IK_ListInit
+block|,
+name|IK_FirstOpInit
+block|,
+name|IK_BinOpInit
+block|,
+name|IK_TernOpInit
+block|,
+name|IK_UnOpInit
+block|,
+name|IK_LastOpInit
+block|,
+name|IK_StringInit
+block|,
+name|IK_VarInit
+block|,
+name|IK_VarListElementInit
+block|,
+name|IK_LastTypedInit
+block|,
+name|IK_UnsetInit
+block|,
+name|IK_VarBitInit
+block|}
+block|;
+name|private
+operator|:
+specifier|const
+name|InitKind
+name|Kind
+block|;
 name|Init
 argument_list|(
-specifier|const
-name|Init
-operator|&
+argument|const Init&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|Init
 operator|&
 name|operator
@@ -3182,18 +3452,35 @@ specifier|const
 name|Init
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|virtual
 name|void
 name|anchor
 argument_list|()
 block|;
+name|public
+operator|:
+name|InitKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
 name|protected
 operator|:
+name|explicit
 name|Init
 argument_list|(
-argument|void
+argument|InitKind K
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+argument|K
 argument_list|)
 block|{}
 name|public
@@ -3379,6 +3666,51 @@ name|this
 operator|)
 return|;
 block|}
+comment|/// getBit - This method is used to return the initializer for the specified
+comment|/// bit.
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// getBitVar - This method is used to retrieve the initializer for bit
+comment|/// reference. For non-VarBitInit, it simply returns itself.
+name|virtual
+name|Init
+operator|*
+name|getBitVar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Init
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+return|;
+block|}
+comment|/// getBitNum - This method is used to retrieve the bit number of a bit
+comment|/// reference. For non-VarBitInit, it simply returns 0.
+name|virtual
+name|unsigned
+name|getBitNum
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 expr|}
 block|;
 specifier|inline
@@ -3423,13 +3755,10 @@ name|Ty
 block|;
 name|TypedInit
 argument_list|(
-specifier|const
-name|TypedInit
-operator|&
-name|Other
+argument|const TypedInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|TypedInit
 operator|&
 name|operator
@@ -3440,18 +3769,23 @@ name|TypedInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|protected
 operator|:
 name|explicit
 name|TypedInit
 argument_list|(
-name|RecTy
-operator|*
-name|T
+argument|InitKind K
+argument_list|,
+argument|RecTy *T
 argument_list|)
 operator|:
+name|Init
+argument_list|(
+name|K
+argument_list|)
+block|,
 name|Ty
 argument_list|(
 argument|T
@@ -3459,6 +3793,29 @@ argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|>=
+name|IK_FirstTypedInit
+operator|&&
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|IK_LastTypedInit
+return|;
+block|}
 name|RecTy
 operator|*
 name|getType
@@ -3500,25 +3857,6 @@ argument|const std::string&FieldName
 argument_list|)
 specifier|const
 block|;
-comment|/// resolveBitReference - This method is used to implement
-comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
-comment|/// simply return the resolved value, otherwise we return null.
-comment|///
-name|virtual
-name|Init
-operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -3550,16 +3888,16 @@ name|UnsetInit
 argument_list|()
 operator|:
 name|Init
-argument_list|()
+argument_list|(
+argument|IK_UnsetInit
+argument_list|)
 block|{}
 name|UnsetInit
 argument_list|(
-specifier|const
-name|UnsetInit
-operator|&
+argument|const UnsetInit&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|UnsetInit
 operator|&
 name|operator
@@ -3570,8 +3908,8 @@ name|UnsetInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|virtual
 name|void
 name|anchor
@@ -3579,6 +3917,22 @@ argument_list|()
 block|;
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_UnsetInit
+return|;
+block|}
 specifier|static
 name|UnsetInit
 operator|*
@@ -3608,6 +3962,26 @@ operator|(
 name|this
 operator|)
 argument_list|)
+return|;
+block|}
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|UnsetInit
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
 return|;
 block|}
 name|virtual
@@ -3651,6 +4025,11 @@ argument_list|(
 argument|bool V
 argument_list|)
 operator|:
+name|Init
+argument_list|(
+name|IK_BitInit
+argument_list|)
+block|,
 name|Value
 argument_list|(
 argument|V
@@ -3658,13 +4037,10 @@ argument_list|)
 block|{}
 name|BitInit
 argument_list|(
-specifier|const
-name|BitInit
-operator|&
-name|Other
+argument|const BitInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|BitInit
 operator|&
 name|operator
@@ -3674,8 +4050,8 @@ name|BitInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|virtual
 name|void
 name|anchor
@@ -3683,6 +4059,22 @@ argument_list|()
 block|;
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_BitInit
+return|;
+block|}
 specifier|static
 name|BitInit
 operator|*
@@ -3723,6 +4115,35 @@ operator|(
 name|this
 operator|)
 argument_list|)
+return|;
+block|}
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Bit
+operator|<
+literal|1
+operator|&&
+literal|"Bit index out of range!"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|BitInit
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
 return|;
 block|}
 name|virtual
@@ -3774,6 +4195,11 @@ operator|>
 name|Range
 argument_list|)
 operator|:
+name|Init
+argument_list|(
+name|IK_BitsInit
+argument_list|)
+block|,
 name|Bits
 argument_list|(
 argument|Range.begin()
@@ -3783,13 +4209,10 @@ argument_list|)
 block|{}
 name|BitsInit
 argument_list|(
-specifier|const
-name|BitsInit
-operator|&
-name|Other
+argument|const BitsInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|BitsInit
 operator|&
 name|operator
@@ -3800,10 +4223,26 @@ name|BitsInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_BitsInit
+return|;
+block|}
 specifier|static
 name|BitsInit
 operator|*
@@ -3834,33 +4273,6 @@ name|Bits
 operator|.
 name|size
 argument_list|()
-return|;
-block|}
-name|Init
-operator|*
-name|getBit
-argument_list|(
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|Bit
-operator|<
-name|Bits
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Bit index out of range!"
-argument_list|)
-block|;
-return|return
-name|Bits
-index|[
-name|Bit
-index|]
 return|;
 block|}
 name|virtual
@@ -3991,7 +4403,36 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
-block|; }
+block|;
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Bit
+operator|<
+name|Bits
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Bit index out of range!"
+argument_list|)
+block|;
+return|return
+name|Bits
+index|[
+name|Bit
+index|]
+return|;
+block|}
+expr|}
 block|;
 comment|/// IntInit - 7 - Represent an initalization by a literal integer value.
 comment|///
@@ -4012,6 +4453,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_IntInit
+argument_list|,
 name|IntRecTy
 operator|::
 name|get
@@ -4025,13 +4468,10 @@ argument_list|)
 block|{}
 name|IntInit
 argument_list|(
-specifier|const
-name|IntInit
-operator|&
-name|Other
+argument|const IntInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|IntInit
 operator|&
 name|operator
@@ -4042,10 +4482,26 @@ name|IntInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do note define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_IntInit
+return|;
+block|}
 specifier|static
 name|IntInit
 operator|*
@@ -4105,28 +4561,6 @@ name|getAsString
 argument_list|()
 specifier|const
 block|;
-comment|/// resolveBitReference - This method is used to implement
-comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
-comment|/// simply return the resolved value, otherwise we return null.
-comment|///
-name|virtual
-name|Init
-operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Illegal bit reference off int"
-argument_list|)
-block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -4148,7 +4582,35 @@ argument_list|(
 literal|"Illegal element reference off int"
 argument_list|)
 block|;   }
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|{
+return|return
+name|BitInit
+operator|::
+name|get
+argument_list|(
+operator|(
+name|Value
+operator|&
+operator|(
+literal|1ULL
+operator|<<
+name|Bit
+operator|)
+operator|)
+operator|!=
+literal|0
+argument_list|)
+return|;
 block|}
+expr|}
 block|;
 comment|/// StringInit - "foo" - Represent an initialization by a string value.
 comment|///
@@ -4176,6 +4638,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_StringInit
+argument_list|,
 name|StringRecTy
 operator|::
 name|get
@@ -4189,13 +4653,10 @@ argument_list|)
 block|{}
 name|StringInit
 argument_list|(
-specifier|const
-name|StringInit
-operator|&
-name|Other
+argument|const StringInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|StringInit
 operator|&
 name|operator
@@ -4206,8 +4667,8 @@ name|StringInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|virtual
 name|void
 name|anchor
@@ -4215,6 +4676,22 @@ argument_list|()
 block|;
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_StringInit
+return|;
+block|}
 specifier|static
 name|StringInit
 operator|*
@@ -4289,28 +4766,6 @@ return|return
 name|Value
 return|;
 block|}
-comment|/// resolveBitReference - This method is used to implement
-comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
-comment|/// simply return the resolved value, otherwise we return null.
-comment|///
-name|virtual
-name|Init
-operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Illegal bit reference off string"
-argument_list|)
-block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -4330,6 +4785,20 @@ block|{
 name|llvm_unreachable
 argument_list|(
 literal|"Illegal element reference off string"
+argument_list|)
+block|;   }
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Illegal bit reference off string"
 argument_list|)
 block|;   }
 expr|}
@@ -4387,6 +4856,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_ListInit
+argument_list|,
 name|ListRecTy
 operator|::
 name|get
@@ -4404,13 +4875,10 @@ argument_list|)
 block|{}
 name|ListInit
 argument_list|(
-specifier|const
-name|ListInit
-operator|&
-name|Other
+argument|const ListInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|ListInit
 operator|&
 name|operator
@@ -4421,10 +4889,26 @@ name|ListInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_ListInit
+return|;
+block|}
 specifier|static
 name|ListInit
 operator|*
@@ -4496,6 +4980,7 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
+name|virtual
 name|Init
 operator|*
 name|convertInitListSlice
@@ -4618,28 +5103,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// resolveBitReference - This method is used to implement
-comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
-comment|/// simply return the resolved value, otherwise we return null.
-comment|///
-name|virtual
-name|Init
-operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Illegal bit reference off list"
-argument_list|)
-block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -4655,7 +5118,22 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
-block|; }
+block|;
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Illegal bit reference off list"
+argument_list|)
+block|;   }
+block|}
 block|;
 comment|/// OpInit - Base class for operators
 comment|///
@@ -4667,13 +5145,10 @@ name|TypedInit
 block|{
 name|OpInit
 argument_list|(
-specifier|const
-name|OpInit
-operator|&
-name|Other
+argument|const OpInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|OpInit
 operator|&
 name|operator
@@ -4683,25 +5158,50 @@ name|OpInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|protected
 operator|:
 name|explicit
 name|OpInit
 argument_list|(
-name|RecTy
-operator|*
-name|Type
+argument|InitKind K
+argument_list|,
+argument|RecTy *Type
 argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+argument|K
+argument_list|,
 argument|Type
 argument_list|)
 block|{}
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|>=
+name|IK_FirstOpInit
+operator|&&
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|IK_LastOpInit
+return|;
+block|}
 comment|// Clone - Clone this operator, replacing arguments with the new list
 name|virtual
 name|OpInit
@@ -4776,19 +5276,6 @@ block|}
 name|virtual
 name|Init
 operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|Init
-operator|*
 name|resolveListElementReference
 argument_list|(
 argument|Record&R
@@ -4796,6 +5283,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|,
 argument|unsigned Elt
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
 argument_list|)
 specifier|const
 block|; }
@@ -4842,6 +5338,8 @@ argument_list|)
 operator|:
 name|OpInit
 argument_list|(
+name|IK_UnOpInit
+argument_list|,
 name|Type
 argument_list|)
 block|,
@@ -4857,13 +5355,10 @@ argument_list|)
 block|{}
 name|UnOpInit
 argument_list|(
-specifier|const
-name|UnOpInit
-operator|&
-name|Other
+argument|const UnOpInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|UnOpInit
 operator|&
 name|operator
@@ -4874,10 +5369,26 @@ name|UnOpInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_UnOpInit
+return|;
+block|}
 specifier|static
 name|UnOpInit
 operator|*
@@ -4931,6 +5442,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|virtual
 name|int
 name|getNumOperands
 argument_list|()
@@ -4940,6 +5452,7 @@ return|return
 literal|1
 return|;
 block|}
+name|virtual
 name|Init
 operator|*
 name|getOperand
@@ -4983,6 +5496,7 @@ return|;
 block|}
 comment|// Fold - If possible, fold this to a simpler init.  Return this if not
 comment|// possible to fold.
+name|virtual
 name|Init
 operator|*
 name|Fold
@@ -5064,6 +5578,8 @@ argument_list|)
 operator|:
 name|OpInit
 argument_list|(
+name|IK_BinOpInit
+argument_list|,
 name|Type
 argument_list|)
 block|,
@@ -5084,13 +5600,10 @@ argument_list|)
 block|{}
 name|BinOpInit
 argument_list|(
-specifier|const
-name|BinOpInit
-operator|&
-name|Other
+argument|const BinOpInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|BinOpInit
 operator|&
 name|operator
@@ -5101,10 +5614,26 @@ name|BinOpInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_BinOpInit
+return|;
+block|}
 specifier|static
 name|BinOpInit
 operator|*
@@ -5164,6 +5693,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|virtual
 name|int
 name|getNumOperands
 argument_list|()
@@ -5173,6 +5703,7 @@ return|return
 literal|2
 return|;
 block|}
+name|virtual
 name|Init
 operator|*
 name|getOperand
@@ -5247,6 +5778,7 @@ return|;
 block|}
 comment|// Fold - If possible, fold this to a simpler init.  Return this if not
 comment|// possible to fold.
+name|virtual
 name|Init
 operator|*
 name|Fold
@@ -5327,6 +5859,8 @@ argument_list|)
 operator|:
 name|OpInit
 argument_list|(
+name|IK_TernOpInit
+argument_list|,
 name|Type
 argument_list|)
 block|,
@@ -5352,13 +5886,10 @@ argument_list|)
 block|{}
 name|TernOpInit
 argument_list|(
-specifier|const
-name|TernOpInit
-operator|&
-name|Other
+argument|const TernOpInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|TernOpInit
 operator|&
 name|operator
@@ -5369,10 +5900,26 @@ name|TernOpInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_TernOpInit
+return|;
+block|}
 specifier|static
 name|TernOpInit
 operator|*
@@ -5439,6 +5986,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|virtual
 name|int
 name|getNumOperands
 argument_list|()
@@ -5448,6 +5996,7 @@ return|return
 literal|3
 return|;
 block|}
+name|virtual
 name|Init
 operator|*
 name|getOperand
@@ -5549,6 +6098,7 @@ return|;
 block|}
 comment|// Fold - If possible, fold this to a simpler init.  Return this if not
 comment|// possible to fold.
+name|virtual
 name|Init
 operator|*
 name|Fold
@@ -5618,6 +6168,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_VarInit
+argument_list|,
 name|T
 argument_list|)
 block|,
@@ -5640,6 +6192,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_VarInit
+argument_list|,
 name|T
 argument_list|)
 block|,
@@ -5650,13 +6204,10 @@ argument_list|)
 block|{}
 name|VarInit
 argument_list|(
-specifier|const
-name|VarInit
-operator|&
-name|Other
+argument|const VarInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|VarInit
 operator|&
 name|operator
@@ -5667,10 +6218,26 @@ name|VarInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_VarInit
+return|;
+block|}
 specifier|static
 name|VarInit
 operator|*
@@ -5764,19 +6331,6 @@ block|}
 name|virtual
 name|Init
 operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|Init
-operator|*
 name|resolveListElementReference
 argument_list|(
 argument|Record&R
@@ -5826,6 +6380,15 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|std
 operator|::
 name|string
@@ -5862,6 +6425,11 @@ argument_list|,
 argument|unsigned B
 argument_list|)
 operator|:
+name|Init
+argument_list|(
+name|IK_VarBitInit
+argument_list|)
+block|,
 name|TI
 argument_list|(
 name|T
@@ -5879,10 +6447,22 @@ operator|->
 name|getType
 argument_list|()
 operator|&&
-name|dynamic_cast
+operator|(
+name|isa
+operator|<
+name|IntRecTy
+operator|>
+operator|(
+name|T
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|||
+operator|(
+name|isa
 operator|<
 name|BitsRecTy
-operator|*
 operator|>
 operator|(
 name|T
@@ -5891,11 +6471,11 @@ name|getType
 argument_list|()
 operator|)
 operator|&&
-operator|(
-operator|(
+name|cast
+operator|<
 name|BitsRecTy
-operator|*
-operator|)
+operator|>
+operator|(
 name|T
 operator|->
 name|getType
@@ -5906,19 +6486,18 @@ name|getNumBits
 argument_list|()
 operator|>
 name|B
+operator|)
+operator|)
 operator|&&
 literal|"Illegal VarBitInit expression!"
 argument_list|)
 block|;   }
 name|VarBitInit
 argument_list|(
-specifier|const
-name|VarBitInit
-operator|&
-name|Other
+argument|const VarBitInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|VarBitInit
 operator|&
 name|operator
@@ -5929,10 +6508,26 @@ name|VarBitInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_VarBitInit
+return|;
+block|}
 specifier|static
 name|VarBitInit
 operator|*
@@ -5968,9 +6563,10 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|TypedInit
+name|virtual
+name|Init
 operator|*
-name|getVariable
+name|getBitVar
 argument_list|()
 specifier|const
 block|{
@@ -5978,6 +6574,7 @@ return|return
 name|TI
 return|;
 block|}
+name|virtual
 name|unsigned
 name|getBitNum
 argument_list|()
@@ -6005,7 +6602,37 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
-block|; }
+block|;
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned B
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|B
+operator|<
+literal|1
+operator|&&
+literal|"Bit index out of range!"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|VarBitInit
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// VarListElementInit - List[4] - Represent access to one element of a var or
 comment|/// field.
@@ -6031,10 +6658,11 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
-name|dynamic_cast
+name|IK_VarListElementInit
+argument_list|,
+name|cast
 operator|<
 name|ListRecTy
-operator|*
 operator|>
 operator|(
 name|T
@@ -6064,10 +6692,9 @@ operator|->
 name|getType
 argument_list|()
 operator|&&
-name|dynamic_cast
+name|isa
 operator|<
 name|ListRecTy
-operator|*
 operator|>
 operator|(
 name|T
@@ -6081,15 +6708,11 @@ argument_list|)
 block|;   }
 name|VarListElementInit
 argument_list|(
-specifier|const
-name|VarListElementInit
-operator|&
-name|Other
+argument|const VarListElementInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
-name|VarListElementInit
-operator|&
+name|void
 name|operator
 operator|=
 operator|(
@@ -6098,12 +6721,26 @@ name|VarListElementInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do
-comment|// not
-comment|// define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_VarListElementInit
+return|;
+block|}
 specifier|static
 name|VarListElementInit
 operator|*
@@ -6158,19 +6795,6 @@ return|return
 name|Element
 return|;
 block|}
-name|virtual
-name|Init
-operator|*
-name|resolveBitReference
-argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
-argument|unsigned Bit
-argument_list|)
-specifier|const
-block|;
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
@@ -6205,6 +6829,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|Init
+operator|*
+name|getBit
+argument_list|(
+argument|unsigned Bit
+argument_list|)
+specifier|const
 block|; }
 block|;
 comment|/// DefInit - AL - Represent a reference to a 'def' in the description
@@ -6232,6 +6865,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_DefInit
+argument_list|,
 name|T
 argument_list|)
 block|,
@@ -6246,13 +6881,10 @@ name|Record
 block|;
 name|DefInit
 argument_list|(
-specifier|const
-name|DefInit
-operator|&
-name|Other
+argument|const DefInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|DefInit
 operator|&
 name|operator
@@ -6263,10 +6895,26 @@ name|DefInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_DefInit
+return|;
+block|}
 specifier|static
 name|DefInit
 operator|*
@@ -6342,19 +6990,11 @@ name|getAsString
 argument_list|()
 specifier|const
 block|;
-comment|/// resolveBitReference - This method is used to implement
-comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
-comment|/// simply return the resolved value, otherwise we return null.
-comment|///
 name|virtual
 name|Init
 operator|*
-name|resolveBitReference
+name|getBit
 argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
 argument|unsigned Bit
 argument_list|)
 specifier|const
@@ -6422,6 +7062,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_FieldInit
+argument_list|,
 name|R
 operator|->
 name|getFieldType
@@ -6450,13 +7092,10 @@ argument_list|)
 block|;   }
 name|FieldInit
 argument_list|(
-specifier|const
-name|FieldInit
-operator|&
-name|Other
+argument|const FieldInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|FieldInit
 operator|&
 name|operator
@@ -6467,10 +7106,26 @@ name|FieldInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_FieldInit
+return|;
+block|}
 specifier|static
 name|FieldInit
 operator|*
@@ -6531,12 +7186,8 @@ block|}
 name|virtual
 name|Init
 operator|*
-name|resolveBitReference
+name|getBit
 argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
 argument|unsigned Bit
 argument_list|)
 specifier|const
@@ -6658,6 +7309,8 @@ argument_list|)
 operator|:
 name|TypedInit
 argument_list|(
+name|IK_DagInit
+argument_list|,
 name|DagRecTy
 operator|::
 name|get
@@ -6696,13 +7349,10 @@ argument_list|)
 block|{}
 name|DagInit
 argument_list|(
-specifier|const
-name|DagInit
-operator|&
-name|Other
+argument|const DagInit&Other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|DagInit
 operator|&
 name|operator
@@ -6713,10 +7363,26 @@ name|DagInit
 operator|&
 name|Other
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not define.
 name|public
 operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Init *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IK_DagInit
+return|;
+block|}
 specifier|static
 name|DagInit
 operator|*
@@ -7061,12 +7727,8 @@ block|}
 name|virtual
 name|Init
 operator|*
-name|resolveBitReference
+name|getBit
 argument_list|(
-argument|Record&R
-argument_list|,
-argument|const RecordVal *RV
-argument_list|,
 argument|unsigned Bit
 argument_list|)
 specifier|const
@@ -7294,8 +7956,15 @@ name|Init
 operator|*
 name|Name
 block|;
+comment|// Location where record was instantiated, followed by the location of
+comment|// multiclass prototypes used.
+name|SmallVector
+operator|<
 name|SMLoc
-name|Loc
+block|,
+literal|4
+operator|>
+name|Locs
 block|;
 name|std
 operator|::
@@ -7346,11 +8015,22 @@ comment|// Constructs a record.
 name|explicit
 name|Record
 argument_list|(
-argument|const std::string&N
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|N
 argument_list|,
-argument|SMLoc loc
+name|ArrayRef
+operator|<
+name|SMLoc
+operator|>
+name|locs
 argument_list|,
-argument|RecordKeeper&records
+name|RecordKeeper
+operator|&
+name|records
 argument_list|)
 operator|:
 name|ID
@@ -7369,9 +8049,17 @@ name|N
 argument_list|)
 argument_list|)
 block|,
-name|Loc
+name|Locs
 argument_list|(
-name|loc
+name|locs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|locs
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|,
 name|TrackedRecords
@@ -7390,11 +8078,19 @@ block|;   }
 name|explicit
 name|Record
 argument_list|(
-argument|Init *N
+name|Init
+operator|*
+name|N
 argument_list|,
-argument|SMLoc loc
+name|ArrayRef
+operator|<
+name|SMLoc
+operator|>
+name|locs
 argument_list|,
-argument|RecordKeeper&records
+name|RecordKeeper
+operator|&
+name|records
 argument_list|)
 operator|:
 name|ID
@@ -7408,9 +8104,17 @@ argument_list|(
 name|N
 argument_list|)
 block|,
-name|Loc
+name|Locs
 argument_list|(
-name|loc
+name|locs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|locs
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|,
 name|TrackedRecords
@@ -7426,6 +8130,69 @@ block|{
 name|init
 argument_list|()
 block|;   }
+comment|// When copy-constructing a Record, we must still guarantee a globally unique
+comment|// ID number.  All other fields can be copied normally.
+name|Record
+argument_list|(
+specifier|const
+name|Record
+operator|&
+name|O
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|LastID
+operator|++
+argument_list|)
+block|,
+name|Name
+argument_list|(
+name|O
+operator|.
+name|Name
+argument_list|)
+block|,
+name|Locs
+argument_list|(
+name|O
+operator|.
+name|Locs
+argument_list|)
+block|,
+name|TemplateArgs
+argument_list|(
+name|O
+operator|.
+name|TemplateArgs
+argument_list|)
+block|,
+name|Values
+argument_list|(
+name|O
+operator|.
+name|Values
+argument_list|)
+block|,
+name|SuperClasses
+argument_list|(
+name|O
+operator|.
+name|SuperClasses
+argument_list|)
+block|,
+name|TrackedRecords
+argument_list|(
+name|O
+operator|.
+name|TrackedRecords
+argument_list|)
+block|,
+name|TheInit
+argument_list|(
+argument|O.TheInit
+argument_list|)
+block|{ }
 operator|~
 name|Record
 argument_list|()
@@ -7505,13 +8272,16 @@ name|Name
 argument_list|)
 block|;
 comment|// Also updates RecordKeeper.
+name|ArrayRef
+operator|<
 name|SMLoc
+operator|>
 name|getLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Loc
+name|Locs
 return|;
 block|}
 comment|/// get the corresponding DefInit.
@@ -8249,6 +9019,19 @@ argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
+comment|/// getValueAsBitOrUnset - This method looks up the specified field and
+comment|/// returns its value as a bit. If the field is unset, sets Unset to true and
+comment|/// retunrs false.
+comment|///
+name|bool
+name|getValueAsBitOrUnset
+argument_list|(
+argument|StringRef FieldName
+argument_list|,
+argument|bool&Unset
+argument_list|)
+specifier|const
+block|;
 comment|/// getValueAsInt - This method looks up the specified field and returns its
 comment|/// value as an int64_t, throwing an exception if the field does not exist or
 comment|/// if the value is not the right type.
@@ -8728,10 +9511,10 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-decl_stmt|;
+block|;
 comment|/// LessRecord - Sorting predicate to sort record pointers by name.
 comment|///
-struct|struct
+block|struct
 name|LessRecord
 block|{
 name|bool
@@ -8742,7 +9525,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -8770,12 +9553,49 @@ operator|<
 literal|0
 return|;
 block|}
+expr|}
+block|;
+comment|/// LessRecordByID - Sorting predicate to sort record pointers by their
+comment|/// unique ID. If you just need a deterministic order, use this, since it
+comment|/// just compares two `unsigned`; the other sorting predicates require
+comment|/// string manipulation.
+block|struct
+name|LessRecordByID
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|Record
+operator|*
+name|LHS
+expr|,
+specifier|const
+name|Record
+operator|*
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|LHS
+operator|->
+name|getID
+argument_list|()
+operator|<
+name|RHS
+operator|->
+name|getID
+argument_list|()
+return|;
 block|}
-struct|;
+expr|}
+block|;
 comment|/// LessRecordFieldName - Sorting predicate to sort record pointers by their
 comment|/// name field.
 comment|///
-struct|struct
+block|struct
 name|LessRecordFieldName
 block|{
 name|bool
@@ -8786,7 +9606,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -8810,8 +9630,8 @@ literal|"Name"
 argument_list|)
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 name|raw_ostream
 operator|&
 name|operator
@@ -8820,17 +9640,17 @@ operator|(
 name|raw_ostream
 operator|&
 name|OS
-operator|,
+expr|,
 specifier|const
 name|RecordKeeper
 operator|&
 name|RK
 operator|)
-expr_stmt|;
+block|;
 comment|/// QualifyName - Return an Init with a qualifier prefix referring
 comment|/// to CurRec's name.
 name|Init
-modifier|*
+operator|*
 name|QualifyName
 argument_list|(
 name|Record
@@ -8852,11 +9672,11 @@ name|string
 operator|&
 name|Scoper
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// QualifyName - Return an Init with a qualifier prefix referring
 comment|/// to CurRec's name.
 name|Init
-modifier|*
+operator|*
 name|QualifyName
 argument_list|(
 name|Record
@@ -8881,8 +9701,7 @@ name|string
 operator|&
 name|Scoper
 argument_list|)
-decl_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -177,6 +177,33 @@ comment|/// routines (i.e. GCC's save_volatiles attribute).
 name|MBLAZE_SVOL
 init|=
 literal|74
+block|,
+comment|/// SPIR_FUNC - Calling convention for SPIR non-kernel device functions.
+comment|/// No lowering or expansion of arguments.
+comment|/// Structures are passed as a pointer to a struct with the byval attribute.
+comment|/// Functions can only call SPIR_FUNC and SPIR_KERNEL functions.
+comment|/// Functions can only have zero or one return values.
+comment|/// Variable arguments are not allowed, except for printf.
+comment|/// How arguments/return values are lowered are not specified.
+comment|/// Functions are only visible to the devices.
+name|SPIR_FUNC
+init|=
+literal|75
+block|,
+comment|/// SPIR_KERNEL - Calling convention for SPIR kernel functions.
+comment|/// Inherits the restrictions of SPIR_FUNC, except
+comment|/// Cannot have non-void return values.
+comment|/// Cannot have variable arguments.
+comment|/// Can also be called by the host.
+comment|/// Is externally visible.
+name|SPIR_KERNEL
+init|=
+literal|76
+block|,
+comment|/// Intel_OCL_BI - Calling conventions for Intel OpenCL built-ins
+name|Intel_OCL_BI
+init|=
+literal|77
 block|}
 enum|;
 block|}

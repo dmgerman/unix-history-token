@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2008-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libauditd/auditd_lib.c#11 $  */
+comment|/*-  * Copyright (c) 2008-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libauditd/auditd_lib.c#18 $  */
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<bsm/libbsm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -318,6 +324,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|auditd_dist
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 name|auditd_host
 index|[
@@ -346,43 +361,43 @@ init|=
 block|{
 literal|"no error"
 block|,
-comment|/* ADE_NOERR 	( 0) */
+comment|/* ADE_NOERR	( 0) */
 literal|"could not parse audit_control(5) file"
 block|,
-comment|/* ADE_PARSE 	( 1) */
+comment|/* ADE_PARSE	( 1) */
 literal|"auditon(2) failed"
 block|,
-comment|/* ADE_AUDITON 	( 2) */
+comment|/* ADE_AUDITON	( 2) */
 literal|"malloc(3) failed"
 block|,
-comment|/* ADE_NOMEM 	( 3) */
+comment|/* ADE_NOMEM	( 3) */
 literal|"all audit log directories over soft limit"
 block|,
-comment|/* ADE_SOFTLIM  ( 4) */
+comment|/* ADE_SOFTLIM	( 4) */
 literal|"all audit log directories over hard limit"
 block|,
-comment|/* ADE_HARDLIM 	( 5) */
+comment|/* ADE_HARDLIM	( 5) */
 literal|"could not create file name string"
 block|,
-comment|/* ADE_STRERR 	( 6) */
+comment|/* ADE_STRERR	( 6) */
 literal|"could not open audit record"
 block|,
-comment|/* ADE_AU_OPEN 	( 7) */
+comment|/* ADE_AU_OPEN	( 7) */
 literal|"could not close audit record"
 block|,
-comment|/* ADE_AU_CLOSE ( 8) */
+comment|/* ADE_AU_CLOSE	( 8) */
 literal|"could not set active audit session state"
 block|,
-comment|/* ADE_SETAUDIT ( 9) */
+comment|/* ADE_SETAUDIT	( 9) */
 literal|"auditctl(2) failed (trail still swapped)"
 block|,
-comment|/* ADE_ACTL 	(10) */
+comment|/* ADE_ACTL	(10) */
 literal|"auditctl(2) failed (trail not swapped)"
 block|,
-comment|/* ADE_ACTLERR  (11) */
+comment|/* ADE_ACTLERR	(11) */
 literal|"could not swap audit trail file"
 block|,
-comment|/* ADE_SWAPERR 	(12) */
+comment|/* ADE_SWAPERR	(12) */
 literal|"could not rename crash recovery file"
 block|,
 comment|/* ADE_RENAME	(13) */
@@ -391,7 +406,7 @@ block|,
 comment|/* ADE_READLINK	(14) */
 literal|"could not create 'current' link file"
 block|,
-comment|/* ADE_SYMLINK  (15) */
+comment|/* ADE_SYMLINK	(15) */
 literal|"invalid argument"
 block|,
 comment|/* ADE_INVAL	(16) */
@@ -479,7 +494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free our local list of directory names and init list   */
+comment|/*  * Free our local list of directory names and init list.  */
 end_comment
 
 begin_function
@@ -582,11 +597,7 @@ argument_list|(
 name|name
 argument_list|)
 operator|!=
-operator|(
 name|FILENAME_LEN
-operator|-
-literal|1
-operator|)
 condition|)
 block|{
 name|errno
@@ -742,7 +753,49 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the host from audit_control(5) and set it in the audit kernel  * information.  Return:  *	ADE_NOERR	on success.  *	ADE_PARSE	error parsing audit_control(5).  *	ADE_AUDITON	error getting/setting auditon(2) value.  *	ADE_GETADDR 	error getting address info for host.   *	ADE_ADDRFAM	un-supported address family. 	  */
+comment|/*  * Get the min percentage of free blocks from audit_control(5) and that  * value in the kernel.  Return:  *	ADE_NOERR	on success,  *	ADE_PARSE	error parsing audit_control(5),  */
+end_comment
+
+begin_function
+name|int
+name|auditd_set_dist
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|getacdist
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ADE_PARSE
+operator|)
+return|;
+name|auditd_dist
+operator|=
+name|ret
+expr_stmt|;
+return|return
+operator|(
+name|ADE_NOERR
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get the host from audit_control(5) and set it in the audit kernel  * information.  Return:  *	ADE_NOERR	on success.  *	ADE_PARSE	error parsing audit_control(5).  *	ADE_AUDITON	error getting/setting auditon(2) value.  *	ADE_GETADDR	error getting address info for host.  *	ADE_ADDRFAM	un-supported address family.  */
 end_comment
 
 begin_function
@@ -1025,7 +1078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get the min percentage of free blocks from audit_control(5) and that  * value in the kernel.  Return:  *	ADE_NOERR	on success,  *	ADE_PARSE 	error parsing audit_control(5),  *	ADE_AUDITON	error getting/setting auditon(2) value.  */
+comment|/*  * Get the min percentage of free blocks from audit_control(5) and that  * value in the kernel.  Return:  *	ADE_NOERR	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error getting/setting auditon(2) value.  */
 end_comment
 
 begin_function
@@ -1143,6 +1196,8 @@ name|char
 name|ts
 index|[
 name|TIMESTAMP_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
@@ -1182,7 +1237,10 @@ argument_list|,
 operator|++
 name|p
 argument_list|,
-name|TIMESTAMP_LEN
+sizeof|sizeof
+argument_list|(
+name|ts
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1453,7 +1511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove audit trails files according to the expiration conditions.  Returns:  * 	ADE_NOERR	on success or there is nothing to do.  * 	ADE_PARSE	if error parsing audit_control(5).  * 	ADE_NOMEM	if could not allocate memory.  * 	ADE_EXPIRE	if there was an unespected error.  */
+comment|/*  * Remove audit trails files according to the expiration conditions.  Returns:  *	ADE_NOERR	on success or there is nothing to do.  *	ADE_PARSE	if error parsing audit_control(5).  *	ADE_NOMEM	if could not allocate memory.  *	ADE_EXPIRE	if there was an unespected error.  */
 end_comment
 
 begin_function
@@ -1667,24 +1725,9 @@ condition|(
 name|dp
 operator|->
 name|d_namlen
-operator|!=
-operator|(
+operator|<
 name|FILENAME_LEN
-operator|-
-literal|1
-operator|)
 operator|||
-ifdef|#
-directive|ifdef
-name|DT_REG
-name|dp
-operator|->
-name|d_type
-operator|!=
-name|DT_REG
-operator|||
-endif|#
-directive|endif
 name|dp
 operator|->
 name|d_name
@@ -1763,15 +1806,13 @@ name|NULL
 operator|!=
 name|afnp
 operator|&&
-name|strncmp
+name|strcmp
 argument_list|(
 name|dp
 operator|->
 name|d_name
 argument_list|,
 name|afnp
-argument_list|,
-name|FILENAME_LEN
 argument_list|)
 operator|==
 literal|0
@@ -1931,7 +1972,6 @@ operator|&
 name|head
 argument_list|)
 operator|||
-operator|(
 name|new
 operator|->
 name|at_time
@@ -1943,7 +1983,6 @@ name|head
 argument_list|)
 operator|->
 name|at_time
-operator|)
 condition|)
 block|{
 name|TAILQ_INSERT_HEAD
@@ -2006,7 +2045,7 @@ name|current_time
 operator|-
 name|expire_age
 expr_stmt|;
-comment|/*  	 * Expire trail files, oldest (mtime) first, if the given 	 * conditions are met. 	 */
+comment|/* 	 * Expire trail files, oldest (mtime) first, if the given 	 * conditions are met. 	 */
 name|at
 operator|=
 name|TAILQ_FIRST
@@ -2280,14 +2319,14 @@ condition|)
 name|auditd_set_host
 argument_list|()
 expr_stmt|;
-comment|/*          * Init directory q.  Force a re-read of the file the next time.          */
+comment|/* 	 * Init directory q.  Force a re-read of the file the next time. 	 */
 name|free_dir_q
 argument_list|()
 expr_stmt|;
 name|endac
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Read the list of directories into an ordered linked list 	 * admin's preference, then those over soft limit and, finally, 	 * those over the hard limit. 	 *          * XXX We should use the reentrant interfaces once they are          * available.          */
+comment|/* 	 * Read the list of directories into an ordered linked list 	 * admin's preference, then those over soft limit and, finally, 	 * those over the hard limit. 	 * 	 * XXX We should use the reentrant interfaces once they are 	 * available. 	 */
 while|while
 condition|(
 name|getacdir
@@ -2325,12 +2364,10 @@ operator|(
 name|sfs
 operator|.
 name|f_blocks
-operator|/
-operator|(
-literal|100
-operator|/
+operator|*
 name|auditd_minval
-operator|)
+operator|/
+literal|100
 operator|)
 operator|)
 condition|?
@@ -2540,7 +2577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process the audit event file, obtaining a class mapping for each event, and  * set that mapping into the kernel. Return:  * 	 n	number of event mappings that were successfully processed,  *   ADE_NOMEM	if there was an error allocating memory.	  */
+comment|/*  * Process the audit event file, obtaining a class mapping for each event, and  * set that mapping into the kernel. Return:  *	 n	number of event mappings that were successfully processed,  *   ADE_NOMEM	if there was an error allocating memory.  */
 end_comment
 
 begin_function
@@ -2593,21 +2630,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ev
 operator|.
 name|ae_name
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|ev
 operator|.
 name|ae_desc
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 if|if
@@ -2715,7 +2748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the non-attributable event string and set the kernel mask.  Return:  *	ADE_NOERR 	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error setting the mask using auditon(2).  */
+comment|/*  * Get the non-attributable event string and set the kernel mask.  Return:  *	ADE_NOERR	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error setting the mask using auditon(2).  */
 end_comment
 
 begin_function
@@ -2736,7 +2769,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|getacna
 argument_list|(
 name|naeventstr
@@ -2745,9 +2777,7 @@ name|NA_EVENT_STR_SIZE
 argument_list|)
 operator|!=
 literal|0
-operator|)
 operator|||
-operator|(
 name|getauditflagsbin
 argument_list|(
 name|naeventstr
@@ -2757,7 +2787,6 @@ name|aumask
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
@@ -2793,7 +2822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the audit control policy if a policy is configured in audit_control(5),  * implement the policy. However, if one isn't defined or if there is an error  * parsing the control file, set AUDIT_CNT to avoid leaving the system in a  * fragile state.  Return:  *	ADE_NOERR 	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error setting policy using auditon(2).  */
+comment|/*  * Set the audit control policy if a policy is configured in audit_control(5),  * implement the policy. However, if one isn't defined or if there is an error  * parsing the control file, set AUDIT_CNT to avoid leaving the system in a  * fragile state.  Return:  *	ADE_NOERR	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error setting policy using auditon(2).  */
 end_comment
 
 begin_function
@@ -2814,7 +2843,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|getacpol
 argument_list|(
 name|polstr
@@ -2823,9 +2851,7 @@ name|POL_STR_SIZE
 argument_list|)
 operator|!=
 literal|0
-operator|)
 operator|||
-operator|(
 name|au_strtopol
 argument_list|(
 name|polstr
@@ -2835,7 +2861,6 @@ name|policy
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|policy
@@ -2887,7 +2912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Set trail rotation size.  Return:  *	ADE_NOERR 	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error setting file size using auditon(2).  */
+comment|/*  * Set trail rotation size.  Return:  *	ADE_NOERR	on success,  *	ADE_PARSE	error parsing audit_control(5),  *	ADE_AUDITON	error setting file size using auditon(2).  */
 end_comment
 
 begin_function
@@ -2964,8 +2989,228 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|inject_dist
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fromname
+parameter_list|,
+name|char
+modifier|*
+name|toname
+parameter_list|,
+name|size_t
+name|tonamesize
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+name|ptr
+operator|=
+name|strrchr
+argument_list|(
+name|fromname
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|ptr
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|ptr
+operator|-
+name|fromname
+operator|<
+operator|(
+name|ssize_t
+operator|)
+name|tonamesize
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|toname
+argument_list|,
+name|fromname
+argument_list|,
+name|ptr
+operator|-
+name|fromname
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|toname
+argument_list|,
+literal|"/dist/"
+argument_list|,
+name|tonamesize
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|toname
+argument_list|,
+name|ptr
+operator|+
+literal|1
+argument_list|,
+name|tonamesize
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|auditdist_link
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+block|{
+name|char
+name|fname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|auditd_dist
+condition|)
+block|{
+name|inject_dist
+argument_list|(
+name|filename
+argument_list|,
+name|fname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Ignore errors. */
+operator|(
+name|void
+operator|)
+name|link
+argument_list|(
+name|filename
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|auditd_rename
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fromname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|toname
+parameter_list|)
+block|{
+name|char
+name|fname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|tname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|auditd_dist
+condition|)
+block|{
+name|inject_dist
+argument_list|(
+name|fromname
+argument_list|,
+name|fname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|inject_dist
+argument_list|(
+name|toname
+argument_list|,
+name|tname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tname
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Ignore errors. */
+operator|(
+name|void
+operator|)
+name|rename
+argument_list|(
+name|fname
+argument_list|,
+name|tname
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|rename
+argument_list|(
+name|fromname
+argument_list|,
+name|toname
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Create the new audit file with appropriate permissions and ownership.  Try  * to clean up if something goes wrong.  */
+comment|/*  * Create the new audit file with appropriate permissions and ownership.  * Call auditctl(2) for this file.  * Try to clean up if something goes wrong.  * *errorp is modified only on auditctl(2) failure.  */
 end_comment
 
 begin_function
@@ -2979,13 +3224,16 @@ name|fname
 parameter_list|,
 name|gid_t
 name|gid
+parameter_list|,
+name|int
+modifier|*
+name|errorp
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|fd
 decl_stmt|;
+comment|/* XXXPJD: What should we do if the file already exists? */
 name|fd
 operator|=
 name|open
@@ -2997,8 +3245,6 @@ operator||
 name|O_CREAT
 argument_list|,
 name|S_IRUSR
-operator||
-name|S_IRGRP
 argument_list|)
 expr_stmt|;
 if|if
@@ -3026,12 +3272,22 @@ name|gid
 argument_list|)
 operator|<
 literal|0
+operator|||
+name|fchmod
+argument_list|(
+name|fd
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IRGRP
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
-name|error
-operator|=
-name|errno
-expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -3045,9 +3301,43 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
-name|errno
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|auditctl
+argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|*
+name|errorp
 operator|=
-name|error
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|fname
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3056,16 +3346,24 @@ literal|1
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|auditdist_link
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|fd
+literal|0
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Create the new audit trail file, swap with existing audit file.  Arguments  * include timestamp for the filename, a pointer to a string for returning the  * new file name, GID for trail file, and audit_warn function pointer for   * 'getacdir()' errors.  Returns:  *  	ADE_NOERR	on success,  *  	ADE_STRERR	if the file name string could not be created,  *  	ADE_SWAPERR	if the audit trail file could not be swapped,  *	ADE_ACTL 	if the auditctl(2) call failed but file swap still  *			successful.  *	ADE_ACTLERR	if the auditctl(2) call failed and file swap failed.  *	ADE_SYMLINK	if symlink(2) failed updating the current link.  */
+comment|/*  * Create the new audit trail file, swap with existing audit file.  Arguments  * include timestamp for the filename, a pointer to a string for returning the  * new file name, GID for trail file, and audit_warn function pointer for  * 'getacdir()' errors.  Returns:  *	ADE_NOERR	on success,  *	ADE_STRERR	if the file name string could not be created,  *	ADE_SWAPERR	if the audit trail file could not be swapped,  *	ADE_ACTL	if the auditctl(2) call failed but file swap still  *			successful.  *	ADE_ACTLERR	if the auditctl(2) call failed and file swap failed.  *	ADE_SYMLINK	if symlink(2) failed updating the current link.  */
 end_comment
 
 begin_function
@@ -3099,6 +3397,8 @@ name|char
 name|timestr
 index|[
 name|FILENAME_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
@@ -3109,12 +3409,6 @@ name|struct
 name|dir_ent
 modifier|*
 name|dirent
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|int
 name|saverrno
@@ -3128,17 +3422,16 @@ argument_list|(
 name|TS
 argument_list|)
 operator|!=
-operator|(
 name|TIMESTAMP_LEN
-operator|-
-literal|1
-operator|)
 operator|||
 name|snprintf
 argument_list|(
 name|timestr
 argument_list|,
-name|FILENAME_LEN
+sizeof|sizeof
+argument_list|(
+name|timestr
+argument_list|)
 argument_list|,
 literal|"%s.%s"
 argument_list|,
@@ -3197,47 +3490,21 @@ operator|(
 name|ADE_STRERR
 operator|)
 return|;
-comment|/* 		 * Create and open the file; then close and pass to the 		 * kernel if all went well. 		 */
-name|fd
-operator|=
+comment|/* 		 * Create the file and pass to the kernel if all went well. 		 */
+if|if
+condition|(
 name|open_trail
 argument_list|(
 name|fn
 argument_list|,
 name|gid
+argument_list|,
+operator|&
+name|saverrno
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|>=
+operator|==
 literal|0
 condition|)
-block|{
-name|error
-operator|=
-name|auditctl
-argument_list|(
-name|fn
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-comment|/*  				 * auditctl failed setting log file.   				 * Try again. 				 */
-name|saverrno
-operator|=
-name|errno
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 comment|/* Success. */
 operator|*
@@ -3245,26 +3512,12 @@ name|newfile
 operator|=
 name|fn
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|saverrno
 condition|)
 block|{
-comment|/* 					 * auditctl() failed but still 					 * successful. Return errno and "soft"  					 * error. 					 */
+comment|/* 				 * auditctl() failed but still 				 * successful. Return errno and "soft" 				 * error. 				 */
 name|errno
 operator|=
 name|saverrno
@@ -3281,7 +3534,7 @@ name|ADE_NOERR
 operator|)
 return|;
 block|}
-block|}
+comment|/* 		 * auditctl failed setting log file. Try again. 		 */
 comment|/* 		 * Tell the administrator about lack of permissions for dir. 		 */
 if|if
 condition|(
@@ -3344,7 +3597,7 @@ block|{
 name|auditinfo_addr_t
 name|aia
 decl_stmt|;
-comment|/*  	 * To prevent event feedback cycles and avoid audit becoming stalled if 	 * auditing is suspended we mask this processes events from being 	 * audited.  We allow the uid, tid, and mask fields to be implicitly 	 * set to zero, but do set the audit session ID to the PID.  	 * 	 * XXXRW: Is there more to it than this? 	 */
+comment|/* 	 * To prevent event feedback cycles and avoid audit becoming stalled if 	 * auditing is suspended we mask this processes events from being 	 * audited.  We allow the uid, tid, and mask fields to be implicitly 	 * set to zero, but do set the audit session ID to the PID. 	 * 	 * XXXRW: Is there more to it than this? 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -3413,7 +3666,7 @@ block|{
 name|auditinfo_t
 name|ai
 decl_stmt|;
-comment|/*  	 * To prevent event feedback cycles and avoid audit becoming stalled if 	 * auditing is suspended we mask this processes events from being 	 * audited.  We allow the uid, tid, and mask fields to be implicitly 	 * set to zero, but do set the audit session ID to the PID.  	 * 	 * XXXRW: Is there more to it than this? 	 */
+comment|/* 	 * To prevent event feedback cycles and avoid audit becoming stalled if 	 * auditing is suspended we mask this processes events from being 	 * audited.  We allow the uid, tid, and mask fields to be implicitly 	 * set to zero, but do set the audit session ID to the PID. 	 * 	 * XXXRW: Is there more to it than this? 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -3461,11 +3714,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __APPLE__ */
+comment|/* !__APPLE__ */
 end_comment
 
 begin_comment
-comment|/*  * Generate and submit audit record for audit startup or shutdown.  The event  * argument can be AUE_audit_recovery, AUE_audit_startup or  * AUE_audit_shutdown. The path argument will add a path token, if not NULL.  * Returns:  *	AUE_NOERR	on success,  *	ADE_NOMEM	if memory allocation fails,  * 	ADE_AU_OPEN	if au_open(3) fails,  *	ADE_AU_CLOSE	if au_close(3) fails.  */
+comment|/*  * Generate and submit audit record for audit startup or shutdown.  The event  * argument can be AUE_audit_recovery, AUE_audit_startup or  * AUE_audit_shutdown. The path argument will add a path token, if not NULL.  * Returns:  *	AUE_NOERR	on success,  *	ADE_NOMEM	if memory allocation fails,  *	ADE_AU_OPEN	if au_open(3) fails,  *	ADE_AU_CLOSE	if au_close(3) fails.  */
 end_comment
 
 begin_function
@@ -3757,7 +4010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for a 'current' symlink and do crash recovery, if needed. Create a new  * 'current' symlink. The argument 'curfile' is the file the 'current' symlink  * should point to.  Returns:  *	ADE_NOERR	on success,  *  	ADE_AU_OPEN	if au_open(3) fails,  *  	ADE_AU_CLOSE	if au_close(3) fails.  *	ADE_RENAME	if error renaming audit trail file,  *	ADE_READLINK	if error reading the 'current' link,  *	ADE_SYMLINK	if error creating 'current' link.  */
+comment|/*  * Check for a 'current' symlink and do crash recovery, if needed. Create a new  * 'current' symlink. The argument 'curfile' is the file the 'current' symlink  * should point to.  Returns:  *	ADE_NOERR	on success,  *	ADE_AU_OPEN	if au_open(3) fails,  *	ADE_AU_CLOSE	if au_close(3) fails.  *	ADE_RENAME	if error renaming audit trail file,  *	ADE_READLINK	if error reading the 'current' link,  *	ADE_SYMLINK	if error creating 'current' link.  */
 end_comment
 
 begin_function
@@ -3809,7 +4062,10 @@ name|AUDIT_CURRENT_LINK
 argument_list|,
 name|recoveredname
 argument_list|,
-name|MAXPATHLEN
+sizeof|sizeof
+argument_list|(
+name|recoveredname
+argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -3850,7 +4106,10 @@ name|newname
 argument_list|,
 name|recoveredname
 argument_list|,
-name|MAXPATHLEN
+sizeof|sizeof
+argument_list|(
+name|newname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3880,7 +4139,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rename
+name|auditd_rename
 argument_list|(
 name|recoveredname
 argument_list|,
@@ -4001,6 +4260,8 @@ name|char
 name|TS
 index|[
 name|TIMESTAMP_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -4008,7 +4269,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-comment|/*  	 * Mask auditing of this process. 	 */
+comment|/* 	 * Mask auditing of this process. 	 */
 if|if
 condition|(
 name|auditd_prevent_audit
@@ -4048,6 +4309,13 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* 	 * Setup trail file distribution. 	 */
+operator|(
+name|void
+operator|)
+name|auditd_set_dist
+argument_list|()
+expr_stmt|;
 comment|/* 	 *  Create a new audit trail log. 	 */
 if|if
 condition|(
@@ -4057,7 +4325,10 @@ name|tt
 argument_list|,
 name|TS
 argument_list|,
-name|TIMESTAMP_LEN
+sizeof|sizeof
+argument_list|(
+name|TS
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -4103,7 +4374,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Add the current symlink and recover from crash, if needed.  	 */
+comment|/* 	 * Add the current symlink and recover from crash, if needed. 	 */
 if|if
 condition|(
 name|auditd_new_curlink
@@ -4243,6 +4514,8 @@ name|char
 name|TS
 index|[
 name|TIMESTAMP_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * Auditing already disabled? 	 */
@@ -4324,7 +4597,10 @@ name|AUDIT_CURRENT_LINK
 argument_list|,
 name|oldname
 argument_list|,
-name|MAXPATHLEN
+sizeof|sizeof
+argument_list|(
+name|oldname
+argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -4357,7 +4633,10 @@ name|tt
 argument_list|,
 name|TS
 argument_list|,
-name|TIMESTAMP_LEN
+sizeof|sizeof
+argument_list|(
+name|TS
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -4374,7 +4653,10 @@ name|newname
 argument_list|,
 name|oldname
 argument_list|,
-name|len
+sizeof|sizeof
+argument_list|(
+name|newname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4404,7 +4686,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rename
+name|auditd_rename
 argument_list|(
 name|oldname
 argument_list|,

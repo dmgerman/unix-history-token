@@ -134,6 +134,9 @@ name|true
 argument_list|,
 operator|&
 name|zero
+argument_list|,
+name|chunk_dss_prec_get
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if

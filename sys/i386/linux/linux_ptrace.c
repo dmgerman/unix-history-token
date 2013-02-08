@@ -95,6 +95,12 @@ directive|include
 file|<i386/linux/linux_proto.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_signal.h>
+end_include
+
 begin_if
 if|#
 directive|if

@@ -494,14 +494,21 @@ value|SND_CHN_MATRIX_3_0
 end_define
 
 begin_comment
-comment|/* 4 @ 4.0 Quadraphonic */
+comment|/* 4 @ 3.1 (lfe), 4.0 (Quadraphonic, DEFAULT) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SND_CHN_MATRIX_4_0
+name|SND_CHN_MATRIX_3_1
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_CHN_MATRIX_4_0
+value|5
 end_define
 
 begin_define
@@ -519,14 +526,14 @@ begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_4_1
-value|5
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_5_0
-value|6
+value|7
 end_define
 
 begin_define
@@ -544,14 +551,14 @@ begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_5_1
-value|7
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_6_0
-value|8
+value|9
 end_define
 
 begin_define
@@ -562,14 +569,21 @@ value|SND_CHN_MATRIX_5_1
 end_define
 
 begin_comment
-comment|/* 7 @ 6.1 (lfe) */
+comment|/* 7 @ 6.1 (lfe, DEFAULT), 7.0 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_6_1
-value|9
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_CHN_MATRIX_7_0
+value|11
 end_define
 
 begin_define
@@ -587,7 +601,7 @@ begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_7_1
-value|10
+value|12
 end_define
 
 begin_define
@@ -601,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|SND_CHN_MATRIX_MAX
-value|11
+value|13
 end_define
 
 begin_define

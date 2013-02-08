@@ -165,7 +165,7 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|int32_t
+name|uint32_t
 name|newb
 decl_stmt|,
 modifier|*

@@ -194,12 +194,10 @@ name|DiagContext
 decl_stmt|;
 name|SourceMgr
 argument_list|(
-specifier|const
-name|SourceMgr
-operator|&
+argument|const SourceMgr&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -208,8 +206,8 @@ specifier|const
 name|SourceMgr
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|SourceMgr
@@ -553,7 +551,7 @@ decl_stmt|;
 comment|/// GetMessage - Return an SMDiagnostic at the specified location with the
 comment|/// specified string.
 comment|///
-comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
+comment|/// @param Msg If non-null, the kind of message (e.g., "error") which is
 comment|/// prefixed to the message.
 name|SMDiagnostic
 name|GetMessage

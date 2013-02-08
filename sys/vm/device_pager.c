@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_phys.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -650,6 +656,16 @@ name|ops
 operator|=
 name|ops
 expr_stmt|;
+name|object1
+operator|->
+name|un_pager
+operator|.
+name|devp
+operator|.
+name|dev
+operator|=
+name|handle
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1055,7 +1071,11 @@ name|cdev_pg_dtor
 argument_list|(
 name|object
 operator|->
-name|handle
+name|un_pager
+operator|.
+name|devp
+operator|.
+name|dev
 argument_list|)
 expr_stmt|;
 name|mtx_lock

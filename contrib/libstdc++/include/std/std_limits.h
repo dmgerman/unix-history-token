@@ -515,7 +515,7 @@ parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|(__glibcxx_signed (T) ? (T)1<< __glibcxx_digits (T) : (T)0)
+value|(__glibcxx_signed (T) ? (((T)1<< (__glibcxx_digits (T) - 1))<< 1) : (T)0)
 end_define
 
 begin_define
@@ -526,7 +526,7 @@ parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|(__glibcxx_signed (T) ? ((T)1<< __glibcxx_digits (T)) - 1 : ~(T)0)
+value|(__glibcxx_signed (T) ? \    (((((T)1<< (__glibcxx_digits (T) - 1)) - 1)<< 1) + 1) : ~(T)0)
 end_define
 
 begin_define

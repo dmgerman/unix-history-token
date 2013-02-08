@@ -290,6 +290,10 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|void
+modifier|*
+name|sc_tx_dma_buf
+decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;

@@ -103,7 +103,7 @@ name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -227,7 +227,7 @@ name|unsigned
 name|getEntrySize
 argument_list|(
 specifier|const
-name|TargetData
+name|DataLayout
 operator|&
 name|TD
 argument_list|)
@@ -238,7 +238,7 @@ name|unsigned
 name|getEntryAlignment
 argument_list|(
 specifier|const
-name|TargetData
+name|DataLayout
 operator|&
 name|TD
 argument_list|)

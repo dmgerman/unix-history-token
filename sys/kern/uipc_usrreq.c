@@ -393,7 +393,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|task
+name|timeout_task
 name|unp_gc_task
 decl_stmt|;
 end_decl_stmt
@@ -3065,12 +3065,15 @@ if|if
 condition|(
 name|local_unp_rights
 condition|)
-name|taskqueue_enqueue
+name|taskqueue_enqueue_timeout
 argument_list|(
 name|taskqueue_thread
 argument_list|,
 operator|&
 name|unp_gc_task
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4176,7 +4179,7 @@ operator|&
 name|UNP_WANTCRED
 condition|)
 block|{
-comment|/* 			 * Credentials are passed only once on SOCK_STREAM. 			 */
+comment|/* 			 * Credentials are passed only once on SOCK_STREAM 			 * and SOCK_SEQPACKET. 			 */
 name|unp2
 operator|->
 name|unp_flags
@@ -8171,6 +8174,13 @@ argument_list|,
 name|maxsockets
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_warning
+argument_list|(
+name|unp_zone
+argument_list|,
+literal|"kern.ipc.maxsockets limit reached"
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|maxsockets_change
@@ -8206,8 +8216,10 @@ operator|&
 name|unp_defers
 argument_list|)
 expr_stmt|;
-name|TASK_INIT
+name|TIMEOUT_TASK_INIT
 argument_list|(
+name|taskqueue_thread
+argument_list|,
 operator|&
 name|unp_gc_task
 argument_list|,

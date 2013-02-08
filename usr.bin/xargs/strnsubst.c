@@ -141,9 +141,9 @@ name|s2
 operator|=
 name|calloc
 argument_list|(
-name|maxsize
-argument_list|,
 literal|1
+argument_list|,
+name|maxsize
 argument_list|)
 expr_stmt|;
 if|if

@@ -923,6 +923,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_CLOCK_V3_BASE_MASK
+value|0x0000FF00
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_CLOCK_BASE_SHIFT
 value|8
 end_define

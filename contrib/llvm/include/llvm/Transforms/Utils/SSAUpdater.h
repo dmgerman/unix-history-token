@@ -293,16 +293,14 @@ specifier|const
 name|SSAUpdater
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|SSAUpdater
 argument_list|(
-specifier|const
-name|SSAUpdater
-operator|&
+argument|const SSAUpdater&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 block|}
 empty_stmt|;
 comment|/// LoadAndStorePromoter - This little helper class provides a convenient way to

@@ -1323,16 +1323,6 @@ begin_comment
 comment|/* functions to start/stop udp tunneling */
 end_comment
 
-begin_comment
-comment|/* XXX: Remove the #ifdef after tunneling over IPv6 works also on FreeBSD. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_function_decl
 name|void
 name|sctp_over_udp_stop
@@ -1350,11 +1340,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int

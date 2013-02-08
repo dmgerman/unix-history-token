@@ -247,6 +247,8 @@ block|,
 literal|"KEEP"
 block|,
 literal|"2MSL"
+block|,
+literal|"DELACK"
 block|}
 decl_stmt|;
 end_decl_stmt

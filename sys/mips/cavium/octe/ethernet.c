@@ -1131,13 +1131,6 @@ decl_stmt|;
 name|int
 name|qos
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"cavium-ethernet: %s\n"
-argument_list|,
-name|OCTEON_SDK_VERSION_STRING
-argument_list|)
-expr_stmt|;
 name|cvm_oct_rx_initialize
 argument_list|()
 expr_stmt|;

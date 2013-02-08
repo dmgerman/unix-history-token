@@ -559,6 +559,7 @@ comment|///
 end_comment
 
 begin_decl_stmt
+name|virtual
 name|MachineBasicBlock
 modifier|*
 name|EmitSchedule
@@ -751,6 +752,36 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|/// ForceUnitLatencies - Return true if all scheduling edges should be given
+end_comment
+
+begin_comment
+comment|/// a latency value of one.  The default is to return false; schedulers may
+end_comment
+
+begin_comment
+comment|/// override this as needed.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|bool
+name|forceUnitLatencies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
 
 begin_label
 name|private

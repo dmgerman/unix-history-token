@@ -2500,7 +2500,7 @@ literal|0
 expr_stmt|;
 name|scsi_ulto2b
 argument_list|(
-literal|3
+literal|4
 argument_list|,
 name|page
 operator|->
@@ -2529,6 +2529,13 @@ literal|6
 index|]
 operator|=
 literal|2
+expr_stmt|;
+name|buf
+index|[
+literal|7
+index|]
+operator|=
+literal|7
 expr_stmt|;
 name|ccb
 operator|->

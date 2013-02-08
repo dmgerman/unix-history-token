@@ -495,6 +495,16 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|getSymbolValue
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint64_t&Val
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|getSectionNext
 argument_list|(
 argument|DataRefImpl Sec
@@ -596,6 +606,16 @@ block|;
 name|virtual
 name|error_code
 name|isSectionZeroInit
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionReadOnlyData
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|,
@@ -973,18 +993,6 @@ name|v
 operator|->
 name|isCOFF
 argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const COFFObjectFile *v
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

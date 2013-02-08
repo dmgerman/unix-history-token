@@ -213,6 +213,39 @@ name|NFSSVC_RESUMENFSD
 value|0x08000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSSVC_DUMPMNTOPTS
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Argument structure for NFSSVC_DUMPMNTOPTS. */
+end_comment
+
+begin_struct
+struct|struct
+name|nfscl_dumpmntopts
+block|{
+name|char
+modifier|*
+name|ndmnt_fname
+decl_stmt|;
+comment|/* File Name */
+name|size_t
+name|ndmnt_blen
+decl_stmt|;
+comment|/* Size of buffer */
+name|void
+modifier|*
+name|ndmnt_buf
+decl_stmt|;
+comment|/* and the buffer */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

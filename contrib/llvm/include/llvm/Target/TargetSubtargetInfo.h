@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineInstr
+decl_stmt|;
+name|class
 name|SDep
 decl_stmt|;
 name|class
@@ -83,6 +86,9 @@ name|SUnit
 decl_stmt|;
 name|class
 name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetSchedModel
 decl_stmt|;
 name|template
 operator|<
@@ -106,12 +112,10 @@ name|MCSubtargetInfo
 block|{
 name|TargetSubtargetInfo
 argument_list|(
-specifier|const
-name|TargetSubtargetInfo
-operator|&
+argument|const TargetSubtargetInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -120,8 +124,8 @@ specifier|const
 name|TargetSubtargetInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 comment|// Can only create subclasses...
@@ -157,15 +161,27 @@ decl|~
 name|TargetSubtargetInfo
 argument_list|()
 empty_stmt|;
-comment|/// getSpecialAddressLatency - For targets where it is beneficial to
-comment|/// backschedule instructions that compute addresses, return a value
-comment|/// indicating the number of scheduling cycles of backscheduling that
-comment|/// should be attempted.
+comment|/// Resolve a SchedClass at runtime, where SchedClass identifies an
+comment|/// MCSchedClassDesc with the isVariant property. This may return the ID of
+comment|/// another variant SchedClass, but repeated invocation must quickly terminate
+comment|/// in a nonvariant SchedClass.
 name|virtual
 name|unsigned
-name|getSpecialAddressLatency
-argument_list|()
-decl|const
+name|resolveSchedClass
+block|(
+name|unsigned
+name|SchedClass
+block|, const
+name|MachineInstr
+modifier|*
+name|MI
+block|,
+specifier|const
+name|TargetSchedModel
+operator|*
+name|SchedModel
+block|)
+specifier|const
 block|{
 return|return
 literal|0
@@ -180,47 +196,37 @@ name|virtual
 name|bool
 name|enablePostRAScheduler
 argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|,
-name|AntiDepBreakMode
-operator|&
-name|Mode
+argument|AntiDepBreakMode& Mode
 argument_list|,
-name|RegClassVector
-operator|&
-name|CriticalPathRCs
+argument|RegClassVector& CriticalPathRCs
 argument_list|)
-decl|const
-empty_stmt|;
+specifier|const
+expr_stmt|;
 comment|// adjustSchedDependency - Perform target specific adjustments to
 comment|// the latency of a schedule dependency.
 name|virtual
 name|void
 name|adjustSchedDependency
-block|(
-name|SUnit
-block|*
-name|def
-block|,
-name|SUnit
-modifier|*
-name|use
-block|,
-name|SDep
-modifier|&
-name|dep
-block|)
+argument_list|(
+argument|SUnit *def
+argument_list|,
+argument|SUnit *use
+argument_list|,
+argument|SDep& dep
+argument_list|)
 specifier|const
 block|{ }
 block|}
-enum|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

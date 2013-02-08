@@ -2227,6 +2227,8 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|md
 operator|->
 name|md_name

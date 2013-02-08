@@ -89,6 +89,17 @@ directive|include
 file|<net/bpfdesc.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|PRINET
+value|26
+end_define
+
+begin_comment
+comment|/* interruptible */
+end_comment
+
 begin_comment
 comment|/*  * Implement historical kernel memory buffering model for BPF: two malloc(9)  * kernel buffers are hung off of the descriptor.  The size is fixed prior to  * attaching to an ifnet, ad cannot be changed after that.  read(2) simply  * copies the data to user space using uiomove(9).  */
 end_comment
@@ -568,6 +579,31 @@ name|EINVAL
 operator|)
 return|;
 block|}
+while|while
+condition|(
+name|d
+operator|->
+name|bd_hbuf_in_use
+condition|)
+name|mtx_sleep
+argument_list|(
+operator|&
+name|d
+operator|->
+name|bd_hbuf_in_use
+argument_list|,
+operator|&
+name|d
+operator|->
+name|bd_lock
+argument_list|,
+name|PRINET
+argument_list|,
+literal|"bd_hbuf"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Free old buffers if set */
 if|if
 condition|(

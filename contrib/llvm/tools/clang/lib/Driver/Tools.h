@@ -850,6 +850,16 @@ comment|// end namespace hexagon.
 name|namespace
 name|darwin
 block|{
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ArchType
+name|getArchTypeForDarwinArchName
+argument_list|(
+argument|StringRef Str
+argument_list|)
+expr_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|DarwinTool
@@ -1269,6 +1279,13 @@ operator|:
 name|public
 name|DarwinTool
 block|{
+name|bool
+name|NeedsTempPath
+argument_list|(
+argument|const InputInfoList&Inputs
+argument_list|)
+specifier|const
+block|;
 name|void
 name|AddLinkArgs
 argument_list|(
@@ -1277,6 +1294,8 @@ argument_list|,
 argument|const ArgList&Args
 argument_list|,
 argument|ArgStringList&CmdArgs
+argument_list|,
+argument|const InputInfoList&Inputs
 argument_list|)
 specifier|const
 block|;

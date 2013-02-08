@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MipsAnalyzeImmediate.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MipsSERegisterInfo.h"
 end_include
 
@@ -225,6 +219,24 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
+comment|/// Emit a series of instructions to load an immediate. If NewImm is a
+comment|/// non-NULL parameter, the last instruction is not emitted, but instead
+comment|/// its immediate operand is returned in NewImm.
+name|unsigned
+name|loadImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned *NewImm
 argument_list|)
 specifier|const
 block|;

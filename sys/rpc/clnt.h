@@ -1312,6 +1312,17 @@ begin_comment
 comment|/* get privileged source port flag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLSET_BACKCHANNEL
+value|29
+end_define
+
+begin_comment
+comment|/* set backchannel for socket */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/AnalysisContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState.h"
 end_include
 
@@ -276,12 +282,18 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \class RuntimeDefinition
 comment|/// \brief Defines the runtime definition of the called function.
+comment|///
+comment|/// Encapsulates the information we have about which Decl will be used
+comment|/// when the call is executed on the given path. When dealing with dynamic
+comment|/// dispatch, the information is based on DynamicTypeInfo and might not be
+comment|/// precise.
 name|class
 name|RuntimeDefinition
 block|{
-comment|/// The Declaration of the function which will be called at runtime.
-comment|/// 0 if not available.
+comment|/// The Declaration of the function which could be called at runtime.
+comment|/// NULL if not available.
 specifier|const
 name|Decl
 operator|*
@@ -289,7 +301,8 @@ name|D
 block|;
 comment|/// The region representing an object (ObjC/C++) on which the method is
 comment|/// called. With dynamic dispatch, the method definition depends on the
-comment|/// runtime type of this object. 0 when there is no dynamic dispatch.
+comment|/// runtime type of this object. NULL when the DynamicTypeInfo is
+comment|/// precise.
 specifier|const
 name|MemRegion
 operator|*
@@ -361,16 +374,9 @@ return|return
 name|D
 return|;
 block|}
-specifier|const
-name|MemRegion
-operator|*
-name|getDispatchRegion
-argument_list|()
-block|{
-return|return
-name|R
-return|;
-block|}
+comment|/// \brief Check if the definition we have is precise.
+comment|/// If not, it is possible that the call dispatches to another definition at
+comment|/// execution time.
 name|bool
 name|mayHaveOtherDefinitions
 argument_list|()
@@ -379,6 +385,18 @@ return|return
 name|R
 operator|!=
 literal|0
+return|;
+block|}
+comment|/// When other definitions are possible, returns the region whose runtime type
+comment|/// determines the method definition.
+specifier|const
+name|MemRegion
+operator|*
+name|getDispatchRegion
+argument_list|()
+block|{
+return|return
+name|R
 return|;
 block|}
 expr|}
@@ -425,9 +443,7 @@ operator|*
 operator|>
 name|Origin
 block|;
-comment|// DO NOT IMPLEMENT
-name|CallEvent
-operator|&
+name|void
 name|operator
 operator|=
 operator|(
@@ -435,6 +451,7 @@ specifier|const
 name|CallEvent
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|protected
 operator|:
@@ -593,26 +610,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|ProgramStateRef
-name|getState
-argument_list|()
-specifier|const
-block|{
-return|return
-name|State
-return|;
-block|}
-specifier|const
-name|LocationContext
-operator|*
-name|getLocationContext
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LCtx
-return|;
-block|}
 comment|/// Copies this CallEvent, with vtable intact, into a new block of memory.
 name|virtual
 name|void
@@ -664,14 +661,6 @@ argument|RegionList&Regions
 argument_list|)
 specifier|const
 block|{}
-name|virtual
-name|QualType
-name|getDeclaredResultType
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
 name|public
 operator|:
 name|virtual
@@ -709,6 +698,28 @@ operator|*
 operator|>
 operator|(
 operator|)
+return|;
+block|}
+comment|/// \brief The state in which the call is being evaluated.
+name|ProgramStateRef
+name|getState
+argument_list|()
+specifier|const
+block|{
+return|return
+name|State
+return|;
+block|}
+comment|/// \brief The context in which the call is being evaluated.
+specifier|const
+name|LocationContext
+operator|*
+name|getLocationContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LCtx
 return|;
 block|}
 comment|/// \brief Returns the definition of the function or method that will be
@@ -921,6 +932,15 @@ name|getResultType
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns the return value of the call.
+comment|///
+comment|/// This should only be called if the CallEvent was created using a state in
+comment|/// which the return value has already been bound to the origin expression.
+name|SVal
+name|getReturnValue
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Returns true if any of the arguments appear to represent callbacks.
 name|bool
 name|hasNonZeroCallbackArg
@@ -943,7 +963,83 @@ name|hasNonZeroCallbackArg
 argument_list|()
 return|;
 block|}
+comment|/// \brief Returns true if the callee is an externally-visible function in the
+comment|/// top-level namespace, such as \c malloc.
+comment|///
+comment|/// You can use this call to determine that a particular function really is
+comment|/// a library function and not, say, a C++ member function with the same name.
+comment|///
+comment|/// If a name is provided, the function must additionally match the given
+comment|/// name.
+comment|///
+comment|/// Note that this deliberately excludes C++ library functions in the \c std
+comment|/// namespace, but will include C library functions accessed through the
+comment|/// \c std namespace. This also does not check if the function is declared
+comment|/// as 'extern "C"', or if it uses C++ name mangling.
+comment|// FIXME: Add a helper for checking namespaces.
+comment|// FIXME: Move this down to AnyFunctionCall once checkers have more
+comment|// precise callbacks.
+name|bool
+name|isGlobalCFunction
+argument_list|(
+name|StringRef
+name|SpecificName
+operator|=
+name|StringRef
+argument_list|()
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Returns the name of the callee, if its name is a simple identifier.
+comment|///
+comment|/// Note that this will fail for Objective-C methods, blocks, and C++
+comment|/// overloaded operators. The former is named by a Selector rather than a
+comment|/// simple identifier, and the latter two do not have names.
+comment|// FIXME: Move this down to AnyFunctionCall once checkers have more
+comment|// precise callbacks.
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getCalleeIdentifier
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|NamedDecl
+operator|*
+name|ND
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|NamedDecl
+operator|>
+operator|(
+name|getDecl
+argument_list|()
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|ND
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|ND
+operator|->
+name|getIdentifier
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns an appropriate ProgramPoint for this call.
+end_comment
+
+begin_decl_stmt
 name|ProgramPoint
 name|getProgramPoint
 argument_list|(
@@ -961,10 +1057,25 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns a new state with all argument regions invalidated.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This accepts an alternate state in case some processing has already
+end_comment
+
+begin_comment
 comment|/// occurred.
+end_comment
+
+begin_decl_stmt
 name|ProgramStateRef
 name|invalidateRegions
 argument_list|(
@@ -978,6 +1089,9 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -989,6 +1103,9 @@ name|SVal
 operator|>
 name|FrameBindingTy
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|SmallVectorImpl
 operator|<
@@ -996,8 +1113,17 @@ name|FrameBindingTy
 operator|>
 name|BindingsTy
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// Populates the given SmallVector with the bindings in the callee's stack
+end_comment
+
+begin_comment
 comment|/// frame at the start of this call.
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|void
 name|getInitialStackFrameContents
@@ -1015,7 +1141,13 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Returns a copy of this CallEvent, but using the given state.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1031,7 +1163,13 @@ argument|ProgramStateRef NewState
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Returns a copy of this CallEvent, but using the given state.
+end_comment
+
+begin_expr_stmt
 name|CallEventRef
 operator|<
 operator|>
@@ -1051,14 +1189,20 @@ name|NewState
 operator|)
 return|;
 block|}
-comment|/// \brief Returns true if this is a statement that can be considered for
-comment|/// inlining.
-comment|///
-comment|/// FIXME: This should go away once CallEvents are cheap and easy to
-comment|/// construct from ExplodedNodes.
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Returns true if this is a statement is a function or method call
+end_comment
+
+begin_comment
+comment|/// of some kind.
+end_comment
+
+begin_function_decl
 specifier|static
 name|bool
-name|mayBeInlined
+name|isCallStmt
 parameter_list|(
 specifier|const
 name|Stmt
@@ -1066,9 +1210,35 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Returns the result type of a function, method declaration.
+end_comment
+
+begin_function_decl
+specifier|static
+name|QualType
+name|getDeclaredResultType
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Iterator access to formal parameters and their types.
+end_comment
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1080,8 +1250,14 @@ name|ParmVarDecl
 operator|>
 name|get_type_fun
 expr_stmt|;
+end_typedef
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_typedef
 typedef|typedef
 specifier|const
 name|ParmVarDecl
@@ -1090,20 +1266,65 @@ specifier|const
 modifier|*
 name|param_iterator
 typedef|;
+end_typedef
+
+begin_comment
 comment|/// Returns an iterator over the call's formal parameters.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If UseDefinitionParams is set, this will return the parameter decls
+end_comment
+
+begin_comment
 comment|/// used in the callee's definition (suitable for inlining). Most of the
+end_comment
+
+begin_comment
 comment|/// time it is better to use the decl found by name lookup, which likely
+end_comment
+
+begin_comment
 comment|/// carries more annotations.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Remember that the number of formal parameters may not match the number
+end_comment
+
+begin_comment
 comment|/// of arguments for all calls. However, the first parameter will always
+end_comment
+
+begin_comment
 comment|/// correspond with the argument value returned by \c getArgSVal(0).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If the call has no accessible declaration (or definition, if
+end_comment
+
+begin_comment
 comment|/// \p UseDefinitionParams is set), \c param_begin() will be equal to
+end_comment
+
+begin_comment
 comment|/// \c param_end().
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|param_iterator
 name|param_begin
@@ -1112,7 +1333,13 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \sa param_begin()
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|param_iterator
 name|param_end
@@ -1121,6 +1348,9 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -1132,11 +1362,29 @@ name|get_type_fun
 operator|>
 name|param_type_iterator
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// Returns an iterator over the types of the call's formal parameters.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This uses the callee decl found by default name lookup rather than the
+end_comment
+
+begin_comment
 comment|/// definition because it represents a public interface, and probably has
+end_comment
+
+begin_comment
 comment|/// more annotations.
+end_comment
+
+begin_expr_stmt
 name|param_type_iterator
 name|param_type_begin
 argument_list|()
@@ -1160,7 +1408,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \sa param_type_begin()
+end_comment
+
+begin_expr_stmt
 name|param_type_iterator
 name|param_type_end
 argument_list|()
@@ -1184,7 +1438,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// For debugging purposes only
+end_comment
+
+begin_decl_stmt
 name|void
 name|dump
 argument_list|(
@@ -1194,33 +1454,19 @@ name|Out
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CallEvent
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// \brief Represents a call to any sort of function that might have a
 end_comment
 
@@ -1286,12 +1532,6 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
-name|QualType
-name|getDeclaredResultType
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 comment|// This function is overridden by subclasses, but they must return
@@ -1331,86 +1571,87 @@ operator|=
 name|getDecl
 argument_list|()
 block|;
-comment|// Note that hasBody() will fill FD with the definition FunctionDecl.
+comment|// Note that the AnalysisDeclContext will have the FunctionDecl with
+comment|// the definition (if one exists).
 if|if
 condition|(
 name|FD
-operator|&&
-name|FD
+condition|)
+block|{
+name|AnalysisDeclContext
+modifier|*
+name|AD
+init|=
+name|getLocationContext
+argument_list|()
 operator|->
-name|hasBody
+name|getAnalysisDeclContext
+argument_list|()
+operator|->
+name|getManager
+argument_list|()
+operator|->
+name|getContext
 argument_list|(
 name|FD
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|AD
+operator|->
+name|getBody
+argument_list|()
 condition|)
 return|return
 name|RuntimeDefinition
 argument_list|(
-name|FD
+name|AD
+operator|->
+name|getDecl
+argument_list|()
 argument_list|)
 return|;
+block|}
 return|return
 name|RuntimeDefinition
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|argumentsMayEscape
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|virtual
 name|void
 name|getInitialStackFrameContents
 argument_list|(
-specifier|const
-name|StackFrameContext
-operator|*
-name|CalleeCtx
+argument|const StackFrameContext *CalleeCtx
 argument_list|,
-name|BindingsTy
-operator|&
-name|Bindings
+argument|BindingsTy&Bindings
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+specifier|const
+block|;
 name|virtual
 name|param_iterator
 name|param_begin
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|virtual
 name|param_iterator
 name|param_end
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_function
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|CallEvent
-modifier|*
-name|CA
-parameter_list|)
+argument_list|(
+argument|const CallEvent *CA
+argument_list|)
 block|{
 return|return
 name|CA
@@ -1428,17 +1669,12 @@ operator|<=
 name|CE_END_FUNCTION_CALLS
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// \brief Represents a call to a non-C++ function, written as a CallExpr.
-end_comment
-
-begin_decl_stmt
 name|class
 name|SimpleCall
-range|:
+operator|:
 name|public
 name|AnyFunctionCall
 block|{
@@ -1731,12 +1967,6 @@ argument|RegionList&Regions
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|QualType
-name|getDeclaredResultType
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 comment|/// \brief Returns the region associated with this instance of the block.
@@ -1935,32 +2165,7 @@ name|SVal
 name|getCXXThisVal
 argument_list|()
 specifier|const
-block|{
-specifier|const
-name|Expr
-operator|*
-name|Base
-operator|=
-name|getCXXThisExpr
-argument_list|()
 block|;
-comment|// FIXME: This doesn't handle an overloaded ->* operator.
-if|if
-condition|(
-operator|!
-name|Base
-condition|)
-return|return
-name|UnknownVal
-argument_list|()
-return|;
-return|return
-name|getSVal
-argument_list|(
-name|Base
-argument_list|)
-return|;
-block|}
 name|virtual
 specifier|const
 name|FunctionDecl
@@ -2148,6 +2353,12 @@ specifier|const
 name|Expr
 operator|*
 name|getCXXThisExpr
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|RuntimeDefinition
+name|getRuntimeDefinition
 argument_list|()
 specifier|const
 block|;
@@ -2357,6 +2568,21 @@ name|CallEventManager
 block|;
 name|protected
 operator|:
+typedef|typedef
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|DtorDataTy
+expr_stmt|;
 comment|/// Creates an implicit destructor.
 comment|///
 comment|/// \param DD The destructor that will be called.
@@ -2371,6 +2597,8 @@ argument_list|,
 argument|const Stmt *Trigger
 argument_list|,
 argument|const MemRegion *Target
+argument_list|,
+argument|bool IsBaseDestructor
 argument_list|,
 argument|ProgramStateRef St
 argument_list|,
@@ -2388,7 +2616,15 @@ argument_list|)
 block|{
 name|Data
 operator|=
+name|DtorDataTy
+argument_list|(
 name|Target
+argument_list|,
+name|IsBaseDestructor
+argument_list|)
+operator|.
+name|getOpaqueValue
+argument_list|()
 block|;
 name|Location
 operator|=
@@ -2450,6 +2686,12 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+name|RuntimeDefinition
+name|getRuntimeDefinition
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Returns the value of the implicit 'this' object.
 name|virtual
 name|SVal
@@ -2457,6 +2699,24 @@ name|getCXXThisVal
 argument_list|()
 specifier|const
 block|;
+comment|/// Returns true if this is a call to a base class destructor.
+name|bool
+name|isBaseDestructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DtorDataTy
+operator|::
+name|getFromOpaqueValue
+argument_list|(
+name|Data
+argument_list|)
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
 name|virtual
 name|Kind
 name|getKind
@@ -2511,7 +2771,7 @@ name|CXXConstructorCall
 argument_list|(
 argument|const CXXConstructExpr *CE
 argument_list|,
-argument|const MemRegion *target
+argument|const MemRegion *Target
 argument_list|,
 argument|ProgramStateRef St
 argument_list|,
@@ -2529,7 +2789,7 @@ argument_list|)
 block|{
 name|Data
 operator|=
-name|target
+name|Target
 block|;   }
 name|CXXConstructorCall
 argument_list|(
@@ -2963,12 +3223,6 @@ argument|RegionList&Regions
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|QualType
-name|getDeclaredResultType
-argument_list|()
-specifier|const
-block|;
 comment|/// Check if the selector may have multiple definitions (may have overrides).
 name|virtual
 name|bool
@@ -3104,6 +3358,12 @@ name|getReceiverSVal
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Return the value of 'self' if available.
+name|SVal
+name|getSelfSVal
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Get the interface for the receiver.
 comment|///
 comment|/// This works whether this is an instance message or a class message.
@@ -3123,6 +3383,12 @@ name|getReceiverInterface
 argument_list|()
 return|;
 block|}
+comment|/// \brief Checks if the receiver refers to 'self' or 'super'.
+name|bool
+name|isReceiverSelfOrSuper
+argument_list|()
+specifier|const
+block|;
 comment|/// Returns how the message was written in the source (property access,
 comment|/// subscript, or explicit message send).
 name|ObjCMessageKind
@@ -3435,6 +3701,61 @@ name|LCtx
 argument_list|)
 return|;
 block|}
+name|template
+operator|<
+name|typename
+name|T
+block|,
+name|typename
+name|Arg1
+block|,
+name|typename
+name|Arg2
+block|,
+name|typename
+name|Arg3
+block|,
+name|typename
+name|Arg4
+operator|>
+name|T
+operator|*
+name|create
+argument_list|(
+argument|Arg1 A1
+argument_list|,
+argument|Arg2 A2
+argument_list|,
+argument|Arg3 A3
+argument_list|,
+argument|Arg4 A4
+argument_list|,
+argument|ProgramStateRef St
+argument_list|,
+argument|const LocationContext *LCtx
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|allocate()
+argument_list|)
+name|T
+argument_list|(
+name|A1
+argument_list|,
+name|A2
+argument_list|,
+name|A3
+argument_list|,
+name|A4
+argument_list|,
+name|St
+argument_list|,
+name|LCtx
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 name|CallEventManager
@@ -3543,6 +3864,8 @@ argument|const Stmt *Trigger
 argument_list|,
 argument|const MemRegion *Target
 argument_list|,
+argument|bool IsBase
+argument_list|,
 argument|ProgramStateRef State
 argument_list|,
 argument|const LocationContext *LCtx
@@ -3559,6 +3882,8 @@ expr|,
 name|Trigger
 expr|,
 name|Target
+expr|,
+name|IsBase
 expr|,
 name|State
 expr|,

@@ -1389,9 +1389,6 @@ name|uint16_t
 name|stream
 decl_stmt|;
 name|uint16_t
-name|strseq
-decl_stmt|;
-name|uint16_t
 name|act_flags
 decl_stmt|;
 name|uint16_t
@@ -1603,11 +1600,14 @@ name|union
 name|scheduling_parameters
 name|ss_params
 decl_stmt|;
+name|uint32_t
+name|chunks_on_queues
+decl_stmt|;
 name|uint16_t
 name|stream_no
 decl_stmt|;
 name|uint16_t
-name|next_sequence_sent
+name|next_sequence_send
 decl_stmt|;
 comment|/* next one I expect to send out */
 name|uint8_t

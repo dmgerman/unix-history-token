@@ -513,6 +513,24 @@ operator|&
 name|MOInvariant
 return|;
 block|}
+comment|/// isUnordered - Returns true if this memory operation doesn't have any
+comment|/// ordering constraints other than normal aliasing. Volatile and atomic
+comment|/// memory operations can't be reordered.
+comment|///
+comment|/// Currently, we don't model the difference between volatile and atomic
+comment|/// operations. They should retain their ordering relative to all memory
+comment|/// operations.
+name|bool
+name|isUnordered
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isVolatile
+argument_list|()
+return|;
+block|}
 comment|/// refineAlignment - Update this MachineMemOperand to reflect the alignment
 comment|/// of MMO, if it has a greater alignment. This must only be used when the
 comment|/// new alignment applies to all users of this MachineMemOperand.

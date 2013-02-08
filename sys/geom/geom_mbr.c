@@ -2728,6 +2728,9 @@ name|sectorsize
 argument_list|,
 literal|"%*.*s%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|gp
@@ -2737,6 +2740,9 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|gp

@@ -128,32 +128,23 @@ comment|/// relocation models.
 name|unsigned
 name|GlobalBaseReg
 block|;
+comment|/// Mips16SPAliasReg - keeps track of the virtual register initialized for
+comment|/// use as an alias for SP for use in load/store of halfword/byte from/to
+comment|/// the stack
+name|unsigned
+name|Mips16SPAliasReg
+block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
 block|;
-comment|// Range of frame object indices.
-comment|// InArgFIRange: Range of indices of all frame objects created during call to
-comment|//               LowerFormalArguments.
-comment|// OutArgFIRange: Range of indices of all frame objects created during call to
-comment|//                LowerCall except for the frame object for restoring $gp.
-name|std
-operator|::
-name|pair
-operator|<
-name|int
-block|,
-name|int
-operator|>
-name|InArgFIRange
-block|,
-name|OutArgFIRange
-block|;
-name|unsigned
-name|MaxCallFrameSize
-block|;
+comment|/// True if function has a byval argument.
 name|bool
-name|EmitNOAT
+name|HasByvalArg
+block|;
+comment|/// Size of incoming argument area.
+name|unsigned
+name|IncomingArgSize
 block|;
 name|public
 operator|:
@@ -179,129 +170,16 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|Mips16SPAliasReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|VarArgsFrameIndex
 argument_list|(
 literal|0
 argument_list|)
-block|,
-name|InArgFIRange
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-block|,
-name|OutArgFIRange
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-block|,
-name|MaxCallFrameSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|EmitNOAT
-argument_list|(
-argument|false
-argument_list|)
 block|{}
-name|bool
-name|isInArgFI
-argument_list|(
-argument|int FI
-argument_list|)
-specifier|const
-block|{
-return|return
-name|FI
-operator|<=
-name|InArgFIRange
-operator|.
-name|first
-operator|&&
-name|FI
-operator|>=
-name|InArgFIRange
-operator|.
-name|second
-return|;
-block|}
-name|void
-name|setLastInArgFI
-argument_list|(
-argument|int FI
-argument_list|)
-block|{
-name|InArgFIRange
-operator|.
-name|second
-operator|=
-name|FI
-block|; }
-name|bool
-name|isOutArgFI
-argument_list|(
-argument|int FI
-argument_list|)
-specifier|const
-block|{
-return|return
-name|FI
-operator|<=
-name|OutArgFIRange
-operator|.
-name|first
-operator|&&
-name|FI
-operator|>=
-name|OutArgFIRange
-operator|.
-name|second
-return|;
-block|}
-name|void
-name|extendOutArgFIRange
-argument_list|(
-argument|int FirstFI
-argument_list|,
-argument|int LastFI
-argument_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|OutArgFIRange
-operator|.
-name|second
-condition|)
-comment|// this must be the first time this function was called.
-name|OutArgFIRange
-operator|.
-name|first
-operator|=
-name|FirstFI
-expr_stmt|;
-name|OutArgFIRange
-operator|.
-name|second
-operator|=
-name|LastFI
-block|;   }
 name|unsigned
 name|getSRetReturnReg
 argument_list|()
@@ -313,25 +191,32 @@ return|;
 block|}
 name|void
 name|setSRetReturnReg
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|SRetReturnReg
 operator|=
 name|Reg
-expr_stmt|;
-block|}
+block|; }
 name|bool
 name|globalBaseRegSet
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|unsigned
 name|getGlobalBaseReg
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
+name|bool
+name|mips16SPAliasRegSet
+argument_list|()
+specifier|const
+block|;
+name|unsigned
+name|getMips16SPAliasReg
+argument_list|()
+block|;
 name|int
 name|getVarArgsFrameIndex
 argument_list|()
@@ -343,64 +228,53 @@ return|;
 block|}
 name|void
 name|setVarArgsFrameIndex
-parameter_list|(
-name|int
-name|Index
-parameter_list|)
+argument_list|(
+argument|int Index
+argument_list|)
 block|{
 name|VarArgsFrameIndex
 operator|=
 name|Index
-expr_stmt|;
-block|}
-name|unsigned
-name|getMaxCallFrameSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MaxCallFrameSize
-return|;
-block|}
-name|void
-name|setMaxCallFrameSize
-parameter_list|(
-name|unsigned
-name|S
-parameter_list|)
-block|{
-name|MaxCallFrameSize
-operator|=
-name|S
-expr_stmt|;
-block|}
+block|; }
 name|bool
-name|getEmitNOAT
+name|hasByvalArg
 argument_list|()
 specifier|const
 block|{
 return|return
-name|EmitNOAT
+name|HasByvalArg
 return|;
 block|}
 name|void
-name|setEmitNOAT
-parameter_list|()
+name|setFormalArgInfo
+argument_list|(
+argument|unsigned Size
+argument_list|,
+argument|bool HasByval
+argument_list|)
 block|{
-name|EmitNOAT
+name|IncomingArgSize
 operator|=
-name|true
-expr_stmt|;
+name|Size
+block|;
+name|HasByvalArg
+operator|=
+name|HasByval
+block|;   }
+name|unsigned
+name|getIncomingArgSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IncomingArgSize
+return|;
 block|}
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end of namespace llvm
 end_comment
 

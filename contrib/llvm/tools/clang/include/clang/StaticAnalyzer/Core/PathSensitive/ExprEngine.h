@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/DomainSpecific/ObjCNoReturn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/AnalysisManager.h"
 end_include
 
@@ -207,33 +213,25 @@ comment|///  variables and symbols (as determined by a liveness analysis).
 name|ProgramStateRef
 name|CleanedState
 block|;
-comment|/// currentStmt - The current block-level statement.
+comment|/// currStmt - The current block-level statement.
 specifier|const
 name|Stmt
 operator|*
-name|currentStmt
+name|currStmt
 block|;
 name|unsigned
 name|int
-name|currentStmtIdx
+name|currStmtIdx
 block|;
 specifier|const
 name|NodeBuilderContext
 operator|*
-name|currentBuilderContext
+name|currBldrCtx
 block|;
-comment|/// Obj-C Class Identifiers.
-name|IdentifierInfo
-operator|*
-name|NSExceptionII
-block|;
-comment|/// Obj-C Selectors.
-name|Selector
-operator|*
-name|NSExceptionInstanceRaiseSelectors
-block|;
-name|Selector
-name|RaiseSel
+comment|/// Helper object to determine if an Objective-C message expression
+comment|/// implicitly never returns.
+name|ObjCNoReturn
+name|ObjCNoRet
 block|;
 comment|/// Whether or not GC is enabled in this analysis.
 name|bool
@@ -245,6 +243,12 @@ comment|///  destructor is called before the rest of the ExprEngine is destroyed
 name|GRBugReporter
 name|BR
 block|;
+comment|/// The functions which have been analyzed through inlining. This is owned by
+comment|/// AnalysisConsumer. It can be null.
+name|SetOfConstDecls
+operator|*
+name|VisitedCallees
+block|;
 name|public
 operator|:
 name|ExprEngine
@@ -253,7 +257,7 @@ argument|AnalysisManager&mgr
 argument_list|,
 argument|bool gcEnabled
 argument_list|,
-argument|SetOfConstDecls *VisitedCallees
+argument|SetOfConstDecls *VisitedCalleesIn
 argument_list|,
 argument|FunctionSummariesTy *FS
 argument_list|)
@@ -380,12 +384,12 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
-name|currentBuilderContext
+name|currBldrCtx
 argument_list|)
 block|;
 return|return
 operator|*
-name|currentBuilderContext
+name|currBldrCtx
 return|;
 block|}
 name|bool
@@ -494,6 +498,10 @@ comment|/// message, if any warnings should occur while removing the dead (leaks
 comment|/// are usually reported here).
 comment|/// \param K - In some cases it is possible to use PreStmt kind. (Do
 comment|/// not use it unless you know what you are doing.)
+comment|/// If the ReferenceStmt is NULL, everything is this and parent contexts is
+comment|/// considered live.
+comment|/// If the stack frame context is NULL, everything on stack is considered
+comment|/// dead.
 name|void
 name|removeDead
 argument_list|(
@@ -503,7 +511,7 @@ argument|ExplodedNodeSet&Out
 argument_list|,
 argument|const Stmt *ReferenceStmt
 argument_list|,
-argument|const LocationContext *LC
+argument|const StackFrameContext *LC
 argument_list|,
 argument|const Stmt *DiagnosticStmt
 argument_list|,
@@ -601,6 +609,10 @@ argument_list|,
 name|NodeBuilderWithSinks
 operator|&
 name|nodeBuilder
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
 argument_list|)
 block|;
 comment|/// ProcessBranch - Called by CoreEngine.  Used to generate successor
@@ -669,6 +681,27 @@ argument_list|(
 name|NodeBuilderContext
 operator|&
 name|BC
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|)
+block|;
+comment|/// Remove dead bindings/symbols before exiting a function.
+name|void
+name|removeDeadOnEndOfFunction
+argument_list|(
+name|NodeBuilderContext
+operator|&
+name|BC
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
 argument_list|)
 block|;
 comment|/// Generate the entry node of the callee.
@@ -793,20 +826,6 @@ name|getBasicVals
 argument_list|()
 return|;
 block|}
-specifier|const
-name|BasicValueFactory
-operator|&
-name|getBasicVals
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StateMgr
-operator|.
-name|getBasicVals
-argument_list|()
-return|;
-block|}
 comment|// FIXME: Remove when we migrate over to just using ValueManager.
 name|SymbolManager
 operator|&
@@ -919,12 +938,12 @@ operator|&
 name|Dst
 argument_list|)
 block|;
-comment|/// VisitAsmStmt - Transfer function logic for inline asm.
+comment|/// VisitGCCAsmStmt - Transfer function logic for inline asm.
 name|void
-name|VisitAsmStmt
+name|VisitGCCAsmStmt
 argument_list|(
 specifier|const
-name|AsmStmt
+name|GCCAsmStmt
 operator|*
 name|A
 argument_list|,
@@ -1394,6 +1413,8 @@ argument|const MemRegion *Dest
 argument_list|,
 argument|const Stmt *S
 argument_list|,
+argument|bool IsBaseDtor
+argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
 argument|ExplodedNodeSet&Dst
@@ -1451,11 +1472,11 @@ operator|&
 name|Dst
 argument_list|)
 block|;
-comment|/// evalEagerlyAssume - Given the nodes in 'Src', eagerly assume symbolic
+comment|/// evalEagerlyAssumeBinOpBifurcation - Given the nodes in 'Src', eagerly assume symbolic
 comment|///  expressions of the form 'x != 0' and generate new nodes (stored in Dst)
 comment|///  with those assumptions.
 name|void
-name|evalEagerlyAssume
+name|evalEagerlyAssumeBinOpBifurcation
 argument_list|(
 name|ExplodedNodeSet
 operator|&
@@ -1483,7 +1504,7 @@ specifier|const
 name|ProgramPointTag
 operator|*
 operator|>
-name|getEagerlyAssumeTags
+name|geteagerlyAssumeBinOpBifurcationTags
 argument_list|()
 block|;
 name|SVal
@@ -1668,6 +1689,9 @@ argument_list|,
 argument|SVal Val
 argument_list|,
 argument|bool atDeclInit = false
+argument_list|,
+argument|const ProgramPoint *PP =
+literal|0
 argument_list|)
 block|;
 name|public
@@ -1818,6 +1842,29 @@ argument_list|,
 argument|bool isLoad
 argument_list|)
 block|;
+comment|/// Count the stack depth and determine if the call is recursive.
+name|void
+name|examineStackFrames
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
+name|bool
+operator|&
+name|IsRecursive
+argument_list|,
+name|unsigned
+operator|&
+name|StackDepth
+argument_list|)
+block|;
 name|bool
 name|shouldInlineDecl
 argument_list|(
@@ -1904,6 +1951,8 @@ block|; }
 decl_stmt|;
 comment|/// Traits for storing the call processing policy inside GDM.
 comment|/// The GDM stores the corresponding CallExpr pointer.
+comment|// FIXME: This does not use the nice trait macros because it must be accessible
+comment|// from multiple translation units.
 struct|struct
 name|ReplayWithoutInlining
 block|{}

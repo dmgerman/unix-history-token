@@ -635,6 +635,42 @@ end_enum
 begin_enum
 enum|enum
 block|{
+comment|/* flags understood by begin_synchronized_op */
+name|HOLD_LOCK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|SLEEP_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|INTR_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* flags understood by end_synchronized_op */
+name|LOCK_HELD
+init|=
+name|HOLD_LOCK
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 comment|/* adapter flags */
 name|FULL_INIT_DONE
 init|=
@@ -728,7 +764,7 @@ name|IS_DOOMED
 parameter_list|(
 name|pi
 parameter_list|)
-value|(pi->flags& DOOMED)
+value|((pi)->flags& DOOMED)
 end_define
 
 begin_define
@@ -738,7 +774,7 @@ name|SET_DOOMED
 parameter_list|(
 name|pi
 parameter_list|)
-value|do {pi->flags |= DOOMED;} while (0)
+value|do {(pi)->flags |= DOOMED;} while (0)
 end_define
 
 begin_define
@@ -748,7 +784,7 @@ name|IS_BUSY
 parameter_list|(
 name|sc
 parameter_list|)
-value|(sc->flags& CXGBE_BUSY)
+value|((sc)->flags& CXGBE_BUSY)
 end_define
 
 begin_define
@@ -758,7 +794,7 @@ name|SET_BUSY
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {sc->flags |= CXGBE_BUSY;} while (0)
+value|do {(sc)->flags |= CXGBE_BUSY;} while (0)
 end_define
 
 begin_define
@@ -768,7 +804,7 @@ name|CLR_BUSY
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {sc->flags&= ~CXGBE_BUSY;} while (0)
+value|do {(sc)->flags&= ~CXGBE_BUSY;} while (0)
 end_define
 
 begin_struct
@@ -2152,8 +2188,13 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|char
+name|cfg_file
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int
 name|cfcsum
 decl_stmt|;
 name|struct
@@ -2235,6 +2276,21 @@ literal|0xef
 index|]
 decl_stmt|;
 comment|/* NUM_CPL_CMDS */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+specifier|const
+name|char
+modifier|*
+name|last_op
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|last_op_thr
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2277,6 +2333,21 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|mtx_assert(&(sc)->sc_lock, MA_NOTOWNED)
+end_define
+
+begin_comment
+comment|/* XXX: not bulletproof, but much better than nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSERT_SYNCHRONIZED_OP
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|KASSERT(IS_BUSY(sc)&& \ 	(mtx_owned(&(sc)->sc_lock) || sc->last_op_thr == curthread), \ 	("%s: operation not synchronized.", __func__))
 end_define
 
 begin_define
@@ -2518,10 +2589,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|txq
+name|q
 parameter_list|)
 define|\
-value|txq =&pi->adapter->sge.txq[pi->first_txq]; \ 	for (iter = 0; iter< pi->ntxq; ++iter, ++txq)
+value|for (q =&pi->adapter->sge.txq[pi->first_txq], iter = 0; \ 	    iter< pi->ntxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2533,10 +2604,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|rxq
+name|q
 parameter_list|)
 define|\
-value|rxq =&pi->adapter->sge.rxq[pi->first_rxq]; \ 	for (iter = 0; iter< pi->nrxq; ++iter, ++rxq)
+value|for (q =&pi->adapter->sge.rxq[pi->first_rxq], iter = 0; \ 	    iter< pi->nrxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2548,10 +2619,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|ofld_txq
+name|q
 parameter_list|)
 define|\
-value|ofld_txq =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq]; \ 	for (iter = 0; iter< pi->nofldtxq; ++iter, ++ofld_txq)
+value|for (q =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq], iter = 0; \ 	    iter< pi->nofldtxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2563,10 +2634,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|ofld_rxq
+name|q
 parameter_list|)
 define|\
-value|ofld_rxq =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq]; \ 	for (iter = 0; iter< pi->nofldrxq; ++iter, ++ofld_rxq)
+value|for (q =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq], iter = 0; \ 	    iter< pi->nofldrxq; ++iter, ++q)
 end_define
 
 begin_comment
@@ -3221,6 +3292,39 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|begin_synchronized_op
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|port_info
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|end_synchronized_op
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3069,7 +3069,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * handler for net.link.bridge.pfil_ipfw  */
+comment|/*  * handler for net.link.bridge.ipfw  */
 end_comment
 
 begin_function
@@ -3397,17 +3397,7 @@ operator|&
 name|hostid
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|retry
-operator|=
-literal|1
-init|;
-name|retry
-operator|!=
-literal|0
-condition|;
-control|)
+do|do
 block|{
 if|if
 condition|(
@@ -3579,10 +3569,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|retry
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|mtx_unlock
 argument_list|(
@@ -3591,6 +3584,13 @@ name|bridge_list_mtx
 argument_list|)
 expr_stmt|;
 block|}
+do|while
+condition|(
+name|retry
+operator|==
+literal|1
+condition|)
+do|;
 name|bstp_attach
 argument_list|(
 operator|&
@@ -9519,7 +9519,7 @@ name|m_copypacket
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10630,7 +10630,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10681,7 +10681,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11197,7 +11197,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11427,7 +11427,7 @@ name|m_copypacket
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -14222,7 +14222,7 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -14265,7 +14265,7 @@ name|mp
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15161,7 +15161,7 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15202,7 +15202,7 @@ name|m0
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

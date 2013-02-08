@@ -801,7 +801,19 @@ comment|/* Outstanding bucket fills */
 name|uint16_t
 name|uz_count
 decl_stmt|;
-comment|/* Highest value ub_ptr can have */
+comment|/* Highest amount of items in bucket */
+comment|/* The next three fields are used to print a rate-limited warnings. */
+specifier|const
+name|char
+modifier|*
+name|uz_warning
+decl_stmt|;
+comment|/* Warning to print on failure */
+name|struct
+name|timeval
+name|uz_ratecheck
+decl_stmt|;
+comment|/* Warnings rate-limiting */
 comment|/* 	 * This HAS to be the last item because we adjust the zone size 	 * based on NCPU and then allocate the space for the zones. 	 */
 name|struct
 name|uma_cache

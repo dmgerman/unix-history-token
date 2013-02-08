@@ -83,6 +83,17 @@ name|UCOM_MAXVER
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|UCOM_JITTERBUF_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|usb_device
@@ -624,6 +635,12 @@ name|int
 name|sc_subunit
 decl_stmt|;
 name|uint16_t
+name|sc_jitterbuf_in
+decl_stmt|;
+name|uint16_t
+name|sc_jitterbuf_out
+decl_stmt|;
+name|uint16_t
 name|sc_portno
 decl_stmt|;
 name|uint16_t
@@ -674,6 +691,11 @@ directive|define
 name|UCOM_FLAG_FREE_UNIT
 value|0x0200
 comment|/* set if we must free the unit */
+define|#
+directive|define
+name|UCOM_FLAG_INWAKEUP
+value|0x0400
+comment|/* set if we are in the tsw_inwakeup callback */
 name|uint8_t
 name|sc_lsr
 decl_stmt|;
@@ -712,6 +734,12 @@ define|#
 directive|define
 name|UCOM_LS_RING
 value|0x08
+name|uint8_t
+name|sc_jitterbuf
+index|[
+name|UCOM_JITTERBUF_SIZE
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

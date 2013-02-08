@@ -15,13 +15,6 @@ directive|define
 name|_FS_EXT2FS_EXT2_DINODE_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|e2di_size_high
-value|e2di_dacl
-end_define
-
 begin_comment
 comment|/*  * Special inode numbers  * The root inode is the root of the file system.  Inode 0 can't be used for  * normal purposes and bad blocks are normally linked to inode 1, thus  * the root inode is 2.  * Inode 3 to 10 are reserved in ext2fs.  */
 end_comment
@@ -184,12 +177,100 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_HTREE
+name|EXT4_INDEX
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* HTree-indexed directory */
+comment|/* hash-indexed directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_IMAGIC
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* AFS directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_JOURNAL_DATA
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* file data should be journaled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_NOTAIL
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* file tail should not be merged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_DIRSYNC
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* dirsync behaviour */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_TOPDIR
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Top of directory hierarchies*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_HUGE_FILE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Set to each huge file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_EXTENTS
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Inode uses extents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_EOFBLOCKS
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Blocks allocated beyond EOF */
 end_comment
 
 begin_comment
@@ -224,7 +305,7 @@ name|E2DI_HAS_XTIME
 parameter_list|(
 name|ip
 parameter_list|)
-value|(EXT2_INODE_SIZE((ip)->i_e2fs)> \ 				    E2FS_REV0_INODE_SIZE)
+value|(EXT2_HAS_RO_COMPAT_FEATURE(ip->i_e2fs, EXT2F_ROCOMPAT_EXTRA_ISIZE))
 end_define
 
 begin_comment
@@ -246,23 +327,23 @@ comment|/*   2: Owner UID */
 name|uint32_t
 name|e2di_size
 decl_stmt|;
-comment|/*	 4: Size (in bytes) */
+comment|/*   4: Size (in bytes) */
 name|uint32_t
 name|e2di_atime
 decl_stmt|;
-comment|/*	 8: Access time */
+comment|/*   8: Access time */
 name|uint32_t
 name|e2di_ctime
 decl_stmt|;
-comment|/*	12: Change time */
+comment|/*  12: Change time */
 name|uint32_t
 name|e2di_mtime
 decl_stmt|;
-comment|/*	16: Modification time */
+comment|/*  16: Modification time */
 name|uint32_t
 name|e2di_dtime
 decl_stmt|;
-comment|/*	20: Deletion time */
+comment|/*  20: Deletion time */
 name|uint16_t
 name|e2di_gid
 decl_stmt|;
@@ -297,27 +378,23 @@ comment|/* 100: generation number */
 name|uint32_t
 name|e2di_facl
 decl_stmt|;
-comment|/* 104: file ACL (not implemented) */
+comment|/* 104: Low EA block */
 name|uint32_t
-name|e2di_dacl
+name|e2di_size_high
 decl_stmt|;
-comment|/* 108: dir ACL (not implemented) */
+comment|/* 108: Upper bits of file size */
 name|uint32_t
 name|e2di_faddr
 decl_stmt|;
-comment|/* 112: fragment address */
-name|uint8_t
-name|e2di_nfrag
-decl_stmt|;
-comment|/* 116: fragment number */
-name|uint8_t
-name|e2di_fsize
-decl_stmt|;
-comment|/* 117: fragment size */
+comment|/* 112: Fragment address (obsolete) */
 name|uint16_t
-name|e2di_linux_reserved2
+name|e2di_nblock_high
 decl_stmt|;
-comment|/* 118 */
+comment|/* 116: Blocks count bits 47:32 */
+name|uint16_t
+name|e2di_facl_high
+decl_stmt|;
+comment|/* 118: File EA bits 47:32 */
 name|uint16_t
 name|e2di_uid_high
 decl_stmt|;
@@ -326,40 +403,46 @@ name|uint16_t
 name|e2di_gid_high
 decl_stmt|;
 comment|/* 122: Owner GID top 16 bits */
-name|uint32_t
-name|e2di_linux_reserved3
+name|uint16_t
+name|e2di_chksum_lo
 decl_stmt|;
-comment|/* 124 */
+comment|/* 124: Lower inode checksum */
+name|uint16_t
+name|e2di_lx_reserved
+decl_stmt|;
+comment|/* 126: Unused */
 name|uint16_t
 name|e2di_extra_isize
 decl_stmt|;
+comment|/* 128: Size of this inode */
 name|uint16_t
-name|e2di_pad1
+name|e2di_chksum_hi
 decl_stmt|;
+comment|/* 130: High inode checksum */
 name|uint32_t
 name|e2di_ctime_extra
 decl_stmt|;
-comment|/* Extra change time */
+comment|/* 132: Extra change time */
 name|uint32_t
 name|e2di_mtime_extra
 decl_stmt|;
-comment|/* Extra modification time */
+comment|/* 136: Extra modification time */
 name|uint32_t
 name|e2di_atime_extra
 decl_stmt|;
-comment|/* Extra access time */
+comment|/* 140: Extra access time */
 name|uint32_t
 name|e2di_crtime
 decl_stmt|;
-comment|/* Creation (birth)time */
+comment|/* 144: Creation (birth)time */
 name|uint32_t
 name|e2di_crtime_extra
 decl_stmt|;
-comment|/* Extra creation (birth)time */
+comment|/* 148: Extra creation (birth)time */
 name|uint32_t
 name|e2di_version_hi
 decl_stmt|;
-comment|/* High 30 bits of inode version */
+comment|/* 152: High bits of inode version */
 block|}
 struct|;
 end_struct

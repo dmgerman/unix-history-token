@@ -1033,6 +1033,8 @@ parameter_list|)
 block|{
 name|u16
 name|packet_length
+init|=
+literal|0
 decl_stmt|;
 name|memset
 argument_list|(

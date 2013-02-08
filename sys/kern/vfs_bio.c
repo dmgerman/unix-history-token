@@ -8562,6 +8562,9 @@ name|addr
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|rv
+decl_stmt|;
 name|bfreekva
 argument_list|(
 name|bp
@@ -8590,7 +8593,7 @@ name|addr
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Uh oh.  Buffer map is to fragmented.  We 				 * must defragment the map. 				 */
+comment|/* 				 * Buffer map is too fragmented. 				 * We must defragment the map. 				 */
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -8623,11 +8626,8 @@ goto|goto
 name|restart
 goto|;
 block|}
-if|if
-condition|(
-name|addr
-condition|)
-block|{
+name|rv
+operator|=
 name|vm_map_insert
 argument_list|(
 name|buffer_map
@@ -8647,6 +8647,24 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|MAP_NOFAULT
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|rv
+operator|==
+name|KERN_SUCCESS
+argument_list|,
+operator|(
+literal|"vm_map_insert(buffer_map) rv %d"
+operator|,
+name|rv
+operator|)
+argument_list|)
+expr_stmt|;
+name|vm_map_unlock
+argument_list|(
+name|buffer_map
 argument_list|)
 expr_stmt|;
 name|bp
@@ -8680,12 +8698,6 @@ operator|&
 name|bufreusecnt
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|vm_map_unlock
-argument_list|(
-name|buffer_map
 argument_list|)
 expr_stmt|;
 block|}
@@ -8900,7 +8912,7 @@ condition|)
 break|break;
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 block|}
@@ -10381,7 +10393,7 @@ name|v_bufobj
 expr_stmt|;
 name|loop
 label|:
-comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem. 	 * 	 * XXX remove if 0 sections (clean this up after its proven)          */
+comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem.          */
 if|if
 condition|(
 name|numfreebuffers

@@ -450,6 +450,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|RBTDB_RDATATYPE_SIGDDS
+define|\
+value|RBTDB_RDATATYPE_VALUE(dns_rdatatype_rrsig, dns_rdatatype_ds)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RBTDB_RDATATYPE_NCACHEANY
 define|\
 value|RBTDB_RDATATYPE_VALUE(0, dns_rdatatype_any)
@@ -19032,7 +19040,7 @@ end_comment
 
 begin_function
 specifier|static
-name|isc_result_t
+name|void
 name|rpz_findips
 parameter_list|(
 name|dns_rpz_zone_t
@@ -19158,11 +19166,7 @@ argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ISC_R_UNEXPECTED
-operator|)
-return|;
+return|return;
 block|}
 name|dns_fixedname_init
 argument_list|(
@@ -19474,7 +19478,7 @@ name|DNS_LOGMODULE_RBTDB
 argument_list|,
 name|DNS_RPZ_ERROR_LEVEL
 argument_list|,
-literal|"rpz_findips findnode(%s): %s"
+literal|"rpz_findips findnode(%s) failed: %s"
 argument_list|,
 name|namebuf
 argument_list|,
@@ -19572,6 +19576,8 @@ name|rpz_policy
 operator|=
 name|dns_rpz_decode_cname
 argument_list|(
+name|rpz
+argument_list|,
 operator|&
 name|zrdataset
 argument_list|,
@@ -19843,7 +19849,14 @@ name|m
 operator|.
 name|ttl
 operator|=
+name|ISC_MIN
+argument_list|(
 name|ttl
+argument_list|,
+name|rpz
+operator|->
+name|max_policy_ttl
+argument_list|)
 expr_stmt|;
 name|st
 operator|->
@@ -19965,11 +19978,6 @@ argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ISC_R_SUCCESS
-operator|)
-return|;
 block|}
 end_function
 
@@ -25223,15 +25231,6 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NEGATIVE
-argument_list|(
-name|newheader
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * We're adding a negative cache entry. 			 */
 name|covers
 operator|=
 name|RBTDB_RDATATYPE_EXT
@@ -25250,6 +25249,15 @@ argument_list|,
 name|covers
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NEGATIVE
+argument_list|(
+name|newheader
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * We're adding a negative cache entry. 			 */
 for|for
 control|(
 name|topheader
@@ -25334,7 +25342,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * We're adding something that isn't a 			 * negative cache entry.  Look for an extant 			 * non-stale NXDOMAIN/NODATA(QTYPE=ANY) negative 			 * cache entry. 			 */
+comment|/* 			 * We're adding something that isn't a 			 * negative cache entry.  Look for an extant 			 * non-stale NXDOMAIN/NODATA(QTYPE=ANY) negative 			 * cache entry.  If we're adding an RRSIG, also 			 * check for an extant non-stale NODATA ncache 			 * entry which covers the same type as the RRSIG. 			 */
 for|for
 control|(
 name|topheader
@@ -25356,13 +25364,36 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|topheader
 operator|->
 name|type
 operator|==
 name|RBTDB_RDATATYPE_NCACHEANY
+operator|)
+operator|||
+operator|(
+name|newheader
+operator|->
+name|type
+operator|==
+name|sigtype
+operator|&&
+name|topheader
+operator|->
+name|type
+operator|==
+name|RBTDB_RDATATYPE_VALUE
+argument_list|(
+literal|0
+argument_list|,
+name|covers
+argument_list|)
+operator|)
 condition|)
+block|{
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -25431,7 +25462,7 @@ name|DNS_R_UNCHANGED
 operator|)
 return|;
 block|}
-comment|/* 				 * The new rdataset is better.  Expire the 				 * NXDOMAIN/NODATA(QTYPE=ANY). 				 */
+comment|/* 				 * The new rdataset is better.  Expire the 				 * ncache entry. 				 */
 name|set_ttl
 argument_list|(
 name|rbtdb
@@ -26169,6 +26200,18 @@ operator|->
 name|type
 operator|==
 name|dns_rdatatype_aaaa
+operator|||
+name|header
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_ds
+operator|||
+name|header
+operator|->
+name|type
+operator|==
+name|RBTDB_RDATATYPE_SIGDDS
 operator|)
 operator|&&
 operator|!

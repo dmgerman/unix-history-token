@@ -1888,20 +1888,11 @@ name|io_request
 operator|->
 name|ccb
 expr_stmt|;
-comment|/* XXX More cleanup is needed here */
 if|if
 condition|(
-operator|(
-name|nseg
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
 name|error
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|ccb
@@ -2360,6 +2351,21 @@ operator|.
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_DIR_MASK
+operator|)
+operator|!=
+name|CAM_DIR_NONE
+condition|)
+block|{
 name|error
 operator|=
 name|bus_dmamap_load
@@ -2391,7 +2397,7 @@ argument_list|,
 literal|0x0
 argument_list|)
 expr_stmt|;
-comment|/* A resource shortage from BUSDMA will be automatically 	 * continued at a later point, pushing the CCB processing 	 * forward, which will in turn unfreeze the simq. 	 */
+comment|/* A resource shortage from BUSDMA will be automatically 		 * continued at a later point, pushing the CCB processing 		 * forward, which will in turn unfreeze the simq. 		 */
 if|if
 condition|(
 name|error
@@ -2417,6 +2423,19 @@ operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
 block|}
+block|}
+else|else
+name|isci_io_request_construct
+argument_list|(
+name|io_request
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

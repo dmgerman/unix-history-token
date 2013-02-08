@@ -27,7 +27,7 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - locked by being in the PCPU and atomicity respect to interrupts  *      q - locked by vm_page_queue_mtx  */
+comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - locked by being in the PCPU and atomicity respect to interrupts  *      q - changes are synchronized by the corresponding vm_pagequeue lock  */
 end_comment
 
 begin_struct
@@ -60,6 +60,10 @@ name|u_int
 name|v_vm_faults
 decl_stmt|;
 comment|/* (p) address memory faults */
+name|u_int
+name|v_io_faults
+decl_stmt|;
+comment|/* (p) page faults requiring I/O */
 name|u_int
 name|v_cow_faults
 decl_stmt|;
@@ -123,7 +127,7 @@ comment|/* (f) times daemon has awaken from sleep */
 name|u_int
 name|v_pdpages
 decl_stmt|;
-comment|/* (q) pages analyzed by daemon */
+comment|/* (p) pages analyzed by daemon */
 name|u_int
 name|v_tcached
 decl_stmt|;

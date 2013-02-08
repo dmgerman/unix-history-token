@@ -71,6 +71,40 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+comment|/*      * For the FreeBSD kernel, have POW consistency checks depend on      * the setting of INVARIANTS.      */
+ifndef|#
+directive|ifndef
+name|CVMX_ENABLE_POW_CHECKS
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+define|#
+directive|define
+name|CVMX_ENABLE_POW_CHECKS
+value|1
+else|#
+directive|else
+define|#
+directive|define
+name|CVMX_ENABLE_POW_CHECKS
+value|0
+endif|#
+directive|endif
+endif|#
+directive|endif
+else|#
+directive|else
 comment|/* Default to having all POW constancy checks turned on */
 ifndef|#
 directive|ifndef
@@ -79,6 +113,8 @@ define|#
 directive|define
 name|CVMX_ENABLE_POW_CHECKS
 value|1
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/**  * Wait flag values for pow functions.  */

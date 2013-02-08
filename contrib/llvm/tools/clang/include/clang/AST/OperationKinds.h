@@ -342,6 +342,10 @@ comment|///
 comment|/// This particular cast kind is used for the conversion from a C++11
 comment|/// lambda expression to a block pointer.
 name|CK_CopyAndAutoreleaseBlockObject
+block|,
+comment|// Convert a builtin function to a function pointer; only allowed in the
+comment|// callee of a call expression.
+name|CK_BuiltinFnToFnPtr
 block|}
 enum|;
 specifier|static

@@ -185,6 +185,62 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// Create a CoalescerPair representing a virtreg-to-physreg copy.
+comment|/// No need to call setRegisters().
+name|CoalescerPair
+argument_list|(
+argument|unsigned VirtReg
+argument_list|,
+argument|unsigned PhysReg
+argument_list|,
+argument|const TargetRegisterInfo&tri
+argument_list|)
+operator|:
+name|TRI
+argument_list|(
+name|tri
+argument_list|)
+operator|,
+name|DstReg
+argument_list|(
+name|PhysReg
+argument_list|)
+operator|,
+name|SrcReg
+argument_list|(
+name|VirtReg
+argument_list|)
+operator|,
+name|DstIdx
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SrcIdx
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Partial
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|CrossClass
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Flipped
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NewRC
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/// setRegisters - set registers to match the copy instruction MI. Return
 comment|/// false if MI is not a coalescable copy instruction.
 name|bool

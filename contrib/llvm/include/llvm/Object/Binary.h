@@ -91,17 +91,14 @@ name|private
 label|:
 name|Binary
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// = delete
 name|Binary
 argument_list|(
-specifier|const
-name|Binary
-operator|&
-name|other
+argument|const Binary&other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// = delete
 name|unsigned
 name|int
 name|TypeID
@@ -204,21 +201,6 @@ specifier|const
 block|{
 return|return
 name|TypeID
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Binary
-modifier|*
-name|v
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Convenience methods

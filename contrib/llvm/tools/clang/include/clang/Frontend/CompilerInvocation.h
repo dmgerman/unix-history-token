@@ -64,7 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/AnalyzerOptions.h"
+file|"clang/Basic/DiagnosticOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/HeaderSearchOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PreprocessorOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/AnalyzerOptions.h"
 end_include
 
 begin_include
@@ -88,31 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/DiagnosticOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Frontend/FrontendOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/HeaderSearchOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Frontend/LangStandard.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Frontend/PreprocessorOptions.h"
 end_include
 
 begin_include
@@ -213,6 +213,34 @@ name|LangOptions
 operator|>
 name|LangOpts
 block|;
+comment|/// Options controlling the target.
+name|IntrusiveRefCntPtr
+operator|<
+name|TargetOptions
+operator|>
+name|TargetOpts
+block|;
+comment|/// Options controlling the diagnostic engine.
+name|IntrusiveRefCntPtr
+operator|<
+name|DiagnosticOptions
+operator|>
+name|DiagnosticOpts
+block|;
+comment|/// Options controlling the \#include directive.
+name|IntrusiveRefCntPtr
+operator|<
+name|HeaderSearchOptions
+operator|>
+name|HeaderSearchOpts
+block|;
+comment|/// Options controlling the preprocessor (aside from \#include handling).
+name|IntrusiveRefCntPtr
+operator|<
+name|PreprocessorOptions
+operator|>
+name|PreprocessorOpts
+block|;
 name|public
 operator|:
 name|CompilerInvocationBase
@@ -252,6 +280,89 @@ name|getPtr
 argument_list|()
 return|;
 block|}
+name|TargetOptions
+operator|&
+name|getTargetOpts
+argument_list|()
+block|{
+return|return
+operator|*
+name|TargetOpts
+operator|.
+name|getPtr
+argument_list|()
+return|;
+block|}
+specifier|const
+name|TargetOptions
+operator|&
+name|getTargetOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TargetOpts
+operator|.
+name|getPtr
+argument_list|()
+return|;
+block|}
+name|DiagnosticOptions
+operator|&
+name|getDiagnosticOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|DiagnosticOpts
+return|;
+block|}
+name|HeaderSearchOptions
+operator|&
+name|getHeaderSearchOpts
+argument_list|()
+block|{
+return|return
+operator|*
+name|HeaderSearchOpts
+return|;
+block|}
+specifier|const
+name|HeaderSearchOptions
+operator|&
+name|getHeaderSearchOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|HeaderSearchOpts
+return|;
+block|}
+name|PreprocessorOptions
+operator|&
+name|getPreprocessorOpts
+argument_list|()
+block|{
+return|return
+operator|*
+name|PreprocessorOpts
+return|;
+block|}
+specifier|const
+name|PreprocessorOptions
+operator|&
+name|getPreprocessorOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|PreprocessorOpts
+return|;
+block|}
 expr|}
 block|;
 comment|/// \brief Helper class for holding the data necessary to invoke the compiler.
@@ -266,7 +377,7 @@ name|public
 name|CompilerInvocationBase
 block|{
 comment|/// Options controlling the static analyzer.
-name|AnalyzerOptions
+name|AnalyzerOptionsRef
 name|AnalyzerOpts
 block|;
 name|MigratorOptions
@@ -280,10 +391,6 @@ comment|/// Options controlling dependency output.
 name|DependencyOutputOptions
 name|DependencyOutputOpts
 block|;
-comment|/// Options controlling the diagnostic engine.
-name|DiagnosticOptions
-name|DiagnosticOpts
-block|;
 comment|/// Options controlling file system operations.
 name|FileSystemOptions
 name|FileSystemOpts
@@ -292,26 +399,19 @@ comment|/// Options controlling the frontend itself.
 name|FrontendOptions
 name|FrontendOpts
 block|;
-comment|/// Options controlling the \#include directive.
-name|HeaderSearchOptions
-name|HeaderSearchOpts
-block|;
-comment|/// Options controlling the preprocessor (aside from \#include handling).
-name|PreprocessorOptions
-name|PreprocessorOpts
-block|;
 comment|/// Options controlling preprocessed output.
 name|PreprocessorOutputOptions
 name|PreprocessorOutputOpts
-block|;
-comment|/// Options controlling the target.
-name|TargetOptions
-name|TargetOpts
 block|;
 name|public
 operator|:
 name|CompilerInvocation
 argument_list|()
+operator|:
+name|AnalyzerOpts
+argument_list|(
+argument|new AnalyzerOptions()
+argument_list|)
 block|{}
 comment|/// @name Utility Methods
 comment|/// @{
@@ -373,15 +473,6 @@ operator|*
 name|MainAddr
 argument_list|)
 block|;
-comment|/// \brief Convert the CompilerInvocation to a list of strings suitable for
-comment|/// passing to CreateFromArgs.
-name|void
-name|toArgs
-argument_list|(
-argument|std::vector<std::string>&Res
-argument_list|)
-specifier|const
-block|;
 comment|/// \brief Set language defaults for the given input language and
 comment|/// language standard in the given LangOptions object.
 comment|///
@@ -411,18 +502,7 @@ block|;
 comment|/// @}
 comment|/// @name Option Subgroups
 comment|/// @{
-name|AnalyzerOptions
-operator|&
-name|getAnalyzerOpts
-argument_list|()
-block|{
-return|return
-name|AnalyzerOpts
-return|;
-block|}
-specifier|const
-name|AnalyzerOptions
-operator|&
+name|AnalyzerOptionsRef
 name|getAnalyzerOpts
 argument_list|()
 specifier|const
@@ -491,26 +571,6 @@ return|return
 name|DependencyOutputOpts
 return|;
 block|}
-name|DiagnosticOptions
-operator|&
-name|getDiagnosticOpts
-argument_list|()
-block|{
-return|return
-name|DiagnosticOpts
-return|;
-block|}
-specifier|const
-name|DiagnosticOptions
-operator|&
-name|getDiagnosticOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DiagnosticOpts
-return|;
-block|}
 name|FileSystemOptions
 operator|&
 name|getFileSystemOpts
@@ -529,26 +589,6 @@ specifier|const
 block|{
 return|return
 name|FileSystemOpts
-return|;
-block|}
-name|HeaderSearchOptions
-operator|&
-name|getHeaderSearchOpts
-argument_list|()
-block|{
-return|return
-name|HeaderSearchOpts
-return|;
-block|}
-specifier|const
-name|HeaderSearchOptions
-operator|&
-name|getHeaderSearchOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HeaderSearchOpts
 return|;
 block|}
 name|FrontendOptions
@@ -571,26 +611,6 @@ return|return
 name|FrontendOpts
 return|;
 block|}
-name|PreprocessorOptions
-operator|&
-name|getPreprocessorOpts
-argument_list|()
-block|{
-return|return
-name|PreprocessorOpts
-return|;
-block|}
-specifier|const
-name|PreprocessorOptions
-operator|&
-name|getPreprocessorOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PreprocessorOpts
-return|;
-block|}
 name|PreprocessorOutputOptions
 operator|&
 name|getPreprocessorOutputOpts
@@ -609,26 +629,6 @@ specifier|const
 block|{
 return|return
 name|PreprocessorOutputOpts
-return|;
-block|}
-name|TargetOptions
-operator|&
-name|getTargetOpts
-argument_list|()
-block|{
-return|return
-name|TargetOpts
-return|;
-block|}
-specifier|const
-name|TargetOptions
-operator|&
-name|getTargetOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetOpts
 return|;
 block|}
 comment|/// @}

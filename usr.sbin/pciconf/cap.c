@@ -2141,17 +2141,21 @@ name|ptr
 parameter_list|)
 block|{
 name|uint32_t
+name|pba_offset
+decl_stmt|,
+name|table_offset
+decl_stmt|,
 name|val
-decl_stmt|;
-name|uint16_t
-name|ctrl
 decl_stmt|;
 name|int
 name|msgnum
 decl_stmt|,
-name|table_bar
-decl_stmt|,
 name|pba_bar
+decl_stmt|,
+name|table_bar
+decl_stmt|;
+name|uint16_t
+name|ctrl
 decl_stmt|;
 name|ctrl
 operator|=
@@ -2208,6 +2212,13 @@ operator|&
 name|PCIM_MSIX_BIR_MASK
 argument_list|)
 expr_stmt|;
+name|table_offset
+operator|=
+name|val
+operator|&
+operator|~
+name|PCIM_MSIX_BIR_MASK
+expr_stmt|;
 name|val
 operator|=
 name|read_config
@@ -2235,9 +2246,16 @@ operator|&
 name|PCIM_MSIX_BIR_MASK
 argument_list|)
 expr_stmt|;
+name|pba_offset
+operator|=
+name|val
+operator|&
+operator|~
+name|PCIM_MSIX_BIR_MASK
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"MSI-X supports %d message%s "
+literal|"MSI-X supports %d message%s%s\n"
 argument_list|,
 name|msgnum
 argument_list|,
@@ -2250,40 +2268,34 @@ condition|?
 literal|""
 else|:
 literal|"s"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|table_bar
-operator|==
-name|pba_bar
-condition|)
-name|printf
-argument_list|(
-literal|"in map 0x%x"
 argument_list|,
-name|table_bar
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"in maps 0x%x and 0x%x"
-argument_list|,
-name|table_bar
-argument_list|,
-name|pba_bar
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|(
 name|ctrl
 operator|&
 name|PCIM_MSIXCTRL_MSIX_ENABLE
-condition|)
+operator|)
+condition|?
+literal|", enabled"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|" enabled"
+literal|"                 "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Table in map 0x%x[0x%x], PBA in map 0x%x[0x%x]"
+argument_list|,
+name|table_bar
+argument_list|,
+name|table_offset
+argument_list|,
+name|pba_bar
+argument_list|,
+name|pba_offset
 argument_list|)
 expr_stmt|;
 block|}

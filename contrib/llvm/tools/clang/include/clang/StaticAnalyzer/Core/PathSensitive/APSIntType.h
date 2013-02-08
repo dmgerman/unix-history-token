@@ -261,6 +261,31 @@ name|IsUnsigned
 argument_list|)
 return|;
 block|}
+name|llvm
+operator|::
+name|APSInt
+name|getValue
+argument_list|(
+argument|uint64_t RawValue
+argument_list|)
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+operator|(
+name|llvm
+operator|::
+name|APSInt
+argument_list|(
+name|BitWidth
+argument_list|,
+name|IsUnsigned
+argument_list|)
+operator|=
+name|RawValue
+operator|)
+return|;
+block|}
 comment|/// Used to classify whether a value is representable using this type.
 comment|///
 comment|/// \see testInRange

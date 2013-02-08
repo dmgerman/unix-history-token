@@ -375,20 +375,6 @@ return|return
 literal|0
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CFGElement
-modifier|*
-name|E
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 end_decl_stmt
 
@@ -3067,6 +3053,9 @@ name|bool
 name|AddImplicitDtors
 decl_stmt|;
 name|bool
+name|AddTemporaryDtors
+decl_stmt|;
+name|bool
 name|alwaysAdd
 argument_list|(
 specifier|const
@@ -3152,6 +3141,11 @@ name|false
 argument_list|)
 operator|,
 name|AddImplicitDtors
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AddTemporaryDtors
 argument_list|(
 argument|false
 argument_list|)

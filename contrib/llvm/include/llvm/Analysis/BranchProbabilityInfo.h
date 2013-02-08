@@ -103,11 +103,14 @@ comment|/// \brief Analysis pass providing branch probability information.
 comment|///
 comment|/// This is a function analysis pass which provides information on the relative
 comment|/// probabilities of each "edge" in the function's CFG where such an edge is
-comment|/// defined by a pair of basic blocks. The probability for a given block and
-comment|/// a successor block are always relative to the probabilities of the other
-comment|/// successor blocks. Another way of looking at it is that the probabilities
-comment|/// for a given block B and each of its successors should sum to exactly
-comment|/// one (100%).
+comment|/// defined by a pair (PredBlock and an index in the successors). The
+comment|/// probability of an edge from one block is always relative to the
+comment|/// probabilities of other edges from the block. The probabilites of all edges
+comment|/// from a block sum to exactly one (100%).
+comment|/// We use a pair (PredBlock and an index in the successors) to uniquely
+comment|/// identify an edge, since we can have multiple edges from Src to Dst.
+comment|/// As an example, we can have a switch which jumps to Dst with value 0 and
+comment|/// value 10.
 name|class
 name|BranchProbabilityInfo
 range|:
@@ -173,6 +176,18 @@ name|getEdgeProbability
 argument_list|(
 argument|const BasicBlock *Src
 argument_list|,
+argument|unsigned IndexInSuccessors
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the probability of going from Src to Dst.
+comment|///
+comment|/// It returns the sum of all probabilities for edges from Src to Dst.
+name|BranchProbability
+name|getEdgeProbability
+argument_list|(
+argument|const BasicBlock *Src
+argument_list|,
 argument|const BasicBlock *Dst
 argument_list|)
 specifier|const
@@ -219,7 +234,7 @@ argument|const BasicBlock *Dst
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Get the raw edge weight calculated for the block pair.
+comment|/// \brief Get the raw edge weight calculated for the edge.
 comment|///
 comment|/// This returns the raw edge weight. It is guaranteed to fall between 1 and
 comment|/// UINT32_MAX. Note that the raw edge weight is not meaningful in isolation.
@@ -230,13 +245,26 @@ name|getEdgeWeight
 argument_list|(
 argument|const BasicBlock *Src
 argument_list|,
+argument|unsigned IndexInSuccessors
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the raw edge weight calculated for the block pair.
+comment|///
+comment|/// This returns the sum of all raw edge weights from Src to Dst.
+comment|/// It is guaranteed to fall between 1 and UINT32_MAX.
+name|uint32_t
+name|getEdgeWeight
+argument_list|(
+argument|const BasicBlock *Src
+argument_list|,
 argument|const BasicBlock *Dst
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Set the raw edge weight for the block pair.
+comment|/// \brief Set the raw edge weight for a given edge.
 comment|///
-comment|/// This allows a pass to explicitly set the edge weight for a block. It can
+comment|/// This allows a pass to explicitly set the edge weight for an edge. It can
 comment|/// be used when updating the CFG to update and preserve the branch
 comment|/// probability information. Read the implementation of how these edge
 comment|/// weights are calculated carefully before using!
@@ -245,13 +273,15 @@ name|setEdgeWeight
 argument_list|(
 argument|const BasicBlock *Src
 argument_list|,
-argument|const BasicBlock *Dst
+argument|unsigned IndexInSuccessors
 argument_list|,
 argument|uint32_t Weight
 argument_list|)
 block|;
 name|private
 operator|:
+comment|// Since we allow duplicate edges from one basic block to another, we use
+comment|// a pair (PredBlock and an index in the successors) to specify an edge.
 typedef|typedef
 name|std
 operator|::
@@ -261,9 +291,7 @@ specifier|const
 name|BasicBlock
 operator|*
 operator|,
-specifier|const
-name|BasicBlock
-operator|*
+name|unsigned
 operator|>
 name|Edge
 expr_stmt|;

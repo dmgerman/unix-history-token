@@ -238,7 +238,7 @@ name|class
 name|SwitchInst
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -566,6 +566,9 @@ decl_stmt|;
 name|unsigned
 name|Bits
 decl_stmt|;
+name|uint32_t
+name|ExtraWeight
+decl_stmt|;
 name|CaseBits
 argument_list|(
 argument|uint64_t mask
@@ -573,6 +576,8 @@ argument_list|,
 argument|MachineBasicBlock* bb
 argument_list|,
 argument|unsigned bits
+argument_list|,
+argument|uint32_t Weight
 argument_list|)
 block|:
 name|Mask
@@ -587,7 +592,12 @@ argument_list|)
 operator|,
 name|Bits
 argument_list|(
-argument|bits
+name|bits
+argument_list|)
+operator|,
+name|ExtraWeight
+argument_list|(
+argument|Weight
 argument_list|)
 block|{ }
 block|}
@@ -992,6 +1002,8 @@ argument_list|,
 argument|MachineBasicBlock* T
 argument_list|,
 argument|MachineBasicBlock* Tr
+argument_list|,
+argument|uint32_t Weight
 argument_list|)
 block|:
 name|Mask
@@ -1006,7 +1018,12 @@ argument_list|)
 operator|,
 name|TargetBB
 argument_list|(
-argument|Tr
+name|Tr
+argument_list|)
+operator|,
+name|ExtraWeight
+argument_list|(
+argument|Weight
 argument_list|)
 block|{ }
 name|uint64_t
@@ -1019,6 +1036,9 @@ decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|TargetBB
+decl_stmt|;
+name|uint32_t
+name|ExtraWeight
 decl_stmt|;
 block|}
 struct|;
@@ -1153,7 +1173,7 @@ modifier|&
 name|DAG
 decl_stmt|;
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -1299,12 +1319,7 @@ argument_list|)
 operator|,
 name|HasTailCall
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Context
-argument_list|(
-argument|dag.getContext()
+argument|false
 argument_list|)
 block|{   }
 name|void
@@ -1892,6 +1907,9 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|NextMBB
+parameter_list|,
+name|uint32_t
+name|BranchWeightToNext
 parameter_list|,
 name|unsigned
 name|Reg

@@ -75,14 +75,80 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+comment|/// \brief Bitfields of CodeGenOptions, split out from CodeGenOptions to ensure
+comment|/// that this large collection of bitfields is a trivial class type.
+name|class
+name|CodeGenOptionsBase
+block|{
+name|public
+label|:
+define|#
+directive|define
+name|CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+value|unsigned Name : Bits;
+define|#
+directive|define
+name|ENUM_CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+include|#
+directive|include
+file|"clang/Frontend/CodeGenOptions.def"
+name|protected
+label|:
+define|#
+directive|define
+name|CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+define|#
+directive|define
+name|ENUM_CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+value|unsigned Name : Bits;
+include|#
+directive|include
+file|"clang/Frontend/CodeGenOptions.def"
+block|}
+empty_stmt|;
 comment|/// CodeGenOptions - Track various options which control how the code
 comment|/// is optimized and passed to the backend.
 name|class
 name|CodeGenOptions
+range|:
+name|public
+name|CodeGenOptionsBase
 block|{
 name|public
-label|:
-enum|enum
+operator|:
+expr|enum
 name|InliningMethod
 block|{
 name|NoInlining
@@ -94,24 +160,22 @@ comment|// Use the standard function inlining pass.
 name|OnlyAlwaysInlining
 comment|// Only run the always inlining pass.
 block|}
-enum|;
-enum|enum
+block|;    enum
 name|ObjCDispatchMethodKind
 block|{
 name|Legacy
-init|=
+operator|=
 literal|0
 block|,
 name|NonLegacy
-init|=
+operator|=
 literal|1
 block|,
 name|Mixed
-init|=
+operator|=
 literal|2
 block|}
-enum|;
-enum|enum
+block|;    enum
 name|DebugInfoKind
 block|{
 name|NoDebugInfo
@@ -128,8 +192,7 @@ comment|// (-flimit-debug-info).
 name|FullDebugInfo
 comment|// Generate complete debug info.
 block|}
-enum|;
-enum|enum
+block|;    enum
 name|TLSModel
 block|{
 name|GeneralDynamicTLSModel
@@ -140,403 +203,57 @@ name|InitialExecTLSModel
 block|,
 name|LocalExecTLSModel
 block|}
-enum|;
-name|unsigned
-name|AsmVerbose
-range|:
-literal|1
-decl_stmt|;
-comment|///< -dA, -fverbose-asm.
-name|unsigned
-name|ObjCAutoRefCountExceptions
-range|:
-literal|1
-decl_stmt|;
-comment|///< Whether ARC should be EH-safe.
-name|unsigned
-name|CUDAIsDevice
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when compiling for CUDA device.
-name|unsigned
-name|CXAAtExit
-range|:
-literal|1
-decl_stmt|;
-comment|///< Use __cxa_atexit for calling destructors.
-name|unsigned
-name|CXXCtorDtorAliases
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit complete ctors/dtors as linker
-comment|///< aliases to base ctors when possible.
-name|unsigned
-name|DataSections
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fdata-sections is enabled.
-name|unsigned
-name|DisableFPElim
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fomit-frame-pointer is enabled.
-name|unsigned
-name|DisableLLVMOpts
-range|:
-literal|1
-decl_stmt|;
-comment|///< Don't run any optimizations, for use in
-comment|///< getting .bc files that correspond to the
-comment|///< internal state before optimizations are
-comment|///< done.
-name|unsigned
-name|DisableRedZone
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -mno-red-zone is enabled.
-name|unsigned
-name|DisableTailCalls
-range|:
-literal|1
-decl_stmt|;
-comment|///< Do not emit tail calls.
-name|unsigned
-name|EmitDeclMetadata
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit special metadata indicating what
-comment|///< Decl* various IR entities came from. Only
-comment|///< useful when running CodeGen as a
-comment|///< subroutine.
-name|unsigned
-name|EmitGcovArcs
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit coverage data files, aka. GCDA.
-name|unsigned
-name|EmitGcovNotes
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit coverage "notes" files, aka GCNO.
-name|unsigned
-name|EmitOpenCLArgMetadata
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit OpenCL kernel arg metadata.
-name|unsigned
-name|EmitMicrosoftInlineAsm
-range|:
-literal|1
-decl_stmt|;
-comment|///< Enable emission of MS-style inline
-comment|///< assembly.
-name|unsigned
-name|ForbidGuardVariables
-range|:
-literal|1
-decl_stmt|;
-comment|///< Issue errors if C++ guard variables
-comment|///< are required.
-name|unsigned
-name|FunctionSections
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -ffunction-sections is enabled.
-name|unsigned
-name|HiddenWeakTemplateVTables
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit weak vtables and RTTI for
-comment|///< template classes with hidden visibility
-name|unsigned
-name|HiddenWeakVTables
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit weak vtables, RTTI, and thunks with
-comment|///< hidden visibility.
-name|unsigned
-name|InstrumentFunctions
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -finstrument-functions is
-comment|///< enabled.
-name|unsigned
-name|InstrumentForProfiling
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -pg is enabled.
-name|unsigned
-name|LessPreciseFPMAD
-range|:
-literal|1
-decl_stmt|;
-comment|///< Enable less precise MAD instructions to
-comment|///< be generated.
-name|unsigned
-name|MergeAllConstants
-range|:
-literal|1
-decl_stmt|;
-comment|///< Merge identical constants.
-name|unsigned
-name|NoCommon
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fno-common or C++ is enabled.
-name|unsigned
-name|NoDwarf2CFIAsm
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fno-dwarf2-cfi-asm is enabled.
-name|unsigned
-name|NoDwarfDirectoryAsm
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fno-dwarf-directory-asm is
-comment|///< enabled.
-name|unsigned
-name|NoExecStack
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -Wa,--noexecstack is enabled.
-name|unsigned
-name|NoGlobalMerge
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -mno-global-merge is enabled.
-name|unsigned
-name|NoImplicitFloat
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -mno-implicit-float is enabled.
-name|unsigned
-name|NoInfsFPMath
-range|:
-literal|1
-decl_stmt|;
-comment|///< Assume FP arguments, results not +-Inf.
-name|unsigned
-name|NoInline
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fno-inline is enabled. Disables
-comment|///< use of the inline keyword.
-name|unsigned
-name|NoNaNsFPMath
-range|:
-literal|1
-decl_stmt|;
-comment|///< Assume FP arguments, results not NaN.
-name|unsigned
-name|NoZeroInitializedInBSS
-range|:
-literal|1
-decl_stmt|;
-comment|///< -fno-zero-initialized-in-bss.
-name|unsigned
-name|ObjCDispatchMethod
-range|:
-literal|2
-decl_stmt|;
-comment|///< Method of Objective-C dispatch to use.
-name|unsigned
-name|OmitLeafFramePointer
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -momit-leaf-frame-pointer is
-comment|///< enabled.
-name|unsigned
-name|OptimizationLevel
-range|:
-literal|3
-decl_stmt|;
-comment|///< The -O[0-4] option specified.
-name|unsigned
-name|OptimizeSize
-range|:
-literal|2
-decl_stmt|;
-comment|///< If -Os (==1) or -Oz (==2) is specified.
-name|unsigned
-name|RelaxAll
-range|:
-literal|1
-decl_stmt|;
-comment|///< Relax all machine code instructions.
-name|unsigned
-name|RelaxedAliasing
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fno-strict-aliasing is enabled.
-name|unsigned
-name|SaveTempLabels
-range|:
-literal|1
-decl_stmt|;
-comment|///< Save temporary labels.
-name|unsigned
-name|SimplifyLibCalls
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -fbuiltin is enabled.
-name|unsigned
-name|SoftFloat
-range|:
-literal|1
-decl_stmt|;
-comment|///< -soft-float.
-name|unsigned
-name|StrictEnums
-range|:
-literal|1
-decl_stmt|;
-comment|///< Optimize based on strict enum definition.
-name|unsigned
-name|TimePasses
-range|:
-literal|1
-decl_stmt|;
-comment|///< Set when -ftime-report is enabled.
-name|unsigned
-name|UnitAtATime
-range|:
-literal|1
-decl_stmt|;
-comment|///< Unused. For mirroring GCC optimization
-comment|///< selection.
-name|unsigned
-name|UnrollLoops
-range|:
-literal|1
-decl_stmt|;
-comment|///< Control whether loops are unrolled.
-name|unsigned
-name|UnsafeFPMath
-range|:
-literal|1
-decl_stmt|;
-comment|///< Allow unsafe floating point optzns.
-name|unsigned
-name|UnwindTables
-range|:
-literal|1
-decl_stmt|;
-comment|///< Emit unwind tables.
-comment|/// Attempt to use register sized accesses to bit-fields in structures, when
-comment|/// possible.
-name|unsigned
-name|UseRegisterSizedBitfieldAccess
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|VerifyModule
-range|:
-literal|1
-decl_stmt|;
-comment|///< Control whether the module should be run
-comment|///< through the LLVM Verifier.
-name|unsigned
-name|StackRealignment
-range|:
-literal|1
-decl_stmt|;
-comment|///< Control whether to permit stack
-comment|///< realignment.
-name|unsigned
-name|UseInitArray
-range|:
-literal|1
-decl_stmt|;
-comment|///< Control whether to use .init_array or
-comment|///< .ctors.
-name|unsigned
-name|StackAlignment
-decl_stmt|;
-comment|///< Overrides default stack alignment,
-comment|///< if not 0.
+block|;
 comment|/// The code model to use (-mcmodel).
 name|std
 operator|::
 name|string
 name|CodeModel
-expr_stmt|;
+block|;
 comment|/// The filename with path we use for coverage files. The extension will be
 comment|/// replaced.
 name|std
 operator|::
 name|string
 name|CoverageFile
-expr_stmt|;
+block|;
 comment|/// Enable additional debugging information.
 name|std
 operator|::
 name|string
 name|DebugPass
-expr_stmt|;
+block|;
 comment|/// The string to embed in debug information as the current working directory.
 name|std
 operator|::
 name|string
 name|DebugCompilationDir
-expr_stmt|;
-comment|/// The kind of generated debug info.
-name|DebugInfoKind
-name|DebugInfo
-decl_stmt|;
+block|;
 comment|/// The string to embed in the debug information for the compile unit, if
 comment|/// non-empty.
 name|std
 operator|::
 name|string
 name|DwarfDebugFlags
-expr_stmt|;
+block|;
 comment|/// The ABI to use for passing floating point arguments.
 name|std
 operator|::
 name|string
 name|FloatABI
-expr_stmt|;
+block|;
 comment|/// The float precision limit to use, if non-empty.
 name|std
 operator|::
 name|string
 name|LimitFloatPrecision
-expr_stmt|;
+block|;
 comment|/// The name of the bitcode file to link before optzns.
 name|std
 operator|::
 name|string
 name|LinkBitcodeFile
-expr_stmt|;
-comment|/// The kind of inlining to perform.
-name|InliningMethod
-name|Inlining
-decl_stmt|;
+block|;
 comment|/// The user provided name for the "main file", if non-empty. This is useful
 comment|/// in situations where the input file name does not match the original input
 comment|/// file, for example with -save-temps.
@@ -544,20 +261,20 @@ name|std
 operator|::
 name|string
 name|MainFileName
-expr_stmt|;
+block|;
 comment|/// The name of the relocation model to use.
 name|std
 operator|::
 name|string
 name|RelocationModel
-expr_stmt|;
+block|;
 comment|/// If not an empty string, trap intrinsics are lowered to calls to this
 comment|/// function instead of to trap instructions.
 name|std
 operator|::
 name|string
 name|TrapFuncName
-expr_stmt|;
+block|;
 comment|/// A list of command-line options to forward to the LLVM backend.
 name|std
 operator|::
@@ -568,265 +285,74 @@ operator|::
 name|string
 operator|>
 name|BackendOptions
-expr_stmt|;
-comment|/// The user specified number of registers to be used for integral arguments,
-comment|/// or 0 if unspecified.
-name|unsigned
-name|NumRegisterParameters
-decl_stmt|;
-comment|/// The run-time penalty for bounds checking, or 0 to disable.
-name|unsigned
-name|char
-name|BoundsChecking
-decl_stmt|;
-comment|/// The default TLS model to use.
-name|TLSModel
-name|DefaultTLSModel
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
+comment|// Define accessors/mutators for code generation options of enumeration type.
+define|#
+directive|define
+name|CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+define|#
+directive|define
+name|ENUM_CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+define|\
+value|Type get##Name() const { return static_cast<Type>(Name); } \   void set##Name(Type Value) { Name = static_cast<unsigned>(Value); }
+include|#
+directive|include
+file|"clang/Frontend/CodeGenOptions.def"
 name|CodeGenOptions
 argument_list|()
 block|{
-name|AsmVerbose
-operator|=
-literal|0
-expr_stmt|;
-name|CUDAIsDevice
-operator|=
-literal|0
-expr_stmt|;
-name|CXAAtExit
-operator|=
-literal|1
-expr_stmt|;
-name|CXXCtorDtorAliases
-operator|=
-literal|0
-expr_stmt|;
-name|DataSections
-operator|=
-literal|0
-expr_stmt|;
-name|DisableFPElim
-operator|=
-literal|0
-expr_stmt|;
-name|DisableLLVMOpts
-operator|=
-literal|0
-expr_stmt|;
-name|DisableRedZone
-operator|=
-literal|0
-expr_stmt|;
-name|DisableTailCalls
-operator|=
-literal|0
-expr_stmt|;
-name|EmitDeclMetadata
-operator|=
-literal|0
-expr_stmt|;
-name|EmitGcovArcs
-operator|=
-literal|0
-expr_stmt|;
-name|EmitGcovNotes
-operator|=
-literal|0
-expr_stmt|;
-name|EmitOpenCLArgMetadata
-operator|=
-literal|0
-expr_stmt|;
-name|EmitMicrosoftInlineAsm
-operator|=
-literal|0
-expr_stmt|;
-name|ForbidGuardVariables
-operator|=
-literal|0
-expr_stmt|;
-name|FunctionSections
-operator|=
-literal|0
-expr_stmt|;
-name|HiddenWeakTemplateVTables
-operator|=
-literal|0
-expr_stmt|;
-name|HiddenWeakVTables
-operator|=
-literal|0
-expr_stmt|;
-name|InstrumentFunctions
-operator|=
-literal|0
-expr_stmt|;
-name|InstrumentForProfiling
-operator|=
-literal|0
-expr_stmt|;
-name|LessPreciseFPMAD
-operator|=
-literal|0
-expr_stmt|;
-name|MergeAllConstants
-operator|=
-literal|1
-expr_stmt|;
-name|NoCommon
-operator|=
-literal|0
-expr_stmt|;
-name|NoDwarf2CFIAsm
-operator|=
-literal|0
-expr_stmt|;
-name|NoImplicitFloat
-operator|=
-literal|0
-expr_stmt|;
-name|NoInfsFPMath
-operator|=
-literal|0
-expr_stmt|;
-name|NoInline
-operator|=
-literal|0
-expr_stmt|;
-name|NoNaNsFPMath
-operator|=
-literal|0
-expr_stmt|;
-name|NoZeroInitializedInBSS
-operator|=
-literal|0
-expr_stmt|;
-name|NumRegisterParameters
-operator|=
-literal|0
-expr_stmt|;
-name|ObjCAutoRefCountExceptions
-operator|=
-literal|0
-expr_stmt|;
-name|ObjCDispatchMethod
-operator|=
-name|Legacy
-expr_stmt|;
-name|OmitLeafFramePointer
-operator|=
-literal|0
-expr_stmt|;
-name|OptimizationLevel
-operator|=
-literal|0
-expr_stmt|;
-name|OptimizeSize
-operator|=
-literal|0
-expr_stmt|;
-name|RelaxAll
-operator|=
-literal|0
-expr_stmt|;
-name|RelaxedAliasing
-operator|=
-literal|0
-expr_stmt|;
-name|SaveTempLabels
-operator|=
-literal|0
-expr_stmt|;
-name|SimplifyLibCalls
-operator|=
-literal|1
-expr_stmt|;
-name|SoftFloat
-operator|=
-literal|0
-expr_stmt|;
-name|StrictEnums
-operator|=
-literal|0
-expr_stmt|;
-name|TimePasses
-operator|=
-literal|0
-expr_stmt|;
-name|UnitAtATime
-operator|=
-literal|1
-expr_stmt|;
-name|UnrollLoops
-operator|=
-literal|0
-expr_stmt|;
-name|UnsafeFPMath
-operator|=
-literal|0
-expr_stmt|;
-name|UnwindTables
-operator|=
-literal|0
-expr_stmt|;
-name|UseRegisterSizedBitfieldAccess
-operator|=
-literal|0
-expr_stmt|;
-name|VerifyModule
-operator|=
-literal|1
-expr_stmt|;
-name|StackRealignment
-operator|=
-literal|0
-expr_stmt|;
-name|StackAlignment
-operator|=
-literal|0
-expr_stmt|;
-name|BoundsChecking
-operator|=
-literal|0
-expr_stmt|;
-name|UseInitArray
-operator|=
-literal|0
-expr_stmt|;
-name|DebugInfo
-operator|=
-name|NoDebugInfo
-expr_stmt|;
-name|Inlining
-operator|=
-name|NoInlining
-expr_stmt|;
+define|#
+directive|define
+name|CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+value|Name = Default;
+define|#
+directive|define
+name|ENUM_CODEGENOPT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Type
+parameter_list|,
+name|Bits
+parameter_list|,
+name|Default
+parameter_list|)
+define|\
+value|set##Name(Default);
+include|#
+directive|include
+file|"clang/Frontend/CodeGenOptions.def"
 name|RelocationModel
 operator|=
 literal|"pic"
-expr_stmt|;
-name|DefaultTLSModel
-operator|=
-name|GeneralDynamicTLSModel
-expr_stmt|;
+block|;   }
 block|}
-name|ObjCDispatchMethodKind
-name|getObjCDispatchMethod
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ObjCDispatchMethodKind
-argument_list|(
-name|ObjCDispatchMethod
-argument_list|)
-return|;
-block|}
-block|}
-empty_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 

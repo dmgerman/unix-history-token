@@ -375,7 +375,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Do the malloc before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if malloc should block. 	 */
 name|ldep
 operator|=
 name|malloc

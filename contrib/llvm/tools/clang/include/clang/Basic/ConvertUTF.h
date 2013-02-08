@@ -284,9 +284,6 @@ name|ConversionFlags
 name|flags
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|CLANG_NEEDS_THESE_ONE_DAY
 name|ConversionResult
 name|ConvertUTF16toUTF32
 parameter_list|(
@@ -363,12 +360,20 @@ parameter_list|(
 specifier|const
 name|UTF8
 modifier|*
+modifier|*
 name|source
 parameter_list|,
 specifier|const
 name|UTF8
 modifier|*
 name|sourceEnd
+parameter_list|)
+function_decl|;
+name|unsigned
+name|getNumBytesForUTF8
+parameter_list|(
+name|UTF8
+name|firstByte
 parameter_list|)
 function_decl|;
 ifdef|#
@@ -395,7 +400,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/**  * Convert an UTF8 StringRef to UTF8, UTF16, or UTF32 depending on  * WideCharWidth. The converted data is written to ResultPtr, which needs to  * point to at least WideCharWidth * (Source.Size() + 1) bytes. On success,  * ResultPtr will point one after the end of the copied string.  * \return true on success.  */
+comment|/**  * Convert an UTF8 StringRef to UTF8, UTF16, or UTF32 depending on  * WideCharWidth. The converted data is written to ResultPtr, which needs to  * point to at least WideCharWidth * (Source.Size() + 1) bytes. On success,  * ResultPtr will point one after the end of the copied string. On failure,  * ResultPtr will not be changed, and ErrorPtr will be set to the location of  * the first character which could not be converted.  * \return true on success.  */
 name|bool
 name|ConvertUTF8toWide
 argument_list|(
@@ -411,6 +416,12 @@ name|char
 operator|*
 operator|&
 name|ResultPtr
+argument_list|,
+specifier|const
+name|UTF8
+operator|*
+operator|&
+name|ErrorPtr
 argument_list|)
 decl_stmt|;
 comment|/**  * Convert an Unicode code point to UTF8 sequence.  *  * \param Source a Unicode code point.  * \param [in,out] ResultPtr pointer to the output buffer, needs to be at least  * \c UNI_MAX_UTF8_BYTES_PER_CODE_POINT bytes.  On success \c ResultPtr is  * updated one past end of the converted sequence.  *  * \returns true on success.  */
@@ -428,11 +439,6 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

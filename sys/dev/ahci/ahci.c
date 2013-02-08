@@ -746,6 +746,10 @@ define|#
 directive|define
 name|AHCI_Q_ALTSIG
 value|2048
+define|#
+directive|define
+name|AHCI_Q_NOMSI
+value|4096
 block|}
 name|ahci_ids
 index|[]
@@ -758,7 +762,7 @@ literal|0x00
 block|,
 literal|"ATI IXP600"
 block|,
-literal|0
+name|AHCI_Q_NOMSI
 block|}
 block|,
 block|{
@@ -817,6 +821,56 @@ block|,
 literal|0x00
 block|,
 literal|"ATI IXP800"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78001022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78011022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78021022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78031022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x78041022
+block|,
+literal|0x00
+block|,
+literal|"AMD Hudson-2"
 block|,
 literal|0
 block|}
@@ -1337,6 +1391,86 @@ block|,
 literal|0x00
 block|,
 literal|"Intel Panther Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c038086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c048086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c058086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c078086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c0e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c0f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point"
 block|,
 literal|0
 block|}
@@ -4734,6 +4868,18 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* Process hints. */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_NOMSI
+condition|)
+name|msi
+operator|=
+literal|0
+expr_stmt|;
 name|resource_int_value
 argument_list|(
 name|device_get_name
