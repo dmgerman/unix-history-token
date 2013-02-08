@@ -188,10 +188,10 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|<
-literal|2
+operator|==
+literal|0
 condition|)
-name|usage
+name|exit
 argument_list|(
 literal|0
 argument_list|)
