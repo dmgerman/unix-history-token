@@ -950,6 +950,27 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_OUTPUT
+argument_list|,
+literal|"forward frame from DS SA(%6D), DA(%6D)\n"
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+literal|":"
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
 name|ieee80211_mesh_proxy_check
 argument_list|(
 name|vap

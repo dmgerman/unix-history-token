@@ -898,12 +898,6 @@ condition|(
 name|desc
 operator|.
 name|dtbd_cpu
-operator|<
-literal|0
-operator|||
-name|desc
-operator|.
-name|dtbd_cpu
 operator|>=
 name|NCPU
 condition|)
