@@ -1536,9 +1536,11 @@ if|if
 condition|(
 name|pmp
 operator|->
-name|pm_flags
+name|pm_mountp
+operator|->
+name|mnt_flag
 operator|&
-name|MSDOSFSMNT_WAITONFAT
+name|MNT_SYNCHRONOUS
 condition|)
 name|bwrite
 argument_list|(
@@ -1558,9 +1560,11 @@ if|if
 condition|(
 name|pmp
 operator|->
-name|pm_flags
+name|pm_mountp
+operator|->
+name|mnt_flag
 operator|&
-name|MSDOSFSMNT_WAITONFAT
+name|MNT_SYNCHRONOUS
 condition|)
 name|bwrite
 argument_list|(
