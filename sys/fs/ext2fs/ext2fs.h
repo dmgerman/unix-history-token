@@ -493,10 +493,6 @@ name|e2fs_gd
 decl_stmt|;
 comment|/* Group Descriptors */
 name|int32_t
-name|e2fs_maxcontig
-decl_stmt|;
-comment|/* max number of contiguous blks */
-name|int32_t
 name|e2fs_contigsumsize
 decl_stmt|;
 comment|/* size of cluster summary array */
