@@ -1309,6 +1309,19 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|len
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"len %d"
+operator|,
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|xfer
 operator|=
