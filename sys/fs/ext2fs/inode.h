@@ -224,13 +224,6 @@ name|i_rdev
 value|i_db[0]
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXSYMLINKLEN
-value|((NDADDR + NIADDR) * sizeof(int32_t))
-end_define
-
 begin_comment
 comment|/* File permissions. */
 end_comment

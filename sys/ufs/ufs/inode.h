@@ -394,17 +394,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXSYMLINKLEN
-parameter_list|(
-name|ip
-parameter_list|)
-define|\
-value|((ip)->i_ump->um_fstype == UFS1) ? \ 	((NDADDR + NIADDR) * sizeof(ufs1_daddr_t)) : \ 	((NDADDR + NIADDR) * sizeof(ufs2_daddr_t))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SHORTLINK
 parameter_list|(
 name|ip
