@@ -2756,7 +2756,6 @@ name|bf_next
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Don't unlock the tid lock until we're sure we are going 		 * to queue this frame. 		 */
 comment|/* 		 * If the frame doesn't have a sequence number that we're 		 * tracking in the BAW (eg NULL QOS data frame), we can't 		 * aggregate it. Stop the aggregation process; the sender 		 * can then TX what's in the list thus far and then 		 * TX the frame individually. 		 */
 if|if
 condition|(
@@ -2881,6 +2880,13 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * If the current frame has an RTS/CTS configuration 		 * that differs from the first frame, override the 		 * subsequent frame with this config. 		 */
+if|if
+condition|(
+name|bf
+operator|!=
+name|bf_first
+condition|)
+block|{
 name|bf
 operator|->
 name|bf_state
@@ -2912,6 +2918,7 @@ operator||
 name|HAL_TXDESC_CTSENA
 operator|)
 expr_stmt|;
+block|}
 comment|/* 		 * If the packet has a sequence number, do not 		 * step outside of the block-ack window. 		 */
 if|if
 condition|(
