@@ -70,7 +70,7 @@ name|buf
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -79,7 +79,7 @@ name|arc_evict_func_t
 parameter_list|(
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 comment|/* generic arc_done_func_t's which you can use */
@@ -410,7 +410,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -450,7 +450,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -509,7 +509,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -536,7 +536,7 @@ name|func
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|)
 function_decl|;
 name|int

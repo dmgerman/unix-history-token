@@ -135,7 +135,7 @@ name|name
 parameter_list|,
 name|char
 modifier|*
-name|class
+name|cls
 parameter_list|,
 name|uchar_t
 name|type

@@ -536,7 +536,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|,
 name|char
 modifier|*
@@ -557,7 +557,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -582,7 +582,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -599,7 +599,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|,
 name|dmu_object_info_t
 modifier|*
@@ -619,7 +619,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1148,7 +1148,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|,
 name|ddt_entry_t
 modifier|*

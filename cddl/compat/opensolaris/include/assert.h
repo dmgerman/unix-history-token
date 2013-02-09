@@ -99,7 +99,18 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 specifier|static
 name|__inline
 name|void
@@ -140,7 +151,16 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_function
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

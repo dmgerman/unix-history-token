@@ -514,7 +514,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
@@ -554,7 +554,7 @@ name|done
 parameter_list|,
 name|void
 modifier|*
-name|private
+name|priv
 parameter_list|,
 name|int
 name|priority
