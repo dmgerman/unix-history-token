@@ -15,12 +15,6 @@ directive|define
 name|_VIRTIO_BLK_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_comment
 comment|/* Feature bits */
 end_comment
