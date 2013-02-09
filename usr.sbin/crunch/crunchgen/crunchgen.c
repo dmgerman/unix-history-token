@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved.  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of U.M. not be used in advertising or  * publicity pertaining to distribution of the software without specific,  * written prior permission.  U.M. makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * U.M. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL U.M.  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Author: James da Silva, Systems Design and Analysis Group  *			   Computer Science Department  *			   University of Maryland at College Park  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved.  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of U.M. not be used in advertising or  * publicity pertaining to distribution of the software without specific,  * written prior permission.  U.M. makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * U.M. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL U.M.  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Author: James da Silva, Systems Design and Analysis Group  *			   Computer Science Department  *			   University of Maryland at College Park  */
 end_comment
 
 begin_comment
@@ -10,19 +10,27 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -318,6 +326,13 @@ comment|/* where are the objects ? */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|path_make
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|linenum
 init|=
@@ -378,6 +393,7 @@ begin_function_decl
 name|void
 name|status
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -414,6 +430,7 @@ begin_function_decl
 name|int
 name|is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -425,6 +442,7 @@ begin_function_decl
 name|int
 name|is_nonempty_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -465,9 +483,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* helper routines for main() */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|crunched_skel
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -534,6 +557,28 @@ operator|*
 name|execfname
 operator|=
 literal|'\0'
+expr_stmt|;
+name|path_make
+operator|=
+name|getenv
+argument_list|(
+literal|"MAKE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|path_make
+operator|==
+name|NULL
+operator|||
+operator|*
+name|path_make
+operator|==
+literal|'\0'
+condition|)
+name|path_make
+operator|=
+literal|"make"
 expr_stmt|;
 name|p
 operator|=
@@ -1009,7 +1054,7 @@ name|parse_line
 parameter_list|(
 name|char
 modifier|*
-name|line
+name|pline
 parameter_list|,
 name|int
 modifier|*
@@ -1568,7 +1613,7 @@ name|parse_line
 parameter_list|(
 name|char
 modifier|*
-name|line
+name|pline
 parameter_list|,
 name|int
 modifier|*
@@ -1589,7 +1634,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|line
+name|pline
 expr_stmt|;
 operator|*
 name|fc
@@ -1605,6 +1650,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1651,6 +1700,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -3083,7 +3136,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Run \"make -f %s\" to build crunched binary.\n"
+literal|"Run \"%s -f %s\" to build crunched binary.\n"
+argument_list|,
+name|path_make
 argument_list|,
 name|outmkname
 argument_list|)
@@ -3722,11 +3777,13 @@ argument_list|(
 name|f
 argument_list|,
 literal|"crunchgen_objs:\n"
-literal|"\t@cd %s&& make -f %s $(BUILDOPTS) $(%s_OPTS)"
+literal|"\t@cd %s&& %s -f %s $(BUILDOPTS) $(%s_OPTS)"
 argument_list|,
 name|p
 operator|->
 name|srcdir
+argument_list|,
+name|path_make
 argument_list|,
 name|tempfname
 argument_list|,
@@ -3782,11 +3839,13 @@ name|line
 argument_list|,
 name|MAXLINELEN
 argument_list|,
-literal|"cd %s&& make -f %s -B crunchgen_objs"
+literal|"cd %s&& %s -f %s -B crunchgen_objs"
 argument_list|,
 name|p
 operator|->
 name|srcdir
+argument_list|,
+name|path_make
 argument_list|,
 name|tempfname
 argument_list|)
@@ -3865,6 +3924,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -3890,6 +3953,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -3922,6 +3989,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -4413,12 +4484,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|crunched_skel
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -4732,6 +4797,10 @@ literal|'_'
 operator|||
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -5831,6 +5900,7 @@ begin_function
 name|void
 name|status
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -6190,6 +6260,7 @@ begin_function
 name|int
 name|is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -6230,6 +6301,7 @@ begin_function
 name|int
 name|is_nonempty_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
