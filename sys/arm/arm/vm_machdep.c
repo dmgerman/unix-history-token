@@ -1827,7 +1827,11 @@ expr|struct
 name|pcb
 argument_list|)
 operator|-
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|trapframe
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#

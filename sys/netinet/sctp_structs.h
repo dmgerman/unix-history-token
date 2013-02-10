@@ -3275,28 +3275,9 @@ comment|/* 	 * packet drop's are supported by the peer, we don't really care 	 *
 name|uint8_t
 name|peer_supports_pktdrop
 decl_stmt|;
-comment|/* Do we allow V6/V4? */
-name|uint8_t
-name|ipv4_addr_legal
-decl_stmt|;
-name|uint8_t
-name|ipv6_addr_legal
-decl_stmt|;
-comment|/* Address scoping flags */
-comment|/* scope value for IPv4 */
-name|uint8_t
-name|ipv4_local_scope
-decl_stmt|;
-comment|/* scope values for IPv6 */
-name|uint8_t
-name|local_scope
-decl_stmt|;
-name|uint8_t
-name|site_scope
-decl_stmt|;
-comment|/* loopback scope */
-name|uint8_t
-name|loopback_scope
+name|struct
+name|sctp_scoping
+name|scope
 decl_stmt|;
 comment|/* flags to handle send alternate net tracking */
 name|uint8_t
