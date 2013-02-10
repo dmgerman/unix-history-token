@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1415,6 +1415,14 @@ name|dn_datablksz
 argument_list|)
 expr_stmt|;
 block|}
+name|min_ibs
+operator|=
+name|max_ibs
+operator|=
+name|dn
+operator|->
+name|dn_indblkshift
+expr_stmt|;
 if|if
 condition|(
 name|dn
@@ -1441,34 +1449,6 @@ operator|=
 name|dn
 operator|->
 name|dn_datablkshift
-expr_stmt|;
-name|min_ibs
-operator|=
-name|max_ibs
-operator|=
-name|dn
-operator|->
-name|dn_indblkshift
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|dn
-operator|->
-name|dn_indblkshift
-operator|>
-name|max_ibs
-condition|)
-block|{
-comment|/* 			 * This ensures that if we reduce DN_MAX_INDBLKSHIFT, 			 * the code will still work correctly on older pools. 			 */
-name|min_ibs
-operator|=
-name|max_ibs
-operator|=
-name|dn
-operator|->
-name|dn_indblkshift
 expr_stmt|;
 block|}
 comment|/* 		 * If this write is not off the end of the file 		 * we need to account for overwrites/unref. 		 */

@@ -3178,14 +3178,6 @@ modifier|*
 name|xfer_mtx
 parameter_list|)
 block|{
-name|struct
-name|usb_xfer
-name|dummy
-decl_stmt|;
-name|struct
-name|usb_setup_params
-name|parm
-decl_stmt|;
 specifier|const
 name|struct
 name|usb_config
@@ -3201,6 +3193,11 @@ name|struct
 name|usb_config
 modifier|*
 name|setup
+decl_stmt|;
+name|struct
+name|usb_setup_params
+modifier|*
+name|parm
 decl_stmt|;
 name|struct
 name|usb_endpoint
@@ -3223,26 +3220,20 @@ name|buf
 init|=
 name|NULL
 decl_stmt|;
+name|usb_error_t
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|uint16_t
 name|n
 decl_stmt|;
 name|uint16_t
 name|refcount
 decl_stmt|;
-name|parm
-operator|.
-name|err
-operator|=
-literal|0
-expr_stmt|;
-name|refcount
-operator|=
-literal|0
-expr_stmt|;
-name|info
-operator|=
-name|NULL
-expr_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
@@ -3315,7 +3306,7 @@ operator|&
 name|Giant
 expr_stmt|;
 block|}
-comment|/* sanity checks */
+comment|/* more sanity checks */
 for|for
 control|(
 name|setup
@@ -3350,9 +3341,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|parm
-operator|.
-name|err
+name|error
 operator|=
 name|USB_ERR_BAD_BUFSIZE
 expr_stmt|;
@@ -3371,9 +3360,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|parm
-operator|.
-name|err
+name|error
 operator|=
 name|USB_ERR_NO_CALLBACK
 expr_stmt|;
@@ -3393,36 +3380,64 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|parm
-operator|.
-name|err
+name|error
 condition|)
-block|{
-goto|goto
-name|done
-goto|;
-block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Protect scratch area */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
+name|refcount
+operator|=
+literal|0
+expr_stmt|;
+name|info
+operator|=
+name|NULL
+expr_stmt|;
+name|parm
+operator|=
+operator|&
+name|udev
+operator|->
+name|scratch
+operator|.
+name|xfer_setup
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+expr_stmt|;
 name|memset
 argument_list|(
-operator|&
 name|parm
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|parm
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|udev
 operator|=
 name|udev
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|speed
 operator|=
 name|usbd_get_speed
@@ -3431,7 +3446,7 @@ name|udev
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|hc_max_packet_count
 operator|=
 literal|1
@@ -3439,14 +3454,14 @@ expr_stmt|;
 if|if
 condition|(
 name|parm
-operator|.
+operator|->
 name|speed
 operator|>=
 name|USB_SPEED_MAX
 condition|)
 block|{
 name|parm
-operator|.
+operator|->
 name|err
 operator|=
 name|USB_ERR_INVAL
@@ -3487,7 +3502,7 @@ operator|->
 name|memory_size
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -3505,7 +3520,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|4
@@ -3521,7 +3536,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|5
@@ -3539,7 +3554,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|5
@@ -3555,7 +3570,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|2
@@ -3589,7 +3604,7 @@ operator|->
 name|dma_parent_tag
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|dma_tag_p
 argument_list|,
 name|udev
@@ -3611,7 +3626,7 @@ argument_list|,
 literal|32
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|dma_tag_max
 argument_list|)
 expr_stmt|;
@@ -3776,7 +3791,7 @@ expr_stmt|;
 block|}
 comment|/* reset sizes */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -3785,13 +3800,13 @@ operator|=
 literal|0
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|buf
 operator|=
 name|buf
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -3948,7 +3963,7 @@ operator|)
 condition|)
 continue|continue;
 name|parm
-operator|.
+operator|->
 name|err
 operator|=
 name|USB_ERR_NO_PIPE
@@ -3959,7 +3974,7 @@ goto|;
 block|}
 comment|/* align data properly */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -3969,7 +3984,7 @@ operator|(
 operator|(
 operator|-
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -3985,7 +4000,7 @@ operator|)
 expr_stmt|;
 comment|/* store current setup pointer */
 name|parm
-operator|.
+operator|->
 name|curr_setup
 operator|=
 name|setup
@@ -4003,7 +4018,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4054,18 +4069,27 @@ comment|/* 				 * Setup a dummy xfer, hence we are 				 * writing to the "usb_xf
 name|xfer
 operator|=
 operator|&
+name|udev
+operator|->
+name|scratch
+operator|.
+name|xfer_setup
+index|[
+literal|0
+index|]
+operator|.
 name|dummy
 expr_stmt|;
 name|memset
 argument_list|(
-operator|&
-name|dummy
+name|xfer
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dummy
+operator|*
+name|xfer
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4090,7 +4114,7 @@ operator|->
 name|stream_id
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4105,7 +4129,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|methods
 operator|=
 name|xfer
@@ -4115,7 +4139,7 @@ operator|->
 name|methods
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|curr_xfer
 operator|=
 name|xfer
@@ -4131,7 +4155,6 @@ operator|->
 name|xfer_setup
 call|)
 argument_list|(
-operator|&
 name|parm
 argument_list|)
 expr_stmt|;
@@ -4139,7 +4162,7 @@ comment|/* check for error */
 if|if
 condition|(
 name|parm
-operator|.
+operator|->
 name|err
 condition|)
 goto|goto
@@ -4169,7 +4192,7 @@ operator|>=
 name|USB_EP_REF_MAX
 condition|)
 name|parm
-operator|.
+operator|->
 name|err
 operator|=
 name|USB_ERR_INVAL
@@ -4222,7 +4245,7 @@ comment|/* check for error */
 if|if
 condition|(
 name|parm
-operator|.
+operator|->
 name|err
 condition|)
 goto|goto
@@ -4232,31 +4255,31 @@ block|}
 if|if
 condition|(
 name|buf
+operator|!=
+name|NULL
 operator|||
 name|parm
-operator|.
+operator|->
 name|err
+operator|!=
+literal|0
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
+comment|/* if no transfers, nothing to do */
 if|if
 condition|(
 name|refcount
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* no transfers - nothing to do ! */
 goto|goto
 name|done
 goto|;
-block|}
 comment|/* align data properly */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4266,7 +4289,7 @@ operator|(
 operator|(
 operator|-
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4282,14 +4305,14 @@ operator|)
 expr_stmt|;
 comment|/* store offset temporarily */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|1
 index|]
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4297,7 +4320,7 @@ index|]
 expr_stmt|;
 comment|/* 		 * The number of DMA tags required depends on 		 * the number of endpoints. The current estimate 		 * for maximum number of DMA tags per endpoint 		 * is three: 		 * 1) for loading memory 		 * 2) for allocating memory 		 * 3) for fixing memory [UHCI] 		 */
 name|parm
-operator|.
+operator|->
 name|dma_tag_max
 operator|+=
 literal|3
@@ -4311,21 +4334,21 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * DMA tags for QH, TD, Data and more. 		 */
 name|parm
-operator|.
+operator|->
 name|dma_tag_max
 operator|+=
 literal|8
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|dma_tag_p
 operator|+=
 name|parm
-operator|.
+operator|->
 name|dma_tag_max
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4337,7 +4360,7 @@ name|uint8_t
 operator|*
 operator|)
 name|parm
-operator|.
+operator|->
 name|dma_tag_p
 operator|)
 operator|-
@@ -4351,7 +4374,7 @@ operator|)
 expr_stmt|;
 comment|/* align data properly */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4361,7 +4384,7 @@ operator|(
 operator|(
 operator|-
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4377,21 +4400,21 @@ operator|)
 expr_stmt|;
 comment|/* store offset temporarily */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|3
 index|]
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
 index|]
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4403,7 +4426,7 @@ name|uint8_t
 operator|*
 operator|)
 name|parm
-operator|.
+operator|->
 name|dma_page_ptr
 operator|)
 operator|-
@@ -4417,7 +4440,7 @@ operator|)
 expr_stmt|;
 comment|/* align data properly */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4427,7 +4450,7 @@ operator|(
 operator|(
 operator|-
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4443,21 +4466,21 @@ operator|)
 expr_stmt|;
 comment|/* store offset temporarily */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|4
 index|]
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
 index|]
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4469,7 +4492,7 @@ name|uint8_t
 operator|*
 operator|)
 name|parm
-operator|.
+operator|->
 name|dma_page_cache_ptr
 operator|)
 operator|-
@@ -4483,21 +4506,21 @@ operator|)
 expr_stmt|;
 comment|/* store end offset temporarily */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|5
 index|]
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
 index|]
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4509,7 +4532,7 @@ name|uint8_t
 operator|*
 operator|)
 name|parm
-operator|.
+operator|->
 name|xfer_page_cache_ptr
 operator|)
 operator|-
@@ -4523,14 +4546,14 @@ operator|)
 expr_stmt|;
 comment|/* store end offset temporarily */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|2
 index|]
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4538,7 +4561,7 @@ index|]
 expr_stmt|;
 comment|/* align data properly */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4548,7 +4571,7 @@ operator|(
 operator|(
 operator|-
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4563,21 +4586,21 @@ operator|)
 operator|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|6
 index|]
 operator|=
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
 index|]
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4589,7 +4612,7 @@ name|uint8_t
 operator|*
 operator|)
 name|parm
-operator|.
+operator|->
 name|xfer_length_ptr
 operator|)
 operator|-
@@ -4603,7 +4626,7 @@ operator|)
 expr_stmt|;
 comment|/* align data properly */
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4613,7 +4636,7 @@ operator|(
 operator|(
 operator|-
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4633,7 +4656,7 @@ operator|=
 name|malloc
 argument_list|(
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4654,7 +4677,7 @@ name|NULL
 condition|)
 block|{
 name|parm
-operator|.
+operator|->
 name|err
 operator|=
 name|USB_ERR_NOMEM
@@ -4667,7 +4690,7 @@ literal|"cannot allocate memory block for "
 literal|"configuration (%d bytes)\n"
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|0
@@ -4679,7 +4702,7 @@ name|done
 goto|;
 block|}
 name|parm
-operator|.
+operator|->
 name|dma_tag_p
 operator|=
 name|USB_ADD_BYTES
@@ -4687,7 +4710,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|1
@@ -4695,7 +4718,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|dma_page_ptr
 operator|=
 name|USB_ADD_BYTES
@@ -4703,7 +4726,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|3
@@ -4711,7 +4734,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|dma_page_cache_ptr
 operator|=
 name|USB_ADD_BYTES
@@ -4719,7 +4742,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|4
@@ -4727,7 +4750,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|xfer_page_cache_ptr
 operator|=
 name|USB_ADD_BYTES
@@ -4735,7 +4758,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|5
@@ -4743,7 +4766,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|parm
-operator|.
+operator|->
 name|xfer_length_ptr
 operator|=
 name|USB_ADD_BYTES
@@ -4751,7 +4774,7 @@ argument_list|(
 name|buf
 argument_list|,
 name|parm
-operator|.
+operator|->
 name|size
 index|[
 literal|6
@@ -4793,13 +4816,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* check if any errors happened */
 if|if
 condition|(
 name|parm
-operator|.
+operator|->
 name|err
 condition|)
-block|{
 name|usbd_transfer_unsetup
 argument_list|(
 name|ppxfer
@@ -4807,12 +4830,24 @@ argument_list|,
 name|n_setup
 argument_list|)
 expr_stmt|;
-block|}
+name|error
+operator|=
+name|parm
+operator|->
+name|err
+expr_stmt|;
+if|if
+condition|(
+name|do_unlock
+condition|)
+name|usbd_enum_unlock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|parm
-operator|.
-name|err
+name|error
 operator|)
 return|;
 block|}
