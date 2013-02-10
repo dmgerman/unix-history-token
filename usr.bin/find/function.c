@@ -3137,10 +3137,19 @@ operator|*
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Ensure that -execdir ... {} + does not mix files 		 * from different directories in one invocation. 		 * Files from the same directory should be handled 		 * in one invocation but there is no code for it. 		 */
 name|new
 operator|->
 name|e_pnummax
 operator|=
+name|new
+operator|->
+name|flags
+operator|&
+name|F_EXECDIR
+condition|?
+literal|1
+else|:
 name|argmax
 operator|/
 literal|16
