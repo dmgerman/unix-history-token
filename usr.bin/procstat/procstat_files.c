@@ -632,6 +632,12 @@ block|,
 literal|"mf"
 block|}
 block|,
+block|{
+name|CAP_MKNOD
+block|,
+literal|"mn"
+block|}
+block|,
 comment|/* Lookups - used to constraint *at() calls. */
 block|{
 name|CAP_LOOKUP
