@@ -216,19 +216,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/net/usb_ethernet.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if_smscreg.h"
+file|<dev/usb/net/if_smscreg.h>
 end_include
 
 begin_ifdef
