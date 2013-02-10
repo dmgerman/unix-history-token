@@ -627,6 +627,28 @@ name|descr
 operator|=
 literal|"Winbond 83627DHG-P"
 block|,    	}
+block|,
+block|{
+operator|.
+name|vendor_id
+operator|=
+literal|0x5ca3
+block|,
+operator|.
+name|device_id
+operator|=
+literal|0xc3
+block|,
+operator|.
+name|device_rev
+operator|=
+literal|0x33
+block|,
+operator|.
+name|descr
+operator|=
+literal|"Nuvoton WPCM450RA0BX"
+block|,    	}
 block|, }
 struct|;
 end_struct
@@ -2493,6 +2515,19 @@ goto|goto
 name|cleanup
 goto|;
 block|}
+if|if
+condition|(
+name|dev_id
+operator|==
+literal|0xff
+operator|&&
+name|dev_rev
+operator|==
+literal|0xff
+condition|)
+goto|goto
+name|cleanup
+goto|;
 for|for
 control|(
 name|j
@@ -2562,6 +2597,45 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+block|{
+if|if
+condition|(
+name|probe
+operator|&&
+name|dev
+operator|!=
+name|NULL
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Unknown Winbond/Nuvoton model"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"DevID 0x%02x DevRev 0x%02x, "
+literal|"please report this.\n"
+argument_list|,
+name|dev_id
+argument_list|,
+name|dev_rev
+argument_list|)
+expr_stmt|;
+block|}
+name|found
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
