@@ -4373,6 +4373,10 @@ define|#
 directive|define
 name|ZYD_FLAG_INITDONE
 value|(1<< 2)
+define|#
+directive|define
+name|ZYD_FLAG_DETACHED
+value|(1<< 3)
 name|struct
 name|zyd_rf
 name|sc_rf
