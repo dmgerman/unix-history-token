@@ -275,35 +275,6 @@ name|uint8_t
 name|no_explore
 decl_stmt|;
 comment|/* don't explore USB ports */
-comment|/*  	 * The scratch area can only be used inside the explore thread 	 * belonging to the give serial bus. 	 */
-union|union
-block|{
-name|struct
-name|usb_hw_ep_scratch
-name|hw_ep_scratch
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|struct
-name|usb_temp_setup
-name|temp_setup
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|uint8_t
-name|data
-index|[
-literal|255
-index|]
-decl_stmt|;
-block|}
-name|scratch
-index|[
-literal|1
-index|]
-union|;
 block|}
 struct|;
 end_struct

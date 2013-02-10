@@ -1991,6 +1991,22 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* -depth implied */
+comment|/* 	 * Try to avoid the confusing error message about relative paths 	 * being potentially not safe. 	 */
+if|if
+condition|(
+name|ftsoptions
+operator|&
+name|FTS_NOCHDIR
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: forbidden when the current directory cannot be opened"
+argument_list|,
+literal|"-delete"
+argument_list|)
+expr_stmt|;
 return|return
 name|palloc
 argument_list|(
@@ -2751,6 +2767,13 @@ operator|&
 name|F_EXECDIR
 operator|)
 operator|&&
+operator|!
+operator|(
+name|ftsoptions
+operator|&
+name|FTS_NOCHDIR
+operator|)
+operator|&&
 name|fchdir
 argument_list|(
 name|dotfd
@@ -2932,6 +2955,28 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+comment|/* This would defeat -execdir's intended security. */
+if|if
+condition|(
+name|option
+operator|->
+name|flags
+operator|&
+name|F_EXECDIR
+operator|&&
+name|ftsoptions
+operator|&
+name|FTS_NOCHDIR
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: forbidden when the current directory cannot be opened"
+argument_list|,
+literal|"-execdir"
+argument_list|)
+expr_stmt|;
 comment|/* XXX - was in c_execdir, but seems unnecessary!? 	ftsoptions&= ~FTS_NOSTAT; 	*/
 name|isoutput
 operator|=
@@ -3137,10 +3182,19 @@ operator|*
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Ensure that -execdir ... {} + does not mix files 		 * from different directories in one invocation. 		 * Files from the same directory should be handled 		 * in one invocation but there is no code for it. 		 */
 name|new
 operator|->
 name|e_pnummax
 operator|=
+name|new
+operator|->
+name|flags
+operator|&
+name|F_EXECDIR
+condition|?
+literal|1
+else|:
 name|argmax
 operator|/
 literal|16

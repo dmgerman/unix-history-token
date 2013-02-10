@@ -1880,32 +1880,14 @@ block|{
 name|uint8_t
 name|do_unlock
 decl_stmt|;
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* detach all interface drivers */
 name|usb_detach_device
 argument_list|(
@@ -2084,32 +2066,14 @@ argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 name|usb_unconfigure
 argument_list|(
 name|udev
@@ -3418,32 +3382,14 @@ decl_stmt|;
 name|uint8_t
 name|do_unlock
 decl_stmt|;
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|iface
@@ -4840,32 +4786,14 @@ name|USB_ERR_INVAL
 operator|)
 return|;
 block|}
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|udev
@@ -5592,6 +5520,9 @@ name|config_quirk
 decl_stmt|;
 name|uint8_t
 name|set_config_failed
+decl_stmt|;
+name|uint8_t
+name|do_unlock
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -6486,16 +6417,19 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Workaround for buggy USB devices. 	 * 	 * It appears that some string-less USB chips will crash and 	 * disappear if any attempts are made to read any string 	 * descriptors. 	 * 	 * Try to detect such chips by checking the strings in the USB 	 * device descriptor. If no strings are present there we 	 * simply disable all USB strings. 	 */
+comment|/* Protect scratch area */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 name|scratch_ptr
 operator|=
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
-index|[
-literal|0
-index|]
 operator|.
 name|data
 expr_stmt|;
@@ -6603,7 +6537,7 @@ literal|0
 index|]
 operator|&=
 operator|~
-literal|1
+literal|1U
 expr_stmt|;
 comment|/* fix compiler warning */
 name|langid
@@ -6696,6 +6630,15 @@ operator|=
 name|langid
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
+name|usbd_enum_unlock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 comment|/* assume 100mA bus powered for now. Changed when configured. */
 name|udev
 operator|->
@@ -8782,6 +8725,17 @@ decl_stmt|;
 name|uint16_t
 name|product_id
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+comment|/* Protect scratch area */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 name|temp_ptr
 operator|=
 operator|(
@@ -8790,12 +8744,7 @@ operator|*
 operator|)
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
-index|[
-literal|0
-index|]
 operator|.
 name|data
 expr_stmt|;
@@ -8805,12 +8754,7 @@ sizeof|sizeof
 argument_list|(
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
-index|[
-literal|0
-index|]
 operator|.
 name|data
 argument_list|)
@@ -9145,6 +9089,15 @@ name|M_USB
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
+name|usbd_enum_unlock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10286,11 +10239,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following function locks enumerating the given USB device. */
+comment|/*  * The following function locks enumerating the given USB device. If  * the lock is already grabbed this function returns zero. Else a  * non-zero value is returned.  */
 end_comment
 
 begin_function
-name|void
+name|uint8_t
 name|usbd_enum_lock
 parameter_list|(
 name|struct
@@ -10299,6 +10252,21 @@ modifier|*
 name|udev
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sx_xlocked
+argument_list|(
+operator|&
+name|udev
+operator|->
+name|enum_sx
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -10322,6 +10290,11 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -10683,32 +10656,14 @@ decl_stmt|;
 name|uint8_t
 name|do_unlock
 decl_stmt|;
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|udev

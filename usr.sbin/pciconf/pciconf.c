@@ -1305,10 +1305,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"size %2d, %s\n"
+literal|"size %ju, %s\n"
 argument_list|,
 operator|(
-name|int
+name|uintmax_t
 operator|)
 name|bar
 operator|.
