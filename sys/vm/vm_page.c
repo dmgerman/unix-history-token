@@ -3144,6 +3144,8 @@ condition|(
 name|object
 operator|->
 name|resident_page_count
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
