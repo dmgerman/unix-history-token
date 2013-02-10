@@ -2009,6 +2009,18 @@ block|}
 else|else
 comment|/* if (strcmp(type, "passfile") == 0) */
 block|{
+name|assert
+argument_list|(
+name|strcmp
+argument_list|(
+name|type
+argument_list|,
+literal|"passfile"
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
