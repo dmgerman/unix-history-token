@@ -11,6 +11,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright 2013 by Saso Kiselkov. All rights reserved.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1389,6 +1393,8 @@ block|,
 name|ZIO_COMPRESS_GZIP_9
 block|,
 name|ZIO_COMPRESS_ZLE
+block|,
+name|ZIO_COMPRESS_LZ4
 block|,
 name|ZIO_COMPRESS_FUNCTIONS
 block|}

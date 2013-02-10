@@ -5384,7 +5384,7 @@ name|next
 operator|=
 name|drbr_peek
 argument_list|(
-name|ifp
+name|dev
 argument_list|,
 name|ring
 operator|->
@@ -5423,7 +5423,7 @@ condition|)
 block|{
 name|drbr_advance
 argument_list|(
-name|ifp
+name|dev
 argument_list|,
 name|ring
 operator|->
@@ -5435,7 +5435,7 @@ else|else
 block|{
 name|drbr_putback
 argument_list|(
-name|ifp
+name|dev
 argument_list|,
 name|ring
 operator|->
@@ -5449,7 +5449,7 @@ break|break;
 block|}
 name|drbr_advance
 argument_list|(
-name|ifp
+name|dev
 argument_list|,
 name|ring
 operator|->
