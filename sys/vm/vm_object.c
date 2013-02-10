@@ -5920,7 +5920,7 @@ condition|(
 operator|!
 name|vm_object_cache_is_empty
 argument_list|(
-name|object
+name|backing_object
 argument_list|)
 condition|)
 name|vm_page_cache_free
