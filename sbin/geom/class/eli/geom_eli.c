@@ -6487,6 +6487,11 @@ operator|>
 literal|0
 condition|)
 do|;
+name|free
+argument_list|(
+name|sector
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
