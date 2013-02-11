@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010, 2012  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: keyvalues.h,v 1.29 2010/12/23 23:47:08 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -204,7 +204,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/*%< key revoked (per rfc5001) */
+comment|/*%< key revoked (per rfc5011) */
 end_comment
 
 begin_define
@@ -255,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|DNS_KEYFLAG_RESERVEDMASK
-value|(DNS_KEYFLAG_RESERVED2 | \ 				  DNS_KEYFLAG_RESERVED4 | \ 				  DNS_KEYFLAG_RESERVED5 | \ 				  DNS_KEYFLAG_RESERVED8 | \ 				  DNS_KEYFLAG_RESERVED9 | \ 				  DNS_KEYFLAG_RESERVED10 | \ 				  DNS_KEYFLAG_RESERVED11 )
+value|(DNS_KEYFLAG_RESERVED2 | \ 				  DNS_KEYFLAG_RESERVED4 | \ 				  DNS_KEYFLAG_RESERVED5 | \ 				  DNS_KEYFLAG_RESERVED9 | \ 				  DNS_KEYFLAG_RESERVED10 | \ 				  DNS_KEYFLAG_RESERVED11 )
 end_define
 
 begin_define
@@ -371,6 +371,27 @@ define|#
 directive|define
 name|DNS_KEYALG_RSASHA512
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_KEYALG_ECCGOST
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_KEYALG_ECDSA256
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_KEYALG_ECDSA384
+value|14
 end_define
 
 begin_define
@@ -535,6 +556,41 @@ define|#
 directive|define
 name|DNS_SIG_DSAMAXBYTES
 value|405
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_SIG_GOSTSIGSIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_SIG_ECDSA256SIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_SIG_ECDSA384SIZE
+value|96
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_KEY_ECDSA256SIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_KEY_ECDSA384SIZE
+value|96
 end_define
 
 begin_endif

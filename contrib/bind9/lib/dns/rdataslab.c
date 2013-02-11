@@ -424,6 +424,12 @@ condition|(
 name|nitems
 operator|==
 literal|0
+operator|&&
+name|rdataset
+operator|->
+name|type
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -441,6 +447,13 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
+if|if
+condition|(
+name|nalloc
+operator|!=
+literal|0
+condition|)
+block|{
 name|x
 operator|=
 name|isc_mem_get
@@ -467,6 +480,12 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
+block|}
+else|else
+name|x
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Save all of the rdata members into an array. 	 */
 name|result
 operator|=
@@ -480,6 +499,10 @@ condition|(
 name|result
 operator|!=
 name|ISC_R_SUCCESS
+operator|&&
+name|result
+operator|!=
+name|ISC_R_NOMORE
 condition|)
 goto|goto
 name|free_rdatas
@@ -768,6 +791,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Don't forget the last item! 	 */
+if|if
+condition|(
+name|nalloc
+operator|!=
+literal|0
+condition|)
+block|{
 if|#
 directive|if
 name|DNS_RDATASET_FIXED
@@ -809,6 +839,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* 	 * Provide space to store the per RR meta data. 	 */
 if|if
 condition|(
@@ -1200,6 +1231,12 @@ name|ISC_R_SUCCESS
 expr_stmt|;
 name|free_rdatas
 label|:
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 name|isc_mem_put
 argument_list|(
 name|mctx

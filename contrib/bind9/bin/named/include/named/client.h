@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2012  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: client.h,v 1.91.278.2 2012/01/31 23:46:39 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -314,6 +314,9 @@ decl_stmt|;
 name|isc_boolean_t
 name|peeraddr_valid
 decl_stmt|;
+name|isc_netaddr_t
+name|destaddr
+decl_stmt|;
 name|struct
 name|in6_pktinfo
 name|pktinfo
@@ -321,6 +324,14 @@ decl_stmt|;
 name|isc_event_t
 name|ctlevent
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ALLOW_FILTER_AAAA_ON_V4
+name|dns_v4_aaaa_t
+name|filter_aaaa
+decl_stmt|;
+endif|#
+directive|endif
 comment|/*% 	 * Information about recent FORMERR response(s), for 	 * FORMERR loop avoidance.  This is separate for each 	 * client object rather than global only to avoid 	 * the need for locking. 	 */
 struct|struct
 block|{
@@ -429,6 +440,39 @@ end_define
 begin_comment
 comment|/*%< include nameserver ID */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_FILTER_AAAA_ON_V4
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NS_CLIENTATTR_FILTER_AAAA
+value|0x40
+end_define
+
+begin_comment
+comment|/*%< suppress AAAAs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_CLIENTATTR_FILTER_AAAA_RC
+value|0x80
+end_define
+
+begin_comment
+comment|/*%< recursing for A against AAAA */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -695,9 +739,9 @@ name|ns_client_t
 modifier|*
 name|client
 parameter_list|,
-name|isc_sockaddr_t
+name|isc_netaddr_t
 modifier|*
-name|sockaddr
+name|netaddr
 parameter_list|,
 name|dns_acl_t
 modifier|*
@@ -710,7 +754,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%  * Convenience function for client request ACL checking.  *  * Check the current client request against 'acl'.  If 'acl'  * is NULL, allow the request iff 'default_allow' is ISC_TRUE.  * If netaddr is NULL, check the ACL against client->peeraddr;  * otherwise check it against netaddr.  *  * Notes:  *\li	This is appropriate for checking allow-update,  * 	allow-query, allow-transfer, etc.  It is not appropriate  * 	for checking the blackhole list because we treat positive  * 	matches as "allow" and negative matches as "deny"; in  *	the case of the blackhole list this would be backwards.  *  * Requires:  *\li	'client' points to a valid client.  *\li	'sockaddr' points to a valid address, or is NULL.  *\li	'acl' points to a valid ACL, or is NULL.  *  * Returns:  *\li	ISC_R_SUCCESS	if the request should be allowed  * \li	ISC_R_REFUSED	if the request should be denied  *\li	No other return values are possible.  */
+comment|/*%  * Convenience function for client request ACL checking.  *  * Check the current client request against 'acl'.  If 'acl'  * is NULL, allow the request iff 'default_allow' is ISC_TRUE.  * If netaddr is NULL, check the ACL against client->peeraddr;  * otherwise check it against netaddr.  *  * Notes:  *\li	This is appropriate for checking allow-update,  * 	allow-query, allow-transfer, etc.  It is not appropriate  * 	for checking the blackhole list because we treat positive  * 	matches as "allow" and negative matches as "deny"; in  *	the case of the blackhole list this would be backwards.  *  * Requires:  *\li	'client' points to a valid client.  *\li	'netaddr' points to a valid address, or is NULL.  *\li	'acl' points to a valid ACL, or is NULL.  *  * Returns:  *\li	ISC_R_SUCCESS	if the request should be allowed  * \li	DNS_R_REFUSED	if the request should be denied  *\li	No other return values are possible.  */
 end_comment
 
 begin_function_decl

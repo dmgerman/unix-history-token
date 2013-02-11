@@ -4,11 +4,11 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.48.84.4 2010-06-03 23:47:49 tbox Exp $ */
+comment|/* $Id: platform.h.in,v 1.56 2010/12/18 01:56:23 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -254,6 +254,17 @@ name|ISC_PLATFORM_HAVEDEVPOLL
 end_undef
 
 begin_comment
+comment|/*! \brief  * Define if we want to log backtrace  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_USEBACKTRACE
+value|1
+end_define
+
+begin_comment
 comment|/*  *** Printing.  ***/
 end_comment
 
@@ -371,9 +382,34 @@ begin_comment
 comment|/*  * Defined to<gssapi.h> or<gssapi/gssapi.h> for how to include  * the GSSAPI header.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_GSSAPIHEADER
+value|<gssapi/gssapi.h>
+end_define
+
+begin_comment
+comment|/*  * Defined to<gssapi_krb5.h> or<gssapi/gssapi_krb5.h> for how to  * include the GSSAPI KRB5 header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_GSSAPI_KRB5_HEADER
+value|<gssapi/gssapi_krb5.h>
+end_define
+
 begin_comment
 comment|/*  * Defined to<krb5.h> or<krb5/krb5.h> for how to include  * the KRB5 header.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_KRB5HEADER
+value|<krb5.h>
+end_define
 
 begin_comment
 comment|/*  * Type used for resource limits.  */
@@ -689,6 +725,16 @@ directive|define
 name|ISC_PLATFORM_HAVESTRINGSH
 value|1
 end_define
+
+begin_comment
+comment|/*  * Define if the hash functions must be provided by OpenSSL.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_OPENSSLHASH
+end_undef
 
 begin_comment
 comment|/*  * Defines for the noreturn attribute.  */

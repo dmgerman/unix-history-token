@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: named-checkzone.c,v 1.61.62.2 2011/12/22 23:45:54 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -299,6 +299,7 @@ literal|"usage: %s [-djqvD] [-c class] "
 literal|"[-f inputformat] [-F outputformat] "
 literal|"[-t directory] [-w directory] [-k (ignore|warn|fail)] "
 literal|"[-n (ignore|warn|fail)] [-m (ignore|warn|fail)] "
+literal|"[-r (ignore|warn|fail)] "
 literal|"[-i (full|full-sibling|local|local-sibling|none)] "
 literal|"[-M (ignore|warn|fail)] [-S (ignore|warn|fail)] "
 literal|"[-W (ignore|warn)] "
@@ -312,7 +313,7 @@ name|progmode_check
 condition|?
 literal|"[-o filename]"
 else|:
-literal|"{-o filename}"
+literal|"-o filename"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -566,6 +567,8 @@ name|DNS_ZONEOPT_CHECKNS
 operator||
 name|DNS_ZONEOPT_FATALNS
 operator||
+name|DNS_ZONEOPT_CHECKDUPRR
+operator||
 name|DNS_ZONEOPT_CHECKNAMES
 operator||
 name|DNS_ZONEOPT_CHECKNAMESFAIL
@@ -574,6 +577,11 @@ name|DNS_ZONEOPT_CHECKWILDCARD
 operator|)
 expr_stmt|;
 block|}
+else|else
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKDUPRR
+expr_stmt|;
 define|#
 directive|define
 name|ARGCMP
@@ -596,7 +604,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:df:hi:jk:m:n:qs:t:o:vw:DF:M:S:W:"
+literal|"c:df:hi:jk:m:n:qr:s:t:o:vw:DF:M:S:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -1042,6 +1050,14 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'o'
+case|:
+name|output_filename
+operator|=
+name|isc_commandline_argument
+expr_stmt|;
+break|break;
+case|case
 literal|'q'
 case|:
 name|quiet
@@ -1049,34 +1065,70 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'t'
+literal|'r'
 case|:
-name|result
-operator|=
-name|isc_dir_chroot
-argument_list|(
-name|isc_commandline_argument
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
+name|ARGCMP
+argument_list|(
+literal|"warn"
+argument_list|)
 condition|)
+block|{
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKDUPRR
+expr_stmt|;
+name|zone_options
+operator|&=
+operator|~
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ARGCMP
+argument_list|(
+literal|"fail"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKDUPRR
+operator||
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ARGCMP
+argument_list|(
+literal|"ignore"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator|&=
+operator|~
+operator|(
+name|DNS_ZONEOPT_CHECKDUPRR
+operator||
+name|DNS_ZONEOPT_CHECKDUPRRFAIL
+operator|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isc_dir_chroot: %s: %s\n"
+literal|"invalid argument to -r: %s\n"
 argument_list|,
 name|isc_commandline_argument
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1135,12 +1187,42 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|'o'
+literal|'t'
 case|:
-name|output_filename
+name|result
 operator|=
+name|isc_dir_chroot
+argument_list|(
 name|isc_commandline_argument
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"isc_dir_chroot: %s: %s\n"
+argument_list|,
+name|isc_commandline_argument
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'v'

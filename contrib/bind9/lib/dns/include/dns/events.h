@@ -327,6 +327,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|DNS_EVENT_MANAGEKEYS
+value|(ISC_EVENTCLASS_DNS + 42)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_CLIENTRESDONE
+value|(ISC_EVENTCLASS_DNS + 43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_CLIENTREQDONE
+value|(ISC_EVENTCLASS_DNS + 44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ADBGROWENTRIES
+value|(ISC_EVENTCLASS_DNS + 45)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ADBGROWNAMES
+value|(ISC_EVENTCLASS_DNS + 46)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DNS_EVENT_FIRSTEVENT
 value|(ISC_EVENTCLASS_DNS + 0)
 end_define

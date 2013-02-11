@@ -2358,7 +2358,10 @@ name|isc_log_write
 argument_list|(
 name|JOURNAL_COMMON_LOGARGS
 argument_list|,
-name|ISC_LOG_INFO
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 literal|"journal file %s does not exist, "
 literal|"creating it"

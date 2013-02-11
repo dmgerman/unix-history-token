@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -190,7 +190,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create a new DNS cache.  *  * dns_cache_create2() is used in BIND 9.7 and up but is not implemented  * here.  *  * dns_cache_create3() will create a cache using two separate memory  * contexts, one for cache data which can be cleaned and a separate one for  * memory allocated for the heap (which can grow without an upper limit and  * has no mechanism for shrinking).  *  * dns_cache_create() is a backward compatible version that internally  * specifies an empty cache name and a single memory context.  *  * Requires:  *  *\li	'cmctx' (and 'hmctx' if applicable) is a valid memory context.  *  *\li	'taskmgr' is a valid task manager and 'timermgr' is a valid timer  * 	manager, or both are NULL.  If NULL, no periodic cleaning of the  * 	cache will take place.  *  *\li	'cachep' is a valid pointer, and *cachep == NULL  *  * Ensures:  *  *\li	'*cachep' is attached to the newly created cache  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Create a new DNS cache.  *  * dns_cache_create2() will create a named cache.  *  * dns_cache_create3() will create a named cache using two separate memory  * contexts, one for cache data which can be cleaned and a separate one for  * memory allocated for the heap (which can grow without an upper limit and  * has no mechanism for shrinking).  *  * dns_cache_create() is a backward compatible version that internally  * specifies an empty cache name and a single memory context.  *  * Requires:  *  *\li	'cmctx' (and 'hmctx' if applicable) is a valid memory context.  *  *\li	'taskmgr' is a valid task manager and 'timermgr' is a valid timer  * 	manager, or both are NULL.  If NULL, no periodic cleaning of the  * 	cache will take place.  *  *\li	'cachename' is a valid string.  This must not be NULL.  *  *\li	'cachep' is a valid pointer, and *cachep == NULL  *  * Ensures:  *  *\li	'*cachep' is attached to the newly created cache  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -337,6 +337,54 @@ comment|/*%<  * Set the periodic cache cleaning interval to 'interval' seconds. 
 end_comment
 
 begin_function_decl
+name|unsigned
+name|int
+name|dns_cache_getcleaninginterval
+parameter_list|(
+name|dns_cache_t
+modifier|*
+name|cache
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the periodic cache cleaning interval to 'interval' seconds.  */
+end_comment
+
+begin_function_decl
+name|isc_uint32_t
+name|dns_cache_getcachesize
+parameter_list|(
+name|dns_cache_t
+modifier|*
+name|cache
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the maximum cache size.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|dns_cache_getname
+parameter_list|(
+name|dns_cache_t
+modifier|*
+name|cache
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the cache name.  */
+end_comment
+
+begin_function_decl
 name|void
 name|dns_cache_setcachesize
 parameter_list|(
@@ -352,6 +400,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Set the maximum cache size.  0 means unlimited.  */
+end_comment
+
+begin_function_decl
+name|isc_uint32_t
+name|dns_cache_getcachesize
+parameter_list|(
+name|dns_cache_t
+modifier|*
+name|cache
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the maximum cache size.  */
 end_comment
 
 begin_function_decl
