@@ -318,7 +318,10 @@ name|uint64_t
 name|threadid
 decl_stmt|;
 name|uint32_t
-name|tstamp
+name|tstamp_sec
+decl_stmt|;
+name|uint32_t
+name|tstamp_usec
 decl_stmt|;
 name|uint16_t
 name|op
