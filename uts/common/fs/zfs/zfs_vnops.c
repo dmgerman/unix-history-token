@@ -1586,6 +1586,8 @@ name|nbytes
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|rl_t
 modifier|*
@@ -2180,6 +2182,8 @@ name|z_max_blksz
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -2188,6 +2192,8 @@ decl_stmt|;
 name|iovec_t
 modifier|*
 name|aiov
+init|=
+name|NULL
 decl_stmt|;
 name|xuio_t
 modifier|*
@@ -8913,6 +8919,10 @@ name|bufsize
 operator|=
 name|bytes_wanted
 expr_stmt|;
+name|outbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|odp
 operator|=
 operator|(
@@ -10973,6 +10983,8 @@ name|va_mask
 decl_stmt|;
 name|uint_t
 name|saved_mask
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|trim_mask

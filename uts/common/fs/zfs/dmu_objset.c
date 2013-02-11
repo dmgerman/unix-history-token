@@ -6722,9 +6722,14 @@ decl_stmt|;
 name|uint64_t
 modifier|*
 name|user
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|uint64_t
 modifier|*
 name|group
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|flags
