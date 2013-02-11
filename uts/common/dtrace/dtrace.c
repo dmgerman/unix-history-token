@@ -23457,6 +23457,8 @@ name|flags
 decl_stmt|;
 name|hrtime_t
 name|now
+decl_stmt|,
+name|end
 decl_stmt|;
 comment|/* 	 * Kick out immediately if this CPU is still being born (in which case 	 * curthread will be set to -1) or the current thread can't allow 	 * probes in its current context. 	 */
 if|if
@@ -23505,6 +23507,11 @@ name|CPU_ON_INTR
 argument_list|(
 name|CPU
 argument_list|)
+expr_stmt|;
+name|CPU
+operator|->
+name|cpu_dtrace_probes
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -25523,6 +25530,11 @@ operator|->
 name|dte_size
 expr_stmt|;
 block|}
+name|end
+operator|=
+name|dtrace_gethrtime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vtime
@@ -25531,8 +25543,15 @@ name|curthread
 operator|->
 name|t_dtrace_start
 operator|=
-name|dtrace_gethrtime
-argument_list|()
+name|end
+expr_stmt|;
+name|CPU
+operator|->
+name|cpu_dtrace_nsec
+operator|+=
+name|end
+operator|-
+name|now
 expr_stmt|;
 name|dtrace_interrupt_enable
 argument_list|(

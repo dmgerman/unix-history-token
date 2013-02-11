@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1989, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 1989, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -535,6 +535,14 @@ name|hrtime_t
 name|cpu_dtrace_chilled
 decl_stmt|;
 comment|/* DTrace: total chill time */
+name|uint64_t
+name|cpu_dtrace_probes
+decl_stmt|;
+comment|/* DTrace: total probes fired */
+name|hrtime_t
+name|cpu_dtrace_nsec
+decl_stmt|;
+comment|/* DTrace: ns in dtrace_probe */
 specifier|volatile
 name|uint16_t
 name|cpu_mstate
