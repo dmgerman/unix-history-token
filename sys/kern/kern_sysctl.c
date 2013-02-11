@@ -4352,7 +4352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a long, signed or unsigned.  arg1 points to it.  */
+comment|/*  * Handle a long, signed or unsigned.  * Two cases:  *     a variable:  point arg1 at it.  *     a constant:  pass it in arg2.  */
 end_comment
 
 begin_function
@@ -4537,7 +4537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a 64 bit int, signed or unsigned.  arg1 points to it.  */
+comment|/*  * Handle a 64 bit int, signed or unsigned.  * Two cases:  *     a variable:  point arg1 at it.  *     a constant:  pass it in arg2.  */
 end_comment
 
 begin_function
