@@ -80,11 +80,6 @@ name|blkptr_t
 modifier|*
 name|bp
 parameter_list|,
-name|struct
-name|arc_buf
-modifier|*
-name|pbuf
-parameter_list|,
 specifier|const
 name|zbookmark_t
 modifier|*

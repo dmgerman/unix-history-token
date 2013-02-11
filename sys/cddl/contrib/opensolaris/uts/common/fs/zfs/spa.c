@@ -8046,10 +8046,6 @@ name|blkptr_t
 modifier|*
 name|bp
 parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
-parameter_list|,
 specifier|const
 name|zbookmark_t
 modifier|*
