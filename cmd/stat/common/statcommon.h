@@ -4,7 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Common routines for acquiring snapshots of kstats for  * iostat, mpstat, and vmstat.  */
+comment|/*  * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
+comment|/*  * Common routines for acquiring snapshots of kstats for  * iostat, mpstat, and vmstat.  */
 end_comment
 
 begin_ifndef
@@ -542,6 +546,9 @@ decl_stmt|;
 name|struct
 name|biostats
 name|s_biostats
+decl_stmt|;
+name|size_t
+name|s_nr_active_cpus
 decl_stmt|;
 block|}
 struct|;
