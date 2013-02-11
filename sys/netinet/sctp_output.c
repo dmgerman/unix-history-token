@@ -32322,6 +32322,12 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_paramhdr
+argument_list|)
+operator|+
 name|ca
 operator|->
 name|sndlen
@@ -62787,7 +62793,6 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
-operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -62795,7 +62800,6 @@ name|sctp_paramhdr
 argument_list|)
 operator|+
 name|tot_out
-operator|)
 argument_list|)
 expr_stmt|;
 name|ph
