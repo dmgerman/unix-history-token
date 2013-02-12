@@ -211,6 +211,11 @@ directive|define
 name|CISS_REQ_BUSY
 value|(1<<5)
 comment|/* controller has req */
+define|#
+directive|define
+name|CISS_REQ_CCB
+value|(1<<6)
+comment|/* data is ccb */
 name|void
 function_decl|(
 modifier|*
