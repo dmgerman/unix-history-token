@@ -1222,7 +1222,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tjail<jailid><filesystem>\n"
+literal|"\tjail<jailid|jailname><filesystem>\n"
 argument_list|)
 operator|)
 return|;
@@ -1233,7 +1233,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tunjail<jailid><filesystem>\n"
+literal|"\tunjail<jailid|jailname><filesystem>\n"
 argument_list|)
 operator|)
 return|;
@@ -29514,7 +29514,7 @@ expr_stmt|;
 block|}
 name|jailid
 operator|=
-name|atoi
+name|jail_getid
 argument_list|(
 name|argv
 index|[
@@ -29525,7 +29525,7 @@ expr_stmt|;
 if|if
 condition|(
 name|jailid
-operator|==
+operator|<
 literal|0
 condition|)
 block|{
@@ -29538,7 +29538,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"invalid jailid\n"
+literal|"invalid jail id or name\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
