@@ -400,6 +400,26 @@ directive|include
 file|<machine/vmparam.h>
 end_include
 
+begin_comment
+comment|/*  * For atomicity reasons, we demand that pc_curthread is the first  * field in the struct pcpu. It allows us to read the pointer with  * a single atomic instruction:  *	ld8 %curthread = [r13]  * Otherwise we would first have to calculate the load address and  * store the result in a temporary register and that for the load:  *	add %temp = %offsetof(struct pcpu), r13  *	ld8 %curthread = [%temp]  * A context switch inbetween the add and the ld8 could have the  * thread migrate to a different core. In that case,  %curthread  * would be the thread running on the original core and not actually  * the current thread.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|offsetof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|,
+name|pc_curthread
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
