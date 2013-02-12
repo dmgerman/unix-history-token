@@ -356,11 +356,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"A10 watchdog probe\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ofw_bus_is_compatible
