@@ -7374,11 +7374,6 @@ operator|->
 name|sa_len
 argument_list|)
 expr_stmt|;
-name|check_sockaddr_len
-argument_list|(
-name|un
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%.*s"
@@ -8197,14 +8192,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|datalen
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr
-argument_list|)
-operator|||
 name|datalen
 operator|!=
 name|ss
