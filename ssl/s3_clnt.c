@@ -3593,9 +3593,15 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_INTERNAL_ERROR
+expr_stmt|;
 goto|goto
 name|f_err
 goto|;
+block|}
 comment|/* lets get the compression algorithm */
 comment|/* COMPRESSION */
 ifdef|#

@@ -3738,7 +3738,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* If p< q it is occasionally possible for the correction of          * adding 'p' if r0 is negative above to leave the result still 	 * negative. This can break the private key operations: the following 	 * second correction should *always* correct this rare occurrence. 	 * This will *never* happen with OpenSSL generated keys because          * they ensure p> q [steve]          */
+comment|/* If p< q it is occasionally possible for the correction of 	 * adding 'p' if r0 is negative above to leave the result still 	 * negative. This can break the private key operations: the following 	 * second correction should *always* correct this rare occurrence. 	 * This will *never* happen with OpenSSL generated keys because 	 * they ensure p> q [steve] 	 */
 if|if
 condition|(
 name|BN_is_negative

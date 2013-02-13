@@ -11126,6 +11126,9 @@ name|ne_types
 operator|||
 operator|!
 name|ne_values
+operator|||
+operator|!
+name|mval
 condition|)
 block|{
 name|BIO_printf
@@ -11531,6 +11534,11 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|mval
+argument_list|)
+expr_stmt|;
 return|return
 name|n
 return|;
@@ -11557,6 +11565,15 @@ condition|)
 name|OPENSSL_free
 argument_list|(
 name|ne_types
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mval
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|mval
 argument_list|)
 expr_stmt|;
 if|if

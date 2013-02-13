@@ -582,6 +582,7 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
+comment|/* Dummy call just to ensure OPENSSL_init() gets linked in */
 name|OPENSSL_init
 argument_list|()
 expr_stmt|;

@@ -1470,7 +1470,6 @@ argument_list|)
 operator|==
 name|nid
 condition|)
-block|{
 return|return
 name|EVP_MD_CTX_copy_ex
 argument_list|(
@@ -1479,7 +1478,6 @@ argument_list|,
 name|mtmp
 argument_list|)
 return|;
-block|}
 name|chain
 operator|=
 name|BIO_next

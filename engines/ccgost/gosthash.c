@@ -205,7 +205,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|k
 argument_list|,

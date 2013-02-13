@@ -435,6 +435,40 @@ operator|&&
 name|__GNUC__
 operator|>=
 literal|2
+if|#
+directive|if
+name|__GNUC__
+operator|>=
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|4
+comment|/* "h" constraint is no more since 4.4 */
+define|#
+directive|define
+name|BN_UMULT_HIGH
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((__uint128_t)(a)*(b))>>64)
+define|#
+directive|define
+name|BN_UMULT_LOHI
+parameter_list|(
+name|low
+parameter_list|,
+name|high
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|({	\ 	__uint128_t ret=(__uint128_t)(a)*(b);	\ 	(high)=ret>>64; (low)=ret;	 })
+else|#
+directive|else
 define|#
 directive|define
 name|BN_UMULT_HIGH
@@ -458,6 +492,8 @@ name|b
 parameter_list|)
 define|\
 value|asm ("dmultu	%2,%3"		\ 	     : "=l"(low),"=h"(high)	\ 	     : "r"(a), "r"(b));
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#

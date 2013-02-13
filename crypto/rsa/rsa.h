@@ -769,6 +769,7 @@ parameter_list|(
 specifier|const
 name|RSA
 modifier|*
+name|rsa
 parameter_list|)
 function_decl|;
 comment|/* Deprecated version */
