@@ -8255,12 +8255,6 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-name|data_tx
-operator|->
-name|use
-operator|=
-literal|0
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
