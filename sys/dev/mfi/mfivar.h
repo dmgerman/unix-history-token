@@ -226,6 +226,10 @@ define|#
 directive|define
 name|MFI_CMD_SCSI
 value|(1<<8)
+define|#
+directive|define
+name|MFI_CMD_CCB
+value|(1<<9)
 name|uint8_t
 name|retry_for_fw_reset
 decl_stmt|;

@@ -2710,13 +2710,17 @@ decl_stmt|;
 comment|/* 			 * We can't deal with physical addresses for this 			 * type of transaction. 			 */
 if|if
 condition|(
+operator|(
 name|inccb
 operator|->
 name|ccb_h
 operator|.
 name|flags
 operator|&
-name|CAM_DATA_PHYS
+name|CAM_DATA_MASK
+operator|)
+operator|!=
+name|CAM_DATA_VADDR
 condition|)
 block|{
 name|error

@@ -99,6 +99,12 @@ directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/allwinner/a10_wdog.h>
+end_include
+
 begin_comment
 comment|/* Start of address space used for bootstrap map */
 end_comment
@@ -110,18 +116,6 @@ name|DEVMAP_BOOTSTRAP_MAP_START
 value|0xE0000000
 end_define
 
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|a10_cpu_reset
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|vm_offset_t
 name|initarm_lastaddr
@@ -129,10 +123,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|a10_cpu_reset
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 name|DEVMAP_BOOTSTRAP_MAP_START
@@ -313,21 +303,8 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
-if|if
-condition|(
-name|a10_cpu_reset
-condition|)
-call|(
-modifier|*
-name|a10_cpu_reset
-call|)
+name|a10wd_watchdog_reset
 argument_list|()
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"no cpu_reset implementation\n"
-argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(

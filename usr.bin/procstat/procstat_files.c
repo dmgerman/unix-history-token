@@ -632,6 +632,12 @@ block|,
 literal|"mf"
 block|}
 block|,
+block|{
+name|CAP_MKNOD
+block|,
+literal|"mn"
+block|}
+block|,
 comment|/* Lookups - used to constraint *at() calls. */
 block|{
 name|CAP_LOOKUP
@@ -808,9 +814,7 @@ block|,
 literal|"ty"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NOTYET
+comment|/* Process management via process descriptors. */
 block|{
 name|CAP_PDGETPID
 block|,
@@ -818,7 +822,7 @@ literal|"pg"
 block|}
 block|,
 block|{
-name|CAP_PDWAIT4
+name|CAP_PDWAIT
 block|,
 literal|"pw"
 block|}
@@ -828,10 +832,7 @@ name|CAP_PDKILL
 block|,
 literal|"pk"
 block|}
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 struct|;
 end_struct
 
