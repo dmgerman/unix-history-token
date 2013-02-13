@@ -136,11 +136,6 @@ name|enum
 name|x2apic_state
 name|x2apic_state
 decl_stmt|;
-name|func
-operator|=
-operator|*
-name|eax
-expr_stmt|;
 comment|/* 	 * Requests for invalid CPUID levels should map to the highest 	 * available level instead. 	 */
 if|if
 condition|(
@@ -204,6 +199,11 @@ operator|=
 name|cpu_high
 expr_stmt|;
 block|}
+name|func
+operator|=
+operator|*
+name|eax
+expr_stmt|;
 comment|/* 	 * In general the approach used for CPU topology is to 	 * advertise a flat topology where all CPUs are packages with 	 * no multi-core or SMT. 	 */
 switch|switch
 condition|(
