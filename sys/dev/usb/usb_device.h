@@ -546,10 +546,6 @@ decl_stmt|;
 comment|/* generic clear stall 						 * messages */
 name|struct
 name|sx
-name|ctrl_sx
-decl_stmt|;
-name|struct
-name|sx
 name|enum_sx
 decl_stmt|;
 name|struct

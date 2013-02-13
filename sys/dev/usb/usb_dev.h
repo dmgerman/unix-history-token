@@ -216,6 +216,10 @@ name|uint8_t
 name|is_usbfs
 decl_stmt|;
 comment|/* USB-FS is active */
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+comment|/* USB enum unlock needed */
 block|}
 struct|;
 end_struct
