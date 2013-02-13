@@ -429,11 +429,7 @@ argument_list|,
 name|ps3_reset
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|PLATFORMMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
