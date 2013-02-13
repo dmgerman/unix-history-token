@@ -250,6 +250,13 @@ name|tk
 decl_stmt|;
 end_decl_stmt
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|__vdso_gettimeofday
+end_pragma
+
 begin_function
 name|int
 name|__vdso_gettimeofday
@@ -292,17 +299,10 @@ condition|)
 block|{
 name|error
 operator|=
-name|_elf_aux_info
+name|__vdso_gettimekeep
 argument_list|(
-name|AT_TIMEKEEP
-argument_list|,
 operator|&
 name|tk
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tk
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -372,6 +372,13 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|__vdso_clock_gettime
+end_pragma
 
 begin_function
 name|int
