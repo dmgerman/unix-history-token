@@ -5462,7 +5462,7 @@ literal|0
 decl_stmt|;
 name|err
 operator|=
-name|arc_read_nolock
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
@@ -11344,10 +11344,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -11365,10 +11361,6 @@ specifier|const
 name|blkptr_t
 modifier|*
 name|bp
-parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
 parameter_list|,
 specifier|const
 name|zbookmark_t
@@ -13564,10 +13556,6 @@ specifier|const
 name|blkptr_t
 modifier|*
 name|bp
-parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
 parameter_list|,
 specifier|const
 name|zbookmark_t

@@ -70,6 +70,9 @@ block|{
 name|u_int
 name|code
 decl_stmt|;
+name|int
+name|narg
+decl_stmt|;
 name|struct
 name|sysent
 modifier|*
@@ -84,9 +87,6 @@ name|args32
 index|[
 literal|8
 index|]
-decl_stmt|;
-name|int
-name|narg
 decl_stmt|;
 block|}
 struct|;

@@ -148,7 +148,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] TXSTATUS: TxDone=%d, TS=0x%08x\n\n"
+literal|"[%u.%06u] [%llu] TXSTATUS: TxDone=%d, TS=0x%08x\n\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -160,7 +160,20 @@ name|a
 operator|->
 name|hdr
 operator|.
-name|tstamp
+name|tstamp_sec
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|be32toh
+argument_list|(
+name|a
+operator|->
+name|hdr
+operator|.
+name|tstamp_usec
 argument_list|)
 argument_list|,
 operator|(
@@ -456,7 +469,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] TXD\n"
+literal|"[%u.%06u] [%llu] TXD\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -468,7 +481,20 @@ name|a
 operator|->
 name|hdr
 operator|.
-name|tstamp
+name|tstamp_sec
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|be32toh
+argument_list|(
+name|a
+operator|->
+name|hdr
+operator|.
+name|tstamp_usec
 argument_list|)
 argument_list|,
 operator|(
@@ -838,7 +864,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] [%llu] RXSTATUS: RxOK=%d TS=0x%08x\n"
+literal|"[%u.%06u] [%llu] RXSTATUS: RxOK=%d TS=0x%08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -850,7 +876,20 @@ name|a
 operator|->
 name|hdr
 operator|.
-name|tstamp
+name|tstamp_sec
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|be32toh
+argument_list|(
+name|a
+operator|->
+name|hdr
+operator|.
+name|tstamp_usec
 argument_list|)
 argument_list|,
 operator|(
@@ -1175,7 +1214,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"[%d] [%lld] op: %d; len %d\n"
+literal|"[%d.%06d] [%lld] op: %d; len %d\n"
 argument_list|,
 name|be32toh
 argument_list|(
@@ -1183,7 +1222,16 @@ name|a
 operator|->
 name|hdr
 operator|.
-name|tstamp
+name|tstamp_sec
+argument_list|)
+argument_list|,
+name|be32toh
+argument_list|(
+name|a
+operator|->
+name|hdr
+operator|.
+name|tstamp_usec
 argument_list|)
 argument_list|,
 name|be64toh

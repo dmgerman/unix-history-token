@@ -100,21 +100,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|vm_pin
-block|{
-name|int
-name|vm_cpuid
-decl_stmt|;
-name|int
-name|host_cpuid
-decl_stmt|;
-comment|/* -1 to unpin */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|vm_run
 block|{
 name|int
@@ -379,10 +364,6 @@ enum|enum
 block|{
 name|IOCNUM_RUN
 block|,
-name|IOCNUM_SET_PINNING
-block|,
-name|IOCNUM_GET_PINNING
-block|,
 name|IOCNUM_MAP_MEMORY
 block|,
 name|IOCNUM_GET_MEMORY_SEG
@@ -432,22 +413,6 @@ directive|define
 name|VM_RUN
 define|\
 value|_IOWR('v', IOCNUM_RUN, struct vm_run)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_SET_PINNING
-define|\
-value|_IOW('v', IOCNUM_SET_PINNING, struct vm_pin)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_GET_PINNING
-define|\
-value|_IOWR('v', IOCNUM_GET_PINNING, struct vm_pin)
 end_define
 
 begin_define

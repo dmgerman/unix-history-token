@@ -520,7 +520,7 @@ directive|endif
 else|else
 name|printf
 argument_list|(
-literal|"[%d] [%lld] op: %d; len %d\n"
+literal|"[%d.%06d] [%lld] op: %d; len %d\n"
 argument_list|,
 name|be32toh
 argument_list|(
@@ -528,7 +528,16 @@ name|a
 operator|->
 name|hdr
 operator|.
-name|tstamp
+name|tstamp_sec
+argument_list|)
+argument_list|,
+name|be32toh
+argument_list|(
+name|a
+operator|->
+name|hdr
+operator|.
+name|tstamp_usec
 argument_list|)
 argument_list|,
 name|be64toh

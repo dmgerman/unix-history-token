@@ -814,7 +814,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|dsl_read_nolock
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
@@ -1252,7 +1252,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|arc_read_nolock
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,

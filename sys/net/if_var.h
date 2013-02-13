@@ -4043,6 +4043,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ifa_preferred
+parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|,
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|if_simloop
 parameter_list|(
 name|struct
