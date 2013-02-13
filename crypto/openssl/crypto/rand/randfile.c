@@ -11,12 +11,27 @@ begin_comment
 comment|/* We need to define this to get macros like S_IFBLK and S_IFCHR */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_VXWORKS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|_XOPEN_SOURCE
 value|500
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

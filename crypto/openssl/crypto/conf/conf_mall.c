@@ -93,6 +93,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|EVP_add_alg_module
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

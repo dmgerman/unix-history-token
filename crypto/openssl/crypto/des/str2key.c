@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"des_locl.h"
+file|<openssl/crypto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/crypto.h>
+file|"des_locl.h"
 end_include
 
 begin_function

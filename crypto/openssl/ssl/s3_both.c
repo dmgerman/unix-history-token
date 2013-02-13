@@ -661,7 +661,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_NEXTPROTONEG
-comment|/* the mac has already been generated when we received the change 	 * cipher spec message and is in s->s3->tmp.peer_finish_md. */
+comment|/* the mac has already been generated when we received the 	 * change cipher spec message and is in s->s3->tmp.peer_finish_md. 	 */
 endif|#
 directive|endif
 name|n
@@ -779,7 +779,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|p
 argument_list|,

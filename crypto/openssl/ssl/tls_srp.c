@@ -1408,6 +1408,8 @@ condition|)
 return|return
 name|SSL3_AL_FATAL
 return|;
+if|if
+condition|(
 name|RAND_bytes
 argument_list|(
 name|b
@@ -1417,7 +1419,12 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+name|SSL3_AL_FATAL
+return|;
 name|s
 operator|->
 name|srp_ctx

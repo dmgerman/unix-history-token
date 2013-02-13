@@ -347,11 +347,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|name_funcs_stack
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 comment|/* ERROR */

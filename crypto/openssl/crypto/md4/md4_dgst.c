@@ -281,6 +281,9 @@ operator|--
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -295,6 +298,9 @@ argument_list|)
 operator|=
 name|l
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -330,6 +336,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -364,6 +373,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -398,6 +410,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -432,6 +447,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -466,6 +484,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -500,6 +521,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -534,6 +558,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -568,6 +595,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -602,6 +632,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -636,6 +669,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -670,6 +706,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -704,6 +743,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -738,6 +780,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -772,6 +817,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data

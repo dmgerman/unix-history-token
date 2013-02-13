@@ -217,7 +217,7 @@ index|]
 operator|.
 name|digest
 operator|=
-name|EVP_dss1
+name|EVP_sha1
 argument_list|()
 expr_stmt|;
 endif|#
@@ -263,7 +263,7 @@ index|]
 operator|.
 name|digest
 operator|=
-name|EVP_ecdsa
+name|EVP_sha1
 argument_list|()
 expr_stmt|;
 endif|#

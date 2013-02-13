@@ -1342,6 +1342,14 @@ name|TLS1_VERSION
 operator|||
 name|version
 operator|==
+name|TLS1_1_VERSION
+operator|||
+name|version
+operator|==
+name|TLS1_2_VERSION
+operator|||
+name|version
+operator|==
 name|DTLS1_VERSION
 operator|||
 name|version

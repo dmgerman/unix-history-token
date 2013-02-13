@@ -1327,6 +1327,9 @@ define|#
 directive|define
 name|SSL3_ST_CW_CHANGE_B
 value|(0x1A1|SSL_ST_CONNECT)
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
 define|#
 directive|define
 name|SSL3_ST_CW_NEXT_PROTO_A
@@ -1335,6 +1338,8 @@ define|#
 directive|define
 name|SSL3_ST_CW_NEXT_PROTO_B
 value|(0x201|SSL_ST_CONNECT)
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL3_ST_CW_FINISHED_A
@@ -1503,6 +1508,9 @@ define|#
 directive|define
 name|SSL3_ST_SR_CHANGE_B
 value|(0x1B1|SSL_ST_ACCEPT)
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
 define|#
 directive|define
 name|SSL3_ST_SR_NEXT_PROTO_A
@@ -1511,6 +1519,8 @@ define|#
 directive|define
 name|SSL3_ST_SR_NEXT_PROTO_B
 value|(0x211|SSL_ST_ACCEPT)
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL3_ST_SR_FINISHED_A
@@ -1600,10 +1610,15 @@ define|#
 directive|define
 name|SSL3_MT_CERTIFICATE_STATUS
 value|22
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
 define|#
 directive|define
 name|SSL3_MT_NEXT_PROTO
 value|67
+endif|#
+directive|endif
 define|#
 directive|define
 name|DTLS1_MT_HELLO_VERIFY_REQUEST

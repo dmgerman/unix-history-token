@@ -1290,7 +1290,7 @@ condition|)
 block|{
 name|BIO_printf
 argument_list|(
-name|STDout
+name|bio_err
 argument_list|,
 literal|"bad number of days\n"
 argument_list|)
@@ -4731,7 +4731,7 @@ condition|)
 block|{
 name|X509_print_ex
 argument_list|(
-name|out
+name|STDout
 argument_list|,
 name|x
 argument_list|,

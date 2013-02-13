@@ -248,6 +248,9 @@ operator|->
 name|md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|EVP_SignInit
 argument_list|(
 operator|&
@@ -257,7 +260,10 @@ name|md
 argument_list|,
 name|md_type
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|EVP_CIPHER_CTX_init
 argument_list|(
 operator|&
@@ -655,6 +661,9 @@ goto|goto
 name|err
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|EVP_EncryptFinal_ex
 argument_list|(
 operator|&
@@ -671,7 +680,10 @@ operator|)
 operator|&
 name|i
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|EVP_EncodeUpdate
 argument_list|(
 operator|&

@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<openssl/opensslconf.h>
+file|<openssl/crypto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/crypto.h>
+file|<openssl/opensslconf.h>
 end_include
 
 begin_if
