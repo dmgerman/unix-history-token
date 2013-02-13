@@ -2725,7 +2725,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/* 		 * If a valid page or edge, smaller then the search slot, is 		 * found in the traversal, skip to the next higher-level key. 		 */
+comment|/* 		 * If a valid page or edge, smaller than the search slot, is 		 * found in the traversal, skip to the next higher-level key. 		 */
 if|if
 condition|(
 name|slot
