@@ -1795,11 +1795,6 @@ control|)
 block|{
 name|pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|sk_OPENSSL_PSTRING_value
 argument_list|(
 name|tmpdb
@@ -2847,10 +2842,6 @@ condition|(
 operator|(
 name|tmp_salt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|OPENSSL_malloc
 argument_list|(
 name|SRP_RANDOM_SALT_LEN

@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/x509.h>
+file|<openssl/sha.h>
 end_include
 
 begin_ifndef

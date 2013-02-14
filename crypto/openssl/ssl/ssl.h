@@ -1397,6 +1397,7 @@ name|psk_identity
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Used to indicate that session resumption is not allowed. 	 * Applications can also set this bit for a new session via 	 * not_resumable_session_cb to disable session caching and tickets. */
 name|int
 name|not_resumable
 decl_stmt|;
@@ -9492,6 +9493,10 @@ define|#
 directive|define
 name|SSL_F_SSL_GET_SERVER_SEND_CERT
 value|182
+define|#
+directive|define
+name|SSL_F_SSL_GET_SERVER_SEND_PKEY
+value|317
 define|#
 directive|define
 name|SSL_F_SSL_GET_SIGN_PKEY

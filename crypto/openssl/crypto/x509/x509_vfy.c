@@ -3802,7 +3802,8 @@ name|a
 argument_list|,
 name|nid
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3856,7 +3857,8 @@ name|b
 argument_list|,
 name|nid
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

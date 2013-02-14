@@ -3070,7 +3070,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-<dgst alg>     use specified digest in the request"
+literal|"-<dgst alg>     use specified digest in the request\n"
 argument_list|)
 expr_stmt|;
 goto|goto

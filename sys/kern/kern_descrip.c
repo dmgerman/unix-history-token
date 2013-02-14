@@ -3807,7 +3807,7 @@ expr_stmt|;
 if|if
 condition|(
 name|arg
-operator|!=
+operator|>=
 literal|0
 condition|)
 block|{

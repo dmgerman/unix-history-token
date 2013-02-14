@@ -1268,13 +1268,9 @@ argument_list|,
 literal|" -no_ticket        - disable use of RFC4507bis session tickets\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_NEXTPROTONEG
-argument_list|)
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1293,6 +1289,9 @@ argument_list|,
 literal|" -legacy_renegotiation - enable use of legacy renegotiation (dangerous)\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1300,6 +1299,8 @@ argument_list|,
 literal|" -use_srtp profiles - Offer SRTP key management with a colon-separated profile list\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1952,6 +1953,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
+end_ifndef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -1960,6 +1967,11 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -2154,6 +2166,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ndef OPENSSL_NO_NEXTPROTONEG */
+end_comment
 
 begin_endif
 endif|#
@@ -4678,6 +4694,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
 elseif|else
 if|if
 condition|(
@@ -4711,6 +4730,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -5382,6 +5403,11 @@ name|psk_client_cb
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
 if|if
 condition|(
 name|srtp_profiles
@@ -8891,6 +8917,34 @@ name|con
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_NO_TLSEXT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_NO_NEXTPROTONEG
+argument_list|)
+if|if
+condition|(
+name|next_proto
+operator|.
+name|data
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|next_proto
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ctx
@@ -8927,6 +8981,15 @@ condition|)
 name|OPENSSL_free
 argument_list|(
 name|pass
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vpm
+condition|)
+name|X509_VERIFY_PARAM_free
+argument_list|(
+name|vpm
 argument_list|)
 expr_stmt|;
 if|if
@@ -9851,6 +9914,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
 block|{
 name|SRTP_PROTECTION_PROFILE
 modifier|*
@@ -9877,6 +9943,8 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|SSL_SESSION_print
 argument_list|(
 name|bio

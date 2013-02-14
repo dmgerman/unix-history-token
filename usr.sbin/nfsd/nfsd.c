@@ -455,6 +455,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -464,6 +465,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|child_cleanup
 parameter_list|(
@@ -473,6 +475,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|killchildren
 parameter_list|(
@@ -482,6 +485,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nfsd_exit
 parameter_list|(
@@ -491,6 +495,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nonfs
 parameter_list|(
@@ -500,6 +505,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -509,6 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|setbindhost
 parameter_list|(
@@ -531,6 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|start_server
 parameter_list|(
@@ -540,6 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|unregistration
 parameter_list|(
@@ -549,6 +558,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -558,6 +568,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|open_stable
 parameter_list|(
@@ -571,6 +582,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|copy_stable
 parameter_list|(
@@ -582,8 +594,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|backup_stable
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|set_nfsdcnt
 parameter_list|(
 name|int
 parameter_list|)
@@ -819,15 +842,12 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|nfsdcnt_set
-operator|=
-literal|1
-expr_stmt|;
-name|nfsdcnt
-operator|=
+name|set_nfsdcnt
+argument_list|(
 name|atoi
 argument_list|(
 name|optarg
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1060,13 +1080,8 @@ name|argc
 operator|==
 literal|1
 condition|)
-block|{
-name|nfsdcnt_set
-operator|=
-literal|1
-expr_stmt|;
-name|nfsdcnt
-operator|=
+name|set_nfsdcnt
+argument_list|(
 name|atoi
 argument_list|(
 name|argv
@@ -1074,33 +1089,8 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nfsdcnt
-operator|<
-literal|1
-operator|||
-name|nfsdcnt
-operator|>
-name|MAXNFSDCNT
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"nfsd count %d; reset to %d"
-argument_list|,
-name|nfsdcnt
-argument_list|,
-name|DEFNFSDCNT
 argument_list|)
 expr_stmt|;
-name|nfsdcnt
-operator|=
-name|DEFNFSDCNT
-expr_stmt|;
-block|}
-block|}
 comment|/* 	 * Unless the "-o" option was specified, try and run "nfsd". 	 * If "-o" was specified, try and run "nfsserver". 	 */
 if|if
 condition|(
@@ -2226,48 +2216,6 @@ operator|!
 name|new_syscall
 condition|)
 block|{
-if|if
-condition|(
-name|nfsdcnt
-operator|<
-literal|1
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"nfsd count too low %d; reset to %d"
-argument_list|,
-name|nfsdcnt
-argument_list|,
-name|DEFNFSDCNT
-argument_list|)
-expr_stmt|;
-name|nfsdcnt
-operator|=
-name|DEFNFSDCNT
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|nfsdcnt
-operator|>
-name|MAXNFSDCNT
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"nfsd count too high %d; reset to %d"
-argument_list|,
-name|nfsdcnt
-argument_list|,
-name|DEFNFSDCNT
-argument_list|)
-expr_stmt|;
-name|nfsdcnt
-operator|=
-name|MAXNFSDCNT
-expr_stmt|;
-block|}
 comment|/* If we use UDP only, we start the last server below. */
 name|srvcnt
 operator|=
@@ -4577,6 +4525,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|setbindhost
 parameter_list|(
@@ -4795,6 +4744,71 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|set_nfsdcnt
+parameter_list|(
+name|int
+name|proposed
+parameter_list|)
+block|{
+if|if
+condition|(
+name|proposed
+operator|<
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"nfsd count too low %d; reset to %d"
+argument_list|,
+name|proposed
+argument_list|,
+name|DEFNFSDCNT
+argument_list|)
+expr_stmt|;
+name|nfsdcnt
+operator|=
+name|DEFNFSDCNT
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|proposed
+operator|>
+name|MAXNFSDCNT
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"nfsd count too high %d; truncated to %d"
+argument_list|,
+name|proposed
+argument_list|,
+name|MAXNFSDCNT
+argument_list|)
+expr_stmt|;
+name|nfsdcnt
+operator|=
+name|MAXNFSDCNT
+expr_stmt|;
+block|}
+else|else
+name|nfsdcnt
+operator|=
+name|proposed
+expr_stmt|;
+name|nfsdcnt_set
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -4822,6 +4836,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nonfs
 parameter_list|(
@@ -4841,6 +4856,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -4908,6 +4924,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|unregistration
 parameter_list|(
@@ -4951,6 +4968,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|killchildren
 parameter_list|(
@@ -5002,6 +5020,7 @@ comment|/*  * Cleanup master after SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -5023,6 +5042,7 @@ comment|/*  * Cleanup child after SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|child_cleanup
 parameter_list|(
@@ -5040,6 +5060,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nfsd_exit
 parameter_list|(
@@ -5160,6 +5181,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|start_server
 parameter_list|(
@@ -5369,99 +5391,60 @@ name|principal
 expr_stmt|;
 if|if
 condition|(
-name|minthreads_set
-condition|)
-block|{
-name|nfsdargs
-operator|.
-name|minthreads
-operator|=
-name|minthreads
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|maxthreads_set
-condition|)
-name|nfsdargs
-operator|.
-name|maxthreads
-operator|=
-name|minthreads
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|maxthreads_set
-condition|)
-block|{
-name|nfsdargs
-operator|.
-name|maxthreads
-operator|=
-name|maxthreads
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|minthreads_set
-condition|)
-name|nfsdargs
-operator|.
-name|minthreads
-operator|=
-name|maxthreads
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|nfsdcnt_set
 condition|)
-block|{
 name|nfsdargs
 operator|.
 name|minthreads
 operator|=
-name|nfsdcnt
-expr_stmt|;
 name|nfsdargs
 operator|.
 name|maxthreads
 operator|=
 name|nfsdcnt
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|minthreads_set
-operator|&&
-operator|!
-name|maxthreads_set
-operator|&&
-operator|!
-name|nfsdcnt_set
-condition|)
+else|else
 block|{
-name|int
-name|tuned_nfsdcnt
-decl_stmt|;
-name|tuned_nfsdcnt
+name|nfsdargs
+operator|.
+name|minthreads
 operator|=
+name|minthreads_set
+condition|?
+name|minthreads
+else|:
 name|get_tuned_nfsdcount
 argument_list|()
 expr_stmt|;
 name|nfsdargs
 operator|.
-name|minthreads
+name|maxthreads
 operator|=
-name|tuned_nfsdcnt
+name|maxthreads_set
+condition|?
+name|maxthreads
+else|:
+name|nfsdargs
+operator|.
+name|minthreads
 expr_stmt|;
+if|if
+condition|(
+name|nfsdargs
+operator|.
+name|maxthreads
+operator|<
+name|nfsdargs
+operator|.
+name|minthreads
+condition|)
 name|nfsdargs
 operator|.
 name|maxthreads
 operator|=
-name|tuned_nfsdcnt
+name|nfsdargs
+operator|.
+name|minthreads
 expr_stmt|;
 block|}
 name|error
@@ -5581,6 +5564,7 @@ comment|/*  * Open the stable restart file and return the file descriptor for it
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|open_stable
 parameter_list|(
@@ -5826,6 +5810,7 @@ comment|/*  * Copy the stable restart file to the backup or vice versa.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|copy_stable
 parameter_list|(
@@ -5993,6 +5978,7 @@ comment|/*  * Back up the stable restart file when indicated by the kernel.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|backup_stable
 parameter_list|(

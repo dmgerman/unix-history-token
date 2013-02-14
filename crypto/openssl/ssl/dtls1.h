@@ -100,11 +100,36 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_SYS_VXWORKS
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/times.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

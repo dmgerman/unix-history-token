@@ -11085,6 +11085,10 @@ condition|(
 name|ctx
 operator|->
 name|mres
+operator|||
+name|ctx
+operator|->
+name|ares
 condition|)
 name|GCM_MUL
 argument_list|(

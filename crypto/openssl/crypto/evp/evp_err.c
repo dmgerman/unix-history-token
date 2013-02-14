@@ -114,6 +114,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|EVP_F_ALG_MODULE_INIT
+argument_list|)
+block|,
+literal|"ALG_MODULE_INIT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|EVP_F_CAMELLIA_INIT_KEY
 argument_list|)
 block|,
@@ -949,6 +958,24 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EVP_R_ERROR_LOADING_SECTION
+argument_list|)
+block|,
+literal|"error loading section"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_ERROR_SETTING_FIPS_MODE
+argument_list|)
+block|,
+literal|"error setting fips mode"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EVP_R_EVP_PBE_CIPHERINIT_ERROR
 argument_list|)
 block|,
@@ -1003,6 +1030,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EVP_R_FIPS_MODE_NOT_SUPPORTED
+argument_list|)
+block|,
+literal|"fips mode not supported"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EVP_R_INITIALIZATION_ERROR
 argument_list|)
 block|,
@@ -1025,6 +1061,15 @@ name|EVP_R_INVALID_DIGEST
 argument_list|)
 block|,
 literal|"invalid digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_INVALID_FIPS_MODE
+argument_list|)
+block|,
+literal|"invalid fips mode"
 block|}
 block|,
 block|{
@@ -1241,6 +1286,15 @@ name|EVP_R_UNKNOWN_DIGEST
 argument_list|)
 block|,
 literal|"unknown digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_UNKNOWN_OPTION
+argument_list|)
+block|,
+literal|"unknown option"
 block|}
 block|,
 block|{

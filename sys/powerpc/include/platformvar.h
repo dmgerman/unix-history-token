@@ -92,6 +92,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PLATFORMMETHOD_END
+value|KOBJMETHOD_END
+end_define
+
+begin_define
+define|#
+directive|define
 name|PLATFORM_DEF
 parameter_list|(
 name|name

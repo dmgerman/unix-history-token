@@ -74,8 +74,7 @@ decl_stmt|;
 name|int
 name|i
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|,
 name|ok
 init|=
