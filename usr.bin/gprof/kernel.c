@@ -90,6 +90,7 @@ specifier|const
 name|char
 modifier|*
 name|unused
+name|__unused
 parameter_list|,
 name|char
 modifier|*

@@ -1076,7 +1076,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|arccmp
-parameter_list|()
+parameter_list|(
+name|arctype
+modifier|*
+parameter_list|,
+name|arctype
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1084,7 +1090,13 @@ begin_function_decl
 name|arctype
 modifier|*
 name|arclookup
-parameter_list|()
+parameter_list|(
+name|nltype
+modifier|*
+parameter_list|,
+name|nltype
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1164,7 +1176,10 @@ end_function_decl
 begin_function_decl
 name|bool
 name|dfn_busy
-parameter_list|()
+parameter_list|(
+name|nltype
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1190,7 +1205,10 @@ end_function_decl
 begin_function_decl
 name|bool
 name|dfn_numbered
-parameter_list|()
+parameter_list|(
+name|nltype
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1229,7 +1247,9 @@ name|nltype
 modifier|*
 modifier|*
 name|doarcs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1255,6 +1275,7 @@ begin_function_decl
 name|void
 name|dumpsum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1306,9 +1327,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* 		gprofheader(); 		gprofline(); */
-end_comment
+begin_function_decl
+name|void
+name|gprofheader
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gprofline
+parameter_list|(
+specifier|register
+name|nltype
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1353,14 +1390,26 @@ begin_function_decl
 name|unsigned
 name|long
 name|max
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|membercmp
-parameter_list|()
+parameter_list|(
+name|nltype
+modifier|*
+parameter_list|,
+name|nltype
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1368,7 +1417,13 @@ begin_function_decl
 name|unsigned
 name|long
 name|min
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1376,7 +1431,10 @@ begin_function_decl
 name|nltype
 modifier|*
 name|nllookup
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1399,29 +1457,10 @@ begin_function_decl
 name|FILE
 modifier|*
 name|openpfile
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|operandlength
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|operandenum
-name|operandmode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+parameter_list|(
 name|char
 modifier|*
-name|operandname
-parameter_list|()
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1429,6 +1468,7 @@ begin_function_decl
 name|void
 name|printblurb
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1535,14 +1575,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
-name|reladdr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|sortchildren
 parameter_list|(
@@ -1596,7 +1628,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|totalcmp
-parameter_list|()
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 

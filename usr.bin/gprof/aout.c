@@ -211,10 +211,6 @@ name|FILE
 modifier|*
 name|nfile
 decl_stmt|;
-name|int
-name|valcmp
-parameter_list|()
-function_decl|;
 name|nfile
 operator|=
 name|fopen
