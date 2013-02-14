@@ -3137,14 +3137,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|object
-operator|->
-name|resident_page_count
-operator|!=
-literal|0
-condition|)
 return|return
 operator|(
 name|vm_radix_lookup_ge
@@ -3156,11 +3148,6 @@ name|rtree
 argument_list|,
 name|pindex
 argument_list|)
-operator|)
-return|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
