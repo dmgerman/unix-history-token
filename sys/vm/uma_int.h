@@ -60,16 +60,16 @@ begin_comment
 comment|/* Number of bits PAGE_MASK */
 end_comment
 
-begin_comment
-comment|/* Initial pages allocated for startup */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|UMA_INIT_BOOT_PAGES
+name|UMA_BOOT_PAGES
 value|64
 end_define
+
+begin_comment
+comment|/* Pages allocated for startup */
+end_comment
 
 begin_comment
 comment|/* Max waste before going to off page slab management */
