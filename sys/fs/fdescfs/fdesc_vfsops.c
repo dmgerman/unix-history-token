@@ -831,6 +831,8 @@ argument_list|,
 name|fdescfs
 argument_list|,
 name|VFCF_SYNTHETIC
+operator||
+name|VFCF_JAIL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
