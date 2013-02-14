@@ -1517,6 +1517,8 @@ block|}
 while|while
 condition|(
 name|rnode
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1954,6 +1956,8 @@ expr_stmt|;
 while|while
 condition|(
 name|rnode
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2137,6 +2141,8 @@ expr_stmt|;
 while|while
 condition|(
 name|rnode
+operator|!=
+name|NULL
 condition|)
 block|{
 name|maplevels
@@ -2564,6 +2570,8 @@ expr_stmt|;
 while|while
 condition|(
 name|rnode
+operator|!=
+name|NULL
 condition|)
 block|{
 name|maplevels
