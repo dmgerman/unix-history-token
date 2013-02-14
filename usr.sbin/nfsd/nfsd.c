@@ -455,6 +455,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -464,6 +465,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|child_cleanup
 parameter_list|(
@@ -473,6 +475,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|killchildren
 parameter_list|(
@@ -482,6 +485,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nfsd_exit
 parameter_list|(
@@ -491,6 +495,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nonfs
 parameter_list|(
@@ -500,6 +505,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -509,6 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|setbindhost
 parameter_list|(
@@ -531,6 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|start_server
 parameter_list|(
@@ -540,6 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|unregistration
 parameter_list|(
@@ -549,6 +558,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -558,6 +568,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|open_stable
 parameter_list|(
@@ -571,6 +582,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|copy_stable
 parameter_list|(
@@ -582,6 +594,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|backup_stable
 parameter_list|(
@@ -4577,6 +4590,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|setbindhost
 parameter_list|(
@@ -4795,6 +4809,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -4822,6 +4837,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nonfs
 parameter_list|(
@@ -4841,6 +4857,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -4908,6 +4925,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|unregistration
 parameter_list|(
@@ -4951,6 +4969,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|killchildren
 parameter_list|(
@@ -5002,6 +5021,7 @@ comment|/*  * Cleanup master after SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -5023,6 +5043,7 @@ comment|/*  * Cleanup child after SIGUSR1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|child_cleanup
 parameter_list|(
@@ -5040,6 +5061,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nfsd_exit
 parameter_list|(
@@ -5160,6 +5182,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|start_server
 parameter_list|(
@@ -5581,6 +5604,7 @@ comment|/*  * Open the stable restart file and return the file descriptor for it
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|open_stable
 parameter_list|(
@@ -5826,6 +5850,7 @@ comment|/*  * Copy the stable restart file to the backup or vice versa.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|copy_stable
 parameter_list|(
@@ -5993,6 +6018,7 @@ comment|/*  * Back up the stable restart file when indicated by the kernel.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|backup_stable
 parameter_list|(
