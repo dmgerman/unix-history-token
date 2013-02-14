@@ -960,7 +960,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_QOS_MC
-value|0x10
+value|0x01
 end_define
 
 begin_comment
@@ -975,7 +975,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_QOS_MESH_PSL
-value|0x20
+value|0x02
 end_define
 
 begin_comment
@@ -986,7 +986,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_QOS_RSPI
-value|0x40
+value|0x04
 end_define
 
 begin_comment
