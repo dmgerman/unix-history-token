@@ -9393,6 +9393,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* NOTE : This should only be called holding  *        DEVICE_LOCK. */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -9501,6 +9505,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Since taskqueue_drain takes a Giant Lock, We should not acquire        any other lock. So unlock device lock and require after        completing taskqueue_drain.     */
+name|UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|dev_lock
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9555,6 +9568,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|dev_lock
+argument_list|)
+expr_stmt|;
 comment|/* Delete RX queue in card with flush param */
 name|oce_stop_rx
 argument_list|(
