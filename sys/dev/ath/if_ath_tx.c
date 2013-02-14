@@ -4203,29 +4203,21 @@ operator|+=
 name|dur
 expr_stmt|;
 comment|/* additional SIFS+ACK */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|bf
 operator|->
-name|bf_state
-operator|.
-name|bfs_nextpktlen
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
+name|bf_m
 operator|->
-name|sc_dev
+name|m_nextpkt
+operator|!=
+name|NULL
 argument_list|,
-literal|"%s: next txfrag len=0?\n"
-argument_list|,
-name|__func__
+operator|(
+literal|"no fragment"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 			 * Include the size of next fragment so NAV is 			 * updated properly.  The last fragment uses only 			 * the ACK duration 			 * 			 * XXX TODO: ensure that the rate lookup for each 			 * fragment is the same as the rate used by the 			 * first fragment! 			 */
 name|dur
 operator|+=
@@ -4237,9 +4229,13 @@ name|rt
 argument_list|,
 name|bf
 operator|->
-name|bf_state
+name|bf_m
+operator|->
+name|m_nextpkt
+operator|->
+name|m_pkthdr
 operator|.
-name|bfs_nextpktlen
+name|len
 argument_list|,
 name|rix
 argument_list|,

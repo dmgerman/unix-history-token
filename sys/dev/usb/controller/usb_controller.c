@@ -1760,6 +1760,9 @@ decl_stmt|;
 name|usb_error_t
 name|err
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 name|bus
 operator|=
 operator|(
@@ -1808,6 +1811,8 @@ operator|->
 name|bdev
 argument_list|)
 expr_stmt|;
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -1901,6 +1906,10 @@ argument_list|,
 name|USB_HW_POWER_SUSPEND
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -1942,6 +1951,9 @@ decl_stmt|;
 name|usb_error_t
 name|err
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 name|bus
 operator|=
 operator|(
@@ -1982,6 +1994,8 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -2127,6 +2141,10 @@ literal|"attach root HUB\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -2167,6 +2185,9 @@ name|udev
 decl_stmt|;
 name|usb_error_t
 name|err
+decl_stmt|;
+name|uint8_t
+name|do_unlock
 decl_stmt|;
 name|bus
 operator|=
@@ -2215,6 +2236,8 @@ operator|->
 name|bdev
 argument_list|)
 expr_stmt|;
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -2308,6 +2331,10 @@ argument_list|,
 name|USB_HW_POWER_SHUTDOWN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev

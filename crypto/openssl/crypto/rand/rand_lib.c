@@ -686,6 +686,11 @@ name|size_t
 name|olen
 parameter_list|)
 block|{
+if|if
+condition|(
+name|out
+condition|)
+block|{
 name|OPENSSL_cleanse
 argument_list|(
 name|out
@@ -698,6 +703,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

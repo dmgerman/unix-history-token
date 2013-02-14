@@ -857,10 +857,6 @@ name|int32_t
 name|bfs_txantenna
 decl_stmt|;
 comment|/* TX antenna config */
-name|uint16_t
-name|bfs_nextpktlen
-decl_stmt|;
-comment|/* length of next frag pkt */
 comment|/* Make this an 8 bit value? */
 name|enum
 name|ieee80211_protmode
@@ -1906,12 +1902,6 @@ name|sc_tq
 decl_stmt|;
 comment|/* private task queue */
 name|struct
-name|taskqueue
-modifier|*
-name|sc_tx_tq
-decl_stmt|;
-comment|/* private TX task queue */
-name|struct
 name|ath_hal
 modifier|*
 name|sc_ah
@@ -2912,6 +2902,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|(mtx_owned(&(_sc)->sc_tx_mtx) != 0&&	\ 					mtx_trylock(&(_sc)->sc_tx_mtx))
 end_define
 
 begin_comment

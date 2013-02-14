@@ -5659,19 +5659,6 @@ argument_list|(
 operator|&
 name|udev
 operator|->
-name|ctrl_sx
-argument_list|,
-literal|"USB device SX lock"
-argument_list|,
-name|SX_DUPOK
-argument_list|)
-expr_stmt|;
-comment|/* initialise our SX-lock */
-name|sx_init_flags
-argument_list|(
-operator|&
-name|udev
-operator|->
 name|enum_sx
 argument_list|,
 literal|"USB config SX lock"
@@ -8067,14 +8054,6 @@ argument_list|(
 name|udev
 operator|->
 name|bus
-argument_list|)
-expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|udev
-operator|->
-name|ctrl_sx
 argument_list|)
 expr_stmt|;
 name|sx_destroy

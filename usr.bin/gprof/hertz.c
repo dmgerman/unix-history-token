@@ -61,6 +61,15 @@ name|HZ_WRONG
 value|0
 end_define
 
+begin_function_decl
+name|int
+name|hertz
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|hertz

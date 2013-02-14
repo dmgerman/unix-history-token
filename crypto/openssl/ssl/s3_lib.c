@@ -1957,7 +1957,7 @@ name|TLS1_TXT_DH_DSS_WITH_AES_128_SHA256
 block|,
 name|TLS1_CK_DH_DSS_WITH_AES_128_SHA256
 block|,
-name|SSL_kDHr
+name|SSL_kDHd
 block|,
 name|SSL_aDH
 block|,
@@ -2457,7 +2457,7 @@ name|TLS1_TXT_DH_DSS_WITH_AES_256_SHA256
 block|,
 name|TLS1_CK_DH_DSS_WITH_AES_256_SHA256
 block|,
-name|SSL_kDHr
+name|SSL_kDHd
 block|,
 name|SSL_aDH
 block|,
@@ -3566,7 +3566,7 @@ name|TLS1_TXT_DH_DSS_WITH_AES_128_GCM_SHA256
 block|,
 name|TLS1_CK_DH_DSS_WITH_AES_128_GCM_SHA256
 block|,
-name|SSL_kDHr
+name|SSL_kDHd
 block|,
 name|SSL_aDH
 block|,
@@ -3599,7 +3599,7 @@ name|TLS1_TXT_DH_DSS_WITH_AES_256_GCM_SHA384
 block|,
 name|TLS1_CK_DH_DSS_WITH_AES_256_GCM_SHA384
 block|,
-name|SSL_kDHr
+name|SSL_kDHd
 block|,
 name|SSL_aDH
 block|,
@@ -5006,7 +5006,7 @@ name|TLS1_TXT_ECDH_RSA_WITH_AES_128_SHA256
 block|,
 name|TLS1_CK_ECDH_RSA_WITH_AES_128_SHA256
 block|,
-name|SSL_kECDHe
+name|SSL_kECDHr
 block|,
 name|SSL_aECDH
 block|,
@@ -5039,7 +5039,7 @@ name|TLS1_TXT_ECDH_RSA_WITH_AES_256_SHA384
 block|,
 name|TLS1_CK_ECDH_RSA_WITH_AES_256_SHA384
 block|,
-name|SSL_kECDHe
+name|SSL_kECDHr
 block|,
 name|SSL_aECDH
 block|,
@@ -5271,7 +5271,7 @@ name|TLS1_TXT_ECDH_RSA_WITH_AES_128_GCM_SHA256
 block|,
 name|TLS1_CK_ECDH_RSA_WITH_AES_128_GCM_SHA256
 block|,
-name|SSL_kECDHe
+name|SSL_kECDHr
 block|,
 name|SSL_aECDH
 block|,
@@ -5304,7 +5304,7 @@ name|TLS1_TXT_ECDH_RSA_WITH_AES_256_GCM_SHA384
 block|,
 name|TLS1_CK_ECDH_RSA_WITH_AES_256_GCM_SHA384
 block|,
-name|SSL_kECDHe
+name|SSL_kECDHr
 block|,
 name|SSL_aECDH
 block|,

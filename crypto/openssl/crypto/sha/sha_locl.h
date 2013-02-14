@@ -67,7 +67,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|do {	\ 	unsigned long ll;		\ 	ll=(c)->h0; HOST_l2c(ll,(s));	\ 	ll=(c)->h1; HOST_l2c(ll,(s));	\ 	ll=(c)->h2; HOST_l2c(ll,(s));	\ 	ll=(c)->h3; HOST_l2c(ll,(s));	\ 	ll=(c)->h4; HOST_l2c(ll,(s));	\ 	} while (0)
+value|do {	\ 	unsigned long ll;		\ 	ll=(c)->h0; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->h1; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->h2; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->h3; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->h4; (void)HOST_l2c(ll,(s));	\ 	} while (0)
 end_define
 
 begin_if
@@ -1488,6 +1488,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1502,6 +1505,9 @@ argument_list|)
 operator|=
 name|l
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1538,6 +1544,9 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1574,6 +1583,9 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1610,6 +1622,9 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1646,6 +1661,9 @@ literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1682,6 +1700,9 @@ literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1718,6 +1739,9 @@ literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1754,6 +1778,9 @@ literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1790,6 +1817,9 @@ literal|7
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1826,6 +1856,9 @@ literal|8
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1862,6 +1895,9 @@ literal|9
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1898,6 +1934,9 @@ literal|10
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1934,6 +1973,9 @@ literal|11
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -1970,6 +2012,9 @@ literal|12
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data
@@ -2006,6 +2051,9 @@ literal|13
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HOST_c2l
 argument_list|(
 name|data

@@ -234,7 +234,7 @@ name|OID_AUTO
 argument_list|,
 name|write_to_degraded
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_write_to_degraded

@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/des.h>
 end_include
 
@@ -35,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/mdc2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
 end_include
 
 begin_undef
