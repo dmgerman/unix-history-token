@@ -370,10 +370,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_GNU_SOURCE
-argument_list|)
+name|__BSD_VISIBLE
 end_if
 
 begin_decl_stmt
