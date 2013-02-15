@@ -290,28 +290,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|verbosity
-operator|>
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|myerr
-argument_list|,
-literal|"Error opening %s: %s\n"
-argument_list|,
-name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|LDNS_STATUS_FILE_ERR
 return|;
@@ -404,6 +382,11 @@ expr_stmt|;
 else|else
 break|break;
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -1352,6 +1335,14 @@ operator|=
 name|cur_first_name
 expr_stmt|;
 block|}
+name|assert
+argument_list|(
+name|cur_next_name
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Because this function is called on nsec occurrence, 	 * there must be a cur_next_name! 	 */
 name|next_owner_str
 operator|=
 name|ldns_rdf2str
@@ -3181,6 +3172,9 @@ argument_list|(
 literal|"\t-k<file>\tspecify a file that contains a "
 literal|"trusted DNSKEY or DS rr.\n\t\t\t"
 literal|"This option may be given more than once.\n"
+literal|"\t\t\tDefault is %s"
+argument_list|,
+name|LDNS_TRUST_ANCHOR_FILE
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3312,6 +3306,36 @@ argument_list|,
 name|keys
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|LDNS_STATUS_FILE_ERR
+condition|)
+block|{
+if|if
+condition|(
+name|verbosity
+operator|>
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|myerr
+argument_list|,
+literal|"Error opening %s: %s\n"
+argument_list|,
+name|optarg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|s
@@ -3518,7 +3542,7 @@ operator|--
 expr_stmt|;
 name|check_time
 operator|=
-name|mktime_from_utc
+name|ldns_mktime_from_utc
 argument_list|(
 operator|&
 name|tm
@@ -3577,6 +3601,30 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|read_key_file
+argument_list|(
+name|LDNS_TRUST_ANCHOR_FILE
+argument_list|,
+name|keys
+argument_list|)
+expr_stmt|;
+name|nkeys
+operator|=
+name|ldns_rr_list_rr_count
+argument_list|(
+name|keys
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nkeys
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|verbosity
@@ -3588,7 +3636,8 @@ name|fprintf
 argument_list|(
 name|myerr
 argument_list|,
-literal|"Unable to chase signature without keys.\n"
+literal|"Unable to chase "
+literal|"signature without keys.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3597,6 +3646,7 @@ argument_list|(
 name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|argc
 operator|-=

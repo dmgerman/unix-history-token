@@ -133,7 +133,7 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
-comment|/**  * Create a new dname rdf from a string  * \param[in] s the size of the new dname  * \param[in] *data pointer to the actual data  * \return ldns_rdf*  */
+comment|/**  * Create a new dname rdf from a string  * \param[in] s the size of the new dname  * \param[in] *data pointer to the actual data  *  * \return ldns_rdf*  */
 name|ldns_rdf
 modifier|*
 name|ldns_dname_new
@@ -146,7 +146,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-comment|/**  * Create a new dname rdf from data (the data is copied)  * \param[in] size the size of the data  * \param[in] *data pointer to the actual data  * \return ldns_rdf*  */
+comment|/**  * Create a new dname rdf from data (the data is copied)  * \param[in] size the size of the data  * \param[in] *data pointer to the actual data  *  * \return ldns_rdf*  */
 name|ldns_rdf
 modifier|*
 name|ldns_dname_new_frm_data
@@ -243,6 +243,16 @@ specifier|const
 name|char
 modifier|*
 name|dname_str
+parameter_list|)
+function_decl|;
+comment|/**  * Checks whether the given dname is absolute (i.e. ends with a '.')  * \param[in] *dname a rdf representing the dname  * \return true or false  */
+name|bool
+name|ldns_dname_absolute
+parameter_list|(
+specifier|const
+name|ldns_rdf
+modifier|*
+name|dname
 parameter_list|)
 function_decl|;
 comment|/**  * look inside the rdf and if it is an LDNS_RDF_TYPE_DNAME  * try and retrieve a specific label. The labels are numbered  * starting from 0 (left most).  * \param[in] rdf the rdf to look in  * \param[in] labelpos return the label with this number  * \return a ldns_rdf* with the label as name or NULL on error  */

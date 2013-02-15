@@ -122,11 +122,39 @@ if|if
 condition|(
 operator|!
 name|p
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|res
+condition|)
+block|{
+name|ldns_resolver_free
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+block|}
+name|error
+argument_list|(
+literal|"Memory allocation failed"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|res
 condition|)
 block|{
+name|ldns_pkt_free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Memory allocation failed"
@@ -248,6 +276,16 @@ argument_list|(
 name|stdout
 argument_list|,
 name|global_dns_root
+argument_list|)
+expr_stmt|;
+name|ldns_resolver_free
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|ldns_pkt_free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -434,14 +472,10 @@ expr_stmt|;
 comment|/* remove the old nameserver from the resolver */
 while|while
 condition|(
-operator|(
-name|pop
-operator|=
 name|ldns_resolver_pop_nameserver
 argument_list|(
 name|res
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* do it */

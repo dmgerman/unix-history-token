@@ -1430,7 +1430,7 @@ modifier|*
 name|buffer
 parameter_list|)
 function_decl|;
-comment|/**  * Copy contents of the other buffer to this buffer. Silently truncated  * if this buffer is too small.  * \param[out] *result resulting buffer which is copied to.  * \param[in] *from what to copy to result.  */
+comment|/**  * Copy contents of the from buffer to the result buffer and then flips   * the result buffer. Data will be silently truncated if the result buffer is  * too small.  * \param[out] *result resulting buffer which is copied to.  * \param[in] *from what to copy to result.  */
 name|void
 name|ldns_buffer_copy
 parameter_list|(

@@ -171,7 +171,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * reads the canned reply file and returns a list of structs   * does an exit on error.  */
+comment|/**  * reads the canned reply file and returns a list of structs   * does an exit on error.  * @param skip_withespace: skip leftside whitespace.  */
 end_comment
 
 begin_function_decl
@@ -184,6 +184,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|skip_whitespace
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -205,7 +208,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Read one entry from the data file.  * @param in: file to read from. Filepos must be at the start of a new line.  * @param name: name of the file for prettier errors.  * @param lineno: line number in file, incremented as lines are read.  *	for prettier errors.  * @param default_ttl: on first call set to default TTL for entries,  *	later it stores the $TTL value last seen. Try 3600 first call.  * @param origin: domain name for origin appending. Can be&NULL on first call.  *	later it stores the $ORIGIN value last seen. Often&NULL or the zone  *	name on first call.  * @param prev_rr: previous rr name for correcter parsing.&NULL on first call.  * @return: The entry read (malloced) or NULL if no entry could be read.  */
+comment|/**  * Read one entry from the data file.  * @param in: file to read from. Filepos must be at the start of a new line.  * @param name: name of the file for prettier errors.  * @param lineno: line number in file, incremented as lines are read.  *	for prettier errors.  * @param default_ttl: on first call set to default TTL for entries,  *	later it stores the $TTL value last seen. Try 3600 first call.  * @param origin: domain name for origin appending. Can be&NULL on first call.  *	later it stores the $ORIGIN value last seen. Often&NULL or the zone  *	name on first call.  * @param prev_rr: previous rr name for correcter parsing.&NULL on first call.  * @param skip_whitespace: skip leftside whitespace.  * @return: The entry read (malloced) or NULL if no entry could be read.  */
 end_comment
 
 begin_function_decl
@@ -240,6 +243,9 @@ name|ldns_rdf
 modifier|*
 modifier|*
 name|prev_rr
+parameter_list|,
+name|int
+name|skip_whitespace
 parameter_list|)
 function_decl|;
 end_function_decl

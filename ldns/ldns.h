@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ldns/dane.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ldns/dname.h>
 end_include
 

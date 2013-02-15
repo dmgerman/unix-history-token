@@ -308,6 +308,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ldns_rr_list_deep_free
+argument_list|(
+name|pubkeys
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;

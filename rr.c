@@ -2191,6 +2191,11 @@ argument_list|(
 name|new
 argument_list|)
 expr_stmt|;
+name|LDNS_FREE
+argument_list|(
+name|hex_data
+argument_list|)
+expr_stmt|;
 return|return
 name|s
 return|;
@@ -2734,6 +2739,15 @@ operator|*
 name|newrr
 operator|=
 name|new
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Maybe the caller just wanted to see if it would parse? */
+name|ldns_rr_free
+argument_list|(
+name|new
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -3329,11 +3343,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|newrr
-operator|&&
 name|s
 operator|==
 name|LDNS_STATUS_OK
+condition|)
+block|{
+if|if
+condition|(
+name|newrr
 condition|)
 block|{
 operator|*
@@ -3341,6 +3358,16 @@ name|newrr
 operator|=
 name|rr
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Just testing if it would parse? */
+name|ldns_rr_free
+argument_list|(
+name|rr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 name|s
@@ -4988,6 +5015,12 @@ operator|==
 name|howmany
 condition|)
 block|{
+comment|/* so i<= 0 */
+name|ldns_rr_list_free
+argument_list|(
+name|popped
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -6474,6 +6507,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* no way to return error */
+name|LDNS_FREE
+argument_list|(
+name|sortables
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|sortables
@@ -8660,6 +8698,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|ldns_rdf_type
+name|type_tlsa_wireformat
+index|[]
+init|=
+block|{
+name|LDNS_RDF_TYPE_INT8
+block|,
+name|LDNS_RDF_TYPE_INT8
+block|,
+name|LDNS_RDF_TYPE_INT8
+block|,
+name|LDNS_RDF_TYPE_HEX
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/** \endcond */
 end_comment
@@ -9669,15 +9726,15 @@ block|}
 block|,
 comment|/* 52 */
 block|{
-name|LDNS_RR_TYPE_NULL
+name|LDNS_RR_TYPE_TLSA
 block|,
-literal|"TYPE52"
+literal|"TLSA"
 block|,
-literal|1
+literal|4
 block|,
-literal|1
+literal|4
 block|,
-name|type_0_wireformat
+name|type_tlsa_wireformat
 block|,
 name|LDNS_RDF_TYPE_NONE
 block|,

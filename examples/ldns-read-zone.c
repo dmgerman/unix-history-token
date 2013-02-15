@@ -114,12 +114,18 @@ decl_stmt|;
 name|ldns_rr_type
 name|cur_rr_type
 decl_stmt|;
-specifier|const
 name|ldns_output_format
-modifier|*
 name|fmt
 init|=
-name|NULL
+block|{
+name|ldns_output_format_default
+operator|->
+name|flags
+block|,
+name|ldns_output_format_default
+operator|->
+name|data
+block|}
 decl_stmt|;
 name|ldns_soa_serial_increment_func_t
 name|soa_serial_increment_func
@@ -142,7 +148,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcdhnsvzS:"
+literal|"0bcdhnpsvzS:"
 argument_list|)
 operator|)
 operator|!=
@@ -159,9 +165,26 @@ case|case
 literal|'b'
 case|:
 name|fmt
-operator|=
-name|ldns_output_format_bubblebabble
+operator|.
+name|flags
+operator||=
+operator|(
+name|LDNS_COMMENT_BUBBLEBABBLE
+operator||
+name|LDNS_COMMENT_FLAGS
+operator|)
 expr_stmt|;
+break|break;
+case|case
+literal|'0'
+case|:
+name|fmt
+operator|.
+name|flags
+operator||=
+name|LDNS_FMT_ZEROIZE_RRSIGS
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
@@ -196,7 +219,7 @@ literal|'h'
 case|:
 name|printf
 argument_list|(
-literal|"Usage: %s [-c] [-v] [-z]<zonefile>\n"
+literal|"Usage: %s [OPTIONS]<zonefile>\n"
 argument_list|,
 name|argv
 index|[
@@ -221,6 +244,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\t-0 zeroize timestamps and signature in RRSIG records.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\t-c canonicalize all rrs in the zone.\n"
 argument_list|)
 expr_stmt|;
@@ -237,6 +265,12 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t-n do not print the SOA record\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-p prepend SOA serial with spaces so"
+literal|" it takes exactly ten characters.\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -287,6 +321,16 @@ case|:
 name|print_soa
 operator|=
 name|false
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|fmt
+operator|.
+name|flags
+operator||=
+name|LDNS_FMT_PAD_SOA_SERIAL
 expr_stmt|;
 break|break;
 case|case
@@ -537,6 +581,38 @@ operator|&
 name|line_nr
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|LDNS_STATUS_OK
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s at %d\n"
+argument_list|,
+name|ldns_get_errorstr_by_id
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+name|line_nr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|strip
@@ -707,13 +783,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|s
-operator|==
-name|LDNS_STATUS_OK
-condition|)
-block|{
-if|if
-condition|(
 name|canonicalize
 condition|)
 block|{
@@ -803,6 +872,7 @@ name|ldns_rr_print_fmt
 argument_list|(
 name|stdout
 argument_list|,
+operator|&
 name|fmt
 argument_list|,
 name|ldns_zone_soa
@@ -816,6 +886,7 @@ name|ldns_rr_list_print_fmt
 argument_list|(
 name|stdout
 argument_list|,
+operator|&
 name|fmt
 argument_list|,
 name|ldns_zone_rrs
@@ -827,34 +898,6 @@ expr_stmt|;
 name|ldns_zone_deep_free
 argument_list|(
 name|z
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s at %d\n"
-argument_list|,
-name|ldns_get_errorstr_by_id
-argument_list|(
-name|s
-argument_list|)
-argument_list|,
-name|line_nr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
-name|fclose
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
 name|exit

@@ -946,6 +946,29 @@ argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsig_cred
+operator|.
+name|keydata
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"TSIG argument is not in form "
+literal|"key:data: %s\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|tsig_cred
 operator|.
@@ -1131,14 +1154,9 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-name|ldns_pkt_set_id
+name|ldns_pkt_set_random_id
 argument_list|(
 name|notify
-argument_list|,
-name|random
-argument_list|()
-operator|&
-literal|0xffff
 argument_list|)
 expr_stmt|;
 if|if
