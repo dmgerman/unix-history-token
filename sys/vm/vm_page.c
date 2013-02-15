@@ -3536,14 +3536,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vm_object_cache_is_empty
-argument_list|(
-name|object
-argument_list|)
-condition|)
 return|return
 operator|(
 name|vm_radix_lookup
@@ -3555,11 +3547,6 @@ name|cache
 argument_list|,
 name|pindex
 argument_list|)
-operator|)
-return|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
