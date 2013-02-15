@@ -250,8 +250,7 @@ name|bus_space_handle_t
 name|bsh
 decl_stmt|;
 comment|/* The chip revsion is read from the device identification registers and 	 * the JTAG (?) tap registers, which are located in address 0x4A00_2200 to 	 * 0x4A00_2218.  This is part of the L4_CORE memory range and should have 	 * been mapped in by the machdep.c code. 	 * 	 *   STD_FUSE_DIE_ID_0    0x4A00 2200 	 *   ID_CODE              0x4A00 2204   (this is the only one we need) 	 *   STD_FUSE_DIE_ID_1    0x4A00 2208 	 *   STD_FUSE_DIE_ID_2    0x4A00 220C 	 *   STD_FUSE_DIE_ID_3    0x4A00 2210 	 *   STD_FUSE_PROD_ID_0   0x4A00 2214 	 *   STD_FUSE_PROD_ID_1   0x4A00 2218 	 */
-comment|// id_code = REG_READ32(OMAP44XX_L4_CORE_VBASE + OMAP4_ID_CODE);
-comment|//FIXME Should we map somewhere else?
+comment|/* FIXME Should we map somewhere else? */
 name|bus_space_map
 argument_list|(
 name|fdtbus_bs_tag
@@ -543,7 +542,6 @@ name|bus_space_handle_t
 name|bsh
 decl_stmt|;
 comment|/* The chip revsion is read from the device identification registers and 	 * the JTAG (?) tap registers, which are located in address 0x4A00_2200 to 	 * 0x4A00_2218.  This is part of the L4_CORE memory range and should have 	 * been mapped in by the machdep.c code. 	 * 	 *   CONTROL_IDCODE       0x4830 A204   (this is the only one we need) 	 * 	 * 	 */
-comment|//id_code = REG_READ32(OMAP35XX_L4_WAKEUP_VBASE + OMAP3_ID_CODE);
 name|bus_space_map
 argument_list|(
 name|fdtbus_bs_tag
@@ -575,7 +573,7 @@ name|fdtbus_bs_tag
 argument_list|,
 name|bsh
 argument_list|,
-literal|0x4000
+literal|0x10000
 argument_list|)
 expr_stmt|;
 name|hawkeye
