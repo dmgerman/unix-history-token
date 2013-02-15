@@ -114,6 +114,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Is a CAFILE given at configure time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DANE_CA_FILE
+value|0
+end_define
+
+begin_comment
+comment|/* Is a CAPATH given at configure time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DANE_CA_PATH
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `NID_secp384r1', and to 0 if you    don't. */
 end_comment
 
@@ -847,6 +869,33 @@ value|1
 end_define
 
 begin_comment
+comment|/* Is a CAFILE given at configure time */
+end_comment
+
+begin_comment
+comment|/* #undef LDNS_DANE_CA_FILE */
+end_comment
+
+begin_comment
+comment|/* Is a CAPATH given at configure time */
+end_comment
+
+begin_comment
+comment|/* #undef LDNS_DANE_CA_PATH */
+end_comment
+
+begin_comment
+comment|/* Default trust anchor file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDNS_TRUST_ANCHOR_FILE
+value|"/etc/unbound/root.key"
+end_define
+
+begin_comment
 comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
 end_comment
 
@@ -887,7 +936,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ldns 1.6.13"
+value|"ldns 1.6.16"
 end_define
 
 begin_comment
@@ -920,7 +969,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.6.13"
+value|"1.6.16"
 end_define
 
 begin_comment

@@ -76,11 +76,11 @@ comment|/* #define	dprintf(X, Y)  */
 define|#
 directive|define
 name|LDNS_VERSION
-value|"1.6.13"
+value|"1.6.16"
 define|#
 directive|define
 name|LDNS_REVISION
-value|((1<<16)|(6<<8)|(13))
+value|((1<<16)|(6<<8)|(16))
 comment|/**  * splint static inline workaround  */
 ifdef|#
 directive|ifdef
@@ -827,6 +827,16 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/**  * Convert TM to seconds since epoch (midnight, January 1st, 1970).  * Like timegm(3), which is not always available.  * \param[in] tm a struct tm* with the date  * \return the seconds since epoch  */
+name|time_t
+name|ldns_mktime_from_utc
+parameter_list|(
+specifier|const
+name|struct
+name|tm
+modifier|*
+name|tm
+parameter_list|)
+function_decl|;
 name|time_t
 name|mktime_from_utc
 parameter_list|(

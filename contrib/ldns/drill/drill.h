@@ -391,22 +391,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ldns_status
-name|read_key_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-name|ldns_rr_list
-modifier|*
-name|key_list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ldns_pkt
 modifier|*
 name|read_hex_pkt

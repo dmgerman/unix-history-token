@@ -454,7 +454,7 @@ name|l
 operator|=
 name|htonl
 argument_list|(
-name|mktime_from_utc
+name|ldns_mktime_from_utc
 argument_list|(
 operator|&
 name|tm
@@ -2598,6 +2598,11 @@ operator|!
 name|data
 condition|)
 block|{
+name|LDNS_FREE
+argument_list|(
+name|afdpart
+argument_list|)
+expr_stmt|;
 name|LDNS_FREE
 argument_list|(
 name|my_ip_str
@@ -5425,16 +5430,6 @@ name|atoi
 argument_list|(
 name|proto_str
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|data
-index|[
-literal|0
-index|]
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|memcpy

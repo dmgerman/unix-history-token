@@ -237,28 +237,41 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t-c<file>\t\tuse file for rescursive nameserver configuration (/etc/resolv.conf)\n"
+literal|"\t-c<file>\tuse file for rescursive nameserver configuration"
+literal|"\n\t\t\t(/etc/resolv.conf)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t-k<file>\tspecify a file that contains a trusted DNSSEC key (DNSKEY|DS) [**]\n"
+literal|"\t-k<file>\tspecify a file that contains a trusted DNSSEC key [**]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t\t\tused to verify any signatures in the current answer\n"
+literal|"\t\t\tUsed to verify any signatures in the current answer.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t-o<mnemonic>\tset flags to: [QR|qr][AA|aa][TC|tc][RD|rd][CD|cd][RA|ra][AD|ad]\n"
+literal|"\t\t\tWhen DNSSEC enabled tracing (-TD) or signature\n"
+literal|"\t\t\tchasing (-S) and no key files are given, keys are read\n"
+literal|"\t\t\tfrom: %s\n"
+argument_list|,
+name|LDNS_TRUST_ANCHOR_FILE
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t-o<mnemonic>\tset flags to:"
+literal|"\n\t\t\t[QR|qr][AA|aa][TC|tc][RD|rd][CD|cd][RA|ra][AD|ad]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -307,7 +320,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t-r<file>\t\tuse file as root servers hint file\n"
+literal|"\t-r<file>\tuse file as root servers hint file\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -321,7 +334,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t-d<domain>\t\tuse domain as the start point for the trace\n"
+literal|"\t-d<domain>\tuse domain as the start point for the trace\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1137,6 +1150,8 @@ argument_list|(
 name|optarg
 argument_list|,
 name|key_list
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -1814,6 +1829,67 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|PURPOSE
+operator|==
+name|DRILL_CHASE
+operator|||
+operator|(
+name|PURPOSE
+operator|==
+name|DRILL_TRACE
+operator|&&
+name|qdnssec
+operator|)
+operator|)
+operator|&&
+name|ldns_rr_list_rr_count
+argument_list|(
+name|key_list
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|read_key_file
+argument_list|(
+name|LDNS_TRUST_ANCHOR_FILE
+argument_list|,
+name|key_list
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ldns_rr_list_rr_count
+argument_list|(
+name|key_list
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|";; Number of trusted keys: %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ldns_rr_list_rr_count
+argument_list|(
+name|key_list
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* do a secure trace when requested */
 if|if
 condition|(

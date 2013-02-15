@@ -371,7 +371,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* LDNS_BUILD_CONFIG_HAVE_SSL */
-comment|/**   * returns a new DS rr that represents the given key rr.  *  * \param[in] *key the key to convert  * \param[in] h the hash to use LDNS_SHA1/LDNS_SHA256  * \return ldns_rr* a new rr pointer to a DS  */
+comment|/**   * returns a new DS rr that represents the given key rr.  *  * \param[in] *key the key to convert  * \param[in] h the hash to use LDNS_SHA1/LDNS_SHA256  *  * \return ldns_rr* a new rr pointer to a DS  */
 name|ldns_rr
 modifier|*
 name|ldns_key_rr2ds

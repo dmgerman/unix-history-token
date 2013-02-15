@@ -51,6 +51,13 @@ name|LDNS_BUILD_CONFIG_HAVE_ATTR_UNUSED
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|LDNS_BUILD_CONFIG_HAVE_SOCKLEN_T
+value|1
+end_define
+
 begin_comment
 comment|/*  * HAVE_STDBOOL_H is not available when distributed as a library, but no build   * configuration variables may be used (like those above) because the header  * is sometimes only available when using special compiler flags to enable the  * c99 environment. Because we cannot force the usage of this flag, we have to  * provide a default type. Below what is suggested by the autoconf manual.  */
 end_comment
@@ -275,6 +282,25 @@ end_endif
 begin_comment
 comment|/* !LDNS_BUILD_CONFIG_HAVE_ATTR_UNUSED */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|LDNS_BUILD_CONFIG_HAVE_SOCKLEN_T
+end_if
+
+begin_typedef
+typedef|typedef
+name|int
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

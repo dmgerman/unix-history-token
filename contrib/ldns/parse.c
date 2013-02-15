@@ -676,7 +676,7 @@ name|ldns_fskipcs_l
 argument_list|(
 name|f
 argument_list|,
-name|delim
+name|del
 argument_list|,
 name|line_nr
 argument_list|)
@@ -1391,7 +1391,7 @@ name|ldns_bskipcs
 argument_list|(
 name|b
 argument_list|,
-name|delim
+name|del
 argument_list|)
 expr_stmt|;
 operator|*

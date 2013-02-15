@@ -809,9 +809,13 @@ argument_list|,
 name|global_dns_root
 argument_list|)
 expr_stmt|;
-return|return
+name|result
+operator|=
 name|status
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 name|labels_count
 operator|=
@@ -1624,9 +1628,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-goto|goto
-name|done
-goto|;
 block|}
 if|if
 condition|(

@@ -49,12 +49,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ldns/dnssec.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ldns/util.h>
 end_include
 
@@ -609,7 +603,7 @@ modifier|*
 name|e
 parameter_list|)
 function_decl|;
-comment|/**  * Set the key's rsa data  * \param[in] k the key  * \param[in] r the rsa data  */
+comment|/**  * Set the key's rsa data.  * The rsa data should be freed by the user.  * \param[in] k the key  * \param[in] r the rsa data  */
 name|void
 name|ldns_key_set_rsa_key
 parameter_list|(
@@ -622,9 +616,35 @@ modifier|*
 name|r
 parameter_list|)
 function_decl|;
-comment|/**  * Set the key's dsa data  * \param[in] k the key  * \param[in] d the dsa data  */
+comment|/**  * Set the key's dsa data  * The dsa data should be freed by the user.  * \param[in] k the key  * \param[in] d the dsa data  */
 name|void
 name|ldns_key_set_dsa_key
+parameter_list|(
+name|ldns_key
+modifier|*
+name|k
+parameter_list|,
+name|DSA
+modifier|*
+name|d
+parameter_list|)
+function_decl|;
+comment|/**  * Assign the key's rsa data  * The rsa data will be freed automatically when the key is freed.  * \param[in] k the key  * \param[in] r the rsa data  */
+name|void
+name|ldns_key_assign_rsa_key
+parameter_list|(
+name|ldns_key
+modifier|*
+name|k
+parameter_list|,
+name|RSA
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+comment|/**  * Assign the key's dsa data  * The dsa data will be freed automatically when the key is freed.  * \param[in] k the key  * \param[in] d the dsa data  */
+name|void
+name|ldns_key_assign_dsa_key
 parameter_list|(
 name|ldns_key
 modifier|*
