@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -126,12 +132,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_RADIX_BOOT_CACHE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|VM_RADIX_BOOT_CACHE
 value|1500
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Such sizes should permit to keep node children contained into a single  * cache-line, or to at least not span many of those.  * In particular, sparse tries should however be compressed properly and  * then make some extra-levels not a big deal.  */
@@ -374,9 +391,11 @@ name|VM_RADIX_BOOT_CACHE
 condition|)
 name|panic
 argument_list|(
-literal|"%s: Increase VM_RADIX_BOOT_CACHE"
+literal|"%s: Increase VM_RADIX_BOOT_CACHE (%u)"
 argument_list|,
 name|__func__
+argument_list|,
+name|VM_RADIX_BOOT_CACHE
 argument_list|)
 expr_stmt|;
 name|rnode
