@@ -91,6 +91,13 @@ argument_list|,
 name|PCIS_BRIDGE_HOST
 argument_list|)
 expr_stmt|;
+name|pci_emul_add_pciecap
+argument_list|(
+name|pi
+argument_list|,
+name|PCIEM_TYPE_ROOT_PORT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
