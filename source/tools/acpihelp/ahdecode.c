@@ -218,6 +218,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|AH_DISPLAY_EXCEPTION_TEXT
+parameter_list|(
+name|Status
+parameter_list|,
+name|Exception
+parameter_list|)
+define|\
+value|printf ("%.4X: %-28s (%s)\n", Status, Exception->Name, Exception->Description)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUFFER_LENGTH
 value|128
 end_define
@@ -2136,9 +2149,9 @@ name|HexString
 parameter_list|)
 block|{
 specifier|const
-name|char
+name|ACPI_EXCEPTION_INFO
 modifier|*
-name|ExceptionName
+name|ExceptionInfo
 decl_stmt|;
 name|UINT32
 name|Status
@@ -2155,14 +2168,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"All defined ACPI exception codes:\n\n"
+literal|"All defined ACPICA exception codes:\n\n"
 argument_list|)
 expr_stmt|;
 name|AH_DISPLAY_EXCEPTION
 argument_list|(
 literal|0
 argument_list|,
-literal|"AE_OK"
+literal|"AE_OK                        (No error occurred)"
 argument_list|)
 expr_stmt|;
 comment|/* Display codes in each block of exception types */
@@ -2191,7 +2204,7 @@ name|i
 expr_stmt|;
 do|do
 block|{
-name|ExceptionName
+name|ExceptionInfo
 operator|=
 name|AcpiUtValidateException
 argument_list|(
@@ -2203,14 +2216,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ExceptionName
+name|ExceptionInfo
 condition|)
 block|{
-name|AH_DISPLAY_EXCEPTION
+name|AH_DISPLAY_EXCEPTION_TEXT
 argument_list|(
 name|Status
 argument_list|,
-name|ExceptionName
+name|ExceptionInfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -2220,7 +2233,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|ExceptionName
+name|ExceptionInfo
 condition|)
 do|;
 block|}
@@ -2246,7 +2259,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Invalid hexadecimal exception code\n"
+literal|"%s: Invalid hexadecimal exception code value\n"
 argument_list|,
 name|HexString
 argument_list|)
@@ -2269,7 +2282,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ExceptionName
+name|ExceptionInfo
 operator|=
 name|AcpiUtValidateException
 argument_list|(
@@ -2282,7 +2295,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ExceptionName
+name|ExceptionInfo
 condition|)
 block|{
 name|AH_DISPLAY_EXCEPTION
@@ -2294,11 +2307,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AH_DISPLAY_EXCEPTION
+name|AH_DISPLAY_EXCEPTION_TEXT
 argument_list|(
 name|Status
 argument_list|,
-name|ExceptionName
+name|ExceptionInfo
 argument_list|)
 expr_stmt|;
 block|}

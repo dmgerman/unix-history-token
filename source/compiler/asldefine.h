@@ -431,15 +431,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_INPUT_TYPE_ASCII_ASL
+name|ASL_INPUT_TYPE_ACPI_TABLE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASL_INPUT_TYPE_ASCII_DATA
+name|ASL_INPUT_TYPE_ASCII_ASL
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_ASCII_DATA
+value|3
 end_define
 
 begin_comment

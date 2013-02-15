@@ -2501,6 +2501,11 @@ name|METHOD_NAME__CRS
 argument_list|)
 expr_stmt|;
 comment|/* Execute _SRS with the resource list */
+name|AcpiOsPrintf
+argument_list|(
+literal|"Evaluating _SRS\n"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiSetCurrentResources
@@ -2789,7 +2794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayResources  *  * PARAMETERS:  ObjectArg           - String object name or object pointer.  *                                    "*" means "display resources for all  *                                    devices"  *  * RETURN:      None  *  * DESCRIPTION: Display the resource objects associated with a device.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayResources  *  * PARAMETERS:  ObjectArg           - String object name or object pointer.  *                                    NULL or "*" means "display resources for  *                                    all devices"  *  * RETURN:      None  *  * DESCRIPTION: Display the resource objects associated with a device.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2818,12 +2823,17 @@ comment|/* Asterisk means "display resources for all devices" */
 if|if
 condition|(
 operator|!
+name|ObjectArg
+operator|||
+operator|(
+operator|!
 name|ACPI_STRCMP
 argument_list|(
 name|ObjectArg
 argument_list|,
 literal|"*"
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(

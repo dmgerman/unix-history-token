@@ -31,6 +31,12 @@ directive|include
 file|"acpredef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acnamesp.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -77,26 +83,6 @@ parameter_list|,
 name|char
 modifier|*
 name|Name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ApCheckObjectType
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PredefinedName
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|ExpectedBtypes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1255,8 +1241,34 @@ operator|.
 name|Info
 operator|.
 name|ExpectedBtypes
+argument_list|,
+name|ACPI_NOT_PACKAGE_ELEMENT
 argument_list|)
 expr_stmt|;
+comment|/* For packages, check the individual package elements */
+if|if
+condition|(
+name|ReturnValueOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_PACKAGE
+condition|)
+block|{
+name|ApCheckPackage
+argument_list|(
+name|ReturnValueOp
+argument_list|,
+operator|&
+name|PredefinedNames
+index|[
+name|Index
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/*              * All other ops are very difficult or impossible to typecheck at              * compile time. These include all Localx, Argx, and method              * invocations. Also, NAMESEG and NAMESTRING because the type of              * any named object can be changed at runtime (for example,              * CopyObject will change the type of the target object.)              */
@@ -1285,6 +1297,10 @@ parameter_list|)
 block|{
 name|UINT32
 name|Index
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ObjectOp
 decl_stmt|;
 comment|/*      * Check for a real predefined name -- not a resource descriptor name      * or a predefined scope name      */
 name|Index
@@ -1333,8 +1349,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 default|default:
+break|break;
+block|}
 comment|/* A standard predefined ACPI name */
-comment|/*          * If this predefined name requires input arguments, then          * it must be implemented as a control method          */
+comment|/*      * If this predefined name requires input arguments, then      * it must be implemented as a control method      */
 if|if
 condition|(
 name|PredefinedNames
@@ -1362,7 +1380,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*          * If no return value is expected from this predefined name, then          * it follows that it must be implemented as a control method          * (with zero args, because the args> 0 case was handled above)          * Examples are: _DIS, _INI, _IRC, _OFF, _ON, _PSx          */
+comment|/*      * If no return value is expected from this predefined name, then      * it follows that it must be implemented as a control method      * (with zero args, because the args> 0 case was handled above)      * Examples are: _DIS, _INI, _IRC, _OFF, _ON, _PSx      */
 if|if
 condition|(
 operator|!
@@ -1390,6 +1408,18 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Typecheck the actual object, it is the next argument */
+name|ObjectOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
 name|ApCheckObjectType
 argument_list|(
 name|PredefinedNames
@@ -1419,9 +1449,33 @@ operator|.
 name|Info
 operator|.
 name|ExpectedBtypes
+argument_list|,
+name|ACPI_NOT_PACKAGE_ELEMENT
 argument_list|)
 expr_stmt|;
-return|return;
+comment|/* For packages, check the individual package elements */
+if|if
+condition|(
+name|ObjectOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_PACKAGE
+condition|)
+block|{
+name|ApCheckPackage
+argument_list|(
+name|ObjectOp
+argument_list|,
+operator|&
+name|PredefinedNames
+index|[
+name|Index
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1831,12 +1885,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckObjectType  *  * PARAMETERS:  PredefinedName  - Name of the predefined object we are checking  *              Op              - Current parse node  *              ExpectedBtypes  - Bitmap of expected return type(s)  *  * RETURN:      None  *  * DESCRIPTION: Check if the object type is one of the types that is expected  *              by the predefined name. Only a limited number of object types  *              can be returned by the predefined names.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckObjectType  *  * PARAMETERS:  PredefinedName  - Name of the predefined object we are checking  *              Op              - Current parse node  *              ExpectedBtypes  - Bitmap of expected return type(s)  *              PackageIndex    - Index of object within parent package (if  *                                applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                otherwise)  *  * RETURN:      None  *  * DESCRIPTION: Check if the object type is one of the types that is expected  *              by the predefined name. Only a limited number of object types  *              can be returned by the predefined names.  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|static
-name|void
+name|ACPI_STATUS
 name|ApCheckObjectType
 parameter_list|(
 specifier|const
@@ -1850,11 +1903,31 @@ name|Op
 parameter_list|,
 name|UINT32
 name|ExpectedBtypes
+parameter_list|,
+name|UINT32
+name|PackageIndex
 parameter_list|)
 block|{
 name|UINT32
 name|ReturnBtype
 decl_stmt|;
+name|char
+modifier|*
+name|TypeName
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+block|{
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
+block|}
+comment|/* Map the parse opcode to a bitmapped return type (RTYPE) */
 switch|switch
 condition|(
 name|Op
@@ -1880,13 +1953,9 @@ name|ReturnBtype
 operator|=
 name|ACPI_RTYPE_INTEGER
 expr_stmt|;
-break|break;
-case|case
-name|PARSEOP_BUFFER
-case|:
-name|ReturnBtype
+name|TypeName
 operator|=
-name|ACPI_RTYPE_BUFFER
+literal|"Integer"
 expr_stmt|;
 break|break;
 case|case
@@ -1895,6 +1964,22 @@ case|:
 name|ReturnBtype
 operator|=
 name|ACPI_RTYPE_STRING
+expr_stmt|;
+name|TypeName
+operator|=
+literal|"String"
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_BUFFER
+case|:
+name|ReturnBtype
+operator|=
+name|ACPI_RTYPE_BUFFER
+expr_stmt|;
+name|TypeName
+operator|=
+literal|"Buffer"
 expr_stmt|;
 break|break;
 case|case
@@ -1907,9 +1992,39 @@ name|ReturnBtype
 operator|=
 name|ACPI_RTYPE_PACKAGE
 expr_stmt|;
+name|TypeName
+operator|=
+literal|"Package"
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_NAMESEG
+case|:
+case|case
+name|PARSEOP_NAMESTRING
+case|:
+name|ReturnBtype
+operator|=
+name|ACPI_RTYPE_REFERENCE
+expr_stmt|;
+name|TypeName
+operator|=
+literal|"Reference"
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Not one of the supported object types */
+name|TypeName
+operator|=
+name|UtGetOpName
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+argument_list|)
+expr_stmt|;
 goto|goto
 name|TypeErrorExit
 goto|;
@@ -1922,7 +2037,11 @@ operator|&
 name|ExpectedBtypes
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 name|TypeErrorExit
 label|:
@@ -1934,26 +2053,45 @@ argument_list|,
 name|ExpectedBtypes
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|PackageIndex
+operator|==
+name|ACPI_NOT_PACKAGE_ELEMENT
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%s: found %s, requires %s"
+literal|"%s: found %s, %s required"
 argument_list|,
 name|PredefinedName
 argument_list|,
-name|UtGetOpName
-argument_list|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-argument_list|)
+name|TypeName
 argument_list|,
 name|StringBuffer
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|sprintf
+argument_list|(
+name|MsgBuffer
+argument_list|,
+literal|"%s: found %s at index %u, %s required"
+argument_list|,
+name|PredefinedName
+argument_list|,
+name|TypeName
+argument_list|,
+name|PackageIndex
+argument_list|,
+name|StringBuffer
+argument_list|)
+expr_stmt|;
+block|}
 name|AslError
 argument_list|(
 name|ASL_ERROR
@@ -1965,6 +2103,11 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
 block|}
 end_function
 

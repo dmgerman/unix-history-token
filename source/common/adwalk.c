@@ -2418,6 +2418,8 @@ operator|)
 name|ObjectType2
 argument_list|,
 name|ParamCount
+operator||
+literal|0x80
 argument_list|)
 expr_stmt|;
 name|Op

@@ -520,7 +520,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 literal|1
 argument_list|)
@@ -559,7 +559,7 @@ name|NumDigits
 operator|++
 expr_stmt|;
 block|}
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|NumDigits
 argument_list|)

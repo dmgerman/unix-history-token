@@ -1080,6 +1080,20 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
+comment|/* All done for disassembler */
+if|if
+condition|(
+name|Gbl_FileType
+operator|==
+name|ASL_INPUT_TYPE_ACPI_TABLE
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 comment|/* Create/Open a hex output file if asked */
 if|if
 condition|(

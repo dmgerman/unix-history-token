@@ -923,6 +923,20 @@ literal|"Maximum System Characteristics Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_MTMR
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpMtmr
+block|,
+name|DtCompileMtmr
+block|,
+name|TemplateMtmr
+block|,
+literal|"MID Timer Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_PCCT
 block|,
 name|NULL
@@ -1102,6 +1116,20 @@ block|,
 name|TemplateUefi
 block|,
 literal|"UEFI Boot Optimization Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_VRTC
+block|,
+name|AcpiDmTableInfoVrtc
+block|,
+name|AcpiDmDumpVrtc
+block|,
+name|DtCompileVrtc
+block|,
+name|TemplateVrtc
+block|,
+literal|"Virtual Real-Time Clock Table"
 block|}
 block|,
 block|{
@@ -1557,6 +1585,17 @@ block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n**** Unknown ACPI table type [%4.4s]\n\n"
+argument_list|,
+name|Table
+operator|->
+name|Signature
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown ACPI table signature [%4.4s], decoding header only\n"
 argument_list|,
 name|Table
 operator|->

@@ -1272,6 +1272,7 @@ name|ACPI_DISASSEMBLER
 end_ifdef
 
 begin_function_decl
+name|ACPI_EXTERN
 name|BOOLEAN
 name|ACPI_INIT_GLOBAL
 parameter_list|(
@@ -1293,6 +1294,20 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_DbOpt_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_NumExternalMethods
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_ResolvedExternalMethods
 decl_stmt|;
 end_decl_stmt
 

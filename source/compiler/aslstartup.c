@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acdisasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acapps.h"
 end_include
 
@@ -96,6 +102,16 @@ parameter_list|(
 name|ASL_FILE_INFO
 modifier|*
 name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AslDoDisassembly
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -489,6 +505,32 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+comment|/* Check for a valid binary ACPI table */
+name|Status
+operator|=
+name|FlCheckForAcpiTable
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_ACPI_TABLE
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/* Check for 100% ASCII source file (comments are ignored) */
 name|Status
 operator|=
@@ -631,45 +673,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslDoOneFile  *  * PARAMETERS:  Filename        - Name of the file  *  * RETURN:      Status  *  * DESCRIPTION: Process a single file - either disassemble, compile, or both  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AslDoDisassembly  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initiate AML file disassembly. Uses ACPICA subsystem to build  *              namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
-name|AslDoOneFile
+name|AslDoDisassembly
 parameter_list|(
-name|char
-modifier|*
-name|Filename
+name|void
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* Re-initialize "some" compiler/preprocessor globals */
-name|AslInitializeGlobals
-argument_list|()
-expr_stmt|;
-name|PrInitializeGlobals
-argument_list|()
-expr_stmt|;
-name|Gbl_Files
-index|[
-name|ASL_FILE_INPUT
-index|]
-operator|.
-name|Filename
-operator|=
-name|Filename
-expr_stmt|;
-comment|/*      * AML Disassembly (Optional)      */
-if|if
-condition|(
-name|Gbl_DisasmFlag
-operator|||
-name|Gbl_GetAllTables
-condition|)
-block|{
 comment|/* ACPICA subsystem initialization */
 name|Status
 operator|=
@@ -766,11 +783,17 @@ name|Status
 operator|)
 return|;
 block|}
+comment|/* Check if any control methods were unresolved */
+name|AcpiDmUnresolvedWarning
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* TBD: Handle additional output files for disassembler */
-block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);         NsDisplayNamespace ();
+block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);     NsDisplayNamespace ();
 endif|#
 directive|endif
 comment|/* Shutdown compiler and ACPICA subsystem */
@@ -783,7 +806,7 @@ operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
-comment|/*          * Gbl_Files[ASL_FILE_INPUT].Filename was replaced with the          * .DSL disassembly file, which can now be compiled if requested          */
+comment|/*      * Gbl_Files[ASL_FILE_INPUT].Filename was replaced with the      * .DSL disassembly file, which can now be compiled if requested      */
 if|if
 condition|(
 name|Gbl_DoCompile
@@ -801,9 +824,22 @@ operator|.
 name|Filename
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_CTRL_CONTINUE
+operator|)
+return|;
 block|}
-else|else
-block|{
+name|ACPI_FREE
+argument_list|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
 name|Gbl_Files
 index|[
 name|ASL_FILE_INPUT
@@ -816,6 +852,66 @@ expr_stmt|;
 return|return
 operator|(
 name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AslDoOneFile  *  * PARAMETERS:  Filename        - Name of the file  *  * RETURN:      Status  *  * DESCRIPTION: Process a single file - either disassemble, compile, or both  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AslDoOneFile
+parameter_list|(
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Re-initialize "some" compiler/preprocessor globals */
+name|AslInitializeGlobals
+argument_list|()
+expr_stmt|;
+name|PrInitializeGlobals
+argument_list|()
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+operator|=
+name|Filename
+expr_stmt|;
+comment|/*      * AML Disassembly (Optional)      */
+if|if
+condition|(
+name|Gbl_DisasmFlag
+operator|||
+name|Gbl_GetAllTables
+condition|)
+block|{
+name|Status
+operator|=
+name|AslDoDisassembly
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|!=
+name|AE_CTRL_CONTINUE
+condition|)
+block|{
+return|return
+operator|(
+name|Status
 operator|)
 return|;
 block|}
@@ -1064,6 +1160,35 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+comment|/*      * Binary ACPI table was auto-detected, disassemble it      */
+case|case
+name|ASL_INPUT_TYPE_ACPI_TABLE
+case|:
+comment|/* We have what appears to be an ACPI table, disassemble it */
+name|FlCloseFile
+argument_list|(
+name|ASL_FILE_INPUT
+argument_list|)
+expr_stmt|;
+name|Gbl_DoCompile
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_DisasmFlag
+operator|=
+name|TRUE
+expr_stmt|;
+name|Status
+operator|=
+name|AslDoDisassembly
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+comment|/* Unknown binary table */
 case|case
 name|ASL_INPUT_TYPE_BINARY
 case|:

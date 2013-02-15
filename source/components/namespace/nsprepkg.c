@@ -225,13 +225,30 @@ name|Package
 operator|.
 name|Count
 expr_stmt|;
-comment|/* The package must have at least one element, else invalid */
+comment|/*      * Most packages must have at least one element. The only exception      * is the variable-length package (ACPI_PTYPE1_VAR).      */
 if|if
 condition|(
 operator|!
 name|Count
 condition|)
 block|{
+if|if
+condition|(
+name|Package
+operator|->
+name|RetInfo
+operator|.
+name|Type
+operator|==
+name|ACPI_PTYPE1_VAR
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
