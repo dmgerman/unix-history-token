@@ -2792,6 +2792,7 @@ name|pindex
 operator|=
 name|pindex
 expr_stmt|;
+comment|/* 	 * Now link into the object's ordered list of backed pages. 	 */
 if|if
 condition|(
 name|object
@@ -3016,6 +3017,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Now remove from the object's list of backed pages. 	 */
 name|vm_radix_remove
 argument_list|(
 operator|&
@@ -3706,6 +3708,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * Transfer all of the pages with offset greater than or 		 * equal to 'offidxstart' from the original object's 		 * cache to the new object's cache. 		 */
 if|if
 condition|(
 operator|(
@@ -3749,6 +3752,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* Update the page's object and offset. */
 name|m
 operator|->
 name|object
@@ -7737,6 +7741,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Remove the page from the object's collection of resident 	 * pages.  	 */
 name|vm_radix_remove
 argument_list|(
 operator|&
