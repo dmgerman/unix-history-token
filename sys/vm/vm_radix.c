@@ -3289,7 +3289,7 @@ name|DDB
 end_ifdef
 
 begin_comment
-comment|/*  * Show details about the given vnode.  */
+comment|/*  * Show details about the given radix node.  */
 end_comment
 
 begin_macro
