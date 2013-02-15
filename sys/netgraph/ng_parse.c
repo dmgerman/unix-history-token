@@ -5993,6 +5993,9 @@ operator|!=
 name|CT_STRUCT
 condition|)
 block|{
+name|u_long
+name|ul
+decl_stmt|;
 name|int
 name|len2
 decl_stmt|,
@@ -6073,11 +6076,8 @@ name|gotIndex
 goto|;
 block|}
 comment|/* Index was specified explicitly; parse it */
-name|index
+name|ul
 operator|=
-operator|(
-name|u_int
-operator|)
 name|strtoul
 argument_list|(
 name|s
@@ -6093,9 +6093,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
-operator|<
-literal|0
+name|ul
+operator|==
+name|ULONG_MAX
 operator|||
 name|eptr
 operator|-
@@ -6117,6 +6117,13 @@ goto|goto
 name|done
 goto|;
 block|}
+name|index
+operator|=
+operator|(
+name|u_int
+operator|)
+name|ul
+expr_stmt|;
 name|nextIndex
 operator|=
 name|index

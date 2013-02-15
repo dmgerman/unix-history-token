@@ -1927,7 +1927,7 @@ name|lock
 parameter_list|,
 name|desc
 parameter_list|)
-value|{ \ 	strncpy((lock)->name, (desc), MAX_LOCK_DESC_LEN); \ 	(lock)->name[MAX_LOCK_DESC_LEN] = '\0'; \ 	mtx_init(&(lock)->mutex, (lock)->name, MTX_NETWORK_LOCK, MTX_DEF); \ }
+value|{ \ 	strncpy((lock)->name, (desc), MAX_LOCK_DESC_LEN); \ 	(lock)->name[MAX_LOCK_DESC_LEN] = '\0'; \ 	mtx_init(&(lock)->mutex, (lock)->name, NULL, MTX_DEF); \ }
 end_define
 
 begin_define

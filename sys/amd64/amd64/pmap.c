@@ -6452,6 +6452,19 @@ operator|>
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|va
+operator|>=
+name|VM_MIN_KERNEL_ADDRESS
+argument_list|,
+operator|(
+literal|"usermode va %lx"
+operator|,
+name|va
+operator|)
+argument_list|)
+expr_stmt|;
 name|pmap_kremove
 argument_list|(
 name|va
@@ -20827,11 +20840,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|panic
 argument_list|(
-literal|"bad pte"
+literal|"bad pte va %lx pte %lx"
+argument_list|,
+name|pv
+operator|->
+name|pv_va
+argument_list|,
+name|tpte
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*  * We cannot remove wired pages from a process' mapping at this time  */
 if|if
 condition|(

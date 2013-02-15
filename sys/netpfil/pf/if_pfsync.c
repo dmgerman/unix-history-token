@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|PFSYNC_MINPKT
-value|( \ 	sizeof(struct ip) + \ 	sizeof(struct pfsync_header) + \ 	sizeof(struct pfsync_subheader) + \ 	sizeof(struct pfsync_eof))
+value|( \ 	sizeof(struct ip) + \ 	sizeof(struct pfsync_header) + \ 	sizeof(struct pfsync_subheader) )
 end_define
 
 begin_struct
