@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -1399,7 +1399,24 @@ name|uma_zone_set_max
 argument_list|(
 name|vm_radix_node_zone
 argument_list|,
-name|vm_page_array_size
+name|cnt
+operator|.
+name|v_page_count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nitems
+operator|<
+name|cnt
+operator|.
+name|v_page_count
+condition|)
+name|panic
+argument_list|(
+literal|"%s: unexpected requested number of items"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|uma_prealloc
