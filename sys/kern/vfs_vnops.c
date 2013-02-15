@@ -4155,14 +4155,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|vn_io_faults_cnt
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_debug
 argument_list|,

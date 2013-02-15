@@ -33,6 +33,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -58,8 +64,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXBUFSPACE
-value|40*1024
+name|MINBUFS
+value|10
+end_define
+
+begin_comment
+comment|/* minimum number of buffers required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBUFS
+value|40
 end_define
 
 begin_comment
@@ -70,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|INOBUFSIZE
-value|56*1024
+value|64*1024
 end_define
 
 begin_comment
@@ -320,18 +337,13 @@ begin_struct
 struct|struct
 name|bufarea
 block|{
-name|struct
-name|bufarea
-modifier|*
-name|b_next
-decl_stmt|;
-comment|/* free list queue */
-name|struct
-name|bufarea
-modifier|*
-name|b_prev
-decl_stmt|;
-comment|/* free list queue */
+name|TAILQ_ENTRY
+argument_list|(
+argument|bufarea
+argument_list|)
+name|b_list
+expr_stmt|;
+comment|/* buffer list */
 name|ufs2_daddr_t
 name|b_bno
 decl_stmt|;
@@ -422,33 +434,19 @@ parameter_list|)
 value|do { \ 	if (sblock.fs_magic == FS_UFS1_MAGIC) \ 		(bp)->b_un.b_indir1[i] = (val); \ 	else \ 		(bp)->b_un.b_indir2[i] = (val); \ 	} while (0)
 end_define
 
+begin_comment
+comment|/*  * Buffer flags  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|B_INUSE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINBUFS
-value|5
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* minimum number of buffers required */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|bufarea
-name|bufhead
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* head of list of other blks in filesys */
+comment|/* Buffer is in use */
 end_comment
 
 begin_decl_stmt

@@ -187,13 +187,6 @@ name|PFSYNC_ACT_MAX
 value|13
 end_define
 
-begin_define
-define|#
-directive|define
-name|PFSYNC_HMAC_LEN
-value|20
-end_define
-
 begin_comment
 comment|/*  * A pfsync frame is built from a header followed by several sections which  * are all prefixed with their own subheaders. Frames must be terminated with  * an EOF subheader.  *  * | ...			|  * | IP header			|  * +============================+  * | pfsync_header		|  * +----------------------------+  * | pfsync_subheader		|  * +----------------------------+  * | first action fields	|  * | ...			|  * +----------------------------+  * | pfsync_subheader		|  * +----------------------------+  * | second action fields	|  * | ...			|  * +----------------------------+  * | EOF pfsync_subheader	|  * +----------------------------+  * | HMAC			|  * +============================+  */
 end_comment
@@ -449,25 +442,6 @@ name|u_int8_t
 name|_pad
 index|[
 literal|2
-index|]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * EOF  */
-end_comment
-
-begin_struct
-struct|struct
-name|pfsync_eof
-block|{
-name|u_int8_t
-name|hmac
-index|[
-name|PFSYNC_HMAC_LEN
 index|]
 decl_stmt|;
 block|}

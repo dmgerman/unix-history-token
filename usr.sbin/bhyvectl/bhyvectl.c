@@ -299,6 +299,7 @@ literal|"       [--get-vmcs-exit-interruption-error]\n"
 literal|"       [--get-vmcs-interruptibility]\n"
 literal|"       [--set-x2apic-state=<state>]\n"
 literal|"       [--get-x2apic-state]\n"
+literal|"       [--unassign-pptdev=<bus/slot/func>]\n"
 literal|"       [--set-lowmem=<memory below 4GB in units of MB>]\n"
 literal|"       [--get-lowmem]\n"
 literal|"       [--set-highmem=<memory above 4GB in units of MB>]\n"
@@ -603,6 +604,19 @@ begin_decl_stmt
 name|enum
 name|x2apic_state
 name|x2apic_state
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|unassign_pptdev
+decl_stmt|,
+name|bus
+decl_stmt|,
+name|slot
+decl_stmt|,
+name|func
 decl_stmt|;
 end_decl_stmt
 
@@ -1485,6 +1499,8 @@ block|,
 name|SET_CAP
 block|,
 name|CAPNAME
+block|,
+name|UNASSIGN_PPTDEV
 block|, }
 enum|;
 end_enum
@@ -1891,6 +1907,16 @@ block|,
 literal|0
 block|,
 name|CAPNAME
+block|}
+block|,
+block|{
+literal|"unassign-pptdev"
+block|,
+name|REQ_ARG
+block|,
+literal|0
+block|,
+name|UNASSIGN_PPTDEV
 block|}
 block|,
 block|{
@@ -3579,6 +3605,37 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+case|case
+name|UNASSIGN_PPTDEV
+case|:
+name|unassign_pptdev
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%d/%d/%d"
+argument_list|,
+operator|&
+name|bus
+argument_list|,
+operator|&
+name|slot
+argument_list|,
+operator|&
+name|func
+argument_list|)
+operator|!=
+literal|3
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -4305,6 +4362,26 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|x2apic_state
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|unassign_pptdev
+condition|)
+name|error
+operator|=
+name|vm_unassign_pptdev
+argument_list|(
+name|ctx
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
 argument_list|)
 expr_stmt|;
 if|if

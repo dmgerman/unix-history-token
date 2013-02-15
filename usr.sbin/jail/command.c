@@ -216,7 +216,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|add_proc
 parameter_list|(
 name|struct
@@ -3494,6 +3494,14 @@ block|{
 if|if
 condition|(
 name|bg
+operator|||
+operator|!
+name|add_proc
+argument_list|(
+name|j
+argument_list|,
+name|pid
+argument_list|)
 condition|)
 block|{
 name|free
@@ -3517,13 +3525,6 @@ else|else
 block|{
 name|paralimit
 operator|--
-expr_stmt|;
-name|add_proc
-argument_list|(
-name|j
-argument_list|,
-name|pid
-argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -4006,7 +4007,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|add_proc
 parameter_list|(
 name|struct
@@ -4091,6 +4092,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ESRCH
+condition|)
+return|return
+literal|0
+return|;
 name|err
 argument_list|(
 literal|1
@@ -4098,6 +4109,7 @@ argument_list|,
 literal|"kevent"
 argument_list|)
 expr_stmt|;
+block|}
 name|ph
 operator|=
 name|emalloc
@@ -4272,6 +4284,9 @@ operator|&
 name|sleeping
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -4639,6 +4654,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|add_proc
 argument_list|(
 name|j
