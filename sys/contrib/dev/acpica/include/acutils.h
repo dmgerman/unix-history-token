@@ -2332,7 +2332,7 @@ end_comment
 
 begin_function_decl
 specifier|const
-name|char
+name|ACPI_EXCEPTION_INFO
 modifier|*
 name|AcpiUtValidateException
 parameter_list|(

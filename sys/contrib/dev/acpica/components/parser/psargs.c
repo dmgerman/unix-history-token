@@ -205,7 +205,7 @@ operator|&
 name|ByteZeroMask
 operator|)
 expr_stmt|;
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|PackageLength
 argument_list|)

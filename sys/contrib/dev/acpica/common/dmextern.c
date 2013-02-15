@@ -37,6 +37,12 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_comment
 comment|/*  * This module is used for application-level code (iASL disassembler) only.  *  * It contains the code to create and emit any necessary External() ASL  * statements for the module being disassembled.  */
 end_comment
@@ -739,6 +745,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|BOOLEAN
+name|Resolved
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -746,6 +757,30 @@ name|Path
 condition|)
 block|{
 return|return;
+block|}
+if|if
+condition|(
+name|Type
+operator|==
+name|ACPI_TYPE_METHOD
+condition|)
+block|{
+if|if
+condition|(
+name|Value
+operator|&
+literal|0x80
+condition|)
+block|{
+name|Resolved
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+name|Value
+operator|&=
+literal|0x07
+expr_stmt|;
 block|}
 comment|/*      * We don't want External() statements to contain a leading '\'.      * This prevents duplicate external statements of the form:      *      *    External (\ABCD)      *    External (ABCD)      *      * This would cause a compile time error when the disassembled      * output file is recompiled.      */
 if|if
@@ -974,6 +1009,12 @@ operator|->
 name|Value
 operator|=
 name|Value
+expr_stmt|;
+name|NewExternal
+operator|->
+name|Resolved
+operator|=
+name|Resolved
 expr_stmt|;
 name|NewExternal
 operator|->
@@ -1412,6 +1453,53 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/*      * Determine the number of control methods in the external list, and      * also how many of those externals were resolved via the namespace.      */
+name|NextExternal
+operator|=
+name|AcpiGbl_ExternalList
+expr_stmt|;
+while|while
+condition|(
+name|NextExternal
+condition|)
+block|{
+if|if
+condition|(
+name|NextExternal
+operator|->
+name|Type
+operator|==
+name|ACPI_TYPE_METHOD
+condition|)
+block|{
+name|AcpiGbl_NumExternalMethods
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|NextExternal
+operator|->
+name|Resolved
+condition|)
+block|{
+name|AcpiGbl_ResolvedExternalMethods
+operator|++
+expr_stmt|;
+block|}
+block|}
+name|NextExternal
+operator|=
+name|NextExternal
+operator|->
+name|Next
+expr_stmt|;
+block|}
+comment|/* Check if any control methods were unresolved */
+name|AcpiDmUnresolvedWarning
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/*      * Walk the list of externals (unresolved references)      * found during the AML parsing      */
 while|while
 condition|(
@@ -1443,6 +1531,13 @@ operator|==
 name|ACPI_TYPE_METHOD
 condition|)
 block|{
+if|if
+condition|(
+name|AcpiGbl_ExternalList
+operator|->
+name|Resolved
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|")    // %u Arguments\n"
@@ -1452,6 +1547,20 @@ operator|->
 name|Value
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|")    // Warning: unresolved Method, "
+literal|"assuming %u arguments (may be incorrect, see warning above)\n"
+argument_list|,
+name|AcpiGbl_ExternalList
+operator|->
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1507,6 +1616,186 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmUnresolvedWarning  *  * PARAMETERS:  Type                - Where to output the warning.  *                                    0 means write to stderr  *                                    1 means write to AcpiOsPrintf  *  * RETURN:      None  *  * DESCRIPTION: Issue warning message if there are unresolved external control  *              methods within the disassembly.  *  ******************************************************************************/
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|Summary of the external control method problem:  When the -e option is used with disassembly, the various SSDTs are simply loaded into a global namespace for the disassembler to use in order to resolve control method references (invocations).  The disassembler tracks any such references, and will emit an External() statement for these types of methods, with the proper number of arguments .  Without the SSDTs, the AML does not contain enough information to properly disassemble the control method invocation -- because the disassembler does not know how many arguments to parse.  An example: Assume we have two control methods. ABCD has one argument, and EFGH has zero arguments. Further, we have two additional control methods that invoke ABCD and EFGH, named T1 and T2:      Method (ABCD, 1)     {     }     Method (EFGH, 0)     {     }     Method (T1)     {         ABCD (Add (2, 7, Local0))     }     Method (T2)     {         EFGH ()         Add (2, 7, Local0)     }  Here is the AML code that is generated for T1 and T2:       185:      Method (T1)  0000034C:  14 10 54 31 5F 5F 00 ...    "..T1__."       186:      {      187:          ABCD (Add (2, 7, Local0))  00000353:  41 42 43 44 ............    "ABCD" 00000357:  72 0A 02 0A 07 60 ......    "r....`"       188:      }       190:      Method (T2)  0000035D:  14 10 54 32 5F 5F 00 ...    "..T2__."       191:      {      192:          EFGH ()  00000364:  45 46 47 48 ............    "EFGH"       193:          Add (2, 7, Local0)  00000368:  72 0A 02 0A 07 60 ......    "r....`"      194:      }  Note that the AML code for T1 and T2 is essentially identical. When disassembling this code, the methods ABCD and EFGH must be known to the disassembler, otherwise it does not know how to handle the method invocations.  In other words, if ABCD and EFGH are actually external control methods appearing in an SSDT, the disassembler does not know what to do unless the owning SSDT has been loaded via the -e option.
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+name|AcpiDmUnresolvedWarning
+parameter_list|(
+name|UINT8
+name|Type
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|AcpiGbl_NumExternalMethods
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+name|Type
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|AcpiGbl_ExternalFileList
+condition|)
+block|{
+comment|/* The -e option was not specified */
+name|AcpiOsPrintf
+argument_list|(
+literal|"    /*\n"
+literal|"     * iASL Warning: There were %u external control methods found during\n"
+literal|"     * disassembly, but additional ACPI tables to resolve these externals\n"
+literal|"     * were not specified. This resulting disassembler output file may not\n"
+literal|"     * compile because the disassembler did not know how many arguments\n"
+literal|"     * to assign to these methods. To specify the tables needed to resolve\n"
+literal|"     * external control method references, use the one of the following\n"
+literal|"     * example iASL invocations:\n"
+literal|"     *     iasl -e<ssdt1.aml,ssdt2.aml...> -d<dsdt.aml>\n"
+literal|"     *     iasl -e<dsdt.aml,ssdt2.aml...> -d<ssdt1.aml>\n"
+literal|"     */\n"
+argument_list|,
+name|AcpiGbl_NumExternalMethods
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|AcpiGbl_NumExternalMethods
+operator|!=
+name|AcpiGbl_ResolvedExternalMethods
+condition|)
+block|{
+comment|/* The -e option was specified, but there are still some unresolved externals */
+name|AcpiOsPrintf
+argument_list|(
+literal|"    /*\n"
+literal|"     * iASL Warning: There were %u external control methods found during\n"
+literal|"     * disassembly, but only %u %s resolved (%u unresolved). Additional\n"
+literal|"     * ACPI tables are required to properly disassemble the code. This\n"
+literal|"     * resulting disassembler output file may not compile because the\n"
+literal|"     * disassembler did not know how many arguments to assign to the\n"
+literal|"     * unresolved methods.\n"
+literal|"     */\n"
+argument_list|,
+name|AcpiGbl_NumExternalMethods
+argument_list|,
+name|AcpiGbl_ResolvedExternalMethods
+argument_list|,
+operator|(
+name|AcpiGbl_ResolvedExternalMethods
+operator|>
+literal|1
+condition|?
+literal|"were"
+else|:
+literal|"was"
+operator|)
+argument_list|,
+operator|(
+name|AcpiGbl_NumExternalMethods
+operator|-
+name|AcpiGbl_ResolvedExternalMethods
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|AcpiGbl_ExternalFileList
+condition|)
+block|{
+comment|/* The -e option was not specified */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+literal|"iASL Warning: There were %u external control methods found during\n"
+literal|"disassembly, but additional ACPI tables to resolve these externals\n"
+literal|"were not specified. The resulting disassembler output file may not\n"
+literal|"compile because the disassembler did not know how many arguments\n"
+literal|"to assign to these methods. To specify the tables needed to resolve\n"
+literal|"external control method references, use the one of the following\n"
+literal|"example iASL invocations:\n"
+literal|"    iasl -e<ssdt1.aml,ssdt2.aml...> -d<dsdt.aml>\n"
+literal|"    iasl -e<dsdt.aml,ssdt2.aml...> -d<ssdt1.aml>\n"
+argument_list|,
+name|AcpiGbl_NumExternalMethods
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|AcpiGbl_NumExternalMethods
+operator|!=
+name|AcpiGbl_ResolvedExternalMethods
+condition|)
+block|{
+comment|/* The -e option was specified, but there are still some unresolved externals */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+literal|"iASL Warning: There were %u external control methods found during\n"
+literal|"disassembly, but only %u %s resolved (%u unresolved). Additional\n"
+literal|"ACPI tables are required to properly disassemble the code. The\n"
+literal|"resulting disassembler output file may not compile because the\n"
+literal|"disassembler did not know how many arguments to assign to the\n"
+literal|"unresolved methods.\n"
+argument_list|,
+name|AcpiGbl_NumExternalMethods
+argument_list|,
+name|AcpiGbl_ResolvedExternalMethods
+argument_list|,
+operator|(
+name|AcpiGbl_ResolvedExternalMethods
+operator|>
+literal|1
+condition|?
+literal|"were"
+else|:
+literal|"was"
+operator|)
+argument_list|,
+operator|(
+name|AcpiGbl_NumExternalMethods
+operator|-
+name|AcpiGbl_ResolvedExternalMethods
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 

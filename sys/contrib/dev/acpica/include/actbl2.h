@@ -151,6 +151,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_MTMR
+value|"MTMR"
+end_define
+
+begin_comment
+comment|/* MID Timer table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_SLIC
 value|"SLIC"
 end_define
@@ -201,6 +212,17 @@ end_define
 
 begin_comment
 comment|/* Uefi Boot Optimization Table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_VRTC
+value|"VRTC"
+end_define
+
+begin_comment
+comment|/* Virtual Real Time Clock Table */
 end_comment
 
 begin_define
@@ -2382,6 +2404,47 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*******************************************************************************  *  * MTMR - MID Timer Table  *        Version 1  *  * Conforms to "Simple Firmware Interface Specification",  * Draft 0.8.2, Oct 19, 2010  * NOTE: The ACPI MTMR is equivalent to the SFI MTMR table.  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_mtmr
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_MTMR
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* MTMR entry */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_mtmr_entry
+block|{
+name|ACPI_GENERIC_ADDRESS
+name|PhysicalAddress
+decl_stmt|;
+name|UINT32
+name|Frequency
+decl_stmt|;
+name|UINT32
+name|Irq
+decl_stmt|;
+block|}
+name|ACPI_MTMR_ENTRY
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table  *        Version 1  *  * Conforms to "OEM Activation 2.0 for Windows Vista Operating Systems",  * Copyright 2006  *  ******************************************************************************/
 end_comment
 
@@ -2800,6 +2863,44 @@ decl_stmt|;
 comment|/* Offset of remaining data in table */
 block|}
 name|ACPI_TABLE_UEFI
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * VRTC - Virtual Real Time Clock Table  *        Version 1  *  * Conforms to "Simple Firmware Interface Specification",  * Draft 0.8.2, Oct 19, 2010  * NOTE: The ACPI VRTC is equivalent to The SFI MRTC table.  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_vrtc
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_VRTC
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* VRTC entry */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_vrtc_entry
+block|{
+name|ACPI_GENERIC_ADDRESS
+name|PhysicalAddress
+decl_stmt|;
+name|UINT32
+name|Irq
+decl_stmt|;
+block|}
+name|ACPI_VRTC_ENTRY
 typedef|;
 end_typedef
 

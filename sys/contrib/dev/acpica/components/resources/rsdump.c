@@ -941,6 +941,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Sanity check the length. It must not be zero, or we loop forever */
+if|if
+condition|(
+operator|!
+name|ResourceList
+operator|->
+name|Length
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Invalid zero length descriptor in resource list\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Dump the resource descriptor */
 if|if
 condition|(
