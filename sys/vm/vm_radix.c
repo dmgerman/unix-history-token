@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -47,30 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -95,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
 end_include
 
 begin_include
