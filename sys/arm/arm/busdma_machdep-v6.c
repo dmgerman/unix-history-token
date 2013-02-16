@@ -3788,7 +3788,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+literal|0
 operator|)
 return|;
 block|}
