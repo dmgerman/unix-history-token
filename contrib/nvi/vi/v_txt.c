@@ -7167,13 +7167,17 @@ name|sw
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+operator|--
+name|target
+expr_stmt|;
 name|target
 operator|-=
-operator|--
 name|target
 operator|%
 name|sw
 expr_stmt|;
+block|}
 comment|/* 	 * The AI characters will be turned into overwrite characters if the 	 * cursor immediately follows them.  We test both the cursor position 	 * and the indent flag because there's no single test.  (^T can only 	 * be detected by the cursor position, and while we know that the test 	 * is always true for ^D, the cursor can be in more than one place, as 	 * "0^D" and "^D" are different.) 	 */
 name|ai_reset
 operator|=
