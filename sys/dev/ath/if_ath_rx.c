@@ -3860,20 +3860,18 @@ name|sc_dfstask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that all the RX frames were handled that 	 * need to be handled, kick the PCU if there's 	 * been an RXEOL condition. 	 */
+if|if
+condition|(
+name|resched
+operator|&&
+name|kickpcu
+condition|)
+block|{
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|resched
-operator|&&
-name|sc
-operator|->
-name|sc_kickpcu
-condition|)
-block|{
 name|ATH_KTR
 argument_list|(
 name|sc
@@ -3898,13 +3896,18 @@ argument_list|,
 name|npkts
 argument_list|)
 expr_stmt|;
-comment|/* XXX rxslink? */
+comment|/* 		 * Go through the process of fully tearing down 		 * the RX buffers and reinitialising them. 		 * 		 * There's a hardware bug that causes the RX FIFO 		 * to get confused under certain conditions and 		 * constantly write over the same frame, leading 		 * the RX driver code here to get heavily confused. 		 */
 if|#
 directive|if
-literal|0
-block|ath_startrecv(sc);
+literal|1
+name|ath_startrecv
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
+comment|/* 		 * Disabled for now - it'd be nice to be able to do 		 * this in order to limit the amount of CPU time spent 		 * reinitialising the RX side (and thus minimise RX 		 * drops) however there's a hardware issue that 		 * causes things to get too far out of whack. 		 */
 comment|/* 		 * XXX can we hold the PCU lock here? 		 * Are there any net80211 buffer calls involved? 		 */
 name|bf
 operator|=
@@ -3962,12 +3965,12 @@ name|sc_kickpcu
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX check this inside of IF_LOCK? */
 if|if
 condition|(
