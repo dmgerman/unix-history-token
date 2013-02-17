@@ -3023,7 +3023,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"direnter: missing name"
+literal|"ext2_direnter: missing name"
 argument_list|)
 expr_stmt|;
 endif|#

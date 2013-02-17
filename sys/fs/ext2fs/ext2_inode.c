@@ -1570,7 +1570,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"itrunc: newspace"
+literal|"ext2_truncate: newspace"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1954,6 +1954,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
@@ -1963,9 +1964,10 @@ name|B_DONE
 operator||
 name|B_DELWRI
 operator|)
+operator|)
+operator|==
+literal|0
 condition|)
-block|{ 	}
-else|else
 block|{
 name|bp
 operator|->

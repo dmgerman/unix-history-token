@@ -1103,7 +1103,7 @@ name|in_lbn
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_reallocblk: start == end"
+literal|"ext2_reallocblks: start == end"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4918,7 +4918,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"blkfree: freeing free block"
+literal|"ext2_blkfree: freeing free block"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5038,7 +5038,6 @@ name|char
 modifier|*
 name|ibp
 decl_stmt|;
-comment|/*	mode_t save_i_mode; */
 name|pip
 operator|=
 name|VTOI
@@ -5208,7 +5207,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ifree: freeing free inode"
+literal|"ext2_vfree: freeing free inode"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5430,7 +5429,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ext2fs_alloccg: map corrupted"
+literal|"ext2_mapsearch: map corrupted"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
