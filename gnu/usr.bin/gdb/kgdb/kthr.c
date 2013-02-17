@@ -107,12 +107,6 @@ directive|include
 file|"kgdb.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pcb.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|CORE_ADDR
@@ -124,13 +118,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|dumptid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|CORE_ADDR
-name|stoppcbs
 decl_stmt|;
 end_decl_stmt
 
@@ -390,10 +377,6 @@ name|td_state
 operator|==
 name|TDS_RUNNING
 operator|&&
-name|stoppcbs
-operator|!=
-literal|0
-operator|&&
 name|CPU_ISSET
 argument_list|(
 name|td
@@ -408,20 +391,12 @@ name|kt
 operator|->
 name|pcb
 operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|stoppcbs
-operator|+
-sizeof|sizeof
+name|kgdb_trgt_core_pcb
 argument_list|(
-expr|struct
-name|pcb
-argument_list|)
-operator|*
 name|td
 operator|.
 name|td_oncpu
+argument_list|)
 expr_stmt|;
 else|else
 name|kt
@@ -690,13 +665,6 @@ operator|&
 name|stopped_cpus
 argument_list|,
 name|cpusetsize
-argument_list|)
-expr_stmt|;
-name|stoppcbs
-operator|=
-name|kgdb_lookup
-argument_list|(
-literal|"stoppcbs"
 argument_list|)
 expr_stmt|;
 name|kgdb_thr_add_procs
