@@ -5385,20 +5385,6 @@ operator||
 name|SDHCI_INT_DATA_END_BIT
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|intmask
-operator|&
-name|SDHCI_INT_DATA_CRC
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"DATA CRC error\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|slot
 operator|->
 name|curcmd
@@ -5407,7 +5393,6 @@ name|error
 operator|=
 name|MMC_ERR_BADCRC
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|slot
