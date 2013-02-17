@@ -654,7 +654,7 @@ name|sw_pidtype
 decl_stmt|;
 comment|/* "daemon" or "process group" */
 name|int
-name|run_cmd
+name|sw_runcmd
 decl_stmt|;
 comment|/* run command or send PID to signal */
 name|char
@@ -8602,6 +8602,13 @@ name|tmp
 decl_stmt|;
 if|if
 condition|(
+name|swork
+operator|->
+name|sw_runcmd
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|!
 operator|(
 name|swork
@@ -8614,6 +8621,7 @@ operator|->
 name|sw_pid
 operator|==
 literal|0
+operator|)
 condition|)
 return|return;
 comment|/* no work to do... */
@@ -8683,6 +8691,27 @@ condition|(
 name|noaction
 condition|)
 block|{
+if|if
+condition|(
+name|swork
+operator|->
+name|sw_runcmd
+condition|)
+name|printf
+argument_list|(
+literal|"\tsh -c '%s %d'\n"
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
+argument_list|,
+name|swork
+operator|->
+name|sw_signum
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"\tkill -%d %d \t\t# %s\n"
@@ -8716,13 +8745,14 @@ argument_list|,
 name|secs
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
 condition|(
 name|swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 condition|)
 block|{
 name|asprintf
@@ -9092,7 +9122,7 @@ name|zwork
 operator|->
 name|zw_swork
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|==
 literal|0
 operator|&&
@@ -9503,7 +9533,7 @@ argument_list|)
 expr_stmt|;
 name|stmp
 operator|->
-name|run_cmd
+name|sw_runcmd
 operator|=
 literal|0
 expr_stmt|;
@@ -9519,7 +9549,20 @@ condition|)
 block|{
 name|stmp
 operator|->
-name|run_cmd
+name|sw_pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_pidok
+operator|=
+literal|0
+expr_stmt|;
+name|stmp
+operator|->
+name|sw_runcmd
 operator|=
 literal|1
 expr_stmt|;
