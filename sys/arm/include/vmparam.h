@@ -372,6 +372,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Ceiling on the size of the kmem submap: 60% of the kernel map.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MAX
+value|((vm_max_kernel_address - \     VM_MIN_KERNEL_ADDRESS + 1) * 3 / 5)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
