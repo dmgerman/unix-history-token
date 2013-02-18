@@ -148,7 +148,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u.%06u] [%llu] TXSTATUS: TxDone=%d, TS=0x%08x\n"
+literal|"[%u.%06u] [%llu] TXSTATUS: TxDone=%d, FrmOk=%d, filt=%d, TS=0x%08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -206,6 +206,38 @@ argument_list|,
 name|AR_TxDone
 argument_list|)
 argument_list|,
+name|MF
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|1
+index|]
+argument_list|,
+name|AR_FrmXmitOK
+argument_list|)
+argument_list|,
+name|MF
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|1
+index|]
+argument_list|,
+name|AR_Filtered
+argument_list|)
+argument_list|,
 name|txs
 operator|.
 name|u
@@ -221,7 +253,7 @@ expr_stmt|;
 comment|/* ds_txstatus0 */
 name|printf
 argument_list|(
-literal|"    RX RSSI 0 [%d %d %d]\n"
+literal|"    RX RSSI 0 [%d %d %d]"
 argument_list|,
 name|MS
 argument_list|(
@@ -272,9 +304,80 @@ name|AR_TxRSSIAnt02
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* ds_txstatus5 */
 name|printf
 argument_list|(
-literal|"    BA Valid=%d\n"
+literal|" RX RSSI 1 [%d %d %d] Comb=%d\n"
+argument_list|,
+name|MS
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|5
+index|]
+argument_list|,
+name|AR_TxRSSIAnt10
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|5
+index|]
+argument_list|,
+name|AR_TxRSSIAnt11
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|5
+index|]
+argument_list|,
+name|AR_TxRSSIAnt12
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|txs
+operator|.
+name|u
+operator|.
+name|tx
+operator|.
+name|status
+index|[
+literal|5
+index|]
+argument_list|,
+name|AR_TxRSSICombined
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* ds_txstatus0 */
+name|printf
+argument_list|(
+literal|"    BA Valid=%d"
 argument_list|,
 name|MF
 argument_list|(
@@ -296,7 +399,7 @@ expr_stmt|;
 comment|/* ds_txstatus1 */
 name|printf
 argument_list|(
-literal|"    Frmok=%d, xretries=%d, fifounderrun=%d, filt=%d\n"
+literal|", Frmok=%d, xretries=%d, fifounderrun=%d, filt=%d\n"
 argument_list|,
 name|MF
 argument_list|(
@@ -489,7 +592,7 @@ expr_stmt|;
 comment|/* ds_txstatus2 */
 name|printf
 argument_list|(
-literal|"    TxTimestamp=0x%08x\n"
+literal|"    TxTimestamp=0x%08x"
 argument_list|,
 name|txs
 operator|.
@@ -507,7 +610,7 @@ comment|/* ds_txstatus3 */
 comment|/* ds_txstatus4 */
 name|printf
 argument_list|(
-literal|"    BALow=0x%08x\n"
+literal|", BALow=0x%08x"
 argument_list|,
 name|txs
 operator|.
@@ -523,7 +626,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    BAHigh=0x%08x\n"
+literal|", BAHigh=0x%08x\n"
 argument_list|,
 name|txs
 operator|.
@@ -535,76 +638,6 @@ name|status
 index|[
 literal|4
 index|]
-argument_list|)
-expr_stmt|;
-comment|/* ds_txstatus5 */
-name|printf
-argument_list|(
-literal|"    RX RSSI 1 [%d %d %d] Comb=%d\n"
-argument_list|,
-name|MS
-argument_list|(
-name|txs
-operator|.
-name|u
-operator|.
-name|tx
-operator|.
-name|status
-index|[
-literal|5
-index|]
-argument_list|,
-name|AR_TxRSSIAnt10
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|txs
-operator|.
-name|u
-operator|.
-name|tx
-operator|.
-name|status
-index|[
-literal|5
-index|]
-argument_list|,
-name|AR_TxRSSIAnt11
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|txs
-operator|.
-name|u
-operator|.
-name|tx
-operator|.
-name|status
-index|[
-literal|5
-index|]
-argument_list|,
-name|AR_TxRSSIAnt12
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|txs
-operator|.
-name|u
-operator|.
-name|tx
-operator|.
-name|status
-index|[
-literal|5
-index|]
-argument_list|,
-name|AR_TxRSSICombined
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ds_txstatus6 */
@@ -1136,10 +1169,10 @@ name|AR_XmitDataTries3
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ds_ctl3 */
+comment|/* ds_ctl3, 4 */
 name|printf
 argument_list|(
-literal|"    rate0=0x%02x, rate1=0x%02x, rate2=0x%02x, rate3=0x%02x\n"
+literal|"    try 0: Rate=0x%02x, PktDur=%d, RTS/CTS ena=%d\n"
 argument_list|,
 name|MS
 argument_list|(
@@ -1149,39 +1182,6 @@ name|ds_ctl3
 argument_list|,
 name|AR_XmitRate0
 argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|txc
-operator|.
-name|ds_ctl3
-argument_list|,
-name|AR_XmitRate1
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|txc
-operator|.
-name|ds_ctl3
-argument_list|,
-name|AR_XmitRate2
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|txc
-operator|.
-name|ds_ctl3
-argument_list|,
-name|AR_XmitRate3
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* ds_ctl4 */
-name|printf
-argument_list|(
-literal|"    try 0: PktDur=%d, RTS/CTS ena=%d\n"
 argument_list|,
 name|MS
 argument_list|(
@@ -1204,7 +1204,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    try 1: PktDur=%d, RTS/CTS ena=%d\n"
+literal|"    try 1: Rate=0x%02x, PktDur=%d, RTS/CTS ena=%d\n"
+argument_list|,
+name|MS
+argument_list|(
+name|txc
+operator|.
+name|ds_ctl3
+argument_list|,
+name|AR_XmitRate1
+argument_list|)
 argument_list|,
 name|MS
 argument_list|(
@@ -1225,10 +1234,19 @@ name|AR_RTSCTSQual1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ds_ctl5 */
+comment|/* ds_ctl3, 5 */
 name|printf
 argument_list|(
-literal|"    try 2: PktDur=%d, RTS/CTS ena=%d\n"
+literal|"    try 2: Rate=0x%02x, PktDur=%d, RTS/CTS ena=%d\n"
+argument_list|,
+name|MS
+argument_list|(
+name|txc
+operator|.
+name|ds_ctl3
+argument_list|,
+name|AR_XmitRate2
+argument_list|)
 argument_list|,
 name|MS
 argument_list|(
@@ -1251,7 +1269,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    try 3: PktDur=%d, RTS/CTS ena=%d\n"
+literal|"    try 3: Rate=0x%02x, PktDur=%d, RTS/CTS ena=%d\n"
+argument_list|,
+name|MS
+argument_list|(
+name|txc
+operator|.
+name|ds_ctl3
+argument_list|,
+name|AR_XmitRate3
+argument_list|)
 argument_list|,
 name|MS
 argument_list|(
@@ -1588,7 +1615,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u.%06u] [%llu] RXSTATUS: RxDone=%d, TS=0x%08x\n"
+literal|"[%u.%06u] [%llu] RXSTATUS: RxDone=%d, RxRate=0x%02x, TS=0x%08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -1637,6 +1664,15 @@ operator|.
 name|ds_rxstatus8
 argument_list|,
 name|AR_RxDone
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus0
+argument_list|,
+name|AR_RxRate
 argument_list|)
 argument_list|,
 name|rxs
@@ -1699,10 +1735,62 @@ name|AR_RxRSSIAnt02
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* status4 */
+name|printf
+argument_list|(
+literal|"  RSSIExt[0]=%d, RSSIExt[1]=%d, RSSIExt[2]=%d, RSSIComb=%d\n"
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus4
+argument_list|,
+name|AR_RxRSSIAnt10
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus4
+argument_list|,
+name|AR_RxRSSIAnt11
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus4
+argument_list|,
+name|AR_RxRSSIAnt12
+argument_list|)
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus4
+argument_list|,
+name|AR_RxRSSICombined
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* status2 */
+name|printf
+argument_list|(
+literal|"  RxTimestamp=0x%08x,"
+argument_list|,
+name|rxs
+operator|.
+name|ds_rxstatus2
+argument_list|)
+expr_stmt|;
 comment|/* status1 */
 name|printf
 argument_list|(
-literal|"  DataLen=%d, RxMore=%d, NumDelim=%d\n"
+literal|" DataLen=%d, RxMore=%d, NumDelim=%d\n"
 argument_list|,
 name|rxs
 operator|.
@@ -1727,16 +1815,6 @@ name|ds_rxstatus1
 argument_list|,
 name|AR_NumDelim
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* status2 */
-name|printf
-argument_list|(
-literal|"  RxTimestamp=0x%08x\n"
-argument_list|,
-name|rxs
-operator|.
-name|ds_rxstatus2
 argument_list|)
 expr_stmt|;
 comment|/* status3 - RxRate however is for Owl 2.0 */
@@ -1787,48 +1865,6 @@ operator|.
 name|ds_rxstatus3
 argument_list|,
 name|AR_RxAntenna
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* status4 */
-name|printf
-argument_list|(
-literal|"  RSSIExt[0]=%d, RSSIExt[1]=%d, RSSIExt[2]=%d, RSSIComb=%d\n"
-argument_list|,
-name|MS
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus4
-argument_list|,
-name|AR_RxRSSIAnt10
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus4
-argument_list|,
-name|AR_RxRSSIAnt11
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus4
-argument_list|,
-name|AR_RxRSSIAnt12
-argument_list|)
-argument_list|,
-name|MS
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus4
-argument_list|,
-name|AR_RxRSSICombined
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1935,47 +1971,6 @@ name|AR_RxKeyIdxValid
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If PHY error, print that out. Otherwise, the key index */
-if|if
-condition|(
-name|MF
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus8
-argument_list|,
-name|AR_PHYErr
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"  PhyErrCode=0x%02x\n"
-argument_list|,
-name|MS
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus8
-argument_list|,
-name|AR_PHYErrCode
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"  KeyIdx=0x%02x\n"
-argument_list|,
-name|MS
-argument_list|(
-name|rxs
-operator|.
-name|ds_rxstatus8
-argument_list|,
-name|AR_KeyIdx
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"  RxMoreAggr=%d, RxAggr=%d, PostDelimCRCErr=%d, HiRxChain=%d\n"
@@ -2017,9 +2012,50 @@ name|AR_HiRxChain
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If PHY error, print that out. Otherwise, the key index */
+if|if
+condition|(
+name|MF
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus8
+argument_list|,
+name|AR_PHYErr
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"  KeyMiss=%d\n"
+literal|"  PhyErrCode=0x%02x"
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus8
+argument_list|,
+name|AR_PHYErrCode
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"  KeyIdx=0x%02x"
+argument_list|,
+name|MS
+argument_list|(
+name|rxs
+operator|.
+name|ds_rxstatus8
+argument_list|,
+name|AR_KeyIdx
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", KeyMiss=%d\n"
 argument_list|,
 name|MF
 argument_list|(
