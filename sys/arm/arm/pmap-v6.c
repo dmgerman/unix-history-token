@@ -605,6 +605,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_offset_t
+name|vm_max_kernel_address
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|pmap
 name|kernel_pmap_store

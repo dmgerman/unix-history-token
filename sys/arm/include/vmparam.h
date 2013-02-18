@@ -329,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|0xffffffff
+value|(vm_max_kernel_address)
 end_define
 
 begin_comment
@@ -489,6 +489,13 @@ end_endif
 begin_comment
 comment|/* ARM_USE_SMALL_ALLOC */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|vm_max_kernel_address
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

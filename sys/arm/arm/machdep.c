@@ -5616,9 +5616,6 @@ name|l2_start
 decl_stmt|,
 name|lastaddr
 decl_stmt|;
-name|vm_offset_t
-name|pmap_bootstrap_lastaddr
-decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|,
@@ -6051,7 +6048,7 @@ operator|=
 name|curr
 expr_stmt|;
 comment|/* Platform-specific initialisation */
-name|pmap_bootstrap_lastaddr
+name|vm_max_kernel_address
 operator|=
 name|initarm_lastaddr
 argument_list|()
@@ -6776,7 +6773,7 @@ name|pmap_bootstrap
 argument_list|(
 name|freemempos
 argument_list|,
-name|pmap_bootstrap_lastaddr
+name|vm_max_kernel_address
 argument_list|,
 operator|&
 name|kernel_l1pt
