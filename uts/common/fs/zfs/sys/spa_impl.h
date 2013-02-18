@@ -771,6 +771,16 @@ name|uint64_t
 name|spa_deadman_synctime
 decl_stmt|;
 comment|/* deadman expiration timer */
+name|kmutex_t
+name|spa_iokstat_lock
+decl_stmt|;
+comment|/* protects spa_iokstat_* */
+name|struct
+name|kstat
+modifier|*
+name|spa_iokstat
+decl_stmt|;
+comment|/* kstat of io to this pool */
 comment|/* 	 * spa_refcnt& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
 name|spa_config_lock_t
 name|spa_config_lock
