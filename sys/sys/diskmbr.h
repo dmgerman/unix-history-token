@@ -154,6 +154,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_HFS
+value|0xaf
+end_define
+
+begin_comment
+comment|/* HFS/HFS+ partition type */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_LINSWP
 value|0x82
 end_define
