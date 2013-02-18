@@ -184,7 +184,7 @@ name|size
 condition|)
 name|panic
 argument_list|(
-literal|"Address 0x%08jX bigger than size 0x%08X\n"
+literal|"Address offset 0x%08jX bigger than size 0x%08X\n"
 argument_list|,
 operator|(
 name|intmax_t
