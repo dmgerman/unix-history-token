@@ -626,7 +626,6 @@ name|ATH_ALQ_INTR_STATUS
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|intr
 argument_list|)
 argument_list|,
