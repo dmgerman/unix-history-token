@@ -2942,11 +2942,12 @@ decl_stmt|,
 modifier|*
 name|xrates
 decl_stmt|;
-name|int
-name|ht_state_change
-init|=
+if|#
+directive|if
 literal|0
-decl_stmt|;
+block|int ht_state_change = 0;
+endif|#
+directive|endif
 name|wh
 operator|=
 name|mtod
