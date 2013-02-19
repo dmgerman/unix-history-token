@@ -1367,10 +1367,10 @@ comment|/* Get the previous shiftwidth column. */
 name|cno
 operator|=
 name|scno
+operator|--
 expr_stmt|;
 name|scno
 operator|-=
-operator|--
 name|scno
 operator|%
 name|sw
