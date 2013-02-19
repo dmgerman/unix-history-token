@@ -97,10 +97,24 @@ directive|include
 file|<rpc/key_prot.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|int
+name|key_setnet
+parameter_list|(
+name|struct
+name|key_netstarg
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|fullname
