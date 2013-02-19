@@ -3368,7 +3368,7 @@ argument_list|(
 argument|if (connected || old !=
 literal|2
 argument|) { 			device_printf(devinfo->dev,
-literal|"Pin sense: nid=%d sence=0x%08x (%sconnected)\n"
+literal|"Pin sense: nid=%d sense=0x%08x (%sconnected)\n"
 argument|, 			    w->nid, res, !connected ?
 literal|"dis"
 argument|:
@@ -4331,7 +4331,7 @@ block|}
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->dev,
-literal|"Pin sense: nid=%d sence=0x%08x "
+literal|"Pin sense: nid=%d sense=0x%08x "
 literal|"(%sconnected, ELD %svalid)\n"
 argument|, 		    w->nid, res, 		    (res& HDA_CMD_GET_PIN_SENSE_PRESENCE_DETECT) ?
 literal|""
