@@ -275,12 +275,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap intilization sequence frequency at higher  * value. Default is standard 400KHz  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
 name|bcm2835_sdhci_min_freq
 init|=
-literal|8000000
+literal|400000
 decl_stmt|;
 end_decl_stmt
 
@@ -1713,7 +1717,6 @@ modifier|*
 name|slot
 parameter_list|)
 block|{
-comment|/*  	 * Arasan HC seems to have problem with  	 * Data CRC on lower frequencies. Cap minimum 	 * frequncy at 8MHz (or whatever set via tunable)  	 * to work around this issue 	 */
 return|return
 name|bcm2835_sdhci_min_freq
 return|;
