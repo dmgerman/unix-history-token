@@ -744,6 +744,12 @@ operator|&
 name|smark
 argument_list|)
 expr_stmt|;
+name|setstackmark
+argument_list|(
+operator|&
+name|smark
+argument_list|)
+expr_stmt|;
 block|}
 name|popfile
 argument_list|()
@@ -1289,6 +1295,12 @@ operator|=
 name|next
 expr_stmt|;
 name|popstackmark
+argument_list|(
+operator|&
+name|smark
+argument_list|)
+expr_stmt|;
+name|setstackmark
 argument_list|(
 operator|&
 name|smark
