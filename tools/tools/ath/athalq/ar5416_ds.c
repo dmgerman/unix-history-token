@@ -1497,6 +1497,20 @@ name|AR_STBC3
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"    RTSCtsRate=0x%02x\n"
+argument_list|,
+name|MS
+argument_list|(
+name|txc
+operator|.
+name|ds_ctl7
+argument_list|,
+name|AR_RTSCTSRate
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* ds_ctl8 */
 name|printf
 argument_list|(
