@@ -1801,6 +1801,12 @@ literal|8
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"set_i8254_freq: unknown operational mode"
+argument_list|)
+expr_stmt|;
 block|}
 name|timer0_mode
 operator|=
