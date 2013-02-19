@@ -276,7 +276,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap intilization sequence frequency at higher  * value. Default is standard 400KHz  */
+comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap initialization sequence frequency at higher  * value. Default is standard 400kHz  */
 end_comment
 
 begin_decl_stmt
