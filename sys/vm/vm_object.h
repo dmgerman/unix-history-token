@@ -539,17 +539,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_OBJECT_LOCKED
-parameter_list|(
-name|object
-parameter_list|)
-define|\
-value|rw_wowned(&(object)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_OBJECT_SLEEP
 parameter_list|(
 name|wchan
