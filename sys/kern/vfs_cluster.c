@@ -1775,7 +1775,7 @@ name|tsize
 operator|=
 name|size
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -1868,7 +1868,7 @@ operator|-=
 name|tinc
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -1991,7 +1991,7 @@ operator|.
 name|cluster_entry
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -2104,7 +2104,7 @@ operator|=
 name|bogus_page
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -2166,7 +2166,7 @@ name|size
 expr_stmt|;
 block|}
 comment|/* 	 * Fully valid pages in the cluster are already good and do not need 	 * to be re-read from disk.  Replace the page with bogus_page 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -2228,7 +2228,7 @@ operator|=
 name|bogus_page
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->
@@ -3864,7 +3864,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -3916,7 +3916,7 @@ operator|&
 name|VPO_BUSY
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -4018,7 +4018,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->

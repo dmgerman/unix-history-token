@@ -5469,7 +5469,7 @@ operator|->
 name|pm_active
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|pm
 operator|->
@@ -5531,7 +5531,7 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|pm
 operator|->
@@ -5724,7 +5724,7 @@ name|pm
 operator|->
 name|pm_tsb_obj
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -5793,7 +5793,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)

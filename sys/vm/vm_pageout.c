@@ -1089,7 +1089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queues  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
+comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queues  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
 end_comment
 
 begin_function
@@ -1176,7 +1176,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2355,7 +2355,7 @@ if|if
 condition|(
 operator|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2400,7 +2400,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2462,7 +2462,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2494,7 +2494,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2521,7 +2521,7 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2537,7 +2537,7 @@ argument_list|,
 name|OBJPC_SYNC
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2606,7 +2606,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2637,7 +2637,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3189,7 +3189,7 @@ condition|)
 goto|goto
 name|unlock_return
 goto|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -3200,7 +3200,7 @@ name|object
 operator|!=
 name|first_object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3214,7 +3214,7 @@ name|object
 operator|!=
 name|first_object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3316,7 +3316,7 @@ name|obj
 operator|!=
 name|NULL
 operator|&&
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3351,7 +3351,7 @@ name|bigobj
 operator|!=
 name|NULL
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bigobj
 argument_list|)
@@ -3362,7 +3362,7 @@ name|obj
 expr_stmt|;
 block|}
 else|else
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3406,7 +3406,7 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bigobj
 argument_list|)
@@ -3472,7 +3472,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3488,7 +3488,7 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3838,7 +3838,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3858,7 +3858,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3890,7 +3890,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4002,7 +4002,7 @@ name|actcount
 operator|+
 name|ACT_ADVANCE
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4059,7 +4059,7 @@ name|ACT_ADVANCE
 operator|+
 literal|1
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4082,7 +4082,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4305,7 +4305,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4405,7 +4405,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4424,7 +4424,7 @@ name|curthread
 argument_list|)
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4451,7 +4451,7 @@ goto|goto
 name|unlock_and_continue
 goto|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4611,7 +4611,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4676,7 +4676,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4911,7 +4911,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4926,7 +4926,7 @@ name|next
 argument_list|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4975,7 +4975,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5195,7 +5195,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5938,7 +5938,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5953,7 +5953,7 @@ name|next
 argument_list|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6002,7 +6002,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6139,7 +6139,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)

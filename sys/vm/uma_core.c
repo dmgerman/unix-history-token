@@ -4290,7 +4290,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * This looks a little weird since we're getting one page at a time. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4456,7 +4456,7 @@ expr_stmt|;
 block|}
 name|done
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)

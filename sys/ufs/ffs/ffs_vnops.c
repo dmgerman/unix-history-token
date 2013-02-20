@@ -3490,7 +3490,7 @@ name|a_reqpage
 index|]
 expr_stmt|;
 comment|/* 	 * if ANY DEV_BSIZE blocks are valid on a large filesystem block, 	 * then the entire page is valid.  Since the page may be mapped, 	 * user programs might reference data beyond the actual end of file 	 * occuring within the page.  We have to zero that data. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mreq
 operator|->
@@ -3574,7 +3574,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mreq
 operator|->
@@ -3585,7 +3585,7 @@ return|return
 name|VM_PAGER_OK
 return|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mreq
 operator|->

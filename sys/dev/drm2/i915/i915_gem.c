@@ -4765,7 +4765,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -4806,7 +4806,7 @@ argument_list|,
 name|obj_pi
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -5001,7 +5001,7 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -5061,7 +5061,7 @@ argument_list|(
 name|vm_obj
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -6699,7 +6699,7 @@ name|NULL
 expr_stmt|;
 name|retry
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -6909,7 +6909,7 @@ name|fault_mappable
 operator|=
 name|true
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -7172,7 +7172,7 @@ goto|goto
 name|unlocked_vmobj
 goto|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -10631,7 +10631,7 @@ name|base
 operator|.
 name|vm_obj
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -10674,7 +10674,7 @@ goto|goto
 name|failed
 goto|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -10748,7 +10748,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -11001,7 +11001,7 @@ name|size
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 operator|->
@@ -11109,7 +11109,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 operator|->
@@ -11218,7 +11218,7 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|devobj
 argument_list|)
@@ -11277,7 +11277,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|devobj
 argument_list|)
@@ -11866,7 +11866,7 @@ name|base
 operator|.
 name|vm_obj
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -11882,7 +11882,7 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -17303,7 +17303,7 @@ name|size
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17347,7 +17347,7 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* XXX */
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17411,7 +17411,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17457,7 +17457,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17677,7 +17677,7 @@ name|size
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17731,7 +17731,7 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17793,7 +17793,7 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 operator|->
@@ -17834,7 +17834,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 operator|->

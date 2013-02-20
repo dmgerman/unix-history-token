@@ -5586,7 +5586,7 @@ operator|(
 name|ENOSPC
 operator|)
 return|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|uobj
 argument_list|)
@@ -5710,14 +5710,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|uobj
 argument_list|)
 expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|uobj
 argument_list|)
@@ -5822,7 +5822,7 @@ name|NULL
 expr_stmt|;
 else|else
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|uobj
 argument_list|)
@@ -5903,7 +5903,7 @@ name|size
 operator|=
 name|newpages
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|uobj
 argument_list|)

@@ -688,7 +688,7 @@ argument_list|)
 operator||
 name|VM_ALLOC_NOBUSY
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -750,7 +750,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -793,7 +793,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -858,7 +858,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1027,7 +1027,7 @@ argument_list|)
 operator||
 name|VM_ALLOC_NOBUSY
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1074,7 +1074,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1117,7 +1117,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1201,7 +1201,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1810,7 +1810,7 @@ argument_list|)
 operator||
 name|VM_ALLOC_WIRED
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1867,7 +1867,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1918,7 +1918,7 @@ operator|&=
 operator|~
 name|MAP_ENTRY_IN_TRANSITION
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1966,7 +1966,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -2035,7 +2035,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -2083,7 +2083,7 @@ name|entry
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop thru pages, entering them in the pmap. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -2141,7 +2141,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)

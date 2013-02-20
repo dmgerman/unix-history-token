@@ -5544,7 +5544,7 @@ name|bp
 operator|->
 name|b_offset
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -5820,7 +5820,7 @@ operator|)
 name|PAGE_MASK
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -6873,7 +6873,7 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -7016,7 +7016,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->
@@ -9887,7 +9887,7 @@ name|mnt_stat
 operator|.
 name|f_iosize
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -9997,7 +9997,7 @@ goto|goto
 name|notinmem
 goto|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10007,7 +10007,7 @@ literal|1
 return|;
 name|notinmem
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10086,7 +10086,7 @@ literal|"vfs_clean_pages_dirty_buf: no buffer offset"
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -10185,7 +10185,7 @@ operator|=
 name|noff
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->
@@ -11904,7 +11904,7 @@ name|desiredpages
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -11989,7 +11989,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->
@@ -12035,7 +12035,7 @@ name|b_bufobj
 operator|->
 name|bo_object
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -12224,7 +12224,7 @@ operator|=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -13339,7 +13339,7 @@ name|bogus
 operator|=
 literal|0
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -13574,7 +13574,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -13708,7 +13708,7 @@ name|b_bufobj
 operator|->
 name|bo_object
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -13822,7 +13822,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -14229,7 +14229,7 @@ literal|"vfs_busy_pages: no buffer offset"
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -14376,7 +14376,7 @@ operator|)
 name|PAGE_MASK
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -14470,7 +14470,7 @@ operator|&
 name|PAGE_MASK
 operator|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -14544,7 +14544,7 @@ operator|=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->
@@ -14620,7 +14620,7 @@ operator|&=
 operator|~
 name|BIO_ERROR
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -15009,7 +15009,7 @@ expr_stmt|;
 block|}
 name|unlock
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->

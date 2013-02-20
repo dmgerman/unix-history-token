@@ -2360,7 +2360,7 @@ name|EINVAL
 return|;
 block|}
 comment|/* 	 * Allocate the pages early, before acquiring the lock, 	 * because vm_page_grab() may sleep and we can't hold a mutex 	 * while sleeping. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2419,7 +2419,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2452,7 +2452,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2468,7 +2468,7 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Bind the individual pages and flush the chipset's 	 * TLB. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2616,7 +2616,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2735,7 +2735,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2840,7 +2840,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
 operator|->
@@ -2896,7 +2896,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mem
 operator|->

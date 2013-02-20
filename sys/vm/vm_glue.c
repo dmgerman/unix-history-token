@@ -814,7 +814,7 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -939,7 +939,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1452,7 +1452,7 @@ operator|=
 name|pages
 expr_stmt|;
 comment|/*  	 * For the length of the stack, link in a real page of ram for each 	 * page of stack. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -1503,7 +1503,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -1562,7 +1562,7 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -1624,7 +1624,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -1949,7 +1949,7 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -2011,7 +2011,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -2066,7 +2066,7 @@ name|td
 operator|->
 name|td_kstack_obj
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|ksobj
 argument_list|)
@@ -2301,7 +2301,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|ksobj
 argument_list|)

@@ -2026,7 +2026,7 @@ name|error
 decl_stmt|,
 name|rv
 decl_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2105,7 +2105,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2126,7 +2126,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2145,7 +2145,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2172,7 +2172,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2368,7 +2368,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2437,7 +2437,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2456,7 +2456,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2466,7 +2466,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2537,7 +2537,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2625,7 +2625,7 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2647,7 +2647,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2658,7 +2658,7 @@ name|error
 operator|)
 return|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2960,7 +2960,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3034,7 +3034,7 @@ argument_list|(
 name|vpg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3076,7 +3076,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3086,7 +3086,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3183,7 +3183,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3231,7 +3231,7 @@ name|tpg
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3286,7 +3286,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3298,7 +3298,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3308,7 +3308,7 @@ argument_list|(
 name|vpg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
