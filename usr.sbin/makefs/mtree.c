@@ -4043,7 +4043,20 @@ operator|==
 name|true
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|dupsok
+condition|)
 name|mtree_error
+argument_list|(
+literal|"duplicate definition of %s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|mtree_warning
 argument_list|(
 literal|"duplicate definition of %s"
 argument_list|,
