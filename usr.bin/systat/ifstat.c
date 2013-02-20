@@ -809,8 +809,10 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|SLIST_INIT
 argument_list|(
@@ -928,7 +930,9 @@ name|sort_interface_list
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1494,11 +1498,11 @@ name|matchline
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
 comment|/* Strip leading whitespaces */
 while|while
 condition|(
@@ -1575,7 +1579,9 @@ operator|=
 name|t
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 operator|*
@@ -1611,7 +1617,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|match
+operator|)
 return|;
 block|}
 end_function
@@ -1800,7 +1808,9 @@ literal|"sysctl error"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|data
+operator|)
 return|;
 block|}
 end_function
@@ -1974,7 +1984,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
