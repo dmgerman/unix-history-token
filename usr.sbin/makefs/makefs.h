@@ -1009,6 +1009,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|fsinode
+modifier|*
+name|link_check
+parameter_list|(
+name|fsinode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Declarations for compat routines.  */
 end_comment
