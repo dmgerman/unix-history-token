@@ -1723,11 +1723,13 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vm_max_kernel_address
+operator|=
+literal|0xd0000000
+expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
 name|pmap_curmaxkvaddr
-argument_list|,
-literal|0xd0000000
 argument_list|,
 operator|&
 name|kernel_l1pt

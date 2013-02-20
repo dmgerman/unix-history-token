@@ -720,12 +720,12 @@ name|void
 name|pmap_bootstrap
 parameter_list|(
 name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
+name|firstaddr
 parameter_list|,
 name|struct
 name|pv_addr
 modifier|*
+name|l1pt
 parameter_list|)
 function_decl|;
 end_function_decl

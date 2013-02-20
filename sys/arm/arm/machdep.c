@@ -6773,8 +6773,6 @@ name|pmap_bootstrap
 argument_list|(
 name|freemempos
 argument_list|,
-name|vm_max_kernel_address
-argument_list|,
 operator|&
 name|kernel_l1pt
 argument_list|)
