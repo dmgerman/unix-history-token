@@ -4573,7 +4573,8 @@ operator|=
 name|IXGBE_SUCCESS
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|hw
@@ -4625,6 +4626,7 @@ name|status
 operator|=
 name|IXGBE_ERR_SFP_NOT_SUPPORTED
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
