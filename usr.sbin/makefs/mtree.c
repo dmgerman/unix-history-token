@@ -4448,14 +4448,9 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Disallow '.' and '..' as components. */
+comment|/* Disallow '..' as a component. */
 if|if
 condition|(
-name|IS_DOT
-argument_list|(
-name|pathspec
-argument_list|)
-operator|||
 name|IS_DOTDOT
 argument_list|(
 name|pathspec
@@ -4464,15 +4459,15 @@ condition|)
 block|{
 name|mtree_error
 argument_list|(
-literal|"absolute path cannot contain . "
-literal|"or .. components"
+literal|"absolute path cannot contain "
+literal|".. component"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-comment|/* Ignore multiple adjacent slashes. */
+comment|/* Ignore multiple adjacent slashes and '.'. */
 if|if
 condition|(
 name|pathspec
@@ -4481,6 +4476,12 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|&&
+operator|!
+name|IS_DOT
+argument_list|(
+name|pathspec
+argument_list|)
 condition|)
 name|error
 operator|=
