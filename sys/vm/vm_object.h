@@ -528,6 +528,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_RLOCK
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_rlock(&(object)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_RUNLOCK
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_runlock(&(object)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_SLEEP
 parameter_list|(
 name|wchan
@@ -542,6 +564,17 @@ name|timo
 parameter_list|)
 define|\
 value|rw_sleep((wchan),&(object)->lock, (pri), (wmesg), (timo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_TRYRLOCK
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_try_rlock(&(object)->lock)
 end_define
 
 begin_define
