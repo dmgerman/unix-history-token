@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -12330,7 +12336,7 @@ name|VM_OBJECT_LOCK_INIT
 argument_list|(
 name|obj
 argument_list|,
-literal|"uma object"
+literal|"uma vm object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate

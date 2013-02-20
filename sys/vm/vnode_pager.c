@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -435,14 +441,11 @@ argument_list|,
 name|OBJ_DISCONNECTWNT
 argument_list|)
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|object
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|object
-argument_list|)
 argument_list|,
 name|PDROP
 operator||
@@ -770,14 +773,11 @@ argument_list|,
 name|OBJ_DISCONNECTWNT
 argument_list|)
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|object
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|object
-argument_list|)
 argument_list|,
 name|PDROP
 operator||
@@ -962,7 +962,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -1163,7 +1163,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If no vp or vp is doomed or marked transparent to VM, we do not 	 * have the page. 	 */
@@ -2379,7 +2379,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|error

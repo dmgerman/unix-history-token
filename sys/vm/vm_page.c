@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1723,7 +1729,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1770,7 +1776,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -1816,7 +1822,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1861,7 +1867,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|m
@@ -1886,7 +1892,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2621,7 +2627,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2646,16 +2652,13 @@ name|oflags
 operator||=
 name|VPO_WANTED
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|m
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|m
 operator|->
 name|object
-argument_list|)
 argument_list|,
 name|PVM
 argument_list|,
@@ -3007,7 +3010,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3285,7 +3288,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3571,7 +3574,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3651,7 +3654,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3745,7 +3748,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3806,7 +3809,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -4451,7 +4454,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|new_object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -4711,7 +4714,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -4830,7 +4833,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|req_class
@@ -5708,7 +5711,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7374,7 +7377,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -8313,7 +8316,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -8415,7 +8418,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -8523,7 +8526,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -9160,7 +9163,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|dnw
@@ -9297,7 +9300,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -9625,7 +9628,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -9820,7 +9823,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10003,7 +10006,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10267,7 +10270,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -10368,7 +10371,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Scan the valid bits looking for invalid sections that 	 * must be zerod.  Invalid sub-DEV_BSIZE'd areas ( where the 	 * valid bit may be set ) have already been zerod by 	 * vm_page_set_validclean(). 	 */
@@ -10484,7 +10487,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|bits
@@ -10536,7 +10539,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10736,7 +10739,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -11083,7 +11086,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 block|}

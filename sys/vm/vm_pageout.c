@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -1462,7 +1468,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
@@ -1894,7 +1900,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 * 	 * NOTE! mc[i]->dirty may be partial or fragmented due to an 	 * edge case with file fragments. 	 */
@@ -2824,7 +2830,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|first_object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2868,7 +2874,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if

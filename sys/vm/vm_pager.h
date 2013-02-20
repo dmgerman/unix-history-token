@@ -468,7 +468,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|r
@@ -557,7 +557,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 operator|(
@@ -618,7 +618,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|ret
@@ -672,7 +672,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if

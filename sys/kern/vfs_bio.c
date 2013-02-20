@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2246,7 +2252,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10220,7 +10226,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet. 	 */
@@ -14041,7 +14047,7 @@ name|b_bufobj
 operator|->
 name|bo_object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|last_busied
@@ -14693,7 +14699,7 @@ index|]
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -14895,7 +14901,7 @@ index|]
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if

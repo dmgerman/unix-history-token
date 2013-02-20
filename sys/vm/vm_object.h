@@ -37,8 +37,14 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_rwlock.h>
+end_include
+
 begin_comment
-comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  *	The root of cached pages pool is protected by both the per-object mutex  *	and the free pages queue mutex.  *	On insert in the cache splay tree, the per-object mutex is expected  *	to be already held and the free pages queue mutex will be  *	acquired during the operation too.  *	On remove and lookup from the cache splay tree, only the free  *	pages queue mutex is expected to be locked.  *	These rules allow for reliably checking for the presence of cached  *	pages with only the per-object lock held, thereby reducing contention  *	for the free pages queue mutex.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object mutex  *	(f)	free pages queue mutex  *  */
+comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  *	The root of cached pages pool is protected by both the per-object lock  *	and the free pages queue mutex.  *	On insert in the cache splay tree, the per-object lock is expected  *	to be already held and the free pages queue mutex will be  *	acquired during the operation too.  *	On remove and lookup from the cache splay tree, only the free  *	pages queue mutex is expected to be locked.  *	These rules allow for reliably checking for the presence of cached  *	pages with only the per-object lock held, thereby reducing contention  *	for the free pages queue mutex.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
 end_comment
 
 begin_struct
@@ -46,8 +52,8 @@ struct|struct
 name|vm_object
 block|{
 name|struct
-name|mtx
-name|mtx
+name|rwlock
+name|lock
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
@@ -500,7 +506,8 @@ name|VM_OBJECT_LOCK
 parameter_list|(
 name|object
 parameter_list|)
-value|mtx_lock(&(object)->mtx)
+define|\
+value|rw_wlock(&(object)->lock)
 end_define
 
 begin_define
@@ -513,7 +520,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|mtx_assert(&(object)->mtx, (type))
+value|rw_assert(&(object)->lock, (type))
 end_define
 
 begin_define
@@ -523,10 +530,10 @@ name|VM_OBJECT_LOCK_INIT
 parameter_list|(
 name|object
 parameter_list|,
-name|type
+name|name
 parameter_list|)
 define|\
-value|mtx_init(&(object)->mtx, "vm object", \ 					    (type), MTX_DEF | MTX_DUPOK)
+value|rw_init_flags(&(object)->lock, (name), RW_DUPOK)
 end_define
 
 begin_define
@@ -536,17 +543,38 @@ name|VM_OBJECT_LOCKED
 parameter_list|(
 name|object
 parameter_list|)
-value|mtx_owned(&(object)->mtx)
+define|\
+value|rw_wowned(&(object)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_OBJECT_MTX
+name|VM_OBJECT_LOCKPTR
 parameter_list|(
 name|object
 parameter_list|)
-value|(&(object)->mtx)
+define|\
+value|(&(object)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_SLEEP
+parameter_list|(
+name|wchan
+parameter_list|,
+name|object
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|rw_sleep((wchan),&(object)->lock, (pri), (wmesg), (timo))
 end_define
 
 begin_define
@@ -556,7 +584,8 @@ name|VM_OBJECT_TRYLOCK
 parameter_list|(
 name|object
 parameter_list|)
-value|mtx_trylock(&(object)->mtx)
+define|\
+value|rw_try_wlock(&(object)->lock)
 end_define
 
 begin_define
@@ -566,7 +595,8 @@ name|VM_OBJECT_UNLOCK
 parameter_list|(
 name|object
 parameter_list|)
-value|mtx_unlock(&(object)->mtx)
+define|\
+value|rw_wunlock(&(object)->lock)
 end_define
 
 begin_comment

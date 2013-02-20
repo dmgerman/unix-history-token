@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -629,13 +635,13 @@ argument_list|(
 operator|&
 name|object
 operator|->
-name|mtx
+name|lock
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|object
 operator|->
-name|mtx
+name|lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -643,7 +649,7 @@ name|VM_OBJECT_LOCK_INIT
 argument_list|(
 name|object
 argument_list|,
-literal|"standard object"
+literal|"standard vm object"
 argument_list|)
 expr_stmt|;
 comment|/* These are true for any object that has been freed */
@@ -937,7 +943,7 @@ name|VM_OBJECT_LOCK_INIT
 argument_list|(
 name|kernel_object
 argument_list|,
-literal|"kernel object"
+literal|"kernel vm object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -983,7 +989,7 @@ name|VM_OBJECT_LOCK_INIT
 argument_list|(
 name|kmem_object
 argument_list|,
-literal|"kmem object"
+literal|"kmem vm object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -1080,7 +1086,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1112,7 +1118,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1206,7 +1212,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1233,7 +1239,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1257,7 +1263,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1313,7 +1319,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -1375,7 +1381,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 while|while
@@ -1391,14 +1397,11 @@ name|flags
 operator||=
 name|OBJ_PIPWNT
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|object
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|object
-argument_list|)
 argument_list|,
 name|PVM
 argument_list|,
@@ -1516,7 +1519,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1579,7 +1582,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2076,14 +2079,11 @@ name|flags
 operator||=
 name|OBJ_PIPWNT
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|object
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|object
-argument_list|)
 argument_list|,
 name|PDROP
 operator||
@@ -2384,7 +2384,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure no one uses us. 	 */
@@ -2801,7 +2801,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3209,7 +3209,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|count
@@ -4164,14 +4164,11 @@ name|oflags
 operator||=
 name|VPO_WANTED
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|m
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|tobject
-argument_list|)
 argument_list|,
 name|PDROP
 operator||
@@ -4864,14 +4861,11 @@ name|oflags
 operator||=
 name|VPO_WANTED
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|m
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|orig_object
-argument_list|)
 argument_list|,
 name|PVM
 argument_list|,
@@ -5078,7 +5072,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
@@ -5087,7 +5081,7 @@ name|object
 operator|->
 name|backing_object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|backing_object
@@ -5339,14 +5333,11 @@ name|oflags
 operator||=
 name|VPO_WANTED
 expr_stmt|;
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|p
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|backing_object
-argument_list|)
 argument_list|,
 name|PDROP
 operator||
@@ -5668,14 +5659,14 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|backing_object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5713,7 +5704,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 while|while
@@ -6193,7 +6184,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6601,7 +6592,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6775,7 +6766,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 for|for
@@ -7212,7 +7203,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if

@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2673,7 +2679,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -3119,7 +3125,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|swp_pager_meta_free
@@ -3311,14 +3317,14 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|srcobject
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|dstobject
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If destroysource is set, we remove the source object from the 	 * swap_pager internal queue now. 	 */
@@ -3542,7 +3548,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * do we have good backing store at the requested index ? 	 */
@@ -3752,7 +3758,7 @@ name|m
 operator|->
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|swp_pager_meta_ctl
@@ -4288,14 +4294,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msleep
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|mreq
 argument_list|,
-name|VM_OBJECT_MTX
-argument_list|(
 name|object
-argument_list|)
 argument_list|,
 name|PSWP
 argument_list|,
@@ -5454,7 +5457,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5995,7 +5998,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Convert default object to swap object if necessary 	 */
@@ -6355,7 +6358,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6545,7 +6548,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6745,7 +6748,7 @@ name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The meta data only exists of the object is OBJT_SWAP 	 * and even then might not be allocated yet. 	 */

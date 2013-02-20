@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/rwlock.h>
 end_include
 
 begin_include
