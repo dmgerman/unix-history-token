@@ -8393,6 +8393,8 @@ name|HAL_INT_RXEOL
 operator||
 name|HAL_INT_RXORN
 operator||
+name|HAL_INT_TXURN
+operator||
 name|HAL_INT_FATAL
 operator||
 name|HAL_INT_GLOBAL
