@@ -476,16 +476,14 @@ specifier|const
 name|PassInfo
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// do not implement
 name|PassInfo
 argument_list|(
-specifier|const
-name|PassInfo
-operator|&
+argument|const PassInfo&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// do not implement
 block|}
 empty_stmt|;
 define|#

@@ -1403,6 +1403,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|sdhci_generic_min_freq
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

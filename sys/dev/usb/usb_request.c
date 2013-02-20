@@ -7,6 +7,23 @@ begin_comment
 comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc. All rights reserved.  * Copyright (c) 1998 Lennart Augustsson. All rights reserved.  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -223,6 +240,15 @@ include|#
 directive|include
 file|<sys/ctype.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1406,7 +1432,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usbd_do_request_flags and usbd_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to  * "usbd_do_request_flags" will be serialised by the use of an  * internal "sx_lock".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_do_request_flags and usbd_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to "usbd_do_request_flags"  * will be serialized by the use of the USB device enumeration lock.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1490,7 +1516,7 @@ name|uint16_t
 name|acttemp
 decl_stmt|;
 name|uint8_t
-name|enum_locked
+name|do_unlock
 decl_stmt|;
 if|if
 condition|(
@@ -1525,13 +1551,6 @@ argument_list|(
 name|req
 operator|->
 name|wLength
-argument_list|)
-expr_stmt|;
-name|enum_locked
-operator|=
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -1674,23 +1693,18 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We need to allow suspend and resume at this point, else the 	 * control transfer will timeout if the device is suspended! 	 */
-if|if
-condition|(
-name|enum_locked
-condition|)
-name|usbd_sr_unlock
+comment|/* 	 * Grab the USB device enumeration SX-lock serialization is 	 * achieved when multiple threads are involved: 	 */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Grab the default sx-lock so that serialisation 	 * is achieved when multiple threads are involved: 	 */
-name|sx_xlock
+comment|/* 	 * We need to allow suspend and resume at this point, else the 	 * control transfer will timeout if the device is suspended! 	 */
+name|usbd_sr_unlock
 argument_list|(
-operator|&
 name|udev
-operator|->
-name|ctrl_sx
 argument_list|)
 expr_stmt|;
 name|hr_func
@@ -2617,19 +2631,16 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|sx_xunlock
+name|usbd_sr_lock
 argument_list|(
-operator|&
 name|udev
-operator|->
-name|ctrl_sx
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|enum_locked
+name|do_unlock
 condition|)
-name|usbd_sr_lock
+name|usbd_enum_unlock
 argument_list|(
 name|udev
 argument_list|)
@@ -2909,11 +2920,6 @@ condition|)
 goto|goto
 name|done
 goto|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-endif|#
-directive|endif
 name|n
 operator|=
 literal|0

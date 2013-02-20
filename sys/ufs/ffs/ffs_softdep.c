@@ -8897,7 +8897,7 @@ argument_list|)
 expr_stmt|;
 name|kern_yield
 argument_list|(
-name|PRI_UNCHANGED
+name|PRI_USER
 argument_list|)
 expr_stmt|;
 name|bwillwrite
@@ -14529,6 +14529,8 @@ expr_stmt|;
 name|vfs_write_resume
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK

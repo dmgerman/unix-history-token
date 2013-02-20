@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_decl_stmt
@@ -135,9 +135,9 @@ argument_list|)
 block|;
 name|virtual
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{

@@ -333,38 +333,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX32
-end_ifdef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/../linux32/linux.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<machine/../linux/linux.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -375,6 +343,12 @@ begin_include
 include|#
 directive|include
 file|<compat/linux/linux_mib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_misc.h>
 end_include
 
 begin_include

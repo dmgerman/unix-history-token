@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.404 2010/07/27 03:35:42 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.405 2012/02/27 22:49:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -858,7 +858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  INVALIDADDR -- check for address containing characters used for macros ** **	Parameters: **		addr -- the address to check. **		delimptr -- if non-NULL: end of address to check, i.e., **			a pointer in the address string. **		isrcpt -- true iff the address is for a recipient. ** **	Returns: **		true -- if the address has characters that are reservered **			for macros or is too long. **		false -- otherwise. */
+comment|/* **  INVALIDADDR -- check for address containing characters used for macros ** **	Parameters: **		addr -- the address to check. **		  note: this is the complete address (including display part) **		delimptr -- if non-NULL: end of address to check, i.e., **			a pointer in the address string. **		isrcpt -- true iff the address is for a recipient. ** **	Returns: **		true -- if the address has characters that are reservered **			for macros or is too long. **		false -- otherwise. */
 end_comment
 
 begin_function

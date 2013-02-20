@@ -658,6 +658,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|opt_robot
+operator|&&
+operator|(
 name|files_total
 operator|!=
 literal|1
@@ -665,6 +669,7 @@ operator|||
 name|filename
 operator|!=
 name|stdin_filename
+operator|)
 condition|)
 block|{
 name|signals_block
@@ -3054,6 +3059,43 @@ argument_list|(
 name|memusage
 argument_list|)
 expr_stmt|;
+name|uint64_t
+name|memlimit
+init|=
+name|hardware_memlimit_get
+argument_list|(
+name|opt_mode
+argument_list|)
+decl_stmt|;
+comment|// Handle the case when there is no memory usage limit.
+comment|// This way we don't print a weird message with a huge number.
+if|if
+condition|(
+name|memlimit
+operator|==
+name|UINT64_MAX
+condition|)
+block|{
+name|message
+argument_list|(
+name|v
+argument_list|,
+name|_
+argument_list|(
+literal|"%s MiB of memory is required. "
+literal|"The limiter is disabled."
+argument_list|)
+argument_list|,
+name|uint64_to_str
+argument_list|(
+name|memusage
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|// With US-ASCII:
 comment|// 2^64 with thousand separators + " MiB" suffix + '\0' = 26 + 4 + 1
 comment|// But there may be multibyte chars so reserve enough space.
@@ -3066,14 +3108,6 @@ decl_stmt|;
 comment|// Show the memory usage limit as MiB unless it is less than 1 MiB.
 comment|// This way it's easy to notice errors where one has typed
 comment|// --memory=123 instead of --memory=123MiB.
-name|uint64_t
-name|memlimit
-init|=
-name|hardware_memlimit_get
-argument_list|(
-name|opt_mode
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|memlimit

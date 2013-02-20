@@ -482,12 +482,10 @@ name|CodeGenTypes
 decl_stmt|;
 name|CGRecordLayout
 argument_list|(
-specifier|const
-name|CGRecordLayout
-operator|&
+argument|const CGRecordLayout&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -496,8 +494,8 @@ specifier|const
 name|CGRecordLayout
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|private
 label|:
 comment|/// The LLVM type corresponding to this record layout; used when

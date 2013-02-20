@@ -872,6 +872,16 @@ parameter_list|)
 value|((size_t)z)
 end_define
 
+begin_define
+define|#
+directive|define
+name|QU
+parameter_list|(
+name|q
+parameter_list|)
+value|((uint64_t)q)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -908,6 +918,12 @@ end_comment
 begin_define
 define|#
 directive|define
+name|JEMALLOC_ALWAYS_INLINE
+end_define
+
+begin_define
+define|#
+directive|define
 name|JEMALLOC_INLINE
 end_define
 
@@ -927,6 +943,37 @@ define|#
 directive|define
 name|JEMALLOC_ENABLE_INLINE
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_HAVE_ATTR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALWAYS_INLINE
+define|\
+value|static inline JEMALLOC_ATTR(unused) JEMALLOC_ATTR(always_inline)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALWAYS_INLINE
+value|static inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1520,11 +1567,33 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_HAS_ALLOCA_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2562,7 +2631,7 @@ end_macro
 begin_macro
 name|malloc_tsd_funcs
 argument_list|(
-argument|JEMALLOC_INLINE
+argument|JEMALLOC_ALWAYS_INLINE
 argument_list|,
 argument|arenas
 argument_list|,
@@ -2579,7 +2648,7 @@ comment|/*  * Compute usable size that would result from allocating an object wi
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|s2u
 parameter_list|(
@@ -2636,7 +2705,7 @@ comment|/*  * Compute usable size that would result from allocating an object wi
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|sa2u
 parameter_list|(
@@ -3287,7 +3356,7 @@ operator|)
 end_if
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|imallocx
@@ -3345,7 +3414,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|imalloc
@@ -3370,7 +3439,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|icallocx
@@ -3421,7 +3490,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|icalloc
@@ -3446,7 +3515,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|ipallocx
@@ -3590,7 +3659,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|ipalloc
@@ -3629,7 +3698,7 @@ comment|/*  * Typical usage:  *   void *ptr = [...]  *   size_t sz = isalloc(ptr
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|isalloc
 parameter_list|(
@@ -3709,7 +3778,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|ivsalloc
 parameter_list|(
@@ -3841,7 +3910,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|idallocx
 parameter_list|(
@@ -3906,7 +3975,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|idalloc
 parameter_list|(
@@ -3926,7 +3995,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|iqallocx
 parameter_list|(
@@ -3961,7 +4030,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 name|iqalloc
 parameter_list|(
@@ -3981,7 +4050,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|irallocx
@@ -4335,7 +4404,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_ALWAYS_INLINE
 name|void
 modifier|*
 name|iralloc
@@ -4399,7 +4468,7 @@ end_macro
 begin_macro
 name|malloc_tsd_funcs
 argument_list|(
-argument|JEMALLOC_INLINE
+argument|JEMALLOC_ALWAYS_INLINE
 argument_list|,
 argument|thread_allocated
 argument_list|,

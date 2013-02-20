@@ -129,7 +129,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|do {	\ 	unsigned long ll;		\ 	ll=(c)->A; HOST_l2c(ll,(s));	\ 	ll=(c)->B; HOST_l2c(ll,(s));	\ 	ll=(c)->C; HOST_l2c(ll,(s));	\ 	ll=(c)->D; HOST_l2c(ll,(s));	\ 	} while (0)
+value|do {	\ 	unsigned long ll;		\ 	ll=(c)->A; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->B; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->C; (void)HOST_l2c(ll,(s));	\ 	ll=(c)->D; (void)HOST_l2c(ll,(s));	\ 	} while (0)
 end_define
 
 begin_define

@@ -1454,6 +1454,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MMC_OCR_MIN_VOLTAGE_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMC_OCR_210_220
 value|(1U<< 9)
 end_define
@@ -1615,6 +1622,13 @@ end_define
 begin_comment
 comment|/* Vdd voltage 3.50 ~ 3.60 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_OCR_MAX_VOLTAGE_SHIFT
+value|23
+end_define
 
 begin_define
 define|#

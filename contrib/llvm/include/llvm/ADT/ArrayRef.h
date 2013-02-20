@@ -191,7 +191,14 @@ argument_list|(
 argument|end - begin
 argument_list|)
 block|{}
-comment|/// Construct an ArrayRef from a SmallVector.
+comment|/// Construct an ArrayRef from a SmallVector. This is templated in order to
+comment|/// avoid instantiating SmallVectorTemplateCommon<T> whenever we
+comment|/// copy-construct an ArrayRef.
+name|template
+operator|<
+name|typename
+name|U
+operator|>
 comment|/*implicit*/
 name|ArrayRef
 argument_list|(
@@ -199,6 +206,8 @@ specifier|const
 name|SmallVectorTemplateCommon
 operator|<
 name|T
+argument_list|,
+name|U
 operator|>
 operator|&
 name|Vec
@@ -216,8 +225,13 @@ name|Length
 argument_list|(
 argument|Vec.size()
 argument_list|)
-block|{}
+block|{     }
 comment|/// Construct an ArrayRef from a std::vector.
+name|template
+operator|<
+name|typename
+name|A
+operator|>
 comment|/*implicit*/
 name|ArrayRef
 argument_list|(
@@ -227,6 +241,8 @@ operator|::
 name|vector
 operator|<
 name|T
+argument_list|,
+name|A
 operator|>
 operator|&
 name|Vec

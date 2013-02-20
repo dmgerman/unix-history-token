@@ -77,6 +77,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<llvm/ADT/ilist.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|PBQP
@@ -96,18 +102,18 @@ name|class
 name|EdgeEntry
 decl_stmt|;
 typedef|typedef
-name|std
+name|llvm
 operator|::
-name|list
+name|ilist
 operator|<
 name|NodeEntry
 operator|>
 name|NodeList
 expr_stmt|;
 typedef|typedef
-name|std
+name|llvm
 operator|::
-name|list
+name|ilist
 operator|<
 name|EdgeEntry
 operator|>
@@ -116,29 +122,27 @@ expr_stmt|;
 name|public
 label|:
 typedef|typedef
-name|NodeList
-operator|::
-name|iterator
+name|NodeEntry
+modifier|*
 name|NodeItr
-expr_stmt|;
+typedef|;
 typedef|typedef
-name|NodeList
-operator|::
-name|const_iterator
+specifier|const
+name|NodeEntry
+modifier|*
 name|ConstNodeItr
-expr_stmt|;
+typedef|;
 typedef|typedef
-name|EdgeList
-operator|::
-name|iterator
+name|EdgeEntry
+modifier|*
 name|EdgeItr
-expr_stmt|;
+typedef|;
 typedef|typedef
-name|EdgeList
-operator|::
-name|const_iterator
+specifier|const
+name|EdgeEntry
+modifier|*
 name|ConstEdgeItr
-expr_stmt|;
+typedef|;
 name|private
 label|:
 typedef|typedef
@@ -162,24 +166,51 @@ name|private
 label|:
 name|class
 name|NodeEntry
+range|:
+name|public
+name|llvm
+operator|::
+name|ilist_node
+operator|<
+name|NodeEntry
+operator|>
 block|{
+name|friend
+expr|struct
+name|llvm
+operator|::
+name|ilist_sentinel_traits
+operator|<
+name|NodeEntry
+operator|>
+block|;
 name|private
-label|:
+operator|:
 name|Vector
 name|costs
-decl_stmt|;
+block|;
 name|AdjEdgeList
 name|adjEdges
-decl_stmt|;
+block|;
 name|unsigned
 name|degree
-decl_stmt|;
+block|;
 name|void
-modifier|*
+operator|*
 name|data
-decl_stmt|;
+block|;
+name|NodeEntry
+argument_list|()
+operator|:
+name|costs
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
 name|public
-label|:
+operator|:
 name|NodeEntry
 argument_list|(
 specifier|const
@@ -192,7 +223,7 @@ name|costs
 argument_list|(
 name|costs
 argument_list|)
-operator|,
+block|,
 name|degree
 argument_list|(
 literal|0
@@ -229,7 +260,7 @@ return|;
 block|}
 name|AdjEdgeItr
 name|edgesBegin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|adjEdges
@@ -240,7 +271,7 @@ return|;
 block|}
 name|AdjEdgeItr
 name|edgesEnd
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|adjEdges
@@ -251,14 +282,13 @@ return|;
 block|}
 name|AdjEdgeItr
 name|addEdge
-parameter_list|(
-name|EdgeItr
-name|e
-parameter_list|)
+argument_list|(
+argument|EdgeItr e
+argument_list|)
 block|{
 operator|++
 name|degree
-expr_stmt|;
+block|;
 return|return
 name|adjEdges
 operator|.
@@ -275,72 +305,96 @@ return|;
 block|}
 name|void
 name|removeEdge
-parameter_list|(
-name|AdjEdgeItr
-name|ae
-parameter_list|)
+argument_list|(
+argument|AdjEdgeItr ae
+argument_list|)
 block|{
 operator|--
 name|degree
-expr_stmt|;
+block|;
 name|adjEdges
 operator|.
 name|erase
 argument_list|(
 name|ae
 argument_list|)
-expr_stmt|;
-block|}
+block|;       }
 name|void
 name|setData
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
+argument_list|(
+argument|void *data
+argument_list|)
 block|{
 name|this
 operator|->
 name|data
 operator|=
 name|data
-expr_stmt|;
-block|}
+block|; }
 name|void
-modifier|*
+operator|*
 name|getData
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|data
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 name|class
 name|EdgeEntry
+operator|:
+name|public
+name|llvm
+operator|::
+name|ilist_node
+operator|<
+name|EdgeEntry
+operator|>
 block|{
+name|friend
+expr|struct
+name|llvm
+operator|::
+name|ilist_sentinel_traits
+operator|<
+name|EdgeEntry
+operator|>
+block|;
 name|private
-label|:
+operator|:
 name|NodeItr
 name|node1
-decl_stmt|,
+block|,
 name|node2
-decl_stmt|;
+block|;
 name|Matrix
 name|costs
-decl_stmt|;
+block|;
 name|AdjEdgeItr
 name|node1AEItr
-decl_stmt|,
+block|,
 name|node2AEItr
-decl_stmt|;
+block|;
 name|void
-modifier|*
+operator|*
 name|data
-decl_stmt|;
+block|;
+name|EdgeEntry
+argument_list|()
+operator|:
+name|costs
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
 name|public
-label|:
+operator|:
 name|EdgeEntry
 argument_list|(
 argument|NodeItr node1
@@ -349,17 +403,17 @@ argument|NodeItr node2
 argument_list|,
 argument|const Matrix&costs
 argument_list|)
-block|:
+operator|:
 name|node1
 argument_list|(
 name|node1
 argument_list|)
-operator|,
+block|,
 name|node2
 argument_list|(
 name|node2
 argument_list|)
-operator|,
+block|,
 name|costs
 argument_list|(
 argument|costs
@@ -384,9 +438,9 @@ name|node2
 return|;
 block|}
 name|Matrix
-modifier|&
+operator|&
 name|getCosts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|costs
@@ -405,19 +459,17 @@ return|;
 block|}
 name|void
 name|setNode1AEItr
-parameter_list|(
-name|AdjEdgeItr
-name|ae
-parameter_list|)
+argument_list|(
+argument|AdjEdgeItr ae
+argument_list|)
 block|{
 name|node1AEItr
 operator|=
 name|ae
-expr_stmt|;
-block|}
+block|; }
 name|AdjEdgeItr
 name|getNode1AEItr
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|node1AEItr
@@ -425,19 +477,17 @@ return|;
 block|}
 name|void
 name|setNode2AEItr
-parameter_list|(
-name|AdjEdgeItr
-name|ae
-parameter_list|)
+argument_list|(
+argument|AdjEdgeItr ae
+argument_list|)
 block|{
 name|node2AEItr
 operator|=
 name|ae
-expr_stmt|;
-block|}
+block|; }
 name|AdjEdgeItr
 name|getNode2AEItr
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|node2AEItr
@@ -445,51 +495,47 @@ return|;
 block|}
 name|void
 name|setData
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
+argument_list|(
+argument|void *data
+argument_list|)
 block|{
 name|this
 operator|->
 name|data
 operator|=
 name|data
-expr_stmt|;
-block|}
+block|; }
 name|void
-modifier|*
+operator|*
 name|getData
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|data
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 comment|// ----- MEMBERS -----
 name|NodeList
 name|nodes
-decl_stmt|;
+block|;
 name|unsigned
 name|numNodes
-decl_stmt|;
+block|;
 name|EdgeList
 name|edges
-decl_stmt|;
+block|;
 name|unsigned
 name|numEdges
-decl_stmt|;
+block|;
 comment|// ----- INTERNAL METHODS -----
 name|NodeEntry
-modifier|&
+operator|&
 name|getNode
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|)
 block|{
 return|return
 operator|*
@@ -498,13 +544,12 @@ return|;
 block|}
 specifier|const
 name|NodeEntry
-modifier|&
+operator|&
 name|getNode
 argument_list|(
-name|ConstNodeItr
-name|nItr
+argument|ConstNodeItr nItr
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|*
@@ -512,12 +557,11 @@ name|nItr
 return|;
 block|}
 name|EdgeEntry
-modifier|&
+operator|&
 name|getEdge
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|)
 block|{
 return|return
 operator|*
@@ -526,13 +570,12 @@ return|;
 block|}
 specifier|const
 name|EdgeEntry
-modifier|&
+operator|&
 name|getEdge
 argument_list|(
-name|ConstEdgeItr
-name|eItr
+argument|ConstEdgeItr eItr
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|*
@@ -541,16 +584,13 @@ return|;
 block|}
 name|NodeItr
 name|addConstructedNode
-parameter_list|(
-specifier|const
-name|NodeEntry
-modifier|&
-name|n
-parameter_list|)
+argument_list|(
+argument|const NodeEntry&n
+argument_list|)
 block|{
 operator|++
 name|numNodes
-expr_stmt|;
+block|;
 return|return
 name|nodes
 operator|.
@@ -567,12 +607,9 @@ return|;
 block|}
 name|EdgeItr
 name|addConstructedEdge
-parameter_list|(
-specifier|const
-name|EdgeEntry
-modifier|&
-name|e
-parameter_list|)
+argument_list|(
+argument|const EdgeEntry&e
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -596,13 +633,13 @@ argument_list|()
 operator|&&
 literal|"Attempt to add duplicate edge."
 argument_list|)
-expr_stmt|;
+block|;
 operator|++
 name|numEdges
-expr_stmt|;
+block|;
 name|EdgeItr
 name|edgeItr
-init|=
+operator|=
 name|edges
 operator|.
 name|insert
@@ -614,20 +651,20 @@ argument_list|()
 argument_list|,
 name|e
 argument_list|)
-decl_stmt|;
+block|;
 name|EdgeEntry
-modifier|&
+operator|&
 name|ne
-init|=
+operator|=
 name|getEdge
 argument_list|(
 name|edgeItr
 argument_list|)
-decl_stmt|;
+block|;
 name|NodeEntry
-modifier|&
+operator|&
 name|n1
-init|=
+operator|=
 name|getNode
 argument_list|(
 name|ne
@@ -635,11 +672,11 @@ operator|.
 name|getNode1
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 name|NodeEntry
-modifier|&
+operator|&
 name|n2
-init|=
+operator|=
 name|getNode
 argument_list|(
 name|ne
@@ -647,7 +684,7 @@ operator|.
 name|getNode2
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 comment|// Sanity check on matrix dimensions:
 name|assert
 argument_list|(
@@ -689,7 +726,7 @@ operator|)
 operator|&&
 literal|"Edge cost dimensions do not match node costs dimensions."
 argument_list|)
-expr_stmt|;
+block|;
 name|ne
 operator|.
 name|setNode1AEItr
@@ -701,7 +738,7 @@ argument_list|(
 name|edgeItr
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 name|ne
 operator|.
 name|setNode2AEItr
@@ -713,7 +750,7 @@ argument_list|(
 name|edgeItr
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|edgeItr
 return|;
@@ -721,15 +758,15 @@ block|}
 specifier|inline
 name|void
 name|copyFrom
-parameter_list|(
+argument_list|(
 specifier|const
 name|Graph
-modifier|&
+operator|&
 name|other
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|public
-label|:
+operator|:
 comment|/// \brief Construct an empty PBQP graph.
 name|Graph
 argument_list|()
@@ -738,7 +775,7 @@ name|numNodes
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|numEdges
 argument_list|(
 literal|0
@@ -759,7 +796,7 @@ name|numNodes
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|numEdges
 argument_list|(
 literal|0
@@ -806,12 +843,9 @@ comment|/// @param costs Cost vector for the new node.
 comment|/// @return Node iterator for the added node.
 name|NodeItr
 name|addNode
-parameter_list|(
-specifier|const
-name|Vector
-modifier|&
-name|costs
-parameter_list|)
+argument_list|(
+argument|const Vector&costs
+argument_list|)
 block|{
 return|return
 name|addConstructedNode
@@ -830,20 +864,11 @@ comment|/// @return Edge iterator for the added edge.
 name|EdgeItr
 name|addEdge
 argument_list|(
-name|Graph
-operator|::
-name|NodeItr
-name|n1Itr
+argument|Graph::NodeItr n1Itr
 argument_list|,
-name|Graph
-operator|::
-name|NodeItr
-name|n2Itr
+argument|Graph::NodeItr n2Itr
 argument_list|,
-specifier|const
-name|Matrix
-operator|&
-name|costs
+argument|const Matrix&costs
 argument_list|)
 block|{
 name|assert
@@ -876,7 +901,7 @@ argument_list|()
 operator|&&
 literal|"Matrix dimensions mismatch."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|addConstructedEdge
 argument_list|(
@@ -917,12 +942,11 @@ comment|/// \brief Get a node's cost vector.
 comment|/// @param nItr Node iterator.
 comment|/// @return Node cost vector.
 name|Vector
-modifier|&
+operator|&
 name|getNodeCosts
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|)
 block|{
 return|return
 name|getNode
@@ -939,13 +963,12 @@ comment|/// @param nItr Node iterator.
 comment|/// @return Node cost vector.
 specifier|const
 name|Vector
-modifier|&
+operator|&
 name|getNodeCosts
 argument_list|(
-name|ConstNodeItr
-name|nItr
+argument|ConstNodeItr nItr
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|getNode
@@ -964,14 +987,11 @@ comment|///
 comment|/// Typically used by a PBQP solver to attach data to aid in solution.
 name|void
 name|setNodeData
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|,
+argument|void *data
+argument_list|)
 block|{
 name|getNode
 argument_list|(
@@ -982,18 +1002,16 @@ name|setData
 argument_list|(
 name|data
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// \brief Get the node's data pointer.
 comment|/// @param nItr Node iterator.
 comment|/// @return Pointer to node data.
 name|void
-modifier|*
+operator|*
 name|getNodeData
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|)
 block|{
 return|return
 name|getNode
@@ -1009,12 +1027,11 @@ comment|/// \brief Get an edge's cost matrix.
 comment|/// @param eItr Edge iterator.
 comment|/// @return Edge cost matrix.
 name|Matrix
-modifier|&
+operator|&
 name|getEdgeCosts
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|)
 block|{
 return|return
 name|getEdge
@@ -1031,13 +1048,12 @@ comment|/// @param eItr Edge iterator.
 comment|/// @return Edge cost matrix.
 specifier|const
 name|Matrix
-modifier|&
+operator|&
 name|getEdgeCosts
 argument_list|(
-name|ConstEdgeItr
-name|eItr
+argument|ConstEdgeItr eItr
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|getEdge
@@ -1056,14 +1072,11 @@ comment|///
 comment|/// Typically used by a PBQP solver to attach data to aid in solution.
 name|void
 name|setEdgeData
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|,
+argument|void *data
+argument_list|)
 block|{
 name|getEdge
 argument_list|(
@@ -1074,18 +1087,16 @@ name|setData
 argument_list|(
 name|data
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// \brief Get an edge's data pointer.
 comment|/// @param eItr Edge iterator.
 comment|/// @return Pointer to edge data.
 name|void
-modifier|*
+operator|*
 name|getEdgeData
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|)
 block|{
 return|return
 name|getEdge
@@ -1103,10 +1114,9 @@ comment|/// @return The degree of the node.
 name|unsigned
 name|getNodeDegree
 argument_list|(
-name|NodeItr
-name|nItr
+argument|NodeItr nItr
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|getNode
@@ -1121,7 +1131,7 @@ block|}
 comment|/// \brief Begin iterator for node set.
 name|NodeItr
 name|nodesBegin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|nodes
@@ -1146,7 +1156,7 @@ block|}
 comment|/// \brief End iterator for node set.
 name|NodeItr
 name|nodesEnd
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|nodes
@@ -1171,7 +1181,7 @@ block|}
 comment|/// \brief Begin iterator for edge set.
 name|EdgeItr
 name|edgesBegin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|edges
@@ -1183,7 +1193,7 @@ block|}
 comment|/// \brief End iterator for edge set.
 name|EdgeItr
 name|edgesEnd
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|edges
@@ -1197,10 +1207,9 @@ comment|/// @param nItr Node iterator.
 comment|/// @return Begin iterator for the set of edges connected to the given node.
 name|AdjEdgeItr
 name|adjEdgesBegin
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|)
 block|{
 return|return
 name|getNode
@@ -1217,10 +1226,9 @@ comment|/// @param nItr Node iterator.
 comment|/// @return End iterator for the set of edges connected to the given node.
 name|AdjEdgeItr
 name|adjEdgesEnd
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|)
 block|{
 return|return
 name|getNode
@@ -1237,10 +1245,9 @@ comment|/// @param eItr Edge iterator.
 comment|/// @return The first node connected to the given edge.
 name|NodeItr
 name|getEdgeNode1
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|)
 block|{
 return|return
 name|getEdge
@@ -1257,10 +1264,9 @@ comment|/// @param eItr Edge iterator.
 comment|/// @return The second node connected to the given edge.
 name|NodeItr
 name|getEdgeNode2
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|)
 block|{
 return|return
 name|getEdge
@@ -1278,23 +1284,21 @@ comment|/// @param nItr Node iterator for the "given" node.
 comment|/// @return The iterator for the "other" node connected to this edge.
 name|NodeItr
 name|getEdgeOtherNode
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|,
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|,
+argument|NodeItr nItr
+argument_list|)
 block|{
 name|EdgeEntry
-modifier|&
+operator|&
 name|e
-init|=
+operator|=
 name|getEdge
 argument_list|(
 name|eItr
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|e
@@ -1327,13 +1331,11 @@ comment|/// @return An iterator for edge (n1Itr, n2Itr) if such an edge exists,
 comment|///         otherwise returns edgesEnd().
 name|EdgeItr
 name|findEdge
-parameter_list|(
-name|NodeItr
-name|n1Itr
-parameter_list|,
-name|NodeItr
-name|n2Itr
-parameter_list|)
+argument_list|(
+argument|NodeItr n1Itr
+argument_list|,
+argument|NodeItr n2Itr
+argument_list|)
 block|{
 for|for
 control|(
@@ -1400,20 +1402,19 @@ comment|/// \brief Remove a node from the graph.
 comment|/// @param nItr Node iterator.
 name|void
 name|removeNode
-parameter_list|(
-name|NodeItr
-name|nItr
-parameter_list|)
+argument_list|(
+argument|NodeItr nItr
+argument_list|)
 block|{
 name|NodeEntry
-modifier|&
+operator|&
 name|n
-init|=
+operator|=
 name|getNode
 argument_list|(
 name|nItr
 argument_list|)
-decl_stmt|;
+block|;
 for|for
 control|(
 name|AdjEdgeItr
@@ -1461,30 +1462,28 @@ argument_list|)
 expr_stmt|;
 operator|--
 name|numNodes
-expr_stmt|;
-block|}
+block|;     }
 comment|/// \brief Remove an edge from the graph.
 comment|/// @param eItr Edge iterator.
 name|void
 name|removeEdge
-parameter_list|(
-name|EdgeItr
-name|eItr
-parameter_list|)
+argument_list|(
+argument|EdgeItr eItr
+argument_list|)
 block|{
 name|EdgeEntry
-modifier|&
+operator|&
 name|e
-init|=
+operator|=
 name|getEdge
 argument_list|(
 name|eItr
 argument_list|)
-decl_stmt|;
+block|;
 name|NodeEntry
-modifier|&
+operator|&
 name|n1
-init|=
+operator|=
 name|getNode
 argument_list|(
 name|e
@@ -1492,11 +1491,11 @@ operator|.
 name|getNode1
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 name|NodeEntry
-modifier|&
+operator|&
 name|n2
-init|=
+operator|=
 name|getNode
 argument_list|(
 name|e
@@ -1504,7 +1503,7 @@ operator|.
 name|getNode2
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 name|n1
 operator|.
 name|removeEdge
@@ -1514,7 +1513,7 @@ operator|.
 name|getNode1AEItr
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|n2
 operator|.
 name|removeEdge
@@ -1524,40 +1523,38 @@ operator|.
 name|getNode2AEItr
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|edges
 operator|.
 name|erase
 argument_list|(
 name|eItr
 argument_list|)
-expr_stmt|;
+block|;
 operator|--
 name|numEdges
-expr_stmt|;
-block|}
+block|;     }
 comment|/// \brief Remove all nodes and edges from the graph.
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 name|nodes
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|edges
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|numNodes
 operator|=
 name|numEdges
 operator|=
 literal|0
-expr_stmt|;
-block|}
+block|;     }
 comment|/// \brief Dump a graph to an output stream.
 name|template
 operator|<
@@ -2021,13 +2018,7 @@ literal|"}\n"
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|NodeItrComparator
 block|{
@@ -2086,13 +2077,7 @@ name|n2
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|EdgeItrCompartor
 block|{
@@ -2151,13 +2136,7 @@ name|e2
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|void
 name|Graph
 operator|::
@@ -2225,10 +2204,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+block|}
+end_decl_stmt
 
 begin_endif
-unit|}  }
 endif|#
 directive|endif
 end_endif

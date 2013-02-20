@@ -172,7 +172,7 @@ comment|// duplicate the inherited versions so as not to inadvertently hide them
 comment|/// @}
 comment|/// @name String Assignment
 comment|/// @{
-comment|/// Assign from a repeated element
+comment|/// Assign from a repeated element.
 name|void
 name|assign
 argument_list|(
@@ -195,7 +195,7 @@ argument_list|,
 name|Elt
 argument_list|)
 block|;   }
-comment|/// Assign from an iterator pair
+comment|/// Assign from an iterator pair.
 name|template
 operator|<
 name|typename
@@ -226,7 +226,7 @@ argument_list|,
 name|E
 argument_list|)
 block|;   }
-comment|/// Assign from a StringRef
+comment|/// Assign from a StringRef.
 name|void
 name|assign
 argument_list|(
@@ -256,7 +256,7 @@ name|end
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// Assign from a SmallVector
+comment|/// Assign from a SmallVector.
 name|void
 name|assign
 argument_list|(
@@ -289,7 +289,7 @@ block|;   }
 comment|/// @}
 comment|/// @name String Concatenation
 comment|/// @{
-comment|/// Append from an iterator pair
+comment|/// Append from an iterator pair.
 name|template
 operator|<
 name|typename
@@ -335,7 +335,7 @@ argument_list|,
 name|Elt
 argument_list|)
 block|;   }
-comment|/// Append from a StringRef
+comment|/// Append from a StringRef.
 name|void
 name|append
 argument_list|(
@@ -360,7 +360,7 @@ name|end
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// Append from a SmallVector
+comment|/// Append from a SmallVector.
 name|void
 name|append
 argument_list|(
@@ -388,8 +388,8 @@ block|;   }
 comment|/// @}
 comment|/// @name String Comparison
 comment|/// @{
-comment|/// equals - Check for string equality, this is more efficient than
-comment|/// compare() when the relative ordering of inequal strings isn't needed.
+comment|/// Check for string equality.  This is more efficient than compare() when
+comment|/// the relative ordering of inequal strings isn't needed.
 name|bool
 name|equals
 argument_list|(
@@ -407,7 +407,7 @@ name|RHS
 argument_list|)
 return|;
 block|}
-comment|/// equals_lower - Check for string equality, ignoring case.
+comment|/// Check for string equality, ignoring case.
 name|bool
 name|equals_lower
 argument_list|(
@@ -425,8 +425,8 @@ name|RHS
 argument_list|)
 return|;
 block|}
-comment|/// compare - Compare two strings; the result is -1, 0, or 1 if this string
-comment|/// is lexicographically less than, equal to, or greater than the \arg RHS.
+comment|/// Compare two strings; the result is -1, 0, or 1 if this string is
+comment|/// lexicographically less than, equal to, or greater than the \p RHS.
 name|int
 name|compare
 argument_list|(
@@ -484,7 +484,7 @@ block|}
 comment|/// @}
 comment|/// @name String Predicates
 comment|/// @{
-comment|/// startswith - Check if this string starts with the given \arg Prefix.
+comment|/// startswith - Check if this string starts with the given \p Prefix.
 name|bool
 name|startswith
 argument_list|(
@@ -502,7 +502,7 @@ name|Prefix
 argument_list|)
 return|;
 block|}
-comment|/// endswith - Check if this string ends with the given \arg Suffix.
+comment|/// endswith - Check if this string ends with the given \p Suffix.
 name|bool
 name|endswith
 argument_list|(
@@ -523,9 +523,9 @@ block|}
 comment|/// @}
 comment|/// @name String Searching
 comment|/// @{
-comment|/// find - Search for the first character \arg C in the string.
+comment|/// find - Search for the first character \p C in the string.
 comment|///
-comment|/// \return - The index of the first occurrence of \arg C, or npos if not
+comment|/// \return - The index of the first occurrence of \p C, or npos if not
 comment|/// found.
 name|size_t
 name|find
@@ -549,9 +549,9 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find - Search for the first string \arg Str in the string.
+comment|/// Search for the first string \p Str in the string.
 comment|///
-comment|/// \return - The index of the first occurrence of \arg Str, or npos if not
+comment|/// \returns The index of the first occurrence of \p Str, or npos if not
 comment|/// found.
 name|size_t
 name|find
@@ -575,9 +575,9 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// rfind - Search for the last character \arg C in the string.
+comment|/// Search for the last character \p C in the string.
 comment|///
-comment|/// \return - The index of the last occurrence of \arg C, or npos if not
+comment|/// \returns The index of the last occurrence of \p C, or npos if not
 comment|/// found.
 name|size_t
 name|rfind
@@ -600,9 +600,9 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// rfind - Search for the last string \arg Str in the string.
+comment|/// Search for the last string \p Str in the string.
 comment|///
-comment|/// \return - The index of the last occurrence of \arg Str, or npos if not
+comment|/// \returns The index of the last occurrence of \p Str, or npos if not
 comment|/// found.
 name|size_t
 name|rfind
@@ -621,8 +621,8 @@ name|Str
 argument_list|)
 return|;
 block|}
-comment|/// find_first_of - Find the first character in the string that is \arg C,
-comment|/// or npos if not found. Same as find.
+comment|/// Find the first character in the string that is \p C, or npos if not
+comment|/// found. Same as find.
 name|size_t
 name|find_first_of
 argument_list|(
@@ -645,10 +645,10 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_first_of - Find the first character in the string that is in \arg
-comment|/// Chars, or npos if not found.
+comment|/// Find the first character in the string that is in \p Chars, or npos if
+comment|/// not found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_t
 name|find_first_of
 argument_list|(
@@ -671,8 +671,8 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_first_not_of - Find the first character in the string that is not
-comment|/// \arg C or npos if not found.
+comment|/// Find the first character in the string that is not \p C or npos if not
+comment|/// found.
 name|size_t
 name|find_first_not_of
 argument_list|(
@@ -695,10 +695,10 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_first_not_of - Find the first character in the string that is not
-comment|/// in the string \arg Chars, or npos if not found.
+comment|/// Find the first character in the string that is not in the string
+comment|/// \p Chars, or npos if not found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_t
 name|find_first_not_of
 argument_list|(
@@ -721,8 +721,8 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_last_of - Find the last character in the string that is \arg C, or
-comment|/// npos if not found.
+comment|/// Find the last character in the string that is \p C, or npos if not
+comment|/// found.
 name|size_t
 name|find_last_of
 argument_list|(
@@ -744,10 +744,10 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_last_of - Find the last character in the string that is in \arg C,
-comment|/// or npos if not found.
+comment|/// Find the last character in the string that is in \p C, or npos if not
+comment|/// found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_t
 name|find_last_of
 argument_list|(
@@ -772,7 +772,7 @@ block|}
 comment|/// @}
 comment|/// @name Helpful Algorithms
 comment|/// @{
-comment|/// count - Return the number of occurrences of \arg C in the string.
+comment|/// Return the number of occurrences of \p C in the string.
 name|size_t
 name|count
 argument_list|(
@@ -790,8 +790,8 @@ name|C
 argument_list|)
 return|;
 block|}
-comment|/// count - Return the number of non-overlapped occurrences of \arg Str in
-comment|/// the string.
+comment|/// Return the number of non-overlapped occurrences of \p Str in the
+comment|/// string.
 name|size_t
 name|count
 argument_list|(
@@ -812,15 +812,15 @@ block|}
 comment|/// @}
 comment|/// @name Substring Operations
 comment|/// @{
-comment|/// substr - Return a reference to the substring from [Start, Start + N).
+comment|/// Return a reference to the substring from [Start, Start + N).
 comment|///
-comment|/// \param Start - The index of the starting character in the substring; if
+comment|/// \param Start The index of the starting character in the substring; if
 comment|/// the index is npos or greater than the length of the string then the
 comment|/// empty substring will be returned.
 comment|///
-comment|/// \param N - The number of characters to included in the substring. If N
+comment|/// \param N The number of characters to included in the substring. If \p N
 comment|/// exceeds the number of characters remaining in the string, the string
-comment|/// suffix (starting with \arg Start) will be returned.
+comment|/// suffix (starting with \p Start) will be returned.
 name|StringRef
 name|substr
 argument_list|(
@@ -842,16 +842,16 @@ name|N
 argument_list|)
 return|;
 block|}
-comment|/// slice - Return a reference to the substring from [Start, End).
+comment|/// Return a reference to the substring from [Start, End).
 comment|///
-comment|/// \param Start - The index of the starting character in the substring; if
+comment|/// \param Start The index of the starting character in the substring; if
 comment|/// the index is npos or greater than the length of the string then the
 comment|/// empty substring will be returned.
 comment|///
-comment|/// \param End - The index following the last character to include in the
-comment|/// substring. If this is npos, or less than \arg Start, or exceeds the
+comment|/// \param End The index following the last character to include in the
+comment|/// substring. If this is npos, or less than \p Start, or exceeds the
 comment|/// number of characters remaining in the string, the string suffix
-comment|/// (starting with \arg Start) will be returned.
+comment|/// (starting with \p Start) will be returned.
 name|StringRef
 name|slice
 argument_list|(
@@ -874,7 +874,7 @@ argument_list|)
 return|;
 block|}
 comment|// Extra methods.
-comment|/// Explicit conversion to StringRef
+comment|/// Explicit conversion to StringRef.
 name|StringRef
 name|str
 argument_list|()

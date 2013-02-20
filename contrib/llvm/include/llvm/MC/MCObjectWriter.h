@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -102,12 +108,10 @@ name|MCObjectWriter
 block|{
 name|MCObjectWriter
 argument_list|(
-specifier|const
-name|MCObjectWriter
-operator|&
+argument|const MCObjectWriter&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -116,8 +120,8 @@ specifier|const
 name|MCObjectWriter
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 name|raw_ostream

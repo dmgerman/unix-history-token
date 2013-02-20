@@ -3336,7 +3336,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 operator|&&
 name|nconf
 operator|->
@@ -11365,6 +11365,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|cpoptarg
+operator|&&
 operator|!
 name|strcmp
 argument_list|(

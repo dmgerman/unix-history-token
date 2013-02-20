@@ -110,6 +110,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|FileEntry
+decl_stmt|;
+name|class
 name|DeclContext
 decl_stmt|;
 name|class
@@ -220,6 +223,43 @@ operator|::
 name|string
 name|FileName
 expr_stmt|;
+comment|/// \brief The original source file name that was used to build the
+comment|/// primary AST file, which may have been modified for
+comment|/// relocatable-pch support.
+name|std
+operator|::
+name|string
+name|OriginalSourceFileName
+expr_stmt|;
+comment|/// \brief The actual original source file name that was used to
+comment|/// build this AST file.
+name|std
+operator|::
+name|string
+name|ActualOriginalSourceFileName
+expr_stmt|;
+comment|/// \brief The file ID for the original source file that was used to
+comment|/// build this AST file.
+name|FileID
+name|OriginalSourceFileID
+decl_stmt|;
+comment|/// \brief The directory that the PCH was originally created in. Used to
+comment|/// allow resolving headers even after headers+PCH was moved to a new path.
+name|std
+operator|::
+name|string
+name|OriginalDir
+expr_stmt|;
+comment|/// \brief Whether this precompiled header is a relocatable PCH file.
+name|bool
+name|RelocatablePCH
+decl_stmt|;
+comment|/// \brief The file entry for the module file.
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+decl_stmt|;
 comment|/// \brief Whether this module has been directly imported by the
 comment|/// user.
 name|bool
@@ -260,6 +300,7 @@ name|BitstreamCursor
 name|Stream
 expr_stmt|;
 comment|/// \brief The source location where this module was first imported.
+comment|/// FIXME: This is not properly initialized yet.
 name|SourceLocation
 name|ImportLoc
 decl_stmt|;
@@ -267,6 +308,40 @@ comment|/// \brief The first source location in this module.
 name|SourceLocation
 name|FirstLoc
 decl_stmt|;
+comment|// === Input Files ===
+comment|/// \brief The cursor to the start of the input-files block.
+name|llvm
+operator|::
+name|BitstreamCursor
+name|InputFilesCursor
+expr_stmt|;
+comment|/// \brief Offsets for all of the input file entries in the AST file.
+specifier|const
+name|uint32_t
+modifier|*
+name|InputFileOffsets
+decl_stmt|;
+comment|/// \brief The input files that have been loaded from this AST file, along
+comment|/// with a bool indicating whether this was an overridden buffer.
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+expr|>
+name|InputFilesLoaded
+expr_stmt|;
 comment|// === Source Locations ===
 comment|/// \brief Cursor used to read source location entries.
 name|llvm
@@ -302,17 +377,6 @@ literal|4
 operator|>
 name|PreloadSLocEntries
 expr_stmt|;
-comment|/// \brief The number of source location file entries in this AST file.
-name|unsigned
-name|LocalNumSLocFileEntries
-decl_stmt|;
-comment|/// \brief Offsets for all of the source location file entries in the
-comment|/// AST file.
-specifier|const
-name|uint32_t
-modifier|*
-name|SLocFileOffsets
-decl_stmt|;
 comment|/// \brief Remapping table for source locations in this module.
 name|ContinuousRangeMap
 operator|<
@@ -378,6 +442,37 @@ name|llvm
 operator|::
 name|BitstreamCursor
 name|MacroCursor
+expr_stmt|;
+comment|/// \brief The number of macros in this AST file.
+name|unsigned
+name|LocalNumMacros
+decl_stmt|;
+comment|/// \brief Offsets of macros in the preprocessor block.
+comment|///
+comment|/// This array is indexed by the macro ID (-1), and provides
+comment|/// the offset into the preprocessor block where macro definitions are
+comment|/// stored.
+specifier|const
+name|uint32_t
+modifier|*
+name|MacroOffsets
+decl_stmt|;
+comment|/// \brief Base macro ID for macros local to this module.
+name|serialization
+operator|::
+name|MacroID
+name|BaseMacroID
+expr_stmt|;
+comment|/// \brief Remapping table for macro IDs in this module.
+name|ContinuousRangeMap
+operator|<
+name|uint32_t
+operator|,
+name|int
+operator|,
+literal|2
+operator|>
+name|MacroRemap
 expr_stmt|;
 comment|/// \brief The offset of the start of the set of defined macros.
 name|uint64_t
@@ -614,6 +709,9 @@ name|DeclID
 operator|*
 name|FileSortedDecls
 expr_stmt|;
+name|unsigned
+name|NumFileSortedDecls
+decl_stmt|;
 comment|/// \brief Array of redeclaration chain location information within this
 comment|/// module file, sorted by the first declaration ID.
 specifier|const
@@ -700,13 +798,6 @@ literal|8
 operator|>
 name|PragmaDiagMappings
 expr_stmt|;
-comment|/// \brief The AST stat cache installed for this file, if any.
-comment|///
-comment|/// The dynamic type of this stat cache is always ASTStatCache
-name|void
-modifier|*
-name|StatCache
-decl_stmt|;
 comment|/// \brief List of modules which depend on this module
 name|llvm
 operator|::

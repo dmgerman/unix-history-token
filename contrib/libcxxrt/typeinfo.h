@@ -108,6 +108,28 @@ decl_stmt|;
 comment|/* 		 * The following functions are in this order to match the 		 * vtable layout of libsupc++.  This allows libcxxrt to be used 		 * with libraries that depend on this. 		 * 		 * These functions are in the public headers for libstdc++, so 		 * we have to assume that someone will probably call them and 		 * expect them to work.  Their names must also match the names used in 		 * libsupc++, so that code linking against this library can subclass 		 * type_info and correctly fill in the values in the vtables. 		 */
 name|public
 label|:
+comment|/** 		 * Returns true if this is some pointer type, false otherwise. 		 */
+name|virtual
+name|bool
+name|__is_pointer_p
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/** 		 * Returns true if this is some function type, false otherwise. 		 */
+name|virtual
+name|bool
+name|__is_function_p
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/** 		 * Catch function.  Allows external libraries to implement 		 * their own basic types.  This is used, for example, in the 		 * GNUstep Objective-C runtime to allow Objective-C types to be 		 * caught in G++ catch blocks. 		 * 		 * The outer parameter indicates the number of outer pointers 		 * in the high bits.  The low bit indicates whether the 		 * pointers are const qualified. 		 */
 name|virtual
 name|bool
@@ -146,28 +168,6 @@ operator|*
 name|thrown_object
 argument_list|)
 decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/** 		 * Returns true if this is some pointer type, false otherwise. 		 */
-name|virtual
-name|bool
-name|__is_pointer_p
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/** 		 * Returns true if this is some function type, false otherwise. 		 */
-name|virtual
-name|bool
-name|__is_function_p
-argument_list|()
-specifier|const
 block|{
 return|return
 name|false
@@ -558,16 +558,6 @@ block|}
 block|;
 name|virtual
 name|bool
-name|__is_pointer_p
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
 name|__do_catch
 argument_list|(
 argument|const type_info *thrown_type
@@ -590,7 +580,18 @@ name|virtual
 operator|~
 name|__pointer_type_info
 argument_list|()
-block|; 	}
+block|;
+name|virtual
+name|bool
+name|__is_pointer_p
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
 block|;
 comment|/** 	 * Pointer to member type info. 	 */
 block|struct

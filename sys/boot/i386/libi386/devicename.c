@@ -467,6 +467,10 @@ else|else
 block|{
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|np
 expr_stmt|;
 block|}

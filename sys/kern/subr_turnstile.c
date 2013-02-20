@@ -735,7 +735,7 @@ operator|==
 name|P_MAGIC
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the thread is asleep, then we are probably about 		 * to deadlock.  To make debugging this easier, just 		 * panic and tell the user which thread misbehaved so 		 * they can hopefully get a stack trace from the truly 		 * misbehaving thread. 		 */
+comment|/* 		 * If the thread is asleep, then we are probably about 		 * to deadlock.  To make debugging this easier, show 		 * backtrace of misbehaving thread and panic to not 		 * leave the kernel deadlocked. 		 */
 if|if
 condition|(
 name|TD_IS_SLEEPING

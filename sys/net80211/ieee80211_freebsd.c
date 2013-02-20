@@ -2080,6 +2080,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
+end_ifndef
+
 begin_comment
 comment|/*  * Re-align the payload in the mbuf.  This is mainly used (right now)  * to handle IP header alignment requirements on certain architectures.  */
 end_comment
@@ -2138,7 +2144,7 @@ name|n
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2149,7 +2155,7 @@ name|n
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -2287,6 +2293,15 @@ name|n
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__NO_STRICT_ALIGNMENT */
+end_comment
 
 begin_function
 name|int

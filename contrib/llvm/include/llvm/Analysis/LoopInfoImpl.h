@@ -896,17 +896,6 @@ block|;
 typedef|typedef
 name|GraphTraits
 operator|<
-name|BlockT
-operator|*
-operator|>
-name|BlockTraits
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|GraphTraits
-operator|<
 name|Inverse
 operator|<
 name|BlockT
@@ -915,7 +904,7 @@ operator|>
 expr|>
 name|InvBlockTraits
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_for
 for|for

@@ -691,6 +691,11 @@ directive|define
 name|UCOM_FLAG_FREE_UNIT
 value|0x0200
 comment|/* set if we must free the unit */
+define|#
+directive|define
+name|UCOM_FLAG_INWAKEUP
+value|0x0400
+comment|/* set if we are in the tsw_inwakeup callback */
 name|uint8_t
 name|sc_lsr
 decl_stmt|;

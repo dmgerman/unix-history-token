@@ -863,7 +863,7 @@ literal|1
 operator|&&
 name|errno
 operator|!=
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 condition|)
 name|err
 argument_list|(
@@ -897,7 +897,7 @@ literal|1
 operator|&&
 name|errno
 operator|!=
-name|EPROTONOSUPPORT
+name|EAFNOSUPPORT
 condition|)
 name|err
 argument_list|(

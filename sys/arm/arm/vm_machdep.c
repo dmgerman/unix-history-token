@@ -1633,7 +1633,8 @@ name|tf
 operator|->
 name|tf_usr_sp
 operator|=
-operator|(
+name|STACKALIGN
+argument_list|(
 operator|(
 name|int
 operator|)
@@ -1650,10 +1651,7 @@ argument_list|(
 expr|struct
 name|trapframe
 argument_list|)
-operator|)
-operator|&
-operator|~
-literal|7
+argument_list|)
 expr_stmt|;
 name|tf
 operator|->
@@ -1802,6 +1800,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 	 * Ensure td_frame is aligned to an 8 byte boundary as it will be 	 * placed into the stack pointer which must be 8 byte aligned in 	 * the ARM EABI. 	 */
 name|td
 operator|->
 name|td_frame
@@ -1811,7 +1810,8 @@ expr|struct
 name|trapframe
 operator|*
 operator|)
-operator|(
+name|STACKALIGN
+argument_list|(
 operator|(
 name|u_int
 operator|)
@@ -1826,9 +1826,13 @@ argument_list|(
 expr|struct
 name|pcb
 argument_list|)
-operator|)
 operator|-
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|trapframe
+argument_list|)
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

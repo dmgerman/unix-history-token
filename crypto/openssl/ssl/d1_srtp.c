@@ -15,12 +15,6 @@ begin_comment
 comment|/*   DTLS code by Eric Rescorla<ekr@rtfm.com>    Copyright (C) 2006, Network Resonance, Inc.   Copyright (C) 2011, RTFM, Inc. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_SRTP
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -38,6 +32,12 @@ include|#
 directive|include
 file|"ssl_locl.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
+end_ifndef
 
 begin_include
 include|#

@@ -513,6 +513,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|VALGRIND_MAKE_MEM_UNDEFINED
+argument_list|(
+name|ret
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(

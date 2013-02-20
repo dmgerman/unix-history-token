@@ -181,10 +181,6 @@ name|dnode_phys_t
 modifier|*
 name|dnp
 parameter_list|,
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|,
 name|uint64_t
 name|objset
 parameter_list|,
@@ -206,10 +202,6 @@ parameter_list|,
 specifier|const
 name|dnode_phys_t
 modifier|*
-parameter_list|,
-name|arc_buf_t
-modifier|*
-name|buf
 parameter_list|,
 name|uint64_t
 name|objset
@@ -322,8 +314,6 @@ argument_list|,
 name|zilog
 argument_list|,
 name|bp
-argument_list|,
-name|NULL
 argument_list|,
 operator|&
 name|zb
@@ -470,8 +460,6 @@ argument_list|,
 name|zilog
 argument_list|,
 name|bp
-argument_list|,
-name|NULL
 argument_list|,
 operator|&
 name|zb
@@ -779,10 +767,6 @@ name|traverse_data_t
 modifier|*
 name|td
 parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
-parameter_list|,
 specifier|const
 name|blkptr_t
 modifier|*
@@ -877,8 +861,6 @@ name|td_spa
 argument_list|,
 name|bp
 argument_list|,
-name|pbuf
-argument_list|,
 name|NULL
 argument_list|,
 name|NULL
@@ -909,10 +891,6 @@ specifier|const
 name|dnode_phys_t
 modifier|*
 name|dnp
-parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
 parameter_list|,
 specifier|const
 name|blkptr_t
@@ -1023,8 +1001,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|pbuf
 argument_list|,
 name|zb
 argument_list|,
@@ -1178,8 +1154,6 @@ name|NULL
 argument_list|,
 name|bp
 argument_list|,
-name|pbuf
-argument_list|,
 name|zb
 argument_list|,
 name|dnp
@@ -1255,7 +1229,7 @@ name|SPA_BLKPTRSHIFT
 decl_stmt|;
 name|err
 operator|=
-name|dsl_read
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
@@ -1264,8 +1238,6 @@ operator|->
 name|td_spa
 argument_list|,
 name|bp
-argument_list|,
-name|pbuf
 argument_list|,
 name|arc_getbuf_func
 argument_list|,
@@ -1343,8 +1315,6 @@ name|traverse_prefetch_metadata
 argument_list|(
 name|td
 argument_list|,
-name|buf
-argument_list|,
 operator|&
 name|cbp
 index|[
@@ -1407,8 +1377,6 @@ name|td
 argument_list|,
 name|dnp
 argument_list|,
-name|buf
-argument_list|,
 operator|&
 name|cbp
 index|[
@@ -1468,7 +1436,7 @@ name|DNODE_SHIFT
 decl_stmt|;
 name|err
 operator|=
-name|dsl_read
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
@@ -1477,8 +1445,6 @@ operator|->
 name|td_spa
 argument_list|,
 name|bp
-argument_list|,
-name|pbuf
 argument_list|,
 name|arc_getbuf_func
 argument_list|,
@@ -1534,8 +1500,6 @@ index|[
 name|i
 index|]
 argument_list|,
-name|buf
-argument_list|,
 name|zb
 operator|->
 name|zb_objset
@@ -1576,8 +1540,6 @@ name|dnp
 index|[
 name|i
 index|]
-argument_list|,
-name|buf
 argument_list|,
 name|zb
 operator|->
@@ -1636,7 +1598,7 @@ name|dnp
 decl_stmt|;
 name|err
 operator|=
-name|dsl_read_nolock
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
@@ -1689,8 +1651,6 @@ name|td
 argument_list|,
 name|dnp
 argument_list|,
-name|buf
-argument_list|,
 name|zb
 operator|->
 name|zb_objset
@@ -1720,8 +1680,6 @@ name|osp
 operator|->
 name|os_userused_dnode
 argument_list|,
-name|buf
-argument_list|,
 name|zb
 operator|->
 name|zb_objset
@@ -1738,8 +1696,6 @@ name|osp
 operator|->
 name|os_groupused_dnode
 argument_list|,
-name|buf
-argument_list|,
 name|zb
 operator|->
 name|zb_objset
@@ -1755,8 +1711,6 @@ argument_list|(
 name|td
 argument_list|,
 name|dnp
-argument_list|,
-name|buf
 argument_list|,
 name|zb
 operator|->
@@ -1813,8 +1767,6 @@ name|td
 argument_list|,
 name|dnp
 argument_list|,
-name|buf
-argument_list|,
 name|zb
 operator|->
 name|zb_objset
@@ -1870,8 +1822,6 @@ argument_list|(
 name|td
 argument_list|,
 name|dnp
-argument_list|,
-name|buf
 argument_list|,
 name|zb
 operator|->
@@ -1931,8 +1881,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|bp
-argument_list|,
-name|pbuf
 argument_list|,
 name|zb
 argument_list|,
@@ -2016,10 +1964,6 @@ name|dnode_phys_t
 modifier|*
 name|dnp
 parameter_list|,
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|,
 name|uint64_t
 name|objset
 parameter_list|,
@@ -2071,8 +2015,6 @@ name|traverse_prefetch_metadata
 argument_list|(
 name|td
 argument_list|,
-name|buf
-argument_list|,
 operator|&
 name|dnp
 operator|->
@@ -2113,8 +2055,6 @@ name|traverse_prefetch_metadata
 argument_list|(
 name|td
 argument_list|,
-name|buf
-argument_list|,
 operator|&
 name|dnp
 operator|->
@@ -2141,10 +2081,6 @@ specifier|const
 name|dnode_phys_t
 modifier|*
 name|dnp
-parameter_list|,
-name|arc_buf_t
-modifier|*
-name|buf
 parameter_list|,
 name|uint64_t
 name|objset
@@ -2220,8 +2156,6 @@ name|td
 argument_list|,
 name|dnp
 argument_list|,
-name|buf
-argument_list|,
 operator|&
 name|dnp
 operator|->
@@ -2281,8 +2215,6 @@ argument_list|(
 name|td
 argument_list|,
 name|dnp
-argument_list|,
-name|buf
 argument_list|,
 operator|&
 name|dnp
@@ -2349,10 +2281,6 @@ specifier|const
 name|blkptr_t
 modifier|*
 name|bp
-parameter_list|,
-name|arc_buf_t
-modifier|*
-name|pbuf
 parameter_list|,
 specifier|const
 name|zbookmark_t
@@ -2505,15 +2433,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|dsl_read
+name|arc_read
 argument_list|(
 name|NULL
 argument_list|,
 name|spa
 argument_list|,
 name|bp
-argument_list|,
-name|pbuf
 argument_list|,
 name|NULL
 argument_list|,
@@ -2607,8 +2533,6 @@ name|traverse_visitbp
 argument_list|(
 operator|&
 name|td
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -2959,8 +2883,6 @@ name|traverse_visitbp
 argument_list|(
 operator|&
 name|td
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

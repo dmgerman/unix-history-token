@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -290,6 +290,8 @@ name|ASL_MSG_RESERVED_NO_RETURN_VAL
 block|,
 name|ASL_MSG_RESERVED_OPERAND_TYPE
 block|,
+name|ASL_MSG_RESERVED_PACKAGE_LENGTH
+block|,
 name|ASL_MSG_RESERVED_RETURN_VALUE
 block|,
 name|ASL_MSG_RESERVED_USE
@@ -337,6 +339,8 @@ block|,
 name|ASL_MSG_TIMEOUT
 block|,
 name|ASL_MSG_TOO_MANY_TEMPS
+block|,
+name|ASL_MSG_TRUNCATION
 block|,
 name|ASL_MSG_UNKNOWN_RESERVED_NAME
 block|,
@@ -536,7 +540,7 @@ comment|/*    ASL_MSG_INPUT_FILE_OPEN */
 literal|"Could not open input file"
 block|,
 comment|/*    ASL_MSG_INTEGER_LENGTH */
-literal|"64-bit integer in 32-bit table, truncating"
+literal|"64-bit integer in 32-bit table, truncating (DSDT version< 2)"
 block|,
 comment|/*    ASL_MSG_INTEGER_OPTIMIZATION */
 literal|"Integer optimized to single-byte AML opcode"
@@ -739,6 +743,9 @@ block|,
 comment|/*    ASL_MSG_RESERVED_OPERAND_TYPE */
 literal|"Invalid object type for reserved name"
 block|,
+comment|/*    ASL_MSG_RESERVED_PACKAGE_LENGTH */
+literal|"Invalid package length for reserved name"
+block|,
 comment|/*    ASL_MSG_RESERVED_RETURN_VALUE */
 literal|"Reserved method must return a value"
 block|,
@@ -810,6 +817,9 @@ literal|"Result is not used, possible operator timeout will be missed"
 block|,
 comment|/*    ASL_MSG_TOO_MANY_TEMPS */
 literal|"Method requires too many temporary variables (_T_x)"
+block|,
+comment|/*    ASL_MSG_TRUNCATION */
+literal|"64-bit return value will be truncated to 32 bits (DSDT version< 2)"
 block|,
 comment|/*    ASL_MSG_UNKNOWN_RESERVED_NAME */
 literal|"Unknown reserved name"

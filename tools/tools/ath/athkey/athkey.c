@@ -328,12 +328,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: too much data in %s, max %u bytes\n"
+literal|"%s: too much data in %s, max %llu bytes\n"
 argument_list|,
 name|progname
 argument_list|,
 name|arg
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|maxlen
 argument_list|)
 expr_stmt|;
@@ -814,6 +819,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"ioctl: %s"
+argument_list|,
 name|atd
 operator|.
 name|ad_name
@@ -966,6 +973,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl: %s"
 argument_list|,
 name|atd
 operator|.

@@ -196,6 +196,18 @@ block|,
 name|CSARM_V7
 init|=
 literal|9
+block|,
+name|CSARM_V7F
+init|=
+literal|10
+block|,
+name|CSARM_V7S
+init|=
+literal|11
+block|,
+name|CSARM_V7K
+init|=
+literal|12
 block|}
 enum|;
 comment|/// \brief PowerPC Machine Subtypes.
@@ -716,6 +728,20 @@ name|Value
 decl_stmt|;
 block|}
 struct|;
+comment|// Despite containing a uint64_t, this structure is only 4-byte aligned within
+comment|// a MachO file.
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|4
+name|)
 struct|struct
 name|Symbol64TableEntry
 block|{
@@ -736,6 +762,12 @@ name|Value
 decl_stmt|;
 block|}
 struct|;
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
 comment|/// @}
 comment|/// @name Data-in-code Table Entry
 comment|/// @{

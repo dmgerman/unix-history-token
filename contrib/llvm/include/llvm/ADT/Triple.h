@@ -169,7 +169,13 @@ name|le32
 block|,
 comment|// le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
 name|amdil
+block|,
 comment|// amdil: amd IL
+name|spir
+block|,
+comment|// SPIR: standard portable IR for OpenCL 32-bit version
+name|spir64
+comment|// SPIR: standard portable IR for OpenCL 64-bit version
 block|}
 enum|;
 enum|enum
@@ -186,6 +192,10 @@ block|,
 name|BGP
 block|,
 name|BGQ
+block|,
+name|Freescale
+block|,
+name|IBM
 block|}
 enum|;
 enum|enum
@@ -237,6 +247,8 @@ name|CNK
 block|,
 comment|// BG/P Compute-Node Kernel
 name|Bitrig
+block|,
+name|AIX
 block|}
 enum|;
 enum|enum
@@ -254,7 +266,9 @@ name|EABI
 block|,
 name|MachO
 block|,
-name|ANDROIDEABI
+name|Android
+block|,
+name|ELF
 block|}
 enum|;
 name|private
@@ -949,7 +963,7 @@ name|EnvironmentType
 name|Kind
 parameter_list|)
 function_decl|;
-comment|/// setTriple - Set all components to the new triple \arg Str.
+comment|/// setTriple - Set all components to the new triple \p Str.
 name|void
 name|setTriple
 parameter_list|(
@@ -1044,8 +1058,7 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Static helpers for IDs.
 comment|/// @{
-comment|/// getArchTypeName - Get the canonical name for the \arg Kind
-comment|/// architecture.
+comment|/// getArchTypeName - Get the canonical name for the \p Kind architecture.
 specifier|static
 specifier|const
 name|char
@@ -1056,7 +1069,7 @@ name|ArchType
 name|Kind
 parameter_list|)
 function_decl|;
-comment|/// getArchTypePrefix - Get the "prefix" canonical name for the \arg Kind
+comment|/// getArchTypePrefix - Get the "prefix" canonical name for the \p Kind
 comment|/// architecture. This is the prefix used by the architecture specific
 comment|/// builtins, and is suitable for passing to \see
 comment|/// Intrinsic::getIntrinsicForGCCBuiltin().
@@ -1072,8 +1085,7 @@ name|ArchType
 name|Kind
 parameter_list|)
 function_decl|;
-comment|/// getVendorTypeName - Get the canonical name for the \arg Kind
-comment|/// vendor.
+comment|/// getVendorTypeName - Get the canonical name for the \p Kind vendor.
 specifier|static
 specifier|const
 name|char
@@ -1084,8 +1096,7 @@ name|VendorType
 name|Kind
 parameter_list|)
 function_decl|;
-comment|/// getOSTypeName - Get the canonical name for the \arg Kind operating
-comment|/// system.
+comment|/// getOSTypeName - Get the canonical name for the \p Kind operating system.
 specifier|static
 specifier|const
 name|char
@@ -1096,7 +1107,7 @@ name|OSType
 name|Kind
 parameter_list|)
 function_decl|;
-comment|/// getEnvironmentTypeName - Get the canonical name for the \arg Kind
+comment|/// getEnvironmentTypeName - Get the canonical name for the \p Kind
 comment|/// environment.
 specifier|static
 specifier|const
@@ -1116,17 +1127,6 @@ comment|/// architecture name (e.g., "x86").
 specifier|static
 name|ArchType
 name|getArchTypeForLLVMName
-parameter_list|(
-name|StringRef
-name|Str
-parameter_list|)
-function_decl|;
-comment|/// getArchTypeForDarwinArchName - Get the architecture type for a "Darwin"
-comment|/// architecture name, for example as accepted by "gcc -arch" (see also
-comment|/// arch(3)).
-specifier|static
-name|ArchType
-name|getArchTypeForDarwinArchName
 parameter_list|(
 name|StringRef
 name|Str

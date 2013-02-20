@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|LOCAL_PEERCRED
-value|0x001
+value|1
 end_define
 
 begin_comment
@@ -104,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|LOCAL_CREDS
-value|0x002
+value|2
 end_define
 
 begin_comment
@@ -115,12 +115,23 @@ begin_define
 define|#
 directive|define
 name|LOCAL_CONNWAIT
-value|0x004
+value|4
 end_define
 
 begin_comment
 comment|/* connects block until accepted */
 end_comment
+
+begin_comment
+comment|/* Start of reserved space for third-party socket options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_VENDOR
+value|SO_VENDOR
+end_define
 
 begin_ifndef
 ifndef|#

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -384,6 +384,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_TPM2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_TPM2,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_UEFI_OFFSET
 parameter_list|(
 name|f
@@ -529,6 +539,16 @@ begin_define
 define|#
 directive|define
 name|ACPI_CSRT1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_CSRT_SHARED_INFO,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CSRT2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
@@ -1018,6 +1038,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_MTMR0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MTMR_ENTRY,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_PCCT0_OFFSET
 parameter_list|(
 name|f
@@ -1173,6 +1203,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(UINT16) ACPI_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VRTC0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_VRTC_ENTRY,f)
 end_define
 
 begin_define
@@ -4424,10 +4464,181 @@ name|ACPI_DMT_UINT32
 block|,
 name|ACPI_CSRT0_OFFSET
 argument_list|(
-name|InfoLength
+name|SharedInfoLength
 argument_list|)
 block|,
-literal|"InfoLength"
+literal|"Shared Info Length"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Shared Info subtable */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoCsrt1
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|MajorVersion
+argument_list|)
+block|,
+literal|"Major Version"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|MinorVersion
+argument_list|)
+block|,
+literal|"Minor Version"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|MmioBaseLow
+argument_list|)
+block|,
+literal|"MMIO Base Address Low"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|MmioBaseHigh
+argument_list|)
+block|,
+literal|"MMIO Base Address High"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|GsiInterrupt
+argument_list|)
+block|,
+literal|"GSI Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|InterruptPolarity
+argument_list|)
+block|,
+literal|"Interrupt Polarity"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|InterruptMode
+argument_list|)
+block|,
+literal|"Interrupt Mode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|NumChannels
+argument_list|)
+block|,
+literal|"Num Channels"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|DmaAddressWidth
+argument_list|)
+block|,
+literal|"DMA Address Width"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|BaseRequestLine
+argument_list|)
+block|,
+literal|"Base Request Line"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|NumHandshakeSignals
+argument_list|)
+block|,
+literal|"Num Handshake Signals"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_CSRT1_OFFSET
+argument_list|(
+name|MaxBlockSize
+argument_list|)
+block|,
+literal|"Max Block Size"
 block|,
 literal|0
 block|}
@@ -4443,14 +4654,14 @@ end_comment
 
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoCsrt1
+name|AcpiDmTableInfoCsrt2
 index|[]
 init|=
 block|{
 block|{
 name|ACPI_DMT_UINT32
 block|,
-name|ACPI_CSRT1_OFFSET
+name|ACPI_CSRT2_OFFSET
 argument_list|(
 name|Length
 argument_list|)
@@ -4463,7 +4674,7 @@ block|,
 block|{
 name|ACPI_DMT_UINT16
 block|,
-name|ACPI_CSRT1_OFFSET
+name|ACPI_CSRT2_OFFSET
 argument_list|(
 name|Type
 argument_list|)
@@ -4476,7 +4687,7 @@ block|,
 block|{
 name|ACPI_DMT_UINT16
 block|,
-name|ACPI_CSRT1_OFFSET
+name|ACPI_CSRT2_OFFSET
 argument_list|(
 name|Subtype
 argument_list|)
@@ -4489,7 +4700,7 @@ block|,
 block|{
 name|ACPI_DMT_UINT32
 block|,
-name|ACPI_CSRT1_OFFSET
+name|ACPI_CSRT2_OFFSET
 argument_list|(
 name|Uid
 argument_list|)
@@ -9862,6 +10073,75 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * MTMR - MID Timer Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMtmr
+index|[]
+init|=
+block|{
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MTMR Subtables - MTMR Entry */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMtmr0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_MTMR0_OFFSET
+argument_list|(
+name|PhysicalAddress
+argument_list|)
+block|,
+literal|"PhysicalAddress"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MTMR0_OFFSET
+argument_list|(
+name|Frequency
+argument_list|)
+block|,
+literal|"Frequency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MTMR0_OFFSET
+argument_list|(
+name|Irq
+argument_list|)
+block|,
+literal|"IRQ"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * PCCT - Platform Communications Channel Table (ACPI 5.0)  *  ******************************************************************************/
 end_comment
 
@@ -12013,6 +12293,60 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoTpm2
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_TPM2_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_TPM2_OFFSET
+argument_list|(
+name|ControlAddress
+argument_list|)
+block|,
+literal|"Control Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_TPM2_OFFSET
+argument_list|(
+name|StartMethod
+argument_list|)
+block|,
+literal|"Start Method"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * UEFI - UEFI Boot optimization Table  *  ******************************************************************************/
 end_comment
 
@@ -12047,6 +12381,62 @@ name|DataOffset
 argument_list|)
 block|,
 literal|"Data Offset"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * VRTC - Virtual Real Time Clock Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoVrtc
+index|[]
+init|=
+block|{
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* VRTC Subtables - VRTC Entry */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoVrtc0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_VRTC0_OFFSET
+argument_list|(
+name|PhysicalAddress
+argument_list|)
+block|,
+literal|"PhysicalAddress"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_VRTC0_OFFSET
+argument_list|(
+name|Irq
+argument_list|)
+block|,
+literal|"IRQ"
 block|,
 literal|0
 block|}

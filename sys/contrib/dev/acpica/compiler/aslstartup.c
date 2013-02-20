@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/actables.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
 begin_include
@@ -96,6 +102,16 @@ parameter_list|(
 name|ASL_FILE_INFO
 modifier|*
 name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AslDoDisassembly
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -489,6 +505,32 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+comment|/* Check for a valid binary ACPI table */
+name|Status
+operator|=
+name|FlCheckForAcpiTable
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_ACPI_TABLE
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/* Check for 100% ASCII source file (comments are ignored) */
 name|Status
 operator|=
@@ -631,45 +673,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslDoOneFile  *  * PARAMETERS:  Filename        - Name of the file  *  * RETURN:      Status  *  * DESCRIPTION: Process a single file - either disassemble, compile, or both  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AslDoDisassembly  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initiate AML file disassembly. Uses ACPICA subsystem to build  *              namespace.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
-name|AslDoOneFile
+name|AslDoDisassembly
 parameter_list|(
-name|char
-modifier|*
-name|Filename
+name|void
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* Re-initialize "some" compiler/preprocessor globals */
-name|AslInitializeGlobals
-argument_list|()
-expr_stmt|;
-name|PrInitializeGlobals
-argument_list|()
-expr_stmt|;
-name|Gbl_Files
-index|[
-name|ASL_FILE_INPUT
-index|]
-operator|.
-name|Filename
-operator|=
-name|Filename
-expr_stmt|;
-comment|/*      * AML Disassembly (Optional)      */
-if|if
-condition|(
-name|Gbl_DisasmFlag
-operator|||
-name|Gbl_GetAllTables
-condition|)
-block|{
 comment|/* ACPICA subsystem initialization */
 name|Status
 operator|=
@@ -766,11 +783,17 @@ name|Status
 operator|)
 return|;
 block|}
+comment|/* Check if any control methods were unresolved */
+name|AcpiDmUnresolvedWarning
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* TBD: Handle additional output files for disassembler */
-block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);         LsDisplayNamespace ();
+block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);     NsDisplayNamespace ();
 endif|#
 directive|endif
 comment|/* Shutdown compiler and ACPICA subsystem */
@@ -783,7 +806,7 @@ operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
-comment|/*          * Gbl_Files[ASL_FILE_INPUT].Filename was replaced with the          * .DSL disassembly file, which can now be compiled if requested          */
+comment|/*      * Gbl_Files[ASL_FILE_INPUT].Filename was replaced with the      * .DSL disassembly file, which can now be compiled if requested      */
 if|if
 condition|(
 name|Gbl_DoCompile
@@ -801,9 +824,22 @@ operator|.
 name|Filename
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_CTRL_CONTINUE
+operator|)
+return|;
 block|}
-else|else
-block|{
+name|ACPI_FREE
+argument_list|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
 name|Gbl_Files
 index|[
 name|ASL_FILE_INPUT
@@ -816,6 +852,66 @@ expr_stmt|;
 return|return
 operator|(
 name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AslDoOneFile  *  * PARAMETERS:  Filename        - Name of the file  *  * RETURN:      Status  *  * DESCRIPTION: Process a single file - either disassemble, compile, or both  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AslDoOneFile
+parameter_list|(
+name|char
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Re-initialize "some" compiler/preprocessor globals */
+name|AslInitializeGlobals
+argument_list|()
+expr_stmt|;
+name|PrInitializeGlobals
+argument_list|()
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+operator|=
+name|Filename
+expr_stmt|;
+comment|/*      * AML Disassembly (Optional)      */
+if|if
+condition|(
+name|Gbl_DisasmFlag
+operator|||
+name|Gbl_GetAllTables
+condition|)
+block|{
+name|Status
+operator|=
+name|AslDoDisassembly
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|!=
+name|AE_CTRL_CONTINUE
+condition|)
+block|{
+return|return
+operator|(
+name|Status
 operator|)
 return|;
 block|}
@@ -1064,6 +1160,35 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+comment|/*      * Binary ACPI table was auto-detected, disassemble it      */
+case|case
+name|ASL_INPUT_TYPE_ACPI_TABLE
+case|:
+comment|/* We have what appears to be an ACPI table, disassemble it */
+name|FlCloseFile
+argument_list|(
+name|ASL_FILE_INPUT
+argument_list|)
+expr_stmt|;
+name|Gbl_DoCompile
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_DisasmFlag
+operator|=
+name|TRUE
+expr_stmt|;
+name|Status
+operator|=
+name|AslDoDisassembly
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+comment|/* Unknown binary table */
 case|case
 name|ASL_INPUT_TYPE_BINARY
 case|:

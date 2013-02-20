@@ -80,6 +80,10 @@ name|bd_fbuf
 decl_stmt|;
 comment|/* free slot */
 name|int
+name|bd_hbuf_in_use
+decl_stmt|;
+comment|/* don't rotate buffers */
+name|int
 name|bd_slen
 decl_stmt|;
 comment|/* current length of store buffer */

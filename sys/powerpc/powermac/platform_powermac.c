@@ -337,11 +337,7 @@ argument_list|,
 name|powermac_reset
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|PLATFORMMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

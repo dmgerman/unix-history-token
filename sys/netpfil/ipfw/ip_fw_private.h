@@ -947,6 +947,16 @@ parameter_list|)
 value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IP_FW_ARG_TABLEARG
+parameter_list|(
+name|a
+parameter_list|)
+value|(((a) == IP_FW_TABLEARG) ? tablearg : (a))
+end_define
+
 begin_comment
 comment|/*  * The lock is heavily used by ip_fw2.c (the main file) and ip_fw_nat.c  * so the variable and the macros must be here.  */
 end_comment

@@ -1610,7 +1610,7 @@ name|m
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1864,7 +1864,7 @@ argument_list|(
 operator|*
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* If we cannot duplicate the mbuf, we sacrifice the divert 		 * chain and continue with the tee-ed packet. 		 */

@@ -179,7 +179,7 @@ name|class
 name|MutexGuard
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|Triple
@@ -345,7 +345,7 @@ return|;
 block|}
 comment|/// \brief Erase an entry from the mapping table.
 comment|///
-comment|/// \returns The address that \arg ToUnmap was happed to.
+comment|/// \returns The address that \p ToUnmap was happed to.
 name|void
 modifier|*
 name|RemoveMapping
@@ -393,7 +393,7 @@ name|EEState
 decl_stmt|;
 comment|/// The target data for the platform for which execution is being performed.
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -429,10 +429,10 @@ operator|>
 name|Modules
 expr_stmt|;
 name|void
-name|setTargetData
+name|setDataLayout
 parameter_list|(
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|td
 parameter_list|)
@@ -676,9 +676,9 @@ argument_list|)
 block|;   }
 comment|//===--------------------------------------------------------------------===//
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
@@ -769,6 +769,7 @@ name|virtual
 name|void
 name|mapSectionAddress
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|LocalAddress
@@ -784,6 +785,16 @@ literal|"EE!"
 argument_list|)
 expr_stmt|;
 block|}
+comment|// finalizeObject - This method should be called after sections within an
+comment|// object have been relocated using mapSectionAddress.  When this method is
+comment|// called the MCJIT execution engine will reapply relocations for a loaded
+comment|// object.  This method has no effect for the legacy JIT engine or the
+comment|// interpeter.
+name|virtual
+name|void
+name|finalizeObject
+parameter_list|()
+block|{}
 comment|/// runStaticConstructorsDestructors - This method is used to execute all of
 comment|/// the static constructors or destructors for a program.
 comment|///

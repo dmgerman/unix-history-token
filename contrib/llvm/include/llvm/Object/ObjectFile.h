@@ -724,6 +724,15 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|error_code
+name|isReadOnlyData
+argument_list|(
+name|bool
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+name|error_code
 name|containsSymbol
 argument_list|(
 name|SymbolRef
@@ -923,6 +932,8 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns the symbol virtual address (i.e. address at which it will be
+comment|/// mapped).
 name|error_code
 name|getAddress
 argument_list|(
@@ -1000,6 +1011,16 @@ argument_list|(
 name|section_iterator
 operator|&
 name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @brief Get value of the symbol in the symbol table.
+name|error_code
+name|getValue
+argument_list|(
+name|uint64_t
+operator|&
+name|Val
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1148,7 +1169,7 @@ comment|/// Concrete instances of this object are created by createObjectFile, w
 end_comment
 
 begin_comment
-comment|/// figure out which type to create.
+comment|/// figures out which type to create.
 end_comment
 
 begin_decl_stmt
@@ -1165,17 +1186,14 @@ argument_list|()
 block|;
 name|ObjectFile
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// = delete
 name|ObjectFile
 argument_list|(
-specifier|const
-name|ObjectFile
-operator|&
-name|other
+argument|const ObjectFile&other
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// = delete
 name|protected
 operator|:
 name|ObjectFile
@@ -1329,6 +1347,18 @@ specifier|const
 operator|=
 literal|0
 block|;
+name|virtual
+name|error_code
+name|getSymbolValue
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint64_t&Val
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
 comment|// Same as above for SectionRef.
 name|friend
 name|class
@@ -1470,6 +1500,18 @@ block|;
 name|virtual
 name|error_code
 name|isSectionZeroInit
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|error_code
+name|isSectionReadOnlyData
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|,
@@ -1804,18 +1846,6 @@ name|isObject
 argument_list|()
 return|;
 block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ObjectFile *v
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -2136,6 +2166,30 @@ argument_list|(
 name|SymbolPimpl
 argument_list|,
 name|Result
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|error_code
+name|SymbolRef
+operator|::
+name|getValue
+argument_list|(
+argument|uint64_t&Val
+argument_list|)
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|getSymbolValue
+argument_list|(
+name|SymbolPimpl
+argument_list|,
+name|Val
 argument_list|)
 return|;
 block|}
@@ -2509,6 +2563,30 @@ return|return
 name|OwningObject
 operator|->
 name|isSectionZeroInit
+argument_list|(
+name|SectionPimpl
+argument_list|,
+name|Result
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|error_code
+name|SectionRef
+operator|::
+name|isReadOnlyData
+argument_list|(
+argument|bool&Result
+argument_list|)
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|isSectionReadOnlyData
 argument_list|(
 name|SectionPimpl
 argument_list|,

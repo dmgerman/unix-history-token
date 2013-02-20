@@ -2201,7 +2201,9 @@ name|cpu_reset_proxy_active
 operator|==
 literal|1
 condition|)
-empty_stmt|;
+name|ia32_pause
+argument_list|()
+expr_stmt|;
 comment|/* Wait for other cpu to see that we've started */
 name|CPU_SETOF
 argument_list|(
@@ -2359,10 +2361,15 @@ name|cnt
 operator|<
 literal|10000000
 condition|)
+block|{
+name|ia32_pause
+argument_list|()
+expr_stmt|;
 name|cnt
 operator|++
 expr_stmt|;
 comment|/* Wait for BSP to announce restart */
+block|}
 if|if
 condition|(
 name|cpu_reset_proxy_active
@@ -2385,7 +2392,9 @@ while|while
 condition|(
 literal|1
 condition|)
-empty_stmt|;
+name|ia32_pause
+argument_list|()
+expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 name|DELAY

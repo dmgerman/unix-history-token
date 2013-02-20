@@ -329,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|0xffffffff
+value|(vm_max_kernel_address)
 end_define
 
 begin_comment
@@ -347,6 +347,46 @@ define|#
 directive|define
 name|VM_KMEM_SIZE
 value|(12*1024*1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_SCALE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_SCALE
+value|(2)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Ceiling on the size of the kmem submap: 60% of the kernel map.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MAX
+value|((vm_max_kernel_address - \     VM_MIN_KERNEL_ADDRESS + 1) * 3 / 5)
 end_define
 
 begin_endif
@@ -471,6 +511,13 @@ end_endif
 begin_comment
 comment|/* ARM_USE_SMALL_ALLOC */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|vm_max_kernel_address
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

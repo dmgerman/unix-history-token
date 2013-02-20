@@ -605,36 +605,51 @@ begin_comment
 comment|/* Gate (GANN) Annoucement */
 end_comment
 
+begin_comment
+comment|/*  * NB: these macros used for the length in the IEs does not include 2 bytes  * for _ie and _len fields as is defined by the standard.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHGANN_BASE_SZ
+value|(15)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_meshgann_ie
 block|{
 name|uint8_t
-name|pann_ie
+name|gann_ie
 decl_stmt|;
 comment|/* IEEE80211_ELEMID_MESHGANN */
 name|uint8_t
-name|pann_len
+name|gann_len
 decl_stmt|;
 name|uint8_t
-name|pann_flags
+name|gann_flags
 decl_stmt|;
 name|uint8_t
-name|pann_hopcount
+name|gann_hopcount
 decl_stmt|;
 name|uint8_t
-name|pann_ttl
+name|gann_ttl
 decl_stmt|;
 name|uint8_t
-name|pann_addr
+name|gann_addr
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
-name|uint8_t
-name|pann_seq
+name|uint32_t
+name|gann_seq
 decl_stmt|;
-comment|/* PANN Sequence Number */
+comment|/* GANN Sequence Number */
+name|uint16_t
+name|gann_interval
+decl_stmt|;
+comment|/* GANN Interval */
 block|}
 name|__packed
 struct|;
@@ -1412,6 +1427,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_MESH_GT_RT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Basic forwarding information:  * o Destination MAC  * o Next-hop MAC  * o Precursor list (not implemented yet)  * o Path timeout  * The rest is part of the active Mesh path selection protocol.  * XXX: to be moved out later.  */
 end_comment
@@ -1490,6 +1513,11 @@ directive|define
 name|IEEE80211_MESHRT_FLAGS_PROXY
 value|0x04
 comment|/* proxy entry */
+define|#
+directive|define
+name|IEEE80211_MESHRT_FLAGS_GATE
+value|0x08
+comment|/* mesh gate entry */
 name|uint32_t
 name|rt_lifetime
 decl_stmt|;
@@ -1522,6 +1550,38 @@ name|cast
 parameter_list|)
 value|((cast *)rt->rt_priv)
 end_define
+
+begin_comment
+comment|/*  * Stored information about known mesh gates.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_mesh_gate_route
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|ieee80211_mesh_gate_route
+argument_list|)
+name|gr_next
+expr_stmt|;
+name|uint8_t
+name|gr_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|gr_lastseq
+decl_stmt|;
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+name|gr_route
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -1816,6 +1876,11 @@ directive|define
 name|IEEE80211_MESHFLAGS_FWD
 value|0x04
 comment|/* forward packets */
+define|#
+directive|define
+name|IEEE80211_MESHFLAGS_ROOT
+value|0x08
+comment|/* configured as root */
 name|uint8_t
 name|ms_flags
 decl_stmt|;
@@ -1827,6 +1892,20 @@ name|struct
 name|callout
 name|ms_cleantimer
 decl_stmt|;
+name|struct
+name|callout
+name|ms_gatetimer
+decl_stmt|;
+name|ieee80211_mesh_seq
+name|ms_gateseq
+decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ieee80211_mesh_gate_route
+argument_list|)
+name|ms_known_gates
+expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2073,6 +2152,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint8_t
+modifier|*
+name|ieee80211_add_meshgate
+parameter_list|(
+name|uint8_t
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_meshgann_ie
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_mesh_node_init
 parameter_list|(
@@ -2151,6 +2245,61 @@ parameter_list|,
 name|struct
 name|ieee80211_beacon_offsets
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ieee80211_mesh_gate_route
+modifier|*
+name|ieee80211_mesh_mark_gate
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_mesh_forward_to_gates
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_mesh_route
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ieee80211_node
+modifier|*
+name|ieee80211_mesh_find_txnode
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl

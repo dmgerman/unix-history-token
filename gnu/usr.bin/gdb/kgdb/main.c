@@ -319,7 +319,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-afqvw] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
+literal|"usage: %s [-afqvw] [-b rate] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
 literal|"\t[kernel [core]]\n"
 argument_list|,
 name|getprogname
@@ -1517,7 +1517,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ac:d:fn:qr:vw"
+literal|"ab:c:d:fn:qr:vw"
 argument_list|)
 operator|)
 operator|!=
@@ -1537,6 +1537,54 @@ name|annotation_level
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'b'
+case|:
+block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|i
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|||
+name|p
+operator|==
+name|optarg
+condition|)
+name|warnx
+argument_list|(
+literal|"warning: could not set baud rate to `%s'.\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+else|else
+name|baud_rate
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
 case|case
 literal|'c'
 case|:

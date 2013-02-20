@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/AnalyzerOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -79,9 +85,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|AnalyzerOptions
-decl_stmt|;
 name|class
 name|ASTConsumer
 decl_stmt|;
@@ -116,9 +119,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-specifier|const
-name|AnalyzerOptions
-operator|&
+name|AnalyzerOptionsRef
 name|opts
 argument_list|,
 name|ArrayRef

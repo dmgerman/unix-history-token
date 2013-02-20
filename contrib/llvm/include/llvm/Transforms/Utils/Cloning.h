@@ -149,7 +149,7 @@ name|class
 name|CallGraph
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|Loop
@@ -314,39 +314,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CloneFunction - Version of the function that doesn't need the VMap.
-comment|///
-specifier|inline
-name|Function
-modifier|*
-name|CloneFunction
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|,
-name|ClonedCodeInfo
-modifier|*
-name|CodeInfo
-init|=
-literal|0
-parameter_list|)
-block|{
-name|ValueToValueMapTy
-name|VMap
-decl_stmt|;
-return|return
-name|CloneFunction
-argument_list|(
-name|F
-argument_list|,
-name|VMap
-argument_list|,
-name|CodeInfo
-argument_list|)
-return|;
-block|}
 comment|/// Clone OldFunc into NewFunc, transforming the old arguments into references
 comment|/// to VMap values.  Note that if NewFunc already has basic blocks, the ones
 comment|/// cloned into it will be added to the end of the function.  This function
@@ -455,7 +422,7 @@ operator|=
 literal|0
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -485,7 +452,7 @@ operator|=
 literal|0
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|td
 operator|=
@@ -509,7 +476,7 @@ operator|*
 name|CG
 expr_stmt|;
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;

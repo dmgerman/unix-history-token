@@ -262,17 +262,6 @@ operator|==
 name|ObjCStringLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCStringLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -425,17 +414,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCBoolLiteralExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCBoolLiteralExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -623,17 +601,6 @@ operator|==
 name|ObjCBoxedExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCBoxedExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -758,17 +725,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCArrayLiteralClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCArrayLiteral *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|/// \brief Retrieve elements of array of literals.
@@ -1362,17 +1318,6 @@ operator|==
 name|ObjCDictionaryLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCDictionaryLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1625,17 +1570,6 @@ operator|==
 name|ObjCEncodeExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCEncodeExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1822,17 +1756,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCSelectorExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCSelectorExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -2031,17 +1954,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCProtocolExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCProtocolExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -2347,17 +2259,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCIvarRefExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCIvarRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -3474,17 +3375,6 @@ operator|==
 name|ObjCPropertyRefExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCPropertyRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -3944,17 +3834,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCSubscriptRefExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCSubscriptRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|Expr
@@ -4782,10 +4661,8 @@ operator|==
 name|SuperClass
 return|;
 block|}
-comment|/// \brief Returns the receiver of an instance message.
-comment|///
-comment|/// \brief Returns the object expression for an instance message, or
-comment|/// NULL for a message that is not an instance message.
+comment|/// \brief Returns the object expression (receiver) for an instance message,
+comment|/// or null for a message that is not an instance message.
 name|Expr
 operator|*
 name|getInstanceReceiver
@@ -4986,6 +4863,53 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Retrieve the receiver type to which this message is being directed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine cross-cuts all of the different kinds of message
+end_comment
+
+begin_comment
+comment|/// sends to determine what the underlying (statically known) type
+end_comment
+
+begin_comment
+comment|/// of the receiver will be; use \c getReceiverKind() to determine
+end_comment
+
+begin_comment
+comment|/// whether the message is a class or an instance method, whether it
+end_comment
+
+begin_comment
+comment|/// is a send to super or not, etc.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The type of the receiver.
+end_comment
+
+begin_macro
+unit|QualType
+name|getReceiverType
+argument_list|()
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the Objective-C interface to which this message
 end_comment
 
@@ -5026,7 +4950,7 @@ comment|/// \returns The Objective-C interface if known, otherwise NULL.
 end_comment
 
 begin_expr_stmt
-unit|ObjCInterfaceDecl
+name|ObjCInterfaceDecl
 operator|*
 name|getReceiverInterface
 argument_list|()
@@ -5761,22 +5685,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ObjCMessageExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -6115,17 +6023,6 @@ operator|==
 name|ObjCIsaExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCIsaExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -6370,17 +6267,6 @@ operator|==
 name|ObjCIndirectCopyRestoreExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCIndirectCopyRestoreExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief An Objective-C "bridged" cast expression, which casts between
@@ -6556,17 +6442,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ObjCBridgedCastExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCBridgedCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}

@@ -14604,6 +14604,8 @@ expr_stmt|;
 name|vfs_write_resume
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|next

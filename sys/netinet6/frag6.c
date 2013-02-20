@@ -2173,7 +2173,7 @@ name|m
 argument_list|,
 name|offset
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==

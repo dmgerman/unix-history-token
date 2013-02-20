@@ -752,7 +752,7 @@ begin_define
 define|#
 directive|define
 name|M_IP6_NEXTHOP
-value|M_PROTO2
+value|M_PROTO7
 end_define
 
 begin_comment

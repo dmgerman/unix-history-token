@@ -320,11 +320,7 @@ argument_list|,
 name|coretemp_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -866,6 +862,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -894,6 +892,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -922,6 +922,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -950,6 +952,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -978,6 +982,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,

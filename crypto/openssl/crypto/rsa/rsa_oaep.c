@@ -753,7 +753,7 @@ literal|1
 return|;
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|db
 argument_list|,

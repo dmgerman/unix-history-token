@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_comment
@@ -161,6 +161,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/* Buffer used by AcpiOsVprintf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_VPRINTF_BUFFER_SIZE
+value|512
+end_define
 
 begin_comment
 comment|/* Apple-specific */
@@ -403,7 +414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPrintf  *  * PARAMETERS:  fmt, ...            - Standard printf format  *  * RETURN:      None  *  * DESCRIPTION: Formatted output  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPrintf  *  * PARAMETERS:  fmt, ...            - Standard printf format  *  * RETURN:      None  *  * DESCRIPTION: Formatted output. Note: very similar to AcpiOsVprintf  *              (performance), changes should be tracked in both functions.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -422,45 +433,6 @@ block|{
 name|va_list
 name|Args
 decl_stmt|;
-name|va_start
-argument_list|(
-name|Args
-argument_list|,
-name|Fmt
-argument_list|)
-expr_stmt|;
-name|AcpiOsVprintf
-argument_list|(
-name|Fmt
-argument_list|,
-name|Args
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|Args
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsVprintf  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      None  *  * DESCRIPTION: Formatted output with argument list pointer  *  *****************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiOsVprintf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Fmt
-parameter_list|,
-name|va_list
-name|Args
-parameter_list|)
-block|{
 name|UINT8
 name|Flags
 decl_stmt|;
@@ -482,12 +454,24 @@ name|AcpiGbl_DebugFile
 condition|)
 block|{
 comment|/* Output file is open, send the output there */
+name|va_start
+argument_list|(
+name|Args
+argument_list|,
+name|Fmt
+argument_list|)
+expr_stmt|;
 name|vfprintf
 argument_list|(
 name|AcpiGbl_DebugFile
 argument_list|,
 name|Fmt
 argument_list|,
+name|Args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|Args
 argument_list|)
 expr_stmt|;
@@ -508,6 +492,13 @@ operator|&
 name|ACPI_DB_CONSOLE_OUTPUT
 condition|)
 block|{
+name|va_start
+argument_list|(
+name|Args
+argument_list|,
+name|Fmt
+argument_list|)
+expr_stmt|;
 name|vfprintf
 argument_list|(
 name|AcpiGbl_OutputFile
@@ -515,6 +506,102 @@ argument_list|,
 name|Fmt
 argument_list|,
 name|Args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|Args
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsVprintf  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      None  *  * DESCRIPTION: Formatted output with argument list pointer. Note: very  *              similar to AcpiOsPrintf, changes should be tracked in both  *              functions.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiOsVprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Fmt
+parameter_list|,
+name|va_list
+name|Args
+parameter_list|)
+block|{
+name|UINT8
+name|Flags
+decl_stmt|;
+name|char
+name|Buffer
+index|[
+name|ACPI_VPRINTF_BUFFER_SIZE
+index|]
+decl_stmt|;
+comment|/*      * We build the output string in a local buffer because we may be      * outputting the buffer twice. Using vfprintf is problematic because      * some implementations modify the args pointer/structure during      * execution. Thus, we use the local buffer for portability.      *      * Note: Since this module is intended for use by the various ACPICA      * utilities/applications, we can safely declare the buffer on the stack.      * Also, This function is used for relatively small error messages only.      */
+name|vsnprintf
+argument_list|(
+name|Buffer
+argument_list|,
+name|ACPI_VPRINTF_BUFFER_SIZE
+argument_list|,
+name|Fmt
+argument_list|,
+name|Args
+argument_list|)
+expr_stmt|;
+name|Flags
+operator|=
+name|AcpiGbl_DbOutputFlags
+expr_stmt|;
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_DB_REDIRECTABLE_OUTPUT
+condition|)
+block|{
+comment|/* Output is directable to either a file (if open) or the console */
+if|if
+condition|(
+name|AcpiGbl_DebugFile
+condition|)
+block|{
+comment|/* Output file is open, send the output there */
+name|fputs
+argument_list|(
+name|Buffer
+argument_list|,
+name|AcpiGbl_DebugFile
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* No redirection, send output to console (once only!) */
+name|Flags
+operator||=
+name|ACPI_DB_CONSOLE_OUTPUT
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_DB_CONSOLE_OUTPUT
+condition|)
+block|{
+name|fputs
+argument_list|(
+name|Buffer
+argument_list|,
+name|AcpiGbl_OutputFile
 argument_list|)
 expr_stmt|;
 block|}
@@ -1063,7 +1150,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWaitSemaphore  *  * PARAMETERS:  Handle              - Handle returned by AcpiOsCreateSemaphore  *              Units               - How many units to wait for  *              Timeout             - How long to wait  *  * RETURN:      Status  *  * DESCRIPTION: Wait for units  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWaitSemaphore  *  * PARAMETERS:  Handle              - Handle returned by AcpiOsCreateSemaphore  *              Units               - How many units to wait for  *              MsecTimeout         - How long to wait (milliseconds)  *  * RETURN:      Status  *  * DESCRIPTION: Wait for units  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1077,7 +1164,7 @@ name|UINT32
 name|Units
 parameter_list|,
 name|UINT16
-name|Timeout
+name|MsecTimeout
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1095,10 +1182,18 @@ operator|*
 operator|)
 name|Handle
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_TIMEOUT
 name|struct
 name|timespec
-name|T
+name|Time
 decl_stmt|;
+name|int
+name|RetVal
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1113,7 +1208,7 @@ return|;
 block|}
 switch|switch
 condition|(
-name|Timeout
+name|MsecTimeout
 condition|)
 block|{
 comment|/*      * No Wait:      * --------      * A zero timeout value indicates that we shouldn't wait - just      * acquire the semaphore if available otherwise return AE_TIME      * (a.k.a. 'would block').      */
@@ -1159,41 +1254,15 @@ operator|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* Wait with Timeout */
+comment|/* Wait with MsecTimeout */
 default|default:
-name|T
-operator|.
-name|tv_sec
-operator|=
-name|Timeout
-operator|/
-literal|1000
-expr_stmt|;
-name|T
-operator|.
-name|tv_nsec
-operator|=
-operator|(
-name|Timeout
-operator|-
-operator|(
-name|T
-operator|.
-name|tv_sec
-operator|*
-literal|1000
-operator|)
-operator|)
-operator|*
-literal|1000000
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ACPI_USE_ALTERNATE_TIMEOUT
 comment|/*          * Alternate timeout mechanism for environments where          * sem_timedwait is not available or does not work properly.          */
 while|while
 condition|(
-name|Timeout
+name|MsecTimeout
 condition|)
 block|{
 if|if
@@ -1213,15 +1282,38 @@ name|AE_OK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|MsecTimeout
+operator|>=
+literal|10
+condition|)
+block|{
+name|MsecTimeout
+operator|-=
+literal|10
+expr_stmt|;
 name|usleep
 argument_list|(
-literal|1000
+literal|10
+operator|*
+name|ACPI_USEC_PER_MSEC
+argument_list|)
+expr_stmt|;
+comment|/* ten milliseconds */
+block|}
+else|else
+block|{
+name|MsecTimeout
+operator|--
+expr_stmt|;
+name|usleep
+argument_list|(
+name|ACPI_USEC_PER_MSEC
 argument_list|)
 expr_stmt|;
 comment|/* one millisecond */
-name|Timeout
-operator|--
-expr_stmt|;
+block|}
 block|}
 name|Status
 operator|=
@@ -1231,17 +1323,139 @@ operator|)
 expr_stmt|;
 else|#
 directive|else
+comment|/*          * The interface to sem_timedwait is an absolute time, so we need to          * get the current time, then add in the millisecond Timeout value.          */
 if|if
 condition|(
+name|clock_gettime
+argument_list|(
+name|CLOCK_REALTIME
+argument_list|,
+operator|&
+name|Time
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"clock_gettime"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_TIME
+operator|)
+return|;
+block|}
+name|Time
+operator|.
+name|tv_sec
+operator|+=
+operator|(
+name|MsecTimeout
+operator|/
+name|ACPI_MSEC_PER_SEC
+operator|)
+expr_stmt|;
+name|Time
+operator|.
+name|tv_nsec
+operator|+=
+operator|(
+operator|(
+name|MsecTimeout
+operator|%
+name|ACPI_MSEC_PER_SEC
+operator|)
+operator|*
+name|ACPI_NSEC_PER_MSEC
+operator|)
+expr_stmt|;
+comment|/* Handle nanosecond overflow (field must be less than one second) */
+if|if
+condition|(
+name|Time
+operator|.
+name|tv_nsec
+operator|>=
+name|ACPI_NSEC_PER_SEC
+condition|)
+block|{
+name|Time
+operator|.
+name|tv_sec
+operator|+=
+operator|(
+name|Time
+operator|.
+name|tv_nsec
+operator|/
+name|ACPI_NSEC_PER_SEC
+operator|)
+expr_stmt|;
+name|Time
+operator|.
+name|tv_nsec
+operator|=
+operator|(
+name|Time
+operator|.
+name|tv_nsec
+operator|%
+name|ACPI_NSEC_PER_SEC
+operator|)
+expr_stmt|;
+block|}
+while|while
+condition|(
+operator|(
+operator|(
+name|RetVal
+operator|=
 name|sem_timedwait
 argument_list|(
 name|Sem
 argument_list|,
 operator|&
-name|T
+name|Time
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINTR
+operator|)
 condition|)
 block|{
+continue|continue;
+block|}
+if|if
+condition|(
+name|RetVal
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ETIMEDOUT
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"sem_timedwait"
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 operator|(
@@ -1510,27 +1724,26 @@ name|UINT64
 name|milliseconds
 parameter_list|)
 block|{
+comment|/* Sleep for whole seconds */
 name|sleep
 argument_list|(
 name|milliseconds
 operator|/
-literal|1000
+name|ACPI_MSEC_PER_SEC
 argument_list|)
 expr_stmt|;
-comment|/* Sleep for whole seconds */
-comment|/*      * Arg to usleep() must be less than 1,000,000 (1 second)      */
+comment|/*      * Sleep for remaining microseconds.      * Arg to usleep() is in usecs and must be less than 1,000,000 (1 second).      */
 name|usleep
 argument_list|(
 operator|(
 name|milliseconds
 operator|%
-literal|1000
+name|ACPI_MSEC_PER_SEC
 operator|)
 operator|*
-literal|1000
+name|ACPI_USEC_PER_MSEC
 argument_list|)
 expr_stmt|;
-comment|/* Sleep for remaining usecs */
 block|}
 end_function
 
@@ -1549,6 +1762,7 @@ name|struct
 name|timeval
 name|time
 decl_stmt|;
+comment|/* This timer has sufficient resolution for user-space application code */
 name|gettimeofday
 argument_list|(
 operator|&
@@ -1557,7 +1771,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Seconds * 10^7 = 100ns(10^-7), Microseconds(10^-6) * 10^1 = 100ns */
+comment|/* (Seconds * 10^7 = 100ns(10^-7)) + (Microseconds(10^-6) * 10^1 = 100ns) */
 return|return
 operator|(
 operator|(
@@ -1568,7 +1782,7 @@ name|time
 operator|.
 name|tv_sec
 operator|*
-literal|10000000
+name|ACPI_100NSEC_PER_SEC
 operator|)
 operator|+
 operator|(
@@ -1579,7 +1793,7 @@ name|time
 operator|.
 name|tv_usec
 operator|*
-literal|10
+name|ACPI_100NSEC_PER_USEC
 operator|)
 operator|)
 return|;

@@ -36,7 +36,7 @@ define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|unsigned instructionIDs;
+value|uint16_t instructionIDs;
 include|#
 directive|include
 file|"X86DisassemblerDecoderCommon.h"
@@ -465,6 +465,7 @@ modifier|*
 name|byteReader_t
 function_decl|)
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|arg
@@ -504,6 +505,7 @@ name|byteReader_t
 name|reader
 decl_stmt|;
 comment|/* Opaque value passed to the reader */
+specifier|const
 name|void
 modifier|*
 name|readerArg
@@ -726,6 +728,7 @@ parameter_list|,
 name|byteReader_t
 name|reader
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|readerArg
@@ -737,6 +740,7 @@ name|void
 modifier|*
 name|loggerArg
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|miiArg
@@ -774,6 +778,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|mii

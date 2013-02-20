@@ -275,23 +275,11 @@ name|Alignment
 operator|>
 expr|struct
 name|AlignedCharArrayImpl
-block|{}
 expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|AlignedCharArrayImpl
-operator|<
-literal|0
-operator|>
-block|{
-typedef|typedef
-name|char
-name|type
-typedef|;
-block|}
-empty_stmt|;
+comment|// MSVC requires special handling here.
+ifndef|#
+directive|ifndef
+name|_MSC_VER
 if|#
 directive|if
 name|__has_feature
@@ -305,31 +293,17 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|template<> struct AlignedCharArrayImpl<x> { \     typedef char alignas(x) type; \   }
+value|template<> struct AlignedCharArrayImpl<x> { \     char alignas(x) aligned; \   }
 elif|#
 directive|elif
-name|defined
-argument_list|(
-name|__clang__
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
-define|#
-directive|define
-name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|template<> struct AlignedCharArrayImpl<x> { \     typedef char type __attribute__((aligned(x))); \   }
-elif|#
-directive|elif
+operator|||
 name|defined
 argument_list|(
-name|_MSC_VER
+name|__IBM_ATTRIBUTES
 argument_list|)
 define|#
 directive|define
@@ -338,7 +312,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|template<> struct AlignedCharArrayImpl<x> { \     typedef __declspec(align(x)) char type; \   }
+value|template<> struct AlignedCharArrayImpl<x> { \     char aligned __attribute__((aligned(x))); \   }
 else|#
 directive|else
 error|#
@@ -411,10 +385,128 @@ argument_list|(
 literal|8192
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+else|#
+directive|else
+comment|// _MSC_VER
+comment|// We provide special variations of this template for the most common
+comment|// alignments because __declspec(align(...)) doesn't actually work when it is
+comment|// a member of a by-value function argument in MSVC, even if the alignment
+comment|// request is something reasonably like 8-byte or 16-byte.
+name|template
+operator|<
+operator|>
+expr|struct
+name|AlignedCharArrayImpl
+operator|<
+literal|1
+operator|>
+block|{
+name|char
+name|aligned
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|AlignedCharArrayImpl
+operator|<
+literal|2
+operator|>
+block|{
+name|short
+name|aligned
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|AlignedCharArrayImpl
+operator|<
+literal|4
+operator|>
+block|{
+name|int
+name|aligned
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|AlignedCharArrayImpl
+operator|<
+literal|8
+operator|>
+block|{
+name|double
+name|aligned
+block|; }
+expr_stmt|;
+define|#
+directive|define
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|template<> struct AlignedCharArrayImpl<x> { \     __declspec(align(x)) char aligned; \   }
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|32
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|64
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|128
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|512
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|1024
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|2048
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|4096
+argument_list|)
+expr_stmt|;
+name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+argument_list|(
+literal|8192
+argument_list|)
+expr_stmt|;
 comment|// Any larger and MSVC complains.
 undef|#
 directive|undef
 name|LLVM_ALIGNEDCHARARRAY_TEMPLATE_ALIGNMENT
+endif|#
+directive|endif
+comment|// _MSC_VER
 comment|/// \brief This union template exposes a suitably aligned and sized character
 comment|/// array member which can hold elements of any of up to four types.
 comment|///
@@ -520,16 +612,11 @@ name|SizerImpl
 argument_list|)
 index|]
 block|;
-comment|// Sadly, Clang and GCC both fail to align a character array properly even
-comment|// with an explicit alignment attribute. To work around this, we union
-comment|// the character array that will actually be used with a struct that contains
-comment|// a single aligned character member. Tests seem to indicate that both Clang
-comment|// and GCC will properly register the alignment of a struct containing an
-comment|// aligned member, and this alignment should carry over to the character
-comment|// array in the union.
-block|struct
-block|{
-name|typename
+name|private
+operator|:
+comment|// Tests seem to indicate that both Clang and GCC will properly register the
+comment|// alignment of a struct containing an aligned member, and this alignment
+comment|// should carry over to the character array in the union.
 name|llvm
 operator|::
 name|AlignedCharArrayImpl
@@ -541,10 +628,6 @@ operator|>
 operator|::
 name|Alignment
 operator|>
-operator|::
-name|type
-name|nonce_inner_member
-block|;   }
 name|nonce_member
 block|; }
 expr_stmt|;

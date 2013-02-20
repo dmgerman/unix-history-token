@@ -65,7 +65,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|nfscl_reqstart((n), (p), VFSTONFS((v)->v_mount), 		\ 	    VTONFS(v)->n_fhp->nfh_fh, VTONFS(v)->n_fhp->nfh_len, NULL)
+value|nfscl_reqstart((n), (p), VFSTONFS((v)->v_mount), 		\ 	    VTONFS(v)->n_fhp->nfh_fh, VTONFS(v)->n_fhp->nfh_len, NULL, NULL)
 end_define
 
 begin_comment

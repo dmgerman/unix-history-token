@@ -105,6 +105,17 @@ comment|/// EndLocation - The location of the last token in the macro.
 name|SourceLocation
 name|EndLocation
 decl_stmt|;
+comment|/// \brief The location where the macro was #undef'd, or an invalid location
+comment|/// for macros that haven't been undefined.
+name|SourceLocation
+name|UndefLocation
+decl_stmt|;
+comment|/// \brief Previous definition, the identifier of this macro was defined to,
+comment|/// or NULL.
+name|MacroInfo
+modifier|*
+name|PreviousDefinition
+decl_stmt|;
 comment|/// Arguments - The list of arguments for a function-like macro.  This can be
 comment|/// empty, for, e.g. "#define X()".  In a C99-style variadic macro, this
 comment|/// includes the \c __VA_ARGS__ identifier on the list.
@@ -224,6 +235,21 @@ name|IsPublic
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether the macro definition is currently "hidden".
+comment|/// Note that this is transient state that is never serialized to the AST
+comment|/// file.
+name|bool
+name|IsHidden
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether the definition of this macro is ambiguous, due to
+comment|/// multiple definitions coming in from multiple modules.
+name|bool
+name|IsAmbiguous
+range|:
+literal|1
+decl_stmt|;
 operator|~
 name|MacroInfo
 argument_list|()
@@ -324,6 +350,89 @@ return|return
 name|EndLocation
 return|;
 block|}
+comment|/// \brief Set the location where macro was undefined. Can only be set once.
+name|void
+name|setUndefLoc
+parameter_list|(
+name|SourceLocation
+name|UndefLoc
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|UndefLocation
+operator|.
+name|isInvalid
+argument_list|()
+operator|&&
+literal|"UndefLocation is already set!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|UndefLoc
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Invalid UndefLoc!"
+argument_list|)
+expr_stmt|;
+name|UndefLocation
+operator|=
+name|UndefLoc
+expr_stmt|;
+block|}
+comment|/// \brief Get the location where macro was undefined.
+name|SourceLocation
+name|getUndefLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UndefLocation
+return|;
+block|}
+comment|/// \brief Set previous definition of the macro with the same name.
+name|void
+name|setPreviousDefinition
+parameter_list|(
+name|MacroInfo
+modifier|*
+name|PreviousDef
+parameter_list|)
+block|{
+name|PreviousDefinition
+operator|=
+name|PreviousDef
+expr_stmt|;
+block|}
+comment|/// \brief Get previous definition of the macro with the same name.
+name|MacroInfo
+modifier|*
+name|getPreviousDefinition
+parameter_list|()
+block|{
+return|return
+name|PreviousDefinition
+return|;
+block|}
+comment|/// \brief Find macro definition active in the specified source location. If
+comment|/// this macro was not defined there, return NULL.
+specifier|const
+name|MacroInfo
+modifier|*
+name|findDefinitionAtLoc
+argument_list|(
+name|SourceLocation
+name|L
+argument_list|,
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Get length in characters of the macro definition.
 name|unsigned
 name|getDefinitionLength
@@ -978,6 +1087,70 @@ block|{
 return|return
 name|VisibilityLocation
 return|;
+block|}
+comment|/// \brief Determine whether this macro is currently defined (and has not
+comment|/// been #undef'd) or has been hidden.
+name|bool
+name|isDefined
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UndefLocation
+operator|.
+name|isInvalid
+argument_list|()
+operator|&&
+operator|!
+name|IsHidden
+return|;
+block|}
+comment|/// \brief Determine whether this macro definition is hidden.
+name|bool
+name|isHidden
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsHidden
+return|;
+block|}
+comment|/// \brief Set whether this macro definition is hidden.
+name|void
+name|setHidden
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|IsHidden
+operator|=
+name|Val
+expr_stmt|;
+block|}
+comment|/// \brief Determine whether this macro definition is ambiguous with
+comment|/// other macro definitions.
+name|bool
+name|isAmbiguous
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsAmbiguous
+return|;
+block|}
+comment|/// \brief Set whether this macro definition is ambiguous.
+name|void
+name|setAmbiguous
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|IsAmbiguous
+operator|=
+name|Val
+expr_stmt|;
 block|}
 name|private
 label|:

@@ -81,7 +81,7 @@ decl_stmt|;
 name|class
 name|MacroArgs
 decl_stmt|;
-comment|/// TokenLexer - This implements a lexer that returns token from a macro body
+comment|/// TokenLexer - This implements a lexer that returns tokens from a macro body
 comment|/// or token stream instead of lexing from a character buffer.  This is used for
 comment|/// macro expansion and _Pragma handling, for example.
 comment|///
@@ -189,12 +189,10 @@ literal|1
 decl_stmt|;
 name|TokenLexer
 argument_list|(
-specifier|const
-name|TokenLexer
-operator|&
+argument|const TokenLexer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -203,8 +201,8 @@ specifier|const
 name|TokenLexer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// Create a TokenLexer for the specified macro with the specified actual
@@ -216,6 +214,8 @@ argument_list|(
 argument|Token&Tok
 argument_list|,
 argument|SourceLocation ILEnd
+argument_list|,
+argument|MacroInfo *MI
 argument_list|,
 argument|MacroArgs *ActualArgs
 argument_list|,
@@ -248,6 +248,8 @@ name|Tok
 argument_list|,
 name|ILEnd
 argument_list|,
+name|MI
+argument_list|,
 name|ActualArgs
 argument_list|)
 block|;   }
@@ -261,6 +263,8 @@ argument_list|(
 argument|Token&Tok
 argument_list|,
 argument|SourceLocation ILEnd
+argument_list|,
+argument|MacroInfo *MI
 argument_list|,
 argument|MacroArgs *ActualArgs
 argument_list|)
@@ -411,7 +415,7 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
-comment|/// \brief If \arg loc is a FileID and points inside the current macro
+comment|/// \brief If \p loc is a FileID and points inside the current macro
 comment|/// definition, returns the appropriate source location pointing at the
 comment|/// macro expansion source location entry.
 name|SourceLocation

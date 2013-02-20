@@ -2253,16 +2253,9 @@ if|if
 condition|(
 name|dosched
 condition|)
-name|taskqueue_enqueue
+name|ath_tx_swq_kick
 argument_list|(
 name|sc
-operator|->
-name|sc_tq
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_txqtask
 argument_list|)
 expr_stmt|;
 block|}

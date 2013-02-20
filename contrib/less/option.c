@@ -455,8 +455,9 @@ name|every_first_cmd
 operator|=
 name|save
 argument_list|(
-operator|++
 name|str
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -1898,21 +1899,6 @@ operator|*
 name|p
 operator|==
 name|END_OPTION_STRING
-operator|||
-operator|*
-name|p
-operator|==
-literal|' '
-operator|||
-operator|*
-name|p
-operator|==
-literal|'\t'
-operator|||
-operator|*
-name|p
-operator|==
-literal|'-'
 operator|||
 operator|(
 name|validchars

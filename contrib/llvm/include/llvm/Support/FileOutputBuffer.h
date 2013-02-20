@@ -204,16 +204,14 @@ operator|~
 name|FileOutputBuffer
 argument_list|()
 expr_stmt|;
-name|protected
+name|private
 label|:
 name|FileOutputBuffer
 argument_list|(
-specifier|const
-name|FileOutputBuffer
-operator|&
+argument|const FileOutputBuffer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|FileOutputBuffer
 modifier|&
 name|operator
@@ -223,8 +221,10 @@ specifier|const
 name|FileOutputBuffer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
+name|protected
+label|:
 name|FileOutputBuffer
 argument_list|(
 argument|uint8_t *Start

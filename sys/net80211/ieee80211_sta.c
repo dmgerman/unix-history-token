@@ -193,6 +193,12 @@ directive|include
 file|<net80211/ieee80211_ratectl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_sta.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -4416,7 +4422,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ieee80211_parse_wmeparams
 parameter_list|(

@@ -4589,7 +4589,7 @@ name|m_uiotombuf
 argument_list|(
 name|uio
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|0
 argument_list|,

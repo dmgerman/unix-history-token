@@ -881,7 +881,7 @@ modifier|*
 name|fmp
 decl_stmt|;
 name|bus_dmamap_t
-name|map
+name|pmap
 decl_stmt|;
 name|u_int
 name|flags
@@ -1191,7 +1191,7 @@ modifier|*
 name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
-name|tag
+name|ptag
 decl_stmt|;
 name|u32
 name|bytes

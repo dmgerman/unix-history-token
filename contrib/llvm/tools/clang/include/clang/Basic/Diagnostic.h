@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DiagnosticOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -126,6 +132,9 @@ name|DiagnosticConsumer
 decl_stmt|;
 name|class
 name|DiagnosticBuilder
+decl_stmt|;
+name|class
+name|DiagnosticOptions
 decl_stmt|;
 name|class
 name|IdentifierInfo
@@ -511,18 +520,6 @@ name|ak_qualtype_pair
 comment|///< pair<QualType, QualType>
 block|}
 block|;
-comment|/// \brief Specifies which overload candidates to display when overload
-comment|/// resolution fails.
-block|enum
-name|OverloadsShown
-block|{
-name|Ovl_All
-block|,
-comment|///< Show all overloads.
-name|Ovl_Best
-comment|///< Show just the "best" overload candidates.
-block|}
-block|;
 comment|/// \brief Represents on argument value, which is a union discriminated
 comment|/// by ArgumentKind, with a value.
 typedef|typedef
@@ -606,6 +603,12 @@ operator|<
 name|DiagnosticIDs
 operator|>
 name|Diags
+expr_stmt|;
+name|IntrusiveRefCntPtr
+operator|<
+name|DiagnosticOptions
+operator|>
+name|DiagOpts
 expr_stmt|;
 name|DiagnosticConsumer
 modifier|*
@@ -1281,6 +1284,10 @@ operator|>
 operator|&
 name|Diags
 argument_list|,
+name|DiagnosticOptions
+operator|*
+name|DiagOpts
+argument_list|,
 name|DiagnosticConsumer
 operator|*
 name|client
@@ -1315,6 +1322,24 @@ specifier|const
 block|{
 return|return
 name|Diags
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the diagnostic options.
+end_comment
+
+begin_expr_stmt
+name|DiagnosticOptions
+operator|&
+name|getDiagnosticOptions
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|DiagOpts
 return|;
 block|}
 end_expr_stmt
@@ -2017,7 +2042,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Pretend that the last diagnostic issued was ignored.
+comment|/// \brief Pretend that the last diagnostic issued was ignored, so any
+end_comment
+
+begin_comment
+comment|/// subsequent notes will be suppressed.
 end_comment
 
 begin_comment
@@ -2033,6 +2062,18 @@ name|void
 name|setLastDiagnosticIgnored
 parameter_list|()
 block|{
+if|if
+condition|(
+name|LastDiagLevel
+operator|==
+name|DiagnosticIDs
+operator|::
+name|Fatal
+condition|)
+name|FatalErrorOccurred
+operator|=
+name|true
+expr_stmt|;
 name|LastDiagLevel
 operator|=
 name|DiagnosticIDs
@@ -2560,11 +2601,10 @@ operator|>
 operator|&
 name|Output
 argument_list|,
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|intptr_t
 operator|>
-operator|&
 name|QualTypeVals
 argument_list|)
 decl|const
@@ -3583,8 +3623,8 @@ specifier|const
 name|DiagnosticBuilder
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|DiagnosticsEngine
@@ -4053,6 +4093,19 @@ index|]
 operator|=
 name|Hint
 expr_stmt|;
+block|}
+name|bool
+name|hasMaxRanges
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumRanges
+operator|==
+name|DiagnosticsEngine
+operator|::
+name|MaxRanges
+return|;
 block|}
 block|}
 end_decl_stmt

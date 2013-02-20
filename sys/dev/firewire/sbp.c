@@ -12989,36 +12989,6 @@ name|ccb_h
 operator|.
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
-condition|)
-name|printf
-argument_list|(
-literal|"sbp: CAM_SCATTER_VALID\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_DATA_PHYS
-condition|)
-name|printf
-argument_list|(
-literal|"sbp: CAM_DATA_PHYS\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
 name|CAM_CDB_POINTER
 condition|)
 name|cdb
@@ -13092,7 +13062,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|bus_dmamap_load
+name|bus_dmamap_load_ccb
 argument_list|(
 comment|/*dma tag*/
 name|sbp
@@ -13105,16 +13075,6 @@ operator|->
 name|dmamap
 argument_list|,
 name|ccb
-operator|->
-name|csio
-operator|.
-name|data_ptr
-argument_list|,
-name|ccb
-operator|->
-name|csio
-operator|.
-name|dxfer_len
 argument_list|,
 name|sbp_execute_ocb
 argument_list|,

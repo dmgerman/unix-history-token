@@ -358,6 +358,16 @@ block|,
 block|{
 name|DLINK_VENDORID
 block|,
+name|DLINK_DEVICEID_520TX_REVC1
+block|,
+name|RL_8139
+block|,
+literal|"D-Link DFE-520TX (rev. C1) 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DLINK_VENDORID
+block|,
 name|DLINK_DEVICEID_530TXPLUS
 block|,
 name|RL_8139
@@ -6844,7 +6854,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

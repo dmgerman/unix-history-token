@@ -85,7 +85,7 @@ name|public
 name|ConstraintManager
 block|{
 name|SubEngine
-operator|&
+operator|*
 name|SU
 block|;
 name|BasicValueFactory
@@ -97,7 +97,7 @@ operator|:
 name|SimpleConstraintManager
 argument_list|(
 name|SubEngine
-operator|&
+operator|*
 name|subengine
 argument_list|,
 name|BasicValueFactory

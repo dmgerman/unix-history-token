@@ -166,6 +166,9 @@ name|class
 name|APValue
 decl_stmt|;
 name|class
+name|CastExpr
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -190,6 +193,9 @@ name|class
 name|CXXOperatorCallExpr
 decl_stmt|;
 name|class
+name|MaterializeTemporaryExpr
+decl_stmt|;
+name|class
 name|CXXMemberCallExpr
 decl_stmt|;
 name|class
@@ -209,6 +215,141 @@ literal|4
 operator|>
 name|CXXCastPath
 expr_stmt|;
+comment|/// \brief An adjustment to be made to the temporary created when emitting a
+comment|/// reference binding, which accesses a particular subobject of that temporary.
+struct|struct
+name|SubobjectAdjustment
+block|{
+enum|enum
+block|{
+name|DerivedToBaseAdjustment
+block|,
+name|FieldAdjustment
+block|,
+name|MemberPointerAdjustment
+block|}
+name|Kind
+enum|;
+union|union
+block|{
+struct|struct
+block|{
+specifier|const
+name|CastExpr
+modifier|*
+name|BasePath
+decl_stmt|;
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|DerivedClass
+decl_stmt|;
+block|}
+name|DerivedToBase
+struct|;
+name|FieldDecl
+modifier|*
+name|Field
+decl_stmt|;
+struct|struct
+block|{
+specifier|const
+name|MemberPointerType
+modifier|*
+name|MPT
+decl_stmt|;
+name|Expr
+modifier|*
+name|RHS
+decl_stmt|;
+block|}
+name|Ptr
+struct|;
+block|}
+union|;
+name|SubobjectAdjustment
+argument_list|(
+specifier|const
+name|CastExpr
+operator|*
+name|BasePath
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|DerivedClass
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+argument|DerivedToBaseAdjustment
+argument_list|)
+block|{
+name|DerivedToBase
+operator|.
+name|BasePath
+operator|=
+name|BasePath
+block|;
+name|DerivedToBase
+operator|.
+name|DerivedClass
+operator|=
+name|DerivedClass
+block|;   }
+name|SubobjectAdjustment
+argument_list|(
+name|FieldDecl
+operator|*
+name|Field
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+argument|FieldAdjustment
+argument_list|)
+block|{
+name|this
+operator|->
+name|Field
+operator|=
+name|Field
+block|;   }
+name|SubobjectAdjustment
+argument_list|(
+specifier|const
+name|MemberPointerType
+operator|*
+name|MPT
+argument_list|,
+name|Expr
+operator|*
+name|RHS
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+argument|MemberPointerAdjustment
+argument_list|)
+block|{
+name|this
+operator|->
+name|Ptr
+operator|.
+name|MPT
+operator|=
+name|MPT
+block|;
+name|this
+operator|->
+name|Ptr
+operator|.
+name|RHS
+operator|=
+name|RHS
+block|;   }
+block|}
+struct|;
 comment|/// Expr - This represents one expression.  Note that Expr's are subclasses of
 comment|/// Stmt.  This allows an expression to be transparently used any place a Stmt
 comment|/// is required.
@@ -636,17 +777,7 @@ argument_list|(
 argument|ASTContext&Ctx
 argument_list|)
 specifier|const
-block|;
-comment|/// isModifiableLvalue - C99 6.3.2.1: an lvalue that does not have array type,
-comment|/// does not have an incomplete type, does not have a const-qualified type,
-comment|/// and if it is a structure or union, does not have any member (including,
-comment|/// recursively, any member or element of all contained aggregates or unions)
-comment|/// with a const-qualified type.
-comment|///
-comment|/// \param Loc [in,out] - A source location which *may* be filled
-comment|/// in with the location of the expression making this a
-comment|/// non-modifiable lvalue, if specified.
-block|enum
+block|;    enum
 name|isModifiableLvalueResult
 block|{
 name|MLV_Valid
@@ -683,6 +814,15 @@ block|,
 name|MLV_ArrayTemporary
 block|}
 block|;
+comment|/// isModifiableLvalue - C99 6.3.2.1: an lvalue that does not have array type,
+comment|/// does not have an incomplete type, does not have a const-qualified type,
+comment|/// and if it is a structure or union, does not have any member (including,
+comment|/// recursively, any member or element of all contained aggregates or unions)
+comment|/// with a const-qualified type.
+comment|///
+comment|/// \param Loc [in,out] - A source location which *may* be filled
+comment|/// in with the location of the expression making this a
+comment|/// non-modifiable lvalue, if specified.
 name|isModifiableLvalueResult
 name|isModifiableLvalue
 argument_list|(
@@ -1171,6 +1311,12 @@ specifier|const
 name|ObjCPropertyRefExpr
 operator|*
 name|getObjCProperty
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Check if this expression is the ObjC 'self' implicit parameter.
+name|bool
+name|isObjCSelfExpr
 argument_list|()
 specifier|const
 block|;
@@ -2056,6 +2202,38 @@ name|getBestDynamicClassType
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Walk outwards from an expression we want to bind a reference to and
+comment|/// find the expression whose lifetime needs to be extended. Record
+comment|/// the adjustments needed along the path.
+specifier|const
+name|Expr
+modifier|*
+name|skipRValueSubobjectAdjustments
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|SubobjectAdjustment
+operator|>
+operator|&
+name|Adjustments
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Skip irrelevant expressions to find what should be materialize for
+comment|/// binding with a reference.
+specifier|const
+name|Expr
+modifier|*
+name|findMaterializedTemporary
+argument_list|(
+specifier|const
+name|MaterializeTemporaryExpr
+operator|*
+operator|&
+name|MTE
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|static
 name|bool
 name|classof
@@ -2080,19 +2258,6 @@ name|getStmtClass
 argument_list|()
 operator|<=
 name|lastExprConstant
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Expr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 block|}
@@ -2378,22 +2543,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OpaqueValueExprClass
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|OpaqueValueExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -3810,22 +3959,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|DeclRefExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -4037,17 +4170,6 @@ operator|==
 name|PredefinedExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PredefinedExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -4107,14 +4229,11 @@ return|;
 block|}
 name|APNumericStorage
 argument_list|(
-specifier|const
-name|APNumericStorage
-operator|&
+argument|const APNumericStorage&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
-name|APNumericStorage
-operator|&
+name|void
 name|operator
 operator|=
 operator|(
@@ -4122,8 +4241,8 @@ specifier|const
 name|APNumericStorage
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|protected
 operator|:
 name|APNumericStorage
@@ -4409,17 +4528,6 @@ operator|==
 name|IntegerLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const IntegerLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -4618,17 +4726,6 @@ operator|==
 name|CharacterLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CharacterLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -4817,17 +4914,6 @@ operator|==
 name|FloatingLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FloatingLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -4971,17 +5057,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ImaginaryLiteralClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImaginaryLiteral *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -5703,17 +5778,6 @@ operator|==
 name|StringLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const StringLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -5934,17 +5998,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ParenExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ParenExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -6349,9 +6402,7 @@ block|}
 comment|/// getOpcodeStr - Turn an Opcode enum value into the punctuation char it
 comment|/// corresponds to, e.g. "sizeof" or "[pre]++"
 specifier|static
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getOpcodeStr
 argument_list|(
 argument|Opcode Op
@@ -6436,17 +6487,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|UnaryOperatorClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UnaryOperator *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -6812,13 +6852,9 @@ argument|SourceLocation OperatorLoc
 argument_list|,
 argument|TypeSourceInfo *tsi
 argument_list|,
-argument|OffsetOfNode* compsPtr
+argument|ArrayRef<OffsetOfNode> comps
 argument_list|,
-argument|unsigned numComps
-argument_list|,
-argument|Expr** exprsPtr
-argument_list|,
-argument|unsigned numExprs
+argument|ArrayRef<Expr*> exprs
 argument_list|,
 argument|SourceLocation RParenLoc
 argument_list|)
@@ -6869,13 +6905,9 @@ argument|SourceLocation OperatorLoc
 argument_list|,
 argument|TypeSourceInfo *tsi
 argument_list|,
-argument|OffsetOfNode* compsPtr
+argument|ArrayRef<OffsetOfNode> comps
 argument_list|,
-argument|unsigned numComps
-argument_list|,
-argument|Expr** exprsPtr
-argument_list|,
-argument|unsigned numExprs
+argument|ArrayRef<Expr*> exprs
 argument_list|,
 argument|SourceLocation RParenLoc
 argument_list|)
@@ -7177,17 +7209,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OffsetOfExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const OffsetOfExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -7674,17 +7695,6 @@ operator|==
 name|UnaryExprOrTypeTraitExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UnaryExprOrTypeTraitExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -8121,17 +8131,6 @@ operator|==
 name|ArraySubscriptExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ArraySubscriptExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -8204,9 +8203,7 @@ argument|Expr *fn
 argument_list|,
 argument|unsigned NumPreArgs
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned numargs
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -8326,9 +8323,7 @@ argument|ASTContext& C
 argument_list|,
 argument|Expr *fn
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned numargs
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -8779,17 +8774,6 @@ name|getStmtClass
 argument_list|()
 operator|<=
 name|lastCallExprConstant
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CallExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -9982,22 +9966,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MemberExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -10345,22 +10313,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CompoundLiteralExprClass
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CompoundLiteralExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -10932,22 +10884,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CastExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -11230,17 +11166,6 @@ operator|==
 name|ImplicitCastExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImplicitCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 specifier|inline
@@ -11480,17 +11405,6 @@ operator|<=
 name|lastExplicitCastExprConstant
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ExplicitCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// CStyleCastExpr - An explicit cast in C (C99 6.5.4) or a C-style
@@ -11686,17 +11600,6 @@ operator|==
 name|CStyleCastExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CStyleCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief A builtin binary operation expression such as "x + y" or "x<= y".
@@ -11736,6 +11639,15 @@ name|Opc
 operator|:
 literal|6
 block|;
+comment|// Records the FP_CONTRACT pragma status at the point that this binary
+comment|// operator was parsed. This bit is only meaningful for operations on
+comment|// floating point types. For all other types it should default to
+comment|// false.
+name|unsigned
+name|FPContractable
+operator|:
+literal|1
+block|;
 name|SourceLocation
 name|OpLoc
 block|;    enum
@@ -11771,6 +11683,8 @@ argument_list|,
 argument|ExprObjectKind OK
 argument_list|,
 argument|SourceLocation opLoc
+argument_list|,
+argument|bool fpContractable
 argument_list|)
 operator|:
 name|Expr
@@ -11831,6 +11745,11 @@ block|,
 name|Opc
 argument_list|(
 name|opc
+argument_list|)
+block|,
+name|FPContractable
+argument_list|(
+name|fpContractable
 argument_list|)
 block|,
 name|OpLoc
@@ -12024,17 +11943,13 @@ block|}
 comment|/// getOpcodeStr - Turn an Opcode enum value into the punctuation char it
 comment|/// corresponds to, e.g. "<<=".
 specifier|static
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getOpcodeStr
 argument_list|(
 argument|Opcode Op
 argument_list|)
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getOpcodeStr
 argument_list|()
 specifier|const
@@ -12468,17 +12383,6 @@ operator|<=
 name|lastBinaryOperatorConstant
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BinaryOperator *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -12503,6 +12407,29 @@ name|END_EXPR
 argument_list|)
 return|;
 block|}
+comment|// Set the FP contractability status of this operator. Only meaningful for
+comment|// operations on floating point types.
+name|void
+name|setFPContractable
+argument_list|(
+argument|bool FPC
+argument_list|)
+block|{
+name|FPContractable
+operator|=
+name|FPC
+block|; }
+comment|// Get the FP contractability status of this operator. Only meaningful for
+comment|// operations on floating point types.
+name|bool
+name|isFPContractable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FPContractable
+return|;
+block|}
 name|protected
 operator|:
 name|BinaryOperator
@@ -12521,7 +12448,9 @@ argument|ExprObjectKind OK
 argument_list|,
 argument|SourceLocation opLoc
 argument_list|,
-argument|bool dead
+argument|bool fpContractable
+argument_list|,
+argument|bool dead2
 argument_list|)
 operator|:
 name|Expr
@@ -12582,6 +12511,11 @@ block|,
 name|Opc
 argument_list|(
 name|opc
+argument_list|)
+block|,
+name|FPContractable
+argument_list|(
+name|fpContractable
 argument_list|)
 block|,
 name|OpLoc
@@ -12663,6 +12597,8 @@ argument_list|,
 argument|QualType CompResultType
 argument_list|,
 argument|SourceLocation OpLoc
+argument_list|,
+argument|bool fpContractable
 argument_list|)
 operator|:
 name|BinaryOperator
@@ -12680,6 +12616,8 @@ argument_list|,
 name|OK
 argument_list|,
 name|OpLoc
+argument_list|,
+name|fpContractable
 argument_list|,
 name|true
 argument_list|)
@@ -12757,17 +12695,6 @@ name|ComputationResultType
 operator|=
 name|T
 block|; }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CompoundAssignOperator *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -12937,17 +12864,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|BinaryConditionalOperatorClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AbstractConditionalOperator *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -13203,17 +13119,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ConditionalOperatorClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ConditionalOperator *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -13569,17 +13474,6 @@ operator|==
 name|BinaryConditionalOperatorClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BinaryConditionalOperator *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -13893,17 +13787,6 @@ operator|==
 name|AddrLabelExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AddrLabelExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -14115,17 +13998,6 @@ operator|==
 name|StmtExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const StmtExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -14181,9 +14053,7 @@ name|ShuffleVectorExpr
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned nexpr
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType Type
 argument_list|,
@@ -14278,17 +14148,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ShuffleVectorExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ShuffleVectorExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|/// getNumSubExprs - Return the size of the SubExprs array.  This includes the
@@ -14404,6 +14263,7 @@ argument|ASTContext&Ctx
 argument_list|,
 argument|unsigned N
 argument_list|)
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -14815,17 +14675,6 @@ operator|==
 name|ChooseExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ChooseExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -14962,17 +14811,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|GNUNullExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const GNUNullExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -15235,17 +15073,6 @@ operator|==
 name|VAArgExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const VAArgExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -15297,12 +15124,20 @@ comment|/// value-initialize the subobjects. Note, however, that the
 comment|/// initializer lists may still have fewer initializers than there are
 comment|/// elements to initialize within the object.
 comment|///
+comment|/// After semantic analysis has completed, given an initializer list,
+comment|/// method isSemanticForm() returns true if and only if this is the
+comment|/// semantic form of the initializer list (note: the same AST node
+comment|/// may at the same time be the syntactic form).
 comment|/// Given the semantic form of the initializer list, one can retrieve
-comment|/// the original syntactic form of that initializer list (if it
-comment|/// exists) using getSyntacticForm(). Since many initializer lists
-comment|/// have the same syntactic and semantic forms, getSyntacticForm() may
-comment|/// return NULL, indicating that the current initializer list also
-comment|/// serves as its syntactic form.
+comment|/// the syntactic form of that initializer list (when different)
+comment|/// using method getSyntacticForm(); the method returns null if applied
+comment|/// to a initializer list which is already in syntactic form.
+comment|/// Similarly, given the syntactic form (i.e., an initializer list such
+comment|/// that isSemanticForm() returns false), one can retrieve the semantic
+comment|/// form using method getSemanticForm().
+comment|/// Since many initializer lists have the same syntactic and semantic forms,
+comment|/// getSyntacticForm() may return NULL, indicating that the current
+comment|/// semantic initializer list also serves as its syntactic form.
 name|class
 name|InitListExpr
 operator|:
@@ -15326,11 +15161,23 @@ name|LBraceLoc
 block|,
 name|RBraceLoc
 block|;
-comment|/// Contains the initializer list that describes the syntactic form
-comment|/// written in the source code.
+comment|/// The alternative form of the initializer list (if it exists).
+comment|/// The int part of the pair stores whether this initalizer list is
+comment|/// in semantic form. If not null, the pointer points to:
+comment|///   - the syntactic form, if this is in semantic form;
+comment|///   - the semantic form, if this is in syntactic form.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|InitListExpr
 operator|*
-name|SyntacticForm
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|AltForm
 block|;
 comment|/// \brief Either:
 comment|///  If this initializer list initializes an array with more elements than
@@ -15359,9 +15206,7 @@ argument|ASTContext&C
 argument_list|,
 argument|SourceLocation lbraceloc
 argument_list|,
-argument|Expr **initexprs
-argument_list|,
-argument|unsigned numinits
+argument|ArrayRef<Expr*> initExprs
 argument_list|,
 argument|SourceLocation rbraceloc
 argument_list|)
@@ -15727,10 +15572,36 @@ name|RBraceLoc
 operator|=
 name|Loc
 block|; }
-comment|/// @brief Retrieve the initializer list that describes the
-comment|/// syntactic form of the initializer.
-comment|///
-comment|///
+name|bool
+name|isSemanticForm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AltForm
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|InitListExpr
+operator|*
+name|getSemanticForm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSemanticForm
+argument_list|()
+operator|?
+literal|0
+operator|:
+name|AltForm
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
 name|InitListExpr
 operator|*
 name|getSyntacticForm
@@ -15738,7 +15609,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SyntacticForm
+name|isSemanticForm
+argument_list|()
+condition|?
+name|AltForm
+operator|.
+name|getPointer
+argument_list|()
+else|:
+literal|0
 return|;
 block|}
 name|void
@@ -15747,10 +15626,38 @@ argument_list|(
 argument|InitListExpr *Init
 argument_list|)
 block|{
-name|SyntacticForm
-operator|=
+name|AltForm
+operator|.
+name|setPointer
+argument_list|(
 name|Init
-block|; }
+argument_list|)
+block|;
+name|AltForm
+operator|.
+name|setInt
+argument_list|(
+name|true
+argument_list|)
+block|;
+name|Init
+operator|->
+name|AltForm
+operator|.
+name|setPointer
+argument_list|(
+name|this
+argument_list|)
+block|;
+name|Init
+operator|->
+name|AltForm
+operator|.
+name|setInt
+argument_list|(
+name|false
+argument_list|)
+block|;   }
 name|bool
 name|hadArrayRangeDesignator
 argument_list|()
@@ -15821,17 +15728,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|InitListExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InitListExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -16077,9 +15973,7 @@ argument|SourceLocation EqualOrColonLoc
 argument_list|,
 argument|bool GNUSyntax
 argument_list|,
-argument|Expr **IndexExprs
-argument_list|,
-argument|unsigned NumIndexExprs
+argument|ArrayRef<Expr*> IndexExprs
 argument_list|,
 argument|Expr *Init
 argument_list|)
@@ -16694,9 +16588,7 @@ argument|Designator *Designators
 argument_list|,
 argument|unsigned NumDesignators
 argument_list|,
-argument|Expr **IndexExprs
-argument_list|,
-argument|unsigned NumIndexExprs
+argument|ArrayRef<Expr*> IndexExprs
 argument_list|,
 argument|SourceLocation EqualOrColonLoc
 argument_list|,
@@ -17275,22 +17167,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|DesignatedInitExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -17427,17 +17303,6 @@ operator|==
 name|ImplicitValueInitExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ImplicitValueInitExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -17488,9 +17353,7 @@ argument|ASTContext& C
 argument_list|,
 argument|SourceLocation lparenloc
 argument_list|,
-argument|Expr **exprs
-argument_list|,
-argument|unsigned numexprs
+argument|ArrayRef<Expr*> exprs
 argument_list|,
 argument|SourceLocation rparenloc
 argument_list|)
@@ -17647,17 +17510,6 @@ operator|==
 name|ParenListExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ParenListExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -17761,11 +17613,9 @@ argument|SourceLocation GenericLoc
 argument_list|,
 argument|Expr *ControllingExpr
 argument_list|,
-argument|TypeSourceInfo **AssocTypes
+argument|ArrayRef<TypeSourceInfo*> AssocTypes
 argument_list|,
-argument|Expr **AssocExprs
-argument_list|,
-argument|unsigned NumAssocs
+argument|ArrayRef<Expr*> AssocExprs
 argument_list|,
 argument|SourceLocation DefaultLoc
 argument_list|,
@@ -17785,11 +17635,9 @@ argument|SourceLocation GenericLoc
 argument_list|,
 argument|Expr *ControllingExpr
 argument_list|,
-argument|TypeSourceInfo **AssocTypes
+argument|ArrayRef<TypeSourceInfo*> AssocTypes
 argument_list|,
-argument|Expr **AssocExprs
-argument_list|,
-argument|unsigned NumAssocs
+argument|ArrayRef<Expr*> AssocExprs
 argument_list|,
 argument|SourceLocation DefaultLoc
 argument_list|,
@@ -18087,17 +17935,6 @@ operator|==
 name|GenericSelectionExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const GenericSelectionExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_range
 name|children
 argument_list|()
@@ -18377,17 +18214,6 @@ operator|==
 name|ExtVectorElementExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ExtVectorElementExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -18573,17 +18399,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|BlockExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BlockExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -18788,17 +18603,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|AsTypeExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const AsTypeExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -19290,17 +19094,6 @@ operator|==
 name|PseudoObjectExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PseudoObjectExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// AtomicExpr - Variadic atomic builtins: __atomic_exchange, __atomic_fetch_*,
@@ -19396,9 +19189,7 @@ name|AtomicExpr
 argument_list|(
 argument|SourceLocation BLoc
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned nexpr
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -19769,22 +19560,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|AtomicExprClass
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|AtomicExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function

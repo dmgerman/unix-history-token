@@ -153,6 +153,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createARMGlobalBaseRegPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createARMGlobalMergePass
 parameter_list|(
 specifier|const

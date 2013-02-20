@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MBlazeELFWriterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
@@ -116,13 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetTransformImpl.h"
 end_include
 
 begin_decl_stmt
@@ -142,8 +142,8 @@ name|MBlazeSubtarget
 name|Subtarget
 block|;
 specifier|const
-name|TargetData
 name|DataLayout
+name|DL
 block|;
 comment|// Calculates type size& alignment
 name|MBlazeInstrInfo
@@ -161,11 +161,14 @@ block|;
 name|MBlazeIntrinsicInfo
 name|IntrinsicInfo
 block|;
-name|MBlazeELFWriterInfo
-name|ELFWriterInfo
-block|;
 name|InstrItineraryData
 name|InstrItins
+block|;
+name|ScalarTargetTransformImpl
+name|STTI
+block|;
+name|VectorTargetTransformImpl
+name|VTTI
 block|;
 name|public
 operator|:
@@ -242,15 +245,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|DataLayout
+name|DL
 return|;
 block|}
 name|virtual
@@ -309,15 +312,28 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|MBlazeELFWriterInfo
+name|ScalarTargetTransformInfo
 operator|*
-name|getELFWriterInfo
+name|getScalarTargetTransformInfo
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|ELFWriterInfo
+name|STTI
+return|;
+block|}
+name|virtual
+specifier|const
+name|VectorTargetTransformInfo
+operator|*
+name|getVectorTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|VTTI
 return|;
 block|}
 comment|// Pass Pipeline Configuration

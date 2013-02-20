@@ -122,7 +122,12 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_ARM11
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
 argument_list|)
 end_elif
 
@@ -230,6 +235,15 @@ name|void
 name|arm_unmask_irq
 parameter_list|(
 name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|arm_intrnames_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

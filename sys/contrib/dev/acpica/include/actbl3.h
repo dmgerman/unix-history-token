@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -118,6 +118,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_TPM2
+value|"TPM2"
+end_define
+
+begin_comment
+comment|/* Trusted Platform Module 2.0 H/W interface table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_S3PT
 value|"S3PT"
 end_define
@@ -139,17 +150,6 @@ end_comment
 
 begin_comment
 comment|/* Reserved table signatures */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_SIG_CSRT
-value|"CSRT"
-end_define
-
-begin_comment
-comment|/* Core System Resources Table */
 end_comment
 
 begin_define
@@ -390,7 +390,7 @@ block|,
 name|ACPI_FPDT_TYPE_S3PERF
 init|=
 literal|1
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -524,7 +524,7 @@ block|,
 name|ACPI_S3PT_TYPE_SUSPEND
 init|=
 literal|1
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -1285,26 +1285,90 @@ decl_stmt|;
 name|UINT16
 name|Status
 decl_stmt|;
-name|UINT64
-name|RequestedAddress
+name|UINT16
+name|Version
+decl_stmt|;
+name|UINT8
+name|Capabilities
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT8
+name|SetCapabilities
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT16
+name|NumParameterBlocks
+decl_stmt|;
+name|UINT32
+name|SetCapabilitiesStatus
+decl_stmt|;
+block|}
+name|ACPI_RASF_SHARED_MEMORY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* RASF Parameter Block Structure Header */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_rasf_parameter_block
+block|{
+name|UINT16
+name|Type
+decl_stmt|;
+name|UINT16
+name|Version
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+block|}
+name|ACPI_RASF_PARAMETER_BLOCK
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* RASF Parameter Block Structure for PATROL_SCRUB */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_rasf_patrol_scrub_parameter
+block|{
+name|ACPI_RASF_PARAMETER_BLOCK
+name|Header
+decl_stmt|;
+name|UINT16
+name|PatrolScrubCommand
 decl_stmt|;
 name|UINT64
-name|RequestedLength
+name|RequestedAddressRange
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|UINT64
-name|ActualAddress
-decl_stmt|;
-name|UINT64
-name|ActualLength
+name|ActualAddressRange
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|UINT16
 name|Flags
 decl_stmt|;
 name|UINT8
-name|Speed
+name|RequestedSpeed
 decl_stmt|;
 block|}
-name|ACPI_RASF_SHARED_MEMORY
+name|ACPI_RASF_PATROL_SCRUB_PARAMETER
 typedef|;
 end_typedef
 
@@ -1326,6 +1390,27 @@ name|ACPI_RASF_SPEED
 value|(7<<1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_RASF_SPEED_SLOW
+value|(0<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RASF_SPEED_MEDIUM
+value|(4<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RASF_SPEED_FAST
+value|(7<<1)
+end_define
+
 begin_comment
 comment|/* Channel Commands */
 end_comment
@@ -1334,21 +1419,51 @@ begin_enum
 enum|enum
 name|AcpiRasfCommands
 block|{
-name|ACPI_RASF_GET_RAS_CAPABILITIES
+name|ACPI_RASF_EXECUTE_RASF_COMMAND
+init|=
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Platform RAS Capabilities */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiRasfCapabiliities
+block|{
+name|ACPI_HW_PATROL_SCRUB_SUPPORTED
+init|=
+literal|0
+block|,
+name|ACPI_SW_PATROL_SCRUB_EXPOSED
+init|=
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Patrol Scrub Commands */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiRasfPatrolScrubCommands
+block|{
+name|ACPI_RASF_GET_PATROL_PARAMETERS
 init|=
 literal|1
 block|,
-name|ACPI_RASF_GET_PATROL_PARAMETERS
+name|ACPI_RASF_START_PATROL_SCRUBBER
 init|=
 literal|2
 block|,
-name|ACPI_RASF_START_PATROL_SCRUBBER
-init|=
-literal|3
-block|,
 name|ACPI_RASF_STOP_PATROL_SCRUBBER
 init|=
-literal|4
+literal|3
 block|}
 enum|;
 end_enum
@@ -1434,6 +1549,74 @@ directive|define
 name|ACPI_RASF_STATUS
 value|(0x1F<<3)
 end_define
+
+begin_comment
+comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 3  *  * Conforms to "TPM 2.0 Hardware Interface Table (TPM2)" 29 November 2011  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tpm2
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT64
+name|ControlAddress
+decl_stmt|;
+name|UINT32
+name|StartMethod
+decl_stmt|;
+block|}
+name|ACPI_TABLE_TPM2
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Control area structure (not part of table, pointed to by ControlAddress) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_tpm2_control
+block|{
+name|UINT32
+name|Reserved
+decl_stmt|;
+name|UINT32
+name|Error
+decl_stmt|;
+name|UINT32
+name|Cancel
+decl_stmt|;
+name|UINT32
+name|Start
+decl_stmt|;
+name|UINT64
+name|InterruptControl
+decl_stmt|;
+name|UINT32
+name|CommandSize
+decl_stmt|;
+name|UINT64
+name|CommandAddress
+decl_stmt|;
+name|UINT32
+name|ResponseSize
+decl_stmt|;
+name|UINT64
+name|ResponseAddress
+decl_stmt|;
+block|}
+name|ACPI_TPM2_CONTROL
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Reset to default packing */

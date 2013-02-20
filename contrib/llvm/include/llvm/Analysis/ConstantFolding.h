@@ -56,7 +56,7 @@ comment|// this file declares some additional folding routines that can make use
 end_comment
 
 begin_comment
-comment|// TargetData information. These functions cannot go in VMCore due to library
+comment|// DataLayout information. These functions cannot go in VMCore due to library
 end_comment
 
 begin_comment
@@ -97,7 +97,7 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -130,7 +130,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -145,7 +145,7 @@ literal|0
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldConstantExpression - Attempt to fold the constant expression
-comment|/// using the specified TargetData.  If successful, the constant result is
+comment|/// using the specified DataLayout.  If successful, the constant result is
 comment|/// result is returned, if not, null is returned.
 name|Constant
 modifier|*
@@ -157,7 +157,7 @@ modifier|*
 name|CE
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -196,7 +196,7 @@ operator|>
 name|Ops
 argument_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 operator|=
@@ -230,7 +230,7 @@ modifier|*
 name|RHS
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=
@@ -278,7 +278,7 @@ modifier|*
 name|C
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 init|=

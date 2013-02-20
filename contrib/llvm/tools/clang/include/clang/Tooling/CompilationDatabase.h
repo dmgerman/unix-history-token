@@ -136,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -149,24 +143,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MemoryBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/SourceMgr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/YAMLParser.h"
 end_include
 
 begin_include
@@ -357,6 +333,48 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// \brief Interface for compilation database plugins.
+comment|///
+comment|/// A compilation database plugin allows the user to register custom compilation
+comment|/// databases that are picked up as compilation database if the corresponding
+comment|/// library is linked in. To register a plugin, declare a static variable like:
+comment|///
+comment|/// \code
+comment|/// static CompilationDatabasePluginRegistry::Add<MyDatabasePlugin>
+comment|/// X("my-compilation-database", "Reads my own compilation database");
+comment|/// \endcode
+name|class
+name|CompilationDatabasePlugin
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|CompilationDatabasePlugin
+argument_list|()
+expr_stmt|;
+comment|/// \brief Loads a compilation database from a build directory.
+comment|///
+comment|/// \see CompilationDatabase::loadFromDirectory().
+name|virtual
+name|CompilationDatabase
+modifier|*
+name|loadFromDirectory
+argument_list|(
+name|StringRef
+name|Directory
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|ErrorMessage
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// \brief A compilation database that returns a single compile command line.
 comment|///
 comment|/// Useful when we want a tool to behave more like a compiler invocation.
@@ -463,200 +481,12 @@ operator|>
 name|CompileCommands
 block|; }
 decl_stmt|;
-comment|/// \brief A JSON based compilation database.
-comment|///
-comment|/// JSON compilation database files must contain a list of JSON objects which
-comment|/// provide the command lines in the attributes 'directory', 'command' and
-comment|/// 'file':
-comment|/// [
-comment|///   { "directory": "<working directory of the compile>",
-comment|///     "command": "<compile command line>",
-comment|///     "file": "<path to source file>"
-comment|///   },
-comment|///   ...
-comment|/// ]
-comment|/// Each object entry defines one compile action. The specified file is
-comment|/// considered to be the main source file for the translation unit.
-comment|///
-comment|/// JSON compilation databases can for example be generated in CMake projects
-comment|/// by setting the flag -DCMAKE_EXPORT_COMPILE_COMMANDS.
-name|class
-name|JSONCompilationDatabase
-range|:
-name|public
-name|CompilationDatabase
-block|{
-name|public
-operator|:
-comment|/// \brief Loads a JSON compilation database from the specified file.
-comment|///
-comment|/// Returns NULL and sets ErrorMessage if the database could not be
-comment|/// loaded from the given file.
-specifier|static
-name|JSONCompilationDatabase
-operator|*
-name|loadFromFile
-argument_list|(
-argument|StringRef FilePath
-argument_list|,
-argument|std::string&ErrorMessage
-argument_list|)
-block|;
-comment|/// \brief Loads a JSON compilation database from a data buffer.
-comment|///
-comment|/// Returns NULL and sets ErrorMessage if the database could not be loaded.
-specifier|static
-name|JSONCompilationDatabase
-operator|*
-name|loadFromBuffer
-argument_list|(
-argument|StringRef DatabaseString
-argument_list|,
-argument|std::string&ErrorMessage
-argument_list|)
-block|;
-comment|/// \brief Returns all compile comamnds in which the specified file was
-comment|/// compiled.
-comment|///
-comment|/// FIXME: Currently FilePath must be an absolute path inside the
-comment|/// source directory which does not have symlinks resolved.
-name|virtual
-name|std
-operator|::
-name|vector
-operator|<
-name|CompileCommand
-operator|>
-name|getCompileCommands
-argument_list|(
-argument|StringRef FilePath
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Returns the list of all files available in the compilation database.
-comment|///
-comment|/// These are the 'file' entries of the JSON objects.
-name|virtual
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|getAllFiles
-argument_list|()
-specifier|const
-block|;
-name|private
-operator|:
-comment|/// \brief Constructs a JSON compilation database on a memory buffer.
-name|JSONCompilationDatabase
-argument_list|(
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|Database
-argument_list|)
-operator|:
-name|Database
-argument_list|(
-name|Database
-argument_list|)
-block|,
-name|YAMLStream
-argument_list|(
-argument|Database->getBuffer()
-argument_list|,
-argument|SM
-argument_list|)
-block|{}
-comment|/// \brief Parses the database file and creates the index.
-comment|///
-comment|/// Returns whether parsing succeeded. Sets ErrorMessage if parsing
-comment|/// failed.
-name|bool
-name|parse
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|ErrorMessage
-argument_list|)
-block|;
-comment|// Tuple (directory, commandline) where 'commandline' pointing to the
-comment|// corresponding nodes in the YAML stream.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|yaml
-operator|::
-name|ScalarNode
-operator|*
-operator|,
-name|llvm
-operator|::
-name|yaml
-operator|::
-name|ScalarNode
-operator|*
-operator|>
-name|CompileCommandRef
-expr_stmt|;
-comment|// Maps file paths to the compile command lines for that file.
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|CompileCommandRef
-operator|>
-block|>
-name|IndexByFile
-decl_stmt|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|>
-name|Database
-expr_stmt|;
-name|llvm
-operator|::
-name|SourceMgr
-name|SM
-expr_stmt|;
-name|llvm
-operator|::
-name|yaml
-operator|::
-name|Stream
-name|YAMLStream
-expr_stmt|;
 block|}
-empty_stmt|;
+comment|// end namespace tooling
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace tooling
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

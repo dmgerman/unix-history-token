@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated from config.h.in by configure.  */
 end_comment
 
 begin_comment
 comment|/* config.h.in.  Generated from configure.in by autoheader.  */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -803,7 +803,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"bmake 20120620"
+value|"bmake 20121212"
 end_define
 
 begin_comment
@@ -836,7 +836,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"20120620"
+value|"20121212"
 end_define
 
 begin_comment

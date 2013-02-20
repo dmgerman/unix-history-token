@@ -174,8 +174,8 @@ name|RegistryTraits
 block|{
 name|RegistryTraits
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement.
 name|public
 operator|:
 typedef|typedef
@@ -266,8 +266,8 @@ name|private
 label|:
 name|Registry
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement.
 specifier|static
 name|void
 name|Announce
@@ -564,6 +564,10 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
 comment|///   class CollectorPrinter : public Registry<Collector>::listener {
 end_comment
 
@@ -608,7 +612,7 @@ comment|///   CollectorPrinter Printer;
 end_comment
 
 begin_comment
-comment|///
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt

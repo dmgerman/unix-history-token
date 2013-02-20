@@ -1275,6 +1275,11 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|ERR_print_errors
+argument_list|(
+name|bio_err
+argument_list|)
+expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1797,9 +1802,21 @@ argument_list|(
 name|dsakey
 argument_list|)
 condition|)
+block|{
+name|ERR_print_errors
+argument_list|(
+name|bio_err
+argument_list|)
+expr_stmt|;
+name|DSA_free
+argument_list|(
+name|dsakey
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
+block|}
 if|if
 condition|(
 name|outformat
@@ -1848,6 +1865,11 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"bad output format specified for outfile\n"
+argument_list|)
+expr_stmt|;
+name|DSA_free
+argument_list|(
+name|dsakey
 argument_list|)
 expr_stmt|;
 goto|goto

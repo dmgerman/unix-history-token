@@ -117,6 +117,12 @@ directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -342,6 +348,20 @@ literal|2
 operator|>
 name|interestingRegions
 expr_stmt|;
+comment|/// A set of location contexts that correspoind to call sites which should be
+comment|/// considered "interesting".
+name|llvm
+operator|::
+name|SmallSet
+operator|<
+specifier|const
+name|LocationContext
+operator|*
+operator|,
+literal|2
+operator|>
+name|InterestingLocationContexts
+expr_stmt|;
 comment|/// A set of custom visitors which generate "event" diagnostics at
 comment|/// interesting points in the path.
 name|VisitorList
@@ -367,6 +387,40 @@ comment|/// when reporting an issue.
 name|bool
 name|DoNotPrunePath
 decl_stmt|;
+comment|/// Used to track unique reasons why a bug report might be invalid.
+comment|///
+comment|/// \sa markInvalid
+comment|/// \sa removeInvalidation
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|>
+name|InvalidationRecord
+expr_stmt|;
+comment|/// If non-empty, this bug report is likely a false positive and should not be
+comment|/// shown to the user.
+comment|///
+comment|/// \sa markInvalid
+comment|/// \sa removeInvalidation
+name|llvm
+operator|::
+name|SmallSet
+operator|<
+name|InvalidationRecord
+operator|,
+literal|4
+operator|>
+name|Invalidations
+expr_stmt|;
 name|private
 label|:
 comment|// Used internally by BugReporter.
@@ -570,6 +624,11 @@ name|ConfigurationChangeToken
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|DoNotPrunePath
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|virtual
 operator|~
@@ -620,17 +679,27 @@ block|}
 specifier|const
 name|StringRef
 name|getShortDescription
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|UseFallback
+operator|=
+name|true
+argument_list|)
+decl|const
 block|{
-return|return
+if|if
+condition|(
 name|ShortDescription
 operator|.
 name|empty
 argument_list|()
-operator|?
+operator|&&
+name|UseFallback
+condition|)
+return|return
 name|Description
-operator|:
+return|;
+return|return
 name|ShortDescription
 return|;
 block|}
@@ -679,6 +748,15 @@ name|SVal
 name|V
 parameter_list|)
 function_decl|;
+name|void
+name|markInteresting
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|LC
+parameter_list|)
+function_decl|;
 name|bool
 name|isInteresting
 parameter_list|(
@@ -702,6 +780,15 @@ name|SVal
 name|V
 parameter_list|)
 function_decl|;
+name|bool
+name|isInteresting
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|LC
+parameter_list|)
+function_decl|;
 name|unsigned
 name|getConfigurationChangeToken
 argument_list|()
@@ -710,6 +797,92 @@ block|{
 return|return
 name|ConfigurationChangeToken
 return|;
+block|}
+comment|/// Returns whether or not this report should be considered valid.
+comment|///
+comment|/// Invalid reports are those that have been classified as likely false
+comment|/// positives after the fact.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Invalidations
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// Marks the current report as invalid, meaning that it is probably a false
+comment|/// positive and should not be reported to the user.
+comment|///
+comment|/// The \p Tag and \p Data arguments are intended to be opaque identifiers for
+comment|/// this particular invalidation, where \p Tag represents the visitor
+comment|/// responsible for invalidation, and \p Data represents the reason this
+comment|/// visitor decided to invalidate the bug report.
+comment|///
+comment|/// \sa removeInvalidation
+name|void
+name|markInvalid
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|Tag
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|Data
+parameter_list|)
+block|{
+name|Invalidations
+operator|.
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Tag
+argument_list|,
+name|Data
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Reverses the effects of a previous invalidation.
+comment|///
+comment|/// \sa markInvalid
+name|void
+name|removeInvalidation
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|Tag
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|Data
+parameter_list|)
+block|{
+name|Invalidations
+operator|.
+name|erase
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Tag
+argument_list|,
+name|Data
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// Return the canonical declaration, be it a method or class, where
 comment|/// this issue semantically occurred.
@@ -1327,6 +1500,22 @@ operator|*
 operator|>
 name|EQClassesVector
 expr_stmt|;
+comment|/// A map from PathDiagnosticPiece to the LocationContext of the inlined
+comment|/// function call it represents.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|PathDiagnosticCallPiece
+operator|*
+operator|,
+specifier|const
+name|LocationContext
+operator|*
+operator|>
+name|LocationContextMap
+expr_stmt|;
 name|protected
 label|:
 name|BugReporter
@@ -1515,8 +1704,8 @@ argument_list|()
 return|;
 block|}
 name|virtual
-name|void
-name|GeneratePathDiagnostic
+name|bool
+name|generatePathDiagnostic
 argument_list|(
 name|PathDiagnostic
 operator|&
@@ -1534,7 +1723,29 @@ operator|>
 operator|&
 name|bugReports
 argument_list|)
-block|{}
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|RemoveUneededCalls
+parameter_list|(
+name|PathPieces
+modifier|&
+name|pieces
+parameter_list|,
+name|BugReport
+modifier|*
+name|R
+parameter_list|,
+name|PathDiagnosticCallPiece
+modifier|*
+name|CallWithLoc
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 name|void
 name|Register
 parameter_list|(
@@ -1549,7 +1760,7 @@ comment|/// The reports are usually generated by the checkers. Further, they are
 comment|/// folded based on the profile value, which is done to coalesce similar
 comment|/// reports.
 name|void
-name|EmitReport
+name|emitReport
 parameter_list|(
 name|BugReport
 modifier|*
@@ -1666,19 +1877,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
-name|bool
-name|classof
+name|void
+name|addCallPieceLocationContextPair
 parameter_list|(
 specifier|const
-name|BugReporter
+name|PathDiagnosticCallPiece
 modifier|*
-name|R
+name|C
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LC
 parameter_list|)
 block|{
-return|return
-name|true
-return|;
+name|LocationContextMap
+index|[
+name|C
+index|]
+operator|=
+name|LC
+expr_stmt|;
 block|}
 name|private
 label|:
@@ -1772,13 +1991,21 @@ operator|&
 name|getStateManager
 argument_list|()
 block|;
+comment|/// Generates a path corresponding to one of the given bug reports.
+comment|///
+comment|/// Which report is used for path generation is not specified. The
+comment|/// bug reporter will try to pick the shortest path, but this is not
+comment|/// guaranteed.
+comment|///
+comment|/// \return True if the report was valid and a path was generated,
+comment|///         false if the reports should be considered invalid.
 name|virtual
-name|void
-name|GeneratePathDiagnostic
+name|bool
+name|generatePathDiagnostic
 argument_list|(
 name|PathDiagnostic
 operator|&
-name|pathDiagnostic
+name|PD
 argument_list|,
 name|PathDiagnosticConsumer
 operator|&

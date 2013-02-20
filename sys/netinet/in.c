@@ -3650,8 +3650,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|flags
-init|=
-name|RTF_UP
 decl_stmt|,
 name|error
 init|=
@@ -3862,6 +3860,10 @@ name|ia_sockmask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add route for the network. 	 */
+name|flags
+operator|=
+name|RTF_UP
+expr_stmt|;
 name|ia
 operator|->
 name|ia_ifa
@@ -6986,7 +6988,7 @@ name|rt_msghdr
 name|rtm
 decl_stmt|;
 name|struct
-name|sockaddr_inarp
+name|sockaddr_in
 name|sin
 decl_stmt|;
 name|struct
@@ -7070,7 +7072,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * produce a msg made of: 			 *  struct rt_msghdr; 			 *  struct sockaddr_inarp; (IPv4) 			 *  struct sockaddr_dl; 			 */
+comment|/* 			 * produce a msg made of: 			 *  struct rt_msghdr; 			 *  struct sockaddr_in; (IPv4) 			 *  struct sockaddr_dl; 			 */
 name|bzero
 argument_list|(
 operator|&
@@ -7174,7 +7176,6 @@ name|la_flags
 operator|&
 name|LLE_PUB
 condition|)
-block|{
 name|arpc
 operator|.
 name|rtm
@@ -7183,24 +7184,6 @@ name|rtm_flags
 operator||=
 name|RTF_ANNOUNCE
 expr_stmt|;
-comment|/* proxy only */
-if|if
-condition|(
-name|lle
-operator|->
-name|la_flags
-operator|&
-name|LLE_PROXY
-condition|)
-name|arpc
-operator|.
-name|sin
-operator|.
-name|sin_other
-operator|=
-name|SIN_PROXY
-expr_stmt|;
-block|}
 name|sdl
 operator|=
 operator|&

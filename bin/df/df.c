@@ -1803,6 +1803,9 @@ name|intmax_t
 operator|)
 name|fsbs
 operator|/
+operator|(
+name|int64_t
+operator|)
 name|bs
 operator|)
 return|;
@@ -2953,7 +2956,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-b | -g | -H | -h | -k | -m | -P] [-acilnT] [-t type] [-,] [file | filesystem ...]\n"
+literal|"usage: df [-b | -g | -H | -h | -k | -m | -P] [-acilnT] [-t type] [-,]\n"
+literal|"          [file | filesystem ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

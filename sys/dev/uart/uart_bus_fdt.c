@@ -937,6 +937,8 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|err
+operator|=
 name|fdt_get_range
 argument_list|(
 name|OF_parent
@@ -952,6 +954,14 @@ argument_list|,
 operator|&
 name|psize
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|pbase
+operator|=
+literal|0
 expr_stmt|;
 name|start
 operator|+=

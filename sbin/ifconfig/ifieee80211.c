@@ -20814,6 +20814,16 @@ operator|)
 condition|?
 literal|'P'
 else|:
+operator|(
+name|rt
+operator|->
+name|imr_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_GATE
+operator|)
+condition|?
+literal|'G'
+else|:
 literal|' '
 argument_list|)
 expr_stmt|;

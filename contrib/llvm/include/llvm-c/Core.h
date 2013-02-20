@@ -299,10 +299,7 @@ init|=
 literal|1
 operator|<<
 literal|31
-comment|// FIXME: This attribute is currently not included in the C API as
-comment|// a temporary measure until the API/ABI impact to the C API is understood
-comment|// and the path forward agreed upon.
-comment|//LLVMAddressSafety = 1ULL<< 32
+comment|/* FIXME: This attribute is currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32     */
 block|}
 name|LLVMAttribute
 typedef|;
@@ -619,6 +616,9 @@ comment|/**< Keep one copy of function when linking (inline)*/
 name|LLVMLinkOnceODRLinkage
 block|,
 comment|/**< Same, but only replaced by something                             equivalent. */
+name|LLVMLinkOnceODRAutoHideLinkage
+block|,
+comment|/**< Like LinkOnceODR, but possibly hidden. */
 name|LLVMWeakAnyLinkage
 block|,
 comment|/**< Keep one copy of function when linking (weak) */
@@ -653,10 +653,7 @@ name|LLVMLinkerPrivateLinkage
 block|,
 comment|/**< Like Private, but linker removes. */
 name|LLVMLinkerPrivateWeakLinkage
-block|,
 comment|/**< Like LinkerPrivate, but is weak. */
-name|LLVMLinkerPrivateWeakDefAutoLinkage
-comment|/**< Like LinkerPrivateWeak, but possibly                                            hidden. */
 block|}
 name|LLVMLinkage
 typedef|;
@@ -3130,7 +3127,7 @@ name|LLVMValueRef
 name|Arg
 parameter_list|)
 function_decl|;
-comment|/**  * Set the alignment for a function parameter.  *  * @see llvm::Argument::addAttr()  * @see llvm::Attribute::constructAlignmentFromInt()  */
+comment|/**  * Set the alignment for a function parameter.  *  * @see llvm::Argument::addAttr()  * @see llvm::AttrBuilder::addAlignmentAttr()  */
 name|void
 name|LLVMSetParamAlignment
 parameter_list|(
@@ -3214,6 +3211,26 @@ parameter_list|,
 name|unsigned
 modifier|*
 name|Len
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the number of operands from an MDNode value.  *  * @param V MDNode to get number of operands from.  * @return Number of operands of the MDNode.  */
+name|unsigned
+name|LLVMGetMDNodeNumOperands
+parameter_list|(
+name|LLVMValueRef
+name|V
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the given MDNode's operands.  *  * The passed LLVMValueRef pointer should point to enough memory to hold all of  * the operands of the given MDNode (see LLVMGetMDNodeNumOperands) as  * LLVMValueRefs. This memory will be populated with the LLVMValueRefs of the  * MDNode's operands.  *  * @param V MDNode to get the operands from.  * @param Dest Destination array for operands.  */
+name|void
+name|LLVMGetMDNodeOperands
+parameter_list|(
+name|LLVMValueRef
+name|V
+parameter_list|,
+name|LLVMValueRef
+modifier|*
+name|Dest
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -5702,8 +5719,8 @@ argument_list|,
 argument|unsigned Length
 argument_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 for|for
 control|(

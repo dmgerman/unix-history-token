@@ -915,12 +915,6 @@ name|Availability
 range|:
 literal|2
 decl_stmt|;
-comment|/// \brief The kind of the parent context.
-name|unsigned
-name|ParentKind
-range|:
-literal|14
-decl_stmt|;
 comment|/// \brief The name of the parent context.
 name|StringRef
 name|ParentName
@@ -934,14 +928,11 @@ name|BriefComment
 decl_stmt|;
 name|CodeCompletionString
 argument_list|(
-specifier|const
-name|CodeCompletionString
-operator|&
+argument|const CodeCompletionString&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
-name|CodeCompletionString
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -949,8 +940,8 @@ specifier|const
 name|CodeCompletionString
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DITTO
 name|CodeCompletionString
 argument_list|(
 argument|const Chunk *Chunks
@@ -964,8 +955,6 @@ argument_list|,
 argument|const char **Annotations
 argument_list|,
 argument|unsigned NumAnnotations
-argument_list|,
-argument|CXCursorKind ParentKind
 argument_list|,
 argument|StringRef ParentName
 argument_list|,
@@ -1117,19 +1106,6 @@ name|AnnotationNr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Retrieve parent context's cursor kind.
-name|CXCursorKind
-name|getParentContextKind
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|CXCursorKind
-operator|)
-name|ParentKind
-return|;
-block|}
 comment|/// \brief Retrieve the name of the parent context.
 name|StringRef
 name|getParentContextName
@@ -1375,9 +1351,6 @@ block|;
 name|CXAvailabilityKind
 name|Availability
 block|;
-name|CXCursorKind
-name|ParentKind
-block|;
 name|StringRef
 name|ParentName
 block|;
@@ -1438,11 +1411,6 @@ argument_list|(
 name|CXAvailability_Available
 argument_list|)
 block|,
-name|ParentKind
-argument_list|(
-name|CXCursor_NotImplemented
-argument_list|)
-block|,
 name|BriefComment
 argument_list|(
 argument|NULL
@@ -1477,11 +1445,6 @@ block|,
 name|Availability
 argument_list|(
 name|Availability
-argument_list|)
-block|,
-name|ParentKind
-argument_list|(
-name|CXCursor_NotImplemented
 argument_list|)
 block|,
 name|BriefComment
@@ -1626,15 +1589,6 @@ argument_list|(
 argument|StringRef Comment
 argument_list|)
 block|;
-name|CXCursorKind
-name|getParentKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParentKind
-return|;
-block|}
 name|StringRef
 name|getParentName
 argument_list|()

@@ -202,7 +202,7 @@ specifier|static
 name|char
 name|malloc
 index|[
-literal|512
+literal|1024
 operator|*
 literal|1024
 index|]
@@ -252,7 +252,7 @@ operator|)
 operator|(
 name|malloc
 operator|+
-literal|512
+literal|1024
 operator|*
 literal|1024
 operator|)

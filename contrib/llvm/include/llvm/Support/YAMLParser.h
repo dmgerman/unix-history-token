@@ -468,20 +468,6 @@ return|return
 name|TypeID
 return|;
 block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Node
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|void
 modifier|*
 name|operator
@@ -612,18 +598,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const NullNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Node *N
 argument_list|)
 block|{
@@ -740,18 +714,6 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const ScalarNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
 argument|const Node *N
 argument_list|)
 block|{
@@ -850,6 +812,7 @@ name|virtual
 name|void
 name|skip
 argument_list|()
+name|LLVM_OVERRIDE
 block|{
 name|getKey
 argument_list|()
@@ -863,18 +826,6 @@ operator|->
 name|skip
 argument_list|()
 block|;   }
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const KeyValueNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -1418,6 +1369,7 @@ name|virtual
 name|void
 name|skip
 parameter_list|()
+function|LLVM_OVERRIDE
 block|{
 name|yaml
 operator|::
@@ -1427,23 +1379,6 @@ operator|*
 name|this
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MappingNode
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
 block|}
 end_function
 
@@ -1707,6 +1642,7 @@ name|virtual
 name|void
 name|skip
 parameter_list|()
+function|LLVM_OVERRIDE
 block|{
 name|yaml
 operator|::
@@ -1716,23 +1652,6 @@ operator|*
 name|this
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|SequenceNode
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
 block|}
 end_function
 
@@ -1857,18 +1776,6 @@ operator|*
 name|getTarget
 argument_list|()
 block|;
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ScalarNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

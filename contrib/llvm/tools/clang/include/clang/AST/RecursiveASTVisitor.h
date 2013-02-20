@@ -2314,6 +2314,11 @@ name|TemplateArgument
 operator|::
 name|Integral
 case|:
+case|case
+name|TemplateArgument
+operator|::
+name|NullPtr
+case|:
 return|return
 name|true
 return|;
@@ -2462,6 +2467,11 @@ case|case
 name|TemplateArgument
 operator|::
 name|Integral
+case|:
+case|case
+name|TemplateArgument
+operator|::
+name|NullPtr
 case|:
 return|return
 name|true
@@ -2725,6 +2735,12 @@ condition|(
 name|Init
 operator|->
 name|isWritten
+argument_list|()
+operator|||
+name|getDerived
+argument_list|()
+operator|.
+name|shouldVisitImplicitCode
 argument_list|()
 condition|)
 name|TRY_TO
@@ -5489,7 +5505,7 @@ define|\
 value|template<typename Derived>                                              \ bool RecursiveASTVisitor<Derived>::Traverse##STMT (STMT *S) {           \   TRY_TO(WalkUpFrom##STMT(S));                                          \   { CODE; }                                                             \   for (Stmt::child_range range = S->children(); range; ++range) {       \     TRY_TO(TraverseStmt(*range));                                       \   }                                                                     \   return true;                                                          \ }
 name|DEF_TRAVERSE_STMT
 argument_list|(
-argument|AsmStmt
+argument|GCCAsmStmt
 argument_list|,
 argument|{     TRY_TO(TraverseStmt(S->getAsmString()));     for (unsigned I =
 literal|0
@@ -5497,7 +5513,7 @@ argument|, E = S->getNumInputs(); I< E; ++I) {       TRY_TO(TraverseStmt(S->getI
 literal|0
 argument|, E = S->getNumOutputs(); I< E; ++I) {       TRY_TO(TraverseStmt(S->getOutputConstraintLiteral(I)));     }     for (unsigned I =
 literal|0
-argument|, E = S->getNumClobbers(); I< E; ++I) {       TRY_TO(TraverseStmt(S->getClobber(I)));     }
+argument|, E = S->getNumClobbers(); I< E; ++I) {       TRY_TO(TraverseStmt(S->getClobberStringLiteral(I)));     }
 comment|// children() iterates over inputExpr and outputExpr.
 argument|}
 argument_list|)
@@ -6481,7 +6497,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CompoundLiteralExpr
 argument_list|,
-argument|{ }
+argument|{   TRY_TO(TraverseTypeLoc(S->getTypeSourceInfo()->getTypeLoc())); }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
@@ -6770,6 +6786,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|SubstNonTypeTemplateParmExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|FunctionParmPackExpr
 argument_list|,
 argument|{ }
 argument_list|)

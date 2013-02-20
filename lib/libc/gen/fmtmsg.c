@@ -393,7 +393,7 @@ name|fopen
 argument_list|(
 literal|"/dev/console"
 argument_list|,
-literal|"a"
+literal|"ae"
 argument_list|)
 operator|)
 operator|==

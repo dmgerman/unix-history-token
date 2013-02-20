@@ -104,13 +104,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetTransformImpl.h"
 end_include
 
 begin_decl_stmt
@@ -133,8 +139,8 @@ name|MipsSubtarget
 name|Subtarget
 block|;
 specifier|const
-name|TargetData
 name|DataLayout
+name|DL
 block|;
 comment|// Calculates type size& alignment
 specifier|const
@@ -155,6 +161,12 @@ name|TSInfo
 block|;
 name|MipsJITInfo
 name|JITInfo
+block|;
+name|ScalarTargetTransformImpl
+name|STTI
+block|;
+name|VectorTargetTransformImpl
+name|VTTI
 block|;
 name|public
 operator|:
@@ -226,15 +238,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|DataLayout
+name|DL
 return|;
 block|}
 name|virtual
@@ -288,6 +300,32 @@ block|{
 return|return
 operator|&
 name|TSInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|ScalarTargetTransformInfo
+operator|*
+name|getScalarTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|STTI
+return|;
+block|}
+name|virtual
+specifier|const
+name|VectorTargetTransformInfo
+operator|*
+name|getVectorTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|VTTI
 return|;
 block|}
 comment|// Pass Pipeline Configuration

@@ -197,6 +197,14 @@ name|CondCode
 name|CC
 parameter_list|)
 function_decl|;
+comment|// Turn CMov opcode into condition code.
+name|CondCode
+name|getCondFromCMovOpc
+parameter_list|(
+name|unsigned
+name|Opc
+parameter_list|)
+function_decl|;
 comment|/// GetOppositeBranchCondition - Return the inverse of the specified cond,
 comment|/// e.g. turning COND_E to COND_NE.
 name|CondCode

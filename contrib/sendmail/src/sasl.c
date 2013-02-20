@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sasl.c,v 8.22 2006/08/15 23:24:57 ca Exp $"
+literal|"@(#)$Id: sasl.c,v 8.23 2012/11/27 18:53:13 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -41,7 +41,7 @@ file|<errno.h>
 end_include
 
 begin_comment
-comment|/* **  In order to ensure that storage leaks are tracked, and to prevent **  conflicts between the sm_heap package and sasl, we tell sasl to **  use the following heap allocation functions.  Unfortunately, **  the sasl package incorrectly specifies the size of a block **  using unsigned long: for portability, it should be size_t. */
+comment|/* **  In order to ensure that storage leaks are tracked, and to prevent **  conflicts between the sm_heap package and sasl, we tell sasl to **  use the following heap allocation functions.  Unfortunately, **  older sasl packages incorrectly specifies the size of a block **  using unsigned long: for portability, it should be size_t. */
 end_comment
 
 begin_if

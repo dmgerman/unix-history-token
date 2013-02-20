@@ -90,18 +90,6 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Read the definition for the given macro.
-name|virtual
-name|void
-name|LoadMacroDefinition
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// \brief Update an out-of-date identifier.
 name|virtual
 name|void

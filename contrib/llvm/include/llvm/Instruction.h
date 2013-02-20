@@ -122,16 +122,14 @@ specifier|const
 name|Instruction
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// Do not implement
 name|Instruction
 argument_list|(
-specifier|const
-name|Instruction
-operator|&
+argument|const Instruction&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// Do not implement
 name|BasicBlock
 modifier|*
 name|Parent
@@ -1023,20 +1021,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool

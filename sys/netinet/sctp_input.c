@@ -4764,13 +4764,6 @@ else|else
 block|{
 comment|/* no outstanding data to send, so move on... */
 comment|/* send SHUTDOWN-ACK */
-name|sctp_send_shutdown_ack
-argument_list|(
-name|stcb
-argument_list|,
-name|net
-argument_list|)
-expr_stmt|;
 comment|/* move to SHUTDOWN-ACK-SENT state */
 if|if
 condition|(
@@ -4816,6 +4809,13 @@ expr_stmt|;
 name|sctp_stop_timers_for_shutdown
 argument_list|(
 name|stcb
+argument_list|)
+expr_stmt|;
+name|sctp_send_shutdown_ack
+argument_list|(
+name|stcb
+argument_list|,
+name|net
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -7221,7 +7221,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -8196,7 +8196,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -10342,6 +10342,8 @@ expr_stmt|;
 comment|/* get scope variables out of cookie */
 name|asoc
 operator|->
+name|scope
+operator|.
 name|ipv4_local_scope
 operator|=
 name|cookie
@@ -10350,6 +10352,8 @@ name|ipv4_scope
 expr_stmt|;
 name|asoc
 operator|->
+name|scope
+operator|.
 name|site_scope
 operator|=
 name|cookie
@@ -10358,6 +10362,8 @@ name|site_scope
 expr_stmt|;
 name|asoc
 operator|->
+name|scope
+operator|.
 name|local_scope
 operator|=
 name|cookie
@@ -10366,6 +10372,8 @@ name|local_scope
 expr_stmt|;
 name|asoc
 operator|->
+name|scope
+operator|.
 name|loopback_scope
 operator|=
 name|cookie
@@ -10377,6 +10385,8 @@ condition|(
 operator|(
 name|asoc
 operator|->
+name|scope
+operator|.
 name|ipv4_addr_legal
 operator|!=
 name|cookie
@@ -10387,6 +10397,8 @@ operator|||
 operator|(
 name|asoc
 operator|->
+name|scope
+operator|.
 name|ipv6_addr_legal
 operator|!=
 name|cookie
@@ -12063,7 +12075,7 @@ name|m
 argument_list|,
 name|sig_offset
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12585,7 +12597,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -20769,7 +20781,7 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -27508,7 +27520,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 literal|1
 argument_list|,
@@ -27581,7 +27593,7 @@ name|offset
 argument_list|,
 name|chk_length
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

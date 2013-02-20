@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: textbox.c,v 1.107 2012/07/01 18:13:24 Zoltan.Kelemen Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2011,2012	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: textbox.c,v 1.101 2011/06/29 09:53:03 tom Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2010,2011	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -1910,13 +1910,6 @@ operator|->
 name|text
 argument_list|)
 expr_stmt|;
-name|dlg_trace_win
-argument_list|(
-name|obj
-operator|->
-name|text
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2288,7 +2281,7 @@ argument_list|,
 name|binding
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box2
+name|dlg_draw_box
 argument_list|(
 name|widget
 argument_list|,
@@ -2303,8 +2296,6 @@ argument_list|,
 name|searchbox_attr
 argument_list|,
 name|searchbox_border_attr
-argument_list|,
-name|searchbox_border2_attr
 argument_list|)
 expr_stmt|;
 name|wattrset
@@ -2374,6 +2365,12 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+name|box_y
+operator|++
+expr_stmt|;
+name|box_x
+operator|++
 expr_stmt|;
 name|box_width
 operator|-=
@@ -2769,6 +2766,10 @@ operator|+
 literal|1
 operator|)
 argument_list|)
+expr_stmt|;
+name|found
+operator|=
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -3232,8 +3233,14 @@ decl_stmt|;
 name|int
 name|button
 init|=
-name|dlg_default_button
+name|dialog_vars
+operator|.
+name|extra_button
+condition|?
+name|dlg_defaultno_button
 argument_list|()
+else|:
+literal|0
 decl_stmt|;
 name|int
 name|min_width
@@ -3497,7 +3504,7 @@ literal|1
 comment|/* lines */
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box2
+name|dlg_draw_box
 argument_list|(
 name|dialog
 argument_list|,
@@ -3512,19 +3519,11 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
-argument_list|,
-name|border2_attr
 argument_list|)
 expr_stmt|;
-name|dlg_draw_bottom_box2
+name|dlg_draw_bottom_box
 argument_list|(
 name|dialog
-argument_list|,
-name|border_attr
-argument_list|,
-name|border2_attr
-argument_list|,
-name|dialog_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -4464,6 +4463,10 @@ name|obj
 operator|.
 name|page_length
 argument_list|)
+expr_stmt|;
+name|moved
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* repaint */
 name|dlg_clear

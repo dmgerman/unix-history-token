@@ -729,6 +729,16 @@ name|FoldingSetNodeIDRef
 operator|)
 specifier|const
 expr_stmt|;
+comment|/// Used to compare the "ordering" of two nodes as defined by the
+comment|/// profiled bits and their ordering defined by memcmp().
+name|bool
+name|operator
+operator|<
+operator|(
+name|FoldingSetNodeIDRef
+operator|)
+specifier|const
+expr_stmt|;
 specifier|const
 name|unsigned
 operator|*
@@ -936,6 +946,29 @@ expr_stmt|;
 name|bool
 name|operator
 operator|==
+operator|(
+specifier|const
+name|FoldingSetNodeIDRef
+name|RHS
+operator|)
+specifier|const
+expr_stmt|;
+comment|/// Used to compare the "ordering" of two nodes as defined by the
+comment|/// profiled bits and their ordering defined by memcmp().
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|FoldingSetNodeID
+operator|&
+name|RHS
+operator|)
+specifier|const
+expr_stmt|;
+name|bool
+name|operator
+operator|<
 operator|(
 specifier|const
 name|FoldingSetNodeIDRef

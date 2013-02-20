@@ -535,6 +535,28 @@ begin_comment
 comment|/* Want the sleep lock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NNOLAYOUT
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Can't get a layout for this file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NWRITEOPENED
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Has been opened for writing */
+end_comment
+
 begin_comment
 comment|/*  * Convert between nfsnode pointers and vnode pointers  */
 end_comment

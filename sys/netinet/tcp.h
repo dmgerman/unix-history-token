@@ -468,14 +468,14 @@ comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_comment
-comment|/*  * User-settable options (used with setsockopt).  */
+comment|/*  * User-settable options (used with setsockopt).  These are discrete  * values and are not masked together.  Some values appear to be  * bitmasks for historical reasons.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCP_NODELAY
-value|0x01
+value|1
 end_define
 
 begin_comment
@@ -492,7 +492,7 @@ begin_define
 define|#
 directive|define
 name|TCP_MAXSEG
-value|0x02
+value|2
 end_define
 
 begin_comment
@@ -503,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|TCP_NOPUSH
-value|0x04
+value|4
 end_define
 
 begin_comment
@@ -514,7 +514,7 @@ begin_define
 define|#
 directive|define
 name|TCP_NOOPT
-value|0x08
+value|8
 end_define
 
 begin_comment
@@ -525,7 +525,7 @@ begin_define
 define|#
 directive|define
 name|TCP_MD5SIG
-value|0x10
+value|16
 end_define
 
 begin_comment
@@ -536,7 +536,7 @@ begin_define
 define|#
 directive|define
 name|TCP_INFO
-value|0x20
+value|32
 end_define
 
 begin_comment
@@ -547,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|TCP_CONGESTION
-value|0x40
+value|64
 end_define
 
 begin_comment
@@ -558,7 +558,7 @@ begin_define
 define|#
 directive|define
 name|TCP_KEEPINIT
-value|0x80
+value|128
 end_define
 
 begin_comment
@@ -569,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|TCP_KEEPIDLE
-value|0x100
+value|256
 end_define
 
 begin_comment
@@ -580,7 +580,7 @@ begin_define
 define|#
 directive|define
 name|TCP_KEEPINTVL
-value|0x200
+value|512
 end_define
 
 begin_comment
@@ -591,12 +591,23 @@ begin_define
 define|#
 directive|define
 name|TCP_KEEPCNT
-value|0x400
+value|1024
 end_define
 
 begin_comment
 comment|/* L,N number of keepalives before close */
 end_comment
+
+begin_comment
+comment|/* Start of reserved space for third-party user-settable options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_VENDOR
+value|SO_VENDOR
+end_define
 
 begin_define
 define|#

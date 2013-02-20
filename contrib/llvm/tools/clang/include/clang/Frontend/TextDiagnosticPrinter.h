@@ -81,6 +81,12 @@ directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -104,9 +110,12 @@ name|raw_ostream
 operator|&
 name|OS
 block|;
-specifier|const
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
 name|DiagnosticOptions
-operator|*
+operator|>
 name|DiagOpts
 block|;
 comment|/// \brief Handle to the currently active text diagnostic emitter.
@@ -133,7 +142,7 @@ name|TextDiagnosticPrinter
 argument_list|(
 argument|raw_ostream&os
 argument_list|,
-argument|const DiagnosticOptions&diags
+argument|DiagnosticOptions *diags
 argument_list|,
 argument|bool OwnsOutputStream = false
 argument_list|)

@@ -71,6 +71,12 @@ directive|include
 file|<dev/terasic/de4led/terasic_de4led.h>
 end_include
 
+begin_decl_stmt
+name|devclass_t
+name|terasic_de4led_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void

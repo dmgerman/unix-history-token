@@ -3112,6 +3112,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_PPTRACE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* PT_TRACEME by vforked child. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_STOPPED
 value|(P_STOPPED_SIG|P_STOPPED_SINGLE|P_STOPPED_TRACE)
 end_define

@@ -591,12 +591,9 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"."
-argument_list|)
+name|ftsoptions
+operator||=
+name|FTS_NOCHDIR
 expr_stmt|;
 name|exit
 argument_list|(

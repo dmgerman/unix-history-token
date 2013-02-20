@@ -97,6 +97,7 @@ comment|/// type to be indexed (as long as it can be ordered with operator<).
 comment|///
 comment|/// Here is a simple example using integers:
 comment|///
+comment|/// \code
 comment|///  EquivalenceClasses<int> EC;
 comment|///  EC.unionSets(1, 2);                // insert 1, 2 into the same set
 comment|///  EC.insert(4); EC.insert(5);        // insert 4, 5 into own sets
@@ -110,6 +111,7 @@ comment|///         MI != EC.member_end(); ++MI)   // Loop over members in this 
 comment|///      cerr<< *MI<< " ";  // Print member.
 comment|///    cerr<< "\n";   // Finish set.
 comment|///  }
+comment|/// \endcode
 comment|///
 comment|/// This example prints:
 comment|///   4

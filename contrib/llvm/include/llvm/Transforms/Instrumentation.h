@@ -114,7 +114,7 @@ name|false
 parameter_list|)
 function_decl|;
 comment|// Insert AddressSanitizer (address sanity checking) instrumentation
-name|ModulePass
+name|FunctionPass
 modifier|*
 name|createAddressSanitizerPass
 parameter_list|()

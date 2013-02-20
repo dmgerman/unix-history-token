@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Instruction.h"
 end_include
 
@@ -112,10 +118,11 @@ operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
+argument|size_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|void
 operator|*
@@ -124,10 +131,17 @@ name|new
 argument_list|(
 argument|size_t s
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
 name|Operator
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
+name|protected
+operator|:
+comment|// NOTE: Cannot use LLVM_DELETED_FUNCTION because it's not legal to delete
+comment|// an overridden method that's not deleted in the base class. Cannot leave
+comment|// this unimplemented because that leads to an ODR-violation.
 operator|~
 name|Operator
 argument_list|()
@@ -242,20 +256,6 @@ name|bool
 name|classof
 parameter_list|(
 specifier|const
-name|Operator
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
 name|Instruction
 modifier|*
 parameter_list|)
@@ -360,11 +360,6 @@ block|}
 block|;
 name|private
 operator|:
-operator|~
-name|OverflowingBinaryOperator
-argument_list|()
-block|;
-comment|// do not implement
 name|friend
 name|class
 name|BinaryOperator
@@ -445,18 +440,6 @@ name|NoSignedWrap
 operator|)
 operator|!=
 literal|0
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const OverflowingBinaryOperator *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -628,11 +611,6 @@ block|}
 block|;
 name|private
 operator|:
-operator|~
-name|PossiblyExactOperator
-argument_list|()
-block|;
-comment|// do not implement
 name|friend
 name|class
 name|BinaryOperator
@@ -808,13 +786,6 @@ operator|:
 name|public
 name|Operator
 block|{
-name|private
-operator|:
-operator|~
-name|FPMathOperator
-argument_list|()
-block|;
-comment|// do not implement
 name|public
 operator|:
 comment|/// \brief Get the maximum error permitted by this operation in ULPs.  An
@@ -825,18 +796,6 @@ name|getFPAccuracy
 argument_list|()
 specifier|const
 block|;
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const FPMathOperator *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -902,27 +861,8 @@ operator|:
 name|public
 name|SuperClass
 block|{
-operator|~
-name|ConcreteOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const ConcreteOperator<SuperClass
-argument_list|,
-argument|Opc> *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -1023,13 +963,7 @@ name|Instruction
 operator|::
 name|Add
 operator|>
-block|{
-operator|~
-name|AddOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|SubOperator
@@ -1043,13 +977,7 @@ name|Instruction
 operator|::
 name|Sub
 operator|>
-block|{
-operator|~
-name|SubOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|MulOperator
@@ -1063,13 +991,7 @@ name|Instruction
 operator|::
 name|Mul
 operator|>
-block|{
-operator|~
-name|MulOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|ShlOperator
@@ -1083,13 +1005,7 @@ name|Instruction
 operator|::
 name|Shl
 operator|>
-block|{
-operator|~
-name|ShlOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|SDivOperator
@@ -1103,13 +1019,7 @@ name|Instruction
 operator|::
 name|SDiv
 operator|>
-block|{
-operator|~
-name|SDivOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|UDivOperator
@@ -1123,13 +1033,7 @@ name|Instruction
 operator|::
 name|UDiv
 operator|>
-block|{
-operator|~
-name|UDivOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|AShrOperator
@@ -1143,13 +1047,7 @@ name|Instruction
 operator|::
 name|AShr
 operator|>
-block|{
-operator|~
-name|AShrOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|LShrOperator
@@ -1163,13 +1061,7 @@ name|Instruction
 operator|::
 name|LShr
 operator|>
-block|{
-operator|~
-name|LShrOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
+block|{ }
 block|;
 name|class
 name|GEPOperator
@@ -1183,13 +1075,7 @@ name|Instruction
 operator|::
 name|GetElementPtr
 operator|>
-block|{
-operator|~
-name|GEPOperator
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|enum
+block|{   enum
 block|{
 name|IsInBounds
 operator|=
@@ -1339,6 +1225,27 @@ name|getPointerOperand
 argument_list|()
 operator|->
 name|getType
+argument_list|()
+return|;
+block|}
+comment|/// getPointerAddressSpace - Method to return the address space of the
+comment|/// pointer operand.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getPointerOperandType
+argument_list|()
+operator|)
+operator|->
+name|getAddressSpace
 argument_list|()
 return|;
 block|}

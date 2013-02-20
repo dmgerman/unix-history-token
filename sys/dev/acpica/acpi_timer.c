@@ -322,11 +322,7 @@ argument_list|,
 name|acpi_timer_attach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

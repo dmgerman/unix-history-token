@@ -3462,6 +3462,24 @@ block|{
 operator|.
 name|devid
 operator|=
+literal|0x016a8086
+block|,
+operator|.
+name|name
+operator|=
+literal|"IvyBridge server GT2 IG"
+block|,
+operator|.
+name|driver
+operator|=
+operator|&
+name|agp_i810_sb_driver
+block|}
+block|,
+block|{
+operator|.
+name|devid
+operator|=
 literal|0
 block|, 	}
 block|}
@@ -10655,7 +10673,7 @@ operator|<<
 literal|31
 operator|)
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 break|break;

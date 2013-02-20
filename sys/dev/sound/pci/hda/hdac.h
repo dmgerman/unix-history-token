@@ -147,6 +147,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_LPT1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8c20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_LPT2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8c21)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_ALL
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xffff)
 end_define
@@ -1137,6 +1151,13 @@ define|#
 directive|define
 name|LENOVO_TCA55_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x1015)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LENOVO_X300_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x20ac)
 end_define
 
 begin_define

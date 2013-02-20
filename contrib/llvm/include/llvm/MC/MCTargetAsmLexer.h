@@ -75,12 +75,10 @@ name|Err
 expr_stmt|;
 name|MCTargetAsmLexer
 argument_list|(
-specifier|const
-name|MCTargetAsmLexer
-operator|&
+argument|const MCTargetAsmLexer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -89,8 +87,8 @@ specifier|const
 name|MCTargetAsmLexer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -161,7 +159,7 @@ return|return
 name|TheTarget
 return|;
 block|}
-comment|/// InstallLexer - Set the lexer to get tokens from lower-level lexer \arg L.
+comment|/// InstallLexer - Set the lexer to get tokens from lower-level lexer \p L.
 name|void
 name|InstallLexer
 parameter_list|(
@@ -249,7 +247,7 @@ name|getKind
 argument_list|()
 return|;
 block|}
-comment|/// is - Check if the current token has kind \arg K.
+comment|/// is - Check if the current token has kind \p K.
 name|bool
 name|is
 argument_list|(
@@ -269,7 +267,7 @@ name|K
 argument_list|)
 return|;
 block|}
-comment|/// isNot - Check if the current token has kind \arg K.
+comment|/// isNot - Check if the current token has kind \p K.
 name|bool
 name|isNot
 argument_list|(

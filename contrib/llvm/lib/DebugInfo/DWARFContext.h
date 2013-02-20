@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"DWARFDebugRangeList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/DIContext.h"
 end_include
 
@@ -96,6 +102,11 @@ block|{
 name|bool
 name|IsLittleEndian
 block|;
+specifier|const
+name|RelocAddrMap
+operator|&
+name|RelocMap
+block|;
 name|SmallVector
 operator|<
 name|DWARFCompileUnit
@@ -124,11 +135,10 @@ name|Line
 block|;
 name|DWARFContext
 argument_list|(
-name|DWARFContext
-operator|&
+argument|DWARFContext&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// = delete
 name|DWARFContext
 operator|&
 name|operator
@@ -137,8 +147,8 @@ operator|(
 name|DWARFContext
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// = delete
 comment|/// Read compile units from the debug_info section and store them in CUs.
 name|void
 name|parseCompileUnits
@@ -149,11 +159,18 @@ operator|:
 name|DWARFContext
 argument_list|(
 argument|bool isLittleEndian
+argument_list|,
+argument|const RelocAddrMap&Map
 argument_list|)
 operator|:
 name|IsLittleEndian
 argument_list|(
-argument|isLittleEndian
+name|isLittleEndian
+argument_list|)
+block|,
+name|RelocMap
+argument_list|(
+argument|Map
 argument_list|)
 block|{}
 name|public
@@ -216,15 +233,6 @@ name|index
 index|]
 return|;
 block|}
-comment|/// Return the compile unit that includes an offset (relative to .debug_info).
-name|DWARFCompileUnit
-modifier|*
-name|getCompileUnitForOffset
-parameter_list|(
-name|uint32_t
-name|offset
-parameter_list|)
-function_decl|;
 comment|/// Get a pointer to the parsed DebugAbbrev object.
 specifier|const
 name|DWARFDebugAbbrev
@@ -257,10 +265,24 @@ name|DILineInfo
 name|getLineInfoForAddress
 parameter_list|(
 name|uint64_t
-name|address
+name|Address
 parameter_list|,
 name|DILineInfoSpecifier
-name|specifier
+name|Specifier
+init|=
+name|DILineInfoSpecifier
+argument_list|()
+parameter_list|)
+function_decl|;
+name|virtual
+name|DIInliningInfo
+name|getInliningInfoForAddress
+parameter_list|(
+name|uint64_t
+name|Address
+parameter_list|,
+name|DILineInfoSpecifier
+name|Specifier
 init|=
 name|DILineInfoSpecifier
 argument_list|()
@@ -273,6 +295,17 @@ specifier|const
 block|{
 return|return
 name|IsLittleEndian
+return|;
+block|}
+specifier|const
+name|RelocAddrMap
+operator|&
+name|relocMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RelocMap
 return|;
 block|}
 name|virtual
@@ -310,6 +343,13 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|StringRef
+name|getRangeSection
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 specifier|static
 name|bool
 name|isSupportedVersion
@@ -328,6 +368,27 @@ operator|==
 literal|3
 return|;
 block|}
+name|private
+label|:
+comment|/// Return the compile unit that includes an offset (relative to .debug_info).
+name|DWARFCompileUnit
+modifier|*
+name|getCompileUnitForOffset
+parameter_list|(
+name|uint32_t
+name|Offset
+parameter_list|)
+function_decl|;
+comment|/// Return the compile unit which contains instruction with provided
+comment|/// address.
+name|DWARFCompileUnit
+modifier|*
+name|getCompileUnitForAddress
+parameter_list|(
+name|uint64_t
+name|Address
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -374,6 +435,9 @@ block|;
 name|StringRef
 name|StringSection
 block|;
+name|StringRef
+name|RangeSection
+block|;
 name|public
 operator|:
 name|DWARFContextInMemory
@@ -389,11 +453,17 @@ argument_list|,
 argument|StringRef lineSection
 argument_list|,
 argument|StringRef stringSection
+argument_list|,
+argument|StringRef rangeSection
+argument_list|,
+argument|const RelocAddrMap&Map = RelocAddrMap()
 argument_list|)
 operator|:
 name|DWARFContext
 argument_list|(
 name|isLittleEndian
+argument_list|,
+name|Map
 argument_list|)
 block|,
 name|InfoSection
@@ -418,7 +488,12 @@ argument_list|)
 block|,
 name|StringSection
 argument_list|(
-argument|stringSection
+name|stringSection
+argument_list|)
+block|,
+name|RangeSection
+argument_list|(
+argument|rangeSection
 argument_list|)
 block|{}
 name|virtual
@@ -464,6 +539,15 @@ argument_list|()
 block|{
 return|return
 name|StringSection
+return|;
+block|}
+name|virtual
+name|StringRef
+name|getRangeSection
+argument_list|()
+block|{
+return|return
+name|RangeSection
 return|;
 block|}
 expr|}

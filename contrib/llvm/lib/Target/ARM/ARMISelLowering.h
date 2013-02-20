@@ -198,15 +198,6 @@ comment|// ARM fmstat instruction.
 name|CMOV
 block|,
 comment|// ARM conditional move instructions.
-name|CAND
-block|,
-comment|// ARM conditional and instructions.
-name|COR
-block|,
-comment|// ARM conditional or instructions.
-name|CXOR
-block|,
-comment|// ARM conditional xor instructions.
 name|BCC_i64
 block|,
 name|RBIT
@@ -431,6 +422,12 @@ comment|// ...signed
 name|VMULLu
 block|,
 comment|// ...unsigned
+name|UMLAL
+block|,
+comment|// 64bit Unsigned Accumulate Multiply
+name|SMLAL
+block|,
+comment|// 64bit Signed Accumulate Multiply
 comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
 comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
 comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
@@ -594,6 +591,23 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isSelectSupported
+argument_list|(
+argument|SelectSupportKind Kind
+argument_list|)
+specifier|const
+block|{
+comment|// ARM does not support scalar condition selects on vectors.
+return|return
+operator|(
+name|Kind
+operator|!=
+name|ScalarCondVectorVal
+operator|)
+return|;
+block|}
 comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
 name|virtual
 name|EVT
@@ -1517,8 +1531,21 @@ name|SDValue
 operator|&
 name|Chain
 argument_list|,
+specifier|const
+name|Value
+operator|*
+name|OrigArg
+argument_list|,
+name|unsigned
+name|OffsetFromOrigArg
+argument_list|,
 name|unsigned
 name|ArgOffset
+argument_list|,
+name|bool
+name|ForceMutable
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1572,6 +1599,8 @@ operator|*
 argument_list|,
 name|unsigned
 operator|&
+argument_list|,
+name|unsigned
 argument_list|)
 decl|const
 decl_stmt|;

@@ -404,13 +404,68 @@ name|isGNUFamily
 argument_list|()
 return|;
 block|}
+comment|/// \brief Does this runtime allow ARC at all?
+name|bool
+name|allowsARC
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|FragileMacOSX
+case|:
+return|return
+name|false
+return|;
+case|case
+name|MacOSX
+case|:
+return|return
+name|true
+return|;
+case|case
+name|iOS
+case|:
+return|return
+name|true
+return|;
+case|case
+name|GCC
+case|:
+return|return
+name|false
+return|;
+case|case
+name|GNUstep
+case|:
+return|return
+name|true
+return|;
+case|case
+name|ObjFW
+case|:
+return|return
+name|true
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad kind"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Does this runtime natively provide the ARC entrypoints?
 comment|///
 comment|/// ARC cannot be directly supported on a platform that does not provide
 comment|/// these entrypoints, although it may be supportable via a stub
 comment|/// library.
 name|bool
-name|hasARC
+name|hasNativeARC
 argument_list|()
 specifier|const
 block|{
@@ -476,9 +531,8 @@ case|case
 name|ObjFW
 case|:
 return|return
-name|false
+name|true
 return|;
-comment|// XXX: this will change soon
 block|}
 name|llvm_unreachable
 argument_list|(
@@ -486,16 +540,74 @@ literal|"bad kind"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Does this runtime natively provide ARC-compliant 'weak'
-comment|/// entrypoints?
+comment|/// \brief Does this runtime supports optimized setter entrypoints?
 name|bool
-name|hasWeak
+name|hasOptimizedSetter
 argument_list|()
 specifier|const
 block|{
-comment|// Right now, this is always equivalent to the ARC decision.
+switch|switch
+condition|(
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|MacOSX
+case|:
 return|return
-name|hasARC
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|10
+argument_list|,
+literal|8
+argument_list|)
+return|;
+case|case
+name|iOS
+case|:
+return|return
+operator|(
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|6
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+comment|/// Does this runtime allow the use of __weak?
+name|bool
+name|allowsWeak
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasNativeWeak
+argument_list|()
+return|;
+block|}
+comment|/// \brief Does this runtime natively provide ARC-compliant 'weak'
+comment|/// entrypoints?
+name|bool
+name|hasNativeWeak
+argument_list|()
+specifier|const
+block|{
+comment|// Right now, this is always equivalent to whether the runtime
+comment|// natively supports ARC decision.
+return|return
+name|hasNativeARC
 argument_list|()
 return|;
 block|}
@@ -537,7 +649,13 @@ case|case
 name|iOS
 case|:
 return|return
-name|false
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|6
+argument_list|)
 return|;
 comment|// This is really a lie, because some implementations and versions
 comment|// of the runtime do not support ARC.  Probably -fgnu-runtime

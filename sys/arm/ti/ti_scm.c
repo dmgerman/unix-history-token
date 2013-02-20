@@ -415,11 +415,20 @@ name|mode
 operator|>=
 literal|8
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Invalid mode \"%s\"\n"
+argument_list|,
+name|muxmode
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* set the mux mode */
 name|reg_val
 operator||=
@@ -1197,12 +1206,14 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"err: failed to configure"
-literal|"pin \"%s\"\n"
+literal|"err: failed to configure "
+literal|"pin \"%s\" as \"%s\"\n"
 argument_list|,
 name|padconf
 operator|->
 name|ballname
+argument_list|,
+name|muxname
 argument_list|)
 expr_stmt|;
 block|}

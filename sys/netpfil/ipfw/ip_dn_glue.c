@@ -2092,7 +2092,7 @@ name|lmax
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)

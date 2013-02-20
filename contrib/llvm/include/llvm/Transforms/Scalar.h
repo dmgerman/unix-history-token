@@ -149,6 +149,20 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// SROA - Replace aggregates or pieces of aggregates with scalar SSA values.
+comment|//
+name|FunctionPass
+modifier|*
+name|createSROAPass
+parameter_list|(
+name|bool
+name|RequiresDomTree
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// ScalarReplAggregates - Break up alloca's of aggregates into multiple allocas
 comment|// if possible.
 comment|//

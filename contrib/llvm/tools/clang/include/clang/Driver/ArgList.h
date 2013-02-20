@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Option.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/OptSpecifier.h"
 end_include
 
@@ -363,12 +369,10 @@ name|private
 label|:
 name|ArgList
 argument_list|(
-specifier|const
-name|ArgList
-operator|&
+argument|const ArgList&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -377,8 +381,8 @@ specifier|const
 name|ArgList
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 typedef|typedef
@@ -435,7 +439,7 @@ argument_list|()
 expr_stmt|;
 comment|/// @name Arg Access
 comment|/// @{
-comment|/// append - Append \arg A to the arg list.
+comment|/// append - Append \p A to the arg list.
 name|void
 name|append
 parameter_list|(
@@ -631,7 +635,7 @@ block|}
 comment|/// @}
 comment|/// @name Arg Removal
 comment|/// @{
-comment|/// eraseArg - Remove any option matching \arg Id.
+comment|/// eraseArg - Remove any option matching \p Id.
 name|void
 name|eraseArg
 parameter_list|(
@@ -642,9 +646,9 @@ function_decl|;
 comment|/// @}
 comment|/// @name Arg Access
 comment|/// @{
-comment|/// hasArg - Does the arg list contain any option matching \arg Id.
+comment|/// hasArg - Does the arg list contain any option matching \p Id.
 comment|///
-comment|/// \arg Claim Whether the argument should be claimed, if it exists.
+comment|/// \p Claim Whether the argument should be claimed, if it exists.
 name|bool
 name|hasArgNoClaim
 argument_list|(
@@ -728,9 +732,9 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getLastArg - Return the last argument matching \arg Id, or null.
+comment|/// getLastArg - Return the last argument matching \p Id, or null.
 comment|///
-comment|/// \arg Claim Whether the argument should be claimed, if it exists.
+comment|/// \p Claim Whether the argument should be claimed, if it exists.
 name|Arg
 modifier|*
 name|getLastArgNoClaim
@@ -896,7 +900,7 @@ name|Id7
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getArgString - Return the input argument string at \arg Index.
+comment|/// getArgString - Return the input argument string at \p Index.
 name|virtual
 specifier|const
 name|char
@@ -1006,11 +1010,10 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Translation Utilities
 comment|/// @{
-comment|/// hasFlag - Given an option \arg Pos and its negative form \arg
-comment|/// Neg, return true if the option is present, false if the
-comment|/// negation is present, and \arg Default if neither option is
-comment|/// given. If both the option and its negation are present, the
-comment|/// last one wins.
+comment|/// hasFlag - Given an option \p Pos and its negative form \p Neg, return
+comment|/// true if the option is present, false if the negation is present, and
+comment|/// \p Default if neither option is given. If both the option and its
+comment|/// negation are present, the last one wins.
 name|bool
 name|hasFlag
 argument_list|(
@@ -1027,8 +1030,7 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// AddLastArg - Render only the last argument match \arg Id0, if
-comment|/// present.
+comment|/// AddLastArg - Render only the last argument match \p Id0, if present.
 name|void
 name|AddLastArg
 argument_list|(
@@ -1207,8 +1209,8 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Create an arg string for (\arg LHS + \arg RHS), reusing the
-comment|/// string at \arg Index if possible.
+comment|/// \brief Create an arg string for (\p LHS + \p RHS), reusing the
+comment|/// string at \p Index if possible.
 specifier|const
 name|char
 modifier|*
@@ -1369,7 +1371,7 @@ name|SynthesizedArgs
 block|;
 name|public
 operator|:
-comment|/// Construct a new derived arg list from \arg BaseArgs.
+comment|/// Construct a new derived arg list from \p BaseArgs.
 name|DerivedArgList
 argument_list|(
 specifier|const
@@ -1452,14 +1454,14 @@ argument|StringRef Str
 argument_list|)
 specifier|const
 block|;
-comment|/// AddFlagArg - Construct a new FlagArg for the given option \arg Id and
+comment|/// AddFlagArg - Construct a new FlagArg for the given option \p Id and
 comment|/// append it to the argument list.
 name|void
 name|AddFlagArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|)
 block|{
 name|append
@@ -1473,14 +1475,14 @@ argument_list|)
 argument_list|)
 block|;     }
 comment|/// AddPositionalArg - Construct a new Positional arg for the given option
-comment|/// \arg Id, with the provided \arg Value and append it to the argument
+comment|/// \p Id, with the provided \p Value and append it to the argument
 comment|/// list.
 name|void
 name|AddPositionalArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|,
 argument|StringRef Value
 argument_list|)
@@ -1498,14 +1500,14 @@ argument_list|)
 argument_list|)
 block|;     }
 comment|/// AddSeparateArg - Construct a new Positional arg for the given option
-comment|/// \arg Id, with the provided \arg Value and append it to the argument
+comment|/// \p Id, with the provided \p Value and append it to the argument
 comment|/// list.
 name|void
 name|AddSeparateArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|,
 argument|StringRef Value
 argument_list|)
@@ -1522,14 +1524,14 @@ name|Value
 argument_list|)
 argument_list|)
 block|;     }
-comment|/// AddJoinedArg - Construct a new Positional arg for the given option \arg
-comment|/// Id, with the provided \arg Value and append it to the argument list.
+comment|/// AddJoinedArg - Construct a new Positional arg for the given option
+comment|/// \p Id, with the provided \p Value and append it to the argument list.
 name|void
 name|AddJoinedArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|,
 argument|StringRef Value
 argument_list|)
@@ -1546,55 +1548,54 @@ name|Value
 argument_list|)
 argument_list|)
 block|;     }
-comment|/// MakeFlagArg - Construct a new FlagArg for the given option
-comment|/// \arg Id.
+comment|/// MakeFlagArg - Construct a new FlagArg for the given option \p Id.
 name|Arg
 operator|*
 name|MakeFlagArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|)
 specifier|const
 block|;
 comment|/// MakePositionalArg - Construct a new Positional arg for the
-comment|/// given option \arg Id, with the provided \arg Value.
+comment|/// given option \p Id, with the provided \p Value.
 name|Arg
 operator|*
 name|MakePositionalArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|,
 argument|StringRef Value
 argument_list|)
 specifier|const
 block|;
 comment|/// MakeSeparateArg - Construct a new Positional arg for the
-comment|/// given option \arg Id, with the provided \arg Value.
+comment|/// given option \p Id, with the provided \p Value.
 name|Arg
 operator|*
 name|MakeSeparateArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|,
 argument|StringRef Value
 argument_list|)
 specifier|const
 block|;
 comment|/// MakeJoinedArg - Construct a new Positional arg for the
-comment|/// given option \arg Id, with the provided \arg Value.
+comment|/// given option \p Id, with the provided \p Value.
 name|Arg
 operator|*
 name|MakeJoinedArg
 argument_list|(
 argument|const Arg *BaseArg
 argument_list|,
-argument|const Option *Opt
+argument|const Option Opt
 argument_list|,
 argument|StringRef Value
 argument_list|)

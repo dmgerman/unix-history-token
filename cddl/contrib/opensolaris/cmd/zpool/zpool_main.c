@@ -3894,9 +3894,13 @@ goto|goto
 name|errout
 goto|;
 block|}
-comment|/* 	 * Check the validity of the mountpoint and direct the user to use the 	 * '-m' mountpoint option if it looks like its in use. 	 */
+comment|/* 	 * Check the validity of the mountpoint and direct the user to use the 	 * '-m' mountpoint option if it looks like its in use. 	 * Ignore the checks if the '-f' option is given. 	 */
 if|if
 condition|(
+operator|!
+name|force
+operator|&&
+operator|(
 name|mountpoint
 operator|==
 name|NULL
@@ -3919,6 +3923,7 @@ name|ZFS_MOUNTPOINT_NONE
 argument_list|)
 operator|!=
 literal|0
+operator|)
 operator|)
 condition|)
 block|{

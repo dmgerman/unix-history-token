@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -348,6 +348,17 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|FlCheckForAcpiTable
+parameter_list|(
+name|FILE
+modifier|*
+name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
 name|FILE
@@ -424,43 +435,47 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AnMethodAnalysisWalkBegin
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AnMethodAnalysisWalkEnd
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AnMethodTypingWalkEnd
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslmethod - Control method analysis walk  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|MtMethodAnalysisWalkBegin
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|MtMethodAnalysisWalkEnd
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -837,6 +852,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|LsDumpAsciiInComment
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|,
+name|UINT32
+name|Count
+parameter_list|,
+name|UINT8
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|LsWriteNodeToAsmListing
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -862,16 +894,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|LsDoHexOutput
+name|LsDumpParseTree
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * aslhex - generate all "hex" output files (C, ASM, ASL)  */
+end_comment
+
 begin_function_decl
 name|void
-name|LsDumpParseTree
+name|HxDoHexOutput
 parameter_list|(
 name|void
 parameter_list|)
@@ -1209,10 +1245,52 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|ApCheckObjectType
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PredefinedName
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|ExpectedBtypes
+parameter_list|,
+name|UINT32
+name|PackageIndex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ApDisplayReservedNames
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslprepkg - ACPI predefined names support for packages  */
+end_comment
+
+begin_function_decl
+name|void
+name|ApCheckPackage
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+parameter_list|,
+specifier|const
+name|ACPI_PREDEFINED_INFO
+modifier|*
+name|Predefined
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1720,17 +1798,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * asllookup - namespace cross reference  */
+comment|/*  * asllookup - namespace lookup functions  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|LkCrossReferenceNamespace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1741,9 +1810,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * aslnamesp - namespace output file generation  */
+end_comment
+
 begin_function_decl
 name|ACPI_STATUS
-name|LsDisplayNamespace
+name|NsDisplayNamespace
 parameter_list|(
 name|void
 parameter_list|)
@@ -1752,11 +1825,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|LsSetupNsList
+name|NsSetupNamespaceListing
 parameter_list|(
 name|void
 modifier|*
 name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslxref - namespace cross reference  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|XfCrossReferenceNamespace
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

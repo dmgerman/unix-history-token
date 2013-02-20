@@ -67,6 +67,12 @@ directive|define
 name|LLVM_SUPPORT_PRETTYSTACKTRACE_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -97,12 +103,10 @@ name|NextEntry
 decl_stmt|;
 name|PrettyStackTraceEntry
 argument_list|(
-specifier|const
-name|PrettyStackTraceEntry
-operator|&
+argument|const PrettyStackTraceEntry&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -111,8 +115,8 @@ specifier|const
 name|PrettyStackTraceEntry
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|PrettyStackTraceEntry
@@ -186,6 +190,7 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;   }
 decl_stmt|;
 comment|/// PrettyStackTraceProgram - This object prints a specified program arguments
@@ -232,6 +237,7 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 block|;   }
 decl_stmt|;
 block|}

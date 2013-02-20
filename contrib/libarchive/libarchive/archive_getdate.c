@@ -2180,7 +2180,7 @@ name|gds
 operator|->
 name|tokenp
 index|[
-literal|1
+literal|0
 index|]
 operator|.
 name|value
@@ -2189,7 +2189,7 @@ name|gds
 operator|->
 name|tokenp
 index|[
-literal|2
+literal|1
 index|]
 operator|.
 name|value
@@ -2198,7 +2198,7 @@ name|gds
 operator|->
 name|tokenp
 operator|+=
-literal|3
+literal|2
 expr_stmt|;
 return|return
 literal|1
@@ -2448,10 +2448,11 @@ index|]
 operator|.
 name|value
 expr_stmt|;
-operator|++
 name|gds
 operator|->
 name|tokenp
+operator|+=
+literal|1
 expr_stmt|;
 return|return
 literal|1
@@ -6574,6 +6575,14 @@ block|{
 name|time_t
 name|d
 decl_stmt|;
+name|time_t
+name|now
+init|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -6598,6 +6607,8 @@ name|d
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 operator|*
 name|argv
 argument_list|)

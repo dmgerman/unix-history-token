@@ -125,12 +125,6 @@ modifier|*
 name|bm
 parameter_list|)
 block|{
-if|if
-condition|(
-name|bm
-operator|->
-name|map
-condition|)
 name|free
 argument_list|(
 name|bm

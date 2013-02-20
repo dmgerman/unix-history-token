@@ -99,6 +99,7 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
@@ -107,6 +108,7 @@ name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|public
 operator|:

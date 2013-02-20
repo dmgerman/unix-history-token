@@ -1477,6 +1477,22 @@ name|u_int32_t
 name|max_sg_length
 decl_stmt|;
 comment|/* 31 in older firmware */
+comment|/*  * these fields appear in OpenCISS Spec 1.06  * http://cciss.sourceforge.net/#docs  */
+name|u_int32_t
+name|max_logical_supported
+decl_stmt|;
+name|u_int32_t
+name|max_physical_supported
+decl_stmt|;
+name|u_int32_t
+name|max_physical_per_logical
+decl_stmt|;
+name|u_int32_t
+name|max_perfomant_mode_cmds
+decl_stmt|;
+name|u_int32_t
+name|max_block_fetch_count
+decl_stmt|;
 block|}
 name|__packed
 struct|;

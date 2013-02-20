@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.706 2010/07/27 03:35:42 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.709 2012/04/20 18:47:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -15296,7 +15296,7 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"timeout conning to LDAP server %.100s"
+literal|"timeout connecting to LDAP server %.100s"
 argument_list|,
 name|id
 argument_list|)
@@ -16740,21 +16740,25 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"Error getting LDAP results in map %s"
+literal|"Error getting LDAP results, map=%s, name=%s"
 argument_list|,
 name|map
 operator|->
 name|map_mname
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"451 4.3.5 Error getting LDAP results in map %s"
+literal|"451 4.3.5 Error getting LDAP results, map=%s, name=%s"
 argument_list|,
 name|map
 operator|->
 name|map_mname
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -16808,7 +16812,11 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"ldap %.100s => %s"
+literal|"ldap=%s, %.100s=>%s"
+argument_list|,
+name|map
+operator|->
+name|map_mname
 argument_list|,
 name|name
 argument_list|,

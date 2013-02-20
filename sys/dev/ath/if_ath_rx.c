@@ -642,6 +642,17 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_PHYRADAR
 expr_stmt|;
+comment|/* 	 * Enable spectral PHY errors if requested by the 	 * spectral module. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dospectral
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYRADAR
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -728,7 +739,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -1695,6 +1706,71 @@ operator|&=
 operator|~
 name|CHAN_HT
 expr_stmt|;
+if|if
+condition|(
+name|rs
+operator|->
+name|rs_status
+operator|&
+name|HAL_RXERR_PHY
+condition|)
+block|{
+comment|/* 		 * PHY error - make sure the channel flags 		 * reflect the actual channel configuration, 		 * not the received frame. 		 */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT40U
+argument_list|(
+name|sc
+operator|->
+name|sc_curchan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_chan_flags
+operator||=
+name|CHAN_HT40U
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT40D
+argument_list|(
+name|sc
+operator|->
+name|sc_curchan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_chan_flags
+operator||=
+name|CHAN_HT40D
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT20
+argument_list|(
+name|sc
+operator|->
+name|sc_curchan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_chan_flags
+operator||=
+name|CHAN_HT20
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|sc
@@ -3336,6 +3412,11 @@ name|npkts
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|kickpcu
+init|=
+literal|0
+decl_stmt|;
 comment|/* XXX we must not hold the ATH_LOCK here */
 name|ATH_UNLOCK_ASSERT
 argument_list|(
@@ -3356,6 +3437,12 @@ name|sc
 operator|->
 name|sc_rxproc_cnt
 operator|++
+expr_stmt|;
+name|kickpcu
+operator|=
+name|sc
+operator|->
+name|sc_kickpcu
 expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
@@ -3408,6 +3495,9 @@ block|{
 comment|/* 		 * Don't process too many packets at a time; give the 		 * TX thread time to also run - otherwise the TX 		 * latency can jump by quite a bit, causing throughput 		 * degredation. 		 */
 if|if
 condition|(
+operator|!
+name|kickpcu
+operator|&&
 name|npkts
 operator|>=
 name|ATH_RX_MAX
@@ -3770,20 +3860,18 @@ name|sc_dfstask
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that all the RX frames were handled that 	 * need to be handled, kick the PCU if there's 	 * been an RXEOL condition. 	 */
+if|if
+condition|(
+name|resched
+operator|&&
+name|kickpcu
+condition|)
+block|{
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|resched
-operator|&&
-name|sc
-operator|->
-name|sc_kickpcu
-condition|)
-block|{
 name|ATH_KTR
 argument_list|(
 name|sc
@@ -3808,7 +3896,18 @@ argument_list|,
 name|npkts
 argument_list|)
 expr_stmt|;
-comment|/* XXX rxslink? */
+comment|/* 		 * Go through the process of fully tearing down 		 * the RX buffers and reinitialising them. 		 * 		 * There's a hardware bug that causes the RX FIFO 		 * to get confused under certain conditions and 		 * constantly write over the same frame, leading 		 * the RX driver code here to get heavily confused. 		 */
+if|#
+directive|if
+literal|1
+name|ath_startrecv
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* 		 * Disabled for now - it'd be nice to be able to do 		 * this in order to limit the amount of CPU time spent 		 * reinitialising the RX side (and thus minimise RX 		 * drops) however there's a hardware issue that 		 * causes things to get too far out of whack. 		 */
 comment|/* 		 * XXX can we hold the PCU lock here? 		 * Are there any net80211 buffer calls involved? 		 */
 name|bf
 operator|=
@@ -3849,6 +3948,8 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* re-enable PCU/DMA engine */
+endif|#
+directive|endif
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -3864,12 +3965,12 @@ name|sc_kickpcu
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX check this inside of IF_LOCK? */
 if|if
 condition|(

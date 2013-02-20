@@ -1974,6 +1974,14 @@ begin_comment
 comment|///
 end_comment
 
+begin_comment
+comment|/// Note that duplicate Machine CFG edges are not allowed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
 begin_function_decl
 name|void
 name|addSuccessor
@@ -3036,6 +3044,87 @@ block|}
 end_function
 
 begin_comment
+comment|/// Possible outcome of a register liveness query to computeRegisterLiveness()
+end_comment
+
+begin_enum
+enum|enum
+name|LivenessQueryResult
+block|{
+name|LQR_Live
+block|,
+comment|///< Register is known to be live.
+name|LQR_OverlappingLive
+block|,
+comment|///< Register itself is not live, but some overlapping
+comment|///< register is.
+name|LQR_Dead
+block|,
+comment|///< Register is known to be dead.
+name|LQR_Unknown
+comment|///< Register liveness not decidable from local
+comment|///< neighborhood.
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// computeRegisterLiveness - Return whether (physical) register \c Reg
+end_comment
+
+begin_comment
+comment|/// has been<def>ined and not<kill>ed as of just before \c MI.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Search is localised to a neighborhood of
+end_comment
+
+begin_comment
+comment|/// \c Neighborhood instructions before (searching for defs or kills) and
+end_comment
+
+begin_comment
+comment|/// Neighborhood instructions after (searching just for defs) MI.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \c Reg must be a physical register.
+end_comment
+
+begin_function_decl
+name|LivenessQueryResult
+name|computeRegisterLiveness
+parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|TRI
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|,
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Neighborhood
+init|=
+literal|10
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Debugging methods.
 end_comment
 
@@ -3181,10 +3270,8 @@ begin_decl_stmt
 name|uint32_t
 name|getSuccWeight
 argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|succ
+name|const_succ_iterator
+name|Succ
 argument_list|)
 decl|const
 decl_stmt|;

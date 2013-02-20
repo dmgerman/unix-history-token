@@ -139,9 +139,6 @@ block|{
 name|va_list
 name|argp
 decl_stmt|;
-name|int
-name|l
-decl_stmt|;
 name|time_t
 name|now
 init|=
@@ -211,13 +208,6 @@ argument_list|,
 literal|"%Y-%m-%d %T "
 argument_list|,
 name|t
-argument_list|)
-expr_stmt|;
-name|l
-operator|=
-name|strlen
-argument_list|(
-name|nfmt
 argument_list|)
 expr_stmt|;
 name|sprintf

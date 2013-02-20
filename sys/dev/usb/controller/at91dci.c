@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 2007-2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
@@ -28,6 +18,23 @@ end_comment
 begin_comment
 comment|/*  * NOTE: The "fifo_bank" is not reset in hardware when the endpoint is  * reset.  *  * NOTE: When the chip detects BUS-reset it will also reset the  * endpoints, Function-address and more.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -215,6 +222,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_include
 include|#
@@ -6569,21 +6585,9 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|STRING_LANG
-define|\
-value|0x09, 0x04,
-end_define
-
-begin_comment
-comment|/* American English */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|STRING_VENDOR
 define|\
-value|'A', 0, 'T', 0, 'M', 0, 'E', 0, 'L', 0
+value|"A\0T\0M\0E\0L"
 end_define
 
 begin_define
@@ -6591,18 +6595,8 @@ define|#
 directive|define
 name|STRING_PRODUCT
 define|\
-value|'D', 0, 'C', 0, 'I', 0, ' ', 0, 'R', 0, \   'o', 0, 'o', 0, 't', 0, ' ', 0, 'H', 0, \   'U', 0, 'B', 0,
+value|"D\0C\0I\0 \0R\0o\0o\0t\0 \0H\0U\0B"
 end_define
-
-begin_expr_stmt
-name|USB_MAKE_STRING_DESC
-argument_list|(
-name|STRING_LANG
-argument_list|,
-name|at91dci_langtab
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|USB_MAKE_STRING_DESC
@@ -7226,7 +7220,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|at91dci_langtab
+name|usb_string_lang_en
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -7237,7 +7231,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|at91dci_langtab
+name|usb_string_lang_en
 expr_stmt|;
 goto|goto
 name|tr_valid

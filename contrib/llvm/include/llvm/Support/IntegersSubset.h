@@ -1959,7 +1959,6 @@ control|)
 block|{
 specifier|const
 name|APInt
-modifier|&
 name|Low
 init|=
 name|getItem
@@ -1972,7 +1971,6 @@ argument_list|()
 decl_stmt|;
 specifier|const
 name|APInt
-modifier|&
 name|High
 init|=
 name|getItem
@@ -2082,7 +2080,6 @@ control|)
 block|{
 specifier|const
 name|APInt
-modifier|&
 name|Low
 init|=
 name|getItem
@@ -2095,7 +2092,6 @@ argument_list|()
 decl_stmt|;
 specifier|const
 name|APInt
-modifier|&
 name|High
 init|=
 name|getItem

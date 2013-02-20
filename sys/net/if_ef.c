@@ -1823,7 +1823,7 @@ name|ETHER_HDR_LEN
 operator|+
 literal|3
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Ensure that ethernet header and next three bytes 		 * will fit into single mbuf 		 */
@@ -1915,7 +1915,7 @@ name|m
 argument_list|,
 literal|8
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|type

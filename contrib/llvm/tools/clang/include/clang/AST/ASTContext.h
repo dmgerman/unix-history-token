@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the ASTContext interface.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::ASTContext interface.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -141,6 +145,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/RawCommentList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CommentCommandTraits.h"
 end_include
 
 begin_include
@@ -322,8 +332,8 @@ name|class
 name|FullComment
 decl_stmt|;
 block|}
-comment|/// ASTContext - This class holds long-lived AST nodes (such as types and
-comment|/// decls) that can be referred to throughout the semantic analysis of a file.
+comment|/// \brief Holds long-lived AST nodes (such as types and decls) that can be
+comment|/// referred to throughout the semantic analysis of a file.
 name|class
 name|ASTContext
 range|:
@@ -700,8 +710,9 @@ name|friend
 name|class
 name|NestedNameSpecifier
 block|;
-comment|/// ASTRecordLayouts - A cache mapping from RecordDecls to ASTRecordLayouts.
-comment|///  This is lazily created.  This is intentionally not serialized.
+comment|/// \brief A cache mapping from RecordDecls to ASTRecordLayouts.
+comment|///
+comment|/// This is lazily created.  This is intentionally not serialized.
 name|mutable
 name|llvm
 operator|::
@@ -732,7 +743,7 @@ operator|*
 operator|>
 name|ObjCLayouts
 block|;
-comment|/// TypeInfoMap - A cache from types to size and alignment information.
+comment|/// \brief A cache from types to size and alignment information.
 typedef|typedef
 name|llvm
 operator|::
@@ -757,7 +768,7 @@ name|mutable
 name|TypeInfoMap
 name|MemoizedTypeInfo
 decl_stmt|;
-comment|/// KeyFunctions - A cache mapping from CXXRecordDecls to key functions.
+comment|/// \brief A cache mapping from CXXRecordDecls to key functions.
 name|llvm
 operator|::
 name|DenseMap
@@ -816,7 +827,7 @@ operator|>
 name|BlockVarCopyInits
 expr_stmt|;
 comment|/// \brief Mapping from class scope functions specialization to their
-comment|///  template patterns.
+comment|/// template patterns.
 name|llvm
 operator|::
 name|DenseMap
@@ -935,29 +946,35 @@ name|TypedefDecl
 modifier|*
 name|BuiltinVaListDecl
 decl_stmt|;
-comment|/// \brief The typedef for the predefined 'id' type.
+comment|/// \brief The typedef for the predefined \c id type.
 name|mutable
 name|TypedefDecl
 modifier|*
 name|ObjCIdDecl
 decl_stmt|;
-comment|/// \brief The typedef for the predefined 'SEL' type.
+comment|/// \brief The typedef for the predefined \c SEL type.
 name|mutable
 name|TypedefDecl
 modifier|*
 name|ObjCSelDecl
 decl_stmt|;
-comment|/// \brief The typedef for the predefined 'Class' type.
+comment|/// \brief The typedef for the predefined \c Class type.
 name|mutable
 name|TypedefDecl
 modifier|*
 name|ObjCClassDecl
 decl_stmt|;
-comment|/// \brief The typedef for the predefined 'Protocol' class in Objective-C.
+comment|/// \brief The typedef for the predefined \c Protocol class in Objective-C.
 name|mutable
 name|ObjCInterfaceDecl
 modifier|*
 name|ObjCProtocolClassDecl
+decl_stmt|;
+comment|/// \brief The typedef for the predefined 'BOOL' type.
+name|mutable
+name|TypedefDecl
+modifier|*
+name|BOOLDecl
 decl_stmt|;
 comment|// Typedefs which may be provided defining the structure of Objective-C
 comment|// pseudo-builtins
@@ -1088,9 +1105,10 @@ operator|>
 name|InstantiatedFromStaticDataMember
 expr_stmt|;
 comment|/// \brief Keeps track of the declaration from which a UsingDecl was
-comment|/// created during instantiation.  The source declaration is always
-comment|/// a UsingDecl, an UnresolvedUsingValueDecl, or an
-comment|/// UnresolvedUsingTypenameDecl.
+comment|/// created during instantiation.
+comment|///
+comment|/// The source declaration is always a UsingDecl, an UnresolvedUsingValueDecl,
+comment|/// or an UnresolvedUsingTypenameDecl.
 comment|///
 comment|/// For example:
 comment|/// \code
@@ -1188,9 +1206,8 @@ name|LambdaMangleContext
 operator|>
 name|LambdaMangleContexts
 expr_stmt|;
-comment|/// \brief Mapping that stores parameterIndex values for ParmVarDecls
-comment|/// when that value exceeds the bitfield size of
-comment|/// ParmVarDeclBits.ParameterIndex.
+comment|/// \brief Mapping that stores parameterIndex values for ParmVarDecls when
+comment|/// that value exceeds the bitfield size of ParmVarDeclBits.ParameterIndex.
 typedef|typedef
 name|llvm
 operator|::
@@ -1219,12 +1236,12 @@ name|TranslationUnitDecl
 modifier|*
 name|TUDecl
 decl_stmt|;
-comment|/// SourceMgr - The associated SourceManager object.
+comment|/// \brief The associated SourceManager object.a
 name|SourceManager
 modifier|&
 name|SourceMgr
 decl_stmt|;
-comment|/// LangOpts - The language options used to create the AST associated with
+comment|/// \brief The language options used to create the AST associated with
 comment|///  this ASTContext object.
 name|LangOptions
 modifier|&
@@ -1327,9 +1344,11 @@ name|ASTMutationListener
 modifier|*
 name|Listener
 decl_stmt|;
+specifier|const
 name|clang
 operator|::
 name|PrintingPolicy
+operator|&
 name|getPrintingPolicy
 argument_list|()
 specifier|const
@@ -1341,9 +1360,11 @@ block|}
 name|void
 name|setPrintingPolicy
 argument_list|(
+specifier|const
 name|clang
 operator|::
 name|PrintingPolicy
+operator|&
 name|Policy
 argument_list|)
 block|{
@@ -1714,6 +1735,27 @@ modifier|&
 name|RC
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|LangOpts
+operator|.
+name|RetainCommentsFromSystemHeaders
+operator|||
+operator|!
+name|SourceMgr
+operator|.
+name|isInSystemHeader
+argument_list|(
+name|RC
+operator|.
+name|getSourceRange
+argument_list|()
+operator|.
+name|getBegin
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Comments
 operator|.
 name|addComment
@@ -1751,6 +1793,9 @@ decl|const
 decl_stmt|;
 comment|/// Return parsed documentation comment attached to a given declaration.
 comment|/// Returns NULL if no comment is attached.
+comment|///
+comment|/// \param PP the Preprocessor used with this TU.  Could be NULL if
+comment|/// preprocessor is not available.
 name|comments
 operator|::
 name|FullComment
@@ -1758,9 +1803,45 @@ operator|*
 name|getCommentForDecl
 argument_list|(
 argument|const Decl *D
+argument_list|,
+argument|const Preprocessor *PP
 argument_list|)
 specifier|const
 expr_stmt|;
+name|comments
+operator|::
+name|FullComment
+operator|*
+name|cloneFullComment
+argument_list|(
+argument|comments::FullComment *FC
+argument_list|,
+argument|const Decl *D
+argument_list|)
+specifier|const
+expr_stmt|;
+name|private
+label|:
+name|mutable
+name|comments
+operator|::
+name|CommandTraits
+name|CommentCommandTraits
+expr_stmt|;
+name|public
+label|:
+name|comments
+operator|::
+name|CommandTraits
+operator|&
+name|getCommentCommandTraits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CommentCommandTraits
+return|;
+block|}
 comment|/// \brief Retrieve the attributes for the given declaration.
 name|AttrVec
 modifier|&
@@ -1840,7 +1921,7 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
-comment|/// \brief If the given using decl is an instantiation of a
+comment|/// \brief If the given using decl \p Inst is an instantiation of a
 comment|/// (possibly unresolved) using decl from a template instantiation,
 comment|/// return it.
 name|NamedDecl
@@ -1908,8 +1989,8 @@ modifier|*
 name|Tmpl
 parameter_list|)
 function_decl|;
-comment|/// ZeroBitfieldFollowsNonBitfield - return 'true" if 'FD' is a zero-length
-comment|/// bitfield which follows the non-bitfield 'LastFD'.
+comment|/// \brief Return \c true if \p FD is a zero-length bitfield which follows
+comment|/// the non-bitfield \p LastFD.
 name|bool
 name|ZeroBitfieldFollowsNonBitfield
 argument_list|(
@@ -1925,8 +2006,8 @@ name|LastFD
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ZeroBitfieldFollowsBitfield - return 'true" if 'FD' is a zero-length
-comment|/// bitfield which follows the bitfield 'LastFD'.
+comment|/// \brief Return \c true if \p FD is a zero-length bitfield which follows
+comment|/// the bitfield \p LastFD.
 name|bool
 name|ZeroBitfieldFollowsBitfield
 argument_list|(
@@ -1942,8 +2023,8 @@ name|LastFD
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// BitfieldFollowsBitfield - return 'true" if 'FD' is a
-comment|/// bitfield which follows the bitfield 'LastFD'.
+comment|/// \brief Return \c true if \p FD is a bitfield which follows the bitfield
+comment|/// \p LastFD.
 name|bool
 name|BitfieldFollowsBitfield
 argument_list|(
@@ -1959,8 +2040,8 @@ name|LastFD
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// NonBitfieldFollowsBitfield - return 'true" if 'FD' is not a
-comment|/// bitfield which follows the bitfield 'LastFD'.
+comment|/// \brief Return \c true if \p FD is not a bitfield which follows the
+comment|/// bitfield \p LastFD.
 name|bool
 name|NonBitfieldFollowsBitfield
 argument_list|(
@@ -1976,8 +2057,8 @@ name|LastFD
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// BitfieldFollowsNonBitfield - return 'true" if 'FD' is a
-comment|/// bitfield which follows the none bitfield 'LastFD'.
+comment|/// \brief Return \c true if \p FD is a bitfield which follows the
+comment|/// non-bitfield \p LastFD.
 name|bool
 name|BitfieldFollowsNonBitfield
 argument_list|(
@@ -2046,6 +2127,32 @@ modifier|*
 name|Overridden
 parameter_list|)
 function_decl|;
+comment|/// \brief Return C++ or ObjC overridden methods for the given \p Method.
+comment|///
+comment|/// An ObjC method is considered to override any method in the class's
+comment|/// base classes, its protocols, or its categories' protocols, that has
+comment|/// the same selector and is of the same kind (class or instance).
+comment|/// A method in an implementation is not considered as overriding the same
+comment|/// method in the interface or its categories.
+name|void
+name|getOverriddenMethods
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
+name|Method
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|>
+operator|&
+name|Overridden
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Notify the AST context that a new import declaration has been
 comment|/// parsed or implicitly created within this translation unit.
 name|void
@@ -2435,6 +2542,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|CanQualType
+name|BuiltinFnTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
 name|PseudoObjectTy
 decl_stmt|,
 name|ARCUnbridgedCastTy
@@ -2719,7 +2832,7 @@ label|:
 end_label
 
 begin_comment
-comment|/// getExtQualType - Return a type with extended qualifiers.
+comment|/// \brief Return a type with extended qualifiers.
 end_comment
 
 begin_decl_stmt
@@ -2757,11 +2870,15 @@ label|:
 end_label
 
 begin_comment
-comment|/// getAddSpaceQualType - Return the uniqued reference to the type for an
+comment|/// \brief Return the uniqued reference to the type for an address space
 end_comment
 
 begin_comment
-comment|/// address space qualified type with the specified type and address space.
+comment|/// qualified type with the specified type and address space.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -2791,15 +2908,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getObjCGCQualType - Returns the uniqued reference to the type for an
+comment|/// \brief Return the uniqued reference to the type for an Objective-C
 end_comment
 
 begin_comment
-comment|/// objc gc qualified type. The retulting type has a union of the qualifiers
+comment|/// gc-qualified type.
 end_comment
 
 begin_comment
-comment|/// from T and the gc attribute.
+comment|///
+end_comment
+
+begin_comment
+comment|/// The retulting type has a union of the qualifiers from T and the gc
+end_comment
+
+begin_comment
+comment|/// attribute.
 end_comment
 
 begin_decl_stmt
@@ -2819,15 +2944,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getRestrictType - Returns the uniqued reference to the type for a
+comment|/// \brief Return the uniqued reference to the type for a \c restrict
 end_comment
 
 begin_comment
-comment|/// 'restrict' qualified type.  The resulting type has a union of the
+comment|/// qualified type.
 end_comment
 
 begin_comment
-comment|/// qualifiers from T and 'restrict'.
+comment|///
+end_comment
+
+begin_comment
+comment|/// The resulting type has a union of the qualifiers from \p T and
+end_comment
+
+begin_comment
+comment|/// \c restrict.
 end_comment
 
 begin_decl_stmt
@@ -2853,15 +2986,23 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getVolatileType - Returns the uniqued reference to the type for a
+comment|/// \brief Return the uniqued reference to the type for a \c volatile
 end_comment
 
 begin_comment
-comment|/// 'volatile' qualified type.  The resulting type has a union of the
+comment|/// qualified type.
 end_comment
 
 begin_comment
-comment|/// qualifiers from T and 'volatile'.
+comment|///
+end_comment
+
+begin_comment
+comment|/// The resulting type has a union of the qualifiers from \p T and
+end_comment
+
+begin_comment
+comment|/// \c volatile.
 end_comment
 
 begin_decl_stmt
@@ -2887,15 +3028,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getConstType - Returns the uniqued reference to the type for a
+comment|/// \brief Return the uniqued reference to the type for a \c const
 end_comment
 
 begin_comment
-comment|/// 'const' qualified type.  The resulting type has a union of the
-end_comment
-
-begin_comment
-comment|/// qualifiers from T and 'const'.
+comment|/// qualified type.
 end_comment
 
 begin_comment
@@ -2903,11 +3040,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// It can be reasonably expected that this will always be
+comment|/// The resulting type has a union of the qualifiers from \p T and \c const.
 end_comment
 
 begin_comment
-comment|/// equivalent to calling T.withConst().
+comment|///
+end_comment
+
+begin_comment
+comment|/// It can be reasonably expected that this will always be equivalent to
+end_comment
+
+begin_comment
+comment|/// calling T.withConst().
 end_comment
 
 begin_decl_stmt
@@ -2929,7 +3074,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// adjustFunctionType - Change the ExtInfo on a function type.
+comment|/// \brief Change the ExtInfo on a function type.
 end_comment
 
 begin_decl_stmt
@@ -2952,7 +3097,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getComplexType - Return the uniqued reference to the type for a complex
+comment|/// \brief Return the uniqued reference to the type for a complex
 end_comment
 
 begin_comment
@@ -2997,7 +3142,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getPointerType - Return the uniqued reference to the type for a pointer to
+comment|/// \brief Return the uniqued reference to the type for a pointer to
 end_comment
 
 begin_comment
@@ -3042,11 +3187,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getAtomicType - Return the uniqued reference to the atomic type for
+comment|/// \brief Return the uniqued reference to the atomic type for the specified
 end_comment
 
 begin_comment
-comment|/// the specified type.
+comment|/// type.
 end_comment
 
 begin_decl_stmt
@@ -3061,11 +3206,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getBlockPointerType - Return the uniqued reference to the type for a block
+comment|/// \brief Return the uniqued reference to the type for a block of the
 end_comment
 
 begin_comment
-comment|/// of the specified type.
+comment|/// specified type.
 end_comment
 
 begin_decl_stmt
@@ -3080,7 +3225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// This gets the struct used to keep track of the descriptor for pointer to
+comment|/// Gets the struct used to keep track of the descriptor for pointer to
 end_comment
 
 begin_comment
@@ -3096,7 +3241,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// This gets the struct used to keep track of the extended descriptor for
+comment|/// Gets the struct used to keep track of the extended descriptor for
 end_comment
 
 begin_comment
@@ -3140,7 +3285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// This builds the struct used for __block variables.
+comment|/// Builds the struct used for __block variables.
 end_comment
 
 begin_decl_stmt
@@ -3173,11 +3318,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getLValueReferenceType - Return the uniqued reference to the type for an
+comment|/// \brief Return the uniqued reference to the type for an lvalue reference
 end_comment
 
 begin_comment
-comment|/// lvalue reference to the specified type.
+comment|/// to the specified type.
 end_comment
 
 begin_decl_stmt
@@ -3197,11 +3342,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getRValueReferenceType - Return the uniqued reference to the type for an
+comment|/// \brief Return the uniqued reference to the type for an rvalue reference
 end_comment
 
 begin_comment
-comment|/// rvalue reference to the specified type.
+comment|/// to the specified type.
 end_comment
 
 begin_decl_stmt
@@ -3216,15 +3361,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getMemberPointerType - Return the uniqued reference to the type for a
+comment|/// \brief Return the uniqued reference to the type for a member pointer to
 end_comment
 
 begin_comment
-comment|/// member pointer to the specified type in the specified class. The class
+comment|/// the specified type in the specified class.
 end_comment
 
 begin_comment
-comment|/// is a Type because it could be a dependent name.
+comment|///
+end_comment
+
+begin_comment
+comment|/// The class \p Cls is a \c Type because it could be a dependent name.
 end_comment
 
 begin_decl_stmt
@@ -3244,11 +3393,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getVariableArrayType - Returns a non-unique reference to the type for a
+comment|/// \brief Return a non-unique reference to the type for a variable array of
 end_comment
 
 begin_comment
-comment|/// variable array of the specified element type.
+comment|/// the specified element type.
 end_comment
 
 begin_decl_stmt
@@ -3278,19 +3427,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getDependentSizedArrayType - Returns a non-unique reference to
+comment|/// \brief Return a non-unique reference to the type for a dependently-sized
 end_comment
 
 begin_comment
-comment|/// the type for a dependently-sized array of the specified element
+comment|/// array of the specified element type.
 end_comment
 
 begin_comment
-comment|/// type. FIXME: We will need these to be uniqued, or at least
+comment|///
 end_comment
 
 begin_comment
-comment|/// comparable, at some point.
+comment|/// FIXME: We will need these to be uniqued, or at least comparable, at some
+end_comment
+
+begin_comment
+comment|/// point.
 end_comment
 
 begin_decl_stmt
@@ -3320,11 +3473,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getIncompleteArrayType - Returns a unique reference to the type for a
+comment|/// \brief Return a unique reference to the type for an incomplete array of
 end_comment
 
 begin_comment
-comment|/// incomplete array of the specified element type.
+comment|/// the specified element type.
 end_comment
 
 begin_decl_stmt
@@ -3347,11 +3500,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getConstantArrayType - Return the unique reference to the type for a
+comment|/// \brief Return the unique reference to the type for a constant array of
 end_comment
 
 begin_comment
-comment|/// constant array of the specified element type.
+comment|/// the specified element type.
 end_comment
 
 begin_decl_stmt
@@ -3381,11 +3534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getVariableArrayDecayedType - Returns a vla type where known sizes
-end_comment
-
-begin_comment
-comment|/// are replaced with [*].
+comment|/// \brief Returns a vla type where known sizes are replaced with [*].
 end_comment
 
 begin_decl_stmt
@@ -3400,11 +3549,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getVectorType - Return the unique reference to a vector type of
+comment|/// \brief Return the unique reference to a vector type of the specified
 end_comment
 
 begin_comment
-comment|/// the specified element type and size. VectorType must be a built-in type.
+comment|/// element type and size.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \pre \p VectorType must be a built-in type.
 end_comment
 
 begin_decl_stmt
@@ -3427,15 +3584,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getExtVectorType - Return the unique reference to an extended vector type
+comment|/// \brief Return the unique reference to an extended vector type
 end_comment
 
 begin_comment
-comment|/// of the specified element type and size.  VectorType must be a built-in
+comment|/// of the specified element type and size.
 end_comment
 
 begin_comment
-comment|/// type.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \pre \p VectorType must be a built-in type.
 end_comment
 
 begin_decl_stmt
@@ -3453,19 +3614,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getDependentSizedExtVectorType - Returns a non-unique reference to
+comment|/// \pre Return a non-unique reference to the type for a dependently-sized
 end_comment
 
 begin_comment
-comment|/// the type for a dependently-sized vector of the specified element
+comment|/// vector of the specified element type.
 end_comment
 
 begin_comment
-comment|/// type. FIXME: We will need these to be uniqued, or at least
+comment|///
 end_comment
 
 begin_comment
-comment|/// comparable, at some point.
+comment|/// FIXME: We will need these to be uniqued, or at least comparable, at some
+end_comment
+
+begin_comment
+comment|/// point.
 end_comment
 
 begin_decl_stmt
@@ -3487,11 +3652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getFunctionNoProtoType - Return a K&R style C function type like 'int()'.
-end_comment
-
-begin_comment
-comment|///
+comment|/// \brief Return a K&R style C function type like 'int()'.
 end_comment
 
 begin_decl_stmt
@@ -3536,11 +3697,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getFunctionType - Return a normal function type with a typed
-end_comment
-
-begin_comment
-comment|/// argument list.
+comment|/// \brief Return a normal function type with a typed argument list.
 end_comment
 
 begin_decl_stmt
@@ -3570,11 +3727,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getTypeDeclType - Return the unique reference to the type for
+comment|/// \brief Return the unique reference to the type for the specified type
 end_comment
 
 begin_comment
-comment|/// the specified type declaration.
+comment|/// declaration.
 end_comment
 
 begin_decl_stmt
@@ -3661,11 +3818,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getTypedefType - Return the unique reference to the type for the
+comment|/// \brief Return the unique reference to the type for the specified
 end_comment
 
 begin_comment
-comment|/// specified typedef-name decl.
+comment|/// typedef-name decl.
 end_comment
 
 begin_decl_stmt
@@ -4060,11 +4217,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getObjCObjectPointerType - Return a ObjCObjectPointerType type
-end_comment
-
-begin_comment
-comment|/// for the given ObjCObjectType.
+comment|/// \brief Return a ObjCObjectPointerType type for the given ObjCObjectType.
 end_comment
 
 begin_decl_stmt
@@ -4079,7 +4232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getTypeOfType - GCC extension.
+comment|/// \brief GCC extension.
 end_comment
 
 begin_decl_stmt
@@ -4106,7 +4259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getDecltypeType - C++0x decltype.
+comment|/// \brief C++11 decltype.
 end_comment
 
 begin_decl_stmt
@@ -4125,7 +4278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getUnaryTransformType - unary type transforms
+comment|/// \brief Unary type transforms
 end_comment
 
 begin_decl_stmt
@@ -4148,7 +4301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getAutoType - C++0x deduced auto type.
+comment|/// \brief C++11 deduced auto type.
 end_comment
 
 begin_decl_stmt
@@ -4163,7 +4316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getAutoDeductType - C++0x deduction pattern for 'auto' type.
+comment|/// \brief C++11 deduction pattern for 'auto' type.
 end_comment
 
 begin_expr_stmt
@@ -4175,7 +4328,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getAutoRRefDeductType - C++0x deduction pattern for 'auto&&' type.
+comment|/// \brief C++11 deduction pattern for 'auto&&' type.
 end_comment
 
 begin_expr_stmt
@@ -4187,11 +4340,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getTagDeclType - Return the unique reference to the type for the
+comment|/// \brief Return the unique reference to the type for the specified TagDecl
 end_comment
 
 begin_comment
-comment|/// specified TagDecl (struct/union/class/enum) decl.
+comment|/// (struct/union/class/enum) decl.
 end_comment
 
 begin_decl_stmt
@@ -4208,11 +4361,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getSizeType - Return the unique type for "size_t" (C99 7.17), defined
+comment|/// \brief Return the unique type for "size_t" (C99 7.17), defined in
 end_comment
 
 begin_comment
-comment|/// in<stddef.h>. The sizeof operator requires this (C99 6.5.3.4p4).
+comment|///<stddef.h>.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The sizeof operator requires this (C99 6.5.3.4p4).
 end_comment
 
 begin_expr_stmt
@@ -4224,11 +4385,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getIntMaxType - Return the unique type for "intmax_t" (C99 7.18.1.5),
+comment|/// \brief Return the unique type for "intmax_t" (C99 7.18.1.5), defined in
 end_comment
 
 begin_comment
-comment|/// defined in<stdint.h>.
+comment|///<stdint.h>.
 end_comment
 
 begin_expr_stmt
@@ -4240,11 +4401,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getUIntMaxType - Return the unique type for "uintmax_t" (C99 7.18.1.5),
+comment|/// \brief Return the unique type for "uintmax_t" (C99 7.18.1.5), defined in
 end_comment
 
 begin_comment
-comment|/// defined in<stdint.h>.
+comment|///<stdint.h>.
 end_comment
 
 begin_expr_stmt
@@ -4256,7 +4417,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getWCharType - In C++, this returns the unique wchar_t type.  In C99, this
+comment|/// \brief In C++, this returns the unique wchar_t type.  In C99, this
 end_comment
 
 begin_comment
@@ -4280,7 +4441,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getSignedWCharType - Return the type of "signed wchar_t".
+comment|/// \brief Return the type of "signed wchar_t".
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -4296,7 +4461,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getUnsignedWCharType - Return the type of "unsigned wchar_t".
+comment|/// \brief Return the type of "unsigned wchar_t".
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -4312,7 +4481,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getWIntType - In C99, this returns a type compatible with the type
+comment|/// \brief In C99, this returns a type compatible with the type
 end_comment
 
 begin_comment
@@ -4332,11 +4501,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getPointerDiffType - Return the unique type for "ptrdiff_t" (C99 7.17)
+comment|/// \brief Return the unique type for "ptrdiff_t" (C99 7.17) defined in
 end_comment
 
 begin_comment
-comment|/// defined in<stddef.h>. Pointer - pointer requires this (C99 6.5.6p9).
+comment|///<stddef.h>. Pointer - pointer requires this (C99 6.5.6p9).
 end_comment
 
 begin_expr_stmt
@@ -4348,11 +4517,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// getCFConstantStringType - Return the C structure type used to represent
+comment|/// \brief Return the unique type for "pid_t" defined in
 end_comment
 
 begin_comment
-comment|// constant CFStrings.
+comment|///<sys/types.h>. We need this to compute the correct type for vfork().
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getProcessIDType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return the C structure type used to represent constant CFStrings.
 end_comment
 
 begin_expr_stmt
@@ -4463,11 +4644,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Retrieve the type that 'id' has been defined to, which may be
+comment|/// \brief Retrieve the type that \c id has been defined to, which may be
 end_comment
 
 begin_comment
-comment|/// different from the built-in 'id' if 'id' has been typedef'd.
+comment|/// different from the built-in \c id if \c id has been typedef'd.
 end_comment
 
 begin_expr_stmt
@@ -4497,7 +4678,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Set the user-written type that redefines 'id'.
+comment|/// \brief Set the user-written type that redefines \c id.
 end_comment
 
 begin_macro
@@ -4518,11 +4699,11 @@ block|}
 end_block
 
 begin_comment
-comment|/// \brief Retrieve the type that 'Class' has been defined to, which may be
+comment|/// \brief Retrieve the type that \c Class has been defined to, which may be
 end_comment
 
 begin_comment
-comment|/// different from the built-in 'Class' if 'Class' has been typedef'd.
+comment|/// different from the built-in \c Class if \c Class has been typedef'd.
 end_comment
 
 begin_expr_stmt
@@ -4904,15 +5085,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getObjCEncodingForType - Emit the ObjC type encoding for the
+comment|/// \brief Emit the Objective-CC type encoding for the given type \p T into
 end_comment
 
 begin_comment
-comment|/// given type into \arg S. If \arg NameFields is specified then
+comment|/// \p S.
 end_comment
 
 begin_comment
-comment|/// record field names are also encoded.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If \p Field is specified then record field names are also encoded.
 end_comment
 
 begin_decl_stmt
@@ -4920,7 +5105,7 @@ name|void
 name|getObjCEncodingForType
 argument_list|(
 name|QualType
-name|t
+name|T
 argument_list|,
 name|std
 operator|::
@@ -4952,7 +5137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Put the string version of type qualifiers into S.
+comment|/// \brief Put the string version of the type qualifiers \p QT into \p S.
 end_comment
 
 begin_decl_stmt
@@ -4975,11 +5160,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getObjCEncodingForFunctionDecl - Returns the encoded type for this
+comment|/// \brief Emit the encoded type for the function \p Decl into \p S.
 end_comment
 
 begin_comment
-comment|/// function.  This is in the same format as Objective-C method encodings.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is in the same format as Objective-C method encodings.
 end_comment
 
 begin_comment
@@ -5013,11 +5202,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getObjCEncodingForMethodDecl - Return the encoded type for this method
+comment|/// \brief Emit the encoded type for the method declaration \p Decl into
 end_comment
 
 begin_comment
-comment|/// declaration.
+comment|/// \p S.
 end_comment
 
 begin_comment
@@ -5057,11 +5246,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getObjCEncodingForBlock - Return the encoded type for this block
-end_comment
-
-begin_comment
-comment|/// declaration.
+comment|/// \brief Return the encoded type for this block declaration.
 end_comment
 
 begin_expr_stmt
@@ -5133,11 +5318,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getObjCEncodingTypeSize returns size of type for objective-c encoding
+comment|/// \brief Return the size of type \p T for Objective-C encoding purpose,
 end_comment
 
 begin_comment
-comment|/// purpose in characters.
+comment|/// in characters.
 end_comment
 
 begin_decl_stmt
@@ -5145,14 +5330,14 @@ name|CharUnits
 name|getObjCEncodingTypeSize
 argument_list|(
 name|QualType
-name|t
+name|T
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Retrieve the typedef corresponding to the predefined 'id' type
+comment|/// \brief Retrieve the typedef corresponding to the predefined \c id type
 end_comment
 
 begin_comment
@@ -5169,11 +5354,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// This setter/getter represents the ObjC 'id' type. It is setup lazily, by
+comment|/// \brief Represents the Objective-CC \c id type.
 end_comment
 
 begin_comment
-comment|/// Sema.  id is always a (typedef for a) pointer type, a pointer to a struct.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is set up lazily, by Sema.  \c id is always a (typedef for a)
+end_comment
+
+begin_comment
+comment|/// pointer type, a pointer to a struct.
 end_comment
 
 begin_expr_stmt
@@ -5251,15 +5444,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// This setter/getter repreents the ObjC 'Class' type. It is setup lazily, by
+comment|/// \brief Represents the Objective-C \c Class type.
 end_comment
 
 begin_comment
-comment|/// Sema.  'Class' is always a (typedef for a) pointer type, a pointer to a
+comment|///
 end_comment
 
 begin_comment
-comment|/// struct.
+comment|/// This is set up lazily, by Sema.  \c Class is always a (typedef for a)
+end_comment
+
+begin_comment
+comment|/// pointer type, a pointer to a struct.
 end_comment
 
 begin_expr_stmt
@@ -5283,7 +5480,7 @@ comment|/// \brief Retrieve the Objective-C class declaration corresponding to
 end_comment
 
 begin_comment
-comment|/// the predefined 'Protocol' class.
+comment|/// the predefined \c Protocol class.
 end_comment
 
 begin_expr_stmt
@@ -5296,7 +5493,64 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Retrieve the type of the Objective-C "Protocol" class.
+comment|/// \brief Retrieve declaration of 'BOOL' typedef
+end_comment
+
+begin_expr_stmt
+name|TypedefDecl
+operator|*
+name|getBOOLDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BOOLDecl
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Save declaration of 'BOOL' typedef
+end_comment
+
+begin_function
+name|void
+name|setBOOLDecl
+parameter_list|(
+name|TypedefDecl
+modifier|*
+name|TD
+parameter_list|)
+block|{
+name|BOOLDecl
+operator|=
+name|TD
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief type of 'BOOL' type.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getBOOLType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeDeclType
+argument_list|(
+name|getBOOLDecl
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the type of the Objective-C \c Protocol class.
 end_comment
 
 begin_expr_stmt
@@ -5320,7 +5574,7 @@ comment|/// \brief Retrieve the C type declaration corresponding to the predefin
 end_comment
 
 begin_comment
-comment|/// __builtin_va_list type.
+comment|/// \c __builtin_va_list type.
 end_comment
 
 begin_expr_stmt
@@ -5333,7 +5587,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Retrieve the type of the __builtin_va_list type.
+comment|/// \brief Retrieve the type of the \c __builtin_va_list type.
 end_comment
 
 begin_expr_stmt
@@ -5357,11 +5611,11 @@ comment|/// \brief Retrieve the C type declaration corresponding to the predefin
 end_comment
 
 begin_comment
-comment|/// __va_list_tag type used to help define the __builtin_va_list type for
+comment|/// \c __va_list_tag type used to help define the \c __builtin_va_list type
 end_comment
 
 begin_comment
-comment|/// some targets.
+comment|/// for some targets.
 end_comment
 
 begin_expr_stmt
@@ -5373,11 +5627,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getCVRQualifiedType - Returns a type with additional const,
+comment|/// \brief Return a type with additional \c const, \c volatile, or
 end_comment
 
 begin_comment
-comment|/// volatile, or restrict qualifiers.
+comment|/// \c restrict qualifiers.
 end_comment
 
 begin_decl_stmt
@@ -5409,7 +5663,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getQualifiedType - Un-split a SplitQualType.
+comment|/// \brief Un-split a SplitQualType.
 end_comment
 
 begin_decl_stmt
@@ -5437,7 +5691,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getQualifiedType - Returns a type with additional qualifiers.
+comment|/// \brief Return a type with additional qualifiers.
 end_comment
 
 begin_decl_stmt
@@ -5501,7 +5755,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getQualifiedType - Returns a type with additional qualifiers.
+comment|/// \brief Return a type with additional qualifiers.
 end_comment
 
 begin_decl_stmt
@@ -5549,11 +5803,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getLifetimeQualifiedType - Returns a type with the given
+comment|/// \brief Return a type with the given lifetime qualifier.
 end_comment
 
 begin_comment
-comment|/// lifetime qualifier.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \pre Neither type.ObjCLifetime() nor \p lifetime may be \c OCL_None.
 end_comment
 
 begin_decl_stmt
@@ -5742,11 +6000,15 @@ enum|;
 end_enum
 
 begin_comment
-comment|/// GetBuiltinType - Return the type for the specified builtin.  If
+comment|/// \brief Return the type for the specified builtin.
 end_comment
 
 begin_comment
-comment|/// IntegerConstantArgs is non-null, it is filled in with a bitmask of
+comment|///
+end_comment
+
+begin_comment
+comment|/// If \p IntegerConstantArgs is non-null, it is filled in with a bitmask of
 end_comment
 
 begin_comment
@@ -5829,15 +6091,11 @@ label|:
 end_label
 
 begin_comment
-comment|/// getObjCGCAttr - Returns one of GCNone, Weak or Strong objc's
+comment|/// \brief Return one of the GCNone, Weak or Strong Objective-C garbage
 end_comment
 
 begin_comment
-comment|/// garbage collection attribute.
-end_comment
-
-begin_comment
-comment|///
+comment|/// collection attributes.
 end_comment
 
 begin_expr_stmt
@@ -5853,19 +6111,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// areCompatibleVectorTypes - Return true if the given vector types
+comment|/// \brief Return true if the given vector types are of the same unqualified
 end_comment
 
 begin_comment
-comment|/// are of the same unqualified type or if they are equivalent to the same
+comment|/// type or if they are equivalent to the same GCC vector type.
 end_comment
 
 begin_comment
-comment|/// GCC vector type, ignoring whether they are target-specific (AltiVec or
+comment|///
 end_comment
 
 begin_comment
-comment|/// Neon) types.
+comment|/// \note This ignores whether they are target-specific (AltiVec or Neon)
+end_comment
+
+begin_comment
+comment|/// types.
 end_comment
 
 begin_function_decl
@@ -5882,11 +6144,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// isObjCNSObjectType - Return true if this is an NSObject object with
+comment|/// \brief Return true if this is an \c NSObject object with its \c NSObject
 end_comment
 
 begin_comment
-comment|/// its NSObject attribute set.
+comment|/// attribute set.
 end_comment
 
 begin_function
@@ -5920,11 +6182,11 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// getFloatTypeSemantics - Return the APFloat 'semantics' for the specified
+comment|/// \brief Return the APFloat 'semantics' for the specified scalar floating
 end_comment
 
 begin_comment
-comment|/// scalar floating point type.
+comment|/// point type.
 end_comment
 
 begin_expr_stmt
@@ -5942,11 +6204,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getTypeInfo - Get the size and alignment of the specified complete type in
-end_comment
-
-begin_comment
-comment|/// bits.
+comment|/// \brief Get the size and alignment of the specified complete type in bits.
 end_comment
 
 begin_expr_stmt
@@ -5994,11 +6252,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getTypeSize - Return the size of the specified type, in bits.  This method
-end_comment
-
-begin_comment
-comment|/// does not work on incomplete types.
+comment|/// \brief Return the size of the specified (complete) type \p T, in bits.
 end_comment
 
 begin_decl_stmt
@@ -6044,7 +6298,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getCharWidth - Return the size of the character type, in bits
+comment|/// \brief Return the size of the character type, in bits.
 end_comment
 
 begin_expr_stmt
@@ -6063,7 +6317,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// toCharUnitsFromBits - Convert a size in bits to a size in characters.
+comment|/// \brief Convert a size in bits to a size in characters.
 end_comment
 
 begin_decl_stmt
@@ -6078,7 +6332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// toBits - Convert a size in characters to a size in bits.
+comment|/// \brief Convert a size in characters to a size in bits.
 end_comment
 
 begin_decl_stmt
@@ -6093,11 +6347,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getTypeSizeInChars - Return the size of the specified type, in characters.
+comment|/// \brief Return the size of the specified (complete) type \p T, in
 end_comment
 
 begin_comment
-comment|/// This method does not work on incomplete types.
+comment|/// characters.
 end_comment
 
 begin_decl_stmt
@@ -6125,11 +6379,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getTypeAlign - Return the ABI-specified alignment of a type, in bits.
+comment|/// \brief Return the ABI-specified alignment of a (complete) type \p T, in
 end_comment
 
 begin_comment
-comment|/// This method does not work on incomplete types.
+comment|/// bits.
 end_comment
 
 begin_decl_stmt
@@ -6175,11 +6429,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getTypeAlignInChars - Return the ABI-specified alignment of a type, in
+comment|/// \brief Return the ABI-specified alignment of a (complete) type \p T, in
 end_comment
 
 begin_comment
-comment|/// characters. This method does not work on incomplete types.
+comment|/// characters.
 end_comment
 
 begin_decl_stmt
@@ -6205,6 +6459,31 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// getTypeInfoDataSizeInChars - Return the size of a type, in chars. If the
+end_comment
+
+begin_comment
+comment|// type is a record, its data size is returned.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|CharUnits
+operator|,
+name|CharUnits
+operator|>
+name|getTypeInfoDataSizeInChars
+argument_list|(
+argument|QualType T
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -6241,19 +6520,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getPreferredTypeAlign - Return the "preferred" alignment of the specified
+comment|/// \brief Return the "preferred" alignment of the specified type \p T for
 end_comment
 
 begin_comment
-comment|/// type for the current target in bits.  This can be different than the ABI
+comment|/// the current target, in bits.
 end_comment
 
 begin_comment
-comment|/// alignment in cases where it is beneficial for performance to overalign
+comment|///
 end_comment
 
 begin_comment
-comment|/// a data type.
+comment|/// This can be different than the ABI alignment in cases where it is
+end_comment
+
+begin_comment
+comment|/// beneficial for performance to overalign a data type.
 end_comment
 
 begin_decl_stmt
@@ -6270,19 +6553,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getDeclAlign - Return a conservative estimate of the alignment of
+comment|/// \brief Return a conservative estimate of the alignment of the specified
 end_comment
 
 begin_comment
-comment|/// the specified decl.  Note that bitfields do not have a valid alignment, so
+comment|/// decl \p D.
 end_comment
 
 begin_comment
-comment|/// this method will assert on them.
+comment|///
 end_comment
 
 begin_comment
-comment|/// If @p RefAsPointee, references are treated like their underlying type
+comment|/// \pre \p D must not be a bitfield type, as bitfields do not have a valid
+end_comment
+
+begin_comment
+comment|/// alignment.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If \p RefAsPointee, references are treated like their underlying type
 end_comment
 
 begin_comment
@@ -6308,11 +6603,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getASTRecordLayout - Get or compute information about the layout of the
+comment|/// \brief Get or compute information about the layout of the specified
 end_comment
 
 begin_comment
-comment|/// specified record (struct/union/class), which indicates its size and field
+comment|/// record (struct/union/class) \p D, which indicates its size and field
 end_comment
 
 begin_comment
@@ -6335,11 +6630,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getASTObjCInterfaceLayout - Get or compute information about the
+comment|/// \brief Get or compute information about the layout of the specified
 end_comment
 
 begin_comment
-comment|/// layout of the specified Objective-C interface.
+comment|/// Objective-C interface.
 end_comment
 
 begin_decl_stmt
@@ -6380,15 +6675,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getASTObjCImplementationLayout - Get or compute information about
+comment|/// \brief Get or compute information about the layout of the specified
 end_comment
 
 begin_comment
-comment|/// the layout of the specified Objective-C implementation. This may
+comment|/// Objective-C implementation.
 end_comment
 
 begin_comment
-comment|/// differ from the interface if synthesized ivars are present.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This may differ from the interface if synthesized ivars are present.
 end_comment
 
 begin_decl_stmt
@@ -6407,15 +6706,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getKeyFunction - Get the key function for the given record decl, or NULL
+comment|/// \brief Get the key function for the given record decl, or NULL if there
 end_comment
 
 begin_comment
-comment|/// if there isn't one.  The key function is, according to the Itanium C++ ABI
+comment|/// isn't one.
 end_comment
 
 begin_comment
-comment|/// section 5.2.3:
+comment|///
+end_comment
+
+begin_comment
+comment|/// The key function is, according to the Itanium C++ ABI section 5.2.3:
 end_comment
 
 begin_comment
@@ -6557,27 +6860,35 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// getCanonicalType - Return the canonical (structural) type corresponding to
+comment|/// \brief Return the canonical (structural) type corresponding to the
 end_comment
 
 begin_comment
-comment|/// the specified potentially non-canonical type.  The non-canonical version
+comment|/// specified potentially non-canonical type \p T.
 end_comment
 
 begin_comment
-comment|/// of a type may have many "decorated" versions of types.  Decorators can
+comment|///
 end_comment
 
 begin_comment
-comment|/// include typedefs, 'typeof' operators, etc. The returned type is guaranteed
+comment|/// The non-canonical version of a type may have many "decorated" versions of
 end_comment
 
 begin_comment
-comment|/// to be free of any of these, allowing two canonical types to be compared
+comment|/// types.  Decorators can include typedefs, 'typeof' operators, etc. The
 end_comment
 
 begin_comment
-comment|/// for exact equality with a simple pointer comparison.
+comment|/// returned type is guaranteed to be free of any of these, allowing two
+end_comment
+
+begin_comment
+comment|/// canonical types to be compared for exact equality with a simple pointer
+end_comment
+
+begin_comment
+comment|/// comparison.
 end_comment
 
 begin_decl_stmt
@@ -6629,11 +6940,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getCanonicalParamType - Return the canonical parameter type
+comment|/// \brief Return the canonical parameter type corresponding to the specific
 end_comment
 
 begin_comment
-comment|/// corresponding to the specific potentially non-canonical one.
+comment|/// potentially non-canonical one.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -6656,7 +6971,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the given types are equivalent.
+comment|/// \brief Determine whether the given types \p T1 and \p T2 are equivalent.
 end_comment
 
 begin_decl_stmt
@@ -6686,19 +7001,23 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns this type as a completely-unqualified array type,
+comment|/// \brief Return this type as a completely-unqualified array type,
 end_comment
 
 begin_comment
-comment|/// capturing the qualifiers in Quals. This will remove the minimal amount of
+comment|/// capturing the qualifiers in \p Quals.
 end_comment
 
 begin_comment
-comment|/// sugaring from the types, similar to the behavior of
+comment|///
 end_comment
 
 begin_comment
-comment|/// QualType::getUnqualifiedType().
+comment|/// This will remove the minimal amount of sugaring from the types, similar
+end_comment
+
+begin_comment
+comment|/// to the behavior of QualType::getUnqualifiedType().
 end_comment
 
 begin_comment
@@ -7250,7 +7569,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getBaseElementType - Returns the innermost element type of an array type.
+comment|/// \brief Return the innermost element type of an array type.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -7271,11 +7594,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getBaseElementType - Returns the innermost element type of a type
+comment|/// \brief Return the innermost element type of a type (which needn't
 end_comment
 
 begin_comment
-comment|/// (which needn't actually be an array type).
+comment|/// actually be an array type).
 end_comment
 
 begin_decl_stmt
@@ -7290,7 +7613,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getConstantArrayElementCount - Returns number of constant array elements.
+comment|/// \brief Return number of constant array elements.
 end_comment
 
 begin_decl_stmt
@@ -7361,19 +7684,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getArrayDecayedType - Return the properly qualified result of decaying the
+comment|/// \brief Return the properly qualified result of decaying the specified
 end_comment
 
 begin_comment
-comment|/// specified array type to a pointer.  This operation is non-trivial when
+comment|/// array type to a pointer.
 end_comment
 
 begin_comment
-comment|/// handling typedefs etc.  The canonical type of "T" must be an array type,
+comment|///
 end_comment
 
 begin_comment
-comment|/// this returns a pointer to a properly qualified element of the array.
+comment|/// This operation is non-trivial when handling typedefs etc.  The canonical
+end_comment
+
+begin_comment
+comment|/// type of \p T must be an array type, this returns a pointer to a properly
+end_comment
+
+begin_comment
+comment|/// qualified element of the array.
 end_comment
 
 begin_comment
@@ -7396,15 +7727,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getPromotedIntegerType - Returns the type that Promotable will
+comment|/// \brief Return the type that \p PromotableType will promote to: C99
 end_comment
 
 begin_comment
-comment|/// promote to: C99 6.3.1.1p2, assuming that Promotable is a promotable
-end_comment
-
-begin_comment
-comment|/// integer type.
+comment|/// 6.3.1.1p2, assuming that \p PromotableType is a promotable integer type.
 end_comment
 
 begin_decl_stmt
@@ -7419,11 +7746,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Recurses in pointer/array types until it finds an objc retainable
+comment|/// \brief Recurses in pointer/array types until it finds an Objective-C
 end_comment
 
 begin_comment
-comment|/// type and returns its ownership.
+comment|/// retainable type and returns its ownership.
 end_comment
 
 begin_expr_stmt
@@ -7471,15 +7798,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getIntegerTypeOrder - Returns the highest ranked integer type:
+comment|/// \brief Return the highest ranked integer type, see C99 6.3.1.8p1.
 end_comment
 
 begin_comment
-comment|/// C99 6.3.1.8p1.  If LHS> RHS, return 1.  If LHS == RHS, return 0. If
+comment|///
 end_comment
 
 begin_comment
-comment|/// LHS< RHS, return -1.
+comment|/// If \p LHS> \p RHS, returns 1.  If \p LHS == \p RHS, returns 0.  If
+end_comment
+
+begin_comment
+comment|/// \p LHS< \p RHS, return -1.
 end_comment
 
 begin_decl_stmt
@@ -7497,19 +7828,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getFloatingTypeOrder - Compare the rank of the two specified floating
+comment|/// \brief Compare the rank of the two specified floating point types,
 end_comment
 
 begin_comment
-comment|/// point types, ignoring the domain of the type (i.e. 'double' ==
+comment|/// ignoring the domain of the type (i.e. 'double' == '_Complex double').
 end_comment
 
 begin_comment
-comment|/// '_Complex double').  If LHS> RHS, return 1.  If LHS == RHS, return 0. If
+comment|///
 end_comment
 
 begin_comment
-comment|/// LHS< RHS, return -1.
+comment|/// If \p LHS> \p RHS, returns 1.  If \p LHS == \p RHS, returns 0.  If
+end_comment
+
+begin_comment
+comment|/// \p LHS< \p RHS, return -1.
 end_comment
 
 begin_decl_stmt
@@ -7527,19 +7862,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getFloatingTypeOfSizeWithinDomain - Returns a real floating
+comment|/// \brief Return a real floating point or a complex type (based on
 end_comment
 
 begin_comment
-comment|/// point or a complex type (based on typeDomain/typeSize).
+comment|/// \p typeDomain/\p typeSize).
 end_comment
 
 begin_comment
-comment|/// 'typeDomain' is a real floating point or complex type.
+comment|///
 end_comment
 
 begin_comment
-comment|/// 'typeSize' is a real floating point or complex type.
+comment|/// \param typeDomain a real floating point or complex type.
+end_comment
+
+begin_comment
+comment|/// \param typeSize a real floating point or complex type.
 end_comment
 
 begin_decl_stmt
@@ -8113,15 +8452,16 @@ begin_comment
 comment|// corresponding unsigned integer type.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|QualType
 name|getCorrespondingUnsignedType
-parameter_list|(
+argument_list|(
 name|QualType
 name|T
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -8236,11 +8576,11 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// MakeIntValue - Make an APSInt of the appropriate width and
+comment|/// \brief Make an APSInt of the appropriate width and signedness for the
 end_comment
 
 begin_comment
-comment|/// signedness for the given \arg Value and integer \arg Type.
+comment|/// given \p Value and integer \p Type.
 end_comment
 
 begin_expr_stmt
@@ -8295,7 +8635,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Get the implementation of ObjCInterfaceDecl,or NULL if none exists.
+comment|/// \brief Get the implementation of the ObjCInterfaceDecl \p D, or NULL if
+end_comment
+
+begin_comment
+comment|/// none exists.
 end_comment
 
 begin_function_decl
@@ -8311,7 +8655,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Get the implementation of ObjCCategoryDecl, or NULL if none exists.
+comment|/// \brief Get the implementation of the ObjCCategoryDecl \p D, or NULL if
+end_comment
+
+begin_comment
+comment|/// none exists.
 end_comment
 
 begin_function_decl
@@ -8327,7 +8675,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief returns true if there is at least one \@implementation in TU.
+comment|/// \brief Return true if there is at least one \@implementation in the TU.
 end_comment
 
 begin_function
@@ -8388,7 +8736,7 @@ comment|/// \brief Get the duplicate declaration of a ObjCMethod in the same
 end_comment
 
 begin_comment
-comment|/// interface, or null if non exists.
+comment|/// interface, or null if none exists.
 end_comment
 
 begin_decl_stmt
@@ -8452,11 +8800,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Returns the objc interface that \arg ND belongs to if it is a
+comment|/// \brief Returns the Objective-C interface that \p ND belongs to if it is
 end_comment
 
 begin_comment
-comment|/// objc method/property/ivar etc. that is part of an interface,
+comment|/// an Objective-C method/property/ivar etc. that is part of an interface,
 end_comment
 
 begin_comment
@@ -8496,11 +8844,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Get the copy initialization expression of VarDecl,or NULL if
+comment|/// \brief Get the copy initialization expression of the VarDecl \p VD, or
 end_comment
 
 begin_comment
-comment|/// none exists.
+comment|/// NULL if none exists.
 end_comment
 
 begin_function_decl
@@ -8633,7 +8981,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \brief Callback A callback function that will be invoked on destruction.
+comment|/// \param Callback A callback function that will be invoked on destruction.
 end_comment
 
 begin_comment
@@ -8641,7 +8989,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \brief Data Pointer data that will be provided to the callback function
+comment|/// \param Data Pointer data that will be provided to the callback function
 end_comment
 
 begin_comment
@@ -8961,19 +9309,17 @@ name|private
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|ASTContext
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
+argument|const ASTContext&
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
 
 begin_decl_stmt
 name|void
@@ -8984,12 +9330,9 @@ specifier|const
 name|ASTContext
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
 
 begin_label
 name|public
@@ -9062,7 +9405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Return the ObjC type encoding for a given type.
+comment|// Return the Objective-C type encoding for a given type.
 end_comment
 
 begin_decl_stmt
@@ -9299,7 +9642,7 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// @brief Utility function for constructing a nullary selector.
+comment|/// \brief Utility function for constructing a nullary selector.
 end_comment
 
 begin_function
@@ -9347,7 +9690,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// @brief Utility function for constructing an unary selector.
+comment|/// \brief Utility function for constructing an unary selector.
 end_comment
 
 begin_function

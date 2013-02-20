@@ -256,6 +256,7 @@ operator|~
 name|MatchCallback
 argument_list|()
 expr_stmt|;
+comment|/// \brief Called on every match by the \c MatchFinder.
 name|virtual
 name|void
 name|run
@@ -268,6 +269,14 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Called at the start of each translation unit.
+comment|///
+comment|/// Optionally override to do per translation unit tasks.
+name|virtual
+name|void
+name|onStartOfTranslationUnit
+parameter_list|()
+block|{}
 block|}
 empty_stmt|;
 comment|/// \brief Called when parsing is finished. Intended for testing only.
@@ -344,6 +353,45 @@ modifier|*
 name|Action
 parameter_list|)
 function_decl|;
+name|void
+name|addMatcher
+parameter_list|(
+specifier|const
+name|NestedNameSpecifierMatcher
+modifier|&
+name|NodeMatch
+parameter_list|,
+name|MatchCallback
+modifier|*
+name|Action
+parameter_list|)
+function_decl|;
+name|void
+name|addMatcher
+parameter_list|(
+specifier|const
+name|NestedNameSpecifierLocMatcher
+modifier|&
+name|NodeMatch
+parameter_list|,
+name|MatchCallback
+modifier|*
+name|Action
+parameter_list|)
+function_decl|;
+name|void
+name|addMatcher
+parameter_list|(
+specifier|const
+name|TypeLocMatcher
+modifier|&
+name|NodeMatch
+parameter_list|,
+name|MatchCallback
+modifier|*
+name|Action
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// \brief Creates a clang ASTConsumer that finds all matches.
 name|clang
@@ -353,6 +401,36 @@ operator|*
 name|newASTConsumer
 argument_list|()
 expr_stmt|;
+comment|/// \brief Finds all matches on the given \c Node.
+comment|///
+comment|/// @{
+name|void
+name|findAll
+parameter_list|(
+specifier|const
+name|Decl
+modifier|&
+name|Node
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+name|void
+name|findAll
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|&
+name|Node
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// @}
 comment|/// \brief Registers a callback to notify the end of parsing.
 comment|///
 comment|/// The provided closure is called after parsing is done, before the AST is
@@ -368,8 +446,8 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|/// \brief The MatchCallback*'s will be called every time the
-comment|/// UntypedBaseMatcher matches on the AST.
+comment|/// \brief For each \c DynTypedMatcher a \c MatchCallback that will be called
+comment|/// when it matches.
 name|std
 operator|::
 name|vector
@@ -381,14 +459,14 @@ operator|<
 specifier|const
 name|internal
 operator|::
-name|UntypedBaseMatcher
+name|DynTypedMatcher
 operator|*
 operator|,
 name|MatchCallback
 operator|*
 operator|>
 expr|>
-name|Triggers
+name|MatcherCallbackPairs
 expr_stmt|;
 comment|/// \brief Called when parsing is done.
 name|ParsingDoneTestCallback

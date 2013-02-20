@@ -41,7 +41,7 @@ comment|/* length of this record */
 name|uint16_t
 name|e2d_namlen
 decl_stmt|;
-comment|/* length of string in d_name */
+comment|/* length of string in e2d_name */
 name|char
 name|e2d_name
 index|[
@@ -72,7 +72,7 @@ comment|/* length of this record */
 name|uint8_t
 name|e2d_namlen
 decl_stmt|;
-comment|/* length of string in d_name */
+comment|/* length of string in e2d_name */
 name|uint8_t
 name|e2d_type
 decl_stmt|;

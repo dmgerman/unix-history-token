@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/ExecutionEngine.h"
 end_include
 
@@ -61,22 +67,13 @@ directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|ObjectImage
+decl_stmt|;
 comment|// FIXME: This makes all kinds of horrible assumptions for the time being,
 comment|// like only having one module, not needing to worry about multi-threading,
 comment|// blah blah. Purely in get-it-up-and-limping mode for now.
@@ -91,8 +88,6 @@ argument_list|(
 argument|Module *M
 argument_list|,
 argument|TargetMachine *tm
-argument_list|,
-argument|TargetJITInfo&tji
 argument_list|,
 argument|RTDyldMemoryManager *MemMgr
 argument_list|,
@@ -114,6 +109,15 @@ block|;
 name|RuntimeDyld
 name|Dyld
 block|;
+name|SmallVector
+operator|<
+name|JITEventListener
+operator|*
+block|,
+literal|2
+operator|>
+name|EventListeners
+block|;
 comment|// FIXME: Add support for multiple modules
 name|bool
 name|isCompiled
@@ -122,18 +126,11 @@ name|Module
 operator|*
 name|M
 block|;
-comment|// FIXME: Move these to a single container which manages JITed objects
-name|SmallVector
+name|OwningPtr
 operator|<
-name|char
-block|,
-literal|4096
+name|ObjectImage
 operator|>
-name|Buffer
-block|;
-comment|// Working buffer into which we JIT.
-name|raw_svector_ostream
-name|OS
+name|LoadedObject
 block|;
 name|public
 operator|:
@@ -143,6 +140,11 @@ argument_list|()
 block|;
 comment|/// @name ExecutionEngine interface implementation
 comment|/// @{
+name|virtual
+name|void
+name|finalizeObject
+argument_list|()
+block|;
 name|virtual
 name|void
 operator|*
@@ -227,7 +229,7 @@ name|virtual
 name|void
 name|mapSectionAddress
 argument_list|(
-argument|void *LocalAddress
+argument|const void *LocalAddress
 argument_list|,
 argument|uint64_t TargetAddress
 argument_list|)
@@ -241,6 +243,24 @@ argument_list|,
 name|TargetAddress
 argument_list|)
 block|;   }
+name|virtual
+name|void
+name|RegisterJITEventListener
+argument_list|(
+name|JITEventListener
+operator|*
+name|L
+argument_list|)
+block|;
+name|virtual
+name|void
+name|UnregisterJITEventListener
+argument_list|(
+name|JITEventListener
+operator|*
+name|L
+argument_list|)
+block|;
 comment|/// @}
 comment|/// @name (Private) Registration Interfaces
 comment|/// @{
@@ -283,6 +303,24 @@ argument_list|(
 name|Module
 operator|*
 name|M
+argument_list|)
+block|;
+name|void
+name|NotifyObjectEmitted
+argument_list|(
+specifier|const
+name|ObjectImage
+operator|&
+name|Obj
+argument_list|)
+block|;
+name|void
+name|NotifyFreeingObject
+argument_list|(
+specifier|const
+name|ObjectImage
+operator|&
+name|Obj
 argument_list|)
 block|; }
 decl_stmt|;

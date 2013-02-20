@@ -140,11 +140,12 @@ name|LangOptions
 modifier|&
 name|LangOpts
 decl_stmt|;
-specifier|const
+name|IntrusiveRefCntPtr
+operator|<
 name|DiagnosticOptions
-modifier|&
+operator|>
 name|DiagOpts
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief The location of the previous diagnostic if known.
 comment|///
 comment|/// This will be invalid in cases where there is no (known) previous
@@ -176,9 +177,8 @@ name|LangOptions
 operator|&
 name|LangOpts
 argument_list|,
-specifier|const
 name|DiagnosticOptions
-operator|&
+operator|*
 name|DiagOpts
 argument_list|)
 expr_stmt|;
@@ -423,7 +423,7 @@ comment|/// \param Message The diagnostic message to emit.
 comment|/// \param Ranges The underlined ranges for this code snippet.
 comment|/// \param FixItHints The FixIt hints active for this diagnostic.
 comment|/// \param SM The SourceManager; will be null if the diagnostic came from the
-comment|///        frontend, thus \param Loc will be invalid.
+comment|///        frontend, thus \p Loc will be invalid.
 name|void
 name|emitDiagnostic
 argument_list|(
@@ -492,9 +492,8 @@ name|LangOptions
 operator|&
 name|LangOpts
 argument_list|,
-specifier|const
 name|DiagnosticOptions
-operator|&
+operator|*
 name|DiagOpts
 argument_list|)
 operator|:

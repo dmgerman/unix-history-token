@@ -605,7 +605,8 @@ block|{
 name|int
 name|paramNID
 decl_stmt|;
-name|off_t
+name|unsigned
+name|int
 name|count
 decl_stmt|;
 name|int
@@ -665,7 +666,8 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|off_t
+name|unsigned
+name|int
 name|count
 decl_stmt|;
 name|int

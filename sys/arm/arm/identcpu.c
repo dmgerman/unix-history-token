@@ -1381,6 +1381,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_ARM1176JZS
+block|,
+name|CPU_CLASS_ARM11J
+block|,
+literal|"ARM1176JZ-S"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_MV88FR131
 block|,
 name|CPU_CLASS_MARVELL

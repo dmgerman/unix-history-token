@@ -1289,7 +1289,7 @@ name|m_collapse
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|ATH_TXDESC
 argument_list|)
@@ -1535,9 +1535,6 @@ name|isFirstDesc
 init|=
 literal|1
 decl_stmt|;
-name|int
-name|qnum
-decl_stmt|;
 comment|/* 	 * XXX There's txdma and txdma_mgmt; the descriptor 	 * sizes must match. 	 */
 name|struct
 name|ath_descdma
@@ -1725,17 +1722,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX this assumes that bfs_txq is the actual destination 		 * hardware queue at this point.  It may not have been assigned, 		 * it may actually be pointing to the multicast software 		 * TXQ id.  These must be fixed! 		 */
-name|qnum
-operator|=
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txq
-operator|->
-name|axq_qnum
-expr_stmt|;
+comment|/* 		 * XXX This assumes that bfs_txq is the actual destination 		 * hardware queue at this point.  It may not have been 		 * assigned, it may actually be pointing to the multicast 		 * software TXQ id.  These must be fixed! 		 */
 name|ath_hal_filltxdesc
 argument_list|(
 name|ah
@@ -1756,7 +1743,11 @@ operator|->
 name|bf_descid
 comment|/* XXX desc id */
 argument_list|,
-name|qnum
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
 argument_list|,
 name|isFirstDesc
 comment|/* first segment */
@@ -1854,32 +1845,6 @@ name|isFirstDesc
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_debug
-operator|&
-name|ATH_DEBUG_XMIT
-condition|)
-name|ath_printtxbuf
-argument_list|(
-name|sc
-argument_list|,
-name|bf
-argument_list|,
-name|qnum
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|bf
 operator|->
 name|bf_lastds
@@ -2507,7 +2472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hand-off a frame to the multicast TX queue.  *  * This is a software TXQ which will be appended to the CAB queue  * during the beacon setup code.  *  * XXX TODO: since the AR9300 EDMA TX queue support wants the QCU ID  * as part of the TX descriptor, bf_state.bfs_txq must be updated  * with the actual hardware txq, or all of this will fall apart.  *  * XXX It may not be a bad idea to just stuff the QCU ID into bf_state  * and retire bfs_txq; then make sure the CABQ QCU ID is populated  * correctly.  */
+comment|/*  * Hand-off a frame to the multicast TX queue.  *  * This is a software TXQ which will be appended to the CAB queue  * during the beacon setup code.  *  * XXX TODO: since the AR9300 EDMA TX queue support wants the QCU ID  * as part of the TX descriptor, bf_state.bfs_tx_queue must be updated  * with the actual hardware txq, or all of this will fall apart.  *  * XXX It may not be a bad idea to just stuff the QCU ID into bf_state  * and retire bfs_tx_queue; then make sure the CABQ QCU ID is populated  * correctly.  */
 end_comment
 
 begin_function
@@ -5282,6 +5247,18 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
+name|struct
+name|ath_node
+modifier|*
+name|an
+init|=
+name|ATH_NODE
+argument_list|(
+name|bf
+operator|->
+name|bf_node
+argument_list|)
+decl_stmt|;
 name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -5289,7 +5266,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tid
+name|an
 operator|->
 name|clrdmask
 operator|==
@@ -5304,7 +5281,7 @@ name|bfs_txflags
 operator||=
 name|HAL_TXDESC_CLRDMASK
 expr_stmt|;
-name|tid
+name|an
 operator|->
 name|clrdmask
 operator|=
@@ -6951,9 +6928,11 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_txq
+name|bfs_tx_queue
 operator|=
 name|txq
+operator|->
+name|axq_qnum
 expr_stmt|;
 name|bf
 operator|->
@@ -6993,11 +6972,13 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_txq
+name|bfs_tx_queue
 operator|=
 name|sc
 operator|->
 name|sc_cabq
+operator|->
+name|axq_qnum
 expr_stmt|;
 block|}
 comment|/* Do the generic frame setup */
@@ -8105,7 +8086,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_txq
+name|bfs_tx_queue
 operator|=
 name|sc
 operator|->
@@ -8113,6 +8094,8 @@ name|sc_ac2q
 index|[
 name|pri
 index|]
+operator|->
+name|axq_qnum
 expr_stmt|;
 name|bf
 operator|->
@@ -10516,47 +10499,11 @@ operator|.
 name|bfs_tid
 index|]
 decl_stmt|;
-comment|//	struct ath_txq *txq = bf->bf_state.bfs_txq;
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
 name|tap
 decl_stmt|;
-if|if
-condition|(
-name|txq
-operator|!=
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txq
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: txq %d != bfs_txq %d!\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|txq
-operator|->
-name|axq_qnum
-argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txq
-operator|->
-name|axq_qnum
-argument_list|)
-expr_stmt|;
-block|}
 name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -10953,7 +10900,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Set local packet state, used to queue packets to hardware */
 comment|/* XXX potentially duplicate info, re-check */
-comment|/* XXX remember, txq must be the hardware queue, not the av_mcastq */
 name|bf
 operator|->
 name|bf_state
@@ -10966,9 +10912,11 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_txq
+name|bfs_tx_queue
 operator|=
 name|txq
+operator|->
+name|axq_qnum
 expr_stmt|;
 name|bf
 operator|->
@@ -11238,6 +11186,72 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Only set the clrdmask bit if none of the nodes are currently  * filtered.  *  * XXX TODO: go through all the callers and check to see  * which are being called in the context of looping over all  * TIDs (eg, if all tids are being paused, resumed, etc.)  * That'll avoid O(n^2) complexity here.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_tx_set_clrdmask
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|ATH_TX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|IEEE80211_TID_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|an
+operator|->
+name|an_tid
+index|[
+name|i
+index|]
+operator|.
+name|isfiltered
+operator|==
+literal|1
+condition|)
+return|return;
+block|}
+name|an
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Configure the per-TID node state.  *  * This likely belongs in if_ath_node.c but I can't think of anywhere  * else to put it just yet.  *  * This sets up the SLISTs and the mutex as appropriate.  */
 end_comment
 
@@ -11388,13 +11402,6 @@ name|cleanup_inprogress
 operator|=
 literal|0
 expr_stmt|;
-name|atid
-operator|->
-name|clrdmask
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Always start by setting this bit */
 if|if
 condition|(
 name|i
@@ -11418,6 +11425,13 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|an
+operator|->
+name|clrdmask
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Always start by setting this bit */
 block|}
 end_function
 
@@ -11522,11 +11536,14 @@ name|paused
 condition|)
 return|return;
 comment|/* 	 * Override the clrdmask configuration for the next frame 	 * from this TID, just to get the ball rolling. 	 */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11567,18 +11584,10 @@ argument_list|,
 name|tid
 argument_list|)
 expr_stmt|;
-comment|/* Punt some frames to the hardware if needed */
-comment|//ath_txq_sched(sc, sc->sc_ac2q[tid->ac]);
-name|taskqueue_enqueue
+comment|/* 	 * Queue the software TX scheduler. 	 */
+name|ath_tx_swq_kick
 argument_list|(
 name|sc
-operator|->
-name|sc_tq
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_txqtask
 argument_list|)
 expr_stmt|;
 block|}
@@ -11804,11 +11813,15 @@ name|isfiltered
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX ath_tx_tid_resume() also calls ath_tx_set_clrdmask()! */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 comment|/* XXX this is really quite inefficient */
 while|while
@@ -12649,11 +12662,14 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Override the clrdmask configuration for the next frame, 	 * just to get the ball rolling. 	 */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate new BAW left edge, now that all frames have either 	 * succeeded or failed. 	 * 	 * XXX verify this is _actually_ the valid value to begin at! 	 */
 name|DPRINTF
@@ -13353,11 +13369,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Override the clrdmask configuration for the next frame 	 * in case there is some future transmission, just to get 	 * the ball rolling. 	 * 	 * This won't hurt things if the TID is about to be freed. 	 */
+name|ath_tx_set_clrdmask
+argument_list|(
+name|sc
+argument_list|,
 name|tid
 operator|->
-name|clrdmask
-operator|=
-literal|1
+name|an
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that it's completed, grab the TID lock and update 	 * the sequence number and BAW window. 	 * Because sequence numbers have been assigned to frames 	 * that haven't been sent yet, it's entirely possible 	 * we'll be called with some pending frames that have not 	 * been transmitted. 	 * 	 * The cleaner solution is to do the sequence number allocation 	 * when the packet is first transmitted - and thus the "retries" 	 * check above would be enough to update the BAW/seqno. 	 */
 comment|/* But don't do it for non-QoS TIDs */
@@ -18240,7 +18259,6 @@ expr_stmt|;
 block|}
 name|queuepkt
 label|:
-comment|//txq = bf->bf_state.bfs_txq;
 comment|/* Set completion handler, multi-frame aggregate or not */
 name|bf
 operator|->
@@ -18465,21 +18483,6 @@ argument_list|,
 name|bf
 argument_list|,
 name|bf_list
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|txq
-operator|==
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txq
-argument_list|,
-operator|(
-literal|"txqs not equal!\n"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Sanity check! */

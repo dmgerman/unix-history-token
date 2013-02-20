@@ -548,7 +548,7 @@ literal|0
 return|;
 block|}
 comment|/// compare - Compare two strings; the result is -1, 0, or 1 if this string
-comment|/// is lexicographically less than, equal to, or greater than the \arg RHS.
+comment|/// is lexicographically less than, equal to, or greater than the \p RHS.
 name|int
 name|compare
 argument_list|(
@@ -747,7 +747,7 @@ block|}
 comment|/// @}
 comment|/// @name String Predicates
 comment|/// @{
-comment|/// startswith - Check if this string starts with the given \arg Prefix.
+comment|/// Check if this string starts with the given \p Prefix.
 name|bool
 name|startswith
 argument_list|(
@@ -779,7 +779,7 @@ operator|==
 literal|0
 return|;
 block|}
-comment|/// endswith - Check if this string ends with the given \arg Suffix.
+comment|/// Check if this string ends with the given \p Suffix.
 name|bool
 name|endswith
 argument_list|(
@@ -819,9 +819,9 @@ block|}
 comment|/// @}
 comment|/// @name String Searching
 comment|/// @{
-comment|/// find - Search for the first character \arg C in the string.
+comment|/// Search for the first character \p C in the string.
 comment|///
-comment|/// \return - The index of the first occurrence of \arg C, or npos if not
+comment|/// \returns The index of the first occurrence of \p C, or npos if not
 comment|/// found.
 name|size_t
 name|find
@@ -875,9 +875,9 @@ return|return
 name|npos
 return|;
 block|}
-comment|/// find - Search for the first string \arg Str in the string.
+comment|/// Search for the first string \p Str in the string.
 comment|///
-comment|/// \return - The index of the first occurrence of \arg Str, or npos if not
+comment|/// \returns The index of the first occurrence of \p Str, or npos if not
 comment|/// found.
 name|size_t
 name|find
@@ -892,9 +892,9 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// rfind - Search for the last character \arg C in the string.
+comment|/// Search for the last character \p C in the string.
 comment|///
-comment|/// \return - The index of the last occurrence of \arg C, or npos if not
+comment|/// \returns The index of the last occurrence of \p C, or npos if not
 comment|/// found.
 name|size_t
 name|rfind
@@ -950,9 +950,9 @@ return|return
 name|npos
 return|;
 block|}
-comment|/// rfind - Search for the last string \arg Str in the string.
+comment|/// Search for the last string \p Str in the string.
 comment|///
-comment|/// \return - The index of the last occurrence of \arg Str, or npos if not
+comment|/// \returns The index of the last occurrence of \p Str, or npos if not
 comment|/// found.
 name|size_t
 name|rfind
@@ -962,8 +962,8 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// find_first_of - Find the first character in the string that is \arg C,
-comment|/// or npos if not found. Same as find.
+comment|/// Find the first character in the string that is \p C, or npos if not
+comment|/// found. Same as find.
 name|size_type
 name|find_first_of
 argument_list|(
@@ -986,10 +986,10 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_first_of - Find the first character in the string that is in \arg
-comment|/// Chars, or npos if not found.
+comment|/// Find the first character in the string that is in \p Chars, or npos if
+comment|/// not found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_type
 name|find_first_of
 argument_list|(
@@ -1003,8 +1003,8 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// find_first_not_of - Find the first character in the string that is not
-comment|/// \arg C or npos if not found.
+comment|/// Find the first character in the string that is not \p C or npos if not
+comment|/// found.
 name|size_type
 name|find_first_not_of
 argument_list|(
@@ -1018,10 +1018,10 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// find_first_not_of - Find the first character in the string that is not
-comment|/// in the string \arg Chars, or npos if not found.
+comment|/// Find the first character in the string that is not in the string
+comment|/// \p Chars, or npos if not found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_type
 name|find_first_not_of
 argument_list|(
@@ -1035,8 +1035,8 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// find_last_of - Find the last character in the string that is \arg C, or
-comment|/// npos if not found.
+comment|/// Find the last character in the string that is \p C, or npos if not
+comment|/// found.
 name|size_type
 name|find_last_of
 argument_list|(
@@ -1059,10 +1059,10 @@ name|From
 argument_list|)
 return|;
 block|}
-comment|/// find_last_of - Find the last character in the string that is in \arg C,
-comment|/// or npos if not found.
+comment|/// Find the last character in the string that is in \p C, or npos if not
+comment|/// found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_type
 name|find_last_of
 argument_list|(
@@ -1076,8 +1076,8 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// find_last_not_of - Find the last character in the string that is not
-comment|/// \arg C, or npos if not found.
+comment|/// Find the last character in the string that is not \p C, or npos if not
+comment|/// found.
 name|size_type
 name|find_last_not_of
 argument_list|(
@@ -1091,10 +1091,10 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// find_last_not_of - Find the last character in the string that is not in
-comment|/// \arg Chars, or npos if not found.
+comment|/// Find the last character in the string that is not in \p Chars, or
+comment|/// npos if not found.
 comment|///
-comment|/// Note: O(size() + Chars.size())
+comment|/// Complexity: O(size() + Chars.size())
 name|size_type
 name|find_last_not_of
 argument_list|(
@@ -1111,7 +1111,7 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Helpful Algorithms
 comment|/// @{
-comment|/// count - Return the number of occurrences of \arg C in the string.
+comment|/// Return the number of occurrences of \p C in the string.
 name|size_t
 name|count
 argument_list|(
@@ -1159,7 +1159,7 @@ return|return
 name|Count
 return|;
 block|}
-comment|/// count - Return the number of non-overlapped occurrences of \arg Str in
+comment|/// Return the number of non-overlapped occurrences of \p Str in
 comment|/// the string.
 name|size_t
 name|count
@@ -1169,14 +1169,13 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getAsInteger - Parse the current string as an integer of the specified
-comment|/// radix.  If Radix is specified as zero, this does radix autosensing using
+comment|/// Parse the current string as an integer of the specified radix.  If
+comment|/// \p Radix is specified as zero, this does radix autosensing using
 comment|/// extended C rules: 0 is octal, 0x is hex, 0b is binary.
 comment|///
 comment|/// If the string is invalid or if only a subset of the string is valid,
 comment|/// this returns true to signify the error.  The string is considered
 comment|/// erroneous if empty or if it overflows T.
-comment|///
 name|template
 operator|<
 name|typename
@@ -1320,23 +1319,19 @@ end_return
 
 begin_comment
 unit|}
-comment|/// getAsInteger - Parse the current string as an integer of the
+comment|/// Parse the current string as an integer of the specified \p Radix, or of
 end_comment
 
 begin_comment
-comment|/// specified radix, or of an autosensed radix if the radix given
+comment|/// an autosensed radix if the \p Radix given is 0.  The current value in
 end_comment
 
 begin_comment
-comment|/// is 0.  The current value in Result is discarded, and the
+comment|/// \p Result is discarded, and the storage is changed to be wide enough to
 end_comment
 
 begin_comment
-comment|/// storage is changed to be wide enough to store the parsed
-end_comment
-
-begin_comment
-comment|/// integer.
+comment|/// store the parsed integer.
 end_comment
 
 begin_comment
@@ -1344,7 +1339,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Returns true if the string does not solely consist of a valid
+comment|/// \returns true if the string does not solely consist of a valid
 end_comment
 
 begin_comment
@@ -1391,7 +1386,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|// lower - Convert the given ASCII string to lowercase.
+comment|// Convert the given ASCII string to lowercase.
 end_comment
 
 begin_expr_stmt
@@ -1405,7 +1400,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// upper - Convert the given ASCII string to uppercase.
+comment|/// Convert the given ASCII string to uppercase.
 end_comment
 
 begin_expr_stmt
@@ -1431,7 +1426,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// substr - Return a reference to the substring from [Start, Start + N).
+comment|/// Return a reference to the substring from [Start, Start + N).
 end_comment
 
 begin_comment
@@ -1439,7 +1434,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Start - The index of the starting character in the substring; if
+comment|/// \param Start The index of the starting character in the substring; if
 end_comment
 
 begin_comment
@@ -1455,7 +1450,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param N - The number of characters to included in the substring. If N
+comment|/// \param N The number of characters to included in the substring. If N
 end_comment
 
 begin_comment
@@ -1463,7 +1458,7 @@ comment|/// exceeds the number of characters remaining in the string, the string
 end_comment
 
 begin_comment
-comment|/// suffix (starting with \arg Start) will be returned.
+comment|/// suffix (starting with \p Start) will be returned.
 end_comment
 
 begin_decl_stmt
@@ -1510,11 +1505,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// drop_front - Return a StringRef equal to 'this' but with the first
+comment|/// Return a StringRef equal to 'this' but with the first \p N elements
 end_comment
 
 begin_comment
-comment|/// elements dropped.
+comment|/// dropped.
 end_comment
 
 begin_decl_stmt
@@ -1548,11 +1543,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// drop_back - Return a StringRef equal to 'this' but with the last
+comment|/// Return a StringRef equal to 'this' but with the last \p N elements
 end_comment
 
 begin_comment
-comment|/// elements dropped.
+comment|/// dropped.
 end_comment
 
 begin_decl_stmt
@@ -1591,7 +1586,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// slice - Return a reference to the substring from [Start, End).
+comment|/// Return a reference to the substring from [Start, End).
 end_comment
 
 begin_comment
@@ -1599,7 +1594,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Start - The index of the starting character in the substring; if
+comment|/// \param Start The index of the starting character in the substring; if
 end_comment
 
 begin_comment
@@ -1615,11 +1610,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param End - The index following the last character to include in the
+comment|/// \param End The index following the last character to include in the
 end_comment
 
 begin_comment
-comment|/// substring. If this is npos, or less than \arg Start, or exceeds the
+comment|/// substring. If this is npos, or less than \p Start, or exceeds the
 end_comment
 
 begin_comment
@@ -1627,7 +1622,7 @@ comment|/// number of characters remaining in the string, the string suffix
 end_comment
 
 begin_comment
-comment|/// (starting with \arg Start) will be returned.
+comment|/// (starting with \p Start) will be returned.
 end_comment
 
 begin_decl_stmt
@@ -1681,11 +1676,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// split - Split into two substrings around the first occurrence of a
+comment|/// Split into two substrings around the first occurrence of a separator
 end_comment
 
 begin_comment
-comment|/// separator character.
+comment|/// character.
 end_comment
 
 begin_comment
@@ -1693,7 +1688,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
+comment|/// If \p Separator is in the string, then the result is a pair (LHS, RHS)
 end_comment
 
 begin_comment
@@ -1701,7 +1696,7 @@ comment|/// such that (*this == LHS + Separator + RHS) is true and RHS is
 end_comment
 
 begin_comment
-comment|/// maximal. If \arg Separator is not in the string, then the result is a
+comment|/// maximal. If \p Separator is not in the string, then the result is a
 end_comment
 
 begin_comment
@@ -1713,11 +1708,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Separator - The character to split on.
+comment|/// \param Separator The character to split on.
 end_comment
 
 begin_comment
-comment|/// \return - The split substrings.
+comment|/// \returns The split substrings.
 end_comment
 
 begin_expr_stmt
@@ -1790,11 +1785,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// split - Split into two substrings around the first occurrence of a
+comment|/// Split into two substrings around the first occurrence of a separator
 end_comment
 
 begin_comment
-comment|/// separator string.
+comment|/// string.
 end_comment
 
 begin_comment
@@ -1802,7 +1797,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
+comment|/// If \p Separator is in the string, then the result is a pair (LHS, RHS)
 end_comment
 
 begin_comment
@@ -1810,7 +1805,7 @@ comment|/// such that (*this == LHS + Separator + RHS) is true and RHS is
 end_comment
 
 begin_comment
-comment|/// maximal. If \arg Separator is not in the string, then the result is a
+comment|/// maximal. If \p Separator is not in the string, then the result is a
 end_comment
 
 begin_comment
@@ -1902,11 +1897,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// split - Split into substrings around the occurrences of a separator
-end_comment
-
-begin_comment
-comment|/// string.
+comment|/// Split into substrings around the occurrences of a separator string.
 end_comment
 
 begin_comment
@@ -1914,11 +1905,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Each substring is stored in \arg A. If \arg MaxSplit is>= 0, at most
+comment|/// Each substring is stored in \p A. If \p MaxSplit is>= 0, at most
 end_comment
 
 begin_comment
-comment|/// \arg MaxSplit splits are done and consequently<= \arg MaxSplit
+comment|/// \p MaxSplit splits are done and consequently<= \p MaxSplit
 end_comment
 
 begin_comment
@@ -1926,11 +1917,11 @@ comment|/// elements are added to A.
 end_comment
 
 begin_comment
-comment|/// If \arg KeepEmpty is false, empty strings are not added to \arg A. They
+comment|/// If \p KeepEmpty is false, empty strings are not added to \p A. They
 end_comment
 
 begin_comment
-comment|/// still count when considering \arg MaxSplit
+comment|/// still count when considering \p MaxSplit
 end_comment
 
 begin_comment
@@ -1982,11 +1973,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// rsplit - Split into two substrings around the last occurrence of a
+comment|/// Split into two substrings around the last occurrence of a separator
 end_comment
 
 begin_comment
-comment|/// separator character.
+comment|/// character.
 end_comment
 
 begin_comment
@@ -1994,7 +1985,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
+comment|/// If \p Separator is in the string, then the result is a pair (LHS, RHS)
 end_comment
 
 begin_comment
@@ -2002,7 +1993,7 @@ comment|/// such that (*this == LHS + Separator + RHS) is true and RHS is
 end_comment
 
 begin_comment
-comment|/// minimal. If \arg Separator is not in the string, then the result is a
+comment|/// minimal. If \p Separator is not in the string, then the result is a
 end_comment
 
 begin_comment
@@ -2091,11 +2082,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// ltrim - Return string with consecutive characters in \arg Chars starting
+comment|/// Return string with consecutive characters in \p Chars starting from
 end_comment
 
 begin_comment
-comment|/// from the left removed.
+comment|/// the left removed.
 end_comment
 
 begin_macro
@@ -2130,11 +2121,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// rtrim - Return string with consecutive characters in \arg Chars starting
+comment|/// Return string with consecutive characters in \p Chars starting from
 end_comment
 
 begin_comment
-comment|/// from the right removed.
+comment|/// the right removed.
 end_comment
 
 begin_decl_stmt
@@ -2172,11 +2163,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// trim - Return string with consecutive characters in \arg Chars starting
+comment|/// Return string with consecutive characters in \p Chars starting from
 end_comment
 
 begin_comment
-comment|/// from the left and right removed.
+comment|/// the left and right removed.
 end_comment
 
 begin_decl_stmt

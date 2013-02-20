@@ -2146,13 +2146,11 @@ index|]
 decl_stmt|;
 name|OverloadCandidateSet
 argument_list|(
-specifier|const
-name|OverloadCandidateSet
-operator|&
+argument|const OverloadCandidateSet&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-name|OverloadCandidateSet
-modifier|&
+name|void
 name|operator
 init|=
 operator|(
@@ -2160,7 +2158,12 @@ specifier|const
 name|OverloadCandidateSet
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
+name|void
+name|destroyCandidates
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|OverloadCandidateSet
@@ -2182,7 +2185,7 @@ operator|~
 name|OverloadCandidateSet
 argument_list|()
 block|{
-name|clear
+name|destroyCandidates
 argument_list|()
 block|; }
 name|SourceLocation
@@ -2435,12 +2438,10 @@ operator|*
 operator|>
 name|Args
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Opc
 operator|=
-literal|0
+literal|""
 argument_list|,
 name|SourceLocation
 name|Loc

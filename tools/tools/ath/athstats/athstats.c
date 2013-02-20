@@ -2867,6 +2867,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+literal|"ioctl: %s"
+argument_list|,
 name|wf
 operator|->
 name|ifr
@@ -2928,6 +2930,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl: %s"
 argument_list|,
 name|wf
 operator|->
@@ -3004,6 +3008,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"ioctl: %s"
+argument_list|,
 name|wf
 operator|->
 name|atd
@@ -3074,6 +3080,8 @@ literal|0
 condition|)
 name|warn
 argument_list|(
+literal|"ioctl: %s"
+argument_list|,
 name|wf
 operator|->
 name|atd
@@ -3372,6 +3380,11 @@ name|bs
 argument_list|,
 literal|"%lu"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|(
 name|wf
 operator|->
@@ -3408,6 +3421,7 @@ operator|.
 name|ast_rx_mgt
 operator|)
 argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -3423,6 +3437,11 @@ name|bs
 argument_list|,
 literal|"%lu"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|wf
 operator|->
 name|cur
@@ -3438,6 +3457,7 @@ operator|.
 name|ath
 operator|.
 name|ast_tx_packets
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

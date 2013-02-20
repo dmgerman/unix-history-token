@@ -82,77 +82,47 @@ name|je_malloc_conf
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
+begin_decl_stmt
+name|bool
+name|opt_abort
+init|=
 ifdef|#
 directive|ifdef
 name|JEMALLOC_DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|bool
-name|opt_abort
-init|=
 name|true
+else|#
+directive|else
+name|false
+endif|#
+directive|endif
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_decl_stmt
+name|bool
+name|opt_junk
+init|=
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|JEMALLOC_DEBUG
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|JEMALLOC_FILL
-end_ifdef
-
-begin_decl_stmt
-name|bool
-name|opt_junk
-init|=
+argument_list|)
+operator|)
 name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
-name|bool
-name|opt_junk
-init|=
 name|false
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|bool
-name|opt_abort
-init|=
-name|false
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|opt_junk
-init|=
-name|false
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|size_t
@@ -492,7 +462,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|do {						\ 	if (opt_utrace) {						\ 		malloc_utrace_t ut;					\ 		ut.p = (a);						\ 		ut.s = (b);						\ 		ut.r = (c);						\ 		utrace(&ut, sizeof(ut));				\ 	}								\ } while (0)
+value|do {						\ 	if (opt_utrace) {						\ 		int utrace_serrno = errno;				\ 		malloc_utrace_t ut;					\ 		ut.p = (a);						\ 		ut.s = (b);						\ 		ut.r = (c);						\ 		utrace(&ut, sizeof(ut));				\ 		errno = utrace_serrno;					\ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -1185,14 +1155,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
+name|JEMALLOC_ATTR
+argument_list|(
+argument|always_inline
+argument_list|)
 name|bool
 name|malloc_init
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1206,16 +1179,18 @@ name|malloc_init_hard
 argument_list|()
 operator|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|false
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|bool
 name|malloc_conf_next
 parameter_list|(
@@ -2028,25 +2003,14 @@ condition|)
 block|{
 define|#
 directive|define
-name|CONF_HANDLE_BOOL_HIT
-parameter_list|(
-name|o
-parameter_list|,
-name|n
-parameter_list|,
-name|hit
-parameter_list|)
-define|\
-value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				if (strncmp("true", v, vlen) == 0&&	\ 				    vlen == sizeof("true")-1)		\ 					o = true;			\ 				else if (strncmp("false", v, vlen) ==	\ 				    0&& vlen == sizeof("false")-1)	\ 					o = false;			\ 				else {					\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				}					\ 				hit = true;				\ 			} else						\ 				hit = false;
-define|#
-directive|define
 name|CONF_HANDLE_BOOL
 parameter_list|(
 name|o
 parameter_list|,
 name|n
 parameter_list|)
-value|{					\ 			bool hit;					\ 			CONF_HANDLE_BOOL_HIT(o, n, hit);		\ 			if (hit)					\ 				continue;				\ }
+define|\
+value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				if (strncmp("true", v, vlen) == 0&&	\ 				    vlen == sizeof("true")-1)		\ 					o = true;			\ 				else if (strncmp("false", v, vlen) ==	\ 				    0&& vlen == sizeof("false")-1)	\ 					o = false;			\ 				else {					\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				}					\ 				continue;				\ 			}
 define|#
 directive|define
 name|CONF_HANDLE_SIZE_T
@@ -2058,9 +2022,11 @@ parameter_list|,
 name|min
 parameter_list|,
 name|max
+parameter_list|,
+name|clip
 parameter_list|)
 define|\
-value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				set_errno(0);				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (get_errno() != 0 || (uintptr_t)end -\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (um< min || um> max) {	\ 					malloc_conf_error(		\ 					    "Out-of-range conf value",	\ 					    k, klen, v, vlen);		\ 				} else					\ 					o = um;				\ 				continue;				\ 			}
+value|if (sizeof(n)-1 == klen&& strncmp(n, k,	\ 			    klen) == 0) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				set_errno(0);				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (get_errno() != 0 || (uintptr_t)end -\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (clip) {			\ 					if (um< min)			\ 						o = min;		\ 					else if (um> max)		\ 						o = max;		\ 					else				\ 						o = um;			\ 				} else {				\ 					if (um< min || um> max) {	\ 						malloc_conf_error(	\ 						    "Out-of-range "	\ 						    "conf value",	\ 						    k, klen, v, vlen);	\ 					} else				\ 						o = um;			\ 				}					\ 				continue;				\ 			}
 define|#
 directive|define
 name|CONF_HANDLE_SSIZE_T
@@ -2110,6 +2076,8 @@ argument|(sizeof(size_t)<<
 literal|3
 argument|) -
 literal|1
+argument_list|,
+argument|true
 argument_list|)
 if|if
 condition|(
@@ -2235,6 +2203,8 @@ argument_list|,
 literal|1
 argument_list|,
 argument|SIZE_T_MAX
+argument_list|,
+argument|false
 argument_list|)
 name|CONF_HANDLE_SSIZE_T
 argument_list|(
@@ -2276,6 +2246,8 @@ argument_list|,
 literal|0
 argument_list|,
 argument|SIZE_T_MAX
+argument_list|,
+argument|false
 argument_list|)
 name|CONF_HANDLE_BOOL
 argument_list|(
@@ -3414,19 +3386,10 @@ begin_comment
 comment|/*  * Avoid any uncertainty as to how many backtrace frames to ignore in  * PROF_ALLOC_PREP().  */
 end_comment
 
-begin_macro
-name|JEMALLOC_ATTR
-argument_list|(
-argument|noinline
-argument_list|)
-end_macro
-
-begin_endif
+begin_function
+name|JEMALLOC_NOINLINE
 endif|#
 directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|int
 name|imemalign
@@ -5761,28 +5724,26 @@ directive|ifdef
 name|JEMALLOC_EXPERIMENTAL
 end_ifdef
 
-begin_function
-name|JEMALLOC_INLINE
+begin_expr_stmt
+specifier|static
+name|JEMALLOC_ATTR
+argument_list|(
+argument|always_inline
+argument_list|)
 name|void
-modifier|*
+operator|*
 name|iallocm
-parameter_list|(
-name|size_t
-name|usize
-parameter_list|,
-name|size_t
-name|alignment
-parameter_list|,
-name|bool
-name|zero
-parameter_list|,
-name|bool
-name|try_tcache
-parameter_list|,
-name|arena_t
-modifier|*
-name|arena
-parameter_list|)
+argument_list|(
+argument|size_t usize
+argument_list|,
+argument|size_t alignment
+argument_list|,
+argument|bool zero
+argument_list|,
+argument|bool try_tcache
+argument_list|,
+argument|arena_t *arena
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -5794,12 +5755,12 @@ name|alignment
 operator|==
 literal|0
 operator|)
-condition|?
+operator|?
 name|s2u
 argument_list|(
 name|usize
 argument_list|)
-else|:
+operator|:
 name|sa2u
 argument_list|(
 name|usize
@@ -5808,7 +5769,7 @@ name|alignment
 argument_list|)
 operator|)
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|alignment
@@ -5862,7 +5823,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 name|int

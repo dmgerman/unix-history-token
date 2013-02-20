@@ -113,12 +113,12 @@ block|{
 comment|/// Not within a conflict marker.
 name|CMK_None
 block|,
-comment|/// A normal or diff3 conflict marker, initiated by at least 7<s,
-comment|/// separated by at least 7 =s or |s, and terminated by at least 7>s.
+comment|/// A normal or diff3 conflict marker, initiated by at least 7 "<"s,
+comment|/// separated by at least 7 "="s or "|"s, and terminated by at least 7 ">"s.
 name|CMK_Normal
 block|,
-comment|/// A Perforce-style conflict marker, initiated by 4>s, separated by 4 =s,
-comment|/// and terminated by 4<s.
+comment|/// A Perforce-style conflict marker, initiated by 4 ">"s,
+comment|/// separated by 4 "="s, and terminated by 4 "<"s.
 name|CMK_Perforce
 block|}
 enum|;
@@ -199,12 +199,10 @@ name|CurrentConflictMarkerState
 block|;
 name|Lexer
 argument_list|(
-specifier|const
-name|Lexer
-operator|&
+argument|const Lexer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -213,8 +211,8 @@ specifier|const
 name|Lexer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|Preprocessor
@@ -329,9 +327,7 @@ name|FileLoc
 return|;
 block|}
 comment|/// Lex - Return the next token in the file.  If this is the end of file, it
-comment|/// return the tok::eof token.  Return true if an error occurred and
-comment|/// compilation should terminate, false if normal.  This implicitly involves
-comment|/// the preprocessor.
+comment|/// return the tok::eof token.  This implicitly involves the preprocessor.
 name|void
 name|Lex
 argument_list|(
@@ -726,8 +722,6 @@ block|;
 comment|/// \brief Given a location any where in a source buffer, find the location
 comment|/// that corresponds to the beginning of the token in which the original
 comment|/// source location lands.
-comment|///
-comment|/// \param Loc
 specifier|static
 name|SourceLocation
 name|GetBeginningOfToken
@@ -805,7 +799,7 @@ block|;
 comment|/// \brief Returns true if the given MacroID location points at the last
 comment|/// token of the macro expansion.
 comment|///
-comment|/// \param MacroBegin If non-null and function returns true, it is set to
+comment|/// \param MacroEnd If non-null and function returns true, it is set to
 comment|/// end location of the macro.
 specifier|static
 name|bool
@@ -925,21 +919,102 @@ argument|unsigned MaxLines =
 literal|0
 argument_list|)
 block|;
+comment|/// \brief Checks that the given token is the first token that occurs after
+comment|/// the given location (this excludes comments and whitespace). Returns the
+comment|/// location immediately after the specified token. If the token is not found
+comment|/// or the location is inside a macro, the returned source location will be
+comment|/// invalid.
+specifier|static
+name|SourceLocation
+name|findLocationAfterToken
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|tok::TokenKind TKind
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|,
+argument|bool SkipTrailingWhitespaceAndNewLine
+argument_list|)
+block|;
+comment|/// \brief Returns true if the given character could appear in an identifier.
+specifier|static
+name|bool
+name|isIdentifierBodyChar
+argument_list|(
+argument|char c
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// getCharAndSizeNoWarn - Like the getCharAndSize method, but does not ever
+comment|/// emit a warning.
+specifier|static
+specifier|inline
+name|char
+name|getCharAndSizeNoWarn
+argument_list|(
+argument|const char *Ptr
+argument_list|,
+argument|unsigned&Size
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|{
+comment|// If this is not a trigraph and not a UCN or escaped newline, return
+comment|// quickly.
+if|if
+condition|(
+name|isObviouslySimpleCharacter
+argument_list|(
+name|Ptr
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
+name|Size
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|*
+name|Ptr
+return|;
+block|}
+name|Size
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|getCharAndSizeSlowNoWarn
+argument_list|(
+name|Ptr
+argument_list|,
+name|Size
+argument_list|,
+name|LangOpts
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal implementation interfaces.
 name|private
-operator|:
+label|:
 comment|/// LexTokenInternal - Internal interface to lex a preprocessing token. Called
 comment|/// by Lex.
 comment|///
 name|void
 name|LexTokenInternal
-argument_list|(
+parameter_list|(
 name|Token
-operator|&
+modifier|&
 name|Result
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// FormTokenWithChars - When we lex a token, we have identified a span
 comment|/// starting at BufferPtr, going to TokEnd that forms the token.  This method
 comment|/// takes that range and assigns it to the token as its location and size.  In
@@ -948,27 +1023,35 @@ comment|/// TokEnd.
 name|void
 name|FormTokenWithChars
 argument_list|(
-argument|Token&Result
+name|Token
+operator|&
+name|Result
 argument_list|,
-argument|const char *TokEnd
+specifier|const
+name|char
+operator|*
+name|TokEnd
 argument_list|,
-argument|tok::TokenKind Kind
+name|tok
+operator|::
+name|TokenKind
+name|Kind
 argument_list|)
 block|{
 name|unsigned
 name|TokLen
-operator|=
+init|=
 name|TokEnd
 operator|-
 name|BufferPtr
-block|;
+decl_stmt|;
 name|Result
 operator|.
 name|setLength
 argument_list|(
 name|TokLen
 argument_list|)
-block|;
+expr_stmt|;
 name|Result
 operator|.
 name|setLocation
@@ -980,29 +1063,28 @@ argument_list|,
 name|TokLen
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|Result
 operator|.
 name|setKind
 argument_list|(
 name|Kind
 argument_list|)
-block|;
+expr_stmt|;
 name|BufferPtr
 operator|=
 name|TokEnd
-block|;   }
+expr_stmt|;
+block|}
 comment|/// isNextPPTokenLParen - Return 1 if the next unexpanded token will return a
 comment|/// tok::l_paren token, 0 if it is something else and 2 if there are no more
 comment|/// tokens in the buffer controlled by this lexer.
 name|unsigned
 name|isNextPPTokenLParen
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Lexer character reading interfaces.
-name|public
-operator|:
 comment|// This lexer is built on two interfaces for reading characters, both of which
 comment|// automatically provide phase 1/2 translation.  getAndAdvanceChar is used
 comment|// when we know that we will be reading a character from the input buffer and
@@ -1024,9 +1106,10 @@ comment|/// never return true for something that needs to be mapped.
 specifier|static
 name|bool
 name|isObviouslySimpleCharacter
-argument_list|(
-argument|char C
-argument_list|)
+parameter_list|(
+name|char
+name|C
+parameter_list|)
 block|{
 return|return
 name|C
@@ -1045,11 +1128,17 @@ comment|/// getCharAndSizeSlow method to handle the hard case.
 specifier|inline
 name|char
 name|getAndAdvanceChar
-argument_list|(
-argument|const char *&Ptr
-argument_list|,
-argument|Token&Tok
-argument_list|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|Ptr
+parameter_list|,
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
 block|{
 comment|// If this is not a trigraph and not a UCN or escaped newline, return
 comment|// quickly.
@@ -1070,12 +1159,12 @@ operator|++
 return|;
 name|unsigned
 name|Size
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|char
 name|C
-operator|=
+init|=
 name|getCharAndSizeSlow
 argument_list|(
 name|Ptr
@@ -1085,17 +1174,15 @@ argument_list|,
 operator|&
 name|Tok
 argument_list|)
-block|;
+decl_stmt|;
 name|Ptr
 operator|+=
 name|Size
-block|;
+expr_stmt|;
 return|return
 name|C
 return|;
 block|}
-name|private
-label|:
 comment|/// ConsumeChar - When a character (identified by getCharAndSize) is consumed
 comment|/// and added to a given token, check to see if there are diagnostics that
 comment|/// need to be emitted or flags that need to be set on the token.  If so, do
@@ -1226,67 +1313,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-name|public
-label|:
-comment|/// getCharAndSizeNoWarn - Like the getCharAndSize method, but does not ever
-comment|/// emit a warning.
-specifier|static
-specifier|inline
-name|char
-name|getCharAndSizeNoWarn
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Ptr
-parameter_list|,
-name|unsigned
-modifier|&
-name|Size
-parameter_list|,
-specifier|const
-name|LangOptions
-modifier|&
-name|LangOpts
-parameter_list|)
-block|{
-comment|// If this is not a trigraph and not a UCN or escaped newline, return
-comment|// quickly.
-if|if
-condition|(
-name|isObviouslySimpleCharacter
-argument_list|(
-name|Ptr
-index|[
-literal|0
-index|]
-argument_list|)
-condition|)
-block|{
-name|Size
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|*
-name|Ptr
-return|;
-block|}
-name|Size
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|getCharAndSizeSlowNoWarn
-argument_list|(
-name|Ptr
-argument_list|,
-name|Size
-argument_list|,
-name|LangOpts
-argument_list|)
-return|;
-block|}
 comment|/// getEscapedNewLineSize - Return the size of the specified escaped newline,
 comment|/// or 0 if it is not an escaped newline. P[-1] is known to be a "\" on entry
 comment|/// to this function.
@@ -1315,53 +1341,6 @@ modifier|*
 name|P
 parameter_list|)
 function_decl|;
-comment|/// \brief Checks that the given token is the first token that occurs after
-comment|/// the given location (this excludes comments and whitespace). Returns the
-comment|/// location immediately after the specified token. If the token is not found
-comment|/// or the location is inside a macro, the returned source location will be
-comment|/// invalid.
-specifier|static
-name|SourceLocation
-name|findLocationAfterToken
-argument_list|(
-name|SourceLocation
-name|loc
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|TKind
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
-argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|LangOpts
-argument_list|,
-name|bool
-name|SkipTrailingWhitespaceAndNewLine
-argument_list|)
-decl_stmt|;
-comment|/// \brief Returns true if the given character could appear in an identifier.
-specifier|static
-name|bool
-name|isIdentifierBodyChar
-parameter_list|(
-name|char
-name|c
-parameter_list|,
-specifier|const
-name|LangOptions
-modifier|&
-name|LangOpts
-parameter_list|)
-function_decl|;
-name|private
-label|:
 comment|/// getCharAndSizeSlowNoWarn - Same as getCharAndSizeSlow, but never emits a
 comment|/// diagnostic.
 specifier|static
@@ -1531,7 +1510,7 @@ name|CurPtr
 parameter_list|)
 function_decl|;
 name|bool
-name|SkipBCPLComment
+name|SkipLineComment
 parameter_list|(
 name|Token
 modifier|&
@@ -1557,7 +1536,7 @@ name|CurPtr
 parameter_list|)
 function_decl|;
 name|bool
-name|SaveBCPLComment
+name|SaveLineComment
 parameter_list|(
 name|Token
 modifier|&
@@ -1606,6 +1585,20 @@ operator|=
 name|BufferEnd
 expr_stmt|;
 block|}
+name|bool
+name|isHexaLiteral
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Start
+parameter_list|,
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

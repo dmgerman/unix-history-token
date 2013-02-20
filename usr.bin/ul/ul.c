@@ -1323,6 +1323,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|wint_t
+operator|)
 name|obuf
 index|[
 name|col

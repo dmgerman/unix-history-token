@@ -34,14 +34,14 @@ value|1024
 end_define
 
 begin_comment
-comment|/*  * Maximum number of logical drives we support.  */
+comment|/*  * Maximum number of logical drives we support.  * If the controller does not indicate a maximum  * value.  This is a compatibiliy value to support  * older ciss controllers (e.g. model 6i)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CISS_MAX_LOGICAL
-value|63
+value|16
 end_define
 
 begin_comment
@@ -211,6 +211,11 @@ directive|define
 name|CISS_REQ_BUSY
 value|(1<<5)
 comment|/* controller has req */
+define|#
+directive|define
+name|CISS_REQ_CCB
+value|(1<<6)
+comment|/* data is ccb */
 name|void
 function_decl|(
 modifier|*

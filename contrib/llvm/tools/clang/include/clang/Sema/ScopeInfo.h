@@ -36,7 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  This file defines FunctionScopeInfo and BlockScopeInfo.
+comment|// This file defines FunctionScopeInfo and its subclasses, which contain
+end_comment
+
+begin_comment
+comment|// information about a single function, block, lambda, or method body.
 end_comment
 
 begin_comment
@@ -88,10 +92,16 @@ name|namespace
 name|clang
 block|{
 name|class
+name|Decl
+decl_stmt|;
+name|class
 name|BlockDecl
 decl_stmt|;
 name|class
 name|CXXMethodDecl
+decl_stmt|;
+name|class
+name|ObjCPropertyDecl
 decl_stmt|;
 name|class
 name|IdentifierInfo
@@ -110,6 +120,18 @@ name|SwitchStmt
 decl_stmt|;
 name|class
 name|VarDecl
+decl_stmt|;
+name|class
+name|DeclRefExpr
+decl_stmt|;
+name|class
+name|ObjCIvarRefExpr
+decl_stmt|;
+name|class
+name|ObjCPropertyRefExpr
+decl_stmt|;
+name|class
+name|ObjCMessageExpr
 decl_stmt|;
 name|namespace
 name|sema
@@ -224,15 +246,11 @@ comment|/// \brief Whether this function contains any indirect gotos.
 name|bool
 name|HasIndirectGoto
 decl_stmt|;
-comment|/// A flag that is set when parsing a -dealloc method and no [super dealloc]
-comment|/// call was found yet.
+comment|/// A flag that is set when parsing a method that must call super's
+comment|/// implementation, such as \c -dealloc, \c -finalize, or any method marked
+comment|/// with \c __attribute__((objc_requires_super)).
 name|bool
-name|ObjCShouldCallSuperDealloc
-decl_stmt|;
-comment|/// A flag that is set when parsing a -finalize method and no [super finalize]
-comment|/// call was found yet.
-name|bool
-name|ObjCShouldCallSuperFinalize
+name|ObjCShouldCallSuper
 decl_stmt|;
 comment|/// \brief Used to determine if errors occurred in this function or block.
 name|DiagnosticErrorTrap
@@ -282,6 +300,502 @@ literal|4
 operator|>
 name|PossiblyUnreachableDiags
 expr_stmt|;
+name|public
+label|:
+comment|/// Represents a simple identification of a weak object.
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+comment|///
+comment|/// This is used to determine if two weak accesses refer to the same object.
+comment|/// Here are some examples of how various accesses are "profiled":
+comment|///
+comment|/// Access Expression |     "Base" Decl     |          "Property" Decl
+comment|/// :---------------: | :-----------------: | :------------------------------:
+comment|/// self.property     | self (VarDecl)      | property (ObjCPropertyDecl)
+comment|/// self.implicitProp | self (VarDecl)      | -implicitProp (ObjCMethodDecl)
+comment|/// self->ivar.prop   | ivar (ObjCIvarDecl) | prop (ObjCPropertyDecl)
+comment|/// cxxObj.obj.prop   | obj (FieldDecl)     | prop (ObjCPropertyDecl)
+comment|/// [self foo].prop   | 0 (unknown)         | prop (ObjCPropertyDecl)
+comment|/// self.prop1.prop2  | prop1 (ObjCPropertyDecl)    | prop2 (ObjCPropertyDecl)
+comment|/// MyClass.prop      | MyClass (ObjCInterfaceDecl) | -prop (ObjCMethodDecl)
+comment|/// weakVar           | 0 (known)           | weakVar (VarDecl)
+comment|/// self->weakIvar    | self (VarDecl)      | weakIvar (ObjCIvarDecl)
+comment|///
+comment|/// Objects are identified with only two Decls to make it reasonably fast to
+comment|/// compare them.
+name|class
+name|WeakObjectProfileTy
+block|{
+comment|/// The base object decl, as described in the class documentation.
+comment|///
+comment|/// The extra flag is "true" if the Base and Property are enough to uniquely
+comment|/// identify the object in memory.
+comment|///
+comment|/// \sa isExactProfile()
+typedef|typedef
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|BaseInfoTy
+expr_stmt|;
+name|BaseInfoTy
+name|Base
+decl_stmt|;
+comment|/// The "property" decl, as described in the class documentation.
+comment|///
+comment|/// Note that this may not actually be an ObjCPropertyDecl, e.g. in the
+comment|/// case of "implicit" properties (regular methods accessed via dot syntax).
+specifier|const
+name|NamedDecl
+modifier|*
+name|Property
+decl_stmt|;
+comment|/// Used to find the proper base profile for a given base expression.
+specifier|static
+name|BaseInfoTy
+name|getBaseInfo
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|BaseE
+parameter_list|)
+function_decl|;
+comment|// For use in DenseMap.
+name|friend
+name|class
+name|DenseMapInfo
+decl_stmt|;
+specifier|inline
+name|WeakObjectProfileTy
+argument_list|()
+expr_stmt|;
+specifier|static
+specifier|inline
+name|WeakObjectProfileTy
+name|getSentinel
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|WeakObjectProfileTy
+argument_list|(
+specifier|const
+name|ObjCPropertyRefExpr
+operator|*
+name|RE
+argument_list|)
+expr_stmt|;
+name|WeakObjectProfileTy
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|Base
+argument_list|,
+specifier|const
+name|ObjCPropertyDecl
+operator|*
+name|Property
+argument_list|)
+expr_stmt|;
+name|WeakObjectProfileTy
+argument_list|(
+specifier|const
+name|DeclRefExpr
+operator|*
+name|RE
+argument_list|)
+expr_stmt|;
+name|WeakObjectProfileTy
+argument_list|(
+specifier|const
+name|ObjCIvarRefExpr
+operator|*
+name|RE
+argument_list|)
+expr_stmt|;
+specifier|const
+name|NamedDecl
+operator|*
+name|getBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Base
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+specifier|const
+name|NamedDecl
+operator|*
+name|getProperty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Property
+return|;
+block|}
+comment|/// Returns true if the object base specifies a known object in memory,
+comment|/// rather than, say, an instance variable or property of another object.
+comment|///
+comment|/// Note that this ignores the effects of aliasing; that is, \c foo.bar is
+comment|/// considered an exact profile if \c foo is a local variable, even if
+comment|/// another variable \c foo2 refers to the same object as \c foo.
+comment|///
+comment|/// For increased precision, accesses with base variables that are
+comment|/// properties or ivars of 'self' (e.g. self.prop1.prop2) are considered to
+comment|/// be exact, though this is not true for arbitrary variables
+comment|/// (foo.prop1.prop2).
+name|bool
+name|isExactProfile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Base
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|WeakObjectProfileTy
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|Base
+operator|==
+name|Other
+operator|.
+name|Base
+operator|&&
+name|Property
+operator|==
+name|Other
+operator|.
+name|Property
+return|;
+block|}
+comment|// For use in DenseMap.
+comment|// We can't specialize the usual llvm::DenseMapInfo at the end of the file
+comment|// because by that point the DenseMap in FunctionScopeInfo has already been
+comment|// instantiated.
+name|class
+name|DenseMapInfo
+block|{
+name|public
+label|:
+specifier|static
+specifier|inline
+name|WeakObjectProfileTy
+name|getEmptyKey
+parameter_list|()
+block|{
+return|return
+name|WeakObjectProfileTy
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|WeakObjectProfileTy
+name|getTombstoneKey
+parameter_list|()
+block|{
+return|return
+name|WeakObjectProfileTy
+operator|::
+name|getSentinel
+argument_list|()
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+parameter_list|(
+specifier|const
+name|WeakObjectProfileTy
+modifier|&
+name|Val
+parameter_list|)
+block|{
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|BaseInfoTy
+operator|,
+specifier|const
+name|NamedDecl
+operator|*
+operator|>
+name|Pair
+expr_stmt|;
+return|return
+name|llvm
+operator|::
+name|DenseMapInfo
+operator|<
+name|Pair
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Pair
+argument_list|(
+name|Val
+operator|.
+name|Base
+argument_list|,
+name|Val
+operator|.
+name|Property
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+parameter_list|(
+specifier|const
+name|WeakObjectProfileTy
+modifier|&
+name|LHS
+parameter_list|,
+specifier|const
+name|WeakObjectProfileTy
+modifier|&
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|LHS
+operator|==
+name|RHS
+return|;
+block|}
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
+comment|/// Represents a single use of a weak object.
+comment|///
+comment|/// Stores both the expression and whether the access is potentially unsafe
+comment|/// (i.e. it could potentially be warned about).
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+name|class
+name|WeakUseTy
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Rep
+expr_stmt|;
+name|public
+label|:
+name|WeakUseTy
+argument_list|(
+argument|const Expr *Use
+argument_list|,
+argument|bool IsRead
+argument_list|)
+block|:
+name|Rep
+argument_list|(
+argument|Use
+argument_list|,
+argument|IsRead
+argument_list|)
+block|{}
+specifier|const
+name|Expr
+operator|*
+name|getUseExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Rep
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|isUnsafe
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Rep
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|void
+name|markSafe
+parameter_list|()
+block|{
+name|Rep
+operator|.
+name|setInt
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|WeakUseTy
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|Rep
+operator|==
+name|Other
+operator|.
+name|Rep
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// Used to collect uses of a particular weak object in a function body.
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+typedef|typedef
+name|SmallVector
+operator|<
+name|WeakUseTy
+operator|,
+literal|4
+operator|>
+name|WeakUseVector
+expr_stmt|;
+comment|/// Used to collect all uses of weak objects in a function body.
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallDenseMap
+operator|<
+name|WeakObjectProfileTy
+operator|,
+name|WeakUseVector
+operator|,
+literal|8
+operator|,
+name|WeakObjectProfileTy
+operator|::
+name|DenseMapInfo
+operator|>
+name|WeakObjectUseMap
+expr_stmt|;
+name|private
+label|:
+comment|/// Used to collect all uses of weak objects in this function body.
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+name|WeakObjectUseMap
+name|WeakObjectUses
+decl_stmt|;
+name|public
+label|:
+comment|/// Record that a weak object was accessed.
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+name|template
+operator|<
+name|typename
+name|ExprT
+operator|>
+specifier|inline
+name|void
+name|recordUseOfWeak
+argument_list|(
+argument|const ExprT *E
+argument_list|,
+argument|bool IsRead = true
+argument_list|)
+expr_stmt|;
+name|void
+name|recordUseOfWeak
+parameter_list|(
+specifier|const
+name|ObjCMessageExpr
+modifier|*
+name|Msg
+parameter_list|,
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|Prop
+parameter_list|)
+function_decl|;
+comment|/// Record that a given expression is a "safe" access of a weak object (e.g.
+comment|/// assigning it to a strong variable.)
+comment|///
+comment|/// Part of the implementation of -Wrepeated-use-of-weak.
+name|void
+name|markSafeWeakUse
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+specifier|const
+name|WeakObjectUseMap
+operator|&
+name|getWeakObjectUses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WeakObjectUses
+return|;
+block|}
 name|void
 name|setHasBranchIntoScope
 parameter_list|()
@@ -351,12 +865,7 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|ObjCShouldCallSuperDealloc
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ObjCShouldCallSuperFinalize
+name|ObjCShouldCallSuper
 argument_list|(
 name|false
 argument_list|)
@@ -377,20 +886,6 @@ name|void
 name|Clear
 parameter_list|()
 function_decl|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|FunctionScopeInfo
-modifier|*
-name|FSI
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 empty_stmt|;
 name|class
@@ -854,34 +1349,7 @@ argument|QualType CaptureType
 argument_list|,
 argument|Expr *Cpy
 argument_list|)
-block|{
-name|Captures
-operator|.
-name|push_back
-argument_list|(
-name|Capture
-argument_list|(
-name|Capture
-operator|::
-name|ThisCapture
-argument_list|,
-name|isNested
-argument_list|,
-name|Loc
-argument_list|,
-name|CaptureType
-argument_list|,
-name|Cpy
-argument_list|)
-argument_list|)
 block|;
-name|CXXThisCaptureIndex
-operator|=
-name|Captures
-operator|.
-name|size
-argument_list|()
-block|;   }
 comment|/// \brief Determine whether the C++ 'this' is captured.
 name|bool
 name|isCXXThisCaptured
@@ -1038,17 +1506,6 @@ operator|==
 name|SK_Lambda
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CapturingScopeInfo *BSI
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief Retains information about a block that is currently being parsed.
@@ -1129,17 +1586,6 @@ operator|->
 name|Kind
 operator|==
 name|SK_Block
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BlockScopeInfo *BSI
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1299,21 +1745,178 @@ operator|==
 name|SK_Lambda
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
+expr|}
+block|;
+name|FunctionScopeInfo
+operator|::
+name|WeakObjectProfileTy
+operator|::
+name|WeakObjectProfileTy
+argument_list|()
+operator|:
+name|Base
 argument_list|(
-argument|const LambdaScopeInfo *BSI
+literal|0
+argument_list|,
+name|false
 argument_list|)
+block|,
+name|Property
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|FunctionScopeInfo
+operator|::
+name|WeakObjectProfileTy
+name|FunctionScopeInfo
+operator|::
+name|WeakObjectProfileTy
+operator|::
+name|getSentinel
+argument_list|()
 block|{
-return|return
+name|FunctionScopeInfo
+operator|::
+name|WeakObjectProfileTy
+name|Result
+block|;
+name|Result
+operator|.
+name|Base
+operator|.
+name|setInt
+argument_list|(
 name|true
+argument_list|)
+block|;
+return|return
+name|Result
 return|;
 block|}
-expr|}
-block|;  }
+name|template
+operator|<
+name|typename
+name|ExprT
+operator|>
+name|void
+name|FunctionScopeInfo
+operator|::
+name|recordUseOfWeak
+argument_list|(
+argument|const ExprT *E
+argument_list|,
+argument|bool IsRead
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|E
+argument_list|)
+block|;
+name|WeakUseVector
+operator|&
+name|Uses
+operator|=
+name|WeakObjectUses
+index|[
+name|WeakObjectProfileTy
+argument_list|(
+name|E
+argument_list|)
+index|]
+block|;
+name|Uses
+operator|.
+name|push_back
+argument_list|(
+name|WeakUseTy
+argument_list|(
+name|E
+argument_list|,
+name|IsRead
+argument_list|)
+argument_list|)
+block|; }
+specifier|inline
+name|void
+name|CapturingScopeInfo
+operator|::
+name|addThisCapture
+argument_list|(
+argument|bool isNested
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType CaptureType
+argument_list|,
+argument|Expr *Cpy
+argument_list|)
+block|{
+name|Captures
+operator|.
+name|push_back
+argument_list|(
+name|Capture
+argument_list|(
+name|Capture
+operator|::
+name|ThisCapture
+argument_list|,
+name|isNested
+argument_list|,
+name|Loc
+argument_list|,
+name|CaptureType
+argument_list|,
+name|Cpy
+argument_list|)
+argument_list|)
+block|;
+name|CXXThisCaptureIndex
+operator|=
+name|Captures
+operator|.
+name|size
+argument_list|()
+block|;
+if|if
+condition|(
+name|LambdaScopeInfo
+modifier|*
+name|LSI
+init|=
+name|dyn_cast
+operator|<
+name|LambdaScopeInfo
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+name|LSI
+operator|->
+name|ArrayIndexStarts
+operator|.
+name|push_back
+argument_list|(
+name|LSI
+operator|->
+name|ArrayIndexVars
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
+expr|}
+comment|// end namespace sema
+expr|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace clang
+end_comment
 
 begin_endif
 endif|#

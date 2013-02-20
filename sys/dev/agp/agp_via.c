@@ -490,7 +490,6 @@ literal|"VIA VT83xx/VT87xx/KTxxx/Px8xx host to PCI bridge"
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 name|NULL
 return|;

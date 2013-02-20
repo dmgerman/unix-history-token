@@ -127,7 +127,7 @@ name|class
 name|AliasAnalysis
 decl_stmt|;
 name|class
-name|TargetData
+name|DataLayout
 decl_stmt|;
 name|class
 name|MemoryDependenceAnalysis
@@ -1277,7 +1277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|TargetData
+name|DataLayout
 modifier|*
 name|TD
 decl_stmt|;
@@ -1682,7 +1682,7 @@ modifier|*
 name|LI
 parameter_list|,
 specifier|const
-name|TargetData
+name|DataLayout
 modifier|&
 name|TD
 parameter_list|)

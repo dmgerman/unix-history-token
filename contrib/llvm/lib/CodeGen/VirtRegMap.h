@@ -213,12 +213,10 @@ argument_list|)
 block|;
 name|VirtRegMap
 argument_list|(
-specifier|const
-name|VirtRegMap
-operator|&
+argument|const VirtRegMap&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 operator|=
@@ -227,8 +225,8 @@ specifier|const
 name|VirtRegMap
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|public
 operator|:
 specifier|static

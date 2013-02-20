@@ -19,6 +19,12 @@ directive|define
 name|_USB_DEV_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -48,6 +54,11 @@ include|#
 directive|include
 file|<sys/proc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -205,6 +216,10 @@ name|uint8_t
 name|is_usbfs
 decl_stmt|;
 comment|/* USB-FS is active */
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+comment|/* USB enum unlock needed */
 block|}
 struct|;
 end_struct

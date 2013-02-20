@@ -729,7 +729,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|for (vp = __mnt_vnode_first_all(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_all(&(mvp), (mp)))
+value|for (vp = __mnt_vnode_first_all(&(mvp), (mp));			\ 		(vp) != NULL; vp = __mnt_vnode_next_all(&(mvp), (mp)))
 end_define
 
 begin_define
@@ -820,7 +820,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|for (vp = __mnt_vnode_first_active(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next_active(&(mvp), (mp)))
+value|for (vp = __mnt_vnode_first_active(&(mvp), (mp)); 		\ 		(vp) != NULL; vp = __mnt_vnode_next_active(&(mvp), (mp)))
 end_define
 
 begin_define
@@ -833,112 +833,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|do {								\ 		MNT_ILOCK(mp);						\ 		__mnt_vnode_markerfree_active(&(mvp), (mp));		\
-comment|/* MNT_IUNLOCK(mp); -- done in above function */
-value|\ 		mtx_assert(MNT_MTX(mp), MA_NOTOWNED);			\ 	} while (0)
-end_define
-
-begin_comment
-comment|/*  * Definitions for MNT_VNODE_FOREACH.  *  * This interface has been deprecated in favor of MNT_VNODE_FOREACH_ALL.  */
-end_comment
-
-begin_function_decl
-name|struct
-name|vnode
-modifier|*
-name|__mnt_vnode_next
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|mvp
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|vnode
-modifier|*
-name|__mnt_vnode_first
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|mvp
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|__mnt_vnode_markerfree
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|mvp
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|MNT_VNODE_FOREACH
-parameter_list|(
-name|vp
-parameter_list|,
-name|mp
-parameter_list|,
-name|mvp
-parameter_list|)
-define|\
-value|for (vp = __mnt_vnode_first(&(mvp), (mp)); \ 		(vp) != NULL; vp = __mnt_vnode_next(&(mvp), (mp)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNT_VNODE_FOREACH_ABORT_ILOCKED
-parameter_list|(
-name|mp
-parameter_list|,
-name|mvp
-parameter_list|)
-define|\
-value|__mnt_vnode_markerfree(&(mvp), (mp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNT_VNODE_FOREACH_ABORT
-parameter_list|(
-name|mp
-parameter_list|,
-name|mvp
-parameter_list|)
-define|\
-value|do {								\ 		MNT_ILOCK(mp);						\ 		MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);		\ 		MNT_IUNLOCK(mp);					\ 	} while (0)
+value|__mnt_vnode_markerfree_active(&(mvp), (mp))
 end_define
 
 begin_define
@@ -4170,7 +4065,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Declarations for these vfs default operations are located in  * kern/vfs_default.c, they should be used instead of making "dummy"  * functions or casting entries in the VFS op table to "enopnotsupp()".  */
+comment|/*  * Declarations for these vfs default operations are located in  * kern/vfs_default.c.  They will be automatically used to replace  * null entries in VFS ops tables when registering a new filesystem  * type in the global table.  */
 end_comment
 
 begin_decl_stmt

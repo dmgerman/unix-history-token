@@ -155,6 +155,14 @@ block|;
 name|SourceRange
 name|Range
 block|;
+comment|// Record the FP_CONTRACT state that applies to this operator call. Only
+comment|// meaningful for floating point types. For other types this value can be
+comment|// set to false.
+name|unsigned
+name|FPContractable
+operator|:
+literal|1
+block|;
 name|SourceRange
 name|getSourceRangeImpl
 argument_list|()
@@ -171,15 +179,15 @@ argument|OverloadedOperatorKind Op
 argument_list|,
 argument|Expr *fn
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned numargs
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType t
 argument_list|,
 argument|ExprValueKind VK
 argument_list|,
 argument|SourceLocation operatorloc
+argument_list|,
+argument|bool fpContractable
 argument_list|)
 operator|:
 name|CallExpr
@@ -194,8 +202,6 @@ literal|0
 argument_list|,
 name|args
 argument_list|,
-name|numargs
-argument_list|,
 name|t
 argument_list|,
 name|VK
@@ -205,7 +211,12 @@ argument_list|)
 block|,
 name|Operator
 argument_list|(
-argument|Op
+name|Op
+argument_list|)
+block|,
+name|FPContractable
+argument_list|(
+argument|fpContractable
 argument_list|)
 block|{
 name|Range
@@ -281,15 +292,27 @@ operator|==
 name|CXXOperatorCallExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
+comment|// Set the FP contractability status of this operator. Only meaningful for
+comment|// operations on floating point types.
+name|void
+name|setFPContractable
 argument_list|(
-argument|const CXXOperatorCallExpr *
+argument|bool FPC
 argument_list|)
 block|{
+name|FPContractable
+operator|=
+name|FPC
+block|; }
+comment|// Get the FP contractability status of this operator. Only meaningful for
+comment|// operations on floating point types.
+name|bool
+name|isFPContractable
+argument_list|()
+specifier|const
+block|{
 return|return
-name|true
+name|FPContractable
 return|;
 block|}
 name|friend
@@ -323,9 +346,7 @@ argument|ASTContext&C
 argument_list|,
 argument|Expr *fn
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned numargs
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -345,8 +366,6 @@ argument_list|,
 literal|0
 argument_list|,
 argument|args
-argument_list|,
-argument|numargs
 argument_list|,
 argument|t
 argument_list|,
@@ -414,17 +433,6 @@ operator|==
 name|CXXMemberCallExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXMemberCallExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// CUDAKernelCallExpr - Represents a call to a CUDA kernel function.
@@ -453,9 +461,7 @@ argument|Expr *fn
 argument_list|,
 argument|CallExpr *Config
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned numargs
+argument|ArrayRef<Expr*> args
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -475,8 +481,6 @@ argument_list|,
 argument|END_PREARG
 argument_list|,
 argument|args
-argument_list|,
-argument|numargs
 argument_list|,
 argument|t
 argument_list|,
@@ -573,17 +577,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CUDAKernelCallExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CUDAKernelCallExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -765,17 +758,6 @@ name|false
 return|;
 block|}
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXNamedCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// CXXStaticCastExpr - A C++ @c static_cast expression
@@ -896,17 +878,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXStaticCastExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXStaticCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1037,17 +1008,6 @@ operator|==
 name|CXXDynamicCastExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXDynamicCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// CXXReinterpretCastExpr - A C++ @c reinterpret_cast expression (C++
@@ -1170,17 +1130,6 @@ operator|==
 name|CXXReinterpretCastExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXReinterpretCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// CXXConstCastExpr - A C++ @c const_cast expression (C++ [expr.const.cast]),
@@ -1293,17 +1242,6 @@ operator|==
 name|CXXConstCastExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXConstCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// UserDefinedLiteral - A call to a literal operator (C++11 [over.literal])
@@ -1333,9 +1271,7 @@ argument|ASTContext&C
 argument_list|,
 argument|Expr *Fn
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr*> Args
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -1357,8 +1293,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|Args
-argument_list|,
-name|NumArgs
 argument_list|,
 name|T
 argument_list|,
@@ -1536,17 +1470,6 @@ operator|==
 name|UserDefinedLiteralClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UserDefinedLiteral *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|friend
 name|class
 name|ASTStmtReader
@@ -1690,17 +1613,6 @@ operator|==
 name|CXXBoolLiteralExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXBoolLiteralExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -1815,17 +1727,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXNullPtrLiteralExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXNullPtrLiteralExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_range
@@ -2180,17 +2081,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXTypeidExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXTypeidExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -2562,17 +2452,15 @@ operator|==
 name|CXXUuidofExprClass
 return|;
 block|}
+comment|/// Grabs __declspec(uuid()) off a type, or returns 0 if there is none.
 specifier|static
-name|bool
-name|classof
+name|UuidAttr
+operator|*
+name|GetUuidAttrOfType
 argument_list|(
-argument|const CXXUuidofExpr *
+argument|QualType QT
 argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
 comment|// Iterators
 name|child_range
 name|children
@@ -2770,17 +2658,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXThisExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXThisExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -3000,17 +2877,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXThrowExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXThrowExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -3406,17 +3272,6 @@ operator|==
 name|CXXDefaultArgExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXDefaultArgExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -3726,17 +3581,6 @@ operator|==
 name|CXXBindTemporaryExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXBindTemporaryExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -3841,9 +3685,7 @@ argument|CXXConstructorDecl *d
 argument_list|,
 argument|bool elidable
 argument_list|,
-argument|Expr **args
-argument_list|,
-argument|unsigned numargs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|bool HadMultipleCandidates
 argument_list|,
@@ -3982,9 +3824,7 @@ argument|CXXConstructorDecl *D
 argument_list|,
 argument|bool Elidable
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|bool HadMultipleCandidates
 argument_list|,
@@ -4352,17 +4192,6 @@ operator|==
 name|CXXTemporaryObjectExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXConstructExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -4579,17 +4408,6 @@ operator|==
 name|CXXFunctionalCastExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXFunctionalCastExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// @brief Represents a C++ functional cast expression that builds a
@@ -4627,9 +4445,7 @@ argument|CXXConstructorDecl *Cons
 argument_list|,
 argument|TypeSourceInfo *Type
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceRange parenRange
 argument_list|,
@@ -4684,17 +4500,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXTemporaryObjectExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXTemporaryObjectExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|friend
@@ -5131,6 +4936,35 @@ name|getArrayIndexVars
 argument_list|()
 specifier|const
 block|{
+name|unsigned
+name|ArrayIndexSize
+operator|=
+name|llvm
+operator|::
+name|RoundUpToAlignment
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|unsigned
+argument_list|)
+operator|*
+operator|(
+name|NumCaptures
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|llvm
+operator|::
+name|alignOf
+operator|<
+name|VarDecl
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -5139,12 +4973,17 @@ operator|*
 operator|*
 operator|>
 operator|(
+name|reinterpret_cast
+operator|<
+name|char
+operator|*
+operator|>
+operator|(
 name|getArrayIndexStarts
 argument_list|()
+operator|)
 operator|+
-name|NumCaptures
-operator|+
-literal|1
+name|ArrayIndexSize
 operator|)
 return|;
 block|}
@@ -5408,17 +5247,6 @@ operator|==
 name|LambdaExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const LambdaExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5585,17 +5413,6 @@ operator|==
 name|CXXScalarValueInitExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXScalarValueInitExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -5644,9 +5461,9 @@ comment|/// the source range covering the parenthesized type-id.
 name|SourceRange
 name|TypeIdParens
 block|;
-comment|/// \brief Location of the first token.
-name|SourceLocation
-name|StartLoc
+comment|/// \brief Range of the entire new expression.
+name|SourceRange
+name|Range
 block|;
 comment|/// \brief Source-range of a paren-delimited initializer.
 name|SourceRange
@@ -5720,9 +5537,7 @@ argument|FunctionDecl *operatorDelete
 argument_list|,
 argument|bool usualArrayDeleteWantsSize
 argument_list|,
-argument|Expr **placementArgs
-argument_list|,
-argument|unsigned numPlaceArgs
+argument|ArrayRef<Expr*> placementArgs
 argument_list|,
 argument|SourceRange typeIdParens
 argument_list|,
@@ -5736,7 +5551,7 @@ argument|QualType ty
 argument_list|,
 argument|TypeSourceInfo *AllocatedTypeInfo
 argument_list|,
-argument|SourceLocation startLoc
+argument|SourceRange Range
 argument_list|,
 argument|SourceRange directInitRange
 argument_list|)
@@ -6135,6 +5950,7 @@ name|CXXConstructExpr
 operator|*
 name|getConstructExpr
 argument_list|()
+specifier|const
 block|{
 return|return
 name|dyn_cast_or_null
@@ -6289,14 +6105,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|StartLoc
+name|Range
+operator|.
+name|getBegin
+argument_list|()
 return|;
 block|}
 name|SourceLocation
 name|getEndLoc
 argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
 name|SourceRange
 name|getDirectInitRange
 argument_list|()
@@ -6313,14 +6139,7 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
-name|getStartLoc
-argument_list|()
-argument_list|,
-name|getEndLoc
-argument_list|()
-argument_list|)
+name|Range
 return|;
 block|}
 specifier|static
@@ -6337,17 +6156,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXNewExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXNewExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -6643,17 +6451,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXDeleteExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXDeleteExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -7131,17 +6928,6 @@ operator|==
 name|CXXPseudoDestructorExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXPseudoDestructorExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -7381,17 +7167,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|UnaryTypeTraitExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UnaryTypeTraitExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -7699,17 +7474,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|BinaryTypeTraitExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BinaryTypeTraitExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -8043,17 +7807,6 @@ operator|==
 name|TypeTraitExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeTraitExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -8343,17 +8096,6 @@ operator|==
 name|ArrayTypeTraitExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ArrayTypeTraitExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -8568,17 +8310,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|ExpressionTraitExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ExpressionTraitExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -9235,17 +8966,6 @@ operator|==
 name|UnresolvedMemberExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const OverloadExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|friend
 name|class
 name|ASTStmtReader
@@ -9276,11 +8996,6 @@ comment|/// argument-dependent lookup if this is the operand of a function
 comment|/// call.
 name|bool
 name|RequiresADL
-block|;
-comment|/// True if namespace ::std should be considered an associated namespace
-comment|/// for the purposes of argument-dependent lookup. See C++0x [stmt.ranged]p1.
-name|bool
-name|StdIsAssociatedNamespace
 block|;
 comment|/// True if these lookup results are overloaded.  This is pretty
 comment|/// trivially rederivable if we urgently need to kill this field.
@@ -9317,8 +9032,6 @@ argument_list|,
 argument|UnresolvedSetIterator Begin
 argument_list|,
 argument|UnresolvedSetIterator End
-argument_list|,
-argument|bool StdIsAssociatedNamespace
 argument_list|)
 operator|:
 name|OverloadExpr
@@ -9351,11 +9064,6 @@ argument_list|(
 name|RequiresADL
 argument_list|)
 block|,
-name|StdIsAssociatedNamespace
-argument_list|(
-name|StdIsAssociatedNamespace
-argument_list|)
-block|,
 name|Overloaded
 argument_list|(
 name|Overloaded
@@ -9379,11 +9087,6 @@ name|Empty
 argument_list|)
 block|,
 name|RequiresADL
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|StdIsAssociatedNamespace
 argument_list|(
 name|false
 argument_list|)
@@ -9424,22 +9127,8 @@ argument_list|,
 argument|UnresolvedSetIterator Begin
 argument_list|,
 argument|UnresolvedSetIterator End
-argument_list|,
-argument|bool StdIsAssociatedNamespace = false
 argument_list|)
 block|{
-name|assert
-argument_list|(
-operator|(
-name|ADL
-operator|||
-operator|!
-name|StdIsAssociatedNamespace
-operator|)
-operator|&&
-literal|"std considered associated namespace when not performing ADL"
-argument_list|)
-block|;
 return|return
 name|new
 argument_list|(
@@ -9467,8 +9156,6 @@ argument_list|,
 name|Begin
 argument_list|,
 name|End
-argument_list|,
-name|StdIsAssociatedNamespace
 argument_list|)
 return|;
 block|}
@@ -9517,17 +9204,6 @@ specifier|const
 block|{
 return|return
 name|RequiresADL
-return|;
-block|}
-comment|/// True if namespace \::std should be artificially added to the set of
-comment|/// associated namespaces for argument-dependent lookup purposes.
-name|bool
-name|isStdAssociatedNamespace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StdIsAssociatedNamespace
 return|;
 block|}
 comment|/// True if this lookup is overloaded.
@@ -9634,22 +9310,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|UnresolvedLookupExprClass
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|UnresolvedLookupExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -10352,22 +10012,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|DependentScopeDeclRefExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
 name|child_range
 name|children
 parameter_list|()
@@ -10760,22 +10404,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ExprWithCleanups
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -10915,9 +10543,7 @@ argument|TypeSourceInfo *Type
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr*> Args
 argument_list|,
 argument|SourceLocation RParenLoc
 argument_list|)
@@ -10961,9 +10587,7 @@ argument|TypeSourceInfo *Type
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr*> Args
 argument_list|,
 argument|SourceLocation RParenLoc
 argument_list|)
@@ -11266,22 +10890,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXUnresolvedConstructExprClass
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXUnresolvedConstructExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -12341,22 +11949,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXDependentScopeMemberExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -12831,22 +12423,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|UnresolvedMemberExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_comment
 comment|// Iterators
 end_comment
@@ -13049,17 +12625,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXNoexceptExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXNoexceptExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -13315,17 +12880,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|PackExpansionExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PackExpansionExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators
@@ -13727,17 +13281,6 @@ operator|==
 name|SizeOfPackExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SizeOfPackExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -13915,17 +13458,6 @@ operator|==
 name|SubstNonTypeTemplateParmExprClass
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SubstNonTypeTemplateParmExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Iterators
 name|child_range
 name|children
@@ -13951,7 +13483,7 @@ comment|/// has been substituted with a non-template argument pack.
 comment|///
 comment|/// When a pack expansion in the source code contains multiple parameter packs
 comment|/// and those parameter packs correspond to different levels of template
-comment|/// parameter lists, this node node is used to represent a non-type template
+comment|/// parameter lists, this node is used to represent a non-type template
 comment|/// parameter pack from an outer level, which has already had its argument pack
 comment|/// substituted but that still lives within a pack expansion that itself
 comment|/// could not be instantiated. When actually performing a substitution into
@@ -14072,18 +13604,212 @@ operator|==
 name|SubstNonTypeTemplateParmPackExprClass
 return|;
 block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a reference to a function parameter pack that has been
+comment|/// substituted but not yet expanded.
+comment|///
+comment|/// When a pack expansion contains multiple parameter packs at different levels,
+comment|/// this node is used to represent a function parameter pack at an outer level
+comment|/// which we have already substituted to refer to expanded parameters, but where
+comment|/// the containing pack expansion cannot yet be expanded.
+comment|///
+comment|/// \code
+comment|/// template<typename...Ts> struct S {
+comment|///   template<typename...Us> auto f(Ts ...ts) -> decltype(g(Us(ts)...));
+comment|/// };
+comment|/// template struct S<int, int>;
+comment|/// \endcode
+name|class
+name|FunctionParmPackExpr
+operator|:
+name|public
+name|Expr
+block|{
+comment|/// \brief The function parameter pack which was referenced.
+name|ParmVarDecl
+operator|*
+name|ParamPack
+block|;
+comment|/// \brief The location of the function parameter pack reference.
+name|SourceLocation
+name|NameLoc
+block|;
+comment|/// \brief The number of expansions of this pack.
+name|unsigned
+name|NumParameters
+block|;
+name|FunctionParmPackExpr
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|ParmVarDecl *ParamPack
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|,
+argument|unsigned NumParams
+argument_list|,
+argument|Decl * const *Params
+argument_list|)
+block|;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|public
+operator|:
+specifier|static
+name|FunctionParmPackExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ParmVarDecl *ParamPack
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|,
+argument|llvm::ArrayRef<Decl*> Params
+argument_list|)
+block|;
+specifier|static
+name|FunctionParmPackExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned NumParams
+argument_list|)
+block|;
+comment|/// \brief Get the parameter pack which this expression refers to.
+name|ParmVarDecl
+operator|*
+name|getParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParamPack
+return|;
+block|}
+comment|/// \brief Get the location of the parameter pack.
+name|SourceLocation
+name|getParameterPackLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameLoc
+return|;
+block|}
+comment|/// \brief Iterators over the parameters which the parameter pack expanded
+comment|/// into.
+typedef|typedef
+name|ParmVarDecl
+modifier|*
+specifier|const
+modifier|*
+name|iterator
+typedef|;
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|iterator
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|begin
+argument_list|()
+operator|+
+name|NumParameters
+return|;
+block|}
+comment|/// \brief Get the number of parameters in this parameter pack.
+name|unsigned
+name|getNumExpansions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumParameters
+return|;
+block|}
+comment|/// \brief Get an expansion of the parameter pack by index.
+name|ParmVarDecl
+operator|*
+name|getExpansion
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|begin
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|NameLoc
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const SubstNonTypeTemplateParmPackExpr *
+argument|const Stmt *T
 argument_list|)
 block|{
 return|return
-name|true
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|FunctionParmPackExprClass
 return|;
 block|}
-comment|// Iterators
 name|child_range
 name|children
 argument_list|()
@@ -14254,17 +13980,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|MaterializeTemporaryExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MaterializeTemporaryExpr *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|// Iterators

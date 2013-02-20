@@ -395,7 +395,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"op: %s; reg: %x; val: %x\n"
+literal|"op: %d; reg: 0x%x; val: 0x%x\n"
 argument_list|,
 name|a
 operator|.

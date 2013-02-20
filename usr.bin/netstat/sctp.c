@@ -258,6 +258,7 @@ value|0x9
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|sctpstates
@@ -1974,6 +1975,7 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tname
@@ -2625,9 +2627,11 @@ specifier|const
 name|char
 modifier|*
 name|name
+name|__unused
 parameter_list|,
 name|int
 name|af1
+name|__unused
 parameter_list|,
 name|int
 name|proto

@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/PPMutationListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -127,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/MapVector.h"
 end_include
 
 begin_include
@@ -192,6 +204,9 @@ name|class
 name|CXXCtorInitializer
 decl_stmt|;
 name|class
+name|FileEntry
+decl_stmt|;
+name|class
 name|FPOptions
 decl_stmt|;
 name|class
@@ -204,9 +219,6 @@ name|class
 name|MacroDefinition
 decl_stmt|;
 name|class
-name|MemorizeStatCalls
-decl_stmt|;
-name|class
 name|OpaqueValueExpr
 decl_stmt|;
 name|class
@@ -214,6 +226,9 @@ name|OpenCLOptions
 decl_stmt|;
 name|class
 name|ASTReader
+decl_stmt|;
+name|class
+name|MacroInfo
 decl_stmt|;
 name|class
 name|Module
@@ -260,6 +275,9 @@ name|ASTWriter
 range|:
 name|public
 name|ASTDeserializationListener
+decl_stmt|,
+name|public
+name|PPMutationListener
 decl_stmt|,
 name|public
 name|ASTMutationListener
@@ -359,6 +377,20 @@ comment|/// \brief Indicates that the AST contained compiler errors.
 name|bool
 name|ASTHasCompilerErrors
 decl_stmt|;
+comment|/// \brief Mapping from input file entries to the index into the
+comment|/// offset table where information about that input file is stored.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+name|uint32_t
+operator|>
+name|InputFileIDs
+expr_stmt|;
 comment|/// \brief Stores a declaration or a type to be written to the AST file.
 name|class
 name|DeclOrType
@@ -567,11 +599,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-specifier|const
-name|SrcMgr
-operator|::
-name|SLocEntry
-operator|*
+name|FileID
 operator|,
 name|DeclIDInFileInfo
 operator|*
@@ -662,6 +690,32 @@ name|IdentID
 operator|>
 name|IdentifierIDs
 expr_stmt|;
+comment|/// \brief The first ID number we can use for our own macros.
+name|serialization
+operator|::
+name|MacroID
+name|FirstMacroID
+expr_stmt|;
+comment|/// \brief The identifier ID that will be assigned to the next new identifier.
+name|serialization
+operator|::
+name|MacroID
+name|NextMacroID
+expr_stmt|;
+comment|/// \brief Map that provides the ID numbers of each macro.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|MacroInfo
+operator|*
+operator|,
+name|serialization
+operator|::
+name|MacroID
+operator|>
+name|MacroIDs
+expr_stmt|;
 comment|/// @name FlushStmt Caches
 comment|/// @{
 comment|/// \brief Set of parent Stmts for the currently serializing sub stmt.
@@ -745,35 +799,22 @@ name|uint32_t
 operator|>
 name|SelectorOffsets
 expr_stmt|;
-comment|/// \brief Offsets of each of the macro identifiers into the
-comment|/// bitstream.
-comment|///
-comment|/// For each identifier that is associated with a macro, this map
-comment|/// provides the offset into the bitstream where that macro is
-comment|/// defined.
+typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
-specifier|const
-name|IdentifierInfo
+name|MacroInfo
 operator|*
 operator|,
-name|uint64_t
+name|MacroUpdate
 operator|>
-name|MacroOffsets
+name|MacroUpdatesMap
 expr_stmt|;
-comment|/// \brief The set of identifiers that had macro definitions at some point.
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|IdentifierInfo
-operator|*
-operator|>
-name|DeserializedMacroNames
-expr_stmt|;
+comment|/// \brief Updates to macro definitions that were loaded from an AST file.
+name|MacroUpdatesMap
+name|MacroUpdates
+decl_stmt|;
 comment|/// \brief Mapping from macro definitions (as they occur in the preprocessing
 comment|/// record) to the macro IDs.
 name|llvm
@@ -1218,8 +1259,12 @@ name|WriteBlockInfoBlock
 parameter_list|()
 function_decl|;
 name|void
-name|WriteMetadata
+name|WriteControlBlock
 argument_list|(
+name|Preprocessor
+operator|&
+name|PP
+argument_list|,
 name|ASTContext
 operator|&
 name|Context
@@ -1236,20 +1281,14 @@ name|OutputFile
 argument_list|)
 decl_stmt|;
 name|void
-name|WriteLanguageOptions
+name|WriteInputFiles
 parameter_list|(
-specifier|const
-name|LangOptions
+name|SourceManager
 modifier|&
-name|LangOpts
-parameter_list|)
-function_decl|;
-name|void
-name|WriteStatCache
-parameter_list|(
-name|MemorizeStatCalls
-modifier|&
-name|StatCalls
+name|SourceMgr
+parameter_list|,
+name|StringRef
+name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -1412,6 +1451,10 @@ name|Record
 argument_list|)
 decl_stmt|;
 name|void
+name|WriteMacroUpdates
+parameter_list|()
+function_decl|;
+name|void
 name|ResolveDeclUpdatesBlocks
 parameter_list|()
 function_decl|;
@@ -1523,10 +1566,6 @@ name|Sema
 operator|&
 name|SemaRef
 argument_list|,
-name|MemorizeStatCalls
-operator|*
-name|StatCalls
-argument_list|,
 name|StringRef
 name|isysroot
 argument_list|,
@@ -1564,9 +1603,6 @@ comment|///
 comment|/// \param SemaRef a reference to the semantic analysis object that processed
 comment|/// the AST to be written into the precompiled header.
 comment|///
-comment|/// \param StatCalls the object that cached all of the stat() calls made while
-comment|/// searching for source files and headers.
-comment|///
 comment|/// \param WritingModule The module that we are writing. If null, we are
 comment|/// writing a precompiled header.
 comment|///
@@ -1578,10 +1614,6 @@ argument_list|(
 name|Sema
 operator|&
 name|SemaRef
-argument_list|,
-name|MemorizeStatCalls
-operator|*
-name|StatCalls
 argument_list|,
 specifier|const
 name|std
@@ -1689,6 +1721,19 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit a reference to a macro.
+name|void
+name|addMacroRef
+parameter_list|(
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a Selector (which is a smart pointer reference).
 name|void
 name|AddSelectorRef
@@ -1754,43 +1799,17 @@ operator|*
 name|II
 argument_list|)
 expr_stmt|;
-comment|/// \brief Retrieve the offset of the macro definition for the given
-comment|/// identifier.
-comment|///
-comment|/// The identifier must refer to a macro.
-name|uint64_t
-name|getMacroOffset
-parameter_list|(
-specifier|const
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|)
-block|{
-name|assert
+comment|/// \brief Get the unique number used to refer to the given macro.
+name|serialization
+operator|::
+name|MacroID
+name|getMacroRef
 argument_list|(
-name|MacroOffsets
-operator|.
-name|find
-argument_list|(
-name|II
-argument_list|)
-operator|!=
-name|MacroOffsets
-operator|.
-name|end
-argument_list|()
-operator|&&
-literal|"Identifier does not name a macro"
+name|MacroInfo
+operator|*
+name|MI
 argument_list|)
 expr_stmt|;
-return|return
-name|MacroOffsets
-index|[
-name|II
-index|]
-return|;
-block|}
 comment|/// \brief Emit a reference to a type.
 name|void
 name|AddTypeRef
@@ -2427,6 +2446,19 @@ name|II
 argument_list|)
 decl_stmt|;
 name|void
+name|MacroRead
+argument_list|(
+name|serialization
+operator|::
+name|MacroID
+name|ID
+argument_list|,
+name|MacroInfo
+operator|*
+name|MI
+argument_list|)
+decl_stmt|;
+name|void
 name|TypeRead
 argument_list|(
 name|serialization
@@ -2464,14 +2496,6 @@ name|MD
 argument_list|)
 decl_stmt|;
 name|void
-name|MacroVisible
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|)
-function_decl|;
-name|void
 name|ModuleRead
 argument_list|(
 name|serialization
@@ -2484,6 +2508,16 @@ operator|*
 name|Mod
 argument_list|)
 decl_stmt|;
+comment|// PPMutationListener implementation.
+name|virtual
+name|void
+name|UndefinedMacro
+parameter_list|(
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
 comment|// ASTMutationListener implementation.
 name|virtual
 name|void
@@ -2649,11 +2683,6 @@ name|Sema
 operator|*
 name|SemaPtr
 block|;
-name|MemorizeStatCalls
-operator|*
-name|StatCalls
-block|;
-comment|// owned by the FileManager
 name|llvm
 operator|::
 name|SmallVector
@@ -2733,6 +2762,12 @@ name|ASTContext
 operator|&
 name|Ctx
 argument_list|)
+block|;
+name|virtual
+name|PPMutationListener
+operator|*
+name|GetPPMutationListener
+argument_list|()
 block|;
 name|virtual
 name|ASTMutationListener

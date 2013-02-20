@@ -192,6 +192,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_sta.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -687,9 +693,18 @@ name|ieee80211_create_ibss
 argument_list|(
 name|vap
 argument_list|,
+name|ieee80211_ht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
 name|vap
 operator|->
 name|iv_des_chan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_ht
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2927,6 +2942,12 @@ decl_stmt|,
 modifier|*
 name|xrates
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int ht_state_change = 0;
+endif|#
+directive|endif
 name|wh
 operator|=
 name|mtod
@@ -3165,6 +3186,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * This isn't enabled yet - otherwise it would 			 * update the HT parameters and channel width 			 * from any node, which could lead to lots of 			 * strange behaviour if the 11n nodes aren't 			 * exactly configured to match. 			 */
+if|#
+directive|if
+literal|0
+block|if (scan.htcap != NULL&& scan.htinfo != NULL&& 			    (vap->iv_flags_ht& IEEE80211_FHT_HT)) { 				if (ieee80211_ht_updateparams(ni, 				    scan.htcap, scan.htinfo)) 					ht_state_change = 1; 			}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ni
@@ -3188,6 +3216,13 @@ operator|=
 name|nf
 expr_stmt|;
 block|}
+comment|/* 			 * Same here - the channel width change should 			 * be applied to the specific peer node, not 			 * to the ic.  Ie, the interface configuration 			 * should stay in its current channel width; 			 * but it should change the rate control and 			 * any queued frames for the given node only. 			 * 			 * Since there's no (current) way to inform 			 * the driver that a channel width change has 			 * occured for a single node, just stub this 			 * out. 			 */
+if|#
+directive|if
+literal|0
+block|if (ht_state_change) 				ieee80211_update_chw(ic);
+endif|#
+directive|endif
 block|}
 break|break;
 block|}

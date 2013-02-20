@@ -541,7 +541,7 @@ operator|&
 name|Subtarget
 block|;
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
 name|TD
 block|;   }

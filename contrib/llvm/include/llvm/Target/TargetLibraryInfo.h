@@ -68,6 +68,36 @@ block|{
 enum|enum
 name|Func
 block|{
+comment|/// void operator delete[](void*);
+name|ZdaPv
+block|,
+comment|/// void operator delete(void*);
+name|ZdlPv
+block|,
+comment|/// void *new[](unsigned int);
+name|Znaj
+block|,
+comment|/// void *new[](unsigned int, nothrow);
+name|ZnajRKSt9nothrow_t
+block|,
+comment|/// void *new[](unsigned long);
+name|Znam
+block|,
+comment|/// void *new[](unsigned long, nothrow);
+name|ZnamRKSt9nothrow_t
+block|,
+comment|/// void *new(unsigned int);
+name|Znwj
+block|,
+comment|/// void *new(unsigned int, nothrow);
+name|ZnwjRKSt9nothrow_t
+block|,
+comment|/// void *new(unsigned long);
+name|Znwm
+block|,
+comment|/// void *new(unsigned long, nothrow);
+name|ZnwmRKSt9nothrow_t
+block|,
 comment|/// int __cxa_atexit(void (*f)(void *), void *p, void *d);
 name|cxa_atexit
 block|,
@@ -90,6 +120,15 @@ block|,
 comment|/// float acosf(float x);
 name|acosf
 block|,
+comment|/// double acosh(double x);
+name|acosh
+block|,
+comment|/// float acoshf(float x);
+name|acoshf
+block|,
+comment|/// long double acoshl(long double x);
+name|acoshl
+block|,
 comment|/// long double acosl(long double x);
 name|acosl
 block|,
@@ -98,6 +137,15 @@ name|asin
 block|,
 comment|/// float asinf(float x);
 name|asinf
+block|,
+comment|/// double asinh(double x);
+name|asinh
+block|,
+comment|/// float asinhf(float x);
+name|asinhf
+block|,
+comment|/// long double asinhl(long double x);
+name|asinhl
 block|,
 comment|/// long double asinl(long double x);
 name|asinl
@@ -117,8 +165,29 @@ block|,
 comment|/// float atanf(float x);
 name|atanf
 block|,
+comment|/// double atanh(double x);
+name|atanh
+block|,
+comment|/// float atanhf(float x);
+name|atanhf
+block|,
+comment|/// long double atanhl(long double x);
+name|atanhl
+block|,
 comment|/// long double atanl(long double x);
 name|atanl
+block|,
+comment|/// void *calloc(size_t count, size_t size);
+name|calloc
+block|,
+comment|/// double cbrt(double x);
+name|cbrt
+block|,
+comment|/// float cbrtf(float x);
+name|cbrtf
+block|,
+comment|/// long double cbrtl(long double x);
+name|cbrtl
 block|,
 comment|/// double ceil(double x);
 name|ceil
@@ -158,6 +227,15 @@ name|cosl
 block|,
 comment|/// double exp(double x);
 name|exp
+block|,
+comment|/// double exp10(double x);
+name|exp10
+block|,
+comment|/// float exp10f(float x);
+name|exp10f
+block|,
+comment|/// long double exp10l(long double x);
+name|exp10l
 block|,
 comment|/// double exp2(double x);
 name|exp2
@@ -219,6 +297,9 @@ block|,
 comment|/// int fputs(const char *s, FILE *stream);
 name|fputs
 block|,
+comment|/// void free(void *ptr);
+name|free
+block|,
 comment|/// size_t fwrite(const void *ptr, size_t size, size_t nitems,
 comment|/// FILE *stream);
 name|fwrite
@@ -256,11 +337,23 @@ block|,
 comment|/// double long double log2l(long double x);
 name|log2l
 block|,
+comment|/// double logb(double x);
+name|logb
+block|,
+comment|/// float logbf(float x);
+name|logbf
+block|,
+comment|/// long double logbl(long double x);
+name|logbl
+block|,
 comment|/// float logf(float x);
 name|logf
 block|,
 comment|/// long double logl(long double x);
 name|logl
+block|,
+comment|/// void *malloc(size_t size);
+name|malloc
 block|,
 comment|/// void *memchr(const void *s, int c, size_t n);
 name|memchr
@@ -289,6 +382,9 @@ block|,
 comment|/// long double nearbyintl(long double x);
 name|nearbyintl
 block|,
+comment|/// int posix_memalign(void **memptr, size_t alignment, size_t size);
+name|posix_memalign
+block|,
 comment|/// double pow(double x, double y);
 name|pow
 block|,
@@ -303,6 +399,12 @@ name|putchar
 block|,
 comment|/// int puts(const char *s);
 name|puts
+block|,
+comment|/// void *realloc(void *ptr, size_t size);
+name|realloc
+block|,
+comment|/// void *reallocf(void *ptr, size_t size);
+name|reallocf
 block|,
 comment|/// double rint(double x);
 name|rint
@@ -352,14 +454,26 @@ block|,
 comment|/// long double sqrtl(long double x);
 name|sqrtl
 block|,
+comment|/// char *stpcpy(char *s1, const char *s2);
+name|stpcpy
+block|,
 comment|/// char *strcat(char *s1, const char *s2);
 name|strcat
 block|,
 comment|/// char *strchr(const char *s, int c);
 name|strchr
 block|,
+comment|/// int strcmp(const char *s1, const char *s2);
+name|strcmp
+block|,
 comment|/// char *strcpy(char *s1, const char *s2);
 name|strcpy
+block|,
+comment|/// size_t strcspn(const char *s1, const char *s2);
+name|strcspn
+block|,
+comment|/// char *strdup(const char *s1);
+name|strdup
 block|,
 comment|/// size_t strlen(const char *s);
 name|strlen
@@ -373,8 +487,45 @@ block|,
 comment|/// char *strncpy(char *s1, const char *s2, size_t n);
 name|strncpy
 block|,
+comment|/// char *strndup(const char *s1, size_t n);
+name|strndup
+block|,
 comment|/// size_t strnlen(const char *s, size_t maxlen);
 name|strnlen
+block|,
+comment|/// char *strpbrk(const char *s1, const char *s2);
+name|strpbrk
+block|,
+comment|/// char *strrchr(const char *s, int c);
+name|strrchr
+block|,
+comment|/// size_t strspn(const char *s1, const char *s2);
+name|strspn
+block|,
+comment|/// char *strstr(const char *s1, const char *s2);
+name|strstr
+block|,
+comment|/// double strtod(const char *nptr, char **endptr);
+name|strtod
+block|,
+comment|/// float strtof(const char *nptr, char **endptr);
+name|strtof
+block|,
+comment|/// long int strtol(const char *nptr, char **endptr, int base);
+name|strtol
+block|,
+comment|/// long double strtold(const char *nptr, char **endptr);
+name|strtold
+block|,
+comment|/// long long int strtoll(const char *nptr, char **endptr, int base);
+name|strtoll
+block|,
+comment|/// unsigned long int strtoul(const char *nptr, char **endptr, int base);
+name|strtoul
+block|,
+comment|/// unsigned long long int strtoull(const char *nptr, char **endptr,
+comment|///                                 int base);
+name|strtoull
 block|,
 comment|/// double tan(double x);
 name|tan
@@ -402,6 +553,9 @@ name|truncf
 block|,
 comment|/// long double truncl(long double x);
 name|truncl
+block|,
+comment|/// void *valloc(size_t size);
+name|valloc
 block|,
 name|NumLibFuncs
 block|}

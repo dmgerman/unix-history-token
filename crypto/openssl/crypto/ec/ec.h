@@ -441,8 +441,10 @@ name|EC_GROUP_set_point_conversion_form
 parameter_list|(
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|point_conversion_form_t
+name|form
 parameter_list|)
 function_decl|;
 name|point_conversion_form_t
@@ -461,6 +463,7 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|x
 parameter_list|)
 function_decl|;
 name|size_t
@@ -1342,12 +1345,15 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|point
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 name|int
@@ -1356,16 +1362,19 @@ parameter_list|(
 specifier|const
 name|EC_GROUP
 modifier|*
+name|group
 parameter_list|,
 name|size_t
 name|num
 parameter_list|,
 name|EC_POINT
 modifier|*
+name|points
 index|[]
 parameter_list|,
 name|BN_CTX
 modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 comment|/** Computes r = generator * n sum_{i=0}^num p[i] * m[i]  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result  *  \param  n      BIGNUM with the multiplier for the group generator (optional)  *  \param  num    number futher summands  *  \param  p      array of size num of EC_POINT objects  *  \param  m      array of size num of BIGNUM objects  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
@@ -1845,9 +1854,11 @@ name|EC_KEY_set_enc_flags
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|eckey
 parameter_list|,
 name|unsigned
 name|int
+name|flags
 parameter_list|)
 function_decl|;
 name|point_conversion_form_t
@@ -1856,6 +1867,7 @@ parameter_list|(
 specifier|const
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|)
 function_decl|;
 name|void
@@ -1863,8 +1875,10 @@ name|EC_KEY_set_conv_form
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|eckey
 parameter_list|,
 name|point_conversion_form_t
+name|cform
 parameter_list|)
 function_decl|;
 comment|/* functions to set/get method specific data  */
@@ -1874,6 +1888,7 @@ name|EC_KEY_get_key_method_data
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 name|void
 modifier|*
@@ -1907,11 +1922,14 @@ modifier|*
 parameter_list|)
 parameter_list|)
 function_decl|;
+comment|/** Sets the key method data of an EC_KEY object, if none has yet been set.  *  \param  key              EC_KEY object  *  \param  data             opaque data to install.  *  \param  dup_func         a function that duplicates |data|.  *  \param  free_func        a function that frees |data|.  *  \param  clear_free_func  a function that wipes and frees |data|.  *  \return the previously set data pointer, or NULL if |data| was inserted.  */
 name|void
+modifier|*
 name|EC_KEY_insert_key_method_data
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 name|void
 modifier|*
@@ -1955,8 +1973,10 @@ name|EC_KEY_set_asn1_flag
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|eckey
 parameter_list|,
 name|int
+name|asn1_flag
 parameter_list|)
 function_decl|;
 comment|/** Creates a table of pre-computed multiples of the generator to   *  accelerate further EC_KEY operations.  *  \param  key  EC_KEY object  *  \param  ctx  BN_CTX object (optional)  *  \return 1 on success and 0 if an error occurred.  */

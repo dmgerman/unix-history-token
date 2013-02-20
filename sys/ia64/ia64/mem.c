@@ -435,6 +435,17 @@ operator|+
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|<
+name|VM_MAXUSER_ADDRESS
+condition|)
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 for|for
 control|(
 init|;

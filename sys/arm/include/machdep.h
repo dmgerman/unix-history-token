@@ -255,6 +255,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Board-specific attributes */
+end_comment
+
+begin_function_decl
+name|void
+name|board_set_serial
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|board_set_revision
+parameter_list|(
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Needs to be initialised by platform_devmap_init */
 end_comment
 

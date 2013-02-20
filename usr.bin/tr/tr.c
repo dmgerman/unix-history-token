@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1194,7 +1200,7 @@ literal|0
 init|;
 name|cnt
 operator|<
-name|WCHAR_MAX
+name|WINT_MAX
 condition|;
 name|cnt
 operator|++

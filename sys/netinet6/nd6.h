@@ -251,6 +251,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND6_IFF_NO_PREFER_IFACE
+value|0x80
+end_define
+
+begin_comment
+comment|/* XXX: not related to ND. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ND6_CREATE
 value|LLE_CREATE
 end_define

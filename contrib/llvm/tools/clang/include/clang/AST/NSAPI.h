@@ -260,7 +260,7 @@ name|MK
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Return NSArrayMethodKind if \arg Sel is such a selector.
+comment|/// \brief Return NSArrayMethodKind if \p Sel is such a selector.
 name|llvm
 operator|::
 name|Optional
@@ -313,7 +313,7 @@ name|MK
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Return NSDictionaryMethodKind if \arg Sel is such a selector.
+comment|/// \brief Return NSDictionaryMethodKind if \p Sel is such a selector.
 name|llvm
 operator|::
 name|Optional
@@ -516,7 +516,7 @@ name|true
 argument_list|)
 return|;
 block|}
-comment|/// \brief Return NSNumberLiteralMethodKind if \arg Sel is such a selector.
+comment|/// \brief Return NSNumberLiteralMethodKind if \p Sel is such a selector.
 name|llvm
 operator|::
 name|Optional

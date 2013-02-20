@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * USB spec: http://www.usb.org/developers/docs/usbspec.zip   */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -221,6 +238,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_define
 define|#
@@ -1001,6 +1027,11 @@ operator|==
 name|USB_MODE_HOST
 condition|)
 block|{
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|child
@@ -1093,6 +1124,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|child
@@ -2618,6 +2653,9 @@ decl_stmt|;
 name|uint8_t
 name|x
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 name|hub
 operator|=
 name|udev
@@ -2679,6 +2717,8 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Make sure we don't race against user-space applications 	 * like LibUSB: 	 */
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -2989,6 +3029,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -7063,10 +7107,10 @@ if|if
 condition|(
 name|usb_proc_msignal
 argument_list|(
-operator|&
+name|USB_BUS_EXPLORE_PROC
+argument_list|(
 name|bus
-operator|->
-name|explore_proc
+argument_list|)
 argument_list|,
 operator|&
 name|bus

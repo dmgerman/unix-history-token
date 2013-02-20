@@ -507,6 +507,13 @@ name|Inode
 operator|)
 return|;
 block|}
+comment|/// \brief Check whether the file is a named pipe (and thus can't be opened by
+comment|/// the native FileManager methods).
+name|bool
+name|isNamedPipe
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Implements support for file system lookup, file system caching,

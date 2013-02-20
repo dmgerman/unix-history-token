@@ -143,12 +143,10 @@ argument_list|()
 block|;
 name|MDString
 argument_list|(
-specifier|const
-name|MDString
-operator|&
+argument|const MDString&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|explicit
 name|MDString
 argument_list|(
@@ -258,18 +256,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const MDString *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -303,12 +289,10 @@ name|FoldingSetNode
 block|{
 name|MDNode
 argument_list|(
-specifier|const
-name|MDNode
-operator|&
+argument|const MDNode&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -317,8 +301,8 @@ specifier|const
 name|MDNode
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|MDNodeOperand
@@ -605,20 +589,6 @@ decl|const
 decl_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
 name|bool
 name|classof
 parameter_list|(
@@ -766,12 +736,10 @@ name|Module
 block|;
 name|NamedMDNode
 argument_list|(
-specifier|const
-name|NamedMDNode
-operator|&
+argument|const NamedMDNode&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|std
 operator|::
 name|string

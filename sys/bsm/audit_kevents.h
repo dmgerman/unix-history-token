@@ -26,7 +26,7 @@ name|AUE_IS_A_KEVENT
 parameter_list|(
 name|e
 parameter_list|)
-value|(((e)> 0&& (e)< 2048) || 	\     				 ((e)> 43000&& (e)< 45000))
+value|(((e)> 0&& (e)< 2048) ||	\ 				 ((e)> 43000&& (e)< 45000))
 end_define
 
 begin_comment

@@ -314,6 +314,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|rad_put_vendor_addr6
+parameter_list|(
+name|struct
+name|rad_handle
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|in6_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|rad_put_vendor_attr
 parameter_list|(
 name|struct

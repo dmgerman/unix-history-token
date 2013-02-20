@@ -2459,6 +2459,8 @@ operator|->
 name|grow
 argument_list|(
 name|NumBuckets
+operator|*
+literal|2
 argument_list|)
 expr_stmt|;
 name|LookupBucketFor
@@ -2469,6 +2471,11 @@ name|TheBucket
 argument_list|)
 expr_stmt|;
 block|}
+name|assert
+argument_list|(
+name|TheBucket
+argument_list|)
+expr_stmt|;
 comment|// Only update the state after we've grown our bucket space appropriately
 comment|// so that when growing buckets we have self-consistent entry count.
 name|incrementNumEntries
@@ -3342,6 +3349,8 @@ operator|,
 name|NextPowerOf2
 argument_list|(
 name|AtLeast
+operator|-
+literal|1
 argument_list|)
 operator|)
 argument_list|)
@@ -4616,7 +4625,7 @@ block|{
 if|if
 condition|(
 name|AtLeast
-operator|>
+operator|>=
 name|InlineBuckets
 condition|)
 name|AtLeast
@@ -4633,6 +4642,8 @@ operator|,
 name|NextPowerOf2
 argument_list|(
 name|AtLeast
+operator|-
+literal|1
 argument_list|)
 operator|)
 expr_stmt|;
@@ -4644,7 +4655,7 @@ block|{
 if|if
 condition|(
 name|AtLeast
-operator|<=
+operator|<
 name|InlineBuckets
 condition|)
 return|return;

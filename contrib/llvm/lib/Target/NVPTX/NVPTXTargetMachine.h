@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_include
@@ -119,6 +119,12 @@ directive|include
 file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetTransformImpl.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -135,8 +141,8 @@ name|NVPTXSubtarget
 name|Subtarget
 block|;
 specifier|const
-name|TargetData
 name|DataLayout
+name|DL
 block|;
 comment|// Calculates type size& alignment
 name|NVPTXInstrInfo
@@ -156,6 +162,12 @@ block|;
 comment|// Hold Strings that can be free'd all together with NVPTXTargetMachine
 name|ManagedStringPool
 name|ManagedStrPool
+block|;
+name|ScalarTargetTransformImpl
+name|STTI
+block|;
+name|VectorTargetTransformImpl
+name|VTTI
 block|;
 comment|//bool addCommonCodeGenPasses(PassManagerBase&, CodeGenOpt::Level,
 comment|//                            bool DisableVerify, MCContext *&OutCtx);
@@ -210,15 +222,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetData
+name|DataLayout
 operator|*
-name|getTargetData
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|DataLayout
+name|DL
 return|;
 block|}
 name|virtual
@@ -282,6 +294,32 @@ block|{
 return|return
 operator|&
 name|TSInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|ScalarTargetTransformInfo
+operator|*
+name|getScalarTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|STTI
+return|;
+block|}
+name|virtual
+specifier|const
+name|VectorTargetTransformInfo
+operator|*
+name|getVectorTargetTransformInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|VTTI
 return|;
 block|}
 comment|//virtual bool addInstSelector(PassManagerBase&PM,

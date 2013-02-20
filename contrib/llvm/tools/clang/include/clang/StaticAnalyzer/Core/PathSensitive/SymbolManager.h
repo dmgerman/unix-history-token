@@ -252,9 +252,7 @@ block|{}
 name|virtual
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -272,19 +270,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|// Implement isa<T> support.
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SymExpr*
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// \brief Iterator over symbols that the current symbol depends on.
 comment|///
 comment|/// For SymbolData, it's the symbol itself; for expressions, it's the
@@ -582,9 +567,7 @@ specifier|const
 block|;
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// Implement isa<T> support.
@@ -718,9 +701,7 @@ return|;
 block|}
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -901,9 +882,7 @@ return|;
 block|}
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -1033,9 +1012,7 @@ return|;
 block|}
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -1230,9 +1207,7 @@ return|;
 block|}
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -1400,9 +1375,7 @@ argument_list|)
 block|{ }
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1578,9 +1551,7 @@ comment|// FIXME: We probably need to make this out-of-line to avoid redundant
 comment|// generation of virtual functions.
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1790,9 +1761,7 @@ argument_list|)
 block|{}
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2035,9 +2004,7 @@ comment|// FIXME: We probably need to make this out-of-line to avoid redundant
 comment|// generation of virtual functions.
 name|QualType
 name|getType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2263,7 +2230,7 @@ block|;
 specifier|const
 name|SymbolConjured
 operator|*
-name|getConjuredSymbol
+name|conjureSymbol
 argument_list|(
 argument|const Stmt *E
 argument_list|,
@@ -2280,7 +2247,7 @@ block|;
 specifier|const
 name|SymbolConjured
 operator|*
-name|getConjuredSymbol
+name|conjureSymbol
 argument_list|(
 argument|const Expr *E
 argument_list|,
@@ -2293,7 +2260,7 @@ literal|0
 argument_list|)
 block|{
 return|return
-name|getConjuredSymbol
+name|conjureSymbol
 argument_list|(
 name|E
 argument_list|,
@@ -2445,9 +2412,7 @@ return|return
 name|SE
 operator|->
 name|getType
-argument_list|(
-name|Ctx
-argument_list|)
+argument_list|()
 return|;
 block|}
 comment|/// \brief Add artificial symbol dependency.
@@ -2579,12 +2544,14 @@ comment|/// live before we execute statement s in the given location context.
 comment|///
 comment|/// If the statement is NULL, everything is this and parent contexts is
 comment|/// considered live.
+comment|/// If the stack frame context is NULL, everything on stack is considered
+comment|/// dead.
 name|SymbolReaper
 argument_list|(
 specifier|const
-name|LocationContext
+name|StackFrameContext
 operator|*
-name|ctx
+name|Ctx
 argument_list|,
 specifier|const
 name|Stmt
@@ -2602,10 +2569,7 @@ argument_list|)
 operator|:
 name|LCtx
 argument_list|(
-name|ctx
-operator|->
-name|getCurrentStackFrame
-argument_list|()
+name|Ctx
 argument_list|)
 block|,
 name|Loc

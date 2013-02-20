@@ -844,7 +844,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Dump the MCInst as prettily as possible using the additional MC
-comment|/// structures, if given. Operators are separated by the \arg Separator
+comment|/// structures, if given. Operators are separated by the \p Separator
 comment|/// string.
 name|void
 name|dump_pretty

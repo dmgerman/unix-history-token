@@ -2494,7 +2494,7 @@ argument_list|(
 operator|*
 name|dbp
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==
@@ -2635,7 +2635,7 @@ argument_list|(
 operator|*
 name|dbp
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==

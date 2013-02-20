@@ -886,6 +886,9 @@ decl_stmt|;
 name|uint32_t
 name|adaptation_layer_indicator
 decl_stmt|;
+name|uint8_t
+name|adaptation_layer_indicator_provided
+decl_stmt|;
 name|uint32_t
 name|store_at
 decl_stmt|;

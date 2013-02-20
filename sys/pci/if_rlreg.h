@@ -5344,6 +5344,17 @@ value|0x1300
 end_define
 
 begin_comment
+comment|/*  * D-Link DFE-520TX rev. C1 device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLINK_DEVICEID_520TX_REVC1
+value|0x4200
+end_define
+
+begin_comment
 comment|/*  * D-Link DFE-5280T device ID  */
 end_comment
 

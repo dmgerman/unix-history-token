@@ -244,7 +244,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* There isn't any srp login extension !!! */
+comment|/* RFC 5054 says SHOULD reject,  			   we do so if There is no srp login name */
 name|ret
 operator|=
 name|SSL3_AL_FATAL
@@ -4171,7 +4171,7 @@ block|}
 block|}
 if|if
 condition|(
-name|ssl_check_clienthello_tlsext
+name|ssl_check_clienthello_tlsext_early
 argument_list|(
 name|s
 argument_list|)
@@ -5162,11 +5162,49 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_INTERNAL_ERROR
+expr_stmt|;
 goto|goto
 name|f_err
 goto|;
 block|}
+block|}
 comment|/* we now have the following setup.  	 * client_random 	 * cipher_list 		- our prefered list of ciphers 	 * ciphers 		- the clients prefered list of ciphers 	 * compression		- basically ignored right now 	 * ssl version is set	- sslv3 	 * s->session		- The ssl session has been setup. 	 * s->hit		- session reuse flag 	 * s->tmp.new_cipher	- the new cipher to use. 	 */
+comment|/* Handles TLS extensions that we couldn't check earlier */
+if|if
+condition|(
+name|s
+operator|->
+name|version
+operator|>=
+name|SSL3_VERSION
+condition|)
+block|{
+if|if
+condition|(
+name|ssl_check_clienthello_tlsext_late
+argument_list|(
+name|s
+argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_CLIENTHELLO_TLSEXT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+block|}
 if|if
 condition|(
 name|ret

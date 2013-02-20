@@ -11,6 +11,23 @@ begin_comment
 comment|/*  * This file contains sub-routines to build up USB descriptors from  * USB templates.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -215,6 +232,15 @@ include|#
 directive|include
 file|<dev/usb/template/usb_template.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_expr_stmt
 name|MODULE_DEPEND
@@ -3525,13 +3551,11 @@ name|desc
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 comment|/* get bus methods */
 name|methods
 operator|=
@@ -3549,13 +3573,11 @@ name|get_hw_ep_profile
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|desc
@@ -3577,13 +3599,11 @@ operator|*
 name|dd
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 name|dd
 operator|=
 operator|(
@@ -3754,13 +3774,11 @@ name|bDescriptorType
 operator|!=
 name|UDESC_CONFIG
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|desc
@@ -3777,23 +3795,16 @@ name|cd
 operator|)
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-block|}
 name|ues
 operator|=
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
-index|[
-literal|0
-index|]
 operator|.
 name|hw_ep_scratch
 expr_stmt|;
@@ -4951,33 +4962,40 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
+name|usb_error_t
+name|error
+decl_stmt|;
 name|uint8_t
 name|n
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+comment|/* be NULL safe */
 if|if
 condition|(
 name|tdd
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* be NULL safe */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
+comment|/* Protect scratch area */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 name|uts
 operator|=
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
-index|[
-literal|0
-index|]
 operator|.
 name|temp_setup
 expr_stmt|;
@@ -5028,13 +5046,9 @@ name|err
 condition|)
 block|{
 comment|/* some error happened */
-return|return
-operator|(
-name|uts
-operator|->
-name|err
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* sanity check */
 if|if
@@ -5046,11 +5060,15 @@ operator|==
 literal|0
 condition|)
 block|{
-return|return
-operator|(
+name|uts
+operator|->
+name|err
+operator|=
 name|USB_ERR_INVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* allocate zeroed memory */
 name|uts
@@ -5070,6 +5088,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allow malloc() to return NULL regardless of M_WAITOK flag. 	 * This helps when porting the software to non-FreeBSD 	 * systems. 	 */
 if|if
 condition|(
 name|uts
@@ -5080,11 +5099,15 @@ name|NULL
 condition|)
 block|{
 comment|/* could not allocate memory */
-return|return
-operator|(
+name|uts
+operator|->
+name|err
+operator|=
 name|USB_ERR_NOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* second pass */
 name|uts
@@ -5118,7 +5141,7 @@ condition|)
 block|{
 comment|/* some error happened during second pass */
 goto|goto
-name|error
+name|done
 goto|;
 block|}
 comment|/* 	 * Resolve all endpoint addresses ! 	 */
@@ -5163,7 +5186,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
-name|error
+name|done
 goto|;
 block|}
 for|for
@@ -5233,29 +5256,39 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
-name|error
+name|done
 goto|;
 block|}
 block|}
-return|return
-operator|(
+name|done
+label|:
+name|error
+operator|=
 name|uts
 operator|->
 name|err
-operator|)
-return|;
+expr_stmt|;
+if|if
+condition|(
 name|error
-label|:
+condition|)
 name|usb_temp_unsetup
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_unlock
+condition|)
+name|usbd_enum_unlock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|uts
-operator|->
-name|err
+name|error
 operator|)
 return|;
 block|}

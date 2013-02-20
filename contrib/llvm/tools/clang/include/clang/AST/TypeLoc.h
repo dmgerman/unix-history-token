@@ -686,23 +686,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|TypeLoc
-modifier|*
-name|TL
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
 begin_label
 name|private
 label|:
@@ -893,17 +876,6 @@ name|hasLocalQualifiers
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UnqualTypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// \brief Wrapper of type source information for a type with
@@ -1016,17 +988,6 @@ name|hasLocalQualifiers
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const QualifiedTypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 specifier|inline
@@ -1074,11 +1035,11 @@ comment|/// A metaprogramming base class for TypeLoc classes which correspond
 comment|/// to a particular Type subclass.  It is accepted for a single
 comment|/// TypeLoc class to correspond to multiple Type classes.
 comment|///
-comment|/// \param Base a class from which to derive
-comment|/// \param Derived the class deriving from this one
-comment|/// \param TypeClass the concrete Type subclass associated with this
+comment|/// \tparam Base a class from which to derive
+comment|/// \tparam Derived the class deriving from this one
+comment|/// \tparam TypeClass the concrete Type subclass associated with this
 comment|///   location type
-comment|/// \param LocalData the structure type of local location data for
+comment|/// \tparam LocalData the structure type of local location data for
 comment|///   this type
 comment|///
 comment|/// sizeof(LocalData) needs to be a multiple of sizeof(void*) or
@@ -1229,17 +1190,6 @@ operator|->
 name|getTypePtr
 argument_list|()
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Derived *TL
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|TypeLoc
@@ -1533,17 +1483,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Derived *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|const
 name|TypeClass
 operator|*
@@ -1668,19 +1607,7 @@ name|TypeLoc
 operator|*
 name|TL
 argument_list|)
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeSpecTypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
+block|; }
 block|;   struct
 name|BuiltinLocInfo
 block|{
@@ -3282,6 +3209,11 @@ name|setNameLoc
 argument_list|(
 name|Loc
 argument_list|)
+block|;
+name|setNameEndLoc
+argument_list|(
+name|Loc
+argument_list|)
 block|;   }
 expr|}
 block|;  struct
@@ -3921,6 +3853,12 @@ name|SourceLocation
 name|LocalRangeBegin
 block|;
 name|SourceLocation
+name|LParenLoc
+block|;
+name|SourceLocation
+name|RParenLoc
+block|;
+name|SourceLocation
 name|LocalRangeEnd
 block|; }
 block|;
@@ -3992,6 +3930,80 @@ name|LocalRangeEnd
 operator|=
 name|L
 block|;   }
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|LParenLoc
+return|;
+block|}
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|LParenLoc
+operator|=
+name|Loc
+block|;   }
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|RParenLoc
+operator|=
+name|Loc
+block|;   }
+name|SourceRange
+name|getParensRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLParenLoc
+argument_list|()
+argument_list|,
+name|getRParenLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|ArrayRef
 operator|<
 name|ParmVarDecl
@@ -4134,6 +4146,16 @@ argument|SourceLocation Loc
 argument_list|)
 block|{
 name|setLocalRangeBegin
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setLParenLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setRParenLoc
 argument_list|(
 name|Loc
 argument_list|)

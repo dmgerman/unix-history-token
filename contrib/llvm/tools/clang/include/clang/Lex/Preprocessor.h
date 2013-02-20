@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/PPMutationListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/TokenLexer.h"
 end_include
 
@@ -231,6 +237,141 @@ decl_stmt|;
 name|class
 name|ModuleLoader
 decl_stmt|;
+name|class
+name|PreprocessorOptions
+decl_stmt|;
+comment|/// \brief Stores token information for comparing actual tokens with
+comment|/// predefined values.  Only handles simple tokens and identifiers.
+name|class
+name|TokenValue
+block|{
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+expr_stmt|;
+name|IdentifierInfo
+modifier|*
+name|II
+decl_stmt|;
+name|public
+label|:
+name|TokenValue
+argument_list|(
+argument|tok::TokenKind Kind
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|II
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|!=
+name|tok
+operator|::
+name|raw_identifier
+operator|&&
+literal|"Raw identifiers are not supported."
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Kind
+operator|!=
+name|tok
+operator|::
+name|identifier
+operator|&&
+literal|"Identifiers should be created by TokenValue(IdentifierInfo *)"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|tok
+operator|::
+name|isLiteral
+argument_list|(
+name|Kind
+argument_list|)
+operator|&&
+literal|"Literals are not supported."
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|tok
+operator|::
+name|isAnnotation
+argument_list|(
+name|Kind
+argument_list|)
+operator|&&
+literal|"Annotations are not supported."
+argument_list|)
+block|;   }
+name|TokenValue
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|tok
+operator|::
+name|identifier
+argument_list|)
+operator|,
+name|II
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Token
+operator|&
+name|Tok
+operator|)
+specifier|const
+block|{
+return|return
+name|Tok
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|Kind
+operator|&&
+operator|(
+operator|!
+name|II
+operator|||
+name|II
+operator|==
+name|Tok
+operator|.
+name|getIdentifierInfo
+argument_list|()
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// Preprocessor - This object engages in a tight little dance with the lexer to
 comment|/// efficiently preprocess tokens.  Lexers know only about tokens within a
 comment|/// single source file, and don't know anything about preprocessor-level issues
@@ -245,6 +386,14 @@ operator|<
 name|Preprocessor
 operator|>
 block|{
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|PreprocessorOptions
+operator|>
+name|PPOpts
+block|;
 name|DiagnosticsEngine
 operator|*
 name|Diags
@@ -383,6 +532,16 @@ operator|*
 name|Ident__has_warning
 block|;
 comment|// __has_warning
+name|IdentifierInfo
+operator|*
+name|Ident__building_module
+block|;
+comment|// __building_module
+name|IdentifierInfo
+operator|*
+name|Ident__MODULE__
+block|;
+comment|// __MODULE__
 name|SourceLocation
 name|DATELoc
 block|,
@@ -733,6 +892,13 @@ comment|/// encountered (e.g. a file is \#included, etc).
 name|PPCallbacks
 operator|*
 name|Callbacks
+block|;
+comment|/// \brief Listener whose actions are invoked when an entity in the
+comment|/// preprocessor (e.g., a macro) that was loaded from an AST file is
+comment|/// later mutated.
+name|PPMutationListener
+operator|*
+name|Listener
 block|;    struct
 name|MacroExpandsInfo
 block|{
@@ -780,8 +946,9 @@ literal|2
 operator|>
 name|DelayedMacroExpandsCallbacks
 block|;
-comment|/// Macros - For each IdentifierInfo with 'HasMacro' set, we keep a mapping
-comment|/// to the actual definition of the macro.
+comment|/// Macros - For each IdentifierInfo that was associated with a macro, we
+comment|/// keep a mapping to the history of all macro definitions and #undefs in
+comment|/// the reverse order (the latest one is in the head of the list).
 name|llvm
 operator|::
 name|DenseMap
@@ -793,6 +960,10 @@ name|MacroInfo
 operator|*
 operator|>
 name|Macros
+block|;
+name|friend
+name|class
+name|ASTReader
 block|;
 comment|/// \brief Macros that we want to warn because they are not used at the end
 comment|/// of the translation unit; we store just their SourceLocations instead
@@ -1016,20 +1187,12 @@ name|MacroInfoChain
 modifier|*
 name|MICache
 decl_stmt|;
-name|MacroInfo
-modifier|*
-name|getInfoForMacro
-argument_list|(
-name|IdentifierInfo
-operator|*
-name|II
-argument_list|)
-decl|const
-decl_stmt|;
 name|public
 label|:
 name|Preprocessor
 argument_list|(
+argument|llvm::IntrusiveRefCntPtr<PreprocessorOptions> PPOpts
+argument_list|,
 argument|DiagnosticsEngine&diags
 argument_list|,
 argument|LangOptions&opts
@@ -1069,6 +1232,19 @@ modifier|&
 name|Target
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the preprocessor options used to initialize this
+comment|/// preprocessor.
+name|PreprocessorOptions
+operator|&
+name|getPreprocessorOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|PPOpts
+return|;
+block|}
 name|DiagnosticsEngine
 operator|&
 name|getDiagnostics
@@ -1398,6 +1574,38 @@ operator|=
 name|C
 expr_stmt|;
 block|}
+comment|/// \brief Attach an preprocessor mutation listener to the preprocessor.
+comment|///
+comment|/// The preprocessor mutation listener provides the ability to track
+comment|/// modifications to the preprocessor entities committed after they were
+comment|/// initially created.
+name|void
+name|setPPMutationListener
+parameter_list|(
+name|PPMutationListener
+modifier|*
+name|Listener
+parameter_list|)
+block|{
+name|this
+operator|->
+name|Listener
+operator|=
+name|Listener
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve a pointer to the preprocessor mutation listener
+comment|/// associated with this preprocessor, if any.
+name|PPMutationListener
+operator|*
+name|getPPMutationListener
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Listener
+return|;
+block|}
 comment|/// \brief Given an identifier, return the MacroInfo it is \#defined to
 comment|/// or null if it isn't \#define'd.
 name|MacroInfo
@@ -1421,13 +1629,46 @@ condition|)
 return|return
 literal|0
 return|;
-return|return
-name|getInfoForMacro
+name|MacroInfo
+modifier|*
+name|MI
+init|=
+name|getMacroInfoHistory
 argument_list|(
 name|II
 argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|MI
+operator|->
+name|getUndefLoc
+argument_list|()
+operator|.
+name|isInvalid
+argument_list|()
+operator|&&
+literal|"Macro is undefined!"
+argument_list|)
+expr_stmt|;
+return|return
+name|MI
 return|;
 block|}
+comment|/// \brief Given an identifier, return the (probably #undef'd) MacroInfo
+comment|/// representing the most recent macro definition. One can iterate over all
+comment|/// previous macro definitions from it. This method should only be called for
+comment|/// identifiers that hadMacroDefinition().
+name|MacroInfo
+modifier|*
+name|getMacroInfoHistory
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Specify a macro for this identifier.
 name|void
 name|setMacroInfo
@@ -1439,15 +1680,54 @@ parameter_list|,
 name|MacroInfo
 modifier|*
 name|MI
-parameter_list|,
-name|bool
-name|LoadedFromAST
-init|=
-name|false
 parameter_list|)
 function_decl|;
-comment|/// macro_iterator/macro_begin/macro_end - This allows you to walk the current
-comment|/// state of the macro table.  This visits every currently-defined macro.
+comment|/// \brief Add a MacroInfo that was loaded from an AST file.
+name|void
+name|addLoadedMacroInfo
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|Hint
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// \brief Make the given MacroInfo, that was loaded from an AST file and
+comment|/// previously hidden, visible.
+name|void
+name|makeLoadedMacroInfoVisible
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// \brief Undefine a macro for this identifier.
+name|void
+name|clearMacroInfo
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+function_decl|;
+comment|/// macro_iterator/macro_begin/macro_end - This allows you to walk the macro
+comment|/// history table. Currently defined macros have
+comment|/// IdentifierInfo::hasMacroDefinition() set and an empty
+comment|/// MacroInfo::getUndefLoc() at the head of the list.
 typedef|typedef
 name|llvm
 operator|::
@@ -1480,6 +1760,23 @@ name|bool
 name|IncludeExternalMacros
 operator|=
 name|true
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return the name of the macro defined before \p Loc that has
+comment|/// spelling \p Tokens.  If there are multiple macros with same spelling,
+comment|/// return the last one defined.
+name|StringRef
+name|getLastMacroWithSpelling
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|ArrayRef
+operator|<
+name|TokenValue
+operator|>
+name|Tokens
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1528,11 +1825,8 @@ operator|=
 name|P
 expr_stmt|;
 block|}
-comment|/// getIdentifierInfo - Return information about the specified preprocessor
-comment|/// identifier token.  The version of this method that takes two character
-comment|/// pointers is preferred unless the identifier is already available as a
-comment|/// string (this avoids allocation and copying of memory to construct an
-comment|/// std::string).
+comment|/// Return information about the specified preprocessor
+comment|/// identifier token.
 name|IdentifierInfo
 modifier|*
 name|getIdentifierInfo
@@ -1584,8 +1878,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// RemovePragmaHandler - Remove the specific pragma handler from
-comment|/// the preprocessor. If \arg Namespace is non-null, then it should
-comment|/// be the namespace that \arg Handler was added to. It is an error
+comment|/// the preprocessor. If \p Namespace is non-null, then it should
+comment|/// be the namespace that \p Handler was added to. It is an error
 comment|/// to remove a handler that has not been registered.
 name|void
 name|RemovePragmaHandler
@@ -1743,6 +2037,10 @@ name|Identifier
 parameter_list|,
 name|SourceLocation
 name|ILEnd
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|Macro
 parameter_list|,
 name|MacroArgs
 modifier|*
@@ -2214,6 +2512,46 @@ name|isAnnotation
 argument_list|()
 operator|&&
 literal|"Expected annotation token"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CachedLexPos
+operator|!=
+literal|0
+operator|&&
+name|isBacktrackEnabled
+argument_list|()
+condition|)
+name|CachedTokens
+index|[
+name|CachedLexPos
+operator|-
+literal|1
+index|]
+operator|=
+name|Tok
+expr_stmt|;
+block|}
+comment|/// TypoCorrectToken - Update the current token to represent the provided
+comment|/// identifier, in order to cache an action performed by typo correction.
+name|void
+name|TypoCorrectToken
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Tok
+operator|.
+name|getIdentifierInfo
+argument_list|()
+operator|&&
+literal|"Expected identifier token"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2748,13 +3086,8 @@ comment|/// location provides a location of the expansion point of the token.
 name|void
 name|CreateString
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Buf
-parameter_list|,
-name|unsigned
-name|Len
+name|StringRef
+name|Str
 parameter_list|,
 name|Token
 modifier|&
@@ -2852,7 +3185,7 @@ block|}
 comment|/// \brief Returns true if the given MacroID location points at the last
 comment|/// token of the macro expansion.
 comment|///
-comment|/// \param MacroBegin If non-null and function returns true, it is set to
+comment|/// \param MacroEnd If non-null and function returns true, it is set to
 comment|/// end location of the macro.
 name|bool
 name|isAtEndOfMacroExpansion
@@ -3364,10 +3697,10 @@ comment|/// ConcatenateIncludeName - Handle cases where the \#include name is ex
 comment|/// from a macro as multiple tokens, which need to be glued together.  This
 comment|/// occurs for code like:
 comment|/// \code
-comment|///    \#define FOO<a/b.h>
+comment|///    \#define FOO<x/y.h>
 comment|///    \#include FOO
 comment|/// \endcode
-comment|/// because in this case, "<a/b.h>" is returned as 7 tokens, not one.
+comment|/// because in this case, "<x/y.h>" is returned as 7 tokens, not one.
 comment|///
 comment|/// This code concatenates and consumes tokens up to the '>' token.  It
 comment|/// returns false if the> was found, otherwise it returns true if it finds
@@ -4029,6 +4362,21 @@ parameter_list|(
 name|Token
 modifier|&
 name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|UndefineMacro
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|,
+name|SourceLocation
+name|UndefLoc
 parameter_list|)
 function_decl|;
 comment|// Conditional Inclusion.

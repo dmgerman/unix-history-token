@@ -21788,6 +21788,15 @@ argument_list|,
 name|SA_UNLOCKED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pr
+operator|->
+name|pr_prison_racct
+operator|==
+name|NULL
+condition|)
+return|return;
 name|prison_racct_free
 argument_list|(
 name|pr

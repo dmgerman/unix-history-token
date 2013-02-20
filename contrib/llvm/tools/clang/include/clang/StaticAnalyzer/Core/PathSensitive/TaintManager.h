@@ -75,6 +75,8 @@ block|{
 comment|/// The GDM component containing the tainted root symbols. We lazily infer the
 comment|/// taint of the dependent symbols. Currently, this is a map from a symbol to
 comment|/// tag kind. TODO: Should support multiple tag kinds.
+comment|// FIXME: This does not use the nice trait macros because it must be accessible
+comment|// from multiple translation units.
 struct|struct
 name|TaintMap
 block|{}

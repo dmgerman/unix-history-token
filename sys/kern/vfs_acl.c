@@ -1002,6 +1002,8 @@ operator|=
 name|acl_alloc
 argument_list|(
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|vn_lock

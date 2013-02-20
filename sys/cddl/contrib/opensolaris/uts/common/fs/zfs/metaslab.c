@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -212,6 +212,50 @@ init|=
 literal|150
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Should we be willing to write data to degraded vdevs?  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zfs_write_to_degraded
+init|=
+name|B_FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|write_to_degraded
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_write_to_degraded
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow writing data to degraded vdevs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.write_to_degraded"
+argument_list|,
+operator|&
+name|zfs_write_to_degraded
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * ==========================================================================  * Metaslab classes  * ==========================================================================  */
@@ -6245,7 +6289,7 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* 		 * Avoid writing single-copy data to a failing vdev 		 */
+comment|/* 		 * Avoid writing single-copy data to a failing vdev 		 * unless the user instructs us that it is okay. 		 */
 if|if
 condition|(
 operator|(
@@ -6271,6 +6315,17 @@ operator|&&
 name|dshift
 operator|==
 literal|3
+operator|&&
+operator|!
+operator|(
+name|zfs_write_to_degraded
+operator|&&
+name|vd
+operator|->
+name|vdev_state
+operator|==
+name|VDEV_STATE_DEGRADED
+operator|)
 condition|)
 block|{
 name|all_zero

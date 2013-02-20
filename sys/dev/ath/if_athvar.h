@@ -388,10 +388,6 @@ name|int
 name|isfiltered
 decl_stmt|;
 comment|/* is this node currently filtered */
-name|int
-name|clrdmask
-decl_stmt|;
-comment|/* has clrdmask been set */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
@@ -488,6 +484,10 @@ name|uint32_t
 name|an_swq_depth
 decl_stmt|;
 comment|/* how many SWQ packets for this 					   node */
+name|int
+name|clrdmask
+decl_stmt|;
+comment|/* has clrdmask been set */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -751,12 +751,10 @@ name|uint8_t
 name|bfs_pri
 decl_stmt|;
 comment|/* packet AC priority */
-name|struct
-name|ath_txq
-modifier|*
-name|bfs_txq
+name|uint8_t
+name|bfs_tx_queue
 decl_stmt|;
-comment|/* eventual dest hardware TXQ */
+comment|/* destination hardware TX queue */
 name|u_int32_t
 name|bfs_aggr
 range|:
@@ -1791,6 +1789,10 @@ index|[
 name|HAL_NUM_TX_QUEUES
 index|]
 decl_stmt|;
+comment|/* 	 * This is (currently) protected by the TX queue lock; 	 * it should migrate to a separate lock later 	 * so as to minimise contention. 	 */
+name|ath_bufhead
+name|sc_txbuf_list
+decl_stmt|;
 name|int
 name|sc_rx_statuslen
 decl_stmt|;
@@ -1875,9 +1877,20 @@ name|struct
 name|mtx
 name|sc_tx_mtx
 decl_stmt|;
-comment|/* TX access mutex */
+comment|/* TX handling/comp mutex */
 name|char
 name|sc_tx_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_tx_ic_mtx
+decl_stmt|;
+comment|/* TX queue mutex */
+name|char
+name|sc_tx_ic_mtx_name
 index|[
 literal|32
 index|]
@@ -2423,6 +2436,11 @@ name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
 name|struct
+name|task
+name|sc_txpkttask
+decl_stmt|;
+comment|/* tx frame processing */
+name|struct
 name|ath_descdma
 name|sc_txcompdma
 decl_stmt|;
@@ -2646,6 +2664,14 @@ name|task
 name|sc_dfstask
 decl_stmt|;
 comment|/* DFS processing task */
+comment|/* Spectral related state */
+name|void
+modifier|*
+name|sc_spectral
+decl_stmt|;
+name|int
+name|sc_dospectral
+decl_stmt|;
 comment|/* ALQ */
 ifdef|#
 directive|ifdef
@@ -2815,7 +2841,7 @@ value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED)
 end_define
 
 begin_comment
-comment|/*  * The TX lock is non-reentrant and serialises the TX send operations.  * (ath_start(), ath_raw_xmit().)  It doesn't yet serialise the TX  * completion operations; thus it can't be used (yet!) to protect  * hardware / software TXQ operations.  */
+comment|/*  * The TX lock is non-reentrant and serialises the TX frame send  * and completion operations.  */
 end_comment
 
 begin_define
@@ -2876,6 +2902,80 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_tx_mtx,	\ 		MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|(mtx_owned(&(_sc)->sc_tx_mtx) != 0&&	\ 					mtx_trylock(&(_sc)->sc_tx_mtx))
+end_define
+
+begin_comment
+comment|/*  * The IC TX lock is non-reentrant and serialises packet queuing from  * the upper layers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_IC_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_tx_ic_mtx_name,				\ 	    sizeof((_sc)->sc_tx_ic_mtx_name),				\ 	    "%s IC TX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_tx_ic_mtx, (_sc)->sc_tx_ic_mtx_name,	\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_IC_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_tx_ic_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_IC_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_tx_ic_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_IC_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_tx_ic_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_IC_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_ic_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_IC_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_tx_ic_mtx,	\ 		MA_NOTOWNED)
 end_define
 
 begin_comment
@@ -5619,6 +5719,65 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_get11nExtBusy)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_supported
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_SPECTRAL_SCAN, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_get_config
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_p
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralGetConfig)((_ah), (_p)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_configure
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_p
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralConfigure)((_ah), (_p)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_start
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralStart)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_spectral_stop
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_spectralStop)((_ah)))
 end_define
 
 begin_endif

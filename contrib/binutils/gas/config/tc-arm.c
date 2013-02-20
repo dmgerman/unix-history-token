@@ -112310,6 +112310,12 @@ name|FPU_ARCH_VFP_V2
 block|}
 block|,
 block|{
+literal|"vfpv2"
+block|,
+name|FPU_ARCH_VFP_V2
+block|}
+block|,
+block|{
 literal|"vfp9"
 block|,
 name|FPU_ARCH_VFP_V2

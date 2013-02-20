@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -52,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_dinode.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_define
@@ -78,20 +84,18 @@ name|NSEC_TO_XTIME
 parameter_list|(
 name|t
 parameter_list|)
-value|((t<< 2)& EXT3_NSEC_MASK)
+value|(le32toh(t<< 2)& EXT3_NSEC_MASK)
 end_define
 
 begin_function
 name|void
 name|ext2_print_inode
 parameter_list|(
-name|in
-parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -263,20 +267,16 @@ begin_function
 name|void
 name|ext2_ei2i
 parameter_list|(
-name|ei
-parameter_list|,
-name|ip
-parameter_list|)
 name|struct
 name|ext2fs_dinode
 modifier|*
 name|ei
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inode
 modifier|*
 name|ip
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -575,20 +575,16 @@ begin_function
 name|void
 name|ext2_i2ei
 parameter_list|(
-name|ip
-parameter_list|,
-name|ei
-parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ext2fs_dinode
 modifier|*
 name|ei
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

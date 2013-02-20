@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -71,14 +77,17 @@ comment|/// clients that have a strong desire to control how the layout of JIT'd
 comment|/// works.
 name|class
 name|JITMemoryManager
+range|:
+name|public
+name|RTDyldMemoryManager
 block|{
 name|protected
-label|:
+operator|:
 name|bool
 name|HasGOT
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|JITMemoryManager
 argument_list|()
 operator|:
@@ -91,74 +100,45 @@ name|virtual
 operator|~
 name|JITMemoryManager
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// CreateDefaultMemManager - This is used to create the default
 comment|/// JIT Memory Manager if the client does not provide one to the JIT.
 specifier|static
 name|JITMemoryManager
-modifier|*
+operator|*
 name|CreateDefaultMemManager
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// setMemoryWritable - When code generation is in progress,
 comment|/// the code pages may need permissions changed.
 name|virtual
 name|void
 name|setMemoryWritable
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// setMemoryExecutable - When code generation is done and we're ready to
 comment|/// start execution, the code pages may need permissions changed.
 name|virtual
 name|void
 name|setMemoryExecutable
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// setPoisonMemory - Setting this flag to true makes the memory manager
 comment|/// garbage values over freed memory.  This is useful for testing and
 comment|/// debugging, and may be turned on by default in debug mode.
 name|virtual
 name|void
 name|setPoisonMemory
-parameter_list|(
-name|bool
-name|poison
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// getPointerToNamedFunction - This method returns the address of the
-comment|/// specified function. As such it is only useful for resolving library
-comment|/// symbols, not code generated symbols.
-comment|///
-comment|/// If AbortOnFailure is false and no function with the given name is
-comment|/// found, this function silently returns a null pointer. Otherwise,
-comment|/// it prints a message to stderr and aborts.
-comment|///
-name|virtual
-name|void
-modifier|*
-name|getPointerToNamedFunction
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|,
-name|bool
-name|AbortOnFailure
-operator|=
-name|true
+argument|bool poison
 argument_list|)
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Global Offset Table Management
 comment|//===--------------------------------------------------------------------===//
@@ -168,10 +148,10 @@ comment|/// to true.
 name|virtual
 name|void
 name|AllocateGOT
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// isManagingGOT - Return true if the AllocateGOT method is called.
 name|bool
 name|isManagingGOT
@@ -192,7 +172,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Main Allocation Functions
 comment|//===--------------------------------------------------------------------===//
@@ -207,21 +187,21 @@ comment|/// of the allocated block through ActualSize.  The JIT will be careful 
 comment|/// not write more than the returned ActualSize bytes of memory.
 name|virtual
 name|uint8_t
-modifier|*
+operator|*
 name|startFunctionBody
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
 name|uintptr_t
-modifier|&
+operator|&
 name|ActualSize
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// allocateStub - This method is called by the JIT to allocate space for a
 comment|/// function stub (used to handle limited branch displacements) while it is
 comment|/// JIT compiling a function.  For example, if foo calls bar, and if bar
@@ -232,23 +212,18 @@ comment|/// but should not be included in the 'actualsize' returned by
 comment|/// startFunctionBody.
 name|virtual
 name|uint8_t
-modifier|*
+operator|*
 name|allocateStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|F
-parameter_list|,
-name|unsigned
-name|StubSize
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|)
-init|=
+argument_list|(
+argument|const GlobalValue* F
+argument_list|,
+argument|unsigned StubSize
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// endFunctionBody - This method is called when the JIT is done codegen'ing
 comment|/// the specified function.  At this point we know the size of the JIT
 comment|/// compiled function.  This passes in FunctionStart (which was returned by
@@ -258,98 +233,50 @@ comment|/// and remember where it is in case the client wants to deallocate it.
 name|virtual
 name|void
 name|endFunctionBody
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
 name|uint8_t
-modifier|*
+operator|*
 name|FunctionStart
-parameter_list|,
+argument_list|,
 name|uint8_t
-modifier|*
+operator|*
 name|FunctionEnd
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
-comment|/// allocateCodeSection - Allocate a memory block of (at least) the given
-comment|/// size suitable for executable code. The SectionID is a unique identifier
-comment|/// assigned by the JIT and passed through to the memory manager for
-comment|/// the instance class to use if it needs to communicate to the JIT about
-comment|/// a given section after the fact.
-name|virtual
-name|uint8_t
-modifier|*
-name|allocateCodeSection
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|,
-name|unsigned
-name|SectionID
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// allocateDataSection - Allocate a memory block of (at least) the given
-comment|/// size suitable for data. The SectionID is a unique identifier
-comment|/// assigned by the JIT and passed through to the memory manager for
-comment|/// the instance class to use if it needs to communicate to the JIT about
-comment|/// a given section after the fact.
-name|virtual
-name|uint8_t
-modifier|*
-name|allocateDataSection
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|,
-name|unsigned
-name|SectionID
-parameter_list|)
-init|=
-literal|0
-function_decl|;
+block|;
 comment|/// allocateSpace - Allocate a memory block of the given size.  This method
 comment|/// cannot be called between calls to startFunctionBody and endFunctionBody.
 name|virtual
 name|uint8_t
-modifier|*
+operator|*
 name|allocateSpace
-parameter_list|(
-name|intptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|)
-init|=
+argument_list|(
+argument|intptr_t Size
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// allocateGlobal - Allocate memory for a global.
 name|virtual
 name|uint8_t
-modifier|*
+operator|*
 name|allocateGlobal
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|)
-init|=
+argument_list|(
+argument|uintptr_t Size
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// deallocateFunctionBody - Free the specified function body.  The argument
 comment|/// must be the return value from a call to startFunctionBody() that hasn't
 comment|/// been deallocated yet.  This is never called when the JIT is currently
@@ -357,59 +284,59 @@ comment|/// emitting a function.
 name|virtual
 name|void
 name|deallocateFunctionBody
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|Body
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// startExceptionTable - When we finished JITing the function, if exception
 comment|/// handling is set, we emit the exception table.
 name|virtual
 name|uint8_t
-modifier|*
+operator|*
 name|startExceptionTable
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
 name|uintptr_t
-modifier|&
+operator|&
 name|ActualSize
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// endExceptionTable - This method is called when the JIT is done emitting
 comment|/// the exception table.
 name|virtual
 name|void
 name|endExceptionTable
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
 name|uint8_t
-modifier|*
+operator|*
 name|TableStart
-parameter_list|,
+argument_list|,
 name|uint8_t
-modifier|*
+operator|*
 name|TableEnd
-parameter_list|,
+argument_list|,
 name|uint8_t
-modifier|*
+operator|*
 name|FrameRegister
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// deallocateExceptionTable - Free the specified exception table's memory.
 comment|/// The argument must be the return value from a call to startExceptionTable()
 comment|/// that hasn't been deallocated yet.  This is never called when the JIT is
@@ -417,14 +344,14 @@ comment|/// currently emitting an exception table.
 name|virtual
 name|void
 name|deallocateExceptionTable
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|ET
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// CheckInvariants - For testing only.  Return true if all internal
 comment|/// invariants are preserved, or return false and set ErrorStr to a helpful
 comment|/// error message.
@@ -432,10 +359,7 @@ name|virtual
 name|bool
 name|CheckInvariants
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
+argument|std::string&
 argument_list|)
 block|{
 return|return
@@ -447,7 +371,7 @@ comment|/// from DefaultJITMemoryManager.
 name|virtual
 name|size_t
 name|GetDefaultCodeSlabSize
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|0
@@ -458,7 +382,7 @@ comment|/// from DefaultJITMemoryManager.
 name|virtual
 name|size_t
 name|GetDefaultDataSlabSize
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|0
@@ -469,7 +393,7 @@ comment|/// from DefaultJITMemoryManager.
 name|virtual
 name|size_t
 name|GetDefaultStubSlabSize
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|0
@@ -480,7 +404,7 @@ comment|/// allocated for code.
 name|virtual
 name|unsigned
 name|GetNumCodeSlabs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|0
@@ -491,7 +415,7 @@ comment|/// allocated for data.
 name|virtual
 name|unsigned
 name|GetNumDataSlabs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|0
@@ -502,15 +426,14 @@ comment|/// allocated for function stubs.
 name|virtual
 name|unsigned
 name|GetNumStubSlabs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|0
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

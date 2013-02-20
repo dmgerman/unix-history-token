@@ -271,7 +271,7 @@ name|false
 return|;
 block|}
 comment|/// \brief Add the given node to the list of nodes to be optimally reduced.
-comment|/// @return nItr Node iterator to be added.
+comment|/// @param nItr Node iterator to be added.
 comment|///
 comment|/// You probably don't want to over-ride this, except perhaps to record
 comment|/// statistics before calling this implementation. HeuristicBase relies on
@@ -524,7 +524,7 @@ comment|/// \brief Heuristically reduce one of the nodes in the heuristic
 comment|///        reduce list.
 comment|/// @return True if a reduction takes place, false if the heuristic reduce
 comment|///         list is empty.
-name|void
+name|bool
 name|heuristicReduce
 parameter_list|()
 block|{
@@ -533,6 +533,9 @@ argument_list|(
 literal|"Must be implemented in derived class."
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
 block|}
 comment|/// \brief Prepare a change in the costs on the given edge.
 comment|/// @param eItr Edge iterator.

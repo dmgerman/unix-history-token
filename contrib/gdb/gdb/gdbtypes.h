@@ -762,6 +762,27 @@ value|(TYPE_INSTANCE_FLAGS(t) \& TYPE_FLAG_ADDRESS_CLASS_ALL)
 end_define
 
 begin_comment
+comment|/* Restrict type.  If this is set, the corresponding type has a  * restrict modifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_FLAG_RESTRICT
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_RESTRICT
+parameter_list|(
+name|t
+parameter_list|)
+value|(TYPE_INSTANCE_FLAGS (t)& TYPE_FLAG_RESTRICT)
+end_define
+
+begin_comment
 comment|/*  Array bound type.  */
 end_comment
 
@@ -3591,8 +3612,10 @@ specifier|extern
 name|struct
 name|type
 modifier|*
-name|make_cv_type
+name|make_cvr_type
 parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|,
 name|int

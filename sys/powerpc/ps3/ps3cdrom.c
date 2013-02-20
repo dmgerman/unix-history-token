@@ -1608,7 +1608,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|bus_dmamap_load
+name|bus_dmamap_load_ccb
 argument_list|(
 name|sc
 operator|->
@@ -1619,16 +1619,6 @@ operator|->
 name|x_dmamap
 argument_list|,
 name|ccb
-operator|->
-name|csio
-operator|.
-name|data_ptr
-argument_list|,
-name|ccb
-operator|->
-name|csio
-operator|.
-name|dxfer_len
 argument_list|,
 name|ps3cdrom_transfer
 argument_list|,

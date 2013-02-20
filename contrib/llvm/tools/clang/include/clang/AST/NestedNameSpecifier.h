@@ -258,8 +258,7 @@ argument_list|(
 argument|Other.Specifier
 argument_list|)
 block|{   }
-name|NestedNameSpecifier
-operator|&
+name|void
 name|operator
 operator|=
 operator|(
@@ -267,9 +266,8 @@ specifier|const
 name|NestedNameSpecifier
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not
-comment|// implement
 comment|/// \brief Either find or insert the given nested name specifier
 comment|/// mockup in the given context.
 specifier|static

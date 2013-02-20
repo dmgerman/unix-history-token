@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CommentCommandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclObjC.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -99,6 +111,9 @@ decl_stmt|;
 name|namespace
 name|comments
 block|{
+name|class
+name|FullComment
+decl_stmt|;
 comment|/// Any part of the comment.
 comment|/// Abstract class.
 name|class
@@ -217,6 +232,11 @@ name|RenderKind
 range|:
 literal|2
 decl_stmt|;
+name|unsigned
+name|CommandID
+range|:
+literal|8
+decl_stmt|;
 block|}
 empty_stmt|;
 enum|enum
@@ -225,7 +245,7 @@ name|NumInlineCommandCommentBits
 init|=
 name|NumInlineContentCommentBits
 operator|+
-literal|1
+literal|10
 block|}
 enum|;
 name|class
@@ -294,6 +314,33 @@ literal|2
 block|}
 enum|;
 name|class
+name|BlockCommandCommentBitfields
+block|{
+name|friend
+name|class
+name|BlockCommandComment
+decl_stmt|;
+name|unsigned
+label|:
+name|NumCommentBits
+expr_stmt|;
+name|unsigned
+name|CommandID
+range|:
+literal|8
+decl_stmt|;
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumBlockCommandCommentBits
+init|=
+name|NumCommentBits
+operator|+
+literal|8
+block|}
+enum|;
+name|class
 name|ParamCommandCommentBitfields
 block|{
 name|friend
@@ -302,7 +349,7 @@ name|ParamCommandComment
 decl_stmt|;
 name|unsigned
 label|:
-name|NumCommentBits
+name|NumBlockCommandCommentBits
 expr_stmt|;
 comment|/// Parameter passing direction, see ParamCommandComment::PassDirection.
 name|unsigned
@@ -322,7 +369,9 @@ enum|enum
 block|{
 name|NumParamCommandCommentBits
 init|=
-literal|11
+name|NumBlockCommandCommentBits
+operator|+
+literal|3
 block|}
 enum|;
 union|union
@@ -344,6 +393,9 @@ name|HTMLStartTagCommentBits
 decl_stmt|;
 name|ParagraphCommentBitfields
 name|ParagraphCommentBits
+decl_stmt|;
+name|BlockCommandCommentBitfields
+name|BlockCommandCommentBits
 decl_stmt|;
 name|ParamCommandCommentBitfields
 name|ParamCommandCommentBits
@@ -486,9 +538,10 @@ name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|(
-name|SourceManager
+specifier|const
+name|ASTContext
 operator|&
-name|SM
+name|Context
 argument_list|)
 decl|const
 decl_stmt|;
@@ -501,25 +554,18 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
+specifier|const
+name|CommandTraits
+operator|*
+name|Traits
+argument_list|,
+specifier|const
 name|SourceManager
 operator|*
 name|SM
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Comment
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -658,17 +704,6 @@ operator|<=
 name|LastInlineContentCommentConstant
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InlineContentComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|void
 name|addTrailingNewline
 argument_list|()
@@ -747,17 +782,6 @@ name|getCommentKind
 argument_list|()
 operator|==
 name|TextCommentKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TextComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_iterator
@@ -884,10 +908,6 @@ block|}
 block|;
 name|protected
 operator|:
-comment|/// Command name.
-name|StringRef
-name|Name
-block|;
 comment|/// Command arguments.
 name|llvm
 operator|::
@@ -905,7 +925,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|,
 argument|RenderKind RK
 argument_list|,
@@ -921,11 +941,6 @@ argument_list|,
 name|LocEnd
 argument_list|)
 block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
 name|Args
 argument_list|(
 argument|Args
@@ -936,6 +951,12 @@ operator|.
 name|RenderKind
 operator|=
 name|RK
+block|;
+name|InlineCommandCommentBits
+operator|.
+name|CommandID
+operator|=
+name|CommandID
 block|;   }
 specifier|static
 name|bool
@@ -951,17 +972,6 @@ name|getCommentKind
 argument_list|()
 operator|==
 name|InlineCommandCommentKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const InlineCommandComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_iterator
@@ -982,12 +992,33 @@ return|return
 name|NULL
 return|;
 block|}
-name|StringRef
-name|getCommandName
+name|unsigned
+name|getCommandID
 argument_list|()
 specifier|const
 block|{
 return|return
+name|InlineCommandCommentBits
+operator|.
+name|CommandID
+return|;
+block|}
+name|StringRef
+name|getCommandName
+argument_list|(
+argument|const CommandTraits&Traits
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Traits
+operator|.
+name|getCommandInfo
+argument_list|(
+name|getCommandID
+argument_list|()
+argument_list|)
+operator|->
 name|Name
 return|;
 block|}
@@ -1157,17 +1188,6 @@ name|getCommentKind
 argument_list|()
 operator|<=
 name|LastHTMLTagCommentConstant
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const HTMLTagComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|StringRef
@@ -1416,17 +1436,6 @@ operator|==
 name|HTMLStartTagCommentKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const HTMLStartTagComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_iterator
 name|child_begin
 argument_list|()
@@ -1630,17 +1639,6 @@ operator|==
 name|HTMLEndTagCommentKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const HTMLEndTagComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_iterator
 name|child_begin
 argument_list|()
@@ -1712,17 +1710,6 @@ name|getCommentKind
 argument_list|()
 operator|<=
 name|LastBlockContentCommentConstant
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BlockContentComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|}
@@ -1850,17 +1837,6 @@ operator|==
 name|ParagraphCommentKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ParagraphComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_iterator
 name|child_begin
 argument_list|()
@@ -1984,10 +1960,6 @@ block|}
 block|;
 name|protected
 operator|:
-comment|/// Command name.
-name|StringRef
-name|Name
-block|;
 comment|/// Word-like arguments.
 name|llvm
 operator|::
@@ -2010,7 +1982,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|)
 operator|:
 name|BlockContentComment
@@ -2022,11 +1994,6 @@ argument_list|,
 name|LocEnd
 argument_list|)
 block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
 name|Paragraph
 argument_list|(
 argument|NULL
@@ -2034,12 +2001,15 @@ argument_list|)
 block|{
 name|setLocation
 argument_list|(
-name|getCommandNameRange
-argument_list|()
-operator|.
-name|getBegin
+name|getCommandNameBeginLoc
 argument_list|()
 argument_list|)
+block|;
+name|BlockCommandCommentBits
+operator|.
+name|CommandID
+operator|=
+name|CommandID
 block|;   }
 name|public
 operator|:
@@ -2049,7 +2019,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|)
 operator|:
 name|BlockContentComment
@@ -2061,11 +2031,6 @@ argument_list|,
 name|LocEnd
 argument_list|)
 block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
 name|Paragraph
 argument_list|(
 argument|NULL
@@ -2073,12 +2038,15 @@ argument_list|)
 block|{
 name|setLocation
 argument_list|(
-name|getCommandNameRange
-argument_list|()
-operator|.
-name|getBegin
+name|getCommandNameBeginLoc
 argument_list|()
 argument_list|)
+block|;
+name|BlockCommandCommentBits
+operator|.
+name|CommandID
+operator|=
+name|CommandID
 block|;   }
 specifier|static
 name|bool
@@ -2101,17 +2069,6 @@ name|getCommentKind
 argument_list|()
 operator|<=
 name|LastBlockCommandCommentConstant
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const BlockCommandComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_iterator
@@ -2148,23 +2105,42 @@ literal|1
 operator|)
 return|;
 block|}
-name|StringRef
-name|getCommandName
+name|unsigned
+name|getCommandID
 argument_list|()
 specifier|const
 block|{
 return|return
+name|BlockCommandCommentBits
+operator|.
+name|CommandID
+return|;
+block|}
+name|StringRef
+name|getCommandName
+argument_list|(
+argument|const CommandTraits&Traits
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Traits
+operator|.
+name|getCommandInfo
+argument_list|(
+name|getCommandID
+argument_list|()
+argument_list|)
+operator|->
 name|Name
 return|;
 block|}
-name|SourceRange
-name|getCommandNameRange
+name|SourceLocation
+name|getCommandNameBeginLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getLocStart
 argument_list|()
 operator|.
@@ -2172,6 +2148,28 @@ name|getLocWithOffset
 argument_list|(
 literal|1
 argument_list|)
+return|;
+block|}
+name|SourceRange
+name|getCommandNameRange
+argument_list|(
+argument|const CommandTraits&Traits
+argument_list|)
+specifier|const
+block|{
+name|StringRef
+name|Name
+operator|=
+name|getCommandName
+argument_list|(
+name|Traits
+argument_list|)
+block|;
+return|return
+name|SourceRange
+argument_list|(
+name|getCommandNameBeginLoc
+argument_list|()
 argument_list|,
 name|getLocStart
 argument_list|()
@@ -2379,7 +2377,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|)
 operator|:
 name|BlockCommandComment
@@ -2390,7 +2388,7 @@ name|LocBegin
 argument_list|,
 name|LocEnd
 argument_list|,
-name|Name
+name|CommandID
 argument_list|)
 block|,
 name|ParamIndex
@@ -2424,17 +2422,6 @@ name|getCommentKind
 argument_list|()
 operator|==
 name|ParamCommandCommentKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ParamCommandComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 expr|enum
@@ -2520,6 +2507,13 @@ return|;
 block|}
 name|StringRef
 name|getParamName
+argument_list|(
+argument|const FullComment *FC
+argument_list|)
+specifier|const
+block|;
+name|StringRef
+name|getParamNameAsWritten
 argument_list|()
 specifier|const
 block|{
@@ -2629,7 +2623,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|)
 operator|:
 name|BlockCommandComment
@@ -2640,7 +2634,7 @@ argument|LocBegin
 argument_list|,
 argument|LocEnd
 argument_list|,
-argument|Name
+argument|CommandID
 argument_list|)
 block|{ }
 specifier|static
@@ -2659,17 +2653,6 @@ operator|==
 name|TParamCommandCommentKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TParamCommandComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|bool
 name|hasParamName
 argument_list|()
@@ -2684,6 +2667,13 @@ return|;
 block|}
 name|StringRef
 name|getParamName
+argument_list|(
+argument|const FullComment *FC
+argument_list|)
+specifier|const
+block|;
+name|StringRef
+name|getParamNameAsWritten
 argument_list|()
 specifier|const
 block|{
@@ -2837,17 +2827,6 @@ operator|==
 name|VerbatimBlockLineCommentKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const VerbatimBlockLineComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_iterator
 name|child_begin
 argument_list|()
@@ -2912,7 +2891,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|)
 operator|:
 name|BlockCommandComment
@@ -2923,7 +2902,7 @@ argument|LocBegin
 argument_list|,
 argument|LocEnd
 argument_list|,
-argument|Name
+argument|CommandID
 argument_list|)
 block|{ }
 specifier|static
@@ -2940,17 +2919,6 @@ name|getCommentKind
 argument_list|()
 operator|==
 name|VerbatimBlockCommentKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const VerbatimBlockComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_iterator
@@ -3080,7 +3048,7 @@ argument|SourceLocation LocBegin
 argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
-argument|StringRef Name
+argument|unsigned CommandID
 argument_list|,
 argument|SourceLocation TextBegin
 argument_list|,
@@ -3095,7 +3063,7 @@ name|LocBegin
 argument_list|,
 name|LocEnd
 argument_list|,
-name|Name
+name|CommandID
 argument_list|)
 block|,
 name|Text
@@ -3122,17 +3090,6 @@ name|getCommentKind
 argument_list|()
 operator|==
 name|VerbatimLineCommentKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const VerbatimLineComment *
-argument_list|)
-block|{
-return|return
-name|true
 return|;
 block|}
 name|child_iterator
@@ -3183,13 +3140,27 @@ comment|/// Information about the declaration, useful to clients of FullComment.
 block|struct
 name|DeclInfo
 block|{
-comment|/// Declaration the comment is attached to.  Should not be NULL.
+comment|/// Declaration the comment is actually attached to (in the source).
+comment|/// Should not be NULL.
 specifier|const
 name|Decl
 operator|*
-name|ThisDecl
+name|CommentDecl
 block|;
-comment|/// Parameters that can be referenced by \\param if \c ThisDecl is something
+comment|/// CurrentDecl is the declaration with which the FullComment is associated.
+comment|///
+comment|/// It can be different from \c CommentDecl.  It happens when we we decide
+comment|/// that the comment originally attached to \c CommentDecl is fine for
+comment|/// \c CurrentDecl too (for example, for a redeclaration or an overrider of
+comment|/// \c CommentDecl).
+comment|///
+comment|/// The information in the DeclInfo corresponds to CurrentDecl.
+specifier|const
+name|Decl
+operator|*
+name|CurrentDecl
+block|;
+comment|/// Parameters that can be referenced by \\param if \c CommentDecl is something
 comment|/// that we consider a "function".
 name|ArrayRef
 operator|<
@@ -3199,12 +3170,12 @@ operator|*
 operator|>
 name|ParamVars
 block|;
-comment|/// Function result type if \c ThisDecl is something that we consider
+comment|/// Function result type if \c CommentDecl is something that we consider
 comment|/// a "function".
 name|QualType
 name|ResultType
 block|;
-comment|/// Template parameters that can be referenced by \\tparam if \c ThisDecl is
+comment|/// Template parameters that can be referenced by \\tparam if \c CommentDecl is
 comment|/// a template (\c IsTemplateDecl or \c IsTemplatePartialSpecialization is
 comment|/// true).
 specifier|const
@@ -3212,7 +3183,7 @@ name|TemplateParameterList
 operator|*
 name|TemplateParameters
 block|;
-comment|/// A simplified description of \c ThisDecl kind that should be good enough
+comment|/// A simplified description of \c CommentDecl kind that should be good enough
 comment|/// for documentation rendering purposes.
 block|enum
 name|DeclKind
@@ -3227,7 +3198,9 @@ comment|/// \li function template specialization,
 comment|/// \li member function,
 comment|/// \li member function template,
 comment|/// \li member function template specialization,
-comment|/// \li ObjC method.
+comment|/// \li ObjC method,
+comment|/// \li a typedef for a function pointer, member function pointer,
+comment|///     ObjC block.
 name|FunctionKind
 block|,
 comment|/// Something that we consider a "class":
@@ -3253,7 +3226,7 @@ comment|/// An enumeration or scoped enumeration.
 name|EnumKind
 block|}
 block|;
-comment|/// What kind of template specialization \c ThisDecl is.
+comment|/// What kind of template specialization \c CommentDecl is.
 block|enum
 name|TemplateDeclKind
 block|{
@@ -3266,31 +3239,31 @@ block|,
 name|TemplatePartialSpecialization
 block|}
 block|;
-comment|/// If false, only \c ThisDecl is valid.
+comment|/// If false, only \c CommentDecl is valid.
 name|unsigned
 name|IsFilled
 operator|:
 literal|1
 block|;
-comment|/// Simplified kind of \c ThisDecl, see\c DeclKind enum.
+comment|/// Simplified kind of \c CommentDecl, see \c DeclKind enum.
 name|unsigned
 name|Kind
 operator|:
 literal|3
 block|;
-comment|/// Is \c ThisDecl a template declaration.
+comment|/// Is \c CommentDecl a template declaration.
 name|unsigned
 name|TemplateKind
 operator|:
 literal|2
 block|;
-comment|/// Is \c ThisDecl an ObjCMethodDecl.
+comment|/// Is \c CommentDecl an ObjCMethodDecl.
 name|unsigned
 name|IsObjCMethod
 operator|:
 literal|1
 block|;
-comment|/// Is \c ThisDecl a non-static member function of C++ class or
+comment|/// Is \c CommentDecl a non-static member function of C++ class or
 comment|/// instance method of ObjC class.
 comment|/// Can be true only if \c IsFunctionDecl is true.
 name|unsigned
@@ -3298,7 +3271,7 @@ name|IsInstanceMethod
 operator|:
 literal|1
 block|;
-comment|/// Is \c ThisDecl a static member function of C++ class or
+comment|/// Is \c CommentDecl a static member function of C++ class or
 comment|/// class method of ObjC class.
 comment|/// Can be true only if \c IsFunctionDecl is true.
 name|unsigned
@@ -3460,17 +3433,6 @@ operator|==
 name|FullCommentKind
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FullComment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|child_iterator
 name|child_begin
 argument_list|()
@@ -3518,7 +3480,7 @@ block|{
 return|return
 name|ThisDeclInfo
 operator|->
-name|ThisDecl
+name|CommentDecl
 return|;
 block|}
 specifier|const
@@ -3545,8 +3507,34 @@ return|return
 name|ThisDeclInfo
 return|;
 block|}
+name|DeclInfo
+operator|*
+name|getThisDeclInfo
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|ThisDeclInfo
+return|;
+block|}
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|BlockContentComment
+operator|*
+operator|>
+name|getBlocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+return|;
+block|}
 expr|}
-block|;  }
+block|; }
 comment|// end namespace comments
 block|}
 end_decl_stmt

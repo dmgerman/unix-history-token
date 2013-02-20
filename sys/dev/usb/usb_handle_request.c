@@ -7,6 +7,23 @@ begin_comment
 comment|/*-  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -205,6 +222,15 @@ include|#
 directive|include
 file|<dev/usb/usb_bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_GLOBAL_INCLUDE_FILE */
+end_comment
 
 begin_comment
 comment|/* function prototypes */
@@ -510,12 +536,18 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 comment|/* 	 * We need to protect against other threads doing probe and 	 * attach: 	 */
 name|USB_XFER_UNLOCK
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+comment|/* Prevent re-enumeration */
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -590,6 +622,10 @@ goto|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -635,32 +671,14 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|alt_index
@@ -762,6 +780,9 @@ decl_stmt|;
 name|uint8_t
 name|temp_state
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -800,6 +821,9 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+comment|/* Prevent re-enumeration */
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -1261,6 +1285,10 @@ goto|;
 block|}
 name|tr_valid
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -1278,6 +1306,10 @@ operator|)
 return|;
 name|tr_short
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -1295,6 +1327,10 @@ operator|)
 return|;
 name|tr_stalled
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev

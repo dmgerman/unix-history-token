@@ -278,12 +278,10 @@ name|i
 decl_stmt|;
 name|i
 operator|=
-operator|(
 name|IN_CAPABILITY_MODE
 argument_list|(
 name|td
 argument_list|)
-operator|)
 condition|?
 literal|1
 else|:

@@ -81,12 +81,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -148,6 +142,12 @@ begin_include
 include|#
 directive|include
 file|"mystring.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syntax.h"
 end_include
 
 begin_undef
@@ -1193,7 +1193,7 @@ else|else
 block|{
 if|if
 condition|(
-name|isdigit
+name|is_digit
 argument_list|(
 operator|*
 name|ap

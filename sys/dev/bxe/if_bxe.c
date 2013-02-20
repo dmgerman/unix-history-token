@@ -16755,7 +16755,7 @@ name|BXE_BR_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 operator|&
 name|fp
@@ -37955,7 +37955,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -40058,37 +40058,10 @@ expr_stmt|;
 if|if
 condition|(
 name|m
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* No new work, check for pending frames. */
-name|next
-operator|=
-name|drbr_dequeue
-argument_list|(
-name|ifp
-argument_list|,
-name|fp
-operator|->
-name|br
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|drbr_needs_enqueue
-argument_list|(
-name|ifp
-argument_list|,
-name|fp
-operator|->
-name|br
-argument_list|)
-condition|)
-block|{
-comment|/* Both new and pending work, maintain packet order. */
 name|rc
 operator|=
 name|drbr_enqueue
@@ -40118,9 +40091,14 @@ goto|goto
 name|bxe_tx_mq_start_locked_exit
 goto|;
 block|}
+block|}
+comment|/* Keep adding entries while there are frames to send. */
+while|while
+condition|(
+operator|(
 name|next
 operator|=
-name|drbr_dequeue
+name|drbr_peek
 argument_list|(
 name|ifp
 argument_list|,
@@ -40128,18 +40106,7 @@ name|fp
 operator|->
 name|br
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* New work only, nothing pending. */
-name|next
-operator|=
-name|m
-expr_stmt|;
-comment|/* Keep adding entries while there are frames to send. */
-while|while
-condition|(
-name|next
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -40180,10 +40147,33 @@ comment|/* Very Bad Frames(tm) may have been dropped. */
 if|if
 condition|(
 name|next
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+name|drbr_advance
+argument_list|(
+name|ifp
+argument_list|,
+name|fp
+operator|->
+name|br
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|drbr_putback
+argument_list|(
+name|ifp
+argument_list|,
+name|fp
+operator|->
+name|br
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
 comment|/* 				 * Mark the TX queue as full and save 				 * the frame. 				 */
 name|ifp
 operator|->
@@ -40196,20 +40186,6 @@ operator|->
 name|tx_frame_deferred
 operator|++
 expr_stmt|;
-comment|/* This may reorder frame. */
-name|rc
-operator|=
-name|drbr_enqueue
-argument_list|(
-name|ifp
-argument_list|,
-name|fp
-operator|->
-name|br
-argument_list|,
-name|next
-argument_list|)
-expr_stmt|;
 name|fp
 operator|->
 name|tx_mbuf_alloc
@@ -40219,6 +40195,15 @@ block|}
 comment|/* Stop looking for more work. */
 break|break;
 block|}
+name|drbr_advance
+argument_list|(
+name|ifp
+argument_list|,
+name|fp
+operator|->
+name|br
+argument_list|)
+expr_stmt|;
 comment|/* The transmit frame was enqueued successfully. */
 name|tx_count
 operator|++
@@ -40288,17 +40273,6 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 break|break;
 block|}
-name|next
-operator|=
-name|drbr_dequeue
-argument_list|(
-name|ifp
-argument_list|,
-name|fp
-operator|->
-name|br
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* No TX packets were dequeued. */
 if|if
@@ -43882,7 +43856,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -44612,7 +44586,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -45357,7 +45331,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,

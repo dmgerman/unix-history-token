@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|LZMA_VERSION_PATCH
-value|3
+value|4
 end_define
 
 begin_define

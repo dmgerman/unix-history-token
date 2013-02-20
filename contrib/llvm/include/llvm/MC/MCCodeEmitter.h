@@ -43,6 +43,12 @@ directive|define
 name|LLVM_MC_MCCODEEMITTER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -72,12 +78,10 @@ name|private
 label|:
 name|MCCodeEmitter
 argument_list|(
-specifier|const
-name|MCCodeEmitter
-operator|&
+argument|const MCCodeEmitter&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -86,8 +90,8 @@ specifier|const
 name|MCCodeEmitter
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -101,8 +105,8 @@ operator|~
 name|MCCodeEmitter
 argument_list|()
 expr_stmt|;
-comment|/// EncodeInstruction - Encode the given \arg Inst to bytes on the output
-comment|/// stream \arg OS.
+comment|/// EncodeInstruction - Encode the given \p Inst to bytes on the output
+comment|/// stream \p OS.
 name|virtual
 name|void
 name|EncodeInstruction

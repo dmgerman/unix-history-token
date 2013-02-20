@@ -324,6 +324,12 @@ name|LK
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|Name
+modifier|*
+name|PossibleMatch
+init|=
+literal|0
 parameter_list|)
 block|{}
 comment|/// Warn when a function is called while an excluded mutex is locked. For

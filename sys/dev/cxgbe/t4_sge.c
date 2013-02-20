@@ -13389,6 +13389,31 @@ argument_list|,
 literal|"# of frames tx'd using txpkts work requests"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+operator|&
+name|pi
+operator|->
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"br_drops"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|txq
+operator|->
+name|br
+operator|->
+name|br_drops
+argument_list|,
+literal|"# of drops in the buf_ring for this queue"
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
@@ -15426,7 +15451,7 @@ name|m_defrag
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

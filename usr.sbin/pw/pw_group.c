@@ -1639,10 +1639,6 @@ operator|->
 name|gr_gid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|members
-condition|)
 name|free
 argument_list|(
 name|members
@@ -2294,11 +2290,11 @@ argument_list|(
 name|grp
 argument_list|)
 expr_stmt|;
-name|fputs
+name|printf
 argument_list|(
-name|buf
+literal|"%s\n"
 argument_list|,
-name|stdout
+name|buf
 argument_list|)
 expr_stmt|;
 name|free

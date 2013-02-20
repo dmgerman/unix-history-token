@@ -126,16 +126,14 @@ specifier|const
 name|AsmLexer
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|AsmLexer
 argument_list|(
-specifier|const
-name|AsmLexer
-operator|&
+argument|const AsmLexer&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// DO NOT IMPLEMENT
 name|protected
 operator|:
 comment|/// LexToken - Read the next token and return its code.

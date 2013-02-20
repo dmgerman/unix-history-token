@@ -585,6 +585,12 @@ directive|include
 file|"zle.c"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lz4.c"
+end_include
+
 begin_comment
 comment|/*  * Compression vectors.  */
 end_comment
@@ -746,6 +752,16 @@ block|,
 literal|64
 block|,
 literal|"zle"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|lz4_decompress
+block|,
+literal|0
+block|,
+literal|"lz4"
 block|}
 block|, }
 decl_stmt|;

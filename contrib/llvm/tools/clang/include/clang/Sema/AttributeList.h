@@ -434,12 +434,10 @@ return|;
 block|}
 name|AttributeList
 argument_list|(
-specifier|const
-name|AttributeList
-operator|&
+argument|const AttributeList&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -448,22 +446,22 @@ specifier|const
 name|AttributeList
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 name|delete
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|// DO NOT IMPLEMENT
+operator|*
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
 operator|~
 name|AttributeList
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|size_t
 name|allocated_size
 argument_list|()

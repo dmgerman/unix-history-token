@@ -612,19 +612,6 @@ name|ComputeHash
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|ProgramPoint
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 name|bool
 name|operator
 operator|==
@@ -1010,7 +997,12 @@ argument|L
 argument_list|,
 argument|tag
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|S
+argument_list|)
+block|;   }
 specifier|const
 name|Stmt
 operator|*
@@ -2208,6 +2200,7 @@ block|}
 expr|}
 block|;
 comment|/// Represents a point when we begin processing an inlined call.
+comment|/// CallEnter uses the caller's location context.
 name|class
 name|CallEnter
 operator|:

@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/DataLayout.h"
 end_include
 
 begin_decl_stmt
@@ -115,7 +115,7 @@ name|AU
 operator|.
 name|addRequired
 operator|<
-name|TargetData
+name|DataLayout
 operator|>
 operator|(
 operator|)

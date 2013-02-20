@@ -168,14 +168,14 @@ name|int32_t
 name|i_birthnsec
 decl_stmt|;
 comment|/* Inode creation time. */
-name|int32_t
+name|uint32_t
 name|i_db
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
 comment|/* Direct disk blocks. */
-name|int32_t
+name|uint32_t
 name|i_ib
 index|[
 name|NIADDR
@@ -186,11 +186,11 @@ name|uint32_t
 name|i_flags
 decl_stmt|;
 comment|/* Status flags (chflags). */
-name|int32_t
+name|uint32_t
 name|i_blocks
 decl_stmt|;
 comment|/* Blocks actually held. */
-name|int32_t
+name|uint32_t
 name|i_gen
 decl_stmt|;
 comment|/* Generation number. */
@@ -222,13 +222,6 @@ define|#
 directive|define
 name|i_rdev
 value|i_db[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSYMLINKLEN
-value|((NDADDR + NIADDR) * sizeof(int32_t))
 end_define
 
 begin_comment
@@ -584,7 +577,7 @@ name|ino_t
 name|ufid_ino
 decl_stmt|;
 comment|/* File number (ino). */
-name|int32_t
+name|uint32_t
 name|ufid_gen
 decl_stmt|;
 comment|/* Generation number. */

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -202,7 +202,7 @@ value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    Options  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display option help message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    Options  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display option help message.  *              Optional items in square brackets.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -281,7 +281,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nGeneral Output:\n"
+literal|"\nGeneral Processing:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -342,33 +342,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAML and Data Output Files:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-sa -sc"
-argument_list|,
-literal|"Create assembler or C source file (*.asm or *.c)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ia -ic"
-argument_list|,
-literal|"Create assembler or C include file (*.inc or *.h)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ta -tc -ts"
-argument_list|,
-literal|"Create assembler, C, or ASL hex table (*.hex)"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nAML Code Generation:\n"
+literal|"\nAML Code Generation (*.aml):\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -408,6 +382,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-in"
+argument_list|,
+literal|"Ignore NoOp operators"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-r<revision>"
 argument_list|,
 literal|"Override table header Revision (1-255)"
@@ -415,7 +396,33 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nASL Listing Files:\n"
+literal|"\nOptional Source Code Output Files:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-sc -sa"
+argument_list|,
+literal|"Create source file in C or assembler (*.c or *.asm)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ic -ia"
+argument_list|,
+literal|"Create include file in C or assembler (*.h or *.inc)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-tc -ta -ts"
+argument_list|,
+literal|"Create hex AML table in C, assembler, or ASL (*.hex)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nOptional Listing Files:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -441,21 +448,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nACPI Data Tables:\n"
+literal|"\nData Table Compiler:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-G"
 argument_list|,
-literal|"Compile custom table containing generic operators"
+literal|"Compile custom table that contains generic operators"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-vt"
 argument_list|,
-literal|"Create verbose templates (full disassembly)"
+literal|"Create verbose template files (full disassembly)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -465,14 +472,21 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-d  [file]"
+literal|"-d<f1,f2>"
 argument_list|,
-literal|"Disassemble or decode binary ACPI table to file (*.dsl)"
+literal|"Disassemble or decode binary ACPI tables to file (*.dsl)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-da [f1,f2]"
+literal|""
+argument_list|,
+literal|"  (Optional, file type is automatically detected)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-da<f1,f2>"
 argument_list|,
 literal|"Disassemble multiple tables from single namespace"
 argument_list|)
@@ -486,7 +500,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-dc [file]"
+literal|"-dc<f1,f2>"
 argument_list|,
 literal|"Disassemble AML and immediately compile it"
 argument_list|)
@@ -495,12 +509,12 @@ name|ACPI_OPTION
 argument_list|(
 literal|""
 argument_list|,
-literal|"(Obtain DSDT from current system if no input file)"
+literal|"  (Obtain DSDT from current system if no input file)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-e  [f1,f2]"
+literal|"-e<f1,f2>"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
 argument_list|)
@@ -510,6 +524,13 @@ argument_list|(
 literal|"-g"
 argument_list|,
 literal|"Get ACPI tables and write to files (*.dat)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-in"
+argument_list|,
+literal|"Ignore NoOp opcodes"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -576,6 +597,13 @@ argument_list|(
 literal|"-f"
 argument_list|,
 literal|"Ignore errors, force creation of AML output file(s)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-m<size>"
+argument_list|,
+literal|"Set internal line buffer size (in Kbytes)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -1550,6 +1578,15 @@ literal|'c'
 case|:
 comment|/* Produce C include file */
 name|Gbl_C_IncludeOutputFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* Compiler/Disassembler: Ignore the NOOP operator */
+name|AcpiGbl_IgnoreNoopOperator
 operator|=
 name|TRUE
 expr_stmt|;

@@ -423,10 +423,6 @@ name|e2fs_bshift
 decl_stmt|;
 comment|/* calc of logical block no */
 name|int32_t
-name|e2fs_bmask
-decl_stmt|;
-comment|/* calc of block offset */
-name|int32_t
 name|e2fs_bpg
 decl_stmt|;
 comment|/* Number of blocks per group */
@@ -463,14 +459,6 @@ name|e2fs_fpg
 decl_stmt|;
 comment|/* Number of fragments per group */
 name|uint32_t
-name|e2fs_dbpg
-decl_stmt|;
-comment|/* Number of descriptor blocks per group */
-name|uint32_t
-name|e2fs_descpb
-decl_stmt|;
-comment|/* Number of group descriptors per block */
-name|uint32_t
 name|e2fs_gdbcount
 decl_stmt|;
 comment|/* Number of group descriptors */
@@ -478,20 +466,10 @@ name|uint32_t
 name|e2fs_gcount
 decl_stmt|;
 comment|/* Number of groups */
-name|uint32_t
-name|e2fs_first_inode
-decl_stmt|;
-comment|/* First inode on fs */
 name|int32_t
 name|e2fs_isize
 decl_stmt|;
 comment|/* Size of inode */
-name|uint32_t
-name|e2fs_mount_opt
-decl_stmt|;
-name|uint32_t
-name|e2fs_blocksize_bits
-decl_stmt|;
 name|uint32_t
 name|e2fs_total_dir
 decl_stmt|;
@@ -514,10 +492,6 @@ modifier|*
 name|e2fs_gd
 decl_stmt|;
 comment|/* Group Descriptors */
-name|int32_t
-name|e2fs_maxcontig
-decl_stmt|;
-comment|/* max number of contiguous blks */
 name|int32_t
 name|e2fs_contigsumsize
 decl_stmt|;
@@ -669,28 +643,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_HUGE_FILE
+name|EXT2F_ROCOMPAT_HUGE_FILE
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_GDT_CSUM
+name|EXT2F_ROCOMPAT_GDT_CSUM
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_DIR_NLINK
+name|EXT2F_ROCOMPAT_DIR_NLINK
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_ROCOMPAT_EXTRA_ISIZE
+name|EXT2F_ROCOMPAT_EXTRA_ISIZE
 value|0x0040
 end_define
 
@@ -711,35 +685,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_META_BG
+name|EXT2F_INCOMPAT_META_BG
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_EXTENTS
+name|EXT2F_INCOMPAT_EXTENTS
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_64BIT
+name|EXT2F_INCOMPAT_64BIT
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_MMP
+name|EXT2F_INCOMPAT_MMP
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT4F_INCOMPAT_FLEX_BG
+name|EXT2F_INCOMPAT_FLEX_BG
 value|0x0200
 end_define
 
@@ -758,7 +732,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT4F_ROCOMPAT_EXTRA_ISIZE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define
@@ -1039,13 +1013,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT2_MIN_BLOCK_SIZE
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
 name|EXT2_MAX_BLOCK_SIZE
 value|4096
 end_define
@@ -1057,15 +1024,6 @@ name|EXT2_MIN_BLOCK_LOG_SIZE
 value|10
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1075,26 +1033,6 @@ name|s
 parameter_list|)
 value|((s)->e2fs_bsize)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_BLOCK_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_MIN_BLOCK_SIZE<< (s)->e2fs_log_bsize)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1106,64 +1044,6 @@ parameter_list|)
 value|(EXT2_BLOCK_SIZE(s) / sizeof(uint32_t))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|EXT2_BLOCK_SIZE_BITS
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->e2fs_blocksize_bits)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_BLOCK_SIZE_BITS
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->e2fs_log_bsize + 10)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|EXT2_ADDR_PER_BLOCK_BITS
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_SB(s)->s_addr_per_block_bits)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1173,46 +1053,6 @@ name|s
 parameter_list|)
 value|(EXT2_SB(s)->e2fs_isize)
 end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_FIRST_INO
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_SB(s)->e2fs_first_inode)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_INODE_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|(((s)->s_rev_level == E2FS_REV0) ? \ 				 E2FS_REV0 : (s)->s_inode_size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_FIRST_INO
-parameter_list|(
-name|s
-parameter_list|)
-value|(((s)->s_rev_level == E2FS_REV0) ? \ 				 E2FS_REV0 : (s)->e2fs_first_ino)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Macro-instructions used to manage fragments  */
@@ -1239,15 +1079,6 @@ name|EXT2_MIN_FRAG_LOG_SIZE
 value|10
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1268,48 +1099,9 @@ parameter_list|)
 value|(EXT2_SB(s)->e2fs_fpb)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_FRAG_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_MIN_FRAG_SIZE<< (s)->e2fs_log_fsize)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_FRAGS_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / EXT2_FRAG_SIZE(s))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Macro-instructions used to manage group descriptors  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -1320,56 +1112,6 @@ name|s
 parameter_list|)
 value|(EXT2_SB(s)->e2fs_bpg)
 end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_DESC_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_SB(s)->e2fs_descpb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_DESC_PER_BLOCK_BITS
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_SB(s)->s_desc_per_block_bits)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_BLOCKS_PER_GROUP
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->e2fs_bpg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_DESC_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof(struct ext2_gd))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

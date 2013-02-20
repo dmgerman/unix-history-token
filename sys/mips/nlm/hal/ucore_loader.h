@@ -100,10 +100,13 @@ name|nlm_store_word_daddr
 argument_list|(
 name|addr
 argument_list|,
+name|htobe32
+argument_list|(
 name|p
 index|[
 name|i
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* add a 'nop' if number of instructions are odd */

@@ -372,6 +372,9 @@ name|struct
 name|fuse_filehandle
 modifier|*
 name|fufh
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -625,6 +628,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|fufh
+argument_list|,
+name|ioflag
 argument_list|)
 expr_stmt|;
 block|}
@@ -1628,6 +1633,9 @@ name|struct
 name|fuse_filehandle
 modifier|*
 name|fufh
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 block|{
 name|struct
@@ -1738,6 +1746,21 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|ioflag
+operator|&
+name|IO_APPEND
+condition|)
+name|uio_setoffset
+argument_list|(
+name|uio
+argument_list|,
+name|fvdat
+operator|->
+name|filesize
+argument_list|)
+expr_stmt|;
 comment|/*          * Find all of this file's B_NEEDCOMMIT buffers.  If our writes          * would exceed the local maximum per-file write commit size when          * combined with those, we must decide whether to flush,          * go synchronous, or return err.  We don't bother checking          * IO_UNIT -- we just make all writes atomic anyway, as there's          * no point optimizing for something that really won't ever happen.          */
 do|do
 block|{

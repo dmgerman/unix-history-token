@@ -61,6 +61,10 @@ name|v_vm_faults
 decl_stmt|;
 comment|/* (p) address memory faults */
 name|u_int
+name|v_io_faults
+decl_stmt|;
+comment|/* (p) page faults requiring I/O */
+name|u_int
 name|v_cow_faults
 decl_stmt|;
 comment|/* (p) copy-on-writes faults */

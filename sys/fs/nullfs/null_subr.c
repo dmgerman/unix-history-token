@@ -63,24 +63,6 @@ directive|include
 file|<fs/nullfs/null.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|LOG2_SIZEVNODE
-value|8
-end_define
-
-begin_comment
-comment|/* log2(sizeof struct vnode) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NNULLNODECACHE
-value|16
-end_define
-
 begin_comment
 comment|/*  * Null layer cache:  * Each cache entry holds a reference to the lower vnode  * along with a pointer to the alias vnode.  When an  * entry is added the lower vnode is VREF'd.  When the  * alias is removed the lower vnode is vrele'd.  */
 end_comment
@@ -92,8 +74,7 @@ name|NULL_NHASH
 parameter_list|(
 name|vp
 parameter_list|)
-define|\
-value|(&null_node_hashtbl[(((uintptr_t)vp)>>LOG2_SIZEVNODE)& null_node_hash])
+value|(&null_node_hashtbl[vfs_hash_index(vp)& null_hash_mask])
 end_define
 
 begin_expr_stmt
@@ -111,15 +92,16 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
-name|null_node_hash
+name|struct
+name|mtx
+name|null_hashmtx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|mtx
-name|null_hashmtx
+specifier|static
+name|u_long
+name|null_hash_mask
 decl_stmt|;
 end_decl_stmt
 
@@ -182,22 +164,16 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
-name|NULLFSDEBUG
-argument_list|(
-literal|"nullfs_init\n"
-argument_list|)
-expr_stmt|;
-comment|/* printed during system boot */
 name|null_node_hashtbl
 operator|=
 name|hashinit
 argument_list|(
-name|NNULLNODECACHE
+name|desiredvnodes
 argument_list|,
 name|M_NULLFSHASH
 argument_list|,
 operator|&
-name|null_node_hash
+name|null_hash_mask
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -244,7 +220,7 @@ name|null_node_hashtbl
 argument_list|,
 name|M_NULLFSHASH
 argument_list|,
-name|null_node_hash
+name|null_hash_mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -742,6 +718,28 @@ operator|!=
 name|LK_EXCLUSIVE
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|MOUNTTONULLMOUNT
+argument_list|(
+name|mp
+argument_list|)
+operator|->
+name|nullm_flags
+operator|&
+name|NULLM_CACHE
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"lowervp %p is not excl locked and cache is disabled"
+operator|,
+name|lowervp
+operator|)
+argument_list|)
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|lowervp

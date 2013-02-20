@@ -108,12 +108,10 @@ name|Parser
 block|{
 name|Parser
 argument_list|(
-specifier|const
-name|Parser
-operator|&
+argument|const Parser&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -122,8 +120,8 @@ specifier|const
 name|Parser
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|TextTokenRetokenizer

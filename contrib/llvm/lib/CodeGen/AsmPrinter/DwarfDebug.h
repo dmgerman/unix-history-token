@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -111,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/UniqueVector.h"
 end_include
 
 begin_include
@@ -964,15 +964,6 @@ name|true
 return|;
 if|if
 condition|(
-name|Var
-operator|.
-name|getTag
-argument_list|()
-operator|==
-name|dwarf
-operator|::
-name|DW_TAG_arg_variable
-operator|&&
 name|getType
 argument_list|()
 operator|.
@@ -990,8 +981,49 @@ end_decl_stmt
 
 begin_expr_stmt
 name|bool
+name|isObjectPointer
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Var
+operator|.
+name|isObjectPointer
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|getType
+argument_list|()
+operator|.
+name|isObjectPointer
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+end_if
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_macro
+unit|}      bool
 name|variableHasComplexAddress
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 name|assert
@@ -1195,7 +1227,7 @@ name|NextStringPoolNumber
 decl_stmt|;
 comment|/// SectionMap - Provides a unique id per text section.
 comment|///
-name|UniqueVector
+name|SetVector
 operator|<
 specifier|const
 name|MCSection
@@ -1491,6 +1523,13 @@ comment|// As an optimization, there is no need to emit an entry in the director
 comment|// table for the same directory as DW_at_comp_dir.
 name|StringRef
 name|CompilationDir
+decl_stmt|;
+comment|// A holder for the DarwinGDBCompat flag so that the compile unit can use it.
+name|bool
+name|isDarwinGDBCompat
+decl_stmt|;
+name|bool
+name|hasDwarfAccelTables
 decl_stmt|;
 name|private
 label|:
@@ -2058,6 +2097,24 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
+comment|/// useDarwinGDBCompat - returns whether or not to limit some of our debug
+comment|/// output to the limitations of darwin gdb.
+name|bool
+name|useDarwinGDBCompat
+parameter_list|()
+block|{
+return|return
+name|isDarwinGDBCompat
+return|;
+block|}
+name|bool
+name|useDwarfAccelTables
+parameter_list|()
+block|{
+return|return
+name|hasDwarfAccelTables
+return|;
+block|}
 block|}
 end_decl_stmt
 

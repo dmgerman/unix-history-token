@@ -387,6 +387,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_spectral.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_athdfs.h>
 end_include
 
@@ -2388,6 +2394,21 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* XXX make this a higher priority taskqueue? */
+name|TASK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txpkttask
+argument_list|,
+literal|0
+argument_list|,
+name|ath_start_task
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles resetting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
 name|sc
 operator|->
@@ -2680,6 +2701,36 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"%s: unable to attach DFS\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|bad2
+goto|;
+block|}
+comment|/* Attach spectral module */
+if|if
+condition|(
+name|ath_spectral_attach
+argument_list|(
+name|sc
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: unable to attach spectral\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -4440,6 +4491,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ath_spectral_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_dfs_detach
 argument_list|(
 name|sc
@@ -6502,6 +6558,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* Restore the LED configuration */
 name|ath_led_config
 argument_list|(
@@ -6816,6 +6882,30 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+name|if_ath_alq_post_intr
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|status
+argument_list|,
+name|ah
+operator|->
+name|ah_intrstate
+argument_list|,
+name|ah
+operator|->
+name|ah_syncstate
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG_ALQ */
 ifdef|#
 directive|ifdef
 name|ATH_KTR_INTR_DEBUG
@@ -7907,6 +7997,7 @@ argument_list|,
 name|pending
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do a reset upon any becaon miss event. 	 * 	 * It may be a non-recognised RX clear hang which needs a reset 	 * to clear. 	 */
 if|if
 condition|(
 name|ath_hal_gethangstate
@@ -7926,6 +8017,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ath_reset
+argument_list|(
+name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
+argument_list|)
+expr_stmt|;
 name|if_printf
 argument_list|(
 name|ifp
@@ -7935,6 +8033,9 @@ argument_list|,
 name|hangs
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|ath_reset
 argument_list|(
 name|ifp
@@ -7942,8 +8043,6 @@ argument_list|,
 name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
-block|}
-else|else
 name|ieee80211_beacon_miss
 argument_list|(
 name|ifp
@@ -7951,6 +8050,7 @@ operator|->
 name|if_l2com
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -8192,6 +8292,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Likewise this is set during reset so update 	 * state cached in the driver. 	 */
 name|sc
 operator|->
@@ -8282,6 +8392,8 @@ operator||
 name|HAL_INT_RXEOL
 operator||
 name|HAL_INT_RXORN
+operator||
+name|HAL_INT_TXURN
 operator||
 name|HAL_INT_FATAL
 operator||
@@ -9172,6 +9284,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ath_startrecv
@@ -9874,6 +9996,7 @@ name|bf
 operator|->
 name|bf_m
 expr_stmt|;
+comment|/* 	 * XXX Copy the node reference, the caller is responsible 	 * for deleting the node reference before it frees its 	 * buffer. 	 * 	 * XXX It's done like this so we don't call the net80211 	 * code whilst having active TX queue locks held. 	 */
 name|tbf
 operator|->
 name|bf_node
@@ -15027,36 +15150,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ts
-operator|->
-name|ts_status
-operator|&
-name|HAL_TX_DATA_UNDERRUN
-condition|)
-name|sc
-operator|->
-name|sc_stats
-operator|.
-name|ast_tx_data_underrun
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|ts
-operator|->
-name|ts_status
-operator|&
-name|HAL_TX_DELIM_UNDERRUN
-condition|)
-name|sc
-operator|->
-name|sc_stats
-operator|.
-name|ast_tx_delim_underrun
-operator|++
-expr_stmt|;
-if|if
-condition|(
 name|bf
 operator|->
 name|bf_m
@@ -15078,7 +15171,7 @@ if|if
 condition|(
 name|ts
 operator|->
-name|ts_status
+name|ts_flags
 operator|&
 name|HAL_TX_DESC_CFG_ERR
 condition|)
@@ -15087,6 +15180,37 @@ operator|->
 name|sc_stats
 operator|.
 name|ast_tx_desccfgerr
+operator|++
+expr_stmt|;
+comment|/* 	 * This can be valid for successful frame transmission! 	 * If there's a TX FIFO underrun during aggregate transmission, 	 * the MAC will pad the rest of the aggregate with delimiters. 	 * If a BA is returned, the frame is marked as "OK" and it's up 	 * to the TX completion code to notice which frames weren't 	 * successfully transmitted. 	 */
+if|if
+condition|(
+name|ts
+operator|->
+name|ts_flags
+operator|&
+name|HAL_TX_DATA_UNDERRUN
+condition|)
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_data_underrun
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ts
+operator|->
+name|ts_flags
+operator|&
+name|HAL_TX_DELIM_UNDERRUN
+condition|)
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_delim_underrun
 operator|++
 expr_stmt|;
 name|sr
@@ -16192,7 +16316,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Kick the TXQ scheduler */
+comment|/* Kick the software TXQ scheduler */
 if|if
 condition|(
 name|dosched
@@ -18576,6 +18700,14 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
+comment|/* Let spectral at in case spectral is enabled */
+name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|chan
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Re-enable rx framework. 		 */
 if|if
 condition|(
@@ -20352,23 +20484,32 @@ break|break;
 case|case
 name|IEEE80211_M_STA
 case|:
-comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 * However if it's due to a CSA -> RUN transition, 			 * force a beacon update so we pick up a lack of 			 * beacons from an AP in CAC and thus force a 			 * scan. 			 */
+comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 * However if it's due to a CSA -> RUN transition, 			 * force a beacon update so we pick up a lack of 			 * beacons from an AP in CAC and thus force a 			 * scan. 			 * 			 * And, there's also corner cases here where 			 * after a scan, the AP may have disappeared. 			 * In that case, we may not receive an actual 			 * beacon to update the beacon timer and thus we 			 * won't get notified of the missing beacons. 			 */
 name|sc
 operator|->
 name|sc_syncbeacon
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|csa_run_transition
-condition|)
+if|#
+directive|if
+literal|0
+block|if (csa_run_transition)
+endif|#
+directive|endif
 name|ath_beacon_config
 argument_list|(
 name|sc
 argument_list|,
 name|vap
 argument_list|)
+expr_stmt|;
+comment|/* 			 * PR: kern/175227 			 * 			 * Reconfigure beacons during reset; as otherwise 			 * we won't get the beacon timers reprogrammed 			 * after a reset and thus we won't pick up a 			 * beacon miss interrupt. 			 * 			 * Hopefully we'll see a beacon before the BMISS 			 * timer fires (too often), leading to a STA 			 * disassociation. 			 */
+name|sc
+operator|->
+name|sc_beacons
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -23079,6 +23220,24 @@ break|break;
 endif|#
 directive|endif
 case|case
+name|SIOCGATHSPECTRAL
+case|:
+name|error
+operator|=
+name|ath_ioctl_spectral
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+expr|struct
+name|ath_diag
+operator|*
+operator|)
+name|ifr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SIOCGATHNODERATESTATS
 case|:
 name|error
@@ -23890,7 +24049,7 @@ operator|->
 name|ni_vap
 argument_list|)
 decl_stmt|;
-comment|/* 	 * Some operating omdes don't set av_set_tim(), so don't 	 * update it here. 	 */
+comment|/* 	 * Some operating modes don't set av_set_tim(), so don't 	 * update it here. 	 */
 if|if
 condition|(
 name|avp

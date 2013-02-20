@@ -184,6 +184,16 @@ directive|define
 name|CpuXSAVE
 value|0x1000000
 comment|/* XSAVE Instructions required */
+define|#
+directive|define
+name|CpuAES
+value|0x2000000
+comment|/* AES Instructions required */
+define|#
+directive|define
+name|CpuPCLMUL
+value|0x4000000
+comment|/* Carry-less Multiplication extensions */
 comment|/* SSE4.1/4.2 Instructions required */
 define|#
 directive|define
@@ -204,7 +214,7 @@ comment|/* The default value for unknown CPUs - enable all features to avoid pro
 define|#
 directive|define
 name|CpuUnknownFlags
-value|(Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686 \ 	|CpuP4|CpuSledgehammer|CpuMMX|CpuMMX2|CpuSSE|CpuSSE2|CpuSSE3|CpuVMX \ 	|Cpu3dnow|Cpu3dnowA|CpuK6|CpuPadLock|CpuSVME|CpuSSSE3|CpuSSE4_1 \ 	|CpuSSE4_2|CpuABM|CpuSSE4a|CpuXSAVE)
+value|(Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686 \ 	|CpuP4|CpuSledgehammer|CpuMMX|CpuMMX2|CpuSSE|CpuSSE2|CpuSSE3|CpuVMX \ 	|Cpu3dnow|Cpu3dnowA|CpuK6|CpuPadLock|CpuSVME|CpuSSSE3|CpuSSE4_1 \ 	|CpuSSE4_2|CpuABM|CpuSSE4a|CpuXSAVE|CpuAES|CpuPCLMUL)
 comment|/* the bits in opcode_modifier are used to generate the final opcode from      the base_opcode.  These bits also are used to detect alternate forms of      the same instruction */
 name|unsigned
 name|int
@@ -361,6 +371,10 @@ directive|define
 name|Ugh
 value|0x20000000
 comment|/* deprecated fp insn, gets a warning */
+define|#
+directive|define
+name|NoSuf
+value|(No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_xSuf)
 comment|/* operand_types[i] describes the type of operand i.  This is made      by OR'ing together all of the possible type masks.  (e.g.      'operand_types[i] = Reg|Imm' specifies that operand i can be      either a register or an immediate operand.  */
 name|unsigned
 name|int
