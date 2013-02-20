@@ -550,17 +550,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_OBJECT_LOCKPTR
-parameter_list|(
-name|object
-parameter_list|)
-define|\
-value|(&(object)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_OBJECT_SLEEP
 parameter_list|(
 name|wchan
