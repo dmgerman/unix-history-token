@@ -6,109 +6,66 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_UCONTEXT_H_
+name|_X86_SIGFRAME_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_UCONTEXT_H_
+name|_X86_SIGFRAME_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|COMPAT_FREEBSD4
-argument_list|)
-end_if
+begin_comment
+comment|/*  * Signal frames, arguments passed to application signal handlers.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_struct
 struct|struct
-name|mcontext4
+name|sigframe
 block|{
-name|__register_t
-name|mc_onstack
+comment|/* 	 * The first four members may be used by applications. 	 * 	 * NOTE: The 4th argument is undocumented, ill commented 	 * on and seems to be somewhat BSD "standard".  Handlers 	 * installed with sigvec may be using it. 	 */
+name|register_t
+name|sf_signum
 decl_stmt|;
-comment|/* XXX - sigcontext compat. */
-name|__register_t
-name|mc_gs
+name|register_t
+name|sf_siginfo
 decl_stmt|;
-comment|/* machine state (struct trapframe) */
-name|__register_t
-name|mc_fs
+comment|/* code or pointer to sf_si */
+name|register_t
+name|sf_ucontext
 decl_stmt|;
-name|__register_t
-name|mc_es
+comment|/* points to sf_uc */
+name|register_t
+name|sf_addr
 decl_stmt|;
-name|__register_t
-name|mc_ds
+comment|/* undocumented 4th arg */
+union|union
+block|{
+name|__siginfohandler_t
+modifier|*
+name|sf_action
 decl_stmt|;
-name|__register_t
-name|mc_edi
+name|__sighandler_t
+modifier|*
+name|sf_handler
 decl_stmt|;
-name|__register_t
-name|mc_esi
+block|}
+name|sf_ahu
+union|;
+name|ucontext_t
+name|sf_uc
 decl_stmt|;
-name|__register_t
-name|mc_ebp
+comment|/* = *sf_ucontext */
+name|siginfo_t
+name|sf_si
 decl_stmt|;
-name|__register_t
-name|mc_isp
-decl_stmt|;
-name|__register_t
-name|mc_ebx
-decl_stmt|;
-name|__register_t
-name|mc_edx
-decl_stmt|;
-name|__register_t
-name|mc_ecx
-decl_stmt|;
-name|__register_t
-name|mc_eax
-decl_stmt|;
-name|__register_t
-name|mc_trapno
-decl_stmt|;
-name|__register_t
-name|mc_err
-decl_stmt|;
-name|__register_t
-name|mc_eip
-decl_stmt|;
-name|__register_t
-name|mc_cs
-decl_stmt|;
-name|__register_t
-name|mc_eflags
-decl_stmt|;
-name|__register_t
-name|mc_esp
-decl_stmt|;
-comment|/* machine state */
-name|__register_t
-name|mc_ss
-decl_stmt|;
-name|__register_t
-name|mc_fpregs
-index|[
-literal|28
-index|]
-decl_stmt|;
-comment|/* env87 + fpacc87 + u_long */
-name|__register_t
-name|__spare__
-index|[
-literal|17
-index|]
-decl_stmt|;
+comment|/* = *sf_siginfo (SA_SIGINFO case) */
 block|}
 struct|;
 end_struct
@@ -118,11 +75,44 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<x86/ucontext.h>
-end_include
+begin_comment
+comment|/* __i386__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_struct
+struct|struct
+name|sigframe
+block|{
+union|union
+block|{
+name|__siginfohandler_t
+modifier|*
+name|sf_action
+decl_stmt|;
+name|__sighandler_t
+modifier|*
+name|sf_handler
+decl_stmt|;
+block|}
+name|sf_ahu
+union|;
+name|ucontext_t
+name|sf_uc
+decl_stmt|;
+comment|/* = *sf_ucontext */
+name|siginfo_t
+name|sf_si
+decl_stmt|;
+comment|/* = *sf_siginfo (SA_SIGINFO case) */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
@@ -130,7 +120,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_UCONTEXT_H_ */
+comment|/* __amd64__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _X86_SIGFRAME_H_ */
 end_comment
 
 end_unit
