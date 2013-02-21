@@ -9111,8 +9111,6 @@ decl_stmt|,
 name|trycnt
 decl_stmt|,
 name|firstlock
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|nfscllayout
@@ -9334,11 +9332,6 @@ operator|~
 name|NFSCLFLAGS_RECOVER
 expr_stmt|;
 comment|/* 	 * Mark requests already queued on the server, so that they don't 	 * initiate another recovery cycle. Any requests already in the 	 * queue that handle state information will have the old stale 	 * clientid/stateid and will get a NFSERR_STALESTATEID, 	 * NFSERR_STALECLIENTID or NFSERR_BADSESSION reply from the server. 	 * This will be translated to NFSERR_STALEDONTRECOVER when 	 * R_DONTRECOVER is set. 	 */
-name|s
-operator|=
-name|splsoftclock
-argument_list|()
-expr_stmt|;
 name|NFSLOCKREQ
 argument_list|()
 expr_stmt|;
@@ -9368,11 +9361,6 @@ expr_stmt|;
 block|}
 name|NFSUNLOCKREQ
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Now, mark all delegations "need reclaim". 	 */
 name|TAILQ_FOREACH
