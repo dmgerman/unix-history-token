@@ -111,11 +111,9 @@ name|object
 parameter_list|)
 block|{
 comment|/* 	 * This is not ideal because FILE/LINE used by assertions will not 	 * be too helpful, but it must be an hard function for 	 * compatibility reasons. 	 */
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 block|}

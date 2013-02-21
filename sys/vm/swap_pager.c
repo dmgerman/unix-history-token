@@ -2675,11 +2675,9 @@ name|sw_alloc_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -3121,11 +3119,9 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|swp_pager_meta_free
@@ -3313,18 +3309,14 @@ block|{
 name|vm_pindex_t
 name|i
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|srcobject
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|dstobject
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If destroysource is set, we remove the source object from the 	 * swap_pager internal queue now. 	 */
@@ -3544,11 +3536,9 @@ block|{
 name|daddr_t
 name|blk0
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * do we have good backing store at the requested index ? 	 */
@@ -3752,13 +3742,11 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|swp_pager_meta_ctl
@@ -5453,11 +5441,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5994,11 +5980,9 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Convert default object to swap object if necessary 	 */
@@ -6354,11 +6338,9 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6544,11 +6526,9 @@ name|index
 init|=
 literal|0
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6744,11 +6724,9 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The meta data only exists of the object is OBJT_SWAP 	 * and even then might not be allocated yet. 	 */

@@ -1024,11 +1024,9 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1944,11 +1942,9 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Is a reservation fundamentally impossible? 	 */
@@ -3666,11 +3662,9 @@ block|{
 name|vm_reserv_t
 name|rv
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|new_object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|rv

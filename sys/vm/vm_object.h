@@ -502,14 +502,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 parameter_list|(
 name|object
-parameter_list|,
-name|type
 parameter_list|)
 define|\
-value|rw_assert(&(object)->lock, (type))
+value|rw_assert(&(object)->lock, RA_WLOCKED)
 end_define
 
 begin_define

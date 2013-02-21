@@ -2246,13 +2246,11 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10222,11 +10220,9 @@ name|b_bufobj
 operator|->
 name|bo_object
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet. 	 */
@@ -14039,15 +14035,13 @@ name|i
 decl_stmt|,
 name|last_busied
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|bp
 operator|->
 name|b_bufobj
 operator|->
 name|bo_object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|last_busied
@@ -14688,7 +14682,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|bp
 operator|->
@@ -14698,8 +14692,6 @@ literal|0
 index|]
 operator|->
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -14890,7 +14882,7 @@ operator|)
 operator|<<
 name|j
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|bp
 operator|->
@@ -14900,8 +14892,6 @@ name|i
 index|]
 operator|->
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if

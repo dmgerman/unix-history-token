@@ -2666,13 +2666,11 @@ operator|->
 name|as_lock
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|mem
 operator|->
 name|am_obj
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 for|for

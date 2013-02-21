@@ -1822,7 +1822,7 @@ name|PAGE_SIZE
 operator|-
 name|toff
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|tbp
 operator|->
@@ -1832,8 +1832,6 @@ name|j
 index|]
 operator|->
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2191,7 +2189,7 @@ name|j
 operator|++
 control|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|bp
 operator|->
@@ -2201,8 +2199,6 @@ name|j
 index|]
 operator|->
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if

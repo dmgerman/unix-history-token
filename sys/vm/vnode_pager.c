@@ -958,11 +958,9 @@ argument_list|(
 literal|"vnode_pager_dealloc: pager already dealloced"
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -1159,11 +1157,9 @@ name|pagesperblock
 decl_stmt|,
 name|blocksperpage
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If no vp or vp is doomed or marked transparent to VM, we do not 	 * have the page. 	 */
@@ -2375,11 +2371,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|error
