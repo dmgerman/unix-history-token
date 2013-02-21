@@ -20364,11 +20364,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|panic
 argument_list|(
-literal|"bad pte"
+literal|"bad pte va %lx pte %lx"
+argument_list|,
+name|pv
+operator|->
+name|pv_va
+argument_list|,
+name|tpte
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*  * We cannot remove wired pages from a process' mapping at this time  */
 if|if
 condition|(
