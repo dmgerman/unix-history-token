@@ -502,6 +502,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_ASSERT_LOCKED
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_assert(&(object)->lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_ASSERT_RLOCKED
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_assert(&(object)->lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_ASSERT_WLOCKED
 parameter_list|(
 name|object
