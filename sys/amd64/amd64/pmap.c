@@ -6326,6 +6326,19 @@ operator|>
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|va
+operator|>=
+name|VM_MIN_KERNEL_ADDRESS
+argument_list|,
+operator|(
+literal|"usermode va %lx"
+operator|,
+name|va
+operator|)
+argument_list|)
+expr_stmt|;
 name|pmap_kremove
 argument_list|(
 name|va
