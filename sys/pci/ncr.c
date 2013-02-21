@@ -18521,12 +18521,6 @@ argument_list|(
 literal|"ncr: fatal error: system halted - press reset to reboot ..."
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splhigh
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 init|;
