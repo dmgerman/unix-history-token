@@ -12819,7 +12819,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_PPWAIT
+name|P_PPTRACE
 operator|)
 operator|==
 literal|0
