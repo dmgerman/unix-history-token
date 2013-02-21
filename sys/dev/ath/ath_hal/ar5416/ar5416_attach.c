@@ -1164,13 +1164,13 @@ name|ah_aniControl
 operator|=
 name|ar5416AniControl
 expr_stmt|;
-comment|/* Default FIFO Trigger levels */
+comment|/* 	 * Default FIFO Trigger levels 	 * 	 * These define how filled the TX FIFO needs to be before 	 * the baseband begins to be given some data. 	 * 	 * To be paranoid, we ensure that the TX trigger level always 	 * has at least enough space for two TX DMA to occur. 	 * The TX DMA size is currently hard-coded to AR_TXCFG_DMASZ_128B. 	 * That means we need to leave at least 256 bytes available in 	 * the TX DMA FIFO. 	 */
 define|#
 directive|define
 name|AR_FTRIG_512B
 value|0x00000080
 comment|// 5 bits total
-comment|/* AR9285/AR9271 need to use half the TX FIFOs */
+comment|/* 	 * AR9285/AR9271 have half the size TX FIFO compared to 	 * other devices 	 */
 if|if
 condition|(
 name|AR_SREV_KITE
@@ -1251,6 +1251,16 @@ block|}
 undef|#
 directive|undef
 name|AR_FTRIG_512B
+comment|/* And now leave some headspace - 256 bytes */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_maxTxTrigLev
+operator|-=
+literal|4
+expr_stmt|;
 block|}
 end_function
 

@@ -1992,6 +1992,7 @@ name|AR_TXCFG_DMASZ_128B
 argument_list|)
 expr_stmt|;
 comment|/* 	 * let mac dma writes be in 128 byte chunks 	 */
+comment|/* 	 * XXX If you change this, you must change the headroom 	 * assigned in ah_maxTxTrigLev - see ar5416InitState(). 	 */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
