@@ -659,6 +659,8 @@ argument_list|,
 name|nfs
 argument_list|,
 name|VFCF_NETWORK
+operator||
+name|VFCF_SBDRY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
