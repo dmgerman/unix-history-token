@@ -219,9 +219,6 @@ directive|include
 file|<vm/vm_object.h>
 include|#
 directive|include
-file|<vm/vm_pager.h>
-include|#
-directive|include
 file|<vm/vm_kern.h>
 include|#
 directive|include
