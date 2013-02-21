@@ -12842,36 +12842,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
 comment|/* 		 * This has become a non-fatal error now 		 */
-if|if
-condition|(
-operator|!
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_addedbaw
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: wasn't added: seqno %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|SEQNO
-argument_list|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|if (! bf->bf_state.bfs_addedbaw) 			device_printf(sc->sc_dev, 			    "%s: wasn't added: seqno %d\n", 			    __func__, SEQNO(bf->bf_state.bfs_seqno));
+endif|#
+directive|endif
 block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(

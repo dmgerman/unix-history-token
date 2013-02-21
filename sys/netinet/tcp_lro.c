@@ -1470,8 +1470,6 @@ name|__predict_false
 argument_list|(
 operator|(
 name|csum
-operator|^
-literal|0xffff
 operator|)
 operator|!=
 literal|0

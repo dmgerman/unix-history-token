@@ -12620,35 +12620,38 @@ block|}
 end_function
 
 begin_comment
-comment|/* Defer the delivery of SIGSTOP for the current thread. */
+comment|/*  * Defer the delivery of SIGSTOP for the current thread.  Returns true  * if stops were deferred and false if they were already deferred.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|sigdeferstop
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-operator|!
-operator|(
+decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+if|if
+condition|(
 name|td
 operator|->
 name|td_flags
 operator|&
 name|TDF_SBDRY
-operator|)
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"attempt to set TDF_SBDRY recursively"
+literal|0
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 name|thread_lock
 argument_list|(
 name|td
@@ -12665,6 +12668,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -12675,25 +12683,16 @@ end_comment
 begin_function
 name|void
 name|sigallowstop
-parameter_list|(
+parameter_list|()
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
+decl_stmt|;
 name|td
-operator|->
-name|td_flags
-operator|&
-name|TDF_SBDRY
-argument_list|,
-operator|(
-literal|"attempt to clear already-cleared TDF_SBDRY"
-operator|)
-argument_list|)
+operator|=
+name|curthread
 expr_stmt|;
 name|thread_lock
 argument_list|(

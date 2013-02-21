@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -134,14 +140,14 @@ begin_define
 define|#
 directive|define
 name|RTC_LOCK
-value|mtx_lock_spin(&clock_lock)
+value|do { if (!kdb_active) mtx_lock_spin(&clock_lock); } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RTC_UNLOCK
-value|mtx_unlock_spin(&clock_lock)
+value|do { if (!kdb_active) mtx_unlock_spin(&clock_lock); } while (0)
 end_define
 
 begin_decl_stmt
@@ -1378,8 +1384,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* wait for time update to complete */
-comment|/* If RTCSA_TUP is zero, we have at least 244us before next update */
+comment|/* 	 * wait for time update to complete 	 * If RTCSA_TUP is zero, we have at least 244us before next update. 	 * This is fast enough on most hardware, but a refinement would be 	 * to make sure that no more than 240us pass after we start reading, 	 * and try again if so. 	 */
 while|while
 condition|(
 name|rtcin
@@ -1390,6 +1395,9 @@ operator|&
 name|RTCSA_TUP
 condition|)
 continue|continue;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|ct
 operator|.
 name|nsec
@@ -1485,6 +1493,9 @@ literal|2000
 expr_stmt|;
 endif|#
 directive|endif
+name|critical_exit
+argument_list|()
+expr_stmt|;
 comment|/* Set dow = -1 because some clocks don't set it correctly. */
 name|ct
 operator|.

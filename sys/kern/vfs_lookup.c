@@ -1516,12 +1516,7 @@ name|auio
 operator|.
 name|uio_td
 operator|=
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|td
 expr_stmt|;
 name|auio
 operator|.
