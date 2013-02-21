@@ -1662,6 +1662,26 @@ name|ndelim
 operator|=
 name|AH_FIRST_DESC_NDELIMS
 expr_stmt|;
+comment|/* 	 * If sc_delim_min_pad is non-zero, enforce it as the minimum 	 * pad delimiter count. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_delim_min_pad
+operator|!=
+literal|0
+condition|)
+name|ndelim
+operator|=
+name|MAX
+argument_list|(
+name|ndelim
+argument_list|,
+name|sc
+operator|->
+name|sc_delim_min_pad
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc

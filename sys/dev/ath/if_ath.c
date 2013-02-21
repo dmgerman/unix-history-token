@@ -3822,6 +3822,12 @@ name|sc_aggr_limit
 operator|=
 name|ATH_AGGR_MAXSIZE
 expr_stmt|;
+name|sc
+operator|->
+name|sc_delim_min_pad
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Check if the hardware requires PCI register serialisation. 	 * Some of the Owl based MACs require this. 	 */
 if|if
 condition|(

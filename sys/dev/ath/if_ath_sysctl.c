@@ -3802,7 +3802,7 @@ name|sc_aggr_limit
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum A-MPDU size, or 0 for 'default'"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -3827,7 +3827,34 @@ name|sc_rts_aggr_limit
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum A-MPDU size for RTS-protected frames, or '0' "
+literal|"for default"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"delim_min_pad"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_delim_min_pad
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enforce a minimum number of delimiters per A-MPDU "
+literal|" sub-frame"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
