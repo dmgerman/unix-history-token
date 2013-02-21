@@ -6106,7 +6106,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Note: called at splsoftclock from the timeout code  * This has to deal with two things...  cause wakeups while waiting for  * tty drains on last process exit, and call l_start at about the right  * time for protocols like ppp.  */
+comment|/*  * This has to deal with two things...  cause wakeups while waiting for  * tty drains on last process exit, and call l_start at about the right  * time for protocols like ppp.  */
 end_comment
 
 begin_endif
