@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -159,37 +159,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICH_FLASH_SECTOR_SIZE
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|ICH_FLASH_REG_MAPSIZE
-value|0x00A0
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_ICH_FWSM_RSPCIPHY
 value|0x00000040
 end_define
 
 begin_comment
 comment|/* Reset PHY on PCI Reset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICH_FWSM_DISSW
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* FW Disables SW Writes */
 end_comment
 
 begin_comment
@@ -231,24 +206,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_FWSM_PROXY_MODE
-value|0x00000008
+name|E1000_FWSM_WLOCK_MAC_MASK
+value|0x0380
 end_define
-
-begin_comment
-comment|/* FW is in proxy mode */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_FWSM_MEMC
-value|0x00000010
+name|E1000_FWSM_WLOCK_MAC_SHIFT
+value|7
 end_define
-
-begin_comment
-comment|/* ME Messaging capable */
-end_comment
 
 begin_comment
 comment|/* Shared Receive Address Registers */
@@ -257,132 +224,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_SHRAL
+name|E1000_SHRAL_PCH_LPT
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x05438 + ((_i) * 8))
+value|(0x05408 + ((_i) * 8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_SHRAH
+name|E1000_SHRAH_PCH_LPT
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x0543C + ((_i) * 8))
+value|(0x0540C + ((_i) * 8))
 end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_SHRAH_AV
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Addr Valid bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_SHRAH_MAV
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Multicast Addr Valid bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME
-value|0x05B50
-end_define
-
-begin_comment
-comment|/* Host to ME */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_LSECREQ
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Linksec Request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_LSECA
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Linksec Active */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_LSECSF
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Linksec Failed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_LSECD
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* Linksec Disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_SLCAPD
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Start LCAPD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_IPV4_ARP_EN
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Arp Offload enable bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_H2ME_IPV6_NS_EN
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* NS Offload enable bit */
-end_comment
 
 begin_define
 define|#
@@ -447,6 +304,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM3_PHY_CFG_COUNTER_MASK
+value|0x0C000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM3_PHY_CFG_COUNTER_50MSEC
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_FEXTNVM4_BEACON_DURATION_MASK
 value|0x7
 end_define
@@ -463,6 +334,13 @@ define|#
 directive|define
 name|E1000_FEXTNVM4_BEACON_DURATION_16USEC
 value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM6_REQ_PLL_CLK
+value|0x00000100
 end_define
 
 begin_define
@@ -488,6 +366,17 @@ end_define
 
 begin_comment
 comment|/* RAR[0], SHRA[0-3] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCH_LPT_RAR_ENTRIES
+value|12
+end_define
+
+begin_comment
+comment|/* RAR[0], SHRA[0-10] */
 end_comment
 
 begin_define
@@ -534,28 +423,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGP3_CAPABILITY
-value|PHY_REG(776, 19)
-end_define
-
-begin_comment
-comment|/* Capability */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGP3_PM_CTRL
-value|PHY_REG(769, 20)
-end_define
-
-begin_comment
-comment|/* Power Management Control */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IGP3_KMRN_DIAG_PCS_LOCK_LOSS
 value|0x0002
 end_define
@@ -572,13 +439,6 @@ define|#
 directive|define
 name|IGP3_VR_CTRL_MODE_SHUTDOWN
 value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP3_PM_CTRL_FORCE_PWR_DOWN
-value|0x0020
 end_define
 
 begin_comment
@@ -668,73 +528,6 @@ parameter_list|(
 name|_i
 parameter_list|)
 value|(BM_PHY_REG(BM_WUC_PAGE, 128 + ((_i)<< 1)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_IPAV
-value|(BM_PHY_REG(BM_WUC_PAGE, 64))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_IP4AT_L
-parameter_list|(
-name|_i
-parameter_list|)
-value|(BM_PHY_REG(BM_WUC_PAGE, 82 + ((_i) * 2)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_IP4AT_H
-parameter_list|(
-name|_i
-parameter_list|)
-value|(BM_PHY_REG(BM_WUC_PAGE, 83 + ((_i) * 2)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_SHRAL_LOWER
-parameter_list|(
-name|_i
-parameter_list|)
-value|(BM_PHY_REG(BM_WUC_PAGE, 44 + ((_i) * 4)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_SHRAL_UPPER
-parameter_list|(
-name|_i
-parameter_list|)
-value|(BM_PHY_REG(BM_WUC_PAGE, 45 + ((_i) * 4)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_SHRAH_LOWER
-parameter_list|(
-name|_i
-parameter_list|)
-value|(BM_PHY_REG(BM_WUC_PAGE, 46 + ((_i) * 4)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_SHRAH_UPPER
-parameter_list|(
-name|_i
-parameter_list|)
-value|(BM_PHY_REG(BM_WUC_PAGE, 47 + ((_i) * 4)))
 end_define
 
 begin_define
@@ -990,46 +783,6 @@ begin_comment
 comment|/* PCH Flow Control Refresh Timer Value */
 end_comment
 
-begin_comment
-comment|/*  * For ICH, the name used for NVM word 17h is LED1 Config.  * For PCH, the word was re-named to OEM Config.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_NVM_LED1_CONFIG
-value|0x17
-end_define
-
-begin_comment
-comment|/* NVM LED1/LPLU Config Word */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_NVM_LED1_CONFIG_LPLU_NONDOA
-value|0x0400
-end_define
-
-begin_comment
-comment|/* NVM LPLU in non-D0a Bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_NVM_OEM_CONFIG
-value|E1000_NVM_LED1_CONFIG
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_NVM_OEM_CONFIG_LPLU_NONDOA
-value|E1000_NVM_LED1_CONFIG_LPLU_NONDOA
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1051,6 +804,24 @@ end_define
 begin_comment
 comment|/* NVM Enable K1 bit */
 end_comment
+
+begin_comment
+comment|/* SMBus Control Phy Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CV_SMB_CTRL
+value|PHY_REG(769, 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CV_SMB_CTRL_FORCE_SMBUS
+value|0x0001
+end_define
 
 begin_comment
 comment|/* SMBus Address Phy Register */
@@ -1084,6 +855,27 @@ name|HV_SMB_ADDR_VALID
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|HV_SMB_ADDR_FREQ_MASK
+value|0x1100
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_SMB_ADDR_FREQ_LOW_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_SMB_ADDR_FREQ_HIGH_SHIFT
+value|12
+end_define
+
 begin_comment
 comment|/* Strapping Option Register - RO */
 end_comment
@@ -1107,6 +899,20 @@ define|#
 directive|define
 name|E1000_STRAP_SMBUS_ADDRESS_SHIFT
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STRAP_SMT_FREQ_MASK
+value|0x00003000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STRAP_SMT_FREQ_SHIFT
+value|12
 end_define
 
 begin_comment
@@ -1151,17 +957,6 @@ end_define
 
 begin_comment
 comment|/* Restart Auto-negotiation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCD_CFG_PHY_ADDR_BIT
-value|0x0020
-end_define
-
-begin_comment
-comment|/* Phy addr bit from LCD Config word */
 end_comment
 
 begin_comment
@@ -1221,6 +1016,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HV_PM_CTRL_PLL_STOP_IN_K1_GIGA
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_FLAG_TIMEOUT
 value|1000
 end_define
@@ -1243,6 +1045,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|I82579_LPI_CTRL_100_ENABLE
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_LPI_CTRL_1000_ENABLE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|I82579_LPI_CTRL_ENABLE_MASK
 value|0x6000
 end_define
@@ -1255,7 +1071,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* EMI Registers */
+comment|/* Extended Management Interface (EMI) Registers */
 end_comment
 
 begin_define
@@ -1291,7 +1107,18 @@ value|0x084F
 end_define
 
 begin_comment
-comment|/* Mean Square Error Threshold */
+comment|/* 82579 Mean Square Error Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I82577_MSE_THRESHOLD
+value|0x0887
+end_define
+
+begin_comment
+comment|/* 82577 Mean Square Error Threshold */
 end_comment
 
 begin_define
@@ -1305,91 +1132,207 @@ begin_comment
 comment|/* MSE count before dropping link */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|I82579_RX_CONFIG
+value|0x3412
+end_define
+
 begin_comment
-comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
+comment|/* Receive configuration */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IMS_ICH_ENABLE_MASK
-value|(\ 	E1000_IMS_DSW   | \ 	E1000_IMS_PHYINT | \ 	E1000_IMS_EPRST)
+name|I82579_EEE_PCS_STATUS
+value|0x182D
 end_define
 
 begin_comment
-comment|/* Additional interrupt register bit definitions */
+comment|/* IEEE MMD Register 3.1>> 8 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_ICR_LSECPNC
-value|0x00004000
+name|I82579_EEE_CAPABILITY
+value|0x0410
 end_define
 
 begin_comment
-comment|/* PN threshold - client */
+comment|/* IEEE MMD Register 3.20 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_IMS_LSECPNC
-value|E1000_ICR_LSECPNC
+name|I82579_EEE_ADVERTISEMENT
+value|0x040E
 end_define
 
 begin_comment
-comment|/* PN threshold - client */
+comment|/* IEEE MMD Register 7.60 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_ICS_LSECPNC
-value|E1000_ICR_LSECPNC
+name|I82579_EEE_LP_ABILITY
+value|0x040F
 end_define
 
 begin_comment
-comment|/* PN threshold - client */
-end_comment
-
-begin_comment
-comment|/* Security Processing bit Indication */
+comment|/* IEEE MMD Register 7.61 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDEXT_LINKSEC_STATUS_LSECH
-value|0x01000000
+name|I82579_EEE_100_SUPPORTED
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* 100BaseTx EEE supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I82579_EEE_1000_SUPPORTED
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* 1000BaseTx EEE supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_EEE_PCS_STATUS
+value|0x9401
+end_define
+
+begin_comment
+comment|/* IEEE MMD Register 3.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_EEE_CAPABILITY
+value|0x8000
+end_define
+
+begin_comment
+comment|/* IEEE MMD Register 3.20 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_EEE_ADVERTISEMENT
+value|0x8001
+end_define
+
+begin_comment
+comment|/* IEEE MMD Register 7.60 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_EEE_LP_ABILITY
+value|0x8002
+end_define
+
+begin_comment
+comment|/* IEEE MMD Register 7.61 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_RX_LPI_RCVD
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Tx LP idle received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_TX_LPI_RCVD
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Rx LP idle received */
+end_comment
+
+begin_comment
+comment|/* Intel Rapid Start Technology Support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_PROXY_CTRL
+value|BM_PHY_REG(BM_WUC_PAGE, 70)
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDEXT_LINKSEC_ERROR_BIT_MASK
-value|0x60000000
+name|I217_PROXY_CTRL_AUTO_DISABLE
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDEXT_LINKSEC_ERROR_NO_SA_MATCH
-value|0x20000000
+name|I217_SxCTRL
+value|PHY_REG(BM_PORT_CTRL_PAGE, 28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDEXT_LINKSEC_ERROR_REPLAY_ERROR
-value|0x40000000
+name|I217_SxCTRL_ENABLE_LPI_RESET
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDEXT_LINKSEC_ERROR_BAD_SIG
-value|0x60000000
+name|I217_CGFREG
+value|PHY_REG(772, 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_CGFREG_ENABLE_MTA_RESET
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_MEMPWR
+value|PHY_REG(772, 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_MEMPWR_DISABLE_SMB_RELEASE
+value|0x0010
 end_define
 
 begin_comment
@@ -1404,6 +1347,123 @@ parameter_list|(
 name|_n
 parameter_list|)
 value|(0x05F50 + ((_n) * 4))
+end_define
+
+begin_comment
+comment|/* Latency Tolerance Reporting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV
+value|0x000F8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_VALUE_MASK
+value|0x000003FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_SCALE_MAX
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_SCALE_FACTOR
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_SCALE_SHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_SCALE_MASK
+value|0x00001C00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_REQ_SHIFT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_NOSNOOP_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRV_SEND
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* Proprietary Latency Tolerance Reporting PCI Capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCI_LTR_CAP_LPT
+value|0xA8
+end_define
+
+begin_comment
+comment|/* OBFF Control& Threshold Defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SVCR_OFF_EN
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SVCR_OFF_MASKINT
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SVCR_OFF_TIMER_MASK
+value|0xFFFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SVCR_OFF_TIMER_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SVT_OFF_HWM_MASK
+value|0x0000001F
 end_define
 
 begin_function_decl
@@ -1511,10 +1571,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|s32
+name|e1000_read_emi_reg_locked
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+name|addr
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _E1000_ICH8LAN_H_ */
+end_comment
 
 end_unit
 
