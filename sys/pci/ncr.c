@@ -21502,20 +21502,11 @@ block|{
 name|lcb_p
 name|lp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|nccb_p
 name|cp
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Keep our timeout handler out */
-name|s
-operator|=
-name|splsoftclock
-argument_list|()
-expr_stmt|;
 comment|/* 	**	Lun structure available ? 	*/
 name|lp
 operator|=
@@ -21620,11 +21611,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|cp
