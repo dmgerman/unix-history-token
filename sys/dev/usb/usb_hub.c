@@ -1010,6 +1010,11 @@ operator|==
 name|USB_MODE_HOST
 condition|)
 block|{
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|child
@@ -1102,6 +1107,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|child
@@ -2605,6 +2614,9 @@ decl_stmt|;
 name|uint8_t
 name|x
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 name|hub
 operator|=
 name|udev
@@ -2666,6 +2678,8 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Make sure we don't race against user-space applications 	 * like LibUSB: 	 */
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -2976,6 +2990,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
