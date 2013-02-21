@@ -253,7 +253,7 @@ value|((struct ppc_data *)device_get_softc(dev))
 end_define
 
 begin_comment
-comment|/*  * We use critical enter/leave for the simple config locking needed to  * detect the devices. We just want to make sure that both of our writes  * happen without someone else also writing to those config registers. Since  * we just do this at startup, Giant keeps multiple threads from executing,  * and critical_enter() then is all that's needed to keep us from being preempted  * during the critical sequences with the hardware.  *  * Note: this doesn't prevent multiple threads from putting the chips into  * config mode, but since we only do that to detect the type at startup the  * extra overhead isn't needed since Giant protects us from multiple entry  * and no other code changes these registers.  */
+comment|/*  * We use critical enter/exit for the simple config locking needed to  * detect the devices. We just want to make sure that both of our writes  * happen without someone else also writing to those config registers. Since  * we just do this at startup, Giant keeps multiple threads from executing,  * and critical_enter() then is all that's needed to keep us from being preempted  * during the critical sequences with the hardware.  *  * Note: this doesn't prevent multiple threads from putting the chips into  * config mode, but since we only do that to detect the type at startup the  * extra overhead isn't needed since Giant protects us from multiple entry  * and no other code changes these registers.  */
 end_comment
 
 begin_define
@@ -273,7 +273,7 @@ name|PPC_CONFIG_UNLOCK
 parameter_list|(
 name|ppc
 parameter_list|)
-value|critical_leave()
+value|critical_exit()
 end_define
 
 begin_decl_stmt
