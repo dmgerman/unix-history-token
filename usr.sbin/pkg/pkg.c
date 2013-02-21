@@ -936,7 +936,7 @@ name|ret
 operator|)
 return|;
 block|}
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -1104,7 +1104,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 label|:
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

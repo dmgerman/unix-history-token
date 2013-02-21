@@ -531,6 +531,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|dupsok
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|timespec
 name|start_time
@@ -998,6 +1005,17 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|fsinode
+modifier|*
+name|link_check
+parameter_list|(
+name|fsinode
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

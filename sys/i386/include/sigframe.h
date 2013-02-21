@@ -142,50 +142,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
-struct|struct
-name|sigframe
-block|{
-comment|/* 	 * The first four members may be used by applications. 	 * 	 * NOTE: The 4th argument is undocumented, ill commented 	 * on and seems to be somewhat BSD "standard".  Handlers 	 * installed with sigvec may be using it. 	 */
-name|register_t
-name|sf_signum
-decl_stmt|;
-name|register_t
-name|sf_siginfo
-decl_stmt|;
-comment|/* code or pointer to sf_si */
-name|register_t
-name|sf_ucontext
-decl_stmt|;
-comment|/* points to sf_uc */
-name|register_t
-name|sf_addr
-decl_stmt|;
-comment|/* undocumented 4th arg */
-union|union
-block|{
-name|__siginfohandler_t
-modifier|*
-name|sf_action
-decl_stmt|;
-name|__sighandler_t
-modifier|*
-name|sf_handler
-decl_stmt|;
-block|}
-name|sf_ahu
-union|;
-name|ucontext_t
-name|sf_uc
-decl_stmt|;
-comment|/* = *sf_ucontext */
-name|siginfo_t
-name|sf_si
-decl_stmt|;
-comment|/* = *sf_siginfo (SA_SIGINFO case) */
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|<x86/sigframe.h>
+end_include
 
 begin_endif
 endif|#
