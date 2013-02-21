@@ -21593,11 +21593,6 @@ name|np
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
