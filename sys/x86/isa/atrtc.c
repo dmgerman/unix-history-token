@@ -1351,9 +1351,6 @@ name|struct
 name|clocktime
 name|ct
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* Look if we have a RTC present and the time is valid */
 if|if
 condition|(
@@ -1383,11 +1380,6 @@ return|;
 block|}
 comment|/* wait for time update to complete */
 comment|/* If RTCSA_TUP is zero, we have at least 244us before next update */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|rtcin
@@ -1397,18 +1389,7 @@ argument_list|)
 operator|&
 name|RTCSA_TUP
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-block|}
+continue|continue;
 name|ct
 operator|.
 name|nsec
