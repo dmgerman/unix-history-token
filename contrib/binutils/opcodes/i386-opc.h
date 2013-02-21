@@ -189,16 +189,6 @@ directive|define
 name|CpuAES
 value|0x2000000
 comment|/* AES Instructions required */
-define|#
-directive|define
-name|CpuPCLMUL
-value|0x4000000
-comment|/* Carry-less Multiplication extensions */
-comment|/* SSE4.1/4.2 Instructions required */
-define|#
-directive|define
-name|CpuSSE4
-value|(CpuSSE4_1|CpuSSE4_2)
 comment|/* These flags are set by gas depending on the flag_code.  */
 define|#
 directive|define
@@ -210,6 +200,16 @@ directive|define
 name|CpuNo64
 value|0x8000000
 comment|/* Not supported in the 64bit mode  */
+define|#
+directive|define
+name|CpuPCLMUL
+value|0x10000000
+comment|/* Carry-less Multiplication extensions */
+comment|/* SSE4.1/4.2 Instructions required */
+define|#
+directive|define
+name|CpuSSE4
+value|(CpuSSE4_1|CpuSSE4_2)
 comment|/* The default value for unknown CPUs - enable all features to avoid problems.  */
 define|#
 directive|define
