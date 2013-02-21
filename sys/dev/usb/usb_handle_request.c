@@ -510,12 +510,18 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 comment|/* 	 * We need to protect against other threads doing probe and 	 * attach: 	 */
 name|USB_XFER_UNLOCK
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+comment|/* Prevent re-enumeration */
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -590,6 +596,10 @@ goto|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -635,32 +645,14 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/* automatic locking */
-if|if
-condition|(
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
-argument_list|)
-condition|)
-block|{
+comment|/* Prevent re-enumeration */
 name|do_unlock
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|do_unlock
-operator|=
-literal|1
-expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|alt_index
@@ -762,6 +754,9 @@ decl_stmt|;
 name|uint8_t
 name|temp_state
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -800,6 +795,9 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+comment|/* Prevent re-enumeration */
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -1261,6 +1259,10 @@ goto|;
 block|}
 name|tr_valid
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -1278,6 +1280,10 @@ operator|)
 return|;
 name|tr_short
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
@@ -1295,6 +1301,10 @@ operator|)
 return|;
 name|tr_stalled
 label|:
+if|if
+condition|(
+name|do_unlock
+condition|)
 name|usbd_enum_unlock
 argument_list|(
 name|udev
