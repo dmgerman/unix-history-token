@@ -9241,6 +9241,12 @@ name|ccb
 operator|=
 name|ccb
 expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ATA_R_DATA_IN_CCB
+expr_stmt|;
 name|ch
 operator|->
 name|running
