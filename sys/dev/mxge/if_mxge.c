@@ -12395,17 +12395,6 @@ name|ip
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|cap
-init|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|->
-name|if_capenable
-decl_stmt|;
 name|uint16_t
 name|c
 decl_stmt|,
