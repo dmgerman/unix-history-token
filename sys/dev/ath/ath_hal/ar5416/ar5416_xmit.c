@@ -3552,6 +3552,76 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|HT_RC_2_MCS
+parameter_list|(
+name|_rc
+parameter_list|)
+value|((_rc)& 0x0f)
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u_int8_t
+name|baDurationDelta
+index|[]
+init|=
+block|{
+literal|24
+block|,
+comment|//  0: BPSK
+literal|12
+block|,
+comment|//  1: QPSK 1/2
+literal|12
+block|,
+comment|//  2: QPSK 3/4
+literal|4
+block|,
+comment|//  3: 16-QAM 1/2
+literal|4
+block|,
+comment|//  4: 16-QAM 3/4
+literal|4
+block|,
+comment|//  5: 64-QAM 2/3
+literal|4
+block|,
+comment|//  6: 64-QAM 3/4
+literal|4
+block|,
+comment|//  7: 64-QAM 5/6
+literal|24
+block|,
+comment|//  8: BPSK
+literal|12
+block|,
+comment|//  9: QPSK 1/2
+literal|12
+block|,
+comment|// 10: QPSK 3/4
+literal|4
+block|,
+comment|// 11: 16-QAM 1/2
+literal|4
+block|,
+comment|// 12: 16-QAM 3/4
+literal|4
+block|,
+comment|// 13: 64-QAM 2/3
+literal|4
+block|,
+comment|// 14: 64-QAM 3/4
+literal|4
+block|,
+comment|// 15: 64-QAM 5/6
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|ar5416Set11nRateScenario
@@ -3933,6 +4003,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Note: this should be called before calling ar5416SetBurstDuration()  * (if it is indeed called) in order to ensure that the burst duration  * is correctly updated with the BA delta workaround.  */
+end_comment
+
 begin_function
 name|void
 name|ar5416Set11nAggrFirst
@@ -3963,6 +4037,15 @@ name|AR5416DESC
 argument_list|(
 name|ds
 argument_list|)
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|burstDur
+decl_stmt|;
+name|uint8_t
+name|rate
 decl_stmt|;
 name|ads
 operator|->
@@ -4007,6 +4090,85 @@ argument_list|,
 name|AR_PadDelim
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AR_SREV_MERLIN_10_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * XXX It'd be nice if I were passed in the rate scenario 		 * at this point.. 		 */
+name|rate
+operator|=
+name|MS
+argument_list|(
+name|ads
+operator|->
+name|ds_ctl3
+argument_list|,
+name|AR_XmitRate0
+argument_list|)
+expr_stmt|;
+name|flags
+operator|=
+name|ads
+operator|->
+name|ds_ctl0
+operator|&
+operator|(
+name|AR_CTSEnable
+operator||
+name|AR_RTSEnable
+operator|)
+expr_stmt|;
+comment|/* 		 * WAR - MAC assumes normal ACK time instead of 		 * block ACK while computing packet duration. 		 * Add this delta to the burst duration in the descriptor. 		 */
+if|if
+condition|(
+name|flags
+operator|&&
+operator|(
+name|ads
+operator|->
+name|ds_ctl1
+operator|&
+name|AR_IsAggr
+operator|)
+condition|)
+block|{
+name|burstDur
+operator|=
+name|baDurationDelta
+index|[
+name|HT_RC_2_MCS
+argument_list|(
+name|rate
+argument_list|)
+index|]
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl2
+operator|&=
+operator|~
+operator|(
+name|AR_BurstDur
+operator|)
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl2
+operator||=
+name|SM
+argument_list|(
+name|burstDur
+argument_list|,
+name|AR_BurstDur
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -4198,6 +4360,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Program the burst duration, with the included BA delta if it's  * applicable.  */
+end_comment
+
 begin_function
 name|void
 name|ar5416Set11nBurstDuration
@@ -4226,6 +4392,57 @@ argument_list|(
 name|ds
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|burstDur
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
+name|rate
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|AR_SREV_MERLIN_10_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * XXX It'd be nice if I were passed in the rate scenario 		 * at this point.. 		 */
+name|rate
+operator|=
+name|MS
+argument_list|(
+name|ads
+operator|->
+name|ds_ctl3
+argument_list|,
+name|AR_XmitDataTries0
+argument_list|)
+expr_stmt|;
+comment|/* 		 * WAR - MAC assumes normal ACK time instead of 		 * block ACK while computing packet duration. 		 * Add this delta to the burst duration in the descriptor. 		 */
+if|if
+condition|(
+name|ads
+operator|->
+name|ds_ctl1
+operator|&
+name|AR_IsAggr
+condition|)
+block|{
+name|burstDur
+operator|=
+name|baDurationDelta
+index|[
+name|HT_RC_2_MCS
+argument_list|(
+name|rate
+argument_list|)
+index|]
+expr_stmt|;
+block|}
+block|}
 name|ads
 operator|->
 name|ds_ctl2
@@ -4239,6 +4456,8 @@ name|ds_ctl2
 operator||=
 name|SM
 argument_list|(
+name|burstDur
+operator|+
 name|burstDuration
 argument_list|,
 name|AR_BurstDur
