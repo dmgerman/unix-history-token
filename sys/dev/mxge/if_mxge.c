@@ -9030,6 +9030,9 @@ directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|m
 operator|->
 name|m_pkthdr
@@ -9074,6 +9077,8 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|m_copyback
 argument_list|(
@@ -12339,7 +12344,6 @@ argument_list|,
 name|csum
 argument_list|)
 expr_stmt|;
-comment|//	printf("%d %d %x %x %x %x %x\n", m->m_pkthdr.len, cksum_offset, c, csum, ocsum, partial, d);
 name|c
 operator|^=
 literal|0xffff
@@ -12392,6 +12396,30 @@ name|struct
 name|ip
 modifier|*
 name|ip
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+name|int
+name|cap
+init|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_capenable
 decl_stmt|;
 endif|#
 directive|endif
