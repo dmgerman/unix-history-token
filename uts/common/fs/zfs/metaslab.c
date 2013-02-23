@@ -3554,6 +3554,34 @@ name|ms_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This vdev is in the process of being removed so there is nothing 	 * for us to do here. 	 */
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_removing
+condition|)
+block|{
+name|ASSERT0
+argument_list|(
+name|smo
+operator|->
+name|smo_alloc
+argument_list|)
+expr_stmt|;
+name|ASSERT0
+argument_list|(
+name|vd
+operator|->
+name|vdev_ms_shift
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * The baseline weight is the metaslab's free space. 	 */
 name|space
 operator|=
@@ -5251,8 +5279,10 @@ name|ms_map
 decl_stmt|;
 name|space_map_t
 modifier|*
+modifier|*
 name|freed_map
 init|=
+operator|&
 name|msp
 operator|->
 name|ms_freemap
@@ -5267,8 +5297,10 @@ index|]
 decl_stmt|;
 name|space_map_t
 modifier|*
+modifier|*
 name|defer_map
 init|=
+operator|&
 name|msp
 operator|->
 name|ms_defermap
@@ -5318,6 +5350,7 @@ expr_stmt|;
 comment|/* 	 * If this metaslab is just becoming available, initialize its 	 * allocmaps, freemaps, and defermap and add its capacity to the vdev. 	 */
 if|if
 condition|(
+operator|*
 name|freed_map
 operator|==
 name|NULL
@@ -5325,6 +5358,7 @@ condition|)
 block|{
 name|ASSERT
 argument_list|(
+operator|*
 name|defer_map
 operator|==
 name|NULL
@@ -5493,6 +5527,7 @@ expr_stmt|;
 block|}
 name|freed_map
 operator|=
+operator|&
 name|msp
 operator|->
 name|ms_freemap
@@ -5507,6 +5542,7 @@ index|]
 expr_stmt|;
 name|defer_map
 operator|=
+operator|&
 name|msp
 operator|->
 name|ms_defermap
@@ -5542,11 +5578,17 @@ name|smo_alloc
 expr_stmt|;
 name|defer_delta
 operator|=
+operator|(
+operator|*
 name|freed_map
+operator|)
 operator|->
 name|sm_space
 operator|-
+operator|(
+operator|*
 name|defer_map
+operator|)
 operator|->
 name|sm_space
 expr_stmt|;
@@ -5595,14 +5637,16 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there's a space_map_load() in progress, wait for it to complete 	 * so that we have a consistent view of the in-core space map. 	 * Then, add defer_map (oldest deferred frees) to this map and 	 * transfer freed_map (this txg's frees) to defer_map. 	 */
+comment|/* 	 * If there's a space_map_load() in progress, wait for it to complete 	 * so that we have a consistent view of the in-core space map. 	 */
 name|space_map_load_wait
 argument_list|(
 name|sm
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Move the frees from the defer_map to this map (if it's loaded). 	 * Swap the freed_map and the defer_map -- this is safe to do 	 * because we've just emptied out the defer_map. 	 */
 name|space_map_vacate
 argument_list|(
+operator|*
 name|defer_map
 argument_list|,
 name|sm
@@ -5616,11 +5660,33 @@ argument_list|,
 name|sm
 argument_list|)
 expr_stmt|;
-name|space_map_vacate
+name|ASSERT0
+argument_list|(
+operator|(
+operator|*
+name|defer_map
+operator|)
+operator|->
+name|sm_space
+argument_list|)
+expr_stmt|;
+name|ASSERT0
+argument_list|(
+name|avl_numnodes
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|defer_map
+operator|)
+operator|->
+name|sm_root
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|space_map_swap
 argument_list|(
 name|freed_map
-argument_list|,
-name|space_map_add
 argument_list|,
 name|defer_map
 argument_list|)
