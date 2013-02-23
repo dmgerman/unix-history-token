@@ -734,7 +734,7 @@ control|)
 block|{
 if|if
 condition|(
-name|pendingsigs
+name|pendingsig
 condition|)
 name|dotrap
 argument_list|()
