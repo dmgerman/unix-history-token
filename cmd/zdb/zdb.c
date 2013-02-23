@@ -3029,7 +3029,6 @@ name|space_map_t
 modifier|*
 name|sm
 init|=
-operator|&
 name|msp
 operator|->
 name|ms_map
@@ -3123,7 +3122,6 @@ name|space_map_t
 modifier|*
 name|sm
 init|=
-operator|&
 name|msp
 operator|->
 name|ms_map
@@ -12494,7 +12492,6 @@ argument_list|)
 expr_stmt|;
 name|space_map_unload
 argument_list|(
-operator|&
 name|msp
 operator|->
 name|ms_map
@@ -12504,7 +12501,6 @@ name|VERIFY
 argument_list|(
 name|space_map_load
 argument_list|(
-operator|&
 name|msp
 operator|->
 name|ms_map
@@ -12530,7 +12526,7 @@ expr_stmt|;
 name|msp
 operator|->
 name|ms_map
-operator|.
+operator|->
 name|sm_ppd
 operator|=
 name|vd
@@ -12669,7 +12665,6 @@ argument_list|)
 expr_stmt|;
 name|space_map_unload
 argument_list|(
-operator|&
 name|msp
 operator|->
 name|ms_map
