@@ -25168,8 +25168,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vm_pagerret_ok
-argument_list|()
+name|zfs_vm_pagerret_ok
 operator|)
 return|;
 block|}
@@ -25268,8 +25267,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vm_pagerret_bad
-argument_list|()
+name|zfs_vm_pagerret_bad
 operator|)
 return|;
 block|}
@@ -25516,11 +25514,9 @@ return|return
 operator|(
 name|error
 condition|?
-name|vm_pagerret_error
-argument_list|()
+name|zfs_vm_pagerret_error
 else|:
-name|vm_pagerret_ok
-argument_list|()
+name|zfs_vm_pagerret_ok
 operator|)
 return|;
 block|}

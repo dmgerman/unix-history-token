@@ -21,32 +21,29 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+specifier|const
 name|int
-name|vm_pagerret_bad
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|zfs_vm_pagerret_bad
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+specifier|const
 name|int
-name|vm_pagerret_error
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|zfs_vm_pagerret_error
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+specifier|const
 name|int
-name|vm_pagerret_ok
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|zfs_vm_pagerret_ok
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
