@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  Copyright (c) 2006-2009, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/******************************************************************************  Copyright (c) 2006-2013, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -1356,6 +1356,8 @@ name|int
 name|i
 decl_stmt|,
 name|found_mac
+decl_stmt|,
+name|found_sn2
 decl_stmt|;
 name|ptr
 operator|=
@@ -1372,6 +1374,10 @@ operator|+
 name|MXGE_EEPROM_STRINGS_SIZE
 expr_stmt|;
 name|found_mac
+operator|=
+literal|0
+expr_stmt|;
+name|found_sn2
 operator|=
 literal|0
 expr_stmt|;
@@ -1505,6 +1511,10 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|found_sn2
+operator|&&
+operator|(
 name|memcmp
 argument_list|(
 name|ptr
@@ -1515,11 +1525,55 @@ literal|3
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|ptr
 operator|+=
 literal|3
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|sc
+operator|->
+name|serial_number_string
+argument_list|,
+name|ptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|serial_number_string
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"SN2="
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* SN2 takes precedence over SN */
+name|ptr
+operator|+=
+literal|4
+expr_stmt|;
+name|found_sn2
+operator|=
+literal|1
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -2601,7 +2655,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Run a DMA test which watches for unaligned completions and 	 * aborts on the first one seen. 	 */
+comment|/*  	 * Run a DMA test which watches for unaligned completions and 	 * aborts on the first one seen.  Not required on Z8ES or newer. 	 */
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|>=
+name|MXGE_PCI_REV_Z8ES
+condition|)
+return|return
+literal|0
+return|;
 name|status
 operator|=
 name|mxge_dma_test
@@ -9030,6 +9098,9 @@ directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|m
 operator|->
 name|m_pkthdr
@@ -9074,6 +9145,8 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|m_copyback
 argument_list|(
@@ -12339,7 +12412,6 @@ argument_list|,
 name|csum
 argument_list|)
 expr_stmt|;
-comment|//	printf("%d %d %x %x %x %x %x\n", m->m_pkthdr.len, cksum_offset, c, csum, ocsum, partial, d);
 name|c
 operator|^=
 literal|0xffff
@@ -12395,6 +12467,17 @@ name|ip
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|int
 name|cap
 init|=
@@ -12406,6 +12489,8 @@ name|rcvif
 operator|->
 name|if_capenable
 decl_stmt|;
+endif|#
+directive|endif
 name|uint16_t
 name|c
 decl_stmt|,

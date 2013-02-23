@@ -1867,6 +1867,8 @@ literal|0
 decl_stmt|;
 name|uint64_t
 name|objnum
+init|=
+literal|0
 decl_stmt|;
 name|boolean_t
 name|has_feature
@@ -6267,6 +6269,10 @@ block|{
 name|nl2cache
 operator|=
 literal|0
+expr_stmt|;
+name|newvdevs
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|oldvdevs
@@ -20973,6 +20979,8 @@ name|B_FALSE
 decl_stmt|;
 name|uint64_t
 name|unspare_guid
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*

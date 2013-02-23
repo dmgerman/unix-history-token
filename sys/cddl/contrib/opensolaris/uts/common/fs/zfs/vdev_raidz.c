@@ -6067,7 +6067,10 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|log
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
 name|val
 decl_stmt|;
 name|int

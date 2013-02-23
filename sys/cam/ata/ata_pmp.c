@@ -2738,11 +2738,19 @@ block|{
 comment|/* 			 * This PMP declares 6 ports, while only 5 of them 			 * are real. Port 5 is a SEMB port, probing which 			 * causes timeouts if external SEP is not connected 			 * to PMP over I2C. 			 */
 if|if
 condition|(
+operator|(
 name|softc
 operator|->
 name|pm_pid
 operator|==
 literal|0x37261095
+operator|||
+name|softc
+operator|->
+name|pm_pid
+operator|==
+literal|0x38261095
+operator|)
 operator|&&
 name|softc
 operator|->

@@ -2049,15 +2049,6 @@ name|ds_dir
 operator|->
 name|dd_pool
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|&&
-name|dsl_pool_sync_context
-argument_list|(
-name|dp
-argument_list|)
-condition|)
 name|start
 operator|=
 name|gethrtime
