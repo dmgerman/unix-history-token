@@ -1170,7 +1170,7 @@ if|if
 condition|(
 operator|*
 name|idx
-operator|<
+operator|>
 name|wrapidx
 condition|)
 return|return
