@@ -356,6 +356,9 @@ decl_stmt|;
 name|int
 name|b_flags
 decl_stmt|;
+name|int
+name|b_type
+decl_stmt|;
 union|union
 block|{
 name|char
@@ -449,6 +452,179 @@ begin_comment
 comment|/* Buffer is in use */
 end_comment
 
+begin_comment
+comment|/*  * Type of data in buffer  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* Buffer holds a superblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_SUPERBLK
+value|1
+end_define
+
+begin_comment
+comment|/* Buffer holds a superblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_CYLGRP
+value|2
+end_define
+
+begin_comment
+comment|/* Buffer holds a cylinder group map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_LEVEL1
+value|3
+end_define
+
+begin_comment
+comment|/* Buffer holds single level indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_LEVEL2
+value|4
+end_define
+
+begin_comment
+comment|/* Buffer holds double level indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_LEVEL3
+value|5
+end_define
+
+begin_comment
+comment|/* Buffer holds triple level indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_EXTATTR
+value|6
+end_define
+
+begin_comment
+comment|/* Buffer holds external attribute data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_INODES
+value|7
+end_define
+
+begin_comment
+comment|/* Buffer holds external attribute data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_DIRDATA
+value|8
+end_define
+
+begin_comment
+comment|/* Buffer holds directory data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_DATA
+value|9
+end_define
+
+begin_comment
+comment|/* Buffer holds user data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_NUMBUFTYPES
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BT_NAMES
+value|{			\ 	"unknown",			\ 	"Superblock",			\ 	"Cylinder Group",		\ 	"Single Level Indirect",	\ 	"Double Level Indirect",	\ 	"Triple Level Indirect",	\ 	"External Attribute",		\ 	"Inode Block",			\ 	"Directory Contents",		\ 	"User Data" }
+end_define
+
+begin_decl_stmt
+name|long
+name|readcnt
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|totalreadcnt
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timespec
+name|readtime
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timespec
+name|totalreadtime
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timespec
+name|startprog
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|bufarea
@@ -511,8 +687,10 @@ directive|define
 name|initbarea
 parameter_list|(
 name|bp
+parameter_list|,
+name|type
 parameter_list|)
-value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs2_daddr_t)-1; \ 	(bp)->b_flags = 0; \ } while (0)
+value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs2_daddr_t)-1; \ 	(bp)->b_flags = 0; \ 	(bp)->b_type = type; \ } while (0)
 end_define
 
 begin_define
@@ -1781,6 +1959,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|finalIOstats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|findino
 parameter_list|(
@@ -1890,6 +2077,9 @@ name|blkno
 parameter_list|,
 name|long
 name|size
+parameter_list|,
+name|int
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1996,6 +2186,17 @@ name|inoinfo
 parameter_list|(
 name|ino_t
 name|inum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|IOstats
+parameter_list|(
+name|char
+modifier|*
+name|what
 parameter_list|)
 function_decl|;
 end_function_decl

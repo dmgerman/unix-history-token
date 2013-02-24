@@ -642,6 +642,13 @@ condition|)
 block|{
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|buffer
+operator|->
+name|_fixed
+condition|)
 name|LDNS_FREE
 argument_list|(
 name|buffer

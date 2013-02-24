@@ -1001,7 +1001,7 @@ modifier|*
 name|rrlist
 parameter_list|)
 function_decl|;
-comment|/**  * Send the query for using the resolver and take the search list into account  * The search algorithm is as follows:  * If the name is absolute, try it as-is, otherwise apply the search list  * \param[in] *r operate using this resolver  * \param[in] *rdf query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  * \return ldns_pkt* a packet with the reply from the nameserver  */
+comment|/**  * Send the query for using the resolver and take the search list into account  * The search algorithm is as follows:  * If the name is absolute, try it as-is, otherwise apply the search list  * \param[in] *r operate using this resolver  * \param[in] *rdf query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  */
 name|ldns_pkt
 modifier|*
 name|ldns_resolver_search
@@ -1026,7 +1026,7 @@ name|uint16_t
 name|flags
 parameter_list|)
 function_decl|;
-comment|/**  * Form a query packet from a resolver and name/type/class combo  * \param[out] **q a pointer to a ldns_pkt pointer (initialized by this function)  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] f the query flags  * \return ldns_pkt* a packet with the reply from the nameserver  */
+comment|/**  * Form a query packet from a resolver and name/type/class combo  * \param[out] **q a pointer to a ldns_pkt pointer (initialized by this function)  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] f the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  */
 name|ldns_status
 name|ldns_resolver_prepare_query_pkt
 parameter_list|(
@@ -1054,7 +1054,7 @@ name|uint16_t
 name|f
 parameter_list|)
 function_decl|;
-comment|/**  * Send the query for name as-is  * \param[out] **answer a pointer to a ldns_pkt pointer (initialized by this function)  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  * \return ldns_pkt* a packet with the reply from the nameserver  */
+comment|/**  * Send the query for name as-is  * \param[out] **answer a pointer to a ldns_pkt pointer (initialized by this function)  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  */
 name|ldns_status
 name|ldns_resolver_send
 parameter_list|(
@@ -1100,7 +1100,7 @@ modifier|*
 name|query_pkt
 parameter_list|)
 function_decl|;
-comment|/**  * Send a query to a nameserver  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] *t query for this type (may be 0, defaults to A)  * \param[in] *c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  * \return ldns_pkt* a packet with the reply from the nameserver  * if _defnames is true the default domain will be added  */
+comment|/**  * Send a query to a nameserver  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] *t query for this type (may be 0, defaults to A)  * \param[in] *c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  * if _defnames is true the default domain will be added  */
 name|ldns_pkt
 modifier|*
 name|ldns_resolver_query

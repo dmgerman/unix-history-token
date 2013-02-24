@@ -466,6 +466,11 @@ expr_stmt|;
 comment|/* AHB clock gate usb0 */
 name|reg_value
 operator||=
+name|CCM_AHB_GATING_EHCI0
+expr_stmt|;
+comment|/* AHB clock gate ehci1 */
+name|reg_value
+operator||=
 name|CCM_AHB_GATING_EHCI1
 expr_stmt|;
 comment|/* AHB clock gate ehci1 */

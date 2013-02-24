@@ -375,6 +375,30 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Sanity check the length. It must not be zero, or we loop forever */
+if|if
+condition|(
+operator|!
+name|Resource
+operator|->
+name|Length
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid zero length descriptor in resource list\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_BAD_RESOURCE_LENGTH
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Perform the conversion */
 if|if
 condition|(

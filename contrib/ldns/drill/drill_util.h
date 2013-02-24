@@ -22,6 +22,29 @@ file|<ldns/ldns.h>
 end_include
 
 begin_comment
+comment|/**  * Read  keys from filename and append to key_list.  */
+end_comment
+
+begin_function_decl
+name|ldns_status
+name|read_key_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|ldns_rr_list
+modifier|*
+name|key_list
+parameter_list|,
+name|bool
+name|silently
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * return a address rdf, either A or AAAA   * NULL if anything goes wrong  */
 end_comment
 

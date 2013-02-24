@@ -162,6 +162,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|register_mem_fallback
+parameter_list|(
+name|struct
+name|mem_range
+modifier|*
+name|memp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

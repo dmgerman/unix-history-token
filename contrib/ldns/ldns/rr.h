@@ -79,7 +79,7 @@ comment|/* The first fields are 'common' and can be referenced instantly */
 define|#
 directive|define
 name|LDNS_RDATA_FIELD_DESCRIPTORS_COMMON
-value|52
+value|53
 comment|/**  *  The different RR classes.  */
 enum|enum
 name|ldns_enum_rr_class
@@ -412,6 +412,11 @@ comment|/* RFC 5155 */
 name|LDNS_RR_TYPE_NSEC3PARAMS
 init|=
 literal|51
+block|,
+comment|/** draft-ietf-dane-protocol */
+name|LDNS_RR_TYPE_TLSA
+init|=
+literal|52
 block|,
 comment|/** draft-ietf-dnsop-trust-history */
 name|LDNS_RR_TYPE_TALINK

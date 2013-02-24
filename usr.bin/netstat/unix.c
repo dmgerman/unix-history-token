@@ -941,6 +941,10 @@ decl_stmt|;
 name|u_long
 name|head_off
 decl_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|type

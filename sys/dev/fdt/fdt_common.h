@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|DI_MAX_INTR_NUM
-value|8
+value|32
 end_define
 
 begin_struct

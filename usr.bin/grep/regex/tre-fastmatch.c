@@ -150,7 +150,7 @@ define|#
 directive|define
 name|STORE_MBS_PAT
 define|\
-value|{									\     size_t siz;								\ 									\     siz = wcstombs(NULL, fg->wpattern, 0);				\     if (siz == (size_t)-1)						\       return REG_BADPAT;						\     fg->len = siz;							\     fg->pattern = xmalloc(siz + 1);					\     if (fg->pattern == NULL)						\       return REG_ESPACE;						\     wcstombs(fg->pattern, fg->wpattern, siz);				\     fg->pattern[siz] = '\0';						\   }									\  #define IS_OUT_OF_BOUNDS						\   ((!fg->reversed							\     ? ((type == STR_WIDE) ? ((j + fg->wlen)> len)			\ 			  : ((j + fg->len)> len))			\     : (j< 0)))
+value|{									\     size_t siz;								\ 									\     siz = wcstombs(NULL, fg->wpattern, 0);				\     if (siz == (size_t)-1)						\       return REG_BADPAT;						\     fg->len = siz;							\     fg->pattern = xmalloc(siz + 1);					\     if (fg->pattern == NULL)						\       return REG_ESPACE;						\     wcstombs(fg->pattern, fg->wpattern, siz);				\     fg->pattern[siz] = '\0';						\   }									\  #define IS_OUT_OF_BOUNDS						\   ((!fg->reversed							\     ? ((type == STR_WIDE) ? ((j + fg->wlen)> len)			\ 			  : ((j + fg->len)> len))			\     : (j<= 0)))
 end_define
 
 begin_comment

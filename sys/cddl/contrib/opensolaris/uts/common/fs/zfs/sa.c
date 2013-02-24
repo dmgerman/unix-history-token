@@ -2998,8 +2998,11 @@ name|lot_count
 decl_stmt|;
 name|int
 name|hdrsize
-decl_stmt|,
+decl_stmt|;
+name|int
 name|spillhdrsize
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|used
@@ -4048,6 +4051,8 @@ literal|0
 decl_stmt|;
 name|uint64_t
 name|sa_reg_count
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|error
@@ -8369,8 +8374,13 @@ literal|0
 decl_stmt|;
 name|int
 name|bonus_data_size
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|spill_data_size
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|spill_attr_count

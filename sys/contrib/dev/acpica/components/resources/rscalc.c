@@ -302,6 +302,21 @@ name|AE_AML_INVALID_RESOURCE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Sanity check the length. It must not be zero, or we loop forever */
+if|if
+condition|(
+operator|!
+name|Resource
+operator|->
+name|Length
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_BAD_RESOURCE_LENGTH
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Get the base size of the (external stream) resource descriptor */
 name|TotalSize
 operator|=

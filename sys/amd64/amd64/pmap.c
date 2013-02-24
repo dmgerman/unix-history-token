@@ -23603,13 +23603,11 @@ name|PAGE_MASK
 expr_stmt|;
 name|size
 operator|=
-name|roundup
+name|round_page
 argument_list|(
 name|offset
 operator|+
 name|size
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|va
@@ -23798,13 +23796,11 @@ name|PAGE_MASK
 expr_stmt|;
 name|size
 operator|=
-name|roundup
+name|round_page
 argument_list|(
 name|offset
 operator|+
 name|size
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|kmem_free
@@ -24264,13 +24260,11 @@ name|PAGE_MASK
 expr_stmt|;
 name|size
 operator|=
-name|roundup
+name|round_page
 argument_list|(
 name|offset
 operator|+
 name|size
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Only supported on kernel virtual addresses, including the direct 	 * map but excluding the recursive map. 	 */

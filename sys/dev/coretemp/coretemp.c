@@ -862,6 +862,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -890,6 +892,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -918,6 +922,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -946,6 +952,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,
@@ -974,6 +982,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|dev
 argument_list|,

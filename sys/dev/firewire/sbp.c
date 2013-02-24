@@ -13051,15 +13051,8 @@ literal|0
 condition|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
-name|s
-operator|=
-name|splsoftvm
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load_ccb
@@ -13082,11 +13075,6 @@ name|ocb
 argument_list|,
 comment|/*flags*/
 literal|0
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if

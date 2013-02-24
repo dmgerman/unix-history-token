@@ -605,6 +605,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_offset_t
+name|vm_max_kernel_address
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|pmap
 name|kernel_pmap_store
@@ -5293,9 +5299,6 @@ parameter_list|(
 name|vm_offset_t
 name|firstaddr
 parameter_list|,
-name|vm_offset_t
-name|lastaddr
-parameter_list|,
 name|struct
 name|pv_addr
 modifier|*
@@ -5380,7 +5383,7 @@ literal|"firstaddr = %08x, lastaddr = %08x\n"
 argument_list|,
 name|firstaddr
 argument_list|,
-name|lastaddr
+name|vm_max_kernel_address
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5792,7 +5795,7 @@ name|size
 operator|=
 operator|(
 operator|(
-name|lastaddr
+name|vm_max_kernel_address
 operator|-
 name|pmap_curmaxkvaddr
 operator|)
@@ -5940,7 +5943,7 @@ argument_list|)
 expr_stmt|;
 name|virtual_end
 operator|=
-name|lastaddr
+name|vm_max_kernel_address
 expr_stmt|;
 name|kernel_vm_end
 operator|=
@@ -5948,7 +5951,7 @@ name|pmap_curmaxkvaddr
 expr_stmt|;
 name|arm_nocache_startaddr
 operator|=
-name|lastaddr
+name|vm_max_kernel_address
 expr_stmt|;
 name|mtx_init
 argument_list|(

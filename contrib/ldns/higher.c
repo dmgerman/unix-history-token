@@ -483,6 +483,11 @@ operator||
 name|LDNS_RD
 argument_list|)
 expr_stmt|;
+name|ldns_rdf_deep_free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pkt

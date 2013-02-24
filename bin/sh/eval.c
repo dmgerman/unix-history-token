@@ -744,6 +744,12 @@ operator|&
 name|smark
 argument_list|)
 expr_stmt|;
+name|setstackmark
+argument_list|(
+operator|&
+name|smark
+argument_list|)
+expr_stmt|;
 block|}
 name|popfile
 argument_list|()
@@ -1294,6 +1300,12 @@ operator|&
 name|smark
 argument_list|)
 expr_stmt|;
+name|setstackmark
+argument_list|(
+operator|&
+name|smark
+argument_list|)
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -1312,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pendingsigs
+name|pendingsig
 condition|)
 name|dotrap
 argument_list|()

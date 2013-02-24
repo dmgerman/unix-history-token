@@ -502,6 +502,97 @@ literal|"DNSSEC signature not incepted long enough"
 block|}
 block|,
 block|{
+name|LDNS_STATUS_DANE_UNKNOWN_CERTIFICATE_USAGE
+block|,
+literal|"Unknown TLSA Certificate Usage"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_UNKNOWN_SELECTOR
+block|,
+literal|"Unknown TLSA Selector"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_UNKNOWN_MATCHING_TYPE
+block|,
+literal|"Unknown TLSA Matching Type"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_UNKNOWN_PROTOCOL
+block|,
+literal|"Unknown protocol. Only IPv4 and IPv6 are understood"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_UNKNOWN_TRANSPORT
+block|,
+literal|"Unknown transport. Should be one of {tcp, udp, sctp}"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_MISSING_EXTRA_CERTS
+block|,
+comment|/* Trust anchor assertion */
+literal|"More than one certificate should be provided"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_EXTRA_CERTS_NOT_USED
+block|,
+comment|/* Trust anchor assertion */
+literal|"Non of the extra certificates is used to sign the first"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_OFFSET_OUT_OF_RANGE
+block|,
+comment|/* Trust anchor assertion */
+literal|"The offset was out of range"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_INSECURE
+block|,
+comment|/* Unused by library */
+literal|"The queried resource records were insecure"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_BOGUS
+block|,
+comment|/* Unused by library */
+literal|"The queried resource records were bogus"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_TLSA_DID_NOT_MATCH
+block|,
+literal|"The TLSA record(s) "
+literal|"did not match with the server certificate (chain)"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_NON_CA_CERTIFICATE
+block|,
+literal|"The certificate was not a CA certificate"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_PKIX_DID_NOT_VALIDATE
+block|,
+literal|"Could not PKIX validate"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_DANE_PKIX_NO_SELF_SIGNED_TRUST_ANCHOR
+block|,
+literal|"The validation path "
+literal|"did not end in a self-signed certificate"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

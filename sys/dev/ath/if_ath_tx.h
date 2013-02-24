@@ -139,6 +139,17 @@ define|\
 value|((((_seqno) - (_start))& 4095)< (_bawsz))
 end_define
 
+begin_comment
+comment|/*  * Maximum aggregate size  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_AGGR_MAXSIZE
+value|65530
+end_define
+
 begin_function_decl
 specifier|extern
 name|void

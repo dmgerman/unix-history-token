@@ -100,6 +100,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|CORE_ADDR
+name|kgdb_trgt_core_pcb
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CORE_ADDR
+name|kgdb_trgt_stop_pcb
+parameter_list|(
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|kgdb_trgt_new_objfile
 parameter_list|(

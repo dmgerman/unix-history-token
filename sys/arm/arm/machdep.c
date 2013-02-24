@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_sched.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_timer.h"
 end_include
 
@@ -163,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
 end_include
 
 begin_include
@@ -1920,6 +1932,17 @@ name|int
 name|busy
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_SPARE2
+argument_list|,
+literal|"cpu_idle(%d) at %d"
+argument_list|,
+name|busy
+argument_list|,
+name|curcpu
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_EVENTTIMERS
@@ -1938,6 +1961,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|sched_runnable
+argument_list|()
+condition|)
 name|cpu_sleep
 argument_list|(
 literal|0
@@ -1961,6 +1990,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|CTR2
+argument_list|(
+name|KTR_SPARE2
+argument_list|,
+literal|"cpu_idle(%d) at %d done"
+argument_list|,
+name|busy
+argument_list|,
+name|curcpu
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5616,9 +5656,6 @@ name|l2_start
 decl_stmt|,
 name|lastaddr
 decl_stmt|;
-name|vm_offset_t
-name|pmap_bootstrap_lastaddr
-decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|,
@@ -6051,7 +6088,7 @@ operator|=
 name|curr
 expr_stmt|;
 comment|/* Platform-specific initialisation */
-name|pmap_bootstrap_lastaddr
+name|vm_max_kernel_address
 operator|=
 name|initarm_lastaddr
 argument_list|()
@@ -6775,8 +6812,6 @@ expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
 name|freemempos
-argument_list|,
-name|pmap_bootstrap_lastaddr
 argument_list|,
 operator|&
 name|kernel_l1pt

@@ -453,28 +453,6 @@ begin_comment
 comment|/* AIM/E500 */
 end_comment
 
-begin_comment
-comment|/* XXX max. amount of KVM to be used by buffers. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_MAX_KERNEL_BUF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_KERNEL_BUF
-value|(SEGMENT_LENGTH * 7 / 10)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if

@@ -1223,11 +1223,9 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Don't allow two handlers. */
+comment|/* Do not allow multiple handlers */
 if|if
 condition|(
-name|NULL
-operator|!=
 name|AcpiGbl_FixedEventHandlers
 index|[
 name|Event
@@ -1285,7 +1283,12 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not enable fixed event 0x%X"
+literal|"Could not enable fixed event - %s (%u)"
+operator|,
+name|AcpiUtGetEventName
+argument_list|(
+name|Event
+argument_list|)
 operator|,
 name|Event
 operator|)
@@ -1318,7 +1321,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Enabled fixed event %X, Handler=%p\n"
+literal|"Enabled fixed event %s (%X), Handler=%p\n"
+operator|,
+name|AcpiUtGetEventName
+argument_list|(
+name|Event
+argument_list|)
 operator|,
 name|Event
 operator|,
@@ -1454,7 +1462,12 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not write to fixed event enable register 0x%X"
+literal|"Could not disable fixed event - %s (%u)"
+operator|,
+name|AcpiUtGetEventName
+argument_list|(
+name|Event
+argument_list|)
 operator|,
 name|Event
 operator|)
@@ -1468,7 +1481,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Disabled fixed event %X\n"
+literal|"Disabled fixed event - %s (%X)\n"
+operator|,
+name|AcpiUtGetEventName
+argument_list|(
+name|Event
+argument_list|)
 operator|,
 name|Event
 operator|)
