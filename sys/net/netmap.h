@@ -53,7 +53,19 @@ define|#
 directive|define
 name|NS_FORWARD
 value|0x0004
-comment|/* pass packet to the other endpoint 				 * (host stack or device 				 */
+comment|/* pass packet to the other endpoint 				 * (host stack or device) 				 */
+define|#
+directive|define
+name|NS_NO_LEARN
+value|0x0008
+define|#
+directive|define
+name|NS_PORT_SHIFT
+value|8
+define|#
+directive|define
+name|NS_PORT_MASK
+value|(0xff<< NS_PORT_SHIFT)
 block|}
 struct|;
 end_struct

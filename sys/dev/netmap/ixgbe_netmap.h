@@ -44,34 +44,6 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ix_write_len
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_dev_netmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ix_write_len
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ix_write_len
-argument_list|,
-literal|0
-argument_list|,
-literal|"write rx len"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ix_rx_miss
 decl_stmt|,
 name|ix_rx_miss_bufs
@@ -717,7 +689,7 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* 	 * ixgbe can generate an interrupt on every tx packet, but it 	 * seems very expensive, so we interrupt once every half ring, 	 * or when requested with NS_REPORT 	 */
-name|int
+name|u_int
 name|report_frequency
 init|=
 name|kring
@@ -1644,7 +1616,6 @@ operator|||
 name|force_update
 condition|)
 block|{
-comment|/* XXX apparently the length field in advanced descriptors 		 * does not include the CRC irrespective of the setting 		 * of CRCSTRIP. The data sheets say differently. 		 * Very strange. 		 */
 name|int
 name|crclen
 init|=
@@ -1653,6 +1624,13 @@ condition|?
 literal|0
 else|:
 literal|4
+decl_stmt|;
+name|uint16_t
+name|slot_flags
+init|=
+name|kring
+operator|->
+name|nkr_slot_flags
 decl_stmt|;
 name|l
 operator|=
@@ -1740,16 +1718,6 @@ argument_list|)
 operator|-
 name|crclen
 expr_stmt|;
-if|if
-condition|(
-name|ix_write_len
-condition|)
-name|D
-argument_list|(
-literal|"rx[%d] len %d"
-argument_list|,
-name|j
-argument_list|,
 name|ring
 operator|->
 name|slot
@@ -1757,8 +1725,9 @@ index|[
 name|j
 index|]
 operator|.
-name|len
-argument_list|)
+name|flags
+operator|=
+name|slot_flags
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
