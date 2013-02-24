@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|VM_RADIX_BOOT_CACHE
-value|1500
+value|150
 end_define
 
 begin_endif
@@ -1354,9 +1354,6 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-name|int
-name|nitems
-decl_stmt|;
 name|vm_radix_node_zone
 operator|=
 name|uma_zcreate
@@ -1393,9 +1390,10 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
-name|nitems
-operator|=
-name|uma_zone_set_max
+if|if
+condition|(
+operator|!
+name|uma_zone_reserve_kva
 argument_list|(
 name|vm_radix_node_zone
 argument_list|,
@@ -1403,18 +1401,10 @@ name|cnt
 operator|.
 name|v_page_count
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nitems
-operator|<
-name|cnt
-operator|.
-name|v_page_count
 condition|)
 name|panic
 argument_list|(
-literal|"%s: unexpected requested number of items"
+literal|"%s: unable to create new zone"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1423,7 +1413,9 @@ name|uma_prealloc
 argument_list|(
 name|vm_radix_node_zone
 argument_list|,
-name|nitems
+name|cnt
+operator|.
+name|v_page_count
 argument_list|)
 expr_stmt|;
 name|boot_cache_cnt

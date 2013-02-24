@@ -799,29 +799,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Switches the backing object of a zone  *  * Arguments:  *	zone  The zone to update.  *	obj   The VM object to use for future allocations.  *	size  The size of the object to allocate.  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	A NULL object can be used and uma will allocate one for you.  Setting  *	the size will limit the amount of memory allocated to this zone.  *  */
+comment|/*  * Switches the backing object of a zone to VM_ALLOC_NOOBJ.  *  * Arguments:  *	zone  The zone to update.  *	nitems  The number of items previewed to be allocated.  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	The size will limit the amount of memory allocated to this zone.  *  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|vm_object
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
-name|uma_zone_set_obj
+name|uma_zone_reserve_kva
 parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
 name|int
-name|size
+name|nitems
 parameter_list|)
 function_decl|;
 end_function_decl

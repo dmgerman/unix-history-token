@@ -1086,14 +1086,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|vm_object
-name|pvzone_obj
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|pv_entry_count
 init|=
@@ -6641,12 +6633,9 @@ name|cnt
 operator|.
 name|v_page_count
 expr_stmt|;
-name|uma_zone_set_obj
+name|uma_zone_reserve_kva
 argument_list|(
 name|pvzone
-argument_list|,
-operator|&
-name|pvzone_obj
 argument_list|,
 name|pv_entry_max
 argument_list|)

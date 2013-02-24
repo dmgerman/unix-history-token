@@ -629,28 +629,6 @@ name|vm_object_t
 operator|)
 name|mem
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|object
-operator|->
-name|mtx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|object
-operator|->
-name|mtx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
-argument_list|(
-name|object
-argument_list|,
-literal|"standard object"
-argument_list|)
-expr_stmt|;
 comment|/* These are true for any object that has been freed */
 name|object
 operator|->
@@ -670,6 +648,7 @@ name|shadow_count
 operator|=
 literal|0
 expr_stmt|;
+comment|/* It relies on vm object mutex to be initialized afterwards. */
 return|return
 operator|(
 literal|0
@@ -679,6 +658,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|_vm_object_allocate
 parameter_list|(
@@ -690,8 +670,44 @@ name|size
 parameter_list|,
 name|vm_object_t
 name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mtxname
 parameter_list|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|object
+operator|->
+name|mtx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|object
+operator|->
+name|mtx
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|object
+operator|->
+name|mtx
+argument_list|,
+literal|"vm object"
+argument_list|,
+name|mtxname
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_DUPOK
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -942,13 +958,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
-argument_list|(
-name|kernel_object
-argument_list|,
-literal|"kernel object"
-argument_list|)
-expr_stmt|;
 name|_vm_object_allocate
 argument_list|(
 name|OBJT_PHYS
@@ -961,6 +970,8 @@ name|VM_MIN_KERNEL_ADDRESS
 argument_list|)
 argument_list|,
 name|kernel_object
+argument_list|,
+literal|"kernel object"
 argument_list|)
 expr_stmt|;
 if|#
@@ -988,13 +999,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|VM_OBJECT_LOCK_INIT
-argument_list|(
-name|kmem_object
-argument_list|,
-literal|"kmem object"
-argument_list|)
-expr_stmt|;
 name|_vm_object_allocate
 argument_list|(
 name|OBJT_PHYS
@@ -1007,6 +1011,8 @@ name|VM_MIN_KERNEL_ADDRESS
 argument_list|)
 argument_list|,
 name|kmem_object
+argument_list|,
+literal|"kmem object"
 argument_list|)
 expr_stmt|;
 if|#
@@ -1457,6 +1463,8 @@ argument_list|,
 name|size
 argument_list|,
 name|object
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
