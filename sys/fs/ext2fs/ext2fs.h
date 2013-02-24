@@ -493,10 +493,6 @@ name|e2fs_gd
 decl_stmt|;
 comment|/* Group Descriptors */
 name|int32_t
-name|e2fs_maxcontig
-decl_stmt|;
-comment|/* max number of contiguous blks */
-name|int32_t
 name|e2fs_contigsumsize
 decl_stmt|;
 comment|/* size of cluster summary array */
@@ -1013,13 +1009,6 @@ end_define
 begin_comment
 comment|/*  * Macro-instructions used to manage several block sizes  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_MIN_BLOCK_SIZE
-value|1024
-end_define
 
 begin_define
 define|#
