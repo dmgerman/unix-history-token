@@ -295,7 +295,7 @@ name|uuid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uuid
+name|kcmuuid_t
 argument_list|)
 argument_list|)
 operator|==

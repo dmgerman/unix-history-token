@@ -16347,7 +16347,11 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
+operator|(
 name|CSUM_IP
+operator||
+name|CSUM_TSO
+operator|)
 operator|)
 condition|)
 name|ctrl1
@@ -16372,6 +16376,8 @@ operator||
 name|CSUM_UDP_IPV6
 operator||
 name|CSUM_TCP_IPV6
+operator||
+name|CSUM_TSO
 operator|)
 operator|)
 condition|)
@@ -16397,6 +16403,8 @@ operator||
 name|CSUM_UDP_IPV6
 operator||
 name|CSUM_TCP_IPV6
+operator||
+name|CSUM_TSO
 operator|)
 condition|)
 name|txq
@@ -17386,7 +17394,11 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
+operator|(
 name|CSUM_IP
+operator||
+name|CSUM_TSO
+operator|)
 operator|)
 condition|)
 name|ctrl
@@ -17407,6 +17419,12 @@ operator|(
 name|CSUM_TCP
 operator||
 name|CSUM_UDP
+operator||
+name|CSUM_UDP_IPV6
+operator||
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_TSO
 operator|)
 operator|)
 condition|)
@@ -17428,6 +17446,12 @@ operator||
 name|CSUM_TCP
 operator||
 name|CSUM_UDP
+operator||
+name|CSUM_UDP_IPV6
+operator||
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_TSO
 operator|)
 condition|)
 name|txq

@@ -1634,12 +1634,12 @@ argument_list|(
 name|pktlen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If encryption is enabled, add extra delimiters to let the 	 * crypto hardware catch up. This could be tuned per-MAC and 	 * per-rate, but for now we'll simply assume encryption is 	 * always enabled. 	 */
+comment|/* 	 * If encryption is enabled, add extra delimiters to let the 	 * crypto hardware catch up. This could be tuned per-MAC and 	 * per-rate, but for now we'll simply assume encryption is 	 * always enabled. 	 * 	 * Also note that the Atheros reference driver inserts two 	 * delimiters by default for pre-AR9380 peers.  This will 	 * include "that" required delimiter. 	 */
 name|ndelim
 operator|+=
 name|ATH_AGGR_ENCRYPTDELIM
 expr_stmt|;
-comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 */
+comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 * 	 * XXX TODO: this is only needed if (a) RTS/CTS is enabled, and 	 * XXX (b) this is the first sub-frame in the aggregate. 	 */
 if|if
 condition|(
 name|sc
@@ -1661,6 +1661,26 @@ condition|)
 name|ndelim
 operator|=
 name|AH_FIRST_DESC_NDELIMS
+expr_stmt|;
+comment|/* 	 * If sc_delim_min_pad is non-zero, enforce it as the minimum 	 * pad delimiter count. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_delim_min_pad
+operator|!=
+literal|0
+condition|)
+name|ndelim
+operator|=
+name|MAX
+argument_list|(
+name|ndelim
+argument_list|,
+name|sc
+operator|->
+name|sc_delim_min_pad
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1886,11 +1906,31 @@ block|{
 name|int
 name|amin
 init|=
-literal|65530
+name|ATH_AGGR_MAXSIZE
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_aggr_limit
+operator|>
+literal|0
+operator|&&
+name|sc
+operator|->
+name|sc_aggr_limit
+operator|<
+name|ATH_AGGR_MAXSIZE
+condition|)
+name|amin
+operator|=
+name|sc
+operator|->
+name|sc_aggr_limit
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2151,6 +2191,7 @@ operator|.
 name|tries
 expr_stmt|;
 comment|/* 		 * XXX this isn't strictly correct - sc_txchainmask 		 * XXX isn't the currently active chainmask; 		 * XXX it's the interface chainmask at startup. 		 * XXX It's overridden in the HAL rate scenario function 		 * XXX for now. 		 */
+comment|/* 		 * XXX TODO: When the NIC is capable of three stream TX, 		 * transmit 1/2 stream rates on two streams. 		 * 		 * This reduces the power consumption of the NIC and 		 * keeps it within the PCIe slot power limits. 		 */
 name|series
 index|[
 name|i

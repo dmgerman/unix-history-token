@@ -1781,6 +1781,8 @@ name|rl
 decl_stmt|,
 modifier|*
 name|next
+init|=
+name|NULL
 decl_stmt|;
 name|uint64_t
 name|len

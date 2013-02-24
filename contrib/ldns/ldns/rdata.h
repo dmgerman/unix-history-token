@@ -307,7 +307,7 @@ modifier|*
 name|rd
 parameter_list|)
 function_decl|;
-comment|/**  * returns the data of the rdf.  * \param[in] *rd the rdf to read from  * \return uint8_t* pointer to the rdf's data  */
+comment|/**  * returns the data of the rdf.  * \param[in] *rd the rdf to read from  *  * \return uint8_t* pointer to the rdf's data  */
 name|uint8_t
 modifier|*
 name|ldns_rdf_data
@@ -460,7 +460,7 @@ name|uint32_t
 name|value
 parameter_list|)
 function_decl|;
-comment|/**  * returns an int16_data rdf that contains the data in the  * given array, preceded by an int16 specifying the length.  *  * The memory is copied, and an LDNS_RDF_TYPE_INT16DATA is returned  * \param[in] size the size of the data  * \param[in] *data pointer to the actual data  * \return ldns_rd* the rdf with the data  */
+comment|/**  * returns an int16_data rdf that contains the data in the  * given array, preceded by an int16 specifying the length.  *  * The memory is copied, and an LDNS_RDF_TYPE_INT16DATA is returned  * \param[in] size the size of the data  * \param[in] *data pointer to the actual data  *  * \return ldns_rd* the rdf with the data  */
 name|ldns_rdf
 modifier|*
 name|ldns_native2rdf_int16_data

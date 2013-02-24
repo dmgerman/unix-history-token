@@ -382,6 +382,7 @@ name|bufp
 parameter_list|,
 name|int
 name|istcp
+name|__unused
 parameter_list|)
 block|{
 specifier|const

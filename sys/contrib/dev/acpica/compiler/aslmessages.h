@@ -290,6 +290,8 @@ name|ASL_MSG_RESERVED_NO_RETURN_VAL
 block|,
 name|ASL_MSG_RESERVED_OPERAND_TYPE
 block|,
+name|ASL_MSG_RESERVED_PACKAGE_LENGTH
+block|,
 name|ASL_MSG_RESERVED_RETURN_VALUE
 block|,
 name|ASL_MSG_RESERVED_USE
@@ -740,6 +742,9 @@ literal|"Reserved method should not return a value"
 block|,
 comment|/*    ASL_MSG_RESERVED_OPERAND_TYPE */
 literal|"Invalid object type for reserved name"
+block|,
+comment|/*    ASL_MSG_RESERVED_PACKAGE_LENGTH */
+literal|"Invalid package length for reserved name"
 block|,
 comment|/*    ASL_MSG_RESERVED_RETURN_VALUE */
 literal|"Reserved method must return a value"

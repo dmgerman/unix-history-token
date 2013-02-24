@@ -3788,7 +3788,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+literal|0
 operator|)
 return|;
 block|}
@@ -4276,6 +4276,12 @@ name|dmat
 operator|->
 name|segments
 expr_stmt|;
+name|map
+operator|->
+name|pmap
+operator|=
+name|pmap
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4343,12 +4349,6 @@ operator|(
 name|vm_offset_t
 operator|)
 name|buf
-expr_stmt|;
-name|map
-operator|->
-name|pmap
-operator|=
-name|pmap
 expr_stmt|;
 while|while
 condition|(

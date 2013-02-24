@@ -20,7 +20,11 @@ name|__ACEXCEP_H__
 end_define
 
 begin_comment
-comment|/*  * Exceptions returned by external ACPI interfaces  */
+comment|/* This module contains all possible exception codes for ACPI_STATUS */
+end_comment
+
+begin_comment
+comment|/*  * Exception code classes  */
 end_comment
 
 begin_define
@@ -30,12 +34,20 @@ name|AE_CODE_ENVIRONMENTAL
 value|0x0000
 end_define
 
+begin_comment
+comment|/* General ACPICA environment */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AE_CODE_PROGRAMMER
 value|0x1000
 end_define
+
+begin_comment
+comment|/* External ACPICA interface caller */
+end_comment
 
 begin_define
 define|#
@@ -44,6 +56,10 @@ name|AE_CODE_ACPI_TABLES
 value|0x2000
 end_define
 
+begin_comment
+comment|/* ACPI tables */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -51,12 +67,20 @@ name|AE_CODE_AML
 value|0x3000
 end_define
 
+begin_comment
+comment|/* From executing AML code */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AE_CODE_CONTROL
 value|0x4000
 end_define
+
+begin_comment
+comment|/* Internal control codes */
+end_comment
 
 begin_define
 define|#
@@ -71,6 +95,131 @@ directive|define
 name|AE_CODE_MASK
 value|0xF000
 end_define
+
+begin_comment
+comment|/*  * Macros to insert the exception code classes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCEP_ENV
+parameter_list|(
+name|code
+parameter_list|)
+value|((ACPI_STATUS) (code | AE_CODE_ENVIRONMENTAL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEP_PGM
+parameter_list|(
+name|code
+parameter_list|)
+value|((ACPI_STATUS) (code | AE_CODE_PROGRAMMER))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEP_TBL
+parameter_list|(
+name|code
+parameter_list|)
+value|((ACPI_STATUS) (code | AE_CODE_ACPI_TABLES))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEP_AML
+parameter_list|(
+name|code
+parameter_list|)
+value|((ACPI_STATUS) (code | AE_CODE_AML))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCEP_CTL
+parameter_list|(
+name|code
+parameter_list|)
+value|((ACPI_STATUS) (code | AE_CODE_CONTROL))
+end_define
+
+begin_comment
+comment|/*  * Exception info table. The "Description" field is used only by the  * ACPICA help application (acpihelp).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_exception_info
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_HELP_APP
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|ACPI_EXCEPTION_INFO
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_HELP_APP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EXCEP_TXT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Description
+parameter_list|)
+value|{Name, Description}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXCEP_TXT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Description
+parameter_list|)
+value|{Name}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Success is always zero, failure is non-zero  */
+end_comment
 
 begin_define
 define|#
@@ -107,196 +256,196 @@ begin_define
 define|#
 directive|define
 name|AE_ERROR
-value|(ACPI_STATUS) (0x0001 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NO_ACPI_TABLES
-value|(ACPI_STATUS) (0x0002 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0002)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NO_NAMESPACE
-value|(ACPI_STATUS) (0x0003 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0003)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NO_MEMORY
-value|(ACPI_STATUS) (0x0004 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0004)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NOT_FOUND
-value|(ACPI_STATUS) (0x0005 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0005)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NOT_EXIST
-value|(ACPI_STATUS) (0x0006 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0006)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_ALREADY_EXISTS
-value|(ACPI_STATUS) (0x0007 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0007)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_TYPE
-value|(ACPI_STATUS) (0x0008 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0008)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NULL_OBJECT
-value|(ACPI_STATUS) (0x0009 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0009)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NULL_ENTRY
-value|(ACPI_STATUS) (0x000A | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x000A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BUFFER_OVERFLOW
-value|(ACPI_STATUS) (0x000B | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x000B)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_STACK_OVERFLOW
-value|(ACPI_STATUS) (0x000C | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x000C)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_STACK_UNDERFLOW
-value|(ACPI_STATUS) (0x000D | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x000D)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NOT_IMPLEMENTED
-value|(ACPI_STATUS) (0x000E | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x000E)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_SUPPORT
-value|(ACPI_STATUS) (0x000F | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x000F)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_LIMIT
-value|(ACPI_STATUS) (0x0010 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0010)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_TIME
-value|(ACPI_STATUS) (0x0011 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0011)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_ACQUIRE_DEADLOCK
-value|(ACPI_STATUS) (0x0012 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0012)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_RELEASE_DEADLOCK
-value|(ACPI_STATUS) (0x0013 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0013)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NOT_ACQUIRED
-value|(ACPI_STATUS) (0x0014 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0014)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_ALREADY_ACQUIRED
-value|(ACPI_STATUS) (0x0015 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0015)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NO_HARDWARE_RESPONSE
-value|(ACPI_STATUS) (0x0016 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0016)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NO_GLOBAL_LOCK
-value|(ACPI_STATUS) (0x0017 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0017)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_ABORT_METHOD
-value|(ACPI_STATUS) (0x0018 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0018)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_SAME_HANDLER
-value|(ACPI_STATUS) (0x0019 | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x0019)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NO_HANDLER
-value|(ACPI_STATUS) (0x001A | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x001A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_OWNER_ID_LIMIT
-value|(ACPI_STATUS) (0x001B | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x001B)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_NOT_CONFIGURED
-value|(ACPI_STATUS) (0x001C | AE_CODE_ENVIRONMENTAL)
+value|EXCEP_ENV (0x001C)
 end_define
 
 begin_define
@@ -314,63 +463,63 @@ begin_define
 define|#
 directive|define
 name|AE_BAD_PARAMETER
-value|(ACPI_STATUS) (0x0001 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_CHARACTER
-value|(ACPI_STATUS) (0x0002 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0002)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_PATHNAME
-value|(ACPI_STATUS) (0x0003 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0003)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_DATA
-value|(ACPI_STATUS) (0x0004 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0004)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_HEX_CONSTANT
-value|(ACPI_STATUS) (0x0005 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0005)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_OCTAL_CONSTANT
-value|(ACPI_STATUS) (0x0006 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0006)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_DECIMAL_CONSTANT
-value|(ACPI_STATUS) (0x0007 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0007)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_MISSING_ARGUMENTS
-value|(ACPI_STATUS) (0x0008 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0008)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_ADDRESS
-value|(ACPI_STATUS) (0x0009 | AE_CODE_PROGRAMMER)
+value|EXCEP_PGM (0x0009)
 end_define
 
 begin_define
@@ -388,35 +537,35 @@ begin_define
 define|#
 directive|define
 name|AE_BAD_SIGNATURE
-value|(ACPI_STATUS) (0x0001 | AE_CODE_ACPI_TABLES)
+value|EXCEP_TBL (0x0001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_HEADER
-value|(ACPI_STATUS) (0x0002 | AE_CODE_ACPI_TABLES)
+value|EXCEP_TBL (0x0002)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_CHECKSUM
-value|(ACPI_STATUS) (0x0003 | AE_CODE_ACPI_TABLES)
+value|EXCEP_TBL (0x0003)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_BAD_VALUE
-value|(ACPI_STATUS) (0x0004 | AE_CODE_ACPI_TABLES)
+value|EXCEP_TBL (0x0004)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_INVALID_TABLE_LENGTH
-value|(ACPI_STATUS) (0x0005 | AE_CODE_ACPI_TABLES)
+value|EXCEP_TBL (0x0005)
 end_define
 
 begin_define
@@ -434,231 +583,231 @@ begin_define
 define|#
 directive|define
 name|AE_AML_BAD_OPCODE
-value|(ACPI_STATUS) (0x0001 | AE_CODE_AML)
+value|EXCEP_AML (0x0001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NO_OPERAND
-value|(ACPI_STATUS) (0x0002 | AE_CODE_AML)
+value|EXCEP_AML (0x0002)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_OPERAND_TYPE
-value|(ACPI_STATUS) (0x0003 | AE_CODE_AML)
+value|EXCEP_AML (0x0003)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_OPERAND_VALUE
-value|(ACPI_STATUS) (0x0004 | AE_CODE_AML)
+value|EXCEP_AML (0x0004)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_UNINITIALIZED_LOCAL
-value|(ACPI_STATUS) (0x0005 | AE_CODE_AML)
+value|EXCEP_AML (0x0005)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_UNINITIALIZED_ARG
-value|(ACPI_STATUS) (0x0006 | AE_CODE_AML)
+value|EXCEP_AML (0x0006)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_UNINITIALIZED_ELEMENT
-value|(ACPI_STATUS) (0x0007 | AE_CODE_AML)
+value|EXCEP_AML (0x0007)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NUMERIC_OVERFLOW
-value|(ACPI_STATUS) (0x0008 | AE_CODE_AML)
+value|EXCEP_AML (0x0008)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_REGION_LIMIT
-value|(ACPI_STATUS) (0x0009 | AE_CODE_AML)
+value|EXCEP_AML (0x0009)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_BUFFER_LIMIT
-value|(ACPI_STATUS) (0x000A | AE_CODE_AML)
+value|EXCEP_AML (0x000A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_PACKAGE_LIMIT
-value|(ACPI_STATUS) (0x000B | AE_CODE_AML)
+value|EXCEP_AML (0x000B)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_DIVIDE_BY_ZERO
-value|(ACPI_STATUS) (0x000C | AE_CODE_AML)
+value|EXCEP_AML (0x000C)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_BAD_NAME
-value|(ACPI_STATUS) (0x000D | AE_CODE_AML)
+value|EXCEP_AML (0x000D)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NAME_NOT_FOUND
-value|(ACPI_STATUS) (0x000E | AE_CODE_AML)
+value|EXCEP_AML (0x000E)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_INTERNAL
-value|(ACPI_STATUS) (0x000F | AE_CODE_AML)
+value|EXCEP_AML (0x000F)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_INVALID_SPACE_ID
-value|(ACPI_STATUS) (0x0010 | AE_CODE_AML)
+value|EXCEP_AML (0x0010)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_STRING_LIMIT
-value|(ACPI_STATUS) (0x0011 | AE_CODE_AML)
+value|EXCEP_AML (0x0011)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NO_RETURN_VALUE
-value|(ACPI_STATUS) (0x0012 | AE_CODE_AML)
+value|EXCEP_AML (0x0012)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_METHOD_LIMIT
-value|(ACPI_STATUS) (0x0013 | AE_CODE_AML)
+value|EXCEP_AML (0x0013)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NOT_OWNER
-value|(ACPI_STATUS) (0x0014 | AE_CODE_AML)
+value|EXCEP_AML (0x0014)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_MUTEX_ORDER
-value|(ACPI_STATUS) (0x0015 | AE_CODE_AML)
+value|EXCEP_AML (0x0015)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_MUTEX_NOT_ACQUIRED
-value|(ACPI_STATUS) (0x0016 | AE_CODE_AML)
+value|EXCEP_AML (0x0016)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_INVALID_RESOURCE_TYPE
-value|(ACPI_STATUS) (0x0017 | AE_CODE_AML)
+value|EXCEP_AML (0x0017)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_INVALID_INDEX
-value|(ACPI_STATUS) (0x0018 | AE_CODE_AML)
+value|EXCEP_AML (0x0018)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_REGISTER_LIMIT
-value|(ACPI_STATUS) (0x0019 | AE_CODE_AML)
+value|EXCEP_AML (0x0019)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NO_WHILE
-value|(ACPI_STATUS) (0x001A | AE_CODE_AML)
+value|EXCEP_AML (0x001A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_ALIGNMENT
-value|(ACPI_STATUS) (0x001B | AE_CODE_AML)
+value|EXCEP_AML (0x001B)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_NO_RESOURCE_END_TAG
-value|(ACPI_STATUS) (0x001C | AE_CODE_AML)
+value|EXCEP_AML (0x001C)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_BAD_RESOURCE_VALUE
-value|(ACPI_STATUS) (0x001D | AE_CODE_AML)
+value|EXCEP_AML (0x001D)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_CIRCULAR_REFERENCE
-value|(ACPI_STATUS) (0x001E | AE_CODE_AML)
+value|EXCEP_AML (0x001E)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_BAD_RESOURCE_LENGTH
-value|(ACPI_STATUS) (0x001F | AE_CODE_AML)
+value|EXCEP_AML (0x001F)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_ILLEGAL_ADDRESS
-value|(ACPI_STATUS) (0x0020 | AE_CODE_AML)
+value|EXCEP_AML (0x0020)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_AML_INFINITE_LOOP
-value|(ACPI_STATUS) (0x0021 | AE_CODE_AML)
+value|EXCEP_AML (0x0021)
 end_define
 
 begin_define
@@ -676,91 +825,91 @@ begin_define
 define|#
 directive|define
 name|AE_CTRL_RETURN_VALUE
-value|(ACPI_STATUS) (0x0001 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_PENDING
-value|(ACPI_STATUS) (0x0002 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0002)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_TERMINATE
-value|(ACPI_STATUS) (0x0003 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0003)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_TRUE
-value|(ACPI_STATUS) (0x0004 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0004)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_FALSE
-value|(ACPI_STATUS) (0x0005 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0005)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_DEPTH
-value|(ACPI_STATUS) (0x0006 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0006)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_END
-value|(ACPI_STATUS) (0x0007 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0007)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_TRANSFER
-value|(ACPI_STATUS) (0x0008 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0008)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_BREAK
-value|(ACPI_STATUS) (0x0009 | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x0009)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_CONTINUE
-value|(ACPI_STATUS) (0x000A | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x000A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_SKIP
-value|(ACPI_STATUS) (0x000B | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x000B)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_PARSE_CONTINUE
-value|(ACPI_STATUS) (0x000C | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x000C)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AE_CTRL_PARSE_PENDING
-value|(ACPI_STATUS) (0x000D | AE_CODE_CONTROL)
+value|EXCEP_CTL (0x000D)
 end_define
 
 begin_define
@@ -785,242 +934,707 @@ comment|/*  * String versions of the exception codes above  * These strings must
 end_comment
 
 begin_decl_stmt
-name|char
+specifier|static
 specifier|const
-modifier|*
+name|ACPI_EXCEPTION_INFO
 name|AcpiGbl_ExceptionNames_Env
 index|[]
 init|=
 block|{
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_OK"
+argument_list|,
+literal|"No error"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_ERROR"
+argument_list|,
+literal|"Unspecified error"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NO_ACPI_TABLES"
+argument_list|,
+literal|"ACPI tables could not be found"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NO_NAMESPACE"
+argument_list|,
+literal|"A namespace has not been loaded"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NO_MEMORY"
+argument_list|,
+literal|"Insufficient dynamic memory"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NOT_FOUND"
+argument_list|,
+literal|"The name was not found in the namespace"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NOT_EXIST"
+argument_list|,
+literal|"A required entity does not exist"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_ALREADY_EXISTS"
+argument_list|,
+literal|"An entity already exists"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_TYPE"
+argument_list|,
+literal|"The object type is incorrect"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NULL_OBJECT"
+argument_list|,
+literal|"A required object was missing"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NULL_ENTRY"
+argument_list|,
+literal|"The requested object does not exist"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BUFFER_OVERFLOW"
+argument_list|,
+literal|"The buffer provided is too small"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_STACK_OVERFLOW"
+argument_list|,
+literal|"An internal stack overflowed"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_STACK_UNDERFLOW"
+argument_list|,
+literal|"An internal stack underflowed"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NOT_IMPLEMENTED"
+argument_list|,
+literal|"The feature is not implemented"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_SUPPORT"
+argument_list|,
+literal|"The feature is not supported"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_LIMIT"
+argument_list|,
+literal|"A predefined limit was exceeded"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_TIME"
+argument_list|,
+literal|"A time limit or timeout expired"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_ACQUIRE_DEADLOCK"
+argument_list|,
+literal|"Internal error, attempt was made to acquire a mutex in improper order"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_RELEASE_DEADLOCK"
+argument_list|,
+literal|"Internal error, attempt was made to release a mutex in improper order"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NOT_ACQUIRED"
+argument_list|,
+literal|"An attempt to release a mutex or Global Lock without a previous acquire"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_ALREADY_ACQUIRED"
+argument_list|,
+literal|"Internal error, attempt was made to acquire a mutex twice"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NO_HARDWARE_RESPONSE"
+argument_list|,
+literal|"Hardware did not respond after an I/O operation"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NO_GLOBAL_LOCK"
+argument_list|,
+literal|"There is no FACS Global Lock"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_ABORT_METHOD"
+argument_list|,
+literal|"A control method was aborted"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_SAME_HANDLER"
+argument_list|,
+literal|"Attempt was made to install the same handler that is already installed"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NO_HANDLER"
+argument_list|,
+literal|"A handler for the operation is not installed"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_OWNER_ID_LIMIT"
+argument_list|,
+literal|"There are no more Owner IDs available for ACPI tables or control methods"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_NOT_CONFIGURED"
+argument_list|,
+literal|"The interface is not part of the current subsystem configuration"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+specifier|static
 specifier|const
-modifier|*
+name|ACPI_EXCEPTION_INFO
 name|AcpiGbl_ExceptionNames_Pgm
 index|[]
 init|=
 block|{
+name|EXCEP_TXT
+argument_list|(
 name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_PARAMETER"
+argument_list|,
+literal|"A parameter is out of range or invalid"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_CHARACTER"
+argument_list|,
+literal|"An invalid character was found in a name"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_PATHNAME"
+argument_list|,
+literal|"An invalid character was found in a pathname"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_DATA"
+argument_list|,
+literal|"A package or buffer contained incorrect data"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_HEX_CONSTANT"
+argument_list|,
+literal|"Invalid character in a Hex constant"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_OCTAL_CONSTANT"
+argument_list|,
+literal|"Invalid character in an Octal constant"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_DECIMAL_CONSTANT"
+argument_list|,
+literal|"Invalid character in a Decimal constant"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_MISSING_ARGUMENTS"
+argument_list|,
+literal|"Too few arguments were passed to a control method"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_ADDRESS"
+argument_list|,
+literal|"An illegal null I/O address"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+specifier|static
 specifier|const
-modifier|*
+name|ACPI_EXCEPTION_INFO
 name|AcpiGbl_ExceptionNames_Tbl
 index|[]
 init|=
 block|{
+name|EXCEP_TXT
+argument_list|(
 name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_SIGNATURE"
+argument_list|,
+literal|"An ACPI table has an invalid signature"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_HEADER"
+argument_list|,
+literal|"Invalid field in an ACPI table header"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_CHECKSUM"
+argument_list|,
+literal|"An ACPI table checksum is not correct"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_BAD_VALUE"
+argument_list|,
+literal|"An invalid value was found in a table"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_INVALID_TABLE_LENGTH"
+argument_list|,
+literal|"The FADT or FACS has improper length"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+specifier|static
 specifier|const
-modifier|*
+name|ACPI_EXCEPTION_INFO
 name|AcpiGbl_ExceptionNames_Aml
 index|[]
 init|=
 block|{
+name|EXCEP_TXT
+argument_list|(
 name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_BAD_OPCODE"
+argument_list|,
+literal|"Invalid AML opcode encountered"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NO_OPERAND"
+argument_list|,
+literal|"A required operand is missing"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_OPERAND_TYPE"
+argument_list|,
+literal|"An operand of an incorrect type was encountered"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_OPERAND_VALUE"
+argument_list|,
+literal|"The operand had an inappropriate or invalid value"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_UNINITIALIZED_LOCAL"
+argument_list|,
+literal|"Method tried to use an uninitialized local variable"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_UNINITIALIZED_ARG"
+argument_list|,
+literal|"Method tried to use an uninitialized argument"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_UNINITIALIZED_ELEMENT"
+argument_list|,
+literal|"Method tried to use an empty package element"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NUMERIC_OVERFLOW"
+argument_list|,
+literal|"Overflow during BCD conversion or other"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_REGION_LIMIT"
+argument_list|,
+literal|"Tried to access beyond the end of an Operation Region"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_BUFFER_LIMIT"
+argument_list|,
+literal|"Tried to access beyond the end of a buffer"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_PACKAGE_LIMIT"
+argument_list|,
+literal|"Tried to access beyond the end of a package"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_DIVIDE_BY_ZERO"
+argument_list|,
+literal|"During execution of AML Divide operator"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_BAD_NAME"
+argument_list|,
+literal|"An ACPI name contains invalid character(s)"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NAME_NOT_FOUND"
+argument_list|,
+literal|"Could not resolve a named reference"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_INTERNAL"
+argument_list|,
+literal|"An internal error within the interprete"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_INVALID_SPACE_ID"
+argument_list|,
+literal|"An Operation Region SpaceID is invalid"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_STRING_LIMIT"
+argument_list|,
+literal|"String is longer than 200 characters"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NO_RETURN_VALUE"
+argument_list|,
+literal|"A method did not return a required value"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_METHOD_LIMIT"
+argument_list|,
+literal|"A control method reached the maximum reentrancy limit of 255"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NOT_OWNER"
+argument_list|,
+literal|"A thread tried to release a mutex that it does not own"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_MUTEX_ORDER"
+argument_list|,
+literal|"Mutex SyncLevel release mismatch"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_MUTEX_NOT_ACQUIRED"
+argument_list|,
+literal|"Attempt to release a mutex that was not previously acquired"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_INVALID_RESOURCE_TYPE"
+argument_list|,
+literal|"Invalid resource type in resource list"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_INVALID_INDEX"
+argument_list|,
+literal|"Invalid Argx or Localx (x too large)"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_REGISTER_LIMIT"
+argument_list|,
+literal|"Bank value or Index value beyond range of register"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NO_WHILE"
+argument_list|,
+literal|"Break or Continue without a While"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_ALIGNMENT"
+argument_list|,
+literal|"Non-aligned memory transfer on platform that does not support this"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_NO_RESOURCE_END_TAG"
+argument_list|,
+literal|"No End Tag in a resource list"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_BAD_RESOURCE_VALUE"
+argument_list|,
+literal|"Invalid value of a resource element"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_CIRCULAR_REFERENCE"
+argument_list|,
+literal|"Two references refer to each other"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_BAD_RESOURCE_LENGTH"
+argument_list|,
+literal|"The length of a Resource Descriptor in the AML is incorrect"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_ILLEGAL_ADDRESS"
+argument_list|,
+literal|"A memory, I/O, or PCI configuration address is invalid"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_AML_INFINITE_LOOP"
+argument_list|,
+literal|"An apparent infinite AML While loop, method was aborted"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+specifier|static
 specifier|const
-modifier|*
+name|ACPI_EXCEPTION_INFO
 name|AcpiGbl_ExceptionNames_Ctrl
 index|[]
 init|=
 block|{
+name|EXCEP_TXT
+argument_list|(
 name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_RETURN_VALUE"
+argument_list|,
+literal|"A Method returned a value"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_PENDING"
+argument_list|,
+literal|"Method is calling another method"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_TERMINATE"
+argument_list|,
+literal|"Terminate the executing method"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_TRUE"
+argument_list|,
+literal|"An If or While predicate result"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_FALSE"
+argument_list|,
+literal|"An If or While predicate result"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_DEPTH"
+argument_list|,
+literal|"Maximum search depth has been reached"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_END"
+argument_list|,
+literal|"An If or While predicate is false"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_TRANSFER"
+argument_list|,
+literal|"Transfer control to called method"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_BREAK"
+argument_list|,
+literal|"A Break has been executed"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_CONTINUE"
+argument_list|,
+literal|"A Continue has been executed"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_SKIP"
+argument_list|,
+literal|"Not currently used"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_PARSE_CONTINUE"
+argument_list|,
+literal|"Used to skip over bad opcodes"
+argument_list|)
 block|,
+name|EXCEP_TXT
+argument_list|(
 literal|"AE_CTRL_PARSE_PENDING"
+argument_list|,
+literal|"Used to implement AML While loops"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt

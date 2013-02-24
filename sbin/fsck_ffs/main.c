@@ -1881,8 +1881,21 @@ literal|"** Phase 1 - Check Blocks and Sizes\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|clock_gettime
+argument_list|(
+name|CLOCK_REALTIME_PRECISE
+argument_list|,
+operator|&
+name|startprog
+argument_list|)
+expr_stmt|;
 name|pass1
 argument_list|()
+expr_stmt|;
+name|IOstats
+argument_list|(
+literal|"Pass1"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * 1b: locate first references to duplicates, if any 	 */
 if|if
@@ -1931,6 +1944,11 @@ expr_stmt|;
 name|pass1b
 argument_list|()
 expr_stmt|;
+name|IOstats
+argument_list|(
+literal|"Pass1b"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * 2: traverse directories from root to mark all connected directories 	 */
 if|if
@@ -1947,6 +1965,11 @@ expr_stmt|;
 name|pass2
 argument_list|()
 expr_stmt|;
+name|IOstats
+argument_list|(
+literal|"Pass2"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * 3: scan inodes looking for disconnected directories 	 */
 if|if
 condition|(
@@ -1961,6 +1984,11 @@ argument_list|)
 expr_stmt|;
 name|pass3
 argument_list|()
+expr_stmt|;
+name|IOstats
+argument_list|(
+literal|"Pass3"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * 4: scan inodes looking for disconnected files; check reference counts 	 */
 if|if
@@ -1977,6 +2005,11 @@ expr_stmt|;
 name|pass4
 argument_list|()
 expr_stmt|;
+name|IOstats
+argument_list|(
+literal|"Pass4"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * 5: check and repair resource counts in cylinder groups 	 */
 if|if
 condition|(
@@ -1991,6 +2024,11 @@ argument_list|)
 expr_stmt|;
 name|pass5
 argument_list|()
+expr_stmt|;
+name|IOstats
+argument_list|(
+literal|"Pass5"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * print out summary statistics 	 */
 name|n_ffree
@@ -2362,6 +2400,9 @@ condition|)
 name|resolved
 operator|=
 literal|0
+expr_stmt|;
+name|finalIOstats
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Check to see if the file system is mounted read-write. 	 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -596,18 +596,6 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|e1000_wait_autoneg_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
 name|e1000_write_kmrn_reg_generic
 parameter_list|(
 name|struct
@@ -692,18 +680,6 @@ name|offset
 parameter_list|,
 name|u16
 name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|e1000_phy_reset_dsp
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1295,17 +1271,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGP01E1000_PHY_CHANNEL_QUALITY
-value|0x15
-end_define
-
-begin_comment
-comment|/* PHY Channel Quality */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IGP02E1000_PHY_POWER_MGMT
 value|0x19
 end_define
@@ -1426,13 +1391,6 @@ define|#
 directive|define
 name|BM_PORT_CTRL_PAGE
 value|769
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_PCIE_PAGE
-value|770
 end_define
 
 begin_define
@@ -1650,13 +1608,6 @@ name|I82577_PHY_STATUS2_SPEED_1000MBPS
 value|0x0200
 end_define
 
-begin_define
-define|#
-directive|define
-name|I82577_PHY_STATUS2_SPEED_100MBPS
-value|0x0100
-end_define
-
 begin_comment
 comment|/* I82577 PHY Control 2 */
 end_comment
@@ -1744,6 +1695,17 @@ begin_comment
 comment|/* For all other states */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_82580_PM_GO_LINKD
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Go Link Disconnect */
+end_comment
+
 begin_comment
 comment|/* BM PHY Copper Specific Control 1 */
 end_comment
@@ -1755,17 +1717,6 @@ name|BM_CS_CTRL1
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|BM_CS_CTRL1_ENERGY_DETECT
-value|0x0300
-end_define
-
-begin_comment
-comment|/* Enable Energy Detect */
-end_comment
-
 begin_comment
 comment|/* BM PHY Copper Specific Status */
 end_comment
@@ -1776,17 +1727,6 @@ directive|define
 name|BM_CS_STATUS
 value|17
 end_define
-
-begin_define
-define|#
-directive|define
-name|BM_CS_STATUS_ENERGY_DETECT
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Energy Detect Status */
-end_comment
 
 begin_define
 define|#
@@ -2047,24 +1987,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGP03E1000_PHY_MISC_CTRL
-value|0x1B
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP03E1000_PHY_MISC_DUPLEX_MANUAL_SET
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Manually Set Duplex */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CABLE_LENGTH_UNDEFINED
 value|0xFF
 end_define
@@ -2170,6 +2092,10 @@ name|E1000_KMRNCTRLSTA_K1_ENABLE
 value|0x0002
 end_define
 
+begin_comment
+comment|/* enable K1 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2248,13 +2174,6 @@ define|#
 directive|define
 name|IFE_PSC_FORCE_POLARITY
 value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFE_PSC_DISABLE_DYNAMIC_POWER_DOWN
-value|0x0100
 end_define
 
 begin_comment

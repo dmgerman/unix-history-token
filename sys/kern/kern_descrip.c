@@ -9228,6 +9228,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cdir
+operator|!=
+name|NULL
 condition|)
 name|vrele
 argument_list|(
@@ -9237,6 +9239,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rdir
+operator|!=
+name|NULL
 condition|)
 name|vrele
 argument_list|(
@@ -9246,6 +9250,8 @@ expr_stmt|;
 if|if
 condition|(
 name|jdir
+operator|!=
+name|NULL
 condition|)
 name|vrele
 argument_list|(

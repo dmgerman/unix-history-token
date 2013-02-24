@@ -7009,7 +7009,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|ifp
 operator|=
 name|m
@@ -7018,21 +7017,16 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|)
-operator|)
 operator|&&
-operator|(
 name|ifp
 operator|->
 name|if_index
 operator|&&
-operator|(
 name|ifp
 operator|->
 name|if_index
 operator|<=
 name|V_if_index
-operator|)
-operator|)
 condition|)
 block|{
 name|sdp
@@ -7051,15 +7045,12 @@ expr_stmt|;
 comment|/* 			 * Change our mind and don't try copy. 			 */
 if|if
 condition|(
-operator|(
 name|sdp
 operator|->
 name|sdl_family
 operator|!=
 name|AF_LINK
-operator|)
 operator|||
-operator|(
 name|sdp
 operator|->
 name|sdl_len
@@ -7068,7 +7059,6 @@ sizeof|sizeof
 argument_list|(
 name|sdlbuf
 argument_list|)
-operator|)
 condition|)
 block|{
 goto|goto

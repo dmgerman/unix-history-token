@@ -1202,6 +1202,8 @@ literal|0
 decl_stmt|;
 name|uint64_t
 name|value
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|shift

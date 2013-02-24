@@ -220,7 +220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* PID file handle. */
+comment|/* Pidfile handle. */
 end_comment
 
 begin_decl_stmt
@@ -3795,6 +3795,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|uint8_t
+name|version
+decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
@@ -4020,6 +4023,73 @@ argument_list|,
 name|raddr
 argument_list|,
 name|resname
+argument_list|)
+expr_stmt|;
+name|version
+operator|=
+name|nv_get_uint8
+argument_list|(
+name|nvin
+argument_list|,
+literal|"version"
+argument_list|)
+expr_stmt|;
+name|pjdlog_debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"%s: version=%hhu"
+argument_list|,
+name|raddr
+argument_list|,
+name|version
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|version
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If no version is sent, it means this is protocol version 1. 		 */
+name|version
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|version
+operator|>
+name|HAST_PROTO_VERSION
+condition|)
+block|{
+name|pjdlog_info
+argument_list|(
+literal|"Remote protocol version %hhu is not supported, falling back to version %hhu."
+argument_list|,
+name|version
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
+name|HAST_PROTO_VERSION
+argument_list|)
+expr_stmt|;
+name|version
+operator|=
+name|HAST_PROTO_VERSION
+expr_stmt|;
+block|}
+name|pjdlog_debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"Negotiated protocol version %hhu."
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 name|token
@@ -4519,6 +4589,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|res
+operator|->
+name|hr_version
+operator|=
+name|version
+expr_stmt|;
 name|arc4random_buf
 argument_list|(
 name|res
@@ -4537,6 +4613,15 @@ name|nvout
 operator|=
 name|nv_alloc
 argument_list|()
+expr_stmt|;
+name|nv_add_uint8
+argument_list|(
+name|nvout
+argument_list|,
+name|version
+argument_list|,
+literal|"version"
+argument_list|)
 expr_stmt|;
 name|nv_add_uint8_array
 argument_list|(
@@ -4607,7 +4692,7 @@ if|if
 condition|(
 name|hast_proto_send
 argument_list|(
-name|NULL
+name|res
 argument_list|,
 name|conn
 argument_list|,

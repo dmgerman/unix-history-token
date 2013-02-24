@@ -9766,10 +9766,6 @@ expr_stmt|;
 name|gotit
 label|:
 comment|/* 	 * Check to see if we need to initialize more inodes. 	 */
-name|ibp
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|fs
@@ -9899,6 +9895,12 @@ name|dp2
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Rather than adding a soft updates dependency to ensure 		 * that the new inode block is written before it is claimed 		 * by the cylinder group map, we just do a barrier write 		 * here. The barrier write will ensure that the inode block 		 * gets written before the updated cylinder group map can be 		 * written. The barrier write should only slow down bulk 		 * loading of newly created filesystems. 		 */
+name|babarrierwrite
+argument_list|(
+name|ibp
+argument_list|)
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_initediblk
@@ -10033,17 +10035,6 @@ expr_stmt|;
 name|bdwrite
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ibp
-operator|!=
-name|NULL
-condition|)
-name|bawrite
-argument_list|(
-name|ibp
 argument_list|)
 expr_stmt|;
 return|return

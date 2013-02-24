@@ -574,7 +574,7 @@ block|,
 block|{
 literal|"RESOURCES"
 block|,
-literal|1
+literal|0
 block|}
 block|,
 block|{
@@ -1007,9 +1007,9 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Resources<DeviceName | *>"
+literal|"  Resources [DeviceName]"
 block|,
-literal|"Display Device resources (* = all devices)\n"
+literal|"Display Device resources (no arg = all devices)\n"
 block|}
 block|,
 block|{

@@ -157,6 +157,14 @@ define|#
 directive|define
 name|LDNS_COMMENT_RRSIGS
 value|0x0100
+define|#
+directive|define
+name|LDNS_FMT_ZEROIZE_RRSIGS
+value|0x0200
+define|#
+directive|define
+name|LDNS_FMT_PAD_SOA_SERIAL
+value|0x0400
 comment|/**  * Output format specifier  *  * Determines how Packets, Resource Records and Resource record data fiels are  * formatted when printing or converting to string.  * Currently it is only used to specify what aspects of a Resource Record are  * annotated in the comment section of the textual representation the record.  * This is speciefed with flags and potential exra data (such as for example  * a lookup map of hashes to real names for annotation NSEC3 records).  */
 struct|struct
 name|ldns_struct_output_format
@@ -910,10 +918,20 @@ modifier|*
 name|rr_list
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the data in the buffer as a null terminated char * string  * Buffer data must be char * type, and must be freed by the caller  *  * \param[in] buffer buffer containing char * data  * \return null terminated char * data, or NULL on error  */
+comment|/**  * Returns a copy of the data in the buffer as a null terminated  * char * string. The returned string must be freed by the caller.  * The buffer must be in write modus and may thus not have been flipped.  *  * \param[in] buffer buffer containing char * data  * \return null terminated char * data, or NULL on error  */
 name|char
 modifier|*
 name|ldns_buffer2str
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|buffer
+parameter_list|)
+function_decl|;
+comment|/**  * Exports and returns the data in the buffer as a null terminated  * char * string. The returned string must be freed by the caller.  * The buffer must be in write modus and may thus not have been flipped.  * The buffer is fixed after this function returns.  *  * \param[in] buffer buffer containing char * data  * \return null terminated char * data, or NULL on error  */
+name|char
+modifier|*
+name|ldns_buffer_export2str
 parameter_list|(
 name|ldns_buffer
 modifier|*

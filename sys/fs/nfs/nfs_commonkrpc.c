@@ -4788,11 +4788,6 @@ operator|->
 name|ps_mtx
 argument_list|)
 expr_stmt|;
-name|sigdeferstop
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|kern_sigprocmask
 argument_list|(
 name|td
@@ -4851,11 +4846,6 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|sigallowstop
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 block|}

@@ -507,7 +507,7 @@ name|time_t
 name|check_time
 parameter_list|)
 function_decl|;
-comment|/**  * Returns OK if there is a trusted path in the tree to one of   * the DNSKEY or DS RRs in the given list  *  * \param *tree The trust tree so search  * \param *keys A ldns_rr_list of DNSKEY and DS rrs to look for  * \return LDNS_STATUS_OK if there is a trusted path to one of  *                        the keys, or the *first* error encountered  *                        if there were no paths  */
+comment|/**  * Returns OK if there is a trusted path in the tree to one of   * the DNSKEY or DS RRs in the given list  *  * \param *tree The trust tree so search  * \param *keys A ldns_rr_list of DNSKEY and DS rrs to look for  *  * \return LDNS_STATUS_OK if there is a trusted path to one of  *                        the keys, or the *first* error encountered  *                        if there were no paths  */
 name|ldns_status
 name|ldns_dnssec_trust_tree_contains_keys
 parameter_list|(

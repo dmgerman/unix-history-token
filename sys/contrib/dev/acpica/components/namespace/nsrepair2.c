@@ -97,7 +97,7 @@ specifier|static
 specifier|const
 name|ACPI_REPAIR_INFO
 modifier|*
-name|AcpiNsMatchRepairableName
+name|AcpiNsMatchComplexRepair
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -407,7 +407,7 @@ decl_stmt|;
 comment|/* Check if this name is in the list of repairable names */
 name|Predefined
 operator|=
-name|AcpiNsMatchRepairableName
+name|AcpiNsMatchComplexRepair
 argument_list|(
 name|Node
 argument_list|)
@@ -444,7 +444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsMatchRepairableName  *  * PARAMETERS:  Node                - Namespace node for the method/object  *  * RETURN:      Pointer to entry in repair table. NULL indicates not found.  *  * DESCRIPTION: Check an object name against the repairable object list.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsMatchComplexRepair  *  * PARAMETERS:  Node                - Namespace node for the method/object  *  * RETURN:      Pointer to entry in repair table. NULL indicates not found.  *  * DESCRIPTION: Check an object name against the repairable object list.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -452,7 +452,7 @@ specifier|static
 specifier|const
 name|ACPI_REPAIR_INFO
 modifier|*
-name|AcpiNsMatchRepairableName
+name|AcpiNsMatchComplexRepair
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*

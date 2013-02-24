@@ -1354,6 +1354,28 @@ define|\
 value|ACPI_TRACE_EXIT (AcpiUtValueExit, UINT64, Value)
 end_define
 
+begin_define
+define|#
+directive|define
+name|return_UINT32
+parameter_list|(
+name|Value
+parameter_list|)
+define|\
+value|ACPI_TRACE_EXIT (AcpiUtValueExit, UINT32, Value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT8
+parameter_list|(
+name|Value
+parameter_list|)
+define|\
+value|ACPI_TRACE_EXIT (AcpiUtValueExit, UINT8, Value)
+end_define
+
 begin_comment
 comment|/* Conditional execution */
 end_comment
@@ -1707,6 +1729,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|return_PTR
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
 name|return_VALUE
 parameter_list|(
 name|s
@@ -1717,7 +1749,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|return_PTR
+name|return_UINT8
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_UINT32
 parameter_list|(
 name|s
 parameter_list|)

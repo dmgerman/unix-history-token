@@ -219,7 +219,7 @@ name|void
 name|netisr_dispatch_policy_to_string
 parameter_list|(
 name|u_int
-name|dispatch_policy
+name|policy
 parameter_list|,
 name|char
 modifier|*
@@ -236,7 +236,7 @@ name|str
 decl_stmt|;
 switch|switch
 condition|(
-name|dispatch_policy
+name|policy
 condition|)
 block|{
 case|case
@@ -301,6 +301,7 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

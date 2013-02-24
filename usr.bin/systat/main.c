@@ -852,7 +852,9 @@ end_function
 begin_function
 name|void
 name|display
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i

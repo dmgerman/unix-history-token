@@ -1044,6 +1044,14 @@ name|AcpiGbl_ExternalList
 operator|=
 name|NULL
 expr_stmt|;
+name|AcpiGbl_NumExternalMethods
+operator|=
+literal|0
+expr_stmt|;
+name|AcpiGbl_ResolvedExternalMethods
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#

@@ -155,6 +155,41 @@ name|A10_GPIO_DEFAULT_CAPS
 value|(GPIO_PIN_INPUT | GPIO_PIN_OUTPUT |	\     GPIO_PIN_PULLUP | GPIO_PIN_PULLDOWN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|A10_GPIO_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_GPIO_PULLUP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_GPIO_PULLDOWN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_GPIO_INPUT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_GPIO_OUTPUT
+value|1
+end_define
+
 begin_struct
 struct|struct
 name|a10_gpio_softc
@@ -199,30 +234,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_enum
-enum|enum
-name|a10_gpio_fsel
-block|{
-name|A10_GPIO_INPUT
-block|,
-name|A10_GPIO_OUTPUT
-block|, }
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|a10_gpio_pud
-block|{
-name|A10_GPIO_NONE
-block|,
-name|A10_GPIO_PULLDOWN
-block|,
-name|A10_GPIO_PULLUP
-block|, }
-enum|;
-end_enum
 
 begin_define
 define|#

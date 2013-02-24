@@ -23,7 +23,7 @@ end_include
 
 begin_function
 specifier|static
-name|size_t
+name|int
 name|read_line
 parameter_list|(
 name|FILE
@@ -38,7 +38,7 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|size_t
+name|int
 name|i
 decl_stmt|;
 name|char
@@ -52,6 +52,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|len
 operator|-
 literal|1
@@ -62,6 +65,9 @@ control|)
 block|{
 name|c
 operator|=
+operator|(
+name|char
+operator|)
 name|getc
 argument_list|(
 name|input
@@ -129,6 +135,9 @@ parameter_list|,
 name|ldns_rr_list
 modifier|*
 name|key_list
+parameter_list|,
+name|bool
+name|silently
 parameter_list|)
 block|{
 name|int
@@ -149,7 +158,7 @@ decl_stmt|;
 name|char
 name|line
 index|[
-name|LDNS_MAX_PACKETLEN
+name|LDNS_MAX_LINELEN
 index|]
 decl_stmt|;
 name|ldns_status
@@ -178,6 +187,12 @@ operator|!
 name|input_file
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|silently
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -192,6 +207,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|LDNS_STATUS_ERR
 return|;
@@ -260,11 +276,18 @@ operator|!=
 name|LDNS_STATUS_OK
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|silently
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Error parsing DNSKEY RR in line %d: %s\n"
+literal|"Error parsing DNSKEY RR "
+literal|"in line %d: %s\n"
 argument_list|,
 name|line_nr
 argument_list|,
@@ -274,6 +297,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -314,11 +338,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|printf
+name|fclose
 argument_list|(
-literal|";; Number of trusted keys: %d\n"
-argument_list|,
-name|key_count
+name|input_file
 argument_list|)
 expr_stmt|;
 if|if
@@ -577,6 +599,11 @@ name|ds
 argument_list|)
 expr_stmt|;
 block|}
+name|ldns_rr_list_deep_free
+argument_list|(
+name|keys
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
