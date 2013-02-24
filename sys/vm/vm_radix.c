@@ -1164,6 +1164,7 @@ name|idx
 operator|>
 name|wrapidx
 operator|)
+return|;
 block|}
 end_function
 
