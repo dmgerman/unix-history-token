@@ -4249,6 +4249,8 @@ argument_list|(
 name|blkno
 argument_list|,
 name|size
+argument_list|,
+name|BT_DIRDATA
 argument_list|)
 expr_stmt|;
 return|return

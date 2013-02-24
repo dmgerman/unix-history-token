@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_sched.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_timer.h"
 end_include
 
@@ -169,6 +175,12 @@ begin_include
 include|#
 directive|include
 file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
 end_include
 
 begin_include
@@ -1926,6 +1938,17 @@ name|int
 name|busy
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_SPARE2
+argument_list|,
+literal|"cpu_idle(%d) at %d"
+argument_list|,
+name|busy
+argument_list|,
+name|curcpu
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_EVENTTIMERS
@@ -1944,6 +1967,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|sched_runnable
+argument_list|()
+condition|)
 name|cpu_sleep
 argument_list|(
 literal|0
@@ -1967,6 +1996,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|CTR2
+argument_list|(
+name|KTR_SPARE2
+argument_list|,
+literal|"cpu_idle(%d) at %d done"
+argument_list|,
+name|busy
+argument_list|,
+name|curcpu
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

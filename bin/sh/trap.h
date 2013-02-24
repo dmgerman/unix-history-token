@@ -5,8 +5,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|pendingsigs
+specifier|volatile
+name|sig_atomic_t
+name|pendingsig
 decl_stmt|;
 end_decl_stmt
 

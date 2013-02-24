@@ -2584,7 +2584,9 @@ name|in_waitcmd
 operator|--
 expr_stmt|;
 return|return
-literal|0
+name|pendingsig
+operator|+
+literal|128
 return|;
 block|}
 end_function

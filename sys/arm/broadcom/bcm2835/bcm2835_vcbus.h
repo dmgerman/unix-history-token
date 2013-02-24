@@ -29,8 +29,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCM2835_VCBUS_IO_BASE
+value|0x7E000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCM2835_VCBUS_SDRAM_UNCACHED
 value|0xC0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM2835_ARM_IO_BASE
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM2835_ARM_IO_SIZE
+value|0x02000000
 end_define
 
 begin_comment
@@ -45,6 +66,34 @@ parameter_list|(
 name|pa
 parameter_list|)
 value|((pa) + BCM2835_VCBUS_SDRAM_CACHED)
+end_define
+
+begin_comment
+comment|/* Check whether pa bellong top IO window */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCM2835_ARM_IS_IO
+parameter_list|(
+name|pa
+parameter_list|)
+value|(((pa)>= BCM2835_ARM_IO_BASE)&& \     ((pa)< BCM2835_ARM_IO_BASE + BCM2835_ARM_IO_SIZE))
+end_define
+
+begin_comment
+comment|/*  * Convert physical address in IO space to VC bus address.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_TO_VCBUS
+parameter_list|(
+name|pa
+parameter_list|)
+value|((pa - BCM2835_ARM_IO_BASE) + \     BCM2835_VCBUS_IO_BASE)
 end_define
 
 begin_comment
