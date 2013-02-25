@@ -855,6 +855,30 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: rtadvd [-dDfRs] "
+literal|"[-c configfile] [-C ctlsock] [-M ifname] [-p pidfile]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -911,7 +935,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:C:dDfM:p:Rs"
+literal|"c:C:dDfhM:p:Rs"
 argument_list|)
 operator|)
 operator|!=
@@ -1003,6 +1027,10 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 name|argc
@@ -1013,28 +1041,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: rtadvd [-dDfRs] [-c conffile] "
-literal|"[-C ctrlsockname] [-M ifname] "
-literal|"[-p pidfile] interfaces...\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|logopt
 operator|=
 name|LOG_NDELAY
