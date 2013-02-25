@@ -1249,7 +1249,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
@@ -1351,7 +1351,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
@@ -1448,7 +1448,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
@@ -1639,7 +1639,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
@@ -1804,7 +1804,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
@@ -1931,7 +1931,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
@@ -2092,7 +2092,7 @@ if|if
 condition|(
 operator|(
 name|bank
-operator|>
+operator|>=
 name|MAX_GPIO_BANKS
 operator|)
 operator|||
