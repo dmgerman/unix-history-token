@@ -5404,6 +5404,22 @@ name|HAL_QUIET_FLAG
 name|flag
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setChainMasks
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
 comment|/* DFS functions */
 name|void
 name|__ahdecl
