@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -674,6 +674,29 @@ name|int
 name|zfs_sync_pass_deferred_free
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|void
+name|spa_deadman
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This (illegal) pool name is used when temporarily importing a spa_t in order  * to get the vdev stats associated with the imported devices.  */
@@ -28085,6 +28108,64 @@ argument_list|,
 name|txg
 argument_list|)
 expr_stmt|;
+name|spa
+operator|->
+name|spa_sync_starttime
+operator|=
+name|gethrtime
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+name|VERIFY
+argument_list|(
+name|cyclic_reprogram
+argument_list|(
+name|spa
+operator|->
+name|spa_deadman_cycid
+argument_list|,
+name|spa
+operator|->
+name|spa_sync_starttime
+operator|+
+name|spa
+operator|->
+name|spa_deadman_synctime
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* FreeBSD */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|callout_reset
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_deadman_cycid
+argument_list|,
+name|hz
+operator|*
+name|spa
+operator|->
+name|spa_deadman_synctime
+operator|/
+name|NANOSEC
+argument_list|,
+name|spa_deadman
+argument_list|,
+name|spa
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* 	 * If we are upgrading to SPA_VERSION_RAIDZ_DEFLATE this txg, 	 * set spa_deflate if we have no raid-z vdevs. 	 */
 if|if
 condition|(
@@ -28712,6 +28793,39 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+name|VERIFY
+argument_list|(
+name|cyclic_reprogram
+argument_list|(
+name|spa
+operator|->
+name|spa_deadman_cycid
+argument_list|,
+name|CY_INFINITY
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* FreeBSD */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|callout_drain
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_deadman_cycid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* 	 * Clear the dirty config list. 	 */
 while|while
 condition|(

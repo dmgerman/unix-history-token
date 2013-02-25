@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -54,6 +58,13 @@ parameter_list|(
 name|char
 modifier|*
 name|prop
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_arch_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 ifdef|#
