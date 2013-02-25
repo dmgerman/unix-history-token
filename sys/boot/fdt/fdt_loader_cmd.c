@@ -193,6 +193,10 @@ begin_comment
 comment|/* Location of FDT yet to be loaded. */
 end_comment
 
+begin_comment
+comment|/* This may be in read-only memory, so can't be manipulated directly. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -205,7 +209,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Local copy of FDT on heap. */
+comment|/* Location of FDT on heap. */
+end_comment
+
+begin_comment
+comment|/* This is the copy we actually manipulate. */
 end_comment
 
 begin_decl_stmt
@@ -233,7 +241,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Location of FDT in kernel or module */
+comment|/* Location of FDT in kernel or module. */
+end_comment
+
+begin_comment
+comment|/* This won't be set if FDT is loaded from disk or memory. */
+end_comment
+
+begin_comment
+comment|/* If it is set, we'll update it when fdt_copy() gets called. */
 end_comment
 
 begin_decl_stmt
@@ -977,16 +993,6 @@ name|strp
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"fdt_start: 0x%08jX\n"
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|fdt_start
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|fdt_start
@@ -1168,37 +1174,37 @@ modifier|*
 name|header
 parameter_list|)
 block|{
-name|struct
-name|preloaded_file
-modifier|*
-name|bfp
-decl_stmt|;
-name|bfp
+comment|// TODO: Verify that there really is an FDT at
+comment|// the specified location.
+name|fdtp_size
 operator|=
-name|mem_load_raw
-argument_list|(
-literal|"dtb"
-argument_list|,
-literal|"memory.dtb"
-argument_list|,
-name|header
-argument_list|,
 name|fdt_totalsize
 argument_list|(
 name|header
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fdtp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bfp
+operator|(
+name|fdtp
+operator|=
+name|malloc
+argument_list|(
+name|fdtp_size
+argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
 block|{
 name|command_errmsg
 operator|=
-literal|"unable to copy DTB into module directory"
+literal|"can't allocate memory for device tree copy"
 expr_stmt|;
 return|return
 operator|(
@@ -1206,13 +1212,24 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
-name|fdt_load_dtb
+name|fdtp_va
+operator|=
+literal|0
+expr_stmt|;
+comment|// Don't write this back into module or kernel.
+name|bcopy
 argument_list|(
-name|bfp
-operator|->
-name|f_addr
+name|header
+argument_list|,
+name|fdtp
+argument_list|,
+name|fdtp_size
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1654,6 +1671,7 @@ value|8
 end_define
 
 begin_function
+specifier|static
 name|void
 name|fixup_ethernet
 parameter_list|(
@@ -1844,6 +1862,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fixup_cpubusfreqs
 parameter_list|(
@@ -2071,6 +2090,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fdt_reg_valid
 parameter_list|(
@@ -2248,6 +2268,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fixup_memory
 parameter_list|(
@@ -3036,6 +3057,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fixup_stdout
 parameter_list|(
@@ -3317,7 +3339,7 @@ end_comment
 
 begin_function
 specifier|static
-name|vm_offset_t
+name|int
 name|fdt_fixup
 parameter_list|(
 name|void
@@ -3437,9 +3459,11 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-goto|goto
-name|success
-goto|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 comment|/* Acquire sys_info */
 name|si
 operator|=
@@ -3617,28 +3641,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|success
-label|:
-comment|/* Overwrite the FDT with the fixed version. */
-name|COPYIN
-argument_list|(
-name|fdtp
-argument_list|,
-name|fdtp_va
-argument_list|,
-name|fdtp_size
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|fdtp_va
+literal|1
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Copy DTB blob to specified location and its return size  */
+comment|/*  * Copy DTB blob to specified location and return size  */
 end_comment
 
 begin_function
@@ -3693,6 +3705,25 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|fdtp_va
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Overwrite the FDT with the fixed version. */
+comment|/* XXX Is this really appropriate? */
+name|COPYIN
+argument_list|(
+name|fdtp
+argument_list|,
+name|fdtp_va
+argument_list|,
+name|fdtp_size
+argument_list|)
+expr_stmt|;
+block|}
 name|COPYIN
 argument_list|(
 name|fdtp
@@ -6232,18 +6263,6 @@ literal|"Could not add/modify property!\n"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|COPYIN
-argument_list|(
-name|fdtp
-argument_list|,
-name|fdtp_va
-argument_list|,
-name|fdtp_size
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|rv
@@ -7082,15 +7101,6 @@ operator|(
 name|CMD_ERROR
 operator|)
 return|;
-name|COPYIN
-argument_list|(
-name|fdtp
-argument_list|,
-name|fdtp_va
-argument_list|,
-name|fdtp_size
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|CMD_OK
@@ -7271,18 +7281,6 @@ name|CMD_ERROR
 operator|)
 return|;
 block|}
-else|else
-block|{
-name|COPYIN
-argument_list|(
-name|fdtp
-argument_list|,
-name|fdtp_va
-argument_list|,
-name|fdtp_size
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|CMD_OK
@@ -7415,18 +7413,6 @@ operator|(
 name|CMD_ERROR
 operator|)
 return|;
-block|}
-else|else
-block|{
-name|COPYIN
-argument_list|(
-name|fdtp
-argument_list|,
-name|fdtp_va
-argument_list|,
-name|fdtp_size
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
