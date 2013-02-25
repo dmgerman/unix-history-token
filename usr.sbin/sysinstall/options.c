@@ -153,6 +153,12 @@ return|return
 literal|"FTP"
 return|;
 case|case
+name|DEVICE_TYPE_HTTP
+case|:
+return|return
+literal|"HTTP Proxy"
+return|;
+case|case
 name|DEVICE_TYPE_CDROM
 case|:
 return|return
