@@ -189,6 +189,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_STATUS_INTxSTATE
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIM_STATUS_CAPPRESENT
 value|0x0010
 end_define
@@ -719,6 +726,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIZ_RCLINK_DCL
+value|0x0005
+end_define
+
+begin_comment
+comment|/* Root Complex Link Declaration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_RCLINK_CTL
+value|0x0006
+end_define
+
+begin_comment
+comment|/* Root Complex Internal Link Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_RCEC_ASSOC
+value|0x0007
+end_define
+
+begin_comment
+comment|/* Root Complex Event Collector Association */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_MFVC
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Multi-Function Virtual Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_RCRB
+value|0x000a
+end_define
+
+begin_comment
+comment|/* RCRB Header */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIZ_VENDOR
 value|0x000b
 end_define
@@ -769,6 +831,72 @@ end_define
 
 begin_comment
 comment|/* Single Root IO Virtualization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_MULTICAST
+value|0x0012
+end_define
+
+begin_comment
+comment|/* Multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_RESIZE_BAR
+value|0x0015
+end_define
+
+begin_comment
+comment|/* Resizable BAR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_DPA
+value|0x0016
+end_define
+
+begin_comment
+comment|/* Dynamic Power Allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_TPH_REQ
+value|0x0017
+end_define
+
+begin_comment
+comment|/* TPH Requester */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_LTR
+value|0x0018
+end_define
+
+begin_comment
+comment|/* Latency Tolerance Reporting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIZ_SEC_PCIE
+value|0x0019
+end_define
+
+begin_comment
+comment|/* Secondary PCI Express */
 end_comment
 
 begin_comment
@@ -5805,6 +5933,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_AER_UC_INTERNAL_ERROR
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_UC_MC_BLOCKED_TLP
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_UC_ATOMIC_EGRESS_BLK
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_UC_TLP_PREFIX_BLOCKED
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_AER_UC_MASK
 value|0x08
 end_define
@@ -5876,6 +6032,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_AER_COR_INTERNAL_ERROR
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_COR_HEADER_LOG_OVFLOW
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_AER_COR_MASK
 value|0x14
 end_define
@@ -5924,6 +6094,27 @@ define|#
 directive|define
 name|PCIM_AER_ECRC_CHECK_ENABLE
 value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_MULT_HDR_CAPABLE
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_MULT_HDR_ENABLE
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_AER_TLP_PREFIX_LOG_PRESENT
+value|0x00000800
 end_define
 
 begin_define
@@ -6052,6 +6243,17 @@ end_define
 
 begin_comment
 comment|/* Only for root complex ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_AER_TLP_PREFIX_LOG
+value|0x38
+end_define
+
+begin_comment
+comment|/* Only for TLP prefix functions */
 end_comment
 
 begin_comment
