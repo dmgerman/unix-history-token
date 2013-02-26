@@ -1278,7 +1278,7 @@ operator|&
 name|ABSOLUTETIMESTAMPS
 condition|)
 block|{
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo
@@ -1326,7 +1326,7 @@ operator|&
 name|RELATIVETIMESTAMPS
 condition|)
 block|{
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo
@@ -1445,7 +1445,7 @@ operator|&
 name|ABSOLUTETIMESTAMPS
 condition|)
 block|{
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo
@@ -1493,7 +1493,7 @@ operator|&
 name|RELATIVETIMESTAMPS
 condition|)
 block|{
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo

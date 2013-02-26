@@ -8836,7 +8836,7 @@ operator|&
 name|ABSOLUTETIMESTAMPS
 condition|)
 block|{
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo
@@ -8886,7 +8886,7 @@ operator|&
 name|RELATIVETIMESTAMPS
 condition|)
 block|{
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo
@@ -9122,7 +9122,7 @@ operator|->
 name|after
 argument_list|)
 expr_stmt|;
-name|timespecsubt
+name|timespecsubt_to
 argument_list|(
 operator|&
 name|trussinfo
@@ -9142,7 +9142,7 @@ operator|&
 name|timediff
 argument_list|)
 expr_stmt|;
-name|timespecadd
+name|timespecadd_to
 argument_list|(
 operator|&
 name|sc
@@ -9362,7 +9362,7 @@ operator|->
 name|nerror
 argument_list|)
 expr_stmt|;
-name|timespecadd
+name|timespecadd_to
 argument_list|(
 operator|&
 name|total
