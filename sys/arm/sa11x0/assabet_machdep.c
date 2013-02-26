@@ -192,12 +192,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_map.h>
 end_include
 
