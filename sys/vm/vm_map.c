@@ -235,14 +235,6 @@ name|vmspace_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|vm_object
-name|kmapentobj
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -1110,12 +1102,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|uma_zone_set_obj
+name|uma_zone_reserve_kva
 argument_list|(
 name|kmapentzone
-argument_list|,
-operator|&
-name|kmapentobj
 argument_list|,
 name|lmin
 argument_list|(

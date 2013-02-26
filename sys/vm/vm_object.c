@@ -645,11 +645,16 @@ name|lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
+name|rw_init_flags
 argument_list|(
+operator|&
 name|object
+operator|->
+name|lock
 argument_list|,
-literal|"standard vm object"
+literal|"vm object"
+argument_list|,
+name|RW_DUPOK
 argument_list|)
 expr_stmt|;
 comment|/* These are true for any object that has been freed */
@@ -680,6 +685,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|_vm_object_allocate
 parameter_list|(
@@ -939,9 +945,12 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
+name|rw_init
 argument_list|(
-name|kernel_object
+operator|&
+name|object
+operator|->
+name|lock
 argument_list|,
 literal|"kernel vm object"
 argument_list|)
@@ -985,9 +994,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|VM_OBJECT_LOCK_INIT
+name|rw_init
 argument_list|(
-name|kmem_object
+operator|&
+name|object
+operator|->
+name|lock
 argument_list|,
 literal|"kmem vm object"
 argument_list|)

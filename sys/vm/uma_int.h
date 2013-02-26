@@ -393,16 +393,14 @@ name|uma_free
 name|uk_freef
 decl_stmt|;
 comment|/* Free routine */
-name|struct
-name|vm_object
-modifier|*
-name|uk_obj
+name|u_long
+name|uk_offset
 decl_stmt|;
-comment|/* Zone specific object */
+comment|/* Next free offset from base KVA */
 name|vm_offset_t
 name|uk_kva
 decl_stmt|;
-comment|/* Base kva for zones with objs */
+comment|/* Zone base KVA */
 name|uma_zone_t
 name|uk_slabzone
 decl_stmt|;
