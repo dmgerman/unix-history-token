@@ -948,7 +948,7 @@ expr_stmt|;
 name|rw_init
 argument_list|(
 operator|&
-name|object
+name|kernel_object
 operator|->
 name|lock
 argument_list|,
@@ -997,7 +997,7 @@ directive|endif
 name|rw_init
 argument_list|(
 operator|&
-name|object
+name|kmem_object
 operator|->
 name|lock
 argument_list|,
