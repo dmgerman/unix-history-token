@@ -239,6 +239,8 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -615,6 +617,8 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|vfslocked
+decl_stmt|,
+name|replacing
 decl_stmt|;
 name|error
 operator|=
@@ -857,6 +861,21 @@ operator|&
 name|acct_sx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't log spurious disable/enable messages if we are 	 * switching from one accounting file to another due to log 	 * rotation. 	 */
+name|replacing
+operator|=
+operator|(
+name|acct_vp
+operator|!=
+name|NULL
+operator|&&
+name|uap
+operator|->
+name|path
+operator|!=
+name|NULL
+operator|)
+expr_stmt|;
 comment|/* 	 * If accounting was previously enabled, kill the old space-watcher, 	 * close the file, and (if no new file was specified, leave).  Reset 	 * the suspended state regardless of whether accounting remains 	 * enabled. 	 */
 name|acct_suspended
 operator|=
@@ -883,6 +902,9 @@ operator|=
 name|acct_disable
 argument_list|(
 name|td
+argument_list|,
+operator|!
+name|replacing
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
@@ -1065,6 +1087,11 @@ operator|&
 name|acct_sx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|replacing
+condition|)
 name|log
 argument_list|(
 name|LOG_NOTICE
@@ -1093,6 +1120,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|logging
 parameter_list|)
 block|{
 name|int
@@ -1140,6 +1170,10 @@ name|acct_flags
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|logging
+condition|)
 name|log
 argument_list|(
 name|LOG_NOTICE
@@ -2215,6 +2249,8 @@ operator|)
 name|acct_disable
 argument_list|(
 name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
