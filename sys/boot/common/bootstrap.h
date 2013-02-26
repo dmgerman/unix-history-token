@@ -1133,35 +1133,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Load from a buffer in memory. */
-end_comment
-
-begin_function_decl
-name|struct
-name|preloaded_file
-modifier|*
-name|mem_load_raw
-parameter_list|(
-name|char
-modifier|*
-name|type
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|p
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* MI module loaders */
 end_comment
 

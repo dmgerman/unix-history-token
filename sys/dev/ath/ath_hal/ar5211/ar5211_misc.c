@@ -2851,6 +2851,24 @@ end_function
 
 begin_function
 name|void
+name|ar5211SetChainMasks
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|txchainmask
+parameter_list|,
+name|uint32_t
+name|rxchainmask
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
 name|ar5211EnableDfs
 parameter_list|(
 name|struct

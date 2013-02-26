@@ -362,9 +362,6 @@ index|[
 name|PI_NAMESZ
 index|]
 decl_stmt|;
-name|uint16_t
-name|pi_iobase
-decl_stmt|;
 name|int
 name|pi_bar_getsize
 decl_stmt|;

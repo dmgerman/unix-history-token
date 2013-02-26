@@ -41,7 +41,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__amigaos4__
+name|__amigaos__
 argument_list|)
 end_elif
 

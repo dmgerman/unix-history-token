@@ -2321,10 +2321,8 @@ operator|&
 name|startpass
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Running time: %ld msec\n"
-argument_list|,
+name|msec
+operator|=
 name|finishpass
 operator|.
 name|tv_sec
@@ -2336,6 +2334,12 @@ operator|.
 name|tv_nsec
 operator|/
 literal|1000000
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Running time: %lld msec\n"
+argument_list|,
+name|msec
 argument_list|)
 expr_stmt|;
 name|printf

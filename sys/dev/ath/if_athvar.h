@@ -2622,9 +2622,17 @@ comment|/* Local eeprom data, if AR9100 */
 name|int
 name|sc_txchainmask
 decl_stmt|;
-comment|/* currently configured TX chainmask */
+comment|/* hardware TX chainmask */
 name|int
 name|sc_rxchainmask
+decl_stmt|;
+comment|/* hardware RX chainmask */
+name|int
+name|sc_cur_txchainmask
+decl_stmt|;
+comment|/* currently configured TX chainmask */
+name|int
+name|sc_cur_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
 name|int
@@ -5727,6 +5735,21 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_get11nExtBusy)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setchainmasks
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_txchainmask
+parameter_list|,
+name|_rxchainmask
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setChainMasks)((_ah), (_txchainmask), (_rxchainmask)))
 end_define
 
 begin_define

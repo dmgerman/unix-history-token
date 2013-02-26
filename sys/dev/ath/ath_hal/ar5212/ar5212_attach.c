@@ -557,6 +557,11 @@ name|ah_getMibCycleCounts
 operator|=
 name|ar5212GetMibCycleCounts
 block|,
+operator|.
+name|ah_setChainMasks
+operator|=
+name|ar5212SetChainMasks
+block|,
 comment|/* DFS Functions */
 operator|.
 name|ah_enableDfs

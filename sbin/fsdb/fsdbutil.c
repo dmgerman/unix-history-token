@@ -1312,6 +1312,8 @@ expr_stmt|;
 name|initbarea
 argument_list|(
 name|bp
+argument_list|,
+name|BT_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|getblk
@@ -1336,6 +1338,8 @@ argument_list|,
 name|sblock
 operator|.
 name|fs_bsize
+argument_list|,
+name|BT_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|cpl

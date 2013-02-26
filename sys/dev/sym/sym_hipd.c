@@ -32070,6 +32070,17 @@ if|if
 condition|(
 name|tip
 operator|->
+name|period
+operator|&&
+name|tip
+operator|->
+name|offset
+condition|)
+block|{
+if|if
+condition|(
+name|tip
+operator|->
 name|offset
 operator|>
 name|SYM_SETUP_MAX_OFFS
@@ -32094,6 +32105,22 @@ name|period
 operator|=
 name|SYM_SETUP_MIN_SYNC
 expr_stmt|;
+block|}
+else|else
+block|{
+name|tip
+operator|->
+name|offset
+operator|=
+literal|0
+expr_stmt|;
+name|tip
+operator|->
+name|period
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 *  Scale against actual controller BUS width. 	 */
 if|if
 condition|(
@@ -32160,6 +32187,17 @@ name|PPR_OPT_DT
 expr_stmt|;
 block|}
 comment|/* 	 *  Scale period factor and offset against controller limits. 	 */
+if|if
+condition|(
+name|tip
+operator|->
+name|offset
+operator|&&
+name|tip
+operator|->
+name|period
+condition|)
+block|{
 if|if
 condition|(
 name|tip
@@ -32280,6 +32318,7 @@ name|np
 operator|->
 name|maxoffs
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/*  *  Update flags for a device (logical unit).  */
