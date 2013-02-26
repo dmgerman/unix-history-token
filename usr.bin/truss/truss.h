@@ -139,7 +139,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|timespecsubt
+name|timespecsubt_to
 parameter_list|(
 name|tvp
 parameter_list|,
@@ -154,7 +154,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|timespecadd
+name|timespecadd_to
 parameter_list|(
 name|tvp
 parameter_list|,
