@@ -770,6 +770,15 @@ name|COPROC11
 value|(0x3<< 22)
 end_define
 
+begin_function_decl
+name|void
+name|vfp_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

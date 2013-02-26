@@ -76,6 +76,16 @@ name|SOFT_CAPS
 value|(PMC_CAP_READ | PMC_CAP_WRITE | PMC_CAP_INTERRUPT | \     PMC_CAP_USER | PMC_CAP_SYSTEM)
 end_define
 
+begin_expr_stmt
+name|PMC_SOFT_DECLARE
+argument_list|( , ,
+name|clock
+argument_list|,
+name|prof
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|soft_descr
@@ -399,6 +409,19 @@ name|pmc_soft_ev_release
 argument_list|(
 name|ps
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ev
+operator|==
+name|pmc___clock_prof
+operator|.
+name|ps_ev
+operator|.
+name|pm_ev_code
+condition|)
+name|cpu_startprofclock
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1525,7 +1548,21 @@ name|phw_pmc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Nothing to do. 	 */
+if|if
+condition|(
+name|pmc
+operator|->
+name|pm_event
+operator|==
+name|pmc___clock_prof
+operator|.
+name|ps_ev
+operator|.
+name|pm_ev_code
+condition|)
+name|cpu_stopprofclock
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
