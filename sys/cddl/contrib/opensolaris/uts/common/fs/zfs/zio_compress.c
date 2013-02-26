@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -197,6 +201,16 @@ block|,
 literal|64
 block|,
 literal|"zle"
+block|}
+block|,
+block|{
+name|lz4_compress
+block|,
+name|lz4_decompress
+block|,
+literal|0
+block|,
+literal|"lz4"
 block|}
 block|, }
 decl_stmt|;
