@@ -1655,7 +1655,7 @@ argument_list|(
 literal|"    reads: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1672,7 +1672,7 @@ argument_list|(
 literal|"    writes: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1689,7 +1689,7 @@ argument_list|(
 literal|"    deletes: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1706,7 +1706,7 @@ argument_list|(
 literal|"    flushes: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1723,7 +1723,7 @@ argument_list|(
 literal|"    activemap updates: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(

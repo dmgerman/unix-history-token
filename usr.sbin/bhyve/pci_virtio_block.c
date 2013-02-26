@@ -337,6 +337,11 @@ define|#
 directive|define
 name|VBH_OP_WRITE
 value|1
+define|#
+directive|define
+name|VBH_FLAG_BARRIER
+value|0x80000000
+comment|/* OR'ed into vbh_type */
 name|uint32_t
 name|vbh_type
 decl_stmt|;
@@ -654,6 +659,8 @@ name|didx
 decl_stmt|;
 name|int
 name|writeop
+decl_stmt|,
+name|type
 decl_stmt|;
 name|off_t
 name|offset
@@ -824,12 +831,20 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|writeop
+comment|/* 	 * XXX 	 * The guest should not be setting the BARRIER flag because 	 * we don't advertise the capability. 	 */
+name|type
 operator|=
-operator|(
 name|vbh
 operator|->
 name|vbh_type
+operator|&
+operator|~
+name|VBH_FLAG_BARRIER
+expr_stmt|;
+name|writeop
+operator|=
+operator|(
+name|type
 operator|==
 name|VBH_OP_WRITE
 operator|)
