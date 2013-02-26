@@ -4142,9 +4142,9 @@ name|VPO_WANTED
 expr_stmt|;
 name|VM_OBJECT_SLEEP
 argument_list|(
-name|m
-argument_list|,
 name|tobject
+argument_list|,
+name|m
 argument_list|,
 name|PDROP
 operator||
@@ -4839,9 +4839,9 @@ name|VPO_WANTED
 expr_stmt|;
 name|VM_OBJECT_SLEEP
 argument_list|(
-name|m
-argument_list|,
 name|orig_object
+argument_list|,
+name|m
 argument_list|,
 name|PVM
 argument_list|,
@@ -5307,9 +5307,9 @@ name|VPO_WANTED
 expr_stmt|;
 name|VM_OBJECT_SLEEP
 argument_list|(
-name|p
-argument_list|,
 name|backing_object
+argument_list|,
+name|p
 argument_list|,
 name|PDROP
 operator||

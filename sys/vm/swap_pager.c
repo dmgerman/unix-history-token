@@ -4284,9 +4284,9 @@ if|if
 condition|(
 name|VM_OBJECT_SLEEP
 argument_list|(
-name|mreq
-argument_list|,
 name|object
+argument_list|,
+name|mreq
 argument_list|,
 name|PSWP
 argument_list|,

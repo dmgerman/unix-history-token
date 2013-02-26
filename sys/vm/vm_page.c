@@ -2643,10 +2643,10 @@ expr_stmt|;
 name|VM_OBJECT_SLEEP
 argument_list|(
 name|m
-argument_list|,
-name|m
 operator|->
 name|object
+argument_list|,
+name|m
 argument_list|,
 name|PVM
 argument_list|,

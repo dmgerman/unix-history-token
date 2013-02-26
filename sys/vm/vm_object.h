@@ -572,9 +572,9 @@ define|#
 directive|define
 name|VM_OBJECT_SLEEP
 parameter_list|(
-name|wchan
-parameter_list|,
 name|object
+parameter_list|,
+name|wchan
 parameter_list|,
 name|pri
 parameter_list|,
