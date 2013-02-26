@@ -449,10 +449,8 @@ control|)
 block|{
 if|if
 condition|(
-name|pmap_extract
+name|pmap_kextract
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|addr
 argument_list|)
 operator|==
