@@ -6286,6 +6286,16 @@ literal|1ULL
 operator|)
 return|;
 block|}
+comment|/* 			 * If the selected metaslab is condensing, skip it. 			 */
+if|if
+condition|(
+name|msp
+operator|->
+name|ms_map
+operator|->
+name|sm_condensing
+condition|)
+continue|continue;
 name|was_active
 operator|=
 name|msp
@@ -6446,26 +6456,6 @@ operator|->
 name|ms_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this metaslab is currently condensing then pick again as 		 * we can't manipulate this metaslab until it's committed 		 * to disk. 		 */
-if|if
-condition|(
-name|msp
-operator|->
-name|ms_map
-operator|->
-name|sm_condensing
-condition|)
-block|{
-name|mutex_exit
-argument_list|(
-operator|&
-name|msp
-operator|->
-name|ms_lock
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* 		 * Ensure that the metaslab we have selected is still 		 * capable of handling our request. It's possible that 		 * another thread may have changed the weight while we 		 * were blocked on the metaslab lock. 		 */
 if|if
 condition|(
@@ -6550,6 +6540,26 @@ name|activation_weight
 argument_list|)
 operator|!=
 literal|0
+condition|)
+block|{
+name|mutex_exit
+argument_list|(
+operator|&
+name|msp
+operator|->
+name|ms_lock
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * If this metaslab is currently condensing then pick again as 		 * we can't manipulate this metaslab until it's committed 		 * to disk. 		 */
+if|if
+condition|(
+name|msp
+operator|->
+name|ms_map
+operator|->
+name|sm_condensing
 condition|)
 block|{
 name|mutex_exit
