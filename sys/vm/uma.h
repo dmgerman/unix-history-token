@@ -799,29 +799,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Switches the backing object of a zone  *  * Arguments:  *	zone  The zone to update.  *	obj   The VM object to use for future allocations.  *	size  The size of the object to allocate.  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	A NULL object can be used and uma will allocate one for you.  Setting  *	the size will limit the amount of memory allocated to this zone.  *  */
+comment|/*  * Reserves the maximum KVA space required by the zone and configures the zone  * to use a VM_ALLOC_NOOBJ-based backend allocator.  *  * Arguments:  *	zone  The zone to update.  *	nitems  The upper limit on the number of items that can be allocated.  *  * Returns:  *	0  if KVA space can not be allocated  *	1  if successful  *  * Discussion:  *	When the machine supports a direct map and the zone's items are smaller  *	than a page, the zone will use the direct map instead of allocating KVA  *	space.  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|vm_object
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
-name|uma_zone_set_obj
+name|uma_zone_reserve_kva
 parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
 name|int
-name|size
+name|nitems
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -951,7 +940,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Replaces the standard page_alloc or obj_alloc functions for this zone  *  * Arguments:  *	zone   The zone whose backend allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
+comment|/*  * Replaces the standard backend allocator for this zone.  *  * Arguments:  *	zone   The zone whose backend allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
 end_comment
 
 begin_function_decl
