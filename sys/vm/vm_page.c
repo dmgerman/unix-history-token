@@ -3320,7 +3320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Convert all of the given object's cached pages that have a  *	pindex within the given range into free pages.  If the value  *	zero is given for "end", then the range's upper bound is  *	infinity.  If the given object is backed by a vnode and it  *	transitions from having one or more cached pages to none, the  *	vnode's hold count is reduced.   *  *	The object must be locked.  */
+comment|/*  *	Convert all of the given object's cached pages that have a  *	pindex within the given range into free pages.  If the value  *	zero is given for "end", then the range's upper bound is  *	infinity.  If the given object is backed by a vnode and it  *	transitions from having one or more cached pages to none, the  *	vnode's hold count is reduced.   */
 end_comment
 
 begin_function
@@ -3343,13 +3343,6 @@ decl_stmt|;
 name|boolean_t
 name|empty
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
-argument_list|(
-name|object
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3505,7 +3498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Returns the cached page that is associated with the given  *	object and offset.  If, however, none exists, returns NULL.  *  *	The free page queue and object must be locked.  */
+comment|/*  *	Returns the cached page that is associated with the given  *	object and offset.  If, however, none exists, returns NULL.  *  *	The free page queue must be locked.  */
 end_comment
 
 begin_function
@@ -3521,13 +3514,6 @@ name|vm_pindex_t
 name|pindex
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
-argument_list|(
-name|object
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3621,7 +3607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Transfer all of the cached pages with offset greater than or  *	equal to 'offidxstart' from the original object's cache to the  *	new object's cache.  However, any cached pages with offset  *	greater than or equal to the new object's size are kept in the  *	original object.  Initially, the new object's cache must be  *	empty.  Offset 'offidxstart' in the original object must  *	correspond to offset zero in the new object.  *  *	The new object and original object must be locked.  */
+comment|/*  *	Transfer all of the cached pages with offset greater than or  *	equal to 'offidxstart' from the original object's cache to the  *	new object's cache.  However, any cached pages with offset  *	greater than or equal to the new object's size are kept in the  *	original object.  Initially, the new object's cache must be  *	empty.  Offset 'offidxstart' in the original object must  *	correspond to offset zero in the new object.  *  *	The new object must be locked.  */
 end_comment
 
 begin_function
@@ -3645,13 +3631,6 @@ comment|/* 	 * Insertion into an object's collection of cached pages 	 * require
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|new_object
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
-argument_list|(
-name|orig_object
 argument_list|,
 name|MA_OWNED
 argument_list|)
