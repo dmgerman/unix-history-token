@@ -1566,7 +1566,7 @@ literal|0
 expr_stmt|;
 name|kernel_vm_end
 operator|=
-name|VM_MIN_KERNEL_ADDRESS
+name|VM_INIT_KERNEL_ADDRESS
 expr_stmt|;
 comment|/* 	 * Determine a valid (mappable) VHPT size. 	 */
 name|TUNABLE_INT_FETCH
@@ -1763,7 +1763,7 @@ argument_list|()
 expr_stmt|;
 name|virtual_avail
 operator|=
-name|VM_MIN_KERNEL_ADDRESS
+name|VM_INIT_KERNEL_ADDRESS
 expr_stmt|;
 name|virtual_end
 operator|=
@@ -6155,7 +6155,7 @@ if|if
 condition|(
 name|va
 operator|>=
-name|VM_MIN_KERNEL_ADDRESS
+name|VM_INIT_KERNEL_ADDRESS
 condition|)
 block|{
 name|pte
@@ -11910,7 +11910,7 @@ if|if
 condition|(
 name|addr
 operator|<
-name|VM_MIN_KERNEL_ADDRESS
+name|VM_INIT_KERNEL_ADDRESS
 condition|)
 block|{
 name|db_printf

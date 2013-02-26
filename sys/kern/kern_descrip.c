@@ -4187,7 +4187,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the caller specified a file descriptor, make sure the file 	 * table is large enough to hold it, and grab it.  Otherwise, just 	 * allocate a new descriptor the usual way.  Since the filedesc 	 * lock may be temporarily dropped in the process, we have to look 	 * out for a race. 	 */
+comment|/* 	 * If the caller specified a file descriptor, make sure the file 	 * table is large enough to hold it, and grab it.  Otherwise, just 	 * allocate a new descriptor the usual way. 	 */
 if|if
 condition|(
 name|flags

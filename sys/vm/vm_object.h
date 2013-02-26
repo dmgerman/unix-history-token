@@ -549,11 +549,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_OBJECT_MTX
+name|VM_OBJECT_SLEEP
 parameter_list|(
 name|object
+parameter_list|,
+name|wchan
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
 parameter_list|)
-value|(&(object)->mtx)
+define|\
+value|msleep((wchan),&(object)->mtx, (pri), \ 					    (wmesg), (timo))
 end_define
 
 begin_define
