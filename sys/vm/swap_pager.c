@@ -4277,14 +4277,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msleep
-argument_list|(
-name|mreq
-argument_list|,
-name|VM_OBJECT_MTX
+name|VM_OBJECT_SLEEP
 argument_list|(
 name|object
-argument_list|)
+argument_list|,
+name|mreq
 argument_list|,
 name|PSWP
 argument_list|,

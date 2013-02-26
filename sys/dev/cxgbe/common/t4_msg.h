@@ -10360,6 +10360,36 @@ parameter_list|)
 value|(((x)>> S_EGR_QID)& M_EGR_QID)
 end_define
 
+begin_comment
+comment|/* cpl_fw*.type values */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|FW_TYPE_CMD_RPL
+init|=
+literal|0
+block|,
+name|FW_TYPE_WR_RPL
+init|=
+literal|1
+block|,
+name|FW_TYPE_CQE
+init|=
+literal|2
+block|,
+name|FW_TYPE_OFLD_CONNECTION_WR_RPL
+init|=
+literal|3
+block|,
+name|FW_TYPE_RSSCPL
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|cpl_fw2_pld
@@ -10573,19 +10603,23 @@ enum|enum
 block|{
 name|FW6_TYPE_CMD_RPL
 init|=
-literal|0
+name|FW_TYPE_CMD_RPL
 block|,
 name|FW6_TYPE_WR_RPL
 init|=
-literal|1
+name|FW_TYPE_WR_RPL
 block|,
 name|FW6_TYPE_CQE
 init|=
-literal|2
+name|FW_TYPE_CQE
 block|,
 name|FW6_TYPE_OFLD_CONNECTION_WR_RPL
 init|=
-literal|3
+name|FW_TYPE_OFLD_CONNECTION_WR_RPL
+block|,
+name|FW6_TYPE_RSSCPL
+init|=
+name|FW_TYPE_RSSCPL
 block|,
 name|NUM_FW6_TYPES
 block|}

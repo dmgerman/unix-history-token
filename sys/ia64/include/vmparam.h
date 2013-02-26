@@ -441,6 +441,13 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
+value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INIT_KERNEL_ADDRESS
 value|IA64_RR_BASE(IA64_VM_MINKERN_REGION + 1)
 end_define
 
@@ -448,8 +455,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-define|\
-value|(VM_MIN_KERNEL_ADDRESS + IA64_REGION_GAP_START - 1)
+value|(IA64_RR_BASE(IA64_VM_MINKERN_REGION + 2) - 1)
 end_define
 
 begin_define
@@ -459,11 +465,15 @@ name|VM_MAX_ADDRESS
 value|~0UL
 end_define
 
+begin_comment
+comment|/* We link the kernel at IA64_PBVM_BASE. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|VM_MAXUSER_ADDRESS
+value|IA64_PBVM_BASE
 end_define
 
 begin_comment

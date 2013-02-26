@@ -749,6 +749,12 @@ name|ar5416GetMibCycleCounts
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setChainMasks
+operator|=
+name|ar5416SetChainMasks
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetKeyCacheEntry
 operator|=
 name|ar5416ResetKeyCacheEntry

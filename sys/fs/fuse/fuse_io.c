@@ -200,24 +200,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vnode_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"fuse.h"
 end_include
 

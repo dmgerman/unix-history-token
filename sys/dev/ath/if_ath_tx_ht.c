@@ -2190,7 +2190,6 @@ index|]
 operator|.
 name|tries
 expr_stmt|;
-comment|/* 		 * XXX this isn't strictly correct - sc_txchainmask 		 * XXX isn't the currently active chainmask; 		 * XXX it's the interface chainmask at startup. 		 * XXX It's overridden in the HAL rate scenario function 		 * XXX for now. 		 */
 comment|/* 		 * XXX TODO: When the NIC is capable of three stream TX, 		 * transmit 1/2 stream rates on two streams. 		 * 		 * This reduces the power consumption of the NIC and 		 * keeps it within the PCIe slot power limits. 		 */
 name|series
 index|[
@@ -2201,7 +2200,7 @@ name|ChSel
 operator|=
 name|sc
 operator|->
-name|sc_txchainmask
+name|sc_cur_txchainmask
 expr_stmt|;
 if|if
 condition|(
@@ -2299,6 +2298,8 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_HALFGI
 expr_stmt|;
+comment|/* 		 * XXX TODO: STBC if it's possible 		 */
+comment|/* 		 * XXX TODO: LDPC if it's possible 		 */
 name|series
 index|[
 name|i
