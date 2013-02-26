@@ -666,6 +666,9 @@ decl_stmt|;
 name|u_int16_t
 name|index
 decl_stmt|;
+name|int
+name|linkstat
+decl_stmt|;
 block|}
 struct|;
 end_struct
