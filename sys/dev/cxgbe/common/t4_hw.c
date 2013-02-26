@@ -407,6 +407,102 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	t4_report_fw_error - report firmware error  *	@adap: the adapter  *  *	The adapter firmware can indicate error conditions to the host.  *	This routine prints out the reason for the firmware error (as  *	reported by the firmware).  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|t4_report_fw_error
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adap
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|reason
+index|[]
+init|=
+block|{
+literal|"Crash"
+block|,
+comment|/* PCIE_FW_EVAL_CRASH */
+literal|"During Device Preparation"
+block|,
+comment|/* PCIE_FW_EVAL_PREP */
+literal|"During Device Configuration"
+block|,
+comment|/* PCIE_FW_EVAL_CONF */
+literal|"During Device Initialization"
+block|,
+comment|/* PCIE_FW_EVAL_INIT */
+literal|"Unexpected Event"
+block|,
+comment|/* PCIE_FW_EVAL_UNEXPECTEDEVENT */
+literal|"Insufficient Airflow"
+block|,
+comment|/* PCIE_FW_EVAL_OVERHEAT */
+literal|"Device Shutdown"
+block|,
+comment|/* PCIE_FW_EVAL_DEVICESHUTDOWN */
+literal|"Reserved"
+block|,
+comment|/* reserved */
+block|}
+decl_stmt|;
+name|u32
+name|pcie_fw
+decl_stmt|;
+name|pcie_fw
+operator|=
+name|t4_read_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_PCIE_FW
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|pcie_fw
+operator|&
+name|F_PCIE_FW_ERR
+operator|)
+condition|)
+name|CH_ERR
+argument_list|(
+name|adap
+argument_list|,
+literal|"Firmware error report called with no error\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|CH_ERR
+argument_list|(
+name|adap
+argument_list|,
+literal|"Firmware reports adapter error: %s\n"
+argument_list|,
+name|reason
+index|[
+name|G_PCIE_FW_EVAL
+argument_list|(
+name|pcie_fw
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Get the reply to a mailbox command and store it in @rpl in big-endian order.  */
 end_comment
 
@@ -979,6 +1075,7 @@ argument_list|)
 return|;
 block|}
 block|}
+comment|/* 	 * We timed out waiting for a reply to our mailbox command.  Report 	 * the error and also check to see if the firmware reported any 	 * errors ... 	 */
 name|CH_ERR
 argument_list|(
 name|adap
@@ -994,6 +1091,22 @@ operator|)
 name|cmd
 argument_list|,
 name|mbox
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t4_read_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_PCIE_FW
+argument_list|)
+operator|&
+name|F_PCIE_FW_ERR
+condition|)
+name|t4_report_fw_error
+argument_list|(
+name|adap
 argument_list|)
 expr_stmt|;
 return|return
@@ -9269,6 +9382,22 @@ decl_stmt|;
 name|int
 name|fat
 decl_stmt|;
+if|if
+condition|(
+name|t4_read_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|A_PCIE_FW
+argument_list|)
+operator|&
+name|F_PCIE_FW_ERR
+condition|)
+name|t4_report_fw_error
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|fat
 operator|=
 name|t4_handle_intr_status
@@ -19460,7 +19589,7 @@ operator||
 name|F_FW_HELLO_CMD_CLEARINIT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Issue the HELLO command to the firmware.  If it's not successful 	 * but indicates that we got a "busy" or "timeout" condition, retry 	 * the HELLO until we exhaust our retry limit. 	 */
+comment|/* 	 * Issue the HELLO command to the firmware.  If it's not successful 	 * but indicates that we got a "busy" or "timeout" condition, retry 	 * the HELLO until we exhaust our retry limit.  If we do exceed our 	 * retry limit, check to see if the firmware left us any error 	 * information and report that if so ... 	 */
 name|ret
 operator|=
 name|t4_wr_mbox
@@ -19510,6 +19639,22 @@ condition|)
 goto|goto
 name|retry
 goto|;
+if|if
+condition|(
+name|t4_read_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_PCIE_FW
+argument_list|)
+operator|&
+name|F_PCIE_FW_ERR
+condition|)
+name|t4_report_fw_error
+argument_list|(
+name|adap
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;

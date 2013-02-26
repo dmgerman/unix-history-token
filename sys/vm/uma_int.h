@@ -396,11 +396,11 @@ comment|/* Free routine */
 name|u_long
 name|uk_offset
 decl_stmt|;
-comment|/* Zone specific next page index */
+comment|/* Next free offset from base KVA */
 name|vm_offset_t
 name|uk_kva
 decl_stmt|;
-comment|/* Zone base kva */
+comment|/* Zone base KVA */
 name|uma_zone_t
 name|uk_slabzone
 decl_stmt|;
