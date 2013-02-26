@@ -178,6 +178,13 @@ name|FW_VERSION_BUILD
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|FW_VERSION
+value|(V_FW_HDR_FW_VER_MAJOR(FW_VERSION_MAJOR) | \     V_FW_HDR_FW_VER_MINOR(FW_VERSION_MINOR) | \     V_FW_HDR_FW_VER_MICRO(FW_VERSION_MICRO) | \     V_FW_HDR_FW_VER_BUILD(FW_VERSION_BUILD))
+end_define
+
 begin_struct
 struct|struct
 name|port_stats

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -14216,12 +14216,26 @@ expr_stmt|;
 name|fm_panic
 argument_list|(
 literal|"I/O to pool '%s' appears to be "
-literal|"hung."
+literal|"hung on vdev guid %llu at '%s'."
 argument_list|,
 name|spa_name
 argument_list|(
 name|spa
 argument_list|)
+argument_list|,
+operator|(
+name|long
+name|long
+name|unsigned
+name|int
+operator|)
+name|vd
+operator|->
+name|vdev_guid
+argument_list|,
+name|vd
+operator|->
+name|vdev_path
 argument_list|)
 expr_stmt|;
 block|}
