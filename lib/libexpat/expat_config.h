@@ -178,6 +178,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/param.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PARAM_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/stat.h> header file. */
 end_comment
 
@@ -211,6 +222,16 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LT_OBJDIR
+end_undef
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -218,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"expat-bugs@mail.libexpat.org"
+value|"expat-bugs@libexpat.org"
 end_define
 
 begin_comment
@@ -240,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"expat 1.95.5"
+value|"expat 2.1.0"
 end_define
 
 begin_comment
@@ -255,6 +276,17 @@ value|"expat"
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -262,7 +294,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.95.5"
+value|"2.1.0"
 end_define
 
 begin_comment
@@ -344,6 +376,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to __FUNCTION__ or "" if `__func__' does not conform to ANSI C. */
+end_comment
+
+begin_comment
+comment|/* #undef __func__ */
+end_comment
+
+begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */
 end_comment
 
@@ -352,7 +392,7 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define to `long' if<sys/types.h> does not define. */
+comment|/* Define to `long int' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
@@ -360,7 +400,7 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> does not define. */
+comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
