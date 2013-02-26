@@ -626,6 +626,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/* Operations on timespecs */
 end_comment
@@ -740,7 +755,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __BSD_VISIBLE */
+comment|/* _KERNEL */
 end_comment
 
 begin_ifndef
