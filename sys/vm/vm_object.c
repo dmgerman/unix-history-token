@@ -639,11 +639,20 @@ name|mtx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
+name|mtx_init
 argument_list|(
+operator|&
 name|object
+operator|->
+name|mtx
 argument_list|,
-literal|"standard object"
+literal|"vm object"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 comment|/* These are true for any object that has been freed */
@@ -674,6 +683,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|_vm_object_allocate
 parameter_list|(
@@ -933,11 +943,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
+name|mtx_init
 argument_list|(
+operator|&
 name|kernel_object
+operator|->
+name|mtx
+argument_list|,
+literal|"vm object"
 argument_list|,
 literal|"kernel object"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -979,11 +996,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|VM_OBJECT_LOCK_INIT
+name|mtx_init
 argument_list|(
+operator|&
 name|kmem_object
+operator|->
+name|mtx
+argument_list|,
+literal|"vm object"
 argument_list|,
 literal|"kmem object"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
