@@ -799,7 +799,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Switches the backing object of a zone to VM_ALLOC_NOOBJ.  *  * Arguments:  *	zone  The zone to update.  *	nitems  The number of items previewed to be allocated.  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	The size will limit the amount of memory allocated to this zone.  *  */
+comment|/*  * Reserves the maximum KVA space required by the zone and configures the zone  * to use a VM_ALLOC_NOOBJ-based backend allocator.  *  * Arguments:  *	zone  The zone to update.  *	nitems  The upper limit on the number of items that can be allocated.  *  * Returns:  *	0  if KVA space can not be allocated  *	1  if successful  *  * Discussion:  *	When the machine supports a direct map and the zone's items are smaller  *	than a page, the zone will use the direct map instead of allocating KVA  *	space.  */
 end_comment
 
 begin_function_decl
