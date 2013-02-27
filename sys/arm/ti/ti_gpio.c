@@ -2562,7 +2562,7 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-comment|/* Init OE registger based on pads configuration */
+comment|/* Init OE register based on pads configuration */
 name|reg_oe
 operator|=
 literal|0xffffffff
