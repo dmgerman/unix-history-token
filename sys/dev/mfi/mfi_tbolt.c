@@ -5781,6 +5781,14 @@ literal|1
 expr_stmt|;
 return|return ;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mfi_io_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5913,6 +5921,14 @@ name|hw_crit_error
 condition|)
 block|{
 comment|/* 			 * Initiate AEN (Asynchronous Event Notification) 			 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mfi_io_lock
+argument_list|)
+expr_stmt|;
 name|mfi_aen_setup
 argument_list|(
 name|sc
@@ -5920,6 +5936,14 @@ argument_list|,
 name|sc
 operator|->
 name|last_seq_num
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mfi_io_lock
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5970,14 +5994,6 @@ name|adpreset
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mfi_io_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -3918,21 +3918,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mfi_io_lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* 	 * Register a shutdown handler. 	 */
 if|if
 condition|(
