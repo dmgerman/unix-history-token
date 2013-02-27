@@ -1447,6 +1447,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EARLYFLUSH
+value|0x0008
+end_define
+
+begin_comment
+comment|/* vflush: early call for ffs_flushfiles */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|V_SAVE
 value|0x0001
 end_define
