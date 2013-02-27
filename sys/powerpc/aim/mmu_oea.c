@@ -5442,8 +5442,8 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|(
 name|m
 operator|->
@@ -5455,21 +5455,16 @@ operator||
 name|VPO_BUSY
 operator|)
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
-name|VM_OBJECT_LOCKED
+condition|)
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|)
 argument_list|,
-operator|(
-literal|"moea_enter_locked: page %p is not busy"
-operator|,
-name|m
-operator|)
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* XXX change the pvo head for fake pages */

@@ -8436,6 +8436,16 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+name|space_map_vacate
+argument_list|(
+operator|&
+name|smsync
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|space_map_destroy
 argument_list|(
 operator|&
