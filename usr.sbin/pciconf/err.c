@@ -296,6 +296,30 @@ literal|"ACS Violation"
 block|}
 block|,
 block|{
+name|PCIM_AER_UC_INTERNAL_ERROR
+block|,
+literal|"Uncorrectable Internal Error"
+block|}
+block|,
+block|{
+name|PCIM_AER_UC_MC_BLOCKED_TLP
+block|,
+literal|"MC Blocked TLP"
+block|}
+block|,
+block|{
+name|PCIM_AER_UC_ATOMIC_EGRESS_BLK
+block|,
+literal|"AtomicOp Egress Blocked"
+block|}
+block|,
+block|{
+name|PCIM_AER_UC_TLP_PREFIX_BLOCKED
+block|,
+literal|"TLP Prefix Blocked Error"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -350,6 +374,18 @@ block|{
 name|PCIM_AER_COR_ADVISORY_NF_ERROR
 block|,
 literal|"Advisory Non-Fatal Error"
+block|}
+block|,
+block|{
+name|PCIM_AER_COR_INTERNAL_ERROR
+block|,
+literal|"Corrected Internal Error"
+block|}
+block|,
+block|{
+name|PCIM_AER_COR_HEADER_LOG_OVFLOW
+block|,
+literal|"Header Log Overflow"
 block|}
 block|,
 block|{
