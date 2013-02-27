@@ -11379,6 +11379,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|cpoptarg
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
