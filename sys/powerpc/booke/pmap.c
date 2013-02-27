@@ -7102,8 +7102,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|(
 name|m
 operator|->
@@ -7115,21 +7115,16 @@ operator||
 name|VPO_BUSY
 operator|)
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
-name|VM_OBJECT_LOCKED
+condition|)
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|)
 argument_list|,
-operator|(
-literal|"mmu_booke_enter_locked: page %p is not busy"
-operator|,
-name|m
-operator|)
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|PMAP_LOCK_ASSERT
