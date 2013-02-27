@@ -5200,6 +5200,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|BUF_LOCKRECURSED
+argument_list|(
+name|bp
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Do not process, in particular, do not handle the 		 * B_INVAL/B_RELBUF and do not release to free list. 		 */
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|bp
 operator|->
 name|b_flags
@@ -5917,22 +5933,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|BUF_LOCKRECURSED
-argument_list|(
-name|bp
-argument_list|)
-condition|)
-block|{
-comment|/* do not release to free list */
-name|BUF_UNLOCK
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 comment|/* enqueue */
 name|mtx_lock
@@ -10636,6 +10636,18 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* If recursed, assume caller knows the rules. */
+elseif|else
+if|if
+condition|(
+name|BUF_LOCKRECURSED
+argument_list|(
+name|bp
+argument_list|)
+condition|)
+goto|goto
+name|end
+goto|;
 comment|/* 		 * The buffer is locked.  B_CACHE is cleared if the buffer is  		 * invalid.  Otherwise, for a non-VMIO buffer, B_CACHE is set 		 * and for a VMIO buffer B_CACHE is adjusted according to the 		 * backing VM cache. 		 */
 if|if
 condition|(
@@ -11209,6 +11221,8 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|end
+label|:
 name|KASSERT
 argument_list|(
 name|bp

@@ -2099,6 +2099,14 @@ name|u_int32_t
 name|sc_use_ent
 range|:
 literal|1
+decl_stmt|,
+name|sc_rx_stbc
+range|:
+literal|1
+decl_stmt|,
+name|sc_tx_stbc
+range|:
+literal|1
 decl_stmt|;
 comment|/* 	 * Enterprise mode configuration for AR9380 and later chipsets. 	 */
 name|uint32_t

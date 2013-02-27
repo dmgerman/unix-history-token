@@ -2298,8 +2298,7 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_HALFGI
 expr_stmt|;
-comment|/* 		 * XXX TODO: STBC if it's possible 		 */
-comment|/* 		 * XXX TODO: LDPC if it's possible 		 */
+comment|/* 		 * Setup rate and TX power cap for this series. 		 */
 name|series
 index|[
 name|i
@@ -2345,6 +2344,53 @@ operator|=
 literal|0x3f
 expr_stmt|;
 comment|/* XXX for now */
+comment|/* 		 * If we have STBC TX enabled and the receiver 		 * can receive (at least) 1 stream STBC, AND it's 		 * MCS 0-7, AND we have at least two chains enabled, 		 * enable STBC. 		 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_htcaps
+operator|&
+name|IEEE80211_HTCAP_TXSTBC
+operator|&&
+name|ni
+operator|->
+name|ni_htcap
+operator|&
+name|IEEE80211_HTCAP_RXSTBC_1STREAM
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_cur_txchainmask
+operator|>
+literal|1
+operator|)
+operator|&&
+name|HT_RC_2_STREAMS
+argument_list|(
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|Rate
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateFlags
+operator||=
+name|HAL_RATESERIES_STBC
+expr_stmt|;
+block|}
+comment|/* 		 * XXX TODO: LDPC if it's possible 		 */
 comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(

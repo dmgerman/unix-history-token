@@ -429,6 +429,14 @@ name|HAL_CAP_BB_DFS_HANG
 init|=
 literal|54
 block|,
+name|HAL_CAP_RX_STBC
+init|=
+literal|58
+block|,
+name|HAL_CAP_TX_STBC
+init|=
+literal|59
+block|,
 name|HAL_CAP_BT_COEX
 init|=
 literal|60
