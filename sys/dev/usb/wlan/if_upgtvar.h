@@ -1714,8 +1714,14 @@ comment|/* data which we found in the EEPROM */
 name|uint8_t
 name|sc_eeprom
 index|[
+literal|2
+operator|*
 name|UPGT_EEPROM_SIZE
 index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 decl_stmt|;
 name|uint16_t
 name|sc_eeprom_hwrx
