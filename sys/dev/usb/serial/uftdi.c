@@ -2502,6 +2502,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|KTLINK
+argument_list|,
+name|UFTDI_TYPE_8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|LENZ_LIUSB
 argument_list|,
 name|UFTDI_TYPE_AUTO
