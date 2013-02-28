@@ -85,15 +85,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_quad_t
-name|nfs_curusec
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|nfsm_disct

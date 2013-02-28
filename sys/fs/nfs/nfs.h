@@ -2277,11 +2277,6 @@ modifier|*
 name|nd_rp
 decl_stmt|;
 comment|/* Assoc. cache entry */
-name|struct
-name|timeval
-name|nd_starttime
-decl_stmt|;
-comment|/* Time RPC initiated */
 name|fhandle_t
 name|nd_fh
 decl_stmt|;
