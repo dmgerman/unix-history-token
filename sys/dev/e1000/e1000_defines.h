@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -70,100 +70,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUC_PME_STATUS
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* PME Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_APMPME
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* Assert PME on APM Wakeup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_LSCWE
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Link Status wake up enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_PPROXYE
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Protocol Proxy Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_LSCWO
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Link Status wake up override */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_SPM
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Enable SPM */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_WUC_PHY_WAKE
 value|0x00000100
 end_define
 
 begin_comment
 comment|/* if PHY supports wakeup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_FLX6_PHY
-value|0x4000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 6 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUC_FLX7_PHY
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 7 Enable */
 end_comment
 
 begin_comment
@@ -250,346 +162,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_IPV6
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* Directed IPv6 Packet Wakeup Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_IGNORE_TCO_PHY
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* Ignore WakeOn TCO packets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX0_PHY
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 0 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX1_PHY
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 1 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX2_PHY
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 2 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX3_PHY
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 3 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX4_PHY
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Flexible Filter 4 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX5_PHY
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Flexible Filter 5 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_IGNORE_TCO
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Ignore WakeOn TCO packets */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_WUFC_FLX0
 value|0x00010000
 end_define
 
 begin_comment
 comment|/* Flexible Filter 0 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX1
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 1 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX2
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 2 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX3
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 3 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX4
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 4 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX5
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 5 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX6
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 6 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX7
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 7 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FW_RST
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Wake on FW Reset Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_ALL_FILTERS_PHY_4
-value|0x0000F0FF
-end_define
-
-begin_comment
-comment|/* wakeup filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_OFFSET_PHY
-value|12
-end_define
-
-begin_comment
-comment|/* Flexible Filters bits offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_FILTERS_PHY_4
-value|0x0000F000
-end_define
-
-begin_comment
-comment|/* 4 flexible filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_ALL_FILTERS_PHY_6
-value|0x0000F6FF
-end_define
-
-begin_comment
-comment|/* 6 wakeup filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_FILTERS_PHY_6
-value|0x0000F600
-end_define
-
-begin_comment
-comment|/* 6 flexible filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_ALL_FILTERS
-value|0x000F00FF
-end_define
-
-begin_comment
-comment|/* all wakeup filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_ALL_FILTERS_6
-value|0x003F00FF
-end_define
-
-begin_comment
-comment|/* Mask all 6 wu filters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_ALL_FILTERS_8
-value|0x00FF00FF
-end_define
-
-begin_comment
-comment|/* Mask all 8 wu filters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_OFFSET
-value|16
-end_define
-
-begin_comment
-comment|/* Flexible Filters bits offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_FILTERS
-value|0x000F0000
-end_define
-
-begin_comment
-comment|/* 4 flexible filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_FILTERS_6
-value|0x003F0000
-end_define
-
-begin_comment
-comment|/* 6 flexible filters mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_FILTERS_8
-value|0x00FF0000
-end_define
-
-begin_comment
-comment|/* 8 flexible filters mask */
-end_comment
-
-begin_comment
-comment|/*  * For 82576 to utilize Extended filter masks in addition to  * existing (filter) masks  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_EXT_FLX_FILTERS
-value|0x00300000
-end_define
-
-begin_comment
-comment|/* Ext. FLX filter mask */
 end_comment
 
 begin_comment
@@ -631,301 +209,6 @@ name|E1000_WUS_BC
 value|E1000_WUFC_BC
 end_define
 
-begin_define
-define|#
-directive|define
-name|E1000_WUS_ARP
-value|E1000_WUFC_ARP
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_IPV4
-value|E1000_WUFC_IPV4
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_IPV6
-value|E1000_WUFC_IPV6
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX0_PHY
-value|E1000_WUFC_FLX0_PHY
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX1_PHY
-value|E1000_WUFC_FLX1_PHY
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX2_PHY
-value|E1000_WUFC_FLX2_PHY
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX3_PHY
-value|E1000_WUFC_FLX3_PHY
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX_FILTERS_PHY_4
-value|E1000_WUFC_FLX_FILTERS_PHY_4
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX0
-value|E1000_WUFC_FLX0
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX1
-value|E1000_WUFC_FLX1
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX2
-value|E1000_WUFC_FLX2
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX3
-value|E1000_WUFC_FLX3
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX4
-value|E1000_WUFC_FLX4
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX5
-value|E1000_WUFC_FLX5
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX6
-value|E1000_WUFC_FLX6
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX7
-value|E1000_WUFC_FLX7
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX4_PHY
-value|E1000_WUFC_FLX4_PHY
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX5_PHY
-value|E1000_WUFC_FLX5_PHY
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX6_PHY
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX7_PHY
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX_FILTERS
-value|E1000_WUFC_FLX_FILTERS
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX_FILTERS_6
-value|E1000_WUFC_FLX_FILTERS_6
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX_FILTERS_8
-value|E1000_WUFC_FLX_FILTERS_8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX_FILTERS_PHY_6
-value|E1000_WUFC_FLX_FILTERS_PHY_6
-end_define
-
-begin_comment
-comment|/* Wake Up Packet Length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUPL_LENGTH_MASK
-value|0x0FFF
-end_define
-
-begin_comment
-comment|/* Only the lower 12 bits are valid */
-end_comment
-
-begin_comment
-comment|/* Four Flexible Filters are supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FLEXIBLE_FILTER_COUNT_MAX
-value|4
-end_define
-
-begin_comment
-comment|/* Six Flexible Filters are supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FLEXIBLE_FILTER_COUNT_MAX_6
-value|6
-end_define
-
-begin_comment
-comment|/* Eight Flexible Filters are supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FLEXIBLE_FILTER_COUNT_MAX_8
-value|8
-end_define
-
-begin_comment
-comment|/* Two Extended Flexible Filters are supported (82576) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EXT_FLEXIBLE_FILTER_COUNT_MAX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_FHFT_LENGTH_OFFSET
-value|0xFC
-end_define
-
-begin_comment
-comment|/* Length byte in FHFT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FHFT_LENGTH_MASK
-value|0x0FF
-end_define
-
-begin_comment
-comment|/* Length in lower byte */
-end_comment
-
-begin_comment
-comment|/* Each Flexible Filter is at most 128 (0x80) bytes in length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FLEXIBLE_FILTER_SIZE_MAX
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_FFLT_SIZE
-value|E1000_FLEXIBLE_FILTER_COUNT_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_FFLT_SIZE_6
-value|E1000_FLEXIBLE_FILTER_COUNT_MAX_6
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_FFLT_SIZE_8
-value|E1000_FLEXIBLE_FILTER_COUNT_MAX_8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_FFMT_SIZE
-value|E1000_FLEXIBLE_FILTER_SIZE_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_FFVT_SIZE
-value|E1000_FLEXIBLE_FILTER_SIZE_MAX
-end_define
-
 begin_comment
 comment|/* Extended Device Control */
 end_comment
@@ -933,56 +216,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_GPI0_EN
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Maps SDP4 to GPI0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_GPI1_EN
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Maps SDP5 to GPI1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_PHYINT_EN
-value|E1000_CTRL_EXT_GPI1_EN
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_GPI2_EN
+name|E1000_CTRL_EXT_LPCD
 value|0x00000004
 end_define
 
 begin_comment
-comment|/* Maps SDP6 to GPI2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_GPI3_EN
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* Maps SDP7 to GPI3 */
-end_comment
-
-begin_comment
-comment|/* Reserved (bits 4,5) in>= 82575 */
+comment|/* LCD Power Cycle Done */
 end_comment
 
 begin_define
@@ -995,24 +234,6 @@ end_define
 begin_comment
 comment|/* SW Definable Pin 4 data */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_SDP5_DATA
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* SW Definable Pin 5 data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_PHY_INT
-value|E1000_CTRL_EXT_SDP5_DATA
-end_define
 
 begin_define
 define|#
@@ -1054,17 +275,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_SDP5_DIR
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Direction of SDP5 0=in 1=out */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_EXT_SDP6_DIR
 value|0x00000400
 end_define
@@ -1087,12 +297,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_ASDCHK
-value|0x00001000
+name|E1000_CTRL_EXT_FORCE_SMBUS
+value|0x00000800
 end_define
 
 begin_comment
-comment|/* Initiate an ASD sequence */
+comment|/* Force SMBus mode */
 end_comment
 
 begin_define
@@ -1104,17 +314,6 @@ end_define
 
 begin_comment
 comment|/* Reinitialize from EEPROM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_IPS
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* Invert Power State */
 end_comment
 
 begin_comment
@@ -1182,17 +381,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_LINK_MODE_82580_MASK
-value|0x01C00000
-end_define
-
-begin_comment
-comment|/*82580 bit 24:22*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_EXT_LINK_MODE_1000BASE_KX
 value|0x00400000
 end_define
@@ -1207,29 +395,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_LINK_MODE_TBI
-value|0x00C00000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_LINK_MODE_KMRN
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_EXT_LINK_MODE_PCIE_SERDES
 value|0x00C00000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_LINK_MODE_PCIX_SERDES
-value|0x00800000
 end_define
 
 begin_define
@@ -1256,62 +423,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_WR_WMARK_MASK
-value|0x03000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_WR_WMARK_256
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_WR_WMARK_320
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_WR_WMARK_384
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_WR_WMARK_448
-value|0x03000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_CANC
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Int delay cancellation */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_EXT_DRV_LOAD
 value|0x10000000
 end_define
 
 begin_comment
 comment|/* Drv loaded bit for FW */
-end_comment
-
-begin_comment
-comment|/* IAME enable bit (27) was removed in>= 82575 */
 end_comment
 
 begin_define
@@ -1324,35 +441,6 @@ end_define
 begin_comment
 comment|/* Int ACK Auto-mask */
 end_comment
-
-begin_comment
-comment|/* packet buffer parity error detection enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CRTL_EXT_PB_PAREN
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* descriptor FIFO parity error detection enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_DF_PAREN
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_GHOST_PAREN
-value|0x40000000
-end_define
 
 begin_define
 define|#
@@ -1389,22 +477,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_I2CCMD_REG_ADDR
-value|0x00FF0000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_I2CCMD_PHY_ADDR_SHIFT
 value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_I2CCMD_PHY_ADDR
-value|0x07000000
 end_define
 
 begin_define
@@ -1424,22 +498,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_I2CCMD_RESET
-value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_I2CCMD_READY
 value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_I2CCMD_INTERRUPT_ENA
-value|0x40000000
 end_define
 
 begin_define
@@ -1613,17 +673,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RXD_STAT_CRCV
-value|0x100
-end_define
-
-begin_comment
-comment|/* Speculative CRC Valid */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RXD_STAT_IPIDV
 value|0x200
 end_define
@@ -1652,17 +701,6 @@ end_define
 
 begin_comment
 comment|/* Pkt caused INT via DYNINT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXD_STAT_ACK
-value|0x8000
-end_define
-
-begin_comment
-comment|/* ACK Packet indication */
 end_comment
 
 begin_define
@@ -1756,38 +794,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RXD_SPC_PRI_MASK
-value|0xE000
+name|E1000_RXDEXT_STATERR_TST
+value|0x00000100
 end_define
 
 begin_comment
-comment|/* Priority is in upper 3 bits */
+comment|/* Time Stamp taken */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXD_SPC_PRI_SHIFT
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXD_SPC_CFI_MASK
-value|0x1000
-end_define
-
-begin_comment
-comment|/* CFI is bit 12 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXD_SPC_CFI_SHIFT
-value|12
-end_define
 
 begin_define
 define|#
@@ -1845,48 +858,6 @@ name|E1000_RXDEXT_STATERR_RXE
 value|0x80000000
 end_define
 
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECH
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_MASK
-value|0x60000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_NO_ERROR
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_NO_SA_MATCH
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_REPLAY_DETECT
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_BAD_SIG
-value|0x60000000
-end_define
-
 begin_comment
 comment|/* mask to determine if packets should be dropped due to frame errors */
 end_comment
@@ -1907,27 +878,6 @@ define|#
 directive|define
 name|E1000_RXDEXT_ERR_FRAME_ERR_MASK
 value|( \ 	E1000_RXDEXT_STATERR_CE  |	\ 	E1000_RXDEXT_STATERR_SE  |	\ 	E1000_RXDEXT_STATERR_SEQ |	\ 	E1000_RXDEXT_STATERR_CXE |	\ 	E1000_RXDEXT_STATERR_RXE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MRQC_ENABLE_MASK
-value|0x00000007
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MRQC_ENABLE_RSS_2Q
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MRQC_ENABLE_RSS_INT
-value|0x00000004
 end_define
 
 begin_define
@@ -1961,13 +911,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_MRQC_RSS_FIELD_IPV6_EX
-value|0x00080000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_MRQC_RSS_FIELD_IPV6
 value|0x00100000
 end_define
@@ -1984,13 +927,6 @@ define|#
 directive|define
 name|E1000_RXDPS_HDRSTAT_HDRSP
 value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDPS_HDRSTAT_HDRLEN_MASK
-value|0x000003FF
 end_define
 
 begin_comment
@@ -2022,111 +958,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_MANC_R_ON_FORCE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Reset on Force TCO - RO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_RMCP_EN
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Enable RCMP 026Fh Filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_0298_EN
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Enable RCMP 0298h Filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_IPV4_EN
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Enable IPv4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_IPV6_EN
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* Enable IPv6 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SNAP_EN
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* Accept LLC/SNAP */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_MANC_ARP_EN
 value|0x00002000
 end_define
 
 begin_comment
 comment|/* Enable ARP Request Filtering */
-end_comment
-
-begin_comment
-comment|/* Enable Neighbor Discovery Filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_NEIGHBOR_EN
-value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_ARP_RES_EN
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Enable ARP response Filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_TCO_RESET
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* TCO Reset Occurred */
 end_comment
 
 begin_define
@@ -2138,28 +975,6 @@ end_define
 
 begin_comment
 comment|/* Receive TCO Packets Enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_REPORT_STATUS
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Status Reporting Enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_RCV_ALL
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* Receive All Enabled */
 end_comment
 
 begin_define
@@ -2194,149 +1009,6 @@ directive|define
 name|E1000_MANC_EN_MNG2HOST
 value|0x00200000
 end_define
-
-begin_comment
-comment|/* Enable IP address filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_EN_IP_ADDR_FILTER
-value|0x00400000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_EN_XSUM_FILTER
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Ena checksum filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_BR_EN
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Ena broadcast filtering */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_REQ
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* SMBus Request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_GNT
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* SMBus Grant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_CLK_IN
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* SMBus Clock In */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_DATA_IN
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* SMBus Data In */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_DATA_OUT
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* SMBus Data Out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_CLK_OUT
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* SMBus Clock Out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_MPROXYE
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Mngment Proxy Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_EN_BMC2OS
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* OS2BMC is enabld or not */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_DATA_OUT_SHIFT
-value|28
-end_define
-
-begin_comment
-comment|/* SMBus Data Out Shift */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MANC_SMB_CLK_OUT_SHIFT
-value|29
-end_define
-
-begin_comment
-comment|/* SMBus Clock Out Shift */
-end_comment
 
 begin_define
 define|#
@@ -2477,34 +1149,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RCTL_LBM_SLP
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* serial link loopback mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RCTL_LBM_TCVR
 value|0x000000C0
 end_define
 
 begin_comment
 comment|/* tcvr loopback mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_DTYP_MASK
-value|0x00000C00
-end_define
-
-begin_comment
-comment|/* Descriptor type mask */
 end_comment
 
 begin_define
@@ -2532,28 +1182,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RCTL_RDMTS_QUAT
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Rx desc min thresh size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_RDMTS_EIGTH
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Rx desc min thresh size */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RCTL_MO_SHIFT
 value|12
 end_define
@@ -2565,56 +1193,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RCTL_MO_0
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* multicast offset 11:0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_MO_1
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* multicast offset 12:1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_MO_2
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* multicast offset 13:2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RCTL_MO_3
 value|0x00003000
 end_define
 
 begin_comment
 comment|/* multicast offset 15:4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_MDR
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* multicast desc ring 0 */
 end_comment
 
 begin_define
@@ -2790,30 +1374,8 @@ begin_comment
 comment|/* Strip Ethernet CRC */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_FLXBUF_MASK
-value|0x78000000
-end_define
-
 begin_comment
-comment|/* Flexible buffer size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_FLXBUF_SHIFT
-value|27
-end_define
-
-begin_comment
-comment|/* Flexible buffer shift */
-end_comment
-
-begin_comment
-comment|/*  * Use byte values for the following shift parameters  * Usage:  *     psrctl |= (((ROUNDUP(value0, 128)>> E1000_PSRCTL_BSIZE0_SHIFT)&  *		  E1000_PSRCTL_BSIZE0_MASK) |  *		((ROUNDUP(value1, 1024)>> E1000_PSRCTL_BSIZE1_SHIFT)&  *		  E1000_PSRCTL_BSIZE1_MASK) |  *		((ROUNDUP(value2, 1024)<< E1000_PSRCTL_BSIZE2_SHIFT)&  *		  E1000_PSRCTL_BSIZE2_MASK) |  *		((ROUNDUP(value3, 1024)<< E1000_PSRCTL_BSIZE3_SHIFT) |;  *		  E1000_PSRCTL_BSIZE3_MASK))  * where value0 = [128..16256],  default=256  *       value1 = [1024..64512], default=4096  *       value2 = [0..64512],    default=4096  *       value3 = [0..64512],    default=0  */
+comment|/* Use byte values for the following shift parameters  * Usage:  *     psrctl |= (((ROUNDUP(value0, 128)>> E1000_PSRCTL_BSIZE0_SHIFT)&  *		  E1000_PSRCTL_BSIZE0_MASK) |  *		((ROUNDUP(value1, 1024)>> E1000_PSRCTL_BSIZE1_SHIFT)&  *		  E1000_PSRCTL_BSIZE1_MASK) |  *		((ROUNDUP(value2, 1024)<< E1000_PSRCTL_BSIZE2_SHIFT)&  *		  E1000_PSRCTL_BSIZE2_MASK) |  *		((ROUNDUP(value3, 1024)<< E1000_PSRCTL_BSIZE3_SHIFT) |;  *		  E1000_PSRCTL_BSIZE3_MASK))  * where value0 = [128..16256],  default=256  *       value1 = [1024..64512], default=4096  *       value2 = [0..64512],    default=4096  *       value3 = [0..64512],    default=0  */
 end_comment
 
 begin_define
@@ -2942,21 +1504,6 @@ value|0x400
 end_define
 
 begin_comment
-comment|/* FACTPS Definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FACTPS_LFS
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* LAN Function Select */
-end_comment
-
-begin_comment
 comment|/* Device Control */
 end_comment
 
@@ -2969,17 +1516,6 @@ end_define
 
 begin_comment
 comment|/* Full duplex.0=half; 1=full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_BEM
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Endian Mode.0=little,1=big */
 end_comment
 
 begin_define
@@ -3013,28 +1549,6 @@ end_define
 
 begin_comment
 comment|/* Link reset. 0=normal,1=reset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_TME
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Test mode. 0=normal,1=test */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_SLE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Serial Link on 0=dis,1=en */
 end_comment
 
 begin_define
@@ -3117,17 +1631,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_BEM32
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Big Endian 32 mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_FRCSPD
 value|0x00000800
 end_define
@@ -3150,50 +1653,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_D_UD_EN
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* Dock/Undock enable */
-end_comment
-
-begin_comment
-comment|/* Defined polarity of Dock/Undock indication in SDP[0] */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_D_UD_POLARITY
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* Reset both PHY ports, through PHYRST_N pin */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_FORCE_PHY_RESET
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* enable link status from external LINK_0 and LINK_1 pins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_EXT_LINK_EN
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_LANPHYPC_OVERRIDE
 value|0x00010000
 end_define
@@ -3211,6 +1670,17 @@ end_define
 
 begin_comment
 comment|/* SW value of LANPHYPC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_MEHE
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Memory Error Handling Enable */
 end_comment
 
 begin_define
@@ -3260,6 +1730,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_CTRL_EN_PHY_PWR_MGMT
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* PHY PM enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_CTRL_SWDPIN3
 value|0x00200000
 end_define
@@ -3277,17 +1758,6 @@ end_define
 
 begin_comment
 comment|/* SWDPIN 0 Input or output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_SWDPIO1
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* SWDPIN 1 input or output */
 end_comment
 
 begin_define
@@ -3348,17 +1818,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_RTE
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Routing tag enable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_VME
 value|0x40000000
 end_define
@@ -3381,17 +1840,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_SW2FW_INT
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Initiate an interrupt to ME */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_CTRL_I2C_ENA
 value|0x02000000
 end_define
@@ -3399,24 +1847,6 @@ end_define
 begin_comment
 comment|/* I2C enable */
 end_comment
-
-begin_comment
-comment|/*  * Bit definitions for the Management Data IO (MDIO) and Management Data  * Clock (MDC) pins in the Device Control Register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_PHY_RESET_DIR
-value|E1000_CTRL_SWDPIO0
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_PHY_RESET
-value|E1000_CTRL_SWDPIN0
-end_define
 
 begin_define
 define|#
@@ -3449,22 +1879,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_PHY_RESET_DIR4
-value|E1000_CTRL_EXT_SDP4_DIR
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_CTRL_PHY_RESET4
-value|E1000_CTRL_EXT_SDP4_DATA
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_CONNSW_ENRGSRC
 value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CONNSW_PHYSD
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CONNSW_SERDESD
+value|0x200
 end_define
 
 begin_define
@@ -3526,13 +1956,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_PCS_LCTL_LOW_LINK_LATCH
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_PCS_LCTL_FORCE_FCTRL
 value|0x80
 end_define
@@ -3561,41 +1984,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_PCS_LCTL_AN_SGMII_BYPASS
-value|0x80000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LCTL_AN_SGMII_TRIGGER
-value|0x100000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LCTL_FAST_LINK_TIMER
-value|0x1000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LCTL_LINK_OK_FIX
-value|0x2000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LCTL_CRS_ON_NI
-value|0x4000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_ENABLE_SERDES_LOOPBACK
 value|0x0410
 end_define
@@ -3605,13 +1993,6 @@ define|#
 directive|define
 name|E1000_PCS_LSTS_LINK_OK
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LSTS_SPEED_10
-value|0
 end_define
 
 begin_define
@@ -3647,34 +2028,6 @@ define|#
 directive|define
 name|E1000_PCS_LSTS_AN_COMPLETE
 value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LSTS_AN_PAGE_RX
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LSTS_AN_TIMED_OUT
-value|0x40000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LSTS_AN_REMOTE_FAULT
-value|0x80000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_PCS_LSTS_AN_ERROR_RWS
-value|0x100000
 end_define
 
 begin_comment
@@ -3724,17 +2077,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_STATUS_FUNC_0
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* Function 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_STATUS_FUNC_1
 value|0x00000004
 end_define
@@ -3752,17 +2094,6 @@ end_define
 
 begin_comment
 comment|/* transmission paused */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_TBIMODE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* TBI mode */
 end_comment
 
 begin_define
@@ -3819,17 +2150,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_STATUS_ASDV
-value|0x00000300
-end_define
-
-begin_comment
-comment|/* Auto speed detect value */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_STATUS_PHYRA
 value|0x00000400
 end_define
@@ -3837,17 +2157,6 @@ end_define
 begin_comment
 comment|/* PHY Reset Asserted */
 end_comment
-
-begin_comment
-comment|/* Change in Dock/Undock state clear on write '0'. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_DOCK_CI
-value|0x00000800
-end_define
 
 begin_define
 define|#
@@ -3858,17 +2167,6 @@ end_define
 
 begin_comment
 comment|/* Master request status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_MTXCKOK
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* MTX clock running OK */
 end_comment
 
 begin_define
@@ -3913,108 +2211,6 @@ end_define
 
 begin_comment
 comment|/* PCI-X bus speed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_BMC_SKU_0
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* BMC USB redirect disbld */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_BMC_SKU_1
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* BMC SRAM disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_BMC_SKU_2
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* BMC SDRAM disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_BMC_CRYPTO
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* BMC crypto disabled */
-end_comment
-
-begin_comment
-comment|/* BMC external code execution disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_BMC_LITE
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_RGMII_ENABLE
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* RGMII disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_FUSE_8
-value|0x04000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_FUSE_9
-value|0x08000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_SERDES0_DIS
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* SERDES disbld on port 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_STATUS_SERDES1_DIS
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* SERDES disbld on port 1 */
 end_comment
 
 begin_comment
@@ -4177,13 +2373,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_ALL_FULL_DUPLEX
-value|( \ 	ADVERTISE_10_FULL | ADVERTISE_100_FULL | ADVERTISE_1000_FULL)
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_ALL_HALF_DUPLEX
 value|(ADVERTISE_10_HALF | ADVERTISE_100_HALF)
 end_define
@@ -4216,13 +2405,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_PHY_LED0_BLINK
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_PHY_LED0_MASK
 value|0x0000001F
 end_define
@@ -4244,13 +2426,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_LEDCTL_LED0_BLINK_RATE
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_LEDCTL_LED0_IVRT
 value|0x00000040
 end_define
@@ -4265,204 +2440,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_LEDCTL_LED1_MODE_MASK
-value|0x00000F00
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED1_MODE_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED1_BLINK_RATE
-value|0x00002000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED1_IVRT
-value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED1_BLINK
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED2_MODE_MASK
-value|0x000F0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED2_MODE_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED2_BLINK_RATE
-value|0x00200000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED2_IVRT
-value|0x00400000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED2_BLINK
-value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED3_MODE_MASK
-value|0x0F000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED3_MODE_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED3_BLINK_RATE
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED3_IVRT
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_LED3_BLINK
-value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_LINK_10_1000
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_LINK_100_1000
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_LEDCTL_MODE_LINK_UP
 value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_ACTIVITY
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_LINK_ACTIVITY
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_LINK_10
-value|0x5
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_LINK_100
-value|0x6
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_LINK_1000
-value|0x7
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_PCIX_MODE
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_FULL_DUPLEX
-value|0x9
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_COLLISION
-value|0xA
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_BUS_SPEED
-value|0xB
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_BUS_SIZE
-value|0xC
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LEDCTL_MODE_PAUSED
-value|0xD
 end_define
 
 begin_define
@@ -4503,17 +2482,6 @@ end_define
 
 begin_comment
 comment|/* Context Descriptor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_POPTS_SHIFT
-value|8
-end_define
-
-begin_comment
-comment|/* POPTS shift */
 end_comment
 
 begin_define
@@ -4714,21 +2682,6 @@ begin_comment
 comment|/* Tx Underrun */
 end_comment
 
-begin_comment
-comment|/* Extended desc bits for Linksec and timesync */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_LINKSEC
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Apply LinkSec on packet */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -4747,34 +2700,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_TCTL_RST
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* software reset */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_TCTL_EN
 value|0x00000002
 end_define
 
 begin_comment
 comment|/* enable Tx */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TCTL_BCE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* busy check enable */
 end_comment
 
 begin_define
@@ -4813,45 +2744,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_TCTL_SWXOFF
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* SW Xoff transmission */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TCTL_PBE
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Packet Burst Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_TCTL_RTLC
 value|0x01000000
 end_define
 
 begin_comment
 comment|/* Re-transmit on late collision */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TCTL_NRTU
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* No Re-transmit on underrun */
 end_comment
 
 begin_define
@@ -4891,19 +2789,15 @@ name|E1000_SCTL_DISABLE_SERDES_LOOPBACK
 value|0x0400
 end_define
 
-begin_comment
-comment|/* Receive Checksum Control */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|E1000_RXCSUM_PCSS_MASK
-value|0x000000FF
+name|E1000_SCTL_ENABLE_SERDES_LOOPBACK
+value|0x0410
 end_define
 
 begin_comment
-comment|/* Packet Checksum Start */
+comment|/* Receive Checksum Control */
 end_comment
 
 begin_define
@@ -4926,17 +2820,6 @@ end_define
 
 begin_comment
 comment|/* TCP / UDP checksum offload */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXCSUM_IPV6OFL
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* IPv6 checksum offload */
 end_comment
 
 begin_define
@@ -4979,27 +2862,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RFCTL_ISCSI_DIS
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_ISCSI_DWC_MASK
-value|0x0000003E
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_ISCSI_DWC_SHIFT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_RFCTL_NFSW_DIS
 value|0x00000040
 end_define
@@ -5014,50 +2876,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_RFCTL_NFS_VER_MASK
-value|0x00000300
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_NFS_VER_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_IPV6_DIS
-value|0x00000400
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_IPV6_XSUM_DIS
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_RFCTL_ACK_DIS
 value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_ACKD_DIS
-value|0x00002000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RFCTL_IPFRSP_DIS
-value|0x00004000
 end_define
 
 begin_define
@@ -5150,20 +2970,6 @@ define|#
 directive|define
 name|E1000_TIPG_IPGT_MASK
 value|0x000003FF
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TIPG_IPGR1_MASK
-value|0x000FFC00
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TIPG_IPGR2_MASK
-value|0x3FF00000
 end_define
 
 begin_define
@@ -5314,13 +3120,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_PHY_CTRL_SPD_EN
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_PHY_CTRL_D0A_LPLU
 value|0x00000002
 end_define
@@ -5354,18 +3153,22 @@ value|0x00050000
 end_define
 
 begin_comment
-comment|/* PBA constants */
+comment|/* Low Power IDLE Control */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_PBA_6K
-value|0x0006
+name|E1000_LPIC_LPIET_SHIFT
+value|24
 end_define
 
 begin_comment
-comment|/* 6KB */
+comment|/* Low Power Idle Entry Time */
+end_comment
+
+begin_comment
+comment|/* PBA constants */
 end_comment
 
 begin_define
@@ -5526,7 +3329,7 @@ begin_define
 define|#
 directive|define
 name|E1000_PBA_RXA_MASK
-value|0xFFFF;
+value|0xFFFF
 end_define
 
 begin_define
@@ -5536,11 +3339,36 @@ name|E1000_PBS_16K
 value|E1000_PBA_16K
 end_define
 
+begin_comment
+comment|/* Uncorrectable/correctable ECC Error counts and enable bits */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|E1000_PBS_24K
-value|E1000_PBA_24K
+name|E1000_PBECCSTS_CORR_ERR_CNT_MASK
+value|0x000000FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PBECCSTS_UNCORR_ERR_CNT_MASK
+value|0x0000FF00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PBECCSTS_UNCORR_ERR_CNT_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PBECCSTS_ECC_ENABLE
+value|0x00010000
 end_define
 
 begin_define
@@ -5602,17 +3430,6 @@ end_define
 
 begin_comment
 comment|/* FW Semaphore bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_SWSM_WMNG
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Wake MNG Clock */
 end_comment
 
 begin_define
@@ -5732,17 +3549,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_ICR_MDAC
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* MDIO access complete */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_ICR_RXCFG
 value|0x00000400
 end_define
@@ -5805,24 +3611,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_ICR_SRPD
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_ACK
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* Receive Ack frame */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_ICR_MNG
 value|0x00040000
 end_define
@@ -5834,12 +3622,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_ICR_DOCK
+name|E1000_ICR_ECCER
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Uncorrectable ECC Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_TS
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* Dock/Undock */
+comment|/* Time Sync Interrupt */
 end_comment
 
 begin_define
@@ -5867,122 +3666,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_ICR_RXD_FIFO_PAR0
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Q0 Rx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_TXD_FIFO_PAR0
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Q0 Tx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_HOST_ARB_PAR
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* host arb read buffer parity err */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_PB_PAR
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* packet buffer parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_RXD_FIFO_PAR1
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Q1 Rx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_TXD_FIFO_PAR1
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Q1 Tx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_ALL_PARITY
-value|0x03F00000
-end_define
-
-begin_comment
-comment|/* all parity error bits */
-end_comment
-
-begin_comment
-comment|/* FW changed the status of DISSW bit in the FWSM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_DSW
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* LAN connected device generates an interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_PHYINT
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_ICR_DOUTSYNC
 value|0x10000000
 end_define
 
 begin_comment
 comment|/* NIC DMA out of sync */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_EPRST
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* ME hardware reset occurs */
 end_comment
 
 begin_define
@@ -6317,18 +4006,7 @@ comment|/* Loop */
 end_comment
 
 begin_comment
-comment|/*  * This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POLL_IMS_ENABLE_MASK
-value|( \ 	E1000_IMS_RXDMT0 |    \ 	E1000_IMS_RXSEQ)
-end_define
-
-begin_comment
-comment|/*  * This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXT0   = Receiver Timer Interrupt (ring 0)  *   o TXDW   = Transmit Descriptor Written Back  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  *   o LSC    = Link Status Change  */
+comment|/* This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXT0   = Receiver Timer Interrupt (ring 0)  *   o TXDW   = Transmit Descriptor Written Back  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  *   o LSC    = Link Status Change  */
 end_comment
 
 begin_define
@@ -6433,72 +4111,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IMS_MDAC
-value|E1000_ICR_MDAC
-end_define
-
-begin_comment
-comment|/* MDIO access complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXCFG
-value|E1000_ICR_RXCFG
-end_define
-
-begin_comment
-comment|/* Rx /c/ ordered set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_GPI_EN0
-value|E1000_ICR_GPI_EN0
-end_define
-
-begin_comment
-comment|/* GP Int 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_GPI_EN1
-value|E1000_ICR_GPI_EN1
-end_define
-
-begin_comment
-comment|/* GP Int 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_GPI_EN2
-value|E1000_ICR_GPI_EN2
-end_define
-
-begin_comment
-comment|/* GP Int 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_GPI_EN3
-value|E1000_ICR_GPI_EN3
-end_define
-
-begin_comment
-comment|/* GP Int 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_IMS_TXD_LOW
 value|E1000_ICR_TXD_LOW
 end_define
@@ -6506,41 +4118,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_IMS_SRPD
-value|E1000_ICR_SRPD
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_ACK
-value|E1000_ICR_ACK
+name|E1000_IMS_ECCER
+value|E1000_ICR_ECCER
 end_define
 
 begin_comment
-comment|/* Receive Ack frame */
+comment|/* Uncorrectable ECC Error */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_IMS_MNG
-value|E1000_ICR_MNG
+name|E1000_IMS_TS
+value|E1000_ICR_TS
 end_define
 
 begin_comment
-comment|/* Manageability event */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_DOCK
-value|E1000_ICR_DOCK
-end_define
-
-begin_comment
-comment|/* Dock/Undock */
+comment|/* Time Sync Interrupt */
 end_comment
 
 begin_define
@@ -6554,86 +4148,6 @@ begin_comment
 comment|/* Device Reset Asserted */
 end_comment
 
-begin_comment
-comment|/* Q0 Rx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXD_FIFO_PAR0
-value|E1000_ICR_RXD_FIFO_PAR0
-end_define
-
-begin_comment
-comment|/* Q0 Tx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_TXD_FIFO_PAR0
-value|E1000_ICR_TXD_FIFO_PAR0
-end_define
-
-begin_comment
-comment|/* host arb read buffer parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_HOST_ARB_PAR
-value|E1000_ICR_HOST_ARB_PAR
-end_define
-
-begin_comment
-comment|/* packet buffer parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_PB_PAR
-value|E1000_ICR_PB_PAR
-end_define
-
-begin_comment
-comment|/* Q1 Rx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXD_FIFO_PAR1
-value|E1000_ICR_RXD_FIFO_PAR1
-end_define
-
-begin_comment
-comment|/* Q1 Tx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_TXD_FIFO_PAR1
-value|E1000_ICR_TXD_FIFO_PAR1
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_DSW
-value|E1000_ICR_DSW
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_PHYINT
-value|E1000_ICR_PHYINT
-end_define
-
 begin_define
 define|#
 directive|define
@@ -6644,13 +4158,6 @@ end_define
 begin_comment
 comment|/* NIC DMA out of sync */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_EPRST
-value|E1000_ICR_EPRST
-end_define
 
 begin_define
 define|#
@@ -6861,28 +4368,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_ICS_TXDW
-value|E1000_ICR_TXDW
-end_define
-
-begin_comment
-comment|/* Tx desc written back */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_TXQE
-value|E1000_ICR_TXQE
-end_define
-
-begin_comment
-comment|/* Transmit Queue empty */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_ICS_LSC
 value|E1000_ICR_LSC
 end_define
@@ -6912,250 +4397,6 @@ end_define
 begin_comment
 comment|/* Rx desc min. threshold */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_RXO
-value|E1000_ICR_RXO
-end_define
-
-begin_comment
-comment|/* Rx overrun */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_RXT0
-value|E1000_ICR_RXT0
-end_define
-
-begin_comment
-comment|/* Rx timer intr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_MDAC
-value|E1000_ICR_MDAC
-end_define
-
-begin_comment
-comment|/* MDIO access complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_RXCFG
-value|E1000_ICR_RXCFG
-end_define
-
-begin_comment
-comment|/* Rx /c/ ordered set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_GPI_EN0
-value|E1000_ICR_GPI_EN0
-end_define
-
-begin_comment
-comment|/* GP Int 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_GPI_EN1
-value|E1000_ICR_GPI_EN1
-end_define
-
-begin_comment
-comment|/* GP Int 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_GPI_EN2
-value|E1000_ICR_GPI_EN2
-end_define
-
-begin_comment
-comment|/* GP Int 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_GPI_EN3
-value|E1000_ICR_GPI_EN3
-end_define
-
-begin_comment
-comment|/* GP Int 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_TXD_LOW
-value|E1000_ICR_TXD_LOW
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_SRPD
-value|E1000_ICR_SRPD
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_ACK
-value|E1000_ICR_ACK
-end_define
-
-begin_comment
-comment|/* Receive Ack frame */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_MNG
-value|E1000_ICR_MNG
-end_define
-
-begin_comment
-comment|/* Manageability event */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_DOCK
-value|E1000_ICR_DOCK
-end_define
-
-begin_comment
-comment|/* Dock/Undock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_DRSTA
-value|E1000_ICR_DRSTA
-end_define
-
-begin_comment
-comment|/* Device Reset Aserted */
-end_comment
-
-begin_comment
-comment|/* Q0 Rx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_RXD_FIFO_PAR0
-value|E1000_ICR_RXD_FIFO_PAR0
-end_define
-
-begin_comment
-comment|/* Q0 Tx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_TXD_FIFO_PAR0
-value|E1000_ICR_TXD_FIFO_PAR0
-end_define
-
-begin_comment
-comment|/* host arb read buffer parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_HOST_ARB_PAR
-value|E1000_ICR_HOST_ARB_PAR
-end_define
-
-begin_comment
-comment|/* packet buffer parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_PB_PAR
-value|E1000_ICR_PB_PAR
-end_define
-
-begin_comment
-comment|/* Q1 Rx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_RXD_FIFO_PAR1
-value|E1000_ICR_RXD_FIFO_PAR1
-end_define
-
-begin_comment
-comment|/* Q1 Tx desc FIFO parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_TXD_FIFO_PAR1
-value|E1000_ICR_TXD_FIFO_PAR1
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_DSW
-value|E1000_ICR_DSW
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_DOUTSYNC
-value|E1000_ICR_DOUTSYNC
-end_define
-
-begin_comment
-comment|/* NIC DMA out of sync */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_PHYINT
-value|E1000_ICR_PHYINT
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_ICS_EPRST
-value|E1000_ICR_EPRST
-end_define
 
 begin_comment
 comment|/* Extended Interrupt Cause Set */
@@ -7344,17 +4585,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_TXDCTL_LWTHRESH
-value|0xFE000000
-end_define
-
-begin_comment
-comment|/* TXDCTL Low Threshold */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_TXDCTL_FULL_TX_DESC_WB
 value|0x01010000
 end_define
@@ -7437,11 +4667,7 @@ comment|/* VLAN Filter Table (4096 bits) */
 end_comment
 
 begin_comment
-comment|/* Receive Address */
-end_comment
-
-begin_comment
-comment|/*  * Number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * Technically, we have 16 spots.  However, we reserve one of these spots  * (RAR[15]) for our directed address used by controllers with  * manageability enabled, allowing us room for 15 multicast addresses.  */
+comment|/* Receive Address  * Number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * Technically, we have 16 spots.  However, we reserve one of these spots  * (RAR[15]) for our directed address used by controllers with  * manageability enabled, allowing us room for 15 multicast addresses.  */
 end_comment
 
 begin_define
@@ -7481,20 +4707,6 @@ define|#
 directive|define
 name|E1000_RAH_QUEUE_MASK_82575
 value|0x000C0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RAH_POOL_MASK
-value|0x03FC0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RAH_POOL_SHIFT
-value|18
 end_define
 
 begin_define
@@ -7735,17 +4947,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_FCRTH_XFCE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* External Flow Control Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_FCRTL_RTL
 value|0x0000FFF8
 end_define
@@ -7778,17 +4979,6 @@ end_define
 
 begin_comment
 comment|/* TXCW full duplex */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXCW_HD
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* TXCW half duplex */
 end_comment
 
 begin_define
@@ -7827,50 +5017,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_TXCW_RF
-value|0x00003000
-end_define
-
-begin_comment
-comment|/* TXCW remote fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXCW_NP
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* TXCW next page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXCW_CW
-value|0x0000ffff
-end_define
-
-begin_comment
-comment|/* TxConfigWord mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXCW_TXC
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Transmit Config control */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_TXCW_ANE
 value|0x80000000
 end_define
@@ -7897,34 +5043,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RXCW_NC
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Receive config no carrier */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RXCW_IV
 value|0x08000000
 end_define
 
 begin_comment
 comment|/* Receive config invalid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXCW_CC
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Receive config change */
 end_comment
 
 begin_define
@@ -7947,17 +5071,6 @@ end_define
 
 begin_comment
 comment|/* Receive config synch */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXCW_ANC
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Auto-neg complete */
 end_comment
 
 begin_define
@@ -8049,6 +5162,45 @@ end_define
 begin_comment
 comment|/* enable Rx timestamping */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_SYSCFI
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Sys clock frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXMTRL_PTP_V1_SYNC_MESSAGE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXMTRL_PTP_V1_DELAY_REQ_MESSAGE
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXMTRL_PTP_V2_SYNC_MESSAGE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXMTRL_PTP_V2_DELAY_REQ_MESSAGE
+value|0x01000000
+end_define
 
 begin_define
 define|#
@@ -8174,6 +5326,34 @@ define|#
 directive|define
 name|E1000_TIMINCA_16NS_SHIFT
 value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TIMINCA_INCPERIOD_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TIMINCA_INCVALUE_MASK
+value|0x00FFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSICR_TXTS
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSIM_TXTS
+value|0x00000002
 end_define
 
 begin_comment
@@ -8519,6 +5699,17 @@ end_define
 
 begin_comment
 comment|/* Tx in LPI state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_SU_LPI_CLK_STP
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* EEE LPI Clock Stop */
 end_comment
 
 begin_comment
@@ -9685,42 +6876,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_EECD_FWE_MASK
-value|0x00000030
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_EECD_FWE_DIS
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Disable FLASH writes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EECD_FWE_EN
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Enable FLASH writes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EECD_FWE_SHIFT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_EECD_REQ
 value|0x00000040
 end_define
@@ -9882,39 +7037,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_EECD_NVADDS
-value|0x00018000
-end_define
-
-begin_comment
-comment|/* NVM Address Size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EECD_SELSHAD
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* Select Shadow RAM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EECD_INITSRAM
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Initialize Shadow RAM */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_EECD_FLUPD
 value|0x00080000
 end_define
@@ -9937,17 +7059,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_EECD_SHADV
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Shadow RAM Data Valid */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_EECD_SEC1VAL
 value|0x00400000
 end_define
@@ -9959,13 +7070,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_EECD_SECVAL_SHIFT
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_EECD_SEC1VAL_VALID_MASK
 value|(E1000_EECD_AUTO_RD | E1000_EECD_PRES)
 end_define
@@ -9973,24 +7077,135 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_NVM_SWDPIN0
-value|0x0001
+name|E1000_EECD_FLUPD_I210
+value|0x00800000
 end_define
 
 begin_comment
-comment|/* SWDPIN 0 NVM Value */
+comment|/* Update FLASH */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_NVM_LED_LOGIC
-value|0x0020
+name|E1000_EECD_FLUDONE_I210
+value|0x04000000
 end_define
 
 begin_comment
-comment|/* Led Logic Word */
+comment|/* Update FLASH done */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_FLASH_DETECTED_I210
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* FLASH detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_SEC1VAL_I210
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Sector One Valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FLUDONE_ATTEMPTS
+value|20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_EEWR_MAX_COUNT
+value|512
+end_define
+
+begin_comment
+comment|/* buffered EEPROM words rw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_RX
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_TX_QAV
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x02 + (_i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_TX_LEGACY
+value|E1000_I210_FIFO_SEL_TX_QAV(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_BMC2OS_TX
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FIFO_SEL_BMC2OS_RX
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FLASH_SECTOR_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 4KB FLASH sector unit size */
+end_comment
+
+begin_comment
+comment|/* Secure FLASH mode requires removing MSb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FW_PTR_MASK
+value|0x7FFF
+end_define
+
+begin_comment
+comment|/* Firmware code revision field word offset*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I210_FW_VER_OFFSET
+value|328
+end_define
 
 begin_define
 define|#
@@ -10086,13 +7301,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NVM_VERSION
-value|0x0005
-end_define
-
-begin_define
-define|#
-directive|define
 name|NVM_SERDES_AMPLITUDE
 value|0x0006
 end_define
@@ -10111,8 +7319,99 @@ end_define
 begin_define
 define|#
 directive|define
-name|NVM_INIT_CONTROL1_REG
-value|0x000A
+name|E1000_I210_NVM_FW_MODULE_PTR
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I350_NVM_FW_MODULE_PTR
+value|0x0051
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_FUTURE_INIT_WORD1
+value|0x0019
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_MAC_ADDR
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_SUB_DEV_ID
+value|0x000B
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_SUB_VEN_ID
+value|0x000C
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_DEV_ID
+value|0x000D
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_VEN_ID
+value|0x000E
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_INIT_CTRL_2
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_INIT_CTRL_4
+value|0x0013
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_LED_1_CFG
+value|0x001C
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_LED_0_2_CFG
+value|0x001F
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_COMPAT_VALID_CSUM
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_FUTURE_INIT_WORD1_VALID_CSUM
+value|0x0040
 end_define
 
 begin_define
@@ -10120,13 +7419,6 @@ define|#
 directive|define
 name|NVM_INIT_CONTROL2_REG
 value|0x000F
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_SWDEF_PINS_CTRL_PORT_1
-value|0x0010
 end_define
 
 begin_define
@@ -10162,13 +7454,6 @@ define|#
 directive|define
 name|NVM_CFG
 value|0x0012
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_FLASH_VERSION
-value|0x0032
 end_define
 
 begin_define
@@ -10250,7 +7535,7 @@ name|NVM_82580_LAN_FUNC_OFFSET
 parameter_list|(
 name|a
 parameter_list|)
-value|(a ? (0x40 + (0x40 * a)) : 0)
+value|((a) ? (0x40 + (0x40 * (a))) : 0)
 end_define
 
 begin_comment
@@ -10280,7 +7565,7 @@ comment|/* MDIO accesses routed extrnl */
 end_comment
 
 begin_comment
-comment|/* Offset of Link Mode bits for 82575 up to Kawela */
+comment|/* Offset of Link Mode bits for 82575/82576 */
 end_comment
 
 begin_define
@@ -10329,22 +7614,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NVM_WORD0F_ANE
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
 name|NVM_WORD0F_SWPDIO_EXT_MASK
 value|0x00F0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_WORD0F_LPLU
-value|0x0001
 end_define
 
 begin_comment
@@ -10391,12 +7662,9 @@ name|NVM_SUM
 value|0xBABA
 end_define
 
-begin_define
-define|#
-directive|define
-name|NVM_MAC_ADDR_OFFSET
-value|0
-end_define
+begin_comment
+comment|/* PBA (printed board assembly) number words */
+end_comment
 
 begin_define
 define|#
@@ -10589,34 +7857,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NVM_WRDI_OPCODE_SPI
-value|0x04
-end_define
-
-begin_comment
-comment|/* NVM reset Write Enable latch */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NVM_RDSR_OPCODE_SPI
 value|0x05
 end_define
 
 begin_comment
 comment|/* NVM read Status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NVM_WRSR_OPCODE_SPI
-value|0x01
-end_define
-
-begin_comment
-comment|/* NVM write Status register */
 end_comment
 
 begin_comment
@@ -10628,34 +7874,6 @@ define|#
 directive|define
 name|NVM_STATUS_RDY_SPI
 value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_STATUS_WEN_SPI
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_STATUS_BP0_SPI
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_STATUS_BP1_SPI
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_STATUS_WPEN_SPI
-value|0x80
 end_define
 
 begin_comment
@@ -10955,11 +8173,7 @@ value|0xF
 end_define
 
 begin_comment
-comment|/* Bit definitions for valid PHY IDs. */
-end_comment
-
-begin_comment
-comment|/*  * I = Integrated  * E = External  */
+comment|/* Bit definitions for valid PHY IDs.  * I = Integrated  * E = External  */
 end_comment
 
 begin_define
@@ -10988,13 +8202,6 @@ define|#
 directive|define
 name|IGP01E1000_I_PHY_ID
 value|0x02A80380
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1011_I_REV_4
-value|0x04
 end_define
 
 begin_define
@@ -11098,6 +8305,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|I217_E_PHY_ID
+value|0x015400A0
+end_define
+
+begin_define
+define|#
+directive|define
 name|I82580_I_PHY_ID
 value|0x015403A0
 end_define
@@ -11107,6 +8321,13 @@ define|#
 directive|define
 name|I350_I_PHY_ID
 value|0x015403B0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I210_I_PHY_ID
+value|0x01410C00
 end_define
 
 begin_define
@@ -11147,28 +8368,6 @@ end_define
 
 begin_comment
 comment|/* PHY Specific Status Reg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_INT_ENABLE
-value|0x12
-end_define
-
-begin_comment
-comment|/* Interrupt Enable Reg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_INT_STATUS
-value|0x13
-end_define
-
-begin_comment
-comment|/* Interrupt Status Reg */
 end_comment
 
 begin_define
@@ -11255,17 +8454,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M88E1000_PSCR_JABBER_DISABLE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* 1=Jabber Function disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M88E1000_PSCR_POLARITY_REVERSAL
 value|0x0002
 end_define
@@ -11273,28 +8461,6 @@ end_define
 begin_comment
 comment|/* 1=Polarity Reverse enabled */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSCR_SQE_TEST
-value|0x0004
-end_define
-
-begin_comment
-comment|/* 1=SQE Test enabled */
-end_comment
-
-begin_comment
-comment|/* 1=CLK125 low, 0=CLK125 toggling */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSCR_CLK125_DISABLE
-value|0x0010
-end_define
 
 begin_comment
 comment|/* MDI Crossover Mode bits 6:5 Manual MDI configuration */
@@ -11340,50 +8506,6 @@ name|M88E1000_PSCR_AUTO_X_MODE
 value|0x0060
 end_define
 
-begin_comment
-comment|/*  * 1=Enable Extended 10BASE-T distance (Lower 10BASE-T Rx Threshold  * 0=Normal 10BASE-T Rx Threshold  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSCR_EN_10BT_EXT_DIST
-value|0x0080
-end_define
-
-begin_comment
-comment|/* 1=5-bit interface in 100BASE-TX, 0=MII interface in 100BASE-TX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSCR_MII_5BIT_ENABLE
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSCR_SCRAMBLER_DISABLE
-value|0x0200
-end_define
-
-begin_comment
-comment|/* 1=Scrambler disable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSCR_FORCE_LINK_GOOD
-value|0x0400
-end_define
-
-begin_comment
-comment|/* 1=Force link good */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -11397,17 +8519,6 @@ end_comment
 
 begin_comment
 comment|/* M88E1000 PHY Specific Status Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSSR_JABBER
-value|0x0001
-end_define
-
-begin_comment
-comment|/* 1=Jabber */
 end_comment
 
 begin_define
@@ -11444,7 +8555,7 @@ comment|/* 1=MDIX; 0=MDI */
 end_comment
 
 begin_comment
-comment|/*  * 0 =<50M  * 1 = 50-80M  * 2 = 80-110M  * 3 = 110-140M  * 4 =>140M  */
+comment|/* 0 =<50M  * 1 = 50-80M  * 2 = 80-110M  * 3 = 110-140M  * 4 =>140M  */
 end_comment
 
 begin_define
@@ -11479,17 +8590,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M88E1000_PSSR_PAGE_RCVD
-value|0x1000
-end_define
-
-begin_comment
-comment|/* 1=Page received */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M88E1000_PSSR_DPLX
 value|0x2000
 end_define
@@ -11507,17 +8607,6 @@ end_define
 
 begin_comment
 comment|/* Speed, bits 14:15 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_PSSR_10MBS
-value|0x0000
-end_define
-
-begin_comment
-comment|/* 00=10Mbs */
 end_comment
 
 begin_define
@@ -11550,33 +8639,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* M88E1000 Extended PHY Specific Control Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_FIBER_LOOPBACK
-value|0x4000
-end_define
-
-begin_comment
-comment|/* 1=Fiber loopback */
-end_comment
-
-begin_comment
-comment|/*  * 1 = Lost lock detect enabled.  * Will assert lost lock and bring  * link down if idle not seen  * within 1ms in 1000BASE-T  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_DOWN_NO_IDLE
-value|0x8000
-end_define
-
-begin_comment
-comment|/*  * Number of times we will attempt to autonegotiate before downshifting if we  * are the master  */
+comment|/* Number of times we will attempt to autonegotiate before downshifting if we  * are the master  */
 end_comment
 
 begin_define
@@ -11593,29 +8656,8 @@ name|M88E1000_EPSCR_MASTER_DOWNSHIFT_1X
 value|0x0000
 end_define
 
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_MASTER_DOWNSHIFT_2X
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_MASTER_DOWNSHIFT_3X
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_MASTER_DOWNSHIFT_4X
-value|0x0C00
-end_define
-
 begin_comment
-comment|/*  * Number of times we will attempt to autonegotiate before downshifting if we  * are the slave  */
+comment|/* Number of times we will attempt to autonegotiate before downshifting if we  * are the slave  */
 end_comment
 
 begin_define
@@ -11628,41 +8670,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|M88E1000_EPSCR_SLAVE_DOWNSHIFT_DIS
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
 name|M88E1000_EPSCR_SLAVE_DOWNSHIFT_1X
 value|0x0100
 end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_SLAVE_DOWNSHIFT_2X
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_SLAVE_DOWNSHIFT_3X
-value|0x0300
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_TX_CLK_2_5
-value|0x0060
-end_define
-
-begin_comment
-comment|/* 2.5 MHz TX_CLK */
-end_comment
 
 begin_define
 define|#
@@ -11674,61 +8684,6 @@ end_define
 begin_comment
 comment|/* 25  MHz TX_CLK */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1000_EPSCR_TX_CLK_0
-value|0x0000
-end_define
-
-begin_comment
-comment|/* NO  TX_CLK */
-end_comment
-
-begin_comment
-comment|/* M88E1111 Specific Registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1111_PHY_PAGE_SELECT1
-value|0x16
-end_define
-
-begin_comment
-comment|/* for registers 0-28 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1111_PHY_PAGE_SELECT2
-value|0x1D
-end_define
-
-begin_comment
-comment|/* for registers 30-31 */
-end_comment
-
-begin_comment
-comment|/* M88E1111 page select register mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M88E1111_PHY_PAGE_SELECT_MASK1
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88E1111_PHY_PAGE_SELECT_MASK2
-value|0x3F
-end_define
 
 begin_comment
 comment|/* Intel I347AT4 Registers */
@@ -11768,7 +8723,7 @@ comment|/* I347AT4 Extended PHY Specific Control Register */
 end_comment
 
 begin_comment
-comment|/*  * Number of times we will attempt to autonegotiate before downshifting if we  * are the master  */
+comment|/* Number of times we will attempt to autonegotiate before downshifting if we  * are the master  */
 end_comment
 
 begin_define
@@ -11881,57 +8836,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_1X
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_2X
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_3X
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_4X
-value|0x0600
-end_define
-
-begin_define
-define|#
-directive|define
 name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_5X
 value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_6X
-value|0x0A00
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_7X
-value|0x0C00
-end_define
-
-begin_define
-define|#
-directive|define
-name|M88EC018_EPSCR_DOWNSHIFT_COUNTER_8X
-value|0x0E00
 end_define
 
 begin_define
@@ -11964,7 +8870,7 @@ comment|/* 1 = enable downshift */
 end_comment
 
 begin_comment
-comment|/*  * Bits...  * 15-5: page  * 4-0: register offset  */
+comment|/* Bits...  * 15-5: page  * 4-0: register offset  */
 end_comment
 
 begin_define
@@ -12012,50 +8918,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GG82563_PHY_SPEC_STATUS
-value|GG82563_REG(0, 17)
-end_define
-
-begin_comment
-comment|/* PHY Spec Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_INT_ENABLE
-value|GG82563_REG(0, 18)
-end_define
-
-begin_comment
-comment|/* Interrupt Ena */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_SPEC_STATUS_2
-value|GG82563_REG(0, 19)
-end_define
-
-begin_comment
-comment|/* PHY Spec Stat2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_RX_ERR_CNTR
-value|GG82563_REG(0, 21)
-end_define
-
-begin_comment
-comment|/* Rx Err Counter */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GG82563_PHY_PAGE_SELECT
 value|GG82563_REG(0, 22)
 end_define
@@ -12087,17 +8949,6 @@ comment|/* Alt Page Select */
 end_comment
 
 begin_comment
-comment|/* Test Clock Control (use reg. 29 to select) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_TEST_CLK_CTRL
-value|GG82563_REG(0, 30)
-end_define
-
-begin_comment
 comment|/* MAC Specific Control Register */
 end_comment
 
@@ -12107,17 +8958,6 @@ directive|define
 name|GG82563_PHY_MAC_SPEC_CTRL
 value|GG82563_REG(2, 21)
 end_define
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_MAC_SPEC_CTRL_2
-value|GG82563_REG(2, 26)
-end_define
-
-begin_comment
-comment|/* MAC Spec Ctrl 2 */
-end_comment
 
 begin_define
 define|#
@@ -12148,39 +8988,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GG82563_PHY_PORT_RESET
-value|GG82563_REG(193, 17)
-end_define
-
-begin_comment
-comment|/* Port Reset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_REVISION_ID
-value|GG82563_REG(193, 18)
-end_define
-
-begin_comment
-comment|/* Revision ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_DEVICE_ID
-value|GG82563_REG(193, 19)
-end_define
-
-begin_comment
-comment|/* Device ID */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GG82563_PHY_PWR_MGMT_CTRL
 value|GG82563_REG(193, 20)
 end_define
@@ -12190,40 +8997,7 @@ comment|/* Pwr Mgt Ctrl */
 end_comment
 
 begin_comment
-comment|/* Rate Adaptation Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_RATE_ADAPT_CTRL
-value|GG82563_REG(193, 25)
-end_define
-
-begin_comment
 comment|/* Page 194 - KMRN Registers */
-end_comment
-
-begin_comment
-comment|/* FIFO's Control/Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_KMRN_FIFO_CTRL_STAT
-value|GG82563_REG(194, 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_KMRN_CTRL
-value|GG82563_REG(194, 17)
-end_define
-
-begin_comment
-comment|/* Control */
 end_comment
 
 begin_define
@@ -12237,93 +9011,9 @@ begin_comment
 comment|/* Inband Ctrl */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_KMRN_DIAGNOSTIC
-value|GG82563_REG(194, 19)
-end_define
-
-begin_comment
-comment|/* Diagnostic */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_ACK_TIMEOUTS
-value|GG82563_REG(194, 20)
-end_define
-
-begin_comment
-comment|/* Ack Timeouts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_ADV_ABILITY
-value|GG82563_REG(194, 21)
-end_define
-
-begin_comment
-comment|/* Adver Ability */
-end_comment
-
-begin_comment
-comment|/* Link Partner Advertised Ability */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_LINK_PARTNER_ADV_ABILITY
-value|GG82563_REG(194, 23)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_ADV_NEXT_PAGE
-value|GG82563_REG(194, 24)
-end_define
-
-begin_comment
-comment|/* Adver Next Pg */
-end_comment
-
-begin_comment
-comment|/* Link Partner Advertised Next page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_LINK_PARTNER_ADV_NEXT_PAGE
-value|GG82563_REG(194, 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GG82563_PHY_KMRN_MISC
-value|GG82563_REG(194, 26)
-end_define
-
-begin_comment
-comment|/* Misc. */
-end_comment
-
 begin_comment
 comment|/* MDI Control */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MDIC_DATA_MASK
-value|0x0000FFFF
-end_define
 
 begin_define
 define|#
@@ -12372,13 +9062,6 @@ define|#
 directive|define
 name|E1000_MDIC_READY
 value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MDIC_INT_EN
-value|0x20000000
 end_define
 
 begin_define
@@ -12660,6 +9343,17 @@ comment|/* Enable DMA Coalescing */
 end_comment
 
 begin_comment
+comment|/* DMA Coalescing BMC-to-OS Watchdog Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DC_BMC2OSW_EN
+value|0x00008000
+end_define
+
+begin_comment
 comment|/* DMA Coalescing Transmit Threshold */
 end_comment
 
@@ -12746,12 +9440,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_LTRC_EEEMS_EN
-value|0x00000005
+name|E1000_RXPBS_CFG_TS_EN
+value|0x80000000
 end_define
 
 begin_comment
-comment|/* Enable EEE LTR max send */
+comment|/* Timestamp in Rx buffer */
 end_comment
 
 begin_define
@@ -12765,136 +9459,16 @@ begin_comment
 comment|/* Rx packet buffer size */
 end_comment
 
-begin_comment
-comment|/* Minimum time for 1000BASE-T where no data will be transmit following move out  * of EEE LPI Tx state  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|E1000_TW_SYSTEM_1000_MASK
-value|0x000000FF
+name|E1000_TXPB0S_SIZE_I210_MASK
+value|0x0000003F
 end_define
 
 begin_comment
-comment|/* Minimum time for 100BASE-T where no data will be transmit following move out  * of EEE LPI Tx state  */
+comment|/* Tx packet buffer 0 size */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TW_SYSTEM_100_MASK
-value|0x0000FF00
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TW_SYSTEM_100_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMINV_LTRV_MASK
-value|0x000003FF
-end_define
-
-begin_comment
-comment|/* LTR minimum value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV_LTRV_MASK
-value|0x000003FF
-end_define
-
-begin_comment
-comment|/* LTR maximum value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMINV_SCALE_MASK
-value|0x00001C00
-end_define
-
-begin_comment
-comment|/* LTR minimum scale */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMINV_SCALE_SHIFT
-value|10
-end_define
-
-begin_comment
-comment|/* Reg val to set scale to 1024 nsec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMINV_SCALE_1024
-value|2
-end_define
-
-begin_comment
-comment|/* Reg val to set scale to 32768 nsec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMINV_SCALE_32768
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV_SCALE_MASK
-value|0x00001C00
-end_define
-
-begin_comment
-comment|/* LTR maximum scale */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV_SCALE_SHIFT
-value|10
-end_define
-
-begin_comment
-comment|/* Reg val to set scale to 1024 nsec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV_SCALE_1024
-value|2
-end_define
-
-begin_comment
-comment|/* Reg val to set scale to 32768 nsec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV_SCALE_32768
-value|3
-end_define
 
 begin_define
 define|#
@@ -12919,7 +9493,7 @@ comment|/* Exit active CB */
 end_comment
 
 begin_comment
-comment|/* Proxy Filer Control */
+comment|/* Proxy Filter Control */
 end_comment
 
 begin_define
@@ -13007,7 +9581,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* IPv4 NBRHD Solicitation */
+comment|/* IPv6 Neighbor Solicitation */
 end_comment
 
 begin_define
