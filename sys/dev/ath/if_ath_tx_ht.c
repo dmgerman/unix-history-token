@@ -1226,10 +1226,13 @@ expr_stmt|;
 comment|/* 		 * Only enable short preamble for legacy rates 		 */
 if|if
 condition|(
+operator|(
+operator|!
 name|IS_HT_RATE
 argument_list|(
 name|rate
 argument_list|)
+operator|)
 operator|&&
 name|bf
 operator|->
