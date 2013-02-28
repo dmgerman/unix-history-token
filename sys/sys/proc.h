@@ -5070,7 +5070,7 @@ modifier|*
 name|cpu_idle_hook
 function_decl|)
 parameter_list|(
-name|void
+name|sbintime_t
 parameter_list|)
 function_decl|;
 end_function_decl

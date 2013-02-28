@@ -3863,7 +3863,7 @@ comment|/*  * Switch to idle mode (all ticks handled).  */
 end_comment
 
 begin_function
-name|void
+name|sbintime_t
 name|cpu_idleclock
 parameter_list|(
 name|void
@@ -3908,7 +3908,12 @@ argument_list|()
 endif|#
 directive|endif
 condition|)
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|state
 operator|=
 name|DPCPU_PTR
@@ -4011,6 +4016,28 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
+name|bintime_sub
+argument_list|(
+operator|&
+name|t
+argument_list|,
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|MAX
+argument_list|(
+name|bttosbt
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

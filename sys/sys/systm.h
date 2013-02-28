@@ -55,6 +55,12 @@ begin_comment
 comment|/* for people using printf mainly */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2100,7 +2106,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|sbintime_t
 name|cpu_idleclock
 parameter_list|(
 name|void
