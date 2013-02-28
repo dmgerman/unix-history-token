@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.186 2010/11/29 23:45:51 djm Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.189 2012/06/22 12:30:26 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -488,6 +488,9 @@ decl_stmt|;
 name|int
 name|ktype
 decl_stmt|;
+name|u_int
+name|i
+decl_stmt|;
 comment|/* Find all hostkeys for this hostname */
 name|get_hostfile_hostname_ipaddr
 argument_list|(
@@ -508,6 +511,21 @@ operator|=
 name|init_hostkeys
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|options
+operator|.
+name|num_user_hostfiles
+condition|;
+name|i
+operator|++
+control|)
 name|load_hostkeys
 argument_list|(
 name|hostkeys
@@ -516,9 +534,27 @@ name|hostname
 argument_list|,
 name|options
 operator|.
-name|user_hostfile2
+name|user_hostfiles
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|options
+operator|.
+name|num_system_hostfiles
+condition|;
+name|i
+operator|++
+control|)
 name|load_hostkeys
 argument_list|(
 name|hostkeys
@@ -527,29 +563,10 @@ name|hostname
 argument_list|,
 name|options
 operator|.
-name|system_hostfile2
-argument_list|)
-expr_stmt|;
-name|load_hostkeys
-argument_list|(
-name|hostkeys
-argument_list|,
-name|hostname
-argument_list|,
-name|options
-operator|.
-name|user_hostfile
-argument_list|)
-expr_stmt|;
-name|load_hostkeys
-argument_list|(
-name|hostkeys
-argument_list|,
-name|hostname
-argument_list|,
-name|options
-operator|.
-name|system_hostfile
+name|system_hostfiles
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|oavail
@@ -9778,6 +9795,11 @@ name|debug
 argument_list|(
 literal|"Next authentication method: %s"
 argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;

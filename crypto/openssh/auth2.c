@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.122 2010/08/31 09:58:37 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.124 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -471,6 +471,12 @@ return|;
 block|}
 if|if
 condition|(
+name|st
+operator|.
+name|st_size
+operator|<=
+literal|0
+operator|||
 name|st
 operator|.
 name|st_size
@@ -1402,6 +1408,12 @@ name|postponed
 operator|=
 literal|0
 expr_stmt|;
+name|authctxt
+operator|->
+name|server_caused_failure
+operator|=
+literal|0
+expr_stmt|;
 comment|/* try to authenticate user */
 name|m
 operator|=
@@ -1708,6 +1720,12 @@ block|{
 comment|/* Allow initial try of "none" auth without failure penalty */
 if|if
 condition|(
+operator|!
+name|authctxt
+operator|->
+name|server_caused_failure
+operator|&&
+operator|(
 name|authctxt
 operator|->
 name|attempt
@@ -1722,6 +1740,7 @@ literal|"none"
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 name|authctxt
 operator|->

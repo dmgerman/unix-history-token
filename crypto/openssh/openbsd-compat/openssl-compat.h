@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.18 2011/01/21 22:37:06 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.20 2012/01/17 03:03:39 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -547,13 +547,13 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 end_undef
 
 begin_endif
@@ -564,9 +564,9 @@ end_endif
 begin_define
 define|#
 directive|define
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 parameter_list|()
-value|ssh_SSLeay_add_all_algorithms()
+value|ssh_OpenSSL_add_all_algorithms()
 end_define
 
 begin_endif
@@ -727,12 +727,32 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ssh_SSLeay_add_all_algorithms
+name|ssh_OpenSSL_add_all_algorithms
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_HMAC_CTX_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HMAC_CTX_init
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

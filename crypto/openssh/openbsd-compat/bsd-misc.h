@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.19 2010/11/08 22:26:23 tim Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.21 2012/07/03 22:50:10 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -257,6 +257,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SETLINEBUF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|setlinebuf
+parameter_list|(
+name|a
+parameter_list|)
+value|(setvbuf((a), NULL, _IOLBF, 0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -444,7 +469,7 @@ name|HAVE_UNSETENV
 end_ifndef
 
 begin_function_decl
-name|void
+name|int
 name|unsetenv
 parameter_list|(
 specifier|const

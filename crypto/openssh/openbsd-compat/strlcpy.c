@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: strlcpy.c,v 1.10 2005/08/08 08:05:37 espie Exp $	*/
+comment|/*	$OpenBSD: strlcpy.c,v 1.11 2006/05/05 15:27:38 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -80,14 +80,15 @@ condition|(
 name|n
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+while|while
+condition|(
 operator|--
 name|n
 operator|!=
 literal|0
 condition|)
-block|{
-do|do
 block|{
 if|if
 condition|(
@@ -101,18 +102,10 @@ name|s
 operator|++
 operator|)
 operator|==
-literal|0
+literal|'\0'
 condition|)
 break|break;
 block|}
-do|while
-condition|(
-operator|--
-name|n
-operator|!=
-literal|0
-condition|)
-do|;
 block|}
 comment|/* Not enough room in dst, add NUL and traverse rest of src */
 if|if

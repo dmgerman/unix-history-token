@@ -952,6 +952,8 @@ name|int
 name|tmpfd
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|oerrno
 decl_stmt|;
 name|char
 name|ccname
@@ -1017,6 +1019,10 @@ literal|"FILE:"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|oerrno
+operator|=
+name|errno
+expr_stmt|;
 name|umask
 argument_list|(
 name|old_umask
@@ -1036,12 +1042,12 @@ literal|"mkstemp(): %.100s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|oerrno
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|errno
+name|oerrno
 return|;
 block|}
 if|if
@@ -1059,13 +1065,17 @@ operator|-
 literal|1
 condition|)
 block|{
+name|oerrno
+operator|=
+name|errno
+expr_stmt|;
 name|logit
 argument_list|(
 literal|"fchmod(): %.100s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|oerrno
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1075,7 +1085,7 @@ name|tmpfd
 argument_list|)
 expr_stmt|;
 return|return
-name|errno
+name|oerrno
 return|;
 block|}
 name|close

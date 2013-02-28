@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.231 2011/01/16 12:05:59 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.240 2012/06/20 04:42:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -357,17 +357,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Force TTY allocation */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|force_tty_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Flag to indicate that we have received a window change signal which has  * not yet been processed.  This will cause a message indicating the new  * window size to be sent to the server a little later.  This is volatile  * because this is updated in a signal handler.  */
 end_comment
 
@@ -646,8 +635,10 @@ name|request_type
 decl_stmt|;
 name|int
 name|id
-decl_stmt|,
-name|do_close
+decl_stmt|;
+name|enum
+name|confirm_action
+name|action
 decl_stmt|;
 block|}
 struct|;
@@ -926,11 +917,13 @@ name|control_persist_timeout
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* not using a ControlPersist timeout */
 name|control_persist_exit_time
 operator|=
 literal|0
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -993,6 +986,95 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* else we are already counting down to the timeout */
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|SSH_X11_VALID_DISPLAY_CHARS
+value|":/.-_"
+end_define
+
+begin_function
+specifier|static
+name|int
+name|client_x11_display_valid
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|display
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|,
+name|dlen
+decl_stmt|;
+name|dlen
+operator|=
+name|strlen
+argument_list|(
+name|display
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|dlen
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isalnum
+argument_list|(
+name|display
+index|[
+name|i
+index|]
+argument_list|)
+operator|&&
+name|strchr
+argument_list|(
+name|SSH_X11_VALID_DISPLAY_CHARS
+argument_list|,
+name|display
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"Invalid character '%c' in DISPLAY"
+argument_list|,
+name|display
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1148,6 +1230,24 @@ block|{
 name|debug
 argument_list|(
 literal|"No xauth program."
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|client_x11_display_valid
+argument_list|(
+name|display
+argument_list|)
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"DISPLAY '%s' invalid, falling back to fake xauth data"
+argument_list|,
+name|display
 argument_list|)
 expr_stmt|;
 block|}
@@ -2119,6 +2219,11 @@ decl_stmt|;
 name|int
 name|timeout_secs
 decl_stmt|;
+name|time_t
+name|minwait_secs
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -2132,6 +2237,9 @@ argument_list|,
 name|maxfdp
 argument_list|,
 name|nallocp
+argument_list|,
+operator|&
+name|minwait_secs
 argument_list|,
 name|rekeying
 argument_list|)
@@ -2362,6 +2470,24 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|minwait_secs
+operator|!=
+literal|0
+condition|)
+name|timeout_secs
+operator|=
+name|MIN
+argument_list|(
+name|timeout_secs
+argument_list|,
+operator|(
+name|int
+operator|)
+name|minwait_secs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|timeout_secs
 operator|==
 name|INT_MAX
@@ -2581,7 +2707,11 @@ argument_list|)
 expr_stmt|;
 name|leave_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free (and clear) the buffer to reduce the amount of data that gets 	 * written to swap. 	 */
@@ -2632,7 +2762,11 @@ argument_list|)
 expr_stmt|;
 name|enter_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2851,6 +2985,35 @@ decl_stmt|;
 name|int
 name|tochan
 decl_stmt|;
+comment|/* 	 * If a TTY was explicitly requested, then a failure to allocate 	 * one is fatal. 	 */
+if|if
+condition|(
+name|cr
+operator|->
+name|action
+operator|==
+name|CONFIRM_TTY
+operator|&&
+operator|(
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
+operator|||
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_YES
+operator|)
+condition|)
+name|cr
+operator|->
+name|action
+operator|=
+name|CONFIRM_CLOSE
+expr_stmt|;
 comment|/* XXX supress on mux _client_ quietmode */
 name|tochan
 operator|=
@@ -2952,7 +3115,9 @@ if|if
 condition|(
 name|cr
 operator|->
-name|do_close
+name|action
+operator|==
+name|CONFIRM_CLOSE
 operator|&&
 name|c
 operator|->
@@ -2967,11 +3132,12 @@ argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
-comment|/* If error occurred on mux client, append to their stderr */
+comment|/* 		 * If error occurred on mux client, append to 		 * their stderr. 		 */
 if|if
 condition|(
 name|tochan
 condition|)
+block|{
 name|buffer_append
 argument_list|(
 operator|&
@@ -2987,6 +3153,7 @@ name|errmsg
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|error
 argument_list|(
@@ -2999,7 +3166,40 @@ if|if
 condition|(
 name|cr
 operator|->
-name|do_close
+name|action
+operator|==
+name|CONFIRM_TTY
+condition|)
+block|{
+comment|/* 			 * If a TTY allocation error occurred, then arrange 			 * for the correct TTY to leave raw mode. 			 */
+if|if
+condition|(
+name|c
+operator|->
+name|self
+operator|==
+name|session_ident
+condition|)
+name|leave_raw_mode
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|mux_tty_alloc_failed
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cr
+operator|->
+name|action
+operator|==
+name|CONFIRM_CLOSE
 condition|)
 block|{
 name|chan_read_failed
@@ -3045,7 +3245,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|client_expect_confirm
 parameter_list|(
@@ -3057,8 +3256,9 @@ name|char
 modifier|*
 name|request
 parameter_list|,
-name|int
-name|do_close
+name|enum
+name|confirm_action
+name|action
 parameter_list|)
 block|{
 name|struct
@@ -3083,9 +3283,9 @@ name|request
 expr_stmt|;
 name|cr
 operator|->
-name|do_close
+name|action
 operator|=
-name|do_close
+name|action
 expr_stmt|;
 name|channel_register_status_confirm
 argument_list|(
@@ -3245,8 +3445,7 @@ name|int
 name|delete
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|local
 init|=
 literal|0
@@ -3261,6 +3460,8 @@ literal|0
 decl_stmt|;
 name|int
 name|cancel_port
+decl_stmt|,
+name|ok
 decl_stmt|;
 name|Forward
 name|fwd
@@ -3288,7 +3489,11 @@ name|NULL
 expr_stmt|;
 name|leave_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 name|handler
@@ -3395,8 +3600,20 @@ argument_list|)
 expr_stmt|;
 name|logit
 argument_list|(
+literal|"      -KL[bind_address:]port                 "
+literal|"Cancel local forward"
+argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
 literal|"      -KR[bind_address:]port                 "
 literal|"Cancel remote forward"
+argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+literal|"      -KD[bind_address:]port                 "
+literal|"Cancel dynamic forward"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3507,28 +3724,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
-name|local
-operator|||
-name|dynamic
-operator|)
-operator|&&
-name|delete
-condition|)
-block|{
-name|logit
-argument_list|(
-literal|"Not supported."
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
-name|remote
-operator|&&
 name|delete
 operator|&&
 operator|!
@@ -3625,11 +3820,79 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|remote
+condition|)
+name|ok
+operator|=
 name|channel_request_rforward_cancel
 argument_list|(
 name|cancel_host
 argument_list|,
 name|cancel_port
+argument_list|)
+operator|==
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dynamic
+condition|)
+name|ok
+operator|=
+name|channel_cancel_lport_listener
+argument_list|(
+name|cancel_host
+argument_list|,
+name|cancel_port
+argument_list|,
+literal|0
+argument_list|,
+name|options
+operator|.
+name|gateway_ports
+argument_list|)
+operator|>
+literal|0
+expr_stmt|;
+else|else
+name|ok
+operator|=
+name|channel_cancel_lport_listener
+argument_list|(
+name|cancel_host
+argument_list|,
+name|cancel_port
+argument_list|,
+name|CHANNEL_CANCEL_PORT_STATIC
+argument_list|,
+name|options
+operator|.
+name|gateway_ports
+argument_list|)
+operator|>
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ok
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Unkown port forwarding."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|logit
+argument_list|(
+literal|"Canceled forwarding."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3758,7 +4021,11 @@ argument_list|)
 expr_stmt|;
 name|enter_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4229,7 +4496,11 @@ comment|/* 				 * Detach the program (continue to serve 				 * connections, but 
 comment|/* Restore tty modes. */
 name|leave_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 comment|/* Stop listening for new connections. */
@@ -5202,7 +5473,11 @@ literal|1
 expr_stmt|;
 name|leave_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5543,7 +5818,11 @@ name|have_pty
 condition|)
 name|enter_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5557,10 +5836,19 @@ name|ssh2_chan_id
 expr_stmt|;
 if|if
 condition|(
+name|session_ident
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
 name|escape_char_arg
 operator|!=
 name|SSH_ESCAPECHAR_NONE
 condition|)
+block|{
 name|channel_register_filter
 argument_list|(
 name|session_ident
@@ -5577,13 +5865,7 @@ name|escape_char_arg
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|session_ident
-operator|!=
-operator|-
-literal|1
-condition|)
+block|}
 name|channel_register_cleanup
 argument_list|(
 name|session_ident
@@ -5593,6 +5875,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5925,7 +6208,11 @@ name|have_pty
 condition|)
 name|leave_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 comment|/* restore blocking io */
@@ -8039,7 +8326,7 @@ name|id
 argument_list|,
 literal|"PTY allocation"
 argument_list|,
-literal|1
+name|CONFIRM_TTY
 argument_list|)
 expr_stmt|;
 name|packet_put_cstring
@@ -8373,7 +8660,7 @@ name|id
 argument_list|,
 literal|"subsystem"
 argument_list|,
-literal|1
+name|CONFIRM_CLOSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -8410,7 +8697,7 @@ name|id
 argument_list|,
 literal|"exec"
 argument_list|,
-literal|1
+name|CONFIRM_CLOSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -8448,7 +8735,7 @@ name|id
 argument_list|,
 literal|"shell"
 argument_list|,
-literal|1
+name|CONFIRM_CLOSE
 argument_list|)
 expr_stmt|;
 name|packet_send
@@ -8775,6 +9062,54 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|client_stop_mux
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|options
+operator|.
+name|control_path
+operator|!=
+name|NULL
+operator|&&
+name|muxserver_sock
+operator|!=
+operator|-
+literal|1
+condition|)
+name|unlink
+argument_list|(
+name|options
+operator|.
+name|control_path
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If we are in persist mode, signal that we should close when all 	 * active channels are closed. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|control_persist
+condition|)
+block|{
+name|session_closed
+operator|=
+literal|1
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"[stopped mux]"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/* client specific fatal cleanup */
 end_comment
@@ -8789,7 +9124,11 @@ parameter_list|)
 block|{
 name|leave_raw_mode
 argument_list|(
-name|force_tty_flag
+name|options
+operator|.
+name|request_tty
+operator|==
+name|REQUEST_TTY_FORCE
 argument_list|)
 expr_stmt|;
 name|leave_non_blocking

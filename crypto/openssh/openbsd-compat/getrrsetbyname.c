@@ -21,11 +21,21 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_GETRRSETBYNAME
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_LDNS
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -2632,7 +2642,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(HAVE_GETRRSETBYNAME) */
+comment|/*  !defined (HAVE_GETRRSETBYNAME)&& !defined (HAVE_LDNS) */
 end_comment
 
 end_unit

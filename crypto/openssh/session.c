@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.258 2010/11/25 04:10:09 djm Exp $ */
+comment|/* $OpenBSD: session.c,v 1.260 2012/03/15 03:10:27 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -358,6 +358,23 @@ begin_include
 include|#
 directive|include
 file|<kafs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SELINUX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<selinux/selinux.h>
 end_include
 
 begin_endif
@@ -6430,10 +6447,12 @@ literal|"ignorenologin"
 argument_list|,
 literal|0
 argument_list|)
-operator|&&
+operator|||
 name|pw
 operator|->
 name|pw_uid
+operator|==
+literal|0
 condition|)
 return|return;
 name|nl
@@ -7206,6 +7225,16 @@ argument_list|,
 literal|"You must change your password now and login again!\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SELINUX
+name|setexeccon
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PASSWD_NEEDS_USERNAME
@@ -10039,7 +10068,7 @@ if|if
 condition|(
 name|s
 operator|->
-name|ttyfd
+name|ptymaster
 operator|==
 operator|-
 literal|1
@@ -10048,7 +10077,7 @@ name|tcsendbreak
 argument_list|(
 name|s
 operator|->
-name|ttyfd
+name|ptymaster
 argument_list|,
 literal|0
 argument_list|)

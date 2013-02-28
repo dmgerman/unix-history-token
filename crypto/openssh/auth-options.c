@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.54 2010/12/24 21:41:48 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.56 2011/10/18 04:58:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1679,12 +1679,12 @@ operator|||
 operator|(
 name|port
 operator|=
-name|a2port
+name|permitopen_port
 argument_list|(
 name|p
 argument_list|)
 operator|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -2211,25 +2211,6 @@ argument_list|,
 name|dlen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|!=
-name|nlen
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"Certificate constraint name contains \\0"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|found
 operator|=
 literal|0
@@ -2418,26 +2399,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|strlen
-argument_list|(
-name|command
-argument_list|)
-operator|!=
-name|clen
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"force-command constraint "
-literal|"contains \\0"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 operator|*
 name|cert_forced_command
 operator|!=
@@ -2505,26 +2466,6 @@ literal|"Certificate constraint "
 literal|"\"%s\" corrupt"
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|allowed
-argument_list|)
-operator|!=
-name|clen
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"source-address constraint "
-literal|"contains \\0"
 argument_list|)
 expr_stmt|;
 goto|goto

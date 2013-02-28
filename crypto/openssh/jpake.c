@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: jpake.c,v 1.6 2010/09/20 04:54:07 djm Exp $ */
+comment|/* $OpenBSD: jpake.c,v 1.7 2012/06/18 11:43:53 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -472,6 +472,7 @@ name|pctx
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|pctx
 argument_list|)
 argument_list|)

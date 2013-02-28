@@ -868,7 +868,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Authentication is accepted if the encrypted passwords 	 * are identical. 	 */
 return|return
-operator|(
+name|encrypted_password
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|encrypted_password
@@ -877,7 +880,6 @@ name|pw_password
 argument_list|)
 operator|==
 literal|0
-operator|)
 return|;
 block|}
 end_function
