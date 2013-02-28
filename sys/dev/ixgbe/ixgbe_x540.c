@@ -403,6 +403,15 @@ name|mac
 operator|->
 name|ops
 operator|.
+name|set_vmdq_san_mac
+operator|=
+operator|&
+name|ixgbe_set_vmdq_san_mac_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
 name|clear_vmdq
 operator|=
 operator|&
@@ -1020,6 +1029,21 @@ literal|0
 argument_list|,
 name|IXGBE_RAH_AV
 argument_list|)
+expr_stmt|;
+comment|/* Save the SAN MAC RAR index */
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_mac_rar_index
+operator|=
+name|hw
+operator|->
+name|mac
+operator|.
+name|num_rar_entries
+operator|-
+literal|1
 expr_stmt|;
 comment|/* Reserve the last RAR for the SAN MAC address */
 name|hw
@@ -2721,7 +2745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_release_swfw_sync_X540 - Release SWFW semaphore  *  @hw: pointer to hardware structure  *  @mask: Mask to specify which semaphore to release  *  *  Releases the SWFW semaphore throught the SW_FW_SYNC register  *  for the specified function (CSR, PHY0, PHY1, EVM, Flash)  **/
+comment|/**  *  ixgbe_release_swfw_sync_X540 - Release SWFW semaphore  *  @hw: pointer to hardware structure  *  @mask: Mask to specify which semaphore to release  *  *  Releases the SWFW semaphore through the SW_FW_SYNC register  *  for the specified function (CSR, PHY0, PHY1, EVM, Flash)  **/
 end_comment
 
 begin_function
