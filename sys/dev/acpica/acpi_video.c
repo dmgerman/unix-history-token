@@ -4352,7 +4352,11 @@ operator|&
 name|DOD_DEVID_MASK_FULL
 operator|)
 operator|==
+operator|(
 name|adr
+operator|&
+name|DOD_DEVID_MASK_FULL
+operator|)
 condition|)
 block|{
 name|argset
