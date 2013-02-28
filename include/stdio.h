@@ -1777,6 +1777,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|FILE
+modifier|*
+name|open_memstream
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|renameat
 parameter_list|(

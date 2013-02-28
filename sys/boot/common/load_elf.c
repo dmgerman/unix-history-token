@@ -1308,7 +1308,7 @@ operator|&
 literal|0xc0000000u
 operator|)
 operator|==
-literal|0xc000000u
+literal|0xc0000000u
 condition|)
 name|ehdr
 operator|->
