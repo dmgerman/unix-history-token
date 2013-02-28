@@ -103,8 +103,11 @@ decl_stmt|;
 comment|/* entry index */
 name|uint32_t
 name|addr
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* next hop IP address */
+comment|/* next hop IP or IPv6 address */
 name|struct
 name|ifnet
 modifier|*
@@ -153,6 +156,10 @@ name|hash
 decl_stmt|;
 comment|/* hash bucket the entry is on */
 name|uint8_t
+name|ipv6
+decl_stmt|;
+comment|/* entry is for an IPv6 address */
+name|uint8_t
 name|lport
 decl_stmt|;
 comment|/* associated offload logical port */
@@ -175,6 +182,9 @@ name|struct
 name|rwlock
 name|lock
 decl_stmt|;
+name|u_int
+name|l2t_size
+decl_stmt|;
 specifier|volatile
 name|int
 name|nfree
@@ -189,9 +199,7 @@ comment|/* starting point for next allocation */
 name|struct
 name|l2t_entry
 name|l2tab
-index|[
-name|L2T_SIZE
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -323,8 +331,11 @@ name|l2t_data
 modifier|*
 name|d
 init|=
-name|member2struct
+name|__containerof
 argument_list|(
+name|e
+argument_list|,
+expr|struct
 name|l2t_data
 argument_list|,
 name|l2tab
@@ -333,8 +344,6 @@ name|e
 operator|->
 name|idx
 index|]
-argument_list|,
-name|e
 argument_list|)
 decl_stmt|;
 if|if
