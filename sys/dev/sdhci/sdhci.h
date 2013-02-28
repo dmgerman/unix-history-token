@@ -1102,13 +1102,17 @@ name|u_char
 name|opt
 decl_stmt|;
 comment|/* Slot options */
-name|u_char
-name|version
-decl_stmt|;
 define|#
 directive|define
 name|SDHCI_HAVE_DMA
 value|1
+define|#
+directive|define
+name|SDHCI_PLATFORM_TRANSFER
+value|2
+name|u_char
+name|version
+decl_stmt|;
 name|uint32_t
 name|max_clk
 decl_stmt|;
@@ -1207,6 +1211,11 @@ directive|define
 name|SDHCI_USE_DMA
 value|4
 comment|/* Use DMA for this req. */
+define|#
+directive|define
+name|PLATFORM_DATA_STARTED
+value|8
+comment|/* Data transfer is handled by platform */
 name|struct
 name|mtx
 name|mtx
@@ -1276,6 +1285,22 @@ end_function_decl
 begin_function_decl
 name|void
 name|sdhci_start_slot
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* performs generic clean-up for platform transfers */
+end_comment
+
+begin_function_decl
+name|void
+name|sdhci_finish_data
 parameter_list|(
 name|struct
 name|sdhci_slot
