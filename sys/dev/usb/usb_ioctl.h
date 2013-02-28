@@ -914,8 +914,15 @@ value|_IOW ('U', 127, struct usb_read_dir)
 end_define
 
 begin_comment
-comment|/* 128 - 135 unused */
+comment|/* 128 - 134 unused */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_GET_POWER_USAGE
+value|_IOR ('U', 135, int)
+end_define
 
 begin_define
 define|#
