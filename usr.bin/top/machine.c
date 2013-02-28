@@ -693,9 +693,9 @@ init|=
 block|{
 literal|"K Total, "
 block|,
-literal|"K MRU, "
-block|,
 literal|"K MFU, "
+block|,
+literal|"K MRU, "
 block|,
 literal|"K Anon, "
 block|,
