@@ -566,6 +566,36 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|tcp_rexmit_drop_options
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rexmit_drop_options
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_rexmit_drop_options
+argument_list|,
+literal|0
+argument_list|,
+literal|"Drop TCP options from 3rd and later retransmitted SYN"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|per_cpu_timers
 init|=
 literal|0
@@ -2529,6 +2559,8 @@ expr_stmt|;
 comment|/* 	 * Disable rfc1323 if we haven't got any response to 	 * our third SYN to work-around some broken terminal servers 	 * (most of which have hopefully been retired) that have bad VJ 	 * header compression code which trashes TCP segments containing 	 * unknown-to-them TCP options. 	 */
 if|if
 condition|(
+name|tcp_rexmit_drop_options
+operator|&&
 operator|(
 name|tp
 operator|->
