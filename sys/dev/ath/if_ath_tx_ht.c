@@ -1223,9 +1223,14 @@ index|]
 operator|.
 name|rateCode
 expr_stmt|;
-comment|/* 		 * XXX only do this for legacy rates? 		 */
+comment|/* 		 * Only enable short preamble for legacy rates 		 */
 if|if
 condition|(
+name|IS_HT_RATE
+argument_list|(
+name|rate
+argument_list|)
+operator|&&
 name|bf
 operator|->
 name|bf_state
@@ -1374,6 +1379,47 @@ name|flags
 operator||=
 name|ATH_RC_SGI_FLAG
 expr_stmt|;
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_htcaps
+operator|&
+name|IEEE80211_HTCAP_TXSTBC
+operator|&&
+name|ni
+operator|->
+name|ni_htcap
+operator|&
+name|IEEE80211_HTCAP_RXSTBC_1STREAM
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_cur_txchainmask
+operator|>
+literal|1
+operator|)
+operator|&&
+name|HT_RC_2_STREAMS
+argument_list|(
+name|rate
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator||=
+name|ATH_RC_STBC_FLAG
+expr_stmt|;
+block|}
 comment|/* XXX dual stream? and 3-stream? */
 block|}
 comment|/* 		 * Calculate the maximum 4ms frame length based 		 * on the MCS rate, SGI and channel width flags. 		 */
@@ -2000,7 +2046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup a 11n rate series structure  *  * This should be called for both legacy and MCS rates.  *  * It, along with ath_buf_set_rate, must be called -after- a burst  * or aggregate is setup.  */
+comment|/*  * Setup a 11n rate series structure  *  * This should be called for both legacy and MCS rates.  *  * It, along with ath_buf_set_rate, must be called -after- a burst  * or aggregate is setup.  *  * XXX TODO: it should use the rate series information from the  * ath_buf, rather than recalculating it here!  */
 end_comment
 
 begin_function
@@ -2202,6 +2248,53 @@ name|sc
 operator|->
 name|sc_cur_txchainmask
 expr_stmt|;
+comment|/* 		 * Setup rate and TX power cap for this series. 		 */
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|Rate
+operator|=
+name|rt
+operator|->
+name|info
+index|[
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+index|]
+operator|.
+name|rateCode
+expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateIndex
+operator|=
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|tx_power_cap
+operator|=
+literal|0x3f
+expr_stmt|;
+comment|/* XXX for now */
+comment|/* 		 * Enable RTS/CTS as appropriate. 		 */
 if|if
 condition|(
 name|flags
@@ -2221,7 +2314,27 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_RTS_CTS
 expr_stmt|;
-comment|/* 		 * Transmit 40MHz frames only if the node has negotiated 		 * it rather than whether the node is capable of it or not. 	 	 * It's subtly different in the hostap case. 	 	 */
+if|if
+condition|(
+name|IS_HT_RATE
+argument_list|(
+name|rt
+operator|->
+name|info
+index|[
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+index|]
+operator|.
+name|rateCode
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Transmit 40MHz frames only if the node has negotiated 			 * it rather than whether the node is capable of it or not. 			 * It's subtly different in the hostap case. 			 */
 if|if
 condition|(
 name|ni
@@ -2239,7 +2352,7 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_2040
 expr_stmt|;
-comment|/* 		 * Set short-GI only if the node has advertised it 		 * the channel width is suitable, and we support it. 		 * We don't currently have a "negotiated" set of bits - 		 * ni_htcap is what the remote end sends, not what this 		 * node is capable of. 		 */
+comment|/* 			 * Set short-GI only if the node has advertised it 			 * the channel width is suitable, and we support it. 			 * We don't currently have a "negotiated" set of bits - 			 * ni_htcap is what the remote end sends, not what this 			 * node is capable of. 			 */
 if|if
 condition|(
 name|ni
@@ -2298,53 +2411,7 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_HALFGI
 expr_stmt|;
-comment|/* 		 * Setup rate and TX power cap for this series. 		 */
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|Rate
-operator|=
-name|rt
-operator|->
-name|info
-index|[
-name|rc
-index|[
-name|i
-index|]
-operator|.
-name|rix
-index|]
-operator|.
-name|rateCode
-expr_stmt|;
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|RateIndex
-operator|=
-name|rc
-index|[
-name|i
-index|]
-operator|.
-name|rix
-expr_stmt|;
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|tx_power_cap
-operator|=
-literal|0x3f
-expr_stmt|;
-comment|/* XXX for now */
-comment|/* 		 * If we have STBC TX enabled and the receiver 		 * can receive (at least) 1 stream STBC, AND it's 		 * MCS 0-7, AND we have at least two chains enabled, 		 * enable STBC. 		 */
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
 if|if
 condition|(
 name|ic
@@ -2390,7 +2457,8 @@ operator||=
 name|HAL_RATESERIES_STBC
 expr_stmt|;
 block|}
-comment|/* 		 * XXX TODO: LDPC if it's possible 		 */
+comment|/* 			 * XXX TODO: LDPC if it's possible 			 */
+block|}
 comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(
