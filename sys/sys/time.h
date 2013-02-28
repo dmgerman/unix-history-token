@@ -430,13 +430,6 @@ define|\
 value|(((a)->sec == (b)->sec) ?					\ 	    ((a)->frac cmp (b)->frac) :					\ 	    ((a)->sec cmp (b)->sec))
 end_define
 
-begin_typedef
-typedef|typedef
-name|int64_t
-name|sbintime_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
