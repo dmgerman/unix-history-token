@@ -68,6 +68,9 @@ decl_stmt|;
 name|boolean_t
 name|rr_writer_wanted
 decl_stmt|;
+name|boolean_t
+name|rr_track_all
+decl_stmt|;
 block|}
 name|rrwlock_t
 typedef|;
@@ -78,6 +81,9 @@ parameter_list|(
 name|rrwlock_t
 modifier|*
 name|rrl
+parameter_list|,
+name|boolean_t
+name|track_all
 parameter_list|)
 function_decl|;
 name|void
@@ -101,6 +107,26 @@ parameter_list|,
 name|void
 modifier|*
 name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|rrw_enter_read
+parameter_list|(
+name|rrwlock_t
+modifier|*
+name|rrl
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|rrw_enter_write
+parameter_list|(
+name|rrwlock_t
+modifier|*
+name|rrl
 parameter_list|)
 function_decl|;
 name|void
@@ -148,6 +174,14 @@ parameter_list|(
 name|x
 parameter_list|)
 value|rrw_held(x, RW_WRITER)
+define|#
+directive|define
+name|RRW_LOCK_HELD
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(rrw_held(x, RW_WRITER) || rrw_held(x, RW_READER))
 ifdef|#
 directive|ifdef
 name|__cplusplus

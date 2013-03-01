@@ -250,7 +250,7 @@ name|ZFS_DEBUG
 end_ifdef
 
 begin_comment
-comment|/* Everything except dprintf is on by default in debug builds */
+comment|/* Everything except dprintf and spa is on by default in debug builds */
 end_comment
 
 begin_decl_stmt
@@ -258,7 +258,11 @@ name|int
 name|zfs_flags
 init|=
 operator|~
+operator|(
 name|ZFS_DEBUG_DPRINTF
+operator||
+name|ZFS_DEBUG_SPA
+operator|)
 decl_stmt|;
 end_decl_stmt
 
@@ -393,7 +397,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|refcount_create
+name|refcount_create_untracked
 argument_list|(
 operator|&
 name|scl
@@ -729,6 +733,20 @@ name|wlocks_held
 init|=
 literal|0
 decl_stmt|;
+name|ASSERT3U
+argument_list|(
+name|SCL_LOCKS
+argument_list|,
+operator|<
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|wlocks_held
+argument_list|)
+operator|*
+name|NBBY
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -1187,9 +1205,6 @@ name|avl_index_t
 name|where
 decl_stmt|;
 name|char
-name|c
-decl_stmt|;
-name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -1202,32 +1217,6 @@ name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If it's a full dataset name, figure out the pool name and 	 * just use that. 	 */
-name|cp
-operator|=
-name|strpbrk
-argument_list|(
-name|name
-argument_list|,
-literal|"/@"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-condition|)
-block|{
-name|c
-operator|=
-operator|*
-name|cp
-expr_stmt|;
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1247,6 +1236,29 @@ name|spa_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If it's a full dataset name, figure out the pool name and 	 * just use that. 	 */
+name|cp
+operator|=
+name|strpbrk
+argument_list|(
+name|search
+operator|.
+name|spa_name
+argument_list|,
+literal|"/@"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 name|spa
 operator|=
 name|avl_find
@@ -1260,15 +1272,6 @@ argument_list|,
 operator|&
 name|where
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-condition|)
-operator|*
-name|cp
-operator|=
-name|c
 expr_stmt|;
 return|return
 operator|(
@@ -1987,6 +1990,20 @@ name|spa_iokstat
 argument_list|)
 expr_stmt|;
 block|}
+name|spa
+operator|->
+name|spa_debug
+operator|=
+operator|(
+operator|(
+name|zfs_flags
+operator|&
+name|ZFS_DEBUG_SPA
+operator|)
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
 return|return
 operator|(
 name|spa

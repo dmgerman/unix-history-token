@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/dmu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/nvpair.h>
 end_include
 
@@ -49,11 +43,21 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+struct_decl|struct
+name|spa
+struct_decl|;
+struct_decl|struct
+name|dmu_tx
+struct_decl|;
+struct_decl|struct
+name|objset
+struct_decl|;
 specifier|extern
 name|boolean_t
 name|feature_is_supported
 parameter_list|(
-name|objset_t
+name|struct
+name|objset
 modifier|*
 name|os
 parameter_list|,
@@ -72,9 +76,6 @@ modifier|*
 name|enabled_feat
 parameter_list|)
 function_decl|;
-struct_decl|struct
-name|spa
-struct_decl|;
 specifier|extern
 name|void
 name|spa_feature_create_zap_objects
@@ -83,7 +84,8 @@ name|struct
 name|spa
 modifier|*
 parameter_list|,
-name|dmu_tx_t
+name|struct
+name|dmu_tx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -98,7 +100,8 @@ parameter_list|,
 name|zfeature_info_t
 modifier|*
 parameter_list|,
-name|dmu_tx_t
+name|struct
+name|dmu_tx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -113,7 +116,8 @@ parameter_list|,
 name|zfeature_info_t
 modifier|*
 parameter_list|,
-name|dmu_tx_t
+name|struct
+name|dmu_tx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -128,7 +132,8 @@ parameter_list|,
 name|zfeature_info_t
 modifier|*
 parameter_list|,
-name|dmu_tx_t
+name|struct
+name|dmu_tx
 modifier|*
 parameter_list|)
 function_decl|;

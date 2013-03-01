@@ -76,14 +76,6 @@ define|#
 directive|define
 name|TXG_DEFER_SIZE
 value|2
-define|#
-directive|define
-name|TXG_WAIT
-value|1ULL
-define|#
-directive|define
-name|TXG_NOWAIT
-value|2ULL
 typedef|typedef
 name|struct
 name|tx_cpu
@@ -344,7 +336,7 @@ name|txg
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|txg_list_add
 parameter_list|(
 name|txg_list_t
@@ -360,7 +352,7 @@ name|txg
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|txg_list_add_tail
 parameter_list|(
 name|txg_list_t
@@ -406,7 +398,7 @@ name|txg
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|txg_list_member
 parameter_list|(
 name|txg_list_t

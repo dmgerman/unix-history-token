@@ -280,7 +280,7 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
-name|int
+name|boolean_t
 name|arc_buf_remove_ref
 parameter_list|(
 name|arc_buf_t

@@ -7423,7 +7423,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|arc_buf_remove_ref
 parameter_list|(
 name|arc_buf_t
@@ -7452,7 +7452,7 @@ argument_list|(
 name|hdr
 argument_list|)
 decl_stmt|;
-name|int
+name|boolean_t
 name|no_callback
 init|=
 operator|(
@@ -8418,7 +8418,7 @@ argument_list|,
 name|missed
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have just evicted some date into the ghost state, make 	 * sure we also adjust the ghost state size if necessary. 	 */
+comment|/* 	 * We have just evicted some data into the ghost state, make 	 * sure we also adjust the ghost state size if necessary. 	 */
 if|if
 condition|(
 name|arc_no_grow
@@ -11625,8 +11625,6 @@ name|buf
 argument_list|,
 name|arg
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -11677,8 +11675,6 @@ name|buf
 argument_list|,
 name|arg
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 operator|*

@@ -2004,6 +2004,13 @@ name|nvlist_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|size_t
+name|fnvlist_num_pairs
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 name|fnvlist_add_boolean
 parameter_list|(
