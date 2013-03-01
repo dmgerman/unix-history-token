@@ -823,6 +823,10 @@ name|u_int
 name|td_vp_reserv
 decl_stmt|;
 comment|/* (k) Count of reserved vnodes. */
+name|int
+name|td_no_sleeping
+decl_stmt|;
+comment|/* (k) Sleeping disabled count. */
 define|#
 directive|define
 name|td_endzero
@@ -1649,12 +1653,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_NOSLEEPING
+name|TDP_UNUSED9
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* Thread is not allowed to sleep on a sq. */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -3867,7 +3871,7 @@ define|#
 directive|define
 name|THREAD_NO_SLEEPING
 parameter_list|()
-value|do {					\ 	KASSERT(!(curthread->td_pflags& TDP_NOSLEEPING),		\ 	    ("nested no sleeping"));					\ 	curthread->td_pflags |= TDP_NOSLEEPING;				\ } while (0)
+value|((curthread)->td_no_sleeping++)
 end_define
 
 begin_define
@@ -3875,7 +3879,7 @@ define|#
 directive|define
 name|THREAD_SLEEPING_OK
 parameter_list|()
-value|do {					\ 	KASSERT((curthread->td_pflags& TDP_NOSLEEPING),		\ 	    ("nested sleeping ok"));					\ 	curthread->td_pflags&= ~TDP_NOSLEEPING;			\ } while (0)
+value|((curthread)->td_no_sleeping--)
 end_define
 
 begin_define
