@@ -51,7 +51,18 @@ begin_define
 define|#
 directive|define
 name|UDP_ENCAP
-value|0x01
+value|1
+end_define
+
+begin_comment
+comment|/* Start of reserved space for third-party user-settable options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDP_VENDOR
+value|SO_VENDOR
 end_define
 
 begin_comment
