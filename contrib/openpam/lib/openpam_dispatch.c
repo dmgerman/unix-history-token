@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2007 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_dispatch.c 408 2007-12-21 11:36:24Z des $  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_dispatch.c 501 2011-12-07 01:28:05Z des $  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -34,7 +51,7 @@ end_if
 begin_function_decl
 specifier|static
 name|void
-name|_openpam_check_error_code
+name|openpam_check_error_code
 parameter_list|(
 name|int
 parameter_list|,
@@ -51,7 +68,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|_openpam_check_error_code
+name|openpam_check_error_code
 parameter_list|(
 name|a
 parameter_list|,
@@ -98,14 +115,9 @@ name|fail
 decl_stmt|,
 name|r
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|int
 name|debug
 decl_stmt|;
-endif|#
-directive|endif
 name|ENTER
 argument_list|()
 expr_stmt|;
@@ -136,7 +148,7 @@ name|PAM_LOG_ERROR
 argument_list|,
 literal|"%s() called while %s::%s() is in progress"
 argument_list|,
-name|_pam_func_name
+name|pam_func_name
 index|[
 name|primitive
 index|]
@@ -149,7 +161,7 @@ name|module
 operator|->
 name|path
 argument_list|,
-name|_pam_sm_func_name
+name|pam_sm_func_name
 index|[
 name|pamh
 operator|->
@@ -280,13 +292,16 @@ name|module
 operator|->
 name|path
 argument_list|,
-name|_pam_sm_func_name
+name|pam_sm_func_name
 index|[
 name|primitive
 index|]
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|r
+operator|=
+name|PAM_SYSTEM_ERR
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -302,9 +317,6 @@ name|current
 operator|=
 name|chain
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|debug
 operator|=
 operator|(
@@ -323,7 +335,7 @@ condition|(
 name|debug
 condition|)
 operator|++
-name|_openpam_debug
+name|openpam_debug
 expr_stmt|;
 name|openpam_log
 argument_list|(
@@ -331,7 +343,7 @@ name|PAM_LOG_DEBUG
 argument_list|,
 literal|"calling %s() in %s"
 argument_list|,
-name|_pam_sm_func_name
+name|pam_sm_func_name
 index|[
 name|primitive
 index|]
@@ -343,8 +355,6 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|r
 operator|=
 operator|(
@@ -383,9 +393,6 @@ name|current
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|openpam_log
 argument_list|(
 name|PAM_LOG_DEBUG
@@ -398,7 +405,7 @@ name|module
 operator|->
 name|path
 argument_list|,
-name|_pam_sm_func_name
+name|pam_sm_func_name
 index|[
 name|primitive
 index|]
@@ -416,10 +423,8 @@ condition|(
 name|debug
 condition|)
 operator|--
-name|_openpam_debug
+name|openpam_debug
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -475,7 +480,7 @@ condition|)
 break|break;
 continue|continue;
 block|}
-name|_openpam_check_error_code
+name|openpam_check_error_code
 argument_list|(
 name|primitive
 argument_list|,
@@ -587,7 +592,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|_openpam_check_error_code
+name|openpam_check_error_code
 parameter_list|(
 name|int
 name|primitive
@@ -755,7 +760,7 @@ name|PAM_LOG_ERROR
 argument_list|,
 literal|"%s(): unexpected return value %d"
 argument_list|,
-name|_pam_sm_func_name
+name|pam_sm_func_name
 index|[
 name|primitive
 index|]
