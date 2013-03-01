@@ -5728,6 +5728,10 @@ name|rid
 operator|=
 literal|1
 expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 literal|0
