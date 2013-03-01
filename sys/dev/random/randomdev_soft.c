@@ -1693,6 +1693,7 @@ expr_stmt|;
 comment|/* Blocking logic */
 while|while
 condition|(
+operator|!
 name|random_systat
 operator|.
 name|seeded
