@@ -1418,6 +1418,44 @@ argument_list|(
 argument|XML_Parser parser
 argument_list|)
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|XML_ATTR_INFO
+comment|/* Source file byte offsets for the start and end of attribute names and values.    The value indices are exclusive of surrounding quotes; thus in a UTF-8 source    file an attribute value of "blah" will yield:    info->valueEnd - info->valueStart = 4 bytes. */
+typedef|typedef
+struct|struct
+block|{
+name|XML_Index
+name|nameStart
+decl_stmt|;
+comment|/* Offset to beginning of the attribute name. */
+name|XML_Index
+name|nameEnd
+decl_stmt|;
+comment|/* Offset after the attribute name's last byte. */
+name|XML_Index
+name|valueStart
+decl_stmt|;
+comment|/* Offset to beginning of the attribute value. */
+name|XML_Index
+name|valueEnd
+decl_stmt|;
+comment|/* Offset after the attribute value's last byte. */
+block|}
+name|XML_AttrInfo
+typedef|;
+comment|/* Returns an array of XML_AttrInfo structures for the attribute/value pairs    passed in last call to the XML_StartElementHandler that were specified    in the start-tag rather than defaulted. Each attribute/value pair counts    as 1; thus the number of entries in the array is    XML_GetSpecifiedAttributeCount(parser) / 2. */
+name|XMLPARSEAPI
+argument_list|(
+argument|const XML_AttrInfo *
+argument_list|)
+name|XML_GetAttributeInfo
+argument_list|(
+argument|XML_Parser parser
+argument_list|)
+empty_stmt|;
+endif|#
+directive|endif
 comment|/* Parses some input. Returns XML_STATUS_ERROR if a fatal error is    detected.  The last call to XML_Parse must have isFinal true; len    may be zero for this call (or any other).     Though the return values for these functions has always been    described as a Boolean value, the implementation, at least for the    1.95.x series, has always returned exactly one of the XML_Status    values. */
 name|XMLPARSEAPI
 argument_list|(
@@ -1551,6 +1589,18 @@ argument_list|(
 argument|XML_Parser parser
 argument_list|,
 argument|enum XML_ParamEntityParsing parsing
+argument_list|)
+empty_stmt|;
+comment|/* Sets the hash salt to use for internal hash calculations.    Helps in preventing DoS attacks based on predicting hash    function behavior. This must be called before parsing is started.    Returns 1 if successful, 0 when called after parsing has started. */
+name|XMLPARSEAPI
+argument_list|(
+argument|int
+argument_list|)
+name|XML_SetHashSalt
+argument_list|(
+argument|XML_Parser parser
+argument_list|,
+argument|unsigned long hash_salt
 argument_list|)
 empty_stmt|;
 comment|/* If XML_Parse or XML_ParseBuffer have returned XML_STATUS_ERROR, then    XML_GetErrorCode returns information about the error. */
@@ -1756,6 +1806,8 @@ block|,
 name|XML_FEATURE_NS
 block|,
 name|XML_FEATURE_LARGE_SIZE
+block|,
+name|XML_FEATURE_ATTR_INFO
 comment|/* Additional features must be added to the end of this enum. */
 block|}
 enum|;
@@ -1795,11 +1847,11 @@ value|2
 define|#
 directive|define
 name|XML_MINOR_VERSION
-value|0
+value|1
 define|#
 directive|define
 name|XML_MICRO_VERSION
-value|1
+value|0
 ifdef|#
 directive|ifdef
 name|__cplusplus

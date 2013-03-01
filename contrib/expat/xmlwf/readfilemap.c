@@ -294,6 +294,11 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -316,6 +321,11 @@ argument_list|,
 literal|"%s: not a regular file\n"
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
