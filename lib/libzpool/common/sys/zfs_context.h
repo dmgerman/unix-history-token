@@ -117,6 +117,12 @@ directive|include
 file|<procfs.h>
 include|#
 directive|include
+file|<pthread.h>
+include|#
+directive|include
+file|<sys/debug.h>
+include|#
+directive|include
 file|<libsysevent.h>
 include|#
 directive|include
@@ -707,6 +713,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|_rw_write_held(&(x)->rw_lock)
+undef|#
+directive|undef
+name|RW_LOCK_HELD
+define|#
+directive|define
+name|RW_LOCK_HELD
+parameter_list|(
+name|x
+parameter_list|)
+value|(RW_READ_HELD(x) || RW_WRITE_HELD(x))
 specifier|extern
 name|void
 name|rw_init
@@ -916,6 +932,39 @@ modifier|*
 name|cv
 parameter_list|)
 function_decl|;
+comment|/*  * Thread-specific data  */
+define|#
+directive|define
+name|tsd_get
+parameter_list|(
+name|k
+parameter_list|)
+value|pthread_getspecific(k)
+define|#
+directive|define
+name|tsd_set
+parameter_list|(
+name|k
+parameter_list|,
+name|v
+parameter_list|)
+value|pthread_setspecific(k, v)
+define|#
+directive|define
+name|tsd_create
+parameter_list|(
+name|kp
+parameter_list|,
+name|d
+parameter_list|)
+value|pthread_key_create(kp, d)
+define|#
+directive|define
+name|tsd_destroy
+parameter_list|(
+name|kp
+parameter_list|)
+comment|/* nothing */
 comment|/*  * kstat creation, installation and deletion  */
 specifier|extern
 name|kstat_t
@@ -2131,7 +2180,7 @@ name|strfree
 parameter_list|(
 name|str
 parameter_list|)
-value|kmem_free((str), strlen(str)+1)
+value|kmem_free((str), strlen(str) + 1)
 comment|/*  * Hostname information  */
 specifier|extern
 name|char
