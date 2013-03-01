@@ -1028,6 +1028,10 @@ literal|"local APIC not aligned on a page boundary"
 operator|)
 argument_list|)
 expr_stmt|;
+name|lapic_paddr
+operator|=
+name|addr
+expr_stmt|;
 name|lapic
 operator|=
 name|pmap_mapdev
@@ -1039,10 +1043,6 @@ argument_list|(
 name|lapic_t
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|lapic_paddr
-operator|=
-name|addr
 expr_stmt|;
 name|setidt
 argument_list|(
