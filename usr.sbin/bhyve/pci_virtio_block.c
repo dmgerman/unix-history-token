@@ -759,6 +759,10 @@ argument_list|(
 name|vd
 operator|->
 name|vd_addr
+argument_list|,
+name|vd
+operator|->
+name|vd_len
 argument_list|)
 expr_stmt|;
 name|assert
@@ -785,6 +789,12 @@ literal|0
 index|]
 operator|.
 name|vd_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|virtio_blk_hdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assert
@@ -895,6 +905,13 @@ name|i
 index|]
 operator|.
 name|vd_addr
+argument_list|,
+name|vid
+index|[
+name|i
+index|]
+operator|.
+name|vd_len
 argument_list|)
 expr_stmt|;
 name|iov
@@ -985,6 +1002,8 @@ literal|1
 index|]
 operator|.
 name|vd_addr
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1325,6 +1344,11 @@ argument_list|(
 name|pfn
 operator|<<
 name|VRING_PFN
+argument_list|,
+name|vring_size
+argument_list|(
+name|VTBLK_RINGSZ
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hq
@@ -1483,21 +1507,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Access to guest memory is required. Fail if 	 * memory not mapped 	 */
-if|if
-condition|(
-name|paddr_guest2host
-argument_list|(
-literal|0
-argument_list|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 comment|/* 	 * The supplied backing file has to exist 	 */
 name|fd
 operator|=
