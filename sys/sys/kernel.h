@@ -123,6 +123,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|int
 name|ticks
 decl_stmt|;

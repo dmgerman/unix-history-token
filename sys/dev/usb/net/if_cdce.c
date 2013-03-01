@@ -2683,6 +2683,9 @@ name|usb_config
 modifier|*
 name|pcfg
 decl_stmt|;
+name|uint32_t
+name|seed
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3162,6 +3165,10 @@ argument_list|,
 literal|"faking MAC address\n"
 argument_list|)
 expr_stmt|;
+name|seed
+operator|=
+name|ticks
+expr_stmt|;
 name|sc
 operator|->
 name|sc_ue
@@ -3186,7 +3193,7 @@ literal|1
 index|]
 argument_list|,
 operator|&
-name|ticks
+name|seed
 argument_list|,
 sizeof|sizeof
 argument_list|(

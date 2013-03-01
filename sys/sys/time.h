@@ -1114,6 +1114,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|time_t
 name|time_second
 decl_stmt|;
@@ -1121,6 +1122,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|time_t
 name|time_uptime
 decl_stmt|;
