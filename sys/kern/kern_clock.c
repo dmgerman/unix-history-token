@@ -1506,6 +1506,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|int
 name|ticks
 decl_stmt|;
@@ -1816,11 +1817,6 @@ parameter_list|)
 block|{
 name|atomic_add_int
 argument_list|(
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 operator|&
 name|ticks
 argument_list|,

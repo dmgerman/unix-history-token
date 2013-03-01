@@ -641,6 +641,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|time_t
 name|time_second
 init|=
@@ -649,6 +650,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|time_t
 name|time_uptime
 init|=

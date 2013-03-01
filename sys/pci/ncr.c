@@ -3623,6 +3623,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|void
 modifier|*
 name|script_kvars
