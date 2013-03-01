@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.103 2010/01/26 01:28:35 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.111 2012/04/11 13:16:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -206,6 +206,13 @@ name|SSH_CHANNEL_MAX_TYPE
 value|17
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHANNEL_CANCEL_PORT_STATIC
+value|-1
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|Channel
@@ -218,6 +225,21 @@ name|struct
 name|Channel
 name|Channel
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|channel_open_fn
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_typedef
@@ -462,6 +484,10 @@ name|int
 name|force_drain
 decl_stmt|;
 comment|/* force close on iEOF */
+name|time_t
+name|notbefore
+decl_stmt|;
+comment|/* Pause IO until deadline (time_t) */
 name|int
 name|delayed
 decl_stmt|;
@@ -486,6 +512,11 @@ name|int
 name|listening_port
 decl_stmt|;
 comment|/* port being listened for forwards */
+name|char
+modifier|*
+name|listening_addr
+decl_stmt|;
+comment|/* addr being listened for forwards */
 name|int
 name|host_port
 decl_stmt|;
@@ -531,7 +562,7 @@ name|ctype
 decl_stmt|;
 comment|/* type */
 comment|/* callback */
-name|channel_callback_fn
+name|channel_open_fn
 modifier|*
 name|open_confirm
 decl_stmt|;
@@ -584,6 +615,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|mux_ctx
+decl_stmt|;
+name|int
+name|mux_pause
 decl_stmt|;
 block|}
 struct|;
@@ -943,7 +977,7 @@ name|channel_register_open_confirm
 parameter_list|(
 name|int
 parameter_list|,
-name|channel_callback_fn
+name|channel_open_fn
 modifier|*
 parameter_list|,
 name|void
@@ -1199,6 +1233,9 @@ parameter_list|,
 name|u_int
 modifier|*
 parameter_list|,
+name|time_t
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -1313,6 +1350,26 @@ name|channel_add_adm_permitted_opens
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_disable_adm_local_opens
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_update_permitted_opens
+parameter_list|(
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1452,7 +1509,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_request_rforward_cancel
 parameter_list|(
 specifier|const
@@ -1493,6 +1550,34 @@ name|char
 modifier|*
 parameter_list|,
 name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|channel_cancel_lport_listener
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_short
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|permitopen_port
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1561,6 +1646,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

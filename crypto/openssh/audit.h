@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit.h,v 1.3 2006/08/05 14:05:10 dtucker Exp $ */
+comment|/* $Id: audit.h,v 1.4 2011/01/17 10:15:30 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|_SSH_AUDIT_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"loginrec.h"
+end_include
 
 begin_enum
 enum|enum
@@ -94,8 +100,8 @@ begin_function_decl
 name|void
 name|audit_session_open
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|logininfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -105,8 +111,8 @@ begin_function_decl
 name|void
 name|audit_session_close
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|logininfo
 modifier|*
 parameter_list|)
 function_decl|;

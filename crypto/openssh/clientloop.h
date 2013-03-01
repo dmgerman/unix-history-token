@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.23 2010/01/26 01:28:35 djm Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.29 2011/09/09 22:46:44 djm Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -112,6 +114,15 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|client_stop_mux
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -191,6 +202,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Channel request confirmation callbacks */
+end_comment
+
+begin_enum
+enum|enum
+name|confirm_action
+block|{
+name|CONFIRM_WARN
+init|=
+literal|0
+block|,
+name|CONFIRM_CLOSE
+block|,
+name|CONFIRM_TTY
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+name|void
+name|client_expect_confirm
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|confirm_action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Multiplexing protocol version */
 end_comment
 
@@ -249,6 +295,39 @@ begin_comment
 comment|/* Open stdio fwd (ssh -W) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_FORWARD
+value|5
+end_define
+
+begin_comment
+comment|/* Forward only, no command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_STOP
+value|6
+end_define
+
+begin_comment
+comment|/* Disable mux but not conn */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_CANCEL_FWD
+value|7
+end_define
+
+begin_comment
+comment|/* Cancel forwarding(s) */
+end_comment
+
 begin_function_decl
 name|void
 name|muxserver_listen
@@ -277,6 +356,16 @@ name|Channel
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mux_tty_alloc_failed
+parameter_list|(
+name|Channel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

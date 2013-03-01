@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-solaris.h,v 1.1 2006/08/30 17:24:42 djm Exp $ */
+comment|/* $Id: port-solaris.h,v 1.2 2010/11/05 01:03:05 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_function_decl
@@ -43,6 +49,17 @@ name|solaris_contract_post_fork_parent
 parameter_list|(
 name|pid_t
 name|pid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|solaris_set_default_project
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

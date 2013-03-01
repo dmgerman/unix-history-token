@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.94 2010/03/01 11:07:06 otto Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.103 2011/10/18 23:37:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -173,6 +173,13 @@ name|_PATH_SSH_CLIENT_ID_RSA
 block|,
 name|_PATH_SSH_CLIENT_ID_DSA
 block|,
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_ECC
+name|_PATH_SSH_CLIENT_ID_ECDSA
+block|,
+endif|#
+directive|endif
 name|_PATH_SSH_CLIENT_IDENTITY
 block|,
 name|NULL
@@ -451,6 +458,9 @@ specifier|const
 name|char
 modifier|*
 name|filename
+parameter_list|,
+name|int
+name|key_only
 parameter_list|)
 block|{
 name|Key
@@ -474,6 +484,8 @@ index|]
 decl_stmt|,
 modifier|*
 name|certpath
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|fd
@@ -485,6 +497,31 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|Buffer
+name|keyblob
+decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fd
+operator|=
+name|STDIN_FILENO
+expr_stmt|;
+name|filename
+operator|=
+literal|"(stdin)"
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -512,6 +549,13 @@ literal|1
 return|;
 block|}
 comment|/* 	 * Since we'll try to load a keyfile multiple times, permission errors 	 * will occur multiple times, so check perms first and bail if wrong. 	 */
+if|if
+condition|(
+name|fd
+operator|!=
+name|STDIN_FILENO
+condition|)
+block|{
 name|perms_ok
 operator|=
 name|key_perm_ok
@@ -521,25 +565,72 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|perms_ok
 condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
+block|}
+name|buffer_init
+argument_list|(
+operator|&
+name|keyblob
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|key_load_file
+argument_list|(
+name|fd
+argument_list|,
+name|filename
+argument_list|,
+operator|&
+name|keyblob
+argument_list|)
+condition|)
+block|{
+name|buffer_free
+argument_list|(
+operator|&
+name|keyblob
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 comment|/* At first, try empty passphrase */
 name|private
 operator|=
-name|key_load_private
+name|key_parse_private
 argument_list|(
+operator|&
+name|keyblob
+argument_list|,
 name|filename
 argument_list|,
 literal|""
@@ -574,8 +665,11 @@ name|NULL
 condition|)
 name|private
 operator|=
-name|key_load_private
+name|key_parse_private
 argument_list|(
+operator|&
+name|keyblob
+argument_list|,
 name|filename
 argument_list|,
 name|pass
@@ -641,6 +735,12 @@ argument_list|(
 name|comment
 argument_list|)
 expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|keyblob
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -648,8 +748,11 @@ return|;
 block|}
 name|private
 operator|=
-name|key_load_private
+name|key_parse_private
 argument_list|(
+operator|&
+name|keyblob
+argument_list|,
 name|filename
 argument_list|,
 name|pass
@@ -682,6 +785,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|buffer_free
+argument_list|(
+operator|&
+name|keyblob
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ssh_add_identity_constrained
@@ -738,7 +847,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The user has to confirm each use of the key\n"
+literal|"The user must confirm each use of the key\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -754,6 +863,14 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Skip trying to load the cert if requested */
+if|if
+condition|(
+name|key_only
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* Now try to add the certificate flavour too */
 name|xasprintf
 argument_list|(
@@ -777,27 +894,73 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+operator|!
+name|key_equal_public
+argument_list|(
+name|cert
+argument_list|,
+name|private
+argument_list|)
+condition|)
 block|{
+name|error
+argument_list|(
+literal|"Certificate %s does not match private key %s"
+argument_list|,
+name|certpath
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|cert
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Graft with private bits */
 if|if
 condition|(
 name|key_to_certified
 argument_list|(
 name|private
+argument_list|,
+name|key_cert_is_legacy
+argument_list|(
+name|cert
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: key_to_certified failed"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|key_free
+argument_list|(
+name|cert
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|key_cert_copy
 argument_list|(
 name|cert
@@ -812,6 +975,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ssh_add_identity_constrained
 argument_list|(
 name|ac
@@ -826,6 +990,20 @@ name|confirm
 argument_list|)
 condition|)
 block|{
+name|error
+argument_list|(
+literal|"Certificate %s (%s) add failed"
+argument_list|,
+name|certpath
+argument_list|,
+name|private
+operator|->
+name|cert
+operator|->
+name|key_id
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -866,28 +1044,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The user has to confirm each "
-literal|"use of the key\n"
+literal|"The user must confirm each use of the key\n"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|error
-argument_list|(
-literal|"Certificate %s (%s) add failed"
-argument_list|,
+name|out
+label|:
+if|if
+condition|(
 name|certpath
-argument_list|,
-name|private
-operator|->
-name|cert
-operator|->
-name|key_id
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+operator|!=
+name|NULL
+condition|)
 name|xfree
 argument_list|(
 name|certpath
@@ -1418,6 +1585,9 @@ parameter_list|,
 name|int
 name|deleting
 parameter_list|,
+name|int
+name|key_only
+parameter_list|,
 name|char
 modifier|*
 name|file
@@ -1454,6 +1624,8 @@ argument_list|(
 name|ac
 argument_list|,
 name|file
+argument_list|,
+name|key_only
 argument_list|)
 operator|==
 operator|-
@@ -1512,6 +1684,27 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -k          Load only keys and not certificates.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -c          Require confirmation to sign using identities\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -t life     Set lifetime (in seconds) when adding identities.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -d          Delete identity.\n"
 argument_list|)
 expr_stmt|;
@@ -1534,20 +1727,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"  -X          Unlock agent.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t life     Set lifetime (in seconds) when adding identities.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -c          Require confirmation to sign using identities\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1613,6 +1792,10 @@ decl_stmt|,
 name|ret
 init|=
 literal|0
+decl_stmt|,
+name|key_only
+init|=
+literal|0
 decl_stmt|;
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
@@ -1628,13 +1811,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|init_rng
-argument_list|()
-expr_stmt|;
 name|seed_rng
 argument_list|()
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* At first, get a connection to the authentication agent. */
@@ -1674,7 +1854,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lLcdDxXe:s:t:"
+literal|"klLcdDxXe:s:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -1687,6 +1867,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'k'
+case|:
+name|key_only
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -2010,6 +2198,8 @@ name|ac
 argument_list|,
 name|deleting
 argument_list|,
+name|key_only
+argument_list|,
 name|buf
 argument_list|)
 operator|==
@@ -2059,6 +2249,8 @@ argument_list|(
 name|ac
 argument_list|,
 name|deleting
+argument_list|,
+name|key_only
 argument_list|,
 name|argv
 index|[

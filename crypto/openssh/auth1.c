@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.73 2008/07/04 23:30:16 djm Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.75 2010/08/31 09:58:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -727,7 +727,7 @@ decl_stmt|;
 comment|/* 	 * Get client user name.  Note that we just have to 	 * trust the client; root on the client machine can 	 * claim to be any user. 	 */
 name|client_user
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 operator|&
 name|ulen
@@ -1060,6 +1060,10 @@ expr_stmt|;
 comment|/* If the user has no password, accept authentication immediately. */
 if|if
 condition|(
+name|options
+operator|.
+name|permit_empty_passwd
+operator|&&
 name|options
 operator|.
 name|password_authentication
@@ -1618,7 +1622,7 @@ expr_stmt|;
 comment|/* Get the user name. */
 name|user
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 operator|&
 name|ulen

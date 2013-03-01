@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.h,v 1.15 2008/11/04 08:22:13 djm Exp $ */
+comment|/* $OpenBSD: monitor.h,v 1.16 2011/06/17 21:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -179,6 +179,12 @@ name|m_recvfd
 decl_stmt|;
 name|int
 name|m_sendfd
+decl_stmt|;
+name|int
+name|m_log_recvfd
+decl_stmt|;
+name|int
+name|m_log_sendfd
 decl_stmt|;
 name|struct
 name|mm_master

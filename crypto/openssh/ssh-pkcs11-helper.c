@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.3 2010/02/24 06:12:53 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.4 2012/07/02 12:13:26 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -12,12 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_PKCS11
-end_ifdef
 
 begin_include
 include|#
@@ -113,6 +107,12 @@ include|#
 directive|include
 file|"ssh-pkcs11.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_PKCS11
+end_ifdef
 
 begin_comment
 comment|/* borrows code from sftp-server and ssh-agent */
@@ -792,8 +792,6 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
-name|flags
-decl_stmt|,
 name|ret
 decl_stmt|;
 name|Key
@@ -822,12 +820,13 @@ operator|&
 name|dlen
 argument_list|)
 expr_stmt|;
-name|flags
-operator|=
+operator|(
+name|void
+operator|)
 name|get_int
 argument_list|()
 expr_stmt|;
-comment|/* XXX ignore */
+comment|/* XXX ignore flags */
 if|if
 condition|(
 operator|(
@@ -1316,9 +1315,6 @@ name|pkcs11_init
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-name|init_rng
-argument_list|()
 expr_stmt|;
 name|seed_rng
 argument_list|()

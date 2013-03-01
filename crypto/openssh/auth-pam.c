@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2003,2004 Damien Miller<djm@mindrot.org>  * Copyrigh
 end_comment
 
 begin_comment
-comment|/* Based on $FreeBSD$ */
+comment|/* Based on $FreeBSD: stable/8/crypto/openssh/auth-pam.c 206984 2010-04-21 06:33:10Z des $ */
 end_comment
 
 begin_include

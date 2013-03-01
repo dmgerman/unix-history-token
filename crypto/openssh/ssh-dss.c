@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-dss.c,v 1.25 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: ssh-dss.c,v 1.27 2010/08/31 09:58:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -158,6 +158,12 @@ name|key
 operator|==
 name|NULL
 operator|||
+name|key
+operator|->
+name|dsa
+operator|==
+name|NULL
+operator|||
 operator|(
 name|key
 operator|->
@@ -170,13 +176,13 @@ operator|->
 name|type
 operator|!=
 name|KEY_DSA_CERT
-operator|)
-operator|||
+operator|&&
 name|key
 operator|->
-name|dsa
-operator|==
-name|NULL
+name|type
+operator|!=
+name|KEY_DSA_CERT_V00
+operator|)
 condition|)
 block|{
 name|error
@@ -553,6 +559,12 @@ name|key
 operator|==
 name|NULL
 operator|||
+name|key
+operator|->
+name|dsa
+operator|==
+name|NULL
+operator|||
 operator|(
 name|key
 operator|->
@@ -565,13 +577,13 @@ operator|->
 name|type
 operator|!=
 name|KEY_DSA_CERT
-operator|)
-operator|||
+operator|&&
 name|key
 operator|->
-name|dsa
-operator|==
-name|NULL
+name|type
+operator|!=
+name|KEY_DSA_CERT_V00
+operator|)
 condition|)
 block|{
 name|error
@@ -638,7 +650,7 @@ argument_list|)
 expr_stmt|;
 name|ktype
 operator|=
-name|buffer_get_string
+name|buffer_get_cstring
 argument_list|(
 operator|&
 name|b

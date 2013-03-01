@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compress.c,v 1.25 2006/08/06 01:13:32 stevesk Exp $ */
+comment|/* $OpenBSD: compress.c,v 1.26 2010/09/08 04:13:31 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<zlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"log.h"
 end_include
 
@@ -47,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"compress.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<zlib.h>
 end_include
 
 begin_decl_stmt

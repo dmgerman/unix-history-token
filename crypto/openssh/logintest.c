@@ -1136,9 +1136,7 @@ directive|ifdef
 name|USE_UTMPX
 name|printf
 argument_list|(
-literal|"\tUSE_UTMPX (UTMPX_FILE=%s)\n"
-argument_list|,
-name|UTMPX_FILE
+literal|"\tUSE_UTMPX\n"
 argument_list|)
 expr_stmt|;
 endif|#

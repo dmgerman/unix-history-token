@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.121 2009/06/22 05:39:28 dtucker Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.124 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -474,6 +474,12 @@ condition|(
 name|st
 operator|.
 name|st_size
+operator|<=
+literal|0
+operator|||
+name|st
+operator|.
+name|st_size
 operator|>
 literal|1
 operator|*
@@ -767,7 +773,7 @@ name|char
 modifier|*
 name|service
 init|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 operator|&
 name|len
@@ -966,21 +972,21 @@ argument_list|)
 expr_stmt|;
 name|user
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
 name|service
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
 name|method
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 name|NULL
 argument_list|)
@@ -1402,6 +1408,12 @@ name|postponed
 operator|=
 literal|0
 expr_stmt|;
+name|authctxt
+operator|->
+name|server_caused_failure
+operator|=
+literal|0
+expr_stmt|;
 comment|/* try to authenticate user */
 name|m
 operator|=
@@ -1708,6 +1720,12 @@ block|{
 comment|/* Allow initial try of "none" auth without failure penalty */
 if|if
 condition|(
+operator|!
+name|authctxt
+operator|->
+name|server_caused_failure
+operator|&&
+operator|(
 name|authctxt
 operator|->
 name|attempt
@@ -1722,6 +1740,7 @@ literal|"none"
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 name|authctxt
 operator|->

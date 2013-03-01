@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.82 2010/02/08 10:50:20 markus Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.91 2011/09/23 07:45:05 markus Exp $ */
 end_comment
 
 begin_comment
@@ -49,6 +49,14 @@ name|int
 name|connect_port
 decl_stmt|;
 comment|/* Port to connect on connect_host. */
+name|int
+name|allocated_port
+decl_stmt|;
+comment|/* Dynamically allocated listen port */
+name|int
+name|handle
+decl_stmt|;
+comment|/* Handle for dynamic listen ports */
 block|}
 name|Forward
 typedef|;
@@ -65,6 +73,13 @@ name|MAX_SEND_ENV
 value|256
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSH_MAX_HOSTS_FILES
+value|256
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -77,6 +92,10 @@ name|int
 name|forward_x11
 decl_stmt|;
 comment|/* Forward X11 display. */
+name|int
+name|forward_x11_timeout
+decl_stmt|;
+comment|/* Expiration for Cookies */
 name|int
 name|forward_x11_trusted
 decl_stmt|;
@@ -167,6 +186,14 @@ name|int
 name|tcp_keep_alive
 decl_stmt|;
 comment|/* Set SO_KEEPALIVE. */
+name|int
+name|ip_qos_interactive
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for interactive */
+name|int
+name|ip_qos_bulk
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for bulk traffic */
 name|LogLevel
 name|log_level
 decl_stmt|;
@@ -209,6 +236,11 @@ modifier|*
 name|hostkeyalgorithms
 decl_stmt|;
 comment|/* SSH2 server key types in order of preference. */
+name|char
+modifier|*
+name|kex_algorithms
+decl_stmt|;
+comment|/* SSH2 kex methods in order of preference. */
 name|int
 name|protocol
 decl_stmt|;
@@ -237,23 +269,27 @@ name|int
 name|escape_char
 decl_stmt|;
 comment|/* Escape character; -2 = none */
-name|char
-modifier|*
-name|system_hostfile
+name|u_int
+name|num_system_hostfiles
 decl_stmt|;
-comment|/* Path for /etc/ssh/ssh_known_hosts. */
+comment|/* Paths for /etc/ssh/ssh_known_hosts */
 name|char
 modifier|*
-name|user_hostfile
+name|system_hostfiles
+index|[
+name|SSH_MAX_HOSTS_FILES
+index|]
 decl_stmt|;
-comment|/* Path for $HOME/.ssh/known_hosts. */
-name|char
-modifier|*
-name|system_hostfile2
+name|u_int
+name|num_user_hostfiles
 decl_stmt|;
+comment|/* Path for $HOME/.ssh/known_hosts */
 name|char
 modifier|*
-name|user_hostfile2
+name|user_hostfiles
+index|[
+name|SSH_MAX_HOSTS_FILES
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -296,20 +332,16 @@ name|int
 name|num_local_forwards
 decl_stmt|;
 name|Forward
+modifier|*
 name|local_forwards
-index|[
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-index|]
 decl_stmt|;
 comment|/* Remote TCP/IP forward requests. */
 name|int
 name|num_remote_forwards
 decl_stmt|;
 name|Forward
+modifier|*
 name|remote_forwards
-index|[
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-index|]
 decl_stmt|;
 name|int
 name|clear_forwardings
@@ -350,6 +382,14 @@ name|int
 name|control_master
 decl_stmt|;
 name|int
+name|control_persist
+decl_stmt|;
+comment|/* ControlPersist flag */
+name|int
+name|control_persist_timeout
+decl_stmt|;
+comment|/* ControlPersist timeout (seconds) */
+name|int
 name|hash_known_hosts
 decl_stmt|;
 name|int
@@ -377,6 +417,14 @@ decl_stmt|;
 name|int
 name|use_roaming
 decl_stmt|;
+name|int
+name|request_tty
+decl_stmt|;
+name|char
+modifier|*
+name|version_addendum
+decl_stmt|;
+comment|/* Appended to SSH banner */
 name|int
 name|hpn_disabled
 decl_stmt|;
@@ -444,6 +492,34 @@ define|#
 directive|define
 name|SSHCTL_MASTER_AUTO_ASK
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_AUTO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_NO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_YES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|REQUEST_TTY_FORCE
+value|3
 end_define
 
 begin_function_decl

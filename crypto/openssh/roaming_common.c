@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_common.c,v 1.8 2010/01/12 00:59:29 djm Exp $ */
+comment|/* $OpenBSD: roaming_common.c,v 1.9 2011/12/07 05:44:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -291,6 +291,28 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+operator|||
+name|size
+operator|>
+name|MAX_ROAMBUF
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad buffer size %lu"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The buffer size can only be set once and the buffer will live 	 * as long as the session lives. 	 */
 if|if
 condition|(
