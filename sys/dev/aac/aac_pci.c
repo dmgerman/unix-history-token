@@ -2347,6 +2347,10 @@ name|rid
 operator|=
 literal|0
 expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|aac_enable_msi
