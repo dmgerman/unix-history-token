@@ -188,6 +188,9 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
