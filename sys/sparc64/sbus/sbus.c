@@ -516,14 +516,14 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|driver_filter_t
+name|driver_intr_t
 name|sbus_overtemp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_filter_t
+name|driver_intr_t
 name|sbus_pwrfail
 decl_stmt|;
 end_decl_stmt
@@ -2093,9 +2093,9 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_BRIDGE
 argument_list|,
-name|sbus_overtemp
-argument_list|,
 name|NULL
+argument_list|,
+name|sbus_overtemp
 argument_list|,
 name|sc
 argument_list|,
@@ -2192,9 +2192,9 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_BRIDGE
 argument_list|,
-name|sbus_pwrfail
-argument_list|,
 name|NULL
+argument_list|,
+name|sbus_pwrfail
 argument_list|,
 name|sc
 argument_list|,
@@ -4780,7 +4780,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sbus_overtemp
 parameter_list|(
 name|void
@@ -4800,11 +4800,7 @@ name|shutdown
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
+return|return;
 name|shutdown
 operator|++
 expr_stmt|;
@@ -4818,11 +4814,6 @@ argument_list|(
 name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
@@ -4832,7 +4823,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sbus_pwrfail
 parameter_list|(
 name|void
@@ -4852,11 +4843,7 @@ name|shutdown
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
+return|return;
 name|shutdown
 operator|++
 expr_stmt|;
@@ -4867,14 +4854,9 @@ argument_list|)
 expr_stmt|;
 name|shutdown_nice
 argument_list|(
-name|FILTER_HANDLED
+name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
