@@ -390,11 +390,7 @@ argument_list|,
 name|aac_cam_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -429,9 +425,9 @@ name|aac_pass_driver
 argument_list|,
 name|aac_pass_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

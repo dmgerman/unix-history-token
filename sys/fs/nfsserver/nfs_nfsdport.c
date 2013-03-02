@@ -13856,6 +13856,7 @@ comment|/*  * glue for fp.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fp_getfvp
 parameter_list|(
@@ -13906,6 +13907,10 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
+operator|<
+literal|0
+operator|||
+name|fd
 operator|>=
 name|fdp
 operator|->
@@ -13920,6 +13925,8 @@ name|fd_ofiles
 index|[
 name|fd
 index|]
+operator|.
+name|fde_file
 operator|)
 operator|==
 name|NULL
@@ -15081,7 +15088,7 @@ name|sockarg
 operator|.
 name|sock
 argument_list|,
-name|CAP_SOCK_ALL
+name|CAP_SOCK_SERVER
 argument_list|,
 operator|&
 name|fp

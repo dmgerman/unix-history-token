@@ -1235,7 +1235,7 @@ name|len
 operator|=
 name|raddr
 operator|->
-name|maxlen
+name|len
 expr_stmt|;
 name|ct
 operator|->

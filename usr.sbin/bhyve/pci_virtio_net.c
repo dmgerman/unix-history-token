@@ -1071,16 +1071,15 @@ expr_stmt|;
 comment|/* 		 * Get a pointer to the rx header, and use the 		 * data immediately following it for the packet buffer. 		 */
 name|vrx
 operator|=
-operator|(
-expr|struct
-name|virtio_net_rxhdr
-operator|*
-operator|)
 name|paddr_guest2host
 argument_list|(
 name|vd
 operator|->
 name|vd_addr
+argument_list|,
+name|vd
+operator|->
+name|vd_len
 argument_list|)
 expr_stmt|;
 name|buf
@@ -1526,6 +1525,10 @@ argument_list|(
 name|vd
 operator|->
 name|vd_addr
+argument_list|,
+name|vd
+operator|->
+name|vd_len
 argument_list|)
 expr_stmt|;
 name|iov
@@ -1862,6 +1865,13 @@ argument_list|(
 name|pfn
 operator|<<
 name|VRING_PFN
+argument_list|,
+name|vring_size
+argument_list|(
+name|hq
+operator|->
+name|hq_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hq
@@ -2005,21 +2015,6 @@ name|char
 modifier|*
 name|env_msi
 decl_stmt|;
-comment|/* 	 * Access to guest memory is required. Fail if 	 * memory not mapped 	 */
-if|if
-condition|(
-name|paddr_guest2host
-argument_list|(
-literal|0
-argument_list|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 name|sc
 operator|=
 name|malloc

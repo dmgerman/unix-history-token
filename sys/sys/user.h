@@ -981,15 +981,11 @@ name|KF_TYPE_PTS
 value|10
 end_define
 
-begin_comment
-comment|/* no KF_TYPE_CAPABILITY (11), since capabilities wrap other file objects */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|KF_TYPE_PROCDESC
-value|12
+value|11
 end_define
 
 begin_define
@@ -1238,13 +1234,6 @@ define|#
 directive|define
 name|KF_FLAG_EXEC
 value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|KF_FLAG_CAPABILITY
-value|0x00008000
 end_define
 
 begin_comment

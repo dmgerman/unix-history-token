@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -921,6 +921,12 @@ name|zfs_kernel_version
 init|=
 literal|0
 decl_stmt|;
+specifier|static
+name|int
+name|zfs_ioctl_version
+init|=
+literal|0
+decl_stmt|;
 comment|/*  * This is FreeBSD version of ioctl, because Solaris' ioctl() updates  * zc_nvlist_dst_size even if an error is returned, on FreeBSD if an  * error is returned zc_nvlist_dst_size won't be updated.  */
 specifier|static
 name|__inline
@@ -943,6 +949,8 @@ name|size_t
 name|oldsize
 decl_stmt|,
 name|zfs_kernel_version_size
+decl_stmt|,
+name|zfs_ioctl_version_size
 decl_stmt|;
 name|int
 name|version
@@ -953,6 +961,48 @@ name|cflag
 init|=
 name|ZFS_CMD_COMPAT_NONE
 decl_stmt|;
+name|zfs_ioctl_version_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|zfs_ioctl_version
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zfs_ioctl_version
+operator|==
+literal|0
+condition|)
+block|{
+name|sysctlbyname
+argument_list|(
+literal|"vfs.zfs.version.ioctl"
+argument_list|,
+operator|&
+name|zfs_ioctl_version
+argument_list|,
+operator|&
+name|zfs_ioctl_version_size
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If vfs.zfs.version.ioctl is not defined, assume we have v28 	 * compatible binaries and use vfs.zfs.version.spa to test for v15 	 */
+if|if
+condition|(
+name|zfs_ioctl_version
+operator|<
+name|ZFS_IOCVER_DEADMAN
+condition|)
+block|{
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_V28
+expr_stmt|;
 name|zfs_kernel_version_size
 operator|=
 sizeof|sizeof
@@ -1001,6 +1051,7 @@ name|cflag
 operator|=
 name|ZFS_CMD_COMPAT_V15
 expr_stmt|;
+block|}
 name|oldsize
 operator|=
 name|zc

@@ -552,7 +552,7 @@ name|TWS_TRACE_DEBUG
 argument_list|(
 name|sc
 argument_list|,
-literal|"host outbound clenup"
+literal|"host outbound cleanup"
 argument_list|,
 name|reg
 argument_list|,

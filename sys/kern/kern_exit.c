@@ -964,7 +964,7 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Close open files and release open-file table. 	 * This may block! 	 */
-name|fdfree
+name|fdescfree
 argument_list|(
 name|td
 argument_list|)

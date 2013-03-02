@@ -1108,17 +1108,14 @@ expr_stmt|;
 comment|/* If this thread is not allowed to sleep, die a horrible death. */
 name|KASSERT
 argument_list|(
-operator|!
-operator|(
 name|td
 operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
-operator|)
+name|td_no_sleeping
+operator|==
+literal|0
 argument_list|,
 operator|(
-literal|"%s: td %p to sleep on wchan %p with TDP_NOSLEEPING on"
+literal|"%s: td %p to sleep on wchan %p with sleeping prohibited"
 operator|,
 name|__func__
 operator|,
