@@ -137,7 +137,7 @@ parameter_list|,
 name|exp
 parameter_list|)
 define|\
-value|do {									\ 	(timer)->expires = exp;						\ 	callout_reset(&(timer)->timer_callout, (exp) - jiffies,		\ 	    _timer_fn, (timer));					\ } while (0)
+value|do {									\ 	(timer)->expires = (exp);					\ 	callout_reset(&(timer)->timer_callout, (exp) - jiffies,		\ 	    _timer_fn, (timer));					\ } while (0)
 end_define
 
 begin_define
