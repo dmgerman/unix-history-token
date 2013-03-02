@@ -260,6 +260,8 @@ parameter_list|,
 name|bus_addr_t
 parameter_list|,
 name|driver_filter_t
+parameter_list|,
+name|driver_intr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -382,14 +384,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_filter_t
+name|driver_intr_t
 name|psycho_powerdown
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_filter_t
+name|driver_intr_t
 name|psycho_overtemp
 decl_stmt|;
 end_decl_stmt
@@ -3008,6 +3010,8 @@ argument_list|,
 name|PSR_UE_INT_MAP
 argument_list|,
 name|psycho_ue
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|psycho_set_intr
@@ -3019,6 +3023,8 @@ argument_list|,
 name|PSR_CE_INT_MAP
 argument_list|,
 name|psycho_ce
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3042,6 +3048,8 @@ argument_list|,
 name|PSR_POWER_INT_MAP
 argument_list|,
 name|psycho_powerdebug
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3053,6 +3061,8 @@ argument_list|,
 literal|3
 argument_list|,
 name|PSR_POWER_INT_MAP
+argument_list|,
+name|NULL
 argument_list|,
 name|psycho_powerdown
 argument_list|)
@@ -3078,6 +3088,8 @@ literal|4
 argument_list|,
 name|PSR_SPARE_INT_MAP
 argument_list|,
+name|NULL
+argument_list|,
 name|psycho_overtemp
 argument_list|)
 expr_stmt|;
@@ -3094,6 +3106,8 @@ argument_list|,
 name|PSR_PWRMGT_INT_MAP
 argument_list|,
 name|psycho_wakeup
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3119,6 +3133,8 @@ else|:
 name|PSR_PCIBERR_INT_MAP
 argument_list|,
 name|psycho_pci_bus
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the latency timer register as this isn't always done by the 	 * firmware. 	 */
@@ -3343,7 +3359,10 @@ name|bus_addr_t
 name|intrmap
 parameter_list|,
 name|driver_filter_t
-name|handler
+name|filt
+parameter_list|,
+name|driver_intr_t
+name|intr
 parameter_list|)
 block|{
 name|u_long
@@ -3465,9 +3484,9 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_BRIDGE
 argument_list|,
-name|handler
+name|filt
 argument_list|,
-name|NULL
+name|intr
 argument_list|,
 name|sc
 argument_list|,
@@ -4099,7 +4118,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|psycho_powerdown
 parameter_list|(
 name|void
@@ -4119,11 +4138,7 @@ name|shutdown
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
+return|return;
 name|shutdown
 operator|++
 expr_stmt|;
@@ -4137,17 +4152,12 @@ argument_list|(
 name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|psycho_overtemp
 parameter_list|(
 name|void
@@ -4167,11 +4177,7 @@ name|shutdown
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
+return|return;
 name|shutdown
 operator|++
 expr_stmt|;
@@ -4185,11 +4191,6 @@ argument_list|(
 name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
