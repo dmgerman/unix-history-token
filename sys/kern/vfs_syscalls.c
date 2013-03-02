@@ -17479,7 +17479,14 @@ block|}
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
-comment|/* 		 * If the target already exists we require CAP_UNLINKAT 		 * from 'newfd'. 		 */
+if|if
+condition|(
+name|newfd
+operator|!=
+name|AT_FDCWD
+condition|)
+block|{
+comment|/* 			 * If the target already exists we require CAP_UNLINKAT 			 * from 'newfd'. 			 */
 name|error
 operator|=
 name|cap_check
@@ -17502,6 +17509,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+block|}
 endif|#
 directive|endif
 block|}
