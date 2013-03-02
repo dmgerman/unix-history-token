@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/tcp_lro.h>
 end_include
 
@@ -254,6 +260,63 @@ define|#
 directive|define
 name|SBUF_DRAIN
 value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|900000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IFCAP_RXCSUM_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TXCSUM_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_DATA_VALID_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWCSUM_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_UDP_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP_IPV6
+value|0
 end_define
 
 begin_endif
@@ -539,6 +602,11 @@ block|,
 comment|/* cluster, jumbo9k, jumbo16k */
 endif|#
 directive|endif
+name|OFLD_BUF_SIZE
+init|=
+name|MJUM16BYTES
+block|,
+comment|/* size of fl buffer for TOE rxq */
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
@@ -559,6 +627,36 @@ literal|8
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T4_PKT_TIMESTAMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RX_COPY_THRESHOLD
+value|(MINCLSIZE - 8)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RX_COPY_THRESHOLD
+value|MINCLSIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_enum
 enum|enum
@@ -588,6 +686,42 @@ operator|<<
 literal|2
 operator|)
 block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+comment|/* flags understood by begin_synchronized_op */
+name|HOLD_LOCK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|SLEEP_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|INTR_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* flags understood by end_synchronized_op */
+name|LOCK_HELD
+init|=
+name|HOLD_LOCK
+block|, }
 enum|;
 end_enum
 
@@ -636,6 +770,14 @@ operator|<<
 literal|4
 operator|)
 block|,
+name|TOM_INIT_DONE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,
 name|CXGBE_BUSY
 init|=
 operator|(
@@ -679,7 +821,7 @@ name|IS_DOOMED
 parameter_list|(
 name|pi
 parameter_list|)
-value|(pi->flags& DOOMED)
+value|((pi)->flags& DOOMED)
 end_define
 
 begin_define
@@ -689,7 +831,7 @@ name|SET_DOOMED
 parameter_list|(
 name|pi
 parameter_list|)
-value|do {pi->flags |= DOOMED;} while (0)
+value|do {(pi)->flags |= DOOMED;} while (0)
 end_define
 
 begin_define
@@ -699,7 +841,7 @@ name|IS_BUSY
 parameter_list|(
 name|sc
 parameter_list|)
-value|(sc->flags& CXGBE_BUSY)
+value|((sc)->flags& CXGBE_BUSY)
 end_define
 
 begin_define
@@ -709,7 +851,7 @@ name|SET_BUSY
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {sc->flags |= CXGBE_BUSY;} while (0)
+value|do {(sc)->flags |= CXGBE_BUSY;} while (0)
 end_define
 
 begin_define
@@ -719,7 +861,7 @@ name|CLR_BUSY
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {sc->flags&= ~CXGBE_BUSY;} while (0)
+value|do {(sc)->flags&= ~CXGBE_BUSY;} while (0)
 end_define
 
 begin_struct
@@ -807,9 +949,9 @@ name|int
 name|first_rxq
 decl_stmt|;
 comment|/* index of first rx queue */
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 name|int
 name|nofldtxq
 decl_stmt|;
@@ -1052,12 +1194,6 @@ name|bus_addr_t
 name|ba
 decl_stmt|;
 comment|/* bus address of descriptor ring */
-name|char
-name|lockname
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -1141,9 +1277,9 @@ name|EQ_ETH
 init|=
 literal|2
 block|,
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 name|EQ_OFLD
 init|=
 literal|3
@@ -1491,7 +1627,7 @@ comment|/* # of times hardware assisted with checksum */
 name|uint64_t
 name|tso_wrs
 decl_stmt|;
-comment|/* # of IPv4 TSO work requests */
+comment|/* # of TSO work requests */
 name|uint64_t
 name|vlan_insertion
 decl_stmt|;
@@ -1557,9 +1693,17 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* the interface this rxq belongs to */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|lro_ctrl
 name|lro
@@ -1585,11 +1729,40 @@ argument_list|)
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
-end_ifndef
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|sge_rxq
+modifier|*
+name|iq_to_rxq
+parameter_list|(
+name|struct
+name|sge_iq
+modifier|*
+name|iq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|member2struct
+argument_list|(
+name|sge_rxq
+argument_list|,
+name|iq
+argument_list|,
+name|iq
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+end_ifdef
 
 begin_comment
 comment|/* ofld_rxq: SGE ingress queue + SGE free list + miscellaneous items */
@@ -1617,10 +1790,69 @@ argument_list|)
 struct|;
 end_struct
 
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|sge_ofld_rxq
+modifier|*
+name|iq_to_ofld_rxq
+parameter_list|(
+name|struct
+name|sge_iq
+modifier|*
+name|iq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|member2struct
+argument_list|(
+name|sge_ofld_rxq
+argument_list|,
+name|iq
+argument_list|,
+name|iq
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct
+struct|struct
+name|wrqe
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|wrqe
+argument_list|)
+name|link
+expr_stmt|;
+name|struct
+name|sge_wrq
+modifier|*
+name|wrq
+decl_stmt|;
+name|int
+name|wr_len
+decl_stmt|;
+name|uint64_t
+name|wr
+index|[]
+name|__aligned
+argument_list|(
+literal|16
+argument_list|)
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * wrq: SGE egress queue that is given prebuilt work requests.  Both the control  * and offload tx queues are of this type.  */
@@ -1640,18 +1872,14 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|head
-decl_stmt|;
-comment|/* held up due to lack of descriptors */
-name|struct
-name|mbuf
-modifier|*
-name|tail
-decl_stmt|;
-comment|/* valid only if head is valid */
+comment|/* List of WRs held up due to lack of tx descriptors */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|wrqe
+argument_list|)
+name|wr_list
+expr_stmt|;
 comment|/* stats for common events first */
 name|uint64_t
 name|tx_wrs
@@ -1697,9 +1925,9 @@ name|int
 name|ntxq
 decl_stmt|;
 comment|/* total # of Ethernet tx tx queues */
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 name|int
 name|nofldrxq
 decl_stmt|;
@@ -1746,9 +1974,9 @@ modifier|*
 name|rxq
 decl_stmt|;
 comment|/* NIC rx queues */
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 name|struct
 name|sge_wrq
 modifier|*
@@ -1812,6 +2040,45 @@ modifier|*
 parameter_list|,
 name|struct
 name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|an_handler_t
+function_decl|)
+parameter_list|(
+name|struct
+name|sge_iq
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|rsp_ctrl
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|fw_msg_handler_t
+function_decl|)
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+specifier|const
+name|__be64
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1929,13 +2196,14 @@ decl_stmt|;
 name|uint32_t
 name|filter_mode
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
-name|struct
-name|uld_softc
-name|tom
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+name|void
+modifier|*
+name|tom_softc
 decl_stmt|;
+comment|/* (struct tom_data *) */
 name|struct
 name|tom_tunables
 name|tt
@@ -1955,9 +2223,9 @@ decl_stmt|;
 name|int
 name|open_device_map
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|TCP_OFFLOAD_DISABLE
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 name|int
 name|offload_map
 decl_stmt|;
@@ -1972,8 +2240,13 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|char
+name|cfg_file
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int
 name|cfcsum
 decl_stmt|;
 name|struct
@@ -2034,16 +2307,42 @@ name|struct
 name|callout
 name|sfl_callout
 decl_stmt|;
-name|cpl_handler_t
-name|cpl_handler
-index|[
-literal|256
-index|]
+name|an_handler_t
+name|an_handler
 name|__aligned
 parameter_list|(
 name|CACHE_LINE_SIZE
 parameter_list|)
 function_decl|;
+name|fw_msg_handler_t
+name|fw_msg_handler
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* NUM_FW6_TYPES */
+name|cpl_handler_t
+name|cpl_handler
+index|[
+literal|0xef
+index|]
+decl_stmt|;
+comment|/* NUM_CPL_CMDS */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+specifier|const
+name|char
+modifier|*
+name|last_op
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|last_op_thr
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2086,6 +2385,21 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|mtx_assert(&(sc)->sc_lock, MA_NOTOWNED)
+end_define
+
+begin_comment
+comment|/* XXX: not bulletproof, but much better than nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSERT_SYNCHRONIZED_OP
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|KASSERT(IS_BUSY(sc)&& \ 	(mtx_owned(&(sc)->sc_lock) || sc->last_op_thr == curthread), \ 	("%s: operation not synchronized.", __func__))
 end_define
 
 begin_define
@@ -2327,10 +2641,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|txq
+name|q
 parameter_list|)
 define|\
-value|txq =&pi->adapter->sge.txq[pi->first_txq]; \ 	for (iter = 0; iter< pi->ntxq; ++iter, ++txq)
+value|for (q =&pi->adapter->sge.txq[pi->first_txq], iter = 0; \ 	    iter< pi->ntxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2342,10 +2656,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|rxq
+name|q
 parameter_list|)
 define|\
-value|rxq =&pi->adapter->sge.rxq[pi->first_rxq]; \ 	for (iter = 0; iter< pi->nrxq; ++iter, ++rxq)
+value|for (q =&pi->adapter->sge.rxq[pi->first_rxq], iter = 0; \ 	    iter< pi->nrxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2357,10 +2671,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|ofld_txq
+name|q
 parameter_list|)
 define|\
-value|ofld_txq =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq]; \ 	for (iter = 0; iter< pi->nofldtxq; ++iter, ++ofld_txq)
+value|for (q =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq], iter = 0; \ 	    iter< pi->nofldtxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -2372,10 +2686,10 @@ name|pi
 parameter_list|,
 name|iter
 parameter_list|,
-name|ofld_rxq
+name|q
 parameter_list|)
 define|\
-value|ofld_rxq =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq]; \ 	for (iter = 0; iter< pi->nofldrxq; ++iter, ++ofld_rxq)
+value|for (q =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq], iter = 0; \ 	    iter< pi->nofldrxq; ++iter, ++q)
 end_define
 
 begin_comment
@@ -2986,6 +3300,87 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|t4_register_an_handler
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|an_handler_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_register_fw_msg_handler
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|fw_msg_handler_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_filter_rpl
+parameter_list|(
+name|struct
+name|sge_iq
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|rss_header
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|begin_synchronized_op
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|port_info
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|end_synchronized_op
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* t4_sge.c */
 end_comment
@@ -3147,22 +3542,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|t4_mgmt_tx
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+name|void
 name|t4_wrq_tx_locked
 parameter_list|(
 name|struct
@@ -3174,7 +3554,7 @@ name|sge_wrq
 modifier|*
 parameter_list|,
 name|struct
-name|mbuf
+name|wrqe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3224,7 +3604,136 @@ end_function_decl
 begin_function
 specifier|static
 specifier|inline
+name|struct
+name|wrqe
+modifier|*
+name|alloc_wrqe
+parameter_list|(
 name|int
+name|wr_len
+parameter_list|,
+name|struct
+name|sge_wrq
+modifier|*
+name|wrq
+parameter_list|)
+block|{
+name|int
+name|len
+init|=
+name|offsetof
+argument_list|(
+expr|struct
+name|wrqe
+argument_list|,
+name|wr
+argument_list|)
+operator|+
+name|wr_len
+decl_stmt|;
+name|struct
+name|wrqe
+modifier|*
+name|wr
+decl_stmt|;
+name|wr
+operator|=
+name|malloc
+argument_list|(
+name|len
+argument_list|,
+name|M_CXGBE
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|wr
+operator|==
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|wr
+operator|->
+name|wr_len
+operator|=
+name|wr_len
+expr_stmt|;
+name|wr
+operator|->
+name|wrq
+operator|=
+name|wrq
+expr_stmt|;
+return|return
+operator|(
+name|wr
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|wrtod
+parameter_list|(
+name|struct
+name|wrqe
+modifier|*
+name|wr
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|&
+name|wr
+operator|->
+name|wr
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|free_wrqe
+parameter_list|(
+name|struct
+name|wrqe
+modifier|*
+name|wr
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|wr
+argument_list|,
+name|M_CXGBE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
 name|t4_wrq_tx
 parameter_list|(
 name|struct
@@ -3233,33 +3742,32 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
+name|wrqe
+modifier|*
+name|wr
+parameter_list|)
+block|{
+name|struct
 name|sge_wrq
 modifier|*
 name|wrq
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|int
-name|rc
+init|=
+name|wr
+operator|->
+name|wrq
 decl_stmt|;
 name|TXQ_LOCK
 argument_list|(
 name|wrq
 argument_list|)
 expr_stmt|;
-name|rc
-operator|=
 name|t4_wrq_tx_locked
 argument_list|(
 name|sc
 argument_list|,
 name|wrq
 argument_list|,
-name|m
+name|wr
 argument_list|)
 expr_stmt|;
 name|TXQ_UNLOCK
@@ -3267,11 +3775,6 @@ argument_list|(
 name|wrq
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|rc
-operator|)
-return|;
 block|}
 end_function
 

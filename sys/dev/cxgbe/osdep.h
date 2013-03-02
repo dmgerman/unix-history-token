@@ -359,7 +359,7 @@ name|ARRAY_SIZE
 parameter_list|(
 name|x
 parameter_list|)
-value|(sizeof(x) / sizeof((x)[0]))
+value|nitems(x)
 end_define
 
 begin_define
@@ -580,6 +580,13 @@ define|#
 directive|define
 name|AUTONEG_ENABLE
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID
+value|PCIR_DEVICE
 end_define
 
 begin_define
