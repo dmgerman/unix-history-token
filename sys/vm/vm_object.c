@@ -843,12 +843,6 @@ literal|0
 expr_stmt|;
 name|object
 operator|->
-name|pg_color
-operator|=
-literal|0
-expr_stmt|;
-name|object
-operator|->
 name|handle
 operator|=
 name|NULL
