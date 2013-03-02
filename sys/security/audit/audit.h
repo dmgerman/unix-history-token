@@ -434,6 +434,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
@@ -1135,9 +1138,11 @@ name|AUDIT_ARG_SOCKADDR
 parameter_list|(
 name|td
 parameter_list|,
+name|dirfd
+parameter_list|,
 name|sa
 parameter_list|)
-value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_sockaddr((td), (sa));				\ } while (0)
+value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_sockaddr((td), (dirfd), (sa));		\ } while (0)
 end_define
 
 begin_define
@@ -1550,6 +1555,8 @@ directive|define
 name|AUDIT_ARG_SOCKADDR
 parameter_list|(
 name|td
+parameter_list|,
+name|dirfd
 parameter_list|,
 name|sa
 parameter_list|)
