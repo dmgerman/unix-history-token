@@ -195,6 +195,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bce_type
 name|bce_devs
@@ -501,6 +502,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|flash_spec
 name|flash_table
@@ -937,6 +939,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|flash_spec
 name|flash_5709
@@ -2960,9 +2963,9 @@ name|bce_driver
 argument_list|,
 name|bce_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2978,9 +2981,9 @@ name|miibus_driver
 argument_list|,
 name|miibus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4004,6 +4007,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|bce_type
 modifier|*
@@ -4044,17 +4048,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bce_softc
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5575,13 +5568,15 @@ name|u32
 name|val
 decl_stmt|;
 name|int
-name|error
+name|count
 decl_stmt|,
-name|rid
+name|error
 decl_stmt|,
 name|rc
 init|=
 literal|0
+decl_stmt|,
+name|rid
 decl_stmt|;
 name|sc
 operator|=
@@ -5733,11 +5728,15 @@ name|rid
 operator|=
 literal|1
 expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* Try allocating MSI-X interrupts. */
-block|if ((sc->bce_cap_flags& BCE_MSIX_CAPABLE_FLAG)&& 		(bce_msi_enable>= 2)&& 		((sc->bce_res_irq = bus_alloc_resource_any(dev, SYS_RES_MEMORY,&rid, RF_ACTIVE)) != NULL)) {  		msi_needed = sc->bce_msi_count = 1;  		if (((error = pci_alloc_msix(dev,&sc->bce_msi_count)) != 0) || 			(sc->bce_msi_count != msi_needed)) { 			BCE_PRINTF("%s(%d): MSI-X allocation failed! Requested = %d," 				"Received = %d, error = %d\n", __FILE__, __LINE__, 				msi_needed, sc->bce_msi_count, error); 			sc->bce_msi_count = 0; 			pci_release_msi(dev); 			bus_release_resource(dev, SYS_RES_MEMORY, rid, 				sc->bce_res_irq); 			sc->bce_res_irq = NULL; 		} else { 			DBPRINT(sc, BCE_INFO_LOAD, "%s(): Using MSI-X interrupt.\n", 				__FUNCTION__); 			sc->bce_flags |= BCE_USING_MSIX_FLAG; 			sc->bce_intr = bce_intr; 		} 	}
+block|if ((sc->bce_cap_flags& BCE_MSIX_CAPABLE_FLAG)&& 		(bce_msi_enable>= 2)&& 		((sc->bce_res_irq = bus_alloc_resource_any(dev, SYS_RES_MEMORY,&rid, RF_ACTIVE)) != NULL)) {  		msi_needed = count = 1;  		if (((error = pci_alloc_msix(dev,&count)) != 0) || 			(count != msi_needed)) { 			BCE_PRINTF("%s(%d): MSI-X allocation failed! Requested = %d," 				"Received = %d, error = %d\n", __FILE__, __LINE__, 				msi_needed, count, error); 			count = 0; 			pci_release_msi(dev); 			bus_release_resource(dev, SYS_RES_MEMORY, rid, 				sc->bce_res_irq); 			sc->bce_res_irq = NULL; 		} else { 			DBPRINT(sc, BCE_INFO_LOAD, "%s(): Using MSI-X interrupt.\n", 				__FUNCTION__); 			sc->bce_flags |= BCE_USING_MSIX_FLAG; 		} 	}
 endif|#
 directive|endif
 comment|/* Try allocating a MSI interrupt. */
@@ -5758,17 +5757,13 @@ literal|1
 operator|)
 operator|&&
 operator|(
-name|sc
-operator|->
-name|bce_msi_count
+name|count
 operator|==
 literal|0
 operator|)
 condition|)
 block|{
-name|sc
-operator|->
-name|bce_msi_count
+name|count
 operator|=
 literal|1
 expr_stmt|;
@@ -5782,9 +5777,7 @@ argument_list|(
 name|dev
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|bce_msi_count
+name|count
 argument_list|)
 operator|)
 operator|!=
@@ -5803,9 +5796,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|bce_msi_count
+name|count
 operator|=
 literal|0
 expr_stmt|;
@@ -5850,26 +5841,16 @@ name|bce_flags
 operator||=
 name|BCE_ONE_SHOT_MSI_FLAG
 expr_stmt|;
-name|sc
-operator|->
-name|bce_irq_rid
+name|rid
 operator|=
 literal|1
-expr_stmt|;
-name|sc
-operator|->
-name|bce_intr
-operator|=
-name|bce_intr
 expr_stmt|;
 block|}
 block|}
 comment|/* Try allocating a legacy interrupt. */
 if|if
 condition|(
-name|sc
-operator|->
-name|bce_msi_count
+name|count
 operator|==
 literal|0
 condition|)
@@ -5889,12 +5870,6 @@ name|rid
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
-name|bce_intr
-operator|=
-name|bce_intr
-expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -5909,16 +5884,18 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
+operator||
+operator|(
+name|count
+operator|!=
+literal|0
+condition|?
+literal|0
+else|:
+name|RF_SHAREABLE
+operator|)
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|bce_irq_rid
-operator|=
-name|rid
 expr_stmt|;
 comment|/* Report any IRQ allocation errors. */
 if|if
@@ -7909,15 +7886,9 @@ block|{
 name|u32
 name|val
 init|=
-name|bus_space_read_4
+name|REG_RD
 argument_list|(
 name|sc
-operator|->
-name|bce_btag
-argument_list|,
-name|sc
-operator|->
-name|bce_bhandle
 argument_list|,
 name|offset
 argument_list|)
@@ -7999,15 +7970,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|bus_space_write_2
+name|REG_WR16
 argument_list|(
 name|sc
-operator|->
-name|bce_btag
-argument_list|,
-name|sc
-operator|->
-name|bce_bhandle
 argument_list|,
 name|offset
 argument_list|,
@@ -8073,15 +8038,9 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|bus_space_write_4
+name|REG_WR
 argument_list|(
 name|sc
-operator|->
-name|bce_btag
-argument_list|,
-name|sc
-operator|->
-name|bce_bhandle
 argument_list|,
 name|offset
 argument_list|,
@@ -9039,34 +8998,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we are accessing the correct PHY address. */
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|bce_phy_addr
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INSANE_PHY
-argument_list|,
-literal|"Invalid PHY address %d "
-literal|"for PHY read!\n"
-argument_list|,
-name|phy
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/*      * The 5709S PHY is an IEEE Clause 45 PHY      * with special mappings to work with IEEE      * Clause 22 register accesses.      */
 if|if
 condition|(
@@ -9394,34 +9325,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we are accessing the correct PHY address. */
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|bce_phy_addr
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INSANE_PHY
-argument_list|,
-literal|"Invalid PHY address %d "
-literal|"for PHY write!\n"
-argument_list|,
-name|phy
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|DB_PRINT_PHY_REG
 argument_list|(
 name|reg
@@ -11674,6 +11577,7 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|struct
 name|flash_spec
 modifier|*
@@ -17775,9 +17679,12 @@ name|dev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|sc
 operator|->
-name|bce_irq_rid
+name|bce_res_irq
+argument_list|)
 argument_list|,
 name|sc
 operator|->

@@ -2184,6 +2184,8 @@ name|fd_ofiles
 index|[
 name|fcnt
 index|]
+operator|.
+name|fde_file
 operator|==
 name|NULL
 condition|)

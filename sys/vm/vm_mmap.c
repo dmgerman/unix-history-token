@@ -1109,7 +1109,7 @@ name|PROT_READ
 condition|)
 name|rights
 operator||=
-name|CAP_READ
+name|CAP_MMAP_R
 expr_stmt|;
 if|if
 condition|(
@@ -1130,7 +1130,7 @@ name|PROT_WRITE
 condition|)
 name|rights
 operator||=
-name|CAP_WRITE
+name|CAP_MMAP_W
 expr_stmt|;
 block|}
 if|if
@@ -1141,7 +1141,7 @@ name|PROT_EXEC
 condition|)
 name|rights
 operator||=
-name|CAP_MAPEXEC
+name|CAP_MMAP_X
 expr_stmt|;
 if|if
 condition|(

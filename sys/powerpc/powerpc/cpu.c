@@ -146,7 +146,7 @@ modifier|*
 name|cpu_idle_hook
 function_decl|)
 parameter_list|(
-name|void
+name|sbintime_t
 parameter_list|)
 init|=
 name|NULL
@@ -158,7 +158,7 @@ specifier|static
 name|void
 name|cpu_idle_60x
 parameter_list|(
-name|void
+name|sbintime_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -168,7 +168,7 @@ specifier|static
 name|void
 name|cpu_idle_booke
 parameter_list|(
-name|void
+name|sbintime_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2201,6 +2201,12 @@ name|int
 name|busy
 parameter_list|)
 block|{
+name|sbintime_t
+name|sbt
+init|=
+operator|-
+literal|1
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -2272,12 +2278,16 @@ block|{
 name|critical_enter
 argument_list|()
 expr_stmt|;
+name|sbt
+operator|=
 name|cpu_idleclock
 argument_list|()
 expr_stmt|;
 block|}
 name|cpu_idle_hook
-argument_list|()
+argument_list|(
+name|sbt
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2328,7 +2338,8 @@ specifier|static
 name|void
 name|cpu_idle_60x
 parameter_list|(
-name|void
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|register_t
@@ -2426,7 +2437,8 @@ unit|}  static
 name|void
 name|cpu_idle_booke
 parameter_list|(
-name|void
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|register_t

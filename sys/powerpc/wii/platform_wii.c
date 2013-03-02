@@ -232,7 +232,8 @@ specifier|static
 name|void
 name|wii_cpu_idle
 parameter_list|(
-name|void
+name|sbintime_t
+name|sbt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -557,7 +558,8 @@ specifier|static
 name|void
 name|wii_cpu_idle
 parameter_list|(
-name|void
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{ }
 end_function

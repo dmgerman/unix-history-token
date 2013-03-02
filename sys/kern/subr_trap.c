@@ -461,13 +461,9 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
 name|td
 operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
-operator|)
+name|td_no_sleeping
 operator|==
 literal|0
 argument_list|,

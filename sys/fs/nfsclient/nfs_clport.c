@@ -6366,7 +6366,7 @@ name|nfscbdarg
 operator|.
 name|sock
 argument_list|,
-name|CAP_SOCK_ALL
+name|CAP_SOCK_CLIENT
 argument_list|,
 operator|&
 name|fp

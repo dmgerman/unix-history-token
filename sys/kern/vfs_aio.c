@@ -7453,9 +7453,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_WRITE
-operator||
-name|CAP_SEEK
+name|CAP_PWRITE
 argument_list|,
 operator|&
 name|fp
@@ -7473,9 +7471,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_READ
-operator||
-name|CAP_SEEK
+name|CAP_PREAD
 argument_list|,
 operator|&
 name|fp
@@ -7511,7 +7507,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|CAP_NONE
 argument_list|,
 operator|&
 name|fp

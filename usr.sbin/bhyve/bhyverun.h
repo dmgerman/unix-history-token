@@ -114,6 +114,10 @@ modifier|*
 name|paddr_guest2host
 parameter_list|(
 name|uintptr_t
+name|addr
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
