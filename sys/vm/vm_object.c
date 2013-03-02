@@ -494,7 +494,24 @@ name|memq
 argument_list|)
 argument_list|,
 operator|(
-literal|"object %p has resident pages"
+literal|"object %p has resident pages in its memq"
+operator|,
+name|object
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|rtree
+operator|.
+name|rt_root
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"object %p has resident pages in its trie"
 operator|,
 name|object
 operator|)
@@ -663,6 +680,14 @@ expr_stmt|;
 comment|/* These are true for any object that has been freed */
 name|object
 operator|->
+name|rtree
+operator|.
+name|rt_root
+operator|=
+literal|0
+expr_stmt|;
+name|object
+operator|->
 name|paging_in_progress
 operator|=
 literal|0
@@ -717,14 +742,6 @@ name|object
 operator|->
 name|shadow_head
 argument_list|)
-expr_stmt|;
-name|object
-operator|->
-name|rtree
-operator|.
-name|rt_root
-operator|=
-literal|0
 expr_stmt|;
 name|object
 operator|->
@@ -2593,14 +2610,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_radix_reclaim_allnodes
-argument_list|(
-operator|&
-name|object
-operator|->
-name|rtree
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If the object contained any pages, then reset it to an empty state. 	 * None of the object's fields, including "resident_page_count", were 	 * modified by the preceding loop. 	 */
 if|if
 condition|(
@@ -2611,6 +2620,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|vm_radix_reclaim_allnodes
+argument_list|(
+operator|&
+name|object
+operator|->
+name|rtree
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
