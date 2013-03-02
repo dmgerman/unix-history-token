@@ -250,7 +250,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artifical packet drop in %s", s);	\ 		return;							\ 	}
+value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artificial packet drop in %s", s);	\ 		return;							\ 	}
 end_define
 
 begin_define
@@ -263,7 +263,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artifical packet drop in %s", s);	\ 		return (n);						\ 	}
+value|if (packetdroppercentage != 0&&				\ 	    random()%100< packetdroppercentage) {			\ 		tftp_log(LOG_DEBUG, "Artificial packet drop in %s", s);	\ 		return (n);						\ 	}
 end_define
 
 begin_function
