@@ -161,6 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
 struct|struct
 name|errmsg
 block|{
@@ -1771,6 +1772,7 @@ comment|/*  * Receive a packet  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|timeoutbuf
 decl_stmt|;
