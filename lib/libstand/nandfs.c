@@ -2182,7 +2182,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|nandfs_free_node
 parameter_list|(
 name|struct
@@ -2306,6 +2306,11 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
