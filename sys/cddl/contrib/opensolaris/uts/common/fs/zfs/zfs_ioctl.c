@@ -16545,6 +16545,8 @@ operator|=
 name|getf
 argument_list|(
 name|fd
+argument_list|,
+name|CAP_PREAD
 argument_list|)
 expr_stmt|;
 if|if
@@ -17627,6 +17629,8 @@ argument_list|(
 name|zc
 operator|->
 name|zc_cookie
+argument_list|,
+name|CAP_WRITE
 argument_list|)
 decl_stmt|;
 if|if
@@ -20089,6 +20093,8 @@ argument_list|(
 name|zc
 operator|->
 name|zc_cookie
+argument_list|,
+name|CAP_WRITE
 argument_list|)
 expr_stmt|;
 if|if

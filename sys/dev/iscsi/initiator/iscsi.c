@@ -1985,7 +1985,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_SOCK_ALL
+name|CAP_SOCK_CLIENT
 argument_list|,
 operator|&
 name|sp
@@ -2011,7 +2011,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_SOCK_ALL
+name|CAP_SOCK_CLIENT
 argument_list|,
 operator|&
 name|sp
