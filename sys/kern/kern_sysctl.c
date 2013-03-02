@@ -4182,7 +4182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a long, signed or unsigned.  arg1 points to it.  */
+comment|/*  * Handle a long, signed or unsigned.  * Two cases:  *     a variable:  point arg1 at it.  *     a constant:  pass it in arg2.  */
 end_comment
 
 begin_function
@@ -4211,14 +4211,8 @@ directive|endif
 comment|/* 	 * Attempt to get a coherent snapshot by making a copy of the data. 	 */
 if|if
 condition|(
-operator|!
 name|arg1
 condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|tmplong
 operator|=
 operator|*
@@ -4227,6 +4221,11 @@ name|long
 operator|*
 operator|)
 name|arg1
+expr_stmt|;
+else|else
+name|tmplong
+operator|=
+name|arg2
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4292,9 +4291,19 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|arg1
+condition|)
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTL_MASK32
+elseif|else
 if|if
 condition|(
 name|req
@@ -4332,9 +4341,9 @@ operator|)
 name|tmpint
 expr_stmt|;
 block|}
-else|else
 endif|#
 directive|endif
+else|else
 name|error
 operator|=
 name|SYSCTL_IN
@@ -4358,7 +4367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a 64 bit int, signed or unsigned.  arg1 points to it.  */
+comment|/*  * Handle a 64 bit int, signed or unsigned.  * Two cases:  *     a variable:  point arg1 at it.  *     a constant:  pass it in arg2.  */
 end_comment
 
 begin_function
@@ -4379,14 +4388,8 @@ decl_stmt|;
 comment|/* 	 * Attempt to get a coherent snapshot by making a copy of the data. 	 */
 if|if
 condition|(
-operator|!
 name|arg1
 condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|tmpout
 operator|=
 operator|*
@@ -4395,6 +4398,11 @@ name|uint64_t
 operator|*
 operator|)
 name|arg1
+expr_stmt|;
+else|else
+name|tmpout
+operator|=
+name|arg2
 expr_stmt|;
 name|error
 operator|=
@@ -4425,6 +4433,16 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|arg1
+condition|)
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|SYSCTL_IN
