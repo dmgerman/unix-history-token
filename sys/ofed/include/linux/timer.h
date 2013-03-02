@@ -61,16 +61,13 @@ name|unsigned
 name|long
 name|data
 decl_stmt|;
+name|unsigned
+name|long
+name|expires
+decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|expires
-value|timer_callout.c_time
-end_define
 
 begin_function
 specifier|static
@@ -137,10 +134,10 @@ name|mod_timer
 parameter_list|(
 name|timer
 parameter_list|,
-name|expire
+name|exp
 parameter_list|)
 define|\
-value|callout_reset(&(timer)->timer_callout, (expire) - jiffies,	\ 	    _timer_fn, (timer))
+value|do {									\ 	(timer)->expires = exp;						\ 	callout_reset(&(timer)->timer_callout, (exp) - jiffies,		\ 	    _timer_fn, (timer));					\ } while (0)
 end_define
 
 begin_define
@@ -151,7 +148,7 @@ parameter_list|(
 name|timer
 parameter_list|)
 define|\
-value|callout_reset(&(timer)->timer_callout,				\ 	    (timer)->timer_callout.c_time - jiffies, _timer_fn, (timer))
+value|callout_reset(&(timer)->timer_callout,				\ 	    (timer)->expires - jiffies, _timer_fn, (timer))
 end_define
 
 begin_define
