@@ -2211,6 +2211,14 @@ condition|)
 block|{
 name|tftp_log
 argument_list|(
+name|pkt
+operator|->
+name|th_code
+operator|==
+name|EUNDEF
+condition|?
+name|LOG_DEBUG
+else|:
 name|LOG_ERR
 argument_list|,
 literal|"Got ERROR packet: %s"
