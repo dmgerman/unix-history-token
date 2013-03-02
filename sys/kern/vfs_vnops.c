@@ -8634,9 +8634,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|vp
 operator|=
 name|fp
@@ -8669,8 +8666,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|error
-operator|=
+return|return
+operator|(
 name|setfmode
 argument_list|(
 name|td
@@ -8681,10 +8678,6 @@ name|vp
 argument_list|,
 name|mode
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -8721,9 +8714,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|vp
 operator|=
 name|fp
@@ -8756,8 +8746,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|error
-operator|=
+return|return
+operator|(
 name|setfown
 argument_list|(
 name|td
@@ -8770,10 +8760,6 @@ name|uid
 argument_list|,
 name|gid
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}

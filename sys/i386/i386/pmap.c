@@ -9946,7 +9946,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 if|if
@@ -11089,7 +11089,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 if|if
@@ -11117,7 +11117,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11238,7 +11238,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 comment|/* Instantiate the remaining NPTEPG - 1 pv entries. */
@@ -11406,7 +11406,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 comment|/* Free the remaining NPTEPG - 1 pv entries. */
@@ -11659,7 +11659,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 block|}
@@ -11739,7 +11739,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 return|return
@@ -11834,7 +11834,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 return|return
@@ -13875,7 +13875,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|free_pv_entry
@@ -15687,7 +15687,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|pa
@@ -18714,7 +18714,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 if|if
@@ -18780,7 +18780,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 if|if
@@ -18967,7 +18967,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -19600,7 +19600,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 if|if
@@ -19746,7 +19746,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 if|if
@@ -20037,7 +20037,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -20329,7 +20329,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -20524,7 +20524,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|,
 argument|next_pv
 argument_list|)
@@ -20593,7 +20593,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -20848,7 +20848,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|,
 argument|pvn
 argument_list|)
@@ -21003,7 +21003,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -21017,7 +21017,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -21031,7 +21031,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|pmap
@@ -21313,7 +21313,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|,
 argument|next_pv
 argument_list|)
@@ -21482,7 +21482,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -21695,7 +21695,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|,
 argument|next_pv
 argument_list|)
@@ -21794,7 +21794,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -24025,7 +24025,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap

@@ -139,6 +139,28 @@ begin_comment
 comment|/* enable RTS/CTS protection */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATH_RC_STBC_FLAG
+value|0x20
+end_define
+
+begin_comment
+comment|/* enable STBC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_LDPC_FLAG
+value|0x40
+end_define
+
+begin_comment
+comment|/* enable STBC */
+end_comment
+
 begin_struct
 struct|struct
 name|ath_rc_series

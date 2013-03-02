@@ -768,6 +768,16 @@ define|\
 value|(((uint64_t)0x8000000000000000 + ((bt)->frac>> 2)) /		\ 	    ((bt)->frac>> 1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SBT2FREQ
+parameter_list|(
+name|sbt
+parameter_list|)
+value|((SBT_1S + ((sbt)>> 1)) / (sbt))
+end_define
+
 begin_comment
 comment|/*  * Timer broadcast IPI handler.  */
 end_comment
@@ -2310,11 +2320,15 @@ name|et_start
 argument_list|(
 name|timer
 argument_list|,
-operator|&
+name|bttosbt
+argument_list|(
 name|new
+argument_list|)
 argument_list|,
-operator|&
+name|bttosbt
+argument_list|(
 name|timerperiod
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2399,10 +2413,12 @@ name|et_start
 argument_list|(
 name|timer
 argument_list|,
-operator|&
+name|bttosbt
+argument_list|(
 name|new
+argument_list|)
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3096,10 +3112,8 @@ condition|(
 name|et
 operator|->
 name|et_min_period
-operator|.
-name|sec
 operator|>
-literal|0
+name|SBT_1S
 condition|)
 name|panic
 argument_list|(
@@ -3116,8 +3130,6 @@ condition|(
 name|et
 operator|->
 name|et_min_period
-operator|.
-name|frac
 operator|!=
 literal|0
 condition|)
@@ -3127,9 +3139,8 @@ name|min
 argument_list|(
 name|freq
 argument_list|,
-name|BT2FREQ
+name|SBT2FREQ
 argument_list|(
-operator|&
 name|et
 operator|->
 name|et_min_period
@@ -3141,16 +3152,12 @@ condition|(
 name|et
 operator|->
 name|et_max_period
-operator|.
-name|sec
-operator|==
-literal|0
+operator|<
+name|SBT_1S
 operator|&&
 name|et
 operator|->
 name|et_max_period
-operator|.
-name|frac
 operator|!=
 literal|0
 condition|)
@@ -3160,9 +3167,8 @@ name|max
 argument_list|(
 name|freq
 argument_list|,
-name|BT2FREQ
+name|SBT2FREQ
 argument_list|(
-operator|&
 name|et
 operator|->
 name|et_max_period
@@ -3863,7 +3869,7 @@ comment|/*  * Switch to idle mode (all ticks handled).  */
 end_comment
 
 begin_function
-name|void
+name|sbintime_t
 name|cpu_idleclock
 parameter_list|(
 name|void
@@ -3908,7 +3914,12 @@ argument_list|()
 endif|#
 directive|endif
 condition|)
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|state
 operator|=
 name|DPCPU_PTR
@@ -4011,6 +4022,28 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
+name|bintime_sub
+argument_list|(
+operator|&
+name|t
+argument_list|,
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|MAX
+argument_list|(
+name|bttosbt
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

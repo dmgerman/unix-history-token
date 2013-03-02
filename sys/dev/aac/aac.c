@@ -712,6 +712,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|aac_interface
 name|aac_sa_interface
@@ -910,6 +911,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|aac_interface
 name|aac_rx_interface
@@ -1108,6 +1110,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|aac_interface
 name|aac_rkt_interface
@@ -1155,10 +1158,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|aac_describe_code
 parameter_list|(
+specifier|const
 name|struct
 name|aac_code_lookup
 modifier|*
@@ -1493,7 +1498,6 @@ comment|/* sysctl node */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -3421,9 +3425,12 @@ name|aac_dev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|sc
 operator|->
-name|aac_irq_rid
+name|aac_irq
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -3475,9 +3482,12 @@ name|aac_dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|sc
 operator|->
-name|aac_regs_rid0
+name|aac_regs_res0
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -3506,9 +3516,12 @@ name|aac_dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
+name|rman_get_rid
+argument_list|(
 name|sc
 operator|->
-name|aac_regs_rid1
+name|aac_regs_res1
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -6400,18 +6413,6 @@ name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-comment|/* pass an error string out to the disk layer */
-name|bp
-operator|->
-name|bio_driver1
-operator|=
-name|aac_describe_code
-argument_list|(
-name|aac_command_status_table
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
 block|}
 name|aac_biodone
 argument_list|(
@@ -8210,6 +8211,8 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|rid
+decl_stmt|,
 name|status
 decl_stmt|;
 name|time_t
@@ -8581,7 +8584,7 @@ operator|&&
 name|sc
 operator|->
 name|aac_if
-operator|.
+operator|->
 name|aif_send_command
 condition|)
 name|sc
@@ -8641,6 +8644,15 @@ name|aac_regs_res1
 argument_list|)
 condition|)
 block|{
+name|rid
+operator|=
+name|rman_get_rid
+argument_list|(
+name|sc
+operator|->
+name|aac_regs_res1
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|sc
@@ -8649,9 +8661,7 @@ name|aac_dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|sc
-operator|->
-name|aac_regs_rid1
+name|rid
 argument_list|,
 name|sc
 operator|->
@@ -8671,9 +8681,7 @@ argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|aac_regs_rid1
+name|rid
 argument_list|,
 literal|0ul
 argument_list|,
@@ -8707,9 +8715,7 @@ argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|aac_regs_rid1
+name|rid
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -8784,14 +8790,6 @@ operator|=
 name|sc
 operator|->
 name|aac_regs_res1
-expr_stmt|;
-name|sc
-operator|->
-name|aac_regs_rid0
-operator|=
-name|sc
-operator|->
-name|aac_regs_rid1
 expr_stmt|;
 name|sc
 operator|->
@@ -9834,56 +9832,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|sc
-operator|->
-name|aac_irq_rid
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|aac_irq
-operator|=
-name|bus_alloc_resource_any
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|aac_irq_rid
-argument_list|,
-name|RF_SHAREABLE
-operator||
-name|RF_ACTIVE
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"can't allocate interrupt\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|sc
@@ -10366,6 +10314,7 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
@@ -13301,10 +13250,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|aac_describe_code
 parameter_list|(
+specifier|const
 name|struct
 name|aac_code_lookup
 modifier|*

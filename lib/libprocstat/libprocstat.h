@@ -339,13 +339,6 @@ name|PS_FST_FFLAG_HASLOCK
 value|0x4000
 end_define
 
-begin_define
-define|#
-directive|define
-name|PS_FST_FFLAG_CAPABILITY
-value|0x8000
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|procstat

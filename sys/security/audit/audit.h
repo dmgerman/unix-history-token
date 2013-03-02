@@ -693,6 +693,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|audit_arg_fcntl_rights
+parameter_list|(
+name|uint32_t
+name|fcntlrights
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|audit_sysclose
 parameter_list|(
 name|struct
@@ -1062,6 +1072,16 @@ parameter_list|(
 name|rights
 parameter_list|)
 value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_rights((rights));				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_FCNTL_RIGHTS
+parameter_list|(
+name|fcntlrights
+parameter_list|)
+value|do {			\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_fcntl_rights((fcntlrights));			\ } while (0)
 end_define
 
 begin_define
@@ -1472,6 +1492,15 @@ directive|define
 name|AUDIT_ARG_RIGHTS
 parameter_list|(
 name|rights
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_FCNTL_RIGHTS
+parameter_list|(
+name|fcntlrights
 parameter_list|)
 end_define
 

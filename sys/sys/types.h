@@ -831,6 +831,13 @@ end_endif
 
 begin_typedef
 typedef|typedef
+name|__int64_t
+name|sbintime_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__segsz_t
 name|segsz_t
 typedef|;

@@ -229,6 +229,10 @@ name|ZFS_PROP_WRITTEN
 block|,
 name|ZFS_PROP_CLONES
 block|,
+name|ZFS_PROP_LOGICALUSED
+block|,
+name|ZFS_PROP_LOGICALREFERENCED
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t

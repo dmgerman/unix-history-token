@@ -3224,12 +3224,6 @@ name|PS_FST_FFLAG_ASYNC
 block|}
 block|,
 block|{
-name|KF_FLAG_CAPABILITY
-block|,
-name|PS_FST_FFLAG_CAPABILITY
-block|}
-block|,
-block|{
 name|KF_FLAG_CREAT
 block|,
 name|PS_FST_FFLAG_CREAT

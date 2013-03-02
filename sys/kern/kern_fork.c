@@ -1501,7 +1501,7 @@ operator|->
 name|p_fd
 argument_list|)
 expr_stmt|;
-name|fdfree
+name|fdescfree
 argument_list|(
 name|td
 argument_list|)

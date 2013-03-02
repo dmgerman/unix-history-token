@@ -1077,7 +1077,7 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|pv_entry
 argument_list|)
-name|pv_list
+name|pv_next
 expr_stmt|;
 block|}
 typedef|*
