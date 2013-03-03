@@ -839,6 +839,19 @@ block|,
 literal|"pk"
 block|}
 block|,
+comment|/* 	 * Rights that allow to use bindat(2) and connectat(2) syscalls on a 	 * directory descriptor. 	 */
+block|{
+name|CAP_BINDAT
+block|,
+literal|"ba"
+block|}
+block|,
+block|{
+name|CAP_CONNECTAT
+block|,
+literal|"ca"
+block|}
+block|,
 comment|/* Aliases and defines that combine multiple rights. */
 block|{
 name|CAP_PREAD

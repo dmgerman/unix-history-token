@@ -687,6 +687,24 @@ value|0x0040000000000000ULL
 end_define
 
 begin_comment
+comment|/*  * Rights that allow to use bindat(2) and connectat(2) syscalls on a  * directory descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_BINDAT
+value|0x0400000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_CONNECTAT
+value|0x0800000000000000ULL
+end_define
+
+begin_comment
 comment|/* The mask of all valid method rights. */
 end_comment
 
@@ -694,7 +712,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MASK_VALID
-value|0x03ffffffffffffffULL
+value|0x0fffffffffffffffULL
 end_define
 
 begin_define
@@ -707,20 +725,6 @@ end_define
 begin_comment
 comment|/* Available bits. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_UNUSED5
-value|0x0400000000000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_UNUSED4
-value|0x0800000000000000ULL
-end_define
 
 begin_define
 define|#
