@@ -7750,6 +7750,14 @@ name|fde
 operator|->
 name|fde_file
 expr_stmt|;
+name|filecaps_free
+argument_list|(
+operator|&
+name|fdep
+operator|->
+name|fde_caps
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|fde
@@ -8144,7 +8152,7 @@ name|fdep
 operator|->
 name|fde_file
 expr_stmt|;
-name|filecaps_copy
+name|filecaps_move
 argument_list|(
 operator|&
 name|fdep

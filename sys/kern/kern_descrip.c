@@ -6502,7 +6502,6 @@ comment|/*  * Move filecaps structure to the new place and clear the old place. 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|filecaps_move
 parameter_list|(
