@@ -856,6 +856,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSDOSFS_FSIMOD
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSDOSFS_ARGSMAGIC
 value|0xe4eff300
 end_define
