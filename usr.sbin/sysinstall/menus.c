@@ -5117,7 +5117,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"Please select the ethernet device to configure.\n\n"
+literal|"Please select the ethernet or PLIP device to configure.\n\n"
 literal|""
 block|,
 literal|"Press F1 to read network configuration manual"
