@@ -2511,6 +2511,8 @@ argument_list|)
 condition|)
 name|msgConfirm
 argument_list|(
+literal|"%s"
+argument_list|,
 name|err
 argument_list|)
 expr_stmt|;

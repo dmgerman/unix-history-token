@@ -4043,6 +4043,8 @@ name|pi
 operator|->
 name|mountpoint
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
@@ -4057,6 +4059,8 @@ return|return
 operator|(
 name|vsystem
 argument_list|(
+literal|"%s"
+argument_list|,
 name|buffer
 argument_list|)
 operator|)
