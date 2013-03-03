@@ -138,6 +138,10 @@ name|u_char
 name|bd_immediate
 decl_stmt|;
 comment|/* true to return on packet arrival */
+name|u_char
+name|bd_writer
+decl_stmt|;
+comment|/* non-zero if d is writer-only */
 name|int
 name|bd_hdrcmplt
 decl_stmt|;
@@ -171,9 +175,9 @@ decl_stmt|;
 comment|/* bsd select info */
 name|struct
 name|mtx
-name|bd_mtx
+name|bd_lock
 decl_stmt|;
-comment|/* mutex for this descriptor */
+comment|/* per-descriptor lock */
 name|struct
 name|callout
 name|bd_callout
@@ -269,7 +273,7 @@ name|BPFD_LOCK
 parameter_list|(
 name|bd
 parameter_list|)
-value|mtx_lock(&(bd)->bd_mtx)
+value|mtx_lock(&(bd)->bd_lock)
 end_define
 
 begin_define
@@ -279,7 +283,7 @@ name|BPFD_UNLOCK
 parameter_list|(
 name|bd
 parameter_list|)
-value|mtx_unlock(&(bd)->bd_mtx)
+value|mtx_unlock(&(bd)->bd_lock)
 end_define
 
 begin_define
@@ -289,7 +293,53 @@ name|BPFD_LOCK_ASSERT
 parameter_list|(
 name|bd
 parameter_list|)
-value|mtx_assert(&(bd)->bd_mtx, MA_OWNED)
+value|mtx_assert(&(bd)->bd_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_PID_REFRESH
+parameter_list|(
+name|bd
+parameter_list|,
+name|td
+parameter_list|)
+value|(bd)->bd_pid = (td)->td_proc->p_pid
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_PID_REFRESH_CUR
+parameter_list|(
+name|bd
+parameter_list|)
+value|(bd)->bd_pid = curthread->td_proc->p_pid
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_LOCK
+parameter_list|()
+value|mtx_lock(&bpf_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_UNLOCK
+parameter_list|()
+value|mtx_unlock(&bpf_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&bpf_mtx, MA_OWNED)
 end_define
 
 begin_comment
@@ -390,22 +440,53 @@ end_struct
 begin_define
 define|#
 directive|define
-name|BPFIF_LOCK
+name|BPFIF_RLOCK
 parameter_list|(
 name|bif
 parameter_list|)
-value|mtx_lock(&(bif)->bif_mtx)
+value|rw_rlock(&(bif)->bif_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BPFIF_UNLOCK
+name|BPFIF_RUNLOCK
 parameter_list|(
 name|bif
 parameter_list|)
-value|mtx_unlock(&(bif)->bif_mtx)
+value|rw_runlock(&(bif)->bif_lock)
 end_define
+
+begin_define
+define|#
+directive|define
+name|BPFIF_WLOCK
+parameter_list|(
+name|bif
+parameter_list|)
+value|rw_wlock(&(bif)->bif_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPFIF_WUNLOCK
+parameter_list|(
+name|bif
+parameter_list|)
+value|rw_wunlock(&(bif)->bif_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPFIF_FLAG_DYING
+value|1
+end_define
+
+begin_comment
+comment|/* Reject new bpf consumers */
+end_comment
 
 begin_endif
 endif|#

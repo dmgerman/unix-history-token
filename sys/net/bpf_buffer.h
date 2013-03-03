@@ -34,18 +34,6 @@ end_endif
 
 begin_function_decl
 name|void
-name|bpf_buffer_alloc
-parameter_list|(
-name|struct
-name|bpf_d
-modifier|*
-name|d
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|bpf_buffer_append_bytes
 parameter_list|(
 name|struct
