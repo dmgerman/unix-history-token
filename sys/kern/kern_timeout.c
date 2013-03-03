@@ -319,7 +319,7 @@ comment|/*  * TODO:  *	allocate more timeout table slots when table overflows.  
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|callwheelsize
 decl_stmt|,
 name|callwheelmask
