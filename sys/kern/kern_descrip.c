@@ -386,6 +386,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FILECAPS
+argument_list|,
+literal|"filecaps"
+argument_list|,
+literal|"descriptor capabilities"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|M_FADVISE
@@ -6475,7 +6487,7 @@ name|malloc
 argument_list|(
 name|size
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -6599,7 +6611,7 @@ name|fcaps
 operator|->
 name|fc_ioctls
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|)
 expr_stmt|;
 name|bzero
