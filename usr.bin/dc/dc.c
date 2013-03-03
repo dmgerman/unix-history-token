@@ -341,7 +341,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"e:f:Vx"
+literal|"e:f:hVx"
 argument_list|,
 name|long_options
 argument_list|,
