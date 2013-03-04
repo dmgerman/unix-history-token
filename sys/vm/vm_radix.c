@@ -1035,7 +1035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal helper for vm_radix_reclaim_allonodes().  * This function is recursive.  */
+comment|/*  * Internal helper for vm_radix_reclaim_allnodes().  * This function is recursive.  */
 end_comment
 
 begin_function
