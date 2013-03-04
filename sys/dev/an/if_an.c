@@ -14299,6 +14299,13 @@ expr_stmt|;
 name|txcontrol
 operator|=
 name|AN_TXCTL_8023
+operator||
+name|AN_TXCTL_HW
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
 expr_stmt|;
 comment|/* write the txcontrol only */
 name|an_write_data
@@ -14593,6 +14600,13 @@ expr_stmt|;
 name|txcontrol
 operator|=
 name|AN_TXCTL_8023
+operator||
+name|AN_TXCTL_HW
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
 expr_stmt|;
 comment|/* write the txcontrol only */
 name|bcopy
@@ -14715,19 +14729,21 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
-init|;
-name|i
-operator|<
 sizeof|sizeof
 argument_list|(
 name|an_tx_desc
 argument_list|)
 operator|/
 literal|4
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 name|CSR_MEM_AUX_WRITE_4
