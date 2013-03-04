@@ -937,6 +937,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -955,6 +958,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -971,6 +977,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1002,6 +1011,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl

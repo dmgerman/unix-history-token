@@ -55,12 +55,6 @@ begin_comment
 comment|/* for people using printf mainly */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int

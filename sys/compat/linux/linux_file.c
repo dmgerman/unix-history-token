@@ -2402,10 +2402,6 @@ name|resid
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|cookies
-condition|)
 name|free
 argument_list|(
 name|cookies
