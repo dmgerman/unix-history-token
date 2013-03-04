@@ -514,10 +514,10 @@ name|ce_migration_time
 decl_stmt|;
 endif|#
 directive|endif
-name|boolean_t
+name|bool
 name|cc_cancel
 decl_stmt|;
-name|boolean_t
+name|bool
 name|cc_waiting
 decl_stmt|;
 block|}
