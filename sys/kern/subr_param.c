@@ -248,9 +248,34 @@ name|hz
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* system clock's frequency */
+end_comment
+
 begin_decl_stmt
 name|int
 name|tick
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* usec per tick (1000000 / hz) */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|bintime
+name|tick_bt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bintime per tick (1s / hz) */
+end_comment
+
+begin_decl_stmt
+name|sbintime_t
+name|tick_sbt
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,6 +1115,19 @@ operator|=
 literal|1000000
 operator|/
 name|hz
+expr_stmt|;
+name|tick_sbt
+operator|=
+name|SBT_1S
+operator|/
+name|hz
+expr_stmt|;
+name|tick_bt
+operator|=
+name|sbttobt
+argument_list|(
+name|tick_sbt
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
