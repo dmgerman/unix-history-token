@@ -3172,8 +3172,8 @@ operator|->
 name|tq
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|IXGBE_LEGACY_TX
 name|taskqueue_drain
 argument_list|(
