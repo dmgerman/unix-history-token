@@ -907,7 +907,7 @@ index|]
 operator|.
 name|cc_cancel
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|cc
 operator|->
@@ -918,7 +918,7 @@ index|]
 operator|.
 name|cc_waiting
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2847,7 +2847,7 @@ index|]
 operator|.
 name|cc_cancel
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
@@ -2904,7 +2904,7 @@ index|]
 operator|.
 name|cc_cancel
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -3252,7 +3252,7 @@ index|]
 operator|.
 name|cc_waiting
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
@@ -4222,7 +4222,7 @@ index|]
 operator|.
 name|cc_cancel
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -4977,7 +4977,7 @@ index|]
 operator|.
 name|cc_waiting
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|DROP_GIANT
 argument_list|()
@@ -5073,7 +5073,7 @@ index|]
 operator|.
 name|cc_cancel
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|CTR3
 argument_list|(
