@@ -326,7 +326,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|sleepq_set_timeout_sbt((wchan), (tick_sbt * (timo)), 0, C_HARDCLOCK)
+value|sleepq_set_timeout_sbt((wchan), tick_sbt * (timo), 0, C_HARDCLOCK)
 end_define
 
 begin_function_decl
