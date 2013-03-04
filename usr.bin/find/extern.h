@@ -329,6 +329,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|creat_f
+name|c_sparse
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|creat_f
 name|c_type
 decl_stmt|;
 end_decl_stmt
@@ -534,6 +540,12 @@ end_decl_stmt
 begin_decl_stmt
 name|exec_f
 name|f_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|exec_f
+name|f_sparse
 decl_stmt|;
 end_decl_stmt
 

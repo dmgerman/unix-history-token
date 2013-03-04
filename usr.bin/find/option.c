@@ -987,6 +987,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|"-sparse"
+block|,
+name|c_sparse
+block|,
+name|f_sparse
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"-true"
 block|,
 name|c_simple

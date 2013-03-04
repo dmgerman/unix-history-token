@@ -484,6 +484,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|filecaps_move
+parameter_list|(
+name|struct
+name|filecaps
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|filecaps_free
 parameter_list|(
 name|struct

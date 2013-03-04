@@ -1770,13 +1770,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|exitstatus
-operator|=
-name|savestatus
-expr_stmt|;
 comment|/* 					 * If such a command was not 					 * already in progress, allow a 					 * break/continue/return in the 					 * trap action to have an effect 					 * outside of it. 					 */
 if|if
 condition|(
+name|evalskip
+operator|==
+literal|0
+operator|||
 name|prev_evalskip
 operator|!=
 literal|0
@@ -1789,6 +1789,10 @@ expr_stmt|;
 name|skipcount
 operator|=
 name|prev_skipcount
+expr_stmt|;
+name|exitstatus
+operator|=
+name|savestatus
 expr_stmt|;
 block|}
 if|if
