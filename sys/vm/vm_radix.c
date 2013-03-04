@@ -827,8 +827,6 @@ name|levels
 index|[
 literal|0
 index|]
-operator|==
-name|TRUE
 argument_list|,
 operator|(
 literal|"%s: levels back-scanning problem"
@@ -962,8 +960,6 @@ name|levels
 index|[
 literal|0
 index|]
-operator|==
-name|TRUE
 argument_list|,
 operator|(
 literal|"%s: levels back-scanning problem"
@@ -1407,8 +1403,6 @@ name|rnode
 argument_list|,
 name|index
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 break|break;
 name|slot
@@ -1846,8 +1840,6 @@ name|rnode
 argument_list|,
 name|index
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 return|return
 operator|(
@@ -2041,8 +2033,6 @@ name|rnode
 argument_list|,
 name|index
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 block|{
 name|difflev
@@ -2470,8 +2460,6 @@ name|rnode
 argument_list|,
 name|index
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 block|{
 name|difflev
