@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/condvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/interrupt.h>
 end_include
 
@@ -325,7 +319,7 @@ comment|/*  * TODO:  *	allocate more timeout table slots when table overflows.  
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|callwheelsize
 decl_stmt|,
 name|callwheelmask
@@ -695,7 +689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * kern_timeout_callwheel_alloc() - kernel low level callwheel initialization   *  *	This code is called very early in the kernel initialization sequence,  *	and may be called more then once.  */
+comment|/*  * kern_timeout_callwheel_alloc() - kernel low level callwheel initialization  *  *	This code is called very early in the kernel initialization sequence,  *	and may be called more then once.  */
 end_comment
 
 begin_function
@@ -2903,7 +2897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * timeout --  *	Execute a function after a specified length of time.  *  * untimeout --  *	Cancel previous timeout function call.  *  * callout_handle_init --  *	Initialize a handle so that using it with untimeout is benign.  *  *	See AT&T BCI Driver Reference Manual for specification.  This  *	implementation differs from that one in that although an   *	identification value is returned from timeout, the original  *	arguments to timeout as well as the identifier are used to  *	identify entries for untimeout.  */
+comment|/*  * timeout --  *	Execute a function after a specified length of time.  *  * untimeout --  *	Cancel previous timeout function call.  *  * callout_handle_init --  *	Initialize a handle so that using it with untimeout is benign.  *  *	See AT&T BCI Driver Reference Manual for specification.  This  *	implementation differs from that one in that although an  *	identification value is returned from timeout, the original  *	arguments to timeout as well as the identifier are used to  *	identify entries for untimeout.  */
 end_comment
 
 begin_function
