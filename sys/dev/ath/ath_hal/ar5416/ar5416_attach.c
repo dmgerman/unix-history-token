@@ -950,6 +950,12 @@ name|ah_set11nRxClear
 operator|=
 name|ar5416Set11nRxClear
 expr_stmt|;
+name|ah
+operator|->
+name|ah_set11nVirtMoreFrag
+operator|=
+name|ar5416Set11nVirtualMoreFrag
+expr_stmt|;
 comment|/* Interrupt functions */
 name|ah
 operator|->

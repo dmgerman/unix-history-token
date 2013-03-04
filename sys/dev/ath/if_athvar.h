@@ -5550,6 +5550,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_set11n_virtmorefrag
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nVirtMoreFrag)((_ah), (_ds), (_v)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_gpioCfgOutput
 parameter_list|(
 name|_ah

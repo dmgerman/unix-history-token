@@ -1870,8 +1870,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|callout_tick
+name|callout_process
+argument_list|(
+name|sbinuptime
 argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2266,9 +2269,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|callout_tick
-argument_list|()
-expr_stmt|;
 comment|/* We are in charge to handle this tick duty. */
 if|if
 condition|(
