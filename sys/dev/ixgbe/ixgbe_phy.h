@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -30,6 +30,20 @@ define|#
 directive|define
 name|IXGBE_I2C_EEPROM_DEV_ADDR
 value|0xA0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_EEPROM_DEV_ADDR2
+value|0xA2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_EEPROM_BANK_LEN
+value|0xFF
 end_define
 
 begin_comment
@@ -99,6 +113,34 @@ name|IXGBE_SFF_CABLE_SPEC_COMP
 value|0x3C
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_SWAP
+value|0x5C
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_COMP
+value|0x5E
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_OSCB
+value|0x6E
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_ESCB
+value|0x76
+end_define
+
 begin_comment
 comment|/* Bitmasks */
 end_comment
@@ -157,6 +199,27 @@ define|#
 directive|define
 name|IXGBE_SFF_10GBASELR_CAPABLE
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SOFT_RS_SELECT_MASK
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SOFT_RS_SELECT_10G
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SOFT_RS_SELECT_1G
+value|0x0
 end_define
 
 begin_define
@@ -364,6 +427,52 @@ name|IXGBE_TN_LASI_STATUS_TEMP_ALARM
 value|0x0008
 end_define
 
+begin_comment
+comment|/* SFP+ SFF-8472 Compliance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_UNSUP
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_REV_9_3
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_REV_9_5
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_REV_10_2
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_REV_10_4
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SFF_SFF_8472_REV_11_0
+value|0x05
+end_define
+
 begin_function_decl
 name|s32
 name|ixgbe_init_phy_ops_generic
@@ -504,9 +613,6 @@ name|hw
 parameter_list|,
 name|ixgbe_link_speed
 name|speed
-parameter_list|,
-name|bool
-name|autoneg
 parameter_list|,
 name|bool
 name|autoneg_wait_to_complete
