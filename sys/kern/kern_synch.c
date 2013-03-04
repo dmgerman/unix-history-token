@@ -2310,11 +2310,14 @@ operator|>>
 name|FSHIFT
 expr_stmt|;
 comment|/* 	 * Schedule the next update to occur after 5 seconds, but add a 	 * random variation to avoid synchronisation with processes that 	 * run at regular intervals. 	 */
-name|callout_reset
+name|callout_reset_sbt
 argument_list|(
 operator|&
 name|loadav_callout
 argument_list|,
+name|tick_sbt
+operator|*
+operator|(
 name|hz
 operator|*
 literal|4
@@ -2334,10 +2337,17 @@ operator|+
 literal|1
 operator|)
 argument_list|)
+operator|)
+argument_list|,
+literal|0
 argument_list|,
 name|loadav
 argument_list|,
 name|NULL
+argument_list|,
+name|C_DIRECT_EXEC
+operator||
+name|C_HARDCLOCK
 argument_list|)
 expr_stmt|;
 block|}
