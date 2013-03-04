@@ -2787,8 +2787,14 @@ name|char
 modifier|*
 name|wmesg
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 function_decl|__nonnull
 parameter_list|(
@@ -2816,12 +2822,35 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan),&(mtx)->lock_object, (pri), (wmesg), (timo))
+value|_sleep((chan),&(mtx)->lock_object, (pri), (wmesg),		\ 	    tick_sbt * (timo), 0, C_HARDCLOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|msleep_sbt
+parameter_list|(
+name|chan
+parameter_list|,
+name|mtx
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|bt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_sleep((chan),&(mtx)->lock_object, (pri), (wmesg), (bt), (pr),	\ 	    (flags))
 end_define
 
 begin_function_decl
 name|int
-name|msleep_spin
+name|msleep_spin_sbt
 parameter_list|(
 name|void
 modifier|*
@@ -2837,8 +2866,14 @@ name|char
 modifier|*
 name|wmesg
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 function_decl|__nonnull
 parameter_list|(
@@ -2850,20 +2885,56 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_define
+define|#
+directive|define
+name|msleep_spin
+parameter_list|(
+name|chan
+parameter_list|,
+name|mtx
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|msleep_spin_sbt((chan), (mtx), (wmesg), tick_sbt * (timo),	\ 	    0, C_HARDCLOCK)
+end_define
+
 begin_function_decl
 name|int
-name|pause
+name|pause_sbt
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|wmesg
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|pause
+parameter_list|(
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|pause_sbt((wmesg), tick_sbt * (timo), 0, C_HARDCLOCK)
+end_define
 
 begin_define
 define|#
@@ -2879,7 +2950,28 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan), NULL, (pri), (wmesg), (timo))
+value|_sleep((chan), NULL, (pri), (wmesg), tick_sbt * (timo),		\ 	    0, C_HARDCLOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tsleep_sbt
+parameter_list|(
+name|chan
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|bt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_sleep((chan), NULL, (pri), (wmesg), (bt), (pr), (flags))
 end_define
 
 begin_function_decl
