@@ -1039,7 +1039,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal handwork for vm_radix_reclaim_allonodes() primitive.  * This function is recrusive.  */
+comment|/*  * Internal handwork for vm_radix_reclaim_allonodes() primitive.  * This function is recursive.  */
 end_comment
 
 begin_function
