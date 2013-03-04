@@ -1016,12 +1016,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait on a condition variable for at most timo/hz seconds.  Returns 0 if the  * process was resumed by cv_signal or cv_broadcast, EWOULDBLOCK if the timeout  * expires.  */
+comment|/*  * Wait on a condition variable for (at most) the value specified in sbt  * argument. Returns 0 if the process was resumed by cv_signal or cv_broadcast,  * EWOULDBLOCK if the timeout expires.  */
 end_comment
 
 begin_function
 name|int
-name|_cv_timedwait
+name|_cv_timedwait_sbt
 parameter_list|(
 name|struct
 name|cv
@@ -1033,8 +1033,14 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 block|{
 name|WITNESS_SAVE_DECL
@@ -1179,11 +1185,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sleepq_set_timeout
+name|sleepq_set_timeout_sbt
 argument_list|(
 name|cvp
 argument_list|,
-name|timo
+name|sbt
+argument_list|,
+name|pr
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1313,12 +1323,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait on a condition variable for at most timo/hz seconds, allowing  * interruption by signals.  Returns 0 if the thread was resumed by cv_signal  * or cv_broadcast, EWOULDBLOCK if the timeout expires, and EINTR or ERESTART if  * a signal was caught.  */
+comment|/*  * Wait on a condition variable for (at most) the value specified in sbt   * argument, allowing interruption by signals.  * Returns 0 if the thread was resumed by cv_signal or cv_broadcast,  * EWOULDBLOCK if the timeout expires, and EINTR or ERESTART if a signal  * was caught.  */
 end_comment
 
 begin_function
 name|int
-name|_cv_timedwait_sig
+name|_cv_timedwait_sig_sbt
 parameter_list|(
 name|struct
 name|cv
@@ -1330,8 +1340,14 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 block|{
 name|WITNESS_SAVE_DECL
@@ -1478,11 +1494,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sleepq_set_timeout
+name|sleepq_set_timeout_sbt
 argument_list|(
 name|cvp
 argument_list|,
-name|timo
+name|sbt
+argument_list|,
+name|pr
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
