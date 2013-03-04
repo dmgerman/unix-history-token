@@ -91,7 +91,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Such sizes should permit to keep node children contained into a single  * cache-line, or to at least not span many of those.  * In particular, sparse tries should however be compressed properly and  * then make some extra-levels not a big deal.  */
+comment|/*  * These widths should allow the pointers to a node's children to fit within  * a single cache line.  The extra levels from a narrow width should not be  * a problem thanks to path compression.  */
 end_comment
 
 begin_ifdef
@@ -222,7 +222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Allocate a radix node.  Pre-allocation ensures that the request will be  * always successfully satisfied.  */
+comment|/*  * Allocate a radix node.  Pre-allocation should ensure that the request  * will always be satisfied.  */
 end_comment
 
 begin_expr_stmt
@@ -255,7 +255,7 @@ operator||
 name|M_ZERO
 argument_list|)
 block|;
-comment|/* 	 * The required number of nodes might be already correctly 	 * pre-allocated in vm_radix_init().  However, UMA can reserve 	 * few nodes on per-cpu specific buckets, which will not be 	 * accessible from the curcpu.  The allocation could then 	 * return NULL when the pre-allocation pool is close to be 	 * exhausted.  Anyway, in practice this should never be a 	 * problem because a new node is not always required for 	 * insert, thus the pre-allocation pool should already have 	 * some extra-pages that indirectly deal with this situation. 	 */
+comment|/* 	 * The required number of nodes should already be pre-allocated 	 * by vm_radix_prealloc().  However, UMA can hold a few nodes 	 * in per-CPU buckets, which will not be accessible by the 	 * current CPU.  Thus, the allocation could return NULL when 	 * the pre-allocated pool is close to exhaustion.  Anyway, 	 * in practice this should never occur because a new node 	 * is not always required for insert.  Thus, the pre-allocated 	 * pool should have some extra pages that prevent this from 	 * becoming a problem. 	 */
 if|if
 condition|(
 name|rnode
@@ -498,7 +498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns the associated page extracted from rnode if available,  * NULL otherwise.  */
+comment|/*  * Returns the associated page extracted from rnode if available,  * and NULL otherwise.  */
 end_comment
 
 begin_function
@@ -548,7 +548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Adds the page as a child of provided node.  */
+comment|/*  * Adds the page as a child of the provided node.  */
 end_comment
 
 begin_function
@@ -692,7 +692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns TRUE if it can be determined that key does not belong to the  * specified rnode. FALSE otherwise.  */
+comment|/*  * Returns TRUE if it can be determined that key does not belong to the  * specified rnode.  Otherwise, returns FALSE.  */
 end_comment
 
 begin_function
@@ -1035,7 +1035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal handwork for vm_radix_reclaim_allonodes() primitive.  * This function is recursive.  */
+comment|/*  * Internal helper for vm_radix_reclaim_allonodes().  * This function is recursive.  */
 end_comment
 
 begin_function
@@ -1300,7 +1300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Inserts the key-value pair in to the trie.  * Panics if the key already exists.  */
+comment|/*  * Inserts the key-value pair into the trie.  * Panics if the key already exists.  */
 end_comment
 
 begin_function
@@ -1791,7 +1791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns the value stored at the index.  If the index is not present  * NULL is returned.  */
+comment|/*  * Returns the value stored at the index.  If the index is not present,  * NULL is returned.  */
 end_comment
 
 begin_function
@@ -1910,7 +1910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up any entry at a position bigger than or equal to index.  */
+comment|/*  * Look up the nearest entry at a position bigger than or equal to index.  */
 end_comment
 
 begin_function
@@ -2262,7 +2262,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/* 		 * If a valid page or edge, bigger than the search slot, is 		 * found in the traversal, skip to the next higher-level key. 		 */
+comment|/* 		 * If a valid page or edge bigger than the search slot is 		 * found in the traversal, skip to the next higher-level key. 		 */
 if|if
 condition|(
 name|slot
@@ -2337,7 +2337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up any entry at a position less than or equal to index.  */
+comment|/*  * Look up the nearest entry at a position less than or equal to index.  */
 end_comment
 
 begin_function
@@ -2696,7 +2696,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/* 		 * If a valid page or edge, smaller than the search slot, is 		 * found in the traversal, skip to the next higher-level key. 		 */
+comment|/* 		 * If a valid page or edge smaller than the search slot is 		 * found in the traversal, skip to the next higher-level key. 		 */
 if|if
 condition|(
 name|slot
@@ -3056,7 +3056,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove and free all the nodes from the radix tree.  * This function is recrusive but there is a tight control on it as the  * maximum depth of the tree is fixed.  */
+comment|/*  * Remove and free all the nodes from the radix tree.  * This function is recursive but there is a tight control on it as the  * maximum depth of the tree is fixed.  */
 end_comment
 
 begin_function
