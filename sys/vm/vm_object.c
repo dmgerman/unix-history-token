@@ -1106,6 +1106,9 @@ operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+name|vm_radix_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
