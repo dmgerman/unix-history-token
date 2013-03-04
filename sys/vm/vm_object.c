@@ -2683,10 +2683,13 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|!
 name|vm_object_cache_is_empty
 argument_list|(
 name|object
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_free
@@ -4992,10 +4995,13 @@ expr_stmt|;
 comment|/* 		 * Transfer any cached pages from orig_object to new_object. 		 * If swap_pager_copy() found swapped out pages within the 		 * specified range of orig_object, then it changed 		 * new_object's type to OBJT_SWAP when it transferred those 		 * pages to new_object.  Otherwise, new_object's type 		 * should still be OBJT_DEFAULT and orig_object should not 		 * contain any cached pages within the specified range. 		 */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|!
 name|vm_object_cache_is_empty
 argument_list|(
 name|orig_object
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_transfer
@@ -5940,10 +5946,13 @@ expr_stmt|;
 comment|/* 				 * Free any cached pages from backing_object. 				 */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|!
 name|vm_object_cache_is_empty
 argument_list|(
 name|backing_object
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_free
@@ -6570,10 +6579,13 @@ name|skipmemq
 label|:
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|!
 name|vm_object_cache_is_empty
 argument_list|(
 name|object
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_free

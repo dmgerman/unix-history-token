@@ -677,8 +677,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__predict_true
-argument_list|(
 name|object
 operator|->
 name|cache
@@ -686,7 +684,6 @@ operator|.
 name|rt_root
 operator|==
 literal|0
-argument_list|)
 operator|)
 return|;
 block|}

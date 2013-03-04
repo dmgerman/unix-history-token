@@ -3377,9 +3377,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|vm_object_cache_is_empty
 argument_list|(
 name|object
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -3795,9 +3798,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_true
+argument_list|(
 name|vm_object_cache_is_empty
 argument_list|(
 name|object
+argument_list|)
 argument_list|)
 condition|)
 return|return
