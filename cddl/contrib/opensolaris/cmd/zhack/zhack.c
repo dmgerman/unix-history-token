@@ -1224,6 +1224,25 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+name|spa_history_log_internal
+argument_list|(
+name|spa
+argument_list|,
+literal|"zhack enable feature"
+argument_list|,
+name|tx
+argument_list|,
+literal|"name=%s can_readonly=%u"
+argument_list|,
+name|feature
+operator|->
+name|fi_guid
+argument_list|,
+name|feature
+operator|->
+name|fi_can_readonly
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1580,6 +1599,21 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+name|spa_history_log_internal
+argument_list|(
+name|spa
+argument_list|,
+literal|"zhack feature incr"
+argument_list|,
+name|tx
+argument_list|,
+literal|"name=%s"
+argument_list|,
+name|feature
+operator|->
+name|fi_guid
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1620,6 +1654,21 @@ argument_list|,
 name|feature
 argument_list|,
 name|tx
+argument_list|)
+expr_stmt|;
+name|spa_history_log_internal
+argument_list|(
+name|spa
+argument_list|,
+literal|"zhack feature decr"
+argument_list|,
+name|tx
+argument_list|,
+literal|"name=%s"
+argument_list|,
+name|feature
+operator|->
+name|fi_guid
 argument_list|)
 expr_stmt|;
 block|}

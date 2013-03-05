@@ -631,29 +631,19 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|spa_history_log_internal
+name|spa_history_log_internal_dd
 argument_list|(
-name|LOG_DS_PERM_UPDATE
-argument_list|,
 name|dd
-operator|->
-name|dd_pool
-operator|->
-name|dp_spa
+argument_list|,
+literal|"permission update"
 argument_list|,
 name|tx
 argument_list|,
-literal|"%s %s dataset = %llu"
+literal|"%s %s"
 argument_list|,
 name|whokey
 argument_list|,
 name|perm
-argument_list|,
-name|dd
-operator|->
-name|dd_phys
-operator|->
-name|dd_head_dataset_obj
 argument_list|)
 expr_stmt|;
 block|}
@@ -821,27 +811,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|spa_history_log_internal
+name|spa_history_log_internal_dd
 argument_list|(
-name|LOG_DS_PERM_WHO_REMOVE
-argument_list|,
 name|dd
-operator|->
-name|dd_pool
-operator|->
-name|dp_spa
+argument_list|,
+literal|"permission who remove"
 argument_list|,
 name|tx
 argument_list|,
-literal|"%s dataset = %llu"
+literal|"%s"
 argument_list|,
 name|whokey
-argument_list|,
-name|dd
-operator|->
-name|dd_phys
-operator|->
-name|dd_head_dataset_obj
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -956,29 +936,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|spa_history_log_internal
+name|spa_history_log_internal_dd
 argument_list|(
-name|LOG_DS_PERM_REMOVE
-argument_list|,
 name|dd
-operator|->
-name|dd_pool
-operator|->
-name|dp_spa
+argument_list|,
+literal|"permission remove"
 argument_list|,
 name|tx
 argument_list|,
-literal|"%s %s dataset = %llu"
+literal|"%s %s"
 argument_list|,
 name|whokey
 argument_list|,
 name|perm
-argument_list|,
-name|dd
-operator|->
-name|dd_phys
-operator|->
-name|dd_head_dataset_obj
 argument_list|)
 expr_stmt|;
 block|}
@@ -2331,7 +2301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if user has requested permission.  If descendent is set, must have  * descendent perms.  */
+comment|/*  * Check if user has requested permission.  */
 end_comment
 
 begin_function
@@ -2341,9 +2311,6 @@ parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
-parameter_list|,
-name|boolean_t
-name|descendent
 parameter_list|,
 specifier|const
 name|char
@@ -2437,8 +2404,6 @@ name|dsl_dataset_is_snapshot
 argument_list|(
 name|ds
 argument_list|)
-operator|||
-name|descendent
 condition|)
 block|{
 comment|/* 		 * Snapshots are treated as descendents only, 		 * local permissions do not apply. 		 */
@@ -2841,8 +2806,6 @@ operator|=
 name|dsl_deleg_access_impl
 argument_list|(
 name|ds
-argument_list|,
-name|B_FALSE
 argument_list|,
 name|perm
 argument_list|,

@@ -4,19 +4,19 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBFS_IMPL_H
+name|_LIBZFS_IMPL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LIBFS_IMPL_H
+name|_LIBZFS_IMPL_H
 end_define
 
 begin_include
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<libzfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libzfs_core.h>
 end_include
 
 begin_include
@@ -168,10 +174,6 @@ name|libzfs_desc
 index|[
 literal|1024
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|libzfs_log_str
 decl_stmt|;
 name|int
 name|libzfs_printerr
@@ -936,15 +938,18 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|unsigned
-name|long
-name|cmd
+name|int
+name|request
 parameter_list|,
 name|zfs_cmd_t
 modifier|*
 name|zc
 parameter_list|)
 block|{
+name|unsigned
+name|long
+name|cmd
+decl_stmt|;
 name|size_t
 name|oldsize
 decl_stmt|,
@@ -961,6 +966,18 @@ name|cflag
 init|=
 name|ZFS_CMD_COMPAT_NONE
 decl_stmt|;
+name|cmd
+operator|=
+name|_IOWR
+argument_list|(
+literal|'Z'
+argument_list|,
+name|request
+argument_list|,
+expr|struct
+name|zfs_cmd
+argument_list|)
+expr_stmt|;
 name|zfs_ioctl_version_size
 operator|=
 sizeof|sizeof
@@ -1131,7 +1148,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBFS_IMPL_H */
+comment|/* _LIBZFS_IMPL_H */
 end_comment
 
 end_unit

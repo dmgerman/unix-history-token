@@ -113,6 +113,13 @@ define|#
 directive|define
 name|ZFS_IOC_COMPAT_FAIL
 value|255
+define|#
+directive|define
+name|ZFS_IOCREQ
+parameter_list|(
+name|ioreq
+parameter_list|)
+value|((ioreq)& 0xff)
 typedef|typedef
 struct|struct
 name|zinject_record_v15

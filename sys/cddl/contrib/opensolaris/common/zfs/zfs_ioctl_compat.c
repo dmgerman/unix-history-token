@@ -2304,9 +2304,9 @@ directive|ifndef
 name|_KERNEL
 argument|int zcmd_ioctl_compat(int fd, unsigned long cmd, zfs_cmd_t *zc, const int cflag) { 	int nc, ret; 	void *zc_c; 	unsigned long ncmd;  	switch (cflag) { 	case ZFS_CMD_COMPAT_NONE: 		ret = ioctl(fd, cmd, zc); 		return (ret); 	case ZFS_CMD_COMPAT_V28: 		zc_c = malloc(sizeof(zfs_cmd_v28_t)); 		ncmd = _IOWR(
 literal|'Z'
-argument|, ZFS_IOC(cmd), struct zfs_cmd_v28); 		break; 	case ZFS_CMD_COMPAT_V15: 		nc = zfs_ioctl_v28_to_v15[ZFS_IOC(cmd)]; 		zc_c = malloc(sizeof(zfs_cmd_v15_t)); 		ncmd = _IOWR(
+argument|, ZFS_IOCREQ(cmd), struct zfs_cmd_v28); 		break; 	case ZFS_CMD_COMPAT_V15: 		nc = zfs_ioctl_v28_to_v15[ZFS_IOCREQ(cmd)]; 		zc_c = malloc(sizeof(zfs_cmd_v15_t)); 		ncmd = _IOWR(
 literal|'Z'
-argument|, nc, struct zfs_cmd_v15); 		break; 	default: 		return (EINVAL); 	}  	if (ZFS_IOC(ncmd) == ZFS_IOC_COMPAT_FAIL) 		return (ENOTSUP);  	zfs_cmd_compat_put(zc, (caddr_t)zc_c, cflag); 	ret = ioctl(fd, ncmd, zc_c); 	if (cflag == ZFS_CMD_COMPAT_V15&& 	    nc ==
+argument|, nc, struct zfs_cmd_v15); 		break; 	default: 		return (EINVAL); 	}  	if (ZFS_IOCREQ(ncmd) == ZFS_IOC_COMPAT_FAIL) 		return (ENOTSUP);  	zfs_cmd_compat_put(zc, (caddr_t)zc_c, cflag); 	ret = ioctl(fd, ncmd, zc_c); 	if (cflag == ZFS_CMD_COMPAT_V15&& 	    nc ==
 literal|2
 comment|/* ZFS_IOC_POOL_IMPORT */
 argument|) 		ret = ioctl(fd, _IOWR(
