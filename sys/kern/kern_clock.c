@@ -253,11 +253,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|PMC_SOFT_DEFINE
+name|PMC_SOFT_DEFINE_EX
 argument_list|( , ,
 name|clock
 argument_list|,
 name|prof
+argument_list|, \
+name|cpu_startprofclock
+argument_list|,
+name|cpu_stopprofclock
 argument_list|)
 expr_stmt|;
 end_expr_stmt
