@@ -181,8 +181,6 @@ name|i
 decl_stmt|,
 name|mntflags
 decl_stmt|,
-name|opts
-decl_stmt|,
 name|udf_flags
 decl_stmt|;
 name|char
@@ -210,8 +208,6 @@ decl_stmt|;
 name|i
 operator|=
 name|mntflags
-operator|=
-name|opts
 operator|=
 name|udf_flags
 operator|=
@@ -260,8 +256,7 @@ argument_list|,
 operator|&
 name|mntflags
 argument_list|,
-operator|&
-name|opts
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

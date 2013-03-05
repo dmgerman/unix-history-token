@@ -169,7 +169,7 @@ argument_list|,
 operator|&
 name|mntflags
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
