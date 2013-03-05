@@ -189,6 +189,14 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|sx_destroy
+argument_list|(
+operator|&
+name|item
+operator|->
+name|mutex
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
