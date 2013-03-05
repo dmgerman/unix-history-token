@@ -1263,6 +1263,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect((x), 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|container_of
 parameter_list|(
 name|ptr
