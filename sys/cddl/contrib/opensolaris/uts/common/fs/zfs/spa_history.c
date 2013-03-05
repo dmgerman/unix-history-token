@@ -1968,7 +1968,7 @@ name|msg
 argument_list|,
 name|fmt
 argument_list|,
-name|adx
+name|adx2
 argument_list|)
 expr_stmt|;
 name|fnvlist_add_string
