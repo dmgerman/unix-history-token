@@ -157,43 +157,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * ttm_write_unlock  *  * @lock: Pointer to a struct ttm_lock  *  * Releases a write lock.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ttm_write_unlock
-parameter_list|(
-name|struct
-name|ttm_lock
-modifier|*
-name|lock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * ttm_write_lock  *  * @lock: Pointer to a struct ttm_lock  * @interruptible: Interruptible sleeping while waiting for a lock.  *  * Takes the lock in write mode.  * Returns:  * -ERESTARTSYS If interrupted by a signal and interruptible is true.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|ttm_write_lock
-parameter_list|(
-name|struct
-name|ttm_lock
-modifier|*
-name|lock
-parameter_list|,
-name|bool
-name|interruptible
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/**  * ttm_lock_downgrade  *  * @lock: Pointer to a struct ttm_lock  *  * Downgrades a write lock to a read lock.  */
 end_comment
 
