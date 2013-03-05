@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -61,6 +65,7 @@ index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
+comment|/* tx hold count on each txg */
 name|list_t
 name|tc_callbacks
 index|[
@@ -74,6 +79,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+comment|/* pad to fill 3 cache lines */
 block|}
 struct|;
 typedef|typedef
@@ -84,11 +90,11 @@ name|tx_cpu_t
 modifier|*
 name|tx_cpu
 decl_stmt|;
-comment|/* protects right to enter txg	*/
+comment|/* protects access to tx_open_txg */
 name|kmutex_t
 name|tx_sync_lock
 decl_stmt|;
-comment|/* protects tx_state_t */
+comment|/* protects the rest of this struct */
 name|uint64_t
 name|tx_open_txg
 decl_stmt|;

@@ -227,7 +227,6 @@ modifier|*
 name|tx_callbacks
 parameter_list|)
 function_decl|;
-comment|/*  * Delay the caller by the specified number of ticks or until  * the txg closes (whichever comes first).  This is intended  * to be used to throttle writers when the system nears its  * capacity.  */
 specifier|extern
 name|void
 name|txg_delay
@@ -240,8 +239,11 @@ parameter_list|,
 name|uint64_t
 name|txg
 parameter_list|,
-name|int
-name|ticks
+name|hrtime_t
+name|delta
+parameter_list|,
+name|hrtime_t
+name|resolution
 parameter_list|)
 function_decl|;
 comment|/*  * Wait until the given transaction group has finished syncing.  * Try to make this happen as soon as possible (eg. kick off any  * necessary syncs immediately).  If txg==0, wait for the currently open  * txg to finish syncing.  */
