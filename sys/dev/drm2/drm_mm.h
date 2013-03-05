@@ -833,6 +833,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|drm_mm_debug_table
+parameter_list|(
+name|struct
+name|drm_mm
+modifier|*
+name|mm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prefix
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
