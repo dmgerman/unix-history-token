@@ -1267,7 +1267,7 @@ name|likely
 parameter_list|(
 name|x
 parameter_list|)
-value|__builtin_expect((x), 0)
+value|__builtin_expect(!!(x), 1)
 end_define
 
 begin_define
