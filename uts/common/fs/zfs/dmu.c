@@ -8363,7 +8363,7 @@ operator|->
 name|doi_max_offset
 operator|=
 operator|(
-name|dnp
+name|dn
 operator|->
 name|dn_maxblkid
 operator|+
