@@ -48,6 +48,14 @@ comment|/* #undef BIND_8_COMPAT */
 end_comment
 
 begin_comment
+comment|/* The system has incomplete BSM API */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_BSM_API */
+end_comment
+
+begin_comment
 comment|/* Define if cmsg_type is not passed correctly */
 end_comment
 
@@ -262,9 +270,12 @@ begin_comment
 comment|/* Define if you don't want to use lastlog */
 end_comment
 
-begin_comment
-comment|/* #undef DISABLE_LASTLOG */
-end_comment
+begin_define
+define|#
+directive|define
+name|DISABLE_LASTLOG
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you don't want to use your system's login() call */
@@ -878,12 +889,9 @@ begin_comment
 comment|/* Define if you have /dev/ptmx */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_DEV_PTMX
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_DEV_PTMX */
+end_comment
 
 begin_comment
 comment|/* Define if you have /dev/ptc */
@@ -908,9 +916,12 @@ begin_comment
 comment|/* Define to 1 if you have the `dirfd' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_DIRFD */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_DIRFD
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `dirname' function. */
@@ -1503,6 +1514,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `HMAC_CTX_init' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_HMAC_CTX_INIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have ut_host in utmp.h */
 end_comment
 
@@ -1675,6 +1697,14 @@ comment|/* #undef HAVE_LASTLOG_H */
 end_comment
 
 begin_comment
+comment|/* Define if you want ldns support */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LDNS */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<libaudit.h> header file. */
 end_comment
 
@@ -1802,6 +1832,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<linux/audit.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_AUDIT_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/filter.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_FILTER_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<linux/if_tun.h> header file. */
 end_comment
 
@@ -1810,7 +1856,15 @@ comment|/* #undef HAVE_LINUX_IF_TUN_H */
 end_comment
 
 begin_comment
-comment|/* Define if your libraries define login() */
+comment|/* Define to 1 if you have the<linux/seccomp.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_SECCOMP_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `login' function. */
 end_comment
 
 begin_comment
@@ -2488,6 +2542,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setlinebuf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETLINEBUF
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setlogin' function. */
 end_comment
 
@@ -2926,12 +2991,26 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strnlen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRNLEN
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strnvis' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRNVIS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRNVIS
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strptime' function. */
@@ -4260,11 +4339,35 @@ value|1
 end_define
 
 begin_comment
+comment|/* Sandbox using seccomp filter */
+end_comment
+
+begin_comment
+comment|/* #undef SANDBOX_SECCOMP_FILTER */
+end_comment
+
+begin_comment
+comment|/* setrlimit RLIMIT_FSIZE works */
+end_comment
+
+begin_comment
+comment|/* #undef SANDBOX_SKIP_RLIMIT_FSIZE */
+end_comment
+
+begin_comment
 comment|/* Sandbox using systrace(4) */
 end_comment
 
 begin_comment
 comment|/* #undef SANDBOX_SYSTRACE */
+end_comment
+
+begin_comment
+comment|/* Specify the system call convention in use */
+end_comment
+
+begin_comment
+comment|/* #undef SECCOMP_AUDIT_ARCH */
 end_comment
 
 begin_comment
@@ -4274,17 +4377,6 @@ end_comment
 begin_comment
 comment|/* #undef SETEUID_BREAKS_SETUID */
 end_comment
-
-begin_comment
-comment|/* The size of `char', as computed by sizeof. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_CHAR
-value|1
-end_define
 
 begin_comment
 comment|/* The size of `int', as computed by sizeof. */
@@ -4709,6 +4801,28 @@ end_comment
 begin_comment
 comment|/* #undef XAUTH_PATH */
 end_comment
+
+begin_comment
+comment|/* Enable large inode numbers on Mac OS X 10.5.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DARWIN_USE_64_BIT_INODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DARWIN_USE_64_BIT_INODE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */
