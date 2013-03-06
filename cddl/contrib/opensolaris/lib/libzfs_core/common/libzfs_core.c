@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libzfs_impl.h>
+file|<libzfs_compat.h>
 end_include
 
 begin_decl_stmt
