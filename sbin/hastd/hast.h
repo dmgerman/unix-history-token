@@ -684,6 +684,30 @@ comment|/* Number of activemap updates. */
 name|uint64_t
 name|hr_stat_activemap_update
 decl_stmt|;
+comment|/* Number of local read errors. */
+name|uint64_t
+name|hr_stat_read_error
+decl_stmt|;
+comment|/* Number of local write errors. */
+name|uint64_t
+name|hr_stat_write_error
+decl_stmt|;
+comment|/* Number of local delete errors. */
+name|uint64_t
+name|hr_stat_delete_error
+decl_stmt|;
+comment|/* Number of flush errors. */
+name|uint64_t
+name|hr_stat_flush_error
+decl_stmt|;
+comment|/* Number of activemap write errors. */
+name|uint64_t
+name|hr_stat_activemap_write_error
+decl_stmt|;
+comment|/* Number of activemap flush errors. */
+name|uint64_t
+name|hr_stat_activemap_flush_error
+decl_stmt|;
 comment|/* Next resource. */
 name|TAILQ_ENTRY
 argument_list|(
