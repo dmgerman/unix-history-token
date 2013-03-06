@@ -9148,6 +9148,26 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
+comment|/* 	 * Disable RX checksum offloading on controllers that don't use 	 * new descriptor format but give chance to enable it. 	 */
+if|if
+condition|(
+operator|(
+name|sc_if
+operator|->
+name|msk_flags
+operator|&
+name|MSK_FLAG_DESCV2
+operator|)
+operator|==
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_RXCSUM
+expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 * Must appear after the call to ether_ifattach() because 	 * ether_ifattach() sets ifi_hdrlen to the default value. 	 */
 name|ifp
 operator|->
