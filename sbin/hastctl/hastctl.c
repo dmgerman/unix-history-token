@@ -1655,7 +1655,7 @@ argument_list|(
 literal|"    reads: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1672,7 +1672,7 @@ argument_list|(
 literal|"    writes: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1689,7 +1689,7 @@ argument_list|(
 literal|"    deletes: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1706,7 +1706,7 @@ argument_list|(
 literal|"    flushes: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
@@ -1723,13 +1723,67 @@ argument_list|(
 literal|"    activemap updates: %ju\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
 name|nv
 argument_list|,
 literal|"stat_activemap_update%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    local errors: "
+literal|"read: %ju, write: %ju, delete: %ju, flush: %ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_read_error%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_write_error%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_delete_error%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_flush_error%u"
 argument_list|,
 name|ii
 argument_list|)
