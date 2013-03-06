@@ -5395,6 +5395,20 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
+comment|/* Restore CR3 and enable interrupts */
+name|load_cr3
+argument_list|(
+name|cr3
+argument_list|)
+expr_stmt|;
+name|mca_resume
+argument_list|()
+expr_stmt|;
+name|lapic_setup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|atomic_clear_int
 argument_list|(
 operator|&
@@ -5409,20 +5423,6 @@ operator|&
 name|stopped_cpus
 argument_list|,
 name|cpumask
-argument_list|)
-expr_stmt|;
-comment|/* Restore CR3 and enable interrupts */
-name|load_cr3
-argument_list|(
-name|cr3
-argument_list|)
-expr_stmt|;
-name|mca_resume
-argument_list|()
-expr_stmt|;
-name|lapic_setup
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 name|intr_restore
