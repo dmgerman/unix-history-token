@@ -24623,9 +24623,6 @@ decl_stmt|;
 name|uint_t
 name|vecnum
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
 name|int
 name|error
 decl_stmt|,
@@ -24633,6 +24630,9 @@ name|rc
 decl_stmt|,
 name|len
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|minor_t
 name|minor
 init|=
@@ -24647,12 +24647,6 @@ name|int
 name|cflag
 decl_stmt|,
 name|cmd
-decl_stmt|,
-name|error
-decl_stmt|,
-name|rc
-decl_stmt|,
-name|len
 decl_stmt|;
 name|cred_t
 modifier|*
