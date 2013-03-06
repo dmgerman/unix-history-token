@@ -12134,6 +12134,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX According to ACPI specification SCI_EN bit should be restored 	 * by ACPI platform (BIOS, firmware) to its pre-sleep state. 	 * Unfortunately some BIOSes fail to do that and that leads to 	 * unexpected and serious consequences during wake up like a system 	 * getting stuck in SMI handlers. 	 * This hack is picked up from Linux, which claims that it follows 	 * Windows behavior. 	 */
+if|if
+condition|(
+name|sleep_result
+operator|==
+literal|1
+operator|&&
+name|state
+operator|!=
+name|ACPI_STATE_S4
+condition|)
+name|AcpiWriteBitRegister
+argument_list|(
+name|ACPI_BITREG_SCI_ENABLE
+argument_list|,
+name|ACPI_ENABLE_EVENT
+argument_list|)
+expr_stmt|;
 name|intr_restore
 argument_list|(
 name|intr
