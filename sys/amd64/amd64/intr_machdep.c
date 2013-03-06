@@ -219,8 +219,9 @@ end_decl_stmt
 
 begin_expr_stmt
 specifier|static
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
+argument|pics_head
 argument_list|,
 argument|pic
 argument_list|)
@@ -356,7 +357,7 @@ name|pic
 modifier|*
 name|p
 decl_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|p
 argument_list|,
@@ -421,7 +422,7 @@ name|EBUSY
 expr_stmt|;
 else|else
 block|{
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|pics
@@ -1153,7 +1154,7 @@ operator|&
 name|intr_table_lock
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|pic
 argument_list|,
@@ -1205,11 +1206,13 @@ operator|&
 name|intr_table_lock
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|pic
 argument_list|,
 argument|&pics
+argument_list|,
+argument|pics_head
 argument_list|,
 argument|pics
 argument_list|)
@@ -1587,7 +1590,7 @@ name|intrcnt_index
 operator|=
 literal|1
 expr_stmt|;
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|pics
