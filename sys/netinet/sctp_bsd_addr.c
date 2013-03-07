@@ -645,9 +645,9 @@ name|uint32_t
 name|sctp_is_desired_interface_type
 parameter_list|(
 name|struct
-name|ifaddr
+name|ifnet
 modifier|*
-name|ifa
+name|ifn
 parameter_list|)
 block|{
 name|int
@@ -656,9 +656,7 @@ decl_stmt|;
 comment|/* check the interface type to see if it's one we care about */
 switch|switch
 condition|(
-name|ifa
-operator|->
-name|ifa_ifp
+name|ifn
 operator|->
 name|if_type
 condition|)
@@ -811,6 +809,19 @@ argument_list|,
 argument|if_list
 argument_list|)
 block|{
+if|if
+condition|(
+name|sctp_is_desired_interface_type
+argument_list|(
+name|ifn
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* non desired type */
+continue|continue;
+block|}
 name|IF_ADDR_RLOCK
 argument_list|(
 name|ifn
@@ -909,19 +920,6 @@ break|break;
 endif|#
 directive|endif
 default|default:
-continue|continue;
-block|}
-if|if
-condition|(
-name|sctp_is_desired_interface_type
-argument_list|(
-name|ifa
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* non desired type */
 continue|continue;
 block|}
 switch|switch
@@ -1148,6 +1146,21 @@ condition|)
 block|{
 return|return;
 block|}
+if|if
+condition|(
+name|sctp_is_desired_interface_type
+argument_list|(
+name|ifa
+operator|->
+name|ifa_ifp
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* non desired type */
+return|return;
+block|}
 switch|switch
 condition|(
 name|ifa
@@ -1235,19 +1248,6 @@ endif|#
 directive|endif
 default|default:
 comment|/* non inet/inet6 skip */
-return|return;
-block|}
-if|if
-condition|(
-name|sctp_is_desired_interface_type
-argument_list|(
-name|ifa
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* non desired type */
 return|return;
 block|}
 if|if
