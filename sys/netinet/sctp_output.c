@@ -53665,7 +53665,10 @@ name|iph_out
 operator|->
 name|ip_ttl
 operator|=
-name|MAXTTL
+name|MODULE_GLOBAL
+argument_list|(
+name|ip_defttl
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -59820,7 +59823,10 @@ name|iph_out
 operator|->
 name|ip_ttl
 operator|=
-name|MAXTTL
+name|MODULE_GLOBAL
+argument_list|(
+name|ip_defttl
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -61283,7 +61289,10 @@ name|iph_out
 operator|->
 name|ip_ttl
 operator|=
-name|MAXTTL
+name|MODULE_GLOBAL
+argument_list|(
+name|ip_defttl
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
