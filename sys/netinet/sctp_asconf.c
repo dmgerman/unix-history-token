@@ -75,21 +75,6 @@ begin_comment
 comment|/*  * debug flags:  * SCTP_DEBUG_ASCONF1: protocol info, general info and errors  * SCTP_DEBUG_ASCONF2: detailed info  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SCTP_DEBUG */
-end_comment
-
 begin_function
 specifier|static
 name|void
