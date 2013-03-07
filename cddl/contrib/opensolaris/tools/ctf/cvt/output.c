@@ -1421,7 +1421,9 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-name|bname
+name|match
+operator|.
+name|iim_file
 operator|=
 name|bname
 operator|==
@@ -1434,14 +1436,6 @@ else|:
 name|bname
 operator|+
 literal|1
-expr_stmt|;
-name|match
-operator|.
-name|iim_file
-operator|=
-name|match
-operator|.
-name|iim_name
 expr_stmt|;
 continue|continue;
 case|case
