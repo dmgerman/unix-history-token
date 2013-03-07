@@ -185,10 +185,7 @@ name|Argc
 operator|++
 index|]
 operator|=
-name|argv
-index|[
-literal|0
-index|]
+name|CC
 expr_stmt|;
 for|for
 control|(
