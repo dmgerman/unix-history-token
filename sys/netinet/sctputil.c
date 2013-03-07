@@ -21245,11 +21245,6 @@ name|sctp_inpcb
 modifier|*
 name|inp
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|op_err
-parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -21502,7 +21497,7 @@ name|sh
 argument_list|,
 literal|0
 argument_list|,
-name|op_err
+name|NULL
 argument_list|,
 name|vrf_id
 argument_list|,
