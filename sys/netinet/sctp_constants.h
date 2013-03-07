@@ -3419,7 +3419,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_ASSOC_ABORTED
+name|SCTP_NOTIFY_ASSOC_LOC_ABORTED
 value|7
 end_define
 
@@ -3587,8 +3587,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_NOTIFY_ASSOC_REM_ABORTED
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_NOTIFY_MAX
-value|31
+value|32
 end_define
 
 begin_comment
