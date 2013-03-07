@@ -19570,7 +19570,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RECEIVED_SACK
+literal|0
 argument_list|,
 operator|(
 name|void
@@ -23291,7 +23291,7 @@ name|SCTP_NOTIFY_INTERFACE_UP
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RECEIVED_SACK
+literal|0
 argument_list|,
 operator|(
 name|void
