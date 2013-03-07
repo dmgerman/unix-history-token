@@ -753,6 +753,8 @@ name|struct
 name|sctp_tcb
 modifier|*
 parameter_list|,
+name|uint16_t
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -1125,7 +1127,7 @@ name|struct
 name|sctp_tmit_chunk
 modifier|*
 parameter_list|,
-name|int
+name|uint8_t
 parameter_list|,
 name|int
 if|#

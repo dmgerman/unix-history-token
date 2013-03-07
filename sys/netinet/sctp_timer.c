@@ -2815,11 +2815,7 @@ name|stcb
 argument_list|,
 name|chk
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -2881,11 +2877,7 @@ name|stcb
 argument_list|,
 name|chk
 argument_list|,
-operator|(
-name|SCTP_RESPONSE_TO_USER_REQ
-operator||
-name|SCTP_NOTIFY_DATAGRAM_SENT
-operator|)
+literal|1
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
