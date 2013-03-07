@@ -3482,6 +3482,13 @@ name|SCTP_NOTIFY_SENDER_DRY
 value|26
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_REMOTE_ERROR
+value|27
+end_define
+
 begin_comment
 comment|/* This is the value for messages that are NOT completely  * copied down where we will start to split the message.  * So, with our default, we split only if the piece we  * want to take will fill up a full MTU (assuming  * a 1500 byte MTU).  */
 end_comment
