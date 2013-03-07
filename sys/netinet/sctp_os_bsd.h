@@ -749,21 +749,6 @@ define|\
 value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    sctp_print_address(addr);					\ 	}								\     } while (0);							\ }
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTPDBG_PKT
-parameter_list|(
-name|level
-parameter_list|,
-name|iph
-parameter_list|,
-name|sh
-parameter_list|)
-define|\
-value|{									\     do {								\ 	    if (SCTP_BASE_SYSCTL(sctp_debug_on)& level) {		\ 		    sctp_print_address_pkt(iph, sh);			\ 	    }								\     } while (0);							\ }
-end_define
-
 begin_else
 else|#
 directive|else
@@ -789,19 +774,6 @@ parameter_list|(
 name|level
 parameter_list|,
 name|addr
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPDBG_PKT
-parameter_list|(
-name|level
-parameter_list|,
-name|iph
-parameter_list|,
-name|sh
 parameter_list|)
 end_define
 
@@ -1733,30 +1705,6 @@ end_define
 begin_comment
 comment|/* This converts any input packet header  * into the chain of data holders, for BSD  * its a NOP.  */
 end_comment
-
-begin_comment
-comment|/* Macro's for getting length from V6/V4 header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_GET_IPV4_LENGTH
-parameter_list|(
-name|iph
-parameter_list|)
-value|(iph->ip_len)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_GET_IPV6_LENGTH
-parameter_list|(
-name|ip6
-parameter_list|)
-value|(ntohs(ip6->ip6_plen))
-end_define
 
 begin_comment
 comment|/* get the v6 hop limit */

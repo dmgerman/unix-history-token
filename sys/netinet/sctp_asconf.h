@@ -95,6 +95,10 @@ name|unsigned
 name|int
 parameter_list|,
 name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
 name|sctp_asconf_chunk
 modifier|*
 parameter_list|,
@@ -103,7 +107,6 @@ name|sctp_tcb
 modifier|*
 parameter_list|,
 name|int
-name|i
 parameter_list|)
 function_decl|;
 end_function_decl
