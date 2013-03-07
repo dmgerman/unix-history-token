@@ -1435,7 +1435,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_DEF_MAX_BURST
-value|0
+value|4
 end_define
 
 begin_define
