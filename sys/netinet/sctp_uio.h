@@ -3836,12 +3836,6 @@ name|defined
 argument_list|(
 name|INET
 argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
 name|struct
 name|sockaddr_in
 name|sin
@@ -3853,12 +3847,6 @@ directive|if
 name|defined
 argument_list|(
 name|INET6
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|_KERNEL
 argument_list|)
 name|struct
 name|sockaddr_in6
