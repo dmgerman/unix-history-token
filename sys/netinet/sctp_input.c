@@ -28085,6 +28085,8 @@ name|struct
 name|sctp_nets
 modifier|*
 name|net
+init|=
+name|NULL
 decl_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
