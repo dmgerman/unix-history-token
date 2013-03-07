@@ -273,6 +273,10 @@ name|struct
 name|sctp_init_chunk
 modifier|*
 parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
 name|uint32_t
 parameter_list|,
 name|uint16_t
@@ -460,6 +464,10 @@ parameter_list|,
 name|struct
 name|sctphdr
 modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint32_t
 parameter_list|,
 name|uint32_t
 parameter_list|,
@@ -934,6 +942,10 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
 name|uint32_t
 parameter_list|,
 name|uint16_t
@@ -958,6 +970,10 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint32_t
 parameter_list|,
 name|uint32_t
 parameter_list|,
