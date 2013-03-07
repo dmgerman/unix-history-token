@@ -1805,6 +1805,10 @@ name|sctp_sender_dry_event
 name|sn_sender_dry_event
 decl_stmt|;
 name|struct
+name|sctp_send_failed_event
+name|sn_send_failed_event
+decl_stmt|;
+name|struct
 name|sctp_stream_reset_event
 name|sn_strreset_event
 decl_stmt|;
