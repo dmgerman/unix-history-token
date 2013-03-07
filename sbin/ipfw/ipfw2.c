@@ -16052,6 +16052,22 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|co
+operator|.
+name|test_only
+condition|)
+block|{
+name|c
+operator|->
+name|max_log
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 name|errx
 argument_list|(
 literal|1
@@ -16061,6 +16077,7 @@ argument_list|,
 literal|"net.inet.ip.fw.verbose_limit"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -20091,14 +20108,28 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|co
+operator|.
+name|test_only
+condition|)
+name|tables_max
+operator|=
+literal|128
+expr_stmt|;
+comment|/* Old conservative default */
+else|else
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't determine maximum number of ipfw tables. "
-literal|"Perhaps you forgot to load ipfw module?"
+literal|"Can't determine maximum number of ipfw tables."
+literal|" Perhaps you forgot to load ipfw module?"
 argument_list|)
 expr_stmt|;
+block|}
 name|memset
 argument_list|(
 operator|&

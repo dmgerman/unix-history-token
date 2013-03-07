@@ -219,6 +219,12 @@ directive|include
 file|<cam/ctl/ctl_error.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ctl.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|ctl_softc
@@ -1515,6 +1521,25 @@ name|index_to_aps_page
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTL_DISABLE
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|ctl_disable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|ctl_disable
@@ -1522,6 +1547,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_NODE

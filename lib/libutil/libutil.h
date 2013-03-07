@@ -1043,11 +1043,13 @@ name|group
 modifier|*
 name|gr_add
 parameter_list|(
+specifier|const
 name|struct
 name|group
 modifier|*
 name|_gr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|_newmember
