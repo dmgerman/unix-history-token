@@ -6282,7 +6282,7 @@ operator|||
 name|tsp
 operator|->
 name|tv_nsec
-operator|>
+operator|>=
 literal|1000000000
 condition|)
 block|{
