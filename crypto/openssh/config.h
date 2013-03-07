@@ -3005,12 +3005,9 @@ begin_comment
 comment|/* Define to 1 if you have the `strnvis' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_STRNVIS
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_STRNVIS */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `strptime' function. */
@@ -3798,12 +3795,9 @@ begin_comment
 comment|/* Define to 1 if you have the<vis.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_VIS_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_VIS_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `vsnprintf' function. */
