@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2013 EMC Corp.  * Copyright (c) 2011 Jeffrey Roberso
 end_comment
 
 begin_comment
-comment|/*  * Path-compressed radix trie implementation.  * The following code is not generalized into a general purpose library  * because there are way too many parameters embedded that should really  * be decided by the library consumers.  At the same time, consumers  * of this code must achieve highest possible performance.  *  * The implementation takes into account the following rationale:  * - Size of the nodes might be as small as possible.  * - There is no bias toward lookup operations over inserts or removes,  *   and vice-versa.  * - In average there are not many complete levels, than level  *   compression may just complicate things.  */
+comment|/*  * Path-compressed radix trie implementation.  * The following code is not generalized into a general purpose library  * because there are way too many parameters embedded that should really  * be decided by the library consumers.  At the same time, consumers  * of this code must achieve highest possible performance.  *  * The implementation takes into account the following rationale:  * - Size of the nodes should be as small as possible.  * - There is no bias toward lookup operations over inserts or removes,  *   and vice-versa.  * - On average not many nodes are expected to be full, hence level  *   compression may just complicate things.  */
 end_comment
 
 begin_include
@@ -678,7 +678,7 @@ operator|)
 return|;
 name|panic
 argument_list|(
-literal|"%s: it might have not reached this point"
+literal|"%s: cannot reach this point"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2024,7 +2024,7 @@ index|]
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 		 * If the keys differ before the current bisection node 		 * the search key might rollback to the earlierst 		 * available bisection node, or to the smaller value 		 * in the current domain (if the owner is bigger than the 		 * search key). 		 * The search for a valid bisection node is helped through 		 * the use of maplevels array which should bring immediately 		 * a lower useful level, skipping holes. 		 */
+comment|/* 		 * If the keys differ before the current bisection node 		 * the search key might rollback to the earlierst 		 * available bisection node, or to the smaller value 		 * in the current domain (if the owner is bigger than the 		 * search key). 		 * The maplevels array records any node has been seen 		 * at a given level.  This aids the search for a valid 		 * bisection node. 		 */
 if|if
 condition|(
 name|vm_radix_keybarr
@@ -2451,7 +2451,7 @@ index|]
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 		 * If the keys differ before the current bisection node 		 * the search key might rollback to the earlierst 		 * available bisection node, or to the higher value 		 * in the current domain (if the owner is smaller than the 		 * search key). 		 * The search for a valid bisection node is helped through 		 * the use of maplevels array which should bring immediately 		 * a lower useful level, skipping holes. 		 */
+comment|/* 		 * If the keys differ before the current bisection node 		 * the search key might rollback to the earlierst 		 * available bisection node, or to the higher value 		 * in the current domain (if the owner is smaller than the 		 * search key). 		 * The maplevels array records any node has been seen 		 * at a given level.  This aids the search for a valid 		 * bisection node. 		 */
 if|if
 condition|(
 name|vm_radix_keybarr
