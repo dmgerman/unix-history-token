@@ -199,8 +199,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
-name|mntflags
-decl_stmt|,
 name|iovlen
 decl_stmt|;
 name|char
@@ -214,10 +212,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|iovlen
-operator|=
-literal|0
-expr_stmt|;
-name|mntflags
 operator|=
 literal|0
 expr_stmt|;
@@ -504,7 +498,7 @@ name|iov
 argument_list|,
 name|iovlen
 argument_list|,
-name|mntflags
+literal|0
 argument_list|)
 operator|<
 literal|0

@@ -247,8 +247,6 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|,
-name|mntflags
-decl_stmt|,
 name|set_gid
 decl_stmt|,
 name|set_uid
@@ -319,12 +317,6 @@ name|gid
 init|=
 literal|0
 decl_stmt|;
-name|getmnt_silent
-operator|=
-literal|1
-expr_stmt|;
-name|mntflags
-operator|=
 name|set_gid
 operator|=
 name|set_uid
@@ -1273,7 +1265,7 @@ name|iov
 argument_list|,
 name|iovlen
 argument_list|,
-name|mntflags
+literal|0
 argument_list|)
 operator|<
 literal|0

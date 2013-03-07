@@ -146,6 +146,9 @@ comment|/* A NetBSD LFS partition entry. */
 name|G_PART_ALIAS_EBR
 block|,
 comment|/* A EBR partition entry. */
+name|G_PART_ALIAS_MS_FAT16
+block|,
+comment|/* A Microsoft FAT16 partition entry. */
 name|G_PART_ALIAS_MS_FAT32
 block|,
 comment|/* A Microsoft FAT32 partition entry. */

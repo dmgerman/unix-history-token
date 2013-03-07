@@ -526,63 +526,6 @@ decl_stmt|;
 comment|/* scaled inverse-slope of the 2nd segment */
 block|}
 struct|;
-comment|/* for TAILQ based ellist and actlist implementation */
-struct_decl|struct
-name|hfsc_class
-struct_decl|;
-typedef|typedef
-name|TAILQ_HEAD
-argument_list|(
-argument|_eligible
-argument_list|,
-argument|hfsc_class
-argument_list|)
-name|ellist_t
-expr_stmt|;
-typedef|typedef
-name|TAILQ_ENTRY
-argument_list|(
-argument|hfsc_class
-argument_list|)
-name|elentry_t
-expr_stmt|;
-typedef|typedef
-name|TAILQ_HEAD
-argument_list|(
-argument|_active
-argument_list|,
-argument|hfsc_class
-argument_list|)
-name|actlist_t
-expr_stmt|;
-typedef|typedef
-name|TAILQ_ENTRY
-argument_list|(
-argument|hfsc_class
-argument_list|)
-name|actentry_t
-expr_stmt|;
-define|#
-directive|define
-name|ellist_first
-parameter_list|(
-name|s
-parameter_list|)
-value|TAILQ_FIRST(s)
-define|#
-directive|define
-name|actlist_first
-parameter_list|(
-name|s
-parameter_list|)
-value|TAILQ_FIRST(s)
-define|#
-directive|define
-name|actlist_last
-parameter_list|(
-name|s
-parameter_list|)
-value|TAILQ_LAST(s, _active)
 struct|struct
 name|hfsc_class
 block|{
@@ -745,18 +688,28 @@ name|int
 name|cl_nactive
 decl_stmt|;
 comment|/* number of active children */
-name|actlist_t
-modifier|*
+name|TAILQ_HEAD
+argument_list|(
+argument|acthead
+argument_list|,
+argument|hfsc_class
+argument_list|)
 name|cl_actc
-decl_stmt|;
+expr_stmt|;
 comment|/* active children list */
-name|actentry_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|hfsc_class
+argument_list|)
 name|cl_actlist
-decl_stmt|;
+expr_stmt|;
 comment|/* active children list entry */
-name|elentry_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|hfsc_class
+argument_list|)
 name|cl_ellist
-decl_stmt|;
+expr_stmt|;
 comment|/* eligible list entry */
 struct|struct
 block|{
@@ -830,10 +783,14 @@ name|u_int
 name|hif_classid
 decl_stmt|;
 comment|/* class id sequence number */
-name|ellist_t
-modifier|*
+name|TAILQ_HEAD
+argument_list|(
+argument|elighead
+argument_list|,
+argument|hfsc_class
+argument_list|)
 name|hif_eligible
-decl_stmt|;
+expr_stmt|;
 comment|/* eligible list */
 ifdef|#
 directive|ifdef

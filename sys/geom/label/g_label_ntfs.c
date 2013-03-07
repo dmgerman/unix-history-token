@@ -125,6 +125,7 @@ name|uint16_t
 name|a_indexed
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -172,6 +173,7 @@ name|uint16_t
 name|fr_attrnum
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -243,6 +245,7 @@ name|uint32_t
 name|bf_volsn
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 

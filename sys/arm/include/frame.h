@@ -274,13 +274,17 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Switch frame  */
+comment|/*  * Switch frame.  *  * It is important this is a multiple of 8 bytes so the stack is correctly  * aligned when we create new threads.  */
 end_comment
 
 begin_struct
 struct|struct
 name|switchframe
 block|{
+name|u_int
+name|pad
+decl_stmt|;
+comment|/* Used to pad the struct to a multiple of 8-bytes */
 name|u_int
 name|sf_r4
 decl_stmt|;

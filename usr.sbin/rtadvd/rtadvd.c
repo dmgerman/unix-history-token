@@ -4463,6 +4463,15 @@ decl_stmt|,
 modifier|*
 name|rest
 decl_stmt|;
+if|if
+condition|(
+name|ifi
+operator|->
+name|ifi_ra_timer
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Compute a random delay. If the computed value 	 * corresponds to a time later than the time the next 	 * multicast RA is scheduled to be sent, ignore the random 	 * delay and send the advertisement at the 	 * already-scheduled time. RFC 4861 6.2.6 	 */
 ifdef|#
 directive|ifdef

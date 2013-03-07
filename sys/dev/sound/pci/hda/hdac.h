@@ -1156,8 +1156,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_X1_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21e8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LENOVO_X1CRBN_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21f9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LENOVO_X220_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21da)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_X300_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x20ac)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LENOVO_T420_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21ce)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LENOVO_T520_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21cf)
 end_define
 
 begin_define
