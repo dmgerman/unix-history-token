@@ -2430,25 +2430,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|taskqueue_start_threads
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|vtnet_tq
-argument_list|,
-literal|1
-argument_list|,
-name|PI_NET
-argument_list|,
-literal|"%s taskq"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|virtio_setup_intr
@@ -2470,19 +2451,6 @@ argument_list|,
 literal|"cannot setup virtqueue interrupts\n"
 argument_list|)
 expr_stmt|;
-name|taskqueue_free
-argument_list|(
-name|sc
-operator|->
-name|vtnet_tq
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|vtnet_tq
-operator|=
-name|NULL
-expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -2492,6 +2460,25 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|taskqueue_start_threads
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|vtnet_tq
+argument_list|,
+literal|1
+argument_list|,
+name|PI_NET
+argument_list|,
+literal|"%s taskq"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Device defaults to promiscuous mode for backwards 	 * compatibility. Turn it off if possible. 	 */
 if|if
 condition|(
@@ -3624,9 +3611,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_t
-name|dev
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -3635,12 +3619,6 @@ decl_stmt|;
 name|int
 name|link
 decl_stmt|;
-name|dev
-operator|=
-name|sc
-operator|->
-name|vtnet_dev
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
