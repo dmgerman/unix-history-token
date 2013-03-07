@@ -797,7 +797,11 @@ name|struct
 name|sctp_tcb
 modifier|*
 parameter_list|,
-name|int
+name|uint16_t
+parameter_list|,
+name|struct
+name|sctp_abort_chunk
+modifier|*
 parameter_list|,
 name|int
 if|#
@@ -872,8 +876,6 @@ parameter_list|,
 name|struct
 name|sctp_tcb
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|struct
 name|mbuf

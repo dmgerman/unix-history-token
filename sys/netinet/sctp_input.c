@@ -2019,8 +2019,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_CAUSE_PROTOCOL_VIOLATION
-argument_list|,
 name|op_err
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -3660,7 +3658,7 @@ parameter_list|(
 name|struct
 name|sctp_abort_chunk
 modifier|*
-name|cp
+name|abort
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -3694,6 +3692,9 @@ directive|endif
 name|uint16_t
 name|len
 decl_stmt|;
+name|uint16_t
+name|error
+decl_stmt|;
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT2
@@ -3712,7 +3713,7 @@ name|len
 operator|=
 name|ntohs
 argument_list|(
-name|cp
+name|abort
 operator|->
 name|ch
 operator|.
@@ -3732,25 +3733,10 @@ condition|)
 block|{
 comment|/* 		 * Need to check the cause codes for our two magic nat 		 * aborts which don't kill the assoc necessarily. 		 */
 name|struct
-name|sctp_abort_chunk
-modifier|*
-name|cpnext
-decl_stmt|;
-name|struct
 name|sctp_missing_nat_state
 modifier|*
 name|natc
 decl_stmt|;
-name|uint16_t
-name|cause
-decl_stmt|;
-name|cpnext
-operator|=
-name|cp
-expr_stmt|;
-name|cpnext
-operator|++
-expr_stmt|;
 name|natc
 operator|=
 operator|(
@@ -3758,9 +3744,13 @@ expr|struct
 name|sctp_missing_nat_state
 operator|*
 operator|)
-name|cpnext
+operator|(
+name|abort
+operator|+
+literal|1
+operator|)
 expr_stmt|;
-name|cause
+name|error
 operator|=
 name|ntohs
 argument_list|(
@@ -3771,7 +3761,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cause
+name|error
 operator|==
 name|SCTP_CAUSE_NAT_COLLIDING_STATE
 condition|)
@@ -3782,7 +3772,7 @@ name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"Received Colliding state abort flags:%x\n"
 argument_list|,
-name|cp
+name|abort
 operator|->
 name|ch
 operator|.
@@ -3803,7 +3793,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|cause
+name|error
 operator|==
 name|SCTP_CAUSE_NAT_MISSING_STATE
 condition|)
@@ -3814,7 +3804,7 @@ name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"Received missing state abort flags:%x\n"
 argument_list|,
-name|cp
+name|abort
 operator|->
 name|ch
 operator|.
@@ -3834,6 +3824,13 @@ block|{
 return|return;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* stop any receive timers */
 name|sctp_timer_stop
@@ -3858,7 +3855,9 @@ name|sctp_abort_notification
 argument_list|(
 name|stcb
 argument_list|,
-literal|0
+name|error
+argument_list|,
+name|abort
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -5764,6 +5763,8 @@ argument_list|(
 name|stcb
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)

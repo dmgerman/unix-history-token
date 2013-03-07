@@ -8086,8 +8086,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_CAUSE_ILLEGAL_ASCONF_ACK
-argument_list|,
 name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED

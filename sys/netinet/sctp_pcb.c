@@ -28706,11 +28706,9 @@ name|sctp_ep
 argument_list|,
 name|stcb_tmp
 argument_list|,
-literal|1
-argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -29086,11 +29084,9 @@ name|sctp_ep
 argument_list|,
 name|stcb_tmp
 argument_list|,
-literal|1
-argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 goto|goto

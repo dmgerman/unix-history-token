@@ -2990,8 +2990,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -4249,8 +4247,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -4468,8 +4464,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -4702,8 +4696,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -4938,8 +4930,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -5399,8 +5389,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -5630,8 +5618,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -5879,8 +5865,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6113,8 +6097,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -6384,8 +6366,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6640,8 +6620,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -6873,8 +6851,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -7121,8 +7097,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -7832,8 +7806,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-literal|0
 argument_list|,
 name|op_err
 argument_list|,
@@ -8700,8 +8672,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -10023,8 +9993,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -10254,8 +10222,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -10502,8 +10468,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -18815,8 +18779,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_PEER_FAULTY
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -20608,8 +20570,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -21679,8 +21639,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
@@ -23959,8 +23917,6 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|SCTP_RESPONSE_TO_USER_REQ
-argument_list|,
 name|oper
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
@@ -26005,8 +25961,6 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
-argument_list|,
-name|SCTP_PEER_FAULTY
 argument_list|,
 name|oper
 argument_list|,
