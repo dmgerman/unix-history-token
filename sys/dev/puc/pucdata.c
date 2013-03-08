@@ -2833,6 +2833,78 @@ literal|0xffff
 block|,
 literal|0
 block|,
+literal|"Perle Ultraport4 Express"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x155f
+block|,
+literal|0xB012
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Perle Speed2 LE"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x155f
+block|,
+literal|0xB022
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Perle Speed2 LE"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x155f
+block|,
+literal|0xB004
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
 literal|"Perle Speed4 LE"
 block|,
 name|DEFAULT_RCLK
@@ -2840,6 +2912,30 @@ operator|*
 literal|8
 block|,
 name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x155f
+block|,
+literal|0xB008
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Perle Speed8 LE"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_8S
 block|,
 literal|0x10
 block|,
@@ -3399,6 +3495,30 @@ name|config_function
 operator|=
 name|puc_config_syba
 block|}
+block|,
+block|{
+literal|0x1fd4
+block|,
+literal|0x1999
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Sunix SER5437A"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
 block|,
 block|{
 literal|0x5372
