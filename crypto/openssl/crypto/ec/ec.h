@@ -1609,11 +1609,14 @@ modifier|*
 parameter_list|)
 parameter_list|)
 function_decl|;
+comment|/** Sets the key method data of an EC_KEY object, if none has yet been set.  *  \param  key              EC_KEY object  *  \param  data             opaque data to install.  *  \param  dup_func         a function that duplicates |data|.  *  \param  free_func        a function that frees |data|.  *  \param  clear_free_func  a function that wipes and frees |data|.  *  \return the previously set data pointer, or NULL if |data| was inserted.  */
 name|void
+modifier|*
 name|EC_KEY_insert_key_method_data
 parameter_list|(
 name|EC_KEY
 modifier|*
+name|key
 parameter_list|,
 name|void
 modifier|*

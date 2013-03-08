@@ -682,6 +682,12 @@ name|PQ_64BIT
 name|seq_num
 decl_stmt|;
 comment|/* sequence number, needed by DTLS1 */
+comment|/*rw*/
+name|unsigned
+name|int
+name|orig_len
+decl_stmt|;
+comment|/* How many bytes were available before padding 				   was removed? This is used to implement the 				   MAC check in constant time for CBC records. 				 */
 block|}
 name|SSL3_RECORD
 typedef|;

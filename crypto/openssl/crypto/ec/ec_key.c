@@ -1847,7 +1847,17 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-return|return
+name|void
+modifier|*
+name|ret
+decl_stmt|;
+name|CRYPTO_r_lock
+argument_list|(
+name|CRYPTO_LOCK_EC
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
 name|EC_EX_DATA_get_data
 argument_list|(
 name|key
@@ -1860,12 +1870,21 @@ name|free_func
 argument_list|,
 name|clear_free_func
 argument_list|)
+expr_stmt|;
+name|CRYPTO_r_unlock
+argument_list|(
+name|CRYPTO_LOCK_EC
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
 
 begin_function
 name|void
+modifier|*
 name|EC_KEY_insert_key_method_data
 parameter_list|(
 name|EC_KEY
@@ -1959,6 +1978,9 @@ argument_list|(
 name|CRYPTO_LOCK_EC
 argument_list|)
 expr_stmt|;
+return|return
+name|ex_data
+return|;
 block|}
 end_function
 

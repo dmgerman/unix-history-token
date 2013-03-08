@@ -4276,7 +4276,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|p
 argument_list|,

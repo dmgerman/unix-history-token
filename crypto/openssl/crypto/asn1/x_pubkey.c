@@ -1731,6 +1731,11 @@ operator|->
 name|pkey
 condition|)
 block|{
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_EVP_PKEY
+argument_list|)
+expr_stmt|;
 name|EVP_PKEY_free
 argument_list|(
 name|ret
@@ -1744,21 +1749,20 @@ name|pkey
 expr_stmt|;
 block|}
 else|else
+block|{
 name|key
 operator|->
 name|pkey
 operator|=
 name|ret
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_EVP_PKEY
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_if
 
 begin_expr_stmt
 name|CRYPTO_add

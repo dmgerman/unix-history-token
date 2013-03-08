@@ -713,7 +713,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|db
 argument_list|,
