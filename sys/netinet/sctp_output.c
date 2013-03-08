@@ -15488,8 +15488,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 condition|)
@@ -15602,8 +15601,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -15628,8 +15626,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -15725,8 +15722,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -15754,8 +15750,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -15830,8 +15825,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -15859,8 +15853,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -15911,8 +15904,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -15940,8 +15932,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -16133,8 +16124,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 condition|)
@@ -16212,8 +16202,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -16246,8 +16235,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -16583,8 +16571,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -16655,8 +16642,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -16777,8 +16763,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -16849,8 +16834,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -17210,8 +17194,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 condition|)
@@ -17292,8 +17275,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -17362,8 +17344,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
@@ -17415,8 +17396,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|)
@@ -17485,8 +17465,7 @@ name|CMSG_ALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cmsghdr
+name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
