@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/interrupt.h>
 end_include
 
@@ -458,6 +464,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ncallout
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ncallout
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ncallout
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of entries in callwheel and size of timeout() preallocation"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * TODO:  *	allocate more timeout table slots when table overflows.  */
@@ -1048,6 +1082,28 @@ operator|=
 name|CC_CPU
 argument_list|(
 name|timeout_cpu
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Calculate the size of the callout wheel and the preallocated 	 * timeout() structures. 	 */
+name|ncallout
+operator|=
+name|imin
+argument_list|(
+literal|16
+operator|+
+name|maxproc
+operator|+
+name|maxfiles
+argument_list|,
+literal|18508
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ncallout"
+argument_list|,
+operator|&
+name|ncallout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate callout wheel size, should be next power of two higher 	 * than 'ncallout'. 	 */
