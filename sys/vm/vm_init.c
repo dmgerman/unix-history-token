@@ -315,13 +315,6 @@ name|caddr_t
 operator|)
 name|firstaddr
 expr_stmt|;
-name|v
-operator|=
-name|kern_timeout_callwheel_alloc
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Discount the physical memory larger than the size of kernel_map 	 * to avoid eating up all of KVA space. 	 */
 name|physmem_est
 operator|=
@@ -554,10 +547,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */
-comment|/* 	 * Initialize the callouts we just allocated. 	 */
-name|kern_timeout_callwheel_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

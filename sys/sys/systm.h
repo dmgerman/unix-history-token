@@ -2604,25 +2604,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|caddr_t
-name|kern_timeout_callwheel_alloc
-parameter_list|(
-name|caddr_t
-name|v
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kern_timeout_callwheel_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Stubs for obsolete functions that used to be for interrupt management */
 end_comment
