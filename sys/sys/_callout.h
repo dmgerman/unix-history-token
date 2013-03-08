@@ -28,9 +28,19 @@ struct_decl|;
 end_struct_decl
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|LIST_HEAD
 argument_list|(
 name|callout_list
+argument_list|,
+name|callout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|callout_slist
 argument_list|,
 name|callout
 argument_list|)
@@ -53,6 +63,12 @@ name|callout
 block|{
 union|union
 block|{
+name|LIST_ENTRY
+argument_list|(
+argument|callout
+argument_list|)
+name|le
+expr_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|callout
@@ -68,10 +84,14 @@ expr_stmt|;
 block|}
 name|c_links
 union|;
-name|int
+name|sbintime_t
 name|c_time
 decl_stmt|;
 comment|/* ticks to the event */
+name|sbintime_t
+name|c_precision
+decl_stmt|;
+comment|/* delta allowed wrt opt */
 name|void
 modifier|*
 name|c_arg

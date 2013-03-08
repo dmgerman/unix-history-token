@@ -1606,12 +1606,6 @@ operator|&
 name|mountlist_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flep
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|flep
@@ -1905,12 +1899,6 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|flep
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|flep

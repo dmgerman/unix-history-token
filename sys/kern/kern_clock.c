@@ -253,11 +253,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|PMC_SOFT_DEFINE
+name|PMC_SOFT_DEFINE_EX
 argument_list|( , ,
 name|clock
 argument_list|,
 name|prof
+argument_list|, \
+name|cpu_startprofclock
+argument_list|,
+name|cpu_stopprofclock
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1870,8 +1874,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|callout_tick
+name|callout_process
+argument_list|(
+name|sbinuptime
 argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2266,9 +2273,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|callout_tick
-argument_list|()
-expr_stmt|;
 comment|/* We are in charge to handle this tick duty. */
 if|if
 condition|(

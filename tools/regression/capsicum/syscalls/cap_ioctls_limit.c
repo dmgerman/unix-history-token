@@ -122,7 +122,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|==
-name|INT_MAX
+name|CAP_IOCTLS_ALL
 argument_list|)
 expr_stmt|;
 name|CHECK
@@ -1845,7 +1845,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|==
-name|INT_MAX
+name|CAP_IOCTLS_ALL
 argument_list|)
 expr_stmt|;
 name|CHECK

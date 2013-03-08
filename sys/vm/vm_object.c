@@ -494,7 +494,22 @@ name|memq
 argument_list|)
 argument_list|,
 operator|(
-literal|"object %p has resident pages"
+literal|"object %p has resident pages in its memq"
+operator|,
+name|object
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|root
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"object %p has resident pages in its tree"
 operator|,
 name|object
 operator|)
@@ -660,6 +675,12 @@ expr_stmt|;
 comment|/* These are true for any object that has been freed */
 name|object
 operator|->
+name|root
+operator|=
+name|NULL
+expr_stmt|;
+name|object
+operator|->
 name|paging_in_progress
 operator|=
 literal|0
@@ -675,6 +696,12 @@ operator|->
 name|shadow_count
 operator|=
 literal|0
+expr_stmt|;
+name|object
+operator|->
+name|cache
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -714,12 +741,6 @@ name|object
 operator|->
 name|shadow_head
 argument_list|)
-expr_stmt|;
-name|object
-operator|->
-name|root
-operator|=
-name|NULL
 expr_stmt|;
 name|object
 operator|->
@@ -845,12 +866,6 @@ literal|0
 expr_stmt|;
 name|object
 operator|->
-name|pg_color
-operator|=
-literal|0
-expr_stmt|;
-name|object
-operator|->
 name|handle
 operator|=
 name|NULL
@@ -885,12 +900,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|object
-operator|->
-name|cache
-operator|=
-name|NULL
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

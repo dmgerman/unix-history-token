@@ -998,7 +998,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sleep((chan),&(rw)->lock_object, (pri), (wmesg), (timo))
+value|_sleep((chan),&(rw)->lock_object, (pri), (wmesg),		\ 	    tick_sbt * (timo), 0, C_HARDCLOCK)
 end_define
 
 begin_define

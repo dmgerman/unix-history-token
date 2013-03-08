@@ -290,6 +290,12 @@ name|G_PART_ALIAS_EFI
 block|}
 block|,
 block|{
+literal|"fat16"
+block|,
+name|G_PART_ALIAS_MS_FAT16
+block|}
+block|,
+block|{
 literal|"fat32"
 block|,
 name|G_PART_ALIAS_MS_FAT32

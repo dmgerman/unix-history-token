@@ -94,7 +94,7 @@ name|type
 parameter_list|,
 name|arg
 parameter_list|)
-value|zfs_cv_init((cv), (name), (type), (arg))
+value|zfs_cv_init(cv, name, type, arg)
 end_define
 
 begin_endif

@@ -8678,7 +8678,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 if|if
@@ -9804,7 +9804,7 @@ argument|pv
 argument_list|,
 argument|&pvh->pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 if|if
@@ -9832,7 +9832,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10029,7 +10029,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 return|return
@@ -10957,7 +10957,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|free_pv_entry
@@ -12030,7 +12030,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|pa
@@ -15114,7 +15114,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 if|if
@@ -15219,7 +15219,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -15692,7 +15692,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 if|if
@@ -15927,7 +15927,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -16175,7 +16175,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -16568,7 +16568,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -16799,7 +16799,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -16813,7 +16813,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -16827,7 +16827,7 @@ name|pv_list
 argument_list|,
 name|pv
 argument_list|,
-name|pv_list
+name|pv_next
 argument_list|)
 expr_stmt|;
 name|pmap
@@ -17051,7 +17051,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -17195,7 +17195,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap
@@ -19338,7 +19338,7 @@ argument|pv
 argument_list|,
 argument|&m->md.pv_list
 argument_list|,
-argument|pv_list
+argument|pv_next
 argument_list|)
 block|{
 name|pmap

@@ -4532,14 +4532,14 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
-comment|/* Run keepalive checks every keepalive_interval iff ka is enabled */
+comment|/* Run keepalive checks every keepalive_period iff ka is enabled */
 if|if
 condition|(
 operator|(
 name|V_dyn_keepalive_last
 operator|+
-name|V_dyn_keepalive_interval
-operator|>=
+name|V_dyn_keepalive_period
+operator|<=
 name|time_uptime
 operator|)
 operator|&&
@@ -5668,7 +5668,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* do send keepalives */
-name|V_dyn_keepalive
+name|V_dyn_keepalive_last
 operator|=
 name|time_uptime
 expr_stmt|;

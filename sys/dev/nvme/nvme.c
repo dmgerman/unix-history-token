@@ -735,8 +735,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"opc:%x f:%x r1:%x cid:%x nsid:%x r2:%x r3:%x "
-literal|"mptr:%qx prp1:%qx prp2:%qx cdw:%x %x %x %x %x %x\n"
+literal|"opc:%x f:%x r1:%x cid:%x nsid:%x r2:%x r3:%x mptr:%jx prp1:%jx prp2:%jx cdw:%x %x %x %x %x %x\n"
 argument_list|,
 name|cmd
 operator|->
@@ -767,30 +766,21 @@ operator|->
 name|rsvd3
 argument_list|,
 operator|(
-name|long
-name|long
-name|unsigned
-name|int
+name|uintmax_t
 operator|)
 name|cmd
 operator|->
 name|mptr
 argument_list|,
 operator|(
-name|long
-name|long
-name|unsigned
-name|int
+name|uintmax_t
 operator|)
 name|cmd
 operator|->
 name|prp1
 argument_list|,
 operator|(
-name|long
-name|long
-name|unsigned
-name|int
+name|uintmax_t
 operator|)
 name|cmd
 operator|->

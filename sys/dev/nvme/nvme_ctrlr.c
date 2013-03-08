@@ -499,11 +499,10 @@ name|ctrlr
 operator|->
 name|dev
 argument_list|,
-literal|"Chatham size: %lld\n"
+literal|"Chatham size: %jd\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|ctrlr
 operator|->
