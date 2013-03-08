@@ -31996,6 +31996,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|int
 name|sctp_med_chunk_output
 parameter_list|(
