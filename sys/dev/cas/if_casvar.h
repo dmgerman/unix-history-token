@@ -589,6 +589,10 @@ name|u_int
 name|sc_rxdptr
 decl_stmt|;
 comment|/* next ready RX descriptor */
+name|uint32_t
+name|sc_mac_rxcfg
+decl_stmt|;
+comment|/* RX MAC conf. % CAS_MAC_RX_CONF_EN */
 name|int
 name|sc_ifflags
 decl_stmt|;
