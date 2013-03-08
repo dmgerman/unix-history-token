@@ -767,9 +767,9 @@ name|sbus_driver
 argument_list|,
 name|sbus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|BUS_PASS_BUS
 argument_list|)
@@ -4786,6 +4786,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -4828,6 +4829,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -4852,7 +4854,7 @@ argument_list|)
 expr_stmt|;
 name|shutdown_nice
 argument_list|(
-literal|0
+name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
 block|}
