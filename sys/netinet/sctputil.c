@@ -25844,7 +25844,7 @@ ifdef|#
 directive|ifdef
 name|INET6
 case|case
-name|INET6
+name|AF_INET6
 case|:
 block|{
 name|struct
