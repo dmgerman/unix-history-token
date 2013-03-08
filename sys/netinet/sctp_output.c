@@ -19116,12 +19116,14 @@ name|IP_DF
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ip
 operator|->
 name|ip_off
 operator|=
 literal|0
 expr_stmt|;
+block|}
 comment|/* FreeBSD has a function for ip_id's */
 name|ip
 operator|->
