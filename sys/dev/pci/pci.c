@@ -1189,7 +1189,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 	 * MSI-X doesn't work with at least LSI SAS1068E passed through by 	 * VMware. 	 */
+comment|/* 	 * MSI-X allocation doesn't work properly for devices passed through 	 * by VMware up to at least ESXi 5.1. 	 */
 block|{
 literal|0x079015ad
 block|,
@@ -1200,6 +1200,18 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* PCI/PCI-X */
+block|{
+literal|0x07a015ad
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* PCIe */
 comment|/* 	 * Some virtualization environments emulate an older chipset 	 * but support MSI just fine.  QEMU uses the Intel 82440. 	 */
 block|{
 literal|0x12378086
@@ -15548,6 +15560,7 @@ end_function
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
@@ -15556,6 +15569,7 @@ decl_stmt|;
 name|int
 name|subclass
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -16281,13 +16295,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
 decl_stmt|,
 modifier|*
 name|scp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|device
 decl_stmt|;
@@ -16489,7 +16505,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
