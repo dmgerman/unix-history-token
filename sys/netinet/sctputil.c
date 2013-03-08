@@ -6013,6 +6013,17 @@ index|[
 name|i
 index|]
 operator|.
+name|chunks_on_queues
+operator|=
+literal|0
+expr_stmt|;
+name|asoc
+operator|->
+name|strmout
+index|[
+name|i
+index|]
+operator|.
 name|stream_no
 operator|=
 name|i
@@ -19654,7 +19665,7 @@ name|chk
 operator|->
 name|sent
 operator|!=
-name|SCTP_DATAGRAM_NR_MARKED
+name|SCTP_DATAGRAM_NR_ACKED
 condition|)
 block|{
 if|if
