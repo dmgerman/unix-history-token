@@ -21519,6 +21519,10 @@ name|data
 operator|.
 name|TSN_seq
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|tp1
 argument_list|)
 expr_stmt|;

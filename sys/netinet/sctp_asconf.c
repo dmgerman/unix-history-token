@@ -9897,6 +9897,10 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"set_primary_ip_address_sa: queued on tcb=%p, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -9963,6 +9967,10 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"set_primary_ip_address_sa: failed to add to queue on tcb=%p, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;
@@ -10049,6 +10057,10 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"set_primary_ip_address: queued on stcb=%p, "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|stcb
 argument_list|)
 expr_stmt|;

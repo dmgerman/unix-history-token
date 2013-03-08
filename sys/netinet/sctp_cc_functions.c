@@ -5464,6 +5464,10 @@ name|SCTP_DEBUG_INDATA1
 argument_list|,
 literal|"Destination %p moved from PF to reachable with cwnd %d.\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|net
 argument_list|,
 name|net
