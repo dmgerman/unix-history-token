@@ -2048,6 +2048,7 @@ decl_stmt|;
 name|u_int16_t
 name|bce_sdid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|bce_name
@@ -2584,6 +2585,7 @@ decl_stmt|;
 name|u32
 name|total_size
 decl_stmt|;
+specifier|const
 name|u8
 modifier|*
 name|name
@@ -35450,6 +35452,7 @@ decl_stmt|;
 name|u32
 name|text_index
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|text
@@ -35464,6 +35467,7 @@ decl_stmt|;
 name|u32
 name|data_index
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|data
@@ -35478,6 +35482,7 @@ decl_stmt|;
 name|u32
 name|sbss_index
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|sbss
@@ -35851,7 +35856,7 @@ begin_struct
 struct|struct
 name|bce_softc
 block|{
-comment|/* Interface info.  Must be first!! */
+comment|/* Interface info */
 name|struct
 name|ifnet
 modifier|*
@@ -35899,19 +35904,9 @@ name|mtx
 name|bce_mtx
 decl_stmt|;
 comment|/* Interrupt handler. */
-name|driver_intr_t
-modifier|*
-name|bce_intr
-decl_stmt|;
 name|void
 modifier|*
 name|bce_intrhand
-decl_stmt|;
-name|int
-name|bce_irq_rid
-decl_stmt|;
-name|int
-name|bce_msi_count
 decl_stmt|;
 comment|/* ASIC Chip ID. */
 name|u32
@@ -36052,6 +36047,7 @@ name|u16
 name|link_speed
 decl_stmt|;
 comment|/* Flash NVRAM settings */
+specifier|const
 name|struct
 name|flash_spec
 modifier|*
@@ -36066,6 +36062,7 @@ name|u32
 name|bce_shmem_base
 decl_stmt|;
 comment|/* Name string */
+specifier|const
 name|char
 modifier|*
 name|bce_name
