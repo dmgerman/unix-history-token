@@ -2326,6 +2326,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -4083,6 +4087,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -5615,7 +5623,7 @@ condition|)
 block|{
 name|errno
 operator|=
-name|ENOBUFS
+name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
