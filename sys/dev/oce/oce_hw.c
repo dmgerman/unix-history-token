@@ -1323,12 +1323,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 comment|/* Free LRO resources */
 name|oce_free_lro
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Release queue*/
 name|oce_queue_release_all
 argument_list|(
@@ -1513,36 +1526,6 @@ name|if_cap_flags
 operator|=
 name|capab_en_flags
 expr_stmt|;
-comment|/* Enable VLAN Promisc on HW */
-name|rc
-operator|=
-name|oce_config_vlan
-argument_list|(
-name|sc
-argument_list|,
-operator|(
-name|uint8_t
-operator|)
-name|sc
-operator|->
-name|if_id
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rc
-condition|)
-goto|goto
-name|error
-goto|;
 comment|/* set default flow control */
 name|rc
 operator|=
@@ -1762,14 +1745,6 @@ condition|)
 block|{
 name|sc
 operator|->
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_RUNNING
-expr_stmt|;
-name|sc
-operator|->
 name|link_status
 operator|=
 name|NTWK_LOGICAL_LINK_UP
@@ -1786,19 +1761,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&=
-operator|~
-operator|(
-name|IFF_DRV_RUNNING
-operator||
-name|IFF_DRV_OACTIVE
-operator|)
-expr_stmt|;
 name|sc
 operator|->
 name|link_status
@@ -1866,7 +1828,7 @@ operator|->
 name|mq
 argument_list|)
 expr_stmt|;
-comment|/* we need to get MCC aync events. 	   So enable intrs and also arm first EQ 	*/
+comment|/* we need to get MCC aync events. So enable intrs and arm 	   first EQ, Other EQs will be armed after interface is UP  	*/
 name|oce_hw_intr_enable
 argument_list|(
 name|sc
@@ -1890,6 +1852,12 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* Send first mcc cmd and after that we get gracious 	   MCC notifications from FW 	*/
+name|oce_first_mcc_cmd
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1988,7 +1956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief               Function for hardware update multicast filter  * @param sc            software handle to the device  */
+comment|/**  * @brief		Function for hardware update multicast filter  * @param sc		software handle to the device  */
 end_comment
 
 begin_function
