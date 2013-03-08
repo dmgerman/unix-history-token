@@ -1545,6 +1545,13 @@ name|SCTP_FORWARD_TSN_SKIP
 value|30010
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_DATAGRAM_NR_MARKED
+value|40010
+end_define
+
 begin_comment
 comment|/* chunk output send from locations */
 end_comment
