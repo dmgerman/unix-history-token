@@ -10890,8 +10890,6 @@ name|number_entries
 argument_list|,
 name|liste
 operator|->
-name|req
-operator|.
 name|list_of_streams
 argument_list|)
 expr_stmt|;

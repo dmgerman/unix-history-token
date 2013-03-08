@@ -138,12 +138,12 @@ expr_stmt|;
 name|uint32_t
 name|tsn
 decl_stmt|;
-name|int
+name|uint32_t
 name|number_entries
 decl_stmt|;
-name|struct
-name|sctp_stream_reset_out_request
-name|req
+name|uint16_t
+name|list_of_streams
+index|[]
 decl_stmt|;
 block|}
 struct|;
