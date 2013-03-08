@@ -11876,7 +11876,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB1
 argument_list|,
-literal|"Bind called port:%d\n"
+literal|"Bind called port: %d\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -11897,7 +11897,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB1
 argument_list|,
-literal|"Addr :"
+literal|"Addr: "
 argument_list|)
 expr_stmt|;
 name|SCTPDBG_ADDR
