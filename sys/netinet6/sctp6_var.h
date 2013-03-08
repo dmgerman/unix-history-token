@@ -76,6 +76,26 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|sctp6_input_with_port
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|uint16_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|sctp6_output
 name|__P
 argument_list|(
