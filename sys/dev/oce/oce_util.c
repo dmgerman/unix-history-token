@@ -135,6 +135,8 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
 name|BUS_DMA_COHERENT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|dma

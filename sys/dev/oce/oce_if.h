@@ -263,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|COMPONENT_REVISION
-value|"4.2.116.0"
+value|"4.6.95.0"
 end_define
 
 begin_comment
@@ -409,15 +409,19 @@ name|OCE_NCPUS
 value|mp_ncpus
 end_define
 
+begin_comment
+comment|/* This should be powers of 2. Like 2,4,8& 16 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|OCE_MAX_RSS
-value|8
+value|4
 end_define
 
 begin_comment
-comment|/* This should be powers of 2. Like 2,4,8& 16 */
+comment|/* TODO: 8*/
 end_comment
 
 begin_define
@@ -531,7 +535,7 @@ begin_define
 define|#
 directive|define
 name|OCE_MAX_JUMBO_FRAME_SIZE
-value|16360
+value|9018
 end_define
 
 begin_define
@@ -676,7 +680,7 @@ begin_define
 define|#
 directive|define
 name|OCE_IF_CAPABILITIES
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 					IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | \ 					IFCAP_VLAN_HWTSO | IFCAP_JUMBO_MTU | \ 					IFCAP_VLAN_MTU)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 					IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | \ 					IFCAP_JUMBO_MTU | IFCAP_VLAN_MTU)
 end_define
 
 begin_define
@@ -1879,6 +1883,85 @@ end_struct
 begin_define
 define|#
 directive|define
+name|INTR_RATE_HWM
+value|15000
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR_RATE_LWM
+value|10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCE_MAX_EQD
+value|128u
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCE_MIN_EQD
+value|50u
+end_define
+
+begin_struct
+struct|struct
+name|oce_set_eqd
+block|{
+name|uint32_t
+name|eq_id
+decl_stmt|;
+name|uint32_t
+name|phase
+decl_stmt|;
+name|uint32_t
+name|delay_multiplier
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|oce_aic_obj
+block|{
+comment|/* Adaptive interrupt coalescing (AIC) info */
+name|boolean_t
+name|enable
+decl_stmt|;
+name|uint32_t
+name|min_eqd
+decl_stmt|;
+comment|/* in usecs */
+name|uint32_t
+name|max_eqd
+decl_stmt|;
+comment|/* in usecs */
+name|uint32_t
+name|cur_eqd
+decl_stmt|;
+comment|/* in usecs */
+name|uint32_t
+name|et_eqd
+decl_stmt|;
+comment|/* configured value when aic is off */
+name|uint64_t
+name|ticks
+decl_stmt|;
+name|uint64_t
+name|intr_prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
 name|MAX_LOCK_DESC_LEN
 value|32
 end_define
@@ -1919,7 +2002,7 @@ name|lock
 parameter_list|,
 name|desc
 parameter_list|)
-value|{ \ 	strncpy((lock)->name, (desc), MAX_LOCK_DESC_LEN); \ 	(lock)->name[MAX_LOCK_DESC_LEN] = '\0'; \ 	mtx_init(&(lock)->mutex, (lock)->name, MTX_NETWORK_LOCK, MTX_DEF); \ }
+value|{ \ 	strncpy((lock)->name, (desc), MAX_LOCK_DESC_LEN); \ 	(lock)->name[MAX_LOCK_DESC_LEN] = '\0'; \ 	mtx_init(&(lock)->mutex, (lock)->name, NULL, MTX_DEF); \ }
 end_define
 
 begin_define
@@ -2197,6 +2280,9 @@ name|eq_cfg
 decl_stmt|;
 name|int
 name|vector
+decl_stmt|;
+name|uint64_t
+name|intr
 decl_stmt|;
 block|}
 struct|;
@@ -3079,6 +3165,13 @@ decl_stmt|;
 name|uint32_t
 name|promisc
 decl_stmt|;
+name|struct
+name|oce_aic_obj
+name|aic_obj
+index|[
+name|OCE_MAX_EQ
+index|]
+decl_stmt|;
 comment|/*Vlan Filtering related */
 name|eventhandler_tag
 name|vlan_attach
@@ -3109,6 +3202,15 @@ name|timer
 decl_stmt|;
 name|int8_t
 name|be3_native
+decl_stmt|;
+name|uint16_t
+name|qnq_debug_event
+decl_stmt|;
+name|uint16_t
+name|qnqid
+decl_stmt|;
+name|uint16_t
+name|pvid
 decl_stmt|;
 block|}
 name|OCE_SOFTC
@@ -3624,16 +3726,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|oce_free_lro
-parameter_list|(
-name|POCE_SOFTC
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|oce_stop_rx
 parameter_list|(
 name|POCE_SOFTC
@@ -3663,6 +3755,35 @@ name|rq
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+end_if
+
+begin_function_decl
+name|void
+name|oce_free_lro
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/************************************************************  * Mailbox functions  ************************************************************/
@@ -3714,6 +3835,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|oce_get_fw_version
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|oce_first_mcc_cmd
 parameter_list|(
 name|POCE_SOFTC
 name|sc
@@ -4232,6 +4363,37 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|oce_mbox_read_transrecv_data
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|,
+name|uint32_t
+name|page_num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|oce_mbox_eqd_modify_periodic
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|,
+name|struct
+name|oce_set_eqd
+modifier|*
+name|set_eqd
+parameter_list|,
+name|int
+name|num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|mbx_common_req_hdr_init
 parameter_list|(
@@ -4665,6 +4827,58 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|TRANSCEIVER_DATA_NUM_ELE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSCEIVER_DATA_SIZE
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSCEIVER_A0_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSCEIVER_A2_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_NUM_A0
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_NUM_A2
+value|0xa2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_QNQ_OR_UMC
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc->pvid&& (sc->function_mode& FNM_UMC_MODE ))\ 		     || (sc->qnqid&& (sc->function_mode& FNM_FLEX10_MODE)))
+end_define
 
 end_unit
 
