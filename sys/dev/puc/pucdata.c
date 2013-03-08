@@ -2813,8 +2813,6 @@ block|,
 literal|"Oxford Semiconductor OX16PCI958 UARTs"
 block|,
 name|DEFAULT_RCLK
-operator|*
-literal|10
 block|,
 name|PUC_PORT_8S
 block|,
@@ -3687,9 +3685,7 @@ block|,
 literal|4
 block|,
 literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 block|,
 block|{
 literal|0x9710
@@ -5494,6 +5490,7 @@ name|res
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|uint16_t
 name|dual
 index|[]
@@ -5561,6 +5558,7 @@ literal|0
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|uint16_t
 name|quad
 index|[]
@@ -5614,6 +5612,7 @@ literal|0
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|uint16_t
 name|octa
 index|[]
@@ -5647,11 +5646,13 @@ literal|0
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
 name|ports
 decl_stmt|;
+specifier|const
 name|uint16_t
 modifier|*
 name|ids
