@@ -999,14 +999,6 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-name|len
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
 name|in6_sin6_2_sin
 argument_list|(
 operator|(
