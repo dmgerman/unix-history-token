@@ -3036,8 +3036,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -3076,8 +3078,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -3108,8 +3112,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|memcpy
@@ -3165,8 +3171,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -3197,8 +3205,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|memcpy
@@ -3235,8 +3245,10 @@ operator|=
 name|EAFNOSUPPORT
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|who
@@ -4404,6 +4416,7 @@ operator|=
 name|context
 expr_stmt|;
 return|return
+operator|(
 name|sctp_sendx
 argument_list|(
 name|sd
@@ -4421,6 +4434,7 @@ name|sinfo
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
