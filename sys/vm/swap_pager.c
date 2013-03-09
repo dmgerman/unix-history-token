@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2462,7 +2468,7 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2502,7 +2508,7 @@ argument_list|,
 name|SWAPBLK_NONE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2560,7 +2566,7 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2594,7 +2600,7 @@ argument_list|,
 name|SWAPBLK_NONE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2658,11 +2664,9 @@ name|sw_alloc_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -3104,11 +3108,9 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|swp_pager_meta_free
@@ -3157,7 +3159,7 @@ init|=
 name|start
 decl_stmt|;
 comment|/* save start index */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3214,7 +3216,7 @@ operator|-
 name|beg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3259,7 +3261,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3296,18 +3298,14 @@ block|{
 name|vm_pindex_t
 name|i
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|srcobject
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|dstobject
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If destroysource is set, we remove the source object from the 	 * swap_pager internal queue now. 	 */
@@ -3424,7 +3422,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|srcobject
 argument_list|)
@@ -3450,7 +3448,7 @@ argument_list|(
 name|dstobject
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|srcobject
 argument_list|)
@@ -3527,11 +3525,9 @@ block|{
 name|daddr_t
 name|blk0
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * do we have good backing store at the requested index ? 	 */
@@ -3735,13 +3731,11 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|swp_pager_meta_ctl
@@ -4024,7 +4018,7 @@ name|VM_PAGER_FAIL
 operator|)
 return|;
 comment|/* 	 * Getpbuf() can sleep. 	 */
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4143,7 +4137,7 @@ name|reqpage
 operator|-
 name|i
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4227,7 +4221,7 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4244,7 +4238,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * wait for the page we want to complete.  VPO_SWAPINPROG is always 	 * cleared on completion.  If an I/O error occurs, SWAPBLK_NONE 	 * is set in the meta-data. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4424,7 +4418,7 @@ argument_list|,
 name|SWAPBLK_NONE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4736,7 +4730,7 @@ name|b_blkno
 operator|=
 name|blk
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4810,7 +4804,7 @@ operator|=
 name|mreq
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4954,7 +4948,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5067,7 +5061,7 @@ index|]
 operator|->
 name|object
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5343,7 +5337,7 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5436,11 +5430,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5841,7 +5833,7 @@ comment|/* avoid deadlock */
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5866,7 +5858,7 @@ operator|+
 name|j
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5977,11 +5969,9 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Convert default object to swap object if necessary 	 */
@@ -6114,7 +6104,7 @@ operator|&
 name|swhash_mtx
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6161,7 +6151,7 @@ block|}
 else|else
 name|VM_WAIT
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6337,11 +6327,9 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6527,11 +6515,9 @@ name|index
 init|=
 literal|0
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6727,11 +6713,9 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The meta data only exists of the object is OBJT_SWAP 	 * and even then might not be allocated yet. 	 */
@@ -8677,7 +8661,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -8736,7 +8720,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)

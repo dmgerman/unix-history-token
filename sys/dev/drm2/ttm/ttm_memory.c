@@ -192,15 +192,7 @@ name|ttm_mem_global
 modifier|*
 name|glob
 parameter_list|)
-block|{
-name|free
-argument_list|(
-name|glob
-argument_list|,
-name|M_TTM_ZONE
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function

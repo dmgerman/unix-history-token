@@ -6729,13 +6729,6 @@ operator|->
 name|dummy_read_page
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|glob
-argument_list|,
-name|M_DRM_GLOBAL
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
