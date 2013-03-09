@@ -369,6 +369,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -387,6 +388,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd
@@ -405,6 +407,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd_machine
@@ -423,6 +426,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd_machine
@@ -441,6 +445,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd
@@ -459,6 +464,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd
@@ -477,6 +483,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd_serial
@@ -495,6 +502,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_vpd_serial

@@ -201,6 +201,7 @@ file|"opt_gdb.h"
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb

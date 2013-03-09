@@ -1769,6 +1769,7 @@ comment|/*  * Grab an atomic snapshot of the name cache hash chain lengths  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug

@@ -1547,6 +1547,7 @@ comment|/*  * Sysctl entries for devstat.  The first one is a node that all the 
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern

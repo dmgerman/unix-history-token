@@ -818,6 +818,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
