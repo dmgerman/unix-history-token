@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -1769,7 +1775,7 @@ name|tsize
 operator|=
 name|size
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -1816,7 +1822,7 @@ name|PAGE_SIZE
 operator|-
 name|toff
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|tbp
 operator|->
@@ -1826,8 +1832,6 @@ name|j
 index|]
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -1862,7 +1866,7 @@ operator|-=
 name|tinc
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -1985,7 +1989,7 @@ operator|.
 name|cluster_entry
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -2098,7 +2102,7 @@ operator|=
 name|bogus_page
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -2160,7 +2164,7 @@ name|size
 expr_stmt|;
 block|}
 comment|/* 	 * Fully valid pages in the cluster are already good and do not need 	 * to be re-read from disk.  Replace the page with bogus_page 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|bp
 operator|->
@@ -2185,7 +2189,7 @@ name|j
 operator|++
 control|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|bp
 operator|->
@@ -2195,8 +2199,6 @@ name|j
 index|]
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2222,7 +2224,7 @@ operator|=
 name|bogus_page
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|bp
 operator|->
@@ -3858,7 +3860,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -3910,7 +3912,7 @@ operator|&
 name|VPO_BUSY
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->
@@ -4012,7 +4014,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tbp
 operator|->

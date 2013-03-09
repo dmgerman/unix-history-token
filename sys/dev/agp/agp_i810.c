@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/agp/agppriv.h>
 end_include
 
@@ -9231,7 +9237,7 @@ name|AGP_PAGE_SIZE
 condition|)
 block|{
 comment|/* 			 * Allocate and wire down the page now so that we can 			 * get its physical address. 			 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
 operator|->
@@ -9257,7 +9263,7 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mem
 operator|->
@@ -9398,7 +9404,7 @@ name|AGP_PAGE_SIZE
 condition|)
 block|{
 comment|/* 			 * Unwire the page which we wired in alloc_memory. 			 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
 operator|->
@@ -9433,7 +9439,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mem
 operator|->

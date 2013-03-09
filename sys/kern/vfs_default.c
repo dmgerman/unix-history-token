@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -4283,7 +4283,7 @@ operator|->
 name|a_end
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vp
 operator|->
@@ -4307,7 +4307,7 @@ name|end
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vp
 operator|->

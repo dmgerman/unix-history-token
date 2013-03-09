@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -9361,7 +9367,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Temporarily increase the backing VM 			 * object's reference count so that a forced 			 * reclamation of its vnode does not 			 * immediately destroy it. 			 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -9384,7 +9390,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -9392,7 +9398,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -9993,7 +9999,7 @@ name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10099,7 +10105,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10152,7 +10158,7 @@ argument_list|,
 name|xfsize
 argument_list|)
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10196,7 +10202,7 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10285,7 +10291,7 @@ argument_list|)
 expr_stmt|;
 name|after_read
 label|:
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10300,7 +10306,7 @@ condition|(
 operator|!
 name|error
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -10368,7 +10374,7 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)

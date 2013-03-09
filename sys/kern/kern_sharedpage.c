@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -396,7 +396,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|shared_page_obj
 argument_list|)
@@ -422,7 +422,7 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|shared_page_obj
 argument_list|)

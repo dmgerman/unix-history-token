@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -824,11 +830,9 @@ name|vm_object_t
 name|object
 decl_stmt|;
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 operator|(
@@ -892,7 +896,7 @@ operator|==
 name|handle
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -915,14 +919,14 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)

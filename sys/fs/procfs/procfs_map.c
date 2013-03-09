@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -429,7 +429,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -532,7 +532,7 @@ name|tobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -543,7 +543,7 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
@@ -650,7 +650,7 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
@@ -673,7 +673,7 @@ name|obj
 operator|->
 name|shadow_count
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
