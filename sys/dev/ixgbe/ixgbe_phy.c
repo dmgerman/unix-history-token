@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -196,6 +196,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|s32
+name|ixgbe_read_i2c_sff8472_generic
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+modifier|*
+name|sff8472_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  *  ixgbe_init_phy_ops_generic - Inits PHY function ptrs  *  @hw: pointer to the hardware structure  *  *  Initialize the function pointers.  **/
 end_comment
@@ -313,6 +333,15 @@ name|write_i2c_byte
 operator|=
 operator|&
 name|ixgbe_write_i2c_byte_generic
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_i2c_sff8472
+operator|=
+operator|&
+name|ixgbe_read_i2c_sff8472_generic
 expr_stmt|;
 name|phy
 operator|->
@@ -2103,7 +2132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_setup_phy_link_speed_generic - Sets the auto advertised capabilities  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg: TRUE if autonegotiation enabled  **/
+comment|/**  *  ixgbe_setup_phy_link_speed_generic - Sets the auto advertised capabilities  *  @hw: pointer to hardware structure  *  @speed: new link speed  **/
 end_comment
 
 begin_function
@@ -2119,16 +2148,11 @@ name|ixgbe_link_speed
 name|speed
 parameter_list|,
 name|bool
-name|autoneg
-parameter_list|,
-name|bool
 name|autoneg_wait_to_complete
 parameter_list|)
 block|{
-name|UNREFERENCED_2PARAMETER
+name|UNREFERENCED_1PARAMETER
 argument_list|(
-name|autoneg
-argument_list|,
 name|autoneg_wait_to_complete
 argument_list|)
 expr_stmt|;
@@ -3589,16 +3613,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -3658,16 +3674,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -3693,16 +3701,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -3728,16 +3728,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -4159,16 +4151,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -4197,16 +4181,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -4235,16 +4211,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_ERR_SWFW_SYNC
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_I2C
-operator|||
-name|status
-operator|==
-name|IXGBE_ERR_SFP_NOT_PRESENT
+operator|!=
+name|IXGBE_SUCCESS
 condition|)
 goto|goto
 name|err_read_i2c_eeprom
@@ -5040,6 +5008,49 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  ixgbe_read_i2c_sff8472_generic - Reads 8 bit word over I2C interface  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset at address 0xA2  *  @eeprom_data: value read  *  *  Performs byte read operation to SFP module's SFF-8472 data over I2C  **/
+end_comment
+
+begin_function
+specifier|static
+name|s32
+name|ixgbe_read_i2c_sff8472_generic
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+modifier|*
+name|sff8472_data
+parameter_list|)
+block|{
+return|return
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_i2c_byte
+argument_list|(
+name|hw
+argument_list|,
+name|byte_offset
+argument_list|,
+name|IXGBE_I2C_EEPROM_DEV_ADDR2
+argument_list|,
+name|sff8472_data
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  ixgbe_write_i2c_eeprom_generic - Writes 8 bit EEPROM word over I2C interface  *  @hw: pointer to hardware structure  *  @byte_offset: EEPROM byte offset to write  *  @eeprom_data: value to write  *  *  Performs byte write operation to SFP module's EEPROM over I2C interface.  **/
 end_comment
 
@@ -5354,6 +5365,11 @@ expr_stmt|;
 break|break;
 name|fail
 label|:
+name|ixgbe_i2c_bus_clear
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 name|hw
 operator|->
 name|mac
@@ -5370,11 +5386,6 @@ expr_stmt|;
 name|msec_delay
 argument_list|(
 literal|100
-argument_list|)
-expr_stmt|;
-name|ixgbe_i2c_bus_clear
-argument_list|(
-name|hw
 argument_list|)
 expr_stmt|;
 name|retry

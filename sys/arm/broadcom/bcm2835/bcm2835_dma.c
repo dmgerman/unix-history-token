@@ -942,6 +942,12 @@ name|cb
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|cb
+operator|->
+name|info
+operator|=
+name|INFO_WAIT_RESP
+expr_stmt|;
 block|}
 end_function
 
@@ -2759,6 +2765,17 @@ argument_list|,
 name|debug
 operator|&
 name|DEBUG_ERROR_MASK
+argument_list|)
+expr_stmt|;
+name|bcm_dma_reset
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|ch
+operator|->
+name|ch
 argument_list|)
 expr_stmt|;
 block|}

@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -488,7 +494,22 @@ name|memq
 argument_list|)
 argument_list|,
 operator|(
-literal|"object %p has resident pages"
+literal|"object %p has resident pages in its memq"
+operator|,
+name|object
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|root
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"object %p has resident pages in its tree"
 operator|,
 name|object
 operator|)
@@ -520,11 +541,10 @@ endif|#
 directive|endif
 name|KASSERT
 argument_list|(
+name|vm_object_cache_is_empty
+argument_list|(
 name|object
-operator|->
-name|cache
-operator|==
-name|NULL
+argument_list|)
 argument_list|,
 operator|(
 literal|"object %p has cached pages"
@@ -629,33 +649,35 @@ argument_list|(
 operator|&
 name|object
 operator|->
-name|mtx
+name|lock
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|object
 operator|->
-name|mtx
+name|lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|rw_init_flags
 argument_list|(
 operator|&
 name|object
 operator|->
-name|mtx
+name|lock
 argument_list|,
 literal|"vm object"
 argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_DUPOK
+name|RW_DUPOK
 argument_list|)
 expr_stmt|;
 comment|/* These are true for any object that has been freed */
+name|object
+operator|->
+name|root
+operator|=
+name|NULL
+expr_stmt|;
 name|object
 operator|->
 name|paging_in_progress
@@ -673,6 +695,12 @@ operator|->
 name|shadow_count
 operator|=
 literal|0
+expr_stmt|;
+name|object
+operator|->
+name|cache
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -712,12 +740,6 @@ name|object
 operator|->
 name|shadow_head
 argument_list|)
-expr_stmt|;
-name|object
-operator|->
-name|root
-operator|=
-name|NULL
 expr_stmt|;
 name|object
 operator|->
@@ -877,12 +899,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|object
-operator|->
-name|cache
-operator|=
-name|NULL
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -937,18 +953,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|rw_init
 argument_list|(
 operator|&
 name|kernel_object
 operator|->
-name|mtx
+name|lock
 argument_list|,
-literal|"vm object"
-argument_list|,
-literal|"kernel object"
-argument_list|,
-name|MTX_DEF
+literal|"kernel vm object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -990,18 +1002,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_init
+name|rw_init
 argument_list|(
 operator|&
 name|kmem_object
 operator|->
-name|mtx
+name|lock
 argument_list|,
-literal|"vm object"
-argument_list|,
-literal|"kmem object"
-argument_list|,
-name|MTX_DEF
+literal|"kmem vm object"
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -1094,11 +1102,9 @@ name|u_short
 name|bits
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1126,11 +1132,9 @@ name|vm_memattr_t
 name|memattr
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1220,11 +1224,9 @@ name|short
 name|i
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1247,11 +1249,9 @@ name|short
 name|i
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1271,11 +1271,9 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1327,11 +1325,9 @@ name|short
 name|i
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -1389,11 +1385,9 @@ modifier|*
 name|waitid
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 while|while
@@ -1492,7 +1486,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1502,7 +1496,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1527,11 +1521,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1590,11 +1582,9 @@ name|object
 operator|->
 name|handle
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1662,7 +1652,7 @@ operator|->
 name|ref_count
 operator|--
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1681,7 +1671,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1700,7 +1690,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1719,7 +1709,7 @@ operator|==
 name|OBJT_DEAD
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1747,7 +1737,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1784,7 +1774,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1837,7 +1827,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1960,7 +1950,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|robject
 argument_list|)
@@ -1972,7 +1962,7 @@ operator|->
 name|ref_count
 operator|++
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2037,7 +2027,7 @@ operator|->
 name|paging_in_progress
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2062,7 +2052,7 @@ operator|==
 name|temp
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2080,7 +2070,7 @@ operator|->
 name|paging_in_progress
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|robject
 argument_list|)
@@ -2106,7 +2096,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|robject
 argument_list|)
@@ -2124,7 +2114,7 @@ operator|==
 name|temp
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2135,7 +2125,7 @@ goto|;
 block|}
 block|}
 else|else
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2171,20 +2161,20 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|robject
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2206,7 +2196,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|temp
 argument_list|)
@@ -2223,7 +2213,7 @@ operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|temp
 argument_list|)
@@ -2254,7 +2244,7 @@ name|object
 argument_list|)
 expr_stmt|;
 else|else
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2392,11 +2382,9 @@ name|p
 decl_stmt|,
 name|p_next
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure no one uses us. 	 */
@@ -2463,7 +2451,7 @@ argument_list|,
 name|OBJPC_SYNC
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2479,7 +2467,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2654,11 +2642,11 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|!
+name|vm_object_cache_is_empty
+argument_list|(
 name|object
-operator|->
-name|cache
-operator|!=
-name|NULL
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_free
@@ -2676,7 +2664,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2809,11 +2797,9 @@ name|eio
 decl_stmt|,
 name|res
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3217,11 +3203,9 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|count
@@ -3478,7 +3462,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3496,7 +3480,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -3507,7 +3491,7 @@ name|object
 operator|->
 name|backing_object_offset
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3567,7 +3551,7 @@ name|object
 operator|->
 name|handle
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3656,7 +3640,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3676,7 +3660,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3718,7 +3702,7 @@ name|res
 operator|=
 name|FALSE
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3792,7 +3776,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3844,7 +3828,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4010,7 +3994,7 @@ condition|)
 goto|goto
 name|unlock_tobject
 goto|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -4030,7 +4014,7 @@ name|tobject
 operator|!=
 name|object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobject
 argument_list|)
@@ -4165,7 +4149,7 @@ name|object
 operator|!=
 name|tobject
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4191,7 +4175,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4293,13 +4277,13 @@ name|tobject
 operator|!=
 name|object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobject
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4348,7 +4332,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|source
 argument_list|)
@@ -4382,14 +4366,14 @@ name|OBJT_SWAP
 operator|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|source
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|source
 argument_list|)
@@ -4430,7 +4414,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|source
 argument_list|)
@@ -4499,7 +4483,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|source
 argument_list|)
@@ -4583,7 +4567,7 @@ operator|<=
 literal|1
 condition|)
 return|return;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|orig_object
 argument_list|)
@@ -4621,12 +4605,12 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * At this point, the new object is still private, so the order in 	 * which the original and new objects are locked does not matter. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|new_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|orig_object
 argument_list|)
@@ -4644,7 +4628,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|source
 argument_list|)
@@ -4662,17 +4646,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|source
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|orig_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|new_object
 argument_list|)
@@ -4682,7 +4666,7 @@ argument_list|(
 name|new_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|orig_object
 argument_list|)
@@ -4719,7 +4703,7 @@ argument_list|,
 name|OBJ_ONEMAPPING
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|source
 argument_list|)
@@ -4862,7 +4846,7 @@ operator|->
 name|busy
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|new_object
 argument_list|)
@@ -4886,7 +4870,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|new_object
 argument_list|)
@@ -4966,11 +4950,11 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|!
+name|vm_object_cache_is_empty
+argument_list|(
 name|orig_object
-operator|->
-name|cache
-operator|!=
-name|NULL
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_transfer
@@ -4983,7 +4967,7 @@ name|new_object
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|orig_object
 argument_list|)
@@ -5001,7 +4985,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|new_object
 argument_list|)
@@ -5025,7 +5009,7 @@ argument_list|(
 name|orig_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|new_object
 argument_list|)
@@ -5080,20 +5064,16 @@ decl_stmt|;
 name|vm_pindex_t
 name|backing_offset_index
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
 operator|->
 name|backing_object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|backing_object
@@ -5334,7 +5314,7 @@ operator|->
 name|busy
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5360,12 +5340,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -5667,18 +5647,14 @@ name|object
 operator|->
 name|backing_object
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|backing_object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5712,11 +5688,9 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 while|while
@@ -5742,7 +5716,7 @@ name|NULL
 condition|)
 break|break;
 comment|/* 		 * we check the backing object first, because it is most likely 		 * not collapsable. 		 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -5806,7 +5780,7 @@ name|OBJ_DEAD
 operator|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -5833,7 +5807,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -5917,11 +5891,11 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|!
+name|vm_object_cache_is_empty
+argument_list|(
 name|backing_object
-operator|->
-name|cache
-operator|!=
-name|NULL
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_free
@@ -5954,7 +5928,7 @@ operator|->
 name|backing_object
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 operator|->
@@ -5983,7 +5957,7 @@ name|shadow_list
 argument_list|)
 expr_stmt|;
 comment|/* 				 * The shadow_count has not changed. 				 */
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 operator|->
@@ -6023,7 +5997,7 @@ name|backing_object
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -6063,7 +6037,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -6102,7 +6076,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|new_backing_object
 argument_list|)
@@ -6129,7 +6103,7 @@ argument_list|(
 name|new_backing_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|new_backing_object
 argument_list|)
@@ -6149,7 +6123,7 @@ operator|->
 name|ref_count
 operator|--
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -6192,11 +6166,9 @@ decl_stmt|;
 name|int
 name|wirings
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6550,11 +6522,11 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|!
+name|vm_object_cache_is_empty
+argument_list|(
 name|object
-operator|->
-name|cache
-operator|!=
-name|NULL
+argument_list|)
 argument_list|)
 condition|)
 name|vm_page_cache_free
@@ -6600,11 +6572,9 @@ name|p
 decl_stmt|,
 name|next
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6774,11 +6744,9 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 for|for
@@ -6973,7 +6941,7 @@ operator|(
 name|TRUE
 operator|)
 return|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|prev_object
 argument_list|)
@@ -6993,7 +6961,7 @@ operator|!=
 name|OBJT_SWAP
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|prev_object
 argument_list|)
@@ -7020,7 +6988,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|prev_object
 argument_list|)
@@ -7067,7 +7035,7 @@ name|next_pindex
 operator|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|prev_object
 argument_list|)
@@ -7190,7 +7158,7 @@ name|next_pindex
 operator|+
 name|next_size
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|prev_object
 argument_list|)
@@ -7211,11 +7179,9 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if

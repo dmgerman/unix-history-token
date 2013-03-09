@@ -248,9 +248,34 @@ name|hz
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* system clock's frequency */
+end_comment
+
 begin_decl_stmt
 name|int
 name|tick
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* usec per tick (1000000 / hz) */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|bintime
+name|tick_bt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bintime per tick (1s / hz) */
+end_comment
+
+begin_decl_stmt
+name|sbintime_t
+name|tick_sbt
 decl_stmt|;
 end_decl_stmt
 
@@ -312,16 +337,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* size of kernel message buffer */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ncallout
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum # of timer events */
 end_comment
 
 begin_decl_stmt
@@ -471,27 +486,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of clock ticks per second"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ncallout
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|ncallout
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of pre-allocated timer events"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1091,6 +1085,19 @@ literal|1000000
 operator|/
 name|hz
 expr_stmt|;
+name|tick_sbt
+operator|=
+name|SBT_1S
+operator|/
+name|hz
+expr_stmt|;
+name|tick_bt
+operator|=
+name|sbttobt
+argument_list|(
+name|tick_sbt
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VM_SWZONE_SIZE_MAX
@@ -1454,28 +1461,6 @@ literal|"kern.nbuf"
 argument_list|,
 operator|&
 name|nbuf
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXX: Does the callout wheel have to be so big? 	 * 	 * Clip callout to result of previous function of maxusers maximum 	 * 384.  This is still huge, but acceptable. 	 */
-name|ncallout
-operator|=
-name|imin
-argument_list|(
-literal|16
-operator|+
-name|maxproc
-operator|+
-name|maxfiles
-argument_list|,
-literal|18508
-argument_list|)
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"kern.ncallout"
-argument_list|,
-operator|&
-name|ncallout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The default for maxpipekva is min(1/64 of the kernel address space, 	 * max(1/64 of main memory, 512KB)).  See sys_pipe.c for more details. 	 */

@@ -240,8 +240,6 @@ name|int
 name|ch
 decl_stmt|,
 name|mntflags
-decl_stmt|,
-name|opts
 decl_stmt|;
 name|char
 modifier|*
@@ -283,8 +281,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|mntflags
-operator|=
-name|opts
 operator|=
 name|verbose
 operator|=
@@ -422,8 +418,7 @@ argument_list|,
 operator|&
 name|mntflags
 argument_list|,
-operator|&
-name|opts
+name|NULL
 argument_list|)
 expr_stmt|;
 name|p

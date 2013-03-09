@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -126,9 +126,6 @@ name|ixgbe_link_speed
 name|speed
 parameter_list|,
 name|bool
-name|autoneg
-parameter_list|,
-name|bool
 name|autoneg_wait_to_complete
 parameter_list|)
 function_decl|;
@@ -146,9 +143,6 @@ name|hw
 parameter_list|,
 name|ixgbe_link_speed
 name|speed
-parameter_list|,
-name|bool
-name|autoneg
 parameter_list|,
 name|bool
 name|autoneg_wait_to_complete
@@ -219,6 +213,26 @@ name|headroom
 parameter_list|,
 name|int
 name|strategy
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
+name|ixgbe_read_i2c_sff8472_82598
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+modifier|*
+name|sff8472_data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -570,6 +584,15 @@ name|read_i2c_eeprom
 operator|=
 operator|&
 name|ixgbe_read_i2c_eeprom_82598
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_i2c_sff8472
+operator|=
+operator|&
+name|ixgbe_read_i2c_sff8472_82598
 expr_stmt|;
 comment|/* Link */
 name|mac
@@ -2521,7 +2544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_setup_mac_link_82598 - Set MAC link speed  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg: TRUE if autonegotiation enabled  *  @autoneg_wait_to_complete: TRUE when waiting for completion is needed  *  *  Set the link speed in the AUTOC register and restarts link.  **/
+comment|/**  *  ixgbe_setup_mac_link_82598 - Set MAC link speed  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg_wait_to_complete: TRUE when waiting for completion is needed  *  *  Set the link speed in the AUTOC register and restarts link.  **/
 end_comment
 
 begin_function
@@ -2538,12 +2561,14 @@ name|ixgbe_link_speed
 name|speed
 parameter_list|,
 name|bool
-name|autoneg
-parameter_list|,
-name|bool
 name|autoneg_wait_to_complete
 parameter_list|)
 block|{
+name|bool
+name|autoneg
+init|=
+name|FALSE
+decl_stmt|;
 name|s32
 name|status
 init|=
@@ -2686,7 +2711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_setup_copper_link_82598 - Set the PHY autoneg advertised field  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg: TRUE if autonegotiation enabled  *  @autoneg_wait_to_complete: TRUE if waiting is needed to complete  *  *  Sets the link speed in the AUTOC register in the MAC and restarts link.  **/
+comment|/**  *  ixgbe_setup_copper_link_82598 - Set the PHY autoneg advertised field  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg_wait_to_complete: TRUE if waiting is needed to complete  *  *  Sets the link speed in the AUTOC register in the MAC and restarts link.  **/
 end_comment
 
 begin_function
@@ -2701,9 +2726,6 @@ name|hw
 parameter_list|,
 name|ixgbe_link_speed
 name|speed
-parameter_list|,
-name|bool
-name|autoneg
 parameter_list|,
 name|bool
 name|autoneg_wait_to_complete
@@ -2731,8 +2753,6 @@ argument_list|(
 name|hw
 argument_list|,
 name|speed
-argument_list|,
-name|autoneg
 argument_list|,
 name|autoneg_wait_to_complete
 argument_list|)
@@ -3965,17 +3985,21 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_read_i2c_eeprom_82598 - Reads 8 bit word over I2C interface.  *  @hw: pointer to hardware structure  *  @byte_offset: EEPROM byte offset to read  *  @eeprom_data: value read  *  *  Performs 8 byte read operation to SFP module's EEPROM over I2C interface.  **/
+comment|/**  *  ixgbe_read_i2c_phy_82598 - Reads 8 bit word over I2C interface.  *  @hw: pointer to hardware structure  *  @dev_addr: address to read from  *  @byte_offset: byte offset to read from dev_addr  *  @eeprom_data: value read  *  *  Performs 8 byte read operation to SFP module's EEPROM over I2C interface.  **/
 end_comment
 
 begin_function
+specifier|static
 name|s32
-name|ixgbe_read_i2c_eeprom_82598
+name|ixgbe_read_i2c_phy_82598
 parameter_list|(
 name|struct
 name|ixgbe_hw
 modifier|*
 name|hw
+parameter_list|,
+name|u8
+name|dev_addr
 parameter_list|,
 name|u8
 name|byte_offset
@@ -4010,7 +4034,7 @@ name|i
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"ixgbe_read_i2c_eeprom_82598"
+literal|"ixgbe_read_i2c_phy_82598"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4028,7 +4052,7 @@ comment|/* 		 * NetLogic phy SDA/SCL registers are at addresses 0xC30A to 		 * 0
 name|sfp_addr
 operator|=
 operator|(
-name|IXGBE_I2C_EEPROM_DEV_ADDR
+name|dev_addr
 operator|<<
 literal|8
 operator|)
@@ -4170,14 +4194,84 @@ name|status
 operator|=
 name|IXGBE_ERR_PHY
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 name|out
 label|:
 return|return
 name|status
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_read_i2c_eeprom_82598 - Reads 8 bit word over I2C interface.  *  @hw: pointer to hardware structure  *  @byte_offset: EEPROM byte offset to read  *  @eeprom_data: value read  *  *  Performs 8 byte read operation to SFP module's EEPROM over I2C interface.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_read_i2c_eeprom_82598
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+modifier|*
+name|eeprom_data
+parameter_list|)
+block|{
+return|return
+name|ixgbe_read_i2c_phy_82598
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_I2C_EEPROM_DEV_ADDR
+argument_list|,
+name|byte_offset
+argument_list|,
+name|eeprom_data
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_read_i2c_sff8472_82598 - Reads 8 bit word over I2C interface.  *  @hw: pointer to hardware structure  *  @byte_offset: byte offset at address 0xA2  *  @eeprom_data: value read  *  *  Performs 8 byte read operation to SFP module's SFF-8472 data over I2C  **/
+end_comment
+
+begin_function
+specifier|static
+name|s32
+name|ixgbe_read_i2c_sff8472_82598
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+modifier|*
+name|sff8472_data
+parameter_list|)
+block|{
+return|return
+name|ixgbe_read_i2c_phy_82598
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_I2C_EEPROM_DEV_ADDR2
+argument_list|,
+name|byte_offset
+argument_list|,
+name|sff8472_data
+argument_list|)
 return|;
 block|}
 end_function
