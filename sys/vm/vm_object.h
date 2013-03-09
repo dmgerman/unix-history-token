@@ -46,11 +46,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_radix.h>
+file|<vm/_vm_radix.h>
 end_include
 
 begin_comment
-comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  *	The root of cached pages pool is protected by both the per-object lock  *	and the free pages queue mutex.  *	On insert in the cache splay tree, the per-object lock is expected  *	to be already held and the free pages queue mutex will be  *	acquired during the operation too.  *	On remove and lookup from the cache splay tree, only the free  *	pages queue mutex is expected to be locked.  *	These rules allow for reliably checking for the presence of cached  *	pages with only the per-object lock held, thereby reducing contention  *	for the free pages queue mutex.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
+comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  *	The root of cached pages pool is protected by both the per-object lock  *	and the free pages queue mutex.  *	On insert in the cache radix trie, the per-object lock is expected  *	to be already held and the free pages queue mutex will be  *	acquired during the operation too.  *	On remove and lookup from the cache radix trie, only the free  *	pages queue mutex is expected to be locked.  *	These rules allow for reliably checking for the presence of cached  *	pages with only the per-object lock held, thereby reducing contention  *	for the free pages queue mutex.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
 end_comment
 
 begin_struct
@@ -95,7 +95,7 @@ name|struct
 name|vm_radix
 name|rtree
 decl_stmt|;
-comment|/* root of the resident page radix index tree */
+comment|/* root of the resident page radix trie*/
 name|vm_pindex_t
 name|size
 decl_stmt|;
@@ -136,10 +136,6 @@ name|int
 name|resident_page_count
 decl_stmt|;
 comment|/* number of resident pages */
-name|int
-name|cached_page_count
-decl_stmt|;
-comment|/* number of cached pages */
 name|struct
 name|vm_object
 modifier|*
@@ -165,6 +161,11 @@ argument_list|)
 name|rvq
 expr_stmt|;
 comment|/* list of reservations */
+name|struct
+name|vm_radix
+name|cache
+decl_stmt|;
+comment|/* (o + f) root of the cache page radix trie */
 name|void
 modifier|*
 name|handle
@@ -741,8 +742,10 @@ operator|(
 name|object
 operator|->
 name|cache
+operator|.
+name|rt_root
 operator|==
-name|NULL
+literal|0
 operator|)
 return|;
 block|}

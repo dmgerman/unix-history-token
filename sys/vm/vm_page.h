@@ -1375,20 +1375,24 @@ begin_function_decl
 name|void
 name|vm_page_cache_free
 parameter_list|(
-name|vm_page_t
+name|vm_object_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|,
+name|vm_pindex_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_cache_rename
+name|vm_page_cache_transfer
 parameter_list|(
-name|vm_page_t
-parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|,
+name|vm_object_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1490,7 +1494,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|vm_page_insert
 parameter_list|(
 name|vm_page_t
@@ -1498,6 +1502,19 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|vm_page_is_cached
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2558,6 +2558,13 @@ name|first_m
 argument_list|)
 expr_stmt|;
 comment|/* 				 * grab the page and put it into the  				 * process'es object.  The page is  				 * automatically made dirty. 				 */
+name|vm_page_lock
+argument_list|(
+name|fs
+operator|.
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|fs
@@ -2571,6 +2578,13 @@ argument_list|,
 name|fs
 operator|.
 name|first_pindex
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|fs
+operator|.
+name|m
 argument_list|)
 expr_stmt|;
 name|vm_page_busy

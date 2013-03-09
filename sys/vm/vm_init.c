@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_radix.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_map.h>
 end_include
 
@@ -263,9 +257,6 @@ name|virtual_avail
 argument_list|,
 name|virtual_end
 argument_list|)
-expr_stmt|;
-name|vm_radix_init
-argument_list|()
 expr_stmt|;
 name|pmap_init
 argument_list|()

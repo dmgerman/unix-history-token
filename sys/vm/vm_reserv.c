@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_radix.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_reserv.h>
 end_include
 
@@ -1143,8 +1149,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1159,7 +1163,7 @@ argument_list|(
 name|mpred
 operator|->
 name|pindex
-operator|!=
+operator|<
 name|pindex
 argument_list|,
 operator|(
@@ -1192,7 +1196,17 @@ condition|)
 goto|goto
 name|found
 goto|;
+name|msucc
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|mpred
+argument_list|,
+name|listq
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|msucc
 operator|=
 name|vm_radix_lookup_ge
@@ -1203,8 +1217,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1219,7 +1231,7 @@ argument_list|(
 name|msucc
 operator|->
 name|pindex
-operator|!=
+operator|>
 name|pindex
 argument_list|,
 operator|(
@@ -1922,8 +1934,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1938,7 +1948,7 @@ argument_list|(
 name|mpred
 operator|->
 name|pindex
-operator|!=
+operator|<
 name|pindex
 argument_list|,
 operator|(
@@ -1971,7 +1981,17 @@ condition|)
 goto|goto
 name|found
 goto|;
+name|msucc
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|mpred
+argument_list|,
+name|listq
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|msucc
 operator|=
 name|vm_radix_lookup_ge
@@ -1982,8 +2002,6 @@ operator|->
 name|rtree
 argument_list|,
 name|pindex
-argument_list|,
-name|VM_RADIX_BLACK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1998,7 +2016,7 @@ argument_list|(
 name|msucc
 operator|->
 name|pindex
-operator|!=
+operator|>
 name|pindex
 argument_list|,
 operator|(
