@@ -2804,6 +2804,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|scred
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Check for cross-device rename */
 if|if
 condition|(
@@ -3460,7 +3464,7 @@ name|scred
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
