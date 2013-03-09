@@ -7192,7 +7192,9 @@ decl_stmt|;
 comment|/* This is called from the RX path - don't hold this lock */
 name|IEEE80211_TX_UNLOCK_ASSERT
 argument_list|(
-name|ic
+name|vap
+operator|->
+name|iv_ic
 argument_list|)
 expr_stmt|;
 name|qwh
@@ -7392,7 +7394,9 @@ decl_stmt|;
 comment|/* This is called from the RX path - don't hold this lock */
 name|IEEE80211_TX_UNLOCK_ASSERT
 argument_list|(
-name|ic
+name|vap
+operator|->
+name|iv_ic
 argument_list|)
 expr_stmt|;
 name|qwh
@@ -7674,7 +7678,9 @@ decl_stmt|;
 comment|/* This is called from the RX path - don't hold this lock */
 name|IEEE80211_TX_UNLOCK_ASSERT
 argument_list|(
-name|ic
+name|vap
+operator|->
+name|iv_ic
 argument_list|)
 expr_stmt|;
 name|mesh_forward
