@@ -7180,15 +7180,6 @@ decl_stmt|,
 modifier|*
 name|rt_meshsa
 decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|vap
-operator|->
-name|iv_ic
-decl_stmt|;
 comment|/* This is called from the RX path - don't hold this lock */
 name|IEEE80211_TX_UNLOCK_ASSERT
 argument_list|(
@@ -7378,15 +7369,6 @@ name|struct
 name|ieee80211_mesh_route
 modifier|*
 name|rt
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|vap
-operator|->
-name|iv_ic
 decl_stmt|;
 name|int
 name|ae
@@ -7665,15 +7647,6 @@ init|=
 name|vap
 operator|->
 name|iv_mesh
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|vap
-operator|->
-name|iv_ic
 decl_stmt|;
 comment|/* This is called from the RX path - don't hold this lock */
 name|IEEE80211_TX_UNLOCK_ASSERT
