@@ -18168,7 +18168,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RESET
 argument_list|,
-literal|"%s: tx queue [%u] %p, link %p\n"
+literal|"%s: tx queue [%u] %p, flags 0x%08x, link %p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18190,6 +18190,10 @@ name|txq
 operator|->
 name|axq_qnum
 argument_list|)
+argument_list|,
+name|txq
+operator|->
+name|axq_flags
 argument_list|,
 name|txq
 operator|->
