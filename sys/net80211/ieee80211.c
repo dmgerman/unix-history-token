@@ -1499,6 +1499,15 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
+name|IEEE80211_TX_LOCK_INIT
+argument_list|(
+name|ic
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1914,6 +1923,11 @@ argument_list|(
 name|ic
 operator|->
 name|ic_tq
+argument_list|)
+expr_stmt|;
+name|IEEE80211_TX_LOCK_DESTROY
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 name|IEEE80211_LOCK_DESTROY

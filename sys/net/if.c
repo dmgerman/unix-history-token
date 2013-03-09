@@ -6059,6 +6059,8 @@ operator|->
 name|rt_flags
 operator||
 name|RTF_RNH_LOCKED
+operator||
+name|RTF_PINNED
 argument_list|,
 operator|(
 expr|struct

@@ -1763,6 +1763,15 @@ operator|->
 name|ni_psq
 decl_stmt|;
 name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
+name|struct
 name|ieee80211vap
 modifier|*
 name|vap
@@ -1995,11 +2004,9 @@ expr_stmt|;
 comment|/* 			 * For encaped frames, we need to free the node 			 * reference upon failure. 			 */
 if|if
 condition|(
-name|parent
-operator|->
-name|if_transmit
+name|ieee80211_parent_transmit
 argument_list|(
-name|parent
+name|ic
 argument_list|,
 name|m
 argument_list|)
@@ -2061,11 +2068,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ifp
-operator|->
-name|if_transmit
+name|ieee80211_vap_transmit
 argument_list|(
-name|ifp
+name|vap
 argument_list|,
 name|m
 argument_list|)
