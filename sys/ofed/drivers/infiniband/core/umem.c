@@ -624,7 +624,7 @@ name|page
 operator|->
 name|object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -644,7 +644,7 @@ name|page
 operator|->
 name|object
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -667,7 +667,7 @@ if|if
 condition|(
 name|object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)

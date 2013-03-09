@@ -397,7 +397,7 @@ name|NULL
 expr_stmt|;
 name|retry
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -809,7 +809,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -935,7 +935,7 @@ operator|)
 return|;
 name|out_io_unlock
 label|:
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)
@@ -945,7 +945,7 @@ name|out_io_unlock1
 goto|;
 name|out_unlock
 label|:
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
 argument_list|)

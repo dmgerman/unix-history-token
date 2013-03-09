@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -3166,7 +3172,7 @@ name|rv
 operator|=
 name|VM_PAGER_OK
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|sc
 operator|->
@@ -3231,7 +3237,7 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|sc
 operator|->
@@ -3250,7 +3256,7 @@ argument_list|,
 name|SFB_CPUPRIVATE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|sc
 operator|->
@@ -3645,7 +3651,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|sc
 operator|->
@@ -5652,7 +5658,7 @@ operator|<
 name|oldpages
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|sc
 operator|->
@@ -5718,7 +5724,7 @@ name|size
 operator|=
 name|newpages
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|sc
 operator|->
@@ -5822,7 +5828,7 @@ operator|)
 return|;
 block|}
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|sc
 operator|->
@@ -5848,7 +5854,7 @@ name|size
 operator|=
 name|newpages
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|sc
 operator|->

@@ -11644,13 +11644,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|mpte
@@ -12477,13 +12475,11 @@ name|count
 init|=
 literal|0
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m_start
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|psize
@@ -13566,11 +13562,9 @@ decl_stmt|;
 name|int
 name|pat_mode
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -15902,13 +15896,11 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no PTEs can have PG_M set. 	 */
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -16549,13 +16541,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -17024,13 +17014,11 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT

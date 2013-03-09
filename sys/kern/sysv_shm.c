@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -3618,7 +3624,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|shm_object
 argument_list|)
@@ -3637,7 +3643,7 @@ argument_list|,
 name|OBJ_NOSPLIT
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|shm_object
 argument_list|)

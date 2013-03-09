@@ -408,6 +408,10 @@ expr_stmt|;
 if|if
 condition|(
 name|recsize
+operator|==
+literal|0
+operator|||
+name|recsize
 operator|%
 name|pp
 operator|->

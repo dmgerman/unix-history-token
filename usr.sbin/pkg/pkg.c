@@ -691,7 +691,7 @@ name|url
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s/latest/Latest/pkg.txz"
+literal|"%s/Latest/pkg.txz"
 argument_list|,
 name|packagesite
 argument_list|)
