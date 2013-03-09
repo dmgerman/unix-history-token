@@ -1237,7 +1237,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|callout_tailq
+name|callout_list
 argument_list|)
 operator|*
 name|callwheelsize
