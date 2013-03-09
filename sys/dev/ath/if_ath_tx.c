@@ -16389,38 +16389,14 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Occasionally, the MAC sends a tx status for the wrong TID. */
-if|if
-condition|(
-name|tid
-operator|!=
-name|ts
-operator|.
-name|ts_tid
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: tid %d != hw tid %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|tid
-argument_list|,
-name|ts
-operator|.
-name|ts_tid
-argument_list|)
-expr_stmt|;
-name|tx_ok
-operator|=
+comment|/* 	 * The reference driver doesn't do this; it simply ignores 	 * this check in its entirety. 	 * 	 * I've seen this occur when using iperf to send traffic 	 * out tid 1 - the aggregate frames are all marked as TID 1, 	 * but the TXSTATUS has TID=0.  So, let's just ignore this 	 * check. 	 */
+if|#
+directive|if
 literal|0
-expr_stmt|;
-block|}
+comment|/* Occasionally, the MAC sends a tx status for the wrong TID. */
+block|if (tid != ts.ts_tid) { 		device_printf(sc->sc_dev, "%s: tid %d != hw tid %d\n", 		    __func__, tid, ts.ts_tid); 		tx_ok = 0; 	}
+endif|#
+directive|endif
 comment|/* AR5416 BA bug; this requires an interface reset */
 if|if
 condition|(
