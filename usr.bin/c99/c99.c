@@ -197,7 +197,7 @@ expr_stmt|;
 block|}
 name|addarg
 argument_list|(
-literal|"cc"
+literal|"/usr/bin/cc"
 argument_list|)
 expr_stmt|;
 name|addarg
