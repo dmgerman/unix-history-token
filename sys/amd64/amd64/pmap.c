@@ -3263,12 +3263,6 @@ argument_list|(
 name|KPML4phys
 argument_list|)
 expr_stmt|;
-name|kernel_pmap
-operator|->
-name|pm_root
-operator|=
-name|NULL
-expr_stmt|;
 name|CPU_FILL
 argument_list|(
 operator|&
