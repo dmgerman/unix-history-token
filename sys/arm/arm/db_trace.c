@@ -1418,7 +1418,7 @@ operator|==
 name|EXIDX_CANTUNWIND
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"Unable to unwind\n"
 argument_list|)
