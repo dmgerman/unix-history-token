@@ -2003,6 +2003,17 @@ goto|goto
 name|nosyms
 goto|;
 block|}
+name|file_addmetadata
+argument_list|(
+name|fp
+argument_list|,
+name|MODINFOMD_SHDR
+argument_list|,
+name|chunk
+argument_list|,
+name|shdr
+argument_list|)
+expr_stmt|;
 name|symtabindex
 operator|=
 operator|-
