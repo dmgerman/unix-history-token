@@ -739,13 +739,13 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|vm_radix_is_empty
+argument_list|(
+operator|&
 name|object
 operator|->
 name|cache
-operator|.
-name|rt_root
-operator|==
-literal|0
+argument_list|)
 operator|)
 return|;
 block|}

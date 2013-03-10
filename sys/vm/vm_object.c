@@ -508,13 +508,13 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|vm_radix_is_empty
+argument_list|(
+operator|&
 name|object
 operator|->
 name|rtree
-operator|.
-name|rt_root
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
 literal|"object %p has resident pages in its trie"
