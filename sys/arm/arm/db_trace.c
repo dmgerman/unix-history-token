@@ -2418,14 +2418,11 @@ name|struct
 name|unwind_state
 name|state
 decl_stmt|;
-specifier|register
 name|uint32_t
 name|sp
-name|__asm__
-argument_list|(
-literal|"sp"
-argument_list|)
 decl_stmt|;
+comment|/* Read the stack pointer */
+asm|__asm __volatile("mov %0, sp" : "=&r" (sp));
 name|state
 operator|.
 name|registers
@@ -2448,9 +2445,6 @@ index|[
 name|SP
 index|]
 operator|=
-operator|(
-name|uint32_t
-operator|)
 name|sp
 expr_stmt|;
 name|state
