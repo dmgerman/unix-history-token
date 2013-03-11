@@ -11234,9 +11234,15 @@ name|so
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
 goto|goto
 name|noconnection
 goto|;
+block|}
 comment|/* 	 * Before changing the flags on the socket, we have to bump the 	 * reference count.  Otherwise, if the protocol calls sofree(), 	 * the socket will be released due to a zero refcount. 	 */
 name|SOCK_LOCK
 argument_list|(
