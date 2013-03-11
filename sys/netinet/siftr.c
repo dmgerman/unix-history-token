@@ -4979,7 +4979,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|siftr_hashmask
 condition|;
 name|i
