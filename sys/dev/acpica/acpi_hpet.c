@@ -3933,6 +3933,7 @@ operator|+=
 literal|100
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|mp_ncpus
