@@ -1156,6 +1156,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_X220_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21da)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_X300_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x20ac)
 end_define
