@@ -825,6 +825,17 @@ value|4
 end_define
 
 begin_comment
+comment|/*  * AR9380 and later chips are 3x3, which requires  * 5 EVM DWORDs in HT40 mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RADIOTAP_MAX_EVM
+value|5
+end_define
+
+begin_comment
 comment|/*  * The vendor radiotap header data needs to be:  *  * + Aligned to a 4 byte address  * + .. so all internal fields are 4 bytes aligned;  * + .. and no 64 bit fields are allowed.  *  * So padding is required to ensure this is the case.  *  * Note that because of the lack of alignment with the  * vendor header (6 bytes), the first field must be  * two bytes so it can be accessed by alignment-strict  * platform (eg MIPS.)  */
 end_comment
 
@@ -845,10 +856,10 @@ comment|/* At this point it should be 4 byte aligned */
 name|uint32_t
 name|evm
 index|[
-name|ATH_RADIOTAP_MAX_CHAINS
+name|ATH_RADIOTAP_MAX_EVM
 index|]
 decl_stmt|;
-comment|/* 4 * 4 = 16 */
+comment|/* 5 * 4 = 20 */
 name|uint8_t
 name|rssi_ctl
 index|[
