@@ -2026,12 +2026,6 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kernel_pmap
-operator|->
-name|pm_root
-operator|=
-name|NULL
-expr_stmt|;
 name|CPU_FILL
 argument_list|(
 operator|&

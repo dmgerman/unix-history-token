@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All right
 end_comment
 
 begin_comment
-comment|/*  *			GENERAL RULES ON VM_PAGE MANIPULATION  *  *	- A page queue lock is required when adding or removing a page from a  *	  page queue (vm_pagequeues[]), regardless of other locks or the  *	  busy state of a page.  *  *		* In general, no thread besides the page daemon can acquire or  *		  hold more than one page queue lock at a time.  *  *		* The page daemon can acquire and hold any pair of page queue  *		  locks in any order.  *  *	- The object mutex is held when inserting or removing  *	  pages from an object (vm_page_insert() or vm_page_remove()).  *  */
+comment|/*  *			GENERAL RULES ON VM_PAGE MANIPULATION  *  *	- A page queue lock is required when adding or removing a page from a  *	  page queue (vm_pagequeues[]), regardless of other locks or the  *	  busy state of a page.  *  *		* In general, no thread besides the page daemon can acquire or  *		  hold more than one page queue lock at a time.  *  *		* The page daemon can acquire and hold any pair of page queue  *		  locks in any order.  *  *	- The object lock is required when inserting or removing  *	  pages from an object (vm_page_insert() or vm_page_remove()).  *  */
 end_comment
 
 begin_comment

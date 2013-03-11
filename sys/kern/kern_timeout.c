@@ -1085,7 +1085,7 @@ name|callout_cpu
 modifier|*
 name|cc
 decl_stmt|;
-comment|/* 	 * Calculate the size of the callout wheel and the preallocated 	 * timeout() structures. 	 */
+comment|/* 	 * Calculate the size of the callout wheel and the preallocated 	 * timeout() structures. 	 * XXX: Clip callout to result of previous function of maxusers 	 * maximum 384.  This is still huge, but acceptable. 	 */
 name|ncallout
 operator|=
 name|imin
@@ -1237,7 +1237,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|callout_tailq
+name|callout_list
 argument_list|)
 operator|*
 name|callwheelsize
