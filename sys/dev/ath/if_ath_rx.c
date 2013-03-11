@@ -1502,7 +1502,37 @@ name|rs
 operator|->
 name|rs_evm2
 expr_stmt|;
-comment|/* XXX TODO: extend this to include 3-stream EVM */
+comment|/* These are only populated from the AR9300 or later */
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_v
+operator|.
+name|evm
+index|[
+literal|3
+index|]
+operator|=
+name|rs
+operator|->
+name|rs_evm3
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_th
+operator|.
+name|wr_v
+operator|.
+name|evm
+index|[
+literal|4
+index|]
+operator|=
+name|rs
+operator|->
+name|rs_evm4
+expr_stmt|;
 comment|/* phyerr info */
 if|if
 condition|(
