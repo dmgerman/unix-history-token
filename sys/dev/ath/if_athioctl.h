@@ -887,12 +887,44 @@ name|vh_rssi
 decl_stmt|;
 comment|/* Raw RSSI */
 name|uint8_t
-name|vh_pad1
+name|vh_flags
+decl_stmt|;
+comment|/* General flags */
+define|#
+directive|define
+name|ATH_VENDOR_PKT_RX
+value|0x01
+define|#
+directive|define
+name|ATH_VENDOR_PKT_TX
+value|0x02
+define|#
+directive|define
+name|ATH_VENDOR_PKT_RXPHYERR
+value|0x04
+define|#
+directive|define
+name|ATH_VENDOR_PKT_ISAGGR
+value|0x08
+define|#
+directive|define
+name|ATH_VENDOR_PKT_MOREAGGR
+value|0x10
+name|uint8_t
+name|vh_rx_hwrate
+decl_stmt|;
+comment|/* hardware RX ratecode */
+name|uint8_t
+name|vh_rs_flags
+decl_stmt|;
+comment|/* RX HAL flags */
+name|uint8_t
+name|vh_pad
 index|[
-literal|1
+literal|2
 index|]
 decl_stmt|;
-comment|/* Pad to 4 byte boundary */
+comment|/* pad to DWORD boundary */
 block|}
 name|__packed
 struct|;
