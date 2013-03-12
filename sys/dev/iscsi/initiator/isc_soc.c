@@ -316,7 +316,7 @@ name|MGETHDR
 argument_list|(
 name|mh
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -625,7 +625,7 @@ name|MGET
 argument_list|(
 name|md
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -766,7 +766,7 @@ name|MGET
 argument_list|(
 name|md
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
