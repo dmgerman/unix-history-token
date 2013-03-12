@@ -3460,20 +3460,14 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Leave space for record mark. 	 */
-name|MGETHDR
-argument_list|(
 name|mrep
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
-expr_stmt|;
-name|mrep
-operator|->
-name|m_len
-operator|=
-literal|0
 expr_stmt|;
 name|mrep
 operator|->
@@ -3711,20 +3705,14 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Leave space for record mark. 	 */
-name|MGETHDR
-argument_list|(
 name|mrep
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
-expr_stmt|;
-name|mrep
-operator|->
-name|m_len
-operator|=
-literal|0
 expr_stmt|;
 name|mrep
 operator|->

@@ -1061,7 +1061,7 @@ comment|/*-  * Configure a provided mbuf to refer to the provided external stora
 end_comment
 
 begin_function
-name|void
+name|int
 name|m_extadd
 parameter_list|(
 name|struct
@@ -1101,6 +1101,9 @@ name|flags
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|int
+name|wait
 parameter_list|)
 block|{
 name|KASSERT
@@ -1128,15 +1131,11 @@ name|m_ext
 operator|.
 name|ref_cnt
 operator|=
-operator|(
-name|u_int
-operator|*
-operator|)
 name|uma_zalloc
 argument_list|(
 name|zone_ext_refcnt
 argument_list|,
-name|M_NOWAIT
+name|wait
 argument_list|)
 expr_stmt|;
 if|if
@@ -1146,10 +1145,14 @@ operator|->
 name|m_ext
 operator|.
 name|ref_cnt
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 operator|*
 operator|(
 name|mb
@@ -1229,7 +1232,11 @@ name|ext_type
 operator|=
 name|type
 expr_stmt|;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

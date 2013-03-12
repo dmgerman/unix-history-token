@@ -9252,13 +9252,14 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+return|return
+operator|(
 name|m
 operator|->
 name|valid
+operator|!=
+literal|0
 operator|&&
-operator|(
 operator|(
 name|m
 operator|->
@@ -9269,13 +9270,6 @@ operator|)
 operator|==
 name|bits
 operator|)
-condition|)
-return|return
-literal|1
-return|;
-else|else
-return|return
-literal|0
 return|;
 block|}
 comment|/*  * Set the page's dirty bits if the page is modified.  */
