@@ -2754,7 +2754,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|m_extadd((m), (caddr_t)(buf), (size), (free),(arg1),(arg2),(flags), (type))
+value|(void )m_extadd((m), (caddr_t)(buf), (size), (free), (arg1), (arg2),\     (flags), (type), M_NOWAIT)
 end_define
 
 begin_define
@@ -3106,7 +3106,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|m_extadd
 parameter_list|(
 name|struct
@@ -3134,6 +3134,8 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
