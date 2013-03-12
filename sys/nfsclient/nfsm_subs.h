@@ -60,61 +60,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|nfsm_reqhead
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|u_long
-name|procid
-parameter_list|,
-name|int
-name|hsiz
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|M_HASCL
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_flags& M_EXT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMINOFF
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|do { \ 		if (M_HASCL(m)) \ 			(m)->m_data = (m)->m_ext.ext_buf; \ 		else if ((m)->m_flags& M_PKTHDR) \ 			(m)->m_data = (m)->m_pktdat; \ 		else \ 			(m)->m_data = (m)->m_dat; \ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMSIZ
-parameter_list|(
-name|m
-parameter_list|)
-value|((M_HASCL(m))?MCLBYTES: \ 				(((m)->m_flags& M_PKTHDR)?MHLEN:MLEN))
-end_define
-
-begin_comment
-comment|/*  * Now for the macros that do the simple stuff and call the functions  * for the hard stuff.  * These macros use several vars. declared in nfsm_reqhead and these  * vars. must not be used elsewhere unless you are careful not to corrupt  * them. The vars. starting with pN and tN (N=1,2,3,..) are temporaries  * that may be used so long as the value is not expected to retained  * after a macro.  * I know, this is kind of dorkey, but it makes the actual op functions  * fairly clean and deals with the mess caused by the xdr discriminating  * unions.  */
-end_comment
-
 begin_comment
 comment|/* *********************************** */
 end_comment
