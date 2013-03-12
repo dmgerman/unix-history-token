@@ -2264,8 +2264,11 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|nanowait
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2431,6 +2434,9 @@ name|tsleep_sbt
 argument_list|(
 operator|&
 name|nanowait
+index|[
+name|curcpu
+index|]
 argument_list|,
 name|PWAIT
 operator||
