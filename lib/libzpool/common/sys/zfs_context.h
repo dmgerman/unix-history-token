@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -175,6 +175,9 @@ file|<sys/sunddi.h>
 include|#
 directive|include
 file|<sys/debug.h>
+include|#
+directive|include
+file|"zfs.h"
 comment|/*  * Debugging  */
 comment|/*  * Note that we are not using the debugging levels.  */
 define|#
@@ -286,22 +289,26 @@ name|DTRACE_PROBE
 undef|#
 directive|undef
 name|DTRACE_PROBE
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE */
 define|#
 directive|define
 name|DTRACE_PROBE
 parameter_list|(
 name|a
 parameter_list|)
-value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE */
+define|\
+value|ZFS_PROBE0(#a)
 ifdef|#
 directive|ifdef
 name|DTRACE_PROBE1
 undef|#
 directive|undef
 name|DTRACE_PROBE1
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE1 */
 define|#
 directive|define
 name|DTRACE_PROBE1
@@ -312,16 +319,17 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE1 */
+define|\
+value|ZFS_PROBE1(#a, (unsigned long)c)
 ifdef|#
 directive|ifdef
 name|DTRACE_PROBE2
 undef|#
 directive|undef
 name|DTRACE_PROBE2
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE2 */
 define|#
 directive|define
 name|DTRACE_PROBE2
@@ -336,16 +344,17 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE2 */
+define|\
+value|ZFS_PROBE2(#a, (unsigned long)c, (unsigned long)e)
 ifdef|#
 directive|ifdef
 name|DTRACE_PROBE3
 undef|#
 directive|undef
 name|DTRACE_PROBE3
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE3 */
 define|#
 directive|define
 name|DTRACE_PROBE3
@@ -364,16 +373,17 @@ name|f
 parameter_list|,
 name|g
 parameter_list|)
-value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE3 */
+define|\
+value|ZFS_PROBE3(#a, (unsigned long)c, (unsigned long)e, (unsigned long)g)
 ifdef|#
 directive|ifdef
 name|DTRACE_PROBE4
 undef|#
 directive|undef
 name|DTRACE_PROBE4
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE4 */
 define|#
 directive|define
 name|DTRACE_PROBE4
@@ -396,10 +406,16 @@ name|h
 parameter_list|,
 name|i
 parameter_list|)
-value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE4 */
+define|\
+value|ZFS_PROBE4(#a, (unsigned long)c, (unsigned long)e, (unsigned long)g, \ 	(unsigned long)i)
+comment|/*  * We use the comma operator so that this macro can be used without much  * additional code.  For example, "return (EINVAL);" becomes  * "return (SET_ERROR(EINVAL));".  Note that the argument will be evaluated  * twice, so it should not have side effects (e.g. something like:  * "return (SET_ERROR(log_error(EINVAL, info)));" would log the error twice).  */
+define|#
+directive|define
+name|SET_ERROR
+parameter_list|(
+name|err
+parameter_list|)
+value|(ZFS_SET_ERROR(err), err)
 comment|/*  * Threads  */
 define|#
 directive|define
