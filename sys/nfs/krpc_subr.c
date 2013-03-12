@@ -1744,13 +1744,13 @@ name|m
 operator|=
 name|m_get2
 argument_list|(
+name|mlen
+argument_list|,
 name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|,
 literal|0
-argument_list|,
-name|mlen
 argument_list|)
 expr_stmt|;
 name|xs
