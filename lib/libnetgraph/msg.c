@@ -1067,6 +1067,17 @@ operator|.
 name|cmd
 operator|&
 name|NGM_HASREPLY
+operator|&&
+operator|!
+operator|(
+name|msg
+operator|->
+name|header
+operator|.
+name|flags
+operator|&
+name|NGF_RESP
+operator|)
 condition|)
 block|{
 name|struct

@@ -147,14 +147,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Constants for the hash table of sleep queue chains.  These constants are  * the same ones that 4BSD (and possibly earlier versions of BSD) used.  * Basically, we ignore the lower 8 bits of the address since most wait  * channel pointers are aligned and only look at the next 7 bits for the  * hash.  SC_TABLESIZE must be a power of two for SC_MASK to work properly.  */
+comment|/*  * Constants for the hash table of sleep queue chains.  * SC_TABLESIZE must be a power of two for SC_MASK to work properly.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SC_TABLESIZE
-value|128
+value|256
 end_define
 
 begin_comment
@@ -182,7 +182,7 @@ name|SC_HASH
 parameter_list|(
 name|wc
 parameter_list|)
-value|(((uintptr_t)(wc)>> SC_SHIFT)& SC_MASK)
+value|((((uintptr_t)(wc)>> SC_SHIFT) ^ (uintptr_t)(wc))& \ 			    SC_MASK)
 end_define
 
 begin_define

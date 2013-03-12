@@ -1062,7 +1062,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|m
 operator|->
@@ -1081,7 +1081,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m
