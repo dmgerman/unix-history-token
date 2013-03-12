@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -384,7 +384,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -467,7 +470,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -553,7 +559,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 block|}
@@ -651,7 +660,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -809,7 +821,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 if|if
@@ -827,7 +842,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 return|return
@@ -903,7 +921,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -972,7 +993,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 if|if
@@ -988,7 +1012,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 return|return
@@ -1067,7 +1094,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -1135,7 +1165,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -1287,7 +1320,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 name|dsp
@@ -1402,7 +1438,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1430,7 +1469,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 comment|/* free anything past the end of the file */
@@ -1464,7 +1506,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1477,7 +1522,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 return|return
@@ -1575,7 +1623,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1774,7 +1825,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|blk
@@ -1903,7 +1957,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|err
@@ -2044,7 +2101,10 @@ else|else
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2202,7 +2262,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2367,7 +2430,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2730,7 +2796,10 @@ literal|0
 condition|)
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3127,7 +3196,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3147,7 +3219,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|err
@@ -3331,7 +3406,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * fromsnap must be an earlier snapshot from the same fs as tosnap, 	 * or the origin's fs. 	 */
@@ -3351,7 +3429,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 comment|/* Get uncompressed size estimate of changed data. */
@@ -3545,7 +3626,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ETXTBSY
+argument_list|)
 operator|)
 return|;
 comment|/* temporary clone name must not exist */
@@ -3656,7 +3740,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 comment|/* 		 * most recent snapshot must match fromguid, or there are no 		 * changes since the fromguid one 		 */
@@ -3730,7 +3817,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3753,7 +3843,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3802,7 +3895,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3822,7 +3918,10 @@ name|TXG_INITIAL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3951,7 +4050,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* Verify pool version supports SA if SA_SPILL feature set */
@@ -3980,7 +4082,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4023,7 +4128,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4077,7 +4185,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 comment|/* Open the parent of tofs */
@@ -4213,7 +4324,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4244,7 +4358,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4724,7 +4841,10 @@ name|DMU_BACKUP_MAGIC
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|drr
@@ -5223,7 +5343,10 @@ name|ra
 operator|->
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 name|ra
 operator|->
@@ -5934,7 +6057,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5963,7 +6089,10 @@ name|ENOENT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -6129,7 +6258,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6367,7 +6499,10 @@ name|drr_firstobj
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 for|for
@@ -6505,7 +6640,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|data
@@ -6549,7 +6687,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|tx
@@ -6736,7 +6877,10 @@ name|drr_offset
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If the GUID of the referenced dataset is different from the 	 * GUID of the target dataset, find the referenced dataset. 	 */
@@ -6783,7 +6927,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6801,7 +6948,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6989,7 +7139,10 @@ name|SPA_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|data
@@ -7033,7 +7186,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|VERIFY
@@ -7267,7 +7423,10 @@ name|drr_offset
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -7287,7 +7446,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|err
@@ -7557,7 +7719,10 @@ name|ra
 operator|.
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EBADF
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -7761,7 +7926,10 @@ name|ra
 operator|.
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -7972,7 +8140,10 @@ name|ra
 operator|.
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -8014,7 +8185,10 @@ name|ra
 operator|.
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out

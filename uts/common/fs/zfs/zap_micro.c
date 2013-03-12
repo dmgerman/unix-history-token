@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -4138,7 +4138,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4188,7 +4191,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4202,7 +4208,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -4215,7 +4224,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4379,7 +4391,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4501,7 +4516,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4704,7 +4722,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4746,7 +4767,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4882,7 +4906,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5299,7 +5326,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5414,7 +5444,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5563,7 +5596,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5760,7 +5796,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6061,7 +6100,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6245,7 +6287,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6285,7 +6330,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -6435,7 +6483,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6796,7 +6847,10 @@ literal|1ULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 if|if
@@ -6951,10 +7005,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|err
-operator|=
-name|ENOENT
-expr_stmt|;
 name|mze_tofind
 operator|.
 name|mze_hash
@@ -7127,6 +7177,13 @@ operator|=
 operator|-
 literal|1ULL
 expr_stmt|;
+name|err
+operator|=
+name|SET_ERROR
+argument_list|(
+name|ENOENT
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|rw_exit
@@ -7296,7 +7353,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7338,7 +7398,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out

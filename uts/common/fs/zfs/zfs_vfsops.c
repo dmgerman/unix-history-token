@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -2870,7 +2870,10 @@ name|DMU_OT_SA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If we have a NULL data pointer 	 * then assume the id's aren't changing and 	 * return EEXIST to the dmu to let it know to 	 * use the same ids 	 */
@@ -2882,7 +2885,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3318,7 +3324,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|obj
@@ -3578,7 +3587,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3667,7 +3679,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|obj
@@ -3806,7 +3821,10 @@ name|ZFS_PROP_GROUPQUOTA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3819,7 +3837,10 @@ name|ZPL_VERSION_USERSPACE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|objp
@@ -4534,7 +4555,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -5694,7 +5718,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -6316,7 +6343,10 @@ literal|'9'
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|num
@@ -6387,7 +6417,10 @@ literal|'/'
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -6558,7 +6591,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 return|return
@@ -6573,7 +6609,10 @@ return|;
 block|}
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6661,7 +6700,10 @@ name|error
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If labeling is NOT enabled, then disallow the mount of datasets 	 * which have a non-default label already.  No other label checks 	 * are needed. 	 */
@@ -6690,7 +6732,10 @@ operator|)
 return|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6745,7 +6790,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 if|if
@@ -7013,7 +7061,10 @@ operator|++
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 comment|/* 		 * the process of doing a spa_load will require the 		 * clock to be set before we could (for example) do 		 * something better by looking at the timestamp on 		 * an uberblock, so just set it to -1. 		 */
@@ -7047,7 +7098,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7379,7 +7433,10 @@ block|}
 comment|/* 	 * if "why" is equal to anything else other than ROOT_INIT, 	 * ROOT_REMOUNT, or ROOT_UNMOUNT, we do not support it. 	 */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7452,7 +7509,10 @@ name|VDIR
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTDIR
+argument_list|)
 operator|)
 return|;
 name|mutex_enter
@@ -7512,7 +7572,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7543,7 +7606,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Get the objset name (the "special" mount argument). 	 */
@@ -7710,7 +7776,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -8237,7 +8306,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8565,7 +8637,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8589,7 +8664,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8871,7 +8949,10 @@ name|err
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -8991,7 +9072,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9209,7 +9293,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9885,7 +9972,10 @@ name|ZPL_VERSION
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -9898,7 +9988,10 @@ name|z_version
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -9920,7 +10013,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|tx

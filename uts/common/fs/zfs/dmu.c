@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -798,7 +798,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -927,7 +930,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -946,7 +952,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1034,7 +1043,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1049,7 +1061,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1618,7 +1633,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1643,7 +1661,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1971,7 +1992,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2106,7 +2130,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2273,7 +2300,10 @@ name|DB_UNCACHED
 condition|)
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -6909,12 +6939,15 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
+comment|/* Make zl_get_data do txg_waited_synced() */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
-comment|/* Make zl_get_data do txg_waited_synced() */
 block|}
 name|dsa
 operator|=
@@ -7220,7 +7253,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7306,7 +7342,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7383,7 +7422,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EALREADY
+argument_list|)
 operator|)
 return|;
 block|}

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -714,7 +714,10 @@ name|DSS_SCANNING
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 return|return
@@ -1473,7 +1476,10 @@ name|DSS_SCANNING
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 return|return
@@ -6799,7 +6805,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}

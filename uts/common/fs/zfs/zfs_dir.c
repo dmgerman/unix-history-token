@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -545,7 +545,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Case sensitivity and normalization preferences are set when 	 * the file system is created.  These are stored in the 	 * zfsvfs->z_case and zfsvfs->z_norm fields.  These choices 	 * affect what vnodes can be cached in the DNLC, how we 	 * perform zap lookups, and the "width" of our dirlocks. 	 * 	 * A normal dirlock locks a single name.  Note that with 	 * normalization a name can be composed multiple ways, but 	 * when normalized, these names all compare equal.  A wide 	 * dirlock locks multiple names.  We need these when the file 	 * system is supporting mixed-mode access.  It is sometimes 	 * necessary to lock all case permutations of file name at 	 * once so that simultaneous case-insensitive/case-sensitive 	 * behaves as rationally as possible. 	 */
@@ -723,7 +726,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -810,7 +816,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1092,7 +1101,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1120,7 +1132,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1215,7 +1230,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3033,7 +3051,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3732,7 +3753,10 @@ condition|)
 comment|/* prevent new mounts on zp */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3751,7 +3775,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3789,7 +3816,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4441,7 +4471,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4838,7 +4871,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4860,7 +4896,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 block|}

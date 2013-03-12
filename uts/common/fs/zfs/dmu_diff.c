@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -539,7 +539,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINTR
+argument_list|)
 operator|)
 return|;
 if|if
@@ -679,7 +682,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|blk
@@ -843,7 +849,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|error
@@ -978,7 +987,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 block|}

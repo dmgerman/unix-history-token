@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1913,7 +1913,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1930,7 +1933,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1949,7 +1955,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1962,7 +1971,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1991,7 +2003,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2035,7 +2050,10 @@ operator|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2071,7 +2089,10 @@ literal|1
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2090,7 +2111,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2108,7 +2132,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2190,7 +2217,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -2227,7 +2257,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2279,7 +2312,10 @@ operator|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 comment|/* 			 * This is a special case which only occurs when 			 * the pool has completely failed. This allows 			 * the user to change the in-core failmode property 			 * without syncing it out to disk (I/Os might 			 * currently be blocked). We do this by returning 			 * EIO to the caller (spa_prop_set) to trick it 			 * into thinking we encountered a property validation 			 * error. 			 */
 if|if
@@ -2301,7 +2337,10 @@ name|intval
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -2359,7 +2398,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2408,7 +2450,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2457,7 +2502,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -2493,7 +2541,10 @@ name|SPA_VERSION_DEDUP
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 else|else
 name|error
@@ -2522,7 +2573,10 @@ name|ZIO_DEDUPDITTO_MIN
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -3081,7 +3135,10 @@ name|VDEV_STATE_HEALTHY
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 name|ASSERT3U
@@ -5323,7 +5380,10 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8607,7 +8667,10 @@ name|EIO
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -9114,7 +9177,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ASSERT
@@ -9213,7 +9279,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -9520,7 +9589,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|parse
@@ -9729,7 +9801,10 @@ name|VDEV_STATE_CANT_OPEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10742,7 +10817,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBADF
+argument_list|)
 operator|)
 return|;
 block|}
@@ -11667,7 +11745,10 @@ name|VDEV_STATE_CANT_OPEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 if|if
@@ -12558,7 +12639,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12686,7 +12770,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -14223,7 +14310,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Make sure the pool is formatted with a version that supports this 	 * device type. 	 */
@@ -14238,7 +14328,10 @@ name|version
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Set the pending device list so we correctly handle device in-use 	 * checking. 	 */
@@ -14315,7 +14408,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -14354,7 +14450,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTBLK
+argument_list|)
 expr_stmt|;
 name|vdev_free
 argument_list|(
@@ -15050,7 +15149,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -15326,7 +15428,10 @@ argument_list|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -16584,7 +16689,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -16784,7 +16892,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -16827,7 +16938,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -16878,7 +16992,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -17038,7 +17155,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18209,7 +18329,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 name|mutex_enter
@@ -18240,7 +18363,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18335,7 +18461,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18368,7 +18497,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21296,7 +21428,10 @@ else|else
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -21325,7 +21460,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -21359,7 +21497,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -21449,7 +21590,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -21466,7 +21610,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -22765,7 +22912,10 @@ else|else
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -23213,7 +23363,10 @@ else|else
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -23416,7 +23569,10 @@ block|{
 comment|/* 		 * Normal vdevs cannot be removed (yet). 		 */
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -23424,7 +23580,10 @@ block|{
 comment|/* 		 * There is no vdev of any kind with the specified guid. 		 */
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -24287,7 +24446,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 return|return
@@ -24341,7 +24503,10 @@ name|POOL_SCAN_NONE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If a resilver was requested, but there is no DTL on a 	 * writeable leaf device, we have nothing to do. 	 */

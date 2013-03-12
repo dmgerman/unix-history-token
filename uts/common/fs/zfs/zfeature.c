@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -333,7 +333,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|err
@@ -374,7 +377,10 @@ name|ENOENT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 else|else
@@ -536,7 +542,10 @@ name|ENOENT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 if|if
@@ -547,7 +556,10 @@ name|UINT64_MAX
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 name|refcount
@@ -565,7 +577,10 @@ name|ENOENT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 if|if
@@ -576,7 +591,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 name|refcount

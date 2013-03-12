@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -911,7 +915,10 @@ name|ZIO_FLAG_DONT_CACHE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -924,7 +931,10 @@ name|zfs_vdev_cache_max
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If the I/O straddles two or more cache blocks, don't cache it. 	 */
@@ -945,7 +955,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 name|ASSERT
@@ -1012,7 +1025,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ESTALE
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1117,7 +1133,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOMEM
+argument_list|)
 operator|)
 return|;
 block|}

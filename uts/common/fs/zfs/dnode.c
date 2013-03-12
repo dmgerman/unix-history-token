@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5854,7 +5854,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 name|type
@@ -5877,7 +5880,10 @@ name|DMU_OT_NONE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 if|if
@@ -5894,7 +5900,10 @@ name|DMU_OT_NONE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 name|DNODE_VERIFY
@@ -5938,7 +5947,10 @@ name|DN_MAX_OBJECT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|mdn
@@ -6034,7 +6046,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|err
@@ -7620,7 +7635,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10185,7 +10203,10 @@ return|;
 comment|/* 			 * This can only happen when we are searching up 			 * the block tree for data.  We don't really need to 			 * adjust the offset, as we will just end up looking 			 * at the pointer to this block in its parent, and its 			 * going to be unallocated, so we will skip over it. 			 */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10255,7 +10276,10 @@ block|{
 comment|/* 		 * This can only happen when we are searching up the tree 		 * and these conditions mean that we need to keep climbing. 		 */
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -10355,7 +10379,10 @@ name|blkfill
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -10574,7 +10601,10 @@ name|epb
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -10673,7 +10703,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -10716,7 +10749,10 @@ else|else
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 expr_stmt|;
 block|}
 goto|goto
@@ -10824,7 +10860,10 @@ operator|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESRCH
+argument_list|)
 expr_stmt|;
 name|out
 label|:

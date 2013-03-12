@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -640,7 +640,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -653,7 +656,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 ifdef|#
@@ -669,7 +675,10 @@ name|SPEC_MAXOFFSET_T
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 endif|#
@@ -708,7 +717,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EDOM
+argument_list|)
 operator|)
 return|;
 return|return
@@ -1028,7 +1040,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFRAGS
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * See if the block is at the end of the previous extent. 	 */
@@ -1815,7 +1830,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2033,7 +2051,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2098,7 +2119,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2129,7 +2153,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2210,7 +2237,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2280,7 +2310,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2569,7 +2602,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -2713,7 +2749,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3114,7 +3153,10 @@ name|zv_volsize
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 comment|/* Free old extents if they exist */
@@ -3816,7 +3858,10 @@ name|readonly
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 name|mutex_enter
@@ -4077,7 +4122,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4132,7 +4180,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4149,7 +4200,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4173,7 +4227,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4325,7 +4382,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5309,7 +5369,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 elseif|else
@@ -5326,7 +5389,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|dvd
@@ -5368,7 +5434,10 @@ name|doread
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 return|return
@@ -5501,7 +5570,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5569,7 +5641,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -5727,7 +5802,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5754,7 +5832,10 @@ name|NULL
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -5767,7 +5848,10 @@ name|ZSST_ZVOL
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -6167,7 +6251,10 @@ name|ECKSUM
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -6333,7 +6420,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 if|if
@@ -6350,7 +6440,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|boff
@@ -6507,7 +6600,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 name|volsize
@@ -6540,7 +6636,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 if|if
@@ -6672,7 +6771,10 @@ name|ECKSUM
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -6754,7 +6856,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 name|volsize
@@ -6787,7 +6892,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 if|if
@@ -7091,7 +7199,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
 name|ptr
@@ -7134,7 +7245,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|gpe
@@ -7359,7 +7473,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
 name|ptr
@@ -7405,7 +7522,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
 return|return
@@ -7486,7 +7606,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 if|if
@@ -7499,7 +7622,10 @@ name|ZVOL_DUMPIFIED
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 name|ASSERT
@@ -7899,7 +8025,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8013,7 +8142,10 @@ argument_list|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -8091,7 +8223,10 @@ argument_list|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -8255,7 +8390,10 @@ argument_list|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -8290,7 +8428,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -8352,7 +8493,10 @@ case|:
 comment|/* 		 * commands using these (like prtvtoc) expect ENOTSUP 		 * since we're emulating an EFI label 		 */
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -8470,7 +8614,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -8674,7 +8821,10 @@ block|}
 default|default:
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTTY
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -9437,7 +9587,10 @@ name|ZVOL_RDONLY
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 if|if

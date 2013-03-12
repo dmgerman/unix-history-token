@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2794,7 +2794,10 @@ name|B_TRUE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 switch|switch
@@ -3356,7 +3359,10 @@ name|B_TRUE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4842,7 +4848,10 @@ name|ECKSUM
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 goto|goto
 name|done
@@ -8279,7 +8288,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSYS
+argument_list|)
 operator|)
 return|;
 if|if
@@ -8761,7 +8773,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|aclp
@@ -9091,7 +9106,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSYS
+argument_list|)
 operator|)
 return|;
 if|if
@@ -9104,7 +9122,10 @@ name|ZFS_IMMUTABLE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -9585,7 +9606,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9647,7 +9671,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9674,7 +9701,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9703,7 +9733,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10047,7 +10080,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10167,7 +10203,10 @@ name|deny_mask
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10442,7 +10481,10 @@ name|ACE_WRITE_DATA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 return|return
@@ -10513,7 +10555,10 @@ name|ZFS_AV_QUARANTINED
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 name|is_attr
@@ -11450,7 +11495,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -11751,7 +11799,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * First row 	 * If the directory permissions allow the delete, we are done. 	 */
@@ -11977,7 +12028,10 @@ name|ZFS_AV_QUARANTINED
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 name|add_perm
