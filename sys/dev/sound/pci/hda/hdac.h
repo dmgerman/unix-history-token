@@ -1212,6 +1212,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_T530_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21f6)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0xffff)
 end_define
