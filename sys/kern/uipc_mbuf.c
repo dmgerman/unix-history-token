@@ -381,6 +381,9 @@ modifier|*
 name|m_get2
 parameter_list|(
 name|int
+name|size
+parameter_list|,
+name|int
 name|how
 parameter_list|,
 name|short
@@ -388,9 +391,6 @@ name|type
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-name|size
 parameter_list|)
 block|{
 name|struct
