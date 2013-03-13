@@ -811,6 +811,16 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Close the DTrace handle to ensure that any controlled processes are 	 * correctly restored and continued. 	 */
+if|if
+condition|(
+name|g_dtp
+condition|)
+name|dtrace_close
+argument_list|(
+name|g_dtp
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|E_ERROR
