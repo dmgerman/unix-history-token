@@ -4349,17 +4349,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Define this as the flags argument for msleep() when catching signals  * while holding a resource that other threads would block for, such as  * a vnode lock.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_PCATCH
-value|(PCATCH | PBDRY)
-end_define
-
 begin_endif
 endif|#
 directive|endif
