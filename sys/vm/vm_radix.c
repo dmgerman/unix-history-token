@@ -1348,10 +1348,10 @@ name|index
 operator|==
 name|page
 operator|->
-name|index
+name|pindex
 argument_list|,
 operator|(
-literal|"%s: index != page->index"
+literal|"%s: index != page->pindex"
 operator|,
 name|__func__
 operator|)
