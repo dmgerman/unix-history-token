@@ -3796,20 +3796,10 @@ operator|->
 name|ftp_pid
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
-name|mutex_exit
-argument_list|(
-operator|&
-name|provider
-operator|->
-name|ftp_mtx
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -3825,6 +3815,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* 	 * Disable all the associated tracepoints (for fully enabled probes). 	 */
 if|if
 condition|(
@@ -3953,6 +3944,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
 name|PRELE
 argument_list|(
 name|p
