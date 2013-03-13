@@ -3,6 +3,18 @@ begin_comment
 comment|/*-  * Fowler / Noll / Vo Hash (FNV Hash)  * http://www.isthe.com/chongo/tech/comp/fnv/  *  * This is an implementation of the algorithms posted above.  * This file is placed in the public domain by Peter Wemm.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_FNV_HASH_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SYS_FNV_HASH_H_
+end_define
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -271,6 +283,15 @@ name|hval
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_FNV_HASH_H_ */
+end_comment
 
 end_unit
 
