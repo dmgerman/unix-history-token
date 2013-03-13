@@ -7144,6 +7144,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * FreeBSD's setusercontext() will not apply the user's 		 * own umask setting unless running with the user's UID. 		 */
+name|setusercontext
+argument_list|(
+name|lc
+argument_list|,
+name|pw
+argument_list|,
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+name|LOGIN_SETUMASK
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 comment|/* Permanently switch to the desired uid. */
