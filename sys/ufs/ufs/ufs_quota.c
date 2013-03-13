@@ -332,7 +332,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dqflush
 parameter_list|(
 name|struct
@@ -3486,12 +3486,25 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+operator|=
 name|dqflush
 argument_list|(
 name|qvp
 argument_list|)
 expr_stmt|;
-comment|/* Clear um_quotas before closing the quota vnode to prevent 	 * access to the closed vnode from dqget/dqsync 	 */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Clear um_quotas before closing the quota vnode to prevent 	 * access to the closed vnode from dqget/dqsync 	 */
 name|UFS_LOCK
 argument_list|(
 name|ump
@@ -8089,7 +8102,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dqflush
 parameter_list|(
 name|struct
@@ -8111,7 +8124,14 @@ name|dqhash
 modifier|*
 name|dqh
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Move all dquot's that used to refer to this quota 	 * file off their hash chains (they will eventually 	 * fall off the head of the free list and be re-used). 	 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|DQH_LOCK
 argument_list|()
 expr_stmt|;
@@ -8180,11 +8200,12 @@ name|dq
 operator|->
 name|dq_cnt
 condition|)
-name|panic
-argument_list|(
-literal|"dqflush: stray dquot"
-argument_list|)
+name|error
+operator|=
+name|EBUSY
 expr_stmt|;
+else|else
+block|{
 name|LIST_REMOVE
 argument_list|(
 name|dq
@@ -8196,18 +8217,19 @@ name|dq
 operator|->
 name|dq_ump
 operator|=
-operator|(
-expr|struct
-name|ufsmount
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
+block|}
 block|}
 block|}
 name|DQH_UNLOCK
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
