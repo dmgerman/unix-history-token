@@ -1342,6 +1342,21 @@ decl_stmt|;
 name|uint16_t
 name|clev
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|index
+operator|==
+name|page
+operator|->
+name|index
+argument_list|,
+operator|(
+literal|"%s: index != page->index"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The owner of record for root is not really important because it 	 * will never be used. 	 */
 name|rnode
 operator|=
