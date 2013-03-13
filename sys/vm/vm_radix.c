@@ -1735,9 +1735,7 @@ name|vm_radix_node_get
 argument_list|(
 name|vm_radix_trimkey
 argument_list|(
-name|page
-operator|->
-name|pindex
+name|index
 argument_list|,
 name|clev
 operator|-
