@@ -3243,7 +3243,6 @@ name|fail
 goto|;
 block|}
 comment|/* Only support headers that fit within first page for now      */
-comment|/*    (multiplication of two Elf_Half fields will not overflow) */
 if|if
 condition|(
 operator|(
@@ -3255,6 +3254,8 @@ name|PAGE_SIZE
 operator|)
 operator|||
 operator|(
+name|u_int
+operator|)
 name|hdr
 operator|->
 name|e_phentsize
@@ -3262,7 +3263,6 @@ operator|*
 name|hdr
 operator|->
 name|e_phnum
-operator|)
 operator|>
 name|PAGE_SIZE
 operator|-
@@ -3696,10 +3696,8 @@ name|PAGE_SIZE
 operator|)
 operator|||
 operator|(
-name|hdr
-operator|->
-name|e_phoff
-operator|+
+name|u_int
+operator|)
 name|hdr
 operator|->
 name|e_phentsize
@@ -3707,9 +3705,12 @@ operator|*
 name|hdr
 operator|->
 name|e_phnum
-operator|)
 operator|>
 name|PAGE_SIZE
+operator|-
+name|hdr
+operator|->
+name|e_phoff
 condition|)
 block|{
 comment|/* Only support headers in first page for now */
@@ -3828,7 +3829,7 @@ name|i
 index|]
 operator|.
 name|p_offset
-operator|>=
+operator|>
 name|PAGE_SIZE
 operator|||
 name|phdr
@@ -3836,16 +3837,16 @@ index|[
 name|i
 index|]
 operator|.
-name|p_offset
-operator|+
+name|p_filesz
+operator|>
+name|PAGE_SIZE
+operator|-
 name|phdr
 index|[
 name|i
 index|]
 operator|.
-name|p_filesz
-operator|>=
-name|PAGE_SIZE
+name|p_offset
 condition|)
 return|return
 operator|(
@@ -7936,7 +7937,7 @@ operator|||
 name|pnote
 operator|->
 name|p_offset
-operator|>=
+operator|>
 name|PAGE_SIZE
 operator|||
 name|pnote
@@ -7944,16 +7945,10 @@ operator|->
 name|p_filesz
 operator|>
 name|PAGE_SIZE
-operator|||
+operator|-
 name|pnote
 operator|->
 name|p_offset
-operator|+
-name|pnote
-operator|->
-name|p_filesz
-operator|>=
-name|PAGE_SIZE
 condition|)
 return|return
 operator|(
