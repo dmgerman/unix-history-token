@@ -7387,9 +7387,9 @@ break|break;
 default|default:
 name|DPRINTF
 argument_list|(
-literal|"Minimum MaxPacketSize is large enough "
+literal|"Minimum bMaxPacketSize is large enough "
 literal|"to hold the complete device descriptor or "
-literal|"only once MaxPacketSize choice\n"
+literal|"only one bMaxPacketSize choice\n"
 argument_list|)
 expr_stmt|;
 comment|/* get the full device descriptor */
