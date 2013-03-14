@@ -162,18 +162,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|fsinode
-modifier|*
-name|link_check
-parameter_list|(
-name|fsinode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * walk_dir --  *	build a tree of fsnodes from `root' and `dir', with a parent  *	fsnode of `parent' (which may be NULL for the root of the tree).  *	append the tree to a fsnode of `join' if it is not NULL.  *	each "level" is a directory, with the "." entry guaranteed to be  *	at the start of the list, and without ".." entries.  */
 end_comment
@@ -1206,7 +1194,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * free_fsnodes --  *	Removes node from tree and frees it and all of  *   its decendents.  */
+comment|/*  * free_fsnodes --  *	Removes node from tree and frees it and all of  *   its descendants.  */
 end_comment
 
 begin_function
@@ -3372,7 +3360,6 @@ comment|/* This was borrowed from du.c and tweaked to keep an fsnode   * pointer
 end_comment
 
 begin_function
-specifier|static
 name|fsinode
 modifier|*
 name|link_check

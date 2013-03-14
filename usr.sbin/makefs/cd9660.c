@@ -2653,24 +2653,6 @@ block|{
 name|time_t
 name|tim
 decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|temp
-decl_stmt|;
-comment|/* Copy the root directory record */
-name|temp
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|diskStructure
-operator|.
-name|primaryDescriptor
-expr_stmt|;
 comment|/* root should be a fixed size of 34 bytes since it has no name */
 name|memcpy
 argument_list|(
@@ -4507,10 +4489,6 @@ decl_stmt|;
 name|int
 name|numbts
 decl_stmt|,
-name|dot
-decl_stmt|,
-name|semi
-decl_stmt|,
 name|digit
 decl_stmt|,
 name|digits
@@ -4518,8 +4496,6 @@ decl_stmt|,
 name|temp
 decl_stmt|,
 name|powers
-decl_stmt|,
-name|multiplier
 decl_stmt|,
 name|count
 decl_stmt|;
@@ -4604,10 +4580,6 @@ name|digits
 operator|=
 literal|1
 expr_stmt|;
-name|multiplier
-operator|=
-literal|1
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4641,16 +4613,6 @@ operator|->
 name|o_name
 expr_stmt|;
 comment|/* 		while ((*naming != '.')&& (*naming != ';')) { 			naming++; 			count++; 		} 		*/
-name|dot
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|semi
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 while|while
 condition|(
 name|count
@@ -4663,27 +4625,9 @@ condition|(
 operator|*
 name|naming
 operator|==
-literal|'.'
-condition|)
-name|dot
-operator|=
-name|count
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|*
-name|naming
-operator|==
 literal|';'
 condition|)
-block|{
-name|semi
-operator|=
-name|count
-expr_stmt|;
 break|break;
-block|}
 name|naming
 operator|++
 expr_stmt|;
@@ -6139,12 +6083,6 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* root gets a count of 0 */
-name|int
-name|parentRecNum
-init|=
-literal|0
-decl_stmt|;
-comment|/* root's parent is '0' */
 name|TAILQ_HEAD
 argument_list|(
 argument|cd9660_pt_head
@@ -6286,26 +6224,6 @@ block|}
 name|last
 operator|=
 name|dirNode
-expr_stmt|;
-name|parentRecNum
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|dirNode
-operator|->
-name|parent
-operator|!=
-literal|0
-condition|)
-name|parentRecNum
-operator|=
-name|dirNode
-operator|->
-name|parent
-operator|->
-name|ptnumber
 expr_stmt|;
 comment|/* Push children onto queue */
 name|TAILQ_FOREACH

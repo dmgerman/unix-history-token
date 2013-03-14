@@ -254,6 +254,10 @@ name|int
 name|sectorsize
 decl_stmt|;
 comment|/* sector size */
+name|int
+name|sparse
+decl_stmt|;
+comment|/* sparse image, don't fill it with zeros */
 name|void
 modifier|*
 name|fs_specific
@@ -522,6 +526,13 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dupsok
 decl_stmt|;
 end_decl_stmt
 
@@ -994,6 +1005,17 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|fsinode
+modifier|*
+name|link_check
+parameter_list|(
+name|fsinode
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
