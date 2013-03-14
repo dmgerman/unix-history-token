@@ -2828,6 +2828,12 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+name|stmp
+operator|.
+name|length
+operator|=
+literal|0
+expr_stmt|;
 name|ret
 operator|=
 name|ASN1_mbstring_copy

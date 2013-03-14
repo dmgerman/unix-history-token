@@ -324,6 +324,11 @@ argument_list|(
 name|signer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|skey
+condition|)
+block|{
 name|ret
 operator|=
 name|OCSP_BASICRESP_verify
@@ -340,8 +345,12 @@ argument_list|(
 name|skey
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
+operator|!
+name|skey
+operator|||
 name|ret
 operator|<=
 literal|0
@@ -415,6 +424,11 @@ operator|!
 name|init_res
 condition|)
 block|{
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|OCSPerr
 argument_list|(
 name|OCSP_F_OCSP_BASIC_VERIFY

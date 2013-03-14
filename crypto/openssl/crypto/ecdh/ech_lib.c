@@ -584,6 +584,8 @@ condition|)
 return|return
 name|NULL
 return|;
+name|data
+operator|=
 name|EC_KEY_insert_key_method_data
 argument_list|(
 name|key
@@ -601,6 +603,28 @@ argument_list|,
 name|ecdh_data_free
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|data
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Another thread raced us to install the key_method 			 * data and won. */
+name|ecdh_data_free
+argument_list|(
+name|ecdh_data
+argument_list|)
+expr_stmt|;
+name|ecdh_data
+operator|=
+operator|(
+name|ECDH_DATA
+operator|*
+operator|)
+name|data
+expr_stmt|;
+block|}
 block|}
 else|else
 name|ecdh_data

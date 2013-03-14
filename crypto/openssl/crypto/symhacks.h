@@ -1289,19 +1289,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|ec_GFp_simple_group_get_curve_GFp
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ec_GFp_simple_group_get_curve_GFp
-value|ec_GFp_simple_grp_get_curve_GFp
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|ec_GFp_simple_set_Jprojective_coordinates_GFp
 end_undef
 
