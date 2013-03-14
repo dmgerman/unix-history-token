@@ -266,7 +266,7 @@ condition|)
 block|{
 name|s_result
 operator|=
-name|_write
+name|_sendto
 argument_list|(
 name|connection
 operator|->
@@ -291,6 +291,12 @@ else|:
 name|data_size
 operator|-
 name|result
+argument_list|,
+name|MSG_NOSIGNAL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -807,7 +813,7 @@ argument_list|,
 operator|&
 name|cred_hdr
 argument_list|,
-literal|0
+name|MSG_NOSIGNAL
 argument_list|)
 operator|==
 operator|-

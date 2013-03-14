@@ -6023,7 +6023,7 @@ name|bn
 argument_list|,
 name|size
 argument_list|,
-name|NFS_PCATCH
+name|PCATCH
 argument_list|,
 literal|0
 argument_list|,
@@ -6239,7 +6239,7 @@ condition|)
 block|{
 name|slpflag
 operator|=
-name|NFS_PCATCH
+name|PCATCH
 expr_stmt|;
 name|slptimeo
 operator|=
@@ -6580,7 +6580,7 @@ name|NFSMNT_INT
 condition|)
 name|slpflag
 operator|=
-name|NFS_PCATCH
+name|PCATCH
 expr_stmt|;
 name|gotiod
 operator|=
@@ -6800,7 +6800,7 @@ if|if
 condition|(
 name|slpflag
 operator|==
-name|NFS_PCATCH
+name|PCATCH
 condition|)
 block|{
 name|slpflag

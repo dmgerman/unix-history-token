@@ -772,9 +772,9 @@ name|et_flags
 operator|&
 name|ET_FLAGS_ONESHOT
 operator|)
-operator|&&
+operator|||
 name|period
-operator|==
+operator|!=
 literal|0
 argument_list|,
 operator|(

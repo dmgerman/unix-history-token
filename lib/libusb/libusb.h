@@ -19,6 +19,18 @@ directive|define
 name|__LIBUSB_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBUSB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -30,6 +42,11 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
