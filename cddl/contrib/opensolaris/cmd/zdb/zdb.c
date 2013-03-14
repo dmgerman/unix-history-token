@@ -6987,6 +6987,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|bpobj_close
+argument_list|(
+operator|&
+name|subbpo
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
