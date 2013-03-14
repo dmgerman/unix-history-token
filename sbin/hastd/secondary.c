@@ -2555,6 +2555,12 @@ if|if
 condition|(
 name|hio
 operator|->
+name|hio_cmd
+operator|!=
+name|HIO_DELETE
+operator|&&
+name|hio
+operator|->
 name|hio_length
 operator|>
 name|MAXPHYS
