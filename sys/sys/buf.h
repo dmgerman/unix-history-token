@@ -2281,6 +2281,8 @@ name|long
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|buf
 modifier|*
@@ -2302,6 +2304,8 @@ parameter_list|,
 name|daddr_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2319,6 +2323,8 @@ name|buf
 modifier|*
 parameter_list|,
 name|u_quad_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

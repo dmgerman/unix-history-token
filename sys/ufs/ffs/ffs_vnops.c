@@ -2142,6 +2142,8 @@ name|uio_resid
 argument_list|,
 name|seqcount
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|bp
 argument_list|)
@@ -3229,6 +3231,8 @@ operator|->
 name|i_size
 argument_list|,
 name|seqcount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

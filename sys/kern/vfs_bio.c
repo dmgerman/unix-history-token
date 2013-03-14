@@ -7473,10 +7473,14 @@ operator|-
 name|j
 argument_list|,
 name|ncl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|nwritten
+operator|)
 return|;
 block|}
 block|}
