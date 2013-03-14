@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -273,7 +273,7 @@ name|char
 name|lem_driver_version
 index|[]
 init|=
-literal|"1.0.4"
+literal|"1.0.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -1692,12 +1692,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EM_LEGACY_IRQ
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -1708,15 +1702,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* FAST IRQ */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1783,15 +1768,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ~EM_LEGACY_IRQ */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1869,11 +1845,7 @@ argument_list|,
 name|lem_resume
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2154,11 +2126,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EM_LEGACY_IRQ
-end_ifndef
+begin_comment
+comment|/* Interrupt style - default to fast */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lem_use_legacy_irq
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.em.use_legacy_irq"
+argument_list|,
+operator|&
+name|lem_use_legacy_irq
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* How many packets rxeof tries to clean at a time */
@@ -2183,11 +2173,6 @@ name|lem_rx_process_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Flow control setting - default to FULL */
@@ -2780,9 +2765,6 @@ name|lem_tx_abs_int_delay_dflt
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|EM_LEGACY_IRQ
 comment|/* Sysctls for limiting the amount of work done in the taskqueue */
 name|lem_add_rx_process_limit
 argument_list|(
@@ -2800,8 +2782,6 @@ argument_list|,
 name|lem_rx_process_limit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Sysctl for setting the interface flow control */
 name|lem_set_flow_cntrl
 argument_list|(
@@ -5740,65 +5720,6 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* MSI/X configuration for 82574 */
-if|if
-condition|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_82574
-condition|)
-block|{
-name|int
-name|tmp
-decl_stmt|;
-name|tmp
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_CTRL_EXT
-argument_list|)
-expr_stmt|;
-name|tmp
-operator||=
-name|E1000_CTRL_EXT_PBA_CLR
-expr_stmt|;
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_CTRL_EXT
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-comment|/* 		** Set the IVAR - interrupt vector routing. 		** Each nibble represents a vector, high bit 		** is enable, other 3 bits are the MSIX table 		** entry, we map RXQ0 to 0, TXQ0 to 1, and 		** Link (other) to 2, hence the magic number. 		*/
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_IVAR
-argument_list|,
-literal|0x800A0908
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -6084,12 +6005,6 @@ begin_comment
 comment|/* DEVICE_POLLING */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EM_LEGACY_IRQ
-end_ifdef
-
 begin_comment
 comment|/*********************************************************************  *  *  Legacy Interrupt Service routine    *  *********************************************************************/
 end_comment
@@ -6125,11 +6040,25 @@ name|reg_icr
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_capenable
 operator|&
 name|IFCAP_POLLING
+operator|)
+operator|||
+operator|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 return|return;
 name|EM_CORE_LOCK
@@ -6174,24 +6103,14 @@ operator|==
 literal|0
 operator|)
 condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-operator|==
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
+block|{
+name|EM_CORE_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|reg_icr
@@ -6246,11 +6165,14 @@ argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|EM_CORE_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
-name|EM_TX_LOCK
+name|EM_CORE_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -6263,6 +6185,11 @@ operator|-
 literal|1
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
 argument_list|)
 expr_stmt|;
 name|lem_txeof
@@ -6297,25 +6224,9 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-name|EM_CORE_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* EM_FAST_IRQ, then fast interrupt routines only */
-end_comment
 
 begin_function
 specifier|static
@@ -6639,15 +6550,6 @@ name|FILTER_HANDLED
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ~EM_LEGACY_IRQ */
-end_comment
 
 begin_comment
 comment|/*********************************************************************  *  *  Media Ioctl callback  *  *  This routine is called whenever the user queries the status of  *  the interface using ifconfig.  *  **********************************************************************/
@@ -10316,10 +10218,12 @@ name|ENXIO
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|EM_LEGACY_IRQ
-comment|/* We do Legacy setup */
+comment|/* Do Legacy setup? */
+if|if
+condition|(
+name|lem_use_legacy_irq
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -10372,10 +10276,13 @@ name|error
 operator|)
 return|;
 block|}
-else|#
-directive|else
-comment|/* FAST_IRQ */
-comment|/* 	 * Try allocating a fast interrupt and the associated deferred 	 * processing contexts. 	 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Use a Fast interrupt and the associated 	 * deferred processing contexts. 	 */
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -10509,9 +10416,6 @@ name|error
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* EM_LEGACY_IRQ */
 return|return
 operator|(
 literal|0
@@ -15324,67 +15228,6 @@ name|DEFAULT_ITR
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	** When using MSIX interrupts we need to throttle 	** using the EITR register (82574 only) 	*/
-if|if
-condition|(
-name|adapter
-operator|->
-name|msix
-condition|)
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_EITR_82574
-argument_list|(
-name|i
-argument_list|)
-argument_list|,
-name|DEFAULT_ITR
-argument_list|)
-expr_stmt|;
-comment|/* Disable accelerated ackknowledge */
-if|if
-condition|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_82574
-condition|)
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RFCTL
-argument_list|,
-name|E1000_RFCTL_ACK_DIS
-argument_list|)
-expr_stmt|;
 comment|/* Setup the Base and Length of the Rx Descriptor Ring */
 name|bus_addr
 operator|=
@@ -17712,23 +17555,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Update the frame size */
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RLPML
-argument_list|,
-name|adapter
-operator|->
-name|max_frame_size
-operator|+
-name|VLAN_TAG_SIZE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -17758,27 +17584,6 @@ name|ims_mask
 init|=
 name|IMS_ENABLE_MASK
 decl_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|msix
-condition|)
-block|{
-name|E1000_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|EM_EIAC
-argument_list|,
-name|EM_MSIX_MASK
-argument_list|)
-expr_stmt|;
-name|ims_mask
-operator||=
-name|EM_MSIX_MASK
-expr_stmt|;
-block|}
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -17812,26 +17617,8 @@ name|adapter
 operator|->
 name|hw
 decl_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|msix
-condition|)
 name|E1000_WRITE_REG
 argument_list|(
-name|hw
-argument_list|,
-name|EM_EIAC
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
 name|hw
 argument_list|,
 name|E1000_IMC
@@ -22712,12 +22499,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EM_LEGACY_IRQ
-end_ifndef
-
 begin_function
 specifier|static
 name|void
@@ -22787,11 +22568,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -662,6 +662,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_PCH_LPT_I217_LM
+value|0x153A
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_LPT_I217_V
+value|0x153B
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_LPTLP_I218_LM
+value|0x155A
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_LPTLP_I218_V
+value|0x1559
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82576
 value|0x10C9
 end_define
@@ -725,8 +753,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82576_VF_HV
+value|0x152D
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_I350_VF
 value|0x1520
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_I350_VF_HV
+value|0x152F
 end_define
 
 begin_define
@@ -1049,6 +1091,8 @@ name|e1000_pchlan
 block|,
 name|e1000_pch2lan
 block|,
+name|e1000_pch_lpt
+block|,
 name|e1000_82575
 block|,
 name|e1000_82576
@@ -1165,6 +1209,8 @@ block|,
 name|e1000_phy_82577
 block|,
 name|e1000_phy_82579
+block|,
+name|e1000_phy_i217
 block|,
 name|e1000_phy_82580
 block|,
@@ -2359,11 +2405,14 @@ directive|include
 file|"e1000_mbx.h"
 end_include
 
+begin_comment
+comment|/* Function pointers for the MAC. */
+end_comment
+
 begin_struct
 struct|struct
 name|e1000_mac_operations
 block|{
-comment|/* Function pointers for the MAC. */
 name|s32
 function_decl|(
 modifier|*
@@ -2397,17 +2446,6 @@ name|e1000_hw
 modifier|*
 parameter_list|)
 function_decl|;
-name|s32
-function_decl|(
-modifier|*
-name|check_for_link
-function_decl|)
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-parameter_list|)
-function_decl|;
 name|bool
 function_decl|(
 modifier|*
@@ -2417,7 +2455,17 @@ parameter_list|(
 name|struct
 name|e1000_hw
 modifier|*
-name|hw
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|check_for_link
+function_decl|)
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
 parameter_list|)
 function_decl|;
 name|s32
@@ -2674,60 +2722,14 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|mng_host_if_write
+name|set_obff_timer
 function_decl|)
 parameter_list|(
 name|struct
 name|e1000_hw
 modifier|*
 parameter_list|,
-name|u8
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|,
-name|u16
-parameter_list|,
-name|u8
-modifier|*
-parameter_list|)
-function_decl|;
-name|s32
-function_decl|(
-modifier|*
-name|mng_write_cmd_header
-function_decl|)
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|,
-name|struct
-name|e1000_host_mng_command_header
-modifier|*
-parameter_list|)
-function_decl|;
-name|s32
-function_decl|(
-modifier|*
-name|mng_enable_host_if
-function_decl|)
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-parameter_list|)
-function_decl|;
-name|s32
-function_decl|(
-modifier|*
-name|wait_autoneg
-function_decl|)
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
+name|u32
 parameter_list|)
 function_decl|;
 name|s32
@@ -2761,7 +2763,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * When to use various PHY register access functions:  *  *                 Func   Caller  *   Function      Does   Does    When to use  *   ~~~~~~~~~~~~  ~~~~~  ~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  *   X_reg         L,P,A  n/a     for simple PHY reg accesses  *   X_reg_locked  P,A    L       for multiple accesses of different regs  *                                on different pages  *   X_reg_page    A      L,P     for multiple accesses of different regs  *                                on the same page  *  * Where X=[read|write], L=locking, P=sets page, A=register access  *  */
+comment|/* When to use various PHY register access functions:  *  *                 Func   Caller  *   Function      Does   Does    When to use  *   ~~~~~~~~~~~~  ~~~~~  ~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  *   X_reg         L,P,A  n/a     for simple PHY reg accesses  *   X_reg_locked  P,A    L       for multiple accesses of different regs  *                                on different pages  *   X_reg_page    A      L,P     for multiple accesses of different regs  *                                on the same page  *  * Where X=[read|write], L=locking, P=sets page, A=register access  *  */
 end_comment
 
 begin_struct
@@ -3094,6 +3096,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Function pointers for the NVM. */
+end_comment
+
 begin_struct
 struct|struct
 name|e1000_nvm_operations
@@ -3337,6 +3343,9 @@ name|serdes_has_link
 decl_stmt|;
 name|bool
 name|tx_pkt_filtering
+decl_stmt|;
+name|u32
+name|max_frame_size
 decl_stmt|;
 block|}
 struct|;
@@ -3845,6 +3854,9 @@ decl_stmt|;
 name|bool
 name|eee_disable
 decl_stmt|;
+name|u16
+name|eee_lp_ability
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3865,8 +3877,15 @@ decl_stmt|;
 name|bool
 name|module_plugged
 decl_stmt|;
+name|bool
+name|clear_semaphore_once
+decl_stmt|;
 name|u32
 name|mtu
+decl_stmt|;
+name|struct
+name|sfp_e1000_flags
+name|eth_flags
 decl_stmt|;
 block|}
 struct|;

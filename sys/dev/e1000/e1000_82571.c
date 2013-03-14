@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/*  * 82571EB Gigabit Ethernet Controller  * 82571EB Gigabit Ethernet Controller (Copper)  * 82571EB Gigabit Ethernet Controller (Fiber)  * 82571EB Dual Port Gigabit Mezzanine Adapter  * 82571EB Quad Port Gigabit Mezzanine Adapter  * 82571PT Gigabit PT Quad Port Server ExpressModule  * 82572EI Gigabit Ethernet Controller (Copper)  * 82572EI Gigabit Ethernet Controller (Fiber)  * 82572EI Gigabit Ethernet Controller  * 82573V Gigabit Ethernet Controller (Copper)  * 82573E Gigabit Ethernet Controller (Copper)  * 82573L Gigabit Ethernet Controller  * 82574L Gigabit Network Connection  * 82583V Gigabit Network Connection  */
+comment|/* 82571EB Gigabit Ethernet Controller  * 82571EB Gigabit Ethernet Controller (Copper)  * 82571EB Gigabit Ethernet Controller (Fiber)  * 82571EB Dual Port Gigabit Mezzanine Adapter  * 82571EB Quad Port Gigabit Mezzanine Adapter  * 82571PT Gigabit PT Quad Port Server ExpressModule  * 82572EI Gigabit Ethernet Controller (Copper)  * 82572EI Gigabit Ethernet Controller (Fiber)  * 82572EI Gigabit Ethernet Controller  * 82573V Gigabit Ethernet Controller (Copper)  * 82573E Gigabit Ethernet Controller (Copper)  * 82573L Gigabit Ethernet Controller  * 82574L Gigabit Network Connection  * 82583V Gigabit Network Connection  */
 end_comment
 
 begin_include
@@ -16,45 +16,6 @@ include|#
 directive|include
 file|"e1000_api.h"
 end_include
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_phy_params_82571
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_nvm_params_82571
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_mac_params_82571
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -361,19 +322,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|s32
-name|e1000_get_hw_semaphore_82573
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|e1000_put_hw_semaphore_82573
 parameter_list|(
@@ -532,8 +480,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -557,9 +503,9 @@ name|type
 operator|=
 name|e1000_phy_none
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|E1000_SUCCESS
+return|;
 block|}
 name|phy
 operator|->
@@ -933,14 +879,10 @@ name|e1000_set_d3_lplu_state_82574
 expr_stmt|;
 break|break;
 default|default:
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 break|break;
 block|}
 comment|/* This can only be done after all function pointers are setup. */
@@ -961,9 +903,9 @@ argument_list|(
 literal|"Error getting PHY ID\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 comment|/* Verify phy id */
 switch|switch
@@ -1053,8 +995,6 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -1227,7 +1167,7 @@ name|word_size
 operator|=
 literal|2048
 expr_stmt|;
-comment|/* 			 * Autonomous Flash update bit must be cleared due 			 * to Flash update issue. 			 */
+comment|/* Autonomous Flash update bit must be cleared due 			 * to Flash update issue. 			 */
 name|eecd
 operator|&=
 operator|~
@@ -1267,7 +1207,7 @@ operator|>>
 name|E1000_EECD_SIZE_EX_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Added to a constant, "size" becomes the left-shift value 		 * for setting word_size. 		 */
+comment|/* Added to a constant, "size" becomes the left-shift value 		 * for setting word_size. 		 */
 name|size
 operator|+=
 name|NVM_WORD_SIZE_BASE_SHIFT
@@ -1764,11 +1704,13 @@ name|has_fwsm
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 		 * ARC supported; valid only if manageability features are 		 * enabled. 		 */
+comment|/* ARC supported; valid only if manageability features are 		 * enabled. 		 */
 name|mac
 operator|->
 name|arc_subsystem_valid
 operator|=
+operator|!
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -1779,10 +1721,6 @@ argument_list|)
 operator|&
 name|E1000_FWSM_MODE_MASK
 operator|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -1850,7 +1788,7 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Ensure that the inter-port SWSM.SMBI lock bit is clear before 	 * first NVM or PHY acess. This should be done for single-port 	 * devices, and for one port only on dual-port devices so that 	 * for those devices we can still use the SMBI lock to synchronize 	 * inter-port accesses to the PHY& NVM. 	 */
+comment|/* Ensure that the inter-port SWSM.SMBI lock bit is clear before 	 * first NVM or PHY acess. This should be done for single-port 	 * devices, and for one port only on dual-port devices so that 	 * for those devices we can still use the SMBI lock to synchronize 	 * inter-port accesses to the PHY& NVM. 	 */
 switch|switch
 condition|(
 name|hw
@@ -1903,10 +1841,12 @@ name|TRUE
 expr_stmt|;
 block|}
 else|else
+block|{
 name|force_clear_smbi
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|force_clear_smbi
@@ -1957,7 +1897,7 @@ name|E1000_SWSM_SMBI
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialze device specific counter of SMBI acquisition 	 * timeouts. 	 */
+comment|/* Initialze device specific counter of SMBI acquisition timeouts. */
 name|hw
 operator|->
 name|dev_spec
@@ -2053,8 +1993,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|phy_id
@@ -2081,7 +2019,7 @@ case|:
 case|case
 name|e1000_82572
 case|:
-comment|/* 		 * The 82571 firmware may still be configuring the PHY. 		 * In this case, we cannot access the PHY until the 		 * configuration is done.  So we explicitly set the 		 * PHY ID. 		 */
+comment|/* The 82571 firmware may still be configuring the PHY. 		 * In this case, we cannot access the PHY until the 		 * configuration is done.  So we explicitly set the 		 * PHY ID. 		 */
 name|phy
 operator|->
 name|id
@@ -2092,13 +2030,12 @@ break|break;
 case|case
 name|e1000_82573
 case|:
-name|ret_val
-operator|=
+return|return
 name|e1000_get_phy_id
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
+return|;
 break|break;
 case|case
 name|e1000_82574
@@ -2126,9 +2063,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|phy
 operator|->
 name|id
@@ -2167,9 +2104,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|phy
 operator|->
 name|id
@@ -2197,17 +2134,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
+return|;
 break|break;
 block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -2229,11 +2163,6 @@ parameter_list|)
 block|{
 name|u32
 name|swsm
-decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|s32
 name|sw_timeout
@@ -2267,7 +2196,7 @@ argument_list|(
 literal|"e1000_get_hw_semaphore_82571"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we have timedout 3 times on trying to acquire 	 * the inter-port SMBI semaphore, there is old code 	 * operating on the other port, and it is not 	 * releasing SMBI. Modify the number of times that 	 * we try for the semaphore to interwork with this 	 * older code. 	 */
+comment|/* If we have timedout 3 times on trying to acquire 	 * the inter-port SMBI semaphore, there is old code 	 * operating on the other port, and it is not 	 * releasing SMBI. Modify the number of times that 	 * we try for the semaphore to interwork with this 	 * older code. 	 */
 if|if
 condition|(
 name|hw
@@ -2414,19 +2343,13 @@ argument_list|(
 literal|"Driver can't access the NVM\n"
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_NVM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -2503,11 +2426,6 @@ name|u32
 name|extcnf_ctrl
 decl_stmt|;
 name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
-name|s32
 name|i
 init|=
 literal|0
@@ -2526,12 +2444,12 @@ argument_list|,
 name|E1000_EXTCNF_CTRL
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|extcnf_ctrl
 operator||=
 name|E1000_EXTCNF_CTRL_MDIO_SW_OWNERSHIP
 expr_stmt|;
-do|do
-block|{
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -2557,10 +2475,6 @@ operator|&
 name|E1000_EXTCNF_CTRL_MDIO_SW_OWNERSHIP
 condition|)
 break|break;
-name|extcnf_ctrl
-operator||=
-name|E1000_EXTCNF_CTRL_MDIO_SW_OWNERSHIP
-expr_stmt|;
 name|msec_delay
 argument_list|(
 literal|2
@@ -2595,19 +2509,13 @@ argument_list|(
 literal|"Driver can't access the PHY\n"
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -2783,7 +2691,7 @@ name|bool
 name|active
 parameter_list|)
 block|{
-name|u16
+name|u32
 name|data
 init|=
 name|E1000_READ_REG
@@ -2845,7 +2753,7 @@ name|bool
 name|active
 parameter_list|)
 block|{
-name|u16
+name|u32
 name|data
 init|=
 name|E1000_READ_REG
@@ -2960,9 +2868,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 switch|switch
 condition|(
 name|hw
@@ -2995,8 +2903,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -3063,8 +2969,6 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -3177,10 +3081,10 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-comment|/* 	 * If our nvm is an EEPROM, then we're done 	 * otherwise, commit the checksum to the flash NVM. 	 */
+return|return
+name|ret_val
+return|;
+comment|/* If our nvm is an EEPROM, then we're done 	 * otherwise, commit the checksum to the flash NVM. 	 */
 if|if
 condition|(
 name|hw
@@ -3191,9 +3095,9 @@ name|type
 operator|!=
 name|e1000_nvm_flash_hw
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|E1000_SUCCESS
+return|;
 comment|/* Check for pending operations. */
 for|for
 control|(
@@ -3216,6 +3120,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -3226,8 +3131,6 @@ argument_list|)
 operator|&
 name|E1000_EECD_FLUPD
 operator|)
-operator|==
-literal|0
 condition|)
 break|break;
 block|}
@@ -3237,16 +3140,10 @@ name|i
 operator|==
 name|E1000_FLASH_UPDATES
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_NVM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+return|;
 comment|/* Reset the firmware if using STM opcode. */
 if|if
 condition|(
@@ -3264,7 +3161,7 @@ operator|==
 name|E1000_STM_OPCODE
 condition|)
 block|{
-comment|/* 		 * The enabling of and the actual reset must be done 		 * in two write cycles. 		 */
+comment|/* The enabling of and the actual reset must be done 		 * in two write cycles. 		 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -3331,6 +3228,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -3341,8 +3239,6 @@ argument_list|)
 operator|&
 name|E1000_EECD_FLUPD
 operator|)
-operator|==
-literal|0
 condition|)
 break|break;
 block|}
@@ -3352,20 +3248,12 @@ name|i
 operator|==
 name|E1000_FLASH_UPDATES
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_NVM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|out
-label|:
+return|;
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -3459,14 +3347,14 @@ decl_stmt|;
 name|s32
 name|ret_val
 init|=
-literal|0
+name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_write_nvm_eewr_82571"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
+comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -3501,14 +3389,10 @@ argument_list|(
 literal|"nvm parameter(s) out of bounds\n"
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_NVM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 block|}
 for|for
 control|(
@@ -3585,8 +3469,6 @@ name|ret_val
 condition|)
 break|break;
 block|}
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -3612,11 +3494,6 @@ name|s32
 name|timeout
 init|=
 name|PHY_CFG_TIMEOUT
-decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -3660,19 +3537,13 @@ argument_list|(
 literal|"MNG configuration cycle has not completed.\n"
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_RESET
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -3707,8 +3578,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|data
@@ -3729,9 +3598,9 @@ operator|.
 name|read_reg
 operator|)
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|E1000_SUCCESS
+return|;
 name|ret_val
 operator|=
 name|phy
@@ -3752,9 +3621,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 if|if
 condition|(
 name|active
@@ -3783,9 +3652,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* When LPLU is enabled, we should disable SmartSpeed */
 name|ret_val
 operator|=
@@ -3803,6 +3672,13 @@ operator|&
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+return|return
+name|ret_val
+return|;
 name|data
 operator|&=
 operator|~
@@ -3827,9 +3703,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 else|else
 block|{
@@ -3853,7 +3729,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
+comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -3883,9 +3759,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator||=
 name|IGP01E1000_PSCFR_SMART_SPEED
@@ -3909,9 +3785,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 elseif|else
 if|if
@@ -3943,9 +3819,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator|&=
 operator|~
@@ -3970,15 +3846,13 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-block|}
-block|}
-name|out
-label|:
 return|return
 name|ret_val
+return|;
+block|}
+block|}
+return|return
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -4002,6 +3876,10 @@ name|u32
 name|ctrl
 decl_stmt|,
 name|ctrl_ext
+decl_stmt|,
+name|eecd
+decl_stmt|,
+name|tctl
 decl_stmt|;
 name|s32
 name|ret_val
@@ -4011,7 +3889,7 @@ argument_list|(
 literal|"e1000_reset_hw_82571"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
+comment|/* Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
 name|ret_val
 operator|=
 name|e1000_disable_pcie_master_generic
@@ -4051,13 +3929,27 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|tctl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_TCTL
+argument_list|)
+expr_stmt|;
+name|tctl
+operator|&=
+operator|~
+name|E1000_TCTL_EN
+expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
 name|E1000_TCTL
 argument_list|,
-name|E1000_TCTL_PSP
+name|tctl
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_FLUSH
@@ -4070,7 +3962,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Must acquire the MDIO ownership before MAC reset. 	 * Ownership defaults to firmware after a reset. 	 */
+comment|/* Must acquire the MDIO ownership before MAC reset. 	 * Ownership defaults to firmware after a reset. 	 */
 switch|switch
 condition|(
 name|hw
@@ -4223,10 +4115,10 @@ condition|(
 name|ret_val
 condition|)
 comment|/* We don't want to continue accessing MAC registers. */
-goto|goto
-name|out
-goto|;
-comment|/* 	 * Phy configuration from NVM just starts after EECD_AUTO_RD is set. 	 * Need to wait for Phy configuration completion before accessing 	 * NVM and Phy. 	 */
+return|return
+name|ret_val
+return|;
+comment|/* Phy configuration from NVM just starts after EECD_AUTO_RD is set. 	 * Need to wait for Phy configuration completion before accessing 	 * NVM and Phy. 	 */
 switch|switch
 condition|(
 name|hw
@@ -4236,6 +4128,41 @@ operator|.
 name|type
 condition|)
 block|{
+case|case
+name|e1000_82571
+case|:
+case|case
+name|e1000_82572
+case|:
+comment|/* REQ and GNT bits need to be cleared when using AUTO_RD 		 * to access the EEPROM. 		 */
+name|eecd
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_EECD
+argument_list|)
+expr_stmt|;
+name|eecd
+operator|&=
+operator|~
+operator|(
+name|E1000_EECD_REQ
+operator||
+name|E1000_EECD_GNT
+operator|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_EECD
+argument_list|,
+name|eecd
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|e1000_82573
 case|:
@@ -4294,9 +4221,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|e1000_set_laa_state_82571
 argument_list|(
 name|hw
@@ -4324,10 +4251,8 @@ name|serdes_link_state
 operator|=
 name|e1000_serdes_link_down
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -4394,6 +4319,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* An error is not fatal and we should not stop init due to this */
 if|if
 condition|(
 name|ret_val
@@ -4403,7 +4329,6 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-comment|/* This is not fatal and we should not stop init due to this */
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
 argument_list|(
@@ -4419,8 +4344,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Setup the receive address. */
-comment|/* 	 * If, however, a locally administered address was assigned to the 	 * 82571, we must reserve a RAR for it to work around an issue where 	 * resetting one port will reload the MAC on the other port. 	 */
+comment|/* Setup the receive address. 	 * If, however, a locally administered address was assigned to the 	 * 82571, we must reserve a RAR for it to work around an issue where 	 * resetting one port will reload the MAC on the other port. 	 */
 if|if
 condition|(
 name|e1000_get_laa_state_82571
@@ -4606,7 +4530,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82571
 argument_list|(
 name|hw
@@ -5060,7 +4984,7 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Workaround for hardware errata. 	 * Ensure that DMA Dynamic Clock gating is disabled on 82571 and 82572 	 */
+comment|/* Workaround for hardware errata. 	 * Ensure that DMA Dynamic Clock gating is disabled on 82571 and 82572 	 */
 if|if
 condition|(
 operator|(
@@ -5108,6 +5032,45 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Disable IPv6 extension header parsing because some malformed 	 * IPv6 headers can hang the Rx. 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|<=
+name|e1000_82573
+condition|)
+block|{
+name|reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RFCTL
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|E1000_RFCTL_IPV6_EX_DIS
+operator||
+name|E1000_RFCTL_NEW_IPV6_EXT_DIS
+operator|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RFCTL
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* PCI-Ex Control Registers */
 switch|switch
 condition|(
@@ -5150,7 +5113,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Workaround for hardware errata. 		 * apply workaround for hardware errata documented in errata 		 * docs Fixes issue where some error prone or unreliable PCIe 		 * completions are occurring, particularly with ASPM enabled. 		 * Without fix, issue can cause Tx timeouts. 		 */
+comment|/* Workaround for hardware errata. 		 * apply workaround for hardware errata documented in errata 		 * docs Fixes issue where some error prone or unreliable PCIe 		 * completions are occurring, particularly with ASPM enabled. 		 * Without fix, issue can cause Tx timeouts. 		 */
 name|reg
 operator|=
 name|E1000_READ_REG
@@ -5248,7 +5211,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * The VFTA is a 4096b bit-field, each identifying 			 * a single VLAN ID.  The following operations 			 * determine which 32b entry (i.e. offset) into the 			 * array we want to set the VLAN ID (i.e. bit) of 			 * the manageability unit. 			 */
+comment|/* The VFTA is a 4096b bit-field, each identifying 			 * a single VLAN ID.  The following operations 			 * determine which 32b entry (i.e. offset) into the 			 * array we want to set the VLAN ID (i.e. bit) of 			 * the manageability unit. 			 */
 name|vfta_offset
 operator|=
 operator|(
@@ -5296,7 +5259,7 @@ name|offset
 operator|++
 control|)
 block|{
-comment|/* 		 * If the offset we want to clear is the same offset of the 		 * manageability VLAN ID, then clear all bits except that of 		 * the manageability unit. 		 */
+comment|/* If the offset we want to clear is the same offset of the 		 * manageability VLAN ID, then clear all bits except that of 		 * the manageability unit. 		 */
 name|vfta_value
 operator|=
 operator|(
@@ -5431,7 +5394,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * If no link, then turn LED on by setting the invert bit 		 * for each LED that's "on" (0x0E) in ledctl_mode2. 		 */
+comment|/* If no link, then turn LED on by setting the invert bit 		 * for each LED that's "on" (0x0E) in ledctl_mode2. 		 */
 for|for
 control|(
 name|i
@@ -5519,22 +5482,15 @@ name|receive_errors
 init|=
 literal|0
 decl_stmt|;
-name|bool
-name|phy_hung
-init|=
-name|FALSE
-decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_check_phy_82574"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read PHY Receive Error counter first, if its is max - all F's then 	 * read the Base1000T status register If both are max then PHY is hung. 	 */
+comment|/* Read PHY Receive Error counter first, if its is max - all F's then 	 * read the Base1000T status register If both are max then PHY is hung. 	 */
 name|ret_val
 operator|=
 name|hw
@@ -5557,9 +5513,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|FALSE
+return|;
 if|if
 condition|(
 name|receive_errors
@@ -5589,9 +5545,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|FALSE
+return|;
 if|if
 condition|(
 operator|(
@@ -5602,15 +5558,12 @@ operator|)
 operator|==
 name|E1000_IDLE_ERROR_COUNT_MASK
 condition|)
-name|phy_hung
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-name|out
-label|:
 return|return
-name|phy_hung
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
 return|;
 block|}
 end_function
@@ -5635,7 +5588,7 @@ argument_list|(
 literal|"e1000_setup_link_82571"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * 82573 does not have a word in the NVM to determine 	 * the default flow control setting, so we explicitly 	 * set it to full. 	 */
+comment|/* 82573 does not have a word in the NVM to determine 	 * the default flow control setting, so we explicitly 	 * set it to full. 	 */
 switch|switch
 condition|(
 name|hw
@@ -5777,31 +5730,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
+return|;
 break|break;
 block|}
 if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
 name|ret_val
-operator|=
+return|;
+return|return
 name|e1000_setup_copper_link_generic
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function
@@ -5841,7 +5787,7 @@ case|:
 case|case
 name|e1000_82572
 case|:
-comment|/* 		 * If SerDes loopback mode is entered, there is no form 		 * of reset to take the adapter out of that mode.  So we 		 * have to explicitly take the adapter out of loopback 		 * mode.  This prevents drivers from twiddling their thumbs 		 * if another tool failed to take it out of loopback mode. 		 */
+comment|/* If SerDes loopback mode is entered, there is no form 		 * of reset to take the adapter out of that mode.  So we 		 * have to explicitly take the adapter out of loopback 		 * mode.  This prevents drivers from twiddling their thumbs 		 * if another tool failed to take it out of loopback mode. 		 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -5932,6 +5878,19 @@ argument_list|,
 name|E1000_STATUS
 argument_list|)
 expr_stmt|;
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RXCW
+argument_list|)
+expr_stmt|;
+comment|/* SYNCH bit and IV bit are sticky */
+name|usec_delay
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|rxcw
 operator|=
 name|E1000_READ_REG
@@ -5978,7 +5937,7 @@ name|E1000_STATUS_LU
 operator|)
 condition|)
 block|{
-comment|/* 				 * We have lost link, retry autoneg before 				 * reporting link failure 				 */
+comment|/* We have lost link, retry autoneg before 				 * reporting link failure 				 */
 name|mac
 operator|->
 name|serdes_link_state
@@ -6010,21 +5969,12 @@ break|break;
 case|case
 name|e1000_serdes_link_forced_up
 case|:
-comment|/* 			 * If we are receiving /C/ ordered sets, re-enable 			 * auto-negotiation in the TXCW register and disable 			 * forced link in the Device Control register in an 			 * attempt to auto-negotiate with our link partner. 			 * If the partner code word is null, stop forcing 			 * and restart auto negotiation. 			 */
+comment|/* If we are receiving /C/ ordered sets, re-enable 			 * auto-negotiation in the TXCW register and disable 			 * forced link in the Device Control register in an 			 * attempt to auto-negotiate with our link partner. 			 */
 if|if
 condition|(
-operator|(
 name|rxcw
 operator|&
 name|E1000_RXCW_C
-operator|)
-operator|||
-operator|!
-operator|(
-name|rxcw
-operator|&
-name|E1000_RXCW_CW
-operator|)
 condition|)
 block|{
 comment|/* Enable autoneg, and unforce link up */
@@ -6091,7 +6041,7 @@ operator|&
 name|E1000_RXCW_C
 condition|)
 block|{
-comment|/* 				 * We received /C/ ordered sets, meaning the 				 * link partner has autonegotiated, and we can 				 * trust the Link Up (LU) status bit. 				 */
+comment|/* We received /C/ ordered sets, meaning the 				 * link partner has autonegotiated, and we can 				 * trust the Link Up (LU) status bit. 				 */
 if|if
 condition|(
 name|status
@@ -6135,7 +6085,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 				 * The link partner did not autoneg. 				 * Force link up and full duplex, and change 				 * state to forced. 				 */
+comment|/* The link partner did not autoneg. 				 * Force link up and full duplex, and change 				 * state to forced. 				 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -6212,7 +6162,7 @@ case|case
 name|e1000_serdes_link_down
 case|:
 default|default:
-comment|/* 			 * The link was down but the receiver has now gained 			 * valid sync, so lets see if we can bring the link 			 * up. 			 */
+comment|/* The link was down but the receiver has now gained 			 * valid sync, so lets see if we can bring the link 			 * up. 			 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -6290,7 +6240,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Check several times, if Sync and Config 			 * both are consistently 1 then simply ignore 			 * the Invalid bit and restart Autoneg 			 */
+comment|/* Check several times, if SYNCH bit and CONFIG 			 * bit both are consistently 1 then simply ignore 			 * the IV bit and restart Autoneg 			 */
 for|for
 control|(
 name|i
@@ -6324,14 +6274,6 @@ condition|(
 operator|(
 name|rxcw
 operator|&
-name|E1000_RXCW_IV
-operator|)
-operator|&&
-operator|!
-operator|(
-operator|(
-name|rxcw
-operator|&
 name|E1000_RXCW_SYNCH
 operator|)
 operator|&&
@@ -6340,7 +6282,13 @@ name|rxcw
 operator|&
 name|E1000_RXCW_C
 operator|)
-operator|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|rxcw
+operator|&
+name|E1000_RXCW_IV
 condition|)
 block|{
 name|mac
@@ -6474,9 +6422,9 @@ argument_list|(
 literal|"NVM Read Error\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 switch|switch
 condition|(
@@ -6529,10 +6477,8 @@ name|ID_LED_DEFAULT
 expr_stmt|;
 break|break;
 block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -6629,7 +6575,7 @@ if|if
 condition|(
 name|state
 condition|)
-comment|/* 		 * Hold a copy of the LAA in RAR[14] This is done so that 		 * between the time RAR[0] gets clobbered and the time it 		 * gets fixed, the actual LAA is in one of the RARs and no 		 * incoming packets directed to this port are dropped. 		 * Eventually the LAA will be in RAR[0] and RAR[14]. 		 */
+comment|/* Hold a copy of the LAA in RAR[14] This is done so that 		 * between the time RAR[0] gets clobbered and the time it 		 * gets fixed, the actual LAA is in one of the RARs and no 		 * incoming packets directed to this port are dropped. 		 * Eventually the LAA will be in RAR[0] and RAR[14]. 		 */
 name|hw
 operator|->
 name|mac
@@ -6686,8 +6632,6 @@ name|nvm
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|data
@@ -6705,10 +6649,10 @@ name|type
 operator|!=
 name|e1000_nvm_flash_hw
 condition|)
-goto|goto
-name|out
-goto|;
-comment|/* 	 * Check bit 4 of word 10h.  If it is 0, firmware is done updating 	 * 10h-12h.  Checksum may need to be fixed. 	 */
+return|return
+name|E1000_SUCCESS
+return|;
+comment|/* Check bit 4 of word 10h.  If it is 0, firmware is done updating 	 * 10h-12h.  Checksum may need to be fixed. 	 */
 name|ret_val
 operator|=
 name|nvm
@@ -6731,9 +6675,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 if|if
 condition|(
 operator|!
@@ -6744,7 +6688,7 @@ literal|0x10
 operator|)
 condition|)
 block|{
-comment|/* 		 * Read 0x23 and check bit 15.  This bit is a 1 		 * when the checksum has already been fixed.  If 		 * the checksum is still wrong and this bit is a 		 * 1, we need to return bad checksum.  Otherwise, 		 * we need to set this bit to a 1 and update the 		 * checksum. 		 */
+comment|/* Read 0x23 and check bit 15.  This bit is a 1 		 * when the checksum has already been fixed.  If 		 * the checksum is still wrong and this bit is a 		 * 1, we need to return bad checksum.  Otherwise, 		 * we need to set this bit to a 1 and update the 		 * checksum. 		 */
 name|ret_val
 operator|=
 name|nvm
@@ -6767,9 +6711,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 if|if
 condition|(
 operator|!
@@ -6806,9 +6750,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|nvm
@@ -6820,12 +6764,17 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|out
-label|:
+if|if
+condition|(
+name|ret_val
+condition|)
 return|return
 name|ret_val
+return|;
+block|}
+block|}
+return|return
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -6845,11 +6794,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_read_mac_addr_82571"
@@ -6866,7 +6810,10 @@ operator|==
 name|e1000_82571
 condition|)
 block|{
-comment|/* 		 * If there's an alternate MAC address place it in RAR0 		 * so that it will override the Si installed default perm 		 * address. 		 */
+name|s32
+name|ret_val
+decl_stmt|;
+comment|/* If there's an alternate MAC address place it in RAR0 		 * so that it will override the Si installed default perm 		 * address. 		 */
 name|ret_val
 operator|=
 name|e1000_check_alt_mac_addr_generic
@@ -6878,21 +6825,15 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-block|}
+return|return
 name|ret_val
-operator|=
+return|;
+block|}
+return|return
 name|e1000_read_mac_addr_generic
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function
@@ -6935,13 +6876,11 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
 name|phy
 operator|->
 name|ops
 operator|.
 name|check_reset_block
-operator|)
 condition|)
 return|return;
 comment|/* If the management interface is not enabled, then power down */
