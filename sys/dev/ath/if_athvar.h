@@ -1033,6 +1033,12 @@ argument_list|)
 name|axq_q
 expr_stmt|;
 comment|/* transmit queue */
+name|struct
+name|ath_buf
+modifier|*
+name|axq_holdingbf
+decl_stmt|;
+comment|/* holding TX buffer */
 name|char
 name|axq_name
 index|[
