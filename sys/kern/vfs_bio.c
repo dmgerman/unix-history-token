@@ -7511,7 +7511,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|nwritten
+operator|)
 return|;
 block|}
 end_function
@@ -10726,7 +10728,7 @@ name|bo
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * check for size inconsistancies for non-VMIO case. 		 */
+comment|/* 		 * check for size inconsistencies for non-VMIO case. 		 */
 if|if
 condition|(
 name|bp
