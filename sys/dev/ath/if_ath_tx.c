@@ -14209,8 +14209,6 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-comment|// Don't need this anymore; ATH_TID_REMOVE() decrements it for us
-comment|//atid->axq_depth--;
 if|if
 condition|(
 name|bf
