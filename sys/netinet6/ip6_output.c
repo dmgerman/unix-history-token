@@ -2907,7 +2907,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * XXX: ip6_mforward expects that rcvif is NULL 				 * when it is called from the originating path. 				 * However, it is not always the case, since 				 * some versions of MGETHDR() does not 				 * initialize the field. 				 */
+comment|/* 				 * XXX: ip6_mforward expects that rcvif is NULL 				 * when it is called from the originating path. 				 * However, it may not always be the case. 				 */
 name|m
 operator|->
 name|m_pkthdr
@@ -4369,13 +4369,13 @@ operator|+=
 name|len
 control|)
 block|{
-name|MGETHDR
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -4397,14 +4397,6 @@ goto|goto
 name|sendorfree
 goto|;
 block|}
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
 name|m
 operator|->
 name|m_flags
@@ -12140,20 +12132,20 @@ name|ip6
 argument_list|)
 condition|)
 block|{
-name|MGETHDR
-argument_list|(
 name|mh
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|mh
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
