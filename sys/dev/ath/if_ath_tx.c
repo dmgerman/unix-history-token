@@ -14209,11 +14209,8 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|atid
-operator|->
-name|axq_depth
-operator|--
-expr_stmt|;
+comment|// Don't need this anymore; ATH_TID_REMOVE() decrements it for us
+comment|//atid->axq_depth--;
 if|if
 condition|(
 name|bf
@@ -15695,16 +15692,16 @@ index|[
 name|tid
 index|]
 decl_stmt|;
-name|bf
-operator|=
-name|bf_first
-expr_stmt|;
 name|ATH_TX_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* update incomp */
+name|bf
+operator|=
+name|bf_first
+expr_stmt|;
 while|while
 condition|(
 name|bf
@@ -15760,6 +15757,7 @@ expr_stmt|;
 block|}
 comment|/* Send BAR if required */
 comment|/* XXX why would we send a BAR when transitioning to non-aggregation? */
+comment|/* 	 * XXX TODO: we should likely just tear down the BAR state here, 	 * rather than sending a BAR. 	 */
 if|if
 condition|(
 name|ath_tx_tid_bar_tx_ready
@@ -15782,6 +15780,10 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Handle frame completion */
+name|bf
+operator|=
+name|bf_first
+expr_stmt|;
 while|while
 condition|(
 name|bf
