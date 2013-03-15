@@ -2141,11 +2141,11 @@ name|ipoption
 modifier|*
 name|p
 decl_stmt|;
-name|MGET
-argument_list|(
 name|m
-argument_list|,
-name|M_NOWAIT
+operator|=
+name|m_get
+argument_list|(
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
