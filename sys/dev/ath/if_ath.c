@@ -17529,6 +17529,11 @@ modifier|*
 name|txq
 parameter_list|)
 block|{
+name|ATH_TXBUF_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|txq
@@ -17547,11 +17552,6 @@ operator|&=
 operator|~
 name|ATH_BUF_BUSY
 expr_stmt|;
-name|ATH_TXBUF_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ath_returnbuf_tail
 argument_list|(
 name|sc
@@ -17559,11 +17559,6 @@ argument_list|,
 name|txq
 operator|->
 name|axq_holdingbf
-argument_list|)
-expr_stmt|;
-name|ATH_TXBUF_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|txq
@@ -17600,6 +17595,11 @@ name|ath_txq
 modifier|*
 name|txq
 decl_stmt|;
+name|ATH_TXBUF_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* XXX assert ATH_BUF_BUSY is set */
 comment|/* XXX assert the tx queue is under the max number */
 if|if
@@ -17765,11 +17765,21 @@ operator|&
 name|ATH_BUF_BUSY
 condition|)
 block|{
+name|ATH_TXBUF_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_txq_addholdingbuf
 argument_list|(
 name|sc
 argument_list|,
 name|bf
+argument_list|)
+expr_stmt|;
+name|ATH_TXBUF_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -18157,11 +18167,21 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Free the holding buffer if it exists 	 */
+name|ATH_TXBUF_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_txq_freeholdingbuf
 argument_list|(
 name|sc
 argument_list|,
 name|txq
+argument_list|)
+expr_stmt|;
+name|ATH_TXBUF_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Drain software queued frames which are on 	 * active TIDs. 	 */
