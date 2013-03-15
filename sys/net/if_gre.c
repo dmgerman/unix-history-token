@@ -1791,11 +1791,10 @@ operator|->
 name|m_pktdat
 condition|)
 block|{
-comment|/* need new mbuf */
-name|MGETHDR
-argument_list|(
 name|m0
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
