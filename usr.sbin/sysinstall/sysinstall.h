@@ -479,6 +479,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_HTTP_DIR
+value|"httpDirectory"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_HTTP_PATH
 value|"_httpPath"
 end_define
@@ -1355,6 +1362,8 @@ block|,
 name|DEVICE_TYPE_ANY
 block|,
 name|DEVICE_TYPE_HTTP
+block|,
+name|DEVICE_TYPE_HTTP_DIRECT
 block|, }
 name|DeviceType
 typedef|;
@@ -2400,6 +2409,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* FTP media menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuMediaHTTPDirect
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* HTTP Direct media menu			*/
 end_comment
 
 begin_decl_stmt
@@ -4551,6 +4571,20 @@ end_comment
 begin_function_decl
 specifier|extern
 name|Boolean
+name|checkAccess
+parameter_list|(
+name|Boolean
+name|connectCheckOnly
+parameter_list|,
+name|Boolean
+name|isProxy
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Boolean
 name|mediaInitHTTP
 parameter_list|(
 name|Device
@@ -4565,6 +4599,42 @@ specifier|extern
 name|FILE
 modifier|*
 name|mediaGetHTTP
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|Boolean
+name|probe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* httpdirect.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|Boolean
+name|mediaInitHTTPDirect
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|FILE
+modifier|*
+name|mediaGetHTTPDirect
 parameter_list|(
 name|Device
 modifier|*
@@ -5275,6 +5345,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|mediaSetHTTP
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mediaSetHTTPDirect
 parameter_list|(
 name|dialogMenuItem
 modifier|*
