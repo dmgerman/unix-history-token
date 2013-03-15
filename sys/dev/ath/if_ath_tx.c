@@ -15811,7 +15811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle completion of an set of aggregate frames.  *  * XXX for now, simply complete each sub-frame.  *  * Note: the completion handler is the last descriptor in the aggregate,  * not the last descriptor in the first frame.  */
+comment|/*  * Handle completion of an set of aggregate frames.  *  * Note: the completion handler is the last descriptor in the aggregate,  * not the last descriptor in the first frame.  */
 end_comment
 
 begin_function
