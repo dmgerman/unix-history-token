@@ -4619,7 +4619,11 @@ operator|!
 operator|(
 name|flags
 operator|&
+operator|(
 name|O_APPEND
+operator||
+name|O_TRUNC
+operator|)
 operator|)
 condition|)
 name|rights
