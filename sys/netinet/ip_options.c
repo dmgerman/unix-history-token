@@ -2492,7 +2492,7 @@ name|m
 operator|)
 return|;
 block|}
-name|M_MOVE_PKTHDR
+name|m_move_pkthdr
 argument_list|(
 name|n
 argument_list|,

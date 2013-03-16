@@ -7882,10 +7882,10 @@ name|inm
 operator|->
 name|inm_ifp
 expr_stmt|;
-name|MGETHDR
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
