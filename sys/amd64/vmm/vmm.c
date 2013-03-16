@@ -611,7 +611,7 @@ end_comment
 
 begin_expr_stmt
 specifier|static
-name|VMM_STAT_DEFINE
+name|VMM_STAT
 argument_list|(
 name|VCPU_TOTAL_RUNTIME
 argument_list|,
@@ -2520,7 +2520,7 @@ end_function
 
 begin_expr_stmt
 specifier|static
-name|VMM_STAT_DEFINE
+name|VMM_STAT
 argument_list|(
 name|VCPU_IDLE_TICKS
 argument_list|,
@@ -2956,7 +2956,7 @@ end_function
 
 begin_expr_stmt
 specifier|static
-name|VMM_STAT_DEFINE
+name|VMM_STAT
 argument_list|(
 name|VCPU_NMI_COUNT
 argument_list|,
