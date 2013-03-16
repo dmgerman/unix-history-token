@@ -297,6 +297,12 @@ decl_stmt|;
 name|avl_tree_t
 name|vq_pending_tree
 decl_stmt|;
+name|uint64_t
+name|vq_io_complete_ts
+decl_stmt|;
+name|uint64_t
+name|vq_io_delta_ts
+decl_stmt|;
 name|kmutex_t
 name|vq_lock
 decl_stmt|;

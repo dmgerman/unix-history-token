@@ -367,6 +367,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+name|vdev_deadman
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|vdev_get_stats
 parameter_list|(
 name|vdev_t

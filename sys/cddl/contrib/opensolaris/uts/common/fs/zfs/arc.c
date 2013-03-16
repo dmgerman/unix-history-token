@@ -13565,6 +13565,8 @@ decl_stmt|;
 name|arc_buf_t
 modifier|*
 name|buf
+init|=
+name|NULL
 decl_stmt|;
 name|kmutex_t
 modifier|*
@@ -13991,6 +13993,8 @@ name|NULL
 decl_stmt|;
 name|uint64_t
 name|addr
+init|=
+literal|0
 decl_stmt|;
 name|boolean_t
 name|devw
@@ -14642,6 +14646,23 @@ operator|->
 name|l2rcb_flags
 operator|=
 name|zio_flags
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|addr
+operator|>=
+name|VDEV_LABEL_START_SIZE
+operator|&&
+name|addr
+operator|+
+name|size
+operator|<
+name|vd
+operator|->
+name|vdev_psize
+operator|-
+name|VDEV_LABEL_END_SIZE
+argument_list|)
 expr_stmt|;
 comment|/* 				 * l2arc read.  The SCL_L2ARC lock will be 				 * released by l2arc_read_done(). 				 */
 name|rzio
@@ -15562,13 +15583,13 @@ name|b_l2hdr
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|buf_size
 operator|=
 name|hdr
 operator|->
 name|b_size
 expr_stmt|;
-block|}
 comment|/* 	 * Do we have more than one buf? 	 */
 if|if
 condition|(
@@ -19945,6 +19966,8 @@ block|{
 name|list_t
 modifier|*
 name|list
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|idx

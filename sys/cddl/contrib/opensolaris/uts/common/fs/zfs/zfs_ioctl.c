@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -23144,7 +23144,7 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we have sufficient kernel memory allocated 	 * for the zfs_cmd_t request.  Bail out if not so we 	 * will not access undefined memory region. 	 */
+comment|/* 	 * Check if we are talking to supported older binaries 	 * and translate zfs_cmd if necessary 	 */
 if|if
 condition|(
 name|len
@@ -23154,6 +23154,29 @@ argument_list|(
 name|zfs_cmd_t
 argument_list|)
 condition|)
+if|if
+condition|(
+name|len
+operator|==
+sizeof|sizeof
+argument_list|(
+name|zfs_cmd_v28_t
+argument_list|)
+condition|)
+block|{
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_V28
+expr_stmt|;
+name|vec
+operator|=
+name|ZFS_IOC
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|len
@@ -23224,6 +23247,7 @@ name|ENOTSUP
 operator|)
 return|;
 block|}
+comment|/* 	 * Check if we have sufficient kernel memory allocated 	 * for the zfs_cmd_t request.  Bail out if not so we 	 * will not access undefined memory region. 	 */
 if|if
 condition|(
 name|vec

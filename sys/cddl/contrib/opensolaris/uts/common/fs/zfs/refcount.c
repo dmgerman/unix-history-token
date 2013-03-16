@@ -468,6 +468,8 @@ block|{
 name|reference_t
 modifier|*
 name|ref
+init|=
+name|NULL
 decl_stmt|;
 name|int64_t
 name|count
