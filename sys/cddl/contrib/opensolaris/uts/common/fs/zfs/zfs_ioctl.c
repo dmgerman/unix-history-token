@@ -24903,6 +24903,12 @@ goto|goto
 name|out
 goto|;
 block|}
+else|#
+directive|else
+name|error
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 if|if
