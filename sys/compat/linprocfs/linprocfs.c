@@ -1048,24 +1048,30 @@ name|sb
 argument_list|,
 literal|"processor\t: %d\n"
 literal|"vendor_id\t: %.20s\n"
-literal|"cpu family\t: %d\n"
-literal|"model\t\t: %d\n"
+literal|"cpu family\t: %u\n"
+literal|"model\t\t: %u\n"
 literal|"model name\t: %s\n"
-literal|"stepping\t: %d\n"
+literal|"stepping\t: %u\n\n"
 argument_list|,
 name|i
 argument_list|,
 name|cpu_vendor
 argument_list|,
-name|class
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
 argument_list|,
-name|cpu
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
 argument_list|,
 name|model
 argument_list|,
 name|cpu_id
 operator|&
-literal|0xf
+name|CPUID_STEPPING
 argument_list|)
 expr_stmt|;
 comment|/* XXX per-cpu vendor / class / model / id? */
