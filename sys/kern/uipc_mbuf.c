@@ -2550,7 +2550,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* 	 * The mbuf allocator only initializes the pkthdr 	 * when the mbuf is allocated with MGETHDR. Many users 	 * (e.g. m_copy*, m_prepend) use MGET and then 	 * smash the pkthdr as needed causing these 	 * assertions to trip.  For now just disable them. 	 */
+comment|/* 	 * The mbuf allocator only initializes the pkthdr 	 * when the mbuf is allocated with m_gethdr(). Many users 	 * (e.g. m_copy*, m_prepend) use m_get() and then 	 * smash the pkthdr as needed causing these 	 * assertions to trip.  For now just disable them. 	 */
 block|M_ASSERTPKTHDR(to);
 comment|/* Note: with MAC, this may not be a good assertion. */
 block|KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), ("m_dup_pkthdr: to has tags"));
@@ -2692,10 +2692,10 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|MGETHDR
-argument_list|(
 name|mn
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|how
 argument_list|,
 name|m
@@ -2704,10 +2704,10 @@ name|m_type
 argument_list|)
 expr_stmt|;
 else|else
-name|MGET
-argument_list|(
 name|mn
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|how
 argument_list|,
 name|m
@@ -2741,7 +2741,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|M_MOVE_PKTHDR
+name|m_move_pkthdr
 argument_list|(
 name|mn
 argument_list|,
@@ -2987,10 +2987,10 @@ if|if
 condition|(
 name|copyhdr
 condition|)
-name|MGETHDR
-argument_list|(
 name|n
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|wait
 argument_list|,
 name|m
@@ -2999,10 +2999,10 @@ name|m_type
 argument_list|)
 expr_stmt|;
 else|else
-name|MGET
-argument_list|(
 name|n
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|wait
 argument_list|,
 name|m
@@ -4215,10 +4215,10 @@ argument_list|(
 name|how
 argument_list|)
 expr_stmt|;
-name|MGET
-argument_list|(
 name|n
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|how
 argument_list|,
 name|m
@@ -4342,10 +4342,10 @@ condition|(
 name|m
 condition|)
 block|{
-name|MGET
-argument_list|(
 name|o
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|how
 argument_list|,
 name|m
@@ -5497,10 +5497,10 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|MGET
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|n
@@ -5517,12 +5517,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|m
-operator|->
-name|m_len
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|n
@@ -5531,7 +5525,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|M_MOVE_PKTHDR
+name|m_move_pkthdr
 argument_list|(
 name|m
 argument_list|,
@@ -5760,10 +5754,10 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|MGET
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|n
@@ -5780,12 +5774,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|m
-operator|->
-name|m_len
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|n
@@ -5794,7 +5782,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|M_MOVE_PKTHDR
+name|m_move_pkthdr
 argument_list|(
 name|m
 argument_list|,
@@ -6070,10 +6058,10 @@ operator|&
 name|M_PKTHDR
 condition|)
 block|{
-name|MGETHDR
-argument_list|(
 name|n
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|wait
 argument_list|,
 name|m0
@@ -6240,10 +6228,10 @@ return|;
 block|}
 else|else
 block|{
-name|MGET
-argument_list|(
 name|n
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|wait
 argument_list|,
 name|m
