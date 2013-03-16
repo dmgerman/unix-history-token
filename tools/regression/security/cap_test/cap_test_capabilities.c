@@ -969,8 +969,6 @@ argument_list|,
 name|O_FSYNC
 operator||
 name|O_RDONLY
-argument_list|,
-literal|0600
 argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
@@ -1019,8 +1017,6 @@ argument_list|,
 name|O_FSYNC
 operator||
 name|O_WRONLY
-argument_list|,
-literal|0600
 argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
@@ -1069,8 +1065,6 @@ argument_list|,
 name|O_FSYNC
 operator||
 name|O_RDWR
-argument_list|,
-literal|0600
 argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
@@ -1121,8 +1115,6 @@ argument_list|,
 name|O_SYNC
 operator||
 name|O_RDONLY
-argument_list|,
-literal|0600
 argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
@@ -1171,8 +1163,6 @@ argument_list|,
 name|O_SYNC
 operator||
 name|O_WRONLY
-argument_list|,
-literal|0600
 argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
@@ -1221,8 +1211,6 @@ argument_list|,
 name|O_SYNC
 operator||
 name|O_RDWR
-argument_list|,
-literal|0600
 argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
