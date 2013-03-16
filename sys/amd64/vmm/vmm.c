@@ -3940,10 +3940,6 @@ return|;
 if|if
 condition|(
 name|state
-operator|<
-literal|0
-operator|||
-name|state
 operator|>=
 name|X2APIC_STATE_LAST
 condition|)
