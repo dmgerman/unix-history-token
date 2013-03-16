@@ -528,7 +528,7 @@ modifier|*
 name|hq
 parameter_list|)
 block|{
-name|int
+name|uint16_t
 name|ndesc
 decl_stmt|;
 comment|/* 	 * We're just computing (a-b) in GF(216). 	 * 	 * The only glitch here is that in standard C, 	 * uint16_t promotes to (signed) int when int has 	 * more than 16 bits (pretty much always now), so 	 * we have to force it back to unsigned. 	 */
