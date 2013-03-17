@@ -1931,7 +1931,14 @@ argument_list|(
 name|spa
 argument_list|)
 condition|)
+block|{
+name|fnvlist_free
+argument_list|(
+name|nvl
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|va_copy
 argument_list|(
 name|adx2
