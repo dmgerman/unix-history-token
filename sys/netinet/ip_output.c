@@ -3304,10 +3304,10 @@ expr|struct
 name|ip
 argument_list|)
 decl_stmt|;
-name|MGETHDR
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -4167,10 +4167,10 @@ name|EMSGSIZE
 expr_stmt|;
 break|break;
 block|}
-name|MGET
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|sopt
 operator|->
 name|sopt_td

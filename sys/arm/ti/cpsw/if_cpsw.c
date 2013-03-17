@@ -1458,7 +1458,7 @@ parameter_list|,
 name|slot
 parameter_list|)
 define|\
-value|(slot->bd_offset + vtophys(rman_get_start(sc->res[0])))
+value|BUS_SPACE_PHYSADDR(sc->res[0], slot->bd_offset)
 end_define
 
 begin_define

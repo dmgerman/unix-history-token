@@ -251,13 +251,18 @@ block|,
 block|{
 literal|0
 block|,
-literal|"in ipsec 	ah / transport 	esp / tunnel / ::1-::2"
+literal|"in ipsec\n"
+literal|"ah / transport\n"
+literal|"esp / tunnel / ::1-::2"
 block|}
 block|,
 block|{
 literal|0
 block|,
-literal|"out ipsec 	ah/transport/::1-::2 esp/tunnel/::3-::4/use ah/transport/::5-::6/require 	ah/transport/::1-::2 esp/tunnel/::3-::4/use ah/transport/::5-::6/require 	ah/transport/::1-::2 esp/tunnel/::3-::4/use ah/transport/::5-::6/require 	"
+literal|"out ipsec\n"
+literal|"ah/transport/::1-::2 esp/tunnel/::3-::4/use ah/transport/::5-::6/require\n"
+literal|"ah/transport/::1-::2 esp/tunnel/::3-::4/use ah/transport/::5-::6/require\n"
+literal|"ah/transport/::1-::2 esp/tunnel/::3-::4/use ah/transport/::5-::6/require\n"
 block|}
 block|,
 block|{

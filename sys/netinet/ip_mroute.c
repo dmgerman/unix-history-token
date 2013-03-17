@@ -9135,10 +9135,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*      * Allocate a new mbuf, initialize it with the header and      * the payload for the pending calls.      */
-name|MGETHDR
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -9160,18 +9160,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|m
-operator|->
-name|m_len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
-literal|0
-expr_stmt|;
 name|m_copyback
 argument_list|(
 name|m
@@ -10402,10 +10390,10 @@ name|VIF_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 comment|/*      * Add a new mbuf with an upcall header      */
-name|MGETHDR
-argument_list|(
 name|mb_first
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -10671,10 +10659,10 @@ return|;
 comment|/* The iif vif is invalid */
 block|}
 comment|/*      * Add a new mbuf with the encapsulating header      */
-name|MGETHDR
-argument_list|(
 name|mb_first
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA

@@ -136,24 +136,18 @@ end_include
 begin_decl_stmt
 name|vm_map_t
 name|kernel_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
 name|kmem_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
 name|exec_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -166,8 +160,6 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_map_t
 name|buffer_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

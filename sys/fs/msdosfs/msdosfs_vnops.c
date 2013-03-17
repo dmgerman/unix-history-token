@@ -2663,6 +2663,8 @@ name|uio_resid
 argument_list|,
 name|seqcount
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|bp
 argument_list|)
@@ -3659,6 +3661,8 @@ operator|->
 name|de_FileSize
 argument_list|,
 name|seqcount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else

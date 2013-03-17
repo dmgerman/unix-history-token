@@ -186,6 +186,61 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_EABI__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|STOP_UNWINDING
+value|.cantunwind
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FNSTART
+value|.fnstart
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FNEND
+value|.fnend
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STOP_UNWINDING
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FNSTART
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FNEND
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here  * Instead it recognised the # instead of an @ symbols in .type directives  * We define a couple of macros so that assembly code will not be dependant  * on one or the other.  */
 end_comment
@@ -222,7 +277,17 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text; _ALIGN_TEXT; .globl x; .type x,_ASM_TYPE_FUNCTION; x:
+value|.text; _ALIGN_TEXT; .globl x; .type x,_ASM_TYPE_FUNCTION; x: _FNSTART
+end_define
+
+begin_define
+define|#
+directive|define
+name|END
+parameter_list|(
+name|x
+parameter_list|)
+value|.size x, . - x; _FNEND
 end_define
 
 begin_ifdef

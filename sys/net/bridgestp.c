@@ -1391,10 +1391,10 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|MGETHDR
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -2140,10 +2140,10 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|MGETHDR
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA

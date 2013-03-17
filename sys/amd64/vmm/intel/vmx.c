@@ -463,44 +463,11 @@ end_comment
 
 begin_expr_stmt
 specifier|static
-name|VMM_STAT_DEFINE
-argument_list|(
-name|VCPU_MIGRATIONS
-argument_list|,
-literal|"vcpu migration across host cpus"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VMM_STAT_DEFINE
-argument_list|(
-name|VMEXIT_EXTINT
-argument_list|,
-literal|"vm exits due to external interrupt"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VMM_STAT_DEFINE
+name|VMM_STAT_INTEL
 argument_list|(
 name|VMEXIT_HLT_IGNORED
 argument_list|,
 literal|"number of times hlt was ignored"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VMM_STAT_DEFINE
-argument_list|(
-name|VMEXIT_HLT
-argument_list|,
-literal|"number of times hlt was intercepted"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4661,6 +4628,19 @@ operator|->
 name|exitcode
 operator|=
 name|VM_EXITCODE_BOGUS
+expr_stmt|;
+name|vmm_stat_incr
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+name|VMEXIT_COUNT
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(

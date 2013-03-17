@@ -2537,10 +2537,10 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|MGET
-argument_list|(
 name|m
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_SONAME
@@ -2550,7 +2550,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

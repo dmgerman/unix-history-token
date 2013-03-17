@@ -1033,6 +1033,13 @@ argument_list|)
 name|axq_q
 expr_stmt|;
 comment|/* transmit queue */
+comment|/* 	 * XXX the holdingbf field is protected by the TXBUF lock 	 * for now, NOT the TX lock. 	 * 	 * Architecturally, it would likely be better to move 	 * the holdingbf field to a separate array in ath_softc 	 * just to highlight that it's not protected by the normal 	 * TX path lock. 	 */
+name|struct
+name|ath_buf
+modifier|*
+name|axq_holdingbf
+decl_stmt|;
+comment|/* holding TX buffer */
 name|char
 name|axq_name
 index|[

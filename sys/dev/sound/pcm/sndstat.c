@@ -1548,11 +1548,18 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+if|if
+condition|(
+name|snd_verbose
+operator|>
+literal|0
+condition|)
+block|{
 name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|"FreeBSD Audio Driver (newpcm: %ubit %d/%s)\n"
+literal|"FreeBSD Audio Driver (%ubit %d/%s)\n"
 argument_list|,
 operator|(
 name|u_int
@@ -1569,6 +1576,7 @@ argument_list|,
 name|MACHINE_ARCH
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|SLIST_EMPTY

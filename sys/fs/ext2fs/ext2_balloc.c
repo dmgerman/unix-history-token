@@ -1402,6 +1402,8 @@ name|MAXBSIZE
 argument_list|,
 name|seqcount
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|nbp
 argument_list|)
