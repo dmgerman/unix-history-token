@@ -2808,7 +2808,7 @@ else|else
 block|{
 name|neighbor
 operator|=
-name|vm_radix_lookup_ge
+name|vm_radix_lookup_le
 argument_list|(
 operator|&
 name|object
@@ -2828,13 +2828,13 @@ block|{
 name|KASSERT
 argument_list|(
 name|pindex
-operator|<
+operator|>
 name|neighbor
 operator|->
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_page_insert: offset %ju not minor than %ju"
+literal|"vm_page_insert: offset %ju less than %ju"
 operator|,
 operator|(
 name|uintmax_t
@@ -2850,8 +2850,13 @@ name|pindex
 operator|)
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_BEFORE
+name|TAILQ_INSERT_AFTER
 argument_list|(
+operator|&
+name|object
+operator|->
+name|memq
+argument_list|,
 name|neighbor
 argument_list|,
 name|m
@@ -2861,7 +2866,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|TAILQ_INSERT_TAIL
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|object
