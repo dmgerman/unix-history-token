@@ -7493,11 +7493,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* Do not reallocate packet if it is sequentional, 	 * writable and has some extra space for expansion. 	 * XXX: Constant 100bytes is completely empirical. */
-define|#
-directive|define
-name|RESERVE
-value|100
 if|if
 condition|(
 name|m
@@ -7510,13 +7505,6 @@ name|M_WRITABLE
 argument_list|(
 name|m
 argument_list|)
-operator|&&
-name|M_TRAILINGSPACE
-argument_list|(
-name|m
-argument_list|)
-operator|>=
-name|RESERVE
 condition|)
 return|return
 operator|(
@@ -7528,8 +7516,6 @@ operator|=
 name|m_get2
 argument_list|(
 name|len
-operator|+
-name|RESERVE
 argument_list|,
 name|M_NOWAIT
 argument_list|,
@@ -7547,6 +7533,13 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|m_align
+argument_list|(
+name|mcl
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|m_move_pkthdr
 argument_list|(
 name|mcl
