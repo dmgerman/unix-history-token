@@ -2881,8 +2881,6 @@ name|object
 operator|->
 name|rtree
 argument_list|,
-name|pindex
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -3739,10 +3737,6 @@ operator|&
 name|new_object
 operator|->
 name|cache
-argument_list|,
-name|m
-operator|->
-name|pindex
 argument_list|,
 name|m
 argument_list|)
@@ -7800,10 +7794,6 @@ operator|&
 name|object
 operator|->
 name|cache
-argument_list|,
-name|m
-operator|->
-name|pindex
 argument_list|,
 name|m
 argument_list|)

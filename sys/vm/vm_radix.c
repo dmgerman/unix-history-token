@@ -1312,14 +1312,13 @@ name|vm_radix
 modifier|*
 name|rtree
 parameter_list|,
-name|vm_pindex_t
-name|index
-parameter_list|,
 name|vm_page_t
 name|page
 parameter_list|)
 block|{
 name|vm_pindex_t
+name|index
+decl_stmt|,
 name|newind
 decl_stmt|;
 name|struct
@@ -1342,20 +1341,11 @@ decl_stmt|;
 name|uint16_t
 name|clev
 decl_stmt|;
-name|KASSERT
-argument_list|(
 name|index
-operator|==
+operator|=
 name|page
 operator|->
 name|pindex
-argument_list|,
-operator|(
-literal|"%s: index != page->pindex"
-operator|,
-name|__func__
-operator|)
-argument_list|)
 expr_stmt|;
 comment|/* 	 * The owner of record for root is not really important because it 	 * will never be used. 	 */
 name|rnode

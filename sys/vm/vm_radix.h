@@ -45,9 +45,6 @@ name|vm_radix
 modifier|*
 name|rtree
 parameter_list|,
-name|vm_pindex_t
-name|index
-parameter_list|,
 name|vm_page_t
 name|page
 parameter_list|)

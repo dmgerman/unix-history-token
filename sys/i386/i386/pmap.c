@@ -6783,10 +6783,6 @@ operator|->
 name|pm_root
 argument_list|,
 name|mpte
-operator|->
-name|pindex
-argument_list|,
-name|mpte
 argument_list|)
 expr_stmt|;
 block|}
