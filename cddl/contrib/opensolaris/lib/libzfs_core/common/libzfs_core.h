@@ -46,23 +46,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"libzfs_core_compat.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__cplusplus
 end_ifdef
 

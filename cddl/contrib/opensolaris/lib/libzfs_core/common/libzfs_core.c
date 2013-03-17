@@ -98,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libzfs_compat.h>
+file|"libzfs_core_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libzfs_compat.h"
 end_include
 
 begin_ifdef
@@ -108,9 +114,11 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|int
-name|zfs_ioctl_version
+name|lzc_ioctl_version
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -355,7 +363,19 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|zfs_ioctl_version
+name|lzc_ioctl_version
+operator|==
+operator|-
+literal|1
+condition|)
+name|lzc_ioctl_version
+operator|=
+name|get_zfs_ioctl_version
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|lzc_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
@@ -602,7 +622,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|zfs_ioctl_version
+name|lzc_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
@@ -664,7 +684,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|zfs_ioctl_version
+name|lzc_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
@@ -687,7 +707,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|zfs_ioctl_version
+name|lzc_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
