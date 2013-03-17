@@ -66,10 +66,6 @@ modifier|*
 name|zc
 parameter_list|)
 block|{
-name|unsigned
-name|long
-name|cmd
-decl_stmt|;
 name|size_t
 name|oldsize
 decl_stmt|,
@@ -86,18 +82,6 @@ name|cflag
 init|=
 name|ZFS_CMD_COMPAT_NONE
 decl_stmt|;
-name|cmd
-operator|=
-name|_IOWR
-argument_list|(
-literal|'Z'
-argument_list|,
-name|request
-argument_list|,
-expr|struct
-name|zfs_cmd
-argument_list|)
-expr_stmt|;
 name|zfs_ioctl_version_size
 operator|=
 sizeof|sizeof
@@ -128,6 +112,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|zfs_ioctl_version
+operator|==
+name|ZFS_IOCVER_DEADMAN
+condition|)
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_DEADMAN
+expr_stmt|;
 comment|/* 	 * If vfs.zfs.version.ioctl is not defined, assume we have v28 	 * compatible binaries and use vfs.zfs.version.spa to test for v15 	 */
 if|if
 condition|(
@@ -201,7 +195,7 @@ name|zcmd_ioctl_compat
 argument_list|(
 name|fd
 argument_list|,
-name|cmd
+name|request
 argument_list|,
 name|zc
 argument_list|,
@@ -243,11 +237,11 @@ name|ioctl
 parameter_list|(
 name|fd
 parameter_list|,
-name|cmd
+name|ioc
 parameter_list|,
 name|zc
 parameter_list|)
-value|zcmd_ioctl((fd), (cmd), (zc))
+value|zcmd_ioctl((fd), (ioc), (zc))
 ifdef|#
 directive|ifdef
 name|__cplusplus
