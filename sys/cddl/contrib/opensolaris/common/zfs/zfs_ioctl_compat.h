@@ -86,12 +86,20 @@ comment|/*  * Backwards ioctl compatibility  */
 comment|/* ioctl versions for vfs.zfs.version.ioctl */
 define|#
 directive|define
-name|ZFS_IOCVER_LZC
-value|2
+name|ZFS_IOCVER_UNDEF
+value|-1
+define|#
+directive|define
+name|ZFS_IOCVER_NONE
+value|0
 define|#
 directive|define
 name|ZFS_IOCVER_DEADMAN
 value|1
+define|#
+directive|define
+name|ZFS_IOCVER_LZC
+value|2
 define|#
 directive|define
 name|ZFS_IOCVER_CURRENT

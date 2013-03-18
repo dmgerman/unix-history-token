@@ -28,7 +28,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|int
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ name|pos
 decl_stmt|;
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|>=
 name|ZFS_IOCVER_LZC
 condition|)
@@ -422,7 +422,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|>=
 name|ZFS_IOCVER_LZC
 condition|)
@@ -482,7 +482,7 @@ name|nvl
 decl_stmt|;
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|>=
 name|ZFS_IOCVER_LZC
 condition|)

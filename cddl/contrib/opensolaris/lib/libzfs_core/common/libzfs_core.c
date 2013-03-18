@@ -114,11 +114,9 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|lzc_ioctl_version
-init|=
-operator|-
-literal|1
+name|zfs_ioctl_version
 decl_stmt|;
 end_decl_stmt
 
@@ -363,19 +361,18 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|==
-operator|-
-literal|1
+name|ZFS_IOCVER_UNDEF
 condition|)
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|=
 name|get_zfs_ioctl_version
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
@@ -622,7 +619,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
@@ -684,7 +681,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
@@ -707,7 +704,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|lzc_ioctl_version
+name|zfs_ioctl_version
 operator|<
 name|ZFS_IOCVER_LZC
 condition|)
