@@ -239,6 +239,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|uint32_t
+name|pci_hole_startaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|uint64_t
 name|pci_emul_iobase
 decl_stmt|;
@@ -270,13 +277,6 @@ define|#
 directive|define
 name|PCI_EMUL_IOLIMIT
 value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_EMUL_MEMBASE32
-value|(lomem_sz)
 end_define
 
 begin_define
@@ -4061,13 +4061,20 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|pci_hole_startaddr
+operator|=
+name|vm_get_lowmem_limit
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|pci_emul_iobase
 operator|=
 name|PCI_EMUL_IOBASE
 expr_stmt|;
 name|pci_emul_membase32
 operator|=
-name|PCI_EMUL_MEMBASE32
+name|pci_hole_startaddr
 expr_stmt|;
 name|pci_emul_membase64
 operator|=
@@ -4233,7 +4240,7 @@ name|memp
 operator|.
 name|base
 operator|=
-name|lomem_sz
+name|pci_hole_startaddr
 expr_stmt|;
 name|memp
 operator|.
@@ -4249,7 +4256,7 @@ operator|*
 literal|1024
 operator|)
 operator|-
-name|lomem_sz
+name|pci_hole_startaddr
 expr_stmt|;
 name|memp
 operator|.

@@ -436,6 +436,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|vtblk_ctx
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->vbsc_pi->pi_vmctx)
+end_define
+
 begin_comment
 comment|/*   * Return the size of IO BAR that maps virtio header and device specific  * region. The size would vary depending on whether MSI-X is enabled or   * not  */
 end_comment
@@ -732,6 +742,11 @@ name|vid
 operator|=
 name|paddr_guest2host
 argument_list|(
+name|vtblk_ctx
+argument_list|(
+name|sc
+argument_list|)
+argument_list|,
 name|vd
 operator|->
 name|vd_addr
@@ -759,6 +774,11 @@ name|vbh
 operator|=
 name|paddr_guest2host
 argument_list|(
+name|vtblk_ctx
+argument_list|(
+name|sc
+argument_list|)
+argument_list|,
 name|vid
 index|[
 literal|0
@@ -875,6 +895,11 @@ name|iov_base
 operator|=
 name|paddr_guest2host
 argument_list|(
+name|vtblk_ctx
+argument_list|(
+name|sc
+argument_list|)
+argument_list|,
 name|vid
 index|[
 name|i
@@ -970,6 +995,11 @@ name|status
 operator|=
 name|paddr_guest2host
 argument_list|(
+name|vtblk_ctx
+argument_list|(
+name|sc
+argument_list|)
+argument_list|,
 name|vid
 index|[
 name|nsegs
@@ -1317,6 +1347,11 @@ name|hq_dtable
 operator|=
 name|paddr_guest2host
 argument_list|(
+name|vtblk_ctx
+argument_list|(
+name|sc
+argument_list|)
+argument_list|,
 name|pfn
 operator|<<
 name|VRING_PFN
