@@ -1872,9 +1872,18 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%d: fifolen: %d; head=%d; tail=%d\n"
+literal|"%d: fifolen: %d/%d; head=%d; tail=%d\n"
 argument_list|,
 name|i
+argument_list|,
+name|sc
+operator|->
+name|sc_rxedma
+index|[
+name|i
+index|]
+operator|.
+name|m_fifo_depth
 argument_list|,
 name|sc
 operator|->
