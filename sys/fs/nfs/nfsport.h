@@ -544,7 +544,7 @@ name|NFSMGET
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGET((m), M_WAITOK, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_WAITOK, MT_DATA); 		\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -554,7 +554,7 @@ name|NFSMGETHDR
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGETHDR((m), M_WAITOK, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_WAITOK, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -566,7 +566,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
+value|do { 					\ 		MGET((m), M_WAITOK, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_WAITOK, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
 end_define
 
 begin_define
@@ -578,7 +578,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 				\ 		MGETHDR((m), M_WAITOK, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_WAITOK, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -4348,17 +4348,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Define this as the flags argument for msleep() when catching signals  * while holding a resource that other threads would block for, such as  * a vnode lock.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_PCATCH
-value|(PCATCH | PBDRY)
-end_define
 
 begin_endif
 endif|#

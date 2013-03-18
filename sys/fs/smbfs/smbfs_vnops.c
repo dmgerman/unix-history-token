@@ -2804,6 +2804,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|scred
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Check for cross-device rename */
 if|if
 condition|(
@@ -3460,7 +3464,7 @@ name|scred
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
 block|}
 end_function
@@ -5507,16 +5511,24 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
+comment|/* 		 * In the DOTDOT case, don't go over-the-wire 		 * in order to request attributes. We already 		 * know it's a directory and subsequent call to 		 * smbfs_getattr() will restore consistency. 		 * 		 */
+name|SMBVDEBUG
+argument_list|(
+literal|"smbfs_smb_lookup: dotdot\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|isdot
+condition|)
+block|{
 name|error
 operator|=
 name|smbfs_smb_lookup
 argument_list|(
-name|VTOSMB
-argument_list|(
 name|dnp
-operator|->
-name|n_parent
-argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -5529,7 +5541,7 @@ argument_list|)
 expr_stmt|;
 name|SMBVDEBUG
 argument_list|(
-literal|"result of dotdot lookup: %d\n"
+literal|"result of smbfs_smb_lookup: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -5537,11 +5549,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fap
-operator|=
-operator|&
-name|fattr
-expr_stmt|;
 name|error
 operator|=
 name|smbfs_smb_lookup
@@ -5557,7 +5564,6 @@ argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
-comment|/*		if (cnp->cn_namelen == 1&& cnp->cn_nameptr[0] == '.')*/
 name|SMBVDEBUG
 argument_list|(
 literal|"result of smbfs_smb_lookup: %d\n"

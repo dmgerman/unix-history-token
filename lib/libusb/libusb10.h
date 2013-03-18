@@ -19,11 +19,22 @@ directive|define
 name|__LIBUSB10_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBUSB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -2034,7 +2034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If (bufsize> 0&& bufseg == UIO_SYSSPACE)  * 	The caller is responsible for freeing memory which will be allocated  *	in '*buf'.  */
+comment|/*  * If (bufsize> 0&& bufseg == UIO_SYSSPACE)  *	The caller is responsible for freeing memory which will be allocated  *	in '*buf'.  */
 end_comment
 
 begin_function
@@ -4619,7 +4619,11 @@ operator|!
 operator|(
 name|flags
 operator|&
+operator|(
 name|O_APPEND
+operator||
+name|O_TRUNC
+operator|)
 operator|)
 condition|)
 name|rights

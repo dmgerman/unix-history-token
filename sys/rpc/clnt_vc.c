@@ -679,11 +679,7 @@ literal|0
 condition|)
 name|sleep_flag
 operator||=
-operator|(
 name|PCATCH
-operator||
-name|PBDRY
-operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -1634,10 +1630,10 @@ name|ct_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Leave space to pre-pend the record mark. 	 */
-name|MGETHDR
-argument_list|(
 name|mreq
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_WAITOK
 argument_list|,
 name|MT_DATA
@@ -2275,9 +2271,6 @@ condition|)
 block|{
 case|case
 name|EINTR
-case|:
-case|case
-name|ERESTART
 case|:
 name|stat
 operator|=
@@ -3268,8 +3261,6 @@ operator|->
 name|ct_waitflag
 operator|=
 name|PCATCH
-operator||
-name|PBDRY
 expr_stmt|;
 else|else
 name|ct

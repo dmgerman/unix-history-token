@@ -17733,13 +17733,23 @@ expr_stmt|;
 comment|/* 	 * If we were given 'zpool status -x', only report those pools with 	 * problems. 	 */
 if|if
 condition|(
-name|reason
-operator|==
-name|ZPOOL_STATUS_OK
-operator|&&
 name|cbp
 operator|->
 name|cb_explain
+operator|&&
+operator|(
+name|reason
+operator|==
+name|ZPOOL_STATUS_OK
+operator|||
+name|reason
+operator|==
+name|ZPOOL_STATUS_VERSION_OLDER
+operator|||
+name|reason
+operator|==
+name|ZPOOL_STATUS_FEAT_DISABLED
+operator|)
 condition|)
 block|{
 if|if

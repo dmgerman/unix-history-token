@@ -2000,13 +2000,13 @@ name|m
 operator|=
 name|m_get2
 argument_list|(
+name|len
+argument_list|,
 name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|,
 name|M_PKTHDR
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 if|if

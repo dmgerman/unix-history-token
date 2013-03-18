@@ -254,8 +254,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|pause_wchan
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -751,10 +754,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|ident
-operator|==
+operator|>=
 operator|&
 name|pause_wchan
+index|[
+literal|0
+index|]
+operator|&&
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|ident
+operator|<=
+operator|&
+name|pause_wchan
+index|[
+name|MAXCPU
+operator|-
+literal|1
+index|]
 condition|)
 name|sleepq_flags
 operator|=
@@ -1522,6 +1546,9 @@ name|_sleep
 argument_list|(
 operator|&
 name|pause_wchan
+index|[
+name|curcpu
+index|]
 argument_list|,
 name|NULL
 argument_list|,

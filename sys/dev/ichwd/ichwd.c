@@ -1556,15 +1556,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ichwd_verbose_printf
-argument_list|(
-name|sc
-operator|->
-name|device
-argument_list|,
-literal|"timer reloaded\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -66,7 +66,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * ACPI power resource management.  *  * Power resource behaviour is slightly complicated by the fact that  * a single power resource may provide power for more than one device.  * Thus, we must track the device(s) being powered by a given power  * resource, and only deactivate it when there are no powered devices.  *  * Note that this only manages resources for known devices.  There is an  * ugly case where we may turn of power to a device which is in use because  * we don't know that it depends on a given resource.  We should perhaps  * try to be smarter about this, but a more complete solution would involve  * scanning all of the ACPI namespace to find devices we're not currently  * aware of, and this raises questions about whether they should be left   * on, turned off, etc.  */
+comment|/*  * ACPI power resource management.  *  * Power resource behaviour is slightly complicated by the fact that  * a single power resource may provide power for more than one device.  * Thus, we must track the device(s) being powered by a given power  * resource, and only deactivate it when there are no powered devices.  *  * Note that this only manages resources for known devices.  There is an  * ugly case where we may turn off power to a device which is in use because  * we don't know that it depends on a given resource.  We should perhaps  * try to be smarter about this, but a more complete solution would involve  * scanning all of the ACPI namespace to find devices we're not currently  * aware of, and this raises questions about whether they should be left   * on, turned off, etc.  */
 end_comment
 
 begin_expr_stmt

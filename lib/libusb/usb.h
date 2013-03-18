@@ -19,6 +19,18 @@ directive|define
 name|_LIBUSB20_COMPAT_01_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBUSB_GLOBAL_INCLUDE_FILE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -31,11 +43,10 @@ directive|include
 file|<sys/endian.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* USB interface class codes */

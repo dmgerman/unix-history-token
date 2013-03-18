@@ -190,6 +190,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_radix.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_reserv.h>
 end_include
 
@@ -502,14 +508,16 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|vm_radix_is_empty
+argument_list|(
+operator|&
 name|object
 operator|->
-name|root
-operator|==
-name|NULL
+name|rtree
+argument_list|)
 argument_list|,
 operator|(
-literal|"object %p has resident pages in its tree"
+literal|"object %p has resident pages in its trie"
 operator|,
 name|object
 operator|)
@@ -674,9 +682,11 @@ expr_stmt|;
 comment|/* These are true for any object that has been freed */
 name|object
 operator|->
-name|root
+name|rtree
+operator|.
+name|rt_root
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|object
 operator|->
@@ -699,8 +709,10 @@ expr_stmt|;
 name|object
 operator|->
 name|cache
+operator|.
+name|rt_root
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -1087,6 +1099,9 @@ name|UMA_ZONE_VM
 operator||
 name|UMA_ZONE_NOFREE
 argument_list|)
+expr_stmt|;
+name|vm_radix_init
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2576,11 +2591,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|vm_radix_reclaim_allnodes
+argument_list|(
+operator|&
 name|object
 operator|->
-name|root
-operator|=
-name|NULL
+name|rtree
+argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(

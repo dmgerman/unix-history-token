@@ -2560,13 +2560,6 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
-name|IEEE80211_TX_LOCK_ASSERT
-argument_list|(
-name|vap
-operator|->
-name|iv_ic
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|m

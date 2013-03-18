@@ -32,20 +32,40 @@ begin_comment
 comment|/* arbitrary */
 end_comment
 
+begin_enum
+enum|enum
+name|vmm_stat_scope
+block|{
+name|VMM_STAT_SCOPE_ANY
+block|,
+name|VMM_STAT_SCOPE_INTEL
+block|,
+comment|/* Intel VMX specific statistic */
+name|VMM_STAT_SCOPE_AMD
+block|,
+comment|/* AMD SVM specific statistic */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|vmm_stat_type
 block|{
+name|int
+name|index
+decl_stmt|;
+comment|/* position in the stats buffer */
 specifier|const
 name|char
 modifier|*
 name|desc
 decl_stmt|;
 comment|/* description of statistic */
-name|int
-name|index
+name|enum
+name|vmm_stat_scope
+name|scope
 decl_stmt|;
-comment|/* position in the stats buffer */
 block|}
 struct|;
 end_struct
@@ -69,9 +89,61 @@ parameter_list|(
 name|type
 parameter_list|,
 name|desc
+parameter_list|,
+name|scope
 parameter_list|)
 define|\
-value|struct vmm_stat_type type[1] = {				\ 		{ desc, -1 }						\ 	};								\ 	SYSINIT(type##_stat, SI_SUB_KLD, SI_ORDER_ANY, vmm_stat_init, type)
+value|struct vmm_stat_type type[1] = {				\ 		{ -1, desc, scope }					\ 	};								\ 	SYSINIT(type##_stat, SI_SUB_KLD, SI_ORDER_ANY, vmm_stat_init, type)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMM_STAT_DECLARE
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|extern struct vmm_stat_type type[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMM_STAT
+parameter_list|(
+name|type
+parameter_list|,
+name|desc
+parameter_list|)
+define|\
+value|VMM_STAT_DEFINE(type, desc, VMM_STAT_SCOPE_ANY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMM_STAT_INTEL
+parameter_list|(
+name|type
+parameter_list|,
+name|desc
+parameter_list|)
+define|\
+value|VMM_STAT_DEFINE(type, desc, VMM_STAT_SCOPE_INTEL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMM_STAT_AMD
+parameter_list|(
+name|type
+parameter_list|,
+name|desc
+parameter_list|)
+define|\
+value|VMM_STAT_DEFINE(type, desc, VMM_STAT_SCOPE_AMD)
 end_define
 
 begin_function_decl
@@ -192,6 +264,38 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_expr_stmt
+name|VMM_STAT_DECLARE
+argument_list|(
+name|VCPU_MIGRATIONS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT_DECLARE
+argument_list|(
+name|VMEXIT_COUNT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT_DECLARE
+argument_list|(
+name|VMEXIT_EXTINT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT_DECLARE
+argument_list|(
+name|VMEXIT_HLT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
