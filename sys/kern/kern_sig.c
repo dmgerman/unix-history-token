@@ -2956,7 +2956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
+comment|/*  * Determine signal that should be delivered to thread td, the current  * thread, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
 end_comment
 
 begin_function
@@ -11130,7 +11130,7 @@ name|p_step
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Some signals have a process-wide effect and a per-thread 	 * component.  Most processing occurs when the process next 	 * tries to cross the user boundary, however there are some 	 * times when processing needs to be done immediatly, such as 	 * waking up threads so that they can cross the user boundary. 	 * We try do the per-process part here. 	 */
+comment|/* 	 * Some signals have a process-wide effect and a per-thread 	 * component.  Most processing occurs when the process next 	 * tries to cross the user boundary, however there are some 	 * times when processing needs to be done immediately, such as 	 * waking up threads so that they can cross the user boundary. 	 * We try to do the per-process part here. 	 */
 if|if
 condition|(
 name|P_SHOULDSTOP
