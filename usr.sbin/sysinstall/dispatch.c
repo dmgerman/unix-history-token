@@ -430,6 +430,12 @@ name|mediaSetHTTP
 block|}
 block|,
 block|{
+literal|"mediaSetHTTPDirect"
+block|,
+name|mediaSetHTTPDirect
+block|}
+block|,
+block|{
 literal|"mediaSetUFS"
 block|,
 name|mediaSetUFS

@@ -990,13 +990,23 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|" Media, HTTP"
+literal|" Media, HTTP Proxy"
 block|,
 literal|"Select FTP via HTTP proxy install media."
 block|,
 name|NULL
 block|,
 name|mediaSetHTTP
+block|}
+block|,
+block|{
+literal|" Media, HTTP Direct"
+block|,
+literal|"Select HTTP direct installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetHTTPDirect
 block|}
 block|,
 block|{
@@ -5108,6 +5118,47 @@ block|}
 block|}
 block|;
 name|DMenu
+name|MenuMediaHTTPDirect
+operator|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Please select a FreeBSD HTTP distribution site"
+block|,
+literal|"Please select the site closest to you or \"other\" if you'd like to\n"
+literal|"specify a different choice.  Also note that not every site listed here\n"
+literal|"carries more than the base distribution kits. Only Primary sites are\n"
+literal|"guaranteed to carry the full range of possible distributions."
+block|,
+literal|"Select a site that's close!"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"URL"
+block|,
+literal|"Specify some other ftp site by URL"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_HTTP_PATH
+literal|"=other"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|}
+block|;
+name|DMenu
 name|MenuNetworkDevice
 operator|=
 block|{
@@ -5229,7 +5280,7 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"4 HTTP"
+literal|"4 HTTP Proxy"
 block|,
 literal|"Install from an FTP server through a http proxy"
 block|,
@@ -5239,7 +5290,17 @@ name|mediaSetHTTP
 block|}
 block|,
 block|{
-literal|"5 DOS"
+literal|"5 HTTP Direct"
+block|,
+literal|"Install from an HTTP server"
+block|,
+name|NULL
+block|,
+name|mediaSetHTTPDirect
+block|}
+block|,
+block|{
+literal|"6 DOS"
 block|,
 literal|"Install from a DOS partition"
 block|,
@@ -5249,7 +5310,7 @@ name|mediaSetDOS
 block|}
 block|,
 block|{
-literal|"6 NFS"
+literal|"7 NFS"
 block|,
 literal|"Install over NFS"
 block|,
@@ -5259,7 +5320,7 @@ name|mediaSetNFS
 block|}
 block|,
 block|{
-literal|"7 File System"
+literal|"8 File System"
 block|,
 literal|"Install from an existing filesystem"
 block|,
@@ -5269,7 +5330,7 @@ name|mediaSetUFS
 block|}
 block|,
 block|{
-literal|"8 Floppy"
+literal|"9 Floppy"
 block|,
 literal|"Install from a floppy disk set"
 block|,
@@ -5279,7 +5340,7 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
-literal|"9 USB"
+literal|"A USB"
 block|,
 literal|"Install from a USB drive"
 block|,

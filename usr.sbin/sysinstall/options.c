@@ -159,6 +159,12 @@ return|return
 literal|"HTTP Proxy"
 return|;
 case|case
+name|DEVICE_TYPE_HTTP_DIRECT
+case|:
+return|return
+literal|"HTTP Direct"
+return|;
+case|case
 name|DEVICE_TYPE_CDROM
 case|:
 return|return
