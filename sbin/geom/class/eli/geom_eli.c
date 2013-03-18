@@ -1250,6 +1250,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|1024
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -1748,7 +1755,7 @@ name|p
 decl_stmt|,
 name|buf
 index|[
-name|MAXPHYS
+name|BUFSIZE
 index|]
 decl_stmt|,
 name|argname
@@ -2285,7 +2292,7 @@ block|{
 name|char
 name|tmpbuf
 index|[
-name|BUFSIZ
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|p
@@ -2415,7 +2422,7 @@ block|{
 name|char
 name|passbuf
 index|[
-name|MAXPHYS
+name|BUFSIZE
 index|]
 decl_stmt|;
 name|bool
