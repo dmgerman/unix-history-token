@@ -2213,13 +2213,6 @@ name|SIS_TYPE_83815
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIS_TYPE_83816
-value|4
-end_define
-
 begin_struct
 struct|struct
 name|sis_txdesc
