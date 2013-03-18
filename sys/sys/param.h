@@ -767,17 +767,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PBDRY
-value|0x400
-end_define
-
-begin_comment
-comment|/* for PCATCH stop is done on the user boundary */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NZERO
 value|0
 end_define

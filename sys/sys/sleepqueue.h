@@ -120,17 +120,6 @@ begin_comment
 comment|/* Sleep is interruptible. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SLEEPQ_STOP_ON_BDRY
-value|0x200
-end_define
-
-begin_comment
-comment|/* Stop sleeping thread on 						   user mode boundary */
-end_comment
-
 begin_function_decl
 name|void
 name|init_sleepqueues

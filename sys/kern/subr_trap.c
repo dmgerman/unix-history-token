@@ -1032,8 +1032,6 @@ operator|=
 name|cursig
 argument_list|(
 name|td
-argument_list|,
-name|SIG_STOP_ALLOWED
 argument_list|)
 operator|)
 operator|!=
