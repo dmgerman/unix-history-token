@@ -2404,11 +2404,15 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: Q%d: alloc failed?\n"
+literal|"%s: Q%d: alloc failed: i=%d, nbufs=%d?\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|qtype
+argument_list|,
+name|i
+argument_list|,
+name|nbufs
 argument_list|)
 expr_stmt|;
 break|break;
