@@ -532,7 +532,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ofw_bus_is_compatible_strict
+name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
@@ -553,7 +553,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
