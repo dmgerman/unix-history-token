@@ -1847,10 +1847,6 @@ name|rl
 parameter_list|)
 block|{
 name|u_long
-name|start
-decl_stmt|,
-name|end
-decl_stmt|,
 name|count
 decl_stmt|;
 name|pcell_t
@@ -1876,7 +1872,9 @@ decl_stmt|,
 name|rv
 decl_stmt|;
 name|bus_space_handle_t
-name|vaddr
+name|start
+decl_stmt|,
+name|end
 decl_stmt|;
 name|long
 name|busaddr
@@ -2058,32 +2056,9 @@ name|start
 operator|+=
 name|busaddr
 expr_stmt|;
-if|if
-condition|(
-name|bus_space_map
-argument_list|(
-name|fdtbus_bs_tag
-argument_list|,
-name|start
-argument_list|,
-name|count
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|vaddr
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"Couldn't map the device memory"
-argument_list|)
-expr_stmt|;
 name|end
 operator|=
-name|vaddr
+name|start
 operator|+
 name|count
 operator|-
@@ -2093,7 +2068,7 @@ name|debugf
 argument_list|(
 literal|"reg addr start = %lx, end = %lx, count = %lx\n"
 argument_list|,
-name|vaddr
+name|start
 argument_list|,
 name|end
 argument_list|,
@@ -2108,7 +2083,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|i
 argument_list|,
-name|vaddr
+name|start
 argument_list|,
 name|end
 argument_list|,

@@ -3385,7 +3385,7 @@ parameter_list|,
 name|offs
 parameter_list|)
 define|\
-value|(vtophys(rman_get_start(res)+(offs)))
+value|((u_int)(rman_get_start(res)+(offs)))
 end_define
 
 begin_endif

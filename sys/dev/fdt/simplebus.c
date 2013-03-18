@@ -728,7 +728,6 @@ operator|.
 name|obd_name
 argument_list|)
 expr_stmt|;
-comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -785,7 +784,6 @@ operator|->
 name|di_res
 argument_list|)
 expr_stmt|;
-comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -844,7 +842,6 @@ operator|->
 name|di_res
 argument_list|)
 expr_stmt|;
-comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
