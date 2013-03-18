@@ -29792,7 +29792,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|do_vfp_vmrs
 parameter_list|(
 name|void
@@ -29822,9 +29822,7 @@ name|error
 operator|=
 name|BAD_PC
 expr_stmt|;
-return|return
-name|FAIL
-return|;
+return|return;
 block|}
 comment|/* If the destination is r13 and not in ARM mode then unprefictable */
 if|if
@@ -29849,9 +29847,7 @@ name|error
 operator|=
 name|BAD_SP
 expr_stmt|;
-return|return
-name|FAIL
-return|;
+return|return;
 block|}
 comment|/* If the destination is APSR_nzcv */
 if|if
@@ -29883,9 +29879,7 @@ name|error
 operator|=
 name|BAD_VMRS
 expr_stmt|;
-return|return
-name|FAIL
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -29938,15 +29932,12 @@ name|reg
 operator|<<
 literal|16
 expr_stmt|;
-return|return
-name|SUCCESS
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|do_vfp_vmsr
 parameter_list|(
 name|void
@@ -29973,9 +29964,7 @@ name|error
 operator|=
 name|BAD_PC
 expr_stmt|;
-return|return
-name|FAIL
-return|;
+return|return;
 block|}
 comment|/* If the destination is r13 and not in ARM mode then unprefictable */
 if|if
@@ -30000,9 +29989,7 @@ name|error
 operator|=
 name|BAD_SP
 expr_stmt|;
-return|return
-name|FAIL
-return|;
+return|return;
 block|}
 comment|/* Or in the registers to use */
 name|inst
@@ -30035,9 +30022,6 @@ name|reg
 operator|<<
 literal|16
 expr_stmt|;
-return|return
-name|SUCCESS
-return|;
 block|}
 end_function
 
