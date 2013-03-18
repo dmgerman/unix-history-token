@@ -20685,21 +20685,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|parse_big_immediate
-argument_list|(
-operator|&
-name|ptr
-argument_list|,
-name|i
-argument_list|)
-operator|==
-name|SUCCESS
-condition|)
-comment|/* Case 2: VMOV<c><q>.<dt><Qd>, #<imm>              Case 3: VMOV<c><q>.<dt><Dd>, #<imm>  */
-empty_stmt|;
-elseif|else
-if|if
-condition|(
 operator|(
 name|val
 operator|=
@@ -20943,6 +20928,21 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|parse_big_immediate
+argument_list|(
+operator|&
+name|ptr
+argument_list|,
+name|i
+argument_list|)
+operator|==
+name|SUCCESS
+condition|)
+comment|/* Case 2: VMOV<c><q>.<dt><Qd>, #<imm>              Case 3: VMOV<c><q>.<dt><Dd>, #<imm>  */
+empty_stmt|;
 else|else
 block|{
 name|first_error
