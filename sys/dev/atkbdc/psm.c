@@ -3129,15 +3129,15 @@ literal|"Synaptics Touchpad"
 block|}
 block|,
 block|{
-name|MOUSE_MODEL_GENERIC
-block|,
-literal|"Generic PS/2 mouse"
-block|}
-block|,
-block|{
 name|MOUSE_MODEL_TRACKPOINT
 block|,
 literal|"IBM/Lenovo TrackPoint"
+block|}
+block|,
+block|{
+name|MOUSE_MODEL_GENERIC
+block|,
+literal|"Generic PS/2 mouse"
 block|}
 block|,
 block|{
