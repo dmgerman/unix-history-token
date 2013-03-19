@@ -125,6 +125,20 @@ name|BIO_ORDERED
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIO_UNMAPPED
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_TRANSIENT_MAPPING
+value|0x20
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -140,6 +154,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vm_map
 struct_decl|;
 end_struct_decl
 
@@ -213,6 +233,21 @@ name|caddr_t
 name|bio_data
 decl_stmt|;
 comment|/* Memory, superblocks, indirect etc. */
+name|struct
+name|vm_page
+modifier|*
+modifier|*
+name|bio_ma
+decl_stmt|;
+comment|/* Or unmapped. */
+name|int
+name|bio_ma_offset
+decl_stmt|;
+comment|/* Offset in the first page of bio_ma. */
+name|int
+name|bio_ma_n
+decl_stmt|;
+comment|/* Number of pages in bio_ma. */
 name|int
 name|bio_error
 decl_stmt|;
@@ -384,6 +419,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vm_map
+modifier|*
+name|bio_transient_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bio_transient_maxcnt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

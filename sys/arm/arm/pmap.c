@@ -16733,6 +16733,14 @@ directive|endif
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|unmapped_buf_allowed
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|pmap_copy_pages

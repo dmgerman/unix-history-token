@@ -347,6 +347,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|bio_transient_maxcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ngroups_max
 decl_stmt|;
 end_decl_stmt
@@ -591,6 +597,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum value of vfs.maxbufspace"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bio_transient_maxcnt
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|bio_transient_maxcnt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of transient BIOs mappings"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1269,6 +1296,14 @@ name|pid_max
 operator|=
 literal|300
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vfs.unmapped_buf_allowed"
+argument_list|,
+operator|&
+name|unmapped_buf_allowed
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1461,6 +1496,14 @@ literal|"kern.nbuf"
 argument_list|,
 operator|&
 name|nbuf
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.bio_transient_maxcnt"
+argument_list|,
+operator|&
+name|bio_transient_maxcnt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The default for maxpipekva is min(1/64 of the kernel address space, 	 * max(1/64 of main memory, 512KB)).  See sys_pipe.c for more details. 	 */
