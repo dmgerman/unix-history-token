@@ -3950,6 +3950,15 @@ literal|"Enabling register serialisation\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Initialise the deferred completed RX buffer list. 	 */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_rx_rxlist
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Indicate we need the 802.11 header padded to a 	 * 32-bit boundary for 4-address and QoS frames. 	 */
 name|ic
 operator|->
@@ -7351,16 +7360,15 @@ ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
 comment|/* 				 * Schedule the rx taskq in case there's no 				 * traffic so any frames held on the staging 				 * queue are aged and potentially flushed. 				 */
-name|taskqueue_enqueue
+name|sc
+operator|->
+name|sc_rx
+operator|.
+name|recv_sched
 argument_list|(
 name|sc
-operator|->
-name|sc_tq
 argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_rxtask
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7444,22 +7452,21 @@ name|sc_kickpcu
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * Enqueue an RX proc, to handled whatever 			 * is in the RX queue. 			 * This will then kick the PCU. 			 */
-name|taskqueue_enqueue
-argument_list|(
-name|sc
-operator|->
-name|sc_tq
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_rxtask
-argument_list|)
-expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Enqueue an RX proc, to handled whatever 			 * is in the RX queue. 			 * This will then kick the PCU. 			 */
+name|sc
+operator|->
+name|sc_rx
+operator|.
+name|recv_sched
+argument_list|(
+name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -7507,16 +7514,15 @@ operator|.
 name|ast_rx_intr
 operator|++
 expr_stmt|;
-name|taskqueue_enqueue
+name|sc
+operator|->
+name|sc_rx
+operator|.
+name|recv_sched
 argument_list|(
 name|sc
-operator|->
-name|sc_tq
 argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_rxtask
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
