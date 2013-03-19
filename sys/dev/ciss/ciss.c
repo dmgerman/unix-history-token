@@ -1592,6 +1592,13 @@ name|CISS_BOARD_NOMSI
 value|(1<<4)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CISS_BOARD_SIMPLE
+value|(1<<5)
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -1622,6 +1629,8 @@ block|,
 name|CISS_BOARD_SA5
 operator||
 name|CISS_BOARD_NOMSI
+operator||
+name|CISS_BOARD_SIMPLE
 block|,
 literal|"Compaq Smart Array 5300"
 block|}
@@ -3420,6 +3429,23 @@ name|CISS_TRANSPORT_METHOD_PERF
 expr_stmt|;
 break|break;
 default|default:
+comment|/*          * Override the capabilities of the BOARD and specify SIMPLE          * MODE           */
+if|if
+condition|(
+name|ciss_vendor_data
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator|&
+name|CISS_BOARD_SIMPLE
+condition|)
+name|supported_methods
+operator|=
+name|CISS_TRANSPORT_METHOD_SIMPLE
+expr_stmt|;
+else|else
 name|supported_methods
 operator|=
 name|sc
