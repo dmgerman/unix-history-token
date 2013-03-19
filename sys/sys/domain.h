@@ -82,6 +82,8 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|void

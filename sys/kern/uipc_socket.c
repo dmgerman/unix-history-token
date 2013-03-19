@@ -7770,6 +7770,8 @@ argument_list|(
 name|cm
 argument_list|,
 name|controlp
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK
@@ -10885,6 +10887,8 @@ argument_list|(
 name|cm
 argument_list|,
 name|controlp
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
