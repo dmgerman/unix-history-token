@@ -249,6 +249,8 @@ name|int
 name|curfail
 decl_stmt|;
 name|int
+name|gbflags
+decl_stmt|,
 name|reclaimed
 decl_stmt|;
 name|ip
@@ -340,6 +342,20 @@ operator|(
 name|EFBIG
 operator|)
 return|;
+name|gbflags
+operator|=
+operator|(
+name|flags
+operator|&
+name|BA_UNMAPPED
+operator|)
+operator|!=
+literal|0
+condition|?
+name|GB_UNMAPPED
+else|:
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|DOINGSOFTDEP
@@ -956,7 +972,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1246,7 +1262,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2012,7 +2028,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -2197,7 +2213,7 @@ name|MAXBSIZE
 argument_list|,
 name|seqcount
 argument_list|,
-literal|0
+name|gbflags
 argument_list|,
 operator|&
 name|nbp
@@ -2208,7 +2224,7 @@ else|else
 block|{
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -2222,6 +2238,8 @@ operator|->
 name|fs_bsize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|nbp
@@ -2261,7 +2279,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -2803,6 +2821,8 @@ name|int
 name|curfail
 decl_stmt|;
 name|int
+name|gbflags
+decl_stmt|,
 name|reclaimed
 decl_stmt|;
 name|ip
@@ -2883,6 +2903,20 @@ operator|(
 name|EFBIG
 operator|)
 return|;
+name|gbflags
+operator|=
+operator|(
+name|flags
+operator|&
+name|BA_UNMAPPED
+operator|)
+operator|!=
+literal|0
+condition|?
+name|GB_UNMAPPED
+else|:
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|DOINGSOFTDEP
@@ -3175,7 +3209,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -3189,6 +3223,8 @@ operator|->
 name|fs_bsize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|bp
@@ -3280,7 +3316,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -3292,6 +3328,8 @@ argument_list|,
 name|osize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|bp
@@ -3538,7 +3576,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3896,7 +3934,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -3907,6 +3945,8 @@ operator|->
 name|fs_bsize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|bp
@@ -3992,7 +4032,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -4001,6 +4041,8 @@ argument_list|,
 name|osize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|bp
@@ -4229,7 +4271,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|bp
@@ -4519,7 +4561,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|GB_UNMAPPED
 argument_list|)
 expr_stmt|;
 name|bp
@@ -4929,7 +4971,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|GB_UNMAPPED
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -5285,7 +5327,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -5471,7 +5513,7 @@ name|MAXBSIZE
 argument_list|,
 name|seqcount
 argument_list|,
-literal|0
+name|gbflags
 argument_list|,
 operator|&
 name|nbp
@@ -5482,7 +5524,7 @@ else|else
 block|{
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -5496,6 +5538,8 @@ operator|->
 name|fs_bsize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|nbp
@@ -5535,7 +5579,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|gbflags
 argument_list|)
 expr_stmt|;
 name|nbp
