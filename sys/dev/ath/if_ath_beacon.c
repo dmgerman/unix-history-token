@@ -2478,7 +2478,7 @@ name|ath_buf
 modifier|*
 name|bfm
 decl_stmt|;
-comment|/* 			 * Move frames from the s/w mcast q to the h/w cab q. 			 * XXX MORE_DATA bit 			 */
+comment|/* 			 * Move frames from the s/w mcast q to the h/w cab q. 			 * XXX TODO: walk the list, update MORE_DATA bit 			 * XXX TODO: or maybe, set the MORE data bit in the 			 *           TX descriptor(s) here? 			 * 			 * XXX TODO: we're still pushing a CABQ frame list to 			 *           AR9380 hosts; but we don't (yet) populate 			 *           the ATH_BUF_BUSY flag in the EDMA 			 *           completion task (for CABQ, though!) 			 */
 name|bfm
 operator|=
 name|TAILQ_FIRST
