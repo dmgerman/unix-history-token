@@ -1929,7 +1929,28 @@ parameter_list|,
 name|bpp
 parameter_list|)
 define|\
-value|breadn_flags(vp, blkno, size, 0, 0, 0, cred, 0, bpp)
+value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, 0, bpp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bread_gb
+parameter_list|(
+name|vp
+parameter_list|,
+name|blkno
+parameter_list|,
+name|size
+parameter_list|,
+name|cred
+parameter_list|,
+name|gbflags
+parameter_list|,
+name|bpp
+parameter_list|)
+define|\
+value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, \ 		gbflags, bpp)
 end_define
 
 begin_define
