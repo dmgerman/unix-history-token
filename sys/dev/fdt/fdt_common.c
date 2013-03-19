@@ -1847,7 +1847,11 @@ name|rl
 parameter_list|)
 block|{
 name|u_long
+name|end
+decl_stmt|,
 name|count
+decl_stmt|,
+name|start
 decl_stmt|;
 name|pcell_t
 modifier|*
@@ -1870,11 +1874,6 @@ name|int
 name|i
 decl_stmt|,
 name|rv
-decl_stmt|;
-name|bus_space_handle_t
-name|start
-decl_stmt|,
-name|end
 decl_stmt|;
 name|long
 name|busaddr
@@ -2022,10 +2021,6 @@ name|addr_cells
 argument_list|,
 name|size_cells
 argument_list|,
-operator|(
-name|u_long
-operator|*
-operator|)
 operator|&
 name|start
 argument_list|,
