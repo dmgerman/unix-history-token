@@ -6876,6 +6876,13 @@ name|__FreeBSD__
 ifdef|#
 directive|ifdef
 name|_KERNEL
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|pair
@@ -6915,6 +6922,7 @@ argument_list|(
 name|snapname
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
