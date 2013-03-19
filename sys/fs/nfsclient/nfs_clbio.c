@@ -2352,11 +2352,11 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|&
-operator|(
-name|biosize
 operator|-
-literal|1
+operator|(
+name|lbn
+operator|*
+name|biosize
 operator|)
 expr_stmt|;
 comment|/* 		 * Start the read ahead(s), as required. 		 */
@@ -5027,11 +5027,11 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|&
-operator|(
-name|biosize
 operator|-
-literal|1
+operator|(
+name|lbn
+operator|*
+name|biosize
 operator|)
 expr_stmt|;
 name|n
@@ -8523,11 +8523,11 @@ expr_stmt|;
 name|bufsize
 operator|=
 name|nsize
-operator|&
-operator|(
-name|biosize
 operator|-
-literal|1
+operator|(
+name|lbn
+operator|*
+name|biosize
 operator|)
 expr_stmt|;
 name|bp
