@@ -2022,6 +2022,10 @@ name|addr_cells
 argument_list|,
 name|size_cells
 argument_list|,
+operator|(
+name|u_long
+operator|*
+operator|)
 operator|&
 name|start
 argument_list|,
