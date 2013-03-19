@@ -1547,20 +1547,12 @@ operator|->
 name|sc_txdma
 decl_stmt|;
 comment|/* 	 * Fillin the remainder of the descriptor info. 	 */
-comment|/* 	 * For now the HAL doesn't implement halNumTxMaps for non-EDMA 	 * (ie it's 0.)  So just work around it. 	 * 	 * XXX TODO: populate halNumTxMaps for each HAL chip and 	 * then undo this hack. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_ah
-operator|->
-name|ah_magic
-operator|==
-literal|0x19741014
-condition|)
+comment|/* 	 * We need the number of TX data pointers in each descriptor. 	 * EDMA and later chips support 4 TX buffers per descriptor; 	 * previous chips just support one. 	 */
 name|numTxMaps
 operator|=
-literal|4
+name|sc
+operator|->
+name|sc_tx_nmaps
 expr_stmt|;
 comment|/* 	 * For EDMA and later chips ensure the TX map is fully populated 	 * before advancing to the next descriptor. 	 */
 name|ds
