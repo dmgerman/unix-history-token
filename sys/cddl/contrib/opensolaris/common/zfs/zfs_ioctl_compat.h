@@ -1052,6 +1052,9 @@ name|caddr_t
 parameter_list|,
 specifier|const
 name|int
+parameter_list|,
+specifier|const
+name|int
 parameter_list|)
 function_decl|;
 ifdef|#

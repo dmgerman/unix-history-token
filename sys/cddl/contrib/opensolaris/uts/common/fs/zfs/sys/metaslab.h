@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -219,6 +219,20 @@ name|bp
 parameter_list|,
 name|uint64_t
 name|txg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|metaslab_check_free
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|blkptr_t
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 specifier|extern

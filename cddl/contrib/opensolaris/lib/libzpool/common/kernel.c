@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rrwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/zmod.h>
 end_include
 
@@ -3875,6 +3881,10 @@ name|int
 name|mode
 parameter_list|)
 block|{
+specifier|extern
+name|uint_t
+name|rrw_tsd_key
+decl_stmt|;
 name|umem_nofail_callback
 argument_list|(
 name|umem_out_of_memory
@@ -3997,6 +4007,14 @@ directive|endif
 name|spa_init
 argument_list|(
 name|mode
+argument_list|)
+expr_stmt|;
+name|tsd_create
+argument_list|(
+operator|&
+name|rrw_tsd_key
+argument_list|,
+name|rrw_tsd_destroy
 argument_list|)
 expr_stmt|;
 block|}

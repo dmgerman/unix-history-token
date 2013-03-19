@@ -51,6 +51,10 @@ name|rrwlock_t
 modifier|*
 name|rn_rrl
 decl_stmt|;
+name|void
+modifier|*
+name|rn_tag
+decl_stmt|;
 block|}
 name|rrw_node_t
 typedef|;
@@ -142,6 +146,10 @@ parameter_list|(
 name|rrwlock_t
 modifier|*
 name|rrl
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|)
 block|{
 name|rrw_node_t
@@ -176,6 +184,12 @@ argument_list|(
 name|rrw_tsd_key
 argument_list|)
 expr_stmt|;
+name|rn
+operator|->
+name|rn_tag
+operator|=
+name|tag
+expr_stmt|;
 name|VERIFY
 argument_list|(
 name|tsd_set
@@ -203,6 +217,10 @@ parameter_list|(
 name|rrwlock_t
 modifier|*
 name|rrl
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|)
 block|{
 name|rrw_node_t
@@ -259,6 +277,12 @@ operator|->
 name|rn_rrl
 operator|==
 name|rrl
+operator|&&
+name|rn
+operator|->
+name|rn_tag
+operator|==
+name|tag
 condition|)
 block|{
 if|if
@@ -325,6 +349,9 @@ parameter_list|(
 name|rrwlock_t
 modifier|*
 name|rrl
+parameter_list|,
+name|boolean_t
+name|track_all
 parameter_list|)
 block|{
 name|mutex_init
@@ -383,6 +410,12 @@ name|rr_writer_wanted
 operator|=
 name|B_FALSE
 expr_stmt|;
+name|rrl
+operator|->
+name|rr_track_all
+operator|=
+name|track_all
+expr_stmt|;
 block|}
 end_function
 
@@ -440,7 +473,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|rrw_enter_read
 parameter_list|(
@@ -475,15 +507,21 @@ name|_KERNEL
 argument_list|)
 if|if
 condition|(
-operator|!
 name|rrl
 operator|->
 name|rr_writer
+operator|==
+name|NULL
 operator|&&
 operator|!
 name|rrl
 operator|->
 name|rr_writer_wanted
+operator|&&
+operator|!
+name|rrl
+operator|->
+name|rr_track_all
 condition|)
 block|{
 name|rrl
@@ -537,6 +575,8 @@ condition|(
 name|rrl
 operator|->
 name|rr_writer
+operator|!=
+name|NULL
 operator|||
 operator|(
 name|rrl
@@ -577,12 +617,18 @@ condition|(
 name|rrl
 operator|->
 name|rr_writer_wanted
+operator|||
+name|rrl
+operator|->
+name|rr_track_all
 condition|)
 block|{
 comment|/* may or may not be a re-entrant enter */
 name|rrn_add
 argument_list|(
 name|rrl
+argument_list|,
+name|tag
 argument_list|)
 expr_stmt|;
 operator|(
@@ -636,7 +682,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|rrw_enter_write
 parameter_list|(
@@ -907,8 +952,11 @@ condition|(
 name|rrn_find_and_remove
 argument_list|(
 name|rrl
+argument_list|,
+name|tag
 argument_list|)
 condition|)
+block|{
 name|count
 operator|=
 name|refcount_remove
@@ -921,7 +969,17 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|ASSERT
+argument_list|(
+operator|!
+name|rrl
+operator|->
+name|rr_track_all
+argument_list|)
+expr_stmt|;
 name|count
 operator|=
 name|refcount_remove
@@ -934,6 +992,7 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|count
@@ -1005,6 +1064,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * If the lock was created with track_all, rrw_held(RW_READER) will return  * B_TRUE iff the current thread has the lock for reader.  Otherwise it may  * return B_TRUE if any thread has the lock for reader.  */
+end_comment
+
 begin_function
 name|boolean_t
 name|rrw_held
@@ -1060,14 +1123,12 @@ operator|->
 name|rr_anon_rcount
 argument_list|)
 operator|||
-operator|!
-name|refcount_is_zero
+name|rrn_find
 argument_list|(
-operator|&
 name|rrl
-operator|->
-name|rr_linked_rcount
 argument_list|)
+operator|!=
+name|NULL
 operator|)
 expr_stmt|;
 block|}

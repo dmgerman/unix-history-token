@@ -195,19 +195,6 @@ argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-name|strlcpy
-argument_list|(
-name|zc
-operator|->
-name|zc_top_ds
-argument_list|,
-name|zcdm_c
-operator|->
-name|zc_top_ds
-argument_list|,
-name|MAXPATHLEN
-argument_list|)
-expr_stmt|;
 name|zc
 operator|->
 name|zc_guid
@@ -516,19 +503,6 @@ argument_list|,
 name|zc28_c
 operator|->
 name|zc_string
-argument_list|,
-name|MAXPATHLEN
-argument_list|)
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|zc
-operator|->
-name|zc_top_ds
-argument_list|,
-name|zc28_c
-operator|->
-name|zc_top_ds
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -1300,6 +1274,10 @@ name|addr
 parameter_list|,
 specifier|const
 name|int
+name|request
+parameter_list|,
+specifier|const
+name|int
 name|cflag
 parameter_list|)
 block|{
@@ -1368,19 +1346,6 @@ argument_list|,
 name|zc
 operator|->
 name|zc_string
-argument_list|,
-name|MAXPATHLEN
-argument_list|)
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|zcdm_c
-operator|->
-name|zc_top_ds
-argument_list|,
-name|zc
-operator|->
-name|zc_top_ds
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -1636,6 +1601,52 @@ name|zcdm_c
 operator|->
 name|zc_inject_record
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+if|if
+condition|(
+name|request
+operator|==
+name|ZFS_IOC_RECV
+condition|)
+name|strlcpy
+argument_list|(
+name|zcdm_c
+operator|->
+name|zc_top_ds
+argument_list|,
+name|zc
+operator|->
+name|zc_value
+operator|+
+name|strlen
+argument_list|(
+name|zc
+operator|->
+name|zc_value
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+operator|(
+name|MAXPATHLEN
+operator|*
+literal|2
+operator|)
+operator|-
+name|strlen
+argument_list|(
+name|zc
+operator|->
+name|zc_value
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|ZFS_CMD_COMPAT_V28
@@ -1685,19 +1696,6 @@ argument_list|,
 name|zc
 operator|->
 name|zc_string
-argument_list|,
-name|MAXPATHLEN
-argument_list|)
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|zc28_c
-operator|->
-name|zc_top_ds
-argument_list|,
-name|zc
-operator|->
-name|zc_top_ds
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -1944,6 +1942,50 @@ name|zc
 operator|->
 name|zc_stat
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+if|if
+condition|(
+name|request
+operator|==
+name|ZFS_IOC_RECV
+condition|)
+name|strlcpy
+argument_list|(
+name|zc28_c
+operator|->
+name|zc_top_ds
+argument_list|,
+name|zc
+operator|->
+name|zc_value
+operator|+
+name|strlen
+argument_list|(
+name|zc
+operator|->
+name|zc_value
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|MAXPATHLEN
+operator|*
+literal|2
+operator|-
+name|strlen
+argument_list|(
+name|zc
+operator|->
+name|zc_value
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* zc_inject_record */
 name|zc28_c
 operator|->
@@ -2966,7 +3008,7 @@ argument|, request, struct zfs_cmd_deadman); 		break; 	case ZFS_CMD_COMPAT_V28: 
 literal|'Z'
 argument|, request, struct zfs_cmd_v28); 		break; 	case ZFS_CMD_COMPAT_V15: 		nc = zfs_ioctl_v28_to_v15[request]; 		zc_c = malloc(sizeof(zfs_cmd_v15_t)); 		ncmd = _IOWR(
 literal|'Z'
-argument|, nc, struct zfs_cmd_v15); 		break; 	default: 		return (EINVAL); 	}  	if (ZFS_IOCREQ(ncmd) == ZFS_IOC_COMPAT_FAIL) 		return (ENOTSUP);  	zfs_cmd_compat_put(zc, (caddr_t)zc_c, cflag); 	ret = ioctl(fd, ncmd, zc_c); 	if (cflag == ZFS_CMD_COMPAT_V15&& 	    nc == ZFS_IOC_POOL_IMPORT) 		ret = ioctl(fd, _IOWR(
+argument|, nc, struct zfs_cmd_v15); 		break; 	default: 		return (EINVAL); 	}  	if (ZFS_IOCREQ(ncmd) == ZFS_IOC_COMPAT_FAIL) 		return (ENOTSUP);  	zfs_cmd_compat_put(zc, (caddr_t)zc_c, request, cflag);  	ret = ioctl(fd, ncmd, zc_c); 	if (cflag == ZFS_CMD_COMPAT_V15&& 	    nc == ZFS_IOC_POOL_IMPORT) 		ret = ioctl(fd, _IOWR(
 literal|'Z'
 argument|, ZFS_IOC_POOL_CONFIGS, 		    struct zfs_cmd_v15), zc_c); 	zfs_cmd_compat_get(zc, (caddr_t)zc_c, cflag); 	free(zc_c);  	if (cflag == ZFS_CMD_COMPAT_V15) { 		switch (nc) { 		case ZFS_IOC_POOL_IMPORT: 		case ZFS_IOC_POOL_CONFIGS: 		case ZFS_IOC_POOL_STATS: 		case ZFS_IOC_POOL_TRYIMPORT: 			zfs_ioctl_compat_fix_stats(zc, nc); 			break; 		case
 literal|41
@@ -2992,7 +3034,7 @@ argument|zc->zc_cookie = POOL_SCAN_SCRUB; 			break; 		} 	}  	return (error); }  
 literal|41
 argument|:
 comment|/* ZFS_IOC_POOL_GET_PROPS (v15) */
-argument|zfs_ioctl_compat_pool_get_props(zc); 			break; 		} 	} }  nvlist_t * zfs_ioctl_compat_innvl(zfs_cmd_t *zc, nvlist_t * innvl, const int vec,     const int cflag) { 	nvlist_t *nvl, *tmpnvl; 	char *poolname, *snapname; 	int err;  	if (cflag == ZFS_CMD_COMPAT_NONE) 		goto out;  	switch (vec) { 	case ZFS_IOC_CREATE: 		nvl = fnvlist_alloc(); 		fnvlist_add_int32(nvl,
+argument|zfs_ioctl_compat_pool_get_props(zc); 			break; 		} 	} }  nvlist_t * zfs_ioctl_compat_innvl(zfs_cmd_t *zc, nvlist_t * innvl, const int vec,     const int cflag) { 	nvlist_t *nvl, *tmpnvl, *hnvl; 	nvpair_t *elem; 	char *poolname, *snapname; 	int err;  	if (cflag == ZFS_CMD_COMPAT_NONE) 		goto out;  	switch (vec) { 	case ZFS_IOC_CREATE: 		nvl = fnvlist_alloc(); 		fnvlist_add_int32(nvl,
 literal|"type"
 argument|, zc->zc_objset_type); 		if (innvl != NULL) { 			fnvlist_add_nvlist(nvl,
 literal|"props"
@@ -3034,6 +3076,36 @@ argument|zc->zc_name[strcspn(zc->zc_name,
 literal|"/@"
 argument|)] =
 literal|'\0'
+argument|; 		return (nvl); 	break; 	case ZFS_IOC_HOLD: 		nvl = fnvlist_alloc(); 		tmpnvl = fnvlist_alloc(); 		if (zc->zc_cleanup_fd != -
+literal|1
+argument|) 			fnvlist_add_int32(nvl,
+literal|"cleanup_fd"
+argument|, 			    (int32_t)zc->zc_cleanup_fd); 		if (zc->zc_cookie) { 			hnvl = fnvlist_alloc(); 			if (dmu_get_recursive_snaps_nvl(zc->zc_name, 			    zc->zc_value, hnvl) ==
+literal|0
+argument|) { 				elem = NULL; 				while ((elem = nvlist_next_nvpair(hnvl, 				    elem)) != NULL) { 					nvlist_add_string(tmpnvl, 					    nvpair_name(elem), zc->zc_string); 				} 			} 			nvlist_free(hnvl); 		} else { 			snapname = kmem_asprintf(
+literal|"%s@%s"
+argument|, zc->zc_name, 			    zc->zc_value); 			nvlist_add_string(tmpnvl, snapname, zc->zc_string); 			kmem_free(snapname, strlen(snapname +
+literal|1
+argument|)); 		} 		fnvlist_add_nvlist(nvl,
+literal|"holds"
+argument|, tmpnvl); 		nvlist_free(tmpnvl); 		if (innvl != NULL) 			nvlist_free(innvl);
+comment|/* strip dataset part from zc->zc_name */
+argument|zc->zc_name[strcspn(zc->zc_name,
+literal|"/@"
+argument|)] =
+literal|'\0'
+argument|; 		return (nvl); 	break; 	case ZFS_IOC_RELEASE: 		nvl = fnvlist_alloc(); 		tmpnvl = fnvlist_alloc(); 		if (zc->zc_cookie) { 			hnvl = fnvlist_alloc(); 			if (dmu_get_recursive_snaps_nvl(zc->zc_name, 			    zc->zc_value, hnvl) ==
+literal|0
+argument|) { 				elem = NULL; 				while ((elem = nvlist_next_nvpair(hnvl, 				    elem)) != NULL) { 					fnvlist_add_boolean(tmpnvl, 					    zc->zc_string); 					fnvlist_add_nvlist(nvl, 					    nvpair_name(elem), tmpnvl); 				} 			} 			nvlist_free(hnvl); 		} else { 			snapname = kmem_asprintf(
+literal|"%s@%s"
+argument|, zc->zc_name, 			    zc->zc_value); 			fnvlist_add_boolean(tmpnvl, zc->zc_string); 			fnvlist_add_nvlist(nvl, snapname, tmpnvl); 			kmem_free(snapname, strlen(snapname +
+literal|1
+argument|)); 		} 		nvlist_free(tmpnvl); 		if (innvl != NULL) 			nvlist_free(innvl);
+comment|/* strip dataset part from zc->zc_name */
+argument|zc->zc_name[strcspn(zc->zc_name,
+literal|"/@"
+argument|)] =
+literal|'\0'
 argument|; 		return (nvl); 	break; 	} out: 	return (innvl); }  nvlist_t * zfs_ioctl_compat_outnvl(zfs_cmd_t *zc, nvlist_t * outnvl, const int vec,     const int cflag) { 	nvlist_t *tmpnvl;  	if (cflag == ZFS_CMD_COMPAT_NONE) 		return (outnvl);  	switch (vec) { 	case ZFS_IOC_SPACE_SNAPS: 		(void) nvlist_lookup_uint64(outnvl,
 literal|"used"
 argument|,&zc->zc_cookie); 		(void) nvlist_lookup_uint64(outnvl,
@@ -3042,7 +3114,7 @@ argument|,&zc->zc_objset_type); 		(void) nvlist_lookup_uint64(outnvl,
 literal|"uncompressed"
 argument|,&zc->zc_perm_action); 		nvlist_free(outnvl);
 comment|/* return empty outnvl */
-argument|tmpnvl = fnvlist_alloc(); 		return (tmpnvl); 	break; 	case ZFS_IOC_CREATE: 	case ZFS_IOC_CLONE: 		nvlist_free(outnvl);
+argument|tmpnvl = fnvlist_alloc(); 		return (tmpnvl); 	break; 	case ZFS_IOC_CREATE: 	case ZFS_IOC_CLONE: 	case ZFS_IOC_HOLD: 	case ZFS_IOC_RELEASE: 		nvlist_free(outnvl);
 comment|/* return empty outnvl */
 argument|tmpnvl = fnvlist_alloc(); 		return (tmpnvl); 	break; 	}  	return (outnvl); }
 end_function

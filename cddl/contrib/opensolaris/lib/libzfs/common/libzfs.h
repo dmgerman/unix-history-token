@@ -2437,7 +2437,7 @@ specifier|extern
 name|int
 name|zfs_destroy_snaps_nvl
 parameter_list|(
-name|zfs_handle_t
+name|libzfs_handle_t
 modifier|*
 parameter_list|,
 name|nvlist_t
@@ -2665,13 +2665,7 @@ name|boolean_t
 parameter_list|,
 name|boolean_t
 parameter_list|,
-name|boolean_t
-parameter_list|,
 name|int
-parameter_list|,
-name|uint64_t
-parameter_list|,
-name|uint64_t
 parameter_list|)
 function_decl|;
 specifier|extern
