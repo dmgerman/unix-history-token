@@ -300,9 +300,8 @@ literal|"       [--get-vmcs-interruptibility]\n"
 literal|"       [--set-x2apic-state=<state>]\n"
 literal|"       [--get-x2apic-state]\n"
 literal|"       [--unassign-pptdev=<bus/slot/func>]\n"
-literal|"       [--set-lowmem=<memory below 4GB in units of MB>]\n"
+literal|"       [--set-mem=<memory in units of MB>]\n"
 literal|"       [--get-lowmem]\n"
-literal|"       [--set-highmem=<memory above 4GB in units of MB>]\n"
 literal|"       [--get-highmem]\n"
 argument_list|,
 name|progname
@@ -354,9 +353,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint64_t
-name|lowmem
-decl_stmt|,
-name|highmem
+name|memsize
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,9 +1443,7 @@ block|,
 comment|/* avoid collision with return values from getopt */
 name|VCPU
 block|,
-name|SET_LOWMEM
-block|,
-name|SET_HIGHMEM
+name|SET_MEM
 block|,
 name|SET_EFER
 block|,
@@ -1650,23 +1645,13 @@ name|VCPU
 block|}
 block|,
 block|{
-literal|"set-lowmem"
+literal|"set-mem"
 block|,
 name|REQ_ARG
 block|,
 literal|0
 block|,
-name|SET_LOWMEM
-block|}
-block|,
-block|{
-literal|"set-highmem"
-block|,
-name|REQ_ARG
-block|,
-literal|0
-block|,
-name|SET_HIGHMEM
+name|SET_MEM
 block|}
 block|,
 block|{
@@ -3106,9 +3091,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SET_LOWMEM
+name|SET_MEM
 case|:
-name|lowmem
+name|memsize
 operator|=
 name|atoi
 argument_list|(
@@ -3117,35 +3102,11 @@ argument_list|)
 operator|*
 name|MB
 expr_stmt|;
-name|lowmem
+name|memsize
 operator|=
 name|roundup
 argument_list|(
-name|lowmem
-argument_list|,
-literal|2
-operator|*
-name|MB
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SET_HIGHMEM
-case|:
-name|highmem
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|*
-name|MB
-expr_stmt|;
-name|highmem
-operator|=
-name|roundup
-argument_list|(
-name|highmem
+name|memsize
 argument_list|,
 literal|2
 operator|*
@@ -3707,7 +3668,7 @@ condition|(
 operator|!
 name|error
 operator|&&
-name|lowmem
+name|memsize
 condition|)
 name|error
 operator|=
@@ -3715,33 +3676,9 @@ name|vm_setup_memory
 argument_list|(
 name|ctx
 argument_list|,
-literal|0
+name|memsize
 argument_list|,
-name|lowmem
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-operator|&&
-name|highmem
-condition|)
-name|error
-operator|=
-name|vm_setup_memory
-argument_list|(
-name|ctx
-argument_list|,
-literal|4
-operator|*
-name|GB
-argument_list|,
-name|highmem
-argument_list|,
-name|NULL
+name|VM_MMAP_NONE
 argument_list|)
 expr_stmt|;
 if|if

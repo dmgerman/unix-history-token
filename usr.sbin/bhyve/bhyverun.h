@@ -99,20 +99,16 @@ name|vmname
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|lomem_sz
-decl_stmt|,
-name|himem_sz
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 modifier|*
 name|paddr_guest2host
 parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
 name|uintptr_t
 name|addr
 parameter_list|,

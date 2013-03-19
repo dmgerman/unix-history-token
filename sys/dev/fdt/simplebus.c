@@ -520,6 +520,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|simplebus
+argument_list|,
+name|simplebus
+argument_list|,
+name|simplebus_driver
+argument_list|,
+name|simplebus_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -532,7 +550,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ofw_bus_is_compatible_strict
+name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
@@ -553,7 +571,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -728,7 +746,6 @@ operator|.
 name|obd_name
 argument_list|)
 expr_stmt|;
-comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -785,7 +802,6 @@ operator|->
 name|di_res
 argument_list|)
 expr_stmt|;
-comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -844,7 +860,6 @@ operator|->
 name|di_res
 argument_list|)
 expr_stmt|;
-comment|/* XXX should unmap */
 name|ofw_bus_gen_destroy_devinfo
 argument_list|(
 operator|&
@@ -1104,6 +1119,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|bus
@@ -1259,20 +1278,6 @@ name|error
 decl_stmt|,
 name|rid
 decl_stmt|;
-if|if
-condition|(
-name|device_get_parent
-argument_list|(
-name|child
-argument_list|)
-operator|!=
-name|bus
-condition|)
-return|return
-operator|(
-name|ECHILD
-operator|)
-return|;
 name|di
 operator|=
 name|device_get_ivars

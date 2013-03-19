@@ -2318,7 +2318,12 @@ literal|0
 block|,
 operator|-
 literal|1
-block|, 	}
+block|,
+operator|.
+name|config_function
+operator|=
+name|puc_config_exar
+block|}
 block|,
 comment|/* The XR17V358 uses the 125MHz PCIe clock as its reference clock. */
 block|{

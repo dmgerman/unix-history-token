@@ -1629,6 +1629,8 @@ name|startaddr
 operator|=
 name|paddr_guest2host
 argument_list|(
+name|ctx
+argument_list|,
 name|MPTABLE_BASE
 argument_list|,
 name|MPTABLE_MAX_LENGTH
