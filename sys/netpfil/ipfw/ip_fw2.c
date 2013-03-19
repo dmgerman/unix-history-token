@@ -5122,7 +5122,7 @@ name|dst_port
 argument_list|)
 expr_stmt|;
 block|}
-name|IPFW_RLOCK
+name|IPFW_PF_RLOCK
 argument_list|(
 name|chain
 argument_list|)
@@ -5134,7 +5134,7 @@ name|V_ipfw_vnet_ready
 condition|)
 block|{
 comment|/* shutting down, leave NOW. */
-name|IPFW_RUNLOCK
+name|IPFW_PF_RUNLOCK
 argument_list|(
 name|chain
 argument_list|)
@@ -10316,7 +10316,7 @@ block|}
 end_else
 
 begin_expr_stmt
-name|IPFW_RUNLOCK
+name|IPFW_PF_RUNLOCK
 argument_list|(
 name|chain
 argument_list|)
