@@ -424,6 +424,12 @@ comment|/* arg1=called rule number */
 name|O_FORWARD_IP6
 block|,
 comment|/* fwd sockaddr_in6             */
+name|O_DSCP
+block|,
+comment|/* 2 u32 = DSCP mask */
+name|O_SETDSCP
+block|,
+comment|/* arg1=DSCP value */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}

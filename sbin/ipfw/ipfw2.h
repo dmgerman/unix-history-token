@@ -359,6 +359,8 @@ block|,
 name|TOK_LOOKUP
 block|,
 name|TOK_SOCKARG
+block|,
+name|TOK_SETDSCP
 block|, }
 enum|;
 end_enum
