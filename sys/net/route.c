@@ -6151,7 +6151,7 @@ name|NULL
 condition|)
 comment|/* this table doesn't exist but others might */
 continue|continue;
-name|RADIX_NODE_HEAD_LOCK
+name|RADIX_NODE_HEAD_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6276,7 +6276,7 @@ name|dst
 argument_list|)
 operator|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RADIX_NODE_HEAD_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
