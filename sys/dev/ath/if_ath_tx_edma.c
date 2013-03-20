@@ -991,6 +991,16 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+comment|/* link descriptor */
+operator|*
+name|txq
+operator|->
+name|axq_link
+operator|=
+name|bf
+operator|->
+name|bf_daddr
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
