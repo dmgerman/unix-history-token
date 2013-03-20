@@ -20809,17 +20809,10 @@ name|len
 decl_stmt|;
 name|uint32_t
 name|a
-decl_stmt|,
-name|mask
 decl_stmt|;
 name|uint32_t
 name|tables_max
 decl_stmt|;
-name|mask
-operator|=
-literal|0
-expr_stmt|;
-comment|// XXX uninitialized ?
 name|len
 operator|=
 sizeof|sizeof
