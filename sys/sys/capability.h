@@ -266,6 +266,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CAP_CHFLAGSAT
+value|CAP_FCHFLAGS
+end_define
+
+begin_define
+define|#
+directive|define
 name|CAP_FCHMOD
 value|0x0000000000000400ULL
 end_define
