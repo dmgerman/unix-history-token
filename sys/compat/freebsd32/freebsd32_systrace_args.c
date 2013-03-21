@@ -1333,8 +1333,8 @@ name|p
 operator|->
 name|path
 expr_stmt|;
-comment|/* char * */
-name|iarg
+comment|/* const char * */
+name|uarg
 index|[
 literal|1
 index|]
@@ -1343,7 +1343,7 @@ name|p
 operator|->
 name|flags
 expr_stmt|;
-comment|/* int */
+comment|/* u_long */
 operator|*
 name|n_args
 operator|=
@@ -1373,7 +1373,7 @@ operator|->
 name|fd
 expr_stmt|;
 comment|/* int */
-name|iarg
+name|uarg
 index|[
 literal|1
 index|]
@@ -1382,7 +1382,7 @@ name|p
 operator|->
 name|flags
 expr_stmt|;
-comment|/* int */
+comment|/* u_long */
 operator|*
 name|n_args
 operator|=
@@ -10109,7 +10109,7 @@ operator|->
 name|path
 expr_stmt|;
 comment|/* const char * */
-name|iarg
+name|uarg
 index|[
 literal|1
 index|]
@@ -10118,7 +10118,7 @@ name|p
 operator|->
 name|flags
 expr_stmt|;
-comment|/* int */
+comment|/* u_long */
 operator|*
 name|n_args
 operator|=
@@ -18236,7 +18236,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18244,7 +18244,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"u_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -18274,7 +18274,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"u_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -24465,7 +24465,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"u_long"
 expr_stmt|;
 break|break;
 default|default:
