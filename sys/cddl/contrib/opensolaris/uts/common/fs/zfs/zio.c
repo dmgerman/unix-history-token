@@ -12215,6 +12215,10 @@ argument_list|,
 name|zio
 operator|->
 name|io_size
+argument_list|,
+name|zio
+operator|->
+name|io_txg
 argument_list|)
 expr_stmt|;
 return|return

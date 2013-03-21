@@ -80,6 +80,9 @@ name|offset
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|,
+name|uint64_t
+name|txg
 parameter_list|)
 function_decl|;
 specifier|extern

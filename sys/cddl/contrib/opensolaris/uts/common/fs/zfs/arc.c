@@ -7936,6 +7936,8 @@ argument_list|,
 name|hdr
 operator|->
 name|b_size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|list_remove
@@ -16326,6 +16328,8 @@ argument_list|,
 name|hdr
 operator|->
 name|b_size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|list_remove
@@ -19875,6 +19879,8 @@ argument_list|,
 name|ab
 operator|->
 name|b_size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|kmem_free
