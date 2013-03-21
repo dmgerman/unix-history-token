@@ -1997,6 +1997,10 @@ name|setnsize
 operator|=
 literal|0
 expr_stmt|;
+name|nsize
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|vap
