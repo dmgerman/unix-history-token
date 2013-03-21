@@ -78,7 +78,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|atomic_subtract_64(&(tm)->tm_bytes, (size))
+value|atomic_add_64(&(tm)->tm_bytes, -(size))
 end_define
 
 begin_define
