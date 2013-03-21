@@ -47,6 +47,13 @@ name|NANOSEC
 value|1000000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|TIME_MAX
+value|LLONG_MAX
+end_define
+
 begin_typedef
 typedef|typedef
 name|longlong_t

@@ -31,6 +31,12 @@ directive|include
 file|<sys/trim_map.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_comment
 comment|/*  * Calculate the zio end, upgrading based on ashift which would be  * done by zio_vdev_io_start.  *  * This makes free range consolidation much more effective  * than it would otherwise be as well as ensuring that entire  * blocks are invalidated by writes.  */
 end_comment
@@ -107,6 +113,10 @@ name|uint64_t
 name|ts_txg
 decl_stmt|;
 comment|/* Segment creation txg. */
+name|hrtime_t
+name|ts_time
+decl_stmt|;
+comment|/* Segment creation time. */
 block|}
 name|trim_seg_t
 typedef|;
@@ -168,6 +178,47 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Delay TRIMs by that many TXGs."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|trim_l2arc_limit
+init|=
+literal|30
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.trim_l2arc_limit"
+argument_list|,
+operator|&
+name|trim_l2arc_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trim_l2arc_limit
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|trim_l2arc_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Delay TRIMs by this many seconds for cache devices."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -797,6 +848,9 @@ name|merge_before
 decl_stmt|,
 name|merge_after
 decl_stmt|;
+name|hrtime_t
+name|time
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|MUTEX_HELD
@@ -814,6 +868,11 @@ name|start
 operator|<
 name|end
 argument_list|)
+expr_stmt|;
+name|time
+operator|=
+name|gethrtime
+argument_list|()
 expr_stmt|;
 name|tsearch
 operator|.
@@ -1068,6 +1127,12 @@ name|ts_txg
 operator|=
 name|txg
 expr_stmt|;
+name|ts
+operator|->
+name|ts_time
+operator|=
+name|time
+expr_stmt|;
 name|avl_insert
 argument_list|(
 operator|&
@@ -1195,6 +1260,14 @@ operator|=
 name|ts
 operator|->
 name|ts_txg
+expr_stmt|;
+name|nts
+operator|->
+name|ts_time
+operator|=
+name|ts
+operator|->
+name|ts_time
 expr_stmt|;
 name|ts
 operator|->
@@ -1843,7 +1916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the oldest segment (the one with the lowest txg) or false if  * the list is empty or the first element's txg is greater than txg given  * as function argument.  */
+comment|/*  * Return the oldest segment (the one with the lowest txg) or false if  * the list is empty or the first element's txg is greater than txg given  * as function argument, or the first element's time is greater than time  * given as function argument  */
 end_comment
 
 begin_function
@@ -1858,6 +1931,9 @@ name|tm
 parameter_list|,
 name|uint64_t
 name|txg
+parameter_list|,
+name|hrtime_t
+name|time
 parameter_list|)
 block|{
 name|trim_seg_t
@@ -1896,6 +1972,12 @@ operator|->
 name|ts_txg
 operator|<=
 name|txg
+operator|&&
+name|ts
+operator|->
+name|ts_time
+operator|<=
+name|time
 condition|)
 return|return
 operator|(
@@ -1947,6 +2029,9 @@ name|size
 decl_stmt|,
 name|txglimit
 decl_stmt|;
+name|hrtime_t
+name|timelimit
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|vd
@@ -1963,6 +2048,33 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_isl2cache
+condition|)
+block|{
+name|timelimit
+operator|=
+name|gethrtime
+argument_list|()
+operator|-
+name|trim_l2arc_limit
+operator|*
+name|NANOSEC
+expr_stmt|;
+name|txglimit
+operator|=
+name|UINT64_MAX
+expr_stmt|;
+block|}
+else|else
+block|{
+name|timelimit
+operator|=
+name|TIME_MAX
+expr_stmt|;
 name|txglimit
 operator|=
 name|MIN
@@ -1980,6 +2092,7 @@ argument_list|)
 operator|-
 name|trim_txg_limit
 expr_stmt|;
+block|}
 name|mutex_enter
 argument_list|(
 operator|&
@@ -1988,7 +2101,7 @@ operator|->
 name|tm_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Loop until we send all frees up to the txglimit. 	 */
+comment|/* 	 * Loop until we send all frees up to the txglimit 	 * or time limit if this is a cache device. 	 */
 while|while
 condition|(
 operator|(
@@ -1999,6 +2112,8 @@ argument_list|(
 name|tm
 argument_list|,
 name|txglimit
+argument_list|,
+name|timelimit
 argument_list|)
 operator|)
 operator|!=
