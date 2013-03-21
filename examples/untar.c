@@ -474,7 +474,7 @@ condition|(
 operator|(
 name|r
 operator|=
-name|archive_read_open_file
+name|archive_read_open_filename
 argument_list|(
 name|a
 argument_list|,
@@ -486,7 +486,7 @@ operator|)
 condition|)
 name|fail
 argument_list|(
-literal|"archive_read_open_file()"
+literal|"archive_read_open_filename()"
 argument_list|,
 name|archive_error_string
 argument_list|(

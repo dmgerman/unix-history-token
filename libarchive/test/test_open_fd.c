@@ -49,6 +49,23 @@ name|__BORLANDC__
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lseek
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|lseek
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -184,7 +201,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)

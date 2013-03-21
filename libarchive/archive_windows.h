@@ -44,6 +44,24 @@ begin_comment
 comment|/* Start of configuration for native Win32  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINGW_HAS_SECURE_API
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MINGW_HAS_SECURE_API
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -296,6 +314,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|fstat
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|fstat
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -312,6 +347,23 @@ argument_list|(
 name|__BORLANDC__
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lseek
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|lseek
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -380,6 +432,23 @@ directive|define
 name|setmode
 value|_setmode
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|stat
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|stat
+end_undef
 
 begin_endif
 endif|#
@@ -1530,8 +1599,8 @@ specifier|extern
 name|pid_t
 name|__la_waitpid
 parameter_list|(
-name|pid_t
-name|wpid
+name|HANDLE
+name|child
 parameter_list|,
 name|int
 modifier|*

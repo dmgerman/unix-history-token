@@ -675,6 +675,13 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buff
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* ISO9660 format: Create a new archive in memory. */
 name|assert
 argument_list|(
@@ -706,7 +713,7 @@ name|a
 argument_list|,
 literal|0
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -745,6 +752,11 @@ name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buff
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2217,6 +2229,13 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buff
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* ISO9660 format: Create a new archive in memory. */
 name|assert
 argument_list|(
@@ -2248,7 +2267,7 @@ name|a
 argument_list|,
 literal|0
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -2287,6 +2306,11 @@ name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buff
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3983,6 +4007,13 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buff
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* ISO9660 format: Create a new archive in memory. */
 name|assert
 argument_list|(
@@ -4014,7 +4045,7 @@ name|a
 argument_list|,
 literal|0
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -4053,6 +4084,11 @@ name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buff
 argument_list|)
 expr_stmt|;
 return|return;

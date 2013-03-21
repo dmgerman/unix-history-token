@@ -90,7 +90,7 @@ name|assertA
 argument_list|(
 literal|0
 operator|==
-name|archive_read_open_file
+name|archive_read_open_filename
 argument_list|(
 name|a
 argument_list|,

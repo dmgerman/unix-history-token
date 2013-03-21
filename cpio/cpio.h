@@ -42,6 +42,10 @@ modifier|*
 name|argument
 decl_stmt|;
 comment|/* Options */
+name|int
+name|add_filter
+decl_stmt|;
+comment|/* --uuencode */
 specifier|const
 name|char
 modifier|*
@@ -232,17 +236,27 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|OPTION_INSECURE
+name|OPTION_B64ENCODE
 init|=
 literal|1
 block|,
+name|OPTION_GRZIP
+block|,
+name|OPTION_INSECURE
+block|,
+name|OPTION_LRZIP
+block|,
 name|OPTION_LZMA
+block|,
+name|OPTION_LZOP
 block|,
 name|OPTION_NO_PRESERVE_OWNER
 block|,
 name|OPTION_PRESERVE_OWNER
 block|,
 name|OPTION_QUIET
+block|,
+name|OPTION_UUENCODE
 block|,
 name|OPTION_VERSION
 block|}

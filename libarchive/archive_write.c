@@ -993,6 +993,20 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+if|if
+condition|(
+name|f
+operator|->
+name|write
+operator|==
+name|NULL
+condition|)
+comment|/* If unset, a fatal error has already ocuured, so this filter 		 * didn't open. We cannot write anything. */
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 name|r
 operator|=
 call|(
@@ -2083,6 +2097,13 @@ name|free
 argument_list|(
 name|state
 argument_list|)
+expr_stmt|;
+comment|/* Clear the close handler myself not to be called again. */
+name|f
+operator|->
+name|close
+operator|=
+name|NULL
 expr_stmt|;
 name|a
 operator|->

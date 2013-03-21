@@ -7212,6 +7212,11 @@ name|rb_ops_wcs
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
+name|rb_ops_wcs
+expr_stmt|;
 name|pathname
 operator|=
 name|archive_entry_pathname
@@ -7944,6 +7949,11 @@ name|rb_ops_wcs
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
+name|rb_ops_wcs
+expr_stmt|;
 name|pathname
 operator|=
 name|archive_entry_pathname
@@ -8787,6 +8797,10 @@ operator|->
 name|size
 condition|)
 block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|ids
@@ -8808,9 +8822,7 @@ name|size
 operator|*=
 literal|2
 expr_stmt|;
-name|ids
-operator|->
-name|ids
+name|p
 operator|=
 name|realloc
 argument_list|(
@@ -8833,9 +8845,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ids
-operator|->
-name|ids
+name|p
 operator|==
 name|NULL
 condition|)
@@ -8847,6 +8857,16 @@ name|a
 argument_list|)
 operator|)
 return|;
+name|ids
+operator|->
+name|ids
+operator|=
+operator|(
+name|int64_t
+operator|*
+operator|)
+name|p
+expr_stmt|;
 block|}
 comment|/* Find an insert point. */
 for|for
@@ -9011,6 +9031,9 @@ literal|0
 expr_stmt|;
 name|b
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|ids
 operator|->
 name|count

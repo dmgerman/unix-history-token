@@ -761,6 +761,9 @@ operator|)
 return|;
 name|r
 operator|=
+operator|(
+name|int
+operator|)
 name|archive_write_data_block
 argument_list|(
 name|aw

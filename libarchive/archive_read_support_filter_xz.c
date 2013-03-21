@@ -550,6 +550,12 @@ name|NULL
 expr_stmt|;
 name|bidder
 operator|->
+name|name
+operator|=
+literal|"xz"
+expr_stmt|;
+name|bidder
+operator|->
 name|bid
 operator|=
 name|xz_bidder_bid
@@ -590,7 +596,7 @@ name|_a
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Using external unxz program for xz decompression"
+literal|"Using external xz program for xz decompression"
 argument_list|)
 expr_stmt|;
 return|return
@@ -698,6 +704,12 @@ name|NULL
 expr_stmt|;
 name|bidder
 operator|->
+name|name
+operator|=
+literal|"lzma"
+expr_stmt|;
+name|bidder
+operator|->
 name|bid
 operator|=
 name|lzma_bidder_bid
@@ -748,7 +760,7 @@ name|_a
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Using external unlzma program for lzma decompression"
+literal|"Using external lzma program for lzma decompression"
 argument_list|)
 expr_stmt|;
 return|return
@@ -853,6 +865,12 @@ operator|->
 name|data
 operator|=
 name|NULL
+expr_stmt|;
+name|bidder
+operator|->
+name|name
+operator|=
+literal|"lzip"
 expr_stmt|;
 name|bidder
 operator|->
@@ -1479,7 +1497,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_XZ
+name|ARCHIVE_FILTER_XZ
 expr_stmt|;
 name|self
 operator|->
@@ -1513,7 +1531,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZMA
+name|ARCHIVE_FILTER_LZMA
 expr_stmt|;
 name|self
 operator|->
@@ -1547,7 +1565,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 expr_stmt|;
 name|self
 operator|->
@@ -1911,7 +1929,7 @@ name|self
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 condition|)
 block|{
 comment|/* 		 * We have to read a lzip header and use it to initialize 		 * compression library, thus we cannot initialize the 		 * library for lzip here. 		 */
@@ -1941,7 +1959,7 @@ name|self
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_XZ
+name|ARCHIVE_FILTER_XZ
 condition|)
 name|ret
 operator|=
@@ -2944,7 +2962,7 @@ name|self
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 condition|)
 block|{
 name|state
@@ -3120,7 +3138,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZMA
+name|ARCHIVE_FILTER_LZMA
 expr_stmt|;
 name|self
 operator|->
@@ -3861,7 +3879,7 @@ name|__archive_read_program
 argument_list|(
 name|self
 argument_list|,
-literal|"unlzma"
+literal|"lzma -d -qq"
 argument_list|)
 expr_stmt|;
 comment|/* Note: We set the format here even if __archive_read_program() 	 * above fails.  We do, after all, know what the format is 	 * even if we weren't able to read it. */
@@ -3869,7 +3887,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZMA
+name|ARCHIVE_FILTER_LZMA
 expr_stmt|;
 name|self
 operator|->
@@ -3914,7 +3932,7 @@ name|__archive_read_program
 argument_list|(
 name|self
 argument_list|,
-literal|"unxz"
+literal|"xz -d -qq"
 argument_list|)
 expr_stmt|;
 comment|/* Note: We set the format here even if __archive_read_program() 	 * above fails.  We do, after all, know what the format is 	 * even if we weren't able to read it. */
@@ -3922,7 +3940,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_XZ
+name|ARCHIVE_FILTER_XZ
 expr_stmt|;
 name|self
 operator|->
@@ -3958,7 +3976,7 @@ name|__archive_read_program
 argument_list|(
 name|self
 argument_list|,
-literal|"unlzip"
+literal|"lzip -d -q"
 argument_list|)
 expr_stmt|;
 comment|/* Note: We set the format here even if __archive_read_program() 	 * above fails.  We do, after all, know what the format is 	 * even if we weren't able to read it. */
@@ -3966,7 +3984,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 expr_stmt|;
 name|self
 operator|->

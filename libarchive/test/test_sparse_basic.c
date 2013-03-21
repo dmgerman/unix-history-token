@@ -571,7 +571,8 @@ name|DWORD
 name|w
 decl_stmt|,
 name|wr
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|size
 decl_stmt|;
 name|size
@@ -604,6 +605,9 @@ expr_stmt|;
 else|else
 name|w
 operator|=
+operator|(
+name|DWORD
+operator|)
 name|size
 expr_stmt|;
 name|assert
@@ -777,6 +781,18 @@ operator|)
 name|path
 expr_stmt|;
 comment|/* UNUSED */
+name|memset
+argument_list|(
+name|buff
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buff
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|create_sparse_file
 argument_list|(
 name|testfile

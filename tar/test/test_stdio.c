@@ -343,10 +343,13 @@ argument_list|,
 literal|"xvOf.out"
 argument_list|)
 expr_stmt|;
-name|assert
+name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|s
-operator|=
+argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;

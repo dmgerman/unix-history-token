@@ -742,6 +742,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|pathname
+operator|==
+name|NULL
+operator|||
 operator|*
 name|pathname
 operator|==

@@ -75,7 +75,7 @@ name|assertA
 argument_list|(
 literal|0
 operator|==
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -212,7 +212,7 @@ name|assertA
 argument_list|(
 literal|0
 operator|==
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)

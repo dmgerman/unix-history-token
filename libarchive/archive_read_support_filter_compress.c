@@ -411,6 +411,12 @@ name|NULL
 expr_stmt|;
 name|bidder
 operator|->
+name|name
+operator|=
+literal|"compress (.Z)"
+expr_stmt|;
+name|bidder
+operator|->
 name|bid
 operator|=
 name|compress_bidder_bid
@@ -580,7 +586,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_COMPRESS
+name|ARCHIVE_FILTER_COMPRESS
 expr_stmt|;
 name|self
 operator|->

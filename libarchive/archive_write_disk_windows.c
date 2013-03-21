@@ -7189,6 +7189,7 @@ name|final_mode
 operator|&
 literal|0777
 operator|&
+operator|~
 name|a
 operator|->
 name|user_umask

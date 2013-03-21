@@ -533,6 +533,8 @@ name|archive_read_format_ar_read_data
 argument_list|,
 name|archive_read_format_ar_skip
 argument_list|,
+name|NULL
+argument_list|,
 name|archive_read_format_ar_cleanup
 argument_list|)
 expr_stmt|;

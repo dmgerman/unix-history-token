@@ -206,7 +206,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

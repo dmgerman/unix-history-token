@@ -27,6 +27,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<direct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<windows.h>
 end_include
 
@@ -190,6 +196,9 @@ name|GetFullPathNameA
 argument_list|(
 name|tpath
 argument_list|,
+operator|(
+name|DWORD
+operator|)
 name|l
 argument_list|,
 name|fp1
@@ -1179,6 +1188,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1242,6 +1254,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1305,6 +1320,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1368,6 +1386,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1431,6 +1452,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1494,6 +1518,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1566,6 +1593,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2
@@ -1638,6 +1668,9 @@ name|assertFileContents
 argument_list|(
 name|fp2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|fp2

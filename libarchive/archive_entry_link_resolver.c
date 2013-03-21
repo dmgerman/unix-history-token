@@ -910,6 +910,14 @@ operator|*
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|le
+operator|==
+name|NULL
+condition|)
+comment|/* XXX We should return an error code XXX */
+return|return;
 name|le
 operator|->
 name|entry

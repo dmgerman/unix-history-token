@@ -485,7 +485,7 @@ operator|*
 operator|)
 name|client_data
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|bytes_read
 decl_stmt|;
 operator|*
@@ -518,7 +518,16 @@ if|if
 condition|(
 name|bytes_read
 operator|<
-literal|0
+name|mine
+operator|->
+name|block_size
+operator|&&
+name|ferror
+argument_list|(
+name|mine
+operator|->
+name|f
+argument_list|)
 condition|)
 block|{
 name|archive_set_error

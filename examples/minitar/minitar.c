@@ -811,7 +811,7 @@ case|:
 case|case
 literal|'y'
 case|:
-name|archive_write_set_compression_bzip2
+name|archive_write_add_filter_bzip2
 argument_list|(
 name|a
 argument_list|)
@@ -825,7 +825,7 @@ name|NO_COMPRESS_CREATE
 case|case
 literal|'Z'
 case|:
-name|archive_write_set_compression_compress
+name|archive_write_add_filter_compress
 argument_list|(
 name|a
 argument_list|)
@@ -839,7 +839,7 @@ name|NO_GZIP_CREATE
 case|case
 literal|'z'
 case|:
-name|archive_write_set_compression_gzip
+name|archive_write_add_filter_gzip
 argument_list|(
 name|a
 argument_list|)
@@ -848,7 +848,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -875,7 +875,7 @@ name|filename
 operator|=
 name|NULL
 expr_stmt|;
-name|archive_write_open_file
+name|archive_write_open_filename
 argument_list|(
 name|a
 argument_list|,
@@ -1346,7 +1346,7 @@ condition|(
 operator|(
 name|r
 operator|=
-name|archive_read_open_file
+name|archive_read_open_filename
 argument_list|(
 name|a
 argument_list|,

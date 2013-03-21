@@ -424,29 +424,24 @@ name|fmtbuff_length
 operator|*=
 literal|2
 expr_stmt|;
-else|else
-block|{
-name|int
-name|old_length
-init|=
+elseif|else
+if|if
+condition|(
 name|fmtbuff_length
-decl_stmt|;
+operator|<
+literal|1000000
+condition|)
 name|fmtbuff_length
 operator|+=
 name|fmtbuff_length
 operator|/
 literal|4
 expr_stmt|;
-if|if
-condition|(
-name|old_length
-operator|>
-name|fmtbuff_length
-condition|)
+else|else
 block|{
 name|length
 operator|=
-name|old_length
+name|fmtbuff_length
 expr_stmt|;
 name|fmtbuff_heap
 index|[
@@ -458,7 +453,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 break|break;
-block|}
 block|}
 name|free
 argument_list|(
@@ -526,8 +520,8 @@ break|break;
 block|}
 block|}
 comment|/* Note: mbrtowc() has a cleaner API, but mbtowc() seems a bit 	 * more portable, so we use that here instead. */
-name|n
-operator|=
+if|if
+condition|(
 name|mbtowc
 argument_list|(
 name|NULL
@@ -536,8 +530,20 @@ name|NULL
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 comment|/* Reset the shift state. */
+comment|/* mbtowc() should never fail in practice, but 		 * handle the theoretical error anyway. */
+name|free
+argument_list|(
+name|fmtbuff_heap
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Write data, expanding unprintable characters. */
 name|p
 operator|=
@@ -724,12 +730,6 @@ name|outbuff
 argument_list|)
 expr_stmt|;
 comment|/* If we allocated a heap-based formatting buffer, free it now. */
-if|if
-condition|(
-name|fmtbuff_heap
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|fmtbuff_heap
@@ -1586,7 +1586,15 @@ argument_list|)
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|HAVE_REGEX_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_PCREPOSIX_H
+argument_list|)
 name|char
 modifier|*
 name|subst_name

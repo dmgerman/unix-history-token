@@ -280,6 +280,8 @@ name|archive_read_format_raw_read_data
 argument_list|,
 name|archive_read_format_raw_read_data_skip
 argument_list|,
+name|NULL
+argument_list|,
 name|archive_read_format_raw_cleanup
 argument_list|)
 expr_stmt|;
@@ -634,6 +636,9 @@ name|offset
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|avail
 operator|)
 return|;

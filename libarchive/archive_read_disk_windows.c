@@ -2715,6 +2715,9 @@ argument_list|)
 expr_stmt|;
 name|buffbytes
 operator|=
+operator|(
+name|DWORD
+operator|)
 name|olp
 operator|->
 name|buff_size
@@ -3165,6 +3168,8 @@ name|bytes_transferred
 decl_stmt|;
 name|int
 name|r
+init|=
+name|ARCHIVE_FATAL
 decl_stmt|;
 name|archive_check_magic
 argument_list|(
@@ -3304,6 +3309,9 @@ name|bytes_transferred
 condition|)
 name|bytes_transferred
 operator|=
+operator|(
+name|DWORD
+operator|)
 name|olp
 operator|->
 name|bytes_transferred
@@ -6007,7 +6015,7 @@ name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
-literal|"Can't allocate direcotry traversal data"
+literal|"Can't allocate directory traversal data"
 argument_list|)
 expr_stmt|;
 name|a
@@ -6218,6 +6226,10 @@ block|{
 name|size_t
 name|s
 decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
 name|s
 operator|=
 name|t
@@ -6226,9 +6238,7 @@ name|max_filesystem_id
 operator|*
 literal|2
 expr_stmt|;
-name|t
-operator|->
-name|filesystem_table
+name|p
 operator|=
 name|realloc
 argument_list|(
@@ -6249,9 +6259,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|t
-operator|->
-name|filesystem_table
+name|p
 operator|==
 name|NULL
 condition|)
@@ -6276,8 +6284,22 @@ return|;
 block|}
 name|t
 operator|->
+name|filesystem_table
+operator|=
+operator|(
+expr|struct
+name|filesystem
+operator|*
+operator|)
+name|p
+expr_stmt|;
+name|t
+operator|->
 name|allocated_filesytem
 operator|=
+operator|(
+name|int
+operator|)
 name|s
 expr_stmt|;
 block|}
@@ -10736,16 +10758,9 @@ index|]
 operator|.
 name|buff
 argument_list|,
-name|t
-operator|->
-name|ol
-index|[
-name|i
-index|]
-operator|.
-name|buff_size
+literal|0
 argument_list|,
-name|MEM_DECOMMIT
+name|MEM_RELEASE
 argument_list|)
 expr_stmt|;
 name|CloseHandle
@@ -11700,6 +11715,9 @@ argument_list|)
 argument_list|,
 name|outranges
 argument_list|,
+operator|(
+name|DWORD
+operator|)
 name|outranges_size
 argument_list|,
 operator|&

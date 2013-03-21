@@ -332,12 +332,14 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|archive_compression
+name|archive_filter_code
 argument_list|(
 name|a
+argument_list|,
+literal|0
 argument_list|)
 operator|==
-name|ARCHIVE_COMPRESSION_BZIP2
+name|ARCHIVE_FILTER_BZIP2
 argument_list|)
 expr_stmt|;
 name|assert

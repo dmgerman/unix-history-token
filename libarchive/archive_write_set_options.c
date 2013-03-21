@@ -331,8 +331,16 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ARCHIVE_FAILED
+name|m
+operator|==
+name|NULL
 operator|)
+condition|?
+name|ARCHIVE_FAILED
+else|:
+name|ARCHIVE_WARN
+operator|-
+literal|1
 return|;
 comment|/* If the format name didn't match, return a special code for 	 * _archive_set_option[s]. */
 if|if
