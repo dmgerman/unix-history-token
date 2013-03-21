@@ -4975,7 +4975,7 @@ argument_list|(
 operator|&
 name|os
 operator|->
-name|os_lock
+name|os_user_ptr_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -5000,7 +5000,7 @@ argument_list|(
 operator|&
 name|os
 operator|->
-name|os_lock
+name|os_user_ptr_lock
 argument_list|)
 expr_stmt|;
 name|tb
@@ -5083,7 +5083,7 @@ argument_list|(
 operator|&
 name|os
 operator|->
-name|os_lock
+name|os_user_ptr_lock
 argument_list|)
 expr_stmt|;
 name|avl_create

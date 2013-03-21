@@ -312,7 +312,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|refcount_create
+comment|/* 	 * Every dbuf has a reference, and dropping a tracked reference is 	 * O(number of references), so don't track dn_holds. 	 */
+name|refcount_create_untracked
 argument_list|(
 operator|&
 name|dn

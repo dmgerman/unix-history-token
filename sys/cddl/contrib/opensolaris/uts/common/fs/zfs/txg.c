@@ -2381,6 +2381,15 @@ name|dp
 operator|->
 name|dp_tx
 decl_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_pool_config_held
+argument_list|(
+name|dp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -2520,6 +2529,15 @@ name|dp
 operator|->
 name|dp_tx
 decl_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_pool_config_held
+argument_list|(
+name|dp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -2832,11 +2850,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add an entry to the list.  * Returns 0 if it's a new entry, 1 if it's already there.  */
+comment|/*  * Add an entry to the list (unless it's already on the list).  * Returns B_TRUE if it was actually added.  */
 end_comment
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_add
 parameter_list|(
 name|txg_list_t
@@ -2878,8 +2896,8 @@ operator|->
 name|tl_offset
 operator|)
 decl_stmt|;
-name|int
-name|already_on_list
+name|boolean_t
+name|add
 decl_stmt|;
 name|mutex_enter
 argument_list|(
@@ -2889,19 +2907,22 @@ operator|->
 name|tl_lock
 argument_list|)
 expr_stmt|;
-name|already_on_list
+name|add
 operator|=
+operator|(
 name|tn
 operator|->
 name|tn_member
 index|[
 name|t
 index|]
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|already_on_list
+name|add
 condition|)
 block|{
 name|tn
@@ -2947,18 +2968,18 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|already_on_list
+name|add
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Add an entry to the end of the list (walks list to find end).  * Returns 0 if it's a new entry, 1 if it's already there.  */
+comment|/*  * Add an entry to the end of the list, unless it's already on the list.  * (walks list to find end)  * Returns B_TRUE if it was actually added.  */
 end_comment
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_add_tail
 parameter_list|(
 name|txg_list_t
@@ -3000,8 +3021,8 @@ operator|->
 name|tl_offset
 operator|)
 decl_stmt|;
-name|int
-name|already_on_list
+name|boolean_t
+name|add
 decl_stmt|;
 name|mutex_enter
 argument_list|(
@@ -3011,19 +3032,22 @@ operator|->
 name|tl_lock
 argument_list|)
 expr_stmt|;
-name|already_on_list
+name|add
 operator|=
+operator|(
 name|tn
 operator|->
 name|tn_member
 index|[
 name|t
 index|]
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|already_on_list
+name|add
 condition|)
 block|{
 name|txg_node_t
@@ -3096,7 +3120,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|already_on_list
+name|add
 operator|)
 return|;
 block|}
@@ -3372,7 +3396,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_member
 parameter_list|(
 name|txg_list_t
@@ -3422,6 +3446,8 @@ name|tn_member
 index|[
 name|t
 index|]
+operator|!=
+literal|0
 operator|)
 return|;
 block|}

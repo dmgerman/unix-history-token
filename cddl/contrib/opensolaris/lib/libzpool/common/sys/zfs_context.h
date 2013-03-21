@@ -120,6 +120,12 @@ directive|include
 file|<fsshare.h>
 include|#
 directive|include
+file|<pthread.h>
+include|#
+directive|include
+file|<sys/debug.h>
+include|#
+directive|include
 file|<sys/note.h>
 include|#
 directive|include
@@ -758,6 +764,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|rw_lock_held(x)
+undef|#
+directive|undef
+name|RW_LOCK_HELD
+define|#
+directive|define
+name|RW_LOCK_HELD
+parameter_list|(
+name|x
+parameter_list|)
+value|(RW_READ_HELD(x) || RW_WRITE_HELD(x))
 specifier|extern
 name|void
 name|rw_init
@@ -848,6 +864,15 @@ value|do { } while (0)
 specifier|extern
 name|uid_t
 name|crgetuid
+parameter_list|(
+name|cred_t
+modifier|*
+name|cr
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uid_t
+name|crgetruid
 parameter_list|(
 name|cred_t
 modifier|*
@@ -967,6 +992,39 @@ modifier|*
 name|cv
 parameter_list|)
 function_decl|;
+comment|/*  * Thread-specific data  */
+define|#
+directive|define
+name|tsd_get
+parameter_list|(
+name|k
+parameter_list|)
+value|pthread_getspecific(k)
+define|#
+directive|define
+name|tsd_set
+parameter_list|(
+name|k
+parameter_list|,
+name|v
+parameter_list|)
+value|pthread_setspecific(k, v)
+define|#
+directive|define
+name|tsd_create
+parameter_list|(
+name|kp
+parameter_list|,
+name|d
+parameter_list|)
+value|pthread_key_create(kp, d)
+define|#
+directive|define
+name|tsd_destroy
+parameter_list|(
+name|kp
+parameter_list|)
+comment|/* nothing */
 comment|/*  * Kernel memory  */
 define|#
 directive|define
@@ -2094,7 +2152,7 @@ name|strfree
 parameter_list|(
 name|str
 parameter_list|)
-value|kmem_free((str), strlen(str)+1)
+value|kmem_free((str), strlen(str) + 1)
 comment|/*  * Hostname information  */
 specifier|extern
 name|struct

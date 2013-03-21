@@ -95,6 +95,9 @@ block|{
 name|kmutex_t
 name|rc_mtx
 decl_stmt|;
+name|boolean_t
+name|rc_tracked
+decl_stmt|;
 name|list_t
 name|rc_list
 decl_stmt|;
@@ -110,9 +113,17 @@ decl_stmt|;
 block|}
 name|refcount_t
 typedef|;
-comment|/* Note: refcount_t must be initialized with refcount_create() */
+comment|/* Note: refcount_t must be initialized with refcount_create[_untracked]() */
 name|void
 name|refcount_create
+parameter_list|(
+name|refcount_t
+modifier|*
+name|rc
+parameter_list|)
+function_decl|;
+name|void
+name|refcount_create_untracked
 parameter_list|(
 name|refcount_t
 modifier|*
@@ -248,6 +259,13 @@ typedef|;
 define|#
 directive|define
 name|refcount_create
+parameter_list|(
+name|rc
+parameter_list|)
+value|((rc)->rc_count = 0)
+define|#
+directive|define
+name|refcount_create_untracked
 parameter_list|(
 name|rc
 parameter_list|)
