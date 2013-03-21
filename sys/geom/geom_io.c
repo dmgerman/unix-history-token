@@ -2814,6 +2814,15 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|unmapped_buf_allowed
+argument_list|,
+operator|(
+literal|"unmapped disabled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 name|round_page
