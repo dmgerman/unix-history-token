@@ -4933,7 +4933,8 @@ literal|0
 argument_list|)
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|str2flags
 argument_list|(

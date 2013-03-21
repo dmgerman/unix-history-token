@@ -451,7 +451,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12692,7 +12692,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
+name|u_long
 name|flags
 decl_stmt|;
 block|{
@@ -12875,11 +12875,12 @@ begin_struct
 struct|struct
 name|chflags_args
 block|{
+specifier|const
 name|char
 modifier|*
 name|path
 decl_stmt|;
-name|int
+name|u_long
 name|flags
 decl_stmt|;
 block|}
@@ -12907,7 +12908,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|chflags_args
-comment|/* { 		char *path; 		int flags; 	} */
+comment|/* { 		const char *path; 		u_long flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -13023,7 +13024,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lchflags_args
-comment|/* { 		char *path; 		int flags; 	} */
+comment|/* { 		const char *path; 		u_long flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -13136,7 +13137,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|int
+name|u_long
 name|flags
 decl_stmt|;
 block|}
@@ -13164,7 +13165,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|fchflags_args
-comment|/* { 		int fd; 		int flags; 	} */
+comment|/* { 		int fd; 		u_long flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;

@@ -5966,7 +5966,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
+name|u_long
 name|flags
 parameter_list|,
 name|struct
