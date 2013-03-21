@@ -480,6 +480,13 @@ name|system_map
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|bio_transient_maxcnt
+operator|!=
+literal|0
+condition|)
+block|{
 name|bio_transient_map
 operator|=
 name|kmem_suballoc
@@ -512,6 +519,7 @@ name|system_map
 operator|=
 literal|1
 expr_stmt|;
+block|}
 name|pager_map
 operator|=
 name|kmem_suballoc

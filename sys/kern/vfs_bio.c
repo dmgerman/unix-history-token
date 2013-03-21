@@ -2691,6 +2691,8 @@ condition|(
 name|bio_transient_maxcnt
 operator|==
 literal|0
+operator|&&
+name|unmapped_buf_allowed
 condition|)
 block|{
 name|maxbuf_sz
