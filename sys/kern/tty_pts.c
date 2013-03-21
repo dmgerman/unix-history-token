@@ -3482,6 +3482,8 @@ operator|(
 name|O_RDWR
 operator||
 name|O_NOCTTY
+operator||
+name|O_CLOEXEC
 operator|)
 condition|)
 return|return
@@ -3501,7 +3503,9 @@ argument_list|,
 operator|&
 name|fd
 argument_list|,
-literal|0
+name|uap
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
