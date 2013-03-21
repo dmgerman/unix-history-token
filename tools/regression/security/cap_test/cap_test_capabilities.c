@@ -1918,17 +1918,13 @@ name|EOPNOTSUPP
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TODO
-comment|/* No such syscalls yet. */
 name|ret
 operator|=
 name|openat
 argument_list|(
 name|dirfd
 argument_list|,
-literal|"cap_fchflagsat"
+literal|"cap_chflagsat"
 argument_list|,
 name|O_CREAT
 argument_list|,
@@ -1954,11 +1950,11 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|fchflagsat
+name|chflagsat
 argument_list|(
 name|dfd_cap
 argument_list|,
-literal|"cap_fchflagsat"
+literal|"cap_chflagsat"
 argument_list|,
 name|UF_NODUMP
 argument_list|,
@@ -1967,9 +1963,9 @@ argument_list|)
 expr_stmt|;
 name|CHECK_RESULT
 argument_list|(
-name|fchflagsat
+name|chflagsat
 argument_list|,
-name|CAP_FCHFLAGSAT
+name|CAP_CHFLAGSAT
 operator||
 name|CAP_LOOKUP
 argument_list|,
@@ -1984,7 +1980,7 @@ name|unlinkat
 argument_list|(
 name|dirfd
 argument_list|,
-literal|"cap_fchflagsat"
+literal|"cap_chflagsat"
 argument_list|,
 literal|0
 argument_list|)
@@ -1992,8 +1988,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ret
 operator|=
 name|fchown
