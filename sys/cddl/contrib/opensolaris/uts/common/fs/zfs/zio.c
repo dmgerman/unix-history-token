@@ -12206,7 +12206,15 @@ condition|)
 block|{
 name|trim_map_free
 argument_list|(
+name|vd
+argument_list|,
 name|zio
+operator|->
+name|io_offset
+argument_list|,
+name|zio
+operator|->
+name|io_size
 argument_list|)
 expr_stmt|;
 return|return

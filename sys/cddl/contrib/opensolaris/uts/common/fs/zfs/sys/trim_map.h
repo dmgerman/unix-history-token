@@ -71,9 +71,15 @@ specifier|extern
 name|void
 name|trim_map_free
 parameter_list|(
-name|zio_t
+name|vdev_t
 modifier|*
-name|zio
+name|vd
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|uint64_t
+name|size
 parameter_list|)
 function_decl|;
 specifier|extern
