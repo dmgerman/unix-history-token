@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.c,v 1.42 2011/06/17 21:44:30 djm Exp $ */
+comment|/* $OpenBSD: log.c,v 1.43 2012/09/06 04:37:39 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ operator|&&
 name|defined
 argument_list|(
 name|HAVE_VIS_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_STRNVIS
 argument_list|)
 end_if
 
@@ -1193,6 +1199,49 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|log_change_level
+parameter_list|(
+name|LogLevel
+name|new_log_level
+parameter_list|)
+block|{
+comment|/* no-op if log_init has not been called */
+if|if
+condition|(
+name|argv0
+operator|==
+name|NULL
+condition|)
+return|return;
+name|log_init
+argument_list|(
+name|argv0
+argument_list|,
+name|new_log_level
+argument_list|,
+name|log_facility
+argument_list|,
+name|log_on_stderr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|log_is_on_stderr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|log_on_stderr
+return|;
 block|}
 end_function
 

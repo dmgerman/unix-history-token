@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.103 2012/07/10 02:19:15 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.107 2013/01/03 05:49:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -140,6 +140,17 @@ begin_comment
 comment|/* Max # of authorized_keys files. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_AUTH_METHODS
+value|256
+end_define
+
+begin_comment
+comment|/* Max # of AuthenticationMethods. */
+end_comment
+
 begin_comment
 comment|/* permit_root_login */
 end_comment
@@ -202,6 +213,38 @@ define|#
 directive|define
 name|PRIVSEP_NOSANDBOX
 value|2
+end_define
+
+begin_comment
+comment|/* AllowTCPForwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORWARD_DENY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORWARD_REMOTE
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORWARD_LOCAL
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORWARD_ALLOW
+value|(FORWARD_REMOTE|FORWARD_LOCAL)
 end_define
 
 begin_define
@@ -472,6 +515,7 @@ comment|/* If true, compression is allowed */
 name|int
 name|allow_tcp_forwarding
 decl_stmt|;
+comment|/* One of FORWARD_* */
 name|int
 name|allow_agent_forwarding
 decl_stmt|;
@@ -623,9 +667,27 @@ name|authorized_principals_file
 decl_stmt|;
 name|char
 modifier|*
+name|authorized_keys_command
+decl_stmt|;
+name|char
+modifier|*
+name|authorized_keys_command_user
+decl_stmt|;
+name|char
+modifier|*
 name|version_addendum
 decl_stmt|;
 comment|/* Appended to SSH banner */
+name|u_int
+name|num_auth_methods
+decl_stmt|;
+name|char
+modifier|*
+name|auth_methods
+index|[
+name|MAX_AUTH_METHODS
+index|]
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;
@@ -679,7 +741,7 @@ define|#
 directive|define
 name|COPY_MATCH_STRING_OPTS
 parameter_list|()
-value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 	} while (0)
+value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STROPT(authorized_keys_command); \ 		M_CP_STROPT(authorized_keys_command_user); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 		M_CP_STRARRAYOPT(auth_methods, num_auth_methods); \ 	} while (0)
 end_define
 
 begin_function_decl

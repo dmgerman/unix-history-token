@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.393 2012/07/10 02:19:15 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.397 2013/02/11 21:21:58 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1349,6 +1349,33 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Try to kill any processes that we have spawned, E.g. authorized 	 * keys command helpers. 	 */
+if|if
+condition|(
+name|getpgid
+argument_list|(
+literal|0
+argument_list|)
+operator|==
+name|getpid
+argument_list|()
+condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|killpg
+argument_list|(
+literal|0
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Log error and exit. */
 name|sigdie
 argument_list|(
@@ -5654,6 +5681,9 @@ operator|-
 literal|1
 block|}
 decl_stmt|;
+name|u_int
+name|n
+decl_stmt|;
 name|u_int64_t
 name|ibytes
 decl_stmt|,
@@ -6597,6 +6627,115 @@ name|kbd_interactive_authentication
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Check that options are sensible */
+if|if
+condition|(
+name|options
+operator|.
+name|authorized_keys_command_user
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|options
+operator|.
+name|authorized_keys_command
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|authorized_keys_command
+argument_list|,
+literal|"none"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"AuthorizedKeysCommand set without "
+literal|"AuthorizedKeysCommandUser"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check whether there is any path through configured auth methods. 	 * Unfortunately it is not possible to verify this generally before 	 * daemonisation in the presence of Match block, but this catches 	 * and warns for trivial misconfigurations that could break login. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|num_auth_methods
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|options
+operator|.
+name|protocol
+operator|&
+name|SSH_PROTO_1
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"AuthenticationMethods is not supported with "
+literal|"SSH protocol 1"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|options
+operator|.
+name|num_auth_methods
+condition|;
+name|n
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|auth2_methods_valid
+argument_list|(
+name|options
+operator|.
+name|auth_methods
+index|[
+name|n
+index|]
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|n
+operator|>=
+name|options
+operator|.
+name|num_auth_methods
+condition|)
+name|fatal
+argument_list|(
+literal|"AuthenticationMethods cannot be satisfied by "
+literal|"enabled authentication methods"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* set default channel AF */
 name|channel_set_af
 argument_list|(
@@ -6633,9 +6772,14 @@ expr_stmt|;
 block|}
 name|debug
 argument_list|(
-literal|"sshd version %.100s"
+literal|"sshd version %s, %s"
 argument_list|,
-name|SSH_RELEASE
+name|SSH_VERSION
+argument_list|,
+name|SSLeay_version
+argument_list|(
+name|SSLEAY_VERSION
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Store privilege separation user for later use if required. */

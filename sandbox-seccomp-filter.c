@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/unistd.h>
 end_include
 
@@ -342,11 +348,17 @@ argument_list|(
 name|gettimeofday
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|__NR_time
+comment|/* not defined on EABI ARM */
 name|SC_ALLOW
 argument_list|(
 name|time
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|SC_ALLOW
 argument_list|(
 name|read
@@ -394,11 +406,27 @@ argument_list|(
 name|madvise
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|__NR_mmap2
+comment|/* EABI ARM only has mmap2() */
+name|SC_ALLOW
+argument_list|(
+name|mmap2
+argument_list|)
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__NR_mmap
 name|SC_ALLOW
 argument_list|(
 name|mmap
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|SC_ALLOW
 argument_list|(
 name|munmap

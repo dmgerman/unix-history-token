@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.h,v 1.1 2007/06/07 19:37:34 pvalchev Exp $ */
+comment|/* $OpenBSD: umac.h,v 1.2 2012/10/04 13:21:50 markus Exp $ */
 end_comment
 
 begin_comment
@@ -123,6 +123,61 @@ comment|/* key for an RC6 based KDF.                                          */
 block|int uhash_free(uhash_ctx_t ctx);  int uhash_set_params(uhash_ctx_t ctx,                    void       *params);  int uhash_reset(uhash_ctx_t ctx);  int uhash_update(uhash_ctx_t ctx,                u_char       *input,                long        len);  int uhash_final(uhash_ctx_t ctx,               u_char        ouput[]);  int uhash(uhash_ctx_t ctx,         u_char       *input,         long        len,         u_char        output[]);
 endif|#
 directive|endif
+comment|/* matching umac-128 API, we reuse umac_ctx, since it's opaque */
+name|struct
+name|umac_ctx
+modifier|*
+name|umac128_new
+parameter_list|(
+name|u_char
+name|key
+index|[]
+parameter_list|)
+function_decl|;
+name|int
+name|umac128_update
+parameter_list|(
+name|struct
+name|umac_ctx
+modifier|*
+name|ctx
+parameter_list|,
+name|u_char
+modifier|*
+name|input
+parameter_list|,
+name|long
+name|len
+parameter_list|)
+function_decl|;
+name|int
+name|umac128_final
+parameter_list|(
+name|struct
+name|umac_ctx
+modifier|*
+name|ctx
+parameter_list|,
+name|u_char
+name|tag
+index|[]
+parameter_list|,
+name|u_char
+name|nonce
+index|[
+literal|8
+index|]
+parameter_list|)
+function_decl|;
+name|int
+name|umac128_delete
+parameter_list|(
+name|struct
+name|umac_ctx
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

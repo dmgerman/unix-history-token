@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.86 2010/09/22 05:01:29 djm Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.88 2013/01/08 18:49:04 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1135,18 +1135,21 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX RFC4253 sec 7: "each side MAY guess" - currently no supported 	 * KEX method has the server move first, but a server might be using 	 * a custom method or one that we otherwise don't support. We should 	 * be prepared to remember first_kex_follows here so we can eat a 	 * packet later. 	 * XXX2 - RFC4253 is kind of ambiguous on what first_kex_follows means 	 * for cases where the server *doesn't* go first. I guess we should 	 * ignore it when it is set for these cases, which is what we do now. 	 */
 operator|(
 name|void
 operator|)
 name|packet_get_char
 argument_list|()
 expr_stmt|;
+comment|/* first_kex_follows */
 operator|(
 name|void
 operator|)
 name|packet_get_int
 argument_list|()
 expr_stmt|;
+comment|/* reserved */
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
@@ -1407,6 +1410,17 @@ operator|->
 name|iv
 operator|=
 name|NULL
+expr_stmt|;
+name|enc
+operator|->
+name|iv_len
+operator|=
+name|cipher_ivlen
+argument_list|(
+name|enc
+operator|->
+name|cipher
+argument_list|)
 expr_stmt|;
 name|enc
 operator|->
@@ -2166,6 +2180,8 @@ decl_stmt|,
 name|ctos
 decl_stmt|,
 name|need
+decl_stmt|,
+name|authlen
 decl_stmt|;
 name|int
 name|first_kex_follows
@@ -2371,6 +2387,24 @@ name|nenc
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* ignore mac for authenticated encryption */
+name|authlen
+operator|=
+name|cipher_authlen
+argument_list|(
+name|newkeys
+operator|->
+name|enc
+operator|.
+name|cipher
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|authlen
+operator|==
+literal|0
+condition|)
 name|choose_mac
 argument_list|(
 operator|&
@@ -2423,11 +2457,17 @@ name|enc
 operator|.
 name|name
 argument_list|,
+name|authlen
+operator|==
+literal|0
+condition|?
 name|newkeys
 operator|->
 name|mac
 operator|.
 name|name
+else|:
+literal|"<implicit>"
 argument_list|,
 name|newkeys
 operator|->
@@ -2529,6 +2569,24 @@ operator|->
 name|enc
 operator|.
 name|block_size
+expr_stmt|;
+if|if
+condition|(
+name|need
+operator|<
+name|newkeys
+operator|->
+name|enc
+operator|.
+name|iv_len
+condition|)
+name|need
+operator|=
+name|newkeys
+operator|->
+name|enc
+operator|.
+name|iv_len
 expr_stmt|;
 if|if
 condition|(

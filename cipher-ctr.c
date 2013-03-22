@@ -13,6 +13,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_HAVE_EVPCTR
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -75,34 +81,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|const
-name|EVP_CIPHER
-modifier|*
-name|evp_aes_128_ctr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ssh_aes_ctr_iv
-parameter_list|(
-name|EVP_CIPHER_CTX
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 struct|struct
@@ -650,6 +628,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL_HAVE_EVPCTR */
+end_comment
 
 end_unit
 

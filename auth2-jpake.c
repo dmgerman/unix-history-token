@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-jpake.c,v 1.4 2010/08/31 11:54:45 djm Exp $ */
+comment|/* $OpenBSD: auth2-jpake.c,v 1.5 2012/12/02 20:34:09 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2920,6 +2920,8 @@ argument_list|,
 name|method_jpake
 operator|.
 name|name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

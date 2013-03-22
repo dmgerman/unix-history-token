@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.260 2012/03/15 03:10:27 guenther Exp $ */
+comment|/* $OpenBSD: session.c,v 1.261 2012/12/02 20:46:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1257,13 +1257,22 @@ expr_stmt|;
 comment|/* setup the channel layer */
 if|if
 condition|(
-operator|!
 name|no_port_forwarding_flag
-operator|&&
+operator|||
+operator|(
 name|options
 operator|.
 name|allow_tcp_forwarding
+operator|&
+name|FORWARD_LOCAL
+operator|)
+operator|==
+literal|0
 condition|)
+name|channel_disable_adm_local_opens
+argument_list|()
+expr_stmt|;
+else|else
 name|channel_permit_all_opens
 argument_list|()
 expr_stmt|;
@@ -1634,9 +1643,13 @@ block|}
 if|if
 condition|(
 operator|!
+operator|(
 name|options
 operator|.
 name|allow_tcp_forwarding
+operator|&
+name|FORWARD_REMOTE
+operator|)
 condition|)
 block|{
 name|debug
@@ -7056,6 +7069,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  		 * FreeBSD's setusercontext() will not apply the user's 		 * own umask setting unless running with the user's UID. 		 */
+operator|(
+name|void
+operator|)
+name|setusercontext
+argument_list|(
+name|lc
+argument_list|,
+name|pw
+argument_list|,
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+name|LOGIN_SETUMASK
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 comment|/* Permanently switch to the desired uid. */

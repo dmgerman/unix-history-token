@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.21 2012/07/03 22:50:10 dtucker Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.23 2013/03/14 23:34:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -423,6 +423,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_USLEEP
+end_ifndef
+
+begin_function_decl
+name|int
+name|usleep
+parameter_list|(
+name|unsigned
+name|int
+name|useconds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_TCGETPGRP
 end_ifndef
 
@@ -537,6 +559,26 @@ name|int
 name|isblank
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_GETPGID
+end_ifndef
+
+begin_function_decl
+name|pid_t
+name|getpgid
+parameter_list|(
+name|pid_t
 parameter_list|)
 function_decl|;
 end_function_decl

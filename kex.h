@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.52 2010/09/22 05:01:29 djm Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.54 2013/01/08 18:49:04 markus Exp $ */
 end_comment
 
 begin_comment
@@ -255,6 +255,9 @@ name|u_int
 name|key_len
 decl_stmt|;
 name|u_int
+name|iv_len
+decl_stmt|;
+name|u_int
 name|block_size
 decl_stmt|;
 name|u_char
@@ -293,6 +296,10 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
+name|int
+name|etm
+decl_stmt|;
+comment|/* Encrypt-then-MAC */
 specifier|const
 name|EVP_MD
 modifier|*

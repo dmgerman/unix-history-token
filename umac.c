@@ -23,6 +23,12 @@ begin_comment
 comment|/* ---------------------------------------------------------------------- */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UMAC_OUTPUT_LEN
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -33,6 +39,43 @@ end_define
 begin_comment
 comment|/* Alowable: 4, 8, 12, 16                  */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|UMAC_OUTPUT_LEN
+operator|!=
+literal|4
+operator|&&
+name|UMAC_OUTPUT_LEN
+operator|!=
+literal|8
+operator|&&
+expr|\
+name|UMAC_OUTPUT_LEN
+operator|!=
+literal|12
+operator|&&
+name|UMAC_OUTPUT_LEN
+operator|!=
+literal|16
+end_if
+
+begin_error
+error|#
+directive|error
+error|UMAC_OUTPUT_LEN must be defined to 4, 8, 12 or 16
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #define FORCE_C_ONLY        1  ANSI C and 64-bit integers req'd        */
