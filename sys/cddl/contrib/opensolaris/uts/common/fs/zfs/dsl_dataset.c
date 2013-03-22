@@ -13161,6 +13161,9 @@ name|char
 modifier|*
 name|newsnap
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -13340,6 +13343,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* First successful rename clears the error. */
+name|ra
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -13504,6 +13514,12 @@ name|failed
 operator|=
 literal|'\0'
 expr_stmt|;
+name|ra
+operator|->
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
 name|err
 operator|=
 name|dmu_objset_find
@@ -13530,7 +13546,18 @@ name|err
 operator|==
 literal|0
 condition|)
-block|{
+name|err
+operator|=
+name|ra
+operator|->
+name|error
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
 name|err
 operator|=
 name|dsl_sync_task_group_wait
@@ -13540,7 +13567,6 @@ operator|->
 name|dstg
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|dst
