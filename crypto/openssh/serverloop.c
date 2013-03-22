@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.162 2012/06/20 04:42:58 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.164 2012/12/07 01:51:35 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2941,6 +2941,9 @@ name|logit
 argument_list|(
 literal|"Exiting on signal %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|received_sigterm
 argument_list|)
 expr_stmt|;
@@ -3532,6 +3535,9 @@ name|logit
 argument_list|(
 literal|"Exiting on signal %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|received_sigterm
 argument_list|)
 expr_stmt|;
@@ -3852,6 +3858,8 @@ block|{
 name|Channel
 modifier|*
 name|c
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -3906,7 +3914,23 @@ argument_list|,
 name|target_port
 argument_list|)
 expr_stmt|;
-comment|/* XXX check permission */
+comment|/* XXX fine grained permissions */
+if|if
+condition|(
+operator|(
+name|options
+operator|.
+name|allow_tcp_forwarding
+operator|&
+name|FORWARD_LOCAL
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|no_port_forwarding_flag
+condition|)
+block|{
 name|c
 operator|=
 name|channel_connect_to
@@ -3920,6 +3944,24 @@ argument_list|,
 literal|"direct-tcpip"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|logit
+argument_list|(
+literal|"refused local port forward: "
+literal|"originator %s port %d, target %s port %d"
+argument_list|,
+name|originator
+argument_list|,
+name|originator_port
+argument_list|,
+name|target
+argument_list|,
+name|target_port
+argument_list|)
+expr_stmt|;
+block|}
 name|xfree
 argument_list|(
 name|originator
@@ -4693,10 +4735,15 @@ expr_stmt|;
 comment|/* check permissions */
 if|if
 condition|(
-operator|!
+operator|(
 name|options
 operator|.
 name|allow_tcp_forwarding
+operator|&
+name|FORWARD_REMOTE
+operator|)
+operator|==
+literal|0
 operator|||
 name|no_port_forwarding_flag
 operator|||

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.73 2011/06/17 21:44:31 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.75 2013/01/08 18:49:04 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2432,28 +2432,9 @@ operator|&
 name|b
 argument_list|,
 operator|&
-name|len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|!=
 name|enc
 operator|->
-name|block_size
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad ivlen: expected %u != %u"
-argument_list|,
-name|__func__
-argument_list|,
-name|enc
-operator|->
-name|block_size
-argument_list|,
-name|len
+name|iv_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -2491,6 +2472,18 @@ name|cipher
 argument_list|)
 expr_stmt|;
 comment|/* Mac structure */
+if|if
+condition|(
+name|cipher_authlen
+argument_list|(
+name|enc
+operator|->
+name|cipher
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|mac
 operator|->
 name|name
@@ -2584,6 +2577,7 @@ name|key_len
 operator|=
 name|len
 expr_stmt|;
+block|}
 comment|/* Comp structure */
 name|comp
 operator|->
@@ -2828,7 +2822,7 @@ name|iv
 argument_list|,
 name|enc
 operator|->
-name|block_size
+name|iv_len
 argument_list|)
 expr_stmt|;
 name|buffer_put_string
@@ -2842,10 +2836,22 @@ name|iv
 argument_list|,
 name|enc
 operator|->
-name|block_size
+name|iv_len
 argument_list|)
 expr_stmt|;
 comment|/* Mac structure */
+if|if
+condition|(
+name|cipher_authlen
+argument_list|(
+name|enc
+operator|->
+name|cipher
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|buffer_put_cstring
 argument_list|(
 operator|&
@@ -2880,6 +2886,7 @@ operator|->
 name|key_len
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Comp structure */
 name|buffer_put_int
 argument_list|(
@@ -3282,7 +3289,7 @@ name|ivlen
 operator|=
 name|packet_get_keyiv_len
 argument_list|(
-name|MODE_OUT
+name|MODE_IN
 argument_list|)
 expr_stmt|;
 name|packet_get_keyiv

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.94 2011/06/17 21:46:16 djm Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.96 2013/01/04 19:26:38 jmc Exp $ */
 end_comment
 
 begin_comment
@@ -6746,7 +6746,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-ehR] [-f log_facility] [-l log_level] [-u umask]\n"
+literal|"usage: %s [-ehR] [-d start_directory] [-f log_facility] "
+literal|"[-l log_level]\n\t[-u umask]\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -6817,6 +6818,11 @@ name|char
 modifier|*
 name|cp
 decl_stmt|,
+modifier|*
+name|homedir
+init|=
+name|NULL
+decl_stmt|,
 name|buf
 index|[
 literal|4
@@ -6858,6 +6864,13 @@ argument_list|,
 name|log_stderr
 argument_list|)
 expr_stmt|;
+name|pw
+operator|=
+name|pwcopy
+argument_list|(
+name|user_pw
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -6872,7 +6885,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:l:u:cehR"
+literal|"d:f:l:u:cehR"
 argument_list|)
 operator|)
 operator|!=
@@ -6955,6 +6968,51 @@ argument_list|(
 literal|"Invalid log facility \"%s\""
 argument_list|,
 name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|cp
+operator|=
+name|tilde_expand_filename
+argument_list|(
+name|optarg
+argument_list|,
+name|user_pw
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
+name|homedir
+operator|=
+name|percent_expand
+argument_list|(
+name|cp
+argument_list|,
+literal|"d"
+argument_list|,
+name|user_pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"u"
+argument_list|,
+name|user_pw
+operator|->
+name|pw_name
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7112,13 +7170,6 @@ argument_list|(
 literal|"UNKNOWN"
 argument_list|)
 expr_stmt|;
-name|pw
-operator|=
-name|pwcopy
-argument_list|(
-name|user_pw
-argument_list|)
-expr_stmt|;
 name|logit
 argument_list|(
 literal|"session opened for local user %s from [%s]"
@@ -7231,6 +7282,37 @@ argument_list|(
 name|set_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|homedir
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|homedir
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"chdir to \"%s\" failed: %s"
+argument_list|,
+name|homedir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 for|for
 control|(
 init|;

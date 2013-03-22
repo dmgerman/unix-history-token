@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-chall.c,v 1.34 2008/12/09 04:32:22 djm Exp $ */
+comment|/* $OpenBSD: auth2-chall.c,v 1.36 2012/12/03 00:14:06 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1321,15 +1321,19 @@ name|i
 decl_stmt|,
 name|nresp
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|devicename
+init|=
+name|NULL
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|response
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|method
 decl_stmt|;
 if|if
 condition|(
@@ -1572,19 +1576,13 @@ default|default:
 comment|/* Failure! */
 break|break;
 block|}
-name|xasprintf
-argument_list|(
-operator|&
-name|method
-argument_list|,
-literal|"keyboard-interactive/%s"
-argument_list|,
+name|devicename
+operator|=
 name|kbdintctxt
 operator|->
 name|device
 operator|->
 name|name
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1622,12 +1620,9 @@ name|authctxt
 argument_list|,
 name|authenticated
 argument_list|,
-name|method
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|method
+literal|"keyboard-interactive"
+argument_list|,
+name|devicename
 argument_list|)
 expr_stmt|;
 block|}

@@ -29,6 +29,11 @@ name|defined
 argument_list|(
 name|HAVE_STRNVIS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BROKEN_STRNVIS
+argument_list|)
 end_if
 
 begin_ifndef
@@ -406,7 +411,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_STRNVIS */
+comment|/* !HAVE_STRNVIS || BROKEN_STRNVIS */
 end_comment
 
 end_unit

@@ -203,6 +203,17 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
+comment|/* FreeBSD strnvis does not do what we need */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BROKEN_STRNVIS
+value|1
+end_define
+
+begin_comment
 comment|/* tcgetattr with ICANON may hang */
 end_comment
 
@@ -633,6 +644,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<bsd/libutil.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BSD_LIBUTIL_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<bsm/audit.h> header file. */
 end_comment
 
@@ -756,6 +775,14 @@ directive|define
 name|HAVE_DECL_GLOB_NOMATCH
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `GSS_C_NT_HOSTBASED_SERVICE',    and to 0 if you don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `h_errno', and to 0 if you    don't. */
@@ -946,6 +973,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<elf.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ELF_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<endian.h> header file. */
 end_comment
 
@@ -979,6 +1017,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_ETC_DEFAULT_LOGIN */
 end_comment
+
+begin_comment
+comment|/* Define if libcrypto has EVP_CIPHER_CTX_ctrl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_CIPHER_CTX_CTRL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `EVP_sha256' function. */
@@ -1279,6 +1328,28 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_GETPEERUCRED */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `getpgid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getpgrp' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPGRP
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `getpwanam' function. */
@@ -3005,9 +3076,12 @@ begin_comment
 comment|/* Define to 1 if you have the `strnvis' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRNVIS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRNVIS
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strptime' function. */
@@ -3061,6 +3135,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRTOUL
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strtoull' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOULL
 value|1
 end_define
 
@@ -3653,6 +3738,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `usleep' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USLEEP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<util.h> header file. */
 end_comment
 
@@ -3795,9 +3891,12 @@ begin_comment
 comment|/* Define to 1 if you have the<vis.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VIS_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_VIS_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `vsnprintf' function. */
@@ -4130,6 +4229,14 @@ comment|/* #undef NEED_SETPGRP */
 end_comment
 
 begin_comment
+comment|/* compiler does not accept __attribute__ on return types */
+end_comment
+
+begin_comment
+comment|/* #undef NO_ATTRIBUTE_ON_RETURN_TYPE */
+end_comment
+
+begin_comment
 comment|/* Define if the concept of ports only accessible to superusers isn't known */
 end_comment
 
@@ -4169,6 +4276,28 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_HAS_ECC
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has EVP AES CTR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAVE_EVPCTR
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has EVP AES GCM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAVE_EVPGCM
 value|1
 end_define
 
@@ -4279,6 +4408,14 @@ end_comment
 
 begin_comment
 comment|/* #undef PASSWD_NEEDS_USERNAME */
+end_comment
+
+begin_comment
+comment|/* System dirs owned by bin (uid 2) */
+end_comment
+
+begin_comment
+comment|/* #undef PLATFORM_SYS_DIR_UID */
 end_comment
 
 begin_comment

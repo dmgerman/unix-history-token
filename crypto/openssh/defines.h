@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.169 2012/02/15 04:13:06 tim Exp $ */
+comment|/* $Id: defines.h,v 1.171 2013/03/07 09:06:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1200,16 +1200,6 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
-operator|(
-name|SIZEOF_CHAR
-operator|==
-literal|1
-operator|)
-end_if
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -1217,22 +1207,6 @@ name|char
 name|u_int8_t
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"8 bit int type not found."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1555,6 +1529,24 @@ end_endif
 begin_comment
 comment|/* HAVE_U_CHAR */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ULLONG_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ULLONG_MAX
+value|((unsigned long long)-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
