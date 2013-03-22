@@ -1210,12 +1210,6 @@ name|bio_disk
 operator|->
 name|d_drv1
 expr_stmt|;
-name|controller
-operator|=
-name|sc
-operator|->
-name|ld_controller
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1250,6 +1244,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|controller
+operator|=
+name|sc
+operator|->
+name|ld_controller
+expr_stmt|;
 if|if
 condition|(
 name|controller
