@@ -2884,6 +2884,17 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DIP
+argument_list|(
+name|ip
+argument_list|,
+name|i_blocks
+argument_list|)
+operator|>=
+name|blocksreleased
+condition|)
 name|DIP_SET
 argument_list|(
 name|ip
@@ -2900,17 +2911,7 @@ operator|-
 name|blocksreleased
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DIP
-argument_list|(
-name|ip
-argument_list|,
-name|i_blocks
-argument_list|)
-operator|<
-literal|0
-condition|)
+else|else
 comment|/* sanity */
 name|DIP_SET
 argument_list|(
