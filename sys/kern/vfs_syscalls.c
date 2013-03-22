@@ -13038,6 +13038,7 @@ name|uap
 operator|->
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path

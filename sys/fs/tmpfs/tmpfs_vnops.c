@@ -7205,7 +7205,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%x, links %d\n"
+literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%lx, links %d\n"
 argument_list|,
 name|node
 argument_list|,
