@@ -277,7 +277,7 @@ name|a
 argument_list|,
 literal|0
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -758,7 +758,7 @@ comment|/* In particular, this is currently broken on Win32 because 	 * setlocal
 end_comment
 
 begin_comment
-unit|entry = archive_entry_new(); 	if (archive_entry_update_pathname_utf8(entry, badname_utf8)) { 		archive_entry_free(entry); 		skipping("Cannot test conversion failures."); 		return; 	} 	archive_entry_free(entry);  	assert((a = archive_write_new()) != NULL); 	assertEqualIntA(a, 0, archive_write_set_format_pax(a)); 	assertEqualIntA(a, 0, archive_write_set_compression_none(a)); 	assertEqualIntA(a, 0, archive_write_set_bytes_per_block(a, 0)); 	assertEqualInt(0, 	    archive_write_open_memory(a, buff, sizeof(buff),&used));  	assert((entry = archive_entry_new()) != NULL);
+unit|entry = archive_entry_new(); 	if (archive_entry_update_pathname_utf8(entry, badname_utf8)) { 		archive_entry_free(entry); 		skipping("Cannot test conversion failures."); 		return; 	} 	archive_entry_free(entry);  	assert((a = archive_write_new()) != NULL); 	assertEqualIntA(a, 0, archive_write_set_format_pax(a)); 	assertEqualIntA(a, 0, archive_write_add_filter_none(a)); 	assertEqualIntA(a, 0, archive_write_set_bytes_per_block(a, 0)); 	assertEqualInt(0, 	    archive_write_open_memory(a, buff, sizeof(buff),&used));  	assert((entry = archive_entry_new()) != NULL);
 comment|/* Set pathname to non-convertible wide value. */
 end_comment
 

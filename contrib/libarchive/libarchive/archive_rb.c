@@ -1013,6 +1013,13 @@ name|new_child
 init|=
 name|old_father
 decl_stmt|;
+if|if
+condition|(
+name|new_father
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Exchange descendant linkages. 	 */
 name|grandpa
 operator|->
@@ -1909,6 +1916,14 @@ index|[
 name|other
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|brother
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* The tree may be broken. */
 comment|/* 		 * For cases 1, 2a, and 2b, our brother's children must 		 * be black and our father must be black 		 */
 if|if
 condition|(
@@ -1957,6 +1972,14 @@ index|[
 name|other
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|brother
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* The tree may be broken. */
 block|}
 else|else
 block|{
@@ -2071,6 +2094,19 @@ index|]
 expr_stmt|;
 block|}
 comment|/* 			 * Case 4: our brother is black and our far nephew 			 * is red.  Swap our father and brother locations and 			 * change our far nephew to black.  (these can be 			 * done in either order so we change the color first). 			 * The result is a valid red-black tree and is a 			 * terminal case.  (again we don't care about the 			 * father's color) 			 * 			 * If the father is red, we will get a red-black-black 			 * tree: 			 *	|  f      ->  f      -->    b    | 			 *	|    B    ->    B    -->  F   N  | 			 *	|      n  ->      N  -->         | 			 * 			 * If the father is black, we will get an all black 			 * tree: 			 *	|  F      ->  F      -->    B    | 			 *	|    B    ->    B    -->  F   N  | 			 *	|      n  ->      N  -->         | 			 * 			 * If we had two red nephews, then after the swap, 			 * our former father would have a red grandson.  			 */
+if|if
+condition|(
+name|brother
+operator|->
+name|rb_nodes
+index|[
+name|other
+index|]
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* The tree may be broken. */
 name|RB_MARK_BLACK
 argument_list|(
 name|brother

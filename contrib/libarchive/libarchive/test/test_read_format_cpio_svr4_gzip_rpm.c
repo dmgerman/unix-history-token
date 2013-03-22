@@ -263,19 +263,23 @@ expr_stmt|;
 comment|/* Verify that the format detection worked. */
 name|assertEqualInt
 argument_list|(
-name|archive_compression
+name|archive_filter_code
 argument_list|(
 name|a
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
-name|ARCHIVE_COMPRESSION_GZIP
+name|ARCHIVE_FILTER_GZIP
 argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-name|archive_compression_name
+name|archive_filter_name
 argument_list|(
 name|a
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 literal|"gzip"

@@ -89,6 +89,14 @@ name|UF_NODUMP
 block|}
 block|,
 block|{
+literal|"./f11"
+block|,
+name|UF_IMMUTABLE
+operator||
+name|UF_NODUMP
+block|}
+block|,
+block|{
 literal|"./f2"
 block|,
 literal|0

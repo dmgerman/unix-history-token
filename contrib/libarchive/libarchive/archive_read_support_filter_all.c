@@ -98,7 +98,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-comment|/* Gzip decompress falls back to "gunzip" command-line. */
+comment|/* Gzip decompress falls back to "gzip -d" command-line. */
 name|archive_read_support_filter_gzip
 argument_list|(
 name|a
@@ -131,6 +131,24 @@ argument_list|)
 expr_stmt|;
 comment|/* The decode code doesn't use an outside library. */
 name|archive_read_support_filter_rpm
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* The decode code always uses "lrzip -q -d" command-line. */
+name|archive_read_support_filter_lrzip
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* Lzop decompress falls back to "lzop -d" command-line. */
+name|archive_read_support_filter_lzop
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* The decode code always uses "grzip -d" command-line. */
+name|archive_read_support_filter_grzip
 argument_list|(
 name|a
 argument_list|)

@@ -140,7 +140,8 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s -cf ../test1.tar --newer-than middle.txt *.txt a"
+literal|"%s --format pax -cf ../test1.tar "
+literal|"--newer-than middle.txt *.txt a"
 argument_list|,
 name|testprog
 argument_list|)
@@ -152,7 +153,7 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s -cf ../test2.tar *.txt a"
+literal|"%s --format pax -cf ../test2.tar *.txt a"
 argument_list|,
 name|testprog
 argument_list|)

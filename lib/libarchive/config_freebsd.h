@@ -148,6 +148,20 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|HAVE_LIBCRYPTO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_EVP_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_OPENSSL_MD5_H
 value|1
 end_define
@@ -216,6 +230,13 @@ end_else
 begin_define
 define|#
 directive|define
+name|HAVE_LIBMD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_MD5_H
 value|1
 end_define
@@ -224,6 +245,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_MD5INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_RIPEMD_H
 value|1
 end_define
 
@@ -816,6 +844,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_POSIX_SPAWNP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_PWD_H
 value|1
 end_define
@@ -880,6 +915,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_SIGNAL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SPAWN_H
 value|1
 end_define
 

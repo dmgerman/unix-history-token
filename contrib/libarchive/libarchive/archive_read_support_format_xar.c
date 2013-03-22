@@ -2057,6 +2057,8 @@ name|xar_read_data
 argument_list|,
 name|xar_read_data_skip
 argument_list|,
+name|NULL
+argument_list|,
 name|xar_cleanup
 argument_list|)
 expr_stmt|;

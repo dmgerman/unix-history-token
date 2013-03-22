@@ -58,7 +58,7 @@ condition|(
 operator|!
 name|pristine
 condition|)
-name|archive_write_set_compression_gzip
+name|archive_write_add_filter_gzip
 argument_list|(
 name|a
 argument_list|)
@@ -141,7 +141,7 @@ argument_list|,
 literal|"betcha"
 argument_list|)
 expr_stmt|;
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)

@@ -585,6 +585,11 @@ operator|(
 literal|1
 operator|)
 return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -607,6 +612,11 @@ condition|)
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

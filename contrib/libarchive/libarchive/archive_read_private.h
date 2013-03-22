@@ -81,6 +81,12 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
+comment|/* Name of the filter */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
 comment|/* Taste the upstream filter to see if we handle this. */
 name|int
 function_decl|(
@@ -177,6 +183,19 @@ modifier|*
 name|archive
 decl_stmt|;
 comment|/* Associated archive. */
+comment|/* Open a block for reading */
+name|int
+function_decl|(
+modifier|*
+name|open
+function_decl|)
+parameter_list|(
+name|struct
+name|archive_read_filter
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
 comment|/* Return next block. */
 name|ssize_t
 function_decl|(
@@ -240,6 +259,23 @@ name|struct
 name|archive_read_filter
 modifier|*
 name|self
+parameter_list|)
+function_decl|;
+comment|/* Function that handles switching from reading one block to the next/prev */
+name|int
+function_decl|(
+modifier|*
+name|sswitch
+function_decl|)
+parameter_list|(
+name|struct
+name|archive_read_filter
+modifier|*
+name|self
+parameter_list|,
+name|unsigned
+name|int
+name|iindex
 parameter_list|)
 function_decl|;
 comment|/* My private data. */
@@ -308,6 +344,24 @@ end_comment
 
 begin_struct
 struct|struct
+name|archive_read_data_node
+block|{
+name|int64_t
+name|begin_position
+decl_stmt|;
+name|int64_t
+name|total_size
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|archive_read_client
 block|{
 name|archive_open_callback
@@ -330,9 +384,25 @@ name|archive_close_callback
 modifier|*
 name|closer
 decl_stmt|;
-name|void
+name|archive_switch_callback
 modifier|*
-name|data
+name|switcher
+decl_stmt|;
+name|unsigned
+name|int
+name|nodes
+decl_stmt|;
+name|unsigned
+name|int
+name|cursor
+decl_stmt|;
+name|int64_t
+name|position
+decl_stmt|;
+name|struct
+name|archive_read_data_node
+modifier|*
+name|dataset
 decl_stmt|;
 block|}
 struct|;
@@ -376,7 +446,14 @@ decl_stmt|;
 name|size_t
 name|read_data_remaining
 decl_stmt|;
-comment|/* Callbacks to open/read/write/close client archive stream. */
+comment|/* 	 * Used by formats/filters to determine the amount of data 	 * requested from a call to archive_read_data(). This is only 	 * useful when the format/filter has seek support. 	 */
+name|char
+name|read_data_is_posix_read
+decl_stmt|;
+name|size_t
+name|read_data_requested
+decl_stmt|;
+comment|/* Callbacks to open/read/write/close client archive streams. */
 name|struct
 name|archive_read_client
 name|client
@@ -386,7 +463,7 @@ name|struct
 name|archive_read_filter_bidder
 name|bidders
 index|[
-literal|9
+literal|14
 index|]
 decl_stmt|;
 comment|/* Last filter in chain */
@@ -395,9 +472,22 @@ name|archive_read_filter
 modifier|*
 name|filter
 decl_stmt|;
+comment|/* Whether to bypass filter bidding process */
+name|int
+name|bypass_filter_bidding
+decl_stmt|;
 comment|/* File offset of beginning of most recently-read header. */
 name|int64_t
 name|header_position
+decl_stmt|;
+comment|/* Nodes and offsets of compressed data block */
+name|unsigned
+name|int
+name|data_start_node
+decl_stmt|;
+name|unsigned
+name|int
+name|data_end_node
 decl_stmt|;
 comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with one significant difference: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine. 	 */
 struct|struct
@@ -493,6 +583,21 @@ parameter_list|(
 name|struct
 name|archive_read
 modifier|*
+parameter_list|)
+function_decl|;
+name|int64_t
+function_decl|(
+modifier|*
+name|seek_data
+function_decl|)
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -637,6 +742,21 @@ name|archive_read
 modifier|*
 parameter_list|)
 parameter_list|,
+name|int64_t
+function_decl|(
+modifier|*
+name|seek_data
+function_decl|)
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|,
+name|int
+parameter_list|)
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -771,6 +891,28 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__archive_read_free_filters
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__archive_read_close_filters
+parameter_list|(
+name|struct
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
