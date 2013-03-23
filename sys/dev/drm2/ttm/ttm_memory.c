@@ -109,7 +109,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"pTTM] Zone %7s: Used memory at exit: %llu kiB\n"
+literal|"[TTM] Zone %7s: Used memory at exit: %llu kiB\n"
 argument_list|,
 name|zone
 operator|->
