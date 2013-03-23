@@ -307,7 +307,7 @@ directive|define
 name|S_BSTUCK
 value|AFTER(S_TX_LINEAR)
 block|{
-literal|5
+literal|6
 block|,
 literal|"bstuck"
 block|,
@@ -1698,7 +1698,7 @@ directive|define
 name|S_CABQ_XMIT
 value|AFTER(S_TX_AGGR_FAILALL)
 block|{
-literal|5
+literal|7
 block|,
 literal|"cabxmit"
 block|,
@@ -1712,7 +1712,7 @@ directive|define
 name|S_CABQ_BUSY
 value|AFTER(S_CABQ_XMIT)
 block|{
-literal|5
+literal|8
 block|,
 literal|"cabqbusy"
 block|,
@@ -1726,7 +1726,7 @@ directive|define
 name|S_TX_NODATA
 value|AFTER(S_CABQ_BUSY)
 block|{
-literal|5
+literal|8
 block|,
 literal|"txnodata"
 block|,
@@ -1740,7 +1740,7 @@ directive|define
 name|S_TX_BUSDMA
 value|AFTER(S_TX_NODATA)
 block|{
-literal|5
+literal|8
 block|,
 literal|"txbusdma"
 block|,
@@ -1754,7 +1754,7 @@ directive|define
 name|S_RX_BUSDMA
 value|AFTER(S_TX_BUSDMA)
 block|{
-literal|5
+literal|8
 block|,
 literal|"rxbusdma"
 block|,
