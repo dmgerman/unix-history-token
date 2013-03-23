@@ -1143,7 +1143,7 @@ name|sblock
 operator|.
 name|fs_csp
 operator|=
-name|calloc
+name|Calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1325,7 +1325,7 @@ argument_list|)
 expr_stmt|;
 name|blockmap
 operator|=
-name|calloc
+name|Calloc
 argument_list|(
 operator|(
 name|unsigned
@@ -1361,7 +1361,7 @@ goto|;
 block|}
 name|inostathead
 operator|=
-name|calloc
+name|Calloc
 argument_list|(
 call|(
 name|unsigned
@@ -1447,7 +1447,7 @@ name|inoinfo
 operator|*
 operator|*
 operator|)
-name|calloc
+name|Calloc
 argument_list|(
 operator|(
 name|unsigned
@@ -1470,7 +1470,7 @@ name|inoinfo
 operator|*
 operator|*
 operator|)
-name|calloc
+name|Calloc
 argument_list|(
 operator|(
 name|unsigned
@@ -2330,7 +2330,7 @@ name|b_un
 operator|.
 name|b_buf
 operator|=
-name|malloc
+name|Malloc
 argument_list|(
 name|SBLOCKSIZE
 argument_list|)
@@ -2341,7 +2341,7 @@ name|b_un
 operator|.
 name|b_buf
 operator|=
-name|malloc
+name|Malloc
 argument_list|(
 name|SBLOCKSIZE
 argument_list|)
