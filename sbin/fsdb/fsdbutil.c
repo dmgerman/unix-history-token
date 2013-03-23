@@ -1332,16 +1332,6 @@ name|b_buf
 operator|=
 name|bufp
 expr_stmt|;
-name|bp
-operator|->
-name|b_prev
-operator|=
-name|bp
-operator|->
-name|b_next
-operator|=
-name|bp
-expr_stmt|;
 name|initbarea
 argument_list|(
 name|bp
