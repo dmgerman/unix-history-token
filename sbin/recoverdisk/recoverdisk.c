@@ -666,7 +666,7 @@ decl_stmt|;
 name|u_int
 name|sectorsize
 decl_stmt|;
-name|u_int
+name|off_t
 name|stripesize
 decl_stmt|;
 name|time_t
