@@ -32,12 +32,20 @@ name|BIO_READ
 value|0x01
 end_define
 
+begin_comment
+comment|/* Read I/O data */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_WRITE
 value|0x02
 end_define
+
+begin_comment
+comment|/* Write I/O data */
+end_comment
 
 begin_define
 define|#
@@ -46,6 +54,10 @@ name|BIO_DELETE
 value|0x04
 end_define
 
+begin_comment
+comment|/* TRIM or free blocks, i.e. mark as unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -53,12 +65,20 @@ name|BIO_GETATTR
 value|0x08
 end_define
 
+begin_comment
+comment|/* Get GEOM attributes of object */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_FLUSH
 value|0x10
 end_define
+
+begin_comment
+comment|/* Commit outstanding I/O now */
+end_comment
 
 begin_define
 define|#
@@ -104,6 +124,10 @@ name|BIO_ERROR
 value|0x01
 end_define
 
+begin_comment
+comment|/* An error occurred processing this bio. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -111,12 +135,24 @@ name|BIO_DONE
 value|0x02
 end_define
 
+begin_comment
+comment|/* This bio is finished. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_ONQUEUE
 value|0x04
 end_define
+
+begin_comment
+comment|/* This bio is in a queue& not yet taken. */
+end_comment
+
+begin_comment
+comment|/*  * This bio must be executed after all previous bios in the queue have been  * executed, and before any successive bios can be executed.  */
+end_comment
 
 begin_define
 define|#
