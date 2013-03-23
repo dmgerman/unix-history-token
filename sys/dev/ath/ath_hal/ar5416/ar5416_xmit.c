@@ -5837,12 +5837,17 @@ name|ahp
 operator|->
 name|ah_beaconInterval
 operator|*
-literal|70
+literal|50
 operator|/
 literal|100
 operator|)
 operator|-
-operator|(
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_additional_swba_backoff
+operator|-
 name|ah
 operator|->
 name|ah_config
@@ -5854,13 +5859,6 @@ operator|->
 name|ah_config
 operator|.
 name|ah_dma_beacon_response_time
-operator|)
-operator|-
-name|ah
-operator|->
-name|ah_config
-operator|.
-name|ah_additional_swba_backoff
 expr_stmt|;
 comment|/* 			 * XXX Ensure it isn't too low - nothing lower 			 * XXX than 10 TU 			 */
 if|if
