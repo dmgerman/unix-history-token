@@ -2552,6 +2552,20 @@ literal|"sig"
 block|,
 literal|"avg recv signal (dBm)"
 block|}
+block|,
+define|#
+directive|define
+name|S_BMISSCOUNT
+value|AFTER(S_RX_SIGNAL)
+block|{
+literal|8
+block|,
+literal|"bmisscount"
+block|,
+literal|"bmisscnt"
+block|,
+literal|"beacon miss count"
+block|}
 block|,  }
 decl_stmt|;
 end_decl_stmt
@@ -2581,7 +2595,7 @@ begin_define
 define|#
 directive|define
 name|S_MAX
-value|S_ANT_RX7+1
+value|S_BMISSCOUNT+1
 end_define
 
 begin_comment
@@ -4721,6 +4735,14 @@ name|tx_qfull
 argument_list|)
 expr_stmt|;
 case|case
+name|S_BMISSCOUNT
+case|:
+name|STAT
+argument_list|(
+name|be_missed
+argument_list|)
+expr_stmt|;
+case|case
 name|S_RX_NOISE
 case|:
 name|snprintf
@@ -6411,6 +6433,14 @@ case|:
 name|STAT
 argument_list|(
 name|tx_qfull
+argument_list|)
+expr_stmt|;
+case|case
+name|S_BMISSCOUNT
+case|:
+name|STAT
+argument_list|(
+name|be_missed
 argument_list|)
 expr_stmt|;
 case|case
