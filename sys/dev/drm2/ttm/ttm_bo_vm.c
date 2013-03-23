@@ -964,6 +964,7 @@ modifier|*
 name|color
 parameter_list|)
 block|{
+comment|/* 	 * We don't acquire a reference on bo->kref here, because it was 	 * already done in ttm_bo_mmap_single(). 	 */
 operator|*
 name|color
 operator|=
