@@ -183,11 +183,6 @@ begin_comment
 comment|/* padding vector */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -226,12 +221,6 @@ begin_comment
 comment|/* 1 to preserve parity bits */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DES
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|DES_key_schedule
@@ -242,11 +231,6 @@ end_decl_stmt
 begin_comment
 comment|/* expanded DES key */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -288,6 +272,11 @@ end_decl_stmt
 begin_comment
 comment|/* index for put_des_char/get_des_char */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* init_des_cipher: initialize DES */
