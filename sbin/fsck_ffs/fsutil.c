@@ -2668,7 +2668,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Running time: %d.%03ld msec\n"
+literal|"Running time: %ld.%03ld msec\n"
 argument_list|,
 name|finishpass
 operator|.
@@ -2779,7 +2779,7 @@ literal|1000000
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%21s:%8ld %2ld.%ld%% %4d.%03ld sec %2jd.%jd%%\n"
+literal|"%21s:%8ld %2ld.%ld%% %4ld.%03ld sec %2lld.%lld%%\n"
 argument_list|,
 name|buftype
 index|[
