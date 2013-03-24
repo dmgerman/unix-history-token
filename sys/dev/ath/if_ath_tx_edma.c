@@ -725,7 +725,7 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TXQ_LOCK
 argument_list|(
 name|txq
 argument_list|)
@@ -870,6 +870,11 @@ name|axq_qnum
 argument_list|)
 expr_stmt|;
 block|}
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -924,6 +929,11 @@ name|bf
 operator|->
 name|bf_flags
 operator|)
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX this is mostly duplicated in ath_tx_handoff_mcast(). 	 */
@@ -1050,6 +1060,11 @@ operator|&
 name|txq
 operator|->
 name|axq_link
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 block|}
