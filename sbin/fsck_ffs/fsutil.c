@@ -2668,8 +2668,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Running time: %ld.%03ld msec\n"
+literal|"Running time: %jd.%03ld msec\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|finishpass
 operator|.
 name|tv_sec
@@ -2779,7 +2782,7 @@ literal|1000000
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%21s:%8ld %2ld.%ld%% %4ld.%03ld sec %2lld.%lld%%\n"
+literal|"%21s:%8ld %2ld.%ld%% %4jd.%03ld sec %2lld.%lld%%\n"
 argument_list|,
 name|buftype
 index|[
@@ -2813,6 +2816,9 @@ operator|)
 operator|%
 literal|10
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|readtime
 index|[
 name|i
