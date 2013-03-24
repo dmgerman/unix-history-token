@@ -1549,14 +1549,24 @@ value|5
 comment|/* library-controlled action */
 define|#
 directive|define
-name|DTRACEACT_PRINTM
+name|DTRACEACT_TRACEMEM
 value|6
-comment|/* printm() action */
+comment|/* tracemem() action */
+define|#
+directive|define
+name|DTRACEACT_TRACEMEM_DYNSIZE
+value|7
+comment|/* dynamic tracemem() size */
+define|#
+directive|define
+name|DTRACEACT_PRINTM
+value|8
+comment|/* printm() action (BSD) */
 define|#
 directive|define
 name|DTRACEACT_PRINTT
-value|7
-comment|/* printt() action */
+value|9
+comment|/* printt() action (BSD) */
 define|#
 directive|define
 name|DTRACEACT_PROC

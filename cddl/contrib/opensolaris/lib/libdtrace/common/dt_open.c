@@ -343,15 +343,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_7_1
+value|DT_VERSION_NUMBER(1, 7, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_7
+value|DT_VERS_1_7_1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.7"
+value|"Sun D 1.7.1"
 end_define
 
 begin_decl_stmt
@@ -403,6 +410,9 @@ comment|/* D API 1.6.3 */
 name|DT_VERS_1_7
 block|,
 comment|/* D API 1.7 */
+name|DT_VERS_1_7_1
+block|,
+comment|/* D API 1.7.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -3489,7 +3499,7 @@ operator|,
 operator|&
 name|dt_idops_func
 operator|,
-literal|"void(@, size_t)"
+literal|"void(@, size_t, ...)"
 block|}
 end_block
 

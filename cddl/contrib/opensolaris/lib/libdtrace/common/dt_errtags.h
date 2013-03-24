@@ -486,6 +486,12 @@ comment|/* tracemem() address bad type */
 name|D_TRACEMEM_SIZE
 block|,
 comment|/* tracemem() size bad type */
+name|D_TRACEMEM_ARGS
+block|,
+comment|/* tracemem() illegal number of args */
+name|D_TRACEMEM_DYNSIZE
+block|,
+comment|/* tracemem() dynamic size bad type */
 name|D_STACK_PROTO
 block|,
 comment|/* stack() prototype mismatch */
