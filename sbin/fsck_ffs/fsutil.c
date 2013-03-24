@@ -2668,7 +2668,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Running time: %jd.%03ld msec\n"
+literal|"Running time: %jd.%03ld sec\n"
 argument_list|,
 operator|(
 name|intmax_t
