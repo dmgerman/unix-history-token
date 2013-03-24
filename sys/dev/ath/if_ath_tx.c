@@ -2516,6 +2516,11 @@ name|bf_flags
 operator|)
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_LOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|txq
@@ -2589,11 +2594,6 @@ operator|->
 name|bf_daddr
 expr_stmt|;
 block|}
-name|ATH_TXQ_LOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|txq
