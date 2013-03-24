@@ -2589,6 +2589,11 @@ operator|->
 name|bf_daddr
 expr_stmt|;
 block|}
+name|ATH_TXQ_LOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|txq
@@ -2612,6 +2617,11 @@ operator|&
 name|txq
 operator|->
 name|axq_link
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 block|}
@@ -2708,6 +2718,11 @@ condition|(
 literal|1
 condition|)
 block|{
+name|ATH_TXQ_LOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_TDMA
@@ -3310,6 +3325,11 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|ATH_KTR
 argument_list|(
 name|sc
@@ -3366,9 +3386,9 @@ decl_stmt|,
 modifier|*
 name|bf_last
 decl_stmt|;
-name|ATH_TX_LOCK_ASSERT
+name|ATH_TXQ_LOCK_ASSERT
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 comment|/* This is always going to be cleared, empty or not */
@@ -6934,9 +6954,16 @@ name|bfs_pri
 operator|=
 name|pri
 expr_stmt|;
+if|#
+directive|if
+literal|1
 comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast frames 	 * must be bufferd until after the beacon. 	 * 	 * TODO: we should lock the mcastq before we check the length. 	 */
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_cabq_enable
+operator|&&
 name|ismcast
 operator|&&
 operator|(
@@ -6973,6 +7000,8 @@ operator|->
 name|axq_qnum
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Do the generic frame setup */
 comment|/* XXX should just bzero the bf_state? */
 name|bf
@@ -12842,6 +12871,14 @@ block|if (! bf->bf_state.bfs_addedbaw) 			device_printf(sc->sc_dev, 			    "%s: 
 endif|#
 directive|endif
 block|}
+comment|/* Strip it out of an aggregate list if it was in one */
+name|bf
+operator|->
+name|bf_next
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Insert on the free queue to be freed by the caller */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|bf_cq

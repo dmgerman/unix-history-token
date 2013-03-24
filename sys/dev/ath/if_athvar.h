@@ -1033,7 +1033,12 @@ argument_list|)
 name|axq_q
 expr_stmt|;
 comment|/* transmit queue */
-comment|/* 	 * XXX the holdingbf field is protected by the TXBUF lock 	 * for now, NOT the TX lock. 	 * 	 * Architecturally, it would likely be better to move 	 * the holdingbf field to a separate array in ath_softc 	 * just to highlight that it's not protected by the normal 	 * TX path lock. 	 */
+name|struct
+name|mtx
+name|axq_lock
+decl_stmt|;
+comment|/* lock on q and link */
+comment|/* 	 * XXX the holdingbf field is protected by the TXBUF lock 	 * for now, NOT the TXQ lock. 	 * 	 * Architecturally, it would likely be better to move 	 * the holdingbf field to a separate array in ath_softc 	 * just to highlight that it's not protected by the normal 	 * TX path lock. 	 */
 name|struct
 name|ath_buf
 modifier|*
@@ -1048,6 +1053,7 @@ index|]
 decl_stmt|;
 comment|/* e.g. "ath0_txq4" */
 comment|/* Per-TID traffic queue for software -> hardware TX */
+comment|/* 	 * This is protected by the general TX path lock, not (for now) 	 * by the TXQ lock. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument|axq_t_s
@@ -1059,6 +1065,58 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tq
+parameter_list|)
+value|do { \ 	    snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 	      device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	    mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, NULL, MTX_DEF); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_DESTROY
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_destroy(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_lock(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_UNLOCK
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_unlock(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
 
 begin_define
 define|#
@@ -2148,6 +2206,10 @@ name|sc_tx_stbc
 range|:
 literal|1
 decl_stmt|;
+name|int
+name|sc_cabq_enable
+decl_stmt|;
+comment|/* Enable cabq transmission */
 comment|/* 	 * Enterprise mode configuration for AR9380 and later chipsets. 	 */
 name|uint32_t
 name|sc_ent_cfg

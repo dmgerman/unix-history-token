@@ -3412,6 +3412,13 @@ name|sc_txq_mcastq_maxdepth
 operator|=
 name|ath_txbuf
 expr_stmt|;
+comment|/* Enable CABQ by default */
+name|sc
+operator|->
+name|sc_cabq_enable
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Allow the TX and RX chainmasks to be overridden by 	 * environment variables and/or device.hints. 	 * 	 * This must be done early - before the hardware is 	 * calibrated or before the 802.11n stream calculation 	 * is done. 	 */
 if|if
 condition|(
@@ -8060,7 +8067,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ath_hal_gethangstate
 parameter_list|(
@@ -9638,11 +9644,6 @@ operator|==
 name|ATH_RESET_NOLOSS
 condition|)
 block|{
-name|ATH_TX_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -9667,6 +9668,17 @@ name|i
 argument_list|)
 condition|)
 block|{
+name|ATH_TXQ_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|ath_txq_restart_dma
 argument_list|(
 name|sc
@@ -9678,6 +9690,22 @@ name|sc_txq
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|ath_txq_sched
@@ -9693,13 +9721,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|ATH_TX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* 	 * This may have been set during an ath_start() call which 	 * set this once it detected a concurrent TX was going on. 	 * So, clear it. 	 */
 name|IF_LOCK
@@ -11906,6 +11934,16 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
@@ -14300,6 +14338,13 @@ operator|->
 name|axq_tidq
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|,
+name|txq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -15053,6 +15098,11 @@ name|txq
 operator|->
 name|axq_qnum
 operator|)
+expr_stmt|;
+name|ATH_TXQ_LOCK_DESTROY
+argument_list|(
+name|txq
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -16062,9 +16112,9 @@ init|;
 condition|;
 control|)
 block|{
-name|ATH_TX_LOCK
+name|ATH_TXQ_LOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 name|txq
@@ -16091,9 +16141,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ATH_TX_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16254,9 +16304,9 @@ argument_list|,
 name|ds
 argument_list|)
 expr_stmt|;
-name|ATH_TX_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16395,9 +16445,9 @@ name|ts_rssi
 argument_list|)
 expr_stmt|;
 block|}
-name|ATH_TX_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update statistics and call completion 		 */
@@ -17960,9 +18010,9 @@ name|ix
 operator|++
 control|)
 block|{
-name|ATH_TX_LOCK
+name|ATH_TXQ_LOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 name|bf
@@ -17995,9 +18045,9 @@ name|axq_fifo_depth
 operator|=
 literal|0
 expr_stmt|;
-name|ATH_TX_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 break|break;
@@ -18132,9 +18182,9 @@ directive|endif
 comment|/* ATH_DEBUG */
 comment|/* 		 * Since we're now doing magic in the completion 		 * functions, we -must- call it for aggregation 		 * destinations or BAW tracking will get upset. 		 */
 comment|/* 		 * Clear ATH_BUF_BUSY; the completion handler 		 * will free the buffer. 		 */
-name|ATH_TX_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 name|bf

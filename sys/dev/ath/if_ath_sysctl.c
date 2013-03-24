@@ -4010,6 +4010,12 @@ argument_list|,
 literal|"Maximum buffer depth for multicast/broadcast frames"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|SYSCTL_ADD_INT(ctx, SYSCTL_CHILDREN(tree), OID_AUTO, 		"cabq_enable", CTLFLAG_RW,&sc->sc_cabq_enable, 0, 		"Whether to transmit on the CABQ or not");
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_TDMA

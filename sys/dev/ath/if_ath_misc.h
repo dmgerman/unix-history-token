@@ -272,6 +272,26 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|ath_hal_gethangstate
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|mask
+parameter_list|,
+name|uint32_t
+modifier|*
+name|hangs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|ath_tx_freebuf
 parameter_list|(
