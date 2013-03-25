@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -11522,6 +11522,7 @@ name|uint64_t
 argument_list|)
 condition|)
 block|{
+comment|/* LINTED - alignment */
 name|tracememsize
 operator|=
 operator|*
@@ -12042,6 +12043,76 @@ expr_stmt|;
 goto|goto
 name|nextrec
 goto|;
+block|}
+comment|/* 			 * If this is a DIF expression, and the record has a 			 * format set, this indicates we have a CTF type name 			 * associated with the data and we should try to print 			 * it out by type. 			 */
+if|if
+condition|(
+name|act
+operator|==
+name|DTRACEACT_DIFEXPR
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|strdata
+init|=
+name|dt_strdata_lookup
+argument_list|(
+name|dtp
+argument_list|,
+name|rec
+operator|->
+name|dtrd_format
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|strdata
+operator|!=
+name|NULL
+condition|)
+block|{
+name|n
+operator|=
+name|dtrace_print
+argument_list|(
+name|dtp
+argument_list|,
+name|fp
+argument_list|,
+name|strdata
+argument_list|,
+name|addr
+argument_list|,
+name|rec
+operator|->
+name|dtrd_size
+argument_list|)
+expr_stmt|;
+comment|/* 					 * dtrace_print() will return -1 on 					 * error, or return the number of bytes 					 * consumed.  It will return 0 if the 					 * type couldn't be determined, and we 					 * should fall through to the normal 					 * trace method. 					 */
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+goto|goto
+name|nextrec
+goto|;
+block|}
 block|}
 name|nofmt
 label|:

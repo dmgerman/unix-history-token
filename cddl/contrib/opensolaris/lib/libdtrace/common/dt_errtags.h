@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*   * Copyright (c) 2011, Joyent, Inc. All rights reserved.   * Copyright (c) 2011 by Delphix. All rights reserved.   */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_ERRTAGS_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -480,6 +477,12 @@ comment|/* trace() argument has void type */
 name|D_TRACE_DYN
 block|,
 comment|/* trace() argument has dynamic type */
+name|D_PRINT_VOID
+block|,
+comment|/* print() argument has void type */
+name|D_PRINT_DYN
+block|,
+comment|/* print() argument has dynamic type */
 name|D_TRACEMEM_ADDR
 block|,
 comment|/* tracemem() address bad type */

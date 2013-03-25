@@ -42842,6 +42842,9 @@ case|:
 case|case
 name|DTRACEACT_FREOPEN
 case|:
+case|case
+name|DTRACEACT_DIFEXPR
+case|:
 comment|/* 			 * We know that our arg is a string -- turn it into a 			 * format. 			 */
 if|if
 condition|(
@@ -42857,6 +42860,12 @@ operator|->
 name|dtad_kind
 operator|==
 name|DTRACEACT_PRINTA
+operator|||
+name|desc
+operator|->
+name|dtad_kind
+operator|==
+name|DTRACEACT_DIFEXPR
 argument_list|)
 expr_stmt|;
 name|format
@@ -42908,9 +42917,6 @@ block|}
 comment|/*FALLTHROUGH*/
 case|case
 name|DTRACEACT_LIBACT
-case|:
-case|case
-name|DTRACEACT_DIFEXPR
 case|:
 case|case
 name|DTRACEACT_TRACEMEM
@@ -51571,6 +51577,7 @@ name|dofa_kind
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|DTRACEACT_ISPRINTFLIKE
 argument_list|(
 name|kind
@@ -51581,6 +51588,19 @@ name|kind
 operator|!=
 name|DTRACEACT_PRINTA
 operator|||
+name|desc
+operator|->
+name|dofa_strtab
+operator|!=
+name|DOF_SECIDX_NONE
+operator|)
+operator|)
+operator|||
+operator|(
+name|kind
+operator|==
+name|DTRACEACT_DIFEXPR
+operator|&&
 name|desc
 operator|->
 name|dofa_strtab
@@ -51603,7 +51623,7 @@ decl_stmt|;
 name|uint64_t
 name|i
 decl_stmt|;
-comment|/* 			 * printf()-like actions must have a format string. 			 */
+comment|/* 			 * The argument to these actions is an index into the 			 * DOF string table.  For printf()-like actions, this 			 * is the format string.  For print(), this is the 			 * CTF type of the expression result. 			 */
 if|if
 condition|(
 operator|(
