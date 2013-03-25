@@ -350,15 +350,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_8
+value|DT_VERSION_NUMBER(1, 8, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8_1
+value|DT_VERSION_NUMBER(1, 8, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_7_1
+value|DT_VERS_1_8_1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.7.1"
+value|"Sun D 1.8.1"
 end_define
 
 begin_decl_stmt
@@ -413,6 +427,12 @@ comment|/* D API 1.7 */
 name|DT_VERS_1_7_1
 block|,
 comment|/* D API 1.7.1 */
+name|DT_VERS_1_8
+block|,
+comment|/* D API 1.8 */
+name|DT_VERS_1_8_1
+block|,
+comment|/* D API 1.8.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -1746,7 +1766,7 @@ operator|,
 operator|&
 name|dt_idops_func
 operator|,
-literal|"string(int64_t)"
+literal|"string(int64_t, [int])"
 block|}
 end_block
 
@@ -3450,6 +3470,56 @@ operator|&
 name|dt_idops_type
 operator|,
 literal|"uint64_t"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"tolower"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_TOLOWER
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_8
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"toupper"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_TOUPPER
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_8
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *)"
 block|}
 end_block
 
