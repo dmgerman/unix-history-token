@@ -306,6 +306,13 @@ name|NVME_MAX_TIMEOUT_PERIOD
 value|(120)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NVME_DEFAULT_RETRY_COUNT
+value|(4)
+end_define
+
 begin_comment
 comment|/* Maximum log page size to fetch for AERs. */
 end_comment
@@ -342,6 +349,13 @@ name|nvme_request_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int32_t
+name|nvme_retry_count
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|nvme_request
@@ -371,6 +385,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|cb_arg
+decl_stmt|;
+name|int32_t
+name|retries
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
@@ -1513,6 +1530,18 @@ name|struct
 name|nvme_request
 modifier|*
 name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nvme_qpair_reset
+parameter_list|(
+name|struct
+name|nvme_qpair
+modifier|*
+name|qpair
 parameter_list|)
 function_decl|;
 end_function_decl

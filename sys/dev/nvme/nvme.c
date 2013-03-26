@@ -108,6 +108,12 @@ name|nvme_request_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int32_t
+name|nvme_retry_count
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
