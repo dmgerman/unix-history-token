@@ -1406,14 +1406,6 @@ operator|.
 name|oncs
 operator|.
 name|dsm
-operator|&&
-name|ns
-operator|->
-name|data
-operator|.
-name|nsfeat
-operator|.
-name|thin_prov
 condition|)
 name|ns
 operator|->
