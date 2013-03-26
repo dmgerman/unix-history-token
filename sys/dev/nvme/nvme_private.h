@@ -762,6 +762,10 @@ comment|/** maximum i/o size in bytes */
 name|uint32_t
 name|max_xfer_size
 decl_stmt|;
+comment|/** minimum page size supported by this controller in bytes */
+name|uint32_t
+name|min_page_size
+decl_stmt|;
 comment|/** interrupt coalescing time period (in microseconds) */
 name|uint32_t
 name|int_coal_time
