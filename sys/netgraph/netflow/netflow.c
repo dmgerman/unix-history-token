@@ -272,14 +272,6 @@ value|(fle->f.packets<= 4)
 end_define
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_NETFLOW_HASH
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETFLOW_HASH
@@ -382,7 +374,6 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|expire_flow
 parameter_list|(
@@ -405,7 +396,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|uint32_t
 name|ip_hash
 parameter_list|(
@@ -485,7 +476,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|uint32_t
 name|ip6_hash
 parameter_list|(
@@ -1088,7 +1079,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|expire_flow
 parameter_list|(
@@ -1189,7 +1179,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* fle definitely contains IPv4 flow */
+comment|/* fle definitely contains IPv4 flow. */
 name|uma_zfree_arg
 argument_list|(
 name|priv
@@ -3491,7 +3481,6 @@ name|int
 name|src_if_index
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|flow_entry
 modifier|*
@@ -3519,15 +3508,14 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|uint16_t
+name|eproto
+decl_stmt|;
 name|uint8_t
 name|tcp_flags
 init|=
 literal|0
 decl_stmt|;
-name|uint16_t
-name|eproto
-decl_stmt|;
-comment|/* Try to fill flow_rec r */
 name|bzero
 argument_list|(
 operator|&
@@ -3539,7 +3527,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* check version */
 if|if
 condition|(
 name|ip
@@ -3553,7 +3540,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* verify min header length */
 name|hlen
 operator|=
 name|ip
@@ -3612,7 +3598,6 @@ name|fe
 operator|->
 name|fib
 expr_stmt|;
-comment|/* save packet length */
 name|plen
 operator|=
 name|ntohs
@@ -3671,7 +3656,6 @@ case|case
 name|IPPROTO_TCP
 case|:
 block|{
-specifier|register
 name|struct
 name|tcphdr
 modifier|*
@@ -4125,7 +4109,6 @@ name|int
 name|src_if_index
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|flow_entry
 modifier|*
@@ -4136,7 +4119,6 @@ decl_stmt|,
 modifier|*
 name|fle1
 decl_stmt|;
-specifier|register
 name|struct
 name|flow6_entry
 modifier|*
@@ -4228,7 +4210,6 @@ name|flow_type
 operator|=
 name|NETFLOW_V9_FLOW_V6_L4
 expr_stmt|;
-comment|/* save packet length */
 name|plen
 operator|=
 name|ntohs
@@ -4244,10 +4225,10 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 expr_stmt|;
-comment|/* XXX: set DSCP/CoS value */
 if|#
 directive|if
 literal|0
+comment|/* XXX: set DSCP/CoS value */
 block|r.r_tos = ip->ip_tos;
 endif|#
 directive|endif
@@ -4271,7 +4252,6 @@ case|case
 name|IPPROTO_TCP
 case|:
 block|{
-specifier|register
 name|struct
 name|tcphdr
 modifier|*
@@ -4311,7 +4291,6 @@ case|:
 case|case
 name|IPPROTO_SCTP
 case|:
-block|{
 name|r
 operator|.
 name|r_ports
@@ -4324,7 +4303,6 @@ operator|)
 name|upper_ptr
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 name|r
