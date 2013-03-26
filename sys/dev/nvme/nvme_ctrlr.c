@@ -4101,5 +4101,29 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|const
+name|struct
+name|nvme_controller_data
+modifier|*
+name|nvme_ctrlr_get_data
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|&
+name|ctrlr
+operator|->
+name|cdata
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

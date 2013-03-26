@@ -2137,6 +2137,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|struct
+name|nvme_controller_data
+modifier|*
+name|nvme_ctrlr_get_data
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Namespace helper functions */
 end_comment
@@ -2220,6 +2235,21 @@ specifier|const
 name|char
 modifier|*
 name|nvme_ns_get_model_number
+parameter_list|(
+name|struct
+name|nvme_namespace
+modifier|*
+name|ns
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|nvme_namespace_data
+modifier|*
+name|nvme_ns_get_data
 parameter_list|(
 name|struct
 name|nvme_namespace
