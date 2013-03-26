@@ -916,6 +916,27 @@ begin_comment
 comment|/* (tx) desc owned by h/w */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATH_BUF_FIFOEND
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_FIFOPTR
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_FLAGS_CLONE
+value|(ATH_BUF_MGMT)
+end_define
+
 begin_comment
 comment|/*  * DMA state for tx/rx descriptors.  */
 end_comment
@@ -1012,10 +1033,6 @@ name|axq_aggr_depth
 decl_stmt|;
 comment|/* how many aggregates are queued */
 name|u_int
-name|axq_fifo_depth
-decl_stmt|;
-comment|/* depth of FIFO frames */
-name|u_int
 name|axq_intrcnt
 decl_stmt|;
 comment|/* interrupt count */
@@ -1038,6 +1055,27 @@ name|mtx
 name|axq_lock
 decl_stmt|;
 comment|/* lock on q and link */
+comment|/* 	 * This is the FIFO staging buffer when doing EDMA. 	 * 	 * For legacy chips, we just push the head pointer to 	 * the hardware and we ignore this list. 	 * 	 * For EDMA, the staging buffer is treated as normal; 	 * when it's time to push a list of frames to the hardware 	 * we move that list here and we stamp buffers with 	 * flags to identify the beginning/end of that particular 	 * FIFO entry. 	 */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument|axq_q_f_s
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|axq_q
+expr_stmt|;
+name|u_int
+name|axq_depth
+decl_stmt|;
+block|}
+name|fifo
+struct|;
+name|u_int
+name|axq_fifo_depth
+decl_stmt|;
+comment|/* depth of FIFO frames */
 comment|/* 	 * XXX the holdingbf field is protected by the TXBUF lock 	 * for now, NOT the TXQ lock. 	 * 	 * Architecturally, it would likely be better to move 	 * the holdingbf field to a separate array in ath_softc 	 * just to highlight that it's not protected by the normal 	 * TX path lock. 	 */
 name|struct
 name|ath_buf
