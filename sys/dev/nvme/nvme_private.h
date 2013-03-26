@@ -284,8 +284,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|NVME_TIMEOUT_IN_SEC
+name|NVME_DEFAULT_TIMEOUT_PERIOD
 value|(30)
+end_define
+
+begin_comment
+comment|/* in seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVME_MIN_TIMEOUT_PERIOD
+value|(5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MAX_TIMEOUT_PERIOD
+value|(120)
 end_define
 
 begin_ifndef
@@ -328,7 +346,7 @@ decl_stmt|;
 name|uint32_t
 name|payload_size
 decl_stmt|;
-name|uint32_t
+name|boolean_t
 name|timeout
 decl_stmt|;
 name|struct
@@ -704,6 +722,10 @@ decl_stmt|;
 comment|/** interrupt coalescing threshold */
 name|uint32_t
 name|int_coal_threshold
+decl_stmt|;
+comment|/** timeout period in seconds */
+name|uint32_t
+name|timeout_period
 decl_stmt|;
 name|struct
 name|nvme_qpair
@@ -1697,7 +1719,7 @@ name|req
 operator|->
 name|timeout
 operator|=
-name|NVME_TIMEOUT_IN_SEC
+name|TRUE
 expr_stmt|;
 end_expr_stmt
 
@@ -1779,7 +1801,7 @@ name|req
 operator|->
 name|timeout
 operator|=
-name|NVME_TIMEOUT_IN_SEC
+name|TRUE
 expr_stmt|;
 return|return
 operator|(
