@@ -2119,6 +2119,7 @@ name|union
 name|csts_register
 name|csts
 decl_stmt|;
+comment|/* Read csts to get value of cfs - controller fatal status. */
 name|csts
 operator|.
 name|raw
@@ -2130,34 +2131,47 @@ argument_list|,
 name|csts
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|csts
-operator|.
-name|bits
-operator|.
-name|cfs
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* 		 * The controller is reporting fatal status.  Don't bother 		 *  trying to abort the timed out command - proceed 		 *  immediately to a controller-level reset. 		 */
 name|device_printf
 argument_list|(
 name|ctrlr
 operator|->
 name|dev
 argument_list|,
-literal|"controller reports fatal status, resetting...\n"
+literal|"i/o timeout, csts.cfs=%d\n"
+argument_list|,
+name|csts
+operator|.
+name|bits
+operator|.
+name|cfs
 argument_list|)
 expr_stmt|;
-name|nvme_ctrlr_reset
+name|nvme_dump_command
 argument_list|(
-name|ctrlr
+operator|&
+name|tr
+operator|->
+name|req
+operator|->
+name|cmd
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+if|if
+condition|(
+name|ctrlr
+operator|->
+name|enable_aborts
+operator|&&
+name|csts
+operator|.
+name|bits
+operator|.
+name|cfs
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If aborts are enabled, only use them if the controller is 		 *  not reporting fatal status. 		 */
 name|nvme_ctrlr_cmd_abort
 argument_list|(
 name|ctrlr
@@ -2173,6 +2187,13 @@ argument_list|,
 name|nvme_abort_complete
 argument_list|,
 name|tr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|nvme_ctrlr_reset
+argument_list|(
+name|ctrlr
 argument_list|)
 expr_stmt|;
 block|}

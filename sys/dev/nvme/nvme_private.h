@@ -664,6 +664,9 @@ name|uint32_t
 name|force_intx
 decl_stmt|;
 name|uint32_t
+name|enable_aborts
+decl_stmt|;
+name|uint32_t
 name|num_io_queues
 decl_stmt|;
 name|boolean_t
@@ -685,7 +688,7 @@ name|num_start_attempts
 decl_stmt|;
 name|struct
 name|task
-name|restart_task
+name|reset_task
 decl_stmt|;
 name|struct
 name|taskqueue
