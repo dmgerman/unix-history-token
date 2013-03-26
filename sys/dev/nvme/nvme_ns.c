@@ -1279,9 +1279,11 @@ name|cpl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|nvme_printf
 argument_list|(
-literal|"nvme_identify_namespace failed!\n"
+name|ctrlr
+argument_list|,
+literal|"nvme_identify_namespace failed\n"
 argument_list|)
 expr_stmt|;
 return|return

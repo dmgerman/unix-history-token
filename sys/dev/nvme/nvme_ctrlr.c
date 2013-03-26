@@ -161,11 +161,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
 literal|"unable to allocate pci resource\n"
 argument_list|)
@@ -318,11 +316,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
 literal|"unable to alloc pci resource\n"
 argument_list|)
@@ -907,9 +903,12 @@ operator|>
 name|NVME_MAX_ADMIN_ENTRIES
 condition|)
 block|{
-name|printf
+name|nvme_printf
 argument_list|(
-literal|"nvme: invalid hw.nvme.admin_entries=%d specified\n"
+name|ctrlr
+argument_list|,
+literal|"invalid hw.nvme.admin_entries=%d "
+literal|"specified\n"
 argument_list|,
 name|num_entries
 argument_list|)
@@ -1467,11 +1466,9 @@ operator|.
 name|en
 condition|)
 block|{
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
 literal|"%s called with cc.en = 0\n"
 argument_list|,
@@ -1513,14 +1510,12 @@ operator|->
 name|ready_timeout_in_ms
 condition|)
 block|{
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
-literal|"controller did not become "
-literal|"ready within %d ms\n"
+literal|"controller did not become ready "
+literal|"within %d ms\n"
 argument_list|,
 name|ctrlr
 operator|->
@@ -2086,8 +2081,10 @@ name|cpl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|nvme_printf
 argument_list|(
+name|ctrlr
+argument_list|,
 literal|"nvme_identify_controller failed!\n"
 argument_list|)
 expr_stmt|;
@@ -2228,8 +2225,10 @@ name|cpl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|nvme_printf
 argument_list|(
+name|ctrlr
+argument_list|,
 literal|"nvme_set_num_queues failed!\n"
 argument_list|)
 expr_stmt|;
@@ -2401,8 +2400,10 @@ name|cpl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|nvme_printf
 argument_list|(
+name|ctrlr
+argument_list|,
 literal|"nvme_create_io_cq failed!\n"
 argument_list|)
 expr_stmt|;
@@ -2456,8 +2457,10 @@ name|cpl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|nvme_printf
 argument_list|(
+name|ctrlr
+argument_list|,
 literal|"nvme_create_io_sq failed!\n"
 argument_list|)
 expr_stmt|;
@@ -2806,11 +2809,6 @@ block|{
 comment|/* 		 *  This is simulated when controller is being shut down, to 		 *  effectively abort outstanding asynchronous event requests 		 *  and make sure all memory is freed.  Do not repost the 		 *  request in this case. 		 */
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"Asynchronous event occurred.\n"
-argument_list|)
-expr_stmt|;
 comment|/* Associated log page is in bits 23:16 of completion entry dw0. */
 name|aer
 operator|->
@@ -2825,6 +2823,19 @@ literal|0xFF0000
 operator|)
 operator|>>
 literal|16
+expr_stmt|;
+name|nvme_printf
+argument_list|(
+name|aer
+operator|->
+name|ctrlr
+argument_list|,
+literal|"async event occurred (log page id=0x%x)\n"
+argument_list|,
+name|aer
+operator|->
+name|log_page_id
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3437,13 +3448,11 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
-literal|"resetting controller"
+literal|"resetting controller\n"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3623,11 +3632,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
 literal|"unable to allocate shared IRQ\n"
 argument_list|)
@@ -3673,13 +3680,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|nvme_printf
 argument_list|(
 name|ctrlr
-operator|->
-name|dev
 argument_list|,
-literal|"unable to setup legacy interrupt handler\n"
+literal|"unable to setup intx handler\n"
 argument_list|)
 expr_stmt|;
 return|return

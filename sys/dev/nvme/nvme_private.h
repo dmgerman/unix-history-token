@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1003,6 +1009,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|nvme_printf
+parameter_list|(
+name|ctrlr
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|device_printf(ctrlr->dev, fmt, ##args)
+end_define
 
 begin_function_decl
 name|void

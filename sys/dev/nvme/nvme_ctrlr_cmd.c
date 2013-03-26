@@ -885,17 +885,10 @@ operator|>=
 literal|0x100
 condition|)
 block|{
-name|KASSERT
+name|nvme_printf
 argument_list|(
-name|FALSE
+name|ctrlr
 argument_list|,
-operator|(
-literal|"intr coal time> 255*100 microseconds\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"invalid coal time %d, disabling\n"
 argument_list|,
 name|microseconds
@@ -917,17 +910,10 @@ operator|>=
 literal|0x100
 condition|)
 block|{
-name|KASSERT
+name|nvme_printf
 argument_list|(
-name|FALSE
+name|ctrlr
 argument_list|,
-operator|(
-literal|"intr threshold> 255\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"invalid threshold %d, disabling\n"
 argument_list|,
 name|threshold
@@ -1122,6 +1108,37 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Controller's error log page entries is 0-based. */
+name|KASSERT
+argument_list|(
+name|num_entries
+operator|<=
+operator|(
+name|ctrlr
+operator|->
+name|cdata
+operator|.
+name|elpe
+operator|+
+literal|1
+operator|)
+argument_list|,
+operator|(
+literal|"%s called with num_entries=%d but (elpe+1)=%d\n"
+operator|,
+name|__func__
+operator|,
+name|num_entries
+operator|,
+name|ctrlr
+operator|->
+name|cdata
+operator|.
+name|elpe
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|num_entries
@@ -1136,22 +1153,6 @@ operator|+
 literal|1
 operator|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s num_entries=%d cdata.elpe=%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|num_entries
-argument_list|,
-name|ctrlr
-operator|->
-name|cdata
-operator|.
-name|elpe
-argument_list|)
-expr_stmt|;
 name|num_entries
 operator|=
 name|ctrlr
@@ -1162,7 +1163,6 @@ name|elpe
 operator|+
 literal|1
 expr_stmt|;
-block|}
 name|nvme_ctrlr_cmd_get_log_page
 argument_list|(
 name|ctrlr
