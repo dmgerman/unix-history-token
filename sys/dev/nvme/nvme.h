@@ -1989,6 +1989,20 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|nvme_cons_fail_fn_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_enum
 enum|enum
 name|nvme_namespace_flags
@@ -2229,6 +2243,9 @@ name|ctrlr_fn
 parameter_list|,
 name|nvme_cons_async_fn_t
 name|async_fn
+parameter_list|,
+name|nvme_cons_fail_fn_t
+name|fail_fn
 parameter_list|)
 function_decl|;
 end_function_decl
