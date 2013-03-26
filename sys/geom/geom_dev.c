@@ -240,6 +240,8 @@ operator|=
 name|D_DISK
 operator||
 name|D_TRACKCLOSE
+operator||
+name|D_UNMAPPED_IO
 block|, }
 decl_stmt|;
 end_decl_stmt
