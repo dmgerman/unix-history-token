@@ -556,6 +556,13 @@ name|cdev
 modifier|*
 name|cdev
 decl_stmt|;
+name|void
+modifier|*
+name|cons_cookie
+index|[
+name|NVME_MAX_CONSUMERS
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -711,6 +718,13 @@ name|nvme_async_event_request
 name|aer
 index|[
 name|NVME_MAX_ASYNC_EVENTS
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|cons_cookie
+index|[
+name|NVME_MAX_CONSUMERS
 index|]
 decl_stmt|;
 ifdef|#
@@ -1774,6 +1788,24 @@ name|req
 parameter_list|)
 value|uma_zfree(nvme_request_zone, req)
 end_define
+
+begin_function_decl
+name|void
+name|nvme_notify_async_consumers
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+specifier|const
+name|struct
+name|nvme_completion
+modifier|*
+name|async_cpl
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

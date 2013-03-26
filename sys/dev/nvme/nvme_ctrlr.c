@@ -2435,6 +2435,15 @@ block|{
 comment|/* 		 *  This is simulated when controller is being shut down, to 		 *  effectively abort outstanding asynchronous event requests 		 *  and make sure all memory is freed.  Do not repost the 		 *  request in this case. 		 */
 return|return;
 block|}
+name|nvme_notify_async_consumers
+argument_list|(
+name|aer
+operator|->
+name|ctrlr
+argument_list|,
+name|cpl
+argument_list|)
+expr_stmt|;
 comment|/* TODO: decode async event type based on status */
 comment|/* 	 * Repost another asynchronous event request to replace the one that 	 *  just completed. 	 */
 name|printf
@@ -3977,6 +3986,26 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|device_t
+name|nvme_ctrlr_get_device
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ctrlr
+operator|->
+name|dev
+operator|)
+return|;
 block|}
 end_function
 
