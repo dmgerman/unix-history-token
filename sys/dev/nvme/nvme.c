@@ -1043,7 +1043,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|nvme_qpair_submit_cmd
+name|nvme_qpair_submit_tracker
 argument_list|(
 name|tr
 operator|->
@@ -1100,7 +1100,7 @@ return|;
 comment|/* 	 * Reset controller twice to ensure we do a transition from cc.en==1 	 *  to cc.en==0.  This is because we don't really know what status 	 *  the controller was left in when boot handed off to OS. 	 */
 name|status
 operator|=
-name|nvme_ctrlr_reset
+name|nvme_ctrlr_hw_reset
 argument_list|(
 name|ctrlr
 argument_list|)
@@ -1118,7 +1118,7 @@ operator|)
 return|;
 name|status
 operator|=
-name|nvme_ctrlr_reset
+name|nvme_ctrlr_hw_reset
 argument_list|(
 name|ctrlr
 argument_list|)

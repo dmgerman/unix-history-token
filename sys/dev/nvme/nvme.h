@@ -60,6 +60,13 @@ name|NVME_BIO_TEST
 value|_IOWR('n', 4, struct nvme_io_test)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NVME_RESET_CONTROLLER
+value|_IO('n', 5)
+end_define
+
 begin_comment
 comment|/*  * Use to mark a command to apply to all namespaces, or to retrieve global  *  log pages.  */
 end_comment
