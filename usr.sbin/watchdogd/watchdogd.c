@@ -316,7 +316,7 @@ specifier|static
 name|int
 name|do_syslog
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -554,7 +554,6 @@ if|if
 condition|(
 name|do_syslog
 condition|)
-block|{
 name|openlog
 argument_list|(
 literal|"watchdogd"
@@ -568,7 +567,6 @@ argument_list|,
 name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
-block|}
 name|rtp
 operator|.
 name|type
@@ -1001,6 +999,8 @@ name|tv_start
 decl_stmt|,
 name|tv_end
 decl_stmt|,
+name|tv_now
+decl_stmt|,
 name|tv
 decl_stmt|;
 specifier|const
@@ -1010,6 +1010,10 @@ name|cmd_prefix
 decl_stmt|,
 modifier|*
 name|cmd
+decl_stmt|;
+name|struct
+name|timespec
+name|tp_now
 decl_stmt|;
 name|int
 name|sec
@@ -1103,7 +1107,7 @@ argument_list|(
 name|LOG_CRIT
 argument_list|,
 literal|"%s: '%s' took too long: "
-literal|"%d.%06ld seconds>= %d seconds threshhold"
+literal|"%d.%06ld seconds>= %d seconds threshold"
 argument_list|,
 name|cmd_prefix
 argument_list|,
@@ -1121,10 +1125,11 @@ argument_list|,
 name|carp_thresh_seconds
 argument_list|)
 expr_stmt|;
+else|else
 name|warnx
 argument_list|(
 literal|"%s: '%s' took too long: "
-literal|"%d.%06ld seconds>= %d seconds threshhold"
+literal|"%d.%06ld seconds>= %d seconds threshold"
 argument_list|,
 name|cmd_prefix
 argument_list|,
@@ -1141,6 +1146,47 @@ name|tv_usec
 argument_list|,
 name|carp_thresh_seconds
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Adjust the sleep interval again in case syslog(3) took a non-trivial 	 * amount of time to run. 	 */
+if|if
+condition|(
+name|watchdog_getuptime
+argument_list|(
+operator|&
+name|tp_now
+argument_list|)
+condition|)
+return|return
+operator|(
+name|sec
+operator|)
+return|;
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
+name|tv_now
+argument_list|,
+operator|&
+name|tp_now
+argument_list|)
+expr_stmt|;
+name|timersub
+argument_list|(
+operator|&
+name|tv_now
+argument_list|,
+operator|&
+name|tv_start
+argument_list|,
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+name|sec
+operator|=
+name|tv
+operator|.
+name|tv_sec
 expr_stmt|;
 return|return
 operator|(
@@ -1257,17 +1303,6 @@ goto|goto
 name|try_end
 goto|;
 block|}
-name|waited
-operator|=
-name|watchdog_check_dogfunction_time
-argument_list|(
-operator|&
-name|ts_start
-argument_list|,
-operator|&
-name|ts_end
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|failed
@@ -1279,6 +1314,17 @@ argument_list|(
 name|timeout
 operator||
 name|WD_ACTIVE
+argument_list|)
+expr_stmt|;
+name|waited
+operator|=
+name|watchdog_check_dogfunction_time
+argument_list|(
+operator|&
+name|ts_start
+argument_list|,
+operator|&
+name|ts_end
 argument_list|)
 expr_stmt|;
 if|if
@@ -1615,7 +1661,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage:\n"
-literal|"  watchdogd [-dnw] [-e cmd] [-I file] [-s sleep] [-t timeout]\n"
+literal|"  watchdogd [-dnSw] [-e cmd] [-I file] [-s sleep] [-t timeout]\n"
 literal|"            [-T script_timeout]\n"
 literal|"            [--debug]\n"
 literal|"            [--pretimeout seconds] [-pretimeout-action action]\n"
@@ -2269,7 +2315,7 @@ literal|'S'
 case|:
 name|do_syslog
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case
