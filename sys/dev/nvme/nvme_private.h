@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -658,6 +664,15 @@ name|queues_created
 decl_stmt|;
 name|uint32_t
 name|num_start_attempts
+decl_stmt|;
+name|struct
+name|task
+name|restart_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|taskqueue
 decl_stmt|;
 comment|/* For shared legacy interrupt. */
 name|int
