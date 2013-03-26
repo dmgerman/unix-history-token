@@ -2856,7 +2856,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|ENOMEM
 operator|)
 return|;
 name|mtx_init
