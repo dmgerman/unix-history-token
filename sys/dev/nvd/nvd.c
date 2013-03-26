@@ -566,7 +566,7 @@ specifier|const
 name|struct
 name|nvme_completion
 modifier|*
-name|status
+name|cpl
 parameter_list|)
 block|{
 name|struct
@@ -610,13 +610,10 @@ expr_stmt|;
 comment|/* 	 * TODO: add more extensive translation of NVMe status codes 	 *  to different bio error codes (i.e. EIO, EINVAL, etc.) 	 */
 if|if
 condition|(
-name|status
-operator|->
-name|sf_sc
-operator|||
-name|status
-operator|->
-name|sf_sct
+name|nvme_completion_is_error
+argument_list|(
+name|cpl
+argument_list|)
 condition|)
 block|{
 name|bp

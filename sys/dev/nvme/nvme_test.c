@@ -671,7 +671,7 @@ specifier|const
 name|struct
 name|nvme_completion
 modifier|*
-name|status
+name|cpl
 parameter_list|)
 block|{
 name|struct
@@ -692,13 +692,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|status
-operator|->
-name|sf_sc
-operator|||
-name|status
-operator|->
-name|sf_sct
+name|nvme_completion_is_error
+argument_list|(
+name|cpl
+argument_list|)
 condition|)
 block|{
 name|printf

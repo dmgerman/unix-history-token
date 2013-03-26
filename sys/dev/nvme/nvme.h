@@ -538,6 +538,50 @@ end_struct
 
 begin_struct
 struct|struct
+name|nvme_status
+block|{
+name|uint16_t
+name|p
+range|:
+literal|1
+decl_stmt|;
+comment|/* phase tag */
+name|uint16_t
+name|sc
+range|:
+literal|8
+decl_stmt|;
+comment|/* status code */
+name|uint16_t
+name|sct
+range|:
+literal|3
+decl_stmt|;
+comment|/* status code type */
+name|uint16_t
+name|rsvd2
+range|:
+literal|2
+decl_stmt|;
+name|uint16_t
+name|m
+range|:
+literal|1
+decl_stmt|;
+comment|/* more */
+name|uint16_t
+name|dnr
+range|:
+literal|1
+decl_stmt|;
+comment|/* do not retry */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|nvme_completion
 block|{
 comment|/* dword 0 */
@@ -563,41 +607,10 @@ name|uint16_t
 name|cid
 decl_stmt|;
 comment|/* command identifier */
-name|uint16_t
-name|p
-range|:
-literal|1
+name|struct
+name|nvme_status
+name|status
 decl_stmt|;
-comment|/* phase tag */
-name|uint16_t
-name|sf_sc
-range|:
-literal|8
-decl_stmt|;
-comment|/* status field - status code */
-name|uint16_t
-name|sf_sct
-range|:
-literal|3
-decl_stmt|;
-comment|/* status field - status code type */
-name|uint16_t
-name|rsvd2
-range|:
-literal|2
-decl_stmt|;
-name|uint16_t
-name|sf_m
-range|:
-literal|1
-decl_stmt|;
-comment|/* status field - more */
-name|uint16_t
-name|sf_dnr
-range|:
-literal|1
-decl_stmt|;
-comment|/* status field - do not retry */
 block|}
 name|__packed
 struct|;
@@ -1761,6 +1774,17 @@ literal|0x1
 block|, }
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|nvme_completion_is_error
+parameter_list|(
+name|cpl
+parameter_list|)
+define|\
+value|((cpl)->status.sc != 0 || (cpl)->status.sct != 0)
+end_define
 
 begin_ifdef
 ifdef|#
