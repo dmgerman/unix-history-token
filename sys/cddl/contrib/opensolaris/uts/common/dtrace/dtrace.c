@@ -1980,7 +1980,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__i386
+name|__x86
 end_ifndef
 
 begin_define
