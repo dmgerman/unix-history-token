@@ -4365,6 +4365,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|nvme_ctrlr_disable
+argument_list|(
+name|ctrlr
+argument_list|)
+expr_stmt|;
 name|taskqueue_free
 argument_list|(
 name|ctrlr
