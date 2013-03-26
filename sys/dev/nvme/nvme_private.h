@@ -306,6 +306,17 @@ name|NVME_MAX_TIMEOUT_PERIOD
 value|(120)
 end_define
 
+begin_comment
+comment|/* Maximum log page size to fetch for AERs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVME_MAX_AER_LOG_SIZE
+value|(4096)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -384,6 +395,19 @@ name|struct
 name|nvme_request
 modifier|*
 name|req
+decl_stmt|;
+name|struct
+name|nvme_completion
+name|cpl
+decl_stmt|;
+name|uint32_t
+name|log_page_size
+decl_stmt|;
+name|uint8_t
+name|log_page_buffer
+index|[
+name|NVME_MAX_AER_LOG_SIZE
+index|]
 decl_stmt|;
 block|}
 struct|;
