@@ -1231,9 +1231,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s.\n"
+literal|"Could not open %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit_code
@@ -1253,16 +1260,22 @@ argument_list|,
 operator|&
 name|cdata
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ioctl to %s failed.\n"
+literal|"Identify request to %s failed. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit_code
@@ -1338,9 +1351,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s.\n"
+literal|"Could not open %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit_code
@@ -1360,16 +1380,23 @@ argument_list|,
 operator|&
 name|nsdata
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ioctl to %s failed.\n"
+literal|"Identify request to %s failed. "
+literal|"errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit_code
@@ -1540,15 +1567,22 @@ argument_list|,
 operator|&
 name|devstat
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid device node '%s'.\n"
+literal|"Invalid device node %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1575,9 +1609,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s.\n"
+literal|"Could not open %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1597,16 +1638,22 @@ argument_list|,
 operator|&
 name|cdata
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ioctl to %s failed.\n"
+literal|"Identify request to %s failed. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1805,15 +1852,22 @@ argument_list|,
 operator|&
 name|devstat
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid device node '%s'.\n"
+literal|"Invalid device node %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1840,9 +1894,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s.\n"
+literal|"Could not open %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1862,16 +1923,22 @@ argument_list|,
 operator|&
 name|nsdata
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ioctl to %s failed.\n"
+literal|"Identify request to %s failed. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2306,8 +2373,6 @@ decl_stmt|,
 name|tflag
 decl_stmt|;
 name|int
-name|err
-decl_stmt|,
 name|perthread
 init|=
 literal|0
@@ -2793,17 +2858,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s not valid device.\n"
+literal|"%s not valid device. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|perftest_usage
 argument_list|()
 expr_stmt|;
 block|}
-name|err
-operator|=
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -2813,19 +2885,22 @@ argument_list|,
 operator|&
 name|io_test
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
+operator|<
+literal|0
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"NVME_IO_TEST returned %d\n"
+literal|"NVME_IO_TEST failed. errno=%d (%s)\n"
 argument_list|,
 name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2933,15 +3008,22 @@ argument_list|,
 operator|&
 name|devstat
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid device node '%s'.\n"
+literal|"Invalid device node %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2968,9 +3050,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not open %s.\n"
+literal|"Could not open %s. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2987,16 +3076,22 @@ name|fd
 argument_list|,
 name|NVME_RESET_CONTROLLER
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ioctl to %s failed.\n"
+literal|"Reset request to %s failed. errno=%d (%s)\n"
 argument_list|,
 name|path
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
