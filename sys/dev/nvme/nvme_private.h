@@ -322,6 +322,9 @@ decl_stmt|;
 name|uint32_t
 name|payload_size
 decl_stmt|;
+name|uint32_t
+name|timeout
+decl_stmt|;
 name|struct
 name|uio
 modifier|*
@@ -1615,6 +1618,15 @@ name|cb_arg
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|req
+operator|->
+name|timeout
+operator|=
+name|NVME_TIMEOUT_IN_SEC
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
@@ -1688,6 +1700,12 @@ operator|->
 name|cb_arg
 operator|=
 name|cb_arg
+expr_stmt|;
+name|req
+operator|->
+name|timeout
+operator|=
+name|NVME_TIMEOUT_IN_SEC
 expr_stmt|;
 return|return
 operator|(

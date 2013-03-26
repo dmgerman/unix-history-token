@@ -1016,6 +1016,13 @@ argument_list|,
 name|cb_arg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Override default timeout value here, since asynchronous event 	 *  requests should by nature never be timed out. 	 */
+name|req
+operator|->
+name|timeout
+operator|=
+literal|0
+expr_stmt|;
 name|cmd
 operator|=
 operator|&

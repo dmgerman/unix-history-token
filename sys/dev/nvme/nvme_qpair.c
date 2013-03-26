@@ -2029,6 +2029,14 @@ index|]
 operator|=
 name|tr
 expr_stmt|;
+if|if
+condition|(
+name|req
+operator|->
+name|timeout
+operator|>
+literal|0
+condition|)
 if|#
 directive|if
 name|__FreeBSD_version
@@ -2041,7 +2049,9 @@ name|tr
 operator|->
 name|timer
 argument_list|,
-name|NVME_TIMEOUT_IN_SEC
+name|req
+operator|->
+name|timeout
 operator|*
 name|hz
 argument_list|,
@@ -2059,7 +2069,9 @@ name|tr
 operator|->
 name|timer
 argument_list|,
-name|NVME_TIMEOUT_IN_SEC
+name|req
+operator|->
+name|timeout
 operator|*
 name|hz
 argument_list|,
