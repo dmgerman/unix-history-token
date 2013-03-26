@@ -2630,6 +2630,14 @@ name|aer
 init|=
 name|arg
 decl_stmt|;
+comment|/* 	 * If the log page fetch for some reason completed with an error, 	 *  don't pass log page data to the consumers.  In practice, this case 	 *  should never happen. 	 */
+if|if
+condition|(
+name|nvme_completion_is_error
+argument_list|(
+name|cpl
+argument_list|)
+condition|)
 name|nvme_notify_async_consumers
 argument_list|(
 name|aer
@@ -2640,6 +2648,40 @@ operator|&
 name|aer
 operator|->
 name|cpl
+argument_list|,
+name|aer
+operator|->
+name|log_page_id
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* 		 * Pass the cpl data from the original async event completion, 		 *  not the log page fetch. 		 */
+name|nvme_notify_async_consumers
+argument_list|(
+name|aer
+operator|->
+name|ctrlr
+argument_list|,
+operator|&
+name|aer
+operator|->
+name|cpl
+argument_list|,
+name|aer
+operator|->
+name|log_page_id
+argument_list|,
+name|aer
+operator|->
+name|log_page_buffer
+argument_list|,
+name|aer
+operator|->
+name|log_page_size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Repost another asynchronous event request to replace the one 	 *  that just completed. 	 */
@@ -2678,9 +2720,6 @@ name|aer
 init|=
 name|arg
 decl_stmt|;
-name|uint8_t
-name|log_page_id
-decl_stmt|;
 if|if
 condition|(
 name|cpl
@@ -2701,6 +2740,8 @@ literal|"Asynchronous event occurred.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Associated log page is in bits 23:16 of completion entry dw0. */
+name|aer
+operator|->
 name|log_page_id
 operator|=
 operator|(
@@ -2717,6 +2758,8 @@ if|if
 condition|(
 name|is_log_page_id_valid
 argument_list|(
+name|aer
+operator|->
 name|log_page_id
 argument_list|)
 condition|)
@@ -2731,6 +2774,8 @@ name|aer
 operator|->
 name|ctrlr
 argument_list|,
+name|aer
+operator|->
 name|log_page_id
 argument_list|)
 expr_stmt|;
@@ -2756,6 +2801,8 @@ name|aer
 operator|->
 name|ctrlr
 argument_list|,
+name|aer
+operator|->
 name|log_page_id
 argument_list|,
 name|NVME_GLOBAL_NAMESPACE_TAG
@@ -2784,6 +2831,14 @@ operator|->
 name|ctrlr
 argument_list|,
 name|cpl
+argument_list|,
+name|aer
+operator|->
+name|log_page_id
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Repost another asynchronous event request to replace the one 		 *  that just completed. 		 */

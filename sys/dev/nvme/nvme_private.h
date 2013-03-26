@@ -401,6 +401,9 @@ name|nvme_completion
 name|cpl
 decl_stmt|;
 name|uint32_t
+name|log_page_id
+decl_stmt|;
+name|uint32_t
 name|log_page_size
 decl_stmt|;
 name|uint8_t
@@ -1917,6 +1920,16 @@ name|struct
 name|nvme_completion
 modifier|*
 name|async_cpl
+parameter_list|,
+name|uint32_t
+name|log_page_id
+parameter_list|,
+name|void
+modifier|*
+name|log_page_buffer
+parameter_list|,
+name|uint32_t
+name|log_page_size
 parameter_list|)
 function_decl|;
 end_function_decl

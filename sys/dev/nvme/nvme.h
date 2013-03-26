@@ -1978,6 +1978,13 @@ specifier|const
 name|struct
 name|nvme_completion
 modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_typedef
