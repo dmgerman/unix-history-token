@@ -1003,7 +1003,7 @@ name|M_NVD
 argument_list|,
 name|M_ZERO
 operator||
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -1079,7 +1079,7 @@ name|M_NVD
 argument_list|,
 name|M_ZERO
 operator||
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|disk

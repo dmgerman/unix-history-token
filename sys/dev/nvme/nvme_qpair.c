@@ -1239,7 +1239,6 @@ name|num_intr_handler_calls
 operator|=
 literal|0
 expr_stmt|;
-comment|/* TODO: error checking on contigmalloc, bus_dmamap_load calls */
 name|qpair
 operator|->
 name|cmd
@@ -1259,8 +1258,6 @@ argument_list|,
 name|M_NVME
 argument_list|,
 name|M_ZERO
-operator||
-name|M_NOWAIT
 argument_list|,
 literal|0
 argument_list|,
@@ -1290,8 +1287,6 @@ argument_list|,
 name|M_NVME
 argument_list|,
 name|M_ZERO
-operator||
-name|M_NOWAIT
 argument_list|,
 literal|0
 argument_list|,
@@ -1480,23 +1475,9 @@ name|M_NVME
 argument_list|,
 name|M_ZERO
 operator||
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tr
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"warning: nvme tracker malloc failed\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|nvme_qpair_construct_tracker
 argument_list|(
 name|qpair
@@ -1540,7 +1521,7 @@ name|M_NVME
 argument_list|,
 name|M_ZERO
 operator||
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}

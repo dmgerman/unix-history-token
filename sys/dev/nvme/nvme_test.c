@@ -298,7 +298,7 @@ name|size
 argument_list|,
 name|M_NVME
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|idx
@@ -873,7 +873,7 @@ argument_list|)
 argument_list|,
 name|M_NVME
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -926,7 +926,7 @@ name|size
 argument_list|,
 name|M_NVME
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|tth
@@ -1170,7 +1170,7 @@ argument_list|)
 argument_list|,
 name|M_NVME
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
