@@ -504,6 +504,39 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Returns TRUE if the specified radix node is a leaf and FALSE otherwise.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|boolean_t
+name|vm_radix_isleaf
+parameter_list|(
+name|struct
+name|vm_radix_node
+modifier|*
+name|rnode
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|rnode
+operator|&
+name|VM_RADIX_ISLEAF
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Returns the associated page extracted from rnode if available,  * and NULL otherwise.  */
 end_comment
 
@@ -1103,7 +1136,8 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|vm_radix_node_page
+operator|!
+name|vm_radix_isleaf
 argument_list|(
 name|rnode
 operator|->
@@ -1112,8 +1146,6 @@ index|[
 name|slot
 index|]
 argument_list|)
-operator|==
-name|NULL
 condition|)
 name|vm_radix_reclaim_allnodes_int
 argument_list|(
@@ -1772,12 +1804,11 @@ name|tmp
 operator|!=
 name|NULL
 operator|&&
-name|vm_radix_node_page
+operator|!
+name|vm_radix_isleaf
 argument_list|(
 name|tmp
 argument_list|)
-operator|==
-name|NULL
 argument_list|,
 operator|(
 literal|"%s: unexpected lookup interruption"
