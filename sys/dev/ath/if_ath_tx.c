@@ -2523,9 +2523,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ATH_TXQ_LAST
+argument_list|(
 name|txq
-operator|->
-name|axq_link
+argument_list|,
+name|axq_q_s
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -2533,7 +2536,7 @@ block|{
 name|struct
 name|ath_buf
 modifier|*
-name|last
+name|bf_last
 init|=
 name|ATH_TXQ_LAST
 argument_list|(
@@ -2552,7 +2555,7 @@ name|wh
 operator|=
 name|mtod
 argument_list|(
-name|last
+name|bf_last
 operator|->
 name|bf_m
 argument_list|,
@@ -2576,7 +2579,7 @@ name|sc
 operator|->
 name|sc_dmat
 argument_list|,
-name|last
+name|bf_last
 operator|->
 name|bf_dmamap
 argument_list|,
@@ -2584,14 +2587,20 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* link descriptor */
-operator|*
-name|txq
+name|ath_hal_settxdesclink
+argument_list|(
+name|sc
 operator|->
-name|axq_link
-operator|=
+name|sc_ah
+argument_list|,
+name|bf_last
+operator|->
+name|bf_lastds
+argument_list|,
 name|bf
 operator|->
 name|bf_daddr
+argument_list|)
 expr_stmt|;
 block|}
 name|ATH_TXQ_INSERT_TAIL
