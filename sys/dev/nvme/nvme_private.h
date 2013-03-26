@@ -780,6 +780,9 @@ index|[
 name|NVME_MAX_CONSUMERS
 index|]
 decl_stmt|;
+name|uint32_t
+name|is_resetting
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CHATHAM2

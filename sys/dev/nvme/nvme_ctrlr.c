@@ -1852,6 +1852,31 @@ modifier|*
 name|ctrlr
 parameter_list|)
 block|{
+name|int
+name|cmpset
+decl_stmt|;
+name|cmpset
+operator|=
+name|atomic_cmpset_32
+argument_list|(
+operator|&
+name|ctrlr
+operator|->
+name|is_resetting
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmpset
+operator|==
+literal|0
+condition|)
+comment|/* Controller is already resetting. */
+return|return;
 name|taskqueue_enqueue
 argument_list|(
 name|ctrlr
@@ -3000,6 +3025,18 @@ argument_list|(
 name|ctrlr
 argument_list|)
 expr_stmt|;
+name|atomic_cmpset_32
+argument_list|(
+operator|&
+name|ctrlr
+operator|->
+name|is_resetting
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3896,6 +3933,12 @@ name|PI_DISK
 argument_list|,
 literal|"nvme taskq"
 argument_list|)
+expr_stmt|;
+name|ctrlr
+operator|->
+name|is_resetting
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
