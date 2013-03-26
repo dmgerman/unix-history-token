@@ -1149,13 +1149,6 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX For now this is a placeholder; free the buffer 	 * and inform the stack that the TX failed. 	 */
-block|ath_tx_default_comp(sc, bf, 1);
-endif|#
-directive|endif
 block|}
 end_function
 
