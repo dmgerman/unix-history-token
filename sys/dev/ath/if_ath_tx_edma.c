@@ -903,9 +903,9 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
-name|ATH_TXQ_LOCK_ASSERT
+name|ATH_TX_LOCK_ASSERT
 argument_list|(
-name|txq
+name|sc
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -939,9 +939,11 @@ expr_stmt|;
 comment|/* 	 * XXX this is mostly duplicated in ath_tx_handoff_mcast(). 	 */
 if|if
 condition|(
-name|ATH_TXQ_FIRST
+name|ATH_TXQ_LAST
 argument_list|(
 name|txq
+argument_list|,
+name|axq_q_s
 argument_list|)
 operator|!=
 name|NULL
@@ -1002,14 +1004,20 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* link descriptor */
-operator|*
-name|txq
+name|ath_hal_settxdesclink
+argument_list|(
+name|sc
 operator|->
-name|axq_link
-operator|=
+name|sc_ah
+argument_list|,
+name|bf_last
+operator|->
+name|bf_lastds
+argument_list|,
 name|bf
 operator|->
 name|bf_daddr
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
