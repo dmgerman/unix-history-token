@@ -1018,6 +1018,34 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|nvme_ctrlr_cmd_get_error_page
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+name|struct
+name|nvme_error_information_entry
+modifier|*
+name|payload
+parameter_list|,
+name|uint32_t
+name|num_entries
+parameter_list|,
+comment|/* 0 = max */
+name|nvme_cb_fn_t
+name|cb_fn
+parameter_list|,
+name|void
+modifier|*
+name|cb_arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|nvme_ctrlr_cmd_get_health_information_page
 parameter_list|(
 name|struct
