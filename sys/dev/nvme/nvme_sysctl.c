@@ -1055,13 +1055,6 @@ argument_list|(
 name|ctrlr_tree
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ctrlr
-operator|->
-name|is_started
-condition|)
-block|{
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctrlr_ctx
@@ -1214,7 +1207,6 @@ argument_list|,
 literal|"Reset statistics to zero"
 argument_list|)
 expr_stmt|;
-block|}
 name|que_tree
 operator|=
 name|SYSCTL_ADD_NODE

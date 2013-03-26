@@ -727,9 +727,6 @@ decl_stmt|;
 name|uint32_t
 name|queues_created
 decl_stmt|;
-name|uint32_t
-name|num_start_attempts
-decl_stmt|;
 name|struct
 name|task
 name|reset_task
@@ -807,9 +804,6 @@ name|struct
 name|cdev
 modifier|*
 name|cdev
-decl_stmt|;
-name|boolean_t
-name|is_started
 decl_stmt|;
 name|uint32_t
 name|num_aers
@@ -1417,7 +1411,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|nvme_ctrlr_start
+name|nvme_ctrlr_start_config_hook
 parameter_list|(
 name|void
 modifier|*
