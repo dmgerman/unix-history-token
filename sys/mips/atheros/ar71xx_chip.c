@@ -273,6 +273,12 @@ name|u_ar71xx_ddr_freq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uint32_t
+name|u_ar71xx_refclk
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -300,6 +306,10 @@ decl_stmt|;
 name|uint32_t
 name|div
 decl_stmt|;
+name|u_ar71xx_refclk
+operator|=
+name|AR71XX_BASE_FREQ
+expr_stmt|;
 name|pll
 operator|=
 name|ATH_READ_REG

@@ -405,6 +405,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint32_t
+name|u_ar71xx_refclk
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
 name|u_ar71xx_cpu_freq
 decl_stmt|;
 end_decl_stmt
@@ -422,6 +429,21 @@ name|uint32_t
 name|u_ar71xx_ddr_freq
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|uint64_t
+name|ar71xx_refclk
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|u_ar71xx_refclk
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
