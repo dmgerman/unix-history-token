@@ -74,6 +74,9 @@ name|uint32_t
 name|id
 decl_stmt|;
 name|uint32_t
+name|subsystemid
+decl_stmt|;
+name|uint32_t
 name|set
 decl_stmt|,
 name|unset
@@ -92,6 +95,8 @@ name|HDA_MATCH_ALL
 block|,
 name|HDA_MATCH_ALL
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_FORCESTEREO
 operator||
 name|HDAA_QUIRK_IVREF
@@ -103,6 +108,8 @@ block|}
 block|,
 block|{
 name|ACER_ALL_SUBVENDOR
+block|,
+name|HDA_MATCH_ALL
 block|,
 name|HDA_MATCH_ALL
 block|,
@@ -121,6 +128,8 @@ name|ASUS_G2K_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC660
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 literal|0
@@ -135,6 +144,8 @@ block|{
 name|ASUS_M5200_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC880
+block|,
+name|HDA_MATCH_ALL
 block|,
 literal|0
 block|,
@@ -151,6 +162,8 @@ name|ASUS_A7M_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC880
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 literal|0
@@ -165,6 +178,8 @@ block|{
 name|ASUS_A7T_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC882
+block|,
+name|HDA_MATCH_ALL
 block|,
 literal|0
 block|,
@@ -181,6 +196,8 @@ name|ASUS_W2J_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC882
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 literal|0
@@ -196,6 +213,8 @@ name|ASUS_U5F_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_EAPDINV
 block|,
 literal|0
@@ -207,6 +226,8 @@ block|{
 name|ASUS_A8X_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
+block|,
+name|HDA_MATCH_ALL
 block|,
 name|HDAA_QUIRK_EAPDINV
 block|,
@@ -220,6 +241,8 @@ name|ASUS_F3JC_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC861
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_OVREF
 block|,
 literal|0
@@ -232,6 +255,8 @@ name|UNIWILL_9075_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC861
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_OVREF
 block|,
 literal|0
@@ -239,11 +264,13 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*{ ASUS_M2N_SUBVENDOR, HDA_CODEC_AD1988, 	    HDAA_QUIRK_IVREF80, HDAA_QUIRK_IVREF50 | HDAA_QUIRK_IVREF100, 	    0 },*/
+comment|/*{ ASUS_M2N_SUBVENDOR, HDA_CODEC_AD1988, HDA_MATCH_ALL, 	    HDAA_QUIRK_IVREF80, HDAA_QUIRK_IVREF50 | HDAA_QUIRK_IVREF100, 	    0 },*/
 block|{
 name|MEDION_MD95257_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC880
+block|,
+name|HDA_MATCH_ALL
 block|,
 literal|0
 block|,
@@ -260,6 +287,8 @@ name|LENOVO_3KN100_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_EAPDINV
 operator||
 name|HDAA_QUIRK_SENSEINV
@@ -274,6 +303,8 @@ name|SAMSUNG_Q1_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_EAPDINV
 block|,
 literal|0
@@ -285,6 +316,8 @@ block|{
 name|APPLE_MB3_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC885
+block|,
+name|HDA_MATCH_ALL
 block|,
 name|HDAA_QUIRK_OVREF50
 block|,
@@ -300,6 +333,8 @@ block|{
 name|APPLE_INTEL_MAC
 block|,
 name|HDA_CODEC_STAC9221
+block|,
+name|HDA_MATCH_ALL
 block|,
 literal|0
 block|,
@@ -321,6 +356,8 @@ name|APPLE_MACBOOKPRO55
 block|,
 name|HDA_CODEC_CS4206
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 literal|0
@@ -341,6 +378,8 @@ name|DELL_D630_SUBVENDOR
 block|,
 name|HDA_CODEC_STAC9205X
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 literal|0
@@ -355,6 +394,8 @@ block|{
 name|DELL_V1400_SUBVENDOR
 block|,
 name|HDA_CODEC_STAC9228X
+block|,
+name|HDA_MATCH_ALL
 block|,
 literal|0
 block|,
@@ -371,6 +412,8 @@ name|DELL_V1500_SUBVENDOR
 block|,
 name|HDA_CODEC_STAC9205X
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 literal|0
@@ -386,6 +429,8 @@ name|HDA_MATCH_ALL
 block|,
 name|HDA_CODEC_AD1988
 block|,
+name|HDA_MATCH_ALL
+block|,
 name|HDAA_QUIRK_IVREF80
 block|,
 name|HDAA_QUIRK_IVREF50
@@ -399,6 +444,8 @@ block|{
 name|HDA_MATCH_ALL
 block|,
 name|HDA_CODEC_AD1988B
+block|,
+name|HDA_MATCH_ALL
 block|,
 name|HDAA_QUIRK_IVREF80
 block|,
@@ -414,9 +461,26 @@ name|HDA_MATCH_ALL
 block|,
 name|HDA_CODEC_CX20549
 block|,
+name|HDA_MATCH_ALL
+block|,
 literal|0
 block|,
 name|HDAA_QUIRK_FORCESTEREO
+block|,
+literal|0
+block|}
+block|,
+comment|/* Mac Pro 1,1 requires ovref for proper volume level. */
+block|{
+literal|0x00000000
+block|,
+name|HDA_CODEC_ALC885
+block|,
+literal|0x106b0c00
+block|,
+literal|0
+block|,
+name|HDAA_QUIRK_OVREF
 block|,
 literal|0
 block|}
@@ -1494,6 +1558,8 @@ name|uint32_t
 name|id
 decl_stmt|,
 name|subid
+decl_stmt|,
+name|subsystemid
 decl_stmt|;
 name|int
 name|i
@@ -1510,6 +1576,15 @@ operator|=
 name|hdaa_card_id
 argument_list|(
 name|devinfo
+argument_list|)
+expr_stmt|;
+name|subsystemid
+operator|=
+name|hda_get_subsystem_id
+argument_list|(
+name|devinfo
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Quirks 	 */
@@ -1553,6 +1628,18 @@ operator|.
 name|id
 argument_list|,
 name|id
+argument_list|)
+operator|&&
+name|HDA_DEV_MATCH
+argument_list|(
+name|hdac_quirks
+index|[
+name|i
+index|]
+operator|.
+name|subsystemid
+argument_list|,
+name|subsystemid
 argument_list|)
 operator|)
 condition|)
