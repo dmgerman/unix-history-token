@@ -1330,7 +1330,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return ENOMEM to the caller so that it can pass it up the stack. 	 * This error only happens when NOWAIT is set, so deferal is disabled. 	 */
+comment|/* 	 * Return ENOMEM to the caller so that it can pass it up the stack. 	 * This error only happens when NOWAIT is set, so deferral is disabled. 	 */
 if|if
 condition|(
 name|error
@@ -1924,7 +1924,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return ENOMEM to the caller so that it can pass it up the stack. 	 * This error only happens when NOWAIT is set, so deferal is disabled. 	 */
+comment|/* 	 * Return ENOMEM to the caller so that it can pass it up the stack. 	 * This error only happens when NOWAIT is set, so deferral is disabled. 	 */
 if|if
 condition|(
 name|error
@@ -2320,7 +2320,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return ENOMEM to the caller so that it can pass it up the stack. 	 * This error only happens when NOWAIT is set, so deferal is disabled. 	 */
+comment|/* 	 * Return ENOMEM to the caller so that it can pass it up the stack. 	 * This error only happens when NOWAIT is set, so deferral is disabled. 	 */
 if|if
 condition|(
 name|error
