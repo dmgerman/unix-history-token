@@ -2518,6 +2518,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TRANSIENT_DENOM
+value|5
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TRANSIENT_DENOM
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Calculating buffer cache scaling values and reserve space for buffer  * headers.  This is called during low level kernel initialization and  * may be called more then once.  We CANNOT write to the memory area  * being reserved at this time.  */
 end_comment
@@ -2685,7 +2715,7 @@ operator|=
 name|maxbuf
 expr_stmt|;
 block|}
-comment|/* 	 * Ideal allocation size for the transient bio submap if 10% 	 * of the maximal space buffer map.  This roughly corresponds 	 * to the amount of the buffer mapped for typical UFS load. 	 * 	 * Clip the buffer map to reserve space for the transient 	 * BIOs, if its extent is bigger than 90% of the maximum 	 * buffer map extent on the platform. 	 * 	 * The fall-back to the maxbuf in case of maxbcache unset, 	 * allows to not trim the buffer KVA for the architectures 	 * with ample KVA space. 	 */
+comment|/* 	 * Ideal allocation size for the transient bio submap if 10% 	 * of the maximal space buffer map.  This roughly corresponds 	 * to the amount of the buffer mapped for typical UFS load. 	 * 	 * Clip the buffer map to reserve space for the transient 	 * BIOs, if its extent is bigger than 90% (80% on i386) of the 	 * maximum buffer map extent on the platform. 	 * 	 * The fall-back to the maxbuf in case of maxbcache unset, 	 * allows to not trim the buffer KVA for the architectures 	 * with ample KVA space. 	 */
 if|if
 condition|(
 name|bio_transient_maxcnt
@@ -2722,9 +2752,13 @@ name|buf_sz
 operator|<
 name|maxbuf_sz
 operator|/
-literal|10
+name|TRANSIENT_DENOM
 operator|*
-literal|9
+operator|(
+name|TRANSIENT_DENOM
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 comment|/* 			 * There is more KVA than memory.  Do not 			 * adjust buffer map size, and assign the rest 			 * of maxbuf to transient map. 			 */
@@ -2737,12 +2771,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Buffer map spans all KVA we could afford on 			 * this platform.  Give 10% of the buffer map 			 * to the transient bio map. 			 */
+comment|/* 			 * Buffer map spans all KVA we could afford on 			 * this platform.  Give 10% (20% on i386) of 			 * the buffer map to the transient bio map. 			 */
 name|biotmap_sz
 operator|=
 name|buf_sz
 operator|/
-literal|10
+name|TRANSIENT_DENOM
 expr_stmt|;
 name|buf_sz
 operator|-=
