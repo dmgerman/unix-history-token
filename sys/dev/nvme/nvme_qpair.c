@@ -453,7 +453,7 @@ operator|->
 name|ctrlr
 argument_list|,
 literal|"%s sqid:%d cid:%d nsid:%d "
-literal|"lba:%lu len:%d\n"
+literal|"lba:%llu len:%d\n"
 argument_list|,
 name|get_io_opcode_string
 argument_list|(
@@ -476,7 +476,9 @@ name|nsid
 argument_list|,
 operator|(
 operator|(
-name|uint64_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|cmd
 operator|->
@@ -484,7 +486,7 @@ name|cdw11
 operator|<<
 literal|32
 operator|)
-operator||
+operator|+
 name|cmd
 operator|->
 name|cdw10
