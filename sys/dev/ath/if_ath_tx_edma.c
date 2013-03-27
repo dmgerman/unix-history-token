@@ -2072,7 +2072,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 ifdef|#
 directive|ifdef
@@ -2173,6 +2173,11 @@ argument_list|,
 name|ts
 operator|.
 name|ts_queue_id
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 continue|continue;
