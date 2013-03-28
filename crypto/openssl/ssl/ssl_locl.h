@@ -5395,6 +5395,9 @@ name|rec
 parameter_list|,
 name|unsigned
 name|md_size
+parameter_list|,
+name|unsigned
+name|orig_len
 parameter_list|)
 function_decl|;
 end_function_decl
