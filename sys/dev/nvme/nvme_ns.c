@@ -984,7 +984,6 @@ break|break;
 case|case
 name|BIO_DELETE
 case|:
-comment|/* 		 * Note: Chatham2 doesn't support DSM, so this code 		 *  can't be fully tested yet. 		 */
 name|dsm_range
 operator|=
 name|malloc
