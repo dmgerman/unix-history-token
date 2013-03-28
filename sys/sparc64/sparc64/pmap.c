@@ -9246,6 +9246,36 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|pmap_copy_pages
+parameter_list|(
+name|vm_page_t
+name|ma
+index|[]
+parameter_list|,
+name|vm_offset_t
+name|a_offset
+parameter_list|,
+name|vm_page_t
+name|mb
+index|[]
+parameter_list|,
+name|vm_offset_t
+name|b_offset
+parameter_list|,
+name|int
+name|xfersize
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"pmap_copy_pages: not implemented"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
 end_comment
