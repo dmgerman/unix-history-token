@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -226,14 +232,6 @@ begin_decl_stmt
 specifier|static
 name|uma_zone_t
 name|vmspace_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|vm_object
-name|kmapentobj
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,12 +1102,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|uma_zone_set_obj
+name|uma_zone_reserve_kva
 argument_list|(
 name|kmapentzone
-argument_list|,
-operator|&
-name|kmapentobj
 argument_list|,
 name|lmin
 argument_list|(
@@ -4780,7 +4775,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * OBJ_ONEMAPPING must be cleared unless this mapping 		 * is trivially proven to be the only mapping for any 		 * of the object's pages.  (Object granularity 		 * reference counting is insufficient to recognize 		 * aliases with precision.) 		 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4806,7 +4801,7 @@ argument_list|,
 name|OBJ_ONEMAPPING
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6461,7 +6456,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|entry
 operator|->
@@ -6517,7 +6512,7 @@ name|entry
 operator|->
 name|start
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|entry
 operator|->
@@ -6788,7 +6783,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|entry
 operator|->
@@ -6844,7 +6839,7 @@ name|entry
 operator|->
 name|start
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|entry
 operator|->
@@ -7174,7 +7169,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -7433,7 +7428,7 @@ argument_list|)
 expr_stmt|;
 name|unlock_return
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -7740,7 +7735,7 @@ name|cred
 expr_stmt|;
 continue|continue;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -7760,7 +7755,7 @@ operator|!=
 name|OBJT_SWAP
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -7797,7 +7792,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -7835,7 +7830,7 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -11031,7 +11026,7 @@ name|offidxstart
 operator|+
 name|count
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -11185,7 +11180,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -11832,7 +11827,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -11966,7 +11961,7 @@ operator|=
 name|size
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -12785,7 +12780,7 @@ operator|.
 name|vm_object
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -12846,7 +12841,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -15734,7 +15729,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|eobject
 argument_list|)
@@ -15753,7 +15748,7 @@ name|charge
 operator|=
 name|size
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|eobject
 argument_list|)
@@ -15839,7 +15834,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|entry
 operator|->
@@ -15870,7 +15865,7 @@ name|charge
 operator|=
 name|size
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|entry
 operator|->

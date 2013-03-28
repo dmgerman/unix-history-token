@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sched.h>
 end_include
 
@@ -779,7 +785,7 @@ modifier|*
 name|cpu_idle_hook
 function_decl|)
 parameter_list|(
-name|void
+name|sbintime_t
 parameter_list|)
 init|=
 name|NULL
@@ -1844,6 +1850,12 @@ block|{
 name|register_t
 name|ie
 decl_stmt|;
+name|sbintime_t
+name|sbt
+init|=
+operator|-
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1853,6 +1865,8 @@ block|{
 name|critical_enter
 argument_list|()
 expr_stmt|;
+name|sbt
+operator|=
 name|cpu_idleclock
 argument_list|()
 expr_stmt|;
@@ -1895,7 +1909,9 @@ call|(
 modifier|*
 name|cpu_idle_hook
 call|)
-argument_list|()
+argument_list|(
+name|sbt
+argument_list|)
 expr_stmt|;
 comment|/* The hook must enable interrupts! */
 block|}

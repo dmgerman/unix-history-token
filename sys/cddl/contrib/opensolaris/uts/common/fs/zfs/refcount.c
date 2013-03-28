@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -65,7 +65,7 @@ begin_decl_stmt
 name|int
 name|reference_history
 init|=
-literal|4
+literal|3
 decl_stmt|;
 end_decl_stmt
 
@@ -246,6 +246,35 @@ name|rc_removed_count
 operator|=
 literal|0
 expr_stmt|;
+name|rc
+operator|->
+name|rc_tracked
+operator|=
+name|reference_tracking_enable
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|refcount_create_untracked
+parameter_list|(
+name|refcount_t
+modifier|*
+name|rc
+parameter_list|)
+block|{
+name|refcount_create
+argument_list|(
+name|rc
+argument_list|)
+expr_stmt|;
+name|rc
+operator|->
+name|rc_tracked
+operator|=
+name|B_FALSE
+expr_stmt|;
 block|}
 end_function
 
@@ -400,15 +429,6 @@ modifier|*
 name|rc
 parameter_list|)
 block|{
-name|ASSERT
-argument_list|(
-name|rc
-operator|->
-name|rc_count
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rc
@@ -430,15 +450,6 @@ modifier|*
 name|rc
 parameter_list|)
 block|{
-name|ASSERT
-argument_list|(
-name|rc
-operator|->
-name|rc_count
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rc
@@ -468,13 +479,17 @@ block|{
 name|reference_t
 modifier|*
 name|ref
+init|=
+name|NULL
 decl_stmt|;
 name|int64_t
 name|count
 decl_stmt|;
 if|if
 condition|(
-name|reference_tracking_enable
+name|rc
+operator|->
+name|rc_tracked
 condition|)
 block|{
 name|ref
@@ -518,7 +533,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|reference_tracking_enable
+name|rc
+operator|->
+name|rc_tracked
 condition|)
 name|list_insert_head
 argument_list|(
@@ -629,7 +646,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|reference_tracking_enable
+name|rc
+operator|->
+name|rc_tracked
 condition|)
 block|{
 name|rc
@@ -748,7 +767,7 @@ condition|(
 name|rc
 operator|->
 name|rc_removed_count
-operator|>=
+operator|>
 name|reference_history
 condition|)
 block|{

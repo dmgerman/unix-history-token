@@ -582,9 +582,9 @@ if|if
 condition|(
 name|curthread
 operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
+name|td_no_sleeping
+operator|!=
+literal|0
 condition|)
 name|sleep_flag
 operator|=
@@ -1983,9 +1983,9 @@ if|if
 condition|(
 name|curthread
 operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
+name|td_no_sleeping
+operator|!=
+literal|0
 condition|)
 name|sleep_flags
 operator|=

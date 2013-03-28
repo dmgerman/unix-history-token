@@ -17555,23 +17555,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Update the frame size */
-name|E1000_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RLPML
-argument_list|,
-name|adapter
-operator|->
-name|max_frame_size
-operator|+
-name|VLAN_TAG_SIZE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

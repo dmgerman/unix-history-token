@@ -347,6 +347,12 @@ name|NULL
 expr_stmt|;
 name|reader
 operator|->
+name|name
+operator|=
+literal|"bzip2"
+expr_stmt|;
+name|reader
+operator|->
 name|bid
 operator|=
 name|bzip2_reader_bid
@@ -393,7 +399,7 @@ name|_a
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Using external bunzip2 program"
+literal|"Using external bzip2 program"
 argument_list|)
 expr_stmt|;
 return|return
@@ -640,7 +646,7 @@ name|__archive_read_program
 argument_list|(
 name|self
 argument_list|,
-literal|"bunzip2"
+literal|"bzip2 -d"
 argument_list|)
 expr_stmt|;
 comment|/* Note: We set the format here even if __archive_read_program() 	 * above fails.  We do, after all, know what the format is 	 * even if we weren't able to read it. */
@@ -648,7 +654,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_BZIP2
+name|ARCHIVE_FILTER_BZIP2
 expr_stmt|;
 name|self
 operator|->
@@ -706,7 +712,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_BZIP2
+name|ARCHIVE_FILTER_BZIP2
 expr_stmt|;
 name|self
 operator|->

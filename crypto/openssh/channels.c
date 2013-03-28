@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.318 2012/04/23 08:18:17 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.319 2012/12/02 20:46:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -15627,13 +15627,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|num_adm_permitted_opens
-operator|==
-literal|0
-condition|)
-block|{
+name|channel_clear_adm_permitted_opens
+argument_list|()
+expr_stmt|;
 name|permitted_adm_opens
 operator|=
 name|xmalloc
@@ -15658,7 +15654,6 @@ name|num_adm_permitted_opens
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 name|void
 name|channel_clear_permitted_opens

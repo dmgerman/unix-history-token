@@ -1324,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pendingsigs
+name|pendingsig
 condition|)
 name|dotrap
 argument_list|()

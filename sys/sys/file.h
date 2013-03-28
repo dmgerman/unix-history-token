@@ -241,19 +241,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DTYPE_CAPABILITY
-value|12
-end_define
-
-begin_comment
-comment|/* capability */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DTYPE_PROCDESC
-value|13
+value|12
 end_define
 
 begin_comment
@@ -269,6 +258,12 @@ end_ifdef
 begin_struct_decl
 struct_decl|struct
 name|file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|filecaps
 struct_decl|;
 end_struct_decl
 
@@ -1145,27 +1140,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fgetcap
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|fd
-parameter_list|,
-name|struct
-name|file
-modifier|*
-modifier|*
-name|fpp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|_fdrop
 parameter_list|(
 name|struct
@@ -1330,9 +1304,10 @@ parameter_list|,
 name|cap_rights_t
 name|need
 parameter_list|,
-name|cap_rights_t
+name|struct
+name|filecaps
 modifier|*
-name|have
+name|havecaps
 parameter_list|,
 name|struct
 name|vnode

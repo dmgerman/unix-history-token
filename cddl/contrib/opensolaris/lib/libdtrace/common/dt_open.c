@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -343,15 +343,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_7_1
+value|DT_VERSION_NUMBER(1, 7, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8
+value|DT_VERSION_NUMBER(1, 8, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8_1
+value|DT_VERSION_NUMBER(1, 8, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_9
+value|DT_VERSION_NUMBER(1, 9, 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_7
+value|DT_VERS_1_9
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.7"
+value|"Sun D 1.9"
 end_define
 
 begin_decl_stmt
@@ -403,6 +431,18 @@ comment|/* D API 1.6.3 */
 name|DT_VERS_1_7
 block|,
 comment|/* D API 1.7 */
+name|DT_VERS_1_7_1
+block|,
+comment|/* D API 1.7.1 */
+name|DT_VERS_1_8
+block|,
+comment|/* D API 1.8 */
+name|DT_VERS_1_8_1
+block|,
+comment|/* D API 1.8.1 */
+name|DT_VERS_1_9
+block|,
+comment|/* D API 1.9 */
 literal|0
 block|}
 decl_stmt|;
@@ -1736,7 +1776,7 @@ operator|,
 operator|&
 name|dt_idops_func
 operator|,
-literal|"string(int64_t)"
+literal|"string(int64_t, [int])"
 block|}
 end_block
 
@@ -2331,6 +2371,31 @@ operator|&
 name|dt_idops_type
 operator|,
 literal|"pid_t"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"print"
+operator|,
+name|DT_IDENT_ACTFUNC
+operator|,
+literal|0
+operator|,
+name|DT_ACT_PRINT
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_9
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"void(@)"
 block|}
 end_block
 
@@ -3449,6 +3514,56 @@ end_operator
 
 begin_block
 block|{
+literal|"tolower"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_TOLOWER
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_8
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"toupper"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_TOUPPER
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_8
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 literal|"trace"
 operator|,
 name|DT_IDENT_ACTFUNC
@@ -3489,7 +3604,7 @@ operator|,
 operator|&
 name|dt_idops_func
 operator|,
-literal|"void(@, size_t)"
+literal|"void(@, size_t, ...)"
 block|}
 end_block
 
@@ -7501,7 +7616,7 @@ name|dtp
 operator|->
 name|dt_prcmode
 operator|=
-name|DT_PROC_STOP_MAIN
+name|DT_PROC_STOP_POSTINIT
 expr_stmt|;
 endif|#
 directive|endif
@@ -10390,6 +10505,11 @@ name|dtp
 argument_list|)
 expr_stmt|;
 name|dt_format_destroy
+argument_list|(
+name|dtp
+argument_list|)
+expr_stmt|;
+name|dt_strdata_destroy
 argument_list|(
 name|dtp
 argument_list|)

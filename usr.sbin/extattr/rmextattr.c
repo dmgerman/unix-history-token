@@ -1013,6 +1013,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|flag_quiet
+operator|||
+name|error
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"\n"

@@ -853,7 +853,8 @@ specifier|static
 name|void
 name|acpi_cpu_idle
 parameter_list|(
-name|void
+name|sbintime_t
+name|sbt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4485,7 +4486,10 @@ begin_function
 specifier|static
 name|void
 name|acpi_cpu_idle
-parameter_list|()
+parameter_list|(
+name|sbintime_t
+name|sbt
+parameter_list|)
 block|{
 name|struct
 name|acpi_cpu_softc
@@ -4511,6 +4515,8 @@ decl_stmt|,
 name|cx_next_idx
 decl_stmt|,
 name|i
+decl_stmt|,
+name|us
 decl_stmt|;
 comment|/*      * Look up our CPU id to get our softc.  If it's NULL, we'll use C1      * since there is no ACPI processor object for this CPU.  This occurs      * for logical CPUs in the HTT case.      */
 name|sc
@@ -4550,6 +4556,34 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Find the lowest state that has small enough latency. */
+name|us
+operator|=
+name|sc
+operator|->
+name|cpu_prev_sleep
+expr_stmt|;
+if|if
+condition|(
+name|sbt
+operator|>=
+literal|0
+operator|&&
+name|us
+operator|>
+operator|(
+name|sbt
+operator|>>
+literal|12
+operator|)
+condition|)
+name|us
+operator|=
+operator|(
+name|sbt
+operator|>>
+literal|12
+operator|)
+expr_stmt|;
 name|cx_next_idx
 operator|=
 literal|0
@@ -4602,9 +4636,7 @@ name|trans_lat
 operator|*
 literal|3
 operator|<=
-name|sc
-operator|->
-name|cpu_prev_sleep
+name|us
 condition|)
 block|{
 name|cx_next_idx

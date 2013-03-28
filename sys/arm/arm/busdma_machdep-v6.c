@@ -4494,6 +4494,21 @@ name|sync_count
 operator|==
 literal|0
 operator|||
+ifdef|#
+directive|ifdef
+name|ARM_L2_PIPT
+name|curaddr
+operator|!=
+name|sl
+operator|->
+name|busaddr
+operator|+
+name|sl
+operator|->
+name|datacount
+operator|||
+endif|#
+directive|endif
 name|vaddr
 operator|!=
 name|sl
@@ -5108,28 +5123,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* if buffer was from user space, it it possible that this 		 * is not the same vm map. The fix is to map each page in 		 * the buffer into the current address space (KVM) and then 		 * do the bounce copy or sync list cache operation. 		 * 		 * The sync list entries are already broken into 		 * their respective physical pages. 		 */
-if|if
-condition|(
-operator|!
-name|pmap_dmap_iscurrent
-argument_list|(
-name|map
-operator|->
-name|pmap
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"_bus_dmamap_sync: wrong user map: %p %x\n"
-argument_list|,
-name|map
-operator|->
-name|pmap
-argument_list|,
-name|op
-argument_list|)
-expr_stmt|;
+comment|/* 	 * If the buffer was from user space, it is possible that this is not 	 * the same vm map, especially on a POST operation.  It's not clear that 	 * dma on userland buffers can work at all right now, certainly not if a 	 * partial cacheline flush has to be handled.  To be safe, until we're 	 * able to test direct userland dma, panic on a map mismatch. 	 */
 if|if
 condition|(
 operator|(
@@ -5147,6 +5141,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|pmap_dmap_iscurrent
+argument_list|(
+name|map
+operator|->
+name|pmap
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"_bus_dmamap_sync: wrong user map for bounce sync."
+argument_list|)
+expr_stmt|;
 comment|/* Handle data bouncing. */
 name|CTR4
 argument_list|(
@@ -5291,21 +5300,6 @@ operator|&
 name|BUS_DMASYNC_POSTREAD
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|pmap_dmap_iscurrent
-argument_list|(
-name|map
-operator|->
-name|pmap
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"_bus_dmamap_sync: wrong user map. apply fix"
-argument_list|)
-expr_stmt|;
 name|cpu_dcache_inv_range
 argument_list|(
 operator|(
@@ -5521,6 +5515,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|pmap_dmap_iscurrent
+argument_list|(
+name|map
+operator|->
+name|pmap
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"_bus_dmamap_sync: wrong user map for sync."
+argument_list|)
+expr_stmt|;
 comment|/* ARM caches are not self-snooping for dma */
 name|sl
 operator|=
@@ -5845,21 +5854,6 @@ name|FIX_DMAP_BUS_DMASYNC_POSTREAD
 case|case
 name|BUS_DMASYNC_POSTREAD
 case|:
-if|if
-condition|(
-operator|!
-name|pmap_dmap_iscurrent
-argument_list|(
-name|map
-operator|->
-name|pmap
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"_bus_dmamap_sync: wrong user map. apply fix"
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|sl

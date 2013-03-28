@@ -2060,6 +2060,8 @@ operator|->
 name|adh_reset
 condition|)
 block|{
+name|reset
+label|:
 name|adhost
 operator|->
 name|adh_reset
@@ -2144,6 +2146,28 @@ name|true
 expr_stmt|;
 name|wait_for_dir
 argument_list|()
+expr_stmt|;
+comment|/* 		 * We may have been disconnected and reconnected in the 		 * meantime, check if reset is set. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|adist_remote_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adhost
+operator|->
+name|adh_reset
+condition|)
+goto|goto
+name|reset
+goto|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|adist_remote_mtx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

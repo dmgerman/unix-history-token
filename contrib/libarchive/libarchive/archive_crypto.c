@@ -309,6 +309,9 @@ block|{
 name|DWORD
 name|siglen
 init|=
+operator|(
+name|DWORD
+operator|)
 name|bufsize
 decl_stmt|;
 if|if
@@ -4865,7 +4868,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NOTE: Crypto functions are set based on availability and by the following  * order of preference.  * 1. libc  * 2. libc2  * 3. libc3  * 4. libSystem  * 5. OpenSSL  * 6. Windows API  */
+comment|/* NOTE: Crypto functions are set based on availability and by the following  * order of preference.  * 1. libc  * 2. libc2  * 3. libc3  * 4. libSystem  * 5. Nettle  * 6. OpenSSL  * 7. libmd  * 8. Windows API  */
 end_comment
 
 begin_decl_stmt

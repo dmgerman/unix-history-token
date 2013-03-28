@@ -132,6 +132,13 @@ end_struct
 begin_define
 define|#
 directive|define
+name|SW_UNMAPPED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_CLOSING
 value|0x04
 end_define

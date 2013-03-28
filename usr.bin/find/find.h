@@ -387,7 +387,8 @@ name|off_t
 name|_o_data
 decl_stmt|;
 comment|/* file size */
-name|time_t
+name|struct
+name|timespec
 name|_t_data
 decl_stmt|;
 comment|/* time value */

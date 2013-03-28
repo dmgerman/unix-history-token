@@ -521,6 +521,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/_vm_radix.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|u_int64_t
@@ -934,7 +940,8 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
-name|vm_page_t
+name|struct
+name|vm_radix
 name|pm_root
 decl_stmt|;
 comment|/* spare page table pages */
@@ -1077,7 +1084,7 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|pv_entry
 argument_list|)
-name|pv_list
+name|pv_next
 expr_stmt|;
 block|}
 typedef|*

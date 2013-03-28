@@ -88,6 +88,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|ath_beacon_cabq_start
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|ath_wme_update
 parameter_list|(

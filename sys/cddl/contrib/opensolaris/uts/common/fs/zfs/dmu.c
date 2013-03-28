@@ -2049,15 +2049,6 @@ name|ds_dir
 operator|->
 name|dd_pool
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|&&
-name|dsl_pool_sync_context
-argument_list|(
-name|dp
-argument_list|)
-condition|)
 name|start
 operator|=
 name|gethrtime
@@ -6082,8 +6073,6 @@ name|buf
 argument_list|,
 name|FTAG
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -8471,7 +8460,7 @@ operator|->
 name|doi_max_offset
 operator|=
 operator|(
-name|dnp
+name|dn
 operator|->
 name|dn_maxblkid
 operator|+

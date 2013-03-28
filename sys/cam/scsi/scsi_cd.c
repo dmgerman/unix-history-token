@@ -6655,6 +6655,10 @@ operator|->
 name|bio_cmd
 operator|==
 name|BIO_READ
+condition|?
+name|SCSI_RW_READ
+else|:
+name|SCSI_RW_WRITE
 argument_list|,
 comment|/* byte2 */
 literal|0

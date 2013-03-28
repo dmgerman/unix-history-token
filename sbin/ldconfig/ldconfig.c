@@ -406,6 +406,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Note on aout/a.out support.  * To properly support shared libraries for compat2x, which are a.out, we need  * to support a.out here.  As of 2013, bug reports are still coming in for this  * feature (on amd64 no less), so we know it is still in use.  */
+end_comment
+
 begin_function
 name|int
 name|main

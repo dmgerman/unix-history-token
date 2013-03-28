@@ -1659,9 +1659,6 @@ name|fchflags
 argument_list|(
 name|to_fd
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|sbp
 operator|->
 name|st_flags

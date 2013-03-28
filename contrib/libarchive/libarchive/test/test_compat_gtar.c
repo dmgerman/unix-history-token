@@ -355,12 +355,14 @@ expr_stmt|;
 comment|/* Verify that the format detection worked. */
 name|assertEqualInt
 argument_list|(
-name|archive_compression
+name|archive_filter_code
 argument_list|(
 name|a
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
-name|ARCHIVE_COMPRESSION_NONE
+name|ARCHIVE_FILTER_NONE
 argument_list|)
 expr_stmt|;
 name|assertEqualInt

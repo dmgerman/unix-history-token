@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-gss.c,v 1.17 2011/03/10 02:52:57 djm Exp $ */
+comment|/* $OpenBSD: auth2-gss.c,v 1.18 2012/12/02 20:34:09 djm Exp $ */
 end_comment
 
 begin_comment
@@ -690,6 +690,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"gssapi-with-mic"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1034,6 +1036,8 @@ argument_list|,
 name|authenticated
 argument_list|,
 literal|"gssapi-with-mic"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1253,6 +1257,8 @@ argument_list|,
 name|authenticated
 argument_list|,
 literal|"gssapi-with-mic"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -136,24 +136,18 @@ end_include
 begin_decl_stmt
 name|vm_map_t
 name|kernel_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
 name|kmem_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
 name|exec_map
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -166,8 +160,12 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_map_t
 name|buffer_map
-init|=
-literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|bio_transient_map
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +686,7 @@ argument_list|)
 operator||
 name|VM_ALLOC_NOBUSY
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -750,7 +748,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -793,7 +791,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -858,7 +856,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1027,7 +1025,7 @@ argument_list|)
 operator||
 name|VM_ALLOC_NOBUSY
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1074,7 +1072,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1117,7 +1115,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1201,7 +1199,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1810,7 +1808,7 @@ argument_list|)
 operator||
 name|VM_ALLOC_WIRED
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1867,7 +1865,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1918,7 +1916,7 @@ operator|&=
 operator|~
 name|MAP_ENTRY_IN_TRANSITION
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1966,7 +1964,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -2035,7 +2033,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -2083,7 +2081,7 @@ name|entry
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop thru pages, entering them in the pmap. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -2141,7 +2139,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)

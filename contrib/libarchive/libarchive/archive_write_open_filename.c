@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"archive_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive_string.h"
 end_include
 
@@ -141,6 +147,24 @@ begin_define
 define|#
 directive|define
 name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_CLOEXEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_CLOEXEC
 value|0
 end_define
 
@@ -636,6 +660,8 @@ operator||
 name|O_TRUNC
 operator||
 name|O_BINARY
+operator||
+name|O_CLOEXEC
 expr_stmt|;
 comment|/* 	 * Open the file. 	 */
 name|mbs
@@ -850,6 +876,13 @@ argument_list|,
 name|flags
 argument_list|,
 literal|0666
+argument_list|)
+expr_stmt|;
+name|__archive_ensure_cloexec_flag
+argument_list|(
+name|mine
+operator|->
+name|fd
 argument_list|)
 expr_stmt|;
 endif|#

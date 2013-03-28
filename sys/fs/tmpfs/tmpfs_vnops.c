@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -2014,7 +2026,7 @@ name|error
 decl_stmt|,
 name|rv
 decl_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2093,7 +2105,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2114,7 +2126,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2133,7 +2145,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2160,7 +2172,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -2356,7 +2368,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2425,7 +2437,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2444,7 +2456,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2454,7 +2466,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2525,7 +2537,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2613,7 +2625,7 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2635,7 +2647,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2646,7 +2658,7 @@ name|error
 operator|)
 return|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -2948,7 +2960,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3022,7 +3034,7 @@ argument_list|(
 name|vpg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3064,7 +3076,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3074,7 +3086,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3171,7 +3183,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3219,7 +3231,7 @@ name|tpg
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3274,7 +3286,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -3286,7 +3298,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -3296,7 +3308,7 @@ argument_list|(
 name|vpg
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vobj
 argument_list|)
@@ -5975,6 +5987,11 @@ argument_list|(
 name|tvp
 argument_list|)
 expr_stmt|;
+name|cache_purge_negative
+argument_list|(
+name|tdvp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -7188,7 +7205,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%x, links %d\n"
+literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%lx, links %d\n"
 argument_list|,
 name|node
 argument_list|,

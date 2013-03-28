@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -1092,11 +1098,9 @@ name|vp
 operator|->
 name|v_object
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|zfs_vmobject_assert_wlocked
 argument_list|(
 name|obj
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 for|for
@@ -1284,11 +1288,9 @@ name|vp
 operator|->
 name|v_object
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|zfs_vmobject_assert_wlocked
 argument_list|(
 name|obj
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 for|for
@@ -1552,7 +1554,7 @@ name|start
 operator|&
 name|PAGEOFFSET
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -1667,7 +1669,7 @@ literal|"zfs update_pages: writable page in putpages case"
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -1705,7 +1707,7 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -1737,7 +1739,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -1780,7 +1782,7 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -1813,7 +1815,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -1935,7 +1937,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2001,7 +2003,7 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2061,7 +2063,7 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2129,7 +2131,7 @@ operator|-=
 name|bytes
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2238,7 +2240,7 @@ name|start
 operator|&
 name|PAGEOFFSET
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2293,7 +2295,7 @@ decl_stmt|;
 name|caddr_t
 name|va
 decl_stmt|;
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2328,7 +2330,7 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2341,7 +2343,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2361,7 +2363,7 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2381,7 +2383,7 @@ name|error
 condition|)
 break|break;
 block|}
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|obj
 argument_list|)
@@ -2469,6 +2471,8 @@ name|nbytes
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|rl_t
 modifier|*
@@ -3099,6 +3103,8 @@ name|z_max_blksz
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -3107,6 +3113,8 @@ decl_stmt|;
 name|iovec_t
 modifier|*
 name|aiov
+init|=
+name|NULL
 decl_stmt|;
 name|xuio_t
 modifier|*
@@ -10216,6 +10224,10 @@ name|bufsize
 operator|=
 name|bytes_wanted
 expr_stmt|;
+name|outbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|odp
 operator|=
 operator|(
@@ -12556,6 +12568,8 @@ name|va_mask
 decl_stmt|;
 name|uint_t
 name|saved_mask
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|saved_mode
@@ -25043,7 +25057,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|object
 argument_list|)
@@ -25154,7 +25168,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|object
 argument_list|)
@@ -25166,7 +25180,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGER_OK
+name|zfs_vm_pagerret_ok
 operator|)
 return|;
 block|}
@@ -25253,7 +25267,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|object
 argument_list|)
@@ -25265,7 +25279,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGER_BAD
+name|zfs_vm_pagerret_bad
 operator|)
 return|;
 block|}
@@ -25309,7 +25323,7 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|object
 argument_list|)
@@ -25420,7 +25434,7 @@ literal|0
 condition|)
 break|break;
 block|}
-name|VM_OBJECT_LOCK
+name|zfs_vmobject_wlock
 argument_list|(
 name|object
 argument_list|)
@@ -25491,7 +25505,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|zfs_vmobject_wunlock
 argument_list|(
 name|object
 argument_list|)
@@ -25512,9 +25526,9 @@ return|return
 operator|(
 name|error
 condition|?
-name|VM_PAGER_ERROR
+name|zfs_vm_pagerret_error
 else|:
-name|VM_PAGER_OK
+name|zfs_vm_pagerret_ok
 operator|)
 return|;
 block|}

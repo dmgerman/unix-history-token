@@ -3371,6 +3371,23 @@ directive|include
 file|<machine/bus_dma.h>
 end_include
 
+begin_comment
+comment|/*  * Get the physical address of a bus space memory-mapped resource.  * Doing this as a macro is a temporary solution until a more robust fix is  * designed.  It also serves to mark the locations needing that fix.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_PHYSADDR
+parameter_list|(
+name|res
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|((u_int)(rman_get_start(res)+(offs)))
+end_define
+
 begin_endif
 endif|#
 directive|endif

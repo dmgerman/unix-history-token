@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -255,7 +259,7 @@ name|dmu_tx_t
 modifier|*
 name|tx
 parameter_list|,
-name|uint64_t
+name|txg_how_t
 name|txg_how
 parameter_list|)
 function_decl|;
@@ -277,6 +281,16 @@ parameter_list|)
 function_decl|;
 name|uint64_t
 name|dmu_tx_get_txg
+parameter_list|(
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|struct
+name|dsl_pool
+modifier|*
+name|dmu_tx_pool
 parameter_list|(
 name|dmu_tx_t
 modifier|*

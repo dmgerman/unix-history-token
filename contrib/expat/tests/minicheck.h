@@ -35,9 +35,15 @@ define|#
 directive|define
 name|CK_VERBOSE
 value|2
-comment|/* Workaround for Tru64 Unix systems where the C compiler has a working    __func__, but the C++ compiler only has a working __FUNCTION__.  This    could be fixed in configure.in, but it's not worth it right now. */
+comment|/* Workaround for Microsoft's compiler and Tru64 Unix systems where the    C compiler has a working __func__, but the C++ compiler only has a     working __FUNCTION__.  This could be fixed in configure.in, but it's    not worth it right now. */
 if|#
 directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|||
+operator|(
 name|defined
 argument_list|(
 name|__osf__
@@ -47,6 +53,7 @@ name|defined
 argument_list|(
 name|__cplusplus
 argument_list|)
+operator|)
 define|#
 directive|define
 name|__func__

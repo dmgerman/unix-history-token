@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.93 2012/01/25 19:36:31 markus Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.95 2013/01/08 18:49:04 markus Exp $ */
 end_comment
 
 begin_comment
@@ -571,6 +571,10 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|cipher_cleanup
@@ -2260,6 +2264,10 @@ argument_list|(
 operator|&
 name|copy
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|cipher_cleanup

@@ -953,6 +953,14 @@ literal|0
 block|}
 block|,
 block|{
+literal|"TrackPoint"
+block|,
+name|MOUSE_MODEL_TRACKPOINT
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"generic"
 block|,
 name|MOUSE_MODEL_GENERIC

@@ -2132,7 +2132,6 @@ block|}
 case|case
 name|NGM_NETFLOW_SHOW
 case|:
-block|{
 if|if
 condition|(
 name|msg
@@ -2208,7 +2207,6 @@ name|resp
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|NGM_NETFLOW_V9INFO
 case|:
@@ -2880,7 +2878,7 @@ name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
-comment|/* 			 * m_pullup() called by M_CHECK() pullups 			 * kern.ipc.max_protohdr (default 60 bytes) which is enough 			 */
+comment|/* 			 * m_pullup() called by M_CHECK() pullups 			 * kern.ipc.max_protohdr (default 60 bytes) 			 * which is enough. 			 */
 name|M_CHECK
 argument_list|(
 sizeof|sizeof
@@ -3082,7 +3080,7 @@ comment|/* l3_off is already zero */
 ifdef|#
 directive|ifdef
 name|INET6
-comment|/* If INET6 is not defined IPv6 packets will be discarded in ng_netflow_flow_add() */
+comment|/* 		 * If INET6 is not defined IPv6 packets 		 * will be discarded in ng_netflow_flow_add(). 		 */
 if|if
 condition|(
 name|ip
@@ -3092,7 +3090,6 @@ operator|==
 name|IP6VERSION
 condition|)
 block|{
-comment|/* IPv6 packet */
 name|ip
 operator|=
 name|NULL
@@ -3219,7 +3216,7 @@ name|ip
 operator|->
 name|ip_p
 expr_stmt|;
-comment|/* 		 * XXX: in case of wrong upper layer header we will forward this packet 		 * but skip this record in netflow 		 */
+comment|/* 		 * XXX: in case of wrong upper layer header we will 		 * forward this packet but skip this record in netflow. 		 */
 switch|switch
 condition|(
 name|ip
@@ -3276,7 +3273,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Nothing to save except upper layer proto, since this is packet fragment */
+comment|/* 		 * Nothing to save except upper layer proto, 		 * since this is a packet fragment. 		 */
 name|flags
 operator||=
 name|NG_NETFLOW_IS_FRAG
@@ -3328,19 +3325,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Check if we can export */
-if|if
-condition|(
-name|priv
-operator|->
-name|export9
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|bypass
-goto|;
-comment|/* Loop thru IPv6 extended headers to get upper layer header / frag */
 name|int
 name|cur
 init|=
@@ -3362,7 +3346,18 @@ name|ip6_frag
 modifier|*
 name|ip6f
 decl_stmt|;
-comment|/* Save upper layer info */
+if|if
+condition|(
+name|priv
+operator|->
+name|export9
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|bypass
+goto|;
+comment|/* Save upper layer info. */
 name|off
 operator|=
 name|pullup_len
@@ -3386,17 +3381,19 @@ condition|)
 goto|goto
 name|bypass
 goto|;
-while|while
-condition|(
-literal|42
-condition|)
+comment|/* 		 * Loop thru IPv6 extended headers to get upper 		 * layer header / frag. 		 */
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 switch|switch
 condition|(
 name|cur
 condition|)
 block|{
-comment|/* 			 * Same as in IPv4, we can forward 'bad' packet without accounting 			 */
+comment|/* 			 * Same as in IPv4, we can forward a 'bad' 			 * packet without accounting. 			 */
 case|case
 name|IPPROTO_TCP
 case|:

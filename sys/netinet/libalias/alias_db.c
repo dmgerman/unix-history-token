@@ -10338,11 +10338,6 @@ modifier|*
 name|la
 parameter_list|)
 block|{
-name|LIBALIAS_LOCK_ASSERT
-argument_list|(
-name|la
-argument_list|)
-expr_stmt|;
 name|la
 operator|->
 name|fireWallField
@@ -10425,11 +10420,6 @@ modifier|*
 name|la
 parameter_list|)
 block|{
-name|LIBALIAS_LOCK_ASSERT
-argument_list|(
-name|la
-argument_list|)
-expr_stmt|;
 name|ClearAllFWHoles
 argument_list|(
 name|la
@@ -10518,11 +10508,6 @@ name|int
 name|fwhole
 decl_stmt|;
 comment|/* Where to punch hole */
-name|LIBALIAS_LOCK_ASSERT
-argument_list|(
-name|la
-argument_list|)
-expr_stmt|;
 name|la
 operator|=
 name|lnk
@@ -10901,11 +10886,6 @@ name|libalias
 modifier|*
 name|la
 decl_stmt|;
-name|LIBALIAS_LOCK_ASSERT
-argument_list|(
-name|la
-argument_list|)
-expr_stmt|;
 name|la
 operator|=
 name|lnk
@@ -11026,11 +11006,6 @@ comment|/* On-the-fly built rule */
 name|int
 name|i
 decl_stmt|;
-name|LIBALIAS_LOCK_ASSERT
-argument_list|(
-name|la
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|la
@@ -11121,6 +11096,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !NO_FW_PUNCH */
+end_comment
 
 begin_function
 name|void

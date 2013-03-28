@@ -358,6 +358,8 @@ operator|->
 name|cdw10
 operator|=
 name|num_ranges
+operator|-
+literal|1
 expr_stmt|;
 name|cmd
 operator|->

@@ -307,6 +307,35 @@ begin_comment
 comment|/* sequenced packet stream */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
+comment|/*  * Creation flags, OR'ed into socket() and socketpair() type argument.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCK_CLOEXEC
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOCK_NONBLOCK
+value|0x20000000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Option flags per-socket.  */
 end_comment
@@ -2338,6 +2367,17 @@ begin_comment
 comment|/* do not generate SIGPIPE on EOF */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MSG_CMSG_CLOEXEC
+value|0x40000
+end_define
+
+begin_comment
+comment|/* make received fds close-on-exec */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -2901,8 +2941,44 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bindat
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|connect
 parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|connectat
+parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|,
 specifier|const

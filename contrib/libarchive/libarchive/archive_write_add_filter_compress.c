@@ -383,7 +383,7 @@ name|f
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_COMPRESS
+name|ARCHIVE_FILTER_COMPRESS
 expr_stmt|;
 name|f
 operator|->
@@ -433,7 +433,7 @@ name|f
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_COMPRESS
+name|ARCHIVE_FILTER_COMPRESS
 expr_stmt|;
 name|f
 operator|->

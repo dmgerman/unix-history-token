@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.56 2011/10/18 04:58:26 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.57 2012/12/02 20:46:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1725,9 +1725,15 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|options
 operator|.
 name|allow_tcp_forwarding
+operator|&
+name|FORWARD_LOCAL
+operator|)
+operator|!=
+literal|0
 condition|)
 name|channel_add_permitted_opens
 argument_list|(

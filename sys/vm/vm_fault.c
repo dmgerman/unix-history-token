@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -470,7 +470,7 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|->
@@ -488,7 +488,7 @@ operator|->
 name|first_object
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|->
@@ -523,7 +523,7 @@ operator|->
 name|first_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|->
@@ -945,7 +945,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O.  This must be done after 	 * obtaining the vnode lock in order to avoid possible deadlocks. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|.
@@ -1168,7 +1168,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|fs
 operator|.
@@ -1176,21 +1176,21 @@ name|first_object
 argument_list|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|.
 name|first_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|.
@@ -1226,7 +1226,7 @@ operator|.
 name|first_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
@@ -1283,7 +1283,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
@@ -2243,7 +2243,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
@@ -2274,7 +2274,7 @@ name|fs
 operator|.
 name|first_m
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|.
@@ -2357,7 +2357,7 @@ name|next_object
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|next_object
 argument_list|)
@@ -2386,7 +2386,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
@@ -2515,7 +2515,7 @@ operator|&&
 operator|(
 name|is_first_object_locked
 operator|=
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|fs
 operator|.
@@ -2712,7 +2712,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
@@ -2749,7 +2749,7 @@ condition|(
 operator|!
 name|is_first_object_locked
 condition|)
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|.
@@ -3123,7 +3123,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|fs
 operator|.
@@ -3181,7 +3181,7 @@ operator|.
 name|entry
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|fs
 operator|.
@@ -3350,11 +3350,9 @@ name|fs
 operator|->
 name|object
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|first_object
@@ -3373,23 +3371,23 @@ block|{
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|first_object
 argument_list|)
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|first_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3613,7 +3611,7 @@ name|first_object
 operator|!=
 name|object
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|first_object
 argument_list|)
@@ -3806,7 +3804,7 @@ name|lobject
 operator|=
 name|object
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3868,12 +3866,12 @@ name|backing_object_offset
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3891,7 +3889,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3929,7 +3927,7 @@ operator|->
 name|protection
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -4607,7 +4605,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|dst_object
 argument_list|)
@@ -4782,14 +4780,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|dst_object
 argument_list|)
 expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|dst_object
 argument_list|)
@@ -4804,7 +4802,7 @@ name|NULL
 condition|)
 do|;
 comment|/* 		 * Find the page in the source object, and copy it in. 		 * (Because the source is wired down, the page will be in 		 * memory.) 		 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -4848,7 +4846,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Allow fallback to backing objects if we are reading. 			 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -4862,7 +4860,7 @@ operator|->
 name|backing_object_offset
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4890,7 +4888,7 @@ argument_list|,
 name|dst_m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4907,7 +4905,7 @@ name|dirty
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|dst_object
 argument_list|)
@@ -4931,7 +4929,7 @@ name|upgrade
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Mark it no longer busy, and put it on the active list. 		 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|dst_object
 argument_list|)
@@ -4998,7 +4996,7 @@ name|dst_m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|dst_object
 argument_list|)
@@ -5090,13 +5088,11 @@ name|cbehind
 decl_stmt|,
 name|cahead
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object

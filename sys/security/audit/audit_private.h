@@ -665,6 +665,9 @@ decl_stmt|;
 name|cap_rights_t
 name|ar_arg_rights
 decl_stmt|;
+name|uint32_t
+name|ar_arg_fcntl_rights
+decl_stmt|;
 name|char
 name|ar_jailname
 index|[
@@ -1048,6 +1051,13 @@ define|#
 directive|define
 name|ARG_RIGHTS
 value|0x0010000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARG_FCNTL_RIGHTS
+value|0x0020000000000000ULL
 end_define
 
 begin_define

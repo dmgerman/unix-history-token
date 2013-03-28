@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -893,11 +899,9 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -980,11 +984,9 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1054,7 +1056,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1100,7 +1102,7 @@ operator|&
 name|dev_pager_mtx
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1170,11 +1172,9 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|error
@@ -1210,11 +1210,9 @@ name|reqpage
 index|]
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 for|for
@@ -1436,7 +1434,7 @@ name|object
 operator|->
 name|memattr
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1464,7 +1462,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1537,7 +1535,7 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1605,7 +1603,7 @@ operator|=
 operator|*
 name|mres
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1632,7 +1630,7 @@ argument_list|,
 name|memattr
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)

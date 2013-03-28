@@ -343,7 +343,7 @@ decl_stmt|;
 name|mode_t
 name|tn_mode
 decl_stmt|;
-name|int
+name|u_long
 name|tn_flags
 decl_stmt|;
 name|nlink_t
@@ -1061,7 +1061,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int
+name|u_long
 parameter_list|,
 name|struct
 name|ucred

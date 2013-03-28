@@ -359,6 +359,8 @@ block|,
 name|TOK_LOOKUP
 block|,
 name|TOK_SOCKARG
+block|,
+name|TOK_SETDSCP
 block|, }
 enum|;
 end_enum
@@ -937,6 +939,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -955,6 +960,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -971,6 +979,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1002,6 +1013,9 @@ parameter_list|,
 name|char
 modifier|*
 name|av
+parameter_list|,
+name|int
+name|cblen
 parameter_list|)
 function_decl|;
 end_function_decl

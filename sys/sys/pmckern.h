@@ -240,6 +240,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PMC_SOFT_DEFINE_EX
+parameter_list|(
+name|prov
+parameter_list|,
+name|mod
+parameter_list|,
+name|func
+parameter_list|,
+name|name
+parameter_list|,
+name|alloc
+parameter_list|,
+name|release
+parameter_list|)
+define|\
+value|struct pmc_soft pmc_##prov##_##mod##_##func##_##name =			\ 	    { 0, alloc, release, { #prov "_" #mod "_" #func "." #name, 0 } };	\ 	SYSINIT(pmc_##prov##_##mod##_##func##_##name##_init, SI_SUB_KDTRACE, 	\ 	    SI_ORDER_SECOND + 1, pmc_soft_ev_register, 				\&pmc_##prov##_##mod##_##func##_##name );				\ 	SYSUNINIT(pmc_##prov##_##mod##_##func##_##name##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 1, pmc_soft_ev_deregister,	\&pmc_##prov##_##mod##_##func##_##name )
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMC_SOFT_DEFINE
 parameter_list|(
 name|prov
@@ -251,7 +272,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|struct pmc_soft pmc_##prov##_##mod##_##func##_##name =			\ 	    { 0, { #prov "_" #mod "_" #func "." #name, 0 } };			\ 	SYSINIT(pmc_##prov##_##mod##_##func##_##name##_init, SI_SUB_KDTRACE, 	\ 	    SI_ORDER_SECOND + 1, pmc_soft_ev_register, 				\&pmc_##prov##_##mod##_##func##_##name );				\ 	SYSUNINIT(pmc_##prov##_##mod##_##func##_##name##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 1, pmc_soft_ev_deregister,	\&pmc_##prov##_##mod##_##func##_##name )
+value|PMC_SOFT_DEFINE_EX(prov, mod, func, name, NULL, NULL)
 end_define
 
 begin_define
@@ -355,6 +376,24 @@ block|{
 name|int
 name|ps_running
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|ps_alloc
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ps_release
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 name|struct
 name|pmc_dyn_event_descr
 name|ps_ev

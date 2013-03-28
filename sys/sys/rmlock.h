@@ -46,7 +46,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Flags passed to rm_init(9).  */
+comment|/*  * Flags passed to rm_init_flags(9).  */
 end_comment
 
 begin_define

@@ -2485,6 +2485,26 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
+comment|/* XXX We don't do cabq traffic, but just for completeness .. */
+name|ATH_TXQ_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_cabq
+argument_list|)
+expr_stmt|;
+name|ath_beacon_cabq_start
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_cabq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bf
@@ -2495,6 +2515,14 @@ block|{
 comment|/* 		 * Stop any current dma and put the new frame on the queue. 		 * This should never fail since we check above that no frames 		 * are still pending on the queue. 		 */
 if|if
 condition|(
+operator|(
+operator|!
+name|sc
+operator|->
+name|sc_isedma
+operator|)
+operator|&&
+operator|(
 operator|!
 name|ath_hal_stoptxdma
 argument_list|(
@@ -2504,6 +2532,7 @@ name|sc
 operator|->
 name|sc_bhalq
 argument_list|)
+operator|)
 condition|)
 block|{
 name|DPRINTF

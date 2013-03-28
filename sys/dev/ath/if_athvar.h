@@ -916,6 +916,27 @@ begin_comment
 comment|/* (tx) desc owned by h/w */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATH_BUF_FIFOEND
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_FIFOPTR
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_FLAGS_CLONE
+value|(ATH_BUF_MGMT)
+end_define
+
 begin_comment
 comment|/*  * DMA state for tx/rx descriptors.  */
 end_comment
@@ -1012,10 +1033,6 @@ name|axq_aggr_depth
 decl_stmt|;
 comment|/* how many aggregates are queued */
 name|u_int
-name|axq_fifo_depth
-decl_stmt|;
-comment|/* depth of FIFO frames */
-name|u_int
 name|axq_intrcnt
 decl_stmt|;
 comment|/* interrupt count */
@@ -1033,6 +1050,39 @@ argument_list|)
 name|axq_q
 expr_stmt|;
 comment|/* transmit queue */
+name|struct
+name|mtx
+name|axq_lock
+decl_stmt|;
+comment|/* lock on q and link */
+comment|/* 	 * This is the FIFO staging buffer when doing EDMA. 	 * 	 * For legacy chips, we just push the head pointer to 	 * the hardware and we ignore this list. 	 * 	 * For EDMA, the staging buffer is treated as normal; 	 * when it's time to push a list of frames to the hardware 	 * we move that list here and we stamp buffers with 	 * flags to identify the beginning/end of that particular 	 * FIFO entry. 	 */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument|axq_q_f_s
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|axq_q
+expr_stmt|;
+name|u_int
+name|axq_depth
+decl_stmt|;
+block|}
+name|fifo
+struct|;
+name|u_int
+name|axq_fifo_depth
+decl_stmt|;
+comment|/* depth of FIFO frames */
+comment|/* 	 * XXX the holdingbf field is protected by the TXBUF lock 	 * for now, NOT the TXQ lock. 	 * 	 * Architecturally, it would likely be better to move 	 * the holdingbf field to a separate array in ath_softc 	 * just to highlight that it's not protected by the normal 	 * TX path lock. 	 */
+name|struct
+name|ath_buf
+modifier|*
+name|axq_holdingbf
+decl_stmt|;
+comment|/* holding TX buffer */
 name|char
 name|axq_name
 index|[
@@ -1041,6 +1091,7 @@ index|]
 decl_stmt|;
 comment|/* e.g. "ath0_txq4" */
 comment|/* Per-TID traffic queue for software -> hardware TX */
+comment|/* 	 * This is protected by the general TX path lock, not (for now) 	 * by the TXQ lock. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument|axq_t_s
@@ -1052,6 +1103,58 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tq
+parameter_list|)
+value|do { \ 	    snprintf((_tq)->axq_name, sizeof((_tq)->axq_name), "%s_txq%u", \ 	      device_get_nameunit((_sc)->sc_dev), (_tq)->axq_qnum); \ 	    mtx_init(&(_tq)->axq_lock, (_tq)->axq_name, NULL, MTX_DEF); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_DESTROY
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_destroy(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_lock(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_UNLOCK
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_unlock(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
 
 begin_define
 define|#
@@ -1454,6 +1557,39 @@ begin_struct
 struct|struct
 name|ath_rx_methods
 block|{
+name|void
+function_decl|(
+modifier|*
+name|recv_sched_queue
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|HAL_RX_QUEUE
+name|q
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|recv_sched
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|dosched
+parameter_list|)
+function_decl|;
 name|void
 function_decl|(
 modifier|*
@@ -2099,7 +2235,19 @@ name|u_int32_t
 name|sc_use_ent
 range|:
 literal|1
+decl_stmt|,
+name|sc_rx_stbc
+range|:
+literal|1
+decl_stmt|,
+name|sc_tx_stbc
+range|:
+literal|1
 decl_stmt|;
+name|int
+name|sc_cabq_enable
+decl_stmt|;
+comment|/* Enable cabq transmission */
 comment|/* 	 * Enterprise mode configuration for AR9380 and later chipsets. 	 */
 name|uint32_t
 name|sc_ent_cfg
@@ -2320,6 +2468,10 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
+name|ath_bufhead
+name|sc_rx_rxlist
+decl_stmt|;
+comment|/* deferred RX completion */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
@@ -2622,15 +2774,31 @@ comment|/* Local eeprom data, if AR9100 */
 name|int
 name|sc_txchainmask
 decl_stmt|;
-comment|/* currently configured TX chainmask */
+comment|/* hardware TX chainmask */
 name|int
 name|sc_rxchainmask
+decl_stmt|;
+comment|/* hardware RX chainmask */
+name|int
+name|sc_cur_txchainmask
+decl_stmt|;
+comment|/* currently configured TX chainmask */
+name|int
+name|sc_cur_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
 name|int
 name|sc_rts_aggr_limit
 decl_stmt|;
 comment|/* TX limit on RTS aggregates */
+name|int
+name|sc_aggr_limit
+decl_stmt|;
+comment|/* TX limit on all aggregates */
+name|int
+name|sc_delim_min_pad
+decl_stmt|;
+comment|/* Minimum delimiter count */
 comment|/* Queue limits */
 comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
 name|int
@@ -5526,6 +5694,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_set11n_virtmorefrag
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nVirtMoreFrag)((_ah), (_ds), (_v)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_gpioCfgOutput
 parameter_list|(
 name|_ah
@@ -5719,6 +5902,21 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_get11nExtBusy)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setchainmasks
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_txchainmask
+parameter_list|,
+name|_rxchainmask
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setChainMasks)((_ah), (_txchainmask), (_rxchainmask)))
 end_define
 
 begin_define

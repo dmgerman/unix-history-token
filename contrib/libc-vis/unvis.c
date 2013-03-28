@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: unvis.c,v 1.40 2012/12/14 21:31:01 christos Exp $	*/
+comment|/*	$NetBSD: unvis.c,v 1.41 2012/12/15 04:29:53 matt Exp $	*/
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: unvis.c,v 1.40 2012/12/14 21:31:01 christos Exp $"
+literal|"$NetBSD: unvis.c,v 1.41 2012/12/15 04:29:53 matt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -389,7 +389,6 @@ specifier|const
 struct|struct
 name|nv
 block|{
-specifier|const
 name|char
 name|name
 index|[

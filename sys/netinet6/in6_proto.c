@@ -1886,52 +1886,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* raw IP6 parameters */
-end_comment
-
-begin_comment
-comment|/*  * Nominal space allocated to a raw ip socket.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RIPV6SNDQ
-value|8192
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIPV6RCVQ
-value|8192
-end_define
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|u_long
-argument_list|,
-name|rip6_sendspace
-argument_list|)
-operator|=
-name|RIPV6SNDQ
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|u_long
-argument_list|,
-name|rip6_recvspace
-argument_list|)
-operator|=
-name|RIPV6RCVQ
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* ICMPV6 parameters */
 end_comment
 
@@ -2004,52 +1958,6 @@ name|ICMP6_NODEINFO_NODEADDROK
 operator|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* UDP on IP6 parameters */
-end_comment
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|udp6_sendspace
-argument_list|)
-operator|=
-literal|9216
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* really max datagram size */
-end_comment
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|udp6_recvspace
-argument_list|)
-operator|=
-literal|40
-operator|*
-operator|(
-literal|1024
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in6
-argument_list|)
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 40 1K datagrams */
-end_comment
 
 begin_comment
 comment|/*  * sysctl related items.  */

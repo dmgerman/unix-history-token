@@ -1537,6 +1537,22 @@ name|PSCAN_DEFER
 block|,
 name|CTRY_DEFAULT
 block|}
+block|,
+block|{
+name|WORC_WORLD
+block|,
+name|WORC_WORLD
+block|,
+name|WORC_WORLD
+block|,
+name|NO_REQ
+block|,
+name|NO_REQ
+block|,
+name|PSCAN_DEFER
+block|,
+name|CTRY_DEFAULT
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

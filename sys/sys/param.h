@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000028
+value|1000030
 end_define
 
 begin_comment
@@ -762,17 +762,6 @@ end_define
 
 begin_comment
 comment|/* OR'd with pri to stop re-entry of interlock mutex */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PBDRY
-value|0x400
-end_define
-
-begin_comment
-comment|/* for PCATCH stop is done on the user boundary */
 end_comment
 
 begin_define

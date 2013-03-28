@@ -399,7 +399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_try_rlock() acquires rm reader lock for specified head  * if this is immediately possible,  */
+comment|/*  * pfil_try_rlock() acquires rm reader lock for specified head  * if this is immediately possible.  */
 end_comment
 
 begin_function
@@ -418,12 +418,14 @@ name|tracker
 parameter_list|)
 block|{
 return|return
+operator|(
 name|PFIL_TRY_RLOCK
 argument_list|(
 name|ph
 argument_list|,
 name|tracker
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -531,7 +533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_wowned() releases writer lock for specified head.  */
+comment|/*  * pfil_wowned() returns a non-zero value if the current thread owns  * an exclusive lock.  */
 end_comment
 
 begin_function
@@ -545,10 +547,12 @@ name|ph
 parameter_list|)
 block|{
 return|return
+operator|(
 name|PFIL_WOWNED
 argument_list|(
 name|ph
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

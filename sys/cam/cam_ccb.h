@@ -1897,8 +1897,12 @@ comment|/* Do not send 6-byte commands */
 name|PIM_SEQSCAN
 init|=
 literal|0x04
+block|,
 comment|/* Do bus scans sequentially, not in parallel */
-block|}
+name|PIM_UNMAPPED
+init|=
+literal|0x02
+block|, }
 name|pi_miscflag
 typedef|;
 end_typedef

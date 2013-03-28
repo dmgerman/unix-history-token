@@ -141,6 +141,11 @@ init|=
 literal|128
 block|,
 comment|/* # of 128-bit words in a CIM IBQ */
+name|CIM_OBQ_SIZE
+init|=
+literal|128
+block|,
+comment|/* # of 128-bit words in a CIM OBQ */
 name|TPLA_SIZE
 init|=
 literal|128

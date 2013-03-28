@@ -158,7 +158,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_diversity
+name|ah_antControl
 operator|==
 name|HAL_ANT_VARIABLE
 operator|)
@@ -226,7 +226,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_diversity
+name|ah_antControl
 operator|==
 name|HAL_ANT_FIXED_B
 condition|)

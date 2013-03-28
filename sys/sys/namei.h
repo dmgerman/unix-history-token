@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -131,10 +137,11 @@ name|ni_strictrelative
 decl_stmt|;
 comment|/* relative lookup only; no '..' */
 comment|/* 	 * Results: returned from namei 	 */
-name|cap_rights_t
-name|ni_baserights
+name|struct
+name|filecaps
+name|ni_filecaps
 decl_stmt|;
-comment|/* rights the *at base has (or -1) */
+comment|/* rights the *at base has */
 comment|/* 	 * Results: returned from/manipulated by lookup 	 */
 name|struct
 name|vnode
@@ -743,11 +750,13 @@ name|ni_rightsneeded
 operator|=
 name|rights
 expr_stmt|;
+name|filecaps_init
+argument_list|(
+operator|&
 name|ndp
 operator|->
-name|ni_baserights
-operator|=
-literal|0
+name|ni_filecaps
+argument_list|)
 expr_stmt|;
 name|ndp
 operator|->

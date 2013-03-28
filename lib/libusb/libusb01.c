@@ -11,11 +11,22 @@ begin_comment
 comment|/*  * This file contains the emulation layer for LibUSB v0.1 from sourceforge.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBUSB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+include|LIBUSB_GLOBAL_INCLUDE_FILE
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -34,6 +45,29 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

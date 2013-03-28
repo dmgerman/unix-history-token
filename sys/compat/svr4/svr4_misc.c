@@ -1162,8 +1162,6 @@ operator|->
 name|fd
 argument_list|,
 name|CAP_READ
-operator||
-name|CAP_SEEK
 argument_list|,
 operator|&
 name|fp
@@ -1172,13 +1170,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2014,8 +2010,6 @@ operator|->
 name|fd
 argument_list|,
 name|CAP_READ
-operator||
-name|CAP_SEEK
 argument_list|,
 operator|&
 name|fp

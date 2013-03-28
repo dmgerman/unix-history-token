@@ -12,7 +12,7 @@ comment|/*  * USB eXtensible Host Controller Interface, a.k.a. USB 3.0 controlle
 end_comment
 
 begin_comment
-comment|/*  * A few words about the design implementation: This driver emulates  * the concept about TDs which is found in EHCI specification. This  * way we avoid too much diveration among USB drivers.  */
+comment|/*  * A few words about the design implementation: This driver emulates  * the concept about TDs which is found in EHCI specification. This  * way we achieve that the USB controller drivers look similar to  * eachother which makes it easier to understand the code.  */
 end_comment
 
 begin_ifdef

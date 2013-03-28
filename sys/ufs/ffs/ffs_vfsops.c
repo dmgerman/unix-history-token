@@ -5563,6 +5563,8 @@ operator||
 name|MNTK_EXTENDED_SHARED
 operator||
 name|MNTK_NO_IOPF
+operator||
+name|MNTK_UNMAPPED_BUFS
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -6887,6 +6889,8 @@ modifier|*
 name|ump
 decl_stmt|;
 name|int
+name|qerror
+decl_stmt|,
 name|error
 decl_stmt|;
 name|ump
@@ -6895,6 +6899,10 @@ name|VFSTOUFS
 argument_list|(
 name|mp
 argument_list|)
+expr_stmt|;
+name|qerror
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6949,6 +6957,8 @@ name|i
 operator|++
 control|)
 block|{
+name|error
+operator|=
 name|quotaoff
 argument_list|(
 name|td
@@ -6958,8 +6968,36 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|EARLYFLUSH
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+else|else
+name|qerror
+operator|=
+name|error
+expr_stmt|;
 block|}
-comment|/* 		 * Here we fall through to vflush again to ensure 		 * that we have gotten rid of all the system vnodes. 		 */
+block|}
+comment|/* 		 * Here we fall through to vflush again to ensure that 		 * we have gotten rid of all the system vnodes, unless 		 * quotas must not be closed. 		 */
 block|}
 endif|#
 directive|endif
@@ -7020,9 +7058,13 @@ name|FORCECLOSE
 expr_stmt|;
 comment|/* 		 * Here we fall through to vflush again to ensure 		 * that we have gotten rid of all the system vnodes. 		 */
 block|}
-comment|/* 	 * Flush all the files. 	 */
+comment|/* 	 * Do not close system files if quotas were not closed, to be 	 * able to sync the remaining dquots.  The freeblks softupdate 	 * workitems might hold a reference on a dquot, preventing 	 * quotaoff() from completing.  Next round of 	 * softdep_flushworklist() iteration should process the 	 * blockers, allowing the next run of quotaoff() to finally 	 * flush held dquots. 	 * 	 * Otherwise, flush all the files. 	 */
 if|if
 condition|(
+name|qerror
+operator|==
+literal|0
+operator|&&
 operator|(
 name|error
 operator|=
@@ -10238,6 +10280,23 @@ goto|goto
 name|normal_write
 goto|;
 comment|/* 		 * set it to be identical to the old block.  We have to 		 * set b_lblkno and BKGRDMARKER before calling bgetvp() 		 * to avoid confusing the splay tree and gbincore(). 		 */
+name|KASSERT
+argument_list|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_UNMAPPED
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Unmapped cg"
+operator|)
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|newbp

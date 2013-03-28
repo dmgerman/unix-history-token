@@ -198,7 +198,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Note that we can detect gzip archives even if we can't decompress  * them.  (In fact, we like detecting them because we can give better  * error messages.)  So the bid framework here gets compiled even  * if zlib is unavailable.  *  * TODO: If zlib is unavailable, gzip_bidder_init() should  * use the compress_program framework to try to fire up an external  * gunzip program.  */
+comment|/*  * Note that we can detect gzip archives even if we can't decompress  * them.  (In fact, we like detecting them because we can give better  * error messages.)  So the bid framework here gets compiled even  * if zlib is unavailable.  *  * TODO: If zlib is unavailable, gzip_bidder_init() should  * use the compress_program framework to try to fire up an external  * gzip program.  */
 end_comment
 
 begin_function_decl
@@ -328,6 +328,12 @@ name|NULL
 expr_stmt|;
 name|bidder
 operator|->
+name|name
+operator|=
+literal|"gzip"
+expr_stmt|;
+name|bidder
+operator|->
 name|bid
 operator|=
 name|gzip_bidder_bid
@@ -368,7 +374,7 @@ name|_a
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Using external gunzip program"
+literal|"Using external gzip program"
 argument_list|)
 expr_stmt|;
 return|return
@@ -387,7 +393,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|peek_at_header
 parameter_list|(
 name|struct
@@ -808,7 +814,7 @@ name|HAVE_ZLIB_H
 end_ifndef
 
 begin_comment
-comment|/*  * If we don't have the library on this system, we can't do the  * decompression directly.  We can, however, try to run gunzip  * in case that's available.  */
+comment|/*  * If we don't have the library on this system, we can't do the  * decompression directly.  We can, however, try to run "gzip -d"  * in case that's available.  */
 end_comment
 
 begin_function
@@ -831,7 +837,7 @@ name|__archive_read_program
 argument_list|(
 name|self
 argument_list|,
-literal|"gunzip"
+literal|"gzip -d"
 argument_list|)
 expr_stmt|;
 comment|/* Note: We set the format here even if __archive_read_program() 	 * above fails.  We do, after all, know what the format is 	 * even if we weren't able to read it. */
@@ -839,7 +845,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_GZIP
+name|ARCHIVE_FILTER_GZIP
 expr_stmt|;
 name|self
 operator|->
@@ -897,7 +903,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_GZIP
+name|ARCHIVE_FILTER_GZIP
 expr_stmt|;
 name|self
 operator|->
@@ -1143,6 +1149,9 @@ name|stream
 operator|.
 name|avail_in
 operator|=
+operator|(
+name|uInt
+operator|)
 name|avail
 expr_stmt|;
 name|ret
@@ -1454,6 +1463,9 @@ name|stream
 operator|.
 name|avail_out
 operator|=
+operator|(
+name|uInt
+operator|)
 name|state
 operator|->
 name|out_block_size
@@ -1583,6 +1595,9 @@ name|stream
 operator|.
 name|avail_in
 operator|=
+operator|(
+name|uInt
+operator|)
 name|avail_in
 expr_stmt|;
 comment|/* Decompress and consume some of that data. */

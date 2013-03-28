@@ -6390,5 +6390,23 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ar5212SetChainMasks
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|tx_chainmask
+parameter_list|,
+name|uint32_t
+name|rx_chainmask
+parameter_list|)
+block|{ }
+end_function
+
 end_unit
 

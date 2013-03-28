@@ -5369,10 +5369,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|unsigned
-name|long
-name|addr
-decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
@@ -5592,29 +5588,22 @@ literal|"Unknown OMAP device\n"
 argument_list|)
 expr_stmt|;
 comment|/* Get the physical address of the MMC data register, needed for DMA */
-name|addr
-operator|=
-name|vtophys
-argument_list|(
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|sc_mem_res
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_data_reg_paddr
 operator|=
-name|addr
-operator|+
+name|BUS_SPACE_PHYSADDR
+argument_list|(
+name|sc
+operator|->
+name|sc_mem_res
+argument_list|,
 name|sc
 operator|->
 name|sc_reg_off
 operator|+
 name|MMCHS_DATA
+argument_list|)
 expr_stmt|;
 comment|/* Set the initial power state to off */
 name|sc

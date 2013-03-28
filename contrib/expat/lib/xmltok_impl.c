@@ -3982,8 +3982,7 @@ operator|==
 name|end
 condition|)
 return|return
-operator|-
-name|XML_TOK_PERCENT
+name|XML_TOK_PARTIAL
 return|;
 switch|switch
 condition|(

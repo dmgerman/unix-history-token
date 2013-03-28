@@ -25273,11 +25273,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ccb
-operator|=
-name|xpt_alloc_ccb
-argument_list|()
-expr_stmt|;
 name|ISP_LOCK
 argument_list|(
 name|isp

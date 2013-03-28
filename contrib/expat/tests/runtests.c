@@ -47,6 +47,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"expat.h"
 end_include
 
@@ -4691,13 +4697,13 @@ modifier|*
 name|publicId
 parameter_list|)
 block|{
-name|long
+name|intptr_t
 name|callno
 init|=
 literal|1
 operator|+
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|XML_GetUserData
 argument_list|(

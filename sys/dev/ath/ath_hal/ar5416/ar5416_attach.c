@@ -749,6 +749,12 @@ name|ar5416GetMibCycleCounts
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setChainMasks
+operator|=
+name|ar5416SetChainMasks
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetKeyCacheEntry
 operator|=
 name|ar5416ResetKeyCacheEntry
@@ -943,6 +949,12 @@ operator|->
 name|ah_set11nRxClear
 operator|=
 name|ar5416Set11nRxClear
+expr_stmt|;
+name|ah
+operator|->
+name|ah_set11nVirtMoreFrag
+operator|=
+name|ar5416Set11nVirtualMoreFrag
 expr_stmt|;
 comment|/* Interrupt functions */
 name|ah
@@ -1164,13 +1176,13 @@ name|ah_aniControl
 operator|=
 name|ar5416AniControl
 expr_stmt|;
-comment|/* Default FIFO Trigger levels */
+comment|/* 	 * Default FIFO Trigger levels 	 * 	 * These define how filled the TX FIFO needs to be before 	 * the baseband begins to be given some data. 	 * 	 * To be paranoid, we ensure that the TX trigger level always 	 * has at least enough space for two TX DMA to occur. 	 * The TX DMA size is currently hard-coded to AR_TXCFG_DMASZ_128B. 	 * That means we need to leave at least 256 bytes available in 	 * the TX DMA FIFO. 	 */
 define|#
 directive|define
 name|AR_FTRIG_512B
 value|0x00000080
 comment|// 5 bits total
-comment|/* AR9285/AR9271 need to use half the TX FIFOs */
+comment|/* 	 * AR9285/AR9271 have half the size TX FIFO compared to 	 * other devices 	 */
 if|if
 condition|(
 name|AR_SREV_KITE
@@ -1248,32 +1260,19 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"%s: trigLev=%d, maxTxTrigLev=%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|AH5212
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_txTrigLev
-argument_list|,
+undef|#
+directive|undef
+name|AR_FTRIG_512B
+comment|/* And now leave some headspace - 256 bytes */
 name|AH5212
 argument_list|(
 name|ah
 argument_list|)
 operator|->
 name|ah_maxTxTrigLev
-argument_list|)
+operator|-=
+literal|4
 expr_stmt|;
-undef|#
-directive|undef
-name|AR_FTRIG_512B
 block|}
 end_function
 

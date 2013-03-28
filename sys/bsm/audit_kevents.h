@@ -4713,7 +4713,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_CAP_GETRIGHTS
+name|AUE_CAP_RIGHTS_GET
 value|43187
 end_define
 
@@ -4873,6 +4873,94 @@ end_define
 
 begin_comment
 comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_RIGHTS_LIMIT
+value|43202
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_IOCTLS_LIMIT
+value|43203
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_IOCTLS_GET
+value|43204
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_FCNTLS_LIMIT
+value|43205
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_FCNTLS_GET
+value|43206
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_BINDAT
+value|43207
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CONNECTAT
+value|43208
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CHFLAGSAT
+value|43209
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
 end_comment
 
 begin_comment

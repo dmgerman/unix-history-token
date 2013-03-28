@@ -983,6 +983,14 @@ name|sc_altbrk
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|callout
+name|ctimeout
+decl_stmt|;
+name|struct
+name|callout
+name|cblink
+decl_stmt|;
 block|}
 name|sc_softc_t
 typedef|;

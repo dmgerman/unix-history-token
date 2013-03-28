@@ -66,6 +66,17 @@ name|MPTABLE_BASE
 value|0xF0000
 end_define
 
+begin_comment
+comment|/* floating pointer length + maximum length of configuration table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPTABLE_MAX_LENGTH
+value|(65536 + 16)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1614,12 +1625,20 @@ name|char
 modifier|*
 name|startaddr
 decl_stmt|;
-if|if
-condition|(
+name|startaddr
+operator|=
 name|paddr_guest2host
 argument_list|(
-literal|0
+name|ctx
+argument_list|,
+name|MPTABLE_BASE
+argument_list|,
+name|MPTABLE_MAX_LENGTH
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|startaddr
 operator|==
 name|NULL
 condition|)
@@ -1635,14 +1654,9 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|startaddr
-operator|=
 name|curraddr
 operator|=
-name|paddr_guest2host
-argument_list|(
-name|MPTABLE_BASE
-argument_list|)
+name|startaddr
 expr_stmt|;
 name|mpfp
 operator|=

@@ -472,6 +472,10 @@ name|ieee80211_com_lock_t
 name|ic_comlock
 decl_stmt|;
 comment|/* state update lock */
+name|ieee80211_tx_lock_t
+name|ic_txlock
+decl_stmt|;
+comment|/* ic/vap TX lock */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

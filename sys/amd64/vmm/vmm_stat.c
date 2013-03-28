@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_util.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_stat.h"
 end_include
 
@@ -115,6 +121,32 @@ operator|->
 name|desc
 operator|==
 name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|vst
+operator|->
+name|scope
+operator|==
+name|VMM_STAT_SCOPE_INTEL
+operator|&&
+operator|!
+name|vmm_is_intel
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|vst
+operator|->
+name|scope
+operator|==
+name|VMM_STAT_SCOPE_AMD
+operator|&&
+operator|!
+name|vmm_is_amd
+argument_list|()
 condition|)
 return|return;
 if|if
@@ -334,6 +366,50 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* global statistics */
+end_comment
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VCPU_MIGRATIONS
+argument_list|,
+literal|"vcpu migration across host cpus"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_COUNT
+argument_list|,
+literal|"total number of vm exits"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_EXTINT
+argument_list|,
+literal|"vm exits due to external interrupt"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_HLT
+argument_list|,
+literal|"number of times hlt was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

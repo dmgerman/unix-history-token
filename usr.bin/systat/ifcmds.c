@@ -184,13 +184,11 @@ name|matchline
 operator|!=
 name|NULL
 condition|)
-block|{
 name|free
 argument_list|(
 name|matchline
 argument_list|)
 expr_stmt|;
-block|}
 name|needsort
 operator|=
 literal|1
@@ -212,13 +210,11 @@ name|matchline
 operator|!=
 name|NULL
 condition|)
-block|{
 name|free
 argument_list|(
 name|matchline
 argument_list|)
 expr_stmt|;
-block|}
 name|needsort
 operator|=
 literal|1

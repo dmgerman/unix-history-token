@@ -975,6 +975,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DW_REG_USR
+value|31
+end_define
+
+begin_comment
+comment|/* DesignWare derived Uart Status Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|com_usr
 value|39
 end_define

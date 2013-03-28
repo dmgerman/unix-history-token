@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -630,13 +630,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This is the table of legacy internal event names; it should not be modified.  * The internal events are now stored in the history log as strings.  */
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|zfs_history_event_names
 index|[
-name|LOG_END
+name|ZFS_NUM_LEGACY_HISTORY_EVENTS
 index|]
 init|=
 block|{

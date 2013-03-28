@@ -157,7 +157,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_cv_timedwait
+name|_cv_timedwait_sbt
 parameter_list|(
 name|struct
 name|cv
@@ -169,15 +169,21 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|_cv_timedwait_sig
+name|_cv_timedwait_sig_sbt
 parameter_list|(
 name|struct
 name|cv
@@ -189,8 +195,14 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -273,7 +285,26 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_cv_timedwait((cvp),&(lock)->lock_object, (timo))
+value|_cv_timedwait_sbt((cvp),&(lock)->lock_object,			\ 	    tick_sbt * (timo), 0, C_HARDCLOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cv_timedwait_sbt
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_cv_timedwait_sbt((cvp),&(lock)->lock_object, (sbt), (pr), (flags))
 end_define
 
 begin_define
@@ -288,7 +319,26 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_cv_timedwait_sig((cvp),&(lock)->lock_object, (timo))
+value|_cv_timedwait_sig_sbt((cvp),&(lock)->lock_object,		\ 	    tick_sbt * (timo), 0, C_HARDCLOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cv_timedwait_sig_sbt
+parameter_list|(
+name|cvp
+parameter_list|,
+name|lock
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_cv_timedwait_sig_sbt((cvp),&(lock)->lock_object, (sbt), (pr), (flags))
 end_define
 
 begin_define

@@ -651,6 +651,7 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+comment|/* XXXPJD: Verify if TIOCSCTTY is allowed. */
 if|if
 condition|(
 name|fp
@@ -2401,10 +2402,6 @@ name|resid
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|cookies
-condition|)
 name|free
 argument_list|(
 name|cookies
@@ -5305,7 +5302,7 @@ name|uap
 operator|->
 name|fd
 argument_list|,
-name|CAP_READ
+name|CAP_PREAD
 argument_list|,
 operator|&
 name|vp

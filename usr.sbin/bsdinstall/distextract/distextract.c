@@ -526,7 +526,7 @@ argument_list|(
 name|archive
 argument_list|)
 expr_stmt|;
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|archive
 argument_list|)
@@ -889,7 +889,7 @@ argument_list|(
 name|archive
 argument_list|)
 expr_stmt|;
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|archive
 argument_list|)

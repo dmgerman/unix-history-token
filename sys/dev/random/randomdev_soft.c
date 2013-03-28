@@ -1091,6 +1091,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Process until told to stop */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|harvest_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1101,12 +1107,6 @@ condition|;
 control|)
 block|{
 comment|/* Cycle through all the entropy sources */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|harvest_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|source
@@ -1213,12 +1213,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|harvest_mtx
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|local_count
@@ -1244,16 +1238,35 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Work done, so don't belabour the issue */
-name|pause
+name|msleep_spin_sbt
 argument_list|(
+operator|&
+name|random_kthread_control
+argument_list|,
+operator|&
+name|harvest_mtx
+argument_list|,
 literal|"-"
 argument_list|,
-name|hz
+name|SBT_1S
 operator|/
 literal|10
+argument_list|,
+literal|0
+argument_list|,
+name|C_PREL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|harvest_mtx
+argument_list|)
+expr_stmt|;
 name|random_set_wakeup_exit
 argument_list|(
 operator|&
@@ -1693,6 +1706,7 @@ expr_stmt|;
 comment|/* Blocking logic */
 while|while
 condition|(
+operator|!
 name|random_systat
 operator|.
 name|seeded

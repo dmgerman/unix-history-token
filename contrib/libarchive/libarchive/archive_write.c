@@ -993,6 +993,20 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+if|if
+condition|(
+name|f
+operator|->
+name|write
+operator|==
+name|NULL
+condition|)
+comment|/* If unset, a fatal error has already ocuured, so this filter 		 * didn't open. We cannot write anything. */
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 name|r
 operator|=
 call|(
@@ -2083,6 +2097,13 @@ name|free
 argument_list|(
 name|state
 argument_list|)
+expr_stmt|;
+comment|/* Clear the close handler myself not to be called again. */
+name|f
+operator|->
+name|close
+operator|=
+name|NULL
 expr_stmt|;
 name|a
 operator|->
@@ -3205,6 +3226,12 @@ operator|*
 operator|)
 name|_a
 decl_stmt|;
+specifier|const
+name|size_t
+name|max_write
+init|=
+name|INT_MAX
+decl_stmt|;
 name|archive_check_magic
 argument_list|(
 operator|&
@@ -3218,6 +3245,17 @@ name|ARCHIVE_STATE_DATA
 argument_list|,
 literal|"archive_write_data"
 argument_list|)
+expr_stmt|;
+comment|/* In particular, this catches attempts to pass negative values. */
+if|if
+condition|(
+name|s
+operator|>
+name|max_write
+condition|)
+name|s
+operator|=
+name|max_write
 expr_stmt|;
 name|archive_clear_error
 argument_list|(

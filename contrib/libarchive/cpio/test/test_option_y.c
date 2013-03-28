@@ -82,20 +82,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|strstr
-argument_list|(
-name|p
-argument_list|,
-literal|"compression not available"
-argument_list|)
-operator|!=
-name|NULL
+operator|!
+name|canBzip2
+argument_list|()
 condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"This version of bsdcpio was compiled "
-literal|"without bzip2 support"
+literal|"bzip2 is not supported on this platform"
 argument_list|)
 expr_stmt|;
 return|return;

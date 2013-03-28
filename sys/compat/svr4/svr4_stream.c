@@ -6582,7 +6582,7 @@ name|uap
 operator|->
 name|fd
 argument_list|,
-name|CAP_WRITE
+name|CAP_SEND
 argument_list|,
 operator|&
 name|fp
@@ -7403,7 +7403,7 @@ name|uap
 operator|->
 name|fd
 argument_list|,
-name|CAP_READ
+name|CAP_RECV
 argument_list|,
 operator|&
 name|fp

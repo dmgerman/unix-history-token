@@ -102,14 +102,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MIT Kerberos doesn't seem to define GSS_NT_HOSTBASED_SERVICE */
+comment|/* Old MIT Kerberos doesn't seem to define GSS_NT_HOSTBASED_SERVICE */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GSS_C_NT_HOSTBASED_SERVICE
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE
+end_if
 
 begin_define
 define|#
@@ -124,7 +125,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GSS_C_NT_... */
+comment|/* !HAVE_DECL_GSS_C_NT_... */
 end_comment
 
 begin_endif

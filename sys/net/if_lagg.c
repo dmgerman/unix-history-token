@@ -1495,14 +1495,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
-
 begin_comment
 comment|/*  * This routine is run via an vlan  * config EVENT  */
 end_comment
@@ -1684,11 +1676,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -2139,11 +2126,6 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
 name|sc
 operator|->
 name|vlan_attach
@@ -2174,8 +2156,6 @@ argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Insert into the global list of laggs */
 name|mtx_lock
 argument_list|(
@@ -2254,11 +2234,6 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|vlan_config
@@ -2277,8 +2252,6 @@ operator|->
 name|vlan_detach
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Shutdown and remove lagg ports */
 while|while
 condition|(

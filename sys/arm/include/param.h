@@ -72,11 +72,25 @@ directive|ifndef
 name|MACHINE_ARCH
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD_ARCH_armv6__
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__ARM_ARCH
+argument_list|)
+operator|&&
+name|__ARM_ARCH
+operator|>=
+literal|6
+operator|)
+end_if
 
 begin_ifdef
 ifdef|#
