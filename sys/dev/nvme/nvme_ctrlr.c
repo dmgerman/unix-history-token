@@ -2179,6 +2179,8 @@ decl_stmt|;
 name|int
 name|cq_allocated
 decl_stmt|,
+name|i
+decl_stmt|,
 name|sq_allocated
 decl_stmt|;
 name|status
@@ -2267,7 +2269,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 	 * Check that the controller was able to allocate the number of 	 *  queues we requested.  If not, revert to one IO queue. 	 */
+comment|/* 	 * Check that the controller was able to allocate the number of 	 *  queues we requested.  If not, revert to one IO queue pair. 	 */
 if|if
 condition|(
 name|sq_allocated
@@ -2283,6 +2285,33 @@ operator|->
 name|num_io_queues
 condition|)
 block|{
+comment|/* 		 * Destroy extra IO queue pairs that were created at 		 *  controller construction time but are no longer 		 *  needed.  This will only happen when a controller 		 *  supports fewer queues than MSI-X vectors.  This 		 *  is not the normal case, but does occur with the 		 *  Chatham prototype board. 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|ctrlr
+operator|->
+name|num_io_queues
+condition|;
+name|i
+operator|++
+control|)
+name|nvme_io_qpair_destroy
+argument_list|(
+operator|&
+name|ctrlr
+operator|->
+name|ioq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|ctrlr
 operator|->
 name|num_io_queues
@@ -2295,7 +2324,6 @@ name|per_cpu_io_queues
 operator|=
 literal|0
 expr_stmt|;
-comment|/* TODO: destroy extra queues that were created 		 *  previously but now found to be not needed. 		 */
 block|}
 return|return
 operator|(
