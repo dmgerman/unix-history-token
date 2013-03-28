@@ -241,6 +241,8 @@ init|=
 block|{
 literal|".debug"
 block|,
+literal|".symbols"
+block|,
 literal|""
 block|,
 name|NULL
