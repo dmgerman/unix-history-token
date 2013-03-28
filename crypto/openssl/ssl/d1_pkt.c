@@ -975,6 +975,8 @@ decl_stmt|;
 name|unsigned
 name|int
 name|mac_size
+decl_stmt|,
+name|orig_len
 decl_stmt|;
 name|unsigned
 name|char
@@ -1051,8 +1053,6 @@ name|rr
 operator|->
 name|input
 expr_stmt|;
-name|rr
-operator|->
 name|orig_len
 operator|=
 name|rr
@@ -1225,8 +1225,6 @@ expr_stmt|;
 comment|/* orig_len is the length of the record before any padding was 		 * removed. This is public information, as is the MAC in use, 		 * therefore we can safely process the record in a different 		 * amount of time if it's too short to possibly contain a MAC. 		 */
 if|if
 condition|(
-name|rr
-operator|->
 name|orig_len
 operator|<
 name|mac_size
@@ -1242,8 +1240,6 @@ argument_list|)
 operator|==
 name|EVP_CIPH_CBC_MODE
 operator|&&
-name|rr
-operator|->
 name|orig_len
 operator|<
 name|mac_size
@@ -1291,6 +1287,8 @@ argument_list|,
 name|rr
 argument_list|,
 name|mac_size
+argument_list|,
+name|orig_len
 argument_list|)
 expr_stmt|;
 name|rr
@@ -1302,7 +1300,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* In this case there's no padding, so |rec->orig_len| 			 * equals |rec->length| and we checked that there's 			 * enough bytes for |mac_size| above. */
+comment|/* In this case there's no padding, so |orig_len| 			 * equals |rec->length| and we checked that there's 			 * enough bytes for |mac_size| above. */
 name|rr
 operator|->
 name|length
