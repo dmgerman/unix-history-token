@@ -950,10 +950,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|unsigned
-name|long
-name|junk
-decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -978,8 +974,6 @@ operator|^
 name|tv
 operator|.
 name|tv_usec
-operator|^
-name|junk
 argument_list|)
 expr_stmt|;
 return|return;
