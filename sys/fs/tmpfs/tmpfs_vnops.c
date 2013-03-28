@@ -5973,6 +5973,11 @@ argument_list|(
 name|tvp
 argument_list|)
 expr_stmt|;
+name|cache_purge_negative
+argument_list|(
+name|tdvp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
