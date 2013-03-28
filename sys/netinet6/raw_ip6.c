@@ -703,6 +703,11 @@ literal|0
 condition|)
 continue|continue;
 block|}
+name|INP_RLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|in6p
@@ -753,11 +758,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|INP_RLOCK
-argument_list|(
-name|in6p
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If this raw socket has multicast state, and we 		 * have received a multicast, check if this socket 		 * should receive it, as multicast filtering is now 		 * the responsibility of the transport layer. 		 */
 if|if
 condition|(
