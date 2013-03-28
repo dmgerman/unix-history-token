@@ -8764,6 +8764,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"bringing logical drive %d back online"
+argument_list|,
+name|ldrive
 argument_list|)
 expr_stmt|;
 comment|/*      * Build a CISS BMIC command to bring the drive back online.      */
