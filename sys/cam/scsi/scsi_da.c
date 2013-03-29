@@ -11940,13 +11940,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|TAILQ_FOREACH
+name|CAM_PERIPH_FOREACH
 argument_list|(
 argument|periph
 argument_list|,
-argument|&dadriver.units
-argument_list|,
-argument|unit_links
+argument|&dadriver
 argument_list|)
 block|{
 name|union
