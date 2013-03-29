@@ -246,15 +246,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR933X_UART_CLOCK_STEP_M
-value|0xffff
-end_define
-
-begin_define
-define|#
-directive|define
 name|AR933X_UART_CLOCK_SCALE_M
-value|0xfff
+value|0xff
 end_define
 
 begin_define
@@ -268,6 +261,27 @@ begin_define
 define|#
 directive|define
 name|AR933X_UART_CLOCK_STEP_M
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_UART_CLOCK_STEP_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_UART_MAX_SCALE
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_UART_MAX_STEP
 value|0xffff
 end_define
 
