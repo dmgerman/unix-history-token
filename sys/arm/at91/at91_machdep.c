@@ -2337,10 +2337,27 @@ expr_stmt|;
 name|at91_soc_id
 argument_list|()
 expr_stmt|;
-comment|/* Initialize all the clocks, so that the console can work */
+comment|/* 	 * Initialize all the clocks, so that the console can work.  We can only 	 * do this if at91_soc_id() was able to fill in the support data.  Even 	 * if we can't init the clocks, still try to do a console init so we can 	 * try to print the error message about missing soc support.  There's a 	 * chance the printf will work if the bootloader set up the DBGU. 	 */
+if|if
+condition|(
+name|soc_info
+operator|.
+name|soc_data
+operator|!=
+name|NULL
+condition|)
+block|{
+name|soc_info
+operator|.
+name|soc_data
+operator|->
+name|soc_clock_init
+argument_list|()
+expr_stmt|;
 name|at91_pmc_init_clock
 argument_list|()
 expr_stmt|;
+block|}
 name|cninit
 argument_list|()
 expr_stmt|;
