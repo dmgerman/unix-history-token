@@ -1861,6 +1861,23 @@ expr_stmt|;
 name|nsegs
 operator|++
 expr_stmt|;
+name|CTR5
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"%s: tag %p tag flags 0x%x error %d nsegs %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|dmat
+argument_list|,
+name|flags
+argument_list|,
+name|error
+argument_list|,
+name|nsegs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
