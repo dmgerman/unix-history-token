@@ -34,6 +34,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<cam/cam_xpt.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|devstat
@@ -830,24 +836,6 @@ name|union
 name|ccb
 modifier|*
 name|save_ccb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|xpt_lock_buses
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|xpt_unlock_buses
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
