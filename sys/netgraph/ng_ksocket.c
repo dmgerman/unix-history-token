@@ -2895,7 +2895,7 @@ operator|->
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* 	 * --Original comment-- 	 * On a cloned socket we may have already received one or more 	 * upcalls which we couldn't handle without a hook.  Handle 	 * those now. 	 * We cannot call the upcall function directly 	 * from here, because until this function has returned our 	 * hook isn't connected. 	 * 	 * ---meta comment for -current --- 	 * XXX This is dubius. 	 * Upcalls between the time that the hook was 	 * first created and now (on another processesor) will 	 * be earlier on the queue than the request to finalise the hook. 	 * By the time the hook is finalised, 	 * The queued upcalls will have happenned and the code 	 * will have discarded them because of a lack of a hook. 	 * (socket not open). 	 * 	 * This is a bad byproduct of the complicated way in which hooks 	 * are now created (3 daisy chained async events). 	 * 	 * Since we are a netgraph operation  	 * We know that we hold a lock on this node. This forces the 	 * request we make below to be queued rather than implemented 	 * immediatly which will cause the upcall function to be called a bit 	 * later. 	 * However, as we will run any waiting queued operations immediatly 	 * after doing this one, if we have not finalised the other end 	 * of the hook, those queued operations will fail. 	 */
+comment|/* 	 * --Original comment-- 	 * On a cloned socket we may have already received one or more 	 * upcalls which we couldn't handle without a hook.  Handle 	 * those now. 	 * We cannot call the upcall function directly 	 * from here, because until this function has returned our 	 * hook isn't connected. 	 * 	 * ---meta comment for -current --- 	 * XXX This is dubius. 	 * Upcalls between the time that the hook was 	 * first created and now (on another processesor) will 	 * be earlier on the queue than the request to finalise the hook. 	 * By the time the hook is finalised, 	 * The queued upcalls will have happenned and the code 	 * will have discarded them because of a lack of a hook. 	 * (socket not open). 	 * 	 * This is a bad byproduct of the complicated way in which hooks 	 * are now created (3 daisy chained async events). 	 * 	 * Since we are a netgraph operation 	 * We know that we hold a lock on this node. This forces the 	 * request we make below to be queued rather than implemented 	 * immediatly which will cause the upcall function to be called a bit 	 * later. 	 * However, as we will run any waiting queued operations immediatly 	 * after doing this one, if we have not finalised the other end 	 * of the hook, those queued operations will fail. 	 */
 if|if
 condition|(
 name|priv
@@ -4492,7 +4492,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * You should not "just call" a netgraph node function from an external  * asynchronous event. This is because in doing so you are ignoring the  * locking on the netgraph nodes. Instead call your function via ng_send_fn().  * This will call the function you chose, but will first do all the   * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  *  * To decouple stack, we use queue version of ng_send_fn().  */
+comment|/*  * You should not "just call" a netgraph node function from an external  * asynchronous event. This is because in doing so you are ignoring the  * locking on the netgraph nodes. Instead call your function via ng_send_fn().  * This will call the function you chose, but will first do all the  * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  *  * To decouple stack, we use queue version of ng_send_fn().  */
 end_comment
 
 begin_function
@@ -4597,7 +4597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When incoming data is appended to the socket, we get notified here.  * This is also called whenever a significant event occurs for the socket.  * Our original caller may have queued this even some time ago and   * we cannot trust that he even still exists. The node however is being  * held with a reference by the queueing code and guarantied to be valid.  */
+comment|/*  * When incoming data is appended to the socket, we get notified here.  * This is also called whenever a significant event occurs for the socket.  * Our original caller may have queued this even some time ago and  * we cannot trust that he even still exists. The node however is being  * held with a reference by the queueing code and guarantied to be valid.  */
 end_comment
 
 begin_function
@@ -4781,7 +4781,7 @@ name|data
 operator|=
 name|error
 expr_stmt|;
-comment|/*  				 * send an async "response" message 				 * to the node that set us up 				 * (if it still exists) 				 */
+comment|/* 				 * send an async "response" message 				 * to the node that set us up 				 * (if it still exists) 				 */
 name|NG_SEND_MSG_ID
 argument_list|(
 name|error
