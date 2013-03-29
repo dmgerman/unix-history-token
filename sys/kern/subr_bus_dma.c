@@ -1267,8 +1267,6 @@ argument_list|,
 name|error
 argument_list|,
 name|nsegs
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1713,8 +1711,6 @@ argument_list|,
 name|error
 argument_list|,
 name|nsegs
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2257,8 +2253,6 @@ argument_list|,
 name|error
 argument_list|,
 name|nsegs
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
