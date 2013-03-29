@@ -2995,12 +2995,8 @@ name|ctrlr
 expr_stmt|;
 name|req
 operator|=
-name|nvme_allocate_request
+name|nvme_allocate_request_null
 argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
 name|nvme_ctrlr_async_event_cb
 argument_list|,
 name|aer

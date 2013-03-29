@@ -377,6 +377,31 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_VADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_NULL
+value|2
+end_define
+
+begin_comment
+comment|/* For requests with no payload. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_UIO
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|nvme_request
@@ -390,20 +415,28 @@ name|nvme_qpair
 modifier|*
 name|qpair
 decl_stmt|;
+union|union
+block|{
 name|void
 modifier|*
 name|payload
+decl_stmt|;
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+block|}
+name|u
+union|;
+name|uint32_t
+name|type
 decl_stmt|;
 name|uint32_t
 name|payload_size
 decl_stmt|;
 name|boolean_t
 name|timeout
-decl_stmt|;
-name|struct
-name|uio
-modifier|*
-name|uio
 decl_stmt|;
 name|nvme_cb_fn_t
 name|cb_fn
@@ -1950,7 +1983,7 @@ name|__inline
 name|struct
 name|nvme_request
 modifier|*
-name|nvme_allocate_request
+name|nvme_allocate_request_vaddr
 parameter_list|(
 name|void
 modifier|*
@@ -1990,6 +2023,14 @@ condition|)
 block|{
 name|req
 operator|->
+name|type
+operator|=
+name|NVME_REQUEST_VADDR
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
 name|payload
 operator|=
 name|payload
@@ -2015,10 +2056,8 @@ name|__inline
 expr|struct
 name|nvme_request
 operator|*
-name|nvme_allocate_request_uio
+name|nvme_allocate_request_null
 argument_list|(
-argument|struct uio *uio
-argument_list|,
 argument|nvme_cb_fn_t cb_fn
 argument_list|,
 argument|void *cb_arg
@@ -2045,9 +2084,9 @@ name|NULL
 condition|)
 name|req
 operator|->
-name|uio
+name|type
 operator|=
-name|uio
+name|NVME_REQUEST_NULL
 expr_stmt|;
 end_expr_stmt
 
@@ -2059,8 +2098,72 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|struct
+name|nvme_request
+modifier|*
+name|nvme_allocate_request_uio
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|nvme_cb_fn_t
+name|cb_fn
+parameter_list|,
+name|void
+modifier|*
+name|cb_arg
+parameter_list|)
+block|{
+name|struct
+name|nvme_request
+modifier|*
+name|req
+decl_stmt|;
+name|req
+operator|=
+name|_nvme_allocate_request
+argument_list|(
+name|cb_fn
+argument_list|,
+name|cb_arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|!=
+name|NULL
+condition|)
+block|{
+name|req
+operator|->
+name|type
+operator|=
+name|NVME_REQUEST_UIO
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
+name|uio
+operator|=
+name|uio
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|req
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
-unit|}
 define|#
 directive|define
 name|nvme_free_request
@@ -2070,25 +2173,33 @@ parameter_list|)
 value|uma_zfree(nvme_request_zone, req)
 end_define
 
-begin_macro
-unit|void
+begin_function_decl
+name|void
 name|nvme_notify_async_consumers
-argument_list|(
-argument|struct nvme_controller *ctrlr
-argument_list|,
-argument|const struct nvme_completion *async_cpl
-argument_list|,
-argument|uint32_t log_page_id
-argument_list|,
-argument|void *log_page_buffer
-argument_list|,
-argument|uint32_t log_page_size
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+specifier|const
+name|struct
+name|nvme_completion
+modifier|*
+name|async_cpl
+parameter_list|,
+name|uint32_t
+name|log_page_id
+parameter_list|,
+name|void
+modifier|*
+name|log_page_buffer
+parameter_list|,
+name|uint32_t
+name|log_page_size
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

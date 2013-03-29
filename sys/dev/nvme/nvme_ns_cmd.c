@@ -62,7 +62,7 @@ name|cmd
 decl_stmt|;
 name|req
 operator|=
-name|nvme_allocate_request
+name|nvme_allocate_request_vaddr
 argument_list|(
 name|payload
 argument_list|,
@@ -184,7 +184,7 @@ name|cmd
 decl_stmt|;
 name|req
 operator|=
-name|nvme_allocate_request
+name|nvme_allocate_request_vaddr
 argument_list|(
 name|payload
 argument_list|,
@@ -303,7 +303,7 @@ name|cmd
 decl_stmt|;
 name|req
 operator|=
-name|nvme_allocate_request
+name|nvme_allocate_request_vaddr
 argument_list|(
 name|payload
 argument_list|,
@@ -413,12 +413,8 @@ name|cmd
 decl_stmt|;
 name|req
 operator|=
-name|nvme_allocate_request
+name|nvme_allocate_request_null
 argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
 name|cb_fn
 argument_list|,
 name|cb_arg

@@ -1477,15 +1477,9 @@ if|if
 condition|(
 name|req
 operator|->
-name|payload_size
-operator|>
-literal|0
-operator|||
-name|req
-operator|->
-name|uio
+name|type
 operator|!=
-name|NULL
+name|NVME_REQUEST_NULL
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -3441,24 +3435,16 @@ name|req
 operator|=
 name|req
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|req
 operator|->
-name|uio
-operator|==
-name|NULL
+name|type
 condition|)
 block|{
-if|if
-condition|(
-name|req
-operator|->
-name|payload_size
-operator|>
-literal|0
-condition|)
-block|{
+case|case
+name|NVME_REQUEST_VADDR
+case|:
 name|err
 operator|=
 name|bus_dmamap_load
@@ -3475,6 +3461,8 @@ name|payload_dma_map
 argument_list|,
 name|req
 operator|->
+name|u
+operator|.
 name|payload
 argument_list|,
 name|req
@@ -3499,8 +3487,10 @@ argument_list|(
 literal|"bus_dmamap_load returned non-zero!\n"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+break|break;
+case|case
+name|NVME_REQUEST_NULL
+case|:
 name|nvme_qpair_submit_tracker
 argument_list|(
 name|tr
@@ -3510,9 +3500,10 @@ argument_list|,
 name|tr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|NVME_REQUEST_UIO
+case|:
 name|err
 operator|=
 name|bus_dmamap_load_uio
@@ -3529,6 +3520,8 @@ name|payload_dma_map
 argument_list|,
 name|req
 operator|->
+name|u
+operator|.
 name|uio
 argument_list|,
 name|nvme_payload_map_uio
@@ -3546,9 +3539,21 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"bus_dmamap_load returned non-zero!\n"
+literal|"bus_dmamap_load_uio returned non-zero!\n"
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"unknown nvme request type 0x%x\n"
+argument_list|,
+name|req
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
