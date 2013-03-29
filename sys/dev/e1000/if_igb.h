@@ -829,11 +829,9 @@ name|igb_tx_buffer
 modifier|*
 name|tx_buffers
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|struct
 name|buf_ring
 modifier|*
