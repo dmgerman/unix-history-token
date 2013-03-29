@@ -4654,8 +4654,6 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/* so = priv->so; */
-comment|/* XXX could have derived this like so */
 name|KASSERT
 argument_list|(
 name|so
@@ -4924,13 +4922,7 @@ argument_list|,
 operator|&
 name|m
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|flags
@@ -5147,10 +5139,15 @@ name|KSF_EOFSEEN
 operator|)
 condition|)
 block|{
-name|MGETHDR
-argument_list|(
+name|struct
+name|mbuf
+modifier|*
 name|m
-argument_list|,
+decl_stmt|;
+name|m
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -5162,19 +5159,6 @@ name|m
 operator|!=
 name|NULL
 condition|)
-block|{
-name|m
-operator|->
-name|m_len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
-literal|0
-expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -5186,7 +5170,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|priv
 operator|->
 name|flags
