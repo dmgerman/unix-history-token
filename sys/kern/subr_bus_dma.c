@@ -1708,7 +1708,7 @@ name|__func__
 argument_list|,
 name|dmat
 argument_list|,
-name|dmat
+name|flags
 argument_list|,
 name|error
 argument_list|,
