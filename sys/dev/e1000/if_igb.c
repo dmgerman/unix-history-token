@@ -54,13 +54,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
+end_ifndef
 
 begin_include
 include|#
@@ -860,13 +858,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -4431,11 +4427,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -4511,13 +4505,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IGB_LEGACY_TX
+end_ifdef
 
 begin_comment
 comment|/*********************************************************************  *  Transmit entry point  *  *  igb_start is called by the stack to initiate a transmit.  *  The driver will remain in this routine as long as there are  *  packets to transmit and transmit resources are available.  *  In case resources are not available stack is notified and  *  the packet is requeued.  **********************************************************************/
@@ -4782,7 +4774,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __FreeBSD_version>= 800000 */
+comment|/* ~IGB_LEGACY_TX */
 end_comment
 
 begin_comment
@@ -5349,7 +5341,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FreeBSD_version>= 800000 */
+comment|/* ~IGB_LEGACY_TX */
 end_comment
 
 begin_comment
@@ -6660,11 +6652,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -6920,11 +6910,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -7361,11 +7349,9 @@ operator|&&
 name|more
 condition|)
 do|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 if|if
 condition|(
 operator|!
@@ -7525,11 +7511,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -11582,11 +11566,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -12034,11 +12016,9 @@ name|igb_last_bind_cpu
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -13300,11 +13280,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|taskqueue_drain
 argument_list|(
 name|que
@@ -14689,11 +14667,9 @@ name|if_ioctl
 operator|=
 name|igb_ioctl
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|ifp
 operator|->
 name|if_transmit
@@ -15915,11 +15891,9 @@ goto|goto
 name|err_tx_desc
 goto|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Allocate a buf ring */
 name|txr
 operator|->
@@ -16264,11 +16238,9 @@ argument_list|)
 expr_stmt|;
 name|rx_fail
 label|:
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|buf_ring_free
 argument_list|(
 name|txr
@@ -17434,11 +17406,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 if|if
 condition|(
 name|txr
@@ -23099,11 +23069,9 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|rxr
 operator|->
 name|fmp
