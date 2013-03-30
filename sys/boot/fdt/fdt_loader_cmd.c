@@ -656,6 +656,8 @@ name|i
 decl_stmt|,
 name|sym_count
 decl_stmt|;
+name|sym_count
+operator|=
 name|symtab
 operator|=
 name|strtab
