@@ -2262,16 +2262,29 @@ begin_comment
 comment|/* wait for full request or error */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
 begin_define
 define|#
 directive|define
-name|MSG_NOTIFICATION
-value|0x2000
+name|MSG_NOSIGNAL
+value|0x20000
 end_define
 
 begin_comment
-comment|/* SCTP notification */
+comment|/* do not generate SIGPIPE on EOF */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2304,6 +2317,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSG_NOTIFICATION
+value|0x2000
+end_define
+
+begin_comment
+comment|/* SCTP notification */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSG_NBIO
 value|0x4000
 end_define
@@ -2321,6 +2345,17 @@ end_define
 
 begin_comment
 comment|/* used in sendit() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_CMSG_CLOEXEC
+value|0x40000
+end_define
+
+begin_comment
+comment|/* make received fds close-on-exec */
 end_comment
 
 begin_endif
@@ -2343,39 +2378,6 @@ end_define
 
 begin_comment
 comment|/* for use by socket callbacks - soreceive (TCP) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
-begin_define
-define|#
-directive|define
-name|MSG_NOSIGNAL
-value|0x20000
-end_define
-
-begin_comment
-comment|/* do not generate SIGPIPE on EOF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_CMSG_CLOEXEC
-value|0x40000
-end_define
-
-begin_comment
-comment|/* make received fds close-on-exec */
 end_comment
 
 begin_endif
@@ -2799,6 +2801,16 @@ begin_comment
 comment|/* shut down both sides */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
+comment|/* for SCTP */
+end_comment
+
 begin_comment
 comment|/* we cheat and use the SHUT_XX defines for these */
 end_comment
@@ -2823,6 +2835,11 @@ directive|define
 name|PRU_FLUSH_RDWR
 value|SHUT_RDWR
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2941,10 +2958,8 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bindat
+name|connect
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|,
 specifier|const
@@ -2957,10 +2972,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_function_decl
 name|int
-name|connect
+name|bindat
 parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|,
 specifier|const
@@ -2990,6 +3013,11 @@ name|socklen_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
