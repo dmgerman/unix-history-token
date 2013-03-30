@@ -180,27 +180,321 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_comment
+comment|/*  * Calculate the baud from the given chip configuration parameters.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|long
+name|ar933x_uart_get_baud
+parameter_list|(
+name|unsigned
+name|int
+name|clk
+parameter_list|,
+name|unsigned
+name|int
+name|scale
+parameter_list|,
+name|unsigned
+name|int
+name|step
+parameter_list|)
+block|{
+name|uint64_t
+name|t
+decl_stmt|;
+name|uint32_t
+name|div
+decl_stmt|;
+name|div
+operator|=
+operator|(
+literal|2
+operator|<<
+literal|16
+operator|)
+operator|*
+operator|(
+name|scale
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|t
+operator|=
+name|clk
+expr_stmt|;
+name|t
+operator|*=
+name|step
+expr_stmt|;
+name|t
+operator|+=
+operator|(
+name|div
+operator|/
+literal|2
+operator|)
+expr_stmt|;
+name|t
+operator|=
+name|t
+operator|/
+name|div
+expr_stmt|;
+return|return
+operator|(
+name|t
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Calculate the scale/step with the lowest possible deviation from  * the target baudrate.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ar933x_uart_get_scale_step
+parameter_list|(
+name|struct
+name|uart_bas
+modifier|*
+name|bas
+parameter_list|,
+name|unsigned
+name|int
+name|baud
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|scale
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|step
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|tscale
+decl_stmt|;
+name|uint32_t
+name|clk
+decl_stmt|;
+name|long
+name|min_diff
+decl_stmt|;
+name|clk
+operator|=
+name|bas
+operator|->
+name|rclk
+expr_stmt|;
+operator|*
+name|scale
+operator|=
 literal|0
-end_if
+expr_stmt|;
+operator|*
+name|step
+operator|=
+literal|0
+expr_stmt|;
+name|min_diff
+operator|=
+name|baud
+expr_stmt|;
+for|for
+control|(
+name|tscale
+operator|=
+literal|0
+init|;
+name|tscale
+operator|<
+name|AR933X_UART_MAX_SCALE
+condition|;
+name|tscale
+operator|++
+control|)
+block|{
+name|uint64_t
+name|tstep
+decl_stmt|;
+name|int
+name|diff
+decl_stmt|;
+name|tstep
+operator|=
+name|baud
+operator|*
+operator|(
+name|tscale
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|tstep
+operator|*=
+operator|(
+literal|2
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+name|tstep
+operator|=
+name|tstep
+operator|/
+name|clk
+expr_stmt|;
+if|if
+condition|(
+name|tstep
+operator|>
+name|AR933X_UART_MAX_STEP
+condition|)
+break|break;
+name|diff
+operator|=
+name|abs
+argument_list|(
+name|ar933x_uart_get_baud
+argument_list|(
+name|clk
+argument_list|,
+name|tscale
+argument_list|,
+name|tstep
+argument_list|)
+operator|-
+name|baud
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|diff
+operator|<
+name|min_diff
+condition|)
+block|{
+name|min_diff
+operator|=
+name|diff
+expr_stmt|;
+operator|*
+name|scale
+operator|=
+name|tscale
+expr_stmt|;
+operator|*
+name|step
+operator|=
+name|tstep
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
 
-begin_comment
-unit|static int ar933x_param(struct uart_bas *bas, int baudrate, int databits, int stopbits,     int parity) { 	int divisor; 	uint8_t lcr;  	lcr = 0; 	if (databits>= 8) 		lcr |= LCR_8BITS; 	else if (databits == 7) 		lcr |= LCR_7BITS; 	else if (databits == 6) 		lcr |= LCR_6BITS; 	else 		lcr |= LCR_5BITS; 	if (stopbits> 1) 		lcr |= LCR_STOPB; 	lcr |= parity<< 3;
-comment|/* Set baudrate. */
-end_comment
-
-begin_comment
-unit|if (baudrate> 0) { 		divisor = ar933x_divisor(bas->rclk, baudrate); 		if (divisor == 0) 			return (EINVAL); 		uart_setreg(bas, REG_LCR, lcr | LCR_DLAB); 		uart_barrier(bas); 		uart_setreg(bas, REG_DLL, divisor& 0xff); 		uart_setreg(bas, REG_DLH, (divisor>> 8)& 0xff); 		uart_barrier(bas); 	}
-comment|/* Set LCR and clear DLAB. */
-end_comment
-
-begin_endif
-unit|uart_setreg(bas, REG_LCR, lcr); 	uart_barrier(bas); 	return (0); }
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|int
+name|ar933x_param
+parameter_list|(
+name|struct
+name|uart_bas
+modifier|*
+name|bas
+parameter_list|,
+name|int
+name|baudrate
+parameter_list|,
+name|int
+name|databits
+parameter_list|,
+name|int
+name|stopbits
+parameter_list|,
+name|int
+name|parity
+parameter_list|)
+block|{
+comment|/* UART always 8 bits */
+comment|/* UART always 1 stop bit */
+comment|/* UART parity is controllable by bits 0:1, ignore for now */
+comment|/* Set baudrate if required. */
+if|if
+condition|(
+name|baudrate
+operator|>
+literal|0
+condition|)
+block|{
+name|uint32_t
+name|clock_scale
+decl_stmt|,
+name|clock_step
+decl_stmt|;
+comment|/* Find the best fit for the given baud rate */
+name|ar933x_uart_get_scale_step
+argument_list|(
+name|bas
+argument_list|,
+name|baudrate
+argument_list|,
+operator|&
+name|clock_scale
+argument_list|,
+operator|&
+name|clock_step
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Program the clock register in its entirety - no need 		 * for Read-Modify-Write. 		 */
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CLOCK_REG
+argument_list|,
+operator|(
+operator|(
+name|clock_scale
+operator|&
+name|AR933X_UART_CLOCK_SCALE_M
+operator|)
+operator|<<
+name|AR933X_UART_CLOCK_SCALE_S
+operator|)
+operator||
+operator|(
+name|clock_step
+operator|&
+name|AR933X_UART_CLOCK_STEP_M
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Low-level UART interface.  */
@@ -349,16 +643,7 @@ modifier|*
 name|bas
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|u_char val;
-comment|/* Check known 0 bits that don't depend on DLAB. */
-block|val = uart_getreg(bas, REG_IIR); 	if (val& 0x30) 		return (ENXIO);
-comment|/* 	 * Bit 6 of the MCR (= 0x40) appears to be 1 for the Sun1699 	 * chip, but otherwise doesn't seem to have a function. In 	 * other words, uart(4) works regardless. Ignore that bit so 	 * the probe succeeds. 	 */
-block|val = uart_getreg(bas, REG_MCR); 	if (val& 0xa0) 		return (ENXIO);
-endif|#
-directive|endif
+comment|/* We always know this will be here */
 return|return
 operator|(
 literal|0
@@ -390,21 +675,70 @@ name|int
 name|parity
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|u_char	ier;  	if (bas->rclk == 0) 		bas->rclk = DEFAULT_RCLK; 	ar933x_param(bas, baudrate, databits, stopbits, parity);
-comment|/* Disable all interrupt sources. */
-comment|/* 	 * We use 0xe0 instead of 0xf0 as the mask because the XScale PXA 	 * UARTs split the receive time-out interrupt bit out separately as 	 * 0x10.  This gets handled by ier_mask and ier_rxbits below. 	 */
-block|ier = uart_getreg(bas, REG_IER)& 0xe0; 	uart_setreg(bas, REG_IER, ier); 	uart_barrier(bas);
-comment|/* Disable the FIFO (if present). */
-block|uart_setreg(bas, REG_FCR, 0); 	uart_barrier(bas);
-comment|/* Set RTS& DTR. */
-block|uart_setreg(bas, REG_MCR, MCR_IE | MCR_RTS | MCR_DTR); 	uart_barrier(bas);  	ar933x_clrint(bas);
-endif|#
-directive|endif
+name|uint32_t
+name|reg
+decl_stmt|;
+comment|/* Setup default parameters */
+name|ar933x_param
+argument_list|(
+name|bas
+argument_list|,
+name|baudrate
+argument_list|,
+name|databits
+argument_list|,
+name|stopbits
+argument_list|,
+name|parity
+argument_list|)
+expr_stmt|;
+comment|/* XXX Force enable UART in case it was disabled */
+comment|/* Disable all interrupts */
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_EN_REG
+argument_list|,
+literal|0x00000000
+argument_list|)
+expr_stmt|;
+comment|/* Disable the host interrupt */
+name|reg
+operator|=
+name|ar933x_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|)
+expr_stmt|;
+name|reg
+operator|&=
+operator|~
+name|AR933X_UART_CS_HOST_INT_EN
+expr_stmt|;
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
+comment|/* XXX Set RTS/DTR? */
 block|}
 end_function
+
+begin_comment
+comment|/*  * Detach from console.  */
+end_comment
 
 begin_function
 specifier|static
@@ -417,13 +751,7 @@ modifier|*
 name|bas
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* Clear RTS& DTR. */
-block|uart_setreg(bas, REG_MCR, MCR_IE); 	uart_barrier(bas);
-endif|#
-directive|endif
+comment|/* XXX TODO */
 block|}
 end_function
 
