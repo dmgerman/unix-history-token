@@ -554,12 +554,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00004000
+name|B_BARRIER
 value|0x00004000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Write this and all preceeding first. */
 end_comment
 
 begin_define
@@ -2031,6 +2031,28 @@ end_function_decl
 begin_function_decl
 name|void
 name|bawrite
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|babarrierwrite
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bbarrierwrite
 parameter_list|(
 name|struct
 name|buf
