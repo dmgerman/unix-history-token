@@ -5505,7 +5505,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-32s\t%ld\n"
+literal|"%-40s\t%ld\n"
 argument_list|,
 name|desc
 argument_list|,

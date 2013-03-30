@@ -411,5 +411,135 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_CR_ACCESS
+argument_list|,
+literal|"number of times %cr access was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_RDMSR
+argument_list|,
+literal|"number of times rdmsr was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_WRMSR
+argument_list|,
+literal|"number of times wrmsr was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_MTRAP
+argument_list|,
+literal|"number of monitor trap exits"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_PAUSE
+argument_list|,
+literal|"number of times pause was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_INTR_WINDOW
+argument_list|,
+literal|"vm exits due to interrupt window opening"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_NMI_WINDOW
+argument_list|,
+literal|"vm exits due to nmi window opening"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_INOUT
+argument_list|,
+literal|"number of times in/out was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_CPUID
+argument_list|,
+literal|"number of times cpuid was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_EPT_FAULT
+argument_list|,
+literal|"vm exits due to nested page fault"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_UNKNOWN
+argument_list|,
+literal|"number of vm exits for unknown reason"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_ASTPENDING
+argument_list|,
+literal|"number of times astpending at exit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_USERSPACE
+argument_list|,
+literal|"number of vm exits handled in userspace"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
