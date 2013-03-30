@@ -77,11 +77,15 @@ directive|include
 file|"uart_if.h"
 end_include
 
+begin_comment
+comment|/*  * Default system clock is 25MHz; see ar933x_chip.c for how  * the startup process determines whether it's 25MHz or 40MHz.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DEFAULT_RCLK
-value|1843200
+value|(25 * 1000 * 1000)
 end_define
 
 begin_define
@@ -94,7 +98,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((bas)->bst, (bas)->bsh, uart_regofs(bas, reg))
+value|bus_space_read_4((bas)->bst, (bas)->bsh, reg)
 end_define
 
 begin_define
@@ -109,7 +113,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_4((bas)->bst, (bas)->bsh, uart_regofs(bas, reg), value)
+value|bus_space_write_4((bas)->bst, (bas)->bsh, reg, value)
 end_define
 
 begin_if
@@ -624,12 +628,6 @@ name|struct
 name|uart_softc
 name|base
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|uint8_t		fcr; 	uint8_t		ier; 	uint8_t		mcr; 	 	uint8_t		ier_mask; 	uint8_t		ier_rxbits;
-endif|#
-directive|endif
 name|uint32_t
 name|u_ier
 decl_stmt|;
