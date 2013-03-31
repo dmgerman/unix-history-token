@@ -344,6 +344,14 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|arc_buf_eviction_needed
+parameter_list|(
+name|arc_buf_t
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
