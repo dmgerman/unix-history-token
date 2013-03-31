@@ -27039,9 +27039,10 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|version
-operator|<=
-name|SPA_VERSION
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -29233,13 +29234,14 @@ expr_stmt|;
 comment|/* 	 * This should only be called for a non-faulted pool, and since a 	 * future version would result in an unopenable pool, this shouldn't be 	 * possible. 	 */
 name|ASSERT
 argument_list|(
+name|SPA_VERSION_IS_SUPPORTED
+argument_list|(
 name|spa
 operator|->
 name|spa_uberblock
 operator|.
 name|ub_version
-operator|<=
-name|SPA_VERSION
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ASSERT
