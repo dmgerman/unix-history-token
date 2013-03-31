@@ -570,7 +570,7 @@ value|0x100000
 end_define
 
 begin_comment
-comment|/* future use */
+comment|/* route is immutable */
 end_comment
 
 begin_define
