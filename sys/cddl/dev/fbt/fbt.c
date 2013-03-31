@@ -3443,6 +3443,10 @@ index|]
 operator|++
 expr_stmt|;
 block|}
+comment|/* account for a sentinel value below */
+name|ctf_typemax
+operator|++
+expr_stmt|;
 operator|*
 name|lc
 operator|->
