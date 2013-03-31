@@ -1641,6 +1641,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_pipe2
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fildes
+index|[
+literal|2
+index|]
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_posix_fadvise
 parameter_list|(
 name|struct
