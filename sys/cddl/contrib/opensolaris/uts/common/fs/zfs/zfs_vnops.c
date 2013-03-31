@@ -1622,11 +1622,15 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|!
-name|pmap_page_is_write_mapped
-argument_list|(
+operator|(
 name|pp
-argument_list|)
+operator|->
+name|flags
+operator|&
+name|PG_WRITEABLE
+operator|)
+operator|==
+literal|0
 argument_list|,
 operator|(
 literal|"zfs update_pages: writable page in putpages case"
