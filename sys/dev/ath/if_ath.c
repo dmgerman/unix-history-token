@@ -10172,7 +10172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When retrying a software frame, buffers marked ATH_BUF_BUSY  * can't be thrown back on the queue as they could still be  * in use by the hardware.  *  * This duplicates the buffer, or returns NULL.  *  * The descriptor is also copied but the link pointers and  * the DMA segments aren't copied; this frame should thus  * be again passed through the descriptor setup/chain routines  * so the link is correct.  *  * The caller must free the buffer using ath_freebuf().  *  * XXX TODO: this call shouldn't fail as it'll cause packet loss  * XXX in the TX pathway when retries are needed.  * XXX Figure out how to keep some buffers free, or factor the  * XXX number of busy buffers into the xmit path (ath_start())  * XXX so we don't over-commit.  */
+comment|/*  * When retrying a software frame, buffers marked ATH_BUF_BUSY  * can't be thrown back on the queue as they could still be  * in use by the hardware.  *  * This duplicates the buffer, or returns NULL.  *  * The descriptor is also copied but the link pointers and  * the DMA segments aren't copied; this frame should thus  * be again passed through the descriptor setup/chain routines  * so the link is correct.  *  * The caller must free the buffer using ath_freebuf().  */
 end_comment
 
 begin_function
