@@ -10186,7 +10186,6 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-specifier|const
 name|struct
 name|ath_buf
 modifier|*
@@ -10268,7 +10267,6 @@ name|bf
 operator|->
 name|bf_m
 expr_stmt|;
-comment|/* 	 * XXX Copy the node reference, the caller is responsible 	 * for deleting the node reference before it frees its 	 * buffer. 	 * 	 * XXX It's done like this so we don't call the net80211 	 * code whilst having active TX queue locks held. 	 */
 name|tbf
 operator|->
 name|bf_node
@@ -10301,6 +10299,54 @@ name|bf_comp
 expr_stmt|;
 comment|/* NOTE: DMA segments will be setup by the setup/chain functions */
 comment|/* The caller has to re-init the descriptor + links */
+comment|/* 	 * Free the DMA mapping here, before we NULL the mbuf. 	 * We must only call bus_dmamap_unload() once per mbuf chain 	 * or behaviour is undefined. 	 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_m
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * XXX is this POSTWRITE call required? 		 */
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|)
+expr_stmt|;
+block|}
+name|bf
+operator|->
+name|bf_m
+operator|=
+name|NULL
+expr_stmt|;
+name|bf
+operator|->
+name|bf_node
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Copy state */
 name|memcpy
 argument_list|(
@@ -17767,30 +17813,6 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
-name|bus_dmamap_unload
-argument_list|(
-name|sc
-operator|->
-name|sc_dmat
-argument_list|,
-name|bf
-operator|->
-name|bf_dmamap
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|sc_dmat
-argument_list|,
-name|bf
-operator|->
-name|bf_dmamap
-argument_list|,
-name|BUS_DMASYNC_POSTWRITE
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -17915,6 +17937,41 @@ name|bf
 operator|->
 name|bf_m
 decl_stmt|;
+comment|/* 	 * Make sure that we only sync/unload if there's an mbuf. 	 * If not (eg we cloned a buffer), the unload will have already 	 * occured. 	 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_m
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|)
+expr_stmt|;
+block|}
 name|bf
 operator|->
 name|bf_node
@@ -17966,12 +18023,12 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Finally, we don't need this mbuf any longer */
 name|m_freem
 argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX the buffer used to be freed -after-, but the DMA map was 	 * freed where ath_freebuf() now is. I've no idea what this 	 * will do. 	 */
 block|}
 end_function
 

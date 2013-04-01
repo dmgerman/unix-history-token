@@ -131,7 +131,6 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
-specifier|const
 name|struct
 name|ath_buf
 modifier|*

@@ -14553,6 +14553,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Clone the buffer.  This will handle the dma unmap and 	 * copy the node reference to the new buffer.  If this 	 * works out, 'bf' will have no DMA mapping, no mbuf 	 * pointer and no node reference. 	 */
 name|nbf
 operator|=
 name|ath_buf_clone
@@ -14667,19 +14668,7 @@ argument_list|,
 name|nbf
 argument_list|)
 expr_stmt|;
-comment|/* Free current buffer; return the older buffer */
-name|bf
-operator|->
-name|bf_m
-operator|=
-name|NULL
-expr_stmt|;
-name|bf
-operator|->
-name|bf_node
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* Free original buffer; return new buffer */
 name|ath_freebuf
 argument_list|(
 name|sc
