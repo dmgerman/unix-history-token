@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.89 2012/06/12 19:21:51 joerg Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.90 2013/02/25 01:57:14 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -148,8 +148,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAKE_GNUC_PREREQx
-value|, y)	0
+name|MAKE_GNUC_PREREQ
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|0
 end_define
 
 begin_endif
