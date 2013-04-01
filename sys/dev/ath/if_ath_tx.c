@@ -1236,7 +1236,7 @@ name|bf
 operator|->
 name|bf_nseg
 operator|=
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 operator|+
 literal|1
 expr_stmt|;
@@ -1272,7 +1272,7 @@ name|bf
 operator|->
 name|bf_nseg
 operator|>
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 condition|)
 block|{
 comment|/* too many desc's, linearize */
@@ -1291,7 +1291,7 @@ name|m0
 argument_list|,
 name|M_NOWAIT
 argument_list|,
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1376,7 +1376,7 @@ name|bf
 operator|->
 name|bf_nseg
 operator|<=
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 argument_list|,
 operator|(
 literal|"too many segments after defrag; nseg %u"

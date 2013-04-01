@@ -13583,7 +13583,7 @@ name|sc_tx_desclen
 argument_list|,
 name|ath_txbuf
 argument_list|,
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 argument_list|)
 expr_stmt|;
 if|if
