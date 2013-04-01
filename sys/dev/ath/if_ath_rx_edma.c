@@ -2483,7 +2483,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* We're doing this multiple times? */
+comment|/* 	 * Only unload the frame if we haven't consumed 	 * the mbuf via ath_rx_pkt(). 	 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_m
+condition|)
+block|{
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -2495,13 +2502,6 @@ operator|->
 name|bf_dmamap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_m
-condition|)
-block|{
 name|m_freem
 argument_list|(
 name|bf
