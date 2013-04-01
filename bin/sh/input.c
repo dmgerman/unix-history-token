@@ -181,6 +181,7 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/* preceding string on stack */
+specifier|const
 name|char
 modifier|*
 name|prevstring
@@ -231,6 +232,7 @@ name|int
 name|lleft
 decl_stmt|;
 comment|/* number of lines left in this buffer */
+specifier|const
 name|char
 modifier|*
 name|nextc
@@ -290,6 +292,7 @@ comment|/* copy of parsefile->lleft */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|parsenextc
@@ -657,7 +660,9 @@ name|BUFSIZ
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|parsenextc
+name|parsefile
+operator|->
+name|buf
 argument_list|,
 name|rl_cp
 argument_list|,
@@ -698,7 +703,9 @@ name|parsefile
 operator|->
 name|fd
 argument_list|,
-name|parsenextc
+name|parsefile
+operator|->
+name|buf
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -921,7 +928,17 @@ name|q
 operator|=
 name|p
 operator|=
+name|parsefile
+operator|->
+name|buf
+operator|+
+operator|(
 name|parsenextc
+operator|-
+name|parsefile
+operator|->
+name|buf
+operator|)
 expr_stmt|;
 comment|/* delete nul characters */
 name|something
@@ -1598,6 +1615,7 @@ begin_function
 name|void
 name|setinputstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|string

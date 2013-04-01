@@ -5153,6 +5153,7 @@ name|dummy_handler
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{ }
 end_function

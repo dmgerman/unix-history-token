@@ -681,6 +681,10 @@ name|stacknleft
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|min
 operator|>=
 name|INT_MAX
@@ -1013,7 +1017,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|,
 name|char
