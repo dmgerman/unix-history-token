@@ -1210,6 +1210,18 @@ name|d_flags
 operator||=
 name|DISKFLAG_CANFLUSHCACHE
 expr_stmt|;
+comment|/* ifdef used here to ease porting to stable branches at a later point. */
+ifdef|#
+directive|ifdef
+name|DISKFLAG_UNMAPPED_BIO
+name|disk
+operator|->
+name|d_flags
+operator||=
+name|DISKFLAG_UNMAPPED_BIO
+expr_stmt|;
+endif|#
+directive|endif
 name|strlcpy
 argument_list|(
 name|disk

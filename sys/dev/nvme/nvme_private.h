@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -348,6 +354,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Use presence of the BIO_UNMAPPED flag to determine whether unmapped I/O  *  support and the bus_dmamap_load_bio API are available on the target  *  kernel.  This will ease porting back to earlier stable branches at a  *  later point.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIO_UNMAPPED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NVME_UNMAPPED_BIO_SUPPORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|uma_zone_t
@@ -402,6 +429,24 @@ name|NVME_REQUEST_UIO
 value|3
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NVME_UNMAPPED_BIO_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_BIO
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|nvme_request
@@ -425,6 +470,11 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+name|struct
+name|bio
+modifier|*
+name|bio
 decl_stmt|;
 block|}
 name|u
@@ -2163,7 +2213,99 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|nvme_request
+operator|*
+name|nvme_allocate_request_bio
+argument_list|(
+argument|struct bio *bio
+argument_list|,
+argument|nvme_cb_fn_t cb_fn
+argument_list|,
+argument|void *cb_arg
+argument_list|)
+block|{ 	struct
+name|nvme_request
+operator|*
+name|req
+block|;
+name|req
+operator|=
+name|_nvme_allocate_request
+argument_list|(
+name|cb_fn
+argument_list|,
+name|cb_arg
+argument_list|)
+block|;
+if|if
+condition|(
+name|req
+operator|!=
+name|NULL
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NVME_UNMAPPED_BIO_SUPPORT
+name|req
+operator|->
+name|type
+operator|=
+name|NVME_REQUEST_BIO
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
+name|bio
+operator|=
+name|bio
+expr_stmt|;
+else|#
+directive|else
+name|req
+operator|->
+name|type
+operator|=
+name|NVME_REQUEST_VADDR
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
+name|payload
+operator|=
+name|bio
+operator|->
+name|bio_data
+expr_stmt|;
+name|req
+operator|->
+name|payload_size
+operator|=
+name|bio
+operator|->
+name|bio_bcount
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|req
+operator|)
+return|;
+end_return
+
 begin_define
+unit|}
 define|#
 directive|define
 name|nvme_free_request
@@ -2173,33 +2315,25 @@ parameter_list|)
 value|uma_zfree(nvme_request_zone, req)
 end_define
 
-begin_function_decl
-name|void
+begin_macro
+unit|void
 name|nvme_notify_async_consumers
-parameter_list|(
-name|struct
-name|nvme_controller
-modifier|*
-name|ctrlr
-parameter_list|,
-specifier|const
-name|struct
-name|nvme_completion
-modifier|*
-name|async_cpl
-parameter_list|,
-name|uint32_t
-name|log_page_id
-parameter_list|,
-name|void
-modifier|*
-name|log_page_buffer
-parameter_list|,
-name|uint32_t
-name|log_page_size
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|struct nvme_controller *ctrlr
+argument_list|,
+argument|const struct nvme_completion *async_cpl
+argument_list|,
+argument|uint32_t log_page_id
+argument_list|,
+argument|void *log_page_buffer
+argument_list|,
+argument|uint32_t log_page_size
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
