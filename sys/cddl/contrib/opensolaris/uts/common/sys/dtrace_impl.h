@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_SYS_DTRACE_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -621,8 +618,24 @@ name|_LP64
 name|uint64_t
 name|dtb_pad1
 decl_stmt|;
+comment|/* pad out to 64 bytes */
 endif|#
 directive|endif
+name|uint64_t
+name|dtb_switched
+decl_stmt|;
+comment|/* time of last switch */
+name|uint64_t
+name|dtb_interval
+decl_stmt|;
+comment|/* observed switch interval */
+name|uint64_t
+name|dtb_pad2
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* pad to avoid false sharing */
 block|}
 name|dtrace_buffer_t
 typedef|;
@@ -1662,10 +1675,10 @@ modifier|*
 name|dtpv_arg
 decl_stmt|;
 comment|/* provider argument */
-name|uint_t
+name|hrtime_t
 name|dtpv_defunct
 decl_stmt|;
-comment|/* boolean: defunct provider */
+comment|/* when made defunct */
 name|struct
 name|dtrace_provider
 modifier|*

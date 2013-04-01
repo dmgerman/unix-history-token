@@ -359,6 +359,10 @@ name|fasttrap_total
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1053,6 +1057,8 @@ decl_stmt|,
 name|later
 init|=
 literal|0
+decl_stmt|,
+name|rval
 decl_stmt|;
 specifier|static
 specifier|volatile
@@ -1243,10 +1249,14 @@ name|ftp_provid
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rval
+operator|=
 name|dtrace_unregister
 argument_list|(
 name|provid
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -1266,6 +1276,18 @@ name|dtrace_condense
 argument_list|(
 name|provid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+name|EAGAIN
+condition|)
+name|fp
+operator|->
+name|ftp_marked
+operator|=
+literal|1
 expr_stmt|;
 name|later
 operator|+=
@@ -1325,13 +1347,17 @@ condition|(
 name|later
 operator|>
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|callout_active
 argument_list|(
 operator|&
 name|fasttrap_timeout
 argument_list|)
 condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -1345,6 +1371,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1356,6 +1383,7 @@ name|fasttrap_cleanup_work
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
 block|{
 if|#
