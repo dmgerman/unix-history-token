@@ -426,11 +426,6 @@ decl_stmt|;
 comment|/* errno to return */
 name|char
 modifier|*
-name|ifs
-decl_stmt|;
-comment|/* IFS env. var. */
-name|char
-modifier|*
 name|np
 decl_stmt|,
 modifier|*
@@ -456,23 +451,6 @@ decl_stmt|;
 name|serrno
 operator|=
 name|errno
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ifs
-operator|=
-name|getenv
-argument_list|(
-literal|"IFS"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|ifs
-operator|=
-literal|" \t\n"
 expr_stmt|;
 if|if
 condition|(
@@ -650,10 +628,7 @@ argument_list|(
 operator|&
 name|cmd
 argument_list|,
-literal|"wordexp%c%s\n"
-argument_list|,
-operator|*
-name|ifs
+literal|"wordexp %s\n"
 argument_list|,
 name|words
 argument_list|)
