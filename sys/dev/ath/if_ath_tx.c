@@ -6149,6 +6149,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* XXX statistic */
+comment|/* XXX free tx dmamap */
 name|ath_freetx
 argument_list|(
 name|m0
@@ -6260,6 +6261,7 @@ operator|.
 name|ast_tdma_ack
 operator|++
 expr_stmt|;
+comment|/* XXX free tx dmamap */
 name|ath_freetx
 argument_list|(
 name|m0
