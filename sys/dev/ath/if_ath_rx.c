@@ -2654,6 +2654,17 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|)
+expr_stmt|;
 comment|/* NB: bpf needs the mbuf length setup */
 name|len
 operator|=
