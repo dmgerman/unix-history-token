@@ -16657,7 +16657,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
+name|ssize_t
 name|e
 decl_stmt|;
 name|int
@@ -16771,7 +16771,7 @@ condition|(
 name|e
 operator|!=
 operator|(
-name|int
+name|ssize_t
 operator|)
 name|size
 condition|)
