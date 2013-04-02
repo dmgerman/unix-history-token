@@ -252,7 +252,7 @@ name|CTL_DONE_THREAD
 end_define
 
 begin_comment
-comment|/*  *  * Use the serial number and device ID provided by the backend, rather than  *   * making up our own.  *    */
+comment|/*  * Use the serial number and device ID provided by the backend, rather than  * making up our own.  */
 end_comment
 
 begin_define
