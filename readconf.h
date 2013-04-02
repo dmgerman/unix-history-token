@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.91 2011/09/23 07:45:05 markus Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.92 2013/02/17 23:16:57 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -316,6 +316,12 @@ index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]
 decl_stmt|;
+name|int
+name|identity_file_userprovided
+index|[
+name|SSH_MAX_IDENTITY_FILES
+index|]
+decl_stmt|;
 name|Key
 modifier|*
 name|identity_keys
@@ -592,6 +598,26 @@ parameter_list|,
 specifier|const
 name|Forward
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|add_identity_file
+parameter_list|(
+name|Options
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
