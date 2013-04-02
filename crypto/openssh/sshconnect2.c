@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.191 2013/02/15 00:21:01 dtucker Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.192 2013/02/17 23:16:57 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -7120,7 +7120,12 @@ name|id
 operator|->
 name|userprovided
 operator|=
-literal|1
+name|options
+operator|.
+name|identity_file_userprovided
+index|[
+name|i
+index|]
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
