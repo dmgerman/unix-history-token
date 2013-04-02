@@ -1742,6 +1742,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|sk_SSL_COMP_sort
+argument_list|(
+name|ssl_comp_methods
+argument_list|)
+expr_stmt|;
 block|}
 name|MemCheck_on
 argument_list|()

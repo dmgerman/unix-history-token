@@ -165,7 +165,7 @@ name|bitmask_end_values
 index|[]
 init|=
 block|{
-literal|0x00
+literal|0xff
 block|,
 literal|0x01
 block|,
@@ -210,17 +210,6 @@ literal|28
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|unsigned
-name|int
-name|dtls1_min_mtu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -581,6 +570,15 @@ decl_stmt|;
 comment|/* AHA!  Figure out the MTU, and stick to the right size */
 if|if
 condition|(
+name|s
+operator|->
+name|d1
+operator|->
+name|mtu
+operator|<
+name|dtls1_min_mtu
+argument_list|()
+operator|&&
 operator|!
 operator|(
 name|SSL_get_options
@@ -671,10 +669,22 @@ block|}
 if|#
 directive|if
 literal|0
-block|mtu = s->d1->mtu;  	fprintf(stderr, "using MTU = %d\n", mtu);  	mtu -= (DTLS1_HM_HEADER_LENGTH + DTLS1_RT_HEADER_LENGTH);  	curr_mtu = mtu - BIO_wpending(SSL_get_wbio(s));  	if ( curr_mtu> 0) 		mtu = curr_mtu; 	else if ( ( ret = BIO_flush(SSL_get_wbio(s)))<= 0) 		return ret;  	if ( BIO_wpending(SSL_get_wbio(s)) + s->init_num>= mtu) 		{ 		ret = BIO_flush(SSL_get_wbio(s)); 		if ( ret<= 0) 			return ret; 		mtu = s->d1->mtu - (DTLS1_HM_HEADER_LENGTH + DTLS1_RT_HEADER_LENGTH); 		}  	OPENSSL_assert(mtu> 0);
-comment|/* should have something reasonable now */
+block|mtu = s->d1->mtu;  	fprintf(stderr, "using MTU = %d\n", mtu);  	mtu -= (DTLS1_HM_HEADER_LENGTH + DTLS1_RT_HEADER_LENGTH);  	curr_mtu = mtu - BIO_wpending(SSL_get_wbio(s));  	if ( curr_mtu> 0) 		mtu = curr_mtu; 	else if ( ( ret = BIO_flush(SSL_get_wbio(s)))<= 0) 		return ret;  	if ( BIO_wpending(SSL_get_wbio(s)) + s->init_num>= mtu) 		{ 		ret = BIO_flush(SSL_get_wbio(s)); 		if ( ret<= 0) 			return ret; 		mtu = s->d1->mtu - (DTLS1_HM_HEADER_LENGTH + DTLS1_RT_HEADER_LENGTH); 		}
 endif|#
 directive|endif
+name|OPENSSL_assert
+argument_list|(
+name|s
+operator|->
+name|d1
+operator|->
+name|mtu
+operator|>=
+name|dtls1_min_mtu
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* should have something reasonable now */
 if|if
 condition|(
 name|s
@@ -1623,18 +1633,22 @@ name|hm_header_st
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Don't change sequence numbers while listening */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|d1
+operator|->
+name|listen
+condition|)
 name|s
 operator|->
 name|d1
 operator|->
 name|handshake_read_seq
 operator|++
-expr_stmt|;
-comment|/* we just read a handshake message from the other side: 	 * this means that we don't need to retransmit of the 	 * buffered messages.   	 * XDTLS: may be able clear out this 	 * buffer a little sooner (i.e if an out-of-order 	 * handshake message/record is received at the record 	 * layer.   	 * XDTLS: exception is that the server needs to 	 * know that change cipher spec and finished messages 	 * have been received by the client before clearing this 	 * buffer.  this can simply be done by waiting for the 	 * first data  segment, but is there a better way?  */
-name|dtls1_clear_record_buffer
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -3173,13 +3187,29 @@ return|return
 name|i
 return|;
 block|}
-name|OPENSSL_assert
-argument_list|(
+comment|/* Handshake fails if message header is incomplete */
+if|if
+condition|(
 name|i
-operator|==
+operator|!=
 name|DTLS1_HM_HEADER_LENGTH
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_UNEXPECTED_MESSAGE
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_DTLS1_GET_MESSAGE_FRAGMENT
+argument_list|,
+name|SSL_R_UNEXPECTED_MESSAGE
 argument_list|)
 expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 comment|/* parse the message fragment header */
 name|dtls1_get_message_header
 argument_list|(
@@ -3189,7 +3219,7 @@ operator|&
 name|msg_hdr
 argument_list|)
 expr_stmt|;
-comment|/*  	 * if this is a future (or stale) message it gets buffered 	 * (or dropped)--no further processing at this time  	 */
+comment|/*  	 * if this is a future (or stale) message it gets buffered 	 * (or dropped)--no further processing at this time 	 * While listening, we accept seq 1 (ClientHello with cookie) 	 * although we're still expecting seq 0 (ClientHello) 	 */
 if|if
 condition|(
 name|msg_hdr
@@ -3201,6 +3231,21 @@ operator|->
 name|d1
 operator|->
 name|handshake_read_seq
+operator|&&
+operator|!
+operator|(
+name|s
+operator|->
+name|d1
+operator|->
+name|listen
+operator|&&
+name|msg_hdr
+operator|.
+name|seq
+operator|==
+literal|1
+operator|)
 condition|)
 return|return
 name|dtls1_process_out_of_seq_message
@@ -3473,16 +3518,31 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XDTLS:  an incorrectly formatted fragment should cause the  	 * handshake to fail */
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|i
-operator|==
+operator|!=
 operator|(
 name|int
 operator|)
 name|frag_len
+condition|)
+block|{
+name|al
+operator|=
+name|SSL3_AD_ILLEGAL_PARAMETER
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_DTLS1_GET_MESSAGE_FRAGMENT
+argument_list|,
+name|SSL3_AD_ILLEGAL_PARAMETER
 argument_list|)
 expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 operator|*
 name|ok
 operator|=
@@ -5633,11 +5693,19 @@ name|long
 name|frag_len
 parameter_list|)
 block|{
+comment|/* Don't change sequence numbers while listening */
 if|if
 condition|(
 name|frag_off
 operator|==
 literal|0
+operator|&&
+operator|!
+name|s
+operator|->
+name|d1
+operator|->
+name|listen
 condition|)
 block|{
 name|s
@@ -5891,7 +5959,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|unsigned
 name|int
 name|dtls1_min_mtu

@@ -3860,6 +3860,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|BN_is_zero
+argument_list|(
+name|u
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 operator|!
 name|BN_rshift1
 argument_list|(

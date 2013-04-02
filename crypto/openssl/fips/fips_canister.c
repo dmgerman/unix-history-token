@@ -153,6 +153,12 @@ argument_list|)
 operator|)
 operator|||
 expr|\
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+operator|||
+expr|\
 operator|(
 name|defined
 argument_list|(
