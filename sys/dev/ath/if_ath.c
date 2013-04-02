@@ -11125,6 +11125,7 @@ name|iv_state
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX dmamap */
 name|ath_freetx
 argument_list|(
 name|next
@@ -12388,7 +12389,7 @@ operator|*
 name|numpages
 expr_stmt|;
 block|}
-comment|/* 	 * Setup DMA descriptor area. 	 */
+comment|/* 	 * Setup DMA descriptor area. 	 * 	 * BUS_DMA_ALLOCNOW is not used; we never use bounce 	 * buffers for the descriptors themselves. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -12430,7 +12431,7 @@ operator|->
 name|dd_desc_len
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -13412,6 +13413,11 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
+name|int
+name|do_warning
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|dd
@@ -13478,6 +13484,59 @@ operator|->
 name|bf_m
 condition|)
 block|{
+comment|/* 				 * XXX warn if there's buffers here. 				 * XXX it should have been freed by the 				 * owner! 				 */
+if|if
+condition|(
+name|do_warning
+operator|==
+literal|0
+condition|)
+block|{
+name|do_warning
+operator|=
+literal|1
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: %s: mbuf should've been"
+literal|" unmapped/freed!\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|dd
+operator|->
+name|dd_name
+argument_list|)
+expr_stmt|;
+block|}
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|bf
