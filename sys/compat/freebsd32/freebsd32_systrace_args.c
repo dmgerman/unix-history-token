@@ -33672,7 +33672,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"int"
+literal|"ssize_t"
 expr_stmt|;
 break|break;
 comment|/* extattr_get_file */
@@ -33809,7 +33809,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"int"
+literal|"ssize_t"
 expr_stmt|;
 break|break;
 comment|/* extattr_get_fd */
@@ -34246,7 +34246,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"int"
+literal|"ssize_t"
 expr_stmt|;
 break|break;
 comment|/* extattr_get_link */
