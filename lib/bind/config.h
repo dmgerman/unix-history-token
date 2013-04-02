@@ -833,12 +833,9 @@ begin_comment
 comment|/* Define to 1 if you have the<regex.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_REGEX_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_REGEX_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `setegid' function. */

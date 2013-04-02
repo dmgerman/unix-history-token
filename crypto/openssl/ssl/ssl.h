@@ -7632,6 +7632,10 @@ name|SSL_F_SSL_GET_SERVER_SEND_CERT
 value|182
 define|#
 directive|define
+name|SSL_F_SSL_GET_SERVER_SEND_PKEY
+value|317
+define|#
+directive|define
 name|SSL_F_SSL_GET_SIGN_PKEY
 value|183
 define|#

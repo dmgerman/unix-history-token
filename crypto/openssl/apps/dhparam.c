@@ -1151,15 +1151,6 @@ name|cb
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|dh
-condition|)
-name|DH_free
-argument_list|(
-name|dh
-argument_list|)
-expr_stmt|;
 name|ERR_print_errors
 argument_list|(
 name|bio_err
