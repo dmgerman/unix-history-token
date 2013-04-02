@@ -3917,6 +3917,15 @@ operator|.
 name|my_bit
 operator|!=
 name|DIST_LOCAL
+operator|&&
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_bit
+operator|!=
+name|DIST_KERNEL_DEBUG
 condition|)
 block|{
 name|status
@@ -3959,7 +3968,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|// ignore any failures with DIST_LOCAL
+comment|// ignore any failures with DIST_LOCAL/_KERNEL_DEBUG
 name|status
 operator|=
 name|TRUE
@@ -4569,11 +4578,15 @@ argument_list|,
 name|old_kernel
 argument_list|)
 expr_stmt|;
-comment|/* Clear any local dist flags now */
+comment|/* Clear any optional dist flags now */
 name|Dists
 operator|&=
 operator|~
+operator|(
 name|DIST_LOCAL
+operator||
+name|DIST_KERNEL_DEBUG
+operator|)
 expr_stmt|;
 if|if
 condition|(
