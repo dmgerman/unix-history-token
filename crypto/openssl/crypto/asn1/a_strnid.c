@@ -158,6 +158,7 @@ begin_function
 name|int
 name|ASN1_STRING_set_default_mask_asc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p

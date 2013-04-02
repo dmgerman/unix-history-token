@@ -327,6 +327,10 @@ value|40
 comment|/* as kernel for current MTU */
 define|#
 directive|define
+name|BIO_CTRL_DGRAM_GET_FALLBACK_MTU
+value|47
+define|#
+directive|define
 name|BIO_CTRL_DGRAM_GET_MTU
 value|41
 comment|/* get cached value for MTU */
@@ -1051,6 +1055,7 @@ typedef|typedef
 struct|struct
 name|bio_f_buffer_ctx_struct
 block|{
+comment|/* Buffers are setup like this: 	 * 	 *<---------------------- size -----------------------> 	 * +---------------------------------------------------+ 	 * | consumed | remaining          | free space        | 	 * +---------------------------------------------------+ 	 *<-- off --><------- len -------> 	 */
 comment|/* BIO *bio; */
 comment|/* this is now in the BIO struct */
 name|int

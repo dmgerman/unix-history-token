@@ -925,7 +925,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|mac
 argument_list|,
@@ -935,10 +935,6 @@ name|s2
 operator|->
 name|mac_data
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|mac_size
 argument_list|)
 operator|!=

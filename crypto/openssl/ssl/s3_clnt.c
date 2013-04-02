@@ -713,12 +713,34 @@ name|s
 operator|->
 name|hit
 condition|)
+block|{
 name|s
 operator|->
 name|state
 operator|=
 name|SSL3_ST_CR_FINISHED_A
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
+if|if
+condition|(
+name|s
+operator|->
+name|tlsext_ticket_expected
+condition|)
+block|{
+comment|/* receive renewed session ticket */
+name|s
+operator|->
+name|state
+operator|=
+name|SSL3_ST_CR_SESSION_TICKET_A
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 else|else
 name|s
 operator|->
@@ -3393,7 +3415,7 @@ name|SSL_R_BAD_PACKET_LENGTH
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 return|return
@@ -7293,8 +7315,6 @@ block|{
 comment|/* need at least ticket_lifetime_hint + ticket length */
 name|al
 operator|=
-name|SSL3_AL_FATAL
-operator|,
 name|SSL_AD_DECODE_ERROR
 expr_stmt|;
 name|SSLerr
@@ -7351,8 +7371,6 @@ condition|)
 block|{
 name|al
 operator|=
-name|SSL3_AL_FATAL
-operator|,
 name|SSL_AD_DECODE_ERROR
 expr_stmt|;
 name|SSLerr

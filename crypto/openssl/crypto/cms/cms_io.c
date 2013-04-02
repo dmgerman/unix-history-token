@@ -270,7 +270,7 @@ name|tmpbio
 expr_stmt|;
 block|}
 return|return
-literal|1
+name|r
 return|;
 block|}
 end_function

@@ -307,7 +307,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-literal|28
+literal|20
 operator|)
 operator|)
 condition|)
@@ -321,7 +321,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-literal|28
+literal|20
 operator|)
 condition|)
 block|{
