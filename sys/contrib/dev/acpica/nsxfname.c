@@ -566,6 +566,10 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
