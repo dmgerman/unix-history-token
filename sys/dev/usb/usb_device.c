@@ -6952,6 +6952,9 @@ goto|goto
 name|repeat_set_config
 goto|;
 block|}
+if|#
+directive|if
+name|USB_HAVE_MSCTEST
 if|if
 condition|(
 name|config_index
@@ -6986,7 +6989,12 @@ name|repeat_set_config
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
+if|#
+directive|if
+name|USB_HAVE_MSCTEST
 if|if
 condition|(
 name|set_config_failed
@@ -7044,6 +7052,8 @@ name|repeat_set_config
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|config_done
 label|:
 name|DPRINTF
