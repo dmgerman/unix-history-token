@@ -2112,7 +2112,7 @@ name|optind
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * If devicde node contains "ns", we consider it a namespace, 	 *  otherwise, consider it a controller. 	 */
+comment|/* 	 * If device node contains "ns", we consider it a namespace, 	 *  otherwise, consider it a controller. 	 */
 if|if
 condition|(
 name|strstr
