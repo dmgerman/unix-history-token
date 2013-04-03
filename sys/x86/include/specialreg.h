@@ -368,6 +368,17 @@ begin_comment
 comment|/* PTE No-Execute bit enable (R/W) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EFER_SVM
+value|0x000001000
+end_define
+
+begin_comment
+comment|/* SVM enable bit for AMD, reserved for Intel */
+end_comment
+
 begin_comment
 comment|/*  * Intel Extended Features registers  */
 end_comment
@@ -4096,6 +4107,43 @@ directive|define
 name|MSR_MC0_CTL_MASK
 value|0xc0010044
 end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_VM_CR
+value|0xC0010114
+end_define
+
+begin_comment
+comment|/* SVM: feature control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_VM_HSAVE_PA
+value|0xC0010117
+end_define
+
+begin_comment
+comment|/* SVM: host save area address */
+end_comment
+
+begin_comment
+comment|/* AMD VM_CR related */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_CR_SVMDIS
+value|0x10
+end_define
+
+begin_comment
+comment|/* SVM: disabled by BIOS */
+end_comment
 
 begin_comment
 comment|/* VIA ACE crypto featureset: for via_feature_rng */
