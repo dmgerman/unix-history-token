@@ -2428,7 +2428,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* ** This will autoconfigure based on ** the number of CPUs if left at 0. */
+comment|/* ** This will autoconfigure based on ** the number of CPUs and max supported MSI-X messages ** if left at 0. */
 end_comment
 
 begin_decl_stmt
