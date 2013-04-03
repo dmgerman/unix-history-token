@@ -12195,6 +12195,11 @@ argument_list|,
 literal|"Synchronize cache failed\n"
 argument_list|)
 expr_stmt|;
+name|xpt_release_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
 name|periph
