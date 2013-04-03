@@ -4044,7 +4044,14 @@ name|vp_md
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Mark the buffer clean */
+comment|/* 	 * Mark the buffer clean.  Increment the bufobj write count 	 * before bundirty() call, to prevent other thread from seeing 	 * empty dirty list and zero counter for writes in progress, 	 * falsely indicating that the bufobj is clean. 	 */
+name|bufobj_wref
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+argument_list|)
+expr_stmt|;
 name|bundirty
 argument_list|(
 name|bp
@@ -4075,13 +4082,6 @@ operator|->
 name|b_iocmd
 operator|=
 name|BIO_WRITE
-expr_stmt|;
-name|bufobj_wref
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
 expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
