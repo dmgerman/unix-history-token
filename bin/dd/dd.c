@@ -394,6 +394,14 @@ expr_stmt|;
 name|dd_close
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Some devices such as cfi(4) may perform significant amounts 	 * of work when a write descriptor is closed.  Close the out 	 * descriptor explicitly so that the summary handler (called 	 * from an atexit() hook) includes this work. 	 */
+name|close
+argument_list|(
+name|out
+operator|.
+name|fd
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
