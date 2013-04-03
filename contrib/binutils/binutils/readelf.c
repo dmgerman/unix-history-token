@@ -31144,6 +31144,12 @@ case|:
 return|return
 literal|"DW_FORM_indirect"
 return|;
+case|case
+name|DW_FORM_flag_present
+case|:
+return|return
+literal|"DW_FORM_flag_present"
+return|;
 default|default:
 block|{
 specifier|static
@@ -34480,6 +34486,14 @@ name|offset_size
 expr_stmt|;
 break|break;
 case|case
+name|DW_FORM_flag_present
+case|:
+name|uvalue
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|DW_FORM_ref1
 case|:
 case|case
@@ -34679,6 +34693,9 @@ name|uvalue
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DW_FORM_flag_present
+case|:
 case|case
 name|DW_FORM_flag
 case|:
