@@ -60336,7 +60336,7 @@ operator|=
 literal|0
 init|;
 name|cnt
-operator|<
+operator|<=
 name|pagedep_hash
 condition|;
 name|cnt
@@ -60355,7 +60355,7 @@ expr_stmt|;
 if|if
 condition|(
 name|next
-operator|>=
+operator|>
 name|pagedep_hash
 condition|)
 name|next
@@ -60614,7 +60614,7 @@ operator|=
 literal|0
 init|;
 name|cnt
-operator|<
+operator|<=
 name|inodedep_hash
 condition|;
 name|cnt
@@ -60633,7 +60633,7 @@ expr_stmt|;
 if|if
 condition|(
 name|next
-operator|>=
+operator|>
 name|inodedep_hash
 condition|)
 name|next
