@@ -157,6 +157,9 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|struct
 name|mtx
 name|bank_mtx
@@ -169,6 +172,11 @@ name|restart_bank
 decl_stmt|;
 name|int
 name|hardware_bank
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|channels
 decl_stmt|;
 struct|struct
 block|{
@@ -211,6 +219,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -224,6 +238,11 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -739,6 +758,15 @@ return|return
 name|ENXIO
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+name|ctlr
+operator|->
+name|channels
+operator|=
+literal|2
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -774,6 +802,24 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+else|#
+directive|else
+comment|/* Work around the lack of channel serialization in ATA_CAM. */
+name|ctlr
+operator|->
+name|channels
+operator|=
+literal|1
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"second channel ignored\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|unit
@@ -782,7 +828,9 @@ literal|0
 init|;
 name|unit
 operator|<
-literal|2
+name|ctlr
+operator|->
+name|channels
 condition|;
 name|unit
 operator|++
@@ -1142,7 +1190,9 @@ literal|0
 init|;
 name|unit
 operator|<
-literal|2
+name|ctlr
+operator|->
+name|channels
 condition|;
 name|unit
 operator|++
@@ -1165,6 +1215,9 @@ name|argument
 operator|)
 condition|)
 continue|continue;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 if|if
 condition|(
 name|ata_cbuschannel_banking
@@ -1178,6 +1231,8 @@ argument_list|)
 operator|==
 name|unit
 condition|)
+endif|#
+directive|endif
 name|ctlr
 operator|->
 name|interrupt
@@ -1632,6 +1687,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -1657,9 +1718,6 @@ name|dev
 argument_list|)
 argument_list|)
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ATA_CAM
 name|struct
 name|ata_channel
 modifier|*
@@ -1670,8 +1728,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|res
 decl_stmt|;
@@ -1688,9 +1744,6 @@ condition|(
 name|flags
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|ATA_CAM
 case|case
 name|ATA_LF_LOCK
 case|:
@@ -1833,8 +1886,6 @@ block|}
 block|}
 block|}
 break|break;
-endif|#
-directive|endif
 case|case
 name|ATA_LF_WHICH
 case|:
@@ -1859,6 +1910,11 @@ name|res
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
