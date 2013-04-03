@@ -12690,7 +12690,9 @@ name|firstopen
 condition|)
 name|zvol_create_minors
 argument_list|(
-name|pool
+name|spa
+operator|->
+name|spa_name
 argument_list|)
 expr_stmt|;
 endif|#
