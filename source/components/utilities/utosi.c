@@ -818,11 +818,16 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|AcpiUtDeleteObjectDesc
+argument_list|(
+name|ReturnDesc
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Lookup the interface in the global _OSI list */
 name|InterfaceInfo
