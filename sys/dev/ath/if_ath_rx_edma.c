@@ -2152,7 +2152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an RX mbuf for the given ath_buf and initialise  * it for EDMA.  *  * + Allocate a 4KB mbuf;  * + Setup the DMA map for the given buffer;  * + Keep a pointer to the start of the mbuf - that's where the  *   descriptor lies;  * + Take a pointer to the start of the RX buffer, set the  *   mbuf "start" to be there;  * + Return that.  */
+comment|/*  * Allocate an RX mbuf for the given ath_buf and initialise  * it for EDMA.  *  * + Allocate a 4KB mbuf;  * + Setup the DMA map for the given buffer;  * + Return that.  */
 end_comment
 
 begin_function
