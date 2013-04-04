@@ -3220,20 +3220,16 @@ expr_stmt|;
 comment|/* Wait for the disk size update.  */
 name|error
 operator|=
-name|msleep
+name|cam_periph_sleep
 argument_list|(
+name|periph
+argument_list|,
 operator|&
 name|softc
 operator|->
 name|disk
 operator|->
 name|d_mediasize
-argument_list|,
-name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|,
 name|PRIBIO
 argument_list|,
@@ -6427,13 +6423,9 @@ argument_list|,
 name|softc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|cam_periph_unlock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * RBC devices don't have to support READ(6), only READ(10). 	 */
@@ -6985,13 +6977,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|cam_periph_lock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -7009,13 +6997,9 @@ argument_list|,
 name|DISK_VERSION
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|cam_periph_lock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add async callbacks for events of interest. 	 * I don't bother checking if this fails as, 	 * in most cases, the system will function just 	 * fine without them and the only alternative 	 * would be to not attach the device on failure. 	 */

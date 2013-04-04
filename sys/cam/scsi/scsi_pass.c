@@ -1402,13 +1402,9 @@ name|cpi
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We pass in 0 for a blocksize, since we don't  	 * know what the blocksize of this device is, if  	 * it even has a blocksize. 	 */
-name|mtx_unlock
+name|cam_periph_unlock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|no_tags
@@ -1538,13 +1534,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|cam_periph_lock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|softc
