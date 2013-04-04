@@ -3692,20 +3692,13 @@ name|__FreeBSD__
 comment|/* Compatiblity with FreeBSD 9.0 and 9.1: Use version 28 if unspecified */
 if|if
 condition|(
-name|nvlist_lookup_string
+name|enable_all_pool_feat
+operator|&&
+operator|!
+name|prop_list_contains_feature
 argument_list|(
 name|props
-argument_list|,
-name|zpool_prop_to_name
-argument_list|(
-name|ZPOOL_PROP_VERSION
 argument_list|)
-argument_list|,
-operator|&
-name|propval
-argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 if|if
