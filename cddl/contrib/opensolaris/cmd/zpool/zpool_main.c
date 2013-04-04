@@ -3733,21 +3733,6 @@ operator|=
 name|B_FALSE
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|enable_all_pool_feat
-condition|)
-name|nvlist_remove_all
-argument_list|(
-name|props
-argument_list|,
-name|zpool_prop_to_name
-argument_list|(
-name|ZPOOL_PROP_VERSION
-argument_list|)
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
