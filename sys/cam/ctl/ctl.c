@@ -1517,6 +1517,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ctl_is_single
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
