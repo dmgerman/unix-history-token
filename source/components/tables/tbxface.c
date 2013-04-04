@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - ACPI table oriented external interfaces  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - ACPI table-oriented external interfaces  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeTables  *  * PARAMETERS:  InitialTableArray   - Pointer to an array of pre-allocated  *                                    ACPI_TABLE_DESC structures. If NULL, the  *                                    array is dynamically allocated.  *              InitialTableCount   - Size of InitialTableArray, in number of  *                                    ACPI_TABLE_DESC structures  *              AllowRealloc        - Flag to tell Table Manager if resize of  *                                    pre-allocated array is allowed. Ignored  *                                    if InitialTableArray is NULL.  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the table manager, get the RSDP and RSDT/XSDT.  *  * NOTE:        Allows static allocation of the initial table array in order  *              to avoid the use of dynamic memory in confined environments  *              such as the kernel boot sequence where it may not be available.  *  *              If the host OS memory managers are initialized, use NULL for  *              InitialTableArray, and the table will be dynamically allocated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeTables  *  * PARAMETERS:  InitialTableArray   - Pointer to an array of pre-allocated  *                                    ACPI_TABLE_DESC structures. If NULL, the  *                                    array is dynamically allocated.  *              InitialTableCount   - Size of InitialTableArray, in number of  *                                    ACPI_TABLE_DESC structures  *              AllowResize         - Flag to tell Table Manager if resize of  *                                    pre-allocated array is allowed. Ignored  *                                    if InitialTableArray is NULL.  *  * RETURN:      Status  *  * DESCRIPTION: Initialize the table manager, get the RSDP and RSDT/XSDT.  *  * NOTE:        Allows static allocation of the initial table array in order  *              to avoid the use of dynamic memory in confined environments  *              such as the kernel boot sequence where it may not be available.  *  *              If the host OS memory managers are initialized, use NULL for  *              InitialTableArray, and the table will be dynamically allocated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -108,7 +108,7 @@ argument_list|(
 name|AcpiInitializeTables
 argument_list|)
 expr_stmt|;
-comment|/*      * Set up the Root Table Array      * Allocate the table array if requested      */
+comment|/*      * Setup the Root Table Array and allocate the table array      * if requested      */
 if|if
 condition|(
 operator|!
@@ -528,7 +528,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to table  *  * DESCRIPTION: Finds and verifies an ACPI table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to the requested table  *  * DESCRIPTION: Finds and verifies an ACPI table. Table must be in the  *              RSDT/XSDT.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -683,7 +683,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTableByIndex  *  * PARAMETERS:  TableIndex          - Table index  *              Table               - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to the table  *  * DESCRIPTION: Obtain a table by an index into the global table list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTableByIndex  *  * PARAMETERS:  TableIndex          - Table index  *              Table               - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to the requested table  *  * DESCRIPTION: Obtain a table by an index into the global table list. Used  *              internally also.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -838,7 +838,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallTableHandler  *  * PARAMETERS:  Handler         - Table event handler  *              Context         - Value passed to the handler on each event  *  * RETURN:      Status  *  * DESCRIPTION: Install table event handler  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallTableHandler  *  * PARAMETERS:  Handler         - Table event handler  *              Context         - Value passed to the handler on each event  *  * RETURN:      Status  *  * DESCRIPTION: Install a global table event handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -943,7 +943,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveTableHandler  *  * PARAMETERS:  Handler         - Table event handler that was installed  *                                previously.  *  * RETURN:      Status  *  * DESCRIPTION: Remove table event handler  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveTableHandler  *  * PARAMETERS:  Handler         - Table event handler that was installed  *                                previously.  *  * RETURN:      Status  *  * DESCRIPTION: Remove a table event handler  *  ******************************************************************************/
 end_comment
 
 begin_function

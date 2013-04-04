@@ -1123,6 +1123,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_OBJECT_CONVERTER"
+block|,
+name|SRC_TYPE_SIMPLE
+block|}
+block|,
+block|{
 literal|"ACPI_OBJECT_DATA"
 block|,
 name|SRC_TYPE_STRUCT

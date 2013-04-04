@@ -207,6 +207,9 @@ case|case
 name|ASL_FILE_C_SOURCE_OUTPUT
 case|:
 case|case
+name|ASL_FILE_C_OFFSET_OUTPUT
+case|:
+case|case
 name|ASL_FILE_C_INCLUDE_OUTPUT
 case|:
 name|Prefix
@@ -345,6 +348,9 @@ case|case
 name|ASL_FILE_C_SOURCE_OUTPUT
 case|:
 case|case
+name|ASL_FILE_C_OFFSET_OUTPUT
+case|:
+case|case
 name|ASL_FILE_C_INCLUDE_OUTPUT
 case|:
 name|Prefix
@@ -404,6 +410,9 @@ condition|)
 block|{
 case|case
 name|ASL_FILE_C_SOURCE_OUTPUT
+case|:
+case|case
+name|ASL_FILE_C_OFFSET_OUTPUT
 case|:
 case|case
 name|ASL_FILE_C_INCLUDE_OUTPUT

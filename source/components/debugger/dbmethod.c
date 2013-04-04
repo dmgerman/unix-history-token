@@ -1037,9 +1037,13 @@ name|Predefined
 decl_stmt|;
 name|Predefined
 operator|=
-name|AcpiNsCheckForPredefinedName
+name|AcpiUtMatchPredefinedMethod
 argument_list|(
 name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 if|if

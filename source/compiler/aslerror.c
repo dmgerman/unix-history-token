@@ -573,6 +573,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Read/write the source line, up to the maximum line length */
 while|while
 condition|(
 name|RActual
@@ -584,14 +585,16 @@ name|SourceByte
 operator|!=
 literal|'\n'
 operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|Total
 operator|<
 literal|256
-operator|)
 condition|)
 block|{
+comment|/* After the max line length, we will just read the line, no write */
 if|if
 condition|(
 name|fwrite
@@ -615,6 +618,27 @@ literal|"[*** iASL: Write error on output file ***]\n"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|Total
+operator|==
+literal|256
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|"\n[*** iASL: Very long input line, message below refers to column %u ***]"
+argument_list|,
+name|Enode
+operator|->
+name|Column
+argument_list|)
+expr_stmt|;
 block|}
 name|RActual
 operator|=
@@ -655,25 +679,6 @@ return|return;
 block|}
 name|Total
 operator|++
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|Total
-operator|>=
-literal|256
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|OutputFile
-argument_list|,
-literal|"\n[*** iASL: Long input line, an error occurred at column %u ***]"
-argument_list|,
-name|Enode
-operator|->
-name|Column
-argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -1208,7 +1208,7 @@ condition|)
 block|{
 name|AslError
 argument_list|(
-name|ASL_WARNING
+name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_RESULT_NOT_USED
 argument_list|,
@@ -1237,7 +1237,7 @@ condition|)
 block|{
 name|AslError
 argument_list|(
-name|ASL_WARNING
+name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_RESULT_NOT_USED
 argument_list|,
@@ -1277,7 +1277,7 @@ break|break;
 default|default:
 name|AslError
 argument_list|(
-name|ASL_WARNING
+name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_RESULT_NOT_USED
 argument_list|,

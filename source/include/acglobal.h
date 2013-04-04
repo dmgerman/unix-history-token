@@ -494,6 +494,13 @@ begin_comment
 comment|/* For ACPI H/W except GPE registers */
 end_comment
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_SPINLOCK
+name|AcpiGbl_ReferenceCountLock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Mutex for _OSI support */
 end_comment

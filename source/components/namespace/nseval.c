@@ -127,7 +127,15 @@ name|ParamCount
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Get the actual namespace node for the target object. Handles these cases:      *      * 1) Null node, Pathname (absolute path)      * 2) Node, Pathname (path relative to Node)      * 3) Node, Null Pathname      */
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|ResolvedNode
+condition|)
+block|{
+comment|/*          * Get the actual namespace node for the target object if we need to.          * Handles these cases:          *          * 1) Null node, Pathname (absolute path)          * 2) Node, Pathname (path relative to Node)          * 3) Node, Null Pathname          */
 name|Status
 operator|=
 name|AcpiNsGetNode
@@ -161,6 +169,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*      * For a method alias, we must grab the actual method node so that proper      * scoping context will be established before execution.      */
 if|if
