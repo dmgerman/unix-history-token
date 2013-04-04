@@ -360,7 +360,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/**  * @brief Interrupt type bits.  *   * These flags are used both by newbus interrupt  * registration (nexus.c) and also in struct intrec, which defines  * interrupt properties.  *  * XXX We should probably revisit this and remove the vestiges of the  * spls implicit in names like INTR_TYPE_TTY. In the meantime, don't  * confuse things by renaming them (Grog, 18 July 2000).  *  * We define this in terms of bits because some devices may belong  * to multiple classes (and therefore need to be included in  * multiple interrupt masks, which is what this really serves to  * indicate. Buses which do interrupt remapping will want to  * change their type to reflect what sort of devices are underneath.  */
+comment|/**  * @brief Interrupt type bits.  *   * These flags are used both by newbus interrupt  * registration (nexus.c) and also in struct intrec, which defines  * interrupt properties.  *  * XXX We should probably revisit this and remove the vestiges of the  * spls implicit in names like INTR_TYPE_TTY. In the meantime, don't  * confuse things by renaming them (Grog, 18 July 2000).  *  * Buses which do interrupt remapping will want to change their type  * to reflect what sort of devices are underneath.  */
 end_comment
 
 begin_enum
