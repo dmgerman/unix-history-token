@@ -384,6 +384,8 @@ block|,
 name|ASL_FILE_ASM_INCLUDE_OUTPUT
 block|,
 name|ASL_FILE_C_INCLUDE_OUTPUT
+block|,
+name|ASL_FILE_C_OFFSET_OUTPUT
 block|}
 name|ASL_FILE_TYPES
 typedef|;
@@ -393,7 +395,7 @@ begin_define
 define|#
 directive|define
 name|ASL_MAX_FILE_TYPE
-value|13
+value|14
 end_define
 
 begin_define

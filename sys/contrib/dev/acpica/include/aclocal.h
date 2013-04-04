@@ -993,6 +993,15 @@ name|ACPI_BTYPE_ALL_OBJECTS
 value|0x0000FFFF
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
 begin_comment
 comment|/*  * Information structure for ACPI predefined names.  * Each entry in the table contains the following items:  *  * Name                 - The ACPI reserved name  * ParamCount           - Number of arguments to the method  * ExpectedReturnBtypes - Allowed type(s) for the return value  */
 end_comment
@@ -1008,8 +1017,8 @@ index|[
 name|ACPI_NAME_SIZE
 index|]
 decl_stmt|;
-name|UINT8
-name|ParamCount
+name|UINT16
+name|ArgumentList
 decl_stmt|;
 name|UINT8
 name|ExpectedBtypes
@@ -1047,7 +1056,7 @@ decl_stmt|;
 name|UINT8
 name|Count2
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
@@ -1075,6 +1084,9 @@ name|ObjectType
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|UINT8
+name|Reserved
 decl_stmt|;
 block|}
 name|ACPI_PACKAGE_INFO2
@@ -1105,7 +1117,7 @@ decl_stmt|;
 name|UINT8
 name|TailObjectType
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
@@ -1134,6 +1146,18 @@ block|}
 name|ACPI_PREDEFINED_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Reset to default packing */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
 
 begin_comment
 comment|/* Data block used during object validation */

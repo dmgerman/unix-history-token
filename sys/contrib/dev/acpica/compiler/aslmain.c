@@ -420,6 +420,13 @@ argument_list|,
 literal|"Create hex AML table in C, assembler, or ASL (*.hex)"
 argument_list|)
 expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-so"
+argument_list|,
+literal|"Create offset table in C (*.offset.h)"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nOptional Listing Files:\n"
@@ -1909,6 +1916,15 @@ literal|'c'
 case|:
 comment|/* Produce C hex output file */
 name|Gbl_C_OutputFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+comment|/* Produce AML offset table in C */
+name|Gbl_C_OffsetTableFlag
 operator|=
 name|TRUE
 expr_stmt|;

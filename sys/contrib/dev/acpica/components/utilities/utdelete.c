@@ -877,7 +877,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateRefCount  *  * PARAMETERS:  Object          - Object whose ref count is to be updated  *              Action          - What to do  *  * RETURN:      New ref count  *  * DESCRIPTION: Modify the ref count and return it.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateRefCount  *  * PARAMETERS:  Object          - Object whose ref count is to be updated  *              Action          - What to do (REF_INCREMENT or REF_DECREMENT)  *  * RETURN:      None. Sets new reference count within the object  *  * DESCRIPTION: Modify the reference count for an internal acpi object  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -894,10 +894,15 @@ name|Action
 parameter_list|)
 block|{
 name|UINT16
-name|Count
+name|OriginalCount
 decl_stmt|;
 name|UINT16
 name|NewCount
+init|=
+literal|0
+decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|LockFlags
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -912,7 +917,15 @@ condition|)
 block|{
 return|return;
 block|}
-name|Count
+comment|/*      * Always get the reference count lock. Note: Interpreter and/or      * Namespace is not always locked when this function is called.      */
+name|LockFlags
+operator|=
+name|AcpiOsAcquireLock
+argument_list|(
+name|AcpiGbl_ReferenceCountLock
+argument_list|)
+expr_stmt|;
+name|OriginalCount
 operator|=
 name|Object
 operator|->
@@ -920,11 +933,7 @@ name|Common
 operator|.
 name|ReferenceCount
 expr_stmt|;
-name|NewCount
-operator|=
-name|Count
-expr_stmt|;
-comment|/*      * Perform the reference count action (increment, decrement, force delete)      */
+comment|/* Perform the reference count action (increment, decrement) */
 switch|switch
 condition|(
 name|Action
@@ -934,7 +943,10 @@ case|case
 name|REF_INCREMENT
 case|:
 name|NewCount
-operator|++
+operator|=
+name|OriginalCount
+operator|+
+literal|1
 expr_stmt|;
 name|Object
 operator|->
@@ -944,14 +956,46 @@ name|ReferenceCount
 operator|=
 name|NewCount
 expr_stmt|;
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_ReferenceCountLock
+argument_list|,
+name|LockFlags
+argument_list|)
+expr_stmt|;
+comment|/* The current reference count should never be zero here */
+if|if
+condition|(
+operator|!
+name|OriginalCount
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Obj %p, Reference Count was zero before increment\n"
+operator|,
+name|Object
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ALLOCATIONS
 operator|,
-literal|"Obj %p Refs=%X, [Incremented]\n"
+literal|"Obj %p Type %.2X Refs %.2X [Incremented]\n"
 operator|,
 name|Object
+operator|,
+name|Object
+operator|->
+name|Common
+operator|.
+name|Type
 operator|,
 name|NewCount
 operator|)
@@ -961,83 +1005,72 @@ break|break;
 case|case
 name|REF_DECREMENT
 case|:
+comment|/* The current reference count must be non-zero */
 if|if
 condition|(
-name|Count
-operator|<
-literal|1
+name|OriginalCount
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ALLOCATIONS
-operator|,
-literal|"Obj %p Refs=%X, can't decrement! (Set to 0)\n"
-operator|,
-name|Object
-operator|,
-name|NewCount
-operator|)
-argument_list|)
-expr_stmt|;
 name|NewCount
 operator|=
-literal|0
+name|OriginalCount
+operator|-
+literal|1
+expr_stmt|;
+name|Object
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|=
+name|NewCount
 expr_stmt|;
 block|}
-else|else
-block|{
-name|NewCount
-operator|--
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_ReferenceCountLock
+argument_list|,
+name|LockFlags
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|OriginalCount
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Obj %p, Reference Count is already zero, cannot decrement\n"
+operator|,
+name|Object
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ALLOCATIONS
 operator|,
-literal|"Obj %p Refs=%X, [Decremented]\n"
+literal|"Obj %p Type %.2X Refs %.2X [Decremented]\n"
 operator|,
 name|Object
 operator|,
-name|NewCount
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|Object
 operator|->
 name|Common
 operator|.
 name|Type
-operator|==
-name|ACPI_TYPE_METHOD
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ALLOCATIONS
-operator|,
-literal|"Method Obj %p Refs=%X, [Decremented]\n"
-operator|,
-name|Object
 operator|,
 name|NewCount
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-name|Object
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|=
-name|NewCount
-expr_stmt|;
+comment|/* Actually delete the object on a reference count of zero */
 if|if
 condition|(
 name|NewCount
@@ -1052,58 +1085,31 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-case|case
-name|REF_FORCE_DELETE
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ALLOCATIONS
-operator|,
-literal|"Obj %p Refs=%X, Force delete! (Set to 0)\n"
-operator|,
-name|Object
-operator|,
-name|Count
-operator|)
-argument_list|)
-expr_stmt|;
-name|NewCount
-operator|=
-literal|0
-expr_stmt|;
-name|Object
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|=
-name|NewCount
-expr_stmt|;
-name|AcpiUtDeleteInternalObj
-argument_list|(
-name|Object
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_ReferenceCountLock
+argument_list|,
+name|LockFlags
+argument_list|)
+expr_stmt|;
 name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown action (0x%X)"
+literal|"Unknown Reference Count action (0x%X)"
 operator|,
 name|Action
 operator|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 comment|/*      * Sanity check the reference count, for debug purposes only.      * (A deleted object will have a huge reference count)      */
 if|if
 condition|(
-name|Count
+name|NewCount
 operator|>
 name|ACPI_MAX_REFERENCE_COUNT
 condition|)
@@ -1113,11 +1119,17 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Large Reference Count (0x%X) in object %p"
+literal|"Large Reference Count (0x%X) in object %p, Type=0x%.2X"
 operator|,
-name|Count
+name|NewCount
 operator|,
 name|Object
+operator|,
+name|Object
+operator|->
+name|Common
+operator|.
+name|Type
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1126,7 +1138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateObjectReference  *  * PARAMETERS:  Object              - Increment ref count for this object  *                                    and all sub-objects  *              Action              - Either REF_INCREMENT or REF_DECREMENT or  *                                    REF_FORCE_DELETE  *  * RETURN:      Status  *  * DESCRIPTION: Increment the object reference count  *  * Object references are incremented when:  * 1) An object is attached to a Node (namespace object)  * 2) An object is copied (all subobjects must be incremented)  *  * Object references are decremented when:  * 1) An object is detached from an Node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtUpdateObjectReference  *  * PARAMETERS:  Object              - Increment ref count for this object  *                                    and all sub-objects  *              Action              - Either REF_INCREMENT or REF_DECREMENT  *  * RETURN:      Status  *  * DESCRIPTION: Increment the object reference count  *  * Object references are incremented when:  * 1) An object is attached to a Node (namespace object)  * 2) An object is copied (all subobjects must be incremented)  *  * Object references are decremented when:  * 1) An object is detached from an Node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1718,7 +1730,7 @@ argument_list|(
 name|UtRemoveReference
 argument_list|)
 expr_stmt|;
-comment|/*      * Allow a NULL pointer to be passed in, just ignore it. This saves      * each caller from having to check. Also, ignore NS nodes.      *      */
+comment|/*      * Allow a NULL pointer to be passed in, just ignore it. This saves      * each caller from having to check. Also, ignore NS nodes.      */
 if|if
 condition|(
 operator|!
