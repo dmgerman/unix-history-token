@@ -2357,16 +2357,11 @@ argument_list|)
 name|chain
 expr_stmt|;
 comment|/* list management */
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|union
 name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -2900,12 +2895,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATA_CAM
-end_ifdef
-
 begin_struct
 struct|struct
 name|ata_cam_device
@@ -2928,11 +2917,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* structure describing an ATA channel */
@@ -3084,30 +3068,6 @@ define|#
 directive|define
 name|ATA_STALL_QUEUE
 value|0x0002
-ifndef|#
-directive|ifndef
-name|ATA_CAM
-name|struct
-name|mtx
-name|queue_mtx
-decl_stmt|;
-comment|/* queue lock */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ata_request
-argument_list|)
-name|ata_queue
-expr_stmt|;
-comment|/* head of ATA queue */
-name|struct
-name|ata_request
-modifier|*
-name|freezepoint
-decl_stmt|;
-comment|/* composite freezepoint */
-endif|#
-directive|endif
 name|struct
 name|ata_request
 modifier|*
@@ -3119,9 +3079,6 @@ name|task
 name|conntask
 decl_stmt|;
 comment|/* PHY events handling task */
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|struct
 name|cam_sim
 modifier|*
@@ -3152,8 +3109,6 @@ name|int
 name|requestsense
 decl_stmt|;
 comment|/* CCB waiting for SENSE. */
-endif|#
-directive|endif
 name|struct
 name|callout
 name|poll_callout
@@ -3477,104 +3432,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ATA_CAM
-end_ifndef
-
-begin_function_decl
-name|int
-name|ata_identify
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_modify_if_48bit
-parameter_list|(
-name|struct
-name|ata_request
-modifier|*
-name|request
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_pmode
-parameter_list|(
-name|struct
-name|ata_params
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_wmode
-parameter_list|(
-name|struct
-name|ata_params
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_umode
-parameter_list|(
-name|struct
-name|ata_params
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_limit_mode
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|mode
-parameter_list|,
-name|int
-name|maxmode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ata_check_80pin
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 name|ata_cam_end_transaction
@@ -3589,11 +3446,6 @@ name|request
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ata-queue.c: */
@@ -3975,35 +3827,6 @@ parameter_list|(
 name|request
 parameter_list|)
 value|{ \ 	if (!(request->flags& ATA_R_DANGER2)) \ 	    uma_zfree(ata_request_zone, request); \ 	}
-end_define
-
-begin_comment
-comment|/* macros for alloc/free of struct ata_composite */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uma_zone_t
-name|ata_composite_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ata_alloc_composite
-parameter_list|()
-value|uma_zalloc(ata_composite_zone, M_NOWAIT | M_ZERO)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ata_free_composite
-parameter_list|(
-name|composite
-parameter_list|)
-value|uma_zfree(ata_composite_zone, composite)
 end_define
 
 begin_expr_stmt

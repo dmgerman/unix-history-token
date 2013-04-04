@@ -1144,9 +1144,6 @@ operator|*
 literal|512
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 if|if
 condition|(
 name|ctlr
@@ -1163,8 +1160,6 @@ name|flags
 operator||=
 name|ATA_NO_ATAPI_DMA
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

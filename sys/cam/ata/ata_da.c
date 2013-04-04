@@ -1361,35 +1361,12 @@ directive|ifndef
 name|ADA_DEFAULT_LEGACY_ALIASES
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATA_CAM
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|ADA_DEFAULT_LEGACY_ALIASES
 value|1
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ADA_DEFAULT_LEGACY_ALIASES
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

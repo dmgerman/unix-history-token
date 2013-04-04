@@ -1505,17 +1505,12 @@ name|status
 operator|=
 name|ata_cmd_status
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|ch
 operator|->
 name|flags
 operator||=
 name|ATA_NO_ATAPI_DMA
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
