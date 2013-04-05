@@ -19,12 +19,6 @@ directive|include
 file|"util/rtt.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"util/log.h"
-end_include
-
 begin_comment
 comment|/** calculate RTO from rtt information */
 end_comment

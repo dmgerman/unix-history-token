@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|YY_FLEX_SUBMINOR_VERSION
-value|35
+value|36
 end_define
 
 begin_if
@@ -267,15 +267,6 @@ name|flex_uint32_t
 typedef|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! C99 */
-end_comment
-
 begin_comment
 comment|/* Limits of integral types. */
 end_comment
@@ -441,6 +432,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! C99 */
+end_comment
 
 begin_endif
 endif|#
@@ -687,9 +687,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YY_TYPEDEF_YY_SIZE_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|YY_TYPEDEF_YY_SIZE_T
+end_define
+
+begin_typedef
+typedef|typedef
+name|size_t
+name|yy_size_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
-name|int
+name|yy_size_t
 name|yyleng
 decl_stmt|;
 end_decl_stmt
@@ -767,30 +791,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YY_TYPEDEF_YY_SIZE_T
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|YY_TYPEDEF_YY_SIZE_T
-end_define
-
-begin_typedef
-typedef|typedef
-name|size_t
-name|yy_size_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|YY_STRUCT_YY_BUFFER_STATE
 end_ifndef
 
@@ -823,7 +823,7 @@ name|yy_size_t
 name|yy_buf_size
 decl_stmt|;
 comment|/* Number of characters read into yy_ch_buf, not including EOB 	 * characters. 	 */
-name|int
+name|yy_size_t
 name|yy_n_chars
 decl_stmt|;
 comment|/* Whether we "own" the buffer - i.e., we know we created it, 	 * and can realloc() it to grow it, and should free() it to 	 * delete it. 	 */
@@ -958,7 +958,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|yy_size_t
 name|yy_n_chars
 decl_stmt|;
 end_decl_stmt
@@ -968,7 +968,7 @@ comment|/* number of characters read into yy_ch_buf */
 end_comment
 
 begin_decl_stmt
-name|int
+name|yy_size_t
 name|yyleng
 decl_stmt|;
 end_decl_stmt
@@ -1179,7 +1179,7 @@ name|char
 modifier|*
 name|bytes
 parameter_list|,
-name|int
+name|yy_size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -26170,6 +26170,23 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GLOB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<glob.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -26508,6 +26525,207 @@ end_function
 begin_function
 specifier|static
 name|void
+name|config_start_include_glob
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+block|{
+comment|/* check for wildcards */
+ifdef|#
+directive|ifdef
+name|HAVE_GLOB
+name|glob_t
+name|g
+decl_stmt|;
+name|size_t
+name|i
+decl_stmt|;
+name|int
+name|r
+decl_stmt|,
+name|flags
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|!
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'*'
+argument_list|)
+operator|&&
+operator|!
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'?'
+argument_list|)
+operator|&&
+operator|!
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'['
+argument_list|)
+operator|&&
+operator|!
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'{'
+argument_list|)
+operator|&&
+operator|!
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'~'
+argument_list|)
+operator|)
+condition|)
+block|{
+name|flags
+operator|=
+literal|0
+ifdef|#
+directive|ifdef
+name|GLOB_ERR
+operator||
+name|GLOB_ERR
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|GLOB_NOSORT
+operator||
+name|GLOB_NOSORT
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|GLOB_BRACE
+operator||
+name|GLOB_BRACE
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|GLOB_TILDE
+operator||
+name|GLOB_TILDE
+endif|#
+directive|endif
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|g
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|g
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|glob
+argument_list|(
+name|filename
+argument_list|,
+name|flags
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|g
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+condition|)
+block|{
+comment|/* some error */
+name|globfree
+argument_list|(
+operator|&
+name|g
+argument_list|)
+expr_stmt|;
+name|config_start_include
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+comment|/* let original deal with it */
+return|return;
+block|}
+comment|/* process files found, if any */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|size_t
+operator|)
+name|g
+operator|.
+name|gl_pathc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|config_start_include
+argument_list|(
+name|g
+operator|.
+name|gl_pathv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|globfree
+argument_list|(
+operator|&
+name|g
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_GLOB */
+name|config_start_include
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|config_end_include
 parameter_list|(
 name|void
@@ -26597,7 +26815,7 @@ end_define
 begin_line
 line|#
 directive|line
-number|100
+number|148
 file|"util/configlexer.lex"
 end_line
 
@@ -26640,7 +26858,7 @@ end_endif
 begin_line
 line|#
 directive|line
-number|1871
+number|1920
 file|"<stdout>"
 end_line
 
@@ -26829,7 +27047,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|yy_size_t
 name|yyget_leng
 parameter_list|(
 name|void
@@ -27086,7 +27304,7 @@ parameter_list|,
 name|max_size
 parameter_list|)
 define|\
-value|if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \ 		{ \ 		int c = '*'; \ 		unsigned n; \ 		for ( n = 0; n< max_size&& \ 			     (c = getc( yyin )) != EOF&& c != '\n'; ++n ) \ 			buf[n] = (char) c; \ 		if ( c == '\n' ) \ 			buf[n++] = (char) c; \ 		if ( c == EOF&& ferror( yyin ) ) \ 			YY_FATAL_ERROR( "input in flex scanner failed" ); \ 		result = n; \ 		} \ 	else \ 		{ \ 		errno=0; \ 		while ( (result = fread(buf, 1, max_size, yyin))==0&& ferror(yyin)) \ 			{ \ 			if( errno != EINTR) \ 				{ \ 				YY_FATAL_ERROR( "input in flex scanner failed" ); \ 				break; \ 				} \ 			errno=0; \ 			clearerr(yyin); \ 			} \ 		}\ \  #endif
+value|if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \ 		{ \ 		int c = '*'; \ 		size_t n; \ 		for ( n = 0; n< max_size&& \ 			     (c = getc( yyin )) != EOF&& c != '\n'; ++n ) \ 			buf[n] = (char) c; \ 		if ( c == '\n' ) \ 			buf[n++] = (char) c; \ 		if ( c == EOF&& ferror( yyin ) ) \ 			YY_FATAL_ERROR( "input in flex scanner failed" ); \ 		result = n; \ 		} \ 	else \ 		{ \ 		errno=0; \ 		while ( (result = fread(buf, 1, max_size, yyin))==0&& ferror(yyin)) \ 			{ \ 			if( errno != EINTR) \ 				{ \ 				YY_FATAL_ERROR( "input in flex scanner failed" ); \ 				break; \ 				} \ 			errno=0; \ 			clearerr(yyin); \ 			} \ 		}\ \  #endif
 end_define
 
 begin_comment
@@ -27285,11 +27503,11 @@ name|yy_act
 decl_stmt|;
 line|#
 directive|line
-number|120
+number|168
 file|"util/configlexer.lex"
 line|#
 directive|line
-number|2058
+number|2107
 file|"<stdout>"
 if|if
 condition|(
@@ -27622,7 +27840,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|121
+number|169
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -27641,7 +27859,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|123
+number|171
 file|"util/configlexer.lex"
 block|{
 comment|/* note that flex makes the longest match and '.' is any but not nl */
@@ -27663,7 +27881,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|126
+number|174
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27680,7 +27898,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|127
+number|175
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27697,7 +27915,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|128
+number|176
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27714,7 +27932,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|129
+number|177
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27731,7 +27949,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|130
+number|178
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27748,7 +27966,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|131
+number|179
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27765,7 +27983,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|132
+number|180
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27782,7 +28000,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|133
+number|181
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27799,7 +28017,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|134
+number|182
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27816,7 +28034,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|135
+number|183
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27833,7 +28051,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|136
+number|184
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27850,7 +28068,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|137
+number|185
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27867,7 +28085,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|138
+number|186
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27884,7 +28102,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|139
+number|187
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27901,7 +28119,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|140
+number|188
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27918,7 +28136,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|141
+number|189
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27935,7 +28153,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|142
+number|190
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27952,7 +28170,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|143
+number|191
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27969,7 +28187,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|144
+number|192
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -27986,7 +28204,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|145
+number|193
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28003,7 +28221,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|146
+number|194
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28020,7 +28238,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|147
+number|195
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28037,7 +28255,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|148
+number|196
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28054,7 +28272,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|149
+number|197
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28071,7 +28289,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|150
+number|198
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28088,7 +28306,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|151
+number|199
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28105,7 +28323,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|152
+number|200
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28122,7 +28340,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|153
+number|201
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28139,7 +28357,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|154
+number|202
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28156,7 +28374,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|155
+number|203
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28173,7 +28391,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|156
+number|204
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28190,7 +28408,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|157
+number|205
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28207,7 +28425,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|158
+number|206
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28224,7 +28442,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|159
+number|207
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28241,7 +28459,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|160
+number|208
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28258,7 +28476,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|161
+number|209
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28275,7 +28493,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|162
+number|210
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28292,7 +28510,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|163
+number|211
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28309,7 +28527,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|164
+number|212
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28326,7 +28544,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|165
+number|213
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28343,7 +28561,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|166
+number|214
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28360,7 +28578,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|167
+number|215
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28377,7 +28595,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|168
+number|216
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28394,7 +28612,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|169
+number|217
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28411,7 +28629,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|170
+number|218
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28428,7 +28646,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|171
+number|219
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28445,7 +28663,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|172
+number|220
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28462,7 +28680,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|173
+number|221
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28479,7 +28697,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|174
+number|222
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28496,7 +28714,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|175
+number|223
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28513,7 +28731,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|176
+number|224
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28530,7 +28748,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|177
+number|225
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28547,7 +28765,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|178
+number|226
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28564,7 +28782,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|179
+number|227
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28581,7 +28799,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|180
+number|228
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28598,7 +28816,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|181
+number|229
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28615,7 +28833,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|182
+number|230
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28632,7 +28850,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|183
+number|231
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28649,7 +28867,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|184
+number|232
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28666,7 +28884,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|185
+number|233
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28683,7 +28901,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|186
+number|234
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28700,7 +28918,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|187
+number|235
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28717,7 +28935,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|188
+number|236
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28734,7 +28952,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|189
+number|237
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28751,7 +28969,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|190
+number|238
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28768,7 +28986,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|191
+number|239
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28785,7 +29003,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|192
+number|240
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28802,7 +29020,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|193
+number|241
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28819,7 +29037,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|194
+number|242
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28836,7 +29054,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|195
+number|243
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28853,7 +29071,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|196
+number|244
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28870,7 +29088,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|197
+number|245
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28887,7 +29105,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|198
+number|246
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28904,7 +29122,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|199
+number|247
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28921,7 +29139,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|200
+number|248
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28938,7 +29156,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|201
+number|249
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28955,7 +29173,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|202
+number|250
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28972,7 +29190,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|203
+number|251
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -28989,7 +29207,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|204
+number|252
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29006,7 +29224,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|205
+number|253
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29023,7 +29241,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|206
+number|254
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29040,7 +29258,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|207
+number|255
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29057,7 +29275,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|208
+number|256
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29074,7 +29292,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|209
+number|257
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29091,7 +29309,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|210
+number|258
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29108,7 +29326,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|211
+number|259
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29125,7 +29343,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|212
+number|260
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29142,7 +29360,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|213
+number|261
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29159,7 +29377,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|214
+number|262
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29176,7 +29394,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|215
+number|263
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29193,7 +29411,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|216
+number|264
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29210,7 +29428,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|217
+number|265
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29227,7 +29445,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|218
+number|266
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29244,7 +29462,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|219
+number|267
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29261,7 +29479,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|221
+number|269
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29278,7 +29496,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|222
+number|270
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29295,7 +29513,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|223
+number|271
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29312,7 +29530,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|224
+number|272
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29329,7 +29547,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|225
+number|273
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29346,7 +29564,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|226
+number|274
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29363,7 +29581,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|227
+number|275
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29380,7 +29598,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|228
+number|276
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29397,7 +29615,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|229
+number|277
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29414,7 +29632,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|230
+number|278
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29431,7 +29649,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|231
+number|279
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29448,7 +29666,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|232
+number|280
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29465,7 +29683,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|233
+number|281
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29482,7 +29700,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|234
+number|282
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29499,7 +29717,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|235
+number|283
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29516,7 +29734,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|236
+number|284
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29533,7 +29751,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|237
+number|285
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29550,7 +29768,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|238
+number|286
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29567,7 +29785,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|239
+number|287
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29584,7 +29802,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|240
+number|288
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29601,7 +29819,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|241
+number|289
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29618,7 +29836,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|242
+number|290
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29635,7 +29853,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|243
+number|291
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29652,7 +29870,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|244
+number|292
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29669,7 +29887,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|245
+number|293
 file|"util/configlexer.lex"
 block|{
 name|YDVAR
@@ -29687,7 +29905,7 @@ comment|/* rule 122 can match eol */
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|246
+number|294
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -29711,7 +29929,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|249
+number|297
 file|"util/configlexer.lex"
 block|{
 name|BEGIN
@@ -29736,7 +29954,7 @@ argument_list|)
 case|:
 line|#
 directive|line
-number|250
+number|298
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -29774,7 +29992,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|255
+number|303
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -29798,7 +30016,7 @@ comment|/* rule 125 can match eol */
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|256
+number|304
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -29824,7 +30042,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|258
+number|306
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -29898,7 +30116,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|270
+number|318
 file|"util/configlexer.lex"
 block|{
 name|BEGIN
@@ -29923,7 +30141,7 @@ argument_list|)
 case|:
 line|#
 directive|line
-number|271
+number|319
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -29961,7 +30179,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|276
+number|324
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -29985,7 +30203,7 @@ comment|/* rule 129 can match eol */
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|277
+number|325
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -30011,7 +30229,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|279
+number|327
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30085,7 +30303,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|291
+number|339
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30116,7 +30334,7 @@ argument_list|)
 case|:
 line|#
 directive|line
-number|293
+number|341
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -30137,7 +30355,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|297
+number|345
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30157,7 +30375,7 @@ comment|/* rule 133 can match eol */
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|298
+number|346
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30180,7 +30398,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|299
+number|347
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30203,7 +30421,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|300
+number|348
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30215,7 +30433,7 @@ name|yytext
 operator|)
 argument_list|)
 expr_stmt|;
-name|config_start_include
+name|config_start_include_glob
 argument_list|(
 name|yytext
 argument_list|)
@@ -30235,7 +30453,7 @@ argument_list|)
 case|:
 line|#
 directive|line
-number|305
+number|353
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -30256,7 +30474,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|309
+number|357
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30280,7 +30498,7 @@ comment|/* rule 137 can match eol */
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|310
+number|358
 file|"util/configlexer.lex"
 block|{
 name|yyerror
@@ -30306,7 +30524,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|312
+number|360
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30325,7 +30543,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|config_start_include
+name|config_start_include_glob
 argument_list|(
 name|yytext
 argument_list|)
@@ -30351,7 +30569,7 @@ argument_list|)
 case|:
 line|#
 directive|line
-number|318
+number|366
 file|"util/configlexer.lex"
 block|{
 name|yy_set_bol
@@ -30390,7 +30608,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|328
+number|376
 file|"util/configlexer.lex"
 block|{
 name|LEXOUT
@@ -30436,7 +30654,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|332
+number|380
 file|"util/configlexer.lex"
 block|{
 name|ub_c_error_msg
@@ -30454,7 +30672,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|336
+number|384
 file|"util/configlexer.lex"
 block|{
 name|ub_c_error_msg
@@ -30472,14 +30690,14 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|340
+number|388
 file|"util/configlexer.lex"
 name|ECHO
 decl_stmt|;
 name|YY_BREAK
 line|#
 directive|line
-number|2949
+number|2998
 file|"<stdout>"
 case|case
 name|YY_END_OF_BUFFER
@@ -30947,7 +31165,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-name|int
+name|yy_size_t
 name|num_to_read
 init|=
 name|YY_CURRENT_BUFFER_LVALUE
@@ -30970,7 +31188,7 @@ comment|/* just a shorter name for the current buffer */
 name|YY_BUFFER_STATE
 name|b
 init|=
-name|YY_CURRENT_BUFFER
+name|YY_CURRENT_BUFFER_LVALUE
 decl_stmt|;
 name|int
 name|yy_c_buf_p_offset
@@ -30995,7 +31213,7 @@ operator|->
 name|yy_is_our_buffer
 condition|)
 block|{
-name|int
+name|yy_size_t
 name|new_size
 init|=
 name|b
@@ -31124,9 +31342,6 @@ operator|(
 name|yy_n_chars
 operator|)
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|num_to_read
 argument_list|)
 expr_stmt|;
@@ -31666,7 +31881,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* need more input */
-name|int
+name|yy_size_t
 name|offset
 init|=
 operator|(
@@ -32121,31 +32336,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|int
-name|isatty
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __cplusplus */
-end_comment
-
 begin_comment
 comment|/* Initializes or reinitializes a buffer.  * This function is sometimes called more than once on the same buffer,  * such as during a yyrestart() or at EOF.  */
 end_comment
@@ -32463,7 +32653,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|yy_size_t
 name|num_to_alloc
 decl_stmt|;
 if|if
@@ -32820,7 +33010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** Setup the input buffer state to scan the given bytes. The next call to yylex() will  * scan from a @e copy of @a bytes.  * @param bytes the byte buffer to scan  * @param len the number of bytes in the buffer pointed to by @a bytes.  *   * @return the newly allocated buffer state object.  */
+comment|/** Setup the input buffer state to scan the given bytes. The next call to yylex() will  * scan from a @e copy of @a bytes.  * @param yybytes the byte buffer to scan  * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.  *   * @return the newly allocated buffer state object.  */
 end_comment
 
 begin_function
@@ -32832,7 +33022,7 @@ name|char
 modifier|*
 name|yybytes
 parameter_list|,
-name|int
+name|yy_size_t
 name|_yybytes_len
 parameter_list|)
 block|{
@@ -33080,7 +33270,7 @@ comment|/** Get the length of the current token.  *   */
 end_comment
 
 begin_function
-name|int
+name|yy_size_t
 name|yyget_leng
 parameter_list|(
 name|void
@@ -33532,7 +33722,7 @@ end_define
 begin_line
 line|#
 directive|line
-number|340
+number|388
 file|"util/configlexer.lex"
 end_line
 

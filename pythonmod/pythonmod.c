@@ -26,6 +26,15 @@ name|ignored
 literal|"-Wunused-parameter"
 end_pragma
 
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|ignored
+literal|"-Wunused-but-set-variable"
+end_pragma
+
 begin_endif
 endif|#
 directive|endif

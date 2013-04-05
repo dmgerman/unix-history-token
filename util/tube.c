@@ -1889,6 +1889,16 @@ operator|+=
 name|r
 expr_stmt|;
 block|}
+name|log_assert
+argument_list|(
+operator|*
+name|len
+operator|<
+literal|65536
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
 operator|*
 name|buf
 operator|=

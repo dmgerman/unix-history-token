@@ -43,17 +43,39 @@ directive|include
 file|"util/fptr_wlist.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_SSL_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/ssl.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_ERR_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/err.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* -------- Start of local definitions -------- */
@@ -283,11 +305,45 @@ begin_comment
 comment|/* we use libevent */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EVENT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<event.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"event2/event.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"event2/event_struct.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"event2/event_compat.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4775,6 +4831,9 @@ operator|->
 name|ssl
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 name|SSL_shutdown
 argument_list|(
 name|c
@@ -4795,6 +4854,8 @@ name|ssl
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|comm_point_close
 argument_list|(
@@ -5041,6 +5102,12 @@ end_function
 begin_comment
 comment|/** continue ssl handshake */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
+end_ifdef
 
 begin_function
 specifier|static
@@ -5365,6 +5432,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SSL */
+end_comment
+
 begin_comment
 comment|/** ssl read callback on TCP */
 end_comment
@@ -5380,6 +5456,9 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 name|int
 name|r
 decl_stmt|;
@@ -5870,6 +5949,19 @@ block|}
 return|return
 literal|1
 return|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|c
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_SSL */
 block|}
 end_function
 
@@ -5888,6 +5980,9 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 name|int
 name|r
 decl_stmt|;
@@ -6360,6 +6455,19 @@ block|}
 return|return
 literal|1
 return|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|c
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_SSL */
 block|}
 end_function
 
@@ -10698,6 +10806,9 @@ operator|->
 name|ssl
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 name|SSL_shutdown
 argument_list|(
 name|c
@@ -10712,6 +10823,8 @@ operator|->
 name|ssl
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|comm_point_close
 argument_list|(

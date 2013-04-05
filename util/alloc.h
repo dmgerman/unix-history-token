@@ -381,14 +381,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<ldns/ldns.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ldns/packet.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_SSL_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<openssl/ssl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

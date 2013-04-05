@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"validator/val_secalgo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"validator/val_nsec.h"
 end_include
 
@@ -1516,6 +1522,8 @@ init|=
 name|read_datafile
 argument_list|(
 name|fname
+argument_list|,
+literal|1
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1792,6 +1800,8 @@ init|=
 name|read_datafile
 argument_list|(
 name|fname
+argument_list|,
+literal|1
 argument_list|)
 decl_stmt|;
 name|struct
@@ -2661,6 +2671,8 @@ init|=
 name|read_datafile
 argument_list|(
 name|fname
+argument_list|,
+literal|1
 argument_list|)
 decl_stmt|;
 if|if
@@ -2832,10 +2844,17 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|HAVE_EVP_SHA256
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NSS
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -2866,10 +2885,17 @@ endif|#
 directive|endif
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|HAVE_EVP_SHA512
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NSS
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -2924,6 +2950,15 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_ECDSA
+comment|/* test for support in case we use libNSS and ECC is removed */
+if|if
+condition|(
+name|dnskey_algo_id_is_supported
+argument_list|(
+name|LDNS_ECDSAP256SHA256
+argument_list|)
+condition|)
+block|{
 name|verifytest_file
 argument_list|(
 literal|"testdata/test_sigs.ecdsa_p256"
@@ -2938,6 +2973,7 @@ argument_list|,
 literal|"20100908100439"
 argument_list|)
 expr_stmt|;
+block|}
 name|dstest_file
 argument_list|(
 literal|"testdata/test_ds.sha384"

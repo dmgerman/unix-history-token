@@ -2487,11 +2487,17 @@ name|pd
 decl_stmt|;
 name|uint16_t
 name|rrtype
+init|=
+literal|0
 decl_stmt|,
 name|rrclass
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|ttl
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(

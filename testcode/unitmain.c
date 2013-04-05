@@ -81,6 +81,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NSS
+end_ifdef
+
+begin_comment
+comment|/* nss3 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"nss.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -4353,6 +4374,9 @@ argument_list|,
 name|PACKAGE_STRING
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
@@ -4377,6 +4401,29 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_NSS
+argument_list|)
+if|if
+condition|(
+name|NSS_NoDB_Init
+argument_list|(
+literal|"."
+argument_list|)
+operator|!=
+name|SECSuccess
+condition|)
+name|fatal_exit
+argument_list|(
+literal|"could not init NSS"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_SSL or HAVE_NSS*/
 name|checklock_start
 argument_list|()
 expr_stmt|;
@@ -4432,6 +4479,9 @@ argument_list|,
 name|testcount
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 if|#
 directive|if
 name|defined
@@ -4476,6 +4526,27 @@ expr_stmt|;
 name|RAND_cleanup
 argument_list|()
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_NSS
+argument_list|)
+if|if
+condition|(
+name|NSS_Shutdown
+argument_list|()
+operator|!=
+name|SECSuccess
+condition|)
+name|fatal_exit
+argument_list|(
+literal|"could not shutdown NSS"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_SSL or HAVE_NSS */
 ifdef|#
 directive|ifdef
 name|HAVE_PTHREAD

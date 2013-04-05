@@ -949,6 +949,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/**  * Initialize openssl locking for thread safety  * @return false on failure (alloc failure).  */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_openssl_lock_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * De-init the allocated openssl locks  */
+end_comment
+
+begin_function_decl
+name|void
+name|ub_openssl_lock_delete
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

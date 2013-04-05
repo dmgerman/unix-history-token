@@ -3774,6 +3774,9 @@ argument_list|,
 name|prime
 argument_list|)
 decl_stmt|;
+name|int
+name|was_detached
+decl_stmt|;
 if|if
 condition|(
 name|mesh_detect_cycle_found
@@ -3918,6 +3921,18 @@ name|newq
 operator|=
 name|NULL
 expr_stmt|;
+name|was_detached
+operator|=
+operator|(
+name|sub
+operator|->
+name|super_set
+operator|.
+name|count
+operator|==
+literal|0
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3933,6 +3948,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* if it was a duplicate  attachment, the count was not zero before */
 if|if
 condition|(
 operator|!
@@ -3944,6 +3960,8 @@ operator|!
 name|sub
 operator|->
 name|cb_list
+operator|&&
+name|was_detached
 operator|&&
 name|sub
 operator|->
@@ -4094,13 +4112,9 @@ name|s
 operator|=
 name|sub
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UNBOUND_DEBUG
-name|n
-operator|=
-endif|#
-directive|endif
+if|if
+condition|(
+operator|!
 name|rbtree_insert
 argument_list|(
 operator|&
@@ -4113,14 +4127,14 @@ name|superref
 operator|->
 name|node
 argument_list|)
-expr_stmt|;
-name|log_assert
-argument_list|(
-name|n
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* this should not happen, iterator and validator do not 		 * attach subqueries that are identical. */
+comment|/* already attached, we are done, nothing todo. 		 * since superref and subref already allocated in region, 		 * we cannot free them */
+return|return
+literal|1
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|UNBOUND_DEBUG
@@ -4148,6 +4162,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* we checked above if statement, the reverse 	  administration should not fail now, unless they are out of sync */
 return|return
 literal|1
 return|;

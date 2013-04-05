@@ -4376,6 +4376,23 @@ name|sec_status_bogus
 expr_stmt|;
 return|return;
 block|}
+comment|/* If we have found a CNAME, stop looking for one. 		 * The iterator has placed the CNAME chain in correct 		 * order. */
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|s
+operator|->
+name|rk
+operator|.
+name|type
+argument_list|)
+operator|==
+name|LDNS_RR_TYPE_CNAME
+condition|)
+block|{
+break|break;
+block|}
 block|}
 comment|/* AUTHORITY section */
 for|for
@@ -8521,6 +8538,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|subtype
+operator|!=
+name|VAL_CLASS_REFERRAL
+operator|||
 name|vq
 operator|->
 name|rrset_skip

@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"util/net_help.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"util/data/dname.h"
 end_include
 
@@ -3336,10 +3330,13 @@ name|pkt_len
 operator|<
 literal|1
 condition|)
+block|{
+comment|/* NOTREACHED, due to 'while(>0)' */
 return|return
 literal|0
 return|;
 comment|/* len byte exceeds rdata */
+block|}
 name|len
 operator|=
 name|ldns_buffer_current

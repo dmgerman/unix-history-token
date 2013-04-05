@@ -740,6 +740,8 @@ argument_list|,
 name|or
 argument_list|,
 name|prev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2195,6 +2197,8 @@ argument_list|,
 name|or
 argument_list|,
 name|prev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -3962,8 +3962,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* ignore globs that yield no files */
 return|return
-literal|0
+literal|1
 return|;
 block|}
 comment|/* process files found, if any */
@@ -6395,6 +6396,14 @@ operator|->
 name|numDNSKEY
 condition|)
 block|{
+name|lock_basic_unlock
+argument_list|(
+operator|&
+name|anchors
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|lock_basic_unlock
 argument_list|(
 operator|&

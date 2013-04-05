@@ -25,6 +25,25 @@ directive|include
 file|"openssl/ssl.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|NSEC3_SHA_LEN
+value|SHA_DIGEST_LENGTH
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NSEC3_SHA_LEN
+value|20
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -5678,7 +5697,7 @@ decl_stmt|;
 name|uint8_t
 name|hashce
 index|[
-name|SHA_DIGEST_LENGTH
+name|NSEC3_SHA_LEN
 index|]
 decl_stmt|;
 name|uint8_t
@@ -6219,7 +6238,7 @@ decl_stmt|;
 name|uint8_t
 name|hashnc
 index|[
-name|SHA_DIGEST_LENGTH
+name|NSEC3_SHA_LEN
 index|]
 decl_stmt|;
 name|size_t

@@ -1375,10 +1375,17 @@ literal|'2'
 case|:
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|HAVE_EVP_SHA256
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NSS
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(

@@ -1727,6 +1727,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DOXYGEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATTR_UNUSED
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**  * The main function for the service.  * Called by the services API when starting unbound on windows in background.  * Arguments could have been present in the string 'path'.  * @param argc: nr args  * @param argv: arg text.  */
 end_comment
