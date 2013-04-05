@@ -299,6 +299,14 @@ literal|0xB
 condition|)
 block|{
 case|case
+name|APIC_TDCR_1
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
 name|APIC_TDCR_2
 case|:
 return|return
