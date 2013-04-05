@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A Bison parser, made by GNU Bison 2.5.  */
+comment|/* A Bison parser, made by GNU Bison 2.6.1.  */
 end_comment
 
 begin_comment
-comment|/* Bison implementation for Yacc-like parsers in C           Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.        This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
+comment|/* Bison implementation for Yacc-like parsers in C           Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.        This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|YYBISON_VERSION
-value|"2.5"
+value|"2.6.1"
 end_define
 
 begin_comment
@@ -86,22 +86,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Using locations.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YYLSP_NEEDED
-value|0
-end_define
-
-begin_comment
 comment|/* Copy the first part of user declarations.  */
 end_comment
 
 begin_comment
-comment|/* Line 268 of yacc.c  */
+comment|/* Line 336 of yacc.c  */
 end_comment
 
 begin_line
@@ -239,32 +228,56 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Line 268 of yacc.c  */
+comment|/* Line 336 of yacc.c  */
 end_comment
 
 begin_line
 line|#
 directive|line
-number|99
+number|95
 file|"util/configparser.c"
 end_line
-
-begin_comment
-comment|/* Enabling traces.  */
-end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YYDEBUG
+name|YY_NULL
 end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__cplusplus
+operator|&&
+literal|201103L
+operator|<=
+name|__cplusplus
+end_if
 
 begin_define
 define|#
 directive|define
-name|YYDEBUG
+name|YY_NULL
+value|nullptr
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|YY_NULL
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -312,21 +325,55 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Enabling the token table.  */
+comment|/* In a future release of Bison, this section will be replaced    by #include "configparser.h".  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YYTOKEN_TABLE
+name|YY_UTIL_CONFIGPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|YYTOKEN_TABLE
+name|YY_UTIL_CONFIGPARSER_H
+end_define
+
+begin_comment
+comment|/* Enabling traces.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YYDEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|YYDEBUG
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|YYDEBUG
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|yydebug
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1783,7 +1830,7 @@ typedef|typedef
 union|union
 name|YYSTYPE
 block|{
-comment|/* Line 293 of yacc.c  */
+comment|/* Line 350 of yacc.c  */
 line|#
 directive|line
 number|64
@@ -1792,10 +1839,10 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-comment|/* Line 293 of yacc.c  */
+comment|/* Line 350 of yacc.c  */
 line|#
 directive|line
-number|399
+number|401
 file|"util/configparser.c"
 block|}
 name|YYSTYPE
@@ -1832,18 +1879,132 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|YYSTYPE
+name|yylval
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YYPARSE_PARAM
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__STDC__
+operator|||
+name|defined
+name|__cplusplus
+end_if
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|(
+name|void
+modifier|*
+name|YYPARSE_PARAM
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! YYPARSE_PARAM */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__STDC__
+operator|||
+name|defined
+name|__cplusplus
+end_if
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! YYPARSE_PARAM */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !YY_UTIL_CONFIGPARSER_H  */
+end_comment
+
 begin_comment
 comment|/* Copy the second part of user declarations.  */
 end_comment
 
 begin_comment
-comment|/* Line 343 of yacc.c  */
+comment|/* Line 353 of yacc.c  */
 end_comment
 
 begin_line
 line|#
 directive|line
-number|411
+number|429
 file|"util/configparser.c"
 end_line
 
@@ -2461,6 +2622,10 @@ begin_comment
 comment|/* INFRINGES ON USER NAME SPACE */
 end_comment
 
+begin_comment
+comment|/* Use EXIT_SUCCESS as a witness for stdlib.h.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2901,7 +3066,7 @@ name|YYCOPY_NEEDED
 end_if
 
 begin_comment
-comment|/* Copy COUNT objects from FROM to TO.  The source and destination do    not overlap.  */
+comment|/* Copy COUNT objects from SRC to DST.  The source and destination do    not overlap.  */
 end_comment
 
 begin_ifndef
@@ -2926,14 +3091,14 @@ define|#
 directive|define
 name|YYCOPY
 parameter_list|(
-name|To
+name|Dst
 parameter_list|,
-name|From
+name|Src
 parameter_list|,
 name|Count
 parameter_list|)
 define|\
-value|__builtin_memcpy (To, From, (Count) * sizeof (*(From)))
+value|__builtin_memcpy (Dst, Src, (Count) * sizeof (*(Src)))
 end_define
 
 begin_else
@@ -2946,14 +3111,14 @@ define|#
 directive|define
 name|YYCOPY
 parameter_list|(
-name|To
+name|Dst
 parameter_list|,
-name|From
+name|Src
 parameter_list|,
 name|Count
 parameter_list|)
 define|\
-value|do					\ 	{					\ 	  YYSIZE_T yyi;				\ 	  for (yyi = 0; yyi< (Count); yyi++)	\ 	    (To)[yyi] = (From)[yyi];		\ 	}					\       while (YYID (0))
+value|do                                        \         {                                       \           YYSIZE_T yyi;                         \           for (yyi = 0; yyi< (Count); yyi++)   \             (Dst)[yyi] = (Src)[yyi];            \         }                                       \       while (YYID (0))
 end_define
 
 begin_endif
@@ -6445,7 +6610,7 @@ name|YYDEBUG
 operator|||
 name|YYERROR_VERBOSE
 operator|||
-name|YYTOKEN_TABLE
+literal|0
 end_if
 
 begin_comment
@@ -6988,7 +7153,7 @@ literal|"content_py"
 block|,
 literal|"py_script"
 block|,
-literal|0
+name|YY_NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12655,7 +12820,7 @@ parameter_list|,
 name|Value
 parameter_list|)
 define|\
-value|do								\   if (yychar == YYEMPTY&& yylen == 1)				\     {								\       yychar = (Token);						\       yylval = (Value);						\       YYPOPSTACK (1);						\       goto yybackup;						\     }								\   else								\     {								\       yyerror (YY_("syntax error: cannot back up")); \       YYERROR;							\     }								\ while (YYID (0))
+value|do                                                              \   if (yychar == YYEMPTY)                                        \     {                                                           \       yychar = (Token);                                         \       yylval = (Value);                                         \       YYPOPSTACK (yylen);                                       \       yystate = *yyssp;                                         \       goto yybackup;                                            \     }                                                           \   else                                                          \     {                                                           \       yyerror (YY_("syntax error: cannot back up")); \       YYERROR;							\     }								\ while (YYID (0))
 end_define
 
 begin_define
@@ -12676,18 +12841,6 @@ begin_comment
 comment|/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].    If N is 0, then set CURRENT to the empty location which ends    the previous symbol: RHS[0] (always defined).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|YYRHSLOC
-parameter_list|(
-name|Rhs
-parameter_list|,
-name|K
-parameter_list|)
-value|((Rhs)[K])
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -12706,13 +12859,25 @@ parameter_list|,
 name|N
 parameter_list|)
 define|\
-value|do									\       if (YYID (N))                                                    \ 	{								\ 	  (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;	\ 	  (Current).first_column = YYRHSLOC (Rhs, 1).first_column;	\ 	  (Current).last_line    = YYRHSLOC (Rhs, N).last_line;		\ 	  (Current).last_column  = YYRHSLOC (Rhs, N).last_column;	\ 	}								\       else								\ 	{								\ 	  (Current).first_line   = (Current).last_line   =		\ 	    YYRHSLOC (Rhs, 0).last_line;				\ 	  (Current).first_column = (Current).last_column =		\ 	    YYRHSLOC (Rhs, 0).last_column;				\ 	}								\     while (YYID (0))
+value|do                                                                  \       if (YYID (N))                                                     \         {                                                               \           (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;        \           (Current).first_column = YYRHSLOC (Rhs, 1).first_column;      \           (Current).last_line    = YYRHSLOC (Rhs, N).last_line;         \           (Current).last_column  = YYRHSLOC (Rhs, N).last_column;       \         }                                                               \       else                                                              \         {                                                               \           (Current).first_line   = (Current).last_line   =              \             YYRHSLOC (Rhs, 0).last_line;                                \           (Current).first_column = (Current).last_column =              \             YYRHSLOC (Rhs, 0).last_column;                              \         }                                                               \     while (YYID (0))
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|YYRHSLOC
+parameter_list|(
+name|Rhs
+parameter_list|,
+name|K
+parameter_list|)
+value|((Rhs)[K])
+end_define
 
 begin_comment
 comment|/* This macro is provided for backward compatibility. */
@@ -12912,6 +13077,17 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
+name|FILE
+modifier|*
+name|yyo
+init|=
+name|yyoutput
+decl_stmt|;
+name|YYUSE
+argument_list|(
+name|yyo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -13909,7 +14085,7 @@ name|yysize0
 init|=
 name|yytnamerr
 argument_list|(
-literal|0
+name|YY_NULL
 argument_list|,
 name|yytname
 index|[
@@ -13938,7 +14114,7 @@ name|char
 modifier|*
 name|yyformat
 init|=
-literal|0
+name|YY_NULL
 decl_stmt|;
 comment|/* Arguments of yyformat. */
 name|char
@@ -14103,7 +14279,7 @@ name|yysize
 operator|+
 name|yytnamerr
 argument_list|(
-literal|0
+name|YY_NULL
 argument_list|,
 name|yytname
 index|[
@@ -14489,108 +14665,6 @@ block|}
 end_block
 
 begin_comment
-comment|/* Prevent warnings from -Wmissing-prototypes.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YYPARSE_PARAM
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|||
-name|defined
-name|__cplusplus
-end_if
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|(
-name|void
-modifier|*
-name|YYPARSE_PARAM
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! YYPARSE_PARAM */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|||
-name|defined
-name|__cplusplus
-end_if
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! YYPARSE_PARAM */
-end_comment
-
-begin_comment
 comment|/* The lookahead symbol.  */
 end_comment
 
@@ -14726,7 +14800,7 @@ comment|/* Number of tokens to shift before error messages enabled.  */
 name|int
 name|yyerrstatus
 decl_stmt|;
-comment|/* The stacks and their tools:        `yyss': related to states.        `yyvs': related to semantic values.         Refer to the stacks thru separate pointers, to allow yyoverflow        to reallocate them elsewhere.  */
+comment|/* The stacks and their tools:        `yyss': related to states.        `yyvs': related to semantic values.         Refer to the stacks through separate pointers, to allow yyoverflow        to reallocate them elsewhere.  */
 comment|/* The state stack.  */
 name|yytype_int16
 name|yyssa
@@ -15374,7 +15448,7 @@ block|{
 case|case
 literal|9
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|118
@@ -15392,7 +15466,7 @@ break|break;
 case|case
 literal|110
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|167
@@ -15463,7 +15537,7 @@ break|break;
 case|case
 literal|118
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|183
@@ -15534,7 +15608,7 @@ break|break;
 case|case
 literal|125
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|199
@@ -15659,7 +15733,7 @@ break|break;
 case|case
 literal|126
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|208
@@ -15784,7 +15858,7 @@ break|break;
 case|case
 literal|127
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|217
@@ -15942,7 +16016,7 @@ break|break;
 case|case
 literal|128
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|228
@@ -16075,7 +16149,7 @@ break|break;
 case|case
 literal|129
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|237
@@ -16208,7 +16282,7 @@ break|break;
 case|case
 literal|130
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|246
@@ -16311,7 +16385,7 @@ break|break;
 case|case
 literal|131
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|255
@@ -16447,7 +16521,7 @@ break|break;
 case|case
 literal|132
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|268
@@ -16583,7 +16657,7 @@ break|break;
 case|case
 literal|133
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|283
@@ -16686,7 +16760,7 @@ break|break;
 case|case
 literal|134
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|292
@@ -16773,7 +16847,7 @@ break|break;
 case|case
 literal|135
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|301
@@ -16860,7 +16934,7 @@ break|break;
 case|case
 literal|136
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|310
@@ -16985,7 +17059,7 @@ break|break;
 case|case
 literal|137
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|319
@@ -17110,7 +17184,7 @@ break|break;
 case|case
 literal|138
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|328
@@ -17243,7 +17317,7 @@ break|break;
 case|case
 literal|139
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|337
@@ -17376,7 +17450,7 @@ break|break;
 case|case
 literal|140
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|346
@@ -17509,7 +17583,7 @@ break|break;
 case|case
 literal|141
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|355
@@ -17642,7 +17716,7 @@ break|break;
 case|case
 literal|142
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|364
@@ -17775,7 +17849,7 @@ break|break;
 case|case
 literal|143
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|373
@@ -17908,7 +17982,7 @@ break|break;
 case|case
 literal|144
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|382
@@ -18041,7 +18115,7 @@ break|break;
 case|case
 literal|145
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|391
@@ -18104,7 +18178,7 @@ break|break;
 case|case
 literal|146
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|398
@@ -18167,7 +18241,7 @@ break|break;
 case|case
 literal|147
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|405
@@ -18270,7 +18344,7 @@ break|break;
 case|case
 literal|148
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|414
@@ -18403,7 +18477,7 @@ break|break;
 case|case
 literal|149
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|423
@@ -18581,7 +18655,7 @@ break|break;
 case|case
 literal|150
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|437
@@ -18714,7 +18788,7 @@ break|break;
 case|case
 literal|151
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|446
@@ -18847,7 +18921,7 @@ break|break;
 case|case
 literal|152
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|455
@@ -18910,7 +18984,7 @@ break|break;
 case|case
 literal|153
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|462
@@ -18973,7 +19047,7 @@ break|break;
 case|case
 literal|154
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|469
@@ -19036,7 +19110,7 @@ break|break;
 case|case
 literal|155
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|476
@@ -19107,7 +19181,7 @@ break|break;
 case|case
 literal|156
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|484
@@ -19170,7 +19244,7 @@ break|break;
 case|case
 literal|157
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|491
@@ -19236,7 +19310,7 @@ break|break;
 case|case
 literal|158
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|498
@@ -19299,7 +19373,7 @@ break|break;
 case|case
 literal|159
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|505
@@ -19365,7 +19439,7 @@ break|break;
 case|case
 literal|160
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|512
@@ -19431,7 +19505,7 @@ break|break;
 case|case
 literal|161
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|520
@@ -19497,7 +19571,7 @@ break|break;
 case|case
 literal|162
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|528
@@ -19563,7 +19637,7 @@ break|break;
 case|case
 literal|163
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|536
@@ -19629,7 +19703,7 @@ break|break;
 case|case
 literal|164
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|543
@@ -19695,7 +19769,7 @@ break|break;
 case|case
 literal|165
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|550
@@ -19828,7 +19902,7 @@ break|break;
 case|case
 literal|166
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|559
@@ -19961,7 +20035,7 @@ break|break;
 case|case
 literal|167
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|568
@@ -20024,7 +20098,7 @@ break|break;
 case|case
 literal|168
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|575
@@ -20087,7 +20161,7 @@ break|break;
 case|case
 literal|169
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|582
@@ -20171,7 +20245,7 @@ break|break;
 case|case
 literal|170
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|590
@@ -20255,7 +20329,7 @@ break|break;
 case|case
 literal|171
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|598
@@ -20417,7 +20491,7 @@ break|break;
 case|case
 literal|172
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|611
@@ -20548,7 +20622,7 @@ break|break;
 case|case
 literal|173
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|622
@@ -20632,7 +20706,7 @@ break|break;
 case|case
 literal|174
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|630
@@ -20754,7 +20828,7 @@ break|break;
 case|case
 literal|175
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|643
@@ -20857,7 +20931,7 @@ break|break;
 case|case
 literal|176
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|652
@@ -20982,7 +21056,7 @@ break|break;
 case|case
 literal|177
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|661
@@ -21066,7 +21140,7 @@ break|break;
 case|case
 literal|178
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|669
@@ -21188,7 +21262,7 @@ break|break;
 case|case
 literal|179
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|682
@@ -21313,7 +21387,7 @@ break|break;
 case|case
 literal|180
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|691
@@ -21387,7 +21461,7 @@ break|break;
 case|case
 literal|181
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|699
@@ -21490,7 +21564,7 @@ break|break;
 case|case
 literal|182
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|708
@@ -21564,7 +21638,7 @@ break|break;
 case|case
 literal|183
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|716
@@ -21686,7 +21760,7 @@ break|break;
 case|case
 literal|184
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|729
@@ -21749,7 +21823,7 @@ break|break;
 case|case
 literal|185
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|736
@@ -21882,7 +21956,7 @@ break|break;
 case|case
 literal|186
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|746
@@ -22015,7 +22089,7 @@ break|break;
 case|case
 literal|187
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|756
@@ -22148,7 +22222,7 @@ break|break;
 case|case
 literal|188
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|766
@@ -22281,7 +22355,7 @@ break|break;
 case|case
 literal|189
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|776
@@ -22414,7 +22488,7 @@ break|break;
 case|case
 literal|190
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|786
@@ -22547,7 +22621,7 @@ break|break;
 case|case
 literal|191
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|796
@@ -22680,7 +22754,7 @@ break|break;
 case|case
 literal|192
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|806
@@ -22746,7 +22820,7 @@ break|break;
 case|case
 literal|193
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|813
@@ -22812,7 +22886,7 @@ break|break;
 case|case
 literal|194
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|820
@@ -22945,7 +23019,7 @@ break|break;
 case|case
 literal|195
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|829
@@ -23078,7 +23152,7 @@ break|break;
 case|case
 literal|196
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|838
@@ -23203,7 +23277,7 @@ break|break;
 case|case
 literal|197
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|847
@@ -23269,7 +23343,7 @@ break|break;
 case|case
 literal|198
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|854
@@ -23402,7 +23476,7 @@ break|break;
 case|case
 literal|199
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|864
@@ -23599,7 +23673,7 @@ break|break;
 case|case
 literal|200
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|878
@@ -23662,7 +23736,7 @@ break|break;
 case|case
 literal|201
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|885
@@ -23884,7 +23958,7 @@ break|break;
 case|case
 literal|202
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|903
@@ -24030,7 +24104,7 @@ break|break;
 case|case
 literal|203
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|916
@@ -24176,7 +24250,7 @@ break|break;
 case|case
 literal|204
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|929
@@ -24301,7 +24375,7 @@ break|break;
 case|case
 literal|205
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|938
@@ -24426,7 +24500,7 @@ break|break;
 case|case
 literal|206
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|947
@@ -24551,7 +24625,7 @@ break|break;
 case|case
 literal|207
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|956
@@ -24684,7 +24758,7 @@ break|break;
 case|case
 literal|208
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|966
@@ -24817,7 +24891,7 @@ break|break;
 case|case
 literal|209
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|976
@@ -24950,7 +25024,7 @@ break|break;
 case|case
 literal|210
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|985
@@ -25075,7 +25149,7 @@ break|break;
 case|case
 literal|211
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|994
@@ -25138,7 +25212,7 @@ break|break;
 case|case
 literal|212
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1001
@@ -25263,7 +25337,7 @@ break|break;
 case|case
 literal|213
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1010
@@ -25388,7 +25462,7 @@ break|break;
 case|case
 literal|214
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1019
@@ -25513,7 +25587,7 @@ break|break;
 case|case
 literal|215
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1028
@@ -25597,7 +25671,7 @@ break|break;
 case|case
 literal|216
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1036
@@ -25719,7 +25793,7 @@ break|break;
 case|case
 literal|217
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1049
@@ -25803,7 +25877,7 @@ break|break;
 case|case
 literal|218
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1057
@@ -26143,7 +26217,7 @@ break|break;
 case|case
 literal|219
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1079
@@ -26209,7 +26283,7 @@ break|break;
 case|case
 literal|220
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1086
@@ -26318,7 +26392,7 @@ break|break;
 case|case
 literal|221
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1101
@@ -26451,7 +26525,7 @@ break|break;
 case|case
 literal|222
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1111
@@ -26584,7 +26658,7 @@ break|break;
 case|case
 literal|223
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1121
@@ -26667,7 +26741,7 @@ break|break;
 case|case
 literal|224
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1131
@@ -26735,7 +26809,7 @@ break|break;
 case|case
 literal|225
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1138
@@ -26803,7 +26877,7 @@ break|break;
 case|case
 literal|226
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1145
@@ -26938,7 +27012,7 @@ break|break;
 case|case
 literal|227
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1154
@@ -27073,7 +27147,7 @@ break|break;
 case|case
 literal|228
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1164
@@ -27156,7 +27230,7 @@ break|break;
 case|case
 literal|229
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1174
@@ -27224,7 +27298,7 @@ break|break;
 case|case
 literal|230
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1181
@@ -27292,7 +27366,7 @@ break|break;
 case|case
 literal|231
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1188
@@ -27427,7 +27501,7 @@ break|break;
 case|case
 literal|232
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1197
@@ -27445,7 +27519,7 @@ break|break;
 case|case
 literal|242
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1208
@@ -27578,7 +27652,7 @@ break|break;
 case|case
 literal|243
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1218
@@ -27681,7 +27755,7 @@ break|break;
 case|case
 literal|244
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1227
@@ -27747,7 +27821,7 @@ break|break;
 case|case
 literal|245
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1234
@@ -27810,7 +27884,7 @@ break|break;
 case|case
 literal|246
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1241
@@ -27873,7 +27947,7 @@ break|break;
 case|case
 literal|247
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1248
@@ -27936,7 +28010,7 @@ break|break;
 case|case
 literal|248
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1255
@@ -27999,7 +28073,7 @@ break|break;
 case|case
 literal|249
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1262
@@ -28017,7 +28091,7 @@ break|break;
 case|case
 literal|253
 case|:
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
 number|1271
@@ -28077,10 +28151,10 @@ operator|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* Line 1806 of yacc.c  */
+comment|/* Line 1787 of yacc.c  */
 line|#
 directive|line
-number|3658
+number|3545
 file|"util/configparser.c"
 default|default:
 break|break;
@@ -28581,9 +28655,7 @@ if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|yyoverflow
-argument_list|)
 operator|||
 name|YYERROR_VERBOSE
 comment|/*-------------------------------------------------. | yyexhaustedlab -- memory exhaustion comes here.  | `-------------------------------------------------*/
@@ -28714,7 +28786,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Line 2067 of yacc.c  */
+comment|/* Line 2048 of yacc.c  */
 end_comment
 
 begin_line

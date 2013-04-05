@@ -2212,7 +2212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Load single anchor   * @param anchors: all points.  * @param str: comments line  * @param fname: filename  * @param origin: $ORIGIN.  * @param prev: passed to ldns.  * @param skip: if true, the result is NULL, but not an error, skip it.  * @return false on failure, otherwise the tp read.  */
+comment|/**   * Load single anchor   * @param anchors: all points.  * @param str: comments line  * @param fname: filename  * @param origin: the $ORIGIN.  * @param prev: passed to ldns.  * @param skip: if true, the result is NULL, but not an error, skip it.  * @return false on failure, otherwise the tp read.  */
 end_comment
 
 begin_function
@@ -9740,6 +9740,11 @@ parameter_list|)
 block|{
 name|struct
 name|trust_anchor
+modifier|*
+name|del_tp
+decl_stmt|;
+name|struct
+name|trust_anchor
 name|key
 decl_stmt|;
 name|struct
@@ -9892,8 +9897,12 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|del_tp
+operator|=
 operator|(
-name|void
+expr|struct
+name|trust_anchor
+operator|*
 operator|)
 name|rbtree_delete
 argument_list|(
@@ -9960,8 +9969,14 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* if !del_tp then the trust point is no longer present in the tree, 	 * it was deleted by someone else, who will write the zonefile and 	 * clean up the structure */
+if|if
+condition|(
+name|del_tp
+condition|)
+block|{
 comment|/* save on disk */
-name|tp
+name|del_tp
 operator|->
 name|autr
 operator|->
@@ -9974,15 +9989,16 @@ name|autr_write_file
 argument_list|(
 name|env
 argument_list|,
-name|tp
+name|del_tp
 argument_list|)
 expr_stmt|;
 comment|/* delete */
 name|autr_point_delete
 argument_list|(
-name|tp
+name|del_tp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mold

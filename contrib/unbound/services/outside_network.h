@@ -554,7 +554,7 @@ begin_define
 define|#
 directive|define
 name|EDNS_FRAG_SIZE_IP4
-value|1480
+value|1472
 end_define
 
 begin_comment
@@ -565,7 +565,7 @@ begin_define
 define|#
 directive|define
 name|EDNS_FRAG_SIZE_IP6
-value|1260
+value|1232
 end_define
 
 begin_comment
@@ -925,7 +925,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Perform a serviced query to the authoritative servers.  * Duplicate efforts are detected, and EDNS, TCP and UDP retry is performed.  * @param outnet: outside network, with rbtree of serviced queries.  * @param qname: what qname to query.  * @param qnamelen: length of qname in octets including 0 root label.  * @param qtype: rrset type to query (host format)  * @param qclass: query class. (host format)  * @param flags: flags u16 (host format), includes opcode, CD bit.  * @param dnssec: if set, DO bit is set in EDNS queries.  *	If the value includes BIT_CD, CD bit is set when in EDNS queries.  *	If the value includes BIT_DO, DO bit is set when in EDNS queries.  * @param want_dnssec: signatures are needed, without EDNS the answer is  * 	likely to be useless.  * @param tcp_upstream: use TCP for upstream queries.  * @param ssl_upstream: use SSL for upstream queries.  * @param callback: callback function.  * @param callback_arg: user argument to callback function.  * @param addr: to which server to send the query.  * @param addrlen: length of addr.  * @param zone: name of the zone of the delegation point. wireformat dname. 	This is the delegation point name for which the server is deemed 	authoritative.  * @param zonelen: length of zone.  * @param buff: scratch buffer to create query contents in. Empty on exit.  * @param arg_compare: function to compare callback args, return true if   * 	identical. It is given the callback_arg and args that are listed.  * @return 0 on error, or pointer to serviced query that is used to answer  *	this serviced query may be shared with other callbacks as well.  */
+comment|/**  * Perform a serviced query to the authoritative servers.  * Duplicate efforts are detected, and EDNS, TCP and UDP retry is performed.  * @param outnet: outside network, with rbtree of serviced queries.  * @param qname: what qname to query.  * @param qnamelen: length of qname in octets including 0 root label.  * @param qtype: rrset type to query (host format)  * @param qclass: query class. (host format)  * @param flags: flags u16 (host format), includes opcode, CD bit.  * @param dnssec: if set, DO bit is set in EDNS queries.  *	If the value includes BIT_CD, CD bit is set when in EDNS queries.  *	If the value includes BIT_DO, DO bit is set when in EDNS queries.  * @param want_dnssec: signatures are needed, without EDNS the answer is  * 	likely to be useless.  * @param tcp_upstream: use TCP for upstream queries.  * @param ssl_upstream: use SSL for upstream queries.  * @param callback: callback function.  * @param callback_arg: user argument to callback function.  * @param addr: to which server to send the query.  * @param addrlen: length of addr.  * @param zone: name of the zone of the delegation point. wireformat dname. 	This is the delegation point name for which the server is deemed 	authoritative.  * @param zonelen: length of zone.  * @param buff: scratch buffer to create query contents in. Empty on exit.  * @return 0 on error, or pointer to serviced query that is used to answer  *	this serviced query may be shared with other callbacks as well.  */
 end_comment
 
 begin_function_decl
@@ -993,19 +993,6 @@ parameter_list|,
 name|ldns_buffer
 modifier|*
 name|buff
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|arg_compare
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

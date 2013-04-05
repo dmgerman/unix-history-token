@@ -255,6 +255,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NSS
+end_ifdef
+
+begin_comment
+comment|/* nss3 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"nss.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/** global debug value to keep track of heap memory allocation */
 end_comment
@@ -654,10 +675,23 @@ argument_list|,
 name|ldns_version
 argument_list|()
 argument_list|,
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 name|SSLeay_version
 argument_list|(
-name|SSLEAY_VERSION
+argument|SSLEAY_VERSION
 argument_list|)
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_NSS
+argument_list|)
+name|NSS_GetVersion
+argument_list|()
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2068,6 +2102,9 @@ expr_stmt|;
 block|}
 comment|/* if using a logfile, we cannot open it because the logfile would 	 * be created with the wrong permissions, we cannot chown it because 	 * we cannot chown system logfiles, so we do not open at all. 	 * So, using a logfile, the user does not see errors unless -d is 	 * given to unbound on the commandline. */
 comment|/* read ssl keys while superuser and outside chroot */
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 if|if
 condition|(
 operator|!
@@ -2152,6 +2189,8 @@ argument_list|(
 literal|"could not set up connect SSL_CTX"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_KILL
@@ -2571,6 +2610,27 @@ condition|)
 name|fatal_exit
 argument_list|(
 literal|"unable to chroot to %s: %s"
+argument_list|,
+name|cfg
+operator|->
+name|chrootdir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+condition|)
+name|fatal_exit
+argument_list|(
+literal|"unable to chdir to / in chroot %s: %s"
 argument_list|,
 name|cfg
 operator|->

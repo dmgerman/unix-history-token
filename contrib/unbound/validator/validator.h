@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|NULL_KEY_TTL
-value|900
+value|60
 end_define
 
 begin_comment
@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|BOGUS_KEY_TTL
-value|900
+value|60
 end_define
 
 begin_comment

@@ -1947,7 +1947,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|iter_dns_store
 parameter_list|(
 name|struct
@@ -1980,7 +1980,9 @@ modifier|*
 name|region
 parameter_list|)
 block|{
-return|return
+if|if
+condition|(
+operator|!
 name|dns_cache_store
 argument_list|(
 name|env
@@ -1997,7 +1999,12 @@ name|pside
 argument_list|,
 name|region
 argument_list|)
-return|;
+condition|)
+name|log_err
+argument_list|(
+literal|"out of memory: cannot store data in cache"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

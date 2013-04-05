@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"daemon/daemon.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"services/cache/rrset.h"
 end_include
 
@@ -59,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"services/cache/infra.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"services/modstack.h"
 end_include
 
 begin_include

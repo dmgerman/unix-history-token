@@ -102,6 +102,10 @@ name|char
 modifier|*
 name|why_bogus
 decl_stmt|;
+comment|/** 	 * TTL for the result, in seconds.  If the security is bogus, then 	 * you also cannot trust this value. 	 */
+name|int
+name|ttl
+decl_stmt|;
 block|}
 struct|;
 comment|/**  * Callback for results of async queries.  * The readable function definition looks like:  * void my_callback(void* my_arg, int err, struct ub_result* result);  * It is called with  *	void* my_arg: your pointer to a (struct of) data of your choice,   *		or NULL.  *	int err: if 0 all is OK, otherwise an error occured and no results  *	     are forthcoming.  *	struct result: pointer to more detailed result structure.  *		This structure is allocated on the heap and needs to be  *		freed with ub_resolve_free(result);  */

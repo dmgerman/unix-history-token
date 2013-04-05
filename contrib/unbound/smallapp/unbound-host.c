@@ -132,6 +132,27 @@ directive|include
 file|<ldns/ldns.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NSS
+end_ifdef
+
+begin_comment
+comment|/* nss3 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"nss.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/** verbosity for unbound-host app */
 end_comment
@@ -2651,6 +2672,32 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_NSS
+if|if
+condition|(
+name|NSS_NoDB_Init
+argument_list|(
+literal|"."
+argument_list|)
+operator|!=
+name|SECSuccess
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"could not init NSS\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
 name|lookup
 argument_list|(
 name|ctx

@@ -120,11 +120,16 @@ name|rc_hs_write
 block|}
 name|shake_state
 enum|;
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 comment|/** the ssl state */
 name|SSL
 modifier|*
 name|ssl
 decl_stmt|;
+endif|#
+directive|endif
 comment|/** the rc this is part of */
 name|struct
 name|daemon_remote
@@ -169,11 +174,16 @@ name|rc_state
 modifier|*
 name|busy_list
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
 comment|/** the SSL context for creating new SSL streams */
 name|SSL_CTX
 modifier|*
 name|ctx
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -368,6 +378,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
+end_ifdef
+
 begin_comment
 comment|/**   * Print fixed line of text over ssl connection in blocking mode  * @param ssl: print to  * @param text: the text.  * @return false on connection failure.  */
 end_comment
@@ -442,6 +458,15 @@ name|max
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SSL */
+end_comment
 
 begin_comment
 comment|/** routine to printout option values over SSL */

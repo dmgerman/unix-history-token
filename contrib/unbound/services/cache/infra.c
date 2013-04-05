@@ -2381,6 +2381,27 @@ block|}
 block|}
 else|else
 block|{
+comment|/* if we got a reply, but the old timeout was above server 		 * selection height, delete the timeout so the server is 		 * fully available again */
+if|if
+condition|(
+name|rtt_unclamped
+argument_list|(
+operator|&
+name|data
+operator|->
+name|rtt
+argument_list|)
+operator|>=
+name|USEFUL_SERVER_TOP_TIMEOUT
+condition|)
+name|rtt_init
+argument_list|(
+operator|&
+name|data
+operator|->
+name|rtt
+argument_list|)
+expr_stmt|;
 name|rtt_update
 argument_list|(
 operator|&

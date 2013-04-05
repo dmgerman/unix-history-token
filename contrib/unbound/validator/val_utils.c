@@ -103,12 +103,6 @@ directive|include
 file|"util/regional.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"util/config_file.h"
-end_include
-
 begin_function
 name|enum
 name|val_classification

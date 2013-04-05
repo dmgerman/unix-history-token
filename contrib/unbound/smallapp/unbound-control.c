@@ -144,6 +144,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  -q		quiet (don't print anything if it works ok).\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  -h		show this usage help.\n"
 argument_list|)
 expr_stmt|;
@@ -265,6 +270,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  				from rr and dnssec caches\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  flush_bogus			flush all bogus data\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1233,6 +1243,9 @@ modifier|*
 name|ssl
 parameter_list|,
 name|int
+name|quiet
+parameter_list|,
+name|int
 name|argc
 parameter_list|,
 name|char
@@ -1508,13 +1521,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|first_line
@@ -1530,9 +1536,31 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|was_error
 operator|=
 literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
 expr_stmt|;
 name|first_line
 operator|=
@@ -1562,6 +1590,9 @@ parameter_list|,
 name|char
 modifier|*
 name|svr
+parameter_list|,
+name|int
+name|quiet
 parameter_list|,
 name|int
 name|argc
@@ -1684,6 +1715,8 @@ name|go_cmd
 argument_list|(
 name|ssl
 argument_list|,
+name|quiet
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -1771,6 +1804,11 @@ name|int
 name|c
 decl_stmt|,
 name|ret
+decl_stmt|;
+name|int
+name|quiet
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|char
@@ -1915,8 +1953,6 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|v
-decl_stmt|,
 name|seed
 init|=
 operator|(
@@ -1932,6 +1968,12 @@ name|unsigned
 operator|)
 name|getpid
 argument_list|()
+decl_stmt|;
+name|unsigned
+name|int
+name|v
+init|=
+name|seed
 decl_stmt|;
 name|size_t
 name|i
@@ -2013,7 +2055,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:s:h"
+literal|"c:s:qh"
 argument_list|)
 operator|)
 operator|!=
@@ -2040,6 +2082,14 @@ case|:
 name|svr
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|quiet
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2131,6 +2181,8 @@ argument_list|(
 name|cfgfile
 argument_list|,
 name|svr
+argument_list|,
+name|quiet
 argument_list|,
 name|argc
 argument_list|,
