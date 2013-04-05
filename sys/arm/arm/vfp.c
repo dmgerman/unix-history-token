@@ -146,7 +146,8 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|boolean_t
+specifier|extern
+name|int
 name|vfp_exists
 decl_stmt|;
 end_decl_stmt
