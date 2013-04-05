@@ -1608,6 +1608,23 @@ operator||
 name|DA_Q_NO_PREVENT
 block|}
 block|,
+block|{
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Kingston"
+block|,
+literal|"DataTraveler G3"
+block|,
+literal|"1.00"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_PREVENT
+block|}
+block|,
 comment|/* ATA/SATA devices over SAS/USB/... */
 block|{
 comment|/* Hitachi Advanced Format (4k) drives */
