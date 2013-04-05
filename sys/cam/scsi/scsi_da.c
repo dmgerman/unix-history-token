@@ -8194,7 +8194,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|4
+name|da_retry_count
 argument_list|,
 name|dadone
 argument_list|,
@@ -8285,7 +8285,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|4
+name|da_retry_count
 argument_list|,
 comment|/*cbfcnp*/
 name|dadone
@@ -8308,7 +8308,9 @@ comment|/*sense_len*/
 name|SSD_FULL_SIZE
 argument_list|,
 comment|/*timeout*/
-literal|60000
+name|da_default_timeout
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|start_ccb
