@@ -116,22 +116,6 @@ define|\
 value|bus_space_write_4((bas)->bst, (bas)->bsh, reg, value)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Clear pending interrupts. THRE is cleared by reading IIR. Data  * that may have been received gets lost here.  */
-end_comment
-
-begin_endif
-unit|static void ar933x_clrint(struct uart_bas *bas) { 	uint8_t iir, lsr;  	iir = uart_getreg(bas, REG_IIR); 	while ((iir& IIR_NOPEND) == 0) { 		iir&= IIR_IMASK; 		if (iir == IIR_RLS) { 			lsr = uart_getreg(bas, REG_LSR); 			if (lsr& (LSR_BI|LSR_FE|LSR_PE)) 				(void)uart_getreg(bas, REG_DATA); 		} else if (iir == IIR_RXRDY || iir == IIR_RXTOUT) 			(void)uart_getreg(bas, REG_DATA); 		else if (iir == IIR_MLSC) 			(void)uart_getreg(bas, REG_MSR); 		uart_barrier(bas); 		iir = uart_getreg(bas, REG_IIR); 	} }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -1381,9 +1365,74 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ar933x_softc
+modifier|*
+name|u
+init|=
+operator|(
+expr|struct
+name|ar933x_softc
+operator|*
+operator|)
+name|sc
+decl_stmt|;
+name|struct
+name|uart_bas
+modifier|*
+name|bas
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_bas
+decl_stmt|;
+name|uint32_t
+name|reg
+decl_stmt|;
 comment|/* XXX TODO: flush transmitter */
-comment|/* XXX TODO: enable RX interrupts to kick-start things */
-comment|/* XXX TODO: enable the host interrupt now */
+comment|/* 	 * Setup initial interrupt notifications. 	 * 	 * XXX for now, just RX FIFO valid. 	 * Later on (when they're handled), also handle 	 * RX errors/overflow. 	 */
+name|u
+operator|->
+name|u_ier
+operator|=
+name|AR933X_UART_INT_RX_VALID
+expr_stmt|;
+comment|/* Enable RX interrupts to kick-start things */
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_EN_REG
+argument_list|,
+name|u
+operator|->
+name|u_ier
+argument_list|)
+expr_stmt|;
+comment|/* Enable the host interrupt now */
+name|reg
+operator|=
+name|ar933x_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+name|AR933X_UART_CS_HOST_INT_EN
+expr_stmt|;
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1403,14 +1452,58 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|struct ar933x_softc *ns8250; 	struct uart_bas *bas; 	u_char ier;  	ns8250 = (struct ar933x_softc *)sc; 	bas =&sc->sc_bas; 	ier = uart_getreg(bas, REG_IER)& ns8250->ier_mask; 	uart_setreg(bas, REG_IER, ier); 	uart_barrier(bas); 	ar933x_clrint(bas);
-endif|#
-directive|endif
-comment|/* XXX TODO: Disable all interrupts */
-comment|/* XXX TODO: Disable the host interrupt */
+name|struct
+name|uart_bas
+modifier|*
+name|bas
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_bas
+decl_stmt|;
+name|uint32_t
+name|reg
+decl_stmt|;
+comment|/* Disable all interrupts */
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_EN_REG
+argument_list|,
+literal|0x00000000
+argument_list|)
+expr_stmt|;
+comment|/* Disable the host interrupt */
+name|reg
+operator|=
+name|ar933x_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|)
+expr_stmt|;
+name|reg
+operator|&=
+operator|~
+name|AR933X_UART_CS_HOST_INT_EN
+expr_stmt|;
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1601,6 +1694,18 @@ name|sc
 parameter_list|)
 block|{
 name|struct
+name|ar933x_softc
+modifier|*
+name|u
+init|=
+operator|(
+expr|struct
+name|ar933x_softc
+operator|*
+operator|)
+name|sc
+decl_stmt|;
+name|struct
 name|uart_bas
 modifier|*
 name|bas
@@ -1615,6 +1720,9 @@ name|ipend
 init|=
 literal|0
 decl_stmt|;
+name|uint32_t
+name|isr
+decl_stmt|;
 name|uart_lock
 argument_list|(
 name|sc
@@ -1622,18 +1730,74 @@ operator|->
 name|sc_hwmtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Always notify the upper layer if RX is ready. 	 */
-if|if
-condition|(
-name|ar933x_rxready
+comment|/* 	 * Fetch/ACK the ISR status. 	 */
+name|isr
+operator|=
+name|ar933x_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_REG
+argument_list|)
+expr_stmt|;
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_REG
+argument_list|,
+name|isr
+argument_list|)
+expr_stmt|;
+name|uart_barrier
 argument_list|(
 name|bas
 argument_list|)
+expr_stmt|;
+comment|/* 	 * RX ready - notify upper layer. 	 */
+if|if
+condition|(
+name|isr
+operator|&
+name|AR933X_UART_INT_RX_VALID
 condition|)
 block|{
 name|ipend
 operator||=
 name|SER_INT_RXREADY
+expr_stmt|;
+block|}
+comment|/* 	 * If we get this interrupt, we should disable 	 * it from the interrupt mask and inform the uart 	 * driver appropriately. 	 * 	 * We can't keep setting SER_INT_TXIDLE or SER_INT_SIGCHG 	 * all the time or IO stops working.  So we will always 	 * clear this interrupt if we get it, then we only signal 	 * the upper layer if we were doing active TX in the 	 * first place. 	 * 	 * Also, the name is misleading.  This actually means 	 * "the FIFO is almost empty."  So if we just write some 	 * more data to the FIFO without checking whether it can 	 * take said data, we'll overflow the thing. 	 * 	 * Unfortunately the FreeBSD uart device has no concept of 	 * partial UART writes - it expects that the whole buffer 	 * is written to the hardware.  Thus for now, ar933x_bus_transmit() 	 * will wait for the FIFO to finish draining before it pushes 	 * more frames into it. 	 */
+if|if
+condition|(
+name|isr
+operator|&
+name|AR933X_UART_INT_TX_EMPTY
+condition|)
+block|{
+comment|/* 		 * Update u_ier to disable TX notifications; update hardware 		 */
+name|u
+operator|->
+name|u_ier
+operator|&=
+operator|~
+name|AR933X_UART_INT_TX_EMPTY
+expr_stmt|;
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_EN_REG
+argument_list|,
+name|u
+operator|->
+name|u_ier
+argument_list|)
+expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Only signal TX idle if we're not busy transmitting. 	 */
@@ -1646,16 +1810,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|ar933x_getreg
-argument_list|(
-name|bas
-argument_list|,
-name|AR933X_UART_DATA_REG
-argument_list|)
+name|isr
 operator|&
-name|AR933X_UART_DATA_TX_CSR
-operator|)
+name|AR933X_UART_INT_TX_EMPTY
 condition|)
 block|{
 name|ipend
@@ -1917,6 +2074,11 @@ argument_list|,
 name|AR933X_UART_DATA_RX_CSR
 argument_list|)
 expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
 comment|/* XXX frame, parity error */
 name|uart_rx_put
 argument_list|(
@@ -1970,6 +2132,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Write the current transmit buffer to the TX FIFO.  *  * Unfortunately the FreeBSD uart device has no concept of  * partial UART writes - it expects that the whole buffer  * is written to the hardware.  Thus for now, this will wait for  * the FIFO to finish draining before it pushes more frames into it.  *  * If non-blocking operation is truely needed here, either  * the FreeBSD uart device will need to handle partial writes  * in xxx_bus_transmit(), or we'll need to do TX FIFO buffering  * of our own here.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1991,6 +2157,18 @@ name|sc
 operator|->
 name|sc_bas
 decl_stmt|;
+name|struct
+name|ar933x_softc
+modifier|*
+name|u
+init|=
+operator|(
+expr|struct
+name|ar933x_softc
+operator|*
+operator|)
+name|sc
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2001,7 +2179,20 @@ operator|->
 name|sc_hwmtx
 argument_list|)
 expr_stmt|;
-comment|/* XXX wait for FIFO to be ready? */
+comment|/* Wait for the FIFO to be clear - see above */
+while|while
+condition|(
+name|ar933x_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_CS_REG
+argument_list|)
+operator|&
+name|AR933X_UART_CS_TX_BUSY
+condition|)
+empty_stmt|;
+comment|/* 	 * Write some data! 	 */
 for|for
 control|(
 name|i
@@ -2039,7 +2230,35 @@ operator||
 name|AR933X_UART_DATA_TX_CSR
 argument_list|)
 expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
 block|}
+comment|/* 	 * Now that we're transmitting, get interrupt notification 	 * when the FIFO is (almost) empty - see above. 	 */
+name|u
+operator|->
+name|u_ier
+operator||=
+name|AR933X_UART_INT_TX_EMPTY
+expr_stmt|;
+name|ar933x_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|AR933X_UART_INT_EN_REG
+argument_list|,
+name|u
+operator|->
+name|u_ier
+argument_list|)
+expr_stmt|;
+name|uart_barrier
+argument_list|(
+name|bas
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Inform the upper layer that we are presently transmitting 	 * data to the hardware; this will be cleared when the 	 * TXIDLE interrupt occurs. 	 */
 name|sc
 operator|->
