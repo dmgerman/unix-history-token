@@ -267,6 +267,27 @@ name|AR933X_BOOTSTRAP_REF_CLK_40
 value|(1<< 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR933X_PLL_VAL_1000
+value|0x00110000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_PLL_VAL_100
+value|0x00001099
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_PLL_VAL_10
+value|0x00991099
+end_define
+
 begin_endif
 endif|#
 directive|endif
