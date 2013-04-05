@@ -287,6 +287,7 @@ comment|/**  * Custom malloc type for all driver allocations.  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_XENBLOCKBACK

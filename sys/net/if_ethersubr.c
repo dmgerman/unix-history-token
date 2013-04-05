@@ -757,6 +757,7 @@ comment|/* XXX: should be in an arp support file, not here */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ARPCOM

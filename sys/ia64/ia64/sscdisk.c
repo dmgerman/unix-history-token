@@ -317,14 +317,15 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-unit|MALLOC_DEFINE
-operator|(
+unit|static
+name|MALLOC_DEFINE
+argument_list|(
 name|M_SSC
-operator|,
+argument_list|,
 literal|"ssc_disk"
-operator|,
+argument_list|,
 literal|"Simulator Disk"
-operator|)
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

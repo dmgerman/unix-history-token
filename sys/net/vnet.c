@@ -181,6 +181,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_VNET
@@ -257,6 +258,7 @@ value|(VNET_STOP - VNET_START)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_VNET_DATA
@@ -409,6 +411,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_VNET_DATA_FREE

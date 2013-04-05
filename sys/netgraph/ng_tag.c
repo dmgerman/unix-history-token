@@ -80,13 +80,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_TAG
 argument_list|,
 literal|"netgraph_tag"
 argument_list|,
-literal|"netgraph tag node "
+literal|"netgraph tag node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

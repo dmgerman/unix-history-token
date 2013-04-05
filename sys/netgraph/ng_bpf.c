@@ -107,13 +107,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_BPF
 argument_list|,
 literal|"netgraph_bpf"
 argument_list|,
-literal|"netgraph bpf node "
+literal|"netgraph bpf node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

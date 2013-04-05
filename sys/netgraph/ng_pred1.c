@@ -80,13 +80,14 @@ file|"opt_netgraph.h"
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_PRED1
 argument_list|,
 literal|"netgraph_pred1"
 argument_list|,
-literal|"netgraph pred1 node "
+literal|"netgraph pred1 node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
