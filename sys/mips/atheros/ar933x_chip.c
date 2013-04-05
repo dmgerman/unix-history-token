@@ -688,14 +688,36 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|switch (ar71xx_soc) { 	case AR71XX_SOC_AR7240: 		ar71xx_device_stop(AR724X_RESET_MODULE_USB_OHCI_DLL | 		    AR724X_RESET_USB_HOST); 		DELAY(1000);  		ar71xx_device_start(AR724X_RESET_MODULE_USB_OHCI_DLL | 		    AR724X_RESET_USB_HOST); 		DELAY(1000);
-comment|/* 		 * WAR for HW bug. Here it adjusts the duration 		 * between two SOFS. 		 */
-block|ATH_WRITE_REG(AR71XX_USB_CTRL_FLADJ, 		    (3<< USB_CTRL_FLADJ_A0_SHIFT));  		break;  	case AR71XX_SOC_AR7241: 	case AR71XX_SOC_AR7242: 		ar71xx_device_start(AR724X_RESET_MODULE_USB_OHCI_DLL); 		DELAY(100);  		ar71xx_device_start(AR724X_RESET_USB_HOST); 		DELAY(100);  		ar71xx_device_start(AR724X_RESET_USB_PHY); 		DELAY(100);  		break;  	default: 		break; 	}
-endif|#
-directive|endif
+name|ar71xx_device_stop
+argument_list|(
+name|AR933X_RESET_USBSUS_OVERRIDE
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|ar71xx_device_start
+argument_list|(
+name|AR933X_RESET_USB_HOST
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|ar71xx_device_start
+argument_list|(
+name|AR933X_RESET_USB_PHY
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
