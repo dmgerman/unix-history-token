@@ -11052,6 +11052,12 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+name|cp
+operator|->
+name|flags
+operator||=
+name|G_CF_ORPHAN
+expr_stmt|;
 name|g_part_wither
 argument_list|(
 name|cp
