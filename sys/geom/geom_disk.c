@@ -1217,6 +1217,8 @@ operator||
 name|BIO_DELETE
 operator|)
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|sc
@@ -1229,6 +1231,8 @@ name|geom
 operator|->
 name|softc
 operator|)
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1237,6 +1241,8 @@ name|sc
 operator|->
 name|dp
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|devstat_end_transaction_bio
