@@ -479,6 +479,10 @@ operator|=
 operator|&
 name|ar933x_chip_def
 expr_stmt|;
+name|ar71xx_soc
+operator|=
+name|AR71XX_SOC_AR9330
+expr_stmt|;
 break|break;
 case|case
 name|REV_ID_MAJOR_AR9331
@@ -498,6 +502,10 @@ expr_stmt|;
 name|chip
 operator|=
 literal|"9331"
+expr_stmt|;
+name|ar71xx_soc
+operator|=
+name|AR71XX_SOC_AR9331
 expr_stmt|;
 name|ar71xx_cpu_ops
 operator|=

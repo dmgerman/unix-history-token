@@ -40,7 +40,11 @@ block|,
 name|AR71XX_SOC_AR9130
 block|,
 name|AR71XX_SOC_AR9132
-block|}
+block|,
+name|AR71XX_SOC_AR9330
+block|,
+name|AR71XX_SOC_AR9331
+block|, }
 enum|;
 end_enum
 
