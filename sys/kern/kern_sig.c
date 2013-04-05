@@ -15912,6 +15912,13 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|free
+argument_list|(
+name|name
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 goto|goto
 name|restart
 goto|;
