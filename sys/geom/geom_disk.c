@@ -1520,7 +1520,7 @@ condition|)
 block|{
 name|error
 operator|=
-literal|0
+name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
@@ -1974,14 +1974,11 @@ name|DISKFLAG_CANFLUSHCACHE
 operator|)
 condition|)
 block|{
-name|g_io_deliver
-argument_list|(
-name|bp
-argument_list|,
-name|ENODEV
-argument_list|)
+name|error
+operator|=
+name|EOPNOTSUPP
 expr_stmt|;
-return|return;
+break|break;
 block|}
 name|bp2
 operator|=
