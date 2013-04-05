@@ -1666,6 +1666,34 @@ block|,
 name|HAL_GPIO_OUTPUT_MUX_AS_TX_FRAME
 init|=
 literal|6
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_WLAN_DATA
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_WLAN_CLK
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_BT_DATA
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_BT_CLK
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_WL_IN_TX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_WL_IN_RX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_BT_IN_TX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_BT_IN_RX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_RUCKUS_STROBE
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_RUCKUS_DATA
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_SMARTANT_CTRL0
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_SMARTANT_CTRL1
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_SMARTANT_CTRL2
+block|,
+name|HAL_GPIO_OUTPUT_MUX_NUM_ENTRIES
 block|}
 name|HAL_GPIO_MUX_TYPE
 typedef|;
@@ -3313,6 +3341,12 @@ comment|/* Change transmit power */
 name|HAL_BT_COEX_ANTENNA_DIVERSITY
 block|,
 comment|/* Enable RX diversity for Kite */
+name|HAL_BT_COEX_MCI_MAX_TX_PWR
+block|,
+comment|/* Set max tx power for concurrent tx */
+name|HAL_BT_COEX_MCI_FTP_STOMP_RX
+block|,
+comment|/* Use a different weight for stomp low */
 block|}
 name|HAL_BT_COEX_SET_PARAMETER
 typedef|;
@@ -3727,6 +3761,9 @@ name|ath_hal_ext_atten_margin_cfg
 decl_stmt|;
 name|int
 name|ath_hal_war70c
+decl_stmt|;
+name|uint32_t
+name|ath_hal_mci_config
 decl_stmt|;
 block|}
 name|HAL_OPS_CONFIG
