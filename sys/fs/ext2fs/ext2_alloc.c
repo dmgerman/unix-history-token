@@ -3760,12 +3760,6 @@ name|bp
 operator|->
 name|b_data
 expr_stmt|;
-name|bp
-operator|->
-name|b_xflags
-operator||=
-name|BX_BKGRDWRITE
-expr_stmt|;
 name|EXT2_LOCK
 argument_list|(
 name|ump
