@@ -2960,6 +2960,10 @@ define|#
 directive|define
 name|CTS_ATA_VALID_ATAPI
 value|0x20
+define|#
+directive|define
+name|CTS_ATA_VALID_CAPS
+value|0x40
 name|int
 name|mode
 decl_stmt|;
@@ -2972,6 +2976,23 @@ name|u_int
 name|atapi
 decl_stmt|;
 comment|/* Length of ATAPI CDB */
+name|u_int
+name|caps
+decl_stmt|;
+comment|/* Device and host SATA caps. */
+define|#
+directive|define
+name|CTS_ATA_CAPS_H
+value|0x0000ffff
+define|#
+directive|define
+name|CTS_ATA_CAPS_H_DMA48
+value|0x00000001
+comment|/* 48-bit DMA */
+define|#
+directive|define
+name|CTS_ATA_CAPS_D
+value|0xffff0000
 block|}
 struct|;
 end_struct
