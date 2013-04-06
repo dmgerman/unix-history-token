@@ -14259,7 +14259,7 @@ argument_list|)
 expr_stmt|;
 name|delta
 operator|=
-name|ddi_get_lbolt64
+name|gethrtime
 argument_list|()
 operator|-
 name|fio
@@ -14270,19 +14270,16 @@ if|if
 condition|(
 name|delta
 operator|>
-name|NSEC_TO_TICK
-argument_list|(
 name|spa_deadman_synctime
 argument_list|(
 name|spa
-argument_list|)
 argument_list|)
 condition|)
 block|{
 name|zfs_dbgmsg
 argument_list|(
-literal|"SLOW IO: zio timestamp %llu, "
-literal|"delta %llu, last io %llu"
+literal|"SLOW IO: zio timestamp %lluns, "
+literal|"delta %lluns, last io %lluns"
 argument_list|,
 name|fio
 operator|->

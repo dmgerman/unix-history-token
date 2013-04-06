@@ -60,16 +60,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* deadline = pri + ddi_get_lbolt64()>> time_shift) */
+comment|/*  * The deadlines are grouped into buckets based on zfs_vdev_time_shift:  * deadline = pri + gethrtime()>> time_shift)  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|zfs_vdev_time_shift
 init|=
-literal|6
+literal|29
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* each bucket is 0.537 seconds */
+end_comment
 
 begin_comment
 comment|/* exponential I/O issue ramp-up rate */
@@ -1820,7 +1824,7 @@ name|zio
 operator|->
 name|io_timestamp
 operator|=
-name|ddi_get_lbolt64
+name|gethrtime
 argument_list|()
 expr_stmt|;
 name|zio
@@ -1959,20 +1963,8 @@ name|vq
 operator|->
 name|vq_io_complete_ts
 operator|=
-name|ddi_get_lbolt64
+name|gethrtime
 argument_list|()
-expr_stmt|;
-name|vq
-operator|->
-name|vq_io_delta_ts
-operator|=
-name|vq
-operator|->
-name|vq_io_complete_ts
-operator|-
-name|zio
-operator|->
-name|io_timestamp
 expr_stmt|;
 for|for
 control|(
