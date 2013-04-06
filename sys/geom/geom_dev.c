@@ -2665,6 +2665,12 @@ operator|->
 name|bio_cmd
 operator|==
 name|BIO_DELETE
+operator|||
+name|bp
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_FLUSH
 argument_list|,
 operator|(
 literal|"Wrong bio_cmd bio=%p cmd=%d"
