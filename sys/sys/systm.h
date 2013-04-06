@@ -408,6 +408,21 @@ value|KASSERT(sizeof(var) == sizeof(void *)&&			\ 	    ((uintptr_t)&(var)& (size
 end_define
 
 begin_comment
+comment|/*  * Assert that a thread is in critical(9) section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRITICAL_ASSERT
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|KASSERT((td)->td_critnest>= 1, ("Not in critical section"));
+end_define
+
+begin_comment
 comment|/*  * If we have already panic'd and this is the thread that called  * panic(), then don't block on any mutexes but silently succeed.  * Otherwise, the kernel will deadlock since the scheduler isn't  * going to run the thread that holds any lock we need.  */
 end_comment
 

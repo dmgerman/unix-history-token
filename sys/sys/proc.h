@@ -1099,17 +1099,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|CRITICAL_ASSERT
-parameter_list|(
-name|td
-parameter_list|)
-define|\
-value|KASSERT((td)->td_critnest>= 1, ("Not in critical section"));
-end_define
-
 begin_comment
 comment|/*  * Flags kept in td_flags:  * To change these you MUST have the scheduler lock.  */
 end_comment
