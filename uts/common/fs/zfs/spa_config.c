@@ -784,13 +784,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * Skip over our own pool if we're about to remove 			 * ourselves from the spa namespace or any pool that 			 * is readonly. Since we cannot guarantee that a 			 * readonly pool would successfully import upon reboot, 			 * we don't allow them to be written to the cache file. 			 */
 if|if
 condition|(
+operator|(
 name|spa
 operator|==
 name|target
 operator|&&
 name|removing
+operator|)
+operator|||
+operator|!
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
 condition|)
 continue|continue;
 name|mutex_enter
