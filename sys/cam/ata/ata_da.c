@@ -2430,6 +2430,15 @@ decl_stmt|;
 name|uint32_t
 name|prio
 decl_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|state
+operator|!=
+name|ADA_STATE_NORMAL
+condition|)
+return|return;
 comment|/* Check if cam_periph_getccb() was called. */
 name|prio
 operator|=
