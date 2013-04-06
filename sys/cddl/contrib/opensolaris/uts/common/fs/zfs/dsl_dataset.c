@@ -1884,7 +1884,10 @@ name|DMU_OT_DSL_DATASET
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ds
@@ -2627,7 +2630,10 @@ expr_stmt|;
 else|else
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 comment|/* we may be looking for a snapshot */
 if|if
@@ -2671,7 +2677,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2871,7 +2880,10 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2953,7 +2965,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5139,7 +5154,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Propagate any reserved space for this snapshot to other 	 * snapshot checks in this sync group. 	 */
@@ -5250,7 +5268,10 @@ name|tx_txg
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Check for conflicting snapshot name. 	 */
@@ -5274,7 +5295,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 if|if
@@ -5423,7 +5447,10 @@ name|MAXNAMELEN
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5449,7 +5476,10 @@ name|NULL
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6718,7 +6748,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -7081,7 +7114,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8707,7 +8743,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -8743,7 +8782,10 @@ name|MAXNAMELEN
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -9443,7 +9485,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9468,7 +9513,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9489,7 +9537,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9524,7 +9575,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9578,7 +9632,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9975,7 +10032,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10161,7 +10221,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -10215,7 +10278,10 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -11964,7 +12030,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12410,7 +12479,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* the branch point should be just before them */
@@ -12426,7 +12498,10 @@ name|ds_prev
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* clone should be the clone (unless they are unrelated) */
@@ -12464,7 +12539,10 @@ name|ds_next_snap_obj
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* the clone should be a child of the origin */
@@ -12482,7 +12560,10 @@ name|ds_dir
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* origin_head shouldn't be modified unless 'force' */
@@ -12498,7 +12579,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ETXTBSY
+argument_list|)
 operator|)
 return|;
 comment|/* origin_head should have no long holds (e.g. is not mounted) */
@@ -12511,7 +12595,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 comment|/* check amount of any unconsumed refreservation */
@@ -12572,7 +12659,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 comment|/* clone can't be over the head's refquota */
@@ -12596,7 +12686,10 @@ name|ds_quota
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 operator|)
 return|;
 return|return
@@ -13559,12 +13652,18 @@ name|ds_quota
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 expr_stmt|;
 else|else
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 expr_stmt|;
 block|}
 name|mutex_exit
@@ -13660,7 +13759,10 @@ name|SPA_VERSION_REFQUOTA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|error
@@ -13707,7 +13809,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -13802,7 +13907,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 block|}
@@ -14066,7 +14174,10 @@ name|SPA_VERSION_REFRESERVATION
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|error
@@ -14113,7 +14224,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -14301,7 +14415,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 block|}
@@ -14936,7 +15053,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -15037,7 +15157,10 @@ name|ds_creation_txg
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 operator|*

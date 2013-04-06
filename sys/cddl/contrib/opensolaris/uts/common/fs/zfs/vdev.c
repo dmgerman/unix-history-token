@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1598,7 +1598,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1616,7 +1619,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If this is a load, get the vdev guid from the nvlist. 	 * Otherwise, vdev_alloc_common() will generate one for us. 	 */
@@ -1648,7 +1654,10 @@ name|id
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1667,7 +1676,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1695,7 +1707,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1723,7 +1738,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1751,7 +1769,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1771,7 +1792,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Determine whether we're a log vdev. 	 */
@@ -1805,7 +1829,10 @@ name|SPA_VERSION_SLOGS
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1824,7 +1851,10 @@ name|SPA_VERSION_HOLES
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Set the nparity property for RAID-Z vdevs. 	 */
@@ -1868,7 +1898,10 @@ name|VDEV_RAIDZ_MAXPARITY
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 			 * Previous versions could only support 1 or 2 parity 			 * device. 			 */
@@ -1887,7 +1920,10 @@ name|SPA_VERSION_RAIDZ2
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1905,7 +1941,10 @@ name|SPA_VERSION_RAIDZ3
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1923,7 +1962,10 @@ name|SPA_VERSION_RAIDZ2
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 			 * Otherwise, we default to 1 parity device for RAID-Z. 			 */
@@ -4563,7 +4605,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 block|}
 name|mutex_enter
@@ -4624,7 +4669,10 @@ name|pio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
@@ -5372,7 +5420,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5406,7 +5457,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5555,7 +5609,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5745,7 +5802,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5808,7 +5868,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5854,7 +5917,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6121,7 +6187,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBADF
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If the device has already failed, or was marked offline, don't do 	 * any further validation.  Otherwise, label I/O will fail and we will 	 * overwrite the previous state. 	 */
@@ -6469,7 +6538,10 @@ name|POOL_STATE_ACTIVE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBADF
+argument_list|)
 operator|)
 return|;
 comment|/* 		 * If we were able to open and validate a vdev that was 		 * previously marked permanently unavailable, clear that state 		 * now. 		 */

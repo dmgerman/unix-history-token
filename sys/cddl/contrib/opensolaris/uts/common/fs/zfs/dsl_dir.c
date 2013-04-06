@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1193,7 +1193,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 comment|/* This would be a good place to reserve some namespace... */
@@ -1230,7 +1233,10 @@ block|{
 comment|/* two separators in a row */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1279,7 +1285,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1293,7 +1302,10 @@ name|MAXNAMELEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -1332,7 +1344,10 @@ name|MAXNAMELEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -1385,7 +1400,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1398,7 +1416,10 @@ name|MAXNAMELEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -1560,7 +1581,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ASSERT
@@ -1820,7 +1844,10 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -3335,7 +3362,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|retval
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3658,7 +3688,10 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 expr_stmt|;
 block|}
 name|dsl_pool_memory_pressure
@@ -4817,7 +4850,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 expr_stmt|;
 block|}
 name|mutex_exit
@@ -5330,7 +5366,10 @@ operator|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 expr_stmt|;
 block|}
 name|dsl_dataset_rele
@@ -5861,7 +5900,10 @@ name|MAXNAMELEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 return|return
@@ -6031,7 +6073,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6059,7 +6104,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6176,7 +6224,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6785,7 +6836,10 @@ name|space
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 return|return

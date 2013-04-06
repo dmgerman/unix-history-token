@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -6862,7 +6862,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Start at the rotor and loop through all mgs until we find something. 	 * Note that there's no locking on mc_rotor or mc_aliquot because 	 * nothing actually breaks if we miss a few updates -- we just won't 	 * allocate quite as evenly.  It all balances out over time. 	 * 	 * If we are doing ditto or log blocks, try to spread them across 	 * consecutive vdevs.  If we're forced to reuse a vdev before we've 	 * allocated all of our ditto blocks, then try and spread them out on 	 * that vdev as much as possible.  If it turns out to not be possible, 	 * gradually lower our standards until anything becomes acceptable. 	 * Also, allocating on consecutive vdevs (as opposed to random vdevs) 	 * gives us hope of containing our fault domains to something we're 	 * able to reason about.  Otherwise, any two top-level vdev failures 	 * will guarantee the loss of data.  With consecutive allocation, 	 * only two adjacent top-level vdev failures will result in data loss. 	 * 	 * If we are doing gang blocks (hintdva is non-NULL), try to keep 	 * ourselves on the same vdev as our gang block header.  That 	 * way, we can hope for locality in vdev_cache, plus it makes our 	 * fault domains something tractable. 	 */
@@ -7477,7 +7480,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7832,7 +7838,10 @@ name|vdev_ms_count
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 name|msp
@@ -7921,7 +7930,10 @@ argument_list|)
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8131,7 +8143,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 block|}
