@@ -213,6 +213,12 @@ name|_JB_SIGMASK
 value|25
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLER__
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -269,6 +275,11 @@ literal|1
 index|]
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
