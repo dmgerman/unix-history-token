@@ -7836,7 +7836,7 @@ name|n_namesz
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Elf_Size
+name|Elf32_Size
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7875,7 +7875,7 @@ name|n_descsz
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Elf_Size
+name|Elf32_Size
 argument_list|)
 argument_list|)
 expr_stmt|;
