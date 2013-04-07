@@ -323,6 +323,8 @@ name|VBUS_BASE
 argument_list|,
 name|VBUS_MASK
 argument_list|)
+operator|!=
+literal|0
 expr_stmt|;
 name|at91dci_vbus_interrupt
 argument_list|(
