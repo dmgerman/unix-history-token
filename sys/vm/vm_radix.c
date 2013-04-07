@@ -198,14 +198,6 @@ begin_struct
 struct|struct
 name|vm_radix_node
 block|{
-name|void
-modifier|*
-name|rn_child
-index|[
-name|VM_RADIX_COUNT
-index|]
-decl_stmt|;
-comment|/* Child nodes. */
 name|vm_pindex_t
 name|rn_owner
 decl_stmt|;
@@ -218,6 +210,14 @@ name|uint16_t
 name|rn_clev
 decl_stmt|;
 comment|/* Current level. */
+name|void
+modifier|*
+name|rn_child
+index|[
+name|VM_RADIX_COUNT
+index|]
+decl_stmt|;
+comment|/* Child nodes. */
 block|}
 struct|;
 end_struct
@@ -457,14 +457,9 @@ expr|struct
 name|vm_radix_node
 operator|*
 operator|)
-operator|(
 name|rtree
 operator|->
 name|rt_root
-operator|&
-operator|~
-name|VM_RADIX_FLAGS
-operator|)
 operator|)
 return|;
 block|}
