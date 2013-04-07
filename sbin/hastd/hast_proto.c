@@ -410,6 +410,14 @@ name|hdr
 operator|.
 name|version
 operator|=
+name|res
+operator|!=
+name|NULL
+condition|?
+name|res
+operator|->
+name|hr_version
+else|:
 name|HAST_PROTO_VERSION
 expr_stmt|;
 name|hdr
@@ -588,7 +596,7 @@ condition|(
 name|hdr
 operator|.
 name|version
-operator|!=
+operator|>
 name|HAST_PROTO_VERSION
 condition|)
 block|{
