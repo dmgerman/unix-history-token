@@ -430,7 +430,7 @@ name|CAM_SIM_LOCK
 parameter_list|(
 name|sim
 parameter_list|)
-value|mtx_lock((sim)->mtx);
+value|mtx_lock((sim)->mtx)
 end_define
 
 begin_define
@@ -440,7 +440,7 @@ name|CAM_SIM_UNLOCK
 parameter_list|(
 name|sim
 parameter_list|)
-value|mtx_unlock((sim)->mtx);
+value|mtx_unlock((sim)->mtx)
 end_define
 
 begin_function
