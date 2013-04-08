@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMAsmPrinter.h - Print machine code to an ARM .s file --*- C++ -*-===//
+comment|//===-- ARMAsmPrinter.h - ARM implementation of AsmPrinter ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -21,22 +21,6 @@ end_comment
 
 begin_comment
 comment|// License. See LICENSE.TXT for details.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// ARM Assembly printer class.
 end_comment
 
 begin_comment
@@ -196,7 +180,7 @@ specifier|const
 name|LLVM_OVERRIDE
 block|{
 return|return
-literal|"ARM Assembly Printer"
+literal|"ARM Assembly / Object Emitter"
 return|;
 block|}
 name|void
@@ -476,13 +460,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|MCSymbol
-modifier|*
+operator|*
 name|GetARMSJLJEHLabel
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|MCSymbol
 modifier|*
 name|GetARMGVSymbol

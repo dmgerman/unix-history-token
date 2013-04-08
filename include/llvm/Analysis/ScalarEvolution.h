@@ -90,37 +90,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Instructions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Operator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -138,13 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -1057,6 +1057,17 @@ name|SCEV
 operator|*
 name|getMax
 argument_list|(
+argument|ScalarEvolution *SE
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true if any backedge taken count expressions refer to the given
+comment|/// subexpression.
+name|bool
+name|hasOperand
+argument_list|(
+argument|const SCEV *S
+argument_list|,
 argument|ScalarEvolution *SE
 argument_list|)
 specifier|const
@@ -2854,7 +2865,7 @@ argument_list|)
 block|;
 comment|/// SimplifyICmpOperands - Simplify LHS and RHS in a comparison with
 comment|/// predicate Pred. Return true iff any changes were made. If the
-comment|/// operands are provably equal or inequal, LHS and RHS are set to
+comment|/// operands are provably equal or unequal, LHS and RHS are set to
 comment|/// the same value and Pred is set to either ICMP_EQ or ICMP_NE.
 comment|///
 name|bool

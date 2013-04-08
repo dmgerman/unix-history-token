@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SparcInstrInfo.h"
+file|"SparcFrameLowering.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SparcFrameLowering.h"
+file|"SparcInstrInfo.h"
 end_include
 
 begin_include
@@ -92,13 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -110,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetTransformImpl.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -142,12 +136,6 @@ name|TSInfo
 block|;
 name|SparcFrameLowering
 name|FrameLowering
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -251,32 +239,6 @@ block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
 return|;
 block|}
 name|virtual

@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineFunction
+decl_stmt|;
+name|class
 name|MachineInstr
 decl_stmt|;
 name|class
@@ -187,6 +190,17 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// \brief True if the subtarget should run MachineScheduler after aggressive
+comment|/// coalescing.
+comment|///
+comment|/// This currently replaces the SelectionDAG scheduler with the "source" order
+comment|/// scheduler. It does not yet disable the postRA scheduler.
+name|virtual
+name|bool
+name|enableMachineScheduler
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// enablePostRAScheduler - If the target can benefit from post-regalloc
 comment|// scheduling and the specified optimization level meets the requirement
 comment|// return true to enable post-register-allocation scheduling. In
@@ -203,20 +217,37 @@ argument_list|,
 argument|RegClassVector& CriticalPathRCs
 argument_list|)
 specifier|const
-expr_stmt|;
+decl_stmt|;
 comment|// adjustSchedDependency - Perform target specific adjustments to
 comment|// the latency of a schedule dependency.
 name|virtual
 name|void
 name|adjustSchedDependency
 argument_list|(
-argument|SUnit *def
+name|SUnit
+operator|*
+name|def
 argument_list|,
-argument|SUnit *use
+name|SUnit
+operator|*
+name|use
 argument_list|,
-argument|SDep& dep
+name|SDep
+operator|&
+name|dep
 argument_list|)
+decl|const
+block|{ }
+comment|/// \brief Reset the features for the subtarget.
+name|virtual
+name|void
+name|resetSubtargetFeatures
+parameter_list|(
 specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+parameter_list|)
 block|{ }
 block|}
 end_decl_stmt

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Bitcode/Archive.h"
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/TimeValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include

@@ -326,6 +326,36 @@ return|return
 name|PassID
 return|;
 block|}
+comment|/// doInitialization - Virtual method overridden by subclasses to do
+comment|/// any necessary initialization before any pass is run.
+comment|///
+name|virtual
+name|bool
+name|doInitialization
+parameter_list|(
+name|Module
+modifier|&
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// doFinalization - Virtual method overriden by subclasses to do any
+comment|/// necessary clean up after all passes have run.
+comment|///
+name|virtual
+name|bool
+name|doFinalization
+parameter_list|(
+name|Module
+modifier|&
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// print - Print out the internal state of the pass.  This is called by
 comment|/// Analyze to print out the contents of an analysis.  Otherwise it is not
 comment|/// necessary to implement this method.  Beware that the module pointer MAY be
@@ -813,17 +843,6 @@ argument|const std::string&Banner
 argument_list|)
 specifier|const
 block|;
-comment|/// doInitialization - Virtual method overridden by subclasses to do
-comment|/// any necessary per-module initialization.
-comment|///
-name|virtual
-name|bool
-name|doInitialization
-argument_list|(
-name|Module
-operator|&
-argument_list|)
-block|;
 comment|/// runOnFunction - Virtual method overriden by subclasses to do the
 comment|/// per-function processing of the pass.
 comment|///
@@ -837,17 +856,6 @@ name|F
 argument_list|)
 operator|=
 literal|0
-block|;
-comment|/// doFinalization - Virtual method overriden by subclasses to do any post
-comment|/// processing needed after all passes have run.
-comment|///
-name|virtual
-name|bool
-name|doFinalization
-argument_list|(
-name|Module
-operator|&
-argument_list|)
 block|;
 name|virtual
 name|void
@@ -910,16 +918,19 @@ argument|const std::string&Banner
 argument_list|)
 specifier|const
 block|;
-comment|/// doInitialization - Virtual method overridden by subclasses to do
-comment|/// any necessary per-module initialization.
-comment|///
-name|virtual
-name|bool
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
 name|doInitialization
-argument_list|(
-name|Module
-operator|&
-argument_list|)
+block|;
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
+name|doFinalization
 block|;
 comment|/// doInitialization - Virtual method overridden by BasicBlockPass subclasses
 comment|/// to do any necessary per-function initialization.
@@ -954,17 +965,6 @@ name|bool
 name|doFinalization
 argument_list|(
 name|Function
-operator|&
-argument_list|)
-block|;
-comment|/// doFinalization - Virtual method overriden by subclasses to do any post
-comment|/// processing needed after all passes have run.
-comment|///
-name|virtual
-name|bool
-name|doFinalization
-argument_list|(
-name|Module
 operator|&
 argument_list|)
 block|;

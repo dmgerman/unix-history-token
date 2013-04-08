@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ScheduleDAG.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
+file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
 begin_decl_stmt
@@ -668,7 +668,7 @@ decl_stmt|;
 name|unsigned
 name|NodeNumDefs
 decl_stmt|;
-name|EVT
+name|MVT
 name|ValueType
 decl_stmt|;
 name|public
@@ -697,7 +697,7 @@ operator|!=
 name|NULL
 return|;
 block|}
-name|EVT
+name|MVT
 name|GetValue
 argument_list|()
 specifier|const

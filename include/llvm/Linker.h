@@ -31,22 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file defines the interface to the module/file/archive linker.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -81,13 +65,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|sys
-block|{
-name|class
-name|Path
-decl_stmt|;
-block|}
 name|class
 name|Module
 decl_stmt|;
@@ -103,12 +80,11 @@ comment|/// into it. The composite Module can be retrieved via the getModule() m
 comment|/// In this case the Linker still retains ownership of the Module. If the
 comment|/// releaseModule() method is used, the ownership of the Module is transferred
 comment|/// to the caller and the Linker object is only suitable for destruction.
-comment|/// The Linker can link Modules from memory, bitcode files, or bitcode
-comment|/// archives.  It retains a set of search paths in which to find any libraries
-comment|/// presented to it. By default, the linker will generate error and warning
-comment|/// messages to stderr but this capability can be turned off with the
-comment|/// QuietWarnings and QuietErrors flags. It can also be instructed to verbosely
-comment|/// print out the linking actions it is taking with the Verbose flag.
+comment|/// The Linker can link Modules from memory. By default, the linker
+comment|/// will generate error and warning messages to stderr but this capability can
+comment|/// be turned off with the QuietWarnings and QuietErrors flags. It can also be
+comment|/// instructed to verbosely print out the linking actions it is taking with
+comment|/// the Verbose flag.
 comment|/// @brief The LLVM Linker.
 name|class
 name|Linker
@@ -117,30 +93,6 @@ comment|/// @name Types
 comment|/// @{
 name|public
 label|:
-comment|/// This type is used to pass the linkage items (libraries and files) to
-comment|/// the LinkItems function. It is composed of string/bool pairs. The string
-comment|/// provides the name of the file or library (as with the -l option). The
-comment|/// bool should be true for libraries and false for files, signifying
-comment|/// "isLibrary".
-comment|/// @brief A list of linkage items
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|bool
-operator|>
-expr|>
-name|ItemList
-expr_stmt|;
 comment|/// This enumeration is used to control various optional features of the
 comment|/// linker.
 enum|enum
@@ -246,35 +198,13 @@ comment|/// done. Ownership of the composite Module is transferred to the caller
 comment|/// must arrange for its destruct. After this method is called, the Linker
 comment|/// terminates the linking session for the returned Module. It will no
 comment|/// longer utilize the returned Module but instead resets itself for
-comment|/// subsequent linking as if the constructor had been called. The Linker's
-comment|/// LibPaths and flags to be reset, and memory will be released.
+comment|/// subsequent linking as if the constructor had been called.
 comment|/// @brief Release the linked/composite module.
 name|Module
 modifier|*
 name|releaseModule
 parameter_list|()
 function_decl|;
-comment|/// This method gets the list of libraries that form the path that the
-comment|/// Linker will search when it is presented with a library name.
-comment|/// @brief Get the Linkers library path
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|sys
-operator|::
-name|Path
-operator|>
-operator|&
-name|getLibPaths
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LibPaths
-return|;
-block|}
 comment|/// This method returns an error string suitable for printing to the user.
 comment|/// The return value will be empty unless an error occurred in one of the
 comment|/// LinkIn* methods. In those cases, the LinkIn* methods will have returned
@@ -301,225 +231,8 @@ comment|/// @name Mutators
 comment|/// @{
 name|public
 label|:
-comment|/// Add a path to the list of paths that the Linker will search. The Linker
-comment|/// accumulates the set of libraries added
-comment|/// library paths for the target platform. The standard libraries will
-comment|/// always be searched last. The added libraries will be searched in the
-comment|/// order added.
-comment|/// @brief Add a path.
-name|void
-name|addPath
-argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|path
-argument_list|)
-decl_stmt|;
-comment|/// Add a set of paths to the list of paths that the linker will search. The
-comment|/// Linker accumulates the set of libraries added. The \p paths will be
-comment|/// added to the end of the Linker's list. Order will be retained.
-comment|/// @brief Add a set of paths.
-name|void
-name|addPaths
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|paths
-argument_list|)
-decl_stmt|;
-comment|/// This method augments the Linker's list of library paths with the system
-comment|/// paths of the host operating system, include LLVM_LIB_SEARCH_PATH.
-comment|/// @brief Add the system paths.
-name|void
-name|addSystemPaths
-parameter_list|()
-function_decl|;
-comment|/// Control optional linker behavior by setting a group of flags. The flags
-comment|/// are defined in the ControlFlags enumeration.
-comment|/// @see ControlFlags
-comment|/// @brief Set control flags.
-name|void
-name|setFlags
-parameter_list|(
-name|unsigned
-name|flags
-parameter_list|)
-block|{
-name|Flags
-operator|=
-name|flags
-expr_stmt|;
-block|}
-comment|/// This method is the main interface to the linker. It can be used to
-comment|/// link a set of linkage items into a module. A linkage item is either a
-comment|/// file name with fully qualified path, or a library for which the Linker's
-comment|/// LibraryPath will be utilized to locate the library. The bool value in
-comment|/// the LinkItemKind should be set to true for libraries.  This function
-comment|/// allows linking to preserve the order of specification associated with
-comment|/// the command line, or for other purposes. Each item will be linked in
-comment|/// turn as it occurs in \p Items.
-comment|/// @returns true if an error occurred, false otherwise
-comment|/// @see LinkItemKind
-comment|/// @see getLastError
-name|bool
-name|LinkInItems
-parameter_list|(
-specifier|const
-name|ItemList
-modifier|&
-name|Items
-parameter_list|,
-comment|///< Set of libraries/files to link in
-name|ItemList
-modifier|&
-name|NativeItems
-comment|///< Output list of native files/libs
-parameter_list|)
-function_decl|;
-comment|/// This function links the bitcode \p Files into the composite module.
-comment|/// Note that this does not do any linking of unresolved symbols. The \p
-comment|/// Files are all completely linked into \p HeadModule regardless of
-comment|/// unresolved symbols. This function just loads each bitcode file and
-comment|/// calls LinkInModule on them.
-comment|/// @returns true if an error occurs, false otherwise
-comment|/// @see getLastError
-comment|/// @brief Link in multiple files.
-name|bool
-name|LinkInFiles
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|sys
-operator|::
-name|Path
-operator|>
-operator|&
-name|Files
-comment|///< Files to link in
-argument_list|)
-decl_stmt|;
-comment|/// This function links a single bitcode file, \p File, into the composite
-comment|/// module. Note that this does not attempt to resolve symbols. This method
-comment|/// just loads the bitcode file and calls LinkInModule on it. If an error
-comment|/// occurs, the Linker's error string is set.
-comment|/// @returns true if an error occurs, false otherwise
-comment|/// @see getLastError
-comment|/// @brief Link in a single file.
-name|bool
-name|LinkInFile
-argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|File
-argument_list|,
-comment|///< File to link in.
-name|bool
-operator|&
-name|is_native
-comment|///< Indicates if the file is native object file
-argument_list|)
-decl_stmt|;
-comment|/// This function provides a way to selectively link in a set of modules,
-comment|/// found in libraries, based on the unresolved symbols in the composite
-comment|/// module. Each item in \p Libraries should be the base name of a library,
-comment|/// as if given with the -l option of a linker tool.  The Linker's LibPaths
-comment|/// are searched for the \p Libraries and any found will be linked in with
-comment|/// LinkInArchive.  If an error occurs, the Linker's error string is set.
-comment|/// @see LinkInArchive
-comment|/// @see getLastError
-comment|/// @returns true if an error occurs, false otherwise
-comment|/// @brief Link libraries into the module
-name|bool
-name|LinkInLibraries
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Libraries
-comment|///< Libraries to link in
-argument_list|)
-decl_stmt|;
-comment|/// This function provides a way to selectively link in a set of modules,
-comment|/// found in one library, based on the unresolved symbols in the composite
-comment|/// module.The \p Library should be the base name of a library, as if given
-comment|/// with the -l option of a linker tool. The Linker's LibPaths are searched
-comment|/// for the \p Library and if found, it will be linked in with via the
-comment|/// LinkInArchive method. If an error occurs, the Linker's error string is
-comment|/// set.
-comment|/// @see LinkInArchive
-comment|/// @see getLastError
-comment|/// @returns true if an error occurs, false otherwise
-comment|/// @brief Link one library into the module
-name|bool
-name|LinkInLibrary
-parameter_list|(
-name|StringRef
-name|Library
-parameter_list|,
-comment|///< The library to link in
-name|bool
-modifier|&
-name|is_native
-comment|///< Indicates if lib a native library
-parameter_list|)
-function_decl|;
-comment|/// This function links one bitcode archive, \p Filename, into the module.
-comment|/// The archive is searched to resolve outstanding symbols. Any modules in
-comment|/// the archive that resolve outstanding symbols will be linked in. The
-comment|/// library is searched repeatedly until no more modules that resolve
-comment|/// symbols can be found. If an error occurs, the error string is  set.
-comment|/// To speed up this function, ensure the archive has been processed
-comment|/// llvm-ranlib or the S option was given to llvm-ar when the archive was
-comment|/// created. These tools add a symbol table to the archive which makes the
-comment|/// search for undefined symbols much faster.
-comment|/// @see getLastError
-comment|/// @returns true if an error occurs, otherwise false.
-comment|/// @brief Link in one archive.
-name|bool
-name|LinkInArchive
-argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|Filename
-argument_list|,
-comment|///< Filename of the archive to link
-name|bool
-operator|&
-name|is_native
-comment|///<  Indicates if archive is a native archive
-argument_list|)
-decl_stmt|;
 comment|/// This method links the \p Src module into the Linker's Composite module
-comment|/// by calling LinkModules.  All the other LinkIn* methods eventually
-comment|/// result in calling this method to link a Module into the Linker's
-comment|/// composite.
+comment|/// by calling LinkModules.
 comment|/// @see LinkModules
 comment|/// @returns True if an error occurs, false otherwise.
 comment|/// @brief Link in a module.
@@ -589,42 +302,11 @@ operator|*
 name|ErrorMsg
 argument_list|)
 decl_stmt|;
-comment|/// This function looks through the Linker's LibPaths to find a library with
-comment|/// the name \p Filename. If the library cannot be found, the returned path
-comment|/// will be empty (i.e. sys::Path::isEmpty() will return true).
-comment|/// @returns A sys::Path to the found library
-comment|/// @brief Find a library from its short name.
-name|sys
-operator|::
-name|Path
-name|FindLib
-argument_list|(
-argument|StringRef Filename
-argument_list|)
-expr_stmt|;
 comment|/// @}
 comment|/// @name Implementation
 comment|/// @{
 name|private
 label|:
-comment|/// Read in and parse the bitcode file named by FN and return the
-comment|/// Module it contains (wrapped in an auto_ptr), or 0 if an error occurs.
-name|std
-operator|::
-name|auto_ptr
-operator|<
-name|Module
-operator|>
-name|LoadObject
-argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|FN
-argument_list|)
-expr_stmt|;
 name|bool
 name|warning
 parameter_list|(
@@ -661,17 +343,6 @@ modifier|*
 name|Composite
 decl_stmt|;
 comment|///< The composite module linked together
-name|std
-operator|::
-name|vector
-operator|<
-name|sys
-operator|::
-name|Path
-operator|>
-name|LibPaths
-expr_stmt|;
-comment|///< The library search paths
 name|unsigned
 name|Flags
 decl_stmt|;

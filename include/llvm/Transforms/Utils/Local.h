@@ -66,25 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IRBuilder.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Operator.h"
+file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Operator.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/GetElementPtrTypeIterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DataLayout.h"
 end_include
 
 begin_decl_stmt
@@ -358,16 +358,14 @@ modifier|*
 name|BB
 parameter_list|,
 specifier|const
+name|TargetTransformInfo
+modifier|&
+name|TTI
+parameter_list|,
+specifier|const
 name|DataLayout
 modifier|*
 name|TD
-init|=
-literal|0
-parameter_list|,
-specifier|const
-name|TargetTransformInfo
-modifier|*
-name|TTI
 init|=
 literal|0
 parameter_list|)
@@ -930,6 +928,35 @@ parameter_list|(
 name|Value
 modifier|*
 name|V
+parameter_list|)
+function_decl|;
+comment|/// replaceDbgDeclareForAlloca - Replaces llvm.dbg.declare instruction when
+comment|/// alloca is replaced with a new value.
+name|bool
+name|replaceDbgDeclareForAlloca
+parameter_list|(
+name|AllocaInst
+modifier|*
+name|AI
+parameter_list|,
+name|Value
+modifier|*
+name|NewAllocaAddress
+parameter_list|,
+name|DIBuilder
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
+comment|/// \brief Remove all blocks that can not be reached from the function's entry.
+comment|///
+comment|/// Returns true if any basic block was removed.
+name|bool
+name|removeUnreachableBlocks
+parameter_list|(
+name|Function
+modifier|&
+name|F
 parameter_list|)
 function_decl|;
 block|}

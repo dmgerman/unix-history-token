@@ -208,11 +208,6 @@ argument|PointerTy Ptr
 argument_list|,
 argument|IntType Int
 argument_list|)
-operator|:
-name|Value
-argument_list|(
-literal|0
-argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -225,14 +220,22 @@ operator|&&
 literal|"PointerIntPair formed with integer size too large for pointer"
 argument_list|)
 block|;
-name|setPointer
+name|setPointerAndInt
 argument_list|(
 name|Ptr
-argument_list|)
-block|;
-name|setInt
-argument_list|(
+argument_list|,
 name|Int
+argument_list|)
+block|;   }
+name|explicit
+name|PointerIntPair
+argument_list|(
+argument|PointerTy Ptr
+argument_list|)
+block|{
+name|initWithPointer
+argument_list|(
+name|Ptr
 argument_list|)
 block|;   }
 name|PointerTy
@@ -374,6 +377,130 @@ name|IntShift
 block|;
 comment|// Set new integer.
 block|}
+name|void
+name|initWithPointer
+argument_list|(
+argument|PointerTy Ptr
+argument_list|)
+block|{
+name|intptr_t
+name|PtrVal
+operator|=
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|PtrTraits
+operator|::
+name|getAsVoidPointer
+argument_list|(
+name|Ptr
+argument_list|)
+operator|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|PtrVal
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|PtrTraits
+operator|::
+name|NumLowBitsAvailable
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Pointer is not sufficiently aligned"
+argument_list|)
+block|;
+name|Value
+operator|=
+name|PtrVal
+block|;   }
+name|void
+name|setPointerAndInt
+argument_list|(
+argument|PointerTy Ptr
+argument_list|,
+argument|IntType Int
+argument_list|)
+block|{
+name|intptr_t
+name|PtrVal
+operator|=
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|PtrTraits
+operator|::
+name|getAsVoidPointer
+argument_list|(
+name|Ptr
+argument_list|)
+operator|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|PtrVal
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|PtrTraits
+operator|::
+name|NumLowBitsAvailable
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Pointer is not sufficiently aligned"
+argument_list|)
+block|;
+name|intptr_t
+name|IntVal
+operator|=
+name|Int
+block|;
+name|assert
+argument_list|(
+name|IntVal
+operator|<
+operator|(
+literal|1
+operator|<<
+name|IntBits
+operator|)
+operator|&&
+literal|"Integer too large for field"
+argument_list|)
+block|;
+name|Value
+operator|=
+name|PtrVal
+operator||
+operator|(
+name|IntVal
+operator|<<
+name|IntShift
+operator|)
+block|;   }
 name|PointerTy
 specifier|const
 operator|*

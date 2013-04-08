@@ -74,19 +74,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86DisassemblerTables.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CodeGenTarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/TableGen/Record.h"
+file|"X86DisassemblerTables.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/TableGen/Record.h"
 end_include
 
 begin_decl_stmt

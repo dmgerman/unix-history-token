@@ -98,25 +98,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PATH_NUMBERING_H
+name|LLVM_ANALYSIS_PATHNUMBERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PATH_NUMBERING_H
+name|LLVM_ANALYSIS_PATHNUMBERING_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
+file|"llvm/Analysis/ProfileInfoTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Instructions.h"
+file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
@@ -129,12 +135,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CFG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/ProfileInfoTypes.h"
 end_include
 
 begin_include

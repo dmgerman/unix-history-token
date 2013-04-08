@@ -34,13 +34,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/IRBuilder.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -299,7 +299,7 @@ init|=
 literal|1
 operator|<<
 literal|31
-comment|/* FIXME: This attribute is currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32     */
+comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<33     */
 block|}
 name|LLVMAttribute
 typedef|;
@@ -804,6 +804,11 @@ parameter_list|(
 name|LLVMPassRegistryRef
 name|R
 parameter_list|)
+function_decl|;
+comment|/** Deallocate and destroy all ManagedStatic variables.     @see llvm::llvm_shutdown     @see ManagedStatic */
+name|void
+name|LLVMShutdown
+parameter_list|()
 function_decl|;
 comment|/*===-- Error handling ----------------------------------------------------===*/
 name|void
@@ -5344,6 +5349,43 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
+name|LLVMMemoryBufferRef
+name|LLVMCreateMemoryBufferWithMemoryRange
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|InputData
+parameter_list|,
+name|size_t
+name|InputDataLength
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BufferName
+parameter_list|,
+name|LLVMBool
+name|RequiresNullTerminator
+parameter_list|)
+function_decl|;
+name|LLVMMemoryBufferRef
+name|LLVMCreateMemoryBufferWithMemoryRangeCopy
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|InputData
+parameter_list|,
+name|size_t
+name|InputDataLength
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BufferName
+parameter_list|)
+function_decl|;
 name|void
 name|LLVMDisposeMemoryBuffer
 parameter_list|(
@@ -5430,6 +5472,23 @@ parameter_list|(
 name|LLVMPassManagerRef
 name|PM
 parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * @defgroup LLVMCCoreThreading Threading  *  * Handle the structures needed to make LLVM safe for multithreading.  *  * @{  */
+comment|/** Allocate and initialize structures needed to make LLVM safe for     multithreading. The return value indicates whether multithreaded     initialization succeeded. Must be executed in isolation from all     other LLVM api calls.     @see llvm::llvm_start_multithreaded */
+name|LLVMBool
+name|LLVMStartMultithreaded
+parameter_list|()
+function_decl|;
+comment|/** Deallocate structures necessary to make LLVM safe for multithreading.     Must be executed in isolation from all other LLVM api calls.     @see llvm::llvm_stop_multithreaded */
+name|void
+name|LLVMStopMultithreaded
+parameter_list|()
+function_decl|;
+comment|/** Check whether LLVM is executing in thread-safe mode or not.     @see llvm::llvm_is_multithreaded */
+name|LLVMBool
+name|LLVMIsMultithreaded
+parameter_list|()
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * @}  */

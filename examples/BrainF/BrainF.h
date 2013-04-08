@@ -66,19 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IRBuilder.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/LLVMContext.h"
+file|"llvm/IR/LLVMContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_decl_stmt

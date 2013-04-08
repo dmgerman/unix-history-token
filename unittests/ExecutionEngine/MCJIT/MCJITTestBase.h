@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -94,25 +94,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"llvm/ExecutionEngine/SectionMemoryManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IRBuilder.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/LLVMContext.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm/IR/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/TypeBuilder.h"
 end_include
 
 begin_include
@@ -131,18 +143,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/TargetSelect.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/TypeBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"SectionMemoryManager.h"
 end_include
 
 begin_comment
@@ -215,7 +215,7 @@ argument_list|)
 operator|,
 name|HostTriple
 argument_list|(
-argument|LLVM_HOSTTRIPLE
+argument|sys::getProcessTriple()
 argument_list|)
 block|{
 name|InitializeNativeTarget

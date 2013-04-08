@@ -287,7 +287,7 @@ block|{
 endif|#
 directive|endif
 comment|/* !defined(__cplusplus) */
-comment|/**  * Create a disassembler for the TripleName.  Symbolic disassembly is supported  * by passing a block of information in the DisInfo parameter and specifying the  * TagType and callback functions as described above.  These can all be passed  * as NULL.  If successful, this returns a disassembler context.  If not, it  * returns NULL.  */
+comment|/**  * Create a disassembler for the TripleName.  Symbolic disassembly is supported  * by passing a block of information in the DisInfo parameter and specifying the  * TagType and callback functions as described above.  These can all be passed  * as NULL.  If successful, this returns a disassembler context.  If not, it  * returns NULL. This function is equivalent to calling LLVMCreateDisasmCPU()  * with an empty CPU name.  */
 name|LLVMDisasmContextRef
 name|LLVMCreateDisasm
 parameter_list|(
@@ -295,6 +295,34 @@ specifier|const
 name|char
 modifier|*
 name|TripleName
+parameter_list|,
+name|void
+modifier|*
+name|DisInfo
+parameter_list|,
+name|int
+name|TagType
+parameter_list|,
+name|LLVMOpInfoCallback
+name|GetOpInfo
+parameter_list|,
+name|LLVMSymbolLookupCallback
+name|SymbolLookUp
+parameter_list|)
+function_decl|;
+comment|/**  * Create a disassembler for the TripleName and a specific CPU.  Symbolic  * disassembly is supported by passing a block of information in the DisInfo  * parameter and specifying the TagType and callback functions as described  * above.  These can all be passed * as NULL.  If successful, this returns a  * disassembler context.  If not, it returns NULL.  */
+name|LLVMDisasmContextRef
+name|LLVMCreateDisasmCPU
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Triple
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CPU
 parameter_list|,
 name|void
 modifier|*
@@ -326,6 +354,16 @@ define|#
 directive|define
 name|LLVMDisassembler_Option_UseMarkup
 value|1
+comment|/* The option to print immediates as hex. */
+define|#
+directive|define
+name|LLVMDisassembler_Option_PrintImmHex
+value|2
+comment|/* The option use the other assembler printer variant */
+define|#
+directive|define
+name|LLVMDisassembler_Option_AsmPrinterVariant
+value|4
 comment|/**  * Dispose of a disassembler context.  */
 name|void
 name|LLVMDisasmDispose

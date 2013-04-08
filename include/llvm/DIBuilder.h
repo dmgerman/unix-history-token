@@ -54,20 +54,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_DIBUILDER_H
+name|LLVM_DIBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_DIBUILDER_H
+name|LLVM_DIBUILDER_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
 
 begin_include
 include|#
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -108,6 +108,15 @@ name|MDNode
 decl_stmt|;
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|DIBasicType
+decl_stmt|;
+name|class
+name|DICompositeType
+decl_stmt|;
+name|class
+name|DIDerivedType
 decl_stmt|;
 name|class
 name|DIDescriptor
@@ -298,6 +307,8 @@ comment|///                 directly embedded in debug info output which may be 
 comment|///                 by a tool analyzing generated debugging information.
 comment|/// @param RV       This indicates runtime version for languages like
 comment|///                 Objective-C.
+comment|/// @param SplitName The name of the file that we'll split debug info out
+comment|///                  into.
 name|void
 name|createCompileUnit
 parameter_list|(
@@ -321,6 +332,12 @@ name|Flags
 parameter_list|,
 name|unsigned
 name|RV
+parameter_list|,
+name|StringRef
+name|SplitName
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// createFile - Create a file descriptor to hold debugging information
@@ -360,7 +377,7 @@ comment|/// @param Name        Type name.
 comment|/// @param SizeInBits  Size of the type.
 comment|/// @param AlignInBits Type alignment.
 comment|/// @param Encoding    DWARF encoding code, e.g. dwarf::DW_ATE_float.
-name|DIType
+name|DIBasicType
 name|createBasicType
 parameter_list|(
 name|StringRef
@@ -380,7 +397,7 @@ comment|/// createQualifiedType - Create debugging information entry for a quali
 comment|/// type, e.g. 'const int'.
 comment|/// @param Tag         Tag identifing type, e.g. dwarf::TAG_volatile_type
 comment|/// @param FromTy      Base Type.
-name|DIType
+name|DIDerivedType
 name|createQualifiedType
 parameter_list|(
 name|unsigned
@@ -395,7 +412,7 @@ comment|/// @param PointeeTy   Type pointed by this pointer.
 comment|/// @param SizeInBits  Size.
 comment|/// @param AlignInBits Alignment. (optional)
 comment|/// @param Name        Pointer type name. (optional)
-name|DIType
+name|DIDerivedType
 name|createPointerType
 parameter_list|(
 name|DIType
@@ -416,9 +433,22 @@ name|StringRef
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|/// \brief Create debugging information entry for a pointer to member.
+comment|/// @param PointeeTy Type pointed to by this pointer.
+comment|/// @param Class Type for which this pointer points to members of.
+name|DIDerivedType
+name|createMemberPointerType
+parameter_list|(
+name|DIType
+name|PointeeTy
+parameter_list|,
+name|DIType
+name|Class
+parameter_list|)
+function_decl|;
 comment|/// createReferenceType - Create debugging information entry for a c++
 comment|/// style reference or rvalue reference type.
-name|DIType
+name|DIDerivedType
 name|createReferenceType
 parameter_list|(
 name|unsigned
@@ -434,7 +464,7 @@ comment|/// @param Name        Typedef name.
 comment|/// @param File        File where this type is defined.
 comment|/// @param LineNo      Line number.
 comment|/// @param Context     The surrounding context for the typedef.
-name|DIType
+name|DIDerivedType
 name|createTypedef
 parameter_list|(
 name|DIType
@@ -471,7 +501,7 @@ comment|/// @param BaseTy       Base type. Ty is inherits from base.
 comment|/// @param BaseOffset   Base offset.
 comment|/// @param Flags        Flags to describe inheritance attribute,
 comment|///                     e.g. private
-name|DIType
+name|DIDerivedType
 name|createInheritance
 parameter_list|(
 name|DIType
@@ -497,7 +527,7 @@ comment|/// @param AlignInBits  Member alignment.
 comment|/// @param OffsetInBits Member offset.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Ty           Parent type.
-name|DIType
+name|DIDerivedType
 name|createMemberType
 parameter_list|(
 name|DIDescriptor
@@ -528,6 +558,43 @@ name|DIType
 name|Ty
 parameter_list|)
 function_decl|;
+comment|/// createStaticMemberType - Create debugging information entry for a
+comment|/// C++ static data member.
+comment|/// @param Scope      Member scope.
+comment|/// @param Name       Member name.
+comment|/// @param File       File where this member is declared.
+comment|/// @param LineNo     Line number.
+comment|/// @param Ty         Type of the static member.
+comment|/// @param Flags      Flags to encode member attribute, e.g. private.
+comment|/// @param Val        Const initializer of the member.
+name|DIType
+name|createStaticMemberType
+argument_list|(
+name|DIDescriptor
+name|Scope
+argument_list|,
+name|StringRef
+name|Name
+argument_list|,
+name|DIFile
+name|File
+argument_list|,
+name|unsigned
+name|LineNo
+argument_list|,
+name|DIType
+name|Ty
+argument_list|,
+name|unsigned
+name|Flags
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Val
+argument_list|)
+decl_stmt|;
 comment|/// createObjCIVar - Create debugging information entry for Objective-C
 comment|/// instance variable.
 comment|/// @param Name         Member name.
@@ -688,7 +755,7 @@ comment|///                     for this type. This is used in
 comment|///                     DW_AT_containing_type. See DWARF documentation
 comment|///                     for more info.
 comment|/// @param TemplateParms Template type parameters.
-name|DIType
+name|DICompositeType
 name|createClassType
 parameter_list|(
 name|DIDescriptor
@@ -744,7 +811,7 @@ comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Elements     Struct elements.
 comment|/// @param RunTimeLang  Optional parameter, Objective-C runtime version.
-name|DIType
+name|DICompositeType
 name|createStructType
 parameter_list|(
 name|DIDescriptor
@@ -768,11 +835,20 @@ parameter_list|,
 name|unsigned
 name|Flags
 parameter_list|,
+name|DIType
+name|DerivedFrom
+parameter_list|,
 name|DIArray
 name|Elements
 parameter_list|,
 name|unsigned
 name|RunTimeLang
+init|=
+literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|VTableHolder
 init|=
 literal|0
 parameter_list|)
@@ -787,7 +863,7 @@ comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Elements     Union elements.
 comment|/// @param RunTimeLang  Optional parameter, Objective-C runtime version.
-name|DIType
+name|DICompositeType
 name|createUnionType
 parameter_list|(
 name|DIDescriptor
@@ -903,7 +979,7 @@ comment|/// @param Size         Array size.
 comment|/// @param AlignInBits  Alignment.
 comment|/// @param Ty           Element type.
 comment|/// @param Subscripts   Subscripts.
-name|DIType
+name|DICompositeType
 name|createArrayType
 parameter_list|(
 name|uint64_t
@@ -949,7 +1025,7 @@ comment|/// @param LineNumber   Line number.
 comment|/// @param SizeInBits   Member size.
 comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Elements     Enumeration elements.
-name|DIType
+name|DICompositeType
 name|createEnumerationType
 parameter_list|(
 name|DIDescriptor
@@ -981,7 +1057,7 @@ comment|/// createSubroutineType - Create subroutine type.
 comment|/// @param File           File in which this subroutine is defined.
 comment|/// @param ParameterTypes An array of subroutine parameter types. This
 comment|///                       includes return type at 0th index.
-name|DIType
+name|DICompositeType
 name|createSubroutineType
 parameter_list|(
 name|DIFile
@@ -1006,18 +1082,6 @@ name|createObjectPointerType
 parameter_list|(
 name|DIType
 name|Ty
-parameter_list|)
-function_decl|;
-comment|/// createTemporaryType - Create a temporary forward-declared type.
-name|DIType
-name|createTemporaryType
-parameter_list|()
-function_decl|;
-name|DIType
-name|createTemporaryType
-parameter_list|(
-name|DIFile
-name|F
 parameter_list|)
 function_decl|;
 comment|/// createForwardDecl - Create a temporary forward-declared type.
@@ -1091,7 +1155,7 @@ name|int64_t
 name|Lo
 parameter_list|,
 name|int64_t
-name|Hi
+name|Count
 parameter_list|)
 function_decl|;
 comment|/// createGlobalVariable - Create a new descriptor for the specified global.
@@ -1127,6 +1191,43 @@ operator|*
 name|Val
 argument_list|)
 decl_stmt|;
+comment|/// \brief Create a new descriptor for the specified global.
+comment|/// @param Name        Name of the variable.
+comment|/// @param LinkageName Mangled variable name.
+comment|/// @param File        File where this variable is defined.
+comment|/// @param LineNo      Line number.
+comment|/// @param Ty          Variable Type.
+comment|/// @param isLocalToUnit Boolean flag indicate whether this variable is
+comment|///                      externally visible or not.
+comment|/// @param Val         llvm::Value of the variable.
+name|DIGlobalVariable
+name|createGlobalVariable
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|StringRef
+name|LinkageName
+argument_list|,
+name|DIFile
+name|File
+argument_list|,
+name|unsigned
+name|LineNo
+argument_list|,
+name|DIType
+name|Ty
+argument_list|,
+name|bool
+name|isLocalToUnit
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Val
+argument_list|)
+decl_stmt|;
 comment|/// createStaticVariable - Create a new descriptor for the specified
 comment|/// variable.
 comment|/// @param Context     Variable scope.
@@ -1138,6 +1239,7 @@ comment|/// @param Ty          Variable Type.
 comment|/// @param isLocalToUnit Boolean flag indicate whether this variable is
 comment|///                      externally visible or not.
 comment|/// @param Val         llvm::Value of the variable.
+comment|/// @param Decl        Reference to the corresponding declaration.
 name|DIGlobalVariable
 name|createStaticVariable
 argument_list|(
@@ -1167,6 +1269,12 @@ operator|::
 name|Value
 operator|*
 name|Val
+argument_list|,
+name|MDNode
+operator|*
+name|Decl
+operator|=
+name|NULL
 argument_list|)
 decl_stmt|;
 comment|/// createLocalVariable - Create a new descriptor for the specified

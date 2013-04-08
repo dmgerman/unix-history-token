@@ -75,7 +75,7 @@ name|uint8_t
 name|IsLittleEndian
 decl_stmt|;
 name|uint8_t
-name|PointerSize
+name|AddressSize
 decl_stmt|;
 name|public
 label|:
@@ -90,7 +90,7 @@ argument|StringRef Data
 argument_list|,
 argument|bool IsLittleEndian
 argument_list|,
-argument|uint8_t PointerSize
+argument|uint8_t AddressSize
 argument_list|)
 block|:
 name|Data
@@ -103,12 +103,12 @@ argument_list|(
 name|IsLittleEndian
 argument_list|)
 operator|,
-name|PointerSize
+name|AddressSize
 argument_list|(
-argument|PointerSize
+argument|AddressSize
 argument_list|)
 block|{}
-comment|/// getData - Get the data pointed to by this extractor.
+comment|/// \brief Get the data pointed to by this extractor.
 name|StringRef
 name|getData
 argument_list|()
@@ -118,7 +118,7 @@ return|return
 name|Data
 return|;
 block|}
-comment|/// isLittleEndian - Get the endianess for this extractor.
+comment|/// \brief Get the endianess for this extractor.
 name|bool
 name|isLittleEndian
 argument_list|()
@@ -128,15 +128,28 @@ return|return
 name|IsLittleEndian
 return|;
 block|}
-comment|/// getAddressSize - Get the address size for this extractor.
+comment|/// \brief Get the address size for this extractor.
 name|uint8_t
 name|getAddressSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PointerSize
+name|AddressSize
 return|;
+block|}
+comment|/// \brief Set the address size for this extractor.
+name|void
+name|setAddressSize
+parameter_list|(
+name|uint8_t
+name|Size
+parameter_list|)
+block|{
+name|AddressSize
+operator|=
+name|Size
+expr_stmt|;
 block|}
 comment|/// Extract a C string from \a *offset_ptr.
 comment|///
@@ -245,7 +258,7 @@ comment|/// Extract an pointer from \a *offset_ptr.
 comment|///
 comment|/// Extract a single pointer from the data and update the offset
 comment|/// pointed to by \a offset_ptr. The size of the extracted pointer
-comment|/// comes from the \a m_addr_size member variable and should be
+comment|/// is \a getAddressSize(), so the address size has to be
 comment|/// set correctly prior to extracting any pointer values.
 comment|///
 comment|/// @param[in,out] offset_ptr
@@ -271,7 +284,7 @@ name|getUnsigned
 argument_list|(
 name|offset_ptr
 argument_list|,
-name|PointerSize
+name|AddressSize
 argument_list|)
 return|;
 block|}

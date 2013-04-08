@@ -105,6 +105,12 @@ operator|~
 name|MCCodeEmitter
 argument_list|()
 expr_stmt|;
+comment|/// Lifetime management
+name|virtual
+name|void
+name|reset
+parameter_list|()
+block|{ }
 comment|/// EncodeInstruction - Encode the given \p Inst to bytes on the output
 comment|/// stream \p OS.
 name|virtual

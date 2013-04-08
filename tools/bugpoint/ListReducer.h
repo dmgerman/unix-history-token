@@ -66,19 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<vector>
 end_include
 
 begin_decl_stmt

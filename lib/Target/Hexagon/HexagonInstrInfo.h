@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameLowering.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define
@@ -207,6 +207,22 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
 argument|DebugLoc DL
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|analyzeCompare
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&SrcReg2
+argument_list|,
+argument|int&Mask
+argument_list|,
+argument|int&Value
 argument_list|)
 specifier|const
 block|;
@@ -405,6 +421,14 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|isPredicatedNew
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
 name|DefinesPredicate
 argument_list|(
 argument|MachineInstr *MI
@@ -440,6 +464,23 @@ argument_list|,
 argument|unsigned NumCycles
 argument_list|,
 argument|const BranchProbability&Probability
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|emitFrameIndexDebugValue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|int FrameIx
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|const MDNode *MDPtr
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
@@ -618,6 +659,20 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|isNewValueInst
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isDotNewInst
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|isDeallocRet
 argument_list|(
 argument|const MachineInstr *MI
@@ -673,17 +728,69 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
+name|void
+name|immediateExtend
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isConstExtended
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 name|unsigned
-name|getImmExtForm
+name|getAddrMode
 argument_list|(
 argument|const MachineInstr* MI
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|getNormalBranchForm
+name|bool
+name|isOperandExtended
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned short OperandNum
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|short
+name|getCExtOpNum
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getMinValue
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getMaxValue
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|NonExtEquivalentExists
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getNonExtOpcode
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;

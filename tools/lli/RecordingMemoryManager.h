@@ -136,6 +136,22 @@ literal|16
 operator|>
 name|AllocatedCodeMem
 expr_stmt|;
+comment|// FIXME: This is part of a work around to keep sections near one another
+comment|// when MCJIT performs relocations after code emission but before
+comment|// the generated code is moved to the remote target.
+name|sys
+operator|::
+name|MemoryBlock
+name|Near
+expr_stmt|;
+name|sys
+operator|::
+name|MemoryBlock
+name|allocateSection
+argument_list|(
+argument|uintptr_t Size
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 name|RecordingMemoryManager
@@ -145,7 +161,7 @@ name|virtual
 operator|~
 name|RecordingMemoryManager
 argument_list|()
-block|{}
+expr_stmt|;
 typedef|typedef
 name|SmallVectorImpl
 operator|<
@@ -238,6 +254,9 @@ name|Alignment
 parameter_list|,
 name|unsigned
 name|SectionID
+parameter_list|,
+name|bool
+name|IsReadOnly
 parameter_list|)
 function_decl|;
 name|void
@@ -257,6 +276,20 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
+name|bool
+name|applyPermissions
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// The following obsolete JITMemoryManager calls are stubbed out for
 comment|// this model.
 name|void

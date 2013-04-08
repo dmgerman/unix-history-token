@@ -244,11 +244,23 @@ directive|include
 file|"gtest/internal/gtest-type-util.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|GTEST_NO_LLVM_RAW_OSTREAM
+end_if
+
 begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_os_ostream.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Due to C++ preprocessor weirdness, we need double indirection to
@@ -426,6 +438,13 @@ begin_comment
 comment|// but still find raw_ostream& overloads.
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|GTEST_NO_LLVM_RAW_OSTREAM
+end_if
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -506,6 +525,29 @@ name|cos
 operator|<<
 name|val
 block|; }
+else|#
+directive|else
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|void
+name|GTestStreamToHelper
+argument_list|(
+argument|std::ostream* os
+argument_list|,
+argument|const T& val
+argument_list|)
+block|{
+operator|*
+name|os
+operator|<<
+name|val
+block|; }
+endif|#
+directive|endif
 name|class
 name|ProtocolMessage
 decl_stmt|;

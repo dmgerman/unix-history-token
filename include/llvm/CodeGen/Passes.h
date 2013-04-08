@@ -98,6 +98,9 @@ name|class
 name|PassManagerBase
 decl_stmt|;
 name|class
+name|TargetLoweringBase
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -414,6 +417,13 @@ name|void
 name|addPassesToHandleExceptions
 argument_list|()
 block|;
+comment|/// Add pass to prepare the LLVM IR for code generation. This should be done
+comment|/// before exception handling preparation passes.
+name|virtual
+name|void
+name|addCodeGenPrepare
+argument_list|()
+block|;
 comment|/// Add common passes that perform LLVM IR to IR transforms in preparation for
 comment|/// instruction selection.
 name|virtual
@@ -474,6 +484,21 @@ name|void
 name|addMachineSSAOptimization
 argument_list|()
 block|;
+comment|/// Add passes that optimize instruction level parallelism for out-of-order
+comment|/// targets. These passes are run while the machine code is still in SSA
+comment|/// form, so they can use MachineTraceMetrics to control their heuristics.
+comment|///
+comment|/// All passes added here should preserve the MachineDominatorTree,
+comment|/// MachineLoopInfo, and MachineTraceMetrics analyses.
+name|virtual
+name|bool
+name|addILPOpts
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// addPreRegAlloc - This method may be implemented by targets that want to
 comment|/// run passes immediately before register allocation. This should return
 comment|/// true if -print-machineinstrs should print after these passes.
@@ -583,6 +608,14 @@ return|return
 name|false
 return|;
 block|}
+comment|/// addGCPasses - Add late codegen passes that analyze code for garbage
+comment|/// collection. This should return true if GC info should be printed after
+comment|/// these passes.
+name|virtual
+name|bool
+name|addGCPasses
+argument_list|()
+block|;
 comment|/// Add standard basic block placement passes.
 name|virtual
 name|void
@@ -658,6 +691,20 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// \brief Create a basic TargetTransformInfo analysis pass.
+comment|///
+comment|/// This pass implements the target transform info analysis using the target
+comment|/// independent information available to the LLVM code generator.
+name|ImmutablePass
+modifier|*
+name|createBasicTargetTransformInfoPass
+parameter_list|(
+specifier|const
+name|TargetLoweringBase
+modifier|*
+name|TLI
+parameter_list|)
+function_decl|;
 comment|/// createUnreachableBlockEliminationPass - The LLVM code generator does not
 comment|/// work well with unreachable basic blocks (what live ranges make sense for a
 comment|/// block that cannot be reached?).  As such, a code generator should either
@@ -694,12 +741,6 @@ specifier|extern
 name|char
 modifier|&
 name|MachineLoopInfoID
-decl_stmt|;
-comment|/// MachineLoopRanges - This pass is an on-demand loop coverage analysis.
-specifier|extern
-name|char
-modifier|&
-name|MachineLoopRangesID
 decl_stmt|;
 comment|/// MachineDominators - This pass is a machine dominators analysis pass.
 specifier|extern
@@ -923,13 +964,6 @@ name|char
 modifier|&
 name|MachineBlockPlacementStatsID
 decl_stmt|;
-comment|/// Code Placement - This pass optimize code placement and aligns loop
-comment|/// headers to target specific alignment boundary.
-specifier|extern
-name|char
-modifier|&
-name|CodePlacementOptID
-decl_stmt|;
 comment|/// GCLowering Pass - Performs target-independent LLVM IR transformations for
 comment|/// highly portable strategies.
 comment|///
@@ -947,13 +981,6 @@ name|char
 modifier|&
 name|GCMachineCodeAnalysisID
 decl_stmt|;
-comment|/// Deleter Pass - Releases GC metadata.
-comment|///
-name|FunctionPass
-modifier|*
-name|createGCInfoDeleter
-parameter_list|()
-function_decl|;
 comment|/// Creates a pass to print GC metadata.
 comment|///
 name|FunctionPass
@@ -1017,7 +1044,7 @@ modifier|*
 name|createStackProtectorPass
 parameter_list|(
 specifier|const
-name|TargetLowering
+name|TargetLoweringBase
 modifier|*
 name|tli
 parameter_list|)
@@ -1057,7 +1084,7 @@ modifier|*
 name|createSjLjEHPreparePass
 parameter_list|(
 specifier|const
-name|TargetLowering
+name|TargetLoweringBase
 modifier|*
 name|tli
 parameter_list|)

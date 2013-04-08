@@ -54,25 +54,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_SELECTIONDAG_ISEL_H
+name|LLVM_CODEGEN_SELECTIONDAGISEL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_SELECTIONDAG_ISEL_H
+name|LLVM_CODEGEN_SELECTIONDAGISEL_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Pass.h"
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_include
@@ -84,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt
@@ -120,6 +120,9 @@ name|TargetLibraryInfo
 decl_stmt|;
 name|class
 name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetTransformInfo
 decl_stmt|;
 name|class
 name|FunctionLoweringInfo
@@ -160,6 +163,11 @@ specifier|const
 name|TargetLibraryInfo
 operator|*
 name|LibInfo
+block|;
+specifier|const
+name|TargetTransformInfo
+operator|*
+name|TTI
 block|;
 name|FunctionLoweringInfo
 operator|*
@@ -778,6 +786,7 @@ name|void
 name|PrepareEHLandingPad
 argument_list|()
 block|;
+comment|/// \brief Perform instruction selection on all basic blocks in the function.
 name|void
 name|SelectAllBasicBlocks
 argument_list|(
@@ -785,6 +794,19 @@ specifier|const
 name|Function
 operator|&
 name|Fn
+argument_list|)
+block|;
+comment|/// \brief Perform instruction selection on a single basic block, for
+comment|/// instructions between \p Begin and \p End.  \p HadTailCall will be set
+comment|/// to true if a call in the block was translated as a tail call.
+name|void
+name|SelectBasicBlock
+argument_list|(
+argument|BasicBlock::const_iterator Begin
+argument_list|,
+argument|BasicBlock::const_iterator End
+argument_list|,
+argument|bool&HadTailCall
 argument_list|)
 block|;
 name|bool
@@ -810,26 +832,18 @@ name|FinishBasicBlock
 argument_list|()
 block|;
 name|void
-name|SelectBasicBlock
-argument_list|(
-argument|BasicBlock::const_iterator Begin
-argument_list|,
-argument|BasicBlock::const_iterator End
-argument_list|,
-argument|bool&HadTailCall
-argument_list|)
-block|;
-name|void
 name|CodeGenAndEmitDAG
 argument_list|()
 block|;
+comment|/// \brief Generate instructions for lowering the incoming arguments of the
+comment|/// given function.
 name|void
 name|LowerArguments
 argument_list|(
 specifier|const
-name|BasicBlock
-operator|*
-name|BB
+name|Function
+operator|&
+name|F
 argument_list|)
 block|;
 name|void
@@ -881,7 +895,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_CODEGEN_SELECTIONDAG_ISEL_H */
+comment|/* LLVM_CODEGEN_SELECTIONDAGISEL_H */
 end_comment
 
 end_unit

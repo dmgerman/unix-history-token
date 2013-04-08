@@ -195,7 +195,7 @@ name|MO_TLSGD
 block|,
 comment|/// MO_TLSLD - On a symbol operand this indicates that the immediate is
 comment|/// the offset of the GOT entry with the TLS index for the module that
-comment|/// contains the symbol. When this index is passed to a call to to
+comment|/// contains the symbol. When this index is passed to a call to
 comment|/// __tls_get_addr, the function will return the base address of the TLS
 comment|/// block for the symbol. Used in the x86-64 local dynamic TLS access model.
 comment|///
@@ -205,7 +205,7 @@ name|MO_TLSLD
 block|,
 comment|/// MO_TLSLDM - On a symbol operand this indicates that the immediate is
 comment|/// the offset of the GOT entry with the TLS index for the module that
-comment|/// contains the symbol. When this index is passed to a call to to
+comment|/// contains the symbol. When this index is passed to a call to
 comment|/// ___tls_get_addr, the function will return the base address of the TLS
 comment|/// block for the symbol. Used in the IA32 local dynamic TLS access model.
 comment|///
@@ -497,37 +497,41 @@ name|MRM_D5
 init|=
 literal|48
 block|,
-name|MRM_D8
+name|MRM_D6
 init|=
 literal|49
 block|,
-name|MRM_D9
+name|MRM_D8
 init|=
 literal|50
 block|,
-name|MRM_DA
+name|MRM_D9
 init|=
 literal|51
 block|,
-name|MRM_DB
+name|MRM_DA
 init|=
 literal|52
 block|,
-name|MRM_DC
+name|MRM_DB
 init|=
 literal|53
 block|,
-name|MRM_DD
+name|MRM_DC
 init|=
 literal|54
 block|,
-name|MRM_DE
+name|MRM_DD
 init|=
 literal|55
 block|,
-name|MRM_DF
+name|MRM_DE
 init|=
 literal|56
+block|,
+name|MRM_DF
+init|=
+literal|57
 block|,
 comment|/// RawFrmImm8 - This is used for the ENTER instruction, which has two
 comment|/// immediates, the first of which is a 16-bit immediate (specified by
@@ -1545,6 +1549,11 @@ case|case
 name|X86II
 operator|::
 name|MRM_D5
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D6
 case|:
 case|case
 name|X86II

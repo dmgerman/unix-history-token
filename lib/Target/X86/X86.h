@@ -173,13 +173,22 @@ modifier|*
 name|createEmitX86CodeToMemory
 parameter_list|()
 function_decl|;
-comment|/// createX86MaxStackAlignmentHeuristicPass - This function returns a pass
-comment|/// which determines whether the frame pointer register should be
-comment|/// reserved in case dynamic stack alignment is later required.
-comment|///
+comment|/// \brief Creates an X86-specific Target Transformation Info pass.
+name|ImmutablePass
+modifier|*
+name|createX86TargetTransformInfoPass
+parameter_list|(
+specifier|const
+name|X86TargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
+comment|/// createX86PadShortFunctions - Return a pass that pads short functions
+comment|/// with NOOPs. This will prevent a stall when returning on the Atom.
 name|FunctionPass
 modifier|*
-name|createX86MaxStackAlignmentHeuristicPass
+name|createX86PadShortFunctions
 parameter_list|()
 function_decl|;
 block|}

@@ -66,19 +66,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TRANSFORMS_UTILS_BYPASSSLOWDIVISION_H
+name|LLVM_TRANSFORMS_UTILS_BYPASSSLOWDIVISION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TRANSFORMS_UTILS_BYPASSSLOWDIVISION_H
+name|LLVM_TRANSFORMS_UTILS_BYPASSSLOWDIVISION_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
 end_include
 
 begin_decl_stmt

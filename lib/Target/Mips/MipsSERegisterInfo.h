@@ -116,14 +116,13 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|void
-name|eliminateCallFramePseudoInstr
+name|virtual
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|intRegClass
 argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|unsigned Size
 argument_list|)
 specifier|const
 block|;

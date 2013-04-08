@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_LIBCALL_AA_H
+name|LLVM_ANALYSIS_LIBCALLALIASANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_LIBCALL_AA_H
+name|LLVM_ANALYSIS_LIBCALLALIASANALYSIS_H
 end_define
 
 begin_include

@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IRBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Operator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -90,13 +78,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/InstVisitor.h"
+file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/InstVisitor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -531,11 +531,45 @@ comment|//===-------------------------------------------------------------------
 comment|//  Utility functions to compute size of objects.
 comment|//
 comment|/// \brief Compute the size of the object pointed by Ptr. Returns true and the
-comment|/// object size in Size if successful, and false otherwise.
+comment|/// object size in Size if successful, and false otherwise. In this context, by
+comment|/// object we mean the region of memory starting at Ptr to the end of the
+comment|/// underlying object pointed to by Ptr.
 comment|/// If RoundToAlign is true, then Size is rounded up to the aligment of allocas,
 comment|/// byval arguments, and global variables.
 name|bool
 name|getObjectSize
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|uint64_t
+modifier|&
+name|Size
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|TD
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
+name|bool
+name|RoundToAlign
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Compute the size of the underlying object pointed by Ptr. Returns
+comment|/// true and the object size in Size if successful, and false otherwise.
+comment|/// If RoundToAlign is true, then Size is rounded up to the aligment of allocas,
+comment|/// byval arguments, and global variables.
+name|bool
+name|getUnderlyingObjectSize
 parameter_list|(
 specifier|const
 name|Value
@@ -586,6 +620,17 @@ decl_stmt|,
 name|SizeOffsetType
 decl|>
 block|{
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|SizeOffsetType
+operator|>
+name|CacheMapTy
+expr_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
@@ -605,15 +650,9 @@ decl_stmt|;
 name|APInt
 name|Zero
 decl_stmt|;
-name|SmallPtrSet
-operator|<
-name|Instruction
-operator|*
-operator|,
-literal|8
-operator|>
-name|SeenInsts
-expr_stmt|;
+name|CacheMapTy
+name|CacheMap
+decl_stmt|;
 name|APInt
 name|align
 parameter_list|(
@@ -772,6 +811,14 @@ parameter_list|(
 name|GEPOperator
 modifier|&
 name|GEP
+parameter_list|)
+function_decl|;
+name|SizeOffsetType
+name|visitGlobalAlias
+parameter_list|(
+name|GlobalAlias
+modifier|&
+name|GA
 parameter_list|)
 function_decl|;
 name|SizeOffsetType

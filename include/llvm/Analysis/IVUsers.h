@@ -95,9 +95,6 @@ name|class
 name|Value
 decl_stmt|;
 name|class
-name|IVUsers
-decl_stmt|;
-name|class
 name|ScalarEvolution
 decl_stmt|;
 name|class

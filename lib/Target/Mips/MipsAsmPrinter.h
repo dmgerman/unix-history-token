@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MipsMachineFunction.h"
+file|"MipsMCInstLower.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MipsMCInstLower.h"
+file|"MipsMachineFunction.h"
 end_include
 
 begin_include
@@ -374,6 +374,14 @@ argument_list|)
 block|;
 name|void
 name|EmitStartOfAsmFile
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|void
+name|EmitEndOfAsmFile
 argument_list|(
 name|Module
 operator|&

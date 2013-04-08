@@ -21,6 +21,12 @@ directive|include
 file|"llvm-c/Core.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm-c/Target.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

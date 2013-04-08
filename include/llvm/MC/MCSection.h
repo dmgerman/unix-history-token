@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -186,6 +192,28 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|// Convenience routines to get label names for the beginning/end of a
+comment|// section.
+name|virtual
+name|std
+operator|::
+name|string
+name|getLabelBeginName
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|std
+operator|::
+name|string
+name|getLabelEndName
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// isBaseAddressKnownZero - Return true if we know that this section will
 comment|/// get a base address of zero.  In cases where we know that this is true we
 comment|/// can emit section offsets as direct references to avoid a subtraction

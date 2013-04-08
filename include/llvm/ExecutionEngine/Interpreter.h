@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|EXECUTION_ENGINE_INTERPRETER_H
+name|LLVM_EXECUTIONENGINE_INTERPRETER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|EXECUTION_ENGINE_INTERPRETER_H
+name|LLVM_EXECUTIONENGINE_INTERPRETER_H
 end_define
 
 begin_include

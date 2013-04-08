@@ -66,25 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/EquivalenceClasses.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt

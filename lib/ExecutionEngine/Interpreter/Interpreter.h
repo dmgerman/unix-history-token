@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/ExecutionEngine.h"
 end_include
 
@@ -80,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/InstVisitor.h"
 end_include
 
 begin_include
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/InstVisitor.h"
 end_include
 
 begin_include
@@ -844,6 +844,14 @@ name|void
 name|visitVAArgInst
 parameter_list|(
 name|VAArgInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitExtractElementInst
+parameter_list|(
+name|ExtractElementInst
 modifier|&
 name|I
 parameter_list|)

@@ -58,25 +58,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_ASM_INFO_H
+name|LLVM_MC_MCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_ASM_INFO_H
+name|LLVM_MC_MCASMINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
+file|"llvm/MC/MCDirectives.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDirectives.h"
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
@@ -156,6 +156,12 @@ comment|/// PointerSize - Pointer size in bytes.
 comment|///               Default is 4.
 name|unsigned
 name|PointerSize
+decl_stmt|;
+comment|/// CalleeSaveStackSlotSize - Size of the stack slot reserved for
+comment|///                           callee-saved registers, in bytes.
+comment|///                           Default is same as pointer size.
+name|unsigned
+name|CalleeSaveStackSlotSize
 decl_stmt|;
 comment|/// IsLittleEndian - True if target is little endian.
 comment|///                  Default is true.
@@ -241,6 +247,13 @@ specifier|const
 name|char
 modifier|*
 name|LabelSuffix
+decl_stmt|;
+comment|// Defaults to ":"
+comment|/// LabelSuffix - This is appended to emitted labels.
+specifier|const
+name|char
+modifier|*
+name|DebugLabelSuffix
 decl_stmt|;
 comment|// Defaults to ":"
 comment|/// GlobalPrefix - If this is set to a non-empty string, it is prepended
@@ -684,7 +697,18 @@ return|return
 name|PointerSize
 return|;
 block|}
-comment|/// islittleendian - True if the target is little endian.
+comment|/// getCalleeSaveStackSlotSize - Get the callee-saved register stack slot
+comment|/// size in bytes.
+name|unsigned
+name|getCalleeSaveStackSlotSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CalleeSaveStackSlotSize
+return|;
+block|}
+comment|/// isLittleEndian - True if the target is little endian.
 name|bool
 name|isLittleEndian
 argument_list|()
@@ -1028,6 +1052,17 @@ specifier|const
 block|{
 return|return
 name|LabelSuffix
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDebugLabelSuffix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebugLabelSuffix
 return|;
 block|}
 specifier|const

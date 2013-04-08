@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_comment

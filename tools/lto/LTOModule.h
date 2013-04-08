@@ -62,7 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm-c/lto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -86,31 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/lto.h"
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
 end_include
 
 begin_comment
@@ -180,6 +180,7 @@ decl_stmt|;
 name|bool
 name|isFunction
 decl_stmt|;
+specifier|const
 name|llvm
 operator|::
 name|GlobalValue
@@ -596,6 +597,7 @@ comment|/// to a list to be resolved later.
 name|void
 name|addPotentialUndefinedSymbol
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|GlobalValue
@@ -610,6 +612,7 @@ comment|/// addDefinedSymbol - Add a defined symbol to the list.
 name|void
 name|addDefinedSymbol
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|GlobalValue
@@ -624,6 +627,7 @@ comment|/// addDefinedFunctionSymbol - Add a function symbol as defined to the l
 name|void
 name|addDefinedFunctionSymbol
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|Function
@@ -635,6 +639,7 @@ comment|/// addDefinedDataSymbol - Add a data symbol as defined to the list.
 name|void
 name|addDefinedDataSymbol
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|GlobalValue
@@ -681,6 +686,7 @@ comment|/// addObjCClass - Parse i386/ppc ObjC class data structure.
 name|void
 name|addObjCClass
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|GlobalVariable
@@ -692,6 +698,7 @@ comment|/// addObjCCategory - Parse i386/ppc ObjC category data structure.
 name|void
 name|addObjCCategory
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|GlobalVariable
@@ -703,6 +710,7 @@ comment|/// addObjCClassRef - Parse i386/ppc ObjC class list data structure.
 name|void
 name|addObjCClassRef
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|GlobalVariable
@@ -715,6 +723,7 @@ comment|/// to.
 name|bool
 name|objcClassNameFromExpression
 argument_list|(
+specifier|const
 name|llvm
 operator|::
 name|Constant

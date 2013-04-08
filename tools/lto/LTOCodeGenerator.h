@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Linker.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm-c/lto.h"
 end_include
 
 begin_include
@@ -80,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/lto.h"
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Linker.h"
 end_include
 
 begin_include

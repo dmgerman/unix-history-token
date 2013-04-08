@@ -101,7 +101,6 @@ name|raw_ostream
 block|{
 name|private
 label|:
-comment|// Do not implement. raw_ostream is noncopyable.
 name|void
 name|operator
 init|=

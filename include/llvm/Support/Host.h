@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_HOST_H
+name|LLVM_SUPPORT_HOST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_HOST_H
+name|LLVM_SUPPORT_HOST_H
 end_define
 
 begin_include
@@ -123,6 +123,14 @@ name|std
 operator|::
 name|string
 name|getDefaultTargetTriple
+argument_list|()
+expr_stmt|;
+comment|/// getProcessTriple() - Return an appropriate target triple for generating
+comment|/// code to be loaded into the current process, e.g. when using the JIT.
+name|std
+operator|::
+name|string
+name|getProcessTriple
 argument_list|()
 expr_stmt|;
 comment|/// getHostCPUName - Get the LLVM name for the host CPU. The particular format

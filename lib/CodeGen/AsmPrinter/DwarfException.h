@@ -340,6 +340,14 @@ name|void
 name|EmitExceptionTable
 parameter_list|()
 function_decl|;
+name|virtual
+name|void
+name|EmitTypeInfos
+parameter_list|(
+name|unsigned
+name|TTypeEncoding
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|//===--------------------------------------------------------------------===//
@@ -459,6 +467,12 @@ range|:
 name|public
 name|DwarfException
 block|{
+name|void
+name|EmitTypeInfos
+argument_list|(
+argument|unsigned TTypeEncoding
+argument_list|)
+block|;
 name|public
 operator|:
 comment|//===--------------------------------------------------------------------===//

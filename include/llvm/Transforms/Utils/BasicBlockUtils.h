@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TRANSFORMS_UTILS_BASICBLOCK_H
+name|LLVM_TRANSFORMS_UTILS_BASICBLOCKUTILS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TRANSFORMS_UTILS_BASICBLOCK_H
+name|LLVM_TRANSFORMS_UTILS_BASICBLOCKUTILS_H
 end_define
 
 begin_comment
@@ -70,19 +70,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/CFG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_decl_stmt

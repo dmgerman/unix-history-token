@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ASMLEXER_H
+name|LLVM_MC_MCPARSER_ASMLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ASMLEXER_H
+name|LLVM_MC_MCPARSER_ASMLEXER_H
 end_define
 
 begin_include

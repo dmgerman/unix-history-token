@@ -66,7 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/SectionKind.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -108,6 +108,9 @@ name|MCSection
 decl_stmt|;
 name|class
 name|MCSymbol
+decl_stmt|;
+name|class
+name|MCSymbolRefExpr
 decl_stmt|;
 name|class
 name|MCStreamer
@@ -358,14 +361,14 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// getExprForDwarfGlobalReference - Return an MCExpr to use for a reference
+comment|/// getTTypeGlobalReference - Return an MCExpr to use for a reference
 comment|/// to the specified global variable from exception handling information.
 comment|///
 name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getExprForDwarfGlobalReference
+name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -397,9 +400,9 @@ comment|///
 specifier|const
 name|MCExpr
 operator|*
-name|getExprForDwarfReference
+name|getTTypeReference
 argument_list|(
-argument|const MCSymbol *Sym
+argument|const MCSymbolRefExpr *Sym
 argument_list|,
 argument|unsigned Encoding
 argument_list|,

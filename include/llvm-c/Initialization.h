@@ -56,6 +56,13 @@ name|R
 parameter_list|)
 function_decl|;
 name|void
+name|LLVMInitializeObjCARCOpts
+parameter_list|(
+name|LLVMPassRegistryRef
+name|R
+parameter_list|)
+function_decl|;
+name|void
 name|LLVMInitializeVectorization
 parameter_list|(
 name|LLVMPassRegistryRef

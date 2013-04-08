@@ -756,6 +756,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printGPRPairOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printPCLabel
 argument_list|(
 argument|const MCInst *MI

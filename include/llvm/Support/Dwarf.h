@@ -67,6 +67,12 @@ directive|define
 name|LLVM_SUPPORT_DWARF_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -166,7 +172,7 @@ name|namespace
 name|dwarf
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|// Dwarf constants as gleaned from the DWARF Debugging Information Format V.3
+comment|// Dwarf constants as gleaned from the DWARF Debugging Information Format V.4
 comment|// reference manual http://dwarf.freestandards.org .
 comment|//
 comment|// Do not mix the following two enumerations sets.  DW_TAG_invalid changes the
@@ -191,16 +197,6 @@ init|=
 literal|0x101
 block|,
 comment|// Tag for argument variables.
-name|DW_TAG_return_variable
-init|=
-literal|0x102
-block|,
-comment|// Tag for return variables.
-name|DW_TAG_vector_type
-init|=
-literal|0x103
-block|,
-comment|// Tag for vector types.
 name|DW_TAG_user_base
 init|=
 literal|0x1000
@@ -209,14 +205,23 @@ comment|// Recommended base for user tags.
 name|DW_CIE_VERSION
 init|=
 literal|1
-block|,
 comment|// Common frame information version.
-name|DW_CIE_ID
-init|=
-literal|0xffffffff
-comment|// Common frame information mark.
 block|}
 enum|;
+comment|// Special ID values that distinguish a CIE from a FDE in DWARF CFI.
+comment|// Not inside an enum because a 64-bit value is needed.
+specifier|const
+name|uint32_t
+name|DW_CIE_ID
+init|=
+name|UINT32_MAX
+decl_stmt|;
+specifier|const
+name|uint64_t
+name|DW64_CIE_ID
+init|=
+name|UINT64_MAX
+decl_stmt|;
 enum|enum
 name|dwarf_constants
 block|{
@@ -883,6 +888,14 @@ name|DW_AT_linkage_name
 init|=
 literal|0x6e
 block|,
+name|DW_AT_lo_user
+init|=
+literal|0x2000
+block|,
+name|DW_AT_hi_user
+init|=
+literal|0x3fff
+block|,
 name|DW_AT_MIPS_loop_begin
 init|=
 literal|0x2002
@@ -943,6 +956,13 @@ name|DW_AT_MIPS_assumed_shape_dopetype
 init|=
 literal|0x2010
 block|,
+comment|// This one appears to have only been implemented by Open64 for
+comment|// fortran and may conflict with other extensions.
+name|DW_AT_MIPS_assumed_size
+init|=
+literal|0x2011
+block|,
+comment|// GNU extensions
 name|DW_AT_sf_names
 init|=
 literal|0x2101
@@ -975,17 +995,30 @@ name|DW_AT_GNU_template_name
 init|=
 literal|0x2110
 block|,
-name|DW_AT_MIPS_assumed_size
+comment|// Extensions for Fission proposal.
+name|DW_AT_GNU_dwo_name
 init|=
-literal|0x2011
+literal|0x2130
 block|,
-name|DW_AT_lo_user
+name|DW_AT_GNU_dwo_id
 init|=
-literal|0x2000
+literal|0x2131
 block|,
-name|DW_AT_hi_user
+name|DW_AT_GNU_ranges_base
 init|=
-literal|0x3fff
+literal|0x2132
+block|,
+name|DW_AT_GNU_addr_base
+init|=
+literal|0x2133
+block|,
+name|DW_AT_GNU_pubnames
+init|=
+literal|0x2134
+block|,
+name|DW_AT_GNU_pubtypes
+init|=
+literal|0x2135
 block|,
 comment|// Apple extensions.
 name|DW_AT_APPLE_optimized
@@ -1140,6 +1173,15 @@ block|,
 name|DW_FORM_ref_sig8
 init|=
 literal|0x20
+block|,
+comment|// Extensions for Fission proposal
+name|DW_FORM_GNU_addr_index
+init|=
+literal|0x1f01
+block|,
+name|DW_FORM_GNU_str_index
+init|=
+literal|0x1f02
 block|,
 comment|// Operation encodings
 name|DW_OP_addr
@@ -1765,6 +1807,15 @@ block|,
 name|DW_OP_hi_user
 init|=
 literal|0xff
+block|,
+comment|// Extensions for Fission proposal.
+name|DW_OP_GNU_addr_index
+init|=
+literal|0xfb
+block|,
+name|DW_OP_GNU_const_index
+init|=
+literal|0xfc
 block|,
 comment|// Encoding attribute values
 name|DW_ATE_address

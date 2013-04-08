@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCRegisterInfo.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/MC/MCRegisterInfo.h"
 end_include
 
 begin_include
@@ -131,6 +131,9 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
+name|VirtRegMap
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -140,13 +143,13 @@ name|public
 label|:
 typedef|typedef
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|iterator
 typedef|;
 typedef|typedef
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|const_iterator
 typedef|;
@@ -192,7 +195,7 @@ name|SuperClasses
 decl_stmt|;
 name|ArrayRef
 operator|<
-name|uint16_t
+name|MCPhysReg
 operator|>
 call|(
 modifier|*
@@ -658,7 +661,7 @@ comment|/// By default, this method returns all registers in the class.
 comment|///
 name|ArrayRef
 operator|<
-name|uint16_t
+name|MCPhysReg
 operator|>
 name|getRawAllocationOrder
 argument_list|(
@@ -1639,91 +1642,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// isSubRegister - Returns true if regB is a sub-register of regA.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isSubRegister
-argument_list|(
-name|unsigned
-name|regA
-argument_list|,
-name|unsigned
-name|regB
-argument_list|)
-decl|const
-block|{
-return|return
-name|isSuperRegister
-argument_list|(
-name|regB
-argument_list|,
-name|regA
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// isSuperRegister - Returns true if regB is a super-register of regA.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isSuperRegister
-argument_list|(
-name|unsigned
-name|RegA
-argument_list|,
-name|unsigned
-name|RegB
-argument_list|)
-decl|const
-block|{
-for|for
-control|(
-name|MCSuperRegIterator
-name|I
-argument_list|(
-name|RegA
-argument_list|,
-name|this
-argument_list|)
-init|;
-name|I
-operator|.
-name|isValid
-argument_list|()
-condition|;
-operator|++
-name|I
-control|)
-if|if
-condition|(
-operator|*
-name|I
-operator|==
-name|RegB
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getCalleeSavedRegs - Return a null-terminated list of all of the
 end_comment
 
@@ -1746,7 +1664,7 @@ end_comment
 begin_decl_stmt
 name|virtual
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|getCalleeSavedRegs
 argument_list|(
@@ -2602,7 +2520,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Get the weight in units of pressure for this register class.
+comment|/// Get the weight in units of pressure for this register class.
 end_comment
 
 begin_decl_stmt
@@ -2616,6 +2534,24 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Get the weight in units of pressure for this register unit.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|unsigned
+name|getRegUnitWeight
+argument_list|(
+name|unsigned
+name|RegUnit
 argument_list|)
 decl|const
 init|=
@@ -2707,15 +2643,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getRawAllocationOrder - Returns the register allocation order for a
+comment|/// Get the dimensions of register pressure impacted by this register unit.
 end_comment
 
 begin_comment
-comment|/// specified register class with a target-dependent hint. The returned list
+comment|/// Returns a -1 terminated array of pressure set IDs.
+end_comment
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|int
+modifier|*
+name|getRegUnitPressureSets
+argument_list|(
+name|unsigned
+name|RegUnit
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Get a list of 'hint' registers that the register allocator should try
 end_comment
 
 begin_comment
-comment|/// may contain reserved registers that cannot be allocated.
+comment|/// first when allocating a physical register for the virtual register
+end_comment
+
+begin_comment
+comment|/// VirtReg. These registers are effectively moved to the front of the
+end_comment
+
+begin_comment
+comment|/// allocation order.
 end_comment
 
 begin_comment
@@ -2723,88 +2687,76 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Register allocators need only call this function to resolve
+comment|/// The Order argument is the allocation order for VirtReg's register class
 end_comment
 
 begin_comment
-comment|/// target-dependent hints, but it should work without hinting as well.
-end_comment
-
-begin_expr_stmt
-name|virtual
-name|ArrayRef
-operator|<
-name|uint16_t
-operator|>
-name|getRawAllocationOrder
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|unsigned HintType
-argument_list|,
-argument|unsigned HintReg
-argument_list|,
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|{
-return|return
-name|RC
-operator|->
-name|getRawAllocationOrder
-argument_list|(
-name|MF
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// ResolveRegAllocHint - Resolves the specified register allocation hint
+comment|/// as returned from RegisterClassInfo::getOrder(). The hint registers must
 end_comment
 
 begin_comment
-comment|/// to a physical register. Returns the physical register if it is successful.
+comment|/// come from Order, and they must not be reserved.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The default implementation of this function can resolve
+end_comment
+
+begin_comment
+comment|/// target-independent hints provided to MRI::setRegAllocationHint with
+end_comment
+
+begin_comment
+comment|/// HintType == 0. Targets that override this function should defer to the
+end_comment
+
+begin_comment
+comment|/// default implementation if they have no reason to change the allocation
+end_comment
+
+begin_comment
+comment|/// order for VirtReg. There may be target-independent hints.
 end_comment
 
 begin_decl_stmt
 name|virtual
-name|unsigned
-name|ResolveRegAllocHint
+name|void
+name|getRegAllocationHints
 argument_list|(
 name|unsigned
-name|Type
+name|VirtReg
 argument_list|,
-name|unsigned
-name|Reg
+name|ArrayRef
+operator|<
+name|MCPhysReg
+operator|>
+name|Order
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MCPhysReg
+operator|>
+operator|&
+name|Hints
 argument_list|,
 specifier|const
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+specifier|const
+name|VirtRegMap
+operator|*
+name|VRM
+operator|=
+literal|0
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-name|Type
-operator|==
-literal|0
-operator|&&
-name|Reg
-operator|&&
-name|isPhysicalRegister
-argument_list|(
-name|Reg
-argument_list|)
-condition|)
-return|return
-name|Reg
-return|;
-return|return
-literal|0
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -3271,63 +3223,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// eliminateCallFramePseudoInstr - This method is called during prolog/epilog
-end_comment
-
-begin_comment
-comment|/// code insertion to eliminate call frame setup and destroy pseudo
-end_comment
-
-begin_comment
-comment|/// instructions (but only if the Target is using them).  It is responsible
-end_comment
-
-begin_comment
-comment|/// for eliminating these instructions, replacing them with concrete
-end_comment
-
-begin_comment
-comment|/// instructions.  This method need only be implemented if using call frame
-end_comment
-
-begin_comment
-comment|/// setup/destroy pseudo instructions.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
-argument_list|)
-decl|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Call Frame Pseudo Instructions do not exist on this "
-literal|"target!"
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// saveScavengerRegister - Spill the register so it can be used by the
 end_comment
 
@@ -3404,11 +3299,11 @@ comment|/// specified instruction, as long as it keeps the iterator pointing at 
 end_comment
 
 begin_comment
-comment|/// finished product. SPAdj is the SP adjustment due to call frame setup
+comment|/// finished product.  SPAdj is the SP adjustment due to call frame setup
 end_comment
 
 begin_comment
-comment|/// instruction.
+comment|/// instruction.  FIOperandNum is the FI operand number.
 end_comment
 
 begin_decl_stmt
@@ -3423,6 +3318,9 @@ name|MI
 argument_list|,
 name|int
 name|SPAdj
+argument_list|,
+name|unsigned
+name|FIOperandNum
 argument_list|,
 name|RegScavenger
 operator|*
@@ -3818,6 +3716,7 @@ name|SubIdx
 decl_stmt|;
 name|public
 label|:
+name|explicit
 name|PrintReg
 argument_list|(
 argument|unsigned reg

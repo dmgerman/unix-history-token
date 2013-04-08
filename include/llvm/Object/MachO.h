@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Object/ObjectFile.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Object/MachOObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_include
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_decl_stmt
@@ -201,6 +201,18 @@ name|getLoadName
 argument_list|()
 specifier|const
 block|;
+comment|// In a MachO file, sections have a segment name. This is used in the .o
+comment|// files. They have a single segment, but this field specifies which segment
+comment|// a section should be put in in the final object.
+name|error_code
+name|getSectionFinalSegmentName
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|StringRef&Res
+argument_list|)
+specifier|const
+block|;
 name|MachOObject
 operator|*
 name|getObject
@@ -208,6 +220,9 @@ argument_list|()
 block|{
 return|return
 name|MachOObj
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 specifier|static
@@ -597,8 +612,10 @@ specifier|const
 block|;
 name|private
 operator|:
+name|OwningPtr
+operator|<
 name|MachOObject
-operator|*
+operator|>
 name|MachOObj
 block|;
 name|mutable

@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Config/llvm-config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Config/llvm-config.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include

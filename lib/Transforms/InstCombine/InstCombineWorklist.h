@@ -53,19 +53,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Instruction.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -77,7 +65,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include

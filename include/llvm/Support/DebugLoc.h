@@ -426,7 +426,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_DEBUGLOC_H */
+comment|/* LLVM_SUPPORT_DEBUGLOC_H */
 end_comment
 
 end_unit

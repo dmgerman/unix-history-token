@@ -6,14 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LTO_H
+name|LLVM_C_LTO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LTO_H
-value|1
+name|LLVM_C_LTO_H
 end_define
 
 begin_include
@@ -578,6 +577,14 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/**  * Initializes LLVM disassemblers.  * FIXME: This doesn't really belong here.  */
+specifier|extern
+name|void
+name|lto_initialize_disassembler
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 ifdef|#

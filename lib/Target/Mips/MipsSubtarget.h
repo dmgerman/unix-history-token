@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
+file|"MCTargetDesc/MipsReginfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/MC/MCInstrItineraries.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
@@ -185,15 +191,6 @@ comment|// HasCondMov - Conditional mov (MOVZ, MOVN) instructions.
 name|bool
 name|HasCondMov
 block|;
-comment|// HasMulDivAdd - Multiply add and sub (MADD, MADDu, MSUB, MSUBu)
-comment|// instructions.
-name|bool
-name|HasMulDivAdd
-block|;
-comment|// HasMinMax - MIN and MAX instructions.
-name|bool
-name|HasMinMax
-block|;
 comment|// HasSwap - Byte and half swap instructions.
 name|bool
 name|HasSwap
@@ -202,9 +199,17 @@ comment|// HasBitCount - Count leading '1' and '0' bits.
 name|bool
 name|HasBitCount
 block|;
+comment|// HasFPIdx -- Floating point indexed load/store instructions.
+name|bool
+name|HasFPIdx
+block|;
 comment|// InMips16 -- can process Mips16 instructions
 name|bool
 name|InMips16Mode
+block|;
+comment|// InMicroMips -- can process MicroMips instructions
+name|bool
+name|InMicroMipsMode
 block|;
 comment|// HasDSP, HasDSPR2 -- supports DSP ASE.
 name|bool
@@ -212,12 +217,18 @@ name|HasDSP
 block|,
 name|HasDSPR2
 block|;
-comment|// IsAndroid -- target is android
-name|bool
-name|IsAndroid
-block|;
 name|InstrItineraryData
 name|InstrItins
+block|;
+comment|// The instance to the register info section object
+name|MipsReginfo
+name|MRI
+block|;
+comment|// Relocation Model
+name|Reloc
+operator|::
+name|Model
+name|RM
 block|;
 name|public
 operator|:
@@ -361,19 +372,6 @@ name|Mips64r2
 return|;
 block|}
 name|bool
-name|hasMips32r2Or64
-argument_list|()
-specifier|const
-block|{
-return|return
-name|hasMips32r2
-argument_list|()
-operator|||
-name|hasMips64
-argument_list|()
-return|;
-block|}
-name|bool
 name|isLittle
 argument_list|()
 specifier|const
@@ -448,6 +446,15 @@ name|InMips16Mode
 return|;
 block|}
 name|bool
+name|inMicroMipsMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InMicroMipsMode
+return|;
+block|}
+name|bool
 name|hasDSP
 argument_list|()
 specifier|const
@@ -463,15 +470,6 @@ specifier|const
 block|{
 return|return
 name|HasDSPR2
-return|;
-block|}
-name|bool
-name|isAndroid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsAndroid
 return|;
 block|}
 name|bool
@@ -523,24 +521,6 @@ name|HasCondMov
 return|;
 block|}
 name|bool
-name|hasMulDivAdd
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasMulDivAdd
-return|;
-block|}
-name|bool
-name|hasMinMax
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasMinMax
-return|;
-block|}
-name|bool
 name|hasSwap
 argument_list|()
 specifier|const
@@ -556,6 +536,39 @@ specifier|const
 block|{
 return|return
 name|HasBitCount
+return|;
+block|}
+name|bool
+name|hasFPIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFPIdx
+return|;
+block|}
+comment|// Grab MipsRegInfo object
+specifier|const
+name|MipsReginfo
+operator|&
+name|getMReginfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MRI
+return|;
+block|}
+comment|// Grab relocation model
+name|Reloc
+operator|::
+name|Model
+name|getRelocationModel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RM
 return|;
 block|}
 expr|}

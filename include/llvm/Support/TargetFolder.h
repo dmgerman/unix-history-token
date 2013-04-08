@@ -82,18 +82,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Constants.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/InstrTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -101,6 +89,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/ConstantFolding.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
 end_include
 
 begin_decl_stmt

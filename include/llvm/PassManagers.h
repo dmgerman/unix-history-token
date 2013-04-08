@@ -62,25 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -92,13 +74,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -660,7 +660,6 @@ modifier|*
 name|PMDM
 parameter_list|)
 function_decl|;
-name|virtual
 name|unsigned
 name|getNumContainedManagers
 argument_list|()
@@ -1271,7 +1270,6 @@ name|P
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|unsigned
 name|getNumContainedPasses
 argument_list|()
@@ -1304,9 +1302,7 @@ return|return
 name|PMT_Unknown
 return|;
 block|}
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|AnalysisID
 operator|,
@@ -1397,9 +1393,7 @@ expr_stmt|;
 comment|// Collection of Analysis provided by Parent pass manager and
 comment|// used by current pass manager. At at time there can not be more
 comment|// then PMT_Last active pass mangers.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|AnalysisID
 operator|,
@@ -1445,9 +1439,7 @@ comment|// Set of available Analysis. This information is used while scheduling
 comment|// pass. If a pass requires an analysis which is not available then
 comment|// the required analysis pass is scheduled to run before the pass itself is
 comment|// scheduled to run.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|AnalysisID
 operator|,
@@ -1529,6 +1521,14 @@ name|void
 name|cleanup
 parameter_list|()
 function_decl|;
+comment|/// doInitialization - Overrides ModulePass doInitialization for global
+comment|/// initialization tasks
+comment|///
+name|using
+name|ModulePass
+operator|::
+name|doInitialization
+expr_stmt|;
 comment|/// doInitialization - Run all of the initializers for the function passes.
 comment|///
 name|bool
@@ -1539,6 +1539,14 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
+comment|/// doFinalization - Overrides ModulePass doFinalization for global
+comment|/// finalization tasks
+comment|///
+name|using
+name|ModulePass
+operator|::
+name|doFinalization
+expr_stmt|;
 comment|/// doFinalization - Run all of the finalizers for the function passes.
 comment|///
 name|bool

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -77,6 +83,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -84,14 +96,6 @@ block|{
 name|class
 name|error_code
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|OwningPtr
-expr_stmt|;
 comment|/// FileOutputBuffer - This interface provides simple way to create an in-memory
 comment|/// buffer which will be written to a file. During the lifetime of these
 comment|/// objects, the content or existence of the specified file is undefined. That
@@ -140,24 +144,41 @@ argument_list|)
 decl_stmt|;
 comment|/// Returns a pointer to the start of the buffer.
 name|uint8_t
-operator|*
+modifier|*
 name|getBufferStart
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
-name|BufferStart
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|Region
+operator|->
+name|data
+argument_list|()
 return|;
 block|}
 comment|/// Returns a pointer to the end of the buffer.
 name|uint8_t
-operator|*
+modifier|*
 name|getBufferEnd
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
-name|BufferEnd
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|Region
+operator|->
+name|data
+argument_list|()
+operator|+
+name|Region
+operator|->
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// Returns size of the buffer.
@@ -167,9 +188,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BufferEnd
-operator|-
-name|BufferStart
+name|Region
+operator|->
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// Returns path where file will show up if buffer is committed.
@@ -223,27 +245,27 @@ operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-name|protected
-label|:
 name|FileOutputBuffer
 argument_list|(
-argument|uint8_t *Start
-argument_list|,
-argument|uint8_t *End
+argument|llvm::sys::fs::mapped_file_region *R
 argument_list|,
 argument|StringRef Path
 argument_list|,
 argument|StringRef TempPath
 argument_list|)
 empty_stmt|;
-name|uint8_t
-modifier|*
-name|BufferStart
-decl_stmt|;
-name|uint8_t
-modifier|*
-name|BufferEnd
-decl_stmt|;
+name|OwningPtr
+operator|<
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|mapped_file_region
+operator|>
+name|Region
+expr_stmt|;
 name|SmallString
 operator|<
 literal|128

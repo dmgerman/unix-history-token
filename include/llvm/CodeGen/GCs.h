@@ -81,6 +81,16 @@ name|void
 name|linkOcamlGCPrinter
 parameter_list|()
 function_decl|;
+comment|/// Creates an erlang-compatible garbage collector.
+name|void
+name|linkErlangGC
+parameter_list|()
+function_decl|;
+comment|/// Creates an erlang-compatible metadata printer.
+name|void
+name|linkErlangGCPrinter
+parameter_list|()
+function_decl|;
 comment|/// Creates a shadow stack garbage collector. This collector requires no code
 comment|/// generator support.
 name|void

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
+file|"NVPTX.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"NVPTX.h"
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_define
@@ -289,6 +289,17 @@ return|return
 name|SmVersion
 operator|>=
 literal|13
+return|;
+block|}
+name|bool
+name|hasLDG
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SmVersion
+operator|>=
+literal|32
 return|;
 block|}
 name|bool

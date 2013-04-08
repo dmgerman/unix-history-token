@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/InMemoryStruct.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Object/MachOFormat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -475,6 +475,25 @@ operator|<
 name|macho
 operator|::
 name|LinkeditDataLoadCommand
+operator|>
+operator|&
+name|Res
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|ReadLinkerOptionsLoadCommand
+argument_list|(
+specifier|const
+name|LoadCommandInfo
+operator|&
+name|LCI
+argument_list|,
+name|InMemoryStruct
+operator|<
+name|macho
+operator|::
+name|LinkerOptionsLoadCommand
 operator|>
 operator|&
 name|Res

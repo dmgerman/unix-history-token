@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
 begin_include
@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SlotIndexes.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -278,6 +278,14 @@ name|valno
 decl_stmt|;
 comment|// identifier for the value contained in this interval.
 name|LiveRange
+argument_list|()
+operator|:
+name|valno
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|LiveRange
 argument_list|(
 argument|SlotIndex S
 argument_list|,
@@ -285,7 +293,7 @@ argument|SlotIndex E
 argument_list|,
 argument|VNInfo *V
 argument_list|)
-block|:
+operator|:
 name|start
 argument_list|(
 name|S
@@ -1557,13 +1565,14 @@ decl_stmt|;
 comment|/// addRange - Add the specified LiveRange to this interval, merging
 comment|/// intervals as appropriate.  This returns an iterator to the inserted live
 comment|/// range (which may have grown since it was inserted.
-name|void
+name|iterator
 name|addRange
 parameter_list|(
 name|LiveRange
 name|LR
 parameter_list|)
 block|{
+return|return
 name|addRangeFrom
 argument_list|(
 name|LR
@@ -1573,7 +1582,7 @@ operator|.
 name|begin
 argument_list|()
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/// extendInBlock - If this interval is live before Kill in the basic block
 comment|/// that starts at StartIdx, extend it to be live up to Kill, and return
@@ -1927,28 +1936,6 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-name|void
-name|mergeIntervalRanges
-parameter_list|(
-specifier|const
-name|LiveInterval
-modifier|&
-name|RHS
-parameter_list|,
-name|VNInfo
-modifier|*
-name|LHSValNo
-init|=
-literal|0
-parameter_list|,
-specifier|const
-name|VNInfo
-modifier|*
-name|RHSValNo
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 name|LiveInterval
 modifier|&
 name|operator
@@ -1980,6 +1967,205 @@ name|LI
 operator|)
 block|{
 name|LI
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+comment|/// Helper class for performant LiveInterval bulk updates.
+comment|///
+comment|/// Calling LiveInterval::addRange() repeatedly can be expensive on large
+comment|/// live ranges because segments after the insertion point may need to be
+comment|/// shifted. The LiveRangeUpdater class can defer the shifting when adding
+comment|/// many segments in order.
+comment|///
+comment|/// The LiveInterval will be in an invalid state until flush() is called.
+name|class
+name|LiveRangeUpdater
+block|{
+name|LiveInterval
+modifier|*
+name|LI
+decl_stmt|;
+name|SlotIndex
+name|LastStart
+decl_stmt|;
+name|LiveInterval
+operator|::
+name|iterator
+name|WriteI
+expr_stmt|;
+name|LiveInterval
+operator|::
+name|iterator
+name|ReadI
+expr_stmt|;
+name|SmallVector
+operator|<
+name|LiveRange
+operator|,
+literal|16
+operator|>
+name|Spills
+expr_stmt|;
+name|void
+name|mergeSpills
+parameter_list|()
+function_decl|;
+name|public
+label|:
+comment|/// Create a LiveRangeUpdater for adding segments to LI.
+comment|/// LI will temporarily be in an invalid state until flush() is called.
+name|LiveRangeUpdater
+argument_list|(
+name|LiveInterval
+operator|*
+name|li
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|LI
+argument_list|(
+argument|li
+argument_list|)
+block|{}
+operator|~
+name|LiveRangeUpdater
+argument_list|()
+block|{
+name|flush
+argument_list|()
+block|; }
+comment|/// Add a segment to LI and coalesce when possible, just like LI.addRange().
+comment|/// Segments should be added in increasing start order for best performance.
+name|void
+name|add
+argument_list|(
+name|LiveRange
+argument_list|)
+expr_stmt|;
+name|void
+name|add
+parameter_list|(
+name|SlotIndex
+name|Start
+parameter_list|,
+name|SlotIndex
+name|End
+parameter_list|,
+name|VNInfo
+modifier|*
+name|VNI
+parameter_list|)
+block|{
+name|add
+argument_list|(
+name|LiveRange
+argument_list|(
+name|Start
+argument_list|,
+name|End
+argument_list|,
+name|VNI
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Return true if the LI is currently in an invalid state, and flush()
+comment|/// needs to be called.
+name|bool
+name|isDirty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LastStart
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// Flush the updater state to LI so it is valid and contains all added
+comment|/// segments.
+name|void
+name|flush
+parameter_list|()
+function_decl|;
+comment|/// Select a different destination live range.
+name|void
+name|setDest
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|li
+parameter_list|)
+block|{
+if|if
+condition|(
+name|LI
+operator|!=
+name|li
+operator|&&
+name|isDirty
+argument_list|()
+condition|)
+name|flush
+argument_list|()
+expr_stmt|;
+name|LI
+operator|=
+name|li
+expr_stmt|;
+block|}
+comment|/// Get the current destination live range.
+name|LiveInterval
+operator|*
+name|getDest
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LI
+return|;
+block|}
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+empty_stmt|;
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|LiveRangeUpdater
+operator|&
+name|X
+operator|)
+block|{
+name|X
 operator|.
 name|print
 argument_list|(

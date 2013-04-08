@@ -98,14 +98,49 @@ operator|&
 name|TII
 argument_list|)
 block|;
-name|void
-name|eliminateCallFramePseudoInstr
+name|bool
+name|requiresRegisterScavenging
 argument_list|(
-argument|MachineFunction&MF
-argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|useFPForScavengingIndex
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|saveScavengerRegister
+argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|MachineBasicBlock::iterator&UseMI
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|intRegClass
+argument_list|(
+argument|unsigned Size
 argument_list|)
 specifier|const
 block|;

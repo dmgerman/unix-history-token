@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_MACHINE_FUNCTION_ANALYSIS_H
+name|LLVM_CODEGEN_MACHINEFUNCTIONANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_MACHINE_FUNCTION_ANALYSIS_H
+name|LLVM_CODEGEN_MACHINEFUNCTIONANALYSIS_H
 end_define
 
 begin_include
@@ -65,18 +65,15 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|TargetMachine
 decl_stmt|;
 comment|/// MachineFunctionAnalysis - This class is a Pass that manages a
 comment|/// MachineFunction object.

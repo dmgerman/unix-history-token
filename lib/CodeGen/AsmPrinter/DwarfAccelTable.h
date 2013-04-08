@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"DIE.h"
 end_include
 
 begin_include
@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_include
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include
@@ -116,19 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DIE.h"
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_comment
@@ -266,7 +266,7 @@ name|class
 name|DIE
 decl_stmt|;
 name|class
-name|DwarfDebug
+name|DwarfUnits
 decl_stmt|;
 name|class
 name|DwarfAccelTable
@@ -1056,7 +1056,7 @@ parameter_list|(
 name|AsmPrinter
 modifier|*
 parameter_list|,
-name|DwarfDebug
+name|DwarfUnits
 modifier|*
 name|D
 parameter_list|)
@@ -1181,7 +1181,7 @@ parameter_list|,
 name|MCSymbol
 modifier|*
 parameter_list|,
-name|DwarfDebug
+name|DwarfUnits
 modifier|*
 parameter_list|)
 function_decl|;

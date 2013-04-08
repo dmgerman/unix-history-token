@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LOOP_PASS_H
+name|LLVM_ANALYSIS_LOOPPASS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LOOP_PASS_H
+name|LLVM_ANALYSIS_LOOPPASS_H
 end_define
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/PassManagers.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Function.h"
 end_include
 
 begin_include
@@ -157,6 +151,20 @@ name|LPM
 argument_list|)
 operator|=
 literal|0
+block|;
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
+name|doInitialization
+block|;
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
+name|doFinalization
 block|;
 comment|// Initialization and finalization hooks.
 name|virtual

@@ -105,9 +105,9 @@ block|,
 name|arm
 block|,
 comment|// ARM; arm, armv.*, xscale
-name|cellspu
+name|aarch64
 block|,
-comment|// CellSPU: spu, cellspu
+comment|// AArch64: aarch64
 name|hexagon
 block|,
 comment|// Hexagon: hexagon
@@ -241,8 +241,9 @@ name|Minix
 block|,
 name|RTEMS
 block|,
-name|NativeClient
+name|NaCl
 block|,
+comment|// Native Client
 name|CNK
 block|,
 comment|// BG/P Compute-Node Kernel
@@ -261,6 +262,8 @@ block|,
 name|GNUEABI
 block|,
 name|GNUEABIHF
+block|,
+name|GNUX32
 block|,
 name|EABI
 block|,
@@ -820,6 +823,21 @@ operator|::
 name|MacOSX
 return|;
 block|}
+comment|/// Is this an iOS triple.
+name|bool
+name|isiOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|IOS
+return|;
+block|}
 comment|/// isOSDarwin - Is this a "Darwin" OS (OS X or iOS).
 name|bool
 name|isOSDarwin
@@ -830,12 +848,8 @@ return|return
 name|isMacOSX
 argument_list|()
 operator|||
-name|getOS
+name|isiOS
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|IOS
 return|;
 block|}
 comment|/// \brief Tests for either Cygwin or MinGW OS
@@ -876,6 +890,21 @@ name|Win32
 operator|||
 name|isOSCygMing
 argument_list|()
+return|;
+block|}
+comment|/// \brief Tests whether the OS is NaCl (Native Client)
+name|bool
+name|isOSNaCl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|NaCl
 return|;
 block|}
 comment|/// \brief Tests whether the OS uses the ELF binary format.

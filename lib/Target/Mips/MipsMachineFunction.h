@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/CodeGen/MachineFrameInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFrameInfo.h"
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -146,6 +146,17 @@ comment|/// Size of incoming argument area.
 name|unsigned
 name|IncomingArgSize
 block|;
+comment|/// CallsEhReturn - Whether the function calls llvm.eh.return.
+name|bool
+name|CallsEhReturn
+block|;
+comment|/// Frame objects for spilling eh data registers.
+name|int
+name|EhDataRegFI
+index|[
+literal|4
+index|]
+block|;
 name|public
 operator|:
 name|MipsFunctionInfo
@@ -178,6 +189,11 @@ block|,
 name|VarArgsFrameIndex
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|CallsEhReturn
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|unsigned
@@ -270,8 +286,50 @@ return|return
 name|IncomingArgSize
 return|;
 block|}
-expr|}
+name|bool
+name|callsEhReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallsEhReturn
+return|;
+block|}
+name|void
+name|setCallsEhReturn
+argument_list|()
+block|{
+name|CallsEhReturn
+operator|=
+name|true
+block|; }
+name|void
+name|createEhDataRegsFI
+argument_list|()
+block|;
+name|int
+name|getEhDataRegFI
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|{
+return|return
+name|EhDataRegFI
+index|[
+name|Reg
+index|]
+return|;
+block|}
+name|bool
+name|isEhDataRegFI
+argument_list|(
+argument|int FI
+argument_list|)
+specifier|const
 block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|EE_MACHINE_CODE_INFO_H
+name|LLVM_CODEGEN_MACHINECODEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|EE_MACHINE_CODE_INFO_H
+name|LLVM_CODEGEN_MACHINECODEINFO_H
 end_define
 
 begin_include

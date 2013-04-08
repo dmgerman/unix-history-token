@@ -82,25 +82,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CodeGen.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -154,9 +154,6 @@ name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
-decl_stmt|;
-name|class
-name|MCTargetAsmLexer
 decl_stmt|;
 name|class
 name|MCTargetAsmParser
@@ -425,30 +422,6 @@ name|CPU
 parameter_list|)
 function_decl|;
 typedef|typedef
-name|MCTargetAsmLexer
-modifier|*
-function_decl|(
-modifier|*
-name|MCAsmLexerCtorTy
-function_decl|)
-parameter_list|(
-specifier|const
-name|Target
-modifier|&
-name|T
-parameter_list|,
-specifier|const
-name|MCRegisterInfo
-modifier|&
-name|MRI
-parameter_list|,
-specifier|const
-name|MCAsmInfo
-modifier|&
-name|MAI
-parameter_list|)
-function_decl|;
-typedef|typedef
 name|MCTargetAsmParser
 modifier|*
 function_decl|(
@@ -701,11 +674,6 @@ comment|/// MCAsmBackend, if registered.
 name|MCAsmBackendCtorTy
 name|MCAsmBackendCtorFn
 decl_stmt|;
-comment|/// MCAsmLexerCtorFn - Construction function for this target's
-comment|/// MCTargetAsmLexer, if registered.
-name|MCAsmLexerCtorTy
-name|MCAsmLexerCtorFn
-decl_stmt|;
 comment|/// MCAsmParserCtorFn - Construction function for this target's
 comment|/// MCTargetAsmParser, if registered.
 name|MCAsmParserCtorTy
@@ -822,18 +790,6 @@ specifier|const
 block|{
 return|return
 name|MCAsmBackendCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasMCAsmLexer - Check if this target supports .s lexing.
-name|bool
-name|hasMCAsmLexer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCAsmLexerCtorFn
 operator|!=
 literal|0
 return|;
@@ -1240,44 +1196,6 @@ argument_list|,
 name|Triple
 argument_list|,
 name|CPU
-argument_list|)
-return|;
-block|}
-comment|/// createMCAsmLexer - Create a target specific assembly lexer.
-comment|///
-name|MCTargetAsmLexer
-modifier|*
-name|createMCAsmLexer
-argument_list|(
-specifier|const
-name|MCRegisterInfo
-operator|&
-name|MRI
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|&
-name|MAI
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|MCAsmLexerCtorFn
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|MCAsmLexerCtorFn
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|MRI
-argument_list|,
-name|MAI
 argument_list|)
 return|;
 block|}
@@ -2621,73 +2539,6 @@ condition|)
 name|T
 operator|.
 name|MCAsmBackendCtorFn
-operator|=
-name|Fn
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// RegisterMCAsmLexer - Register a MCTargetAsmLexer implementation for the
-end_comment
-
-begin_comment
-comment|/// given target.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Clients are responsible for ensuring that registration doesn't occur
-end_comment
-
-begin_comment
-comment|/// while another thread is attempting to access the registry. Typically
-end_comment
-
-begin_comment
-comment|/// this is done by initializing all targets at program startup.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param T - The target being registered.
-end_comment
-
-begin_comment
-comment|/// @param Fn - A function to construct an MCAsmLexer for the target.
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|RegisterMCAsmLexer
-argument_list|(
-name|Target
-operator|&
-name|T
-argument_list|,
-name|Target
-operator|::
-name|MCAsmLexerCtorTy
-name|Fn
-argument_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCAsmLexerCtorFn
-condition|)
-name|T
-operator|.
-name|MCAsmLexerCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -4272,91 +4123,6 @@ argument_list|,
 name|Triple
 argument_list|,
 name|CPU
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|/// RegisterMCAsmLexer - Helper template for registering a target specific
-end_comment
-
-begin_comment
-comment|/// assembly lexer, for use in the target machine initialization
-end_comment
-
-begin_comment
-comment|/// function. Usage:
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// extern "C" void LLVMInitializeFooMCAsmLexer() {
-end_comment
-
-begin_comment
-comment|///   extern Target TheFooTarget;
-end_comment
-
-begin_comment
-comment|///   RegisterMCAsmLexer<FooMCAsmLexer> X(TheFooTarget);
-end_comment
-
-begin_comment
-comment|/// }
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|MCAsmLexerImpl
-operator|>
-expr|struct
-name|RegisterMCAsmLexer
-block|{
-name|RegisterMCAsmLexer
-argument_list|(
-argument|Target&T
-argument_list|)
-block|{
-name|TargetRegistry
-operator|::
-name|RegisterMCAsmLexer
-argument_list|(
-name|T
-argument_list|,
-operator|&
-name|Allocator
-argument_list|)
-block|;     }
-name|private
-operator|:
-specifier|static
-name|MCTargetAsmLexer
-operator|*
-name|Allocator
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const MCRegisterInfo&MRI
-argument_list|,
-argument|const MCAsmInfo&MAI
-argument_list|)
-block|{
-return|return
-name|new
-name|MCAsmLexerImpl
-argument_list|(
-name|T
-argument_list|,
-name|MRI
-argument_list|,
-name|MAI
 argument_list|)
 return|;
 block|}

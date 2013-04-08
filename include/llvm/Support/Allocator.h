@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MathExtras.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<cstdlib>
 end_include
 
 begin_decl_stmt

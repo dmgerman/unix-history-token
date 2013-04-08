@@ -50,25 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_THREAD_LOCAL_H
+name|LLVM_SUPPORT_THREADLOCAL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_THREAD_LOCAL_H
+name|LLVM_SUPPORT_THREADLOCAL_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Threading.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Threading.h"
 end_include
 
 begin_include

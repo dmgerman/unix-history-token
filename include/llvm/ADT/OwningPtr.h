@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_OWNING_PTR_H
+name|LLVM_ADT_OWNINGPTR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_OWNING_PTR_H
+name|LLVM_ADT_OWNINGPTR_H
 end_define
 
 begin_include
@@ -133,7 +133,7 @@ argument_list|)
 block|{}
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 name|OwningPtr
 argument_list|(
 name|OwningPtr
@@ -409,7 +409,7 @@ argument_list|)
 block|{}
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 name|OwningArrayPtr
 argument_list|(
 name|OwningArrayPtr

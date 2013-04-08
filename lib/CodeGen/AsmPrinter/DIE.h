@@ -199,7 +199,7 @@ name|SmallVector
 operator|<
 name|DIEAbbrevData
 block|,
-literal|8
+literal|12
 operator|>
 name|Data
 block|;
@@ -254,11 +254,9 @@ name|ChildrenFlag
 return|;
 block|}
 specifier|const
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|DIEAbbrevData
-block|,
-literal|8
 operator|>
 operator|&
 name|getData
@@ -387,7 +385,7 @@ block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIE - A structured debug information entry.  Has an abbreviation which
-comment|/// describes it's organization.
+comment|/// describes its organization.
 name|class
 name|DIEValue
 decl_stmt|;
@@ -426,14 +424,14 @@ name|DIE
 modifier|*
 name|Parent
 decl_stmt|;
-comment|/// Attributes values.
+comment|/// Attribute values.
 comment|///
 name|SmallVector
 operator|<
 name|DIEValue
 operator|*
 operator|,
-literal|32
+literal|12
 operator|>
 name|Values
 expr_stmt|;
@@ -554,12 +552,10 @@ name|Children
 return|;
 block|}
 specifier|const
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|DIEValue
 operator|*
-operator|,
-literal|32
 operator|>
 operator|&
 name|getValues
@@ -580,6 +576,14 @@ return|return
 name|Parent
 return|;
 block|}
+comment|/// Climb up the parent chain to get the compile unit DIE this DIE belongs
+comment|/// to.
+name|DIE
+operator|*
+name|getCompileUnit
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|setTag
 parameter_list|(
@@ -896,6 +900,12 @@ condition|(
 name|IsSigned
 condition|)
 block|{
+specifier|const
+name|int64_t
+name|SignedInt
+init|=
+name|Int
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -903,10 +913,7 @@ name|char
 operator|)
 name|Int
 operator|==
-operator|(
-name|signed
-operator|)
-name|Int
+name|SignedInt
 condition|)
 return|return
 name|dwarf
@@ -920,10 +927,7 @@ name|short
 operator|)
 name|Int
 operator|==
-operator|(
-name|signed
-operator|)
-name|Int
+name|SignedInt
 condition|)
 return|return
 name|dwarf
@@ -937,10 +941,7 @@ name|int
 operator|)
 name|Int
 operator|==
-operator|(
-name|signed
-operator|)
-name|Int
+name|SignedInt
 condition|)
 return|return
 name|dwarf

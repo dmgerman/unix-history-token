@@ -139,6 +139,9 @@ decl_stmt|;
 name|int
 name|LocalAreaOffset
 decl_stmt|;
+name|bool
+name|StackRealignable
+decl_stmt|;
 name|public
 label|:
 name|TargetFrameLowering
@@ -151,6 +154,8 @@ argument|int LAO
 argument_list|,
 argument|unsigned TransAl =
 literal|1
+argument_list|,
+argument|bool StackReal = true
 argument_list|)
 block|:
 name|StackDir
@@ -170,7 +175,12 @@ argument_list|)
 operator|,
 name|LocalAreaOffset
 argument_list|(
-argument|LAO
+name|LAO
+argument_list|)
+operator|,
+name|StackRealignable
+argument_list|(
+argument|StackReal
 argument_list|)
 block|{}
 name|virtual
@@ -215,6 +225,17 @@ specifier|const
 block|{
 return|return
 name|TransientStackAlignment
+return|;
+block|}
+comment|/// isStackRealignable - This method returns whether the stack can be
+comment|/// realigned.
+name|bool
+name|isStackRealignable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackRealignable
 return|;
 block|}
 comment|/// getOffsetOfLocalArea - This method returns the offset of the local area
@@ -306,6 +327,18 @@ comment|/// by adding a check even before the "normal" function prologue.
 name|virtual
 name|void
 name|adjustForSegmentedStacks
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{ }
+comment|/// Adjust the prologue to add Erlang Run-Time System (ERTS) specific code in
+comment|/// the assembly prologue to explicitly handle the stack.
+name|virtual
+name|void
+name|adjustForHiPEPrologue
 argument_list|(
 name|MachineFunction
 operator|&
@@ -527,9 +560,48 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|RegScavenger
+operator|*
+name|RS
+operator|=
+name|NULL
 argument_list|)
 decl|const
 block|{   }
+comment|/// eliminateCallFramePseudoInstr - This method is called during prolog/epilog
+comment|/// code insertion to eliminate call frame setup and destroy pseudo
+comment|/// instructions (but only if the Target is using them).  It is responsible
+comment|/// for eliminating these instructions, replacing them with concrete
+comment|/// instructions.  This method need only be implemented if using call frame
+comment|/// setup/destroy pseudo instructions.
+comment|///
+name|virtual
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
+argument_list|)
+decl|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Call Frame Pseudo Instructions do not exist on this "
+literal|"target!"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 block|}

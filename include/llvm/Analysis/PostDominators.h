@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_POST_DOMINATORS_H
+name|LLVM_ANALYSIS_POSTDOMINATORS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_POST_DOMINATORS_H
+name|LLVM_ANALYSIS_POSTDOMINATORS_H
 end_define
 
 begin_include

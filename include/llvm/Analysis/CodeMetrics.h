@@ -92,25 +92,11 @@ name|class
 name|DataLayout
 decl_stmt|;
 name|class
+name|TargetTransformInfo
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
-comment|/// \brief Check whether an instruction is likely to be "free" when lowered.
-name|bool
-name|isInstructionFree
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|I
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|TD
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 comment|/// \brief Check whether a call will lower to something small.
 comment|///
 comment|/// This tests checks whether this callsite will lower to something
@@ -138,9 +124,12 @@ comment|/// \brief True if this function calls itself.
 name|bool
 name|isRecursive
 decl_stmt|;
-comment|/// \brief True if this function contains one or more indirect branches.
+comment|/// \brief True if this function cannot be duplicated.
+comment|///
+comment|/// True if this function contains one or more indirect branches, or it contains
+comment|/// one or more 'noduplicate' instructions.
 name|bool
-name|containsIndirectBr
+name|notDuplicatable
 decl_stmt|;
 comment|/// \brief True if this function calls alloca (in the C sense).
 name|bool
@@ -199,7 +188,7 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|containsIndirectBr
+name|notDuplicatable
 argument_list|(
 name|false
 argument_list|)
@@ -249,29 +238,11 @@ operator|*
 name|BB
 argument_list|,
 specifier|const
-name|DataLayout
-operator|*
-name|TD
-operator|=
-literal|0
+name|TargetTransformInfo
+operator|&
+name|TTI
 argument_list|)
 expr_stmt|;
-comment|/// \brief Add information about a function to the current state.
-name|void
-name|analyzeFunction
-parameter_list|(
-name|Function
-modifier|*
-name|F
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|TD
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 block|}

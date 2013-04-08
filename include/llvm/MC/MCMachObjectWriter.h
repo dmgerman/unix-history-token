@@ -161,6 +161,15 @@ operator|~
 name|MCMachObjectTargetWriter
 argument_list|()
 expr_stmt|;
+comment|/// @name Lifetime Management
+comment|/// @{
+name|virtual
+name|void
+name|reset
+parameter_list|()
+block|{}
+empty_stmt|;
+comment|/// @}
 comment|/// @name Accessors
 comment|/// @{
 name|bool
@@ -387,6 +396,14 @@ argument_list|(
 argument|MOTW
 argument_list|)
 block|{   }
+comment|/// @name Lifetime management Methods
+comment|/// @{
+name|virtual
+name|void
+name|reset
+argument_list|()
+block|;
+comment|/// @}
 comment|/// @name Utility Methods
 comment|/// @{
 name|bool
@@ -604,6 +621,22 @@ argument_list|,
 argument|uint32_t DataSize
 argument_list|)
 block|;
+name|void
+name|WriteLinkerOptionsLoadCommand
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Options
+argument_list|)
+block|;
 comment|// FIXME: We really need to improve the relocation validation. Basically, we
 comment|// want to implement a separate computation which evaluates the relocation
 comment|// entry as the linker would, and verifies that the resultant fixup value is
@@ -696,8 +729,6 @@ block|;
 comment|/// ComputeSymbolTable - Compute the symbol table data
 comment|///
 comment|/// \param StringTable [out] - The string table data.
-comment|/// \param StringIndexMap [out] - Map from symbol names to offsets in the
-comment|/// string table.
 name|void
 name|ComputeSymbolTable
 argument_list|(

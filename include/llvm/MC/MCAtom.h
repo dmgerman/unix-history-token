@@ -188,6 +188,7 @@ operator|:
 name|bool
 name|isTextAtom
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Type
@@ -197,7 +198,8 @@ return|;
 block|}
 name|bool
 name|isDataAtom
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Type

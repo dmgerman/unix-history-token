@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MipsInstrInfo.h"
+file|"MipsISelLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MipsISelLowering.h"
+file|"MipsInstrInfo.h"
 end_include
 
 begin_include
@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetTransformImpl.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -143,17 +143,25 @@ name|DataLayout
 name|DL
 block|;
 comment|// Calculates type size& alignment
+name|OwningPtr
+operator|<
 specifier|const
 name|MipsInstrInfo
-operator|*
+operator|>
 name|InstrInfo
 block|;
+name|OwningPtr
+operator|<
 specifier|const
 name|MipsFrameLowering
-operator|*
+operator|>
 name|FrameLowering
 block|;
+name|OwningPtr
+operator|<
+specifier|const
 name|MipsTargetLowering
+operator|>
 name|TLInfo
 block|;
 name|MipsSelectionDAGInfo
@@ -161,12 +169,6 @@ name|TSInfo
 block|;
 name|MipsJITInfo
 name|JITInfo
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -195,10 +197,7 @@ name|virtual
 operator|~
 name|MipsTargetMachine
 argument_list|()
-block|{
-name|delete
-name|InstrInfo
-block|; }
+block|{}
 name|virtual
 specifier|const
 name|MipsInstrInfo
@@ -209,6 +208,9 @@ specifier|const
 block|{
 return|return
 name|InstrInfo
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -221,6 +223,9 @@ specifier|const
 block|{
 return|return
 name|FrameLowering
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -285,8 +290,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
 name|TLInfo
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -300,32 +307,6 @@ block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
 return|;
 block|}
 comment|// Pass Pipeline Configuration

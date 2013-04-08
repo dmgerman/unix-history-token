@@ -380,72 +380,24 @@ name|PointerUnion
 argument_list|(
 argument|PT1 V
 argument_list|)
-block|{
+block|:
 name|Val
-operator|.
-name|setPointer
 argument_list|(
-name|const_cast
-operator|<
-name|void
-operator|*
-operator|>
-operator|(
-name|PointerLikeTypeTraits
-operator|<
-name|PT1
-operator|>
-operator|::
-name|getAsVoidPointer
-argument_list|(
-name|V
+argument|const_cast<void *>(PointerLikeTypeTraits<PT1>::getAsVoidPointer(V))
 argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|Val
-operator|.
-name|setInt
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
+block|{     }
 name|PointerUnion
 argument_list|(
 argument|PT2 V
 argument_list|)
-block|{
+block|:
 name|Val
-operator|.
-name|setPointer
 argument_list|(
-name|const_cast
-operator|<
-name|void
-operator|*
-operator|>
-operator|(
-name|PointerLikeTypeTraits
-operator|<
-name|PT2
-operator|>
-operator|::
-name|getAsVoidPointer
-argument_list|(
-name|V
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|Val
-operator|.
-name|setInt
-argument_list|(
+argument|const_cast<void *>(PointerLikeTypeTraits<PT2>::getAsVoidPointer(V))
+argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
+block|{     }
 comment|/// isNull - Return true if the pointer held in the union is null,
 comment|/// regardless of which type it is.
 name|bool
@@ -756,7 +708,7 @@ operator|)
 block|{
 name|Val
 operator|.
-name|setPointer
+name|initWithPointer
 argument_list|(
 name|const_cast
 operator|<
@@ -774,13 +726,6 @@ argument_list|(
 name|RHS
 argument_list|)
 operator|)
-argument_list|)
-block|;
-name|Val
-operator|.
-name|setInt
-argument_list|(
-literal|0
 argument_list|)
 block|;
 return|return
@@ -805,7 +750,7 @@ operator|)
 block|{
 name|Val
 operator|.
-name|setPointer
+name|setPointerAndInt
 argument_list|(
 name|const_cast
 operator|<
@@ -823,12 +768,7 @@ argument_list|(
 name|RHS
 argument_list|)
 operator|)
-argument_list|)
-block|;
-name|Val
-operator|.
-name|setInt
-argument_list|(
+argument_list|,
 literal|1
 argument_list|)
 block|;

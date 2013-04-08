@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_include
@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<utility>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<vector>
 end_include
 
 begin_decl_stmt

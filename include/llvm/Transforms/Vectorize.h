@@ -73,6 +73,9 @@ decl_stmt|;
 name|class
 name|BasicBlockPass
 decl_stmt|;
+name|class
+name|Pass
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// @brief Vectorize configuration.
 struct|struct
@@ -154,6 +157,10 @@ decl_stmt|;
 comment|/// @brief The maximum number of pairable instructions per group.
 name|unsigned
 name|MaxInsts
+decl_stmt|;
+comment|/// @brief The maximum number of candidate instruction pairs per group.
+name|unsigned
+name|MaxPairs
 decl_stmt|;
 comment|/// @brief The maximum number of pairing iterations.
 name|unsigned

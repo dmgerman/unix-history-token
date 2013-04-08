@@ -180,18 +180,9 @@ argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|int SPAdj
 argument_list|,
-argument|RegScavenger *RS=NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-argument|MachineFunction&MF
+argument|unsigned FIOperandNum
 argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
@@ -293,46 +284,6 @@ name|std
 operator|::
 name|string
 name|getNVPTXRegClassStr
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|)
-block|;
-name|bool
-name|isNVPTXVectorRegClass
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|)
-block|;
-name|std
-operator|::
-name|string
-name|getNVPTXElemClassName
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|)
-block|;
-name|int
-name|getNVPTXVectorSize
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|)
-block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getNVPTXElemClass
 argument_list|(
 specifier|const
 name|TargetRegisterClass

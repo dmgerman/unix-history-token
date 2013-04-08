@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SUPPORT_SMLOC_H
+name|LLVM_SUPPORT_SMLOC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SUPPORT_SMLOC_H
+name|LLVM_SUPPORT_SMLOC_H
 end_define
 
 begin_include
@@ -73,7 +73,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// SMLoc - Represents a location in source code.
+comment|/// Represents a location in source code.
 name|class
 name|SMLoc
 block|{
@@ -177,9 +177,11 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// SMRange - Represents a range in source code.  Note that unlike standard STL
-comment|/// ranges, the locations specified are considered to be *inclusive*.  For
-comment|/// example, [X,X] *does* include X, it isn't an empty range.
+comment|/// Represents a range in source code.
+comment|///
+comment|/// SMRange is implemented using a half-open range, as is the convention in C++.
+comment|/// In the string "abc", the range (1,3] represents the substring "bc", and the
+comment|/// range (2,2] represents an empty range between the characters "b" and "c".
 name|class
 name|SMRange
 block|{

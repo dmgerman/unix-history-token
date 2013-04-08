@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_decl_stmt

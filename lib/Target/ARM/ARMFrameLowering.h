@@ -282,6 +282,18 @@ argument_list|,
 argument|unsigned NumAlignedDPRCS2Regs
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

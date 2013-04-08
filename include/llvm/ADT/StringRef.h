@@ -2377,8 +2377,6 @@ name|string
 operator|&
 name|buffer
 operator|,
-name|llvm
-operator|::
 name|StringRef
 name|string
 operator|)

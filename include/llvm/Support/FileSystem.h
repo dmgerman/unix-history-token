@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_FILE_SYSTEM_H
+name|LLVM_SUPPORT_FILESYSTEM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_FILE_SYSTEM_H
+name|LLVM_SUPPORT_FILESYSTEM_H
 end_define
 
 begin_include
@@ -1777,6 +1777,9 @@ parameter_list|(
 name|int
 name|FD
 parameter_list|,
+name|bool
+name|CloseFD
+parameter_list|,
 name|uint64_t
 name|Offset
 parameter_list|)
@@ -1789,7 +1792,7 @@ name|char_type
 typedef|;
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 name|mapped_file_region
 argument_list|(
 name|mapped_file_region
@@ -1835,10 +1838,13 @@ argument|error_code&ec
 argument_list|)
 empty_stmt|;
 comment|/// \param fd An open file descriptor to map. mapped_file_region takes
-comment|///           ownership. It must have been opended in the correct mode.
+comment|///   ownership if closefd is true. It must have been opended in the correct
+comment|///   mode.
 name|mapped_file_region
 argument_list|(
 argument|int fd
+argument_list|,
+argument|bool closefd
 argument_list|,
 argument|mapmode mode
 argument_list|,

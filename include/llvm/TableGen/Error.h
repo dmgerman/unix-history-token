@@ -183,6 +183,10 @@ specifier|extern
 name|SourceMgr
 name|SrcMgr
 decl_stmt|;
+specifier|extern
+name|unsigned
+name|ErrorsPrinted
+decl_stmt|;
 block|}
 end_decl_stmt
 

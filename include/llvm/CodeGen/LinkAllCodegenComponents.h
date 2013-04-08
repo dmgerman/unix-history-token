@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/GCs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/Passes.h"
 end_include
 
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/SchedulerRegistry.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/GCs.h"
 end_include
 
 begin_include
@@ -161,6 +161,11 @@ expr_stmt|;
 name|llvm
 operator|::
 name|linkOcamlGC
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|linkErlangGC
 argument_list|()
 expr_stmt|;
 name|llvm

@@ -117,6 +117,12 @@ name|SmallString
 operator|<
 literal|128
 operator|>
+name|FileName
+expr_stmt|;
+name|SmallString
+operator|<
+literal|128
+operator|>
 name|LockFileName
 expr_stmt|;
 name|SmallString

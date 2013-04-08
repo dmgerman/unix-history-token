@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt
@@ -68,6 +68,12 @@ block|{
 enum|enum
 name|Func
 block|{
+comment|/// int _IO_getc(_IO_FILE * __fp);
+name|under_IO_getc
+block|,
+comment|/// int _IO_putc(int __c, _IO_FILE * __fp);
+name|under_IO_putc
+block|,
 comment|/// void operator delete[](void*);
 name|ZdaPv
 block|,
@@ -111,8 +117,29 @@ block|,
 comment|/// void __cxa_guard_release(guard_t *guard);
 name|cxa_guard_release
 block|,
+comment|/// int __isoc99_scanf (const char *format, ...)
+name|dunder_isoc99_scanf
+block|,
+comment|/// int __isoc99_sscanf(const char *s, const char *format, ...)
+name|dunder_isoc99_sscanf
+block|,
 comment|/// void *__memcpy_chk(void *s1, const void *s2, size_t n, size_t s1size);
 name|memcpy_chk
+block|,
+comment|/// char * __strdup(const char *s);
+name|dunder_strdup
+block|,
+comment|/// char *__strndup(const char *s, size_t n);
+name|dunder_strndup
+block|,
+comment|/// char * __strtok_r(char *s, const char *delim, char **save_ptr);
+name|dunder_strtok_r
+block|,
+comment|/// int abs(int j);
+name|abs
+block|,
+comment|/// int access(const char *path, int amode);
+name|access
 block|,
 comment|/// double acos(double x);
 name|acos
@@ -177,6 +204,27 @@ block|,
 comment|/// long double atanl(long double x);
 name|atanl
 block|,
+comment|/// double atof(const char *str);
+name|atof
+block|,
+comment|/// int atoi(const char *str);
+name|atoi
+block|,
+comment|/// long atol(const char *str);
+name|atol
+block|,
+comment|/// long long atoll(const char *nptr);
+name|atoll
+block|,
+comment|/// int bcmp(const void *s1, const void *s2, size_t n);
+name|bcmp
+block|,
+comment|/// void bcopy(const void *s1, void *s2, size_t n);
+name|bcopy
+block|,
+comment|/// void bzero(void *s, size_t n);
+name|bzero
+block|,
 comment|/// void *calloc(size_t count, size_t size);
 name|calloc
 block|,
@@ -197,6 +245,18 @@ name|ceilf
 block|,
 comment|/// long double ceill(long double x);
 name|ceill
+block|,
+comment|/// int chmod(const char *path, mode_t mode);
+name|chmod
+block|,
+comment|/// int chown(const char *path, uid_t owner, gid_t group);
+name|chown
+block|,
+comment|/// void clearerr(FILE *stream);
+name|clearerr
+block|,
+comment|/// int closedir(DIR *dirp);
+name|closedir
 block|,
 comment|/// double copysign(double x, double y);
 name|copysign
@@ -224,6 +284,9 @@ name|coshl
 block|,
 comment|/// long double cosl(long double x);
 name|cosl
+block|,
+comment|/// char *ctermid(char *s);
+name|ctermid
 block|,
 comment|/// double exp(double x);
 name|exp
@@ -270,8 +333,47 @@ block|,
 comment|/// long double fabsl(long double x);
 name|fabsl
 block|,
+comment|/// int fclose(FILE *stream);
+name|fclose
+block|,
+comment|/// FILE *fdopen(int fildes, const char *mode);
+name|fdopen
+block|,
+comment|/// int feof(FILE *stream);
+name|feof
+block|,
+comment|/// int ferror(FILE *stream);
+name|ferror
+block|,
+comment|/// int fflush(FILE *stream);
+name|fflush
+block|,
+comment|/// int ffs(int i);
+name|ffs
+block|,
+comment|/// int ffsl(long int i);
+name|ffsl
+block|,
+comment|/// int ffsll(long long int i);
+name|ffsll
+block|,
+comment|/// int fgetc(FILE *stream);
+name|fgetc
+block|,
+comment|/// int fgetpos(FILE *stream, fpos_t *pos);
+name|fgetpos
+block|,
+comment|/// char *fgets(char *s, int n, FILE *stream);
+name|fgets
+block|,
+comment|/// int fileno(FILE *stream);
+name|fileno
+block|,
 comment|/// int fiprintf(FILE *stream, const char *format, ...);
 name|fiprintf
+block|,
+comment|/// void flockfile(FILE *file);
+name|flockfile
 block|,
 comment|/// double floor(double x);
 name|floor
@@ -291,21 +393,129 @@ block|,
 comment|/// long double fmodl(long double x, long double y);
 name|fmodl
 block|,
+comment|/// FILE *fopen(const char *filename, const char *mode);
+name|fopen
+block|,
+comment|/// FILE *fopen64(const char *filename, const char *opentype)
+name|fopen64
+block|,
+comment|/// int fprintf(FILE *stream, const char *format, ...);
+name|fprintf
+block|,
 comment|/// int fputc(int c, FILE *stream);
 name|fputc
 block|,
 comment|/// int fputs(const char *s, FILE *stream);
 name|fputs
 block|,
+comment|/// size_t fread(void *ptr, size_t size, size_t nitems, FILE *stream);
+name|fread
+block|,
 comment|/// void free(void *ptr);
 name|free
+block|,
+comment|/// double frexp(double num, int *exp);
+name|frexp
+block|,
+comment|/// float frexpf(float num, int *exp);
+name|frexpf
+block|,
+comment|/// long double frexpl(long double num, int *exp);
+name|frexpl
+block|,
+comment|/// int fscanf(FILE *stream, const char *format, ... );
+name|fscanf
+block|,
+comment|/// int fseek(FILE *stream, long offset, int whence);
+name|fseek
+block|,
+comment|/// int fseeko(FILE *stream, off_t offset, int whence);
+name|fseeko
+block|,
+comment|/// int fseeko64(FILE *stream, off64_t offset, int whence)
+name|fseeko64
+block|,
+comment|/// int fsetpos(FILE *stream, const fpos_t *pos);
+name|fsetpos
+block|,
+comment|/// int fstat(int fildes, struct stat *buf);
+name|fstat
+block|,
+comment|/// int fstat64(int filedes, struct stat64 *buf)
+name|fstat64
+block|,
+comment|/// int fstatvfs(int fildes, struct statvfs *buf);
+name|fstatvfs
+block|,
+comment|/// int fstatvfs64(int fildes, struct statvfs64 *buf);
+name|fstatvfs64
+block|,
+comment|/// long ftell(FILE *stream);
+name|ftell
+block|,
+comment|/// off_t ftello(FILE *stream);
+name|ftello
+block|,
+comment|/// off64_t ftello64(FILE *stream)
+name|ftello64
+block|,
+comment|/// int ftrylockfile(FILE *file);
+name|ftrylockfile
+block|,
+comment|/// void funlockfile(FILE *file);
+name|funlockfile
 block|,
 comment|/// size_t fwrite(const void *ptr, size_t size, size_t nitems,
 comment|/// FILE *stream);
 name|fwrite
 block|,
+comment|/// int getc(FILE *stream);
+name|getc
+block|,
+comment|/// int getc_unlocked(FILE *stream);
+name|getc_unlocked
+block|,
+comment|/// int getchar(void);
+name|getchar
+block|,
+comment|/// char *getenv(const char *name);
+name|getenv
+block|,
+comment|/// int getitimer(int which, struct itimerval *value);
+name|getitimer
+block|,
+comment|/// int getlogin_r(char *name, size_t namesize);
+name|getlogin_r
+block|,
+comment|/// struct passwd *getpwnam(const char *name);
+name|getpwnam
+block|,
+comment|/// char *gets(char *s);
+name|gets
+block|,
+comment|/// uint32_t htonl(uint32_t hostlong);
+name|htonl
+block|,
+comment|/// uint16_t htons(uint16_t hostshort);
+name|htons
+block|,
 comment|/// int iprintf(const char *format, ...);
 name|iprintf
+block|,
+comment|/// int isascii(int c);
+name|isascii
+block|,
+comment|/// int isdigit(int c);
+name|isdigit
+block|,
+comment|/// long int labs(long int j);
+name|labs
+block|,
+comment|/// int lchown(const char *path, uid_t owner, gid_t group);
+name|lchown
+block|,
+comment|/// long long int llabs(long long int j);
+name|llabs
 block|,
 comment|/// double log(double x);
 name|log
@@ -352,8 +562,20 @@ block|,
 comment|/// long double logl(long double x);
 name|logl
 block|,
+comment|/// int lstat(const char *path, struct stat *buf);
+name|lstat
+block|,
+comment|/// int lstat64(const char *path, struct stat64 *buf);
+name|lstat64
+block|,
 comment|/// void *malloc(size_t size);
 name|malloc
+block|,
+comment|/// void *memalign(size_t boundary, size_t size);
+name|memalign
+block|,
+comment|/// void *memccpy(void *s1, const void *s2, int c, size_t n);
+name|memccpy
 block|,
 comment|/// void *memchr(const void *s, int c, size_t n);
 name|memchr
@@ -367,11 +589,29 @@ block|,
 comment|/// void *memmove(void *s1, const void *s2, size_t n);
 name|memmove
 block|,
+comment|// void *memrchr(const void *s, int c, size_t n);
+name|memrchr
+block|,
 comment|/// void *memset(void *b, int c, size_t len);
 name|memset
 block|,
 comment|/// void memset_pattern16(void *b, const void *pattern16, size_t len);
 name|memset_pattern16
+block|,
+comment|/// int mkdir(const char *path, mode_t mode);
+name|mkdir
+block|,
+comment|/// time_t mktime(struct tm *timeptr);
+name|mktime
+block|,
+comment|/// double modf(double x, double *iptr);
+name|modf
+block|,
+comment|/// float modff(float, float *iptr);
+name|modff
+block|,
+comment|/// long double modfl(long double value, long double *iptr);
+name|modfl
 block|,
 comment|/// double nearbyint(double x);
 name|nearbyint
@@ -381,6 +621,30 @@ name|nearbyintf
 block|,
 comment|/// long double nearbyintl(long double x);
 name|nearbyintl
+block|,
+comment|/// uint32_t ntohl(uint32_t netlong);
+name|ntohl
+block|,
+comment|/// uint16_t ntohs(uint16_t netshort);
+name|ntohs
+block|,
+comment|/// int open(const char *path, int oflag, ... );
+name|open
+block|,
+comment|/// int open64(const char *filename, int flags[, mode_t mode])
+name|open64
+block|,
+comment|/// DIR *opendir(const char *dirname);
+name|opendir
+block|,
+comment|/// int pclose(FILE *stream);
+name|pclose
+block|,
+comment|/// void perror(const char *s);
+name|perror
+block|,
+comment|/// FILE *popen(const char *command, const char *mode);
+name|popen
 block|,
 comment|/// int posix_memalign(void **memptr, size_t alignment, size_t size);
 name|posix_memalign
@@ -394,17 +658,52 @@ block|,
 comment|/// long double powl(long double x, long double y);
 name|powl
 block|,
+comment|/// ssize_t pread(int fildes, void *buf, size_t nbyte, off_t offset);
+name|pread
+block|,
+comment|/// int printf(const char *format, ...);
+name|printf
+block|,
+comment|/// int putc(int c, FILE *stream);
+name|putc
+block|,
 comment|/// int putchar(int c);
 name|putchar
 block|,
 comment|/// int puts(const char *s);
 name|puts
 block|,
+comment|/// ssize_t pwrite(int fildes, const void *buf, size_t nbyte,
+comment|///                off_t offset);
+name|pwrite
+block|,
+comment|/// void qsort(void *base, size_t nel, size_t width,
+comment|///            int (*compar)(const void *, const void *));
+name|qsort
+block|,
+comment|/// ssize_t read(int fildes, void *buf, size_t nbyte);
+name|read
+block|,
+comment|/// ssize_t readlink(const char *path, char *buf, size_t bufsize);
+name|readlink
+block|,
 comment|/// void *realloc(void *ptr, size_t size);
 name|realloc
 block|,
 comment|/// void *reallocf(void *ptr, size_t size);
 name|reallocf
+block|,
+comment|/// char *realpath(const char *file_name, char *resolved_name);
+name|realpath
+block|,
+comment|/// int remove(const char *path);
+name|remove
+block|,
+comment|/// int rename(const char *old, const char *new);
+name|rename
+block|,
+comment|/// void rewind(FILE *stream);
+name|rewind
 block|,
 comment|/// double rint(double x);
 name|rint
@@ -415,6 +714,9 @@ block|,
 comment|/// long double rintl(long double x);
 name|rintl
 block|,
+comment|/// int rmdir(const char *path);
+name|rmdir
+block|,
 comment|/// double round(double x);
 name|round
 block|,
@@ -423,6 +725,19 @@ name|roundf
 block|,
 comment|/// long double roundl(long double x);
 name|roundl
+block|,
+comment|/// int scanf(const char *restrict format, ... );
+name|scanf
+block|,
+comment|/// void setbuf(FILE *stream, char *buf);
+name|setbuf
+block|,
+comment|/// int setitimer(int which, const struct itimerval *value,
+comment|///               struct itimerval *ovalue);
+name|setitimer
+block|,
+comment|/// int setvbuf(FILE *stream, char *buf, int type, size_t size);
+name|setvbuf
 block|,
 comment|/// double sin(double x);
 name|sin
@@ -445,6 +760,12 @@ block|,
 comment|/// int siprintf(char *str, const char *format, ...);
 name|siprintf
 block|,
+comment|/// int snprintf(char *s, size_t n, const char *format, ...);
+name|snprintf
+block|,
+comment|/// int sprintf(char *str, const char *format, ...);
+name|sprintf
+block|,
 comment|/// double sqrt(double x);
 name|sqrt
 block|,
@@ -454,8 +775,29 @@ block|,
 comment|/// long double sqrtl(long double x);
 name|sqrtl
 block|,
+comment|/// int sscanf(const char *s, const char *format, ... );
+name|sscanf
+block|,
+comment|/// int stat(const char *path, struct stat *buf);
+name|stat
+block|,
+comment|/// int stat64(const char *path, struct stat64 *buf);
+name|stat64
+block|,
+comment|/// int statvfs(const char *path, struct statvfs *buf);
+name|statvfs
+block|,
+comment|/// int statvfs64(const char *path, struct statvfs64 *buf)
+name|statvfs64
+block|,
 comment|/// char *stpcpy(char *s1, const char *s2);
 name|stpcpy
+block|,
+comment|/// char *stpncpy(char *s1, const char *s2, size_t n);
+name|stpncpy
+block|,
+comment|/// int strcasecmp(const char *s1, const char *s2);
+name|strcasecmp
 block|,
 comment|/// char *strcat(char *s1, const char *s2);
 name|strcat
@@ -465,6 +807,9 @@ name|strchr
 block|,
 comment|/// int strcmp(const char *s1, const char *s2);
 name|strcmp
+block|,
+comment|/// int strcoll(const char *s1, const char *s2);
+name|strcoll
 block|,
 comment|/// char *strcpy(char *s1, const char *s2);
 name|strcpy
@@ -477,6 +822,9 @@ name|strdup
 block|,
 comment|/// size_t strlen(const char *s);
 name|strlen
+block|,
+comment|/// int strncasecmp(const char *s1, const char *s2, size_t n);
+name|strncasecmp
 block|,
 comment|/// char *strncat(char *s1, const char *s2, size_t n);
 name|strncat
@@ -511,6 +859,12 @@ block|,
 comment|/// float strtof(const char *nptr, char **endptr);
 name|strtof
 block|,
+comment|// char *strtok(char *s1, const char *s2);
+name|strtok
+block|,
+comment|// char *strtok_r(char *s, const char *sep, char **lasts);
+name|strtok_r
+block|,
 comment|/// long int strtol(const char *nptr, char **endptr, int base);
 name|strtol
 block|,
@@ -526,6 +880,12 @@ block|,
 comment|/// unsigned long long int strtoull(const char *nptr, char **endptr,
 comment|///                                 int base);
 name|strtoull
+block|,
+comment|/// size_t strxfrm(char *s1, const char *s2, size_t n);
+name|strxfrm
+block|,
+comment|/// int system(const char *command);
+name|system
 block|,
 comment|/// double tan(double x);
 name|tan
@@ -545,6 +905,18 @@ block|,
 comment|/// long double tanl(long double x);
 name|tanl
 block|,
+comment|/// clock_t times(struct tms *buffer);
+name|times
+block|,
+comment|/// FILE *tmpfile(void);
+name|tmpfile
+block|,
+comment|/// FILE *tmpfile64(void)
+name|tmpfile64
+block|,
+comment|/// int toascii(int c);
+name|toascii
+block|,
 comment|/// double trunc(double x);
 name|trunc
 block|,
@@ -554,8 +926,50 @@ block|,
 comment|/// long double truncl(long double x);
 name|truncl
 block|,
+comment|/// int uname(struct utsname *name);
+name|uname
+block|,
+comment|/// int ungetc(int c, FILE *stream);
+name|ungetc
+block|,
+comment|/// int unlink(const char *path);
+name|unlink
+block|,
+comment|/// int unsetenv(const char *name);
+name|unsetenv
+block|,
+comment|/// int utime(const char *path, const struct utimbuf *times);
+name|utime
+block|,
+comment|/// int utimes(const char *path, const struct timeval times[2]);
+name|utimes
+block|,
 comment|/// void *valloc(size_t size);
 name|valloc
+block|,
+comment|/// int vfprintf(FILE *stream, const char *format, va_list ap);
+name|vfprintf
+block|,
+comment|/// int vfscanf(FILE *stream, const char *format, va_list arg);
+name|vfscanf
+block|,
+comment|/// int vprintf(const char *restrict format, va_list ap);
+name|vprintf
+block|,
+comment|/// int vscanf(const char *format, va_list arg);
+name|vscanf
+block|,
+comment|/// int vsnprintf(char *s, size_t n, const char *format, va_list ap);
+name|vsnprintf
+block|,
+comment|/// int vsprintf(char *s, const char *format, va_list ap);
+name|vsprintf
+block|,
+comment|/// int vsscanf(const char *s, const char *format, va_list arg);
+name|vsscanf
+block|,
+comment|/// ssize_t write(int fildes, const void *buf, size_t nbyte);
+name|write
 block|,
 name|NumLibFuncs
 block|}

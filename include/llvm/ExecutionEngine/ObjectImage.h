@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//                     The LLVM Compiler Infrastructure
+comment|//		       The LLVM Compiler Infrastructure
 end_comment
 
 begin_comment
@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Object/ObjectFile.h"
+file|"llvm/ExecutionEngine/ObjectBuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ObjectBuffer.h"
+file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_decl_stmt
@@ -210,6 +210,17 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|getObjectFile
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|// Subclasses can override these methods to provide JIT debugging support
 name|virtual
 name|void
@@ -240,7 +251,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_RUNTIMEDYLD_OBJECT_IMAGE_H
+comment|// LLVM_EXECUTIONENGINE_OBJECTIMAGE_H
 end_comment
 
 end_unit

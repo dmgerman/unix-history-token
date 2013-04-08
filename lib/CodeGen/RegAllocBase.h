@@ -154,19 +154,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"LiveIntervalUnion.h"
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LiveIntervalUnion.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/RegisterClassInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_decl_stmt

@@ -402,13 +402,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -512,6 +512,67 @@ return|return
 name|a
 operator|+
 literal|1
+operator|==
+name|b
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|IntervalMapHalfOpenInfo
+block|{
+comment|/// startLess - Return true if x is not in [a;b).
+specifier|static
+specifier|inline
+name|bool
+name|startLess
+argument_list|(
+argument|const T&x
+argument_list|,
+argument|const T&a
+argument_list|)
+block|{
+return|return
+name|x
+operator|<
+name|a
+return|;
+block|}
+comment|/// stopLess - Return true if x is not in [a;b).
+specifier|static
+specifier|inline
+name|bool
+name|stopLess
+argument_list|(
+argument|const T&b
+argument_list|,
+argument|const T&x
+argument_list|)
+block|{
+return|return
+name|b
+operator|<=
+name|x
+return|;
+block|}
+comment|/// adjacent - Return true when the intervals [x;a) and [b;y) can coalesce.
+specifier|static
+specifier|inline
+name|bool
+name|adjacent
+argument_list|(
+argument|const T&a
+argument_list|,
+argument|const T&b
+argument_list|)
+block|{
+return|return
+name|a
 operator|==
 name|b
 return|;
@@ -1420,32 +1481,22 @@ comment|/// @param Grow     Reserve space for a new element at Position.
 comment|/// @return         (node, offset) for Position.
 name|IdxPair
 name|distribute
-parameter_list|(
-name|unsigned
-name|Nodes
-parameter_list|,
-name|unsigned
-name|Elements
-parameter_list|,
-name|unsigned
-name|Capacity
-parameter_list|,
-specifier|const
-name|unsigned
-modifier|*
-name|CurSize
-parameter_list|,
-name|unsigned
-name|NewSize
-index|[]
-parameter_list|,
-name|unsigned
-name|Position
-parameter_list|,
-name|bool
-name|Grow
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Nodes
+argument_list|,
+argument|unsigned Elements
+argument_list|,
+argument|unsigned Capacity
+argument_list|,
+argument|const unsigned *CurSize
+argument_list|,
+argument|unsigned NewSize[]
+argument_list|,
+argument|unsigned Position
+argument_list|,
+argument|bool Grow
+argument_list|)
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//---                   IntervalMapImpl::NodeSizer                         ---//
 comment|//===----------------------------------------------------------------------===//
@@ -1457,32 +1508,32 @@ comment|// This may not be possible if keys or values are very large. Such large
 comment|// are handled correctly, but a std::map would probably give better performance.
 comment|//
 comment|//===----------------------------------------------------------------------===//
-enum|enum
+block|enum
 block|{
 comment|// Cache line size. Most architectures have 32 or 64 byte cache lines.
 comment|// We use 64 bytes here because it provides good branching factors.
 name|Log2CacheLine
-init|=
+operator|=
 literal|6
 block|,
 name|CacheLineBytes
-init|=
+operator|=
 literal|1
 operator|<<
 name|Log2CacheLine
 block|,
 name|DesiredNodeBytes
-init|=
+operator|=
 literal|3
 operator|*
 name|CacheLineBytes
 block|}
-enum|;
+block|;
 name|template
 operator|<
 name|typename
 name|KeyT
-operator|,
+block|,
 name|typename
 name|ValT
 operator|>
@@ -1596,7 +1647,7 @@ operator|*
 argument_list|)
 operator|)
 block|}
-expr_stmt|;
+block|;
 comment|/// Allocator - The recycling allocator used for both branch and leaf nodes.
 comment|/// This typedef is very likely to be identical for all IntervalMaps with
 comment|/// reasonably sized entries, so the same allocator can be shared among
@@ -1615,93 +1666,27 @@ operator|>
 name|Allocator
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//---                     IntervalMapImpl::NodeRef                         ---//
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// B+-tree nodes can be leaves or branches, so we need a polymorphic node
-end_comment
-
-begin_comment
 comment|// pointer that can point to both kinds.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// All nodes are cache line aligned and the low 6 bits of a node pointer are
-end_comment
-
-begin_comment
 comment|// always 0. These bits are used to store the number of elements in the
-end_comment
-
-begin_comment
 comment|// referenced node. Besides saving space, placing node sizes in the parents
-end_comment
-
-begin_comment
 comment|// allow tree balancing algorithms to run without faulting cache lines for nodes
-end_comment
-
-begin_comment
 comment|// that may not need to be modified.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// A NodeRef doesn't know whether it references a leaf node or a branch node.
-end_comment
-
-begin_comment
 comment|// It is the responsibility of the caller to use the correct types.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Nodes are never supposed to be empty, and it is invalid to store a node size
-end_comment
-
-begin_comment
 comment|// of 0 in a NodeRef. The valid range of sizes is 1-64.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_decl_stmt
 name|class
 name|NodeRef
 block|{
@@ -1943,9 +1928,6 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -1966,10 +1948,14 @@ name|RHS
 operator|)
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 

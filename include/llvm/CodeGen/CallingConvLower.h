@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/CodeGen/MachineFrameInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFrameInfo.h"
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetCallingConv.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/Target/TargetCallingConv.h"
 end_include
 
 begin_decl_stmt
@@ -157,13 +157,13 @@ name|unsigned
 name|Loc
 decl_stmt|;
 comment|/// isMem - True if this is a memory loc, false if it is a register loc.
-name|bool
+name|unsigned
 name|isMem
 range|:
 literal|1
 decl_stmt|;
 comment|/// isCustom - True if this arg/retval requires special handling.
-name|bool
+name|unsigned
 name|isCustom
 range|:
 literal|1

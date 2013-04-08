@@ -114,20 +114,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_LOOP_INFO_H
+name|LLVM_ANALYSIS_LOOPINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_LOOP_INFO_H
+name|LLVM_ANALYSIS_LOOPINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/Pass.h"
-end_include
 
 begin_include
 include|#
@@ -139,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DepthFirstIterator.h"
 end_include
 
 begin_include
@@ -162,37 +150,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/Dominators.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CFG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_decl_stmt
@@ -272,6 +242,9 @@ name|Loop
 decl_stmt|;
 name|class
 name|PHINode
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|template
 operator|<
@@ -796,6 +769,7 @@ block|{
 typedef|typedef
 name|GraphTraits
 operator|<
+specifier|const
 name|BlockT
 operator|*
 operator|>
@@ -813,14 +787,7 @@ name|BlockTraits
 operator|::
 name|child_begin
 argument_list|(
-name|const_cast
-operator|<
-name|BlockT
-operator|*
-operator|>
-operator|(
 name|BB
-operator|)
 argument_list|)
 operator|,
 name|SE
@@ -829,14 +796,7 @@ name|BlockTraits
 operator|::
 name|child_end
 argument_list|(
-name|const_cast
-operator|<
-name|BlockT
-operator|*
-operator|>
-operator|(
 name|BB
-operator|)
 argument_list|)
 init|;
 name|SI
@@ -906,14 +866,7 @@ name|InvBlockTraits
 operator|::
 name|child_begin
 argument_list|(
-name|const_cast
-operator|<
-name|BlockT
-operator|*
-operator|>
-operator|(
 name|H
-operator|)
 argument_list|)
 operator|,
 name|E
@@ -922,14 +875,7 @@ name|InvBlockTraits
 operator|::
 name|child_end
 argument_list|(
-name|const_cast
-operator|<
-name|BlockT
-operator|*
-operator|>
-operator|(
 name|H
-operator|)
 argument_list|)
 init|;
 name|I
@@ -1869,6 +1815,23 @@ expr_stmt|;
 comment|/// isSafeToClone - Return true if the loop body is safe to clone in practice.
 name|bool
 name|isSafeToClone
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if the loop is annotated parallel.
+comment|///
+comment|/// A parallel loop can be assumed to not contain any dependencies between
+comment|/// iterations by the compiler. That is, any loop-carried dependency checking
+comment|/// can be skipped completely when parallelizing the loop on the target
+comment|/// machine. Thus, if the parallel loop information originates from the
+comment|/// programmer, e.g. via the OpenMP parallel for pragma, it is the
+comment|/// programmer's responsibility to ensure there are no loop-carried
+comment|/// dependencies. The final execution order of the instructions across
+comment|/// iterations is not guaranteed, thus, the end result might or might not
+comment|/// implement actual concurrent execution of instructions across multiple
+comment|/// iterations.
+name|bool
+name|isAnnotatedParallel
 argument_list|()
 specifier|const
 expr_stmt|;

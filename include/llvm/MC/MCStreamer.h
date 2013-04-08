@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAssembler.h"
 end_include
 
 begin_include
@@ -86,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -147,6 +159,37 @@ comment|///
 name|class
 name|MCStreamer
 block|{
+name|public
+label|:
+enum|enum
+name|StreamerKind
+block|{
+name|SK_AsmStreamer
+block|,
+name|SK_NullStreamer
+block|,
+name|SK_RecordStreamer
+block|,
+comment|// MCObjectStreamer subclasses.
+name|SK_ELFStreamer
+block|,
+name|SK_ARMELFStreamer
+block|,
+name|SK_MachOStreamer
+block|,
+name|SK_PureStreamer
+block|,
+name|SK_MipsELFStreamer
+block|,
+name|SK_WinCOFFStreamer
+block|}
+enum|;
+name|private
+label|:
+specifier|const
+name|StreamerKind
+name|Kind
+decl_stmt|;
 name|MCContext
 modifier|&
 name|Context
@@ -185,6 +228,11 @@ expr_stmt|;
 name|MCDwarfFrameInfo
 modifier|*
 name|getCurrentFrameInfo
+parameter_list|()
+function_decl|;
+name|MCSymbol
+modifier|*
+name|EmitCFICommon
 parameter_list|()
 function_decl|;
 name|void
@@ -241,15 +289,18 @@ literal|4
 operator|>
 name|SectionStack
 expr_stmt|;
+name|bool
+name|AutoInitSections
+decl_stmt|;
 name|protected
 label|:
 name|MCStreamer
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|StreamerKind Kind
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 specifier|const
 name|MCExpr
 modifier|*
@@ -342,6 +393,22 @@ operator|~
 name|MCStreamer
 argument_list|()
 expr_stmt|;
+name|StreamerKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// State management
+comment|///
+name|virtual
+name|void
+name|reset
+parameter_list|()
+function_decl|;
 name|MCContext
 operator|&
 name|getContext
@@ -822,6 +889,46 @@ block|}
 end_function
 
 begin_comment
+comment|/// Initialize the streamer.
+end_comment
+
+begin_function
+name|void
+name|InitStreamer
+parameter_list|()
+block|{
+if|if
+condition|(
+name|AutoInitSections
+condition|)
+name|InitSections
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Tell this MCStreamer to call InitSections upon initialization.
+end_comment
+
+begin_function
+name|void
+name|setAutoInitSections
+parameter_list|(
+name|bool
+name|AutoInitSections
+parameter_list|)
+block|{
+name|this
+operator|->
+name|AutoInitSections
+operator|=
+name|AutoInitSections
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// InitSections - Create the default sections and set the initial one.
 end_comment
 
@@ -829,6 +936,20 @@ begin_function_decl
 name|virtual
 name|void
 name|InitSections
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// InitToTextSection - Create a text section and switch the streamer to it.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|InitToTextSection
 parameter_list|()
 init|=
 literal|0
@@ -882,6 +1003,18 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
+name|EmitDebugLabel
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
 name|EmitEHSymAttributes
 parameter_list|(
 specifier|const
@@ -912,6 +1045,30 @@ init|=
 literal|0
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// EmitLinkerOptions - Emit the given list @p Options of strings as linker
+end_comment
+
+begin_comment
+comment|/// options into the output.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|void
+name|EmitLinkerOptions
+argument_list|(
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Kind
+argument_list|)
+block|{}
+end_decl_stmt
 
 begin_comment
 comment|/// EmitDataRegion - Note in the output the specified region @p Kind.
@@ -947,6 +1104,23 @@ name|Func
 parameter_list|)
 init|=
 literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getOrCreateSymbolData - Get symbol data for given symbol.
+end_comment
+
+begin_function_decl
+name|virtual
+name|MCSymbolData
+modifier|&
+name|getOrCreateSymbolData
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1505,6 +1679,8 @@ name|Data
 parameter_list|,
 name|unsigned
 name|AddrSpace
+init|=
+literal|0
 parameter_list|)
 init|=
 literal|0
@@ -1697,12 +1873,12 @@ name|uint64_t
 name|Value
 parameter_list|,
 name|unsigned
-name|AddrSpace
+name|Padding
 init|=
 literal|0
 parameter_list|,
 name|unsigned
-name|Padding
+name|AddrSpace
 init|=
 literal|0
 parameter_list|)
@@ -1847,6 +2023,8 @@ name|FillValue
 parameter_list|,
 name|unsigned
 name|AddrSpace
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1868,6 +2046,8 @@ name|NumBytes
 parameter_list|,
 name|unsigned
 name|AddrSpace
+init|=
+literal|0
 parameter_list|)
 block|{
 name|EmitFill
@@ -2147,6 +2327,11 @@ name|Directory
 parameter_list|,
 name|StringRef
 name|Filename
+parameter_list|,
+name|unsigned
+name|CUID
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2456,6 +2641,31 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
+name|EmitCFIUndefined
+parameter_list|(
+name|int64_t
+name|Register
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCFIRegister
+parameter_list|(
+name|int64_t
+name|Register1
+parameter_list|,
+name|int64_t
+name|Register2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
 name|EmitWin64EHStartProc
 parameter_list|(
 specifier|const
@@ -2618,6 +2828,74 @@ name|MCInst
 modifier|&
 name|Inst
 parameter_list|)
+init|=
+literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Set the bundle alignment mode from now on in the section.
+end_comment
+
+begin_comment
+comment|/// The argument is the power of 2 to which the alignment is set. The
+end_comment
+
+begin_comment
+comment|/// value 0 means turn the bundle alignment off.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitBundleAlignMode
+parameter_list|(
+name|unsigned
+name|AlignPow2
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief The following instructions are a bundle-locked group.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AlignToEnd - If true, the bundle-locked group will be aligned to
+end_comment
+
+begin_comment
+comment|///                     the end of a bundle.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitBundleLock
+parameter_list|(
+name|bool
+name|AlignToEnd
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Ends a bundle-locked group.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitBundleUnlock
+parameter_list|()
 init|=
 literal|0
 function_decl|;

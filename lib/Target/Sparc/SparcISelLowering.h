@@ -79,6 +79,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|SparcSubtarget
+decl_stmt|;
 name|namespace
 name|SPISD
 block|{
@@ -92,19 +95,25 @@ name|BUILTIN_OP_END
 block|,
 name|CMPICC
 block|,
-comment|// Compare two GPR operands, set icc.
+comment|// Compare two GPR operands, set icc+xcc.
 name|CMPFCC
 block|,
 comment|// Compare two FP operands, set fcc.
 name|BRICC
 block|,
 comment|// Branch to dest on icc condition
+name|BRXCC
+block|,
+comment|// Branch to dest on xcc condition (64-bit only).
 name|BRFCC
 block|,
 comment|// Branch to dest on fcc condition
 name|SELECT_ICC
 block|,
 comment|// Select between two values using the current ICC flags.
+name|SELECT_XCC
+block|,
+comment|// Select between two values using the current XCC flags.
 name|SELECT_FCC
 block|,
 comment|// Select between two values using the current FCC flags.
@@ -139,6 +148,11 @@ range|:
 name|public
 name|TargetLowering
 block|{
+specifier|const
+name|SparcSubtarget
+operator|*
+name|Subtarget
+block|;
 name|public
 operator|:
 name|SparcTargetLowering
@@ -235,6 +249,44 @@ block|;
 name|virtual
 name|SDValue
 name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFormalArguments_32
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFormalArguments_64
 argument_list|(
 argument|SDValue Chain
 argument_list|,
