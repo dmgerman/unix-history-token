@@ -329,5 +329,42 @@ literal|10
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// rdar://12399248
+end_comment
+
+begin_comment
+comment|// CHECK-DEFAULT: define hidden void @test5()
+end_comment
+
+begin_comment
+comment|// CHECK-PROTECTED: define hidden void @test5()
+end_comment
+
+begin_comment
+comment|// CHECK-HIDDEN: define hidden void @test5()
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(availability(macosx,introduced=
+literal|10.5
+argument|,deprecated=
+literal|10.6
+argument|))
+argument_list|)
+end_macro
+
+begin_function
+name|__private_extern__
+name|void
+name|test5
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
+
 end_unit
 

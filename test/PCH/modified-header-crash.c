@@ -12,11 +12,19 @@ comment|// RUN: %clang_cc1 -DCAKE -x c-header %t.h -emit-pch -o %t
 end_comment
 
 begin_comment
-comment|// RUN: echo>> %t.h
+comment|// RUN: echo 'int foobar;'>> %t.h
 end_comment
 
 begin_comment
 comment|// RUN: not %clang_cc1 %s -include-pch %t -fsyntax-only
+end_comment
+
+begin_comment
+comment|// FIXME: It is intended to suppress this on win32.
+end_comment
+
+begin_comment
+comment|// REQUIRES: ansi-escape-sequences
 end_comment
 
 begin_function

@@ -125,7 +125,7 @@ name|42
 end_pragma
 
 begin_comment
-comment|// expected-warning {{unexpected token in pragma diagnostic}}
+comment|// expected-error {{expected string literal in pragma diagnostic}}
 end_comment
 
 begin_pragma

@@ -28,7 +28,7 @@ comment|// Both of them use gcc driver for as.
 end_comment
 
 begin_comment
-comment|// XFAIL: cygwin,mingw32
+comment|// REQUIRES: clang-driver
 end_comment
 
 begin_comment

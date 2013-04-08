@@ -32,7 +32,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 \
 end_comment
 
 begin_comment
-comment|// RUN:   -arch armv7 -mkernel -### -fsyntax-only %s 2> %t
+comment|// RUN:   -arch armv7 -mkernel -mstrict-align -### -fsyntax-only %s 2> %t
 end_comment
 
 begin_comment
@@ -45,6 +45,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-ARM: "-backend-option" "-arm-strict-align"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-NOT: "-backend-option" "-arm-strict-align"
 end_comment
 
 begin_comment

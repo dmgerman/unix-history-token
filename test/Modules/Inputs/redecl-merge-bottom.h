@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|redecl_merge_left
 decl_stmt|;
 end_decl_stmt
@@ -43,7 +43,7 @@ end_decl_stmt
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|redecl_merge_right
 decl_stmt|;
 end_decl_stmt
@@ -90,6 +90,24 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+unit|@
+name|interface
+name|UnrelatedToDeclaredThenLoaded
+operator|-
+name|declaredThenLoadedMethod
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|@
+name|end
+expr|@
+name|class
+name|DeclaredThenLoaded
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

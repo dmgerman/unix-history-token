@@ -14,7 +14,7 @@ union_decl|<anonymous> __mbstate_t;
 end_typedef
 
 begin_comment
-comment|// expected-error {{declaration of anonymous union must be a definition}} expected-warning {{declaration does not declare anything}}
+comment|// expected-error {{declaration of anonymous union must be a definition}} expected-warning {{typedef requires a name}}
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|// expected-warning {{declaration does not declare anything}}
+comment|// expected-warning {{typedef requires a name}}
 end_comment
 
 begin_expr_stmt

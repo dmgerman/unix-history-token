@@ -4,7 +4,11 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=text
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=plist-multi-file %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=plist-multi-file %s -o %t.plist
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --input-file=%t.plist %s
 end_comment
 
 begin_struct
@@ -32,33 +36,6 @@ end_function_decl
 
 begin_function
 name|void
-name|inlined
-parameter_list|(
-name|struct
-name|S
-modifier|*
-name|s
-parameter_list|,
-name|int
-name|m
-parameter_list|)
-block|{
-if|if
-condition|(
-name|s
-operator|->
-name|x
-condition|)
-comment|//expected-note@-1{{Taking false branch}}
-comment|//expected-note@-2{{Assuming pointer value is null}}
-name|m
-operator|++
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|test
 parameter_list|(
 name|struct
@@ -82,16 +59,26 @@ operator|=
 name|foo
 argument_list|()
 expr_stmt|;
-name|inlined
-argument_list|(
+comment|// expected-note{{Value assigned to 'syz.x'}}
+name|struct
+name|S
+modifier|*
+name|ps
+init|=
 operator|&
 name|syz
-argument_list|,
+decl_stmt|;
+if|if
+condition|(
+name|ps
+operator|->
+name|x
+condition|)
+comment|//expected-note@-1{{Taking false branch}}
+comment|//expected-note@-2{{Assuming pointer value is null}}
 name|m
-argument_list|)
+operator|++
 expr_stmt|;
-comment|// expected-note@-1{{Calling 'inlined'}}
-comment|// expected-note@-2{{Returning from 'inlined'}}
 name|m
 operator|+=
 operator|*
@@ -105,1307 +92,1119 @@ block|}
 end_function
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK:<key>diagnostics</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>files</key>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>path</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>diagnostics</key>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>path</key>
+comment|// CHECK-NEXT:<key>edges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>control</string>
+comment|// CHECK-NEXT:<key>start</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>edges</key>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>13</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>start</key>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>20</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>13</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>20</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>end</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>end</key>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>9</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>location</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>event</string>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>location</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<key>ranges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>ranges</key>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>15</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>18</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<string>Value assigned to&apos;syz.x&apos;</string>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>depth</key><integer>0</integer>
+comment|// CHECK-NEXT:<string>Value assigned to&apos;syz.x&apos;</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>extended_message</key>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Calling&apos;inlined&apos;</string>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>message</key>
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Calling&apos;inlined&apos;</string>
+comment|// CHECK-NEXT:<key>edges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>event</string>
+comment|// CHECK-NEXT:<key>start</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>location</key>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>11</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>extended_message</key>
+comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Entered call from&apos;test&apos;</string>
+comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>message</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Entered call from&apos;test&apos;</string>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>end</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>control</string>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>edges</key>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>start</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>11</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>11</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>4</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>end</key>
+comment|// CHECK-NEXT:<key>edges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<key>start</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>4</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>end</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>control</string>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>edges</key>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>start</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>4</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>end</key>
+comment|// CHECK-NEXT:<key>location</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>7</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>ranges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>7</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>col</key><integer>11</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>event</string>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>location</key>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>7</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<string>Assuming pointer value is null</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>ranges</key>
+comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<string>Assuming pointer value is null</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>7</integer>
+comment|// CHECK-NEXT:<key>edges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>start</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>12</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>10</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>extended_message</key>
+comment|// CHECK-NEXT:<key>line</key><integer>17</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Assuming pointer value is null</string>
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>message</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Assuming pointer value is null</string>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>end</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>event</string>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>location</key>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>ranges</key>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>18</integer>
+comment|// CHECK-NEXT:<key>edges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>start</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>extended_message</key>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Returning from&apos;inlined&apos;</string>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>message</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<string>Returning from&apos;inlined&apos;</string>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>control</string>
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>edges</key>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>start</key>
+comment|// CHECK-NEXT:<key>end</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>22</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>9</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>end</key>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>location</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>ranges</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<array>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>col</key><integer>13</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>kind</key><string>control</string>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>edges</key>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>start</key>
+comment|// CHECK-NEXT:<key>col</key><integer>13</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<string>Dereference of null pointer (loaded from field&apos;x&apos;)</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
+comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<string>Dereference of null pointer (loaded from field&apos;x&apos;)</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:<key>description</key><string>Dereference of null pointer (loaded from field&apos;x&apos;)</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>end</key>
+comment|// CHECK-NEXT:<key>category</key><string>Logic error</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<array>
+comment|// CHECK-NEXT:<key>type</key><string>Dereference of null pointer</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
+comment|// CHECK-NEXT:<key>issue_context</key><string>test</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>11</string>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:<key>location</key>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|//CHECK:<dict>
+comment|// CHECK-NEXT:<key>line</key><integer>23</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
 end_comment
 
 begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
+comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|//CHECK:</dict>
+comment|// CHECK-NEXT:</dict>
 end_comment
 
 begin_comment
-comment|//CHECK:</array>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>kind</key><string>event</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>location</key>
-end_comment
-
-begin_comment
-comment|//CHECK:<dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>col</key><integer>8</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>ranges</key>
-end_comment
-
-begin_comment
-comment|//CHECK:<array>
-end_comment
-
-begin_comment
-comment|//CHECK:<array>
-end_comment
-
-begin_comment
-comment|//CHECK:<dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>col</key><integer>13</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>col</key><integer>13</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:</array>
-end_comment
-
-begin_comment
-comment|//CHECK:</array>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>depth</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>extended_message</key>
-end_comment
-
-begin_comment
-comment|//CHECK:<string>Dereference of null pointer (loaded from field&apos;x&apos;)</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>message</key>
-end_comment
-
-begin_comment
-comment|//CHECK:<string>Dereference of null pointer (loaded from field&apos;x&apos;)</string>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:</array>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>description</key><string>Dereference of null pointer (loaded from field&apos;x&apos;)</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>category</key><string>Logic error</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>type</key><string>Dereference of null pointer</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>issue_context_kind</key><string>function</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>issue_context</key><string>test</string>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>issue_hash</key><integer>6</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>location</key>
-end_comment
-
-begin_comment
-comment|//CHECK:<dict>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>line</key><integer>25</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>col</key><integer>8</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:</array>
-end_comment
-
-begin_comment
-comment|//CHECK:</dict>
-end_comment
-
-begin_comment
-comment|//CHECK:</plist>
+comment|// CHECK-NEXT:</plist>
 end_comment
 
 end_unit

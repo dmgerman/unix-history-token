@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
 comment|// RUN: cp %s %t
 end_comment
 
@@ -13,10 +17,6 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -Werror -x c %t
-end_comment
-
-begin_comment
-comment|// RUN: grep "Rectangle" %t
 end_comment
 
 begin_struct
@@ -87,6 +87,7 @@ operator|.
 name|bunds
 operator|.
 comment|// expected-error{{field designator 'bunds' does not refer to any field in type 'struct Window'; did you mean 'bounds'?}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:4-[[@LINE-1]]:9}:"bounds"
 name|topleft
 operator|.
 name|x
@@ -94,6 +95,7 @@ operator|=
 literal|3.14
 block|,
 comment|// expected-error{{field designator 'topleft' does not refer to any field in type 'struct Rectangle'; did you mean 'top_left'?}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:3-[[@LINE-1]]:10}:"top_left"
 literal|2.71818
 block|,
 literal|5.0
@@ -114,6 +116,7 @@ name|Rectangle
 name|r1
 decl_stmt|;
 comment|// expected-error{{must use 'struct' tag to refer to type 'Rectangle'}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:3-[[@LINE-1]]:3}:"struct "
 name|r1
 operator|.
 name|top_left
@@ -136,6 +139,7 @@ operator|&
 name|r1
 decl_stmt|;
 comment|// expected-error{{unknown type name 'rectangle'; did you mean 'Rectangle'?}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:3-[[@LINE-1]]:12}:"Rectangle"
 name|r2
 operator|->
 name|top_left
@@ -151,6 +155,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|// expected-error{{use of undeclared identifier 'unsinged'; did you mean 'unsigned'?}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:3-[[@LINE-1]]:11}:"unsigned"
 operator|*
 name|ptr
 operator|=

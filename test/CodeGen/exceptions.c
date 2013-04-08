@@ -61,5 +61,52 @@ comment|// CHECK-ARM-NEXT:   cleanup
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|test2_helper
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{
+specifier|__block
+name|int
+name|x
+init|=
+literal|10
+decl_stmt|;
+name|test2_helper
+argument_list|(
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test2_helper
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// CHECK: invoke void @test2_helper(i32 5, i32 6)
+end_comment
+
 end_unit
 

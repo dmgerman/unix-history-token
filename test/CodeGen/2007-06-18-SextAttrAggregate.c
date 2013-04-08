@@ -4,7 +4,27 @@ comment|// RUN: %clang_cc1 %s -o - -emit-llvm | FileCheck %s
 end_comment
 
 begin_comment
+comment|// XFAIL: aarch64
+end_comment
+
+begin_comment
 comment|// PR1513
+end_comment
+
+begin_comment
+comment|// AArch64 ABI actually requires the reverse of what this is testing: the callee
+end_comment
+
+begin_comment
+comment|// does any extensions and remaining bits are unspecified.
+end_comment
+
+begin_comment
+comment|// Technically this test wasn't written to test that feature, but it's a
+end_comment
+
+begin_comment
+comment|// valuable check nevertheless.
 end_comment
 
 begin_struct

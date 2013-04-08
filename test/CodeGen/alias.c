@@ -100,7 +100,7 @@ comment|// CHECKBASIC: @f1 = alias void ()* @f0
 end_comment
 
 begin_comment
-comment|// CHECKBASIC: define void @f0() nounwind {
+comment|// CHECKBASIC: define void @f0() [[NUW:#[0-9]+]] {
 end_comment
 
 begin_comment
@@ -278,7 +278,7 @@ comment|// CHECKCC: @inner_a = alias i32 (i32)* @inner
 end_comment
 
 begin_comment
-comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner(i32 %a) nounwind {
+comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner(i32 %a) [[NUW:#[0-9]+]] {
 end_comment
 
 begin_function
@@ -299,7 +299,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKCC: define arm_aapcs_vfpcc i32 @outer(i32 %a) nounwind {
+comment|// CHECKCC: define arm_aapcs_vfpcc i32 @outer(i32 %a) [[NUW]] {
 end_comment
 
 begin_comment
@@ -324,7 +324,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKCC: define arm_aapcs_vfpcc i32 @outer_weak(i32 %a) nounwind {
+comment|// CHECKCC: define arm_aapcs_vfpcc i32 @outer_weak(i32 %a) [[NUW]] {
 end_comment
 
 begin_comment
@@ -332,7 +332,15 @@ comment|// CHECKCC: call arm_aapcs_vfpcc  i32 @inner_weak(i32 %{{.*}})
 end_comment
 
 begin_comment
-comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner_weak(i32 %a) nounwind {
+comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner_weak(i32 %a) [[NUW]] {
+end_comment
+
+begin_comment
+comment|// CHECKBASIC: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECKCC: attributes [[NUW]] = { nounwind{{.*}} }
 end_comment
 
 end_unit

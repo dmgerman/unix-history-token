@@ -97,7 +97,7 @@ argument_list|()
 block|{
 name|ShowCPP
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|ShowComments
 operator|=

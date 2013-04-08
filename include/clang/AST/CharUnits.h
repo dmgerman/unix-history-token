@@ -654,6 +654,50 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// Given that this is a non-zero alignment value, what is the
+comment|/// alignment at the given offset?
+name|CharUnits
+name|alignmentAtOffset
+parameter_list|(
+name|CharUnits
+name|offset
+parameter_list|)
+block|{
+comment|// alignment: 0010000
+comment|// offset:    1011100
+comment|// lowBits:   0001011
+comment|// result:    0000100
+name|QuantityType
+name|lowBits
+init|=
+operator|(
+name|Quantity
+operator|-
+literal|1
+operator|)
+operator|&
+operator|(
+name|offset
+operator|.
+name|Quantity
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+return|return
+name|CharUnits
+argument_list|(
+operator|(
+name|lowBits
+operator|+
+literal|1
+operator|)
+operator|&
+operator|~
+name|lowBits
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|// class CharUnit

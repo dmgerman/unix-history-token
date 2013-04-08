@@ -875,6 +875,9 @@ comment|/// Address points - Address points for all vtables.
 name|AddressPointsMapTy
 name|AddressPoints
 decl_stmt|;
+name|bool
+name|IsMicrosoftABI
+decl_stmt|;
 name|public
 label|:
 name|VTableLayout
@@ -888,6 +891,8 @@ argument_list|,
 argument|const VTableThunkTy *VTableThunks
 argument_list|,
 argument|const AddressPointsMapTy&AddressPoints
+argument_list|,
+argument|bool IsMicrosoftABI
 argument_list|)
 empty_stmt|;
 operator|~
@@ -997,9 +1002,16 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|AddressPoint
-operator|&&
-literal|"Address point must not be zero!"
+operator|!=
+literal|0
+operator|||
+name|IsMicrosoftABI
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|IsMicrosoftABI
 expr_stmt|;
 return|return
 name|AddressPoint
@@ -1054,6 +1066,9 @@ name|ThunkInfoVectorTy
 expr_stmt|;
 name|private
 label|:
+name|bool
+name|IsMicrosoftABI
+decl_stmt|;
 comment|/// MethodVTableIndices - Contains the index (relative to the vtable address
 comment|/// point) where the function pointer for a virtual function is stored.
 typedef|typedef
@@ -1172,6 +1187,18 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
+comment|/// ErrorUnsupported - Print out an error that the v-table layout code
+comment|/// doesn't support the particular C++ feature yet.
+name|void
+name|ErrorUnsupported
+parameter_list|(
+name|StringRef
+name|Feature
+parameter_list|,
+name|SourceLocation
+name|Location
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|VTableContext
@@ -1180,16 +1207,23 @@ name|ASTContext
 operator|&
 name|Context
 argument_list|)
-operator|:
-name|Context
-argument_list|(
-argument|Context
-argument_list|)
-block|{}
+expr_stmt|;
 operator|~
 name|VTableContext
 argument_list|()
 expr_stmt|;
+name|bool
+name|isMicrosoftABI
+argument_list|()
+specifier|const
+block|{
+comment|// FIXME: Currently, this method is only used in the VTableContext and
+comment|// VTableBuilder code which is ABI-specific. Probably we can remove it
+comment|// when we add a layer of abstraction for vtable generation.
+return|return
+name|IsMicrosoftABI
+return|;
+block|}
 specifier|const
 name|VTableLayout
 modifier|&

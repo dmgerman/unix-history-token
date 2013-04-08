@@ -16,10 +16,6 @@ comment|// RUN: rm -fR %t.dir
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
 comment|// This tests that we do not currently emit HTML diagnostics for reports that
 end_comment
 

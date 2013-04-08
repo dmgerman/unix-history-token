@@ -171,5 +171,169 @@ begin_comment
 comment|// CHECK-ABI-SINGLE: "-target-feature" "+single-float"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default -mips16
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEF-MIPS16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEF-MIPS16: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK-DEF-MIPS16: "-mllvm" "-mips16-hard-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mhard-float -mips16
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -mhard-float -mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-HARD-MIPS16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-HARD-MIPS16: "-msoft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-HARD-MIPS16: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK-HARD-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-HARD-MIPS16: "-mllvm" "-mips16-hard-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float -mips16
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -msoft-float -mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT-MIPS16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-SOFT-MIPS16: "-msoft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-SOFT-MIPS16: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK-SOFT-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfloat-abi=hard -mips16
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -mfloat-abi=hard -mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-HARD-MIPS16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-HARD-MIPS16: "-msoft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-HARD-MIPS16: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-HARD-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-HARD-MIPS16: "-mllvm" "-mips16-hard-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfloat-abi=soft -mips16
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -mfloat-abi=soft -mips16 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SOFT-MIPS16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-SOFT-MIPS16: "-msoft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-SOFT-MIPS16: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-SOFT-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
 end_unit
 

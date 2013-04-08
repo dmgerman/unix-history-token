@@ -32,7 +32,7 @@ comment|// CHECK-RECORD: *** Dumping IRgen Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD: Record: struct s0
+comment|// CHECK-RECORD: Record: RecordDecl{{.*}}s0
 end_comment
 
 begin_comment
@@ -52,27 +52,7 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Size:24 IsSigned:1
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     NumComponents:2 Components: [
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:0 FieldBitStart:0 AccessWidth:16
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:1 TargetBitOffset:0 TargetBitWidth:16>
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:2 FieldBitStart:0 AccessWidth:8
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:1 TargetBitOffset:16 TargetBitWidth:8>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:24 IsSigned:1 StorageSize:24 StorageAlignment:1>
 end_comment
 
 begin_struct
@@ -267,7 +247,7 @@ comment|// CHECK-RECORD: *** Dumping IRgen Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD: Record: struct s1
+comment|// CHECK-RECORD: Record: RecordDecl{{.*}}s1
 end_comment
 
 begin_comment
@@ -275,7 +255,7 @@ comment|// CHECK-RECORD: Layout:<CGRecordLayout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   LLVMType:%struct.s1 = type<{ [2 x i8], i8 }>
+comment|// CHECK-RECORD:   LLVMType:%struct.s1 = type<{ [3 x i8] }>
 end_comment
 
 begin_comment
@@ -287,47 +267,11 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Size:10 IsSigned:1
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:10 IsSigned:1 StorageSize:24 StorageAlignment:1>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:                     NumComponents:1 Components: [
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:0 FieldBitStart:0 AccessWidth:16
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:1 TargetBitOffset:0 TargetBitWidth:10>
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:     ]>
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Size:10 IsSigned:1
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     NumComponents:2 Components: [
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:0 FieldBitStart:10 AccessWidth:16
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:1 TargetBitOffset:0 TargetBitWidth:6>
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:2 FieldBitStart:0 AccessWidth:8
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:1 TargetBitOffset:6 TargetBitWidth:4>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:10 Size:10 IsSigned:1 StorageSize:24 StorageAlignment:1>
 end_comment
 
 begin_pragma
@@ -574,7 +518,7 @@ comment|// CHECK-RECORD: *** Dumping IRgen Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD: Record: union u2
+comment|// CHECK-RECORD: Record: RecordDecl{{.*}}u2
 end_comment
 
 begin_comment
@@ -594,19 +538,7 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Size:3 IsSigned:0
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     NumComponents:1 Components: [
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:0 FieldBitStart:0 AccessWidth:8
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:1 TargetBitOffset:0 TargetBitWidth:3>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:3 IsSigned:0 StorageSize:8 StorageAlignment:1>
 end_comment
 
 begin_union
@@ -1582,7 +1514,7 @@ comment|// CHECK-RECORD: *** Dumping IRgen Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD: Record: struct s7
+comment|// CHECK-RECORD: Record: RecordDecl{{.*}}s7
 end_comment
 
 begin_comment
@@ -1602,39 +1534,11 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Size:5 IsSigned:1
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:5 IsSigned:1 StorageSize:8 StorageAlignment:4>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:                     NumComponents:1 Components: [
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:12 FieldBitStart:0 AccessWidth:32
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:4 TargetBitOffset:0 TargetBitWidth:5>
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:     ]>
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Size:29 IsSigned:1
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     NumComponents:1 Components: [
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:<AccessInfo FieldIndex:0 FieldByteOffset:16 FieldBitStart:0 AccessWidth:32
-end_comment
-
-begin_comment
-comment|// CHECK-RECORD:                     AccessAlignment:16 TargetBitOffset:0 TargetBitWidth:29>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:29 IsSigned:1 StorageSize:32 StorageAlignment:16>
 end_comment
 
 begin_struct

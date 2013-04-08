@@ -765,7 +765,7 @@ name|x
 block|}
 decl_stmt|;
 comment|// CHECK: @test13
-comment|// CHECK: and i32 {{.*}}, -1024
+comment|// CHECK: and i16 {{.*}}, -1024
 block|}
 end_function
 

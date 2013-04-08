@@ -203,9 +203,12 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{potential leak}}
+end_comment
 
 begin_function
 name|void
@@ -239,10 +242,13 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{potential leak}}
 block|}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{potential leak}}
+end_comment
 
 begin_function
 name|void
@@ -274,9 +280,12 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{potential leak}}
+end_comment
 
 begin_function
 name|void
@@ -313,9 +322,12 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{potential leak}}
+end_comment
 
 begin_function
 name|void
@@ -406,9 +418,12 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{potential leak}}
+end_comment
 
 begin_function
 name|int
@@ -476,9 +491,12 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{potential leak}}
+end_comment
 
 begin_function
 name|void

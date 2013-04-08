@@ -15,6 +15,10 @@ parameter_list|()
 value|0
 end_define
 
+begin_comment
+comment|/* expected-note 2 {{defined here}} */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24,6 +28,10 @@ name|x
 parameter_list|)
 value|0
 end_define
+
+begin_comment
+comment|/* expected-note 2 {{defined here}} */
+end_comment
 
 begin_define
 define|#
@@ -36,6 +44,10 @@ name|y
 parameter_list|)
 value|0
 end_define
+
+begin_comment
+comment|/* expected-note 4 {{defined here}} */
+end_comment
 
 begin_define
 define|#
@@ -292,6 +304,39 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*<rdar://problem/12292192> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSAssert
+parameter_list|(
+name|condition
+parameter_list|,
+name|desc
+parameter_list|,
+modifier|...
+parameter_list|)
+comment|/* expected-warning {{variadic macros are a C99 feature}} */
+define|\
+value|SomeComplicatedStuff((desc), ##__VA_ARGS__)
+end_define
+
+begin_comment
+comment|/* expected-warning {{token pasting of ',' and __VA_ARGS__ is a GNU extension}} */
+end_comment
+
+begin_macro
+name|NSAssert
+argument_list|(
+argument|somecond
+argument_list|,
+argument|somedesc
+argument_list|)
+end_macro
 
 end_unit
 

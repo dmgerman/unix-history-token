@@ -74,18 +74,18 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/CFG.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Decl.h"
 end_include
 
 begin_comment
 comment|// for Decl* -> NamedDecl* conversion
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"clang/Analysis/CFG.h"
+end_include
 
 begin_include
 include|#

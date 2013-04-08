@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Lex/PreprocessorLexer.h"
+file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LangOptions.h"
+file|"clang/Lex/PreprocessorLexer.h"
 end_include
 
 begin_include
@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -451,9 +451,13 @@ operator|!
 name|Val
 operator|||
 name|LexingRawMode
+operator|||
+name|LangOpts
+operator|.
+name|TraditionalCPP
 operator|)
 operator|&&
-literal|"Can only enable whitespace retention in raw mode"
+literal|"Can only retain whitespace in raw mode or -traditional-cpp"
 argument_list|)
 block|;
 name|ExtendedTokenMode
@@ -503,6 +507,16 @@ literal|1
 else|:
 literal|0
 block|;   }
+comment|/// Sets the extended token mode back to its initial value, according to the
+comment|/// language options and preprocessor. This controls whether the lexer
+comment|/// produces comment and whitespace tokens.
+comment|///
+comment|/// This requires the lexer to have an associated preprocessor. A standalone
+comment|/// lexer has nothing to reset to.
+name|void
+name|resetExtendedTokenMode
+argument_list|()
+block|;
 specifier|const
 name|char
 operator|*
@@ -713,6 +727,21 @@ name|unsigned
 name|MeasureTokenLength
 argument_list|(
 argument|SourceLocation Loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// \brief Relex the token at the specified location.
+comment|/// \returns true if there was a failure, false on success.
+specifier|static
+name|bool
+name|getRawToken
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|Token&Result
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
@@ -1013,6 +1042,25 @@ parameter_list|(
 name|Token
 modifier|&
 name|Result
+parameter_list|)
+function_decl|;
+comment|/// Given that a token begins with the Unicode character \p C, figure out
+comment|/// what kind of token it is and dispatch to the appropriate lexing helper
+comment|/// function.
+name|void
+name|LexUnicode
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|,
+name|uint32_t
+name|C
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CurPtr
 parameter_list|)
 function_decl|;
 comment|/// FormTokenWithChars - When we lex a token, we have identified a span
@@ -1597,6 +1645,37 @@ specifier|const
 name|LangOptions
 modifier|&
 name|LangOpts
+parameter_list|)
+function_decl|;
+comment|/// Read a universal character name.
+comment|///
+comment|/// \param CurPtr The position in the source buffer after the initial '\'.
+comment|///               If the UCN is syntactically well-formed (but not necessarily
+comment|///               valid), this parameter will be updated to point to the
+comment|///               character after the UCN.
+comment|/// \param SlashLoc The position in the source buffer of the '\'.
+comment|/// \param Tok The token being formed. Pass \c NULL to suppress diagnostics
+comment|///            and handle token formation in the caller.
+comment|///
+comment|/// \return The Unicode codepoint specified by the UCN, or 0 if the UCN is
+comment|///         invalid.
+name|uint32_t
+name|tryReadUCN
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|CurPtr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|SlashLoc
+parameter_list|,
+name|Token
+modifier|*
+name|Tok
 parameter_list|)
 function_decl|;
 block|}

@@ -236,9 +236,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
+end_comment
 
 begin_function
 specifier|static
@@ -304,9 +307,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
+end_comment
 
 begin_function
 specifier|static
@@ -680,6 +686,7 @@ name|n
 operator|==
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -691,6 +698,8 @@ literal|20
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+return|return;
+block|}
 elseif|else
 if|if
 condition|(
@@ -698,6 +707,7 @@ name|n
 operator|<
 literal|5
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -709,7 +719,10 @@ name|n
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+return|return;
+block|}
 else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -720,7 +733,9 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+return|return;
 comment|// expected-warning{{leak}}
+block|}
 block|}
 end_function
 

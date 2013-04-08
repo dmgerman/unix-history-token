@@ -3207,5 +3207,33 @@ comment|// CHECK: call<4 x i8> @llvm.mips.subuh.r.qb
 block|}
 end_function
 
+begin_function
+name|void
+name|test_eh_return_data_regno
+parameter_list|()
+block|{
+specifier|volatile
+name|int
+name|res
+decl_stmt|;
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store volatile i32 4
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store volatile i32 5
+block|}
+end_function
+
 end_unit
 

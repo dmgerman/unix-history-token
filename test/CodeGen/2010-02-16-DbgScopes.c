@@ -1,10 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -g< %s | grep  lexical | count 5
+comment|// RUN: %clang_cc1 -emit-llvm -g< %s | FileCheck %s
 end_comment
 
 begin_comment
 comment|// Test to check number of lexical scope identified in debug info.
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
 end_comment
 
 begin_function_decl

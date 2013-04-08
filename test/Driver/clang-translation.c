@@ -248,6 +248,346 @@ comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN: -### -S %s -mcpu=a2q 2>&1 | FileCheck -check-prefix=PPCA2Q %s
+end_comment
+
+begin_comment
+comment|// PPCA2Q: clang
+end_comment
+
+begin_comment
+comment|// PPCA2Q: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCA2Q: "-target-cpu" "a2q"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=630 2>&1 | FileCheck -check-prefix=PPC630 %s
+end_comment
+
+begin_comment
+comment|// PPC630: clang
+end_comment
+
+begin_comment
+comment|// PPC630: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPC630: "-target-cpu" "pwr3"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power3 2>&1 | FileCheck -check-prefix=PPCPOWER3 %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER3: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER3: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER3: "-target-cpu" "pwr3"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=pwr3 2>&1 | FileCheck -check-prefix=PPCPWR3 %s
+end_comment
+
+begin_comment
+comment|// PPCPWR3: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR3: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR3: "-target-cpu" "pwr3"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power4 2>&1 | FileCheck -check-prefix=PPCPOWER4 %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER4: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER4: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER4: "-target-cpu" "pwr4"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=pwr4 2>&1 | FileCheck -check-prefix=PPCPWR4 %s
+end_comment
+
+begin_comment
+comment|// PPCPWR4: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR4: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR4: "-target-cpu" "pwr4"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power5 2>&1 | FileCheck -check-prefix=PPCPOWER5 %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER5: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER5: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER5: "-target-cpu" "pwr5"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=pwr5 2>&1 | FileCheck -check-prefix=PPCPWR5 %s
+end_comment
+
+begin_comment
+comment|// PPCPWR5: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR5: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR5: "-target-cpu" "pwr5"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power5x 2>&1 | FileCheck -check-prefix=PPCPOWER5X %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X: "-target-cpu" "pwr5x"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=pwr5x 2>&1 | FileCheck -check-prefix=PPCPWR5X %s
+end_comment
+
+begin_comment
+comment|// PPCPWR5X: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR5X: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR5X: "-target-cpu" "pwr5x"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power6 2>&1 | FileCheck -check-prefix=PPCPOWER6 %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER6: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER6: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER6: "-target-cpu" "pwr6"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=pwr6 2>&1 | FileCheck -check-prefix=PPCPWR6 %s
+end_comment
+
+begin_comment
+comment|// PPCPWR6: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR6: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR6: "-target-cpu" "pwr6"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power6x 2>&1 | FileCheck -check-prefix=PPCPOWER6X %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X: "-target-cpu" "pwr6x"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=pwr6x 2>&1 | FileCheck -check-prefix=PPCPWR6X %s
+end_comment
+
+begin_comment
+comment|// PPCPWR6X: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR6X: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR6X: "-target-cpu" "pwr6x"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=power7 2>&1 | FileCheck -check-prefix=PPCPOWER7 %s
+end_comment
+
+begin_comment
+comment|// PPCPOWER7: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWER7: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWER7: "-target-cpu" "pwr7"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=powerpc 2>&1 | FileCheck -check-prefix=PPCPOWERPC %s
+end_comment
+
+begin_comment
+comment|// PPCPOWERPC: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWERPC: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWERPC: "-target-cpu" "ppc"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN: -### -S %s -mcpu=powerpc64 2>&1 | FileCheck -check-prefix=PPCPOWERPC64 %s
+end_comment
+
+begin_comment
+comment|// PPCPOWERPC64: clang
+end_comment
+
+begin_comment
+comment|// PPCPOWERPC64: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPOWERPC64: "-target-cpu" "ppc64"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
 comment|// RUN: -### -S %s 2>&1 | FileCheck -check-prefix=PPC64NS %s
 end_comment
 

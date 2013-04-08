@@ -175,7 +175,7 @@ argument|uint64_t Offset
 argument_list|)
 block|;
 name|virtual
-name|DeclContextLookupResult
+name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
 argument|const DeclContext *DC

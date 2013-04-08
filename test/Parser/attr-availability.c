@@ -265,7 +265,7 @@ argument_list|)
 operator|)
 argument_list|)
 block|,
-comment|// expected-error {{expected string literal}}
+comment|// expected-error {{expected string literal for optional message in 'availability' attribute}}
 name|garf
 name|__attribute__
 argument_list|(

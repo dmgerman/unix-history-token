@@ -36,7 +36,11 @@ comment|// REQUIRES: crash-recovery
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell
+comment|// FIXME: Please investigate abnormal path in MemoryBuffer.
+end_comment
+
+begin_comment
+comment|// XFAIL: mingw32,win32
 end_comment
 
 begin_warning

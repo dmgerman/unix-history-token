@@ -1464,7 +1464,7 @@ comment|// CHECK: i8 signext %a0, %struct.s56_0* byval align 4 %a1,
 end_comment
 
 begin_comment
-comment|// CHECK: x86_mmx %a2.coerce, %struct.s56_1* byval align 4,
+comment|// CHECK: i64 %a2.coerce, %struct.s56_1* byval align 4,
 end_comment
 
 begin_comment
@@ -1496,7 +1496,7 @@ comment|// CHECK: i32 %{{[^ ]*}}, %struct.s56_0* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment
-comment|// CHECK: x86_mmx %{{[^ ]*}}, %struct.s56_1* byval align 4 %{{[^ ]*}},
+comment|// CHECK: i64 %{{[^ ]*}}, %struct.s56_1* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment
@@ -2285,6 +2285,39 @@ name|v
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// PR14453
+end_comment
+
+begin_struct
+struct|struct
+name|s67
+block|{
+specifier|_Complex
+name|unsigned
+name|short
+name|int
+name|a
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f67
+parameter_list|(
+name|struct
+name|s67
+name|x
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// CHECK: define void @f67(%struct.s67* byval align 4 %x)
+end_comment
 
 end_unit
 

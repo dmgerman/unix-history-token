@@ -451,20 +451,6 @@ comment|// expected-error{{use of undeclared identifier 'outer8'}}
 block|}
 end_function
 
-begin_function_decl
-specifier|static
-name|float
-name|outer8
-parameter_list|(
-name|float
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|// okay
-end_comment
-
 begin_enum
 enum|enum
 name|e

@@ -143,8 +143,6 @@ argument_list|)
 operator|,
 name|Diagnostics
 argument_list|(
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticIDs
@@ -391,8 +389,6 @@ name|TemporaryDirectory
 argument_list|)
 expr_stmt|;
 block|}
-name|llvm
-operator|::
 name|SmallString
 operator|<
 literal|1024
@@ -585,8 +581,6 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|{
-name|llvm
-operator|::
 name|SmallString
 operator|<
 literal|1024
@@ -631,8 +625,6 @@ name|getBuffer
 argument_list|()
 return|;
 block|}
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticOptions

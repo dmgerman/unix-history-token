@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -triple=i686-linux-gnu -std=
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -triple=aarch64-linux-gnu -std=c11
+end_comment
+
+begin_comment
 comment|// Basic parsing/Sema tests for __c11_atomic_*
 end_comment
 
@@ -138,6 +142,12 @@ argument_list|)
 assert|;
 end_assert
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_assert
 assert|_Static_assert
 argument_list|(
@@ -149,6 +159,28 @@ literal|""
 argument_list|)
 assert|;
 end_assert
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|__GCC_ATOMIC_LLONG_LOCK_FREE
+operator|==
+literal|2
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_assert
 assert|_Static_assert
@@ -1765,6 +1797,30 @@ name|memory_order_acquire
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
+block|}
+end_function
+
+begin_decl_stmt
+atomic|_Atomic
+argument_list|(
+name|int
+operator|*
+argument_list|)
+name|PR12527_a
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|PR12527
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|b
+init|=
+name|PR12527_a
+decl_stmt|;
 block|}
 end_function
 

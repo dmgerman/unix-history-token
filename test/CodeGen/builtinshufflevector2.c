@@ -53,14 +53,14 @@ comment|// Similarly on the remaining insertelement.
 comment|// CHECK: [[V:%[a-zA-Z0-9._]+]] = insertelement<4 x float> undef, float [[E]], i32 0
 comment|// CHECK: [[I:%.*]] = extractelement<4 x i32> [[MASK]], i32 1
 comment|// CHECK: [[E:%.*]] = extractelement<4 x float> [[X]], i32 [[I]]
-comment|// CHECK: [[V:%.*]] = insertelement<4 x float> [[V]], float [[E]], i32 1
+comment|// CHECK: [[V2:%.*]] = insertelement<4 x float> [[V]], float [[E]], i32 1
 comment|// CHECK: [[I:%.*]] = extractelement<4 x i32> [[MASK]], i32 2
 comment|// CHECK: [[E:%.*]] = extractelement<4 x float> [[X]], i32 [[I]]
-comment|// CHECK: [[V:%.*]] = insertelement<4 x float> [[V]], float [[E]], i32 2
+comment|// CHECK: [[V3:%.*]] = insertelement<4 x float> [[V2]], float [[E]], i32 2
 comment|// CHECK: [[I:%.*]] = extractelement<4 x i32> [[MASK]], i32 3
 comment|// CHECK: [[E:%.*]] = extractelement<4 x float> [[X]], i32 [[I]]
-comment|// CHECK: [[V:%.*]] = insertelement<4 x float> [[V]], float [[E]], i32 3
-comment|// CHECK: store<4 x float> [[V]],<4 x float>* {{%.*}},
+comment|// CHECK: [[V4:%.*]] = insertelement<4 x float> [[V3]], float [[E]], i32 3
+comment|// CHECK: store<4 x float> [[V4]],<4 x float>* {{%.*}},
 operator|*
 name|A
 operator|=

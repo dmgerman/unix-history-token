@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"CodeGenFunction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CodeGenFunction.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_decl_stmt
@@ -190,6 +190,30 @@ operator|.
 name|CXXABIThisValue
 return|;
 block|}
+comment|/// Issue a diagnostic about unsupported features in the ABI.
+name|void
+name|ErrorUnsupportedABI
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|StringRef
+name|S
+parameter_list|)
+function_decl|;
+comment|/// Get a null value for unsupported member pointers.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetBogusMemberPointer
+argument_list|(
+argument|QualType T
+argument_list|)
+expr_stmt|;
+comment|// FIXME: Every place that calls getVTT{Decl,Value} is something
+comment|// that needs to be abstracted properly.
 name|ImplicitParamDecl
 modifier|*
 modifier|&
@@ -203,7 +227,7 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CXXVTTDecl
+name|CXXStructorImplicitParamDecl
 return|;
 block|}
 name|llvm
@@ -219,7 +243,39 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CXXVTTValue
+name|CXXStructorImplicitParamValue
+return|;
+block|}
+name|ImplicitParamDecl
+modifier|*
+modifier|&
+name|getStructorImplicitParamDecl
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
+block|{
+return|return
+name|CGF
+operator|.
+name|CXXStructorImplicitParamDecl
+return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|&
+name|getStructorImplicitParamValue
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|)
+block|{
+return|return
+name|CGF
+operator|.
+name|CXXStructorImplicitParamValue
 return|;
 block|}
 comment|/// Build a parameter variable suitable for 'this'.
@@ -297,6 +353,21 @@ block|{
 return|return
 operator|*
 name|MangleCtx
+return|;
+block|}
+comment|/// Returns true if the given instance method is one of the
+comment|/// kinds that the ABI says returns 'this'.
+name|virtual
+name|bool
+name|HasThisReturn
+argument_list|(
+name|GlobalDecl
+name|GD
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|/// Find the LLVM type used to represent the given member pointer
@@ -609,6 +680,18 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|EmitCtorCompleteObjectHandler
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+expr_stmt|;
 comment|/// Build the signature of the given destructor variant by adding
 comment|/// any required parameters.  For convenience, ResTy has been
 comment|/// initialized to 'void' and ArgTys has been initialized with the
@@ -676,6 +759,65 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Emit the constructor call. Return the function that is called.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitConstructorCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|const CXXConstructorDecl *D
+argument_list|,
+argument|CXXCtorType Type
+argument_list|,
+argument|bool ForVirtualBase
+argument_list|,
+argument|bool Delegating
+argument_list|,
+argument|llvm::Value *This
+argument_list|,
+argument|CallExpr::const_arg_iterator ArgBeg
+argument_list|,
+argument|CallExpr::const_arg_iterator ArgEnd
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Emit the ABI-specific virtual destructor call.
+name|virtual
+name|RValue
+name|EmitVirtualDestructorCall
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|Dtor
+argument_list|,
+name|CXXDtorType
+name|DtorType
+argument_list|,
+name|SourceLocation
+name|CallLoc
+argument_list|,
+name|ReturnValueSlot
+name|ReturnValue
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 name|virtual
 name|void
 name|EmitReturnFromThunk
@@ -904,32 +1046,10 @@ operator|*
 name|addr
 argument_list|)
 decl_stmt|;
-comment|/***************************** Virtual Tables *******************************/
-comment|/// Generates and emits the virtual tables for a class.
-name|virtual
-name|void
-name|EmitVTables
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|Class
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 block|}
 empty_stmt|;
-comment|/// Creates an instance of a C++ ABI class.
-name|CGCXXABI
-modifier|*
-name|CreateARMCXXABI
-parameter_list|(
-name|CodeGenModule
-modifier|&
-name|CGM
-parameter_list|)
-function_decl|;
+comment|// Create an instance of a C++ ABI class:
+comment|/// Creates an Itanium-family ABI.
 name|CGCXXABI
 modifier|*
 name|CreateItaniumCXXABI
@@ -939,6 +1059,7 @@ modifier|&
 name|CGM
 parameter_list|)
 function_decl|;
+comment|/// Creates a Microsoft-family ABI.
 name|CGCXXABI
 modifier|*
 name|CreateMicrosoftCXXABI

@@ -356,23 +356,141 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Try badly formed expressions.
+comment|// Fun with macros
 end_comment
 
-begin_comment
-comment|// FIXME: We can recover better in almost all of these cases. (PR13335)
-end_comment
+begin_define
+define|#
+directive|define
+name|MACRO1
+value|__has_include(<stdint.h>)
+end_define
 
-begin_comment
-comment|// expected-error@+1 {{missing '(' after '__has_include'}}
-end_comment
+begin_define
+define|#
+directive|define
+name|MACRO2
+value|("stdint.h")
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACRO3
+value|("blahblah.h")
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACRO4
+value|blahblah.h>)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACRO5
+value|<stdint.h>
+end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|MACRO1
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"__has_include with macro failed (1)."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_include
+name|MACRO2
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"__has_include with macro failed (2)."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
 directive|if
 name|__has_include
+name|MACRO3
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"__has_include with macro failed (3)."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_include
+argument_list|(
+argument|<MACRO4   #error
+literal|"__has_include with macro failed (4)."
+argument|#endif  #if !__has_include(MACRO5)   #error
+literal|"__has_include with macro failed (2)."
+argument|#endif
+comment|// Try as non-preprocessor directives
+argument|void foo( void ) {   __has_include_next(
 literal|"stdint.h"
-if|)
+argument|)
+comment|// expected-warning {{#include_next in primary source file}} expected-error {{__has_include_next must be used within a preprocessing directive}}
+argument|__has_include(
+literal|"stdint.h"
+argument|)
+comment|// expected-error {{__has_include must be used within a preprocessing directive}}
+argument|}  MACRO1
+comment|// expected-error {{__has_include must be used within a preprocessing directive}}
+argument|#if
+literal|1
+argument|MACRO1
+comment|// expected-error {{__has_include must be used within a preprocessing directive}}
+argument|#endif  #if
+literal|0
+argument|#elif
+literal|1
+argument|MACRO1
+comment|// expected-error {{__has_include must be used within a preprocessing directive}}
+argument|#endif  #if
+literal|0
+argument|MACRO1
+comment|// This should be fine because it is never actually reached
+argument|#endif
+comment|// Try badly formed expressions.
+comment|// FIXME: We can recover better in almost all of these cases. (PR13335)
+comment|// expected-error@+1 {{missing '(' after '__has_include'}}
+argument|#if __has_include
+literal|"stdint.h"
+argument_list|)
 end_if
 
 begin_endif
@@ -470,7 +588,7 @@ literal|")
 argument|#endif
 comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} expected-error@+1 {{token is not a valid binary operator in a preprocessor subexpression}}
 argument|#if __has_include(stdint.h>) #endif
-comment|// expected-error@+1 {{missing '(' after '__has_include'}}
+comment|// expected-error@+1 {{__has_include must be used within a preprocessing directive}}
 argument|__has_include
 comment|// expected-error@+1 {{missing ')' after '__has_include'}} // expected-error@+1 {{expected value in expression}}  // expected-note@+1 {{to match this '('}}
 argument|#if __has_include(
@@ -483,7 +601,11 @@ argument|#if __has_include #endif
 comment|// expected-error@+1 {{missing ')' after '__has_include'}}  // expected-error@+1 {{expected value in expression}}  // expected-note@+1 {{to match this '('}}
 argument|#if __has_include(<stdint.h> #endif
 comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} // expected-error@+1 {{expected value in expression}}
-argument|#if __has_include(<stdint.h) #endif
+argument|#if __has_include(<stdint.h) #endif  #define HAS_INCLUDE(header) __has_include(header) #if HAS_INCLUDE(<stdint.h>) #else   #error
+literal|"__has_include failed (9)."
+argument|#endif  #if FOO #elif __has_include(<foo>) #endif
+comment|// PR15539
+argument|#ifdef FOO #elif __has_include(<foo>) #endif
 end_if
 
 end_unit

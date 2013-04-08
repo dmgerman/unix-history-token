@@ -80,15 +80,15 @@ comment|// CHECK-YES: declare x86_fp80 @sqrtl(x86_fp80)
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare float @sqrtf(float) nounwind readnone
+comment|// CHECK-NO: declare float @sqrtf(float) [[NUW_RN:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare double @sqrt(double) nounwind readnone
+comment|// CHECK-NO: declare double @sqrt(double) [[NUW_RN]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare x86_fp80 @sqrtl(x86_fp80) nounwind readnone
+comment|// CHECK-NO: declare x86_fp80 @sqrtl(x86_fp80) [[NUW_RN]]
 end_comment
 
 begin_comment
@@ -167,15 +167,15 @@ comment|// CHECK-YES: declare x86_fp80 @powl(x86_fp80, x86_fp80)
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare float @llvm.pow.f32(float, float) nounwind readonly
+comment|// CHECK-NO: declare float @llvm.pow.f32(float, float) [[NUW_RO:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare double @llvm.pow.f64(double, double) nounwind readonly
+comment|// CHECK-NO: declare double @llvm.pow.f64(double, double) [[NUW_RO]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare x86_fp80 @llvm.pow.f80(x86_fp80, x86_fp80) nounwind readonly
+comment|// CHECK-NO: declare x86_fp80 @llvm.pow.f80(x86_fp80, x86_fp80) [[NUW_RO]]
 end_comment
 
 begin_comment
@@ -248,27 +248,27 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-YES: declare float @llvm.fma.f32(float, float, float) nounwind readnone
+comment|// CHECK-YES: declare float @llvm.fma.f32(float, float, float) [[NUW_RN:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-YES: declare double @llvm.fma.f64(double, double, double) nounwind readnone
+comment|// CHECK-YES: declare double @llvm.fma.f64(double, double, double) [[NUW_RN]]
 end_comment
 
 begin_comment
-comment|// CHECK-YES: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-YES: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) [[NUW_RN]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare float @llvm.fma.f32(float, float, float) nounwind readnone
+comment|// CHECK-NO: declare float @llvm.fma.f32(float, float, float) [[NUW_RN2:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare double @llvm.fma.f64(double, double, double) nounwind readnone
+comment|// CHECK-NO: declare double @llvm.fma.f64(double, double, double) [[NUW_RN2]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NO: declare x86_fp80 @llvm.fma.f80(x86_fp80, x86_fp80, x86_fp80) [[NUW_RN2]]
 end_comment
 
 begin_comment
@@ -317,12 +317,12 @@ argument_list|(
 name|f
 argument_list|)
 decl_stmt|;
-comment|// CHECK-NO: declare double @atan(double) nounwind readnone
-comment|// CHECK-NO: declare x86_fp80 @atanl(x86_fp80) nounwind readnone
-comment|// CHECK-NO: declare float @atanf(float) nounwind readnone
-comment|// CHECK-YES-NOT: declare double @atan(double) nounwind readnone
-comment|// CHECK-YES-NOT: declare x86_fp80 @atanl(x86_fp80) nounwind readnone
-comment|// CHECK-YES-NOT: declare float @atanf(float) nounwind readnone
+comment|// CHECK-NO: declare double @atan(double) [[NUW_RN]]
+comment|// CHECK-NO: declare x86_fp80 @atanl(x86_fp80) [[NUW_RN]]
+comment|// CHECK-NO: declare float @atanf(float) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare double @atan(double) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare x86_fp80 @atanl(x86_fp80) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare float @atanf(float) [[NUW_RN]]
 name|double
 name|atan2_
 init|=
@@ -354,12 +354,12 @@ argument_list|,
 name|f
 argument_list|)
 decl_stmt|;
-comment|// CHECK-NO: declare double @atan2(double, double) nounwind readnone
-comment|// CHECK-NO: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) nounwind readnone
-comment|// CHECK-NO: declare float @atan2f(float, float) nounwind readnone
-comment|// CHECK-YES-NOT: declare double @atan2(double, double) nounwind readnone
-comment|// CHECK-YES-NOT: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) nounwind readnone
-comment|// CHECK-YES-NOT: declare float @atan2f(float, float) nounwind readnone
+comment|// CHECK-NO: declare double @atan2(double, double) [[NUW_RN]]
+comment|// CHECK-NO: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) [[NUW_RN]]
+comment|// CHECK-NO: declare float @atan2f(float, float) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare double @atan2(double, double) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare float @atan2f(float, float) [[NUW_RN]]
 name|double
 name|exp_
 init|=
@@ -385,12 +385,12 @@ argument_list|(
 name|f
 argument_list|)
 decl_stmt|;
-comment|// CHECK-NO: declare double @exp(double) nounwind readnone
-comment|// CHECK-NO: declare x86_fp80 @expl(x86_fp80) nounwind readnone
-comment|// CHECK-NO: declare float @expf(float) nounwind readnone
-comment|// CHECK-YES-NOT: declare double @exp(double) nounwind readnone
-comment|// CHECK-YES-NOT: declare x86_fp80 @expl(x86_fp80) nounwind readnone
-comment|// CHECK-YES-NOT: declare float @expf(float) nounwind readnone
+comment|// CHECK-NO: declare double @exp(double) [[NUW_RN]]
+comment|// CHECK-NO: declare x86_fp80 @expl(x86_fp80) [[NUW_RN]]
+comment|// CHECK-NO: declare float @expf(float) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare double @exp(double) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare x86_fp80 @expl(x86_fp80) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare float @expf(float) [[NUW_RN]]
 name|double
 name|log_
 init|=
@@ -416,14 +416,26 @@ argument_list|(
 name|f
 argument_list|)
 decl_stmt|;
-comment|// CHECK-NO: declare double @log(double) nounwind readnone
-comment|// CHECK-NO: declare x86_fp80 @logl(x86_fp80) nounwind readnone
-comment|// CHECK-NO: declare float @logf(float) nounwind readnone
-comment|// CHECK-YES-NOT: declare double @log(double) nounwind readnone
-comment|// CHECK-YES-NOT: declare x86_fp80 @logl(x86_fp80) nounwind readnone
-comment|// CHECK-YES-NOT: declare float @logf(float) nounwind readnone
+comment|// CHECK-NO: declare double @log(double) [[NUW_RN]]
+comment|// CHECK-NO: declare x86_fp80 @logl(x86_fp80) [[NUW_RN]]
+comment|// CHECK-NO: declare float @logf(float) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare double @log(double) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare x86_fp80 @logl(x86_fp80) [[NUW_RN]]
+comment|// CHECK-YES-NOT: declare float @logf(float) [[NUW_RN]]
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-YES: attributes [[NUW_RN]] = { nounwind readnone }
+end_comment
+
+begin_comment
+comment|// CHECK-NO: attributes [[NUW_RN]] = { nounwind readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-NO: attributes [[NUW_RO]] = { nounwind readonly }
+end_comment
 
 end_unit
 

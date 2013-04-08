@@ -92,7 +92,7 @@ struct|struct
 name|_zend_function_entry
 block|{ }
 comment|// expected-error {{expected ';' after struct}} \
-comment|// expected-warning {{declaration does not declare anything}}
+comment|// expected-warning {{typedef requires a name}}
 name|int
 name|gv2
 typedef|;

@@ -1357,5 +1357,51 @@ comment|// expected-warning {{Division by a tainted value, possibly zero}}
 block|}
 end_function
 
+begin_function
+name|void
+name|constraintManagerShouldTreatAsOpaque
+parameter_list|(
+name|int
+name|rhs
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|scanf
+argument_list|(
+literal|"%d"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// This comparison used to hit an assertion in the constraint manager,
+comment|// which didn't handle NonLoc sym-sym comparisons.
+if|if
+condition|(
+name|i
+operator|<
+name|rhs
+condition|)
+return|return;
+if|if
+condition|(
+name|i
+operator|<
+name|rhs
+condition|)
+operator|*
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
 end_unit
 

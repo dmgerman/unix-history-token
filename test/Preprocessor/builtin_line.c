@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep "^  4"
+comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_define
@@ -12,8 +12,8 @@ end_define
 
 begin_expr_stmt
 name|FOO
+comment|// CHECK: {{^}}  4{{$}}
 comment|// PR3579 - This should expand to the __LINE__ of the ')' not of the X.
-comment|// RUN: %clang_cc1 %s -E | grep "^A 13"
 define|#
 directive|define
 name|X
@@ -23,6 +23,10 @@ name|A
 name|X
 argument_list|(  )
 end_expr_stmt
+
+begin_comment
+comment|// CHECK: {{^}}A 13{{$}}
+end_comment
 
 end_unit
 

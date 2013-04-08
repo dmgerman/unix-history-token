@@ -62,6 +62,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclarationName.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/NestedNameSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Stmt.h"
 end_include
 
@@ -150,22 +168,27 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|CatchLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|HandlerBlock
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -260,9 +283,7 @@ argument|SourceLocation tryLoc
 argument_list|,
 argument|Stmt *tryBlock
 argument_list|,
-argument|Stmt **handlers
-argument_list|,
-argument|unsigned numHandlers
+argument|ArrayRef<Stmt*> handlers
 argument_list|)
 block|;
 name|CXXTryStmt
@@ -340,9 +361,7 @@ argument|SourceLocation tryLoc
 argument_list|,
 argument|Stmt *tryBlock
 argument_list|,
-argument|Stmt **handlers
-argument_list|,
-argument|unsigned numHandlers
+argument|ArrayRef<Stmt*> handlers
 argument_list|)
 block|;
 specifier|static
@@ -357,21 +376,26 @@ argument_list|,
 argument|unsigned numHandlers
 argument_list|)
 block|;
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getTryLoc
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getEndLoc
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -405,8 +429,6 @@ name|getTryBlock
 argument_list|()
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|CompoundStmt
@@ -428,8 +450,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|CompoundStmt
@@ -460,8 +480,6 @@ argument|unsigned i
 argument_list|)
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|CXXCatchStmt
@@ -487,8 +505,6 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|CXXCatchStmt
@@ -1035,17 +1051,23 @@ name|RParenLoc
 operator|=
 name|Loc
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|ForLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|SubExprs
 index|[
 name|BODY
@@ -1053,7 +1075,6 @@ index|]
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -1271,22 +1292,27 @@ name|SubStmt
 operator|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|KeywordLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|SubStmt
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|child_range

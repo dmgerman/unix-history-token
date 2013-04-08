@@ -256,7 +256,26 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning {{visibility attribute ignored}}
+comment|// expected-warning {{'visibility' attribute ignored}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|x
+name|__attribute__
+argument_list|(
+operator|(
+name|type_visibility
+argument_list|(
+literal|"default"
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'type_visibility' attribute only applies to types and namespaces}}
 end_comment
 
 end_unit

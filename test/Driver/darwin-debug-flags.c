@@ -16,6 +16,14 @@ comment|// RUN: env RC_DEBUG_OPTIONS=1 %clang -### -target i386-apple-darwin9 -c
 end_comment
 
 begin_comment
+comment|//<rdar://problem/12955296>
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i386-apple-darwin9 -c -g %t.s 2>&1 | FileCheck -check-prefix=P %s
+end_comment
+
+begin_comment
 comment|// CHECK: !0 = metadata !{
 end_comment
 
@@ -39,6 +47,10 @@ end_decl_stmt
 
 begin_comment
 comment|// S: "-dwarf-debug-flags"
+end_comment
+
+begin_comment
+comment|// P: "-dwarf-debug-producer"
 end_comment
 
 end_unit

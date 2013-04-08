@@ -193,8 +193,97 @@ block|}
 block|}
 end_function
 
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(unavailable)
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|Int
+name|__attribute__
+argument_list|(
+operator|(
+name|unavailable
+operator|)
+argument_list|)
+name|test
+argument_list|()
+name|__attribute__
+argument_list|(
+operator|(
+name|unavailable
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|HEADER
+parameter_list|()
+define|\
+value|int x; \     int y; \     int z
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_INST
+parameter_list|(
+name|name
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|static const struct { \         HEADER(); \     } name = { \         __VA_ARGS__ \     }
+end_define
+
+begin_function_decl
+name|void
+name|func1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|TYPE_INST
+argument_list|(
+name|Foo
+argument_list|,
+operator|.
+name|x
+operator|=
+literal|0
+argument_list|,
+operator|.
+name|y
+operator|=
+literal|1
+argument_list|,
+operator|.
+name|z
+operator|=
+literal|2
+argument_list|, )
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|func2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:34:1 %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:37:1 %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -358,7 +447,7 @@ comment|// CHECK: Punctuation: ";" [8:24 - 8:25] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "const" [9:3 - 9:8] DeclStmt=
+comment|// CHECK: Keyword: "const" [9:3 - 9:8] VarDecl=hello:9:16 (Definition)
 end_comment
 
 begin_comment
@@ -582,11 +671,263 @@ comment|// CHECK: Punctuation: ";" [32:15 - 32:16] CompoundStmt=
 end_comment
 
 begin_comment
+comment|// CHECK: Keyword: "__attribute__" [36:1 - 36:14] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:14 - 36:15] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:15 - 36:16] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "unavailable" [36:16 - 36:27] UnexposedAttr=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:27 - 36:28] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:28 - 36:29] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Int" [36:30 - 36:33] TypeRef=Int:12:13
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "__attribute__" [36:34 - 36:47] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:47 - 36:48] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:48 - 36:49] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "unavailable" [36:49 - 36:60] UnexposedAttr=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:60 - 36:61] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:61 - 36:62] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "test" [36:63 - 36:67] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:67 - 36:68] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:68 - 36:69] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "__attribute__" [36:70 - 36:83] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:83 - 36:84] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [36:84 - 36:85] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "unavailable" [36:85 - 36:96] UnexposedAttr=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:96 - 36:97] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [36:97 - 36:98] FunctionDecl=test:36:63 (unavailable)  (always unavailable: "")
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [36:98 - 36:99]
+end_comment
+
+begin_comment
 comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:165:32 %s | FileCheck %s
 end_comment
 
 begin_comment
 comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:165:38 %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -test-annotate-tokens=%s:50:1:55:1 %s | FileCheck %s -check-prefix=CHECK-RANGE1
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Keyword: "void" [50:1 - 50:5] FunctionDecl=func1:50:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Identifier: "func1" [50:6 - 50:11] FunctionDecl=func1:50:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "(" [50:11 - 50:12] FunctionDecl=func1:50:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Keyword: "void" [50:12 - 50:16] FunctionDecl=func1:50:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: ")" [50:16 - 50:17] FunctionDecl=func1:50:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: ";" [50:17 - 50:18]
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Identifier: "TYPE_INST" [52:1 - 52:10] macro expansion=TYPE_INST:43:9
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "(" [52:10 - 52:11]
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Identifier: "Foo" [52:11 - 52:14] VarDecl=Foo:52:11 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "," [52:14 - 52:15]
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "." [53:5 - 53:6] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Identifier: "x" [53:6 - 53:7] MemberRef=x:52:1
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "=" [53:8 - 53:9] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Literal: "0" [53:10 - 53:11] IntegerLiteral=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "," [53:11 - 53:12] InitListExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "." [54:5 - 54:6] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Identifier: "y" [54:6 - 54:7] MemberRef=y:52:1
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "=" [54:8 - 54:9] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Literal: "1" [54:10 - 54:11] IntegerLiteral=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE1: Punctuation: "," [54:11 - 54:12] InitListExpr=
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -test-annotate-tokens=%s:54:1:59:1 %s | FileCheck %s -check-prefix=CHECK-RANGE2
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "." [54:5 - 54:6] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Identifier: "y" [54:6 - 54:7] MemberRef=y:52:1
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "=" [54:8 - 54:9] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Literal: "1" [54:10 - 54:11] IntegerLiteral=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "," [54:11 - 54:12] InitListExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "." [55:5 - 55:6] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Identifier: "z" [55:6 - 55:7] MemberRef=z:52:1
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "=" [55:8 - 55:9] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Literal: "2" [55:10 - 55:11] IntegerLiteral=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "," [55:11 - 55:12] InitListExpr=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: ")" [56:1 - 56:2]
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: ";" [56:2 - 56:3]
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Keyword: "void" [58:1 - 58:5] FunctionDecl=func2:58:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Identifier: "func2" [58:6 - 58:11] FunctionDecl=func2:58:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "(" [58:11 - 58:12] FunctionDecl=func2:58:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Keyword: "void" [58:12 - 58:16] FunctionDecl=func2:58:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: ")" [58:16 - 58:17] FunctionDecl=func2:58:6
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: ";" [58:17 - 58:18]
 end_comment
 
 end_unit

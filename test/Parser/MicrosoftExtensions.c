@@ -233,14 +233,13 @@ name|long
 name|Bit
 parameter_list|)
 block|{
-asm|__asm {
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
-asm|mov eax, Bit
-asm|mov ecx, Base
-asm|lock bts [ecx], eax
-asm|setc al
-asm|};
+comment|// FIXME: Re-enable this once MS inline asm stabilizes.
+if|#
+directive|if
+literal|0
+block|__asm {     mov eax, Bit     mov ecx, Base     lock bts [ecx], eax     setc al   };
+endif|#
+directive|endif
 block|}
 end_function
 

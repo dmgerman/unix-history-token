@@ -1,38 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// FIXME: We forcibly strip the names so that the test doesn't vary between
+comment|// RUN: %clang_cc1 -fblocks -triple x86_64-apple-darwin10 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// builds with and without asserts. We need a better solution for this.
+comment|// CHECK: [[Vi:%.+]] = alloca %struct.__block_byref_i, align 8
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -triple x86_64-apple-darwin10 -emit-llvm-bc -o - %s | opt -strip | llvm-dis> %t
+comment|// CHECK: call i32 (...)* @rhs()
 end_comment
 
 begin_comment
-comment|// RUN: grep '%6 = call i32 (...)\* @rhs()' %t | count 1
+comment|// CHECK: [[V7:%.+]] = getelementptr inbounds %struct.__block_byref_i* [[Vi]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// RUN: grep '%7 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1
+comment|// CHECK: load %struct.__block_byref_i** [[V7]]
 end_comment
 
 begin_comment
-comment|// RUN: grep '%8 = load %0\*\* %7' %t | count 1
+comment|// CHECK: call i32 (...)* @rhs()
 end_comment
 
 begin_comment
-comment|// RUN: grep '%10 = call i32 (...)\* @rhs()' %t | count 1
+comment|// CHECK: [[V11:%.+]] = getelementptr inbounds %struct.__block_byref_i* [[Vi]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// RUN: grep '%11 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1
-end_comment
-
-begin_comment
-comment|// RUN: grep '%12 = load %0\*\* %11' %t | count 1
+comment|// CHECK: load %struct.__block_byref_i** [[V11]]
 end_comment
 
 begin_function_decl

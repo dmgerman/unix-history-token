@@ -4,7 +4,7 @@ comment|// RUN: rm -f %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only %s -Wblahblah --serialize-diagnostics %t> /dev/null 2>&1 || true
+comment|// RUN: %clang -fsyntax-only %s -Wblahblah --serialize-diagnostics %t> /dev/null 2>&1
 end_comment
 
 begin_comment

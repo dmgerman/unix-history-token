@@ -232,7 +232,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t1() noreturn nounwind {
+comment|// CHECK: define void @t1() [[NR:#[0-9]+]] {
 end_comment
 
 begin_function_decl
@@ -263,7 +263,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t2() nounwind {
+comment|// CHECK: define void @t2() [[NUW:#[0-9]+]] {
 end_comment
 
 begin_function_decl
@@ -288,7 +288,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define weak void @t3() nounwind {
+comment|// CHECK: define weak void @t3() [[NUW]] {
 end_comment
 
 begin_function_decl
@@ -313,7 +313,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define hidden void @t4() nounwind {
+comment|// CHECK: define hidden void @t4() [[NUW]] {
 end_comment
 
 begin_function_decl
@@ -340,7 +340,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t7() noreturn nounwind {
+comment|// CHECK: define void @t7() [[NR]] {
 end_comment
 
 begin_function_decl
@@ -373,7 +373,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t10() nounwind section "SECT" {
+comment|// CHECK: define void @t10() [[NUW]] section "SECT" {
 end_comment
 
 begin_function_decl
@@ -404,7 +404,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t11() nounwind section "SECT" {
+comment|// CHECK: define void @t11() [[NUW]] section "SECT" {
 end_comment
 
 begin_decl_stmt
@@ -426,7 +426,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define i32 @t19() nounwind {
+comment|// CHECK: define i32 @t19() [[NUW]] {
 end_comment
 
 begin_function_decl
@@ -460,7 +460,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:define void @t20() nounwind {
+comment|// CHECK:define void @t20() [[NUW]] {
 end_comment
 
 begin_comment
@@ -570,7 +570,15 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @t22() nounwind section ".bar"
+comment|// CHECK: define void @t22() [[NUW]] section ".bar"
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NR]] = { noreturn nounwind{{.*}} }
 end_comment
 
 end_unit

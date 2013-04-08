@@ -40,7 +40,7 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// O32: define void @test_v4sf(i32 %a1.coerce0, i32 %a1.coerce1, i32 %a1.coerce2, i32 %a1.coerce3, i32 %a2, i32, i32 %a3.coerce0, i32 %a3.coerce1, i32 %a3.coerce2, i32 %a3.coerce3) nounwind
+comment|// O32: define void @test_v4sf(i32 %a1.coerce0, i32 %a1.coerce1, i32 %a1.coerce2, i32 %a1.coerce3, i32 %a2, i32, i32 %a3.coerce0, i32 %a3.coerce1, i32 %a3.coerce2, i32 %a3.coerce3) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// O32: declare i32 @test_v4sf_2(i32, i32, i32, i32, i32, i32, i32, i32,
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4sf(i64 %a1.coerce0, i64 %a1.coerce1, i32 %a2, i64, i64 %a3.coerce0, i64 %a3.coerce1) nounwind
+comment|// N64: define void @test_v4sf(i64 %a1.coerce0, i64 %a1.coerce1, i32 %a2, i64, i64 %a3.coerce0, i64 %a3.coerce1) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ block|}
 end_function
 
 begin_comment
-comment|// O32: define void @test_v4i32(i32 %a1.coerce0, i32 %a1.coerce1, i32 %a1.coerce2, i32 %a1.coerce3, i32 %a2, i32, i32 %a3.coerce0, i32 %a3.coerce1, i32 %a3.coerce2, i32 %a3.coerce3) nounwind
+comment|// O32: define void @test_v4i32(i32 %a1.coerce0, i32 %a1.coerce1, i32 %a1.coerce2, i32 %a1.coerce3, i32 %a2, i32, i32 %a3.coerce0, i32 %a3.coerce1, i32 %a3.coerce2, i32 %a3.coerce3) [[NUW]]
 end_comment
 
 begin_comment
@@ -103,7 +103,7 @@ comment|// O32: declare i32 @test_v4i32_2(i32, i32, i32, i32, i32, i32, i32, i32
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4i32(i64 %a1.coerce0, i64 %a1.coerce1, i32 %a2, i64, i64 %a3.coerce0, i64 %a3.coerce1) nounwind
+comment|// N64: define void @test_v4i32(i64 %a1.coerce0, i64 %a1.coerce1, i32 %a2, i64, i64 %a3.coerce0, i64 %a3.coerce1) [[NUW]]
 end_comment
 
 begin_comment
@@ -148,6 +148,14 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// O32: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// N64: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
 
 end_unit
 

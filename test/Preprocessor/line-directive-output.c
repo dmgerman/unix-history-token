@@ -18,6 +18,14 @@ comment|// CHECK: # 1 "{{.*}}line-directive-output.c"
 end_comment
 
 begin_comment
+comment|// Check that we do not emit an enter marker for the main file.
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: # 1 "{{.*}}line-directive-output.c" 1
+end_comment
+
+begin_comment
 comment|// CHECK: int a;
 end_comment
 

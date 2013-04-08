@@ -40,21 +40,30 @@ begin_define
 define|#
 directive|define
 name|A
-value|1
+parameter_list|(
+name|x
+parameter_list|)
+value|x
 end_define
 
 begin_define
 define|#
 directive|define
 name|B
-value|A
+parameter_list|(
+name|x
+parameter_list|)
+value|A(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|C
-value|B
+parameter_list|(
+name|x
+parameter_list|)
+value|B(x)
 end_define
 
 begin_function
@@ -63,11 +72,14 @@ name|bar
 parameter_list|()
 block|{
 name|C
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:17:3: warning: expression result unused
-comment|// CHECK: {{.*}}:15:11: note: expanded from macro 'C'
-comment|// CHECK: {{.*}}:14:11: note: expanded from macro 'B'
-comment|// CHECK: {{.*}}:13:11: note: expanded from macro 'A'
+comment|// CHECK: {{.*}}:17:5: warning: expression result unused
+comment|// CHECK: {{.*}}:15:16: note: expanded from macro 'C'
+comment|// CHECK: {{.*}}:14:16: note: expanded from macro 'B'
+comment|// CHECK: {{.*}}:13:14: note: expanded from macro 'A'
 block|}
 end_function
 
@@ -421,10 +433,18 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:115:30: warning: expression result unused
-comment|// CHECK: {{.*}}:106:71: note: expanded from macro 'variadic_pasting_args3a'
-comment|// CHECK: {{.*}}:104:70: note: expanded from macro 'variadic_pasting_args2a'
-comment|// CHECK: {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
+comment|// CHECK:        {{.*}}:115:3: warning: expression result unused
+comment|// CHECK-NEXT:     variadic_pasting_args3a(1, 2, 3, 4);
+comment|// CHECK-NEXT: {{  \^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}}
+comment|// CHECK:        {{.*}}:106:44: note: expanded from macro 'variadic_pasting_args3a'
+comment|// CHECK-NEXT:   #define variadic_pasting_args3a(x, y, ...) variadic_pasting_args2a(x, y, __VA_ARGS__)
+comment|// CHECK-NEXT: {{                                           \^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}}
+comment|// CHECK:        {{.*}}:104:70: note: expanded from macro 'variadic_pasting_args2a'
+comment|// CHECK-NEXT:   #define variadic_pasting_args2a(x, y, ...) variadic_pasting_args1(x, y ## __VA_ARGS__)
+comment|// CHECK-NEXT: {{                                                                     \^~~~~~~~~~~~~~~~}}
+comment|// CHECK:        {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
+comment|// CHECK-NEXT:   #define variadic_pasting_args1(x, y, z) y
+comment|// CHECK-NEXT: {{                                        \^}}
 block|}
 end_function
 
@@ -446,7 +466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:         {{.*}}:122:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+comment|// CHECK:         {{.*}}:130:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
 end_comment
 
 begin_comment
@@ -458,7 +478,7 @@ comment|// CHECK-NEXT: {{^                                      \^}}
 end_comment
 
 begin_comment
-comment|// CHECK:         {{.*}}:122:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+comment|// CHECK:         {{.*}}:130:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
 end_comment
 
 begin_comment
@@ -470,7 +490,7 @@ comment|// CHECK-NEXT: {{^                                      \^}}
 end_comment
 
 begin_comment
-comment|// CHECK:         {{.*}}:122:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+comment|// CHECK:         {{.*}}:130:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
 end_comment
 
 begin_comment
@@ -511,7 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:         {{.*}}:137:9: note: place parentheses around the '+' expression to silence this warning
+comment|// CHECK:         {{.*}}:145:9: note: place parentheses around the '+' expression to silence this warning
 end_comment
 
 begin_comment
@@ -523,7 +543,7 @@ comment|// CHECK-NEXT: {{^        \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:136:21: note: expanded from macro 'X'
+comment|// CHECK-NEXT:    {{.*}}:144:21: note: expanded from macro 'X'
 end_comment
 
 begin_comment
@@ -535,7 +555,7 @@ comment|// CHECK-NEXT: {{^          ~~~~~~~~~ \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:134:15: note: expanded from macro 'QMARK'
+comment|// CHECK-NEXT:    {{.*}}:142:15: note: expanded from macro 'QMARK'
 end_comment
 
 begin_comment
@@ -547,7 +567,7 @@ comment|// CHECK-NEXT: {{^              \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:137:9: note: place parentheses around the '?:' expression to evaluate it first
+comment|// CHECK-NEXT:    {{.*}}:145:9: note: place parentheses around the '?:' expression to evaluate it first
 end_comment
 
 begin_comment
@@ -559,7 +579,7 @@ comment|// CHECK-NEXT: {{^        \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:136:21: note: expanded from macro 'X'
+comment|// CHECK-NEXT:    {{.*}}:144:21: note: expanded from macro 'X'
 end_comment
 
 begin_comment
@@ -593,7 +613,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:         {{.*}}:156:9: warning: operator '?:' has lower precedence than '+'; '+' will be evaluated first
+comment|// CHECK:         {{.*}}:164:9: warning: operator '?:' has lower precedence than '+'; '+' will be evaluated first
 end_comment
 
 begin_comment
@@ -605,7 +625,7 @@ comment|// CHECK-NEXT: {{^        \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:155:25: note: expanded from macro 'Y'
+comment|// CHECK-NEXT:    {{.*}}:163:25: note: expanded from macro 'Y'
 end_comment
 
 begin_comment
@@ -617,7 +637,7 @@ comment|// CHECK-NEXT: {{^          ~~~~~~~~~~~~~ \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:134:15: note: expanded from macro 'QMARK'
+comment|// CHECK-NEXT:    {{.*}}:142:15: note: expanded from macro 'QMARK'
 end_comment
 
 begin_comment
@@ -626,6 +646,310 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^              \^}}
+end_comment
+
+begin_comment
+comment|// PR14399
+end_comment
+
+begin_function_decl
+name|void
+name|iequals
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|foo_aa
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+define|#
+directive|define
+comment|/* */
+name|BARC
+parameter_list|(
+name|c
+parameter_list|,
+comment|/* */
+name|b
+parameter_list|,
+name|a
+parameter_list|)
+value|(a + b ? c : c)
+name|iequals
+argument_list|(
+name|__LINE__
+argument_list|,
+name|BARC
+argument_list|(
+literal|123
+argument_list|,
+operator|(
+literal|456
+operator|<
+literal|345
+operator|)
+argument_list|,
+literal|789
+argument_list|)
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK:         {{.*}}:180:21: warning: operator '?:' has lower precedence than '+'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      iequals(__LINE__, BARC(123, (456< 345), 789), 8);
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                    \^~~~~~~~~~~~~~~~~~~~~~~~~~~}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:179:41: note: expanded from macro 'BARC'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define /* */ BARC(c, /* */b, a) (a + b ? c : c)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                  ~~~~~ \^}}
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APPEND2
+parameter_list|(
+name|NUM
+parameter_list|,
+name|SUFF
+parameter_list|)
+value|-1 != NUM ## SUFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPEND
+parameter_list|(
+name|NUM
+parameter_list|,
+name|SUFF
+parameter_list|)
+value|APPEND2(NUM, SUFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UTARG_MAX_U
+value|APPEND (MAX_UINT, UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_UINT
+value|18446744073709551615
+end_define
+
+begin_if
+if|#
+directive|if
+name|UTARG_MAX_U
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK:         {{.*}}:193:5: warning: left side of operator converted from negative value to unsigned: -1 to 18446744073709551615
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #if UTARG_MAX_U
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^    \^~~~~~~~~~~}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:191:21: note: expanded from macro 'UTARG_MAX_U'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define UTARG_MAX_U APPEND (MAX_UINT, UL)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                    \^~~~~~~~~~~~~~~~~~~~~}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:190:27: note: expanded from macro 'APPEND'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define APPEND(NUM, SUFF) APPEND2(NUM, SUFF)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                          \^~~~~~~~~~~~~~~~~~}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:189:31: note: expanded from macro 'APPEND2'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define APPEND2(NUM, SUFF) -1 != NUM ## SUFF
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                           ~~ \^  ~~~~~~~~~~~}}
+end_comment
+
+begin_function_decl
+name|unsigned
+name|long
+name|strlen_test
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|__darwin_obsz
+parameter_list|(
+name|object
+parameter_list|)
+value|__builtin_object_size (object, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sprintf2
+parameter_list|(
+name|str
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Cstrlen
+parameter_list|(
+name|a
+parameter_list|)
+value|strlen_test(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Csprintf
+value|sprintf2
+end_define
+
+begin_function
+name|void
+name|f
+parameter_list|(
+name|char
+modifier|*
+name|pMsgBuf
+parameter_list|,
+name|char
+modifier|*
+name|pKeepBuf
+parameter_list|)
+block|{
+name|Csprintf
+argument_list|(
+name|pMsgBuf
+argument_list|,
+literal|"\nEnter minimum anagram length (2-%1d): "
+argument_list|,
+name|Cstrlen
+argument_list|(
+name|pKeepBuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK:         {{.*}}:216:62: warning: format specifies type 'int' but the argument has type 'unsigned long'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    Csprintf(pMsgBuf,"\nEnter minimum anagram length (2-%1d): ", Cstrlen(pKeepBuf));
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                                    ~~~      \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                                    %1lu}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:213:21: note: expanded from macro 'Cstrlen'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    #define Cstrlen(a)  strlen_test(a)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                    \^}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    {{.*}}:212:56: note: expanded from macro 'sprintf2'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^                                                       \^}}
 end_comment
 
 end_unit

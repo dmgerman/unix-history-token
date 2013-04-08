@@ -74,9 +74,29 @@ parameter_list|)
 value|x(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|y
+parameter_list|(
+name|x
+parameter_list|)
+value|y
+end_define
+
+begin_define
+define|#
+directive|define
+name|z
+parameter_list|(
+name|x
+parameter_list|)
+value|(z)(x)
+end_define
+
 begin_decl_stmt
 name|p
-comment|// expected-warning {{recursive macro}}
+comment|// no warning
 name|a
 comment|// expected-warning {{recursive macro}}
 name|f
@@ -97,10 +117,20 @@ name|c
 argument_list|(
 name|c
 argument_list|)
+comment|// expected-warning {{recursive macro}}
+name|y
+argument_list|(
+literal|5
+argument_list|)
+comment|// expected-warning {{recursive macro}}
+name|z
+argument_list|(
+name|z
+argument_list|)
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{recursive macro}}
+comment|// ok
 end_comment
 
 end_unit

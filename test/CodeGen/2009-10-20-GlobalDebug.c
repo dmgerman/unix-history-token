@@ -29,11 +29,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: metadata !{i32 {{.*}}, i32 0, metadata !5, metadata !"localstatic", metadata !"localstatic", metadata !"", metadata !6, i32 5, metadata !9, i32 1, i32 1, i32* @main.localstatic} ; [ DW_TAG_variable ]
+comment|// CHECK: metadata !{i32 {{.*}}, i32 0, metadata !{{.*}}, metadata !"localstatic", metadata !"localstatic", metadata !"", metadata !{{.*}}, i32 5, metadata !{{.*}}, i32 1, i32 1, i32* @main.localstatic, null} ; [ DW_TAG_variable ]
 end_comment
 
 begin_comment
-comment|// CHECK: metadata !{i32 {{.*}}, i32 0, null, metadata !"global", metadata !"global", metadata !"", metadata !6, i32 3, metadata !9, i32 0, i32 1, i32* @global} ; [ DW_TAG_variable ]
+comment|// CHECK: metadata !{i32 {{.*}}, i32 0, null, metadata !"global", metadata !"global", metadata !"", metadata !{{.*}}, i32 3, metadata !{{.*}}, i32 0, i32 1, i32* @global, null} ; [ DW_TAG_variable ]
 end_comment
 
 end_unit

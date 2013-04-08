@@ -375,5 +375,41 @@ begin_comment
 comment|// CHECK-NORMAL: crtbegin.o
 end_comment
 
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o -target arm-unknown-freebsd10.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM: clang{{.*}}" "-cc1"{{.*}}" "-fsjlj-exceptions"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM: as{{.*}}" "-mfpu=softvfp"{{.*}}"-matpcs"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o -target arm-gnueabi-freebsd10.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM-EABI %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABI-NOT: clang{{.*}}" "-cc1"{{.*}}" "-fsjlj-exceptions"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABI: as{{.*}}" "-mfpu=softvfp" "-meabi=5"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABI-NOT: as{{.*}}" "-matpcs"
+end_comment
+
 end_unit
 

@@ -183,5 +183,56 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|test2
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test2
+parameter_list|(
+name|undef
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{a parameter list without types is only allowed in a function definition}}
+end_comment
+
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{ }
+end_function
+
+begin_function_decl
+name|void
+name|test3
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|test3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{incomplete type}}
+end_comment
+
+begin_function
+name|void
+name|test3
+parameter_list|()
+block|{ }
+end_function
+
 end_unit
 

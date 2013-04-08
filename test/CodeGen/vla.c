@@ -650,5 +650,28 @@ comment|// CHECK-NEXT: store i32 0, i32* [[IX2]], align 4
 block|}
 end_function
 
+begin_comment
+comment|// Follow gcc's behavior for VLAs in parameter lists.  PR9559.
+end_comment
+
+begin_function
+name|void
+name|test7
+parameter_list|(
+name|int
+name|a
+index|[
+name|b
+argument_list|(
+literal|0
+argument_list|)
+index|]
+parameter_list|)
+block|{
+comment|// CHECK: define void @test7(
+comment|// CHECK: call i32 @b(i8* null)
+block|}
+end_function
+
 end_unit
 

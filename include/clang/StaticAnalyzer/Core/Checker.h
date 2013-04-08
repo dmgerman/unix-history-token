@@ -151,8 +151,6 @@ operator|)
 operator|->
 name|checkASTDecl
 argument_list|(
-name|llvm
-operator|::
 name|cast
 operator|<
 name|DECL
@@ -174,8 +172,6 @@ argument|const Decl *D
 argument_list|)
 block|{
 return|return
-name|llvm
-operator|::
 name|isa
 operator|<
 name|DECL
@@ -405,8 +401,6 @@ operator|)
 operator|->
 name|checkPreStmt
 argument_list|(
-name|llvm
-operator|::
 name|cast
 operator|<
 name|STMT
@@ -426,8 +420,6 @@ argument|const Stmt *S
 argument_list|)
 block|{
 return|return
-name|llvm
-operator|::
 name|isa
 operator|<
 name|STMT
@@ -509,8 +501,6 @@ operator|)
 operator|->
 name|checkPostStmt
 argument_list|(
-name|llvm
-operator|::
 name|cast
 operator|<
 name|STMT
@@ -530,8 +520,6 @@ argument|const Stmt *S
 argument_list|)
 block|{
 return|return
-name|llvm
-operator|::
 name|isa
 operator|<
 name|STMT
@@ -1089,7 +1077,7 @@ block|;   }
 block|}
 block|;
 name|class
-name|EndPath
+name|EndFunction
 block|{
 name|template
 operator|<
@@ -1098,7 +1086,7 @@ name|CHECKER
 operator|>
 specifier|static
 name|void
-name|_checkEndPath
+name|_checkEndFunction
 argument_list|(
 argument|void *checker
 argument_list|,
@@ -1114,7 +1102,7 @@ operator|)
 name|checker
 operator|)
 operator|->
-name|checkEndPath
+name|checkEndFunction
 argument_list|(
 name|C
 argument_list|)
@@ -1137,15 +1125,15 @@ argument_list|)
 block|{
 name|mgr
 operator|.
-name|_registerForEndPath
+name|_registerForEndFunction
 argument_list|(
 name|CheckerManager
 operator|::
-name|CheckEndPathFunc
+name|CheckEndFunctionFunc
 argument_list|(
 name|checker
 argument_list|,
-name|_checkEndPath
+name|_checkEndFunction
 operator|<
 name|CHECKER
 operator|>
@@ -1380,7 +1368,7 @@ argument|void *checker
 argument_list|,
 argument|ProgramStateRef state
 argument_list|,
-argument|const StoreManager::InvalidatedSymbols *invalidated
+argument|const InvalidatedSymbols *invalidated
 argument_list|,
 argument|ArrayRef<const MemRegion *> Explicits
 argument_list|,
@@ -1482,6 +1470,185 @@ argument_list|(
 name|checker
 argument_list|,
 name|_wantsRegionChangeUpdate
+operator|<
+name|CHECKER
+operator|>
+argument_list|)
+argument_list|)
+block|;   }
+expr|}
+block|;
+name|class
+name|PointerEscape
+block|{
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|ProgramStateRef
+name|_checkPointerEscape
+argument_list|(
+argument|void *checker
+argument_list|,
+argument|ProgramStateRef State
+argument_list|,
+argument|const InvalidatedSymbols&Escaped
+argument_list|,
+argument|const CallEvent *Call
+argument_list|,
+argument|PointerEscapeKind Kind
+argument_list|,
+argument|bool IsConst
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|IsConst
+condition|)
+return|return
+operator|(
+operator|(
+specifier|const
+name|CHECKER
+operator|*
+operator|)
+name|checker
+operator|)
+operator|->
+name|checkPointerEscape
+argument_list|(
+name|State
+argument_list|,
+name|Escaped
+argument_list|,
+name|Call
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+return|return
+name|State
+return|;
+block|}
+name|public
+operator|:
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_register
+argument_list|(
+argument|CHECKER *checker
+argument_list|,
+argument|CheckerManager&mgr
+argument_list|)
+block|{
+name|mgr
+operator|.
+name|_registerForPointerEscape
+argument_list|(
+name|CheckerManager
+operator|::
+name|CheckPointerEscapeFunc
+argument_list|(
+name|checker
+argument_list|,
+name|_checkPointerEscape
+operator|<
+name|CHECKER
+operator|>
+argument_list|)
+argument_list|)
+block|;   }
+expr|}
+block|;
+name|class
+name|ConstPointerEscape
+block|{
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|ProgramStateRef
+name|_checkConstPointerEscape
+argument_list|(
+argument|void *checker
+argument_list|,
+argument|ProgramStateRef State
+argument_list|,
+argument|const InvalidatedSymbols&Escaped
+argument_list|,
+argument|const CallEvent *Call
+argument_list|,
+argument|PointerEscapeKind Kind
+argument_list|,
+argument|bool IsConst
+argument_list|)
+block|{
+if|if
+condition|(
+name|IsConst
+condition|)
+return|return
+operator|(
+operator|(
+specifier|const
+name|CHECKER
+operator|*
+operator|)
+name|checker
+operator|)
+operator|->
+name|checkConstPointerEscape
+argument_list|(
+name|State
+argument_list|,
+name|Escaped
+argument_list|,
+name|Call
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+return|return
+name|State
+return|;
+block|}
+name|public
+operator|:
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_register
+argument_list|(
+argument|CHECKER *checker
+argument_list|,
+argument|CheckerManager&mgr
+argument_list|)
+block|{
+name|mgr
+operator|.
+name|_registerForPointerEscape
+argument_list|(
+name|CheckerManager
+operator|::
+name|CheckPointerEscapeFunc
+argument_list|(
+name|checker
+argument_list|,
+name|_checkConstPointerEscape
 operator|<
 name|CHECKER
 operator|>
@@ -2263,6 +2430,50 @@ name|BugReporter
 operator|*
 name|BR
 block|; }
+block|;
+comment|/// \brief A helper class which wraps a boolean value set to false by default.
+block|struct
+name|DefaultBool
+block|{
+name|bool
+name|val
+block|;
+name|DefaultBool
+argument_list|()
+operator|:
+name|val
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|val
+return|;
+block|}
+name|DefaultBool
+operator|&
+name|operator
+operator|=
+operator|(
+name|bool
+name|b
+operator|)
+block|{
+name|val
+operator|=
+name|b
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+expr|}
 block|;  }
 comment|// end ento namespace
 block|}

@@ -135,7 +135,7 @@ comment|// RUN: rm -f %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang -Wall -fsyntax-only %s --serialize-diagnostics %t.diag> /dev/null 2>&1 || true
+comment|// RUN: not %clang -Wall -fsyntax-only %s --serialize-diagnostics %t.diag> /dev/null 2>&1
 end_comment
 
 begin_comment

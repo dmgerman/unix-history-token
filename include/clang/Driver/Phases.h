@@ -69,6 +69,15 @@ block|,
 name|Link
 block|}
 enum|;
+enum|enum
+block|{
+name|MaxNumberOfPhases
+init|=
+name|Link
+operator|+
+literal|1
+block|}
+enum|;
 specifier|const
 name|char
 modifier|*

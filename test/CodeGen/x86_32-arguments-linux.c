@@ -16,7 +16,7 @@ comment|// CHECK: i8 signext %a0, %struct.s56_0* byval align 4 %a1,
 end_comment
 
 begin_comment
-comment|// CHECK: x86_mmx %a2.coerce, %struct.s56_1* byval align 4,
+comment|// CHECK: i64 %a2.coerce, %struct.s56_1* byval align 4,
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// CHECK: i32 %{{.*}}, %struct.s56_0* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment
-comment|// CHECK: x86_mmx %{{[^ ]*}}, %struct.s56_1* byval align 4 %{{[^ ]*}},
+comment|// CHECK: i64 %{{[^ ]*}}, %struct.s56_1* byval align 4 %{{[^ ]*}},
 end_comment
 
 begin_comment

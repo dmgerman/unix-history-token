@@ -150,6 +150,9 @@ decl_stmt|;
 name|class
 name|VarDecl
 decl_stmt|;
+name|class
+name|IdentifierInfo
+decl_stmt|;
 name|namespace
 name|cxcursor
 block|{
@@ -171,6 +174,7 @@ name|Attr
 operator|*
 name|A
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|Decl
@@ -184,6 +188,7 @@ decl_stmt|;
 name|CXCursor
 name|MakeCXCursor
 argument_list|(
+specifier|const
 name|clang
 operator|::
 name|Decl
@@ -208,12 +213,14 @@ decl_stmt|;
 name|CXCursor
 name|MakeCXCursor
 argument_list|(
+specifier|const
 name|clang
 operator|::
 name|Stmt
 operator|*
 name|S
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|Decl
@@ -263,6 +270,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|ObjCInterfaceDecl
 operator|*
 operator|,
@@ -295,6 +303,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|ObjCProtocolDecl
 operator|*
 operator|,
@@ -327,6 +336,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|ObjCInterfaceDecl
 operator|*
 operator|,
@@ -359,6 +369,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|TypeDecl
 operator|*
 operator|,
@@ -391,6 +402,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|TemplateDecl
 operator|*
 operator|,
@@ -424,6 +436,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|NamedDecl
 operator|*
 operator|,
@@ -456,6 +469,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|VarDecl
 operator|*
 operator|,
@@ -488,6 +502,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|FieldDecl
 operator|*
 operator|,
@@ -512,6 +527,7 @@ name|TU
 parameter_list|)
 function_decl|;
 comment|/// \brief Unpack a CXXBaseSpecifier cursor into a CXXBaseSpecifier.
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|getCursorCXXBaseSpecifier
@@ -543,6 +559,7 @@ comment|/// \brief Create a macro definition cursor.
 name|CXCursor
 name|MakeMacroDefinitionCursor
 parameter_list|(
+specifier|const
 name|MacroDefinition
 modifier|*
 parameter_list|,
@@ -552,6 +569,7 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Unpack a given macro definition cursor to retrieve its
 comment|/// source range.
+specifier|const
 name|MacroDefinition
 modifier|*
 name|getCursorMacroDefinition
@@ -571,16 +589,193 @@ name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
-comment|/// \brief Unpack a given macro expansion cursor to retrieve its
-comment|/// source range.
-name|MacroExpansion
+comment|/// \brief Create a "pseudo" macro expansion cursor, using a macro definition
+comment|/// and a source location.
+name|CXCursor
+name|MakeMacroExpansionCursor
+parameter_list|(
+name|MacroDefinition
 modifier|*
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Wraps a macro expansion cursor and provides a common interface
+comment|/// for a normal macro expansion cursor or a "pseudo" one.
+comment|///
+comment|/// "Pseudo" macro expansion cursors (essentially a macro definition along with
+comment|/// a source location) are created in special cases, for example they can be
+comment|/// created for identifiers inside macro definitions, if these identifiers are
+comment|/// macro names.
+name|class
+name|MacroExpansionCursor
+block|{
+name|CXCursor
+name|C
+decl_stmt|;
+name|bool
+name|isPseudo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|C
+operator|.
+name|data
+index|[
+literal|1
+index|]
+operator|!=
+literal|0
+return|;
+block|}
+specifier|const
+name|MacroDefinition
+operator|*
+name|getAsMacroDefinition
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isPseudo
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|MacroDefinition
+operator|*
+operator|>
+operator|(
+name|C
+operator|.
+name|data
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+specifier|const
+name|MacroExpansion
+operator|*
+name|getAsMacroExpansion
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isPseudo
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|MacroExpansion
+operator|*
+operator|>
+operator|(
+name|C
+operator|.
+name|data
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+name|SourceLocation
+name|getPseudoLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isPseudo
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|SourceLocation
+operator|::
+name|getFromPtrEncoding
+argument_list|(
+name|C
+operator|.
+name|data
+index|[
+literal|1
+index|]
+argument_list|)
+return|;
+block|}
+name|public
+label|:
+name|MacroExpansionCursor
+argument_list|(
+argument|CXCursor C
+argument_list|)
+block|:
+name|C
+argument_list|(
+argument|C
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|C
+operator|.
+name|kind
+operator|==
+name|CXCursor_MacroExpansion
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getName
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|MacroDefinition
+operator|*
+name|getDefinition
+argument_list|()
+specifier|const
+expr_stmt|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief Unpack a given macro expansion cursor to retrieve its info.
+specifier|static
+specifier|inline
+name|MacroExpansionCursor
 name|getCursorMacroExpansion
 parameter_list|(
 name|CXCursor
 name|C
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|C
+return|;
+block|}
 comment|/// \brief Create an inclusion directive cursor.
 name|CXCursor
 name|MakeInclusionDirectiveCursor
@@ -594,6 +789,7 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Unpack a given inclusion directive cursor to retrieve its
 comment|/// source range.
+specifier|const
 name|InclusionDirective
 modifier|*
 name|getCursorInclusionDirective
@@ -623,6 +819,7 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|LabelStmt
 operator|*
 operator|,
@@ -637,6 +834,7 @@ comment|/// \brief Create a overloaded declaration reference cursor for an expre
 name|CXCursor
 name|MakeCursorOverloadedDeclRef
 parameter_list|(
+specifier|const
 name|OverloadExpr
 modifier|*
 name|E
@@ -649,6 +847,7 @@ comment|/// \brief Create a overloaded declaration reference cursor for a declar
 name|CXCursor
 name|MakeCursorOverloadedDeclRef
 parameter_list|(
+specifier|const
 name|Decl
 modifier|*
 name|D
@@ -680,9 +879,11 @@ name|llvm
 operator|::
 name|PointerUnion3
 operator|<
+specifier|const
 name|OverloadExpr
 operator|*
 operator|,
+specifier|const
 name|Decl
 operator|*
 operator|,
@@ -706,6 +907,7 @@ argument_list|(
 argument|CXCursor C
 argument_list|)
 expr_stmt|;
+specifier|const
 name|Decl
 modifier|*
 name|getCursorDecl
@@ -714,6 +916,7 @@ name|CXCursor
 name|Cursor
 parameter_list|)
 function_decl|;
+specifier|const
 name|Expr
 modifier|*
 name|getCursorExpr
@@ -722,6 +925,7 @@ name|CXCursor
 name|Cursor
 parameter_list|)
 function_decl|;
+specifier|const
 name|Stmt
 modifier|*
 name|getCursorStmt
@@ -730,6 +934,7 @@ name|CXCursor
 name|Cursor
 parameter_list|)
 function_decl|;
+specifier|const
 name|Attr
 modifier|*
 name|getCursorAttr
@@ -738,6 +943,7 @@ name|CXCursor
 name|Cursor
 parameter_list|)
 function_decl|;
+specifier|const
 name|Decl
 modifier|*
 name|getCursorParentDecl

@@ -73,12 +73,6 @@ directive|include
 file|"clang/Frontend/DiagnosticRenderer.h"
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|SourceColumnMap
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|namespace
 name|clang
@@ -261,6 +255,32 @@ argument_list|,
 argument|const SourceManager&SM
 argument_list|)
 block|;
+name|virtual
+name|void
+name|emitImportLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|,
+argument|StringRef ModuleName
+argument_list|,
+argument|const SourceManager&SM
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitBuildingModuleLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|,
+argument|StringRef ModuleName
+argument_list|,
+argument|const SourceManager&SM
+argument_list|)
+block|;
 name|private
 operator|:
 name|void
@@ -281,36 +301,6 @@ name|void
 name|emitSnippet
 argument_list|(
 argument|StringRef SourceLine
-argument_list|)
-block|;
-name|void
-name|highlightRange
-argument_list|(
-argument|const CharSourceRange&R
-argument_list|,
-argument|unsigned LineNo
-argument_list|,
-argument|FileID FID
-argument_list|,
-argument|const SourceColumnMap&map
-argument_list|,
-argument|std::string&CaretLine
-argument_list|,
-argument|const SourceManager&SM
-argument_list|)
-block|;
-name|std
-operator|::
-name|string
-name|buildFixItInsertionLine
-argument_list|(
-argument|unsigned LineNo
-argument_list|,
-argument|const SourceColumnMap&map
-argument_list|,
-argument|ArrayRef<FixItHint> Hints
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 block|;
 name|void

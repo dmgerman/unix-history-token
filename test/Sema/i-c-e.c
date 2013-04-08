@@ -629,5 +629,23 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+modifier|*
+name|PR14729
+init|=
+literal|0
+condition|?
+else|:
+literal|1
+operator|/
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{not a compile-time constant}} expected-warning 3{{}}
+end_comment
+
 end_unit
 

@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-apple-darwin9 -fms-extensions %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-apple-darwin9 -fms-extensions %s -DHAVE
 end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-linux-gnu -fms-extensions %s -DHAVE_NOT
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -66,6 +76,22 @@ operator|-
 literal|1
 operator|>
 literal|1LL
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|a
+index|[
+name|__SIZEOF_INT128__
+operator|==
+literal|16
 condition|?
 literal|1
 else|:
@@ -354,6 +380,46 @@ expr_stmt|;
 comment|// expected-warning {{implicit conversion from '__int128' to 'int' changes value}}
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|__int128
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{__int128 is not supported on this target}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__SIZEOF_INT128__
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|__SIZEOF_INT128__ should not be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

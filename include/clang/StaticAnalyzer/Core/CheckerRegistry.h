@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/CheckerManager.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"clang/StaticAnalyzer/Core/CheckerManager.h"
 end_include
 
 begin_include

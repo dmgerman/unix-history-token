@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/ABI.h"
+file|"CGVTables.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LangOptions.h"
+file|"CodeGenTypes.h"
 end_include
 
 begin_include
@@ -104,19 +104,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGVTables.h"
+file|"clang/Basic/ABI.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CodeGenTypes.h"
+file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"clang/Basic/Module.h"
 end_include
 
 begin_include
@@ -128,7 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
@@ -140,7 +140,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/BlackList.h"
 end_include
 
 begin_decl_stmt
@@ -183,6 +207,9 @@ name|TargetCodeGenInfo
 decl_stmt|;
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|AtomicType
 decl_stmt|;
 name|class
 name|FunctionDecl
@@ -242,6 +269,9 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
+name|TargetOptions
+decl_stmt|;
+name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
@@ -252,6 +282,9 @@ name|CXXDestructorDecl
 decl_stmt|;
 name|class
 name|MangleBuffer
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|namespace
 name|CodeGen
@@ -501,6 +534,26 @@ decl_stmt|;
 comment|// sizeof(size_t)
 block|}
 union|;
+name|llvm
+operator|::
+name|CallingConv
+operator|::
+name|ID
+name|RuntimeCC
+expr_stmt|;
+name|llvm
+operator|::
+name|CallingConv
+operator|::
+name|ID
+name|getRuntimeCC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RuntimeCC
+return|;
+block|}
 block|}
 struct|;
 struct|struct
@@ -679,6 +732,13 @@ name|InlineAsm
 operator|*
 name|retainAutoreleasedReturnValueMarker
 expr_stmt|;
+comment|/// void clang.arc.use(...);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|clang_arc_use
+expr_stmt|;
 block|}
 struct|;
 comment|/// CodeGenModule - This class organizes the cross-function state that is used
@@ -737,6 +797,11 @@ specifier|const
 name|CodeGenOptions
 modifier|&
 name|CodeGenOpts
+decl_stmt|;
+specifier|const
+name|TargetOptions
+modifier|&
+name|TargetOpts
 decl_stmt|;
 name|llvm
 operator|::
@@ -848,6 +913,17 @@ operator|<
 name|GlobalDecl
 operator|>
 name|DeferredDeclsToEmit
+expr_stmt|;
+comment|/// DeferredVTables - A queue of (optional) vtables to consider emitting.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|DeferredVTables
 expr_stmt|;
 comment|/// LLVMUsed - List of global values which are required to be
 comment|/// present in the object file; bitcast to i8*. This is used for
@@ -1101,6 +1177,18 @@ operator|>
 expr|>
 name|CXXGlobalDtors
 expr_stmt|;
+comment|/// \brief The complete set of modules that has been imported.
+name|llvm
+operator|::
+name|SetVector
+operator|<
+name|clang
+operator|::
+name|Module
+operator|*
+operator|>
+name|ImportedModules
+expr_stmt|;
 comment|/// @name Cache for Objective-C runtime types
 comment|/// @{
 comment|/// CFConstantStringClassRef - Cached reference to the class for constant
@@ -1215,8 +1303,32 @@ decl_stmt|;
 block|}
 name|Block
 struct|;
+comment|/// void @llvm.lifetime.start(i64 %size, i8* nocapture<ptr>)
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|LifetimeStartFn
+expr_stmt|;
+comment|/// void @llvm.lifetime.end(i64 %size, i8* nocapture<ptr>)
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|LifetimeEndFn
+expr_stmt|;
 name|GlobalDecl
 name|initializedGlobalDecl
+decl_stmt|;
+name|llvm
+operator|::
+name|BlackList
+name|SanitizerBlacklist
+expr_stmt|;
+specifier|const
+name|SanitizerOptions
+modifier|&
+name|SanOpts
 decl_stmt|;
 comment|/// @}
 name|public
@@ -1231,6 +1343,11 @@ specifier|const
 name|CodeGenOptions
 operator|&
 name|CodeGenOpts
+argument_list|,
+specifier|const
+name|TargetOptions
+operator|&
+name|TargetOpts
 argument_list|,
 name|llvm
 operator|::
@@ -1801,6 +1918,42 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// Return the MDNode in the type DAG for the given struct type.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAStructTypeInfo
+argument_list|(
+argument|QualType QTy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Return the path-aware tag for given base type, access node and offset.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAStructTagInfo
+argument_list|(
+argument|QualType BaseTy
+argument_list|,
+argument|llvm::MDNode *AccessN
+argument_list|,
+argument|uint64_t O
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|bool
 name|isTypeConstant
@@ -1810,6 +1963,28 @@ name|QTy
 parameter_list|,
 name|bool
 name|ExcludeCtorDtor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|isPaddedAtomicType
+parameter_list|(
+name|QualType
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|isPaddedAtomicType
+parameter_list|(
+specifier|const
+name|AtomicType
+modifier|*
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3056,7 +3231,7 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::Attributes ExtraAttrs =                                           llvm::Attributes()
+argument|llvm::AttributeSet ExtraAttrs =                                           llvm::AttributeSet()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3134,6 +3309,26 @@ end_expr_stmt
 begin_comment
 comment|///@}
 end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getLLVMLifetimeStartFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getLLVMLifetimeEndFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// UpdateCompleteType - Make sure that this type is translated.
@@ -3631,6 +3826,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|CallingConv
+parameter_list|,
+name|bool
+name|AttrOnCallSite
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3811,19 +4009,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|>
-name|DeferredVTables
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/// Emit all the global annotations.
 end_comment
@@ -3846,7 +4031,7 @@ name|Constant
 operator|*
 name|EmitAnnotationString
 argument_list|(
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3953,6 +4138,56 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|const
+name|llvm
+operator|::
+name|BlackList
+operator|&
+name|getSanitizerBlacklist
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SanitizerBlacklist
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|SanitizerOptions
+operator|&
+name|getSanOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SanOpts
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|addDeferredVTable
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+block|{
+name|DeferredVTables
+operator|.
+name|push_back
+argument_list|(
+name|RD
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_label
 name|private
 label|:
@@ -3985,7 +4220,7 @@ argument|GlobalDecl D
 argument_list|,
 argument|bool ForVTable
 argument_list|,
-argument|llvm::Attributes ExtraAttrs =                                             llvm::Attributes()
+argument|llvm::AttributeSet ExtraAttrs =                                             llvm::AttributeSet()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4501,9 +4736,22 @@ end_comment
 begin_function_decl
 name|void
 name|EmitDeferred
-parameter_list|(
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitDeferredVTables - Emit any vtables which we deferred and
+end_comment
+
+begin_comment
+comment|/// still have a use for.
+end_comment
+
+begin_function_decl
 name|void
-parameter_list|)
+name|EmitDeferredVTables
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -4518,9 +4766,18 @@ end_comment
 begin_function_decl
 name|void
 name|EmitLLVMUsed
-parameter_list|(
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit the link options introduced by imported modules.
+end_comment
+
+begin_function_decl
 name|void
-parameter_list|)
+name|EmitModuleLinkOptions
+parameter_list|()
 function_decl|;
 end_function_decl
 

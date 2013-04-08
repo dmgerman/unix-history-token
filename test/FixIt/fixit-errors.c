@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -verify %s
+end_comment
+
+begin_comment
 comment|// RUN: cp %s %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -verify -fixit -x c %t
+comment|// RUN: not %clang_cc1 -pedantic -fixit -x c %t
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -pedantic -Werror -x c %t
-end_comment
-
-begin_comment
-comment|// XFAIL: *
 end_comment
 
 begin_comment
@@ -77,6 +77,7 @@ name|get_origin
 operator|->
 name|x
 expr_stmt|;
+comment|// expected-error {{base of member reference is a function; perhaps you meant to call it with no arguments?}}
 block|}
 end_function
 

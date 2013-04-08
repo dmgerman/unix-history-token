@@ -25,10 +25,22 @@ name|param
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 unit|@
 name|end
-end_macro
+expr|@
+name|interface
+name|B
+operator|:
+name|A
+expr|@
+name|end
+expr|@
+name|interface
+name|C
+expr|@
+name|end
+end_expr_stmt
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|// cygming have not supported integrated-as yet.
 end_comment
 
 begin_comment
-comment|// XFAIL: cygwin,mingw32
+comment|// REQUIRES: clang-driver
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// RUN: %clang -### -c -integrated-as -g %t.s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=S %s
+comment|// RUN:   | FileCheck %s
 end_comment
 
 begin_comment
@@ -68,11 +68,43 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S: "-cc1as"
+comment|// CHECK: "-cc1as"
 end_comment
 
 begin_comment
-comment|// S: "-g"
+comment|// CHECK: "-g"
+end_comment
+
+begin_comment
+comment|// Check to make sure clang with -g on a .s file gets passed -dwarf-debug-producer.
+end_comment
+
+begin_comment
+comment|// rdar://12955296
+end_comment
+
+begin_comment
+comment|// RUN: touch %t.s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -integrated-as -g %t.s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=P %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// P: "-cc1as"
+end_comment
+
+begin_comment
+comment|// P: "-dwarf-debug-producer"
 end_comment
 
 end_unit

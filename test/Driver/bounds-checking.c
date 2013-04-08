@@ -1,26 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin10 -fbounds-checking -### -fsyntax-only %s 2> %t
+comment|// RUN: %clang -fsanitize=bounds -### -fsyntax-only %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: FileCheck -check-prefix=CHECK< %t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin10 -fbounds-checking=3 -### -fsyntax-only %s 2> %t
+comment|// CHECK: "-fsanitize=bounds"
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=CHECK2< %t %s
+comment|// RUN: %clang -fbounds-checking -### -fsyntax-only %s 2> %t
 end_comment
 
 begin_comment
-comment|// CHECK: "-fbounds-checking=1"
+comment|// RUN: FileCheck -check-prefix=CHECK-OLD< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK2: "-fbounds-checking=3"
+comment|// CHECK-OLD: "-fsanitize=bounds"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fbounds-checking=3 -### -fsyntax-only %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-OLD2< %t %s
+end_comment
+
+begin_comment
+comment|// CHECK-OLD2: "-fsanitize=bounds"
 end_comment
 
 end_unit

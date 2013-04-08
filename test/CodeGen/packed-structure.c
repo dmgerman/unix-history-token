@@ -4,10 +4,6 @@ comment|// RUN: %clang_cc1 -triple x86_64 -emit-llvm -o - %s | opt -S -strip -o 
 end_comment
 
 begin_comment
-comment|// RUX: llvm-gcc -flto -S -O3 -o %t %s
-end_comment
-
-begin_comment
 comment|// RUN: FileCheck --check-prefix=CHECK-GLOBAL< %t %s
 end_comment
 

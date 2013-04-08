@@ -215,6 +215,11 @@ specifier|const
 name|DiagnosticOptions
 modifier|&
 name|Opts
+parameter_list|,
+name|bool
+name|ReportDiags
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// DoPrintPreprocessedInput - Implement -E mode.

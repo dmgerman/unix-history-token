@@ -26,7 +26,7 @@ name|k
 init|=
 literal|0
 decl_stmt|;
-comment|// CHECK: DW_TAG_auto_variable
+comment|// CHECK: DW_TAG_auto_variable ] [i]
 comment|// CHECK-NEXT: DW_TAG_lexical_block
 for|for
 control|(
@@ -45,6 +45,8 @@ control|)
 name|j
 operator|++
 expr_stmt|;
+comment|// CHECK: DW_TAG_auto_variable ] [i]
+comment|// CHECK-NEXT: DW_TAG_lexical_block
 for|for
 control|(
 name|int

@@ -30,8 +30,7 @@ modifier|*
 name|g
 parameter_list|)
 block|{
-comment|// CHECK: load i16
-comment|// CHECK: load i8
+comment|// CHECK: load i24
 return|return
 name|g
 operator|->

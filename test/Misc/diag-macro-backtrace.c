@@ -80,9 +80,10 @@ name|FOOL
 value|DROOL
 end_define
 
-begin_macro
+begin_expr_stmt
 name|FOOL
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// CHECK: :15:1: error: expected identifier or '('
@@ -228,8 +229,65 @@ begin_comment
 comment|// CHECK:             ^
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ADD
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|a ## #b
+end_define
+
+begin_macro
+name|ADD
+argument_list|(
+argument|L
+argument_list|,
+argument|foo
+argument_list|)
+end_macro
+
 begin_comment
-comment|// CHECK: 1 error generated.
+comment|// CHECK:    error: expected identifier or '('
+end_comment
+
+begin_comment
+comment|// CHECK:    ADD(L, foo)
+end_comment
+
+begin_comment
+comment|// CHECK: {{^\^}}
+end_comment
+
+begin_comment
+comment|// CHECK:    note: expanded from macro 'ADD'
+end_comment
+
+begin_comment
+comment|// CHECK:    #define ADD(a, b) a ## #b
+end_comment
+
+begin_comment
+comment|// CHECK: {{^                  \^}}
+end_comment
+
+begin_comment
+comment|// CHECK:    note: expanded from here
+end_comment
+
+begin_comment
+comment|// CHECK:    L"foo"
+end_comment
+
+begin_comment
+comment|// CHECK: {{^\^}}
+end_comment
+
+begin_comment
+comment|// CHECK: 2 errors generated.
 end_comment
 
 end_unit

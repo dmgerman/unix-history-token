@@ -321,7 +321,7 @@ comment|// CHECK-CC7: FunctionDecl:{ResultType void}{TypedText f5}{LeftParen (}{
 end_comment
 
 begin_comment
-comment|// CHECK-CC7: TypedefDecl:{TypedText type}
+comment|// CHECK-CC7: TypedefDecl:{TypedText type} (50)
 end_comment
 
 end_unit

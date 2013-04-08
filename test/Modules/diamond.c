@@ -5,7 +5,7 @@ end_comment
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|diamond_bottom
 decl_stmt|;
 end_decl_stmt
@@ -89,23 +89,23 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_top %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=diamond_top %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_left %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=diamond_left %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_right %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=diamond_right %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_bottom %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=diamond_bottom %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t %s -verify
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t %s -verify
 end_comment
 
 begin_comment

@@ -1,7 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - |grep internal
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
 end_comment
+
+begin_comment
+comment|// CHECK: @test2_i = internal global i32 99
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|test2_i
+init|=
+literal|99
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|test2_f
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|test2_i
+decl_stmt|;
+return|return
+name|test2_i
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// C99 6.2.2p3
@@ -48,6 +76,10 @@ end_function
 
 begin_comment
 comment|// still has internal linkage
+end_comment
+
+begin_comment
+comment|// CHECK: define internal void @f
 end_comment
 
 end_unit

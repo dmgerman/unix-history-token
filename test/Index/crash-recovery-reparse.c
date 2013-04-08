@@ -35,10 +35,6 @@ begin_comment
 comment|// REQUIRES: crash-recovery
 end_comment
 
-begin_comment
-comment|// REQUIRES: shell
-end_comment
-
 begin_warning
 warning|#
 directive|warning

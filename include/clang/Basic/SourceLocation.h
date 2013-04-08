@@ -72,25 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/PointerLikeTypeTraits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<functional>
+file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
 begin_include
@@ -102,7 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -661,7 +661,7 @@ name|getRawEncoding
 argument_list|()
 return|;
 block|}
-comment|/// getFromPtrEncoding - Turn a pointer encoding of a SourceLocation object
+comment|/// \brief Turn a pointer encoding of a SourceLocation object back
 comment|/// into a real SourceLocation.
 specifier|static
 name|SourceLocation
@@ -986,7 +986,7 @@ empty_stmt|;
 comment|/// \brief Represents a character-granular source range.
 comment|///
 comment|/// The underlying SourceRange can either specify the starting/ending character
-comment|/// of the range, or it can specify the start or the range and the start of the
+comment|/// of the range, or it can specify the start of the range and the start of the
 comment|/// last token of the range (a "token range").  In the token range case, the
 comment|/// size of the last token must be measured to determine the actual end of the
 comment|/// range.
@@ -1033,23 +1033,13 @@ argument_list|(
 argument|SourceRange R
 argument_list|)
 block|{
-name|CharSourceRange
-name|Result
-block|;
-name|Result
-operator|.
-name|Range
-operator|=
-name|R
-block|;
-name|Result
-operator|.
-name|IsTokenRange
-operator|=
-name|true
-block|;
 return|return
-name|Result
+name|CharSourceRange
+argument_list|(
+name|R
+argument_list|,
+name|true
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -1060,23 +1050,13 @@ name|SourceRange
 name|R
 parameter_list|)
 block|{
-name|CharSourceRange
-name|Result
-decl_stmt|;
-name|Result
-operator|.
-name|Range
-operator|=
-name|R
-expr_stmt|;
-name|Result
-operator|.
-name|IsTokenRange
-operator|=
-name|false
-expr_stmt|;
 return|return
-name|Result
+name|CharSourceRange
+argument_list|(
+name|R
+argument_list|,
+name|false
+argument_list|)
 return|;
 block|}
 specifier|static

@@ -8,15 +8,11 @@ comment|// Radar 8396182
 end_comment
 
 begin_comment
-comment|// There is only one lexical block, but we need a DILexicalBlock and two
+comment|// There are no lexical blocks, but we need two DILexicalBlockFiles to
 end_comment
 
 begin_comment
-comment|// DILexicalBlockFile to correctly represent file info. This means we have
-end_comment
-
-begin_comment
-comment|// two lexical blocks shown as the latter is also tagged as a lexical block.
+comment|// correctly represent file info.
 end_comment
 
 begin_function
@@ -45,10 +41,6 @@ name|j
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// CHECK: DW_TAG_lexical_block
-end_comment
 
 begin_comment
 comment|// CHECK: DW_TAG_lexical_block

@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceLocation.h"
+file|"clang/AST/ASTContext.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTContext.h"
+file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_decl_stmt
@@ -128,17 +128,9 @@ name|Result
 init|=
 block|{
 block|{
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SM
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|LangOpts
 block|, }

@@ -21,6 +21,12 @@ directive|include
 file|<mmintrin.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<prfchwintrin.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|float

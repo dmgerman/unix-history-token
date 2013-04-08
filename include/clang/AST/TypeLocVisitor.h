@@ -88,7 +88,7 @@ parameter_list|(
 name|CLASSNAME
 parameter_list|)
 define|\
-value|return static_cast<ImplClass*>(this)-> \     Visit##CLASSNAME(cast<CLASSNAME>(TyLoc))
+value|return static_cast<ImplClass*>(this)-> \     Visit##CLASSNAME(TyLoc.castAs<CLASSNAME>())
 name|template
 operator|<
 name|typename

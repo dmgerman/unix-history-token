@@ -53,10 +53,26 @@ name|top3
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 unit|@
 name|end
-end_macro
+expr|@
+name|protocol
+name|P1
+expr|@
+name|end
+expr|@
+name|protocol
+name|P2
+expr|@
+name|end
+expr|@
+name|protocol
+name|P3
+operator|,
+name|P4
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

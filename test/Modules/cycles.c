@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t -F %S/Inputs %s 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -F %S/Inputs %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -13,29 +13,37 @@ end_comment
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|MutuallyRecursive1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// FIXME: Lots of redundant diagnostics here, because the preprocessor
+comment|// CHECK: While building module 'MutuallyRecursive1' imported from
 end_comment
 
 begin_comment
-comment|// can't currently tell the parser not to try to load the module again.
+comment|// CHECK: While building module 'MutuallyRecursive2' imported from
 end_comment
 
 begin_comment
-comment|// CHECK: MutuallyRecursive2.h:3:32: fatal error: cyclic dependency in module 'MutuallyRecursive1': MutuallyRecursive1 -> MutuallyRecursive2 -> MutuallyRecursive1
+comment|// CHECK: MutuallyRecursive2.h:3:9: fatal error: cyclic dependency in module 'MutuallyRecursive1': MutuallyRecursive1 -> MutuallyRecursive2 -> MutuallyRecursive1
 end_comment
 
 begin_comment
-comment|// CHECK: MutuallyRecursive1.h:2:32: fatal error: could not build module 'MutuallyRecursive2'
+comment|// CHECK: While building module 'MutuallyRecursive1' imported from
 end_comment
 
 begin_comment
-comment|// CHECK: cycles.c:4:32: fatal error: could not build module 'MutuallyRecursive1'
+comment|// CHECK: MutuallyRecursive1.h:2:9: fatal error: could not build module 'MutuallyRecursive2'
+end_comment
+
+begin_comment
+comment|// CHECK: cycles.c:4:9: fatal error: could not build module 'MutuallyRecursive1'
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: error:
 end_comment
 
 end_unit

@@ -35,7 +35,7 @@ operator|&
 name|__imag
 name|a
 decl_stmt|;
-comment|// expected-error {{must be an lvalue}}
+comment|// expected-error {{cannot take the address of an rvalue of type 'int'}}
 block|}
 end_function
 
@@ -107,7 +107,7 @@ operator|&
 name|__imag
 name|a
 decl_stmt|;
-comment|// expected-error {{must be an lvalue}}
+comment|// expected-error {{cannot take the address of an rvalue of type 'double'}}
 block|}
 end_function
 

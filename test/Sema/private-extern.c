@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -verify -fsyntax-only -Wno-private-extern %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -verify -fsyntax-only -Wno-private-extern -fmodules %s
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int

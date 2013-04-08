@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm-bc -o - %s | opt -std-compile-opts | llvm-dis | grep "ret i32 1" | count 3
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -O1 -emit-llvm -o - %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: define i32 @f0
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 1
+end_comment
+
+begin_comment
+comment|// CHECK: define i32 @f1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 1
+end_comment
+
+begin_comment
+comment|// CHECK: define i32 @f2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 1
 end_comment
 
 begin_comment

@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep '^A: Y$'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep '^B: f()$'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep '^C: for()$'
+comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_define
@@ -42,6 +34,7 @@ operator|(
 operator|)
 operator|(
 operator|)
+comment|// CHECK: {{^}}A: Y{{$}}
 comment|// PR3927
 define|#
 directive|define
@@ -86,6 +79,14 @@ end_for
 
 begin_comment
 unit|)
+comment|// CHECK: {{^}}B: f(){{$}}
+end_comment
+
+begin_comment
+comment|// CHECK: {{^}}C: for(){{$}}
+end_comment
+
+begin_comment
 comment|// rdar://6880648
 end_comment
 

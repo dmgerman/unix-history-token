@@ -4,7 +4,7 @@ comment|// __COUNTER__ support: rdar://4329310
 end_comment
 
 begin_comment
-comment|// RUN: %clang -E %s> %t
+comment|// RUN: %clang -E %s | FileCheck %s
 end_comment
 
 begin_define
@@ -41,10 +41,6 @@ parameter_list|)
 value|PASTE1(x,__COUNTER__)
 end_define
 
-begin_comment
-comment|// RUN: grep "A: 0" %t
-end_comment
-
 begin_label
 name|A
 label|:
@@ -52,7 +48,6 @@ end_label
 
 begin_decl_stmt
 name|__COUNTER__
-comment|// RUN: grep "B: foo1" %t
 name|B
 range|:
 name|UNIQUE
@@ -61,10 +56,6 @@ name|foo
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// RUN: grep "C: foo2" %t
-end_comment
 
 begin_label
 name|C
@@ -79,10 +70,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// RUN: grep "D: 3" %t
-end_comment
-
 begin_label
 name|D
 label|:
@@ -91,6 +78,22 @@ end_label
 begin_macro
 name|__COUNTER__
 end_macro
+
+begin_comment
+comment|// CHECK: A: 0
+end_comment
+
+begin_comment
+comment|// CHECK: B: foo1;
+end_comment
+
+begin_comment
+comment|// CHECK: C: foo2;
+end_comment
+
+begin_comment
+comment|// CHECK: D: 3
+end_comment
 
 end_unit
 

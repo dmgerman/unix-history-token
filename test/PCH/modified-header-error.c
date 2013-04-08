@@ -34,7 +34,7 @@ file|"header2.h"
 end_include
 
 begin_comment
-comment|// CHECK: fatal error: file {{.*}} has been modified since the precompiled header was built
+comment|// CHECK: fatal error: file {{.*}} has been modified since the precompiled header {{.*}} was built
 end_comment
 
 begin_comment

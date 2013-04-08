@@ -16,7 +16,7 @@ comment|// RUN: rm -f %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ferror-limit=1 -fsyntax-only %s --serialize-diagnostics %t> /dev/null 2>&1 || true
+comment|// RUN: not %clang -ferror-limit=1 -fsyntax-only %s --serialize-diagnostics %t> /dev/null 2>&1
 end_comment
 
 begin_comment

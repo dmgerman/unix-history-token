@@ -49,7 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{expected ';' after top level declarator}}
+comment|// expected-error {{expected ';' after top level declarator}} expected-warning {{declaration does not declare anything}}
 end_comment
 
 begin_decl_stmt

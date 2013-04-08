@@ -171,6 +171,30 @@ comment|// __unknown_anytype extension
 name|TST_atomic
 block|,
 comment|// C11 _Atomic
+name|TST_image1d_t
+block|,
+comment|// OpenCL image1d_t
+name|TST_image1d_array_t
+block|,
+comment|// OpenCL image1d_array_t
+name|TST_image1d_buffer_t
+block|,
+comment|// OpenCL image1d_buffer_t
+name|TST_image2d_t
+block|,
+comment|// OpenCL image2d_t
+name|TST_image2d_array_t
+block|,
+comment|// OpenCL image2d_array_t
+name|TST_image3d_t
+block|,
+comment|// OpenCL image3d_t
+name|TST_sampler_t
+block|,
+comment|// OpenCL sampler_t
+name|TST_event_t
+block|,
+comment|// OpenCL event_t
 name|TST_error
 comment|// erroneous type
 block|}
@@ -184,7 +208,7 @@ comment|/*DeclSpec::TST*/
 name|unsigned
 name|Type
 range|:
-literal|5
+literal|6
 decl_stmt|;
 comment|/*DeclSpec::TSS*/
 name|unsigned
@@ -384,7 +408,10 @@ name|CC_AAPCS_VFP
 block|,
 comment|// __attribute__((pcs("aapcs-vfp")))
 name|CC_PnaclCall
+block|,
 comment|// __attribute__((pnaclcall))
+name|CC_IntelOclBicc
+comment|// __attribute__((intel_ocl_bicc))
 block|}
 enum|;
 block|}

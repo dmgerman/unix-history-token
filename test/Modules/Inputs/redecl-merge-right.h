@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|redecl_merge_top
 decl_stmt|;
 end_decl_stmt
@@ -402,7 +402,7 @@ end_decl_stmt
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|redecl_merge_top
 operator|.
 name|Explicit
@@ -430,10 +430,39 @@ name|method
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_function_decl
 unit|@
 name|end
-end_macro
+name|void
+name|eventually_noreturn
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|eventually_noreturn2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

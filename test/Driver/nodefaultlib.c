@@ -16,11 +16,11 @@ comment|// CHECK-NOT: start-group
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: -lgcc
+comment|// CHECK-NOT: "-lgcc"
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: -lc
+comment|// CHECK-NOT: "-lc"
 end_comment
 
 begin_comment

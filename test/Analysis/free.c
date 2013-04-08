@@ -243,7 +243,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Argument to free() was allocated by alloca(), not malloc()}}
+comment|// expected-warning {{Memory allocated by alloca() should not be deallocated}}
 block|}
 end_function
 

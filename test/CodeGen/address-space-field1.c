@@ -8,7 +8,7 @@ comment|// CHECK:%struct.S = type { i32, i32 }
 end_comment
 
 begin_comment
-comment|// CHECK:define void @test_addrspace(%struct.S addrspace(1)* %p1, %struct.S addrspace(2)* %p2) nounwind
+comment|// CHECK:define void @test_addrspace(%struct.S addrspace(1)* %p1, %struct.S addrspace(2)* %p2) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -155,6 +155,10 @@ name|a
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
 
 end_unit
 

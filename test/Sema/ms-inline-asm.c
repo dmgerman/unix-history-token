@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: x86-64-registered-target
+comment|// REQUIRES: disabled
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-apple-darwin10 -fms-extensions -fenable-experimental-ms-inline-asm -Wno-microsoft -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple x86_64-apple-darwin10 -fasm-blocks -Wno-microsoft -verify -fsyntax-only
 end_comment
 
 begin_function
@@ -55,25 +55,25 @@ name|f
 argument_list|()
 expr_stmt|;
 asm|__asm {
-asm|mov eax, TYPE cat
+asm|mov eax, LENGTH bar
 comment|//
-asm|expected-error {{Unable to lookup TYPE of expr!}}
+asm|expected-error {{Unable to lookup expr!}}
 asm|}
 name|f
 argument_list|()
 expr_stmt|;
 asm|__asm {
-asm|mov eax, SIZE foo
+asm|mov eax, SIZE bar
 comment|//
-asm|expected-error {{Unsupported directive!}}
+asm|expected-error {{Unable to lookup expr!}}
 asm|}
 name|f
 argument_list|()
 expr_stmt|;
 asm|__asm {
-asm|mov eax, LENGTH foo
+asm|mov eax, TYPE bar
 comment|//
-asm|expected-error {{Unsupported directive!}}
+asm|expected-error {{Unable to lookup expr!}}
 asm|}
 block|}
 end_function

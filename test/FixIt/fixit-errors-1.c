@@ -12,10 +12,6 @@ comment|// RUN: echo %clang_cc1 -pedantic -Werror -x c %t
 end_comment
 
 begin_comment
-comment|/* XPASS: * */
-end_comment
-
-begin_comment
 comment|/* This is a test of the various code modification hints that are    provided as part of warning or extension diagnostics. All of the    warnings will be fixed by -fixit, and the resulting file should    compile cleanly with -Werror -pedantic. */
 end_comment
 

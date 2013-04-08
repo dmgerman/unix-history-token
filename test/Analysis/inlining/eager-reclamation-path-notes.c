@@ -67,7 +67,7 @@ name|p
 init|=
 literal|0
 decl_stmt|;
-comment|// expected-note@-1 {{Variable 'p' initialized to a null pointer value}}
+comment|// expected-note@-1 {{'p' initialized to a null pointer value}}
 name|use
 argument_list|(
 name|p
@@ -136,7 +136,7 @@ name|ptr
 init|=
 literal|0
 decl_stmt|;
-comment|// expected-note@-1 {{Variable 'ptr' initialized to a null pointer value}}
+comment|// expected-note@-1 {{'ptr' initialized to a null pointer value}}
 name|passThrough
 argument_list|(
 name|ptr
@@ -268,7 +268,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -1256,7 +1256,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -1400,7 +1400,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;ptr&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;ptr&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -1408,7 +1408,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;ptr&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;ptr&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -3084,7 +3084,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use2</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment

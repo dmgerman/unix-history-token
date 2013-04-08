@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LangOptions.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_decl_stmt
@@ -76,13 +76,16 @@ name|namespace
 name|clang
 block|{
 name|class
+name|LangOptions
+decl_stmt|;
+name|class
+name|SourceManager
+decl_stmt|;
+name|class
 name|Stmt
 decl_stmt|;
 name|class
 name|TagDecl
-decl_stmt|;
-name|class
-name|LangOptions
 decl_stmt|;
 name|class
 name|PrinterHelper
@@ -192,14 +195,9 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|SuppressAttributes
+name|PolishForDeclaration
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|DumpSourceManager
-argument_list|(
-literal|0
+argument|false
 argument_list|)
 block|{ }
 comment|/// \brief What language we're printing.
@@ -339,20 +337,13 @@ name|TerseOutput
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief When true, do not print attributes attached to the declaration.
+comment|/// \brief When true, do certain refinement needed for producing proper
+comment|/// declaration tag; such as, do not print attributes attached to the declaration.
 comment|///
 name|unsigned
-name|SuppressAttributes
+name|PolishForDeclaration
 range|:
 literal|1
-decl_stmt|;
-comment|/// \brief If we are "dumping" rather than "pretty-printing", this points to
-comment|/// a SourceManager which will be used to dump SourceLocations. Dumping
-comment|/// involves printing the internal details of the AST and pretty-printing
-comment|/// involves printing something similar to source code.
-name|SourceManager
-modifier|*
-name|DumpSourceManager
 decl_stmt|;
 block|}
 struct|;

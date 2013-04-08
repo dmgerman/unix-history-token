@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -O0 -g %s -o - | grep DW_TAG_lexical_block | count 3
+comment|// RUN: %clang_cc1 -emit-llvm -O0 -g %s -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
 end_comment
 
 begin_function

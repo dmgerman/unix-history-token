@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Support/ManagedStatic.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ManagedStatic.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include

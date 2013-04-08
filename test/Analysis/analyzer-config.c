@@ -30,6 +30,10 @@ comment|// CHECK: [config]
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: cfg-conditional-static-initializers = true
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: cfg-temporary-dtors = false
 end_comment
 
@@ -42,7 +46,27 @@ comment|// CHECK-NEXT: graph-trim-interval = 1000
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: ipa = dynamic-bifurcate
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: ipa-always-inline-size = 3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: max-inlinable-size = 50
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: max-nodes = 150000
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: max-times-inline-large = 32
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: mode = deep
 end_comment
 
 begin_comment
@@ -50,7 +74,7 @@ comment|// CHECK-NEXT: [stats]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: num-entries = 4
+comment|// CHECK-NEXT: num-entries = 10
 end_comment
 
 end_unit

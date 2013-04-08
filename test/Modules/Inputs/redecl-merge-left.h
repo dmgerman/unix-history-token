@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|redecl_merge_top
 decl_stmt|;
 end_decl_stmt
@@ -351,6 +351,41 @@ name|id
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|// A class that is declared in the 'bottom' module, then loaded from
+end_comment
+
+begin_comment
+comment|// one of the modules it depends on.
+end_comment
+
+begin_expr_stmt
+unit|@
+name|interface
+name|DeclaredThenLoaded
+operator|-
+name|declaredThenLoadedMethod
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|@
+name|end
+expr|@
+name|class
+name|DeclaredThenLoaded
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|eventually_noreturn2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

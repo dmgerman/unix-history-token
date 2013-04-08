@@ -1,0 +1,103 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// RUN: %clang -target aarch64-none-linux-gnu -x c -E -dM %s -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH 8
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH64EL__
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_ACLE 101
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __AARCH_ADVSIMD_FP
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __AARCH_FEATURE_ADVSIMD
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __AARCH_FEATURE_BIG_ENDIAN
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FEATURE_CLZ 1
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FEATURE_FMA 1
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FEATURE_LDREX 0xf
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FEATURE_UNALIGNED 1
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FP 0xe
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __AARCH_FP_FAST
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FP16_FORMAT_IEEE 1
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_FP_FENV_ROUNDING 1
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_PROFILE 'A'
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_SIZEOF_MINIMAL_ENUM 4
+end_comment
+
+begin_comment
+comment|// CHECK: __AARCH_SIZEOF_WCHAR_T 4
+end_comment
+
+begin_comment
+comment|// CHECK: __aarch64__
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-linux-gnu -ffast-math -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-FASTMATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-FASTMATH: __AARCH_FP_FAST
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-linux-gnu -fshort-wchar -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-SHORTWCHAR %s
+end_comment
+
+begin_comment
+comment|// CHECK-SHORTWCHAR: __AARCH_SIZEOF_WCHAR_T 2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-linux-gnu -fshort-enums -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-SHORTENUMS %s
+end_comment
+
+begin_comment
+comment|// CHECK-SHORTENUMS: __AARCH_SIZEOF_MINIMAL_ENUM 1
+end_comment
+
+end_unit
+

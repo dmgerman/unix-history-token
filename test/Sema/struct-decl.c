@@ -256,7 +256,7 @@ specifier|inline
 struct|struct
 name|test3
 block|{
-comment|// expected-warning {{'inline' ignored on this declaration}}
+comment|// expected-error {{'inline' can only appear on functions}}
 name|int
 name|x
 decl_stmt|;

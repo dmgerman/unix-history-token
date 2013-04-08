@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -129,9 +129,12 @@ block|,
 name|unknown_command
 block|,
 comment|// Command that does not have an ID.
-name|command
+name|backslash_command
 block|,
-comment|// Command with an ID.
+comment|// Command with an ID, that used backslash marker.
+name|at_command
+block|,
+comment|// Command with an ID, that used 'at' marker.
 name|verbatim_block_begin
 block|,
 name|verbatim_block_line
@@ -469,7 +472,14 @@ name|is
 argument_list|(
 name|tok
 operator|::
-name|command
+name|backslash_command
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|tok
+operator|::
+name|at_command
 argument_list|)
 argument_list|)
 block|;
@@ -490,7 +500,14 @@ name|is
 argument_list|(
 name|tok
 operator|::
-name|command
+name|backslash_command
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|tok
+operator|::
+name|at_command
 argument_list|)
 argument_list|)
 expr_stmt|;

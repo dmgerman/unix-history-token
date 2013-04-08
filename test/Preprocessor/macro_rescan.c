@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep 'ei_1 = (17 +1);'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep 'ei_2 = (M1)(17);'
+comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_define
@@ -42,7 +38,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* becomes int ei_1 = (17+1); */
+comment|// CHECK: {{^}}int ei_1 = (17 +1);{{$}}
 end_comment
 
 begin_decl_stmt
@@ -62,7 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* becomes int ei_2 = (M1)(17); */
+comment|// CHECK: {{^}}int ei_2 = (M1)(17);{{$}}
 end_comment
 
 end_unit

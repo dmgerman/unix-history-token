@@ -17,10 +17,43 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 unit|@
 name|end
-end_macro
+expr|@
+name|interface
+name|Def
+operator|-
+name|defMethod
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+unit|@
+name|end
+ifdef|#
+directive|ifdef
+name|__cplusplus
+name|class
+name|Def2
+block|{
+name|public
+label|:
+name|void
+name|func
+parameter_list|()
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState_Fwd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState_Fwd.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
 end_include
 
 begin_include
@@ -122,7 +122,7 @@ name|class
 name|MemRegion
 decl_stmt|;
 name|class
-name|TypedRegion
+name|TypedValueRegion
 decl_stmt|;
 name|class
 name|MemRegionManager
@@ -244,6 +244,94 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// \brief Convert to the specified SVal type, asserting that this SVal is of
+comment|/// the desired type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|castAs
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|T
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|T
+name|t
+block|;
+name|SVal
+operator|&
+name|sv
+operator|=
+name|t
+block|;
+name|sv
+operator|=
+operator|*
+name|this
+block|;
+return|return
+name|t
+return|;
+block|}
+comment|/// \brief Convert to the specified SVal type, returning None if this SVal is
+comment|/// not of the desired type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|Optional
+operator|<
+name|T
+operator|>
+name|getAs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|T
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+condition|)
+return|return
+name|None
+return|;
+name|T
+name|t
+expr_stmt|;
+name|SVal
+modifier|&
+name|sv
+init|=
+name|t
+decl_stmt|;
+name|sv
+operator|=
+operator|*
+name|this
+expr_stmt|;
+return|return
+name|t
+return|;
+block|}
 comment|/// BufferTy - A temporary buffer to hold a set of SVals.
 typedef|typedef
 name|SmallVector
@@ -589,17 +677,22 @@ argument_list|(
 argument|UndefinedKind
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
@@ -616,20 +709,25 @@ name|SVal
 block|{
 name|private
 operator|:
-comment|// Do not implement.  We want calling these methods to be a compiler
-comment|// error since they are tautologically false.
+comment|// We want calling these methods to be a compiler error since they are
+comment|// tautologically false.
 name|bool
 name|isUndef
 argument_list|()
 specifier|const
+name|LLVM_DELETED_FUNCTION
 block|;
 name|bool
 name|isValid
 argument_list|()
 specifier|const
+name|LLVM_DELETED_FUNCTION
 block|;
 name|protected
 operator|:
+name|DefinedOrUnknownSVal
+argument_list|()
+block|{}
 name|explicit
 name|DefinedOrUnknownSVal
 argument_list|(
@@ -664,21 +762,23 @@ argument_list|,
 argument|D
 argument_list|)
 block|{}
-name|public
+name|private
 operator|:
-comment|// Implement isa<T> support.
+name|friend
+name|class
+name|SVal
+block|;
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal *V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 operator|!
 name|V
-operator|->
+operator|.
 name|isUndef
 argument_list|()
 return|;
@@ -702,17 +802,22 @@ argument_list|(
 argument|UnknownKind
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal *V
+argument|const SVal&V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
@@ -729,25 +834,31 @@ name|DefinedOrUnknownSVal
 block|{
 name|private
 operator|:
-comment|// Do not implement.  We want calling these methods to be a compiler
-comment|// error since they are tautologically true/false.
+comment|// We want calling these methods to be a compiler error since they are
+comment|// tautologically true/false.
 name|bool
 name|isUnknown
 argument_list|()
 specifier|const
+name|LLVM_DELETED_FUNCTION
 block|;
 name|bool
 name|isUnknownOrUndef
 argument_list|()
 specifier|const
+name|LLVM_DELETED_FUNCTION
 block|;
 name|bool
 name|isValid
 argument_list|()
 specifier|const
+name|LLVM_DELETED_FUNCTION
 block|;
 name|protected
 operator|:
+name|DefinedSVal
+argument_list|()
+block|{}
 name|explicit
 name|DefinedSVal
 argument_list|(
@@ -767,25 +878,86 @@ argument_list|,
 argument|ValKind
 argument_list|)
 block|{}
-name|public
+name|private
 operator|:
-comment|// Implement isa<T> support.
+name|friend
+name|class
+name|SVal
+block|;
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal *V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 operator|!
 name|V
-operator|->
+operator|.
 name|isUnknownOrUndef
 argument_list|()
 return|;
 block|}
+expr|}
+block|;
+comment|/// \brief Represents an SVal that is guaranteed to not be UnknownVal.
+name|class
+name|KnownSVal
+operator|:
+name|public
+name|SVal
+block|{
+name|KnownSVal
+argument_list|()
+block|{}
+name|friend
+name|class
+name|SVal
+block|;
+specifier|static
+name|bool
+name|isKind
+argument_list|(
+argument|const SVal&V
+argument_list|)
+block|{
+return|return
+operator|!
+name|V
+operator|.
+name|isUnknown
+argument_list|()
+return|;
+block|}
+name|public
+operator|:
+name|KnownSVal
+argument_list|(
+specifier|const
+name|DefinedSVal
+operator|&
+name|V
+argument_list|)
+operator|:
+name|SVal
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+name|KnownSVal
+argument_list|(
+specifier|const
+name|UndefinedVal
+operator|&
+name|V
+argument_list|)
+operator|:
+name|SVal
+argument_list|(
+argument|V
+argument_list|)
+block|{}
 expr|}
 block|;
 name|class
@@ -796,6 +968,9 @@ name|DefinedSVal
 block|{
 name|protected
 operator|:
+name|NonLoc
+argument_list|()
+block|{}
 name|explicit
 name|NonLoc
 argument_list|(
@@ -822,18 +997,22 @@ argument|raw_ostream&Out
 argument_list|)
 specifier|const
 block|;
-comment|// Implement isa<T> support.
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
@@ -850,6 +1029,9 @@ name|DefinedSVal
 block|{
 name|protected
 operator|:
+name|Loc
+argument_list|()
+block|{}
 name|explicit
 name|Loc
 argument_list|(
@@ -876,41 +1058,6 @@ argument|raw_ostream&Out
 argument_list|)
 specifier|const
 block|;
-name|Loc
-argument_list|(
-specifier|const
-name|Loc
-operator|&
-name|X
-argument_list|)
-operator|:
-name|DefinedSVal
-argument_list|(
-argument|X.Data
-argument_list|,
-argument|true
-argument_list|,
-argument|X.getSubKind()
-argument_list|)
-block|{}
-comment|// Implement isa<T> support.
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SVal* V
-argument_list|)
-block|{
-return|return
-name|V
-operator|->
-name|getBaseKind
-argument_list|()
-operator|==
-name|LocKind
-return|;
-block|}
 specifier|static
 specifier|inline
 name|bool
@@ -934,6 +1081,28 @@ name|T
 operator|->
 name|isReferenceType
 argument_list|()
+return|;
+block|}
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+specifier|static
+name|bool
+name|isKind
+argument_list|(
+argument|const SVal& V
+argument_list|)
+block|{
+return|return
+name|V
+operator|.
+name|getBaseKind
+argument_list|()
+operator|==
+name|LocKind
 return|;
 block|}
 expr|}
@@ -995,6 +1164,7 @@ block|}
 name|bool
 name|isExpression
 argument_list|()
+specifier|const
 block|{
 return|return
 operator|!
@@ -1008,24 +1178,32 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|SymbolVal
+argument_list|()
+block|{}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|NonLocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1033,16 +1211,15 @@ name|SymbolValKind
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const NonLoc* V
+argument|const NonLoc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1128,25 +1305,32 @@ argument|SValBuilder&svalBuilder
 argument_list|)
 specifier|const
 block|;
-comment|// Implement isa<T> support.
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|ConcreteInt
+argument_list|()
+block|{}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|NonLocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1154,16 +1338,15 @@ name|ConcreteIntKind
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const NonLoc* V
+argument|const NonLoc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1209,17 +1392,18 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|isa
+name|data
+operator|.
+name|first
+operator|.
+name|getAs
 operator|<
 name|Loc
 operator|>
 operator|(
-name|data
-operator|.
-name|first
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|public
 operator|:
 name|Loc
@@ -1257,20 +1441,19 @@ name|Data
 operator|)
 block|;
 return|return
-name|cast
+name|D
+operator|->
+name|first
+operator|.
+name|castAs
 operator|<
 name|Loc
 operator|>
 operator|(
-name|D
-operator|->
-name|first
 operator|)
 return|;
 block|}
-specifier|const
 name|Loc
-operator|&
 name|getPersistentLoc
 argument_list|()
 specifier|const
@@ -1314,12 +1497,13 @@ operator|->
 name|first
 block|;
 return|return
-name|cast
+name|V
+operator|.
+name|castAs
 operator|<
 name|Loc
 operator|>
 operator|(
-name|V
 operator|)
 return|;
 block|}
@@ -1363,25 +1547,32 @@ operator|->
 name|second
 return|;
 block|}
-comment|// Implement isa<T> support.
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|LocAsInteger
+argument_list|()
+block|{}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|NonLocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1389,16 +1580,15 @@ name|LocAsIntegerKind
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const NonLoc* V
+argument|const NonLoc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1477,23 +1667,32 @@ name|end
 argument_list|()
 specifier|const
 block|;
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|CompoundVal
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|NonLocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1502,14 +1701,14 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const NonLoc* V
+argument|const NonLoc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1575,29 +1774,38 @@ argument_list|()
 specifier|const
 block|;
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|getRegion
 argument_list|()
 specifier|const
 block|;
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|LazyCompoundVal
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal *V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|NonLocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1606,14 +1814,14 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const NonLoc *V
+argument|const NonLoc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1680,24 +1888,32 @@ name|Data
 operator|)
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|GotoLabel
+argument_list|()
+block|{}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|LocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1705,16 +1921,15 @@ name|GotoLabelKind
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const Loc* V
+argument|const Loc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1790,8 +2005,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|dyn_cast
 operator|<
 name|REGION
@@ -1846,25 +2059,32 @@ name|getRegion
 argument_list|()
 return|;
 block|}
-comment|// Implement isa<T> support.
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|MemRegionVal
+argument_list|()
+block|{}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|LocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1872,16 +2092,15 @@ name|MemRegionKind
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const Loc* V
+argument|const Loc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1952,25 +2171,32 @@ argument|const ConcreteInt& R
 argument_list|)
 specifier|const
 block|;
-comment|// Implement isa<T> support.
+name|private
+operator|:
+name|friend
+name|class
+name|SVal
+block|;
+name|ConcreteInt
+argument_list|()
+block|{}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const SVal* V
+argument|const SVal& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getBaseKind
 argument_list|()
 operator|==
 name|LocKind
 operator|&&
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1978,16 +2204,15 @@ name|ConcreteIntKind
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const Loc* V
+argument|const Loc& V
 argument_list|)
 block|{
 return|return
 name|V
-operator|->
+operator|.
 name|getSubKind
 argument_list|()
 operator|==
@@ -1998,7 +2223,7 @@ expr|}
 block|;  }
 comment|// end ento::loc namespace
 block|}
-comment|// end GR namespace
+comment|// end ento namespace
 block|}
 comment|// end clang namespace
 name|namespace
@@ -2034,7 +2259,35 @@ return|return
 name|os
 return|;
 block|}
-expr|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|ento
+operator|::
+name|SVal
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %clang_cc1 %s -std=c89 -Eonly -verify -pedantic-errors   */
+comment|/* RUN: %clang_cc1 %s -std=c89 -Eonly -verify -pedantic-errors   * RUN: %clang_cc1 %s -std=c89 -E | FileCheck %s  */
 end_comment
 
 begin_comment
@@ -37,6 +37,14 @@ end_define
 
 begin_comment
 comment|/* expected-error {{'$' in identifier}} */
+end_comment
+
+begin_comment
+comment|/* CHECK-NOT: this comment should be missing  * CHECK: {{^}}// this comment should be present{{$}}  */
+end_comment
+
+begin_comment
+comment|// this comment should be present
 end_comment
 
 end_unit

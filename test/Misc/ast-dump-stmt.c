@@ -12,11 +12,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:      Dumping TestLocation
+comment|// CHECK:      VarDecl{{.*}}TestLocation
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   IntegerLiteral 0x{{[^ ]*}}<{{.*}}:3:20> 'int' 0
+comment|// CHECK-NEXT:   IntegerLiteral 0x{{[^ ]*}}<col:20> 'int' 0
 end_comment
 
 begin_decl_stmt
@@ -32,23 +32,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:      Dumping TestIndent
+comment|// CHECK:      VarDecl{{.*}}TestIndent
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{\(BinaryOperator[^()]*$}}
+comment|// CHECK-NEXT: {{^}}`-BinaryOperator{{[^()]*$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^  \(IntegerLiteral.*0[^()]*\)$}}
+comment|// CHECK-NEXT: {{^}}  |-IntegerLiteral{{.*0[^()]*$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^  \(ParenExpr.*0[^()]*$}}
+comment|// CHECK-NEXT: {{^}}  `-ParenExpr{{.*0[^()]*$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^    \(IntegerLiteral.*0[^()]*\)\)\)$}}
+comment|// CHECK-NEXT: {{^}}    `-IntegerLiteral{{.*0[^()]*$}}
 end_comment
 
 begin_function
@@ -70,7 +70,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:      Dumping TestDeclStmt
+comment|// CHECK:      FunctionDecl{{.*}}TestDeclStmt
 end_comment
 
 begin_comment
@@ -82,7 +82,7 @@ comment|// CHECK-NEXT:   DeclStmt
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     int x =
+comment|// CHECK-NEXT:     VarDecl{{.*}}x
 end_comment
 
 begin_comment
@@ -94,11 +94,11 @@ comment|// CHECK-NEXT:   DeclStmt
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     int y
+comment|// CHECK-NEXT:     VarDecl{{.*}}y
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     int z
+comment|// CHECK-NEXT:     VarDecl{{.*}}z
 end_comment
 
 begin_decl_stmt
@@ -113,7 +113,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:      Dumping TestOpaqueValueExpr
+comment|// CHECK:      VarDecl{{.*}}TestOpaqueValueExpr
 end_comment
 
 begin_comment

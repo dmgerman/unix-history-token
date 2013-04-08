@@ -326,7 +326,7 @@ argument_list|)
 operator|)
 name|i
 decl_stmt|;
-comment|// expected-error {{'align' attribute ignored when parsing type}}
+comment|// expected-warning {{'align' attribute ignored when parsing type}}
 block|}
 end_function
 

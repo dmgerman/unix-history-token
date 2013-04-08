@@ -1696,7 +1696,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>diagnosticTest</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
 end_comment
 
 begin_comment
@@ -2344,7 +2344,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>myArrayAllocation</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>4</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
 end_comment
 
 begin_comment
@@ -3884,7 +3884,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>reallocDiagnostics</string
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5480,7 +5480,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_wrapper</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -7560,7 +7560,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_double_action_call</s
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>3</string>
 end_comment
 
 begin_comment
@@ -9796,7 +9796,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>reallocIntra</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -10868,7 +10868,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use_ret</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
 end_comment
 
 begin_comment
@@ -11516,7 +11516,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>LeakedSymbol</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>3</string>
 end_comment
 
 begin_comment
@@ -12204,11 +12204,11 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>104</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
 end_comment
 
 begin_comment
@@ -12224,11 +12224,11 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>104</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
 end_comment
 
 begin_comment
@@ -12272,11 +12272,11 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>104</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
 end_comment
 
 begin_comment
@@ -12336,7 +12336,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>function_with_leak1</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -12348,11 +12348,11 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>104</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
 end_comment
 
 begin_comment
@@ -13156,7 +13156,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>function_with_leak2</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -14364,7 +14364,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>function_with_leak3</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -15572,7 +15572,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>function_with_leak4</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -16392,7 +16392,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>function_with_leak5</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -17212,7 +17212,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>function_with_leak6</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -18148,7 +18148,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use_function_with_leak7</s
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -18181,6 +18181,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</plist>
 end_comment
 
 end_unit

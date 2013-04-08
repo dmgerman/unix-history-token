@@ -161,7 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{function declared with with regparm(2) attribute was previously declared with the regparm(3) attribute}}
+comment|// expected-error{{function declared with regparm(2) attribute was previously declared with the regparm(3) attribute}}
 end_comment
 
 end_unit

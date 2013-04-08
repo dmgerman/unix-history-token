@@ -974,5 +974,63 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// Test that we handle an uninitialized value within a logical expression.
+end_comment
+
+begin_function
+name|void
+name|PR14635
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|int
+name|a
+init|=
+literal|0
+decl_stmt|,
+name|b
+decl_stmt|;
+operator|*
+name|p
+operator|=
+name|a
+operator|||
+name|b
+expr_stmt|;
+comment|// expected-warning {{Assigned value is garbage or undefined}}
+block|}
+end_function
+
+begin_comment
+comment|// Test handling floating point values with unary '!'.
+end_comment
+
+begin_function
+name|int
+name|PR14634
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|double
+name|y
+init|=
+operator|(
+name|double
+operator|)
+name|x
+decl_stmt|;
+return|return
+operator|!
+name|y
+return|;
+block|}
+end_function
+
 end_unit
 

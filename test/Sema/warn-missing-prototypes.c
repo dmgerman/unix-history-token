@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -Wmissing-prototypes -fsyntax-only -Xclang -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -Wdocumentation -Wmissing-prototypes -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -Wdocumentation -Wmissing-prototypes -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -239,6 +243,32 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|not_a_prototype_test
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note{{this declaration is not a prototype; add 'void' to make it a prototype for a zero-parameter function}}
+end_comment
+
+begin_function
+name|void
+name|not_a_prototype_test
+parameter_list|()
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-warning{{no previous prototype for function 'not_a_prototype_test'}}
+end_comment
+
+begin_comment
+comment|// CHECK: fix-it:"{{.*}}":{40:27-40:27}:"void"
+end_comment
 
 end_unit
 

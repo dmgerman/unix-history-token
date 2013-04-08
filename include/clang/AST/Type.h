@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/NestedNameSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/TemplateName.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -80,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Linkage.h"
 end_include
 
@@ -92,37 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/Visibility.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/Specifiers.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/NestedNameSpecifier.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/TemplateName.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"clang/Basic/Visibility.h"
 end_include
 
 begin_include
@@ -164,7 +158,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/type_traits.h"
 end_include
 
 begin_decl_stmt
@@ -3696,11 +3696,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The resulting type might still be qualified if it's an array
+comment|/// The resulting type might still be qualified if it's sugar for an array
 end_comment
 
 begin_comment
-comment|/// type.  To strip qualifiers even from within an array type, use
+comment|/// type.  To strip qualifiers even from within a sugared array type, use
 end_comment
 
 begin_comment
@@ -3741,11 +3741,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The resulting type might still be qualified if it's an array
+comment|/// The resulting type might still be qualified if it's sugar for an array
 end_comment
 
 begin_comment
-comment|/// type.  To strip qualifiers even from within an array type, use
+comment|/// type.  To strip qualifiers even from within a sugared array type, use
 end_comment
 
 begin_comment
@@ -4747,29 +4747,6 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/// \brief Determine whether this type has trivial copy/move-assignment
-end_comment
-
-begin_comment
-comment|///        semantics.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|hasTrivialAssignment
-argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
-name|bool
-name|Copying
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
 begin_label
 name|private
 label|:
@@ -4898,7 +4875,6 @@ operator|>
 expr|struct
 name|simplify_type
 operator|<
-specifier|const
 operator|::
 name|clang
 operator|::
@@ -4918,7 +4894,7 @@ specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
-argument|const ::clang::QualType&Val
+argument|::clang::QualType Val
 argument_list|)
 block|{
 return|return
@@ -4930,29 +4906,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|simplify_type
-operator|<
-operator|::
-name|clang
-operator|::
-name|QualType
-operator|>
-operator|:
-name|public
-name|simplify_type
-operator|<
-specifier|const
-operator|::
-name|clang
-operator|::
-name|QualType
-operator|>
-block|{}
-expr_stmt|;
 comment|// Teach SmallPtrSet that QualType is "basically a pointer".
 name|template
 operator|<
@@ -5512,19 +5465,11 @@ name|ContainsUnexpandedParameterPack
 operator|:
 literal|1
 block|;
-comment|/// \brief Nonzero if the cache (i.e. the bitfields here starting
-comment|/// with 'Cache') is valid.  If so, then this is a
-comment|/// LangOptions::VisibilityMode+1.
+comment|/// \brief True if the cache (i.e. the bitfields here starting with
+comment|/// 'Cache') is valid.
 name|mutable
 name|unsigned
-name|CacheValidAndVisibility
-operator|:
-literal|2
-block|;
-comment|/// \brief True if the visibility was set explicitly in the source code.
-name|mutable
-name|unsigned
-name|CachedExplicitVisibility
+name|CacheValid
 operator|:
 literal|1
 block|;
@@ -5555,53 +5500,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|CacheValidAndVisibility
-operator|!=
-literal|0
-operator|)
-return|;
-block|}
-name|Visibility
-name|getVisibility
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isCacheValid
-argument_list|()
-operator|&&
-literal|"getting linkage from invalid cache"
-argument_list|)
-block|;
-return|return
-name|static_cast
-operator|<
-name|Visibility
-operator|>
-operator|(
-name|CacheValidAndVisibility
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-name|bool
-name|isVisibilityExplicit
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isCacheValid
-argument_list|()
-operator|&&
-literal|"getting linkage from invalid cache"
-argument_list|)
-block|;
-return|return
-name|CachedExplicitVisibility
+name|CacheValid
 return|;
 block|}
 name|Linkage
@@ -5729,14 +5628,6 @@ name|unsigned
 name|TypeQuals
 operator|:
 literal|3
-block|;
-comment|/// \brief The ref-qualifier associated with a \c FunctionProtoType.
-comment|///
-comment|/// This is a value of type \c RefQualifierKind.
-name|unsigned
-name|RefQualifier
-operator|:
-literal|2
 block|;   }
 block|;
 name|class
@@ -5985,13 +5876,7 @@ name|ContainsUnexpandedParameterPack
 block|;
 name|TypeBits
 operator|.
-name|CacheValidAndVisibility
-operator|=
-literal|0
-block|;
-name|TypeBits
-operator|.
-name|CachedExplicitVisibility
+name|CacheValid
 operator|=
 name|false
 block|;
@@ -6692,6 +6577,66 @@ argument_list|()
 specifier|const
 block|;
 comment|// C11 _Atomic()
+name|bool
+name|isImage1dT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image1d_t
+name|bool
+name|isImage1dArrayT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image1d_array_t
+name|bool
+name|isImage1dBufferT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image1d_buffer_t
+name|bool
+name|isImage2dT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image2d_t
+name|bool
+name|isImage2dArrayT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image2d_array_t
+name|bool
+name|isImage3dT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image3d_t
+name|bool
+name|isImageType
+argument_list|()
+specifier|const
+block|;
+comment|// Any OpenCL image type
+name|bool
+name|isSamplerT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL sampler_t
+name|bool
+name|isEventT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL event_t
+name|bool
+name|isOpenCLSpecificType
+argument_list|()
+specifier|const
+block|;
+comment|// Any OpenCL specific type
 comment|/// Determines if this type, which must satisfy
 comment|/// isObjCLifetimeType(), is implicitly __unsafe_unretained rather
 comment|/// than implicitly __strong.
@@ -7089,30 +7034,41 @@ name|Visibility
 name|getVisibility
 argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|getLinkageAndVisibility
+argument_list|()
+operator|.
+name|getVisibility
+argument_list|()
+return|;
+block|}
 comment|/// \brief Return true if the visibility was explicitly set is the code.
 name|bool
 name|isVisibilityExplicit
 argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|getLinkageAndVisibility
+argument_list|()
+operator|.
+name|isVisibilityExplicit
+argument_list|()
+return|;
+block|}
 comment|/// \brief Determine the linkage and visibility of this type.
-name|std
-operator|::
-name|pair
-operator|<
-name|Linkage
-block|,
-name|Visibility
-operator|>
+name|LinkageInfo
 name|getLinkageAndVisibility
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Note that the linkage is no longer known.
-name|void
-name|ClearLinkageCache
+comment|/// \brief True if the computed linkage is valid. Used for consistency
+comment|/// checking. Should always return true.
+name|bool
+name|isLinkageValid
 argument_list|()
+specifier|const
 block|;
 specifier|const
 name|char
@@ -8443,6 +8399,19 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// The inheritance model to use for this member pointer.
+block|enum
+name|MSInheritanceModel
+block|{
+name|MSIM_Single
+block|,
+name|MSIM_Multiple
+block|,
+name|MSIM_Virtual
+block|,
+name|MSIM_Unspecified
+block|}
+block|;
 comment|/// MemberPointerType - C++ 8.3.3 - Pointers to members
 comment|///
 name|class
@@ -8576,6 +8545,20 @@ name|isFunctionProtoType
 argument_list|()
 return|;
 block|}
+comment|/// Returns the number of pointer and integer slots used to represent this
+comment|/// member pointer in the MS C++ ABI.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|getMSMemberPointerSlots
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|Type
 operator|*
@@ -10804,8 +10787,6 @@ argument|QualType res
 argument_list|,
 argument|unsigned typeQuals
 argument_list|,
-argument|RefQualifierKind RefQualifier
-argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|bool Dependent
@@ -10852,18 +10833,6 @@ operator|.
 name|TypeQuals
 operator|=
 name|typeQuals
-block|;
-name|FunctionTypeBits
-operator|.
-name|RefQualifier
-operator|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|RefQualifier
-operator|)
 block|;   }
 name|unsigned
 name|getTypeQuals
@@ -10874,23 +10843,6 @@ return|return
 name|FunctionTypeBits
 operator|.
 name|TypeQuals
-return|;
-block|}
-name|RefQualifierKind
-name|getRefQualifier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|RefQualifierKind
-operator|>
-operator|(
-name|FunctionTypeBits
-operator|.
-name|RefQualifier
-operator|)
 return|;
 block|}
 name|public
@@ -10930,6 +10882,9 @@ name|getRegParm
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determine whether this function type includes the GNU noreturn
+comment|/// attribute. The C++11 [[noreturn]] attribute does not affect the function
+comment|/// type.
 name|bool
 name|getNoReturnAttr
 argument_list|()
@@ -11092,8 +11047,6 @@ argument_list|,
 argument|Result
 argument_list|,
 literal|0
-argument_list|,
-argument|RQ_None
 argument_list|,
 argument|Canonical
 argument_list|,
@@ -11384,9 +11337,7 @@ name|FunctionProtoType
 argument_list|(
 argument|QualType result
 argument_list|,
-argument|const QualType *args
-argument_list|,
-argument|unsigned numArgs
+argument|ArrayRef<QualType> args
 argument_list|,
 argument|QualType canonical
 argument_list|,
@@ -11397,7 +11348,7 @@ comment|/// NumArgs - The number of arguments this function has, not counting '.
 name|unsigned
 name|NumArgs
 operator|:
-literal|17
+literal|15
 block|;
 comment|/// NumExceptions - The number of types in the exception spec, if any.
 name|unsigned
@@ -11428,6 +11379,14 @@ name|unsigned
 name|HasTrailingReturn
 operator|:
 literal|1
+block|;
+comment|/// \brief The ref-qualifier associated with a \c FunctionProtoType.
+comment|///
+comment|/// This is a value of type \c RefQualifierKind.
+name|unsigned
+name|RefQualifier
+operator|:
+literal|2
 block|;
 comment|// ArgInfo - There is an variable size array after the class in memory that
 comment|// holds the argument types.
@@ -11541,6 +11500,28 @@ argument_list|()
 index|[
 name|i
 index|]
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|getArgTypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+operator|(
+name|arg_type_begin
+argument_list|()
+expr|,
+name|arg_type_end
+argument_list|()
+operator|)
 return|;
 block|}
 name|ExtProtoInfo
@@ -12032,10 +12013,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|FunctionType
-operator|::
-name|getRefQualifier
-argument_list|()
+name|static_cast
+operator|<
+name|RefQualifierKind
+operator|>
+operator|(
+name|RefQualifier
+operator|)
 return|;
 block|}
 typedef|typedef
@@ -12180,16 +12164,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|// FIXME: Remove the string version.
-name|void
-name|printExceptionSpecification
-argument_list|(
-argument|std::string&S
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|void
 name|printExceptionSpecification
 argument_list|(
@@ -13393,6 +13367,8 @@ block|,
 name|attr_pascal
 block|,
 name|attr_pnaclcall
+block|,
+name|attr_inteloclbicc
 block|}
 block|;
 name|private
@@ -14523,53 +14499,6 @@ argument_list|,
 name|bool
 operator|&
 name|InstantiationDependent
-argument_list|)
-block|;
-comment|/// \brief Print a template argument list, including the '<' and '>'
-comment|/// enclosing the template arguments.
-comment|// FIXME: remove the string ones.
-specifier|static
-name|std
-operator|::
-name|string
-name|PrintTemplateArgumentList
-argument_list|(
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|,
-argument|bool SkipBrackets = false
-argument_list|)
-block|;
-specifier|static
-name|std
-operator|::
-name|string
-name|PrintTemplateArgumentList
-argument_list|(
-argument|const TemplateArgumentLoc *Args
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-block|;
-specifier|static
-name|std
-operator|::
-name|string
-name|PrintTemplateArgumentList
-argument_list|(
-specifier|const
-name|TemplateArgumentListInfo
-operator|&
-argument_list|,
-specifier|const
-name|PrintingPolicy
-operator|&
-name|Policy
 argument_list|)
 block|;
 comment|/// \brief Print a template argument list, including the '<' and '>'
@@ -15998,7 +15927,7 @@ argument|QualType Pattern
 argument_list|,
 argument|QualType Canon
 argument_list|,
-argument|llvm::Optional<unsigned> NumExpansions
+argument|Optional<unsigned> NumExpansions
 argument_list|)
 operator|:
 name|Type
@@ -16060,8 +15989,6 @@ return|;
 block|}
 comment|/// \brief Retrieve the number of expansions that this pack expansion will
 comment|/// generate, if known.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -16080,14 +16007,7 @@ operator|-
 literal|1
 return|;
 return|return
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 return|;
 block|}
 name|bool
@@ -16138,7 +16058,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType Pattern
 argument_list|,
-argument|llvm::Optional<unsigned> NumExpansions
+argument|Optional<unsigned> NumExpansions
 argument_list|)
 block|{
 name|ID
@@ -16156,6 +16076,9 @@ operator|.
 name|AddBoolean
 argument_list|(
 name|NumExpansions
+operator|.
+name|hasValue
+argument_list|()
 argument_list|)
 block|;
 if|if
@@ -19140,6 +19063,189 @@ name|isObjCClassType
 argument_list|()
 operator|||
 name|isObjCSelType
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage1dT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage1d
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage1dArrayT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage1dArray
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage1dBufferT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage1dBuffer
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2d
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dArrayT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dArray
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage3dT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage3d
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isSamplerT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLSampler
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isEventT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLEvent
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImageType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isImage3dT
+argument_list|()
+operator|||
+name|isImage2dT
+argument_list|()
+operator|||
+name|isImage2dArrayT
+argument_list|()
+operator|||
+name|isImage1dT
+argument_list|()
+operator|||
+name|isImage1dArrayT
+argument_list|()
+operator|||
+name|isImage1dBufferT
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isOpenCLSpecificType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSamplerT
+argument_list|()
+operator|||
+name|isEventT
+argument_list|()
+operator|||
+name|isImageType
 argument_list|()
 return|;
 block|}

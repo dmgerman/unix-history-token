@@ -24,27 +24,19 @@ comment|// corner cases.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O3 -emit-llvm -o %t
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O3 -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: not grep '@g0' %t
+comment|// RUN: %clang_cc1 %s -triple x86_64-unknown-unknown -O3 -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-unknown-unknown -O3 -emit-llvm -o %t
+comment|// RUN: %clang_cc1 %s -triple powerpc-unknown-unknown -O3 -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: not grep '@g0' %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 %s -triple powerpc-unknown-unknown -O3 -emit-llvm -o %t
-end_comment
-
-begin_comment
-comment|// RUN: not grep '@g0' %t
+comment|// CHECK-NOT: @g0
 end_comment
 
 begin_typedef

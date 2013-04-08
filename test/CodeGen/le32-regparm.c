@@ -225,7 +225,7 @@ parameter_list|)
 block|{
 comment|// The presence of double c means that foo* d is not passed inreg. This
 comment|// behavior is different from current x86-32 behavior
-comment|// CHECK: call void @reduced(i8 signext inreg 0, {{.*}} %struct.foo* null
+comment|// CHECK: call void @reduced(i8 inreg signext 0, {{.*}} %struct.foo* null
 name|reduced
 argument_list|(
 literal|0

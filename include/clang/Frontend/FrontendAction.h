@@ -31,6 +31,38 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \file
+end_comment
+
+begin_comment
+comment|/// \brief Defines the clang::FrontendAction interface and various convenience
+end_comment
+
+begin_comment
+comment|/// abstract classes (clang::ASTFrontendAction, clang::PluginASTAction,
+end_comment
+
+begin_comment
+comment|/// clang::PreprocessorFrontendAction, and clang::WrapperFrontendAction)
+end_comment
+
+begin_comment
+comment|/// derived from it.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -64,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -101,8 +133,7 @@ decl_stmt|;
 name|class
 name|CompilerInstance
 decl_stmt|;
-comment|/// FrontendAction - Abstract base class for actions which can be performed by
-comment|/// the frontend.
+comment|/// Abstract base class for actions which can be performed by the frontend.
 name|class
 name|FrontendAction
 block|{
@@ -145,20 +176,19 @@ name|protected
 label|:
 comment|/// @name Implementation Action Interface
 comment|/// @{
-comment|/// CreateASTConsumer - Create the AST consumer object for this action, if
-comment|/// supported.
+comment|/// \brief Create the AST consumer object for this action, if supported.
 comment|///
-comment|/// This routine is called as part of \see BeginSourceAction(), which will
+comment|/// This routine is called as part of BeginSourceFile(), which will
 comment|/// fail if the AST consumer cannot be created. This will not be called if the
 comment|/// action has indicated that it only uses the preprocessor.
 comment|///
-comment|/// \param CI - The current compiler instance, provided as a convenience, \see
+comment|/// \param CI - The current compiler instance, provided as a convenience, see
 comment|/// getCompilerInstance().
 comment|///
-comment|/// \param InFile - The current input file, provided as a convenience, \see
+comment|/// \param InFile - The current input file, provided as a convenience, see
 comment|/// getCurrentFile().
 comment|///
-comment|/// \return The new AST consumer, or 0 on failure.
+comment|/// \return The new AST consumer, or null on failure.
 name|virtual
 name|ASTConsumer
 modifier|*
@@ -178,8 +208,8 @@ comment|/// \brief Callback before starting processing a single input, giving th
 comment|/// opportunity to modify the CompilerInvocation or do some other action
 comment|/// before BeginSourceFileAction is called.
 comment|///
-comment|/// \return True on success; on failure \see BeginSourceFileAction() and
-comment|/// ExecutionAction() and EndSourceFileAction() will not be called.
+comment|/// \return True on success; on failure BeginSourceFileAction(),
+comment|/// ExecuteAction() and EndSourceFileAction() will not be called.
 name|virtual
 name|bool
 name|BeginInvocation
@@ -193,10 +223,9 @@ return|return
 name|true
 return|;
 block|}
-comment|/// BeginSourceFileAction - Callback at the start of processing a single
-comment|/// input.
+comment|/// \brief Callback at the start of processing a single input.
 comment|///
-comment|/// \return True on success; on failure \see ExecutionAction() and
+comment|/// \return True on success; on failure ExecutionAction() and
 comment|/// EndSourceFileAction() will not be called.
 name|virtual
 name|bool
@@ -214,11 +243,11 @@ return|return
 name|true
 return|;
 block|}
-comment|/// ExecuteAction - Callback to run the program action, using the initialized
+comment|/// \brief Callback to run the program action, using the initialized
 comment|/// compiler instance.
 comment|///
-comment|/// This routine is guaranteed to only be called between \see
-comment|/// BeginSourceFileAction() and \see EndSourceFileAction().
+comment|/// This is guaranteed to only be called between BeginSourceFileAction()
+comment|/// and EndSourceFileAction().
 name|virtual
 name|void
 name|ExecuteAction
@@ -226,8 +255,9 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// EndSourceFileAction - Callback at the end of processing a single input;
-comment|/// this is guaranteed to only be called following a successful call to
+comment|/// \brief Callback at the end of processing a single input.
+comment|///
+comment|/// This is guaranteed to only be called following a successful call to
 comment|/// BeginSourceFileAction (and BeginSourceFile).
 name|virtual
 name|void
@@ -409,9 +439,10 @@ function_decl|;
 comment|/// @}
 comment|/// @name Supported Modes
 comment|/// @{
-comment|/// usesPreprocessorOnly - Does this action only use the preprocessor? If so
-comment|/// no AST context will be created and this action will be invalid with AST
-comment|/// file inputs.
+comment|/// \brief Does this action only use the preprocessor?
+comment|///
+comment|/// If so no AST context will be created and this action will be invalid
+comment|/// with AST file inputs.
 name|virtual
 name|bool
 name|usesPreprocessorOnly
@@ -430,7 +461,7 @@ return|return
 name|TU_Complete
 return|;
 block|}
-comment|/// hasPCHSupport - Does this action support use with PCH?
+comment|/// \brief Does this action support use with PCH?
 name|virtual
 name|bool
 name|hasPCHSupport
@@ -443,7 +474,7 @@ name|usesPreprocessorOnly
 argument_list|()
 return|;
 block|}
-comment|/// hasASTFileSupport - Does this action support use with AST files?
+comment|/// \brief Does this action support use with AST files?
 name|virtual
 name|bool
 name|hasASTFileSupport
@@ -456,7 +487,7 @@ name|usesPreprocessorOnly
 argument_list|()
 return|;
 block|}
-comment|/// hasIRSupport - Does this action support use with IR files?
+comment|/// \brief Does this action support use with IR files?
 name|virtual
 name|bool
 name|hasIRSupport
@@ -467,8 +498,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// hasCodeCompletionSupport - Does this action support use with code
-comment|/// completion?
+comment|/// \brief Does this action support use with code completion?
 name|virtual
 name|bool
 name|hasCodeCompletionSupport
@@ -482,9 +512,10 @@ block|}
 comment|/// @}
 comment|/// @name Public Action Interface
 comment|/// @{
-comment|/// BeginSourceFile - Prepare the action for processing the input file
-comment|/// \p Input; this is run after the options and frontend have been
-comment|/// initialized, but prior to executing any per-file processing.
+comment|/// \brief Prepare the action for processing the input file \p Input.
+comment|///
+comment|/// This is run after the options and frontend have been initialized,
+comment|/// but prior to executing any per-file processing.
 comment|///
 comment|/// \param CI - The compiler instance this action is being run from. The
 comment|/// action may store and use this object up until the matching EndSourceFile
@@ -495,11 +526,11 @@ comment|/// specially, for example AST inputs, since the AST file itself contain
 comment|/// several objects which would normally be owned by the
 comment|/// CompilerInstance. When processing AST input files, these objects should
 comment|/// generally not be initialized in the CompilerInstance -- they will
-comment|/// automatically be shared with the AST file in between \see
-comment|/// BeginSourceFile() and \see EndSourceFile().
+comment|/// automatically be shared with the AST file in between
+comment|/// BeginSourceFile() and EndSourceFile().
 comment|///
 comment|/// \return True on success; on failure the compilation of this file should
-comment|/// be aborted and neither Execute nor EndSourceFile should be called.
+comment|/// be aborted and neither Execute() nor EndSourceFile() should be called.
 name|bool
 name|BeginSourceFile
 parameter_list|(
@@ -513,12 +544,12 @@ modifier|&
 name|Input
 parameter_list|)
 function_decl|;
-comment|/// Execute - Set the source managers main input file, and run the action.
+comment|/// \brief Set the source manager's main input file, and run the action.
 name|bool
 name|Execute
 parameter_list|()
 function_decl|;
-comment|/// EndSourceFile - Perform any per-file post processing, deallocate per-file
+comment|/// \brief Perform any per-file post processing, deallocate per-file
 comment|/// objects, and run statistics and output file cleanup code.
 name|void
 name|EndSourceFile
@@ -527,8 +558,7 @@ function_decl|;
 comment|/// @}
 block|}
 empty_stmt|;
-comment|/// ASTFrontendAction - Abstract base class to use for AST consumer based
-comment|/// frontend actions.
+comment|/// \brief Abstract base class to use for AST consumer-based frontend actions.
 name|class
 name|ASTFrontendAction
 range|:
@@ -537,8 +567,8 @@ name|FrontendAction
 block|{
 name|protected
 operator|:
-comment|/// ExecuteAction - Implement the ExecuteAction interface by running Sema on
-comment|/// the already initialized AST consumer.
+comment|/// \brief Implement the ExecuteAction interface by running Sema on
+comment|/// the already-initialized AST consumer.
 comment|///
 comment|/// This will also take care of instantiating a code completion consumer if
 comment|/// the user requested it and the action supports it.
@@ -588,7 +618,7 @@ literal|0
 block|;
 name|public
 operator|:
-comment|/// ParseArgs - Parse the given plugin command line arguments.
+comment|/// \brief Parse the given plugin command line arguments.
 comment|///
 comment|/// \param CI - The compiler instance, for use in reporting diagnostics.
 comment|/// \return True if the parsing succeeded; otherwise the plugin will be
@@ -619,8 +649,7 @@ operator|=
 literal|0
 block|; }
 block|;
-comment|/// PreprocessorFrontendAction - Abstract base class to use for preprocessor
-comment|/// based frontend actions.
+comment|/// \brief Abstract base class to use for preprocessor-based frontend actions.
 name|class
 name|PreprocessorFrontendAction
 operator|:
@@ -629,7 +658,7 @@ name|FrontendAction
 block|{
 name|protected
 operator|:
-comment|/// CreateASTConsumer - Provide a default implementation which returns aborts,
+comment|/// \brief Provide a default implementation which returns aborts;
 comment|/// this method should never be called by FrontendAction clients.
 name|virtual
 name|ASTConsumer
@@ -655,11 +684,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// WrapperFrontendAction - A frontend action which simply wraps some other
-comment|/// runtime specified frontend action. Deriving from this class allows an
-comment|/// action to inject custom logic around some existing action's behavior. It
-comment|/// implements every virtual method in the FrontendAction interface by
-comment|/// forwarding to the wrapped action.
+comment|/// \brief A frontend action which simply wraps some other runtime-specified
+comment|/// frontend action.
+comment|///
+comment|/// Deriving from this class allows an action to inject custom logic around
+comment|/// some existing action's behavior. It implements every virtual method in
+comment|/// the FrontendAction interface by forwarding to the wrapped action.
 name|class
 name|WrapperFrontendAction
 operator|:

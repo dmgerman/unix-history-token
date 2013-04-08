@@ -44,7 +44,8 @@ name|i2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{comparison result unused}} \
+comment|// expected-note {{equality comparison}}
 name|COMMA_MACRO_2
 argument_list|(
 name|i1
@@ -73,7 +74,8 @@ name|i2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{comparison result unused}} \
+comment|// expected-note {{equality comparison}}
 name|COMMA_MACRO_4
 argument_list|(
 name|i1

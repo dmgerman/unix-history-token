@@ -381,5 +381,36 @@ comment|// expected-error {{invalid % escape in inline assembly string}}
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/12700799>
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|S
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|// expected-note 2 {{forward declaration of 'struct S'}}
+end_comment
+
+begin_function
+name|void
+name|test14
+parameter_list|(
+name|struct
+name|S
+modifier|*
+name|s
+parameter_list|)
+block|{
+asm|__asm("": : "a"(*s));
+comment|// expected-error {{dereference of pointer to incomplete type 'struct S'}}
+asm|__asm("": "=a" (*s) :);
+comment|// expected-error {{dereference of pointer to incomplete type 'struct S'}}
+block|}
+end_function
+
 end_unit
 

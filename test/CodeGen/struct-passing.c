@@ -152,11 +152,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: declare i32 @f0() nounwind readnone
+comment|// CHECK: declare i32 @f0() [[RN:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK: declare i32 @f1() nounwind readonly
+comment|// CHECK: declare i32 @f1() [[RO:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -173,6 +173,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: declare void @f5({{.*}} byval align 4)
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[RN]] = { nounwind readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[RO]] = { nounwind readonly{{.*}} }
 end_comment
 
 end_unit

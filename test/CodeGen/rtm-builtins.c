@@ -65,5 +65,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|unsigned
+name|int
+name|test_xtest
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK: i32 @llvm.x86.xtest()
+return|return
+name|_xtest
+argument_list|()
+return|;
+block|}
+end_function
+
 end_unit
 

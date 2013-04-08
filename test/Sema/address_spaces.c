@@ -307,5 +307,53 @@ begin_comment
 comment|// expected-error {{function type may not be qualified with an address space}}
 end_comment
 
+begin_typedef
+typedef|typedef
+name|_AS2
+name|int
+name|AS2Int
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|HasASFields
+block|{
+name|_AS2
+name|int
+name|as_field
+decl_stmt|;
+comment|// expected-error {{field may not be qualified with an address space}}
+name|AS2Int
+name|typedef_as_field
+decl_stmt|;
+comment|// expected-error {{field may not be qualified with an address space}}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// Assertion failure was when the field was accessed
+end_comment
+
+begin_function
+name|void
+name|access_as_field
+parameter_list|()
+block|{
+name|struct
+name|HasASFields
+name|x
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|bar
+operator|.
+name|as_field
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

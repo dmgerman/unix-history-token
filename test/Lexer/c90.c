@@ -86,14 +86,14 @@ name|void
 operator|)
 literal|L"\u1234"
 expr_stmt|;
-comment|// expected-error {{unicode escape sequences are only valid in C99 or C++}}
+comment|// expected-error {{universal character names are only valid in C99 or C++}}
 operator|(
 name|void
 operator|)
 literal|L'
 expr|\u1234'
 expr_stmt|;
-comment|// expected-error {{unicode escape sequences are only valid in C99 or C++}}
+comment|// expected-error {{universal character names are only valid in C99 or C++}}
 block|}
 end_function
 
@@ -141,6 +141,36 @@ index|]
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|MY_UCN
+value|\u00FC
+end_define
+
+begin_comment
+comment|// expected-warning {{universal character names are only valid in C99 or C++; treating as '\' followed by identifier}}
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOT_A_UCN
+value|\h
+end_define
+
+begin_comment
+comment|// no-warning
+end_comment
+
+begin_extern
+extern|extern int idWithUCN\u00FC;
+end_extern
+
+begin_comment
+comment|// expected-warning {{universal character names are only valid in C99 or C++; treating as '\' followed by identifier}} expected-error {{expected ';'}}
+end_comment
 
 end_unit
 

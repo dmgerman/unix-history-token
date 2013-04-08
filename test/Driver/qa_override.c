@@ -4,6 +4,18 @@ comment|// RUN: env QA_OVERRIDE_GCC3_OPTIONS="#+-Os +-Oz +-O +-O3 +-Oignore +a +
 end_comment
 
 begin_comment
+comment|// RUN: env QA_OVERRIDE_GCC3_OPTIONS="x-Werror +-mfoo" %clang -Werror %s -c 2>&1 | FileCheck %s -check-prefix=RM-WERROR
+end_comment
+
+begin_comment
+comment|// FIXME: It seems doesn't work with gcc-driver.
+end_comment
+
+begin_comment
+comment|// REQUIRES: clang-driver
+end_comment
+
+begin_comment
 comment|// CHECK-NOT: ###
 end_comment
 
@@ -21,6 +33,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: Option 3 - Name: "-O", Values: {"magic"}
+end_comment
+
+begin_comment
+comment|// RM-WERROR: ### QA_OVERRIDE_GCC3_OPTIONS: x-Werror +-mfoo
+end_comment
+
+begin_comment
+comment|// RM-WERROR-NEXT: ### Deleting argument -Werror
+end_comment
+
+begin_comment
+comment|// RM-WERROR-NEXT: ### Adding argument -mfoo at end
+end_comment
+
+begin_comment
+comment|// RM-WERROR-NEXT: warning: argument unused during compilation: '-mfoo'
 end_comment
 
 end_unit

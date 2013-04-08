@@ -1,14 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm-bc -o - %s | opt --std-compile-opts | llvm-dis> %t
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -O1 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "ret i32" %t | count 2
+comment|// CHECK: define i32 @f0()
 end_comment
 
 begin_comment
-comment|// RUN: grep "ret i32 0" %t | count 2
+comment|// CHECK:   ret i32 0
+end_comment
+
+begin_comment
+comment|// CHECK: define i32 @f1()
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 0
+end_comment
+
+begin_comment
+comment|// CHECK: define i32 @f2()
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 0
 end_comment
 
 begin_comment
@@ -49,21 +65,34 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_function
+name|int
+name|f1
+parameter_list|()
+block|{
+name|struct
+name|s0
+name|x
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
 literal|0
-end_if
-
-begin_comment
-comment|/* Optimizer isn't smart enough to reduce this since we use    memset. Hrm. */
-end_comment
-
-begin_endif
-unit|int f1() {   struct s0 x[2] = { {0} };   return x[1].x; }
-endif|#
-directive|endif
-end_endif
+block|}
+block|}
+decl_stmt|;
+return|return
+name|x
+index|[
+literal|1
+index|]
+operator|.
+name|x
+return|;
+block|}
+end_function
 
 begin_function
 name|int

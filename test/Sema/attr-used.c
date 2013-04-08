@@ -109,5 +109,21 @@ comment|// expected-warning {{used attribute ignored}}
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|used
+operator|)
+argument_list|)
+name|f0
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

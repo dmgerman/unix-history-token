@@ -86,6 +86,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|test2
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|f16
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|extern
+name|int
+name|test2
+decl_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// CHECK: EnumDecl=Baz:3:6 (Definition)linkage=External
 end_comment
@@ -144,6 +165,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: ParmDecl=tria:14:25 (Definition)linkage=NoLinkage
+end_comment
+
+begin_comment
+comment|// CHECK: VarDecl=test2{{.*}}linkage=Internal
+end_comment
+
+begin_comment
+comment|// CHECK: VarDecl=test2{{.*}}linkage=Internal
 end_comment
 
 end_unit

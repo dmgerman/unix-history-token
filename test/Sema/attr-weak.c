@@ -165,5 +165,55 @@ begin_comment
 comment|// expected-warning {{an already-declared variable is made a weak_import declaration}}
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pr14946_x
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pr14946_x
+name|__attribute__
+argument_list|(
+operator|(
+name|weak
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{weak declaration cannot have internal linkage}}
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|pr14946_f
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pr14946_f
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(weak
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{weak declaration cannot have internal linkage}}
+end_comment
+
 end_unit
 

@@ -10,6 +10,16 @@ name|int
 name|x
 parameter_list|)
 function_decl|;
+name|S
+argument_list|()
+expr_stmt|;
+name|S
+argument_list|(
+specifier|const
+name|S
+operator|&
+argument_list|)
+expr_stmt|;
 name|operator
 specifier|const
 name|char

@@ -21,7 +21,7 @@ name|int
 modifier|*
 name|password
 decl_stmt|;
-comment|// expected-note {{Variable 'password' declared without an initial value}}
+comment|// expected-note {{'password' declared without an initial value}}
 if|if
 condition|(
 name|password

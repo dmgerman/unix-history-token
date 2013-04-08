@@ -19,10 +19,14 @@ return|return
 literal|42
 return|;
 comment|// Check that we set the optsize attribute on the function.
-comment|// CHECK: @test1{{.*}}optsize
+comment|// CHECK: @test1{{.*}}[[ATTR:#[0-9]+]]
 comment|// CHECK: ret
 block|}
 end_block
+
+begin_comment
+comment|// CHECK: attributes [[ATTR]] = { {{.*}}optsize{{.*}} }
+end_comment
 
 end_unit
 

@@ -321,6 +321,56 @@ name|diagnostic
 name|pop
 end_pragma
 
+begin_function
+specifier|inline
+name|void
+name|defineStaticVar
+parameter_list|()
+block|{
+comment|// expected-note {{use 'static' to give inline function 'defineStaticVar' internal linkage}}
+specifier|static
+specifier|const
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+comment|// ok
+specifier|static
+name|int
+name|y
+init|=
+literal|0
+decl_stmt|;
+comment|// expected-warning {{non-constant static local variable in inline function may be different in different files}}
+block|}
+end_function
+
+begin_function
+specifier|extern
+specifier|inline
+name|void
+name|defineStaticVarInExtern
+parameter_list|()
+block|{
+specifier|static
+specifier|const
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+comment|// ok
+specifier|static
+name|int
+name|y
+init|=
+literal|0
+decl_stmt|;
+comment|// ok
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

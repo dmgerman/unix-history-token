@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Index_Internal.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CXCursor.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"CXTranslationUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Index_Internal.h"
 end_include
 
 begin_include
@@ -125,6 +125,7 @@ block|}
 enum|;
 name|protected
 label|:
+specifier|const
 name|void
 modifier|*
 name|data
@@ -144,12 +145,12 @@ argument|CXCursor C
 argument_list|,
 argument|Kind k
 argument_list|,
-argument|void *d1
+argument|const void *d1
 argument_list|,
-argument|void *d2 =
+argument|const void *d2 =
 literal|0
 argument_list|,
-argument|void *d3 =
+argument|const void *d3 =
 literal|0
 argument_list|)
 block|:
@@ -271,6 +272,7 @@ name|Parent
 decl_stmt|;
 comment|/// \brief The declaration that serves at the parent of any statement or
 comment|/// expression nodes.
+specifier|const
 name|Decl
 modifier|*
 name|StmtParent
@@ -388,7 +390,7 @@ name|SourceRange
 name|R
 parameter_list|)
 function_decl|;
-name|void
+name|bool
 name|visitDeclsFromFileRegion
 parameter_list|(
 name|FileID
@@ -408,6 +410,7 @@ name|CXCursor
 modifier|&
 name|Parent
 decl_stmt|;
+specifier|const
 name|Decl
 modifier|*
 modifier|&
@@ -422,7 +425,7 @@ name|SetParentRAII
 argument_list|(
 argument|CXCursor&Parent
 argument_list|,
-argument|Decl *&StmtParent
+argument|const Decl *&StmtParent
 argument_list|,
 argument|CXCursor NewParent
 argument_list|)
@@ -519,16 +522,12 @@ argument_list|)
 operator|,
 name|AU
 argument_list|(
-name|static_cast
-operator|<
-name|ASTUnit
-operator|*
-operator|>
-operator|(
+name|cxtu
+operator|::
+name|getASTUnit
+argument_list|(
 name|TU
-operator|->
-name|TUData
-operator|)
+argument_list|)
 argument_list|)
 operator|,
 name|Visitor
@@ -662,16 +661,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|ASTUnit
-operator|*
-operator|>
-operator|(
-name|TU
-operator|->
-name|TUData
-operator|)
+name|AU
 return|;
 block|}
 name|CXTranslationUnit
@@ -697,7 +687,7 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Visit declarations and preprocessed entities for the file region
 comment|/// designated by \see RegionOfInterest.
-name|void
+name|bool
 name|visitFileRegion
 parameter_list|()
 function_decl|;
@@ -771,8 +761,6 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -1172,6 +1160,7 @@ name|VisitorWorkList
 modifier|&
 name|WL
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|S
@@ -1181,6 +1170,7 @@ name|LLVM_ATTRIBUTE_NOINLINE
 name|bool
 name|Visit
 parameter_list|(
+specifier|const
 name|Stmt
 modifier|*
 name|S

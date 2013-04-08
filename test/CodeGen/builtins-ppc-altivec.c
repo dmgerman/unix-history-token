@@ -3349,7 +3349,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vsc
+name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
@@ -3360,7 +3360,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vuc
+name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
@@ -3371,7 +3371,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vs
+name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
@@ -3382,7 +3382,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vus
+name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
@@ -3393,7 +3393,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vi
+name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
@@ -3404,7 +3404,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vui
+name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
@@ -3415,7 +3415,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vf
+name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
@@ -3426,7 +3426,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vsc
+name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
@@ -3437,7 +3437,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vuc
+name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
@@ -3448,7 +3448,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vs
+name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
@@ -3459,7 +3459,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vus
+name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
@@ -3470,7 +3470,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vi
+name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
@@ -3481,7 +3481,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vui
+name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
@@ -3492,7 +3492,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|&
-name|vf
+name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx

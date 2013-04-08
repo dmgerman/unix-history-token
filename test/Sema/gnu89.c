@@ -21,7 +21,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// expected-warning {{return type of 'main' is not 'int'}}
+comment|// expected-warning {{return type of 'main' is not 'int'}} expected-note {{change return type to 'int'}}
 end_comment
 
 end_unit

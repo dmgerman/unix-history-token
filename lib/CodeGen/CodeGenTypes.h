@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -200,6 +200,8 @@ comment|/// while lowering AST types to LLVM types.
 name|class
 name|CodeGenTypes
 block|{
+name|public
+label|:
 comment|// Some of this stuff should probably be left on the CGM.
 name|ASTContext
 modifier|&
@@ -241,6 +243,8 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
+name|private
+label|:
 comment|/// The opaque type map for Objective-C interfaces. All direct
 comment|/// manipulation is done by the runtime interfaces, which are
 comment|/// responsible for coercing to the appropriate type; these opaque
@@ -726,6 +730,22 @@ name|RequiredArgs
 name|required
 argument_list|)
 decl_stmt|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|arrangeBlockFunctionCall
+parameter_list|(
+specifier|const
+name|CallArgList
+modifier|&
+name|args
+parameter_list|,
+specifier|const
+name|FunctionType
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&

@@ -1510,6 +1510,13 @@ comment|// expected-warning{{Argument to string copy function is the address of 
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|globalInt
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|strcpy_effects
@@ -1531,6 +1538,13 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|globalInt
+operator|!=
+literal|42
+condition|)
+return|return;
 name|clang_analyzer_eval
 argument_list|(
 name|strcpy
@@ -1569,6 +1583,14 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|globalInt
+operator|==
+literal|42
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -2312,44 +2334,6 @@ end_function
 
 begin_function
 name|void
-name|strcat_symbolic_src_length
-parameter_list|(
-name|char
-modifier|*
-name|src
-parameter_list|)
-block|{
-name|char
-name|dst
-index|[
-literal|8
-index|]
-init|=
-literal|"1234"
-decl_stmt|;
-name|strcat
-argument_list|(
-name|dst
-argument_list|,
-name|src
-argument_list|)
-expr_stmt|;
-name|clang_analyzer_eval
-argument_list|(
-name|strlen
-argument_list|(
-name|dst
-argument_list|)
-operator|>=
-literal|4
-argument_list|)
-expr_stmt|;
-comment|// expected-warning{{TRUE}}
-block|}
-end_function
-
-begin_function
-name|void
 name|strcat_symbolic_dst_length_taint
 parameter_list|(
 name|char
@@ -2971,56 +2955,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
-block|}
-end_function
-
-begin_function
-name|void
-name|strncpy_exactly_matching_buffer2
-parameter_list|(
-name|char
-modifier|*
-name|y
-parameter_list|)
-block|{
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|y
-argument_list|)
-operator|>=
-literal|4
-condition|)
-return|return;
-name|char
-name|x
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|strncpy
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-comment|// no-warning
-comment|// This time, we know that y fits in x anyway.
-name|clang_analyzer_eval
-argument_list|(
-name|strlen
-argument_list|(
-name|x
-argument_list|)
-operator|<=
-literal|3
-argument_list|)
-expr_stmt|;
-comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -5975,6 +5909,130 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
+block|}
+end_function
+
+begin_comment
+comment|//===----------------------------------------------------------------------===
+end_comment
+
+begin_comment
+comment|// FIXMEs
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===
+end_comment
+
+begin_comment
+comment|// The analyzer_eval call below should evaluate to true. We are being too
+end_comment
+
+begin_comment
+comment|// aggressive in marking the (length of) src symbol dead. The length of dst
+end_comment
+
+begin_comment
+comment|// depends on src. This could be explicitely specified in the checker or the
+end_comment
+
+begin_comment
+comment|// logic for handling MetadataSymbol in SymbolManager needs to change.
+end_comment
+
+begin_function
+name|void
+name|strcat_symbolic_src_length
+parameter_list|(
+name|char
+modifier|*
+name|src
+parameter_list|)
+block|{
+name|char
+name|dst
+index|[
+literal|8
+index|]
+init|=
+literal|"1234"
+decl_stmt|;
+name|strcat
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|)
+expr_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|strlen
+argument_list|(
+name|dst
+argument_list|)
+operator|>=
+literal|4
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_comment
+comment|// The analyzer_eval call below should evaluate to true. Most likely the same
+end_comment
+
+begin_comment
+comment|// issue as the test above.
+end_comment
+
+begin_function
+name|void
+name|strncpy_exactly_matching_buffer2
+parameter_list|(
+name|char
+modifier|*
+name|y
+parameter_list|)
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|y
+argument_list|)
+operator|>=
+literal|4
+condition|)
+return|return;
+name|char
+name|x
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|strncpy
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|// This time, we know that y fits in x anyway.
+name|clang_analyzer_eval
+argument_list|(
+name|strlen
+argument_list|(
+name|x
+argument_list|)
+operator|<=
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 

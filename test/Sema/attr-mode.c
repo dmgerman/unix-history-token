@@ -193,6 +193,18 @@ begin_comment
 comment|// expected-error{{type of machine mode does not match type of base type}}
 end_comment
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|unwind_word
+name|__attribute
+typedef|((
+name|mode
+typedef|(
+name|unwind_word
+typedef|)));
+end_typedef
+
 begin_decl_stmt
 name|int
 modifier|*

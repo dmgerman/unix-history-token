@@ -1880,5 +1880,204 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// rdar://12723368
+end_comment
+
+begin_comment
+comment|// In the following example, there are holes in T4 at the 3rd byte and the 4th
+end_comment
+
+begin_comment
+comment|// byte, however, T2 does not have those holes. T4 is chosen to be the
+end_comment
+
+begin_comment
+comment|// representing type for union T1, but we can't use load or store of T4 since
+end_comment
+
+begin_comment
+comment|// it will skip the 3rd byte and the 4th byte.
+end_comment
+
+begin_comment
+comment|// In general, Since we don't accurately represent the data fields of a union,
+end_comment
+
+begin_comment
+comment|// do not use load or store of the representing llvm type for the union.
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|_Complex
+name|int
+name|T2
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+specifier|_Complex
+name|char
+name|T5
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+specifier|_Complex
+name|int
+name|T7
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|T4
+block|{
+name|T5
+name|field0
+decl_stmt|;
+name|T7
+name|field1
+decl_stmt|;
+block|}
+name|T4
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+name|T1
+block|{
+name|T2
+name|field0
+decl_stmt|;
+name|T4
+name|field1
+decl_stmt|;
+block|}
+name|T1
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|T1
+name|T1_retval
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|T1
+name|test48
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK: @test48
+comment|// CHECK: memcpy
+comment|// CHECK: memcpy
+return|return
+name|T1_retval
+return|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|test49_helper
+parameter_list|(
+name|double
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test49
+parameter_list|(
+name|double
+name|d
+parameter_list|,
+name|double
+name|e
+parameter_list|)
+block|{
+name|test49_helper
+argument_list|(
+name|d
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK:    define void @test49(
+end_comment
+
+begin_comment
+comment|// CHECK:      [[T0:%.*]] = load double*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[T1:%.*]] = load double*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void (double, ...)* @test49_helper(double [[T0]], double [[T1]])
+end_comment
+
+begin_function_decl
+name|void
+name|test50_helper
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test50
+parameter_list|(
+name|double
+name|d
+parameter_list|,
+name|double
+name|e
+parameter_list|)
+block|{
+name|test50_helper
+argument_list|(
+name|d
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK:    define void @test50(
+end_comment
+
+begin_comment
+comment|// CHECK:      [[T0:%.*]] = load double*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[T1:%.*]] = load double*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void (double, double, ...)* bitcast (void (...)* @test50_helper to void (double, double, ...)*)(double [[T0]], double [[T1]])
+end_comment
+
 end_unit
 

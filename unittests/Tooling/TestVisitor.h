@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"clang/AST/ASTConsumer.h"
 end_include
 
 begin_include
@@ -78,25 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTConsumer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/RecursiveASTVisitor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/FrontendAction.h"
+file|"clang/Frontend/CompilerInstance.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/CompilerInstance.h"
+file|"clang/Frontend/FrontendAction.h"
 end_include
 
 begin_include
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"gtest/gtest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt

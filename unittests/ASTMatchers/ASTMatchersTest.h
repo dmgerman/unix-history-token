@@ -438,8 +438,6 @@ argument_list|,
 argument|bool ExpectResult
 argument_list|)
 block|{
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|BoundNodesCallback

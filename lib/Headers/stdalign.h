@@ -15,6 +15,12 @@ directive|define
 name|__STDALIGN_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -25,7 +31,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|alignof
+value|_Alignof
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|__alignas_is_defined
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|__alignof_is_defined
 value|1
 end_define
 

@@ -488,6 +488,18 @@ comment|// no-warning
 block|}
 end_function
 
+begin_comment
+comment|// When calling a non-variadic format function (vprintf, vscanf, NSLogv, ...),
+end_comment
+
+begin_comment
+comment|// warn only if the format string argument is a parameter that is not itself
+end_comment
+
+begin_comment
+comment|// declared as a format string with compatible format.
+end_comment
+
 begin_macro
 name|__attribute__
 argument_list|(

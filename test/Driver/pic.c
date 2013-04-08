@@ -144,6 +144,14 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK-NO-PIE-NOT: "-pie"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -target i386-unknown-unknown -### 2>&1 \
 end_comment
 
@@ -509,6 +517,22 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On Linux, disregard -pie if we have -shared.
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -target i386-unknown-linux -shared -pie -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIE
 end_comment
 
 begin_comment

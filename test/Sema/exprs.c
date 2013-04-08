@@ -492,7 +492,7 @@ operator|->
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{invalid application of '__alignof' to bit-field}}
+comment|// expected-error {{invalid application of 'alignof' to bit-field}}
 name|R
 operator|=
 name|__alignof

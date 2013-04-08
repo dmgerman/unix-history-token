@@ -62,25 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang-c/Index.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CXTranslationUnit.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/Comment.h"
+file|"clang-c/Index.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Comment.h"
 end_include
 
 begin_include
@@ -218,18 +218,14 @@ name|CXC
 parameter_list|)
 block|{
 return|return
-name|static_cast
-operator|<
-name|ASTUnit
-operator|*
-operator|>
-operator|(
+name|cxtu
+operator|::
+name|getASTUnit
+argument_list|(
 name|CXC
 operator|.
 name|TranslationUnit
-operator|->
-name|TUData
-operator|)
+argument_list|)
 operator|->
 name|getASTContext
 argument_list|()

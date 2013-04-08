@@ -502,7 +502,7 @@ operator|*
 operator|)
 name|arr
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue}}
 name|int
 modifier|*
 name|_dummy1
@@ -514,7 +514,7 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue}}
 block|}
 end_function
 
@@ -624,7 +624,7 @@ operator|&
 name|f8
 argument_list|()
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue of type 'void'}}
 specifier|extern
 name|void
 name|v
@@ -643,7 +643,7 @@ name|f8
 argument_list|()
 operator|)
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue of type 'void'}}
 name|void
 modifier|*
 name|dummy2
@@ -656,7 +656,7 @@ expr|,
 name|v
 operator|)
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue of type 'void'}}
 name|void
 modifier|*
 name|dummy3
@@ -666,7 +666,7 @@ operator|(
 block|{ ; }
 operator|)
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue of type 'void'}}
 block|}
 end_function
 

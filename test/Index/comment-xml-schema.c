@@ -124,6 +124,14 @@ comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-sche
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-para-kind-01.xml
+end_comment
+
+begin_comment
 comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/invalid-function-01.xml 2>&1 | FileCheck %s -check-prefix=INVALID
 end_comment
 
@@ -169,6 +177,18 @@ end_comment
 
 begin_comment
 comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/invalid-function-12.xml 2>&1 | FileCheck %s -check-prefix=INVALID
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/invalid-para-kind-01.xml 2>&1 | FileCheck %s -check-prefix=INVALID
+end_comment
+
+begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/invalid-para-kind-02.xml 2>&1 | FileCheck %s -check-prefix=INVALID
 end_comment
 
 begin_comment

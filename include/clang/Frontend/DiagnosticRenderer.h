@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -120,7 +126,8 @@ operator|>
 name|DiagOrStoredDiag
 expr_stmt|;
 comment|/// \brief Class to encapsulate the logic for formatting a diagnostic message.
-comment|///  Actual "printing" logic is implemented by subclasses.
+comment|///
+comment|/// Actual "printing" logic is implemented by subclasses.
 comment|///
 comment|/// This class provides an interface for building and emitting
 comment|/// diagnostic, including all of the macro backtraces, caret diagnostics, FixIt
@@ -156,7 +163,7 @@ name|LastLoc
 decl_stmt|;
 comment|/// \brief The location of the last include whose stack was printed if known.
 comment|///
-comment|/// Same restriction as \see LastLoc essentially, but tracking include stack
+comment|/// Same restriction as LastLoc essentially, but tracking include stack
 comment|/// root locations rather than diagnostic locations.
 name|SourceLocation
 name|LastIncludeLoc
@@ -314,6 +321,48 @@ literal|0
 function_decl|;
 name|virtual
 name|void
+name|emitImportLocation
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|PresumedLoc
+name|PLoc
+parameter_list|,
+name|StringRef
+name|ModuleName
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|emitBuildingModuleLocation
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|PresumedLoc
+name|PLoc
+parameter_list|,
+name|StringRef
+name|ModuleName
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
 name|beginDiagnostic
 argument_list|(
 name|DiagOrStoredDiag
@@ -346,6 +395,9 @@ argument_list|(
 name|SourceLocation
 name|Loc
 argument_list|,
+name|PresumedLoc
+name|PLoc
+argument_list|,
 name|DiagnosticsEngine
 operator|::
 name|Level
@@ -370,7 +422,43 @@ name|SM
 parameter_list|)
 function_decl|;
 name|void
-name|emitMacroExpansionsAndCarets
+name|emitImportStack
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+function_decl|;
+name|void
+name|emitImportStackRecursively
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|StringRef
+name|ModuleName
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+function_decl|;
+name|void
+name|emitModuleBuildStack
+parameter_list|(
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+function_decl|;
+name|void
+name|emitCaret
 argument_list|(
 name|SourceLocation
 name|Loc
@@ -380,11 +468,39 @@ operator|::
 name|Level
 name|Level
 argument_list|,
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|CharSourceRange
 operator|>
+name|Ranges
+argument_list|,
+name|ArrayRef
+operator|<
+name|FixItHint
+operator|>
+name|Hints
+argument_list|,
+specifier|const
+name|SourceManager
 operator|&
+name|SM
+argument_list|)
+decl_stmt|;
+name|void
+name|emitMacroExpansions
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|DiagnosticsEngine
+operator|::
+name|Level
+name|Level
+argument_list|,
+name|ArrayRef
+operator|<
+name|CharSourceRange
+operator|>
 name|Ranges
 argument_list|,
 name|ArrayRef
@@ -523,6 +639,32 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|PresumedLoc PLoc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitImportLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|,
+argument|StringRef ModuleName
+argument_list|,
+argument|const SourceManager&SM
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitBuildingModuleLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|PresumedLoc PLoc
+argument_list|,
+argument|StringRef ModuleName
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)

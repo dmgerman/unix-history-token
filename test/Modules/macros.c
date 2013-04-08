@@ -4,27 +4,27 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=macros_top %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_top %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=macros_left %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_left %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=macros_right %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_right %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=macros %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodule-cache-path %t %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -fmodules -x objective-c -fmodule-cache-path %t %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+comment|// RUN: %clang_cc1 -E -fmodules -x objective-c -fmodules-cache-path=%t %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
 end_comment
 
 begin_comment
@@ -40,6 +40,14 @@ comment|// FIXME: expected-note{{previous definition is here}}
 end_comment
 
 begin_comment
+comment|// FIXME: expected-note{{previous definition is here}} expected-note{{expanding this definition of 'LEFT_RIGHT_DIFFERENT'}}
+end_comment
+
+begin_comment
+comment|// expected-note{{other definition of 'TOP_RIGHT_REDEF'}} expected-note{{expanding this definition of 'LEFT_RIGHT_DIFFERENT2'}}
+end_comment
+
+begin_comment
 comment|// expected-note{{other definition of 'LEFT_RIGHT_DIFFERENT'}}
 end_comment
 
@@ -47,21 +55,9 @@ begin_comment
 comment|// expected-note{{expanding this definition of 'TOP_RIGHT_REDEF'}}
 end_comment
 
-begin_comment
-comment|// FIXME: expected-note{{previous definition is here}} \
-end_comment
-
-begin_comment
-comment|// expected-note{{expanding this definition of 'LEFT_RIGHT_DIFFERENT'}}
-end_comment
-
-begin_comment
-comment|// expected-note{{other definition of 'TOP_RIGHT_REDEF'}}
-end_comment
-
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|macros
 decl_stmt|;
 end_decl_stmt
@@ -267,7 +263,7 @@ end_comment
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|macros_left
 decl_stmt|;
 end_decl_stmt
@@ -323,16 +319,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|TOP_LEFT_UNDEF
-end_ifdef
+end_ifndef
 
 begin_error
 error|#
 directive|error
-error|TOP_LEFT_UNDEF should not be visible
+error|TOP_LEFT_UNDEF should still be defined
 end_error
 
 begin_endif
@@ -366,7 +362,11 @@ value|double
 end_define
 
 begin_comment
-comment|// FIXME: expected-warning{{'LEFT_RIGHT_DIFFERENT2' macro redefined}}
+comment|// FIXME: expected-warning{{'LEFT_RIGHT_DIFFERENT2' macro redefined}} \
+end_comment
+
+begin_comment
+comment|// expected-note{{other definition of 'LEFT_RIGHT_DIFFERENT2'}}
 end_comment
 
 begin_comment
@@ -375,7 +375,7 @@ end_comment
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|macros_right
 decl_stmt|;
 end_decl_stmt
@@ -453,34 +453,35 @@ name|d
 decl_stmt|;
 name|TOP_RIGHT_REDEF
 modifier|*
-name|ip
+name|fp
 init|=
 operator|&
-name|i
+name|f
 decl_stmt|;
 comment|// expected-warning{{ambiguous expansion of macro 'TOP_RIGHT_REDEF'}}
 name|LEFT_RIGHT_IDENTICAL
 modifier|*
-name|ip2
+name|ip
 init|=
 operator|&
 name|i
 decl_stmt|;
 name|LEFT_RIGHT_DIFFERENT
 modifier|*
-name|fp
+name|ip2
 init|=
 operator|&
-name|f
+name|i
 decl_stmt|;
 comment|// expected-warning{{ambiguous expansion of macro 'LEFT_RIGHT_DIFFERENT'}}
 name|LEFT_RIGHT_DIFFERENT2
 modifier|*
-name|dp
+name|ip3
 init|=
 operator|&
-name|d
+name|i
 decl_stmt|;
+comment|// expected-warning{{ambiguous expansion of macro 'LEFT_RIGHT_DIFFERENT2}}
 name|int
 name|LEFT_RIGHT_DIFFERENT3
 decl_stmt|;
@@ -514,6 +515,16 @@ operator|&
 name|d
 decl_stmt|;
 comment|// okay
+name|int
+name|x
+init|=
+name|FN_ADD
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
 block|}
 end_function
 
@@ -536,23 +547,23 @@ end_endif
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|macros_right
 operator|.
 name|undef
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|TOP_RIGHT_UNDEF
-end_ifdef
+end_ifndef
 
 begin_error
 error|#
 directive|error
-error|TOP_RIGHT_UNDEF should not be defined
+error|TOP_RIGHT_UNDEF should still be defined
 end_error
 
 begin_endif

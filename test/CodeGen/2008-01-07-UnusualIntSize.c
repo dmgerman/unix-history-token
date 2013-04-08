@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
+comment|// FIXME: 32-bit target?
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -40,9 +44,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: and i64 %[[TMP1:[0-9]+]], 8589934591
+comment|// CHECK: and i64 %[[TMP1:[^,]+]], 8589934591
 comment|// CHECK-NOT: and i64 [[TMP1]], 8589934591
-comment|// CHECK: and i64 %{{[0-9]}}, 8589934591
+comment|// CHECK: and i64 %{{[^,]+}}, 8589934591
 return|return
 name|a
 operator|.

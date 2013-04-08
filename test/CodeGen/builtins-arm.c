@@ -47,5 +47,33 @@ begin_comment
 comment|// CHECK: call {{.*}} @__clear_cache
 end_comment
 
+begin_function
+name|void
+name|test_eh_return_data_regno
+parameter_list|()
+block|{
+specifier|volatile
+name|int
+name|res
+decl_stmt|;
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store volatile i32 0
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store volatile i32 1
+block|}
+end_function
+
 end_unit
 

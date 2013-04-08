@@ -253,5 +253,47 @@ decl_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|c5
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(deprecated
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-note{{'c5' declared here}}
+end_comment
+
+begin_function
+name|void
+name|t5
+parameter_list|()
+block|{
+name|int
+name|i
+name|__attribute__
+argument_list|(
+operator|(
+name|cleanup
+argument_list|(
+name|c5
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+comment|// expected-warning {{'c5' is deprecated}}
+block|}
+end_function
+
 end_unit
 

@@ -19,7 +19,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @g() nounwind
+comment|// CHECK: define void @g() [[NUW:#[0-9]+]]
 comment|// CHECK-NOT: call void @f() nounwind
 name|f
 argument_list|()
@@ -28,7 +28,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-NOT: declare void @f() nounwind
+comment|// CHECK-NOT: declare void @f() [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
 end_comment
 
 end_unit

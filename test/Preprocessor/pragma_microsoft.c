@@ -87,7 +87,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|// expected-error {{pragma comment requires}}
+comment|// expected-error {{expected string literal in pragma comment}}
 end_comment
 
 begin_define
@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|MACRO_WITH__PRAGMA
-value|{ \   __pragma(warning(push)); \   __pragma(warning(disable: 10000)); \   2+2; \   __pragma(warning(pop)); \ }
+value|{ \   __pragma(warning(push)); \   __pragma(warning(disable: 10000)); \   1 + (2> 3) ? 4 : 5; \   __pragma(warning(pop)); \ }
 end_define
 
 begin_function
@@ -165,7 +165,8 @@ argument_list|()
 comment|// If we ever actually *support* __pragma(warning(disable: x)),
 comment|// this warning should go away.
 name|MACRO_WITH__PRAGMA
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{lower precedence}} \
+comment|// expected-note 2 {{place parentheses}}
 block|}
 end_function
 

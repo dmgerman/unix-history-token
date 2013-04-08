@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -std=c++11 -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
+comment|// RUN: %clang_cc1 -x c++ -std=c++11 -E -dM< /dev/null | FileCheck -check-prefix CXX11 %s
 end_comment
 
 begin_comment
@@ -52,27 +52,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __GNUG__
+comment|// CXX11:#define __GNUG__
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __GXX_EXPERIMENTAL_CXX0X__ 1
+comment|// CXX11:#define __GXX_EXPERIMENTAL_CXX0X__ 1
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __GXX_RTTI 1
+comment|// CXX11:#define __GXX_RTTI 1
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __GXX_WEAK__ 1
+comment|// CXX11:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __cplusplus 201103L
+comment|// CXX11:#define __cplusplus 201103L
 end_comment
 
 begin_comment
-comment|// CXX0X:#define __private_extern__ extern
+comment|// CXX11:#define __private_extern__ extern
 end_comment
 
 begin_comment
@@ -1000,6 +1000,10 @@ comment|// ARM:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// ARM:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// ARM:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -1405,6 +1409,10 @@ end_comment
 
 begin_comment
 comment|// ARMEABISOFTFP:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
@@ -1820,6 +1828,10 @@ comment|// ARMEABIHARDFP:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// ARMEABIHARDFP:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// ARMEABIHARDFP:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -2212,6 +2224,10 @@ comment|// I386:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// I386:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// I386:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -2597,6 +2613,10 @@ end_comment
 
 begin_comment
 comment|// I386-LINUX:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
@@ -3029,6 +3049,10 @@ end_comment
 
 begin_comment
 comment|// MIPS32BE:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
@@ -3496,6 +3520,10 @@ comment|// MIPS32EL:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -3945,6 +3973,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64BE:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __SIZE_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -4405,6 +4437,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64EL:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __SIZE_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -4992,6 +5028,10 @@ comment|// MSP430:#define __SIZEOF_WINT_T__ 2
 end_comment
 
 begin_comment
+comment|// MSP430:#define __SIZE_MAX__ 65535U
+end_comment
+
+begin_comment
 comment|// MSP430:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -5380,6 +5420,10 @@ comment|// NVPTX32:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// NVPTX32:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// NVPTX32:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -5761,6 +5805,10 @@ end_comment
 
 begin_comment
 comment|// NVPTX64:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIZE_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -6165,6 +6213,10 @@ end_comment
 
 begin_comment
 comment|// PPC603E:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
@@ -6600,6 +6652,10 @@ comment|// PPC64:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// PPC64:#define __SIZE_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// PPC64:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -6641,6 +6697,646 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __ppc__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu a2q -fno-signed-char< /dev/null | FileCheck -check-prefix PPCA2Q %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCA2Q:#define _ARCH_A2 1
+end_comment
+
+begin_comment
+comment|// PPCA2Q:#define _ARCH_A2Q 1
+end_comment
+
+begin_comment
+comment|// PPCA2Q:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCA2Q:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCA2Q:#define _ARCH_QP 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-bgq-linux -fno-signed-char< /dev/null | FileCheck -check-prefix PPCBGQ %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCBGQ:#define __THW_BLUEGENE__ 1
+end_comment
+
+begin_comment
+comment|// PPCBGQ:#define __TOS_BGQ__ 1
+end_comment
+
+begin_comment
+comment|// PPCBGQ:#define __bg__ 1
+end_comment
+
+begin_comment
+comment|// PPCBGQ:#define __bgq__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu 630 -fno-signed-char< /dev/null | FileCheck -check-prefix PPC630 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC630:#define _ARCH_630 1
+end_comment
+
+begin_comment
+comment|// PPC630:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPC630:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPC630:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr3 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR3 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR3:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR3:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR3:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power3 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER3 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER3:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER3:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER3:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr4 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR4 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR4:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR4:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR4:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR4:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR4:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power4 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER4 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER4:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER4:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER4:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER4:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER4:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr5 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR5 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR5:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power5 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER5 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER5:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr5x -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR5X %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPWR5X:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power5x -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER5X %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER5X:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr6 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR6 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power6 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER6 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr6x -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR6X %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPCPWR6X:#define _ARCH_PWR6X 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power6x -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER6X %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER6X:#define _ARCH_PWR6X 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr7 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR7 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PWR6X 1
+end_comment
+
+begin_comment
+comment|// PPCPWR7:#define _ARCH_PWR7 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power7 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER7 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PWR6X 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER7:#define _ARCH_PWR7 1
 end_comment
 
 begin_comment
@@ -7005,6 +7701,10 @@ end_comment
 
 begin_comment
 comment|// PPC64-LINUX:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __SIZE_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -7424,6 +8124,10 @@ comment|// PPC:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// PPC:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// PPC:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -7824,6 +8528,10 @@ comment|// PPC-LINUX:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -8204,6 +8912,10 @@ comment|// SPARC:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
+comment|// SPARC:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
 comment|// SPARC:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -8577,6 +9289,10 @@ end_comment
 
 begin_comment
 comment|// TCE:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
@@ -8977,6 +9693,10 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZE_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -9389,6 +10109,10 @@ end_comment
 
 begin_comment
 comment|// X86_64-LINUX:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __SIZE_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment

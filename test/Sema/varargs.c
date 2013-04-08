@@ -274,7 +274,7 @@ argument_list|,
 name|int
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{address expression must be an lvalue or a function designator}}
+comment|// expected-error {{cannot take the address of an rvalue}}
 name|__builtin_va_end
 argument_list|(
 name|ap

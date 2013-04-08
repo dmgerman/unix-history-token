@@ -72,11 +72,11 @@ comment|// RUN:   -no-integrated-as -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=MIPS32-EL-AS %s
+comment|// RUN:   | FileCheck -check-prefix=MIPS32-DEF-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
+comment|// MIPS32-DEF-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
 end_comment
 
 begin_comment
@@ -112,11 +112,11 @@ comment|// RUN:   -no-integrated-as -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=MIPS64-EL-AS %s
+comment|// RUN:   | FileCheck -check-prefix=MIPS64-DEF-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
+comment|// MIPS64-DEF-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
 end_comment
 
 begin_comment
@@ -157,6 +157,46 @@ end_comment
 
 begin_comment
 comment|// MIPS-N32: as{{(.exe)?}}" "-march" "mips64" "-mabi" "n32" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mipsel-linux-gnu -mabi=32 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS32-EL-AS %s
+end_comment
+
+begin_comment
+comment|// MIPS32-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-linux-gnu -mabi=64 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS64-EL-AS %s
+end_comment
+
+begin_comment
+comment|// MIPS64-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
 end_comment
 
 begin_comment

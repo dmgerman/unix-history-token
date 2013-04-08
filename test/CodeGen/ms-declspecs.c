@@ -37,7 +37,7 @@ comment|// CHECK: @u = {{.*}}zeroinitializer, align 16
 end_comment
 
 begin_comment
-comment|// CHECK: define void @t3() nounwind noinline naked {
+comment|// CHECK: define void @t3() [[NAKED:#[0-9]+]] {
 end_comment
 
 begin_macro
@@ -55,7 +55,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t22() nounwind
+comment|// CHECK: define void @t22() [[NUW:#[0-9]+]]
 end_comment
 
 begin_function_decl
@@ -77,7 +77,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @t2() nounwind noinline {
+comment|// CHECK: define void @t2() [[NI:#[0-9]+]] {
 end_comment
 
 begin_macro
@@ -95,11 +95,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: call void @f20_t()
-end_comment
-
-begin_comment
-comment|// CHECK: noreturn
+comment|// CHECK: call void @f20_t() [[NR:#[0-9]+]]
 end_comment
 
 begin_macro
@@ -130,6 +126,22 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: attributes [[NAKED]] = { naked noinline nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NI]] = { noinline nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NR]] = { noreturn }
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-checker=core,unix.API,osx.API %s -analyzer-store=region -analyzer-output=plist -analyzer-ipa=inlining -analyzer-eagerly-assume -analyzer-config faux-bodies=true -fblocks -verify -o %t.plist
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-checker=core,unix.API,osx.API %s -analyzer-store=region -analyzer-output=plist -analyzer-eagerly-assume -analyzer-config faux-bodies=true -fblocks -verify -o %t.plist
 end_comment
 
 begin_comment
@@ -2202,7 +2202,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_open</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>6</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>6</string>
 end_comment
 
 begin_comment
@@ -2778,7 +2778,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Call to&apos;dispatch_once&a
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Mac OS X API</string>
+comment|// CHECK-NEXT:<key>category</key><string>API Misuse (Apple)</string>
 end_comment
 
 begin_comment
@@ -2794,7 +2794,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_dispatch_once</string
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
 end_comment
 
 begin_comment
@@ -3114,7 +3114,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_pthread_once</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
 end_comment
 
 begin_comment
@@ -3434,7 +3434,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>pr2899</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3754,7 +3754,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_calloc</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -4074,7 +4074,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_calloc2</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -4394,7 +4394,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_realloc</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -4714,7 +4714,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_reallocf</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5034,7 +5034,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_alloca</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5354,7 +5354,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_builtin_alloca</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5674,7 +5674,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_valloc</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5978,7 +5978,7 @@ comment|// CHECK-NEXT:<key>description</key><string>Call to&apos;dispatch_once&a
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>category</key><string>Mac OS X API</string>
+comment|// CHECK-NEXT:<key>category</key><string>API Misuse (Apple)</string>
 end_comment
 
 begin_comment
@@ -5994,7 +5994,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_dispatch_once_in_macr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>2</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
 end_comment
 
 begin_comment
@@ -6138,7 +6138,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -6146,7 +6146,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -6242,7 +6242,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>190</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
 end_comment
 
 begin_comment
@@ -6262,7 +6262,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>190</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>15</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
 end_comment
 
 begin_comment
@@ -6283,6 +6283,122 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>190</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>190</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>194</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>&apos;p&apos; captured by block as a null pointer value</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>&apos;p&apos; captured by block as a null pointer value</string>
 end_comment
 
 begin_comment
@@ -6478,43 +6594,11 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>190</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>40</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>ranges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>190</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
 end_comment
 
 begin_comment
@@ -6523,34 +6607,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>194</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
@@ -7566,7 +7622,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -7574,7 +7630,259 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>200</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>200</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>201</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>201</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>201</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>201</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>203</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>&apos;p&apos; captured by block as a null pointer value</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>&apos;p&apos; captured by block as a null pointer value</string>
 end_comment
 
 begin_comment
@@ -8078,43 +8386,11 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>177</integer>
+comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>ranges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>177</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
 end_comment
 
 begin_comment
@@ -8123,34 +8399,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>177</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>33</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment

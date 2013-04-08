@@ -99,11 +99,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: --END PATH--
+comment|// CHECK: --END FUNCTION--
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: --END PATH--
+comment|// CHECK-NOT: --END FUNCTION--
 end_comment
 
 end_unit

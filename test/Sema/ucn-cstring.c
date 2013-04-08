@@ -71,7 +71,7 @@ argument_list|,
 literal|"\U"
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{\u used with no following hex digits}}
+comment|// expected-error{{\U used with no following hex digits}}
 name|printf
 argument_list|(
 literal|"%s\n"

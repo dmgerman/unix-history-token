@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
 end_include
 
 begin_include
@@ -100,8 +100,6 @@ decl_stmt|;
 name|class
 name|ConditionTruthVal
 block|{
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -270,8 +268,13 @@ operator|!
 name|StTrue
 condition|)
 block|{
-comment|// FIXME: This is fairly expensive and should be disabled even in
-comment|// Release+Asserts builds.
+ifndef|#
+directive|ifndef
+name|__OPTIMIZE__
+comment|// This check is expensive and should be disabled even in Release+Asserts
+comment|// builds.
+comment|// FIXME: __OPTIMIZE__ is a GNU extension that Clang implements but MSVC
+comment|// does not. Is there a good equivalent there?
 name|assert
 argument_list|(
 name|assume
@@ -286,6 +289,8 @@ operator|&&
 literal|"System is over constrained."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ProgramStatePair
 argument_list|(
@@ -421,8 +426,6 @@ name|SymbolRef
 name|Sym
 parameter_list|)
 block|{
-name|llvm
-operator|::
 name|SaveAndRestore
 operator|<
 name|bool

@@ -46,25 +46,6 @@ name|x
 expr_stmt|;
 comment|// CHECK: sdiv i32
 comment|// CHECK: cmpxchg i16*
-comment|// These should be emitting atomicrmw instructions, but they aren't yet
-name|i
-operator|+=
-literal|2
-expr_stmt|;
-comment|// CHECK: cmpxchg
-name|i
-operator|-=
-literal|2
-expr_stmt|;
-comment|// CHECK: cmpxchg
-name|i
-operator|++
-expr_stmt|;
-comment|// CHECK: cmpxchg
-name|i
-operator|--
-expr_stmt|;
-comment|// CHECK: cmpxchg
 block|}
 end_function
 

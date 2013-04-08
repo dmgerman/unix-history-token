@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -verify -fms-extensions
+comment|// REQUIRES: disabled
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i386-apple-darwin10 -verify -fasm-blocks
 end_comment
 
 begin_define
@@ -28,10 +32,6 @@ name|M
 block|}
 end_function
 
-begin_comment
-comment|// expected-warning {{MS-style inline assembly is not supported}}
-end_comment
-
 begin_function
 name|void
 name|t2
@@ -42,10 +42,6 @@ block|{
 asm|__asm int 0x2c
 block|}
 end_function
-
-begin_comment
-comment|// expected-warning {{MS-style inline assembly is not supported}}
-end_comment
 
 begin_function
 name|void
@@ -58,10 +54,6 @@ asm|__asm M2 0x2c
 block|}
 end_function
 
-begin_comment
-comment|// expected-warning {{MS-style inline assembly is not supported}}
-end_comment
-
 begin_function
 name|void
 name|t4
@@ -73,18 +65,12 @@ asm|__asm mov eax, fs:[0x10]
 block|}
 end_function
 
-begin_comment
-comment|// expected-warning {{MS-style inline assembly is not supported}}
-end_comment
-
 begin_function
 name|void
 name|t5
 parameter_list|()
 block|{
 asm|__asm {
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
 asm|int 0x2c ;
 asm|}
 name|asm
@@ -102,10 +88,6 @@ end_block
 begin_asm
 asm|__asm {}
 end_asm
-
-begin_comment
-comment|// expected-warning {{MS-style inline assembly is not supported}}
-end_comment
 
 begin_macro
 unit|} int
@@ -125,12 +107,8 @@ end_macro
 
 begin_for
 for|for single-line asm
-comment|// expected-warning {{MS-style inline assembly is not supported}}
 asm|__asm {}
-comment|// expected-warning {{MS-style inline assembly is not supported}}
 asm|__asm int 4
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
 for|return 10
 empty_stmt|;
 end_for
@@ -144,8 +122,6 @@ end_macro
 begin_block
 block|{
 asm|__asm {
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
 asm|push ebx
 asm|mov ebx, 0x07
 asm|pop ebx
@@ -161,8 +137,6 @@ block|{
 asm|__asm nop
 asm|__asm nop
 asm|__asm nop
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
 block|}
 end_function
 
@@ -174,8 +148,6 @@ block|{
 asm|__asm nop
 asm|__asm nop ;
 asm|__asm nop
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
 block|}
 end_function
 
@@ -192,14 +164,12 @@ end_comment
 
 begin_asm
 asm|__asm
-comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}}
 end_asm
 
 begin_asm
 asm|__asm {
 comment|//
-asm|expected-warning {{MS-style inline assembly is not supported}} expected-error 3 {{expected}} expected-note {{to match this}}
+asm|expected-error 3 {{expected}} expected-note {{to match this}}
 end_asm
 
 end_unit

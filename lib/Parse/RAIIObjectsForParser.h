@@ -1520,7 +1520,12 @@ condition|(
 name|getDepth
 argument_list|()
 operator|<
-name|MaxDepth
+name|P
+operator|.
+name|getLangOpts
+argument_list|()
+operator|.
+name|BracketDepth
 condition|)
 block|{
 name|LOpen

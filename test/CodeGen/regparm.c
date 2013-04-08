@@ -133,7 +133,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: call void @reduced(i8 signext inreg 0, {{.*}} %struct.foo* inreg null
+comment|// CHECK: call void @reduced(i8 inreg signext 0, {{.*}} %struct.foo* inreg null
 name|reduced
 argument_list|(
 literal|0

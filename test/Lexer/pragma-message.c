@@ -83,5 +83,18 @@ begin_comment
 comment|// expected-warning {{:O gcc accepts this! 14}}
 end_comment
 
+begin_pragma
+pragma|#
+directive|pragma
+name|message
+name|(
+name|invalid
+name|)
+end_pragma
+
+begin_comment
+comment|// expected-error {{expected string literal in pragma message}}
+end_comment
+
 end_unit
 

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -E 2>&1 | grep 'DO_PRAGMA (STR'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 %s -E 2>&1 | grep '7:3'
+comment|// RUN: %clang_cc1 -E -verify %s
 end_comment
 
 begin_define
@@ -22,7 +18,7 @@ value|"GCC dependency \"parse.y\"")
 end_define
 
 begin_comment
-comment|// Test that this line is printed by caret diagnostics.
+comment|// expected-error@+1 {{'parse.y' file not found}}
 end_comment
 
 begin_macro

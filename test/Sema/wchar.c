@@ -58,6 +58,11 @@ name|defined
 argument_list|(
 name|__arm
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
 end_elif
 
 begin_define

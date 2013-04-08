@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -192,6 +198,25 @@ operator|&
 name|Namespaces
 argument_list|)
 block|;
+comment|/// \brief Load the set of used but not defined functions or variables with
+comment|/// internal linkage, or used but not defined internal functions.
+name|virtual
+name|void
+name|ReadUndefinedButUsed
+argument_list|(
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|NamedDecl
+operator|*
+argument_list|,
+name|SourceLocation
+operator|>
+operator|&
+name|Undefined
+argument_list|)
+block|;
 comment|/// \brief Do last resort, unqualified lookup on a LookupResult that
 comment|/// Sema cannot find.
 comment|///
@@ -291,7 +316,7 @@ comment|/// may be invoked multiple times; the external source should take care 
 comment|/// to introduce the same declarations repeatedly.
 name|virtual
 name|void
-name|ReadLocallyScopedExternalDecls
+name|ReadLocallyScopedExternCDecls
 argument_list|(
 argument|SmallVectorImpl<NamedDecl *>&Decls
 argument_list|)

@@ -245,8 +245,8 @@ case|case
 literal|8
 case|:
 name|i
-comment|// expected-warning {{will never be executed}}
 operator|+=
+comment|// expected-warning {{will never be executed}}
 name|halt
 argument_list|()
 expr_stmt|;
@@ -290,9 +290,9 @@ name|a
 index|[
 name|halt
 argument_list|()
-comment|// expected-warning {{will never be executed}}
 index|]
 expr_stmt|;
+comment|// expected-warning {{will never be executed}}
 block|}
 block|}
 block|}

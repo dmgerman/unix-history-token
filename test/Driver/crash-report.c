@@ -39,6 +39,10 @@ begin_comment
 comment|// REQUIRES: crash-recovery
 end_comment
 
+begin_comment
+comment|// RUN: env FORCE_CLANG_DIAGNOSTICS_CRASH=1 %clang -fsyntax-only -x c /dev/null 2>&1 | FileCheck %s
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma

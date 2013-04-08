@@ -66,13 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Lex/DirectoryLookup.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/ModuleLoader.h"
+file|"clang/Basic/DiagnosticIDs.h"
 end_include
 
 begin_include
@@ -84,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/DiagnosticIDs.h"
+file|"clang/Lex/DirectoryLookup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/ModuleLoader.h"
 end_include
 
 begin_include
@@ -113,7 +113,7 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
-name|MacroInfo
+name|MacroDirective
 decl_stmt|;
 comment|/// \brief This interface provides a way to observe the actions of the
 comment|/// preprocessor as it does its thing.
@@ -446,9 +446,9 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|,
 name|SourceRange
 name|Range
@@ -465,14 +465,14 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever a macro \#undef is seen.
 comment|///
-comment|/// MI is released immediately following this callback.
+comment|/// MD is released immediately following this callback.
 name|virtual
 name|void
 name|MacroUndefined
@@ -483,12 +483,13 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever the 'defined' operator is seen.
+comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Defined
@@ -497,6 +498,11 @@ specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called when a source range is skipped.
@@ -548,6 +554,7 @@ block|{   }
 comment|/// \brief Hook called whenever an \#ifdef is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param MacroNameTok Information on the token being tested.
+comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Ifdef
@@ -559,11 +566,17 @@ specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever an \#ifndef is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param MacroNameTok Information on the token being tested.
+comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Ifndef
@@ -575,6 +588,11 @@ specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever an \#else is seen.
@@ -1063,7 +1081,7 @@ name|MacroExpands
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroInfo* MI
+argument|const MacroDirective *MD
 argument_list|,
 argument|SourceRange Range
 argument_list|)
@@ -1074,7 +1092,7 @@ name|MacroExpands
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|,
 name|Range
 argument_list|)
@@ -1085,7 +1103,7 @@ name|MacroExpands
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|,
 name|Range
 argument_list|)
@@ -1096,7 +1114,7 @@ name|MacroDefined
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroInfo *MI
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1105,7 +1123,7 @@ name|MacroDefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1114,7 +1132,7 @@ name|MacroDefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;   }
 name|virtual
@@ -1123,7 +1141,7 @@ name|MacroUndefined
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroInfo *MI
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1132,7 +1150,7 @@ name|MacroUndefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1141,7 +1159,7 @@ name|MacroUndefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;   }
 name|virtual
@@ -1149,6 +1167,8 @@ name|void
 name|Defined
 argument_list|(
 argument|const Token&MacroNameTok
+argument_list|,
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1156,6 +1176,8 @@ operator|->
 name|Defined
 argument_list|(
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1163,6 +1185,8 @@ operator|->
 name|Defined
 argument_list|(
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;   }
 name|virtual
@@ -1256,6 +1280,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
+argument_list|,
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1265,6 +1291,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1274,6 +1302,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#ifndef is seen.
@@ -1284,6 +1314,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
+argument_list|,
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1293,6 +1325,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1302,6 +1336,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#else is seen.

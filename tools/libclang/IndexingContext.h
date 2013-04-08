@@ -34,25 +34,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"Index_Internal.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CXCursor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclObjC.h"
+file|"Index_Internal.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/DeclGroup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclObjC.h"
 end_include
 
 begin_include
@@ -298,6 +298,10 @@ operator|=
 name|lexicalContainer
 operator|=
 literal|0
+block|;
+name|flags
+operator|=
+literal|0
 block|;   }
 name|DeclInfo
 argument_list|(
@@ -346,6 +350,10 @@ operator|=
 name|semanticContainer
 operator|=
 name|lexicalContainer
+operator|=
+literal|0
+block|;
+name|flags
 operator|=
 literal|0
 block|;   }
@@ -1987,14 +1995,7 @@ name|cxcursor
 operator|::
 name|MakeCXCursor
 argument_list|(
-name|const_cast
-operator|<
-name|Decl
-operator|*
-operator|>
-operator|(
 name|D
-operator|)
 argument_list|,
 name|CXTU
 argument_list|)

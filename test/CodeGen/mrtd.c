@@ -14,7 +14,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define x86_stdcallcc void @foo(i32 %arg) nounwind
+comment|// CHECK: define x86_stdcallcc void @foo(i32 %arg) [[NUW:#[0-9]+]]
 end_comment
 
 begin_function
@@ -46,6 +46,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: declare x86_stdcallcc void @baz(i32)
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
 end_comment
 
 end_unit

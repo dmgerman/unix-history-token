@@ -230,9 +230,12 @@ argument_list|,
 literal|"w"
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Opened file is never closed; potential resource leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning {{Opened file is never closed; potential resource leak}}
+end_comment
 
 begin_function
 name|void
@@ -387,6 +390,76 @@ return|return;
 comment|// expected-warning {{Opened file is never closed; potential resource leak}}
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|passConstPointer
+parameter_list|(
+specifier|const
+name|FILE
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|testPassConstPointer
+parameter_list|()
+block|{
+name|FILE
+modifier|*
+name|F
+init|=
+name|fopen
+argument_list|(
+literal|"myfile.txt"
+argument_list|,
+literal|"w"
+argument_list|)
+decl_stmt|;
+name|passConstPointer
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+return|return;
+comment|// expected-warning {{Opened file is never closed; potential resource leak}}
+block|}
+end_function
+
+begin_function
+name|void
+name|testPassToSystemHeaderFunctionIndirectly
+parameter_list|()
+block|{
+name|FileStruct
+name|fs
+decl_stmt|;
+name|fs
+operator|.
+name|p
+operator|=
+name|fopen
+argument_list|(
+literal|"myfile.txt"
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+name|fakeSystemHeaderCall
+argument_list|(
+operator|&
+name|fs
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-warning {{Opened file is never closed; potential resource leak}}
+end_comment
 
 end_unit
 

@@ -214,5 +214,81 @@ comment|// CHECK-NEXT: ret void
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define i48 @g(
+end_comment
+
+begin_struct
+struct|struct
+name|G
+block|{
+name|short
+name|x
+decl_stmt|,
+name|y
+decl_stmt|,
+name|z
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|struct
+name|G
+name|g
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|,
+name|int
+name|z
+parameter_list|)
+block|{
+comment|// CHECK:      [[RESULT:%.*]] = alloca [[G:%.*]], align 2
+comment|// CHECK-NEXT: [[X:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[Y:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[Z:%.*]] = alloca i32, align 4
+comment|// CHECK-NEXT: [[COERCE_TEMP:%.*]] = alloca i48
+comment|// CHECK-NEXT: store i32
+comment|// CHECK-NEXT: store i32
+comment|// CHECK-NEXT: store i32
+comment|// Evaluate the compound literal directly in the result value slot.
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]]* [[RESULT]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[X]], align 4
+comment|// CHECK-NEXT: [[T2:%.*]] = trunc i32 [[T1]] to i16
+comment|// CHECK-NEXT: store i16 [[T2]], i16* [[T0]], align 2
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]]* [[RESULT]], i32 0, i32 1
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[Y]], align 4
+comment|// CHECK-NEXT: [[T2:%.*]] = trunc i32 [[T1]] to i16
+comment|// CHECK-NEXT: store i16 [[T2]], i16* [[T0]], align 2
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]]* [[RESULT]], i32 0, i32 2
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[Z]], align 4
+comment|// CHECK-NEXT: [[T2:%.*]] = trunc i32 [[T1]] to i16
+comment|// CHECK-NEXT: store i16 [[T2]], i16* [[T0]], align 2
+return|return
+operator|(
+expr|struct
+name|G
+operator|)
+block|{
+name|x
+block|,
+name|y
+block|,
+name|z
+block|}
+return|;
+comment|// CHECK-NEXT: [[T0:%.*]] = bitcast i48* [[COERCE_TEMP]] to i8*
+comment|// CHECK-NEXT: [[T1:%.*]] = bitcast [[G]]* [[RESULT]] to i8*
+comment|// CHECK-NEXT: call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[T0]], i8* [[T1]], i64 6
+comment|// CHECK-NEXT: [[T0:%.*]] = load i48* [[COERCE_TEMP]]
+comment|// CHECK-NEXT: ret i48 [[T0]]
+block|}
+end_function
+
 end_unit
 

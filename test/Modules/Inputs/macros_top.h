@@ -17,6 +17,17 @@ begin_define
 define|#
 directive|define
 name|TOP_RIGHT_REDEF
+value|float
+end_define
+
+begin_comment
+comment|// The last definition will be exported from the sub-module.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOP_RIGHT_REDEF
 value|int
 end_define
 

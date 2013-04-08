@@ -143,6 +143,9 @@ name|LOpts
 argument_list|,
 name|bool
 name|SilenceRewriteMacroWarning
+argument_list|,
+name|bool
+name|LineInfo
 argument_list|)
 decl_stmt|;
 comment|/// CreateHTMLPrinter - Create an AST consumer which rewrites source code to

@@ -20,7 +20,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f1(i32 signext %x) nounwind
+comment|// CHECK: define void @f1(i32 signext %x) [[NUW:#[0-9]+]]
 end_comment
 
 begin_function
@@ -37,7 +37,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f2(i32 zeroext %x) nounwind
+comment|// CHECK: define void @f2(i32 zeroext %x) [[NUW]]
 end_comment
 
 begin_function
@@ -54,7 +54,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define signext i32 @f3() nounwind
+comment|// CHECK: define signext i32 @f3() [[NUW]]
 end_comment
 
 begin_function
@@ -72,7 +72,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define zeroext i32 @f4() nounwind
+comment|// CHECK: define zeroext i32 @f4() [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
 end_comment
 
 end_unit

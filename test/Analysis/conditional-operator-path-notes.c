@@ -32,7 +32,7 @@ name|p
 decl_stmt|;
 comment|// expected-note@-1 {{Assuming 'p' is null}}
 comment|// expected-note@-2 {{'?' condition is false}}
-comment|// expected-note@-3 {{Variable 'x' initialized to a null pointer value}}
+comment|// expected-note@-3 {{'x' initialized to a null pointer value}}
 operator|*
 name|x
 operator|=
@@ -161,7 +161,7 @@ else|:
 name|p
 decl_stmt|;
 comment|// expected-note@-1 {{'?' condition is false}}
-comment|// expected-note@-2 {{Variable 'x' initialized to a null pointer value}}
+comment|// expected-note@-2 {{'x' initialized to a null pointer value}}
 operator|*
 name|x
 operator|=
@@ -852,7 +852,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;x&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;x&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -860,7 +860,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;x&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;x&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -1144,7 +1144,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testCondOp</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
 end_comment
 
 begin_comment
@@ -1716,7 +1716,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testCondProblem</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
 end_comment
 
 begin_comment
@@ -2288,7 +2288,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testLHSProblem</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -2860,7 +2860,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testRHSProblem</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3412,7 +3412,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;x&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;x&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -3420,7 +3420,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;x&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;x&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -3704,7 +3704,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testBinaryCondOp</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>4</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>4</string>
 end_comment
 
 begin_comment
@@ -4276,7 +4276,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testBinaryLHSProblem</stri
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
 end_comment
 
 begin_comment

@@ -309,7 +309,28 @@ comment|// expected-error{{a parameter list without types is only allowed in a f
 end_comment
 
 begin_comment
-comment|// expected-warning{{alloc_size attribute only applies to functions and methods}}
+comment|// expected-error{{attribute parameter 1 is out of bounds}}
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|fn11
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(alloc_size
+parameter_list|(
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error{{attribute parameter 1 is out of bounds}}
 end_comment
 
 end_unit

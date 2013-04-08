@@ -46,7 +46,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call i8* @strstr{{.*}} nounwind
+comment|// CHECK: call i8* @strstr{{.*}} [[NUW:#[0-9]+]]
 end_comment
 
 begin_function
@@ -276,6 +276,10 @@ name|e
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+end_comment
 
 end_unit
 

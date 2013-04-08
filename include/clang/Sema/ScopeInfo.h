@@ -246,6 +246,10 @@ comment|/// \brief Whether this function contains any indirect gotos.
 name|bool
 name|HasIndirectGoto
 decl_stmt|;
+comment|/// \brief Whether a statement was dropped because it was invalid.
+name|bool
+name|HasDroppedStmt
+decl_stmt|;
 comment|/// A flag that is set when parsing a method that must call super's
 comment|/// implementation, such as \c -dealloc, \c -finalize, or any method marked
 comment|/// with \c __attribute__((objc_requires_super)).
@@ -823,18 +827,32 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+name|void
+name|setHasDroppedStmt
+parameter_list|()
+block|{
+name|HasDroppedStmt
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|bool
 name|NeedsScopeChecking
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
+name|HasDroppedStmt
+operator|&&
+operator|(
 name|HasIndirectGoto
 operator|||
 operator|(
 name|HasBranchProtectedScope
 operator|&&
 name|HasBranchIntoScope
+operator|)
 operator|)
 return|;
 block|}
@@ -861,6 +879,11 @@ name|false
 argument_list|)
 operator|,
 name|HasIndirectGoto
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasDroppedStmt
 argument_list|(
 name|false
 argument_list|)
@@ -1634,8 +1657,6 @@ name|bool
 name|ContainsUnexpandedParameterPack
 block|;
 comment|/// \brief Variables used to index into by-copy array captures.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|VarDecl
@@ -1647,8 +1668,6 @@ name|ArrayIndexVars
 block|;
 comment|/// \brief Offsets into the ArrayIndexVars array at which each capture starts
 comment|/// its list of array index variables.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|unsigned

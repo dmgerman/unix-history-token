@@ -18,8 +18,8 @@ name|double
 name|z
 parameter_list|)
 block|{
-comment|// CHECK: {{.*metadata !8, i32 0, i32 0}.*DW_TAG_subroutine_type}}
-comment|// CHECK: {{!8 = .*metadata ![^,]*, metadata ![^,]*, metadata ![^,]*, metadata ![^,]*}}
+comment|// CHECK: metadata ![[NUM:[^,]*]], i32 0, i32 0} ; [ DW_TAG_subroutine_type
+comment|// CHECK: ![[NUM]] = {{metadata !{metadata ![^,]*, metadata ![^,]*, metadata ![^,]*, metadata ![^,]*}}}
 return|return
 name|y
 return|;

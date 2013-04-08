@@ -196,5 +196,21 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// Do not warn here.
+end_comment
+
+begin_function
+specifier|_Noreturn
+name|void
+name|test5
+parameter_list|()
+block|{
+name|test2_positive
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

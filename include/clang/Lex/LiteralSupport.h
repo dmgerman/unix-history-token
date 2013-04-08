@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/CharInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TokenKinds.h"
 end_include
 
 begin_include
@@ -91,18 +103,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/TokenKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cctype>
 end_include
 
 begin_decl_stmt
@@ -354,7 +354,7 @@ name|ptr
 operator|!=
 name|ThisTokEnd
 operator|&&
-name|isxdigit
+name|isHexDigit
 argument_list|(
 operator|*
 name|ptr
@@ -428,7 +428,7 @@ name|ptr
 operator|!=
 name|ThisTokEnd
 operator|&&
-name|isdigit
+name|isDigit
 argument_list|(
 operator|*
 name|ptr

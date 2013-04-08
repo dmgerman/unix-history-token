@@ -4,11 +4,11 @@ comment|// PR691
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - | opt -std-compile-opts | \
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN:    llvm-dis | grep llvm.stacksave
+comment|// CHECK: call i8* @llvm.stacksave()
 end_comment
 
 begin_function

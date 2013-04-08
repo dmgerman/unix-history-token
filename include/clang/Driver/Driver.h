@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Phases.h"
 end_include
 
@@ -116,21 +122,6 @@ include|#
 directive|include
 file|<string>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -493,8 +484,6 @@ argument|StringRef _DefaultTargetTriple
 argument_list|,
 argument|StringRef _DefaultImageName
 argument_list|,
-argument|bool IsProduction
-argument_list|,
 argument|DiagnosticsEngine&_Diags
 argument_list|)
 empty_stmt|;
@@ -797,11 +786,21 @@ name|Compilation
 operator|&
 name|C
 argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+argument_list|,
 specifier|const
 name|Command
 operator|*
+operator|>
+expr|>
 operator|&
-name|FailingCommand
+name|FailingCommands
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1029,27 +1028,15 @@ argument|const char *Suffix
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// ShouldUseClangCompilar - Should the clang compiler be used to
+comment|/// ShouldUseClangCompiler - Should the clang compiler be used to
 comment|/// handle this action.
 name|bool
 name|ShouldUseClangCompiler
 argument_list|(
 specifier|const
-name|Compilation
-operator|&
-name|C
-argument_list|,
-specifier|const
 name|JobAction
 operator|&
 name|JA
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|ArchName
 argument_list|)
 decl|const
 decl_stmt|;

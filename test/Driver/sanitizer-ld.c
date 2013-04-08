@@ -1,0 +1,563 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// Test sanitizers ld flags.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX: libclang_rt.asan-i386.a"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX: "-ldl"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-NOT: "-export-dynamic"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX: "--dynamic-list={{.*}}libclang_rt.asan-i386.a.syms"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/empty_resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: "-ldl"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: "-export-dynamic"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX-NOT: "--dynamic-list"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: stdc++
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o /dev/null -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     -lstdc++ -static 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-LINUX-CXX-STATIC %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX-STATIC: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX-STATIC-NOT: stdc++
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX-STATIC: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX-STATIC: stdc++
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-ANDROID %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID: libclang_rt.asan-arm-android.so"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID-NOT: "-lpthread"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-ANDROID-SHARED %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID-SHARED: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID-SHARED-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID-SHARED: libclang_rt.asan-arm-android.so"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ANDROID-SHARED-NOT: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux -lstdc++ -fsanitize=thread \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-TSAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX-NOT: stdc++
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.tsan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "-ldl"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX-NOT: "-export-dynamic"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.tsan-x86_64.a.syms"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: stdc++
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux -lstdc++ -fsanitize=memory \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MSAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX-NOT: stdc++
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.msan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "-ldl"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX-NOT: "-export-dynamic"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.msan-x86_64.a.syms"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: stdc++
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UBSAN-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.asan
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.san-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.asan
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -fsanitize=undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UBSAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.san-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_cxx-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-CXX: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-UBSAN-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.san
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.san
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-UBSAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX-NOT: libclang_rt.san
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX-NOT: libclang_rt.san
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_cxx-i386.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UBSAN-LINUX-SHARED %s
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-SHARED: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-LINUX-SHARED-NOT: libclang_rt.ubsan-i386.a"
+end_comment
+
+end_unit
+

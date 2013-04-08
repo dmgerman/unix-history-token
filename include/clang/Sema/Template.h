@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/Sema.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -1158,6 +1164,32 @@ name|unsigned
 name|NumExplicitArgs
 parameter_list|)
 function_decl|;
+comment|/// \brief Reset the partially-substituted pack when it is no longer of
+comment|/// interest.
+name|void
+name|ResetPartiallySubstitutedPack
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|PartiallySubstitutedPack
+operator|&&
+literal|"No partially-substituted pack"
+argument_list|)
+expr_stmt|;
+name|PartiallySubstitutedPack
+operator|=
+literal|0
+expr_stmt|;
+name|ArgsInPartiallySubstitutedPack
+operator|=
+literal|0
+expr_stmt|;
+name|NumArgsInPartiallySubstitutedPack
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the partially-substitued template parameter pack.
 comment|///
 comment|/// If there is no partially-substituted parameter pack, returns NULL.
@@ -1623,6 +1655,15 @@ modifier|*
 name|VisitClassScopeFunctionSpecializationDecl
 parameter_list|(
 name|ClassScopeFunctionSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|Decl
+modifier|*
+name|VisitOMPThreadPrivateDecl
+parameter_list|(
+name|OMPThreadPrivateDecl
 modifier|*
 name|D
 parameter_list|)

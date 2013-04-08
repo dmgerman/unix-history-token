@@ -719,7 +719,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__a1() {{.*}} noinline
+comment|// CHECK: define void @__a1() [[NI:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -783,7 +783,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__a3() {{.*}} noinline
+comment|// CHECK: define void @__a3() [[NI]]
 end_comment
 
 begin_pragma
@@ -812,7 +812,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: void @__xxx() {{.*}} noinline
+comment|// CHECK: void @__xxx() [[RN:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -947,6 +947,14 @@ name|int
 name|correct_linkage
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: attributes [[NI]] = { noinline nounwind{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[RN]] = { noinline nounwind readnone{{.*}} }
+end_comment
 
 end_unit
 

@@ -7,7 +7,7 @@ end_ifdef
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|load_nonexistent
 decl_stmt|;
 end_decl_stmt
@@ -25,7 +25,7 @@ end_ifdef
 
 begin_decl_stmt
 unit|@
-name|__experimental_modules_import
+name|import
 name|load_failure
 decl_stmt|;
 end_decl_stmt
@@ -40,19 +40,19 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c++ -fmodule-cache-path %t -fdisable-module-hash -emit-module -fmodule-name=load_failure %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -x objective-c++ -fmodules-cache-path=%t -fdisable-module-hash -emit-module -fmodule-name=load_failure %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
 end_comment
 
 begin_comment
-comment|// CHECK-NONEXISTENT: load_failure.c:2:32: fatal error: module 'load_nonexistent' not found
+comment|// CHECK-NONEXISTENT: load_failure.c:2:9: fatal error: module 'load_nonexistent' not found
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t -fdisable-module-hash %s -DFAILURE 2> %t.out
+comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -fdisable-module-hash %s -DFAILURE 2> %t.out
 end_comment
 
 begin_comment

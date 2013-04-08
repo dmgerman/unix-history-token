@@ -4,7 +4,7 @@ comment|/* RUN: cp %s %t    RUN: %clang_cc1 -std=c90 -pedantic -fixit %t    RUN:
 end_comment
 
 begin_comment
-comment|/* XPASS: *    This test passes because clang merely warns for this syntax error even with    -pedantic -Werror -std=c90.  */
+comment|/*    This test passes because clang merely warns for this syntax error even with    -pedantic -Werror -std=c90.  */
 end_comment
 
 begin_comment

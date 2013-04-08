@@ -71,7 +71,6 @@ typedef|;
 end_typedef
 
 begin_function_decl
-specifier|inline
 name|unsigned
 name|long
 name|gl

@@ -160,6 +160,54 @@ comment|//
 end_comment
 
 begin_comment
+comment|// -mxgot
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mno-xgot -mxgot 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-XGOT %s
+end_comment
+
+begin_comment
+comment|// CHECK-XGOT: "-mllvm" "-mxgot"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-xgot
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mxgot -mno-xgot 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOXGOT %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOXGOT-NOT: "-mllvm" "-mxgot"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// -G
 end_comment
 

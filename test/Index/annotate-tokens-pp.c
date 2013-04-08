@@ -196,12 +196,46 @@ name|__FILE__
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|SOME_MACRO
+value|3
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOME_MACRO
+end_ifdef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|A
+block|{
+ifdef|#
+directive|ifdef
+name|SOME_MACRO
+name|int
+name|x
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:2:1:32:1 -I%S/Inputs %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:2:1:44:1 -I%S/Inputs %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-annotate-tokens=%s:2:1:32:1 -I%S/Inputs %s | FileCheck %s
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-annotate-tokens=%s:2:1:44:1 -I%S/Inputs %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -217,7 +251,7 @@ comment|// CHECK: Identifier: "STILL_NOTHING" [2:9 - 2:22] macro definition=STIL
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "NOTHING" [2:23 - 2:30] macro definition=STILL_NOTHING
+comment|// CHECK: Identifier: "NOTHING" [2:23 - 2:30] macro expansion=NOTHING:1:9
 end_comment
 
 begin_comment
@@ -797,7 +831,7 @@ comment|// CHECK: Punctuation: "{" [25:28 - 25:29] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "int" [25:30 - 25:33] DeclStmt=
+comment|// CHECK: Keyword: "int" [25:30 - 25:33] VarDecl=z:25:34 (Definition)
 end_comment
 
 begin_comment
@@ -858,6 +892,74 @@ end_comment
 
 begin_comment
 comment|// CHECK: Identifier: "__FILE__" [31:21 - 31:29] macro expansion=__FILE__
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "#" [35:1 - 35:2] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "ifdef" [35:2 - 35:7] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "SOME_MACRO" [35:8 - 35:18] macro expansion=SOME_MACRO:33:9
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "#" [36:1 - 36:2] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "endif" [36:2 - 36:7] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "struct" [38:1 - 38:7] StructDecl=A:38:8 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "A" [38:8 - 38:9] StructDecl=A:38:8 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "{" [39:1 - 39:2] StructDecl=A:38:8 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "#" [40:1 - 40:2] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "ifdef" [40:2 - 40:7] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "SOME_MACRO" [40:8 - 40:18] macro expansion=SOME_MACRO:33:9
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "int" [41:3 - 41:6] FieldDecl=x:41:7 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "x" [41:7 - 41:8] FieldDecl=x:41:7 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [41:8 - 41:9] StructDecl=A:38:8 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "#" [42:1 - 42:2] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "endif" [42:2 - 42:7] preprocessing directive=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "}" [43:1 - 43:2] StructDecl=A:38:8 (Definition)
 end_comment
 
 end_unit

@@ -1,30 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: touch %t.o
+comment|// RUN: touch %t.s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang -DCRASH -o %t.o -MMD -MF %t.d %s
+comment|// RUN: not %clang -S -DCRASH -o %t.s -MMD -MF %t.d %s
 end_comment
 
 begin_comment
-comment|// RUN: test ! -f %t.o
-end_comment
-
-begin_comment
-comment|// RUN: test ! -f %t.d
-end_comment
-
-begin_comment
-comment|// RUN: touch %t.o
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -DMISSING -o %t.o -MMD -MF %t.d %s
-end_comment
-
-begin_comment
-comment|// RUN: test ! -f %t.o
+comment|// RUN: test ! -f %t.s
 end_comment
 
 begin_comment
@@ -32,15 +16,31 @@ comment|// RUN: test ! -f %t.d
 end_comment
 
 begin_comment
-comment|// RUN: touch %t.o
+comment|// RUN: touch %t.s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang -o %t.o -MMD -MF %t.d %s
+comment|// RUN: not %clang -S -DMISSING -o %t.s -MMD -MF %t.d %s
 end_comment
 
 begin_comment
-comment|// RUN: test ! -f %t.o
+comment|// RUN: test ! -f %t.s
+end_comment
+
+begin_comment
+comment|// RUN: test ! -f %t.d
+end_comment
+
+begin_comment
+comment|// RUN: touch %t.s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang -S -o %t.s -MMD -MF %t.d %s
+end_comment
+
+begin_comment
+comment|// RUN: test ! -f %t.s
 end_comment
 
 begin_comment
@@ -99,6 +99,94 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// RUN: touch %t1.c
+end_comment
+
+begin_comment
+comment|// RUN: echo "invalid C code"> %t2.c
+end_comment
+
+begin_comment
+comment|// RUN: cd %T&& not %clang -S %t1.c %t2.c
+end_comment
+
+begin_comment
+comment|// RUN: test -f %t1.s
+end_comment
+
+begin_comment
+comment|// RUN: test ! -f %t2.s
+end_comment
+
+begin_comment
+comment|// RUN: touch %t1.c
+end_comment
+
+begin_comment
+comment|// RUN: touch %t2.c
+end_comment
+
+begin_comment
+comment|// RUN: chmod -r %t2.c
+end_comment
+
+begin_comment
+comment|// RUN: cd %T&& not %clang -S %t1.c %t2.c
+end_comment
+
+begin_comment
+comment|// RUN: test -f %t1.s
+end_comment
+
+begin_comment
+comment|// RUN: test ! -f %t2.s
+end_comment
+
+begin_comment
+comment|// RUN: touch %t1.c
+end_comment
+
+begin_comment
+comment|// RUN: echo "invalid C code"> %t2.c
+end_comment
+
+begin_comment
+comment|// RUN: touch %t3.c
+end_comment
+
+begin_comment
+comment|// RUN: echo "invalid C code"> %t4.c
+end_comment
+
+begin_comment
+comment|// RUN: touch %t5.c
+end_comment
+
+begin_comment
+comment|// RUN: cd %T&& not %clang -S %t1.c %t2.c %t3.c %t4.c %t5.c
+end_comment
+
+begin_comment
+comment|// RUN: test -f %t1.s
+end_comment
+
+begin_comment
+comment|// RUN: test ! -f %t2.s
+end_comment
+
+begin_comment
+comment|// RUN: test -f %t3.s
+end_comment
+
+begin_comment
+comment|// RUN: test ! -f %t4.s
+end_comment
+
+begin_comment
+comment|// RUN: test -f %t5.s
+end_comment
 
 end_unit
 

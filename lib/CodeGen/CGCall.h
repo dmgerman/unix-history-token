@@ -66,19 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Value.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
+file|"CGValue.h"
 end_include
 
 begin_include
@@ -90,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGValue.h"
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
 end_include
 
 begin_comment
@@ -107,9 +107,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-struct_decl|struct
-name|AttributeWithIndex
-struct_decl|;
+name|class
+name|AttributeSet
+decl_stmt|;
 name|class
 name|Function
 decl_stmt|;
@@ -119,16 +119,6 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|unsigned
-operator|>
-name|class
-name|SmallVector
-expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -159,7 +149,7 @@ name|SmallVector
 operator|<
 name|llvm
 operator|::
-name|AttributeWithIndex
+name|AttributeSet
 operator|,
 literal|8
 operator|>
@@ -219,16 +209,10 @@ label|:
 struct|struct
 name|Writeback
 block|{
-comment|/// The original argument.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Address
-expr_stmt|;
-comment|/// The pointee type of the original argument.
-name|QualType
-name|AddressType
+comment|/// The original argument.  Note that the argument l-value
+comment|/// is potentially null.
+name|LValue
+name|Source
 decl_stmt|;
 comment|/// The temporary alloca.
 name|llvm
@@ -236,6 +220,13 @@ operator|::
 name|Value
 operator|*
 name|Temporary
+expr_stmt|;
+comment|/// A value to "use" after the writeback, or null.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ToUse
 expr_stmt|;
 block|}
 struct|;
@@ -320,20 +311,20 @@ block|}
 name|void
 name|addWriteback
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|address
-argument_list|,
-name|QualType
-name|addressType
+name|LValue
+name|srcLV
 argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
 name|temporary
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|toUse
 argument_list|)
 block|{
 name|Writeback
@@ -341,21 +332,21 @@ name|writeback
 decl_stmt|;
 name|writeback
 operator|.
-name|Address
+name|Source
 operator|=
-name|address
-expr_stmt|;
-name|writeback
-operator|.
-name|AddressType
-operator|=
-name|addressType
+name|srcLV
 expr_stmt|;
 name|writeback
 operator|.
 name|Temporary
 operator|=
 name|temporary
+expr_stmt|;
+name|writeback
+operator|.
+name|ToUse
+operator|=
+name|toUse
 expr_stmt|;
 name|Writebacks
 operator|.
@@ -589,7 +580,7 @@ operator|~
 literal|0U
 return|;
 block|}
-name|bool
+name|unsigned
 name|getNumRequiredArgs
 argument_list|()
 specifier|const

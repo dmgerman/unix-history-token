@@ -951,7 +951,7 @@ comment|// CHECK: printf("abc%s", "testing testing 123");
 end_comment
 
 begin_comment
-comment|// CHECK: printf("%lu", (long) -12);
+comment|// CHECK: printf("%ld", (long) -12);
 end_comment
 
 begin_comment
@@ -1063,7 +1063,7 @@ comment|// CHECK: printf("%lo", (long) 42);
 end_comment
 
 begin_comment
-comment|// CHECK: printf("%lu", (long) 42);
+comment|// CHECK: printf("%ld", (long) 42);
 end_comment
 
 begin_comment
@@ -1075,11 +1075,11 @@ comment|// CHECK: printf("%lX", (long) 42);
 end_comment
 
 begin_comment
-comment|// CHECK: printf("%li", (unsigned long) 42);
+comment|// CHECK: printf("%lu", (unsigned long) 42);
 end_comment
 
 begin_comment
-comment|// CHECK: printf("%ld", (unsigned long) 42);
+comment|// CHECK: printf("%lu", (unsigned long) 42);
 end_comment
 
 begin_comment

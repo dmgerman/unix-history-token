@@ -450,9 +450,12 @@ argument_list|(
 literal|12
 argument_list|)
 decl_stmt|;
-comment|// expected-warning{{Memory is never released; potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning{{Memory is never released; potential leak}}
+end_comment
 
 begin_function
 name|void
@@ -488,9 +491,12 @@ argument_list|(
 literal|12
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Memory is never released; potential leak}}
 block|}
 end_function
+
+begin_comment
+comment|// expected-warning{{Memory is never released; potential leak}}
+end_comment
 
 begin_comment
 comment|// Test that we can pass out allocated memory via pointer-to-pointer.

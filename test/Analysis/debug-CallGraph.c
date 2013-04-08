@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=debug.DumpCallGraph %s 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=debug.DumpCallGraph %s -fblocks 2>&1 | FileCheck %s
 end_comment
 
 begin_function
@@ -25,7 +25,7 @@ name|y
 operator|=
 name|y
 operator|/
-literal|0
+name|y
 expr_stmt|;
 block|}
 end_function
@@ -79,12 +79,64 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|bbb
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+lambda|^
+block|{
+name|foo
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// CHECK:--- Call graph Dump ---
 end_comment
 
 begin_comment
-comment|// CHECK: Function:< root> calls: aaa
+comment|// CHECK: Function:< root> calls: mmm foo aaa<> bbb
+end_comment
+
+begin_comment
+comment|// CHECK: Function: bbb calls:<>
+end_comment
+
+begin_comment
+comment|// CHECK: Function:<> calls: foo
+end_comment
+
+begin_comment
+comment|// CHECK: Function: aaa calls: foo
+end_comment
+
+begin_comment
+comment|// CHECK: Function: foo calls: mmm
+end_comment
+
+begin_comment
+comment|// CHECK: Function: mmm calls:
 end_comment
 
 end_unit

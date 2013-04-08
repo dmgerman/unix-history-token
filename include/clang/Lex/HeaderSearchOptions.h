@@ -46,13 +46,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -90,6 +108,10 @@ comment|///  building frameworks.
 name|System
 block|,
 comment|///< Like Angled, but marks system directories.
+name|ExternCSystem
+block|,
+comment|///< Like System, but headers are implicitly wrapped in
+comment|///  extern "C".
 name|CSystem
 block|,
 comment|///< Like System, but only used for C.
@@ -113,8 +135,6 @@ name|class
 name|HeaderSearchOptions
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|HeaderSearchOptions
@@ -136,11 +156,6 @@ name|IncludeDirGroup
 name|Group
 block|;
 name|unsigned
-name|IsUserSupplied
-operator|:
-literal|1
-block|;
-name|unsigned
 name|IsFramework
 operator|:
 literal|1
@@ -153,39 +168,15 @@ name|IgnoreSysRoot
 operator|:
 literal|1
 block|;
-comment|/// \brief True if this entry is an internal search path.
-comment|///
-comment|/// This typically indicates that users didn't directly provide it, but
-comment|/// instead it was provided by a compatibility layer for a particular
-comment|/// system. This isn't redundant with IsUserSupplied (even though perhaps
-comment|/// it should be) because that is false for user provided '-iwithprefix'
-comment|/// header search entries.
-name|unsigned
-name|IsInternal
-operator|:
-literal|1
-block|;
-comment|/// \brief True if this entry's headers should be wrapped in extern "C".
-name|unsigned
-name|ImplicitExternC
-operator|:
-literal|1
-block|;
 name|Entry
 argument_list|(
 argument|StringRef path
 argument_list|,
 argument|frontend::IncludeDirGroup group
 argument_list|,
-argument|bool isUserSupplied
-argument_list|,
 argument|bool isFramework
 argument_list|,
 argument|bool ignoreSysRoot
-argument_list|,
-argument|bool isInternal
-argument_list|,
-argument|bool implicitExternC
 argument_list|)
 operator|:
 name|Path
@@ -198,11 +189,6 @@ argument_list|(
 name|group
 argument_list|)
 block|,
-name|IsUserSupplied
-argument_list|(
-name|isUserSupplied
-argument_list|)
-block|,
 name|IsFramework
 argument_list|(
 name|isFramework
@@ -210,17 +196,7 @@ argument_list|)
 block|,
 name|IgnoreSysRoot
 argument_list|(
-name|ignoreSysRoot
-argument_list|)
-block|,
-name|IsInternal
-argument_list|(
-name|isInternal
-argument_list|)
-block|,
-name|ImplicitExternC
-argument_list|(
-argument|implicitExternC
+argument|ignoreSysRoot
 argument_list|)
 block|{}
 block|}
@@ -304,6 +280,38 @@ name|DisableModuleHash
 operator|:
 literal|1
 block|;
+comment|/// \brief The interval (in seconds) between pruning operations.
+comment|///
+comment|/// This operation is expensive, because it requires Clang to walk through
+comment|/// the directory structure of the module cache, stat()'ing and removing
+comment|/// files.
+comment|///
+comment|/// The default value is large, e.g., the operation runs once a week.
+name|unsigned
+name|ModuleCachePruneInterval
+block|;
+comment|/// \brief The time (in seconds) after which an unused module file will be
+comment|/// considered unused and will, therefore, be pruned.
+comment|///
+comment|/// When the module cache is pruned, any module file that has not been
+comment|/// accessed in this many seconds will be removed. The default value is
+comment|/// large, e.g., a month, to avoid forcing infrequently-used modules to be
+comment|/// regenerated often.
+name|unsigned
+name|ModuleCachePruneAfter
+block|;
+comment|/// \brief The set of macro names that should be ignored for the purposes
+comment|/// of computing the module hash.
+name|llvm
+operator|::
+name|SetVector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModulesIgnoreMacros
+block|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
 name|UseBuiltinIncludes
@@ -352,6 +360,28 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|ModuleCachePruneInterval
+argument_list|(
+literal|7
+operator|*
+literal|24
+operator|*
+literal|60
+operator|*
+literal|60
+argument_list|)
+block|,
+name|ModuleCachePruneAfter
+argument_list|(
+literal|31
+operator|*
+literal|24
+operator|*
+literal|60
+operator|*
+literal|60
+argument_list|)
+block|,
 name|UseBuiltinIncludes
 argument_list|(
 name|true
@@ -385,15 +415,9 @@ argument|StringRef Path
 argument_list|,
 argument|frontend::IncludeDirGroup Group
 argument_list|,
-argument|bool IsUserSupplied
-argument_list|,
 argument|bool IsFramework
 argument_list|,
 argument|bool IgnoreSysRoot
-argument_list|,
-argument|bool IsInternal = false
-argument_list|,
-argument|bool ImplicitExternC = false
 argument_list|)
 block|{
 name|UserEntries
@@ -406,15 +430,9 @@ name|Path
 argument_list|,
 name|Group
 argument_list|,
-name|IsUserSupplied
-argument_list|,
 name|IsFramework
 argument_list|,
 name|IgnoreSysRoot
-argument_list|,
-name|IsInternal
-argument_list|,
-name|ImplicitExternC
 argument_list|)
 argument_list|)
 block|;   }

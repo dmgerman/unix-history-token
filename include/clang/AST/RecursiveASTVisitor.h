@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/DeclTemplate.h"
 end_include
 
@@ -1260,31 +1266,6 @@ argument_list|,
 argument|bool&EnqueueChildren
 argument_list|)
 block|{
-comment|// The cast for DISPATCH_WALK is needed for older versions of g++, but causes
-comment|// problems for MSVC.  So we'll skip the cast entirely for MSVC.
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-define|#
-directive|define
-name|GCC_CAST
-parameter_list|(
-name|CLASS
-parameter_list|)
-else|#
-directive|else
-define|#
-directive|define
-name|GCC_CAST
-parameter_list|(
-name|CLASS
-parameter_list|)
-value|(bool (RecursiveASTVisitor::*)(CLASS*))
-endif|#
-directive|endif
 comment|// Dispatch to the corresponding WalkUpFrom* function only if the derived
 comment|// class didn't override Traverse* (and thus the traversal is trivial).
 define|#
@@ -1298,7 +1279,7 @@ parameter_list|,
 name|VAR
 parameter_list|)
 define|\
-value|if (&RecursiveASTVisitor::Traverse##NAME == \       GCC_CAST(CLASS)&Derived::Traverse##NAME) \     return getDerived().WalkUpFrom##NAME(static_cast<CLASS*>(VAR)); \   EnqueueChildren = false; \   return getDerived().Traverse##NAME(static_cast<CLASS*>(VAR));
+value|{ \     bool (Derived::*DerivedFn)(CLASS*) =&Derived::Traverse##NAME; \     bool (Derived::*BaseFn)(CLASS*) =&RecursiveASTVisitor::Traverse##NAME; \     if (DerivedFn == BaseFn) \       return getDerived().WalkUpFrom##NAME(static_cast<CLASS*>(VAR)); \   } \   EnqueueChildren = false; \   return getDerived().Traverse##NAME(static_cast<CLASS*>(VAR));
 if|if
 condition|(
 name|BinaryOperator
@@ -1427,9 +1408,6 @@ block|}
 undef|#
 directive|undef
 name|DISPATCH_WALK
-undef|#
-directive|undef
-name|GCC_CAST
 return|return
 name|true
 return|;
@@ -1752,7 +1730,7 @@ parameter_list|,
 name|BASE
 parameter_list|)
 define|\
-value|case TypeLoc::CLASS: \     return getDerived().Traverse##CLASS##TypeLoc(*cast<CLASS##TypeLoc>(&TL));
+value|case TypeLoc::CLASS: \     return getDerived().Traverse##CLASS##TypeLoc(TL.castAs<CLASS##TypeLoc>());
 include|#
 directive|include
 file|"clang/AST/TypeLocNodes.def"
@@ -3865,6 +3843,12 @@ argument|return true;   }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
+argument|EmptyDecl
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
 argument|FileScopeAsmDecl
 argument_list|,
 argument|{     TRY_TO(TraverseStmt(D->getAsmString()));   }
@@ -4037,6 +4021,12 @@ argument_list|(
 argument|UsingShadowDecl
 argument_list|,
 argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|OMPThreadPrivateDecl
+argument_list|,
+argument|{     for (OMPThreadPrivateDecl::varlist_iterator I = D->varlist_begin(),                                                 E = D->varlist_end();          I != E; ++I) {       TRY_TO(TraverseStmt(*I));     }   }
 argument_list|)
 comment|// A helper method for TemplateDecl's children.
 name|template
@@ -5189,12 +5179,10 @@ end_comment
 begin_if
 if|if
 condition|(
-name|clang
-operator|::
 name|TypeSourceInfo
-operator|*
+modifier|*
 name|TSI
-operator|=
+init|=
 name|D
 operator|->
 name|getTypeSourceInfo
@@ -6319,26 +6307,19 @@ block|}
 elseif|else
 if|if
 condition|(
-name|isa
-operator|<
-name|FunctionProtoTypeLoc
-operator|>
-operator|(
-name|TL
-operator|)
-condition|)
-block|{
 name|FunctionProtoTypeLoc
 name|Proto
 init|=
-name|cast
+name|TL
+operator|.
+name|getAs
 operator|<
 name|FunctionProtoTypeLoc
 operator|>
 operator|(
-name|TL
 operator|)
-decl_stmt|;
+condition|)
+block|{
 if|if
 condition|(
 name|S

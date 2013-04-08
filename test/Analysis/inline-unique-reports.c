@@ -681,7 +681,7 @@ comment|// CHECK:<key>issue_context</key><string>bug</string>
 end_comment
 
 begin_comment
-comment|// CHECK:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment

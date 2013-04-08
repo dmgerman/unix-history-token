@@ -4,83 +4,83 @@ comment|// RUN: echo "GNU89 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o %t -std=gnu89
+comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o - -std=gnu89 | FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @ei()" %t
+comment|// CHECK1: define i32 @foo()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @foo()" %t
+comment|// CHECK1: define i32 @bar()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @bar()" %t
+comment|// CHECK1: define void @unreferenced1()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @unreferenced1()" %t
+comment|// CHECK1-NOT: unreferenced2
 end_comment
 
 begin_comment
-comment|// RUN: not grep unreferenced2 %t
+comment|// CHECK1: define void @gnu_inline()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @gnu_inline()" %t
+comment|// CHECK1: define i32 @test1
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally void @gnu_ei_inline()" %t
+comment|// CHECK1: define i32 @test2
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test1" %t
+comment|// CHECK1: define void @test3()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test2" %t
+comment|// CHECK1: define available_externally i32 @test4
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test3()" %t
+comment|// CHECK1: define available_externally i32 @test5
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test4" %t
+comment|// CHECK1: define i32 @test6
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test5" %t
+comment|// CHECK1: define void @test7
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test6" %t
+comment|// CHECK1: define i{{..}} @strlcpy
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test7" %t
+comment|// CHECK1-NOT: test9
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i.. @strlcpy" %t
+comment|// CHECK1: define void @testA
 end_comment
 
 begin_comment
-comment|// RUN: not grep test9 %t
+comment|// CHECK1: define void @testB
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @testA" %t
+comment|// CHECK1: define void @testC
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @testB" %t
+comment|// CHECK1: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @testC" %t
+comment|// CHECK1: define available_externally i32 @ei()
 end_comment
 
 begin_comment
@@ -88,83 +88,83 @@ comment|// RUN: echo "C99 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o %t -std=gnu99
+comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o - -std=gnu99 | FileCheck %s --check-prefix=CHECK2
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @ei()" %t
+comment|// CHECK2: define i32 @ei()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @foo()" %t
+comment|// CHECK2: define i32 @bar()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @bar()" %t
+comment|// CHECK2-NOT: unreferenced1
 end_comment
 
 begin_comment
-comment|// RUN: not grep unreferenced1 %t
+comment|// CHECK2: define void @unreferenced2()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @unreferenced2()" %t
+comment|// CHECK2: define void @gnu_inline()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @gnu_inline()" %t
+comment|// CHECK2: define i32 @test1
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally void @gnu_ei_inline()" %t
+comment|// CHECK2: define i32 @test2
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test1" %t
+comment|// CHECK2: define void @test3
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test2" %t
+comment|// CHECK2: define available_externally i32 @test4
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test3" %t
+comment|// CHECK2: define available_externally i32 @test5
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test4" %t
+comment|// CHECK2: define i32 @test6
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test5" %t
+comment|// CHECK2: define void @test7
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test6" %t
+comment|// CHECK2: define available_externally i{{..}} @strlcpy
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test7" %t
+comment|// CHECK2: define void @test9
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i.. @strlcpy" %t
+comment|// CHECK2: define void @testA
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test9" %t
+comment|// CHECK2: define void @testB
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @testA" %t
+comment|// CHECK2: define void @testC
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @testB" %t
+comment|// CHECK2: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @testC" %t
+comment|// CHECK2: define available_externally i32 @foo()
 end_comment
 
 begin_comment
@@ -172,31 +172,31 @@ comment|// RUN: echo "C++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x c++ %s -target i386-unknown-unknown -O1 -emit-llvm -S -o %t -std=c++98
+comment|// RUN: %clang -x c++ %s -target i386-unknown-unknown -O1 -emit-llvm -S -o - -std=c++98 | FileCheck %s --check-prefix=CHECK3
 end_comment
 
 begin_comment
-comment|// RUN: grep "define linkonce_odr i32 @_Z2eiv()" %t
+comment|// CHECK3: define i32 @_Z3barv()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define linkonce_odr i32 @_Z3foov()" %t
+comment|// CHECK3: define linkonce_odr i32 @_Z3foov()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @_Z3barv()" %t
+comment|// CHECK3-NOT: unreferenced
 end_comment
 
 begin_comment
-comment|// RUN: not grep unreferenced %t
+comment|// CHECK3: define void @_Z10gnu_inlinev()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @_Z10gnu_inlinev()" %t
+comment|// CHECK3: define available_externally void @_Z13gnu_ei_inlinev()
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally void @_Z13gnu_ei_inlinev()" %t
+comment|// CHECK3: define linkonce_odr i32 @_Z2eiv()
 end_comment
 
 begin_function

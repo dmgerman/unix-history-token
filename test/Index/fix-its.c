@@ -86,7 +86,7 @@ name|long
 name|index
 decl_stmt|;
 comment|// CHECK: warning: format specifies type 'int' but the argument has type 'unsigned long'
-comment|// CHECK: FIX-IT: Replace [26:17 - 26:19] with "%ld"
+comment|// CHECK: FIX-IT: Replace [26:17 - 26:19] with "%lu"
 name|MACRO
 argument_list|(
 name|printf

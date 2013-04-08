@@ -1333,6 +1333,33 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_enum
+enum|enum
+name|E1
+block|{
+name|Foo
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+name|MPI_Datatype
+name|my_e1_datatype
+name|__attribute__
+argument_list|(
+operator|(
+name|type_tag_for_datatype
+argument_list|(
+name|mpi
+argument_list|,
+expr|enum
+name|E1
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|test_user_types
@@ -1354,6 +1381,11 @@ name|struct
 name|S2
 modifier|*
 name|s2_buf
+parameter_list|,
+name|enum
+name|E1
+modifier|*
+name|e1_buf
 parameter_list|)
 block|{
 name|MPI_Send
@@ -1416,6 +1448,36 @@ name|MPI_INT
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{argument type 'struct S1 *' doesn't match specified 'mpi' type tag that requires 'int *'}}
+name|MPI_Send
+argument_list|(
+name|e1_buf
+argument_list|,
+literal|1
+argument_list|,
+name|my_e1_datatype
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|MPI_Send
+argument_list|(
+name|e1_buf
+argument_list|,
+literal|1
+argument_list|,
+name|MPI_INT
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{argument type 'enum E1 *' doesn't match specified 'mpi' type tag that requires 'int *'}}
+name|MPI_Send
+argument_list|(
+name|int_buf
+argument_list|,
+literal|1
+argument_list|,
+name|my_e1_datatype
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{argument type 'int *' doesn't match specified 'mpi' type tag that requires 'enum E1 *'}}
 block|}
 end_function
 

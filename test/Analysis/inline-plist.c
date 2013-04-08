@@ -198,7 +198,7 @@ name|p
 init|=
 literal|0
 decl_stmt|;
-comment|// expected-note{{Variable 'p' initialized to a null pointer value}}
+comment|// expected-note{{'p' initialized to a null pointer value}}
 lambda|^
 parameter_list|()
 block|{
@@ -225,16 +225,18 @@ modifier|*
 name|p
 init|=
 lambda|^
+name|int
+modifier|*
 parameter_list|()
 block|{
-comment|// expected-note {{Calling anonymous block}} expected-note{{Returning to caller}} expected-note {{Variable 'p' initialized to a null pointer value}}
+comment|// expected-note {{Calling anonymous block}} expected-note{{Returning to caller}} expected-note {{'p' initialized to a null pointer value}}
 name|int
 modifier|*
 name|q
 init|=
 literal|0
 decl_stmt|;
-comment|// expected-note {{Variable 'q' initialized to a null pointer value}}
+comment|// expected-note {{'q' initialized to a null pointer value}}
 return|return
 name|q
 return|;
@@ -1142,7 +1144,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>foo</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>7</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>7</string>
 end_comment
 
 begin_comment
@@ -1886,7 +1888,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>has_bug</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3154,7 +3156,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>triggers_bug</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3298,7 +3300,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -3306,7 +3308,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -4474,7 +4476,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;q&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;q&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -4482,7 +4484,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;q&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;q&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -5230,7 +5232,7 @@ comment|// CHECK-NEXT:<key>extended_message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -5238,7 +5240,7 @@ comment|// CHECK-NEXT:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<string>Variable&apos;p&apos; initialized to a null pointer value</string>
+comment|// CHECK-NEXT:<string>&apos;p&apos; initialized to a null pointer value</string>
 end_comment
 
 begin_comment
@@ -5522,7 +5524,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_block_ret</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
 end_comment
 
 begin_comment
@@ -6518,7 +6520,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_block_blockvar</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
 end_comment
 
 begin_comment
@@ -7514,7 +7516,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_block_arg</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><integer>5</integer>
+comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
 end_comment
 
 begin_comment

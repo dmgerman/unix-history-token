@@ -282,7 +282,7 @@ empty_stmt|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{declaration does not declare anything}}
+comment|// expected-warning{{typedef requires a name}}
 end_comment
 
 begin_comment

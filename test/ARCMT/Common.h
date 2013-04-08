@@ -66,6 +66,13 @@ name|nil
 value|((void*) 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NULL
+value|((void*)0)
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -608,6 +615,51 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+modifier|*
+name|_Block_copy
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|aBlock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_Block_release
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|aBlock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|Block_copy
+parameter_list|(
+modifier|...
+parameter_list|)
+value|((__typeof(__VA_ARGS__))_Block_copy((const void *)(__VA_ARGS__)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Block_release
+parameter_list|(
+modifier|...
+parameter_list|)
+value|_Block_release((const void *)(__VA_ARGS__))
+end_define
 
 end_unit
 

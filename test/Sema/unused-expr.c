@@ -658,8 +658,26 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// OpenSSL has some macros like this; we shouldn't warn on the cast.
+comment|// Don't warn for unused expressions in macro bodies; however, do warn for
 end_comment
+
+begin_comment
+comment|// unused expressions in macro arguments. Macros below are reduced from code
+end_comment
+
+begin_comment
+comment|// found in the wild.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOP
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
+end_define
 
 begin_define
 define|#
@@ -673,15 +691,61 @@ parameter_list|)
 value|(long)foo((a), (b))
 end_define
 
-begin_comment
-comment|// But, we should still warn on other subexpressions of casts in macros.
-end_comment
-
 begin_define
 define|#
 directive|define
 name|M2
 value|(long)0;
+end_define
+
+begin_define
+define|#
+directive|define
+name|M3
+parameter_list|(
+name|a
+parameter_list|)
+value|(t3(a), fn2())
+end_define
+
+begin_define
+define|#
+directive|define
+name|M4
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(foo((a), (b)) ? 0 : t3(a), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M5
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(foo((a), (b)), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M6
+parameter_list|()
+value|fn1()
+end_define
+
+begin_define
+define|#
+directive|define
+name|M7
+parameter_list|()
+value|fn2()
 end_define
 
 begin_function
@@ -703,11 +767,121 @@ name|j
 argument_list|)
 expr_stmt|;
 comment|// no warning
-name|M2
+name|NOP
+argument_list|(
+operator|(
+name|long
+operator|)
+name|foo
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|// expected-warning {{expression result unused}}
+name|M2
+expr_stmt|;
+comment|// no warning
+name|NOP
+argument_list|(
+operator|(
+name|long
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+name|M3
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|NOP
+argument_list|(
+operator|(
+name|t3
+argument_list|(
+name|i
+argument_list|)
+operator|,
+name|fn2
+argument_list|()
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{ignoring return value}}
+name|M4
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|NOP
+argument_list|(
+operator|(
+name|foo
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|)
+condition|?
+literal|0
+else|:
+name|t3
+argument_list|(
+name|i
+argument_list|)
+operator|,
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+name|M5
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|NOP
+argument_list|(
+operator|(
+name|foo
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|)
+operator|,
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+name|M6
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{ignoring return value}}
+name|M7
+argument_list|()
+expr_stmt|;
+comment|// no warning
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|NOP
+end_undef
 
 begin_undef
 undef|#
@@ -719,6 +893,36 @@ begin_undef
 undef|#
 directive|undef
 name|M2
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|M3
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|M4
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|M5
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|M6
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|M7
 end_undef
 
 end_unit

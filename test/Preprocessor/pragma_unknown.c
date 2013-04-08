@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep '#pragma foo bar'
+comment|// RUN: %clang_cc1 -fsyntax-only -Wunknown-pragmas -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wunknown-pragmas -verify %s
+comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_comment
@@ -27,6 +27,10 @@ end_pragma
 
 begin_comment
 comment|// expected-warning {{unknown pragma ignored}}
+end_comment
+
+begin_comment
+comment|// CHECK: {{^}}#pragma foo bar{{$}}
 end_comment
 
 begin_pragma

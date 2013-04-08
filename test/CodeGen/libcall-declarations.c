@@ -915,411 +915,419 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @acos(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @acos(double) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @acosl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @acosl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @acosf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @acosf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @asin(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @asin(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @asinl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @asinl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @asinf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @asinf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @atan(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @atan(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @atanl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @atanl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @atanf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @atanf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @atan2(double, double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @atan2(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @atan2l(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @atan2f(float, float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @atan2f(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @ceil(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @ceil(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @ceill(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @ceill(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @ceilf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @ceilf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @copysign(double, double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @copysign(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @copysignl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @copysignl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @copysignf(float, float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @copysignf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @cos(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @cos(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @cosl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @cosl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @cosf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @cosf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @exp(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @exp(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @expl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @expl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @expf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @expf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @exp2(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @exp2(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @exp2l(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @exp2l(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @exp2f(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @exp2f(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @fabs(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @fabs(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @fabsl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @fabsl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @fabsf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @fabsf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @floor(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @floor(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @floorl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @floorl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @floorf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @floorf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @fma(double, double, double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @fma(double, double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @fmal(x86_fp80, x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @fmal(x86_fp80, x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @fmaf(float, float, float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @fmaf(float, float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @fmax(double, double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @fmax(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @fmaxl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @fmaxl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @fmaxf(float, float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @fmaxf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @fmin(double, double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @fmin(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @fminl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @fminl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @fminf(float, float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @fminf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @log(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @log(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @logl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @logl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @logf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @logf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @log2(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @log2(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @log2l(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @log2l(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @log2f(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @log2f(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @nearbyint(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @nearbyint(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @nearbyintl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @nearbyintl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @nearbyintf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @nearbyintf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @pow(double, double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @pow(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @powl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @powl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @powf(float, float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @powf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @rint(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @rint(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @rintl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @rintl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @rintf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @rintf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @round(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @round(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @roundl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @roundl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @roundf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @roundf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @sin(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @sin(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @sinl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @sinl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @sinf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @sinf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @sqrt(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @sqrt(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @sqrtl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @sqrtl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @sqrtf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @sqrtf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @tan(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @tan(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @tanl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @tanl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @tanf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @tanf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare double @trunc(double) nounwind readnone
+comment|// CHECK-NOERRNO: declare double @trunc(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare x86_fp80 @truncl(x86_fp80) nounwind readnone
+comment|// CHECK-NOERRNO: declare x86_fp80 @truncl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-NOERRNO: declare float @truncf(float) nounwind readnone
+comment|// CHECK-NOERRNO: declare float @truncf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @ceil(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @ceil(double) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @ceill(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @ceill(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @ceilf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @ceilf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @copysign(double, double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @copysign(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @copysignl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @copysignl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @copysignf(float, float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @copysignf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @fabs(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @fabs(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @fabsl(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @fabsl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @fabsf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @fabsf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @floor(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @floor(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @floorl(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @floorl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @floorf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @floorf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @fmax(double, double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @fmax(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @fmaxl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @fmaxl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @fmaxf(float, float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @fmaxf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @fmin(double, double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @fmin(double, double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @fminl(x86_fp80, x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @fminl(x86_fp80, x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @fminf(float, float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @fminf(float, float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @nearbyint(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @nearbyint(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @nearbyintl(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @nearbyintl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @nearbyintf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @nearbyintf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @rint(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @rint(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @rintl(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @rintl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @rintf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @rintf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @round(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @round(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @roundl(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @roundl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @roundf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @roundf(float) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare double @trunc(double) nounwind readnone
+comment|// CHECK-ERRNO: declare double @trunc(double) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare x86_fp80 @truncl(x86_fp80) nounwind readnone
+comment|// CHECK-ERRNO: declare x86_fp80 @truncl(x86_fp80) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK-ERRNO: declare float @truncf(float) nounwind readnone
+comment|// CHECK-ERRNO: declare float @truncf(float) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: attributes [[NUW]] = { nounwind readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-ERRNO: attributes [[NUW]] = { nounwind readnone{{.*}} }
 end_comment
 
 end_unit

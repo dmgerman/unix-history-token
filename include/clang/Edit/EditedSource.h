@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -65,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -81,7 +81,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 decl_stmt|;
 name|namespace
 name|edit
@@ -106,7 +106,7 @@ modifier|&
 name|LangOpts
 decl_stmt|;
 specifier|const
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 modifier|*
 name|PPRec
 decl_stmt|;
@@ -173,7 +173,7 @@ operator|&
 name|LangOpts
 argument_list|,
 specifier|const
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 operator|*
 name|PPRec
 operator|=
@@ -224,9 +224,9 @@ name|LangOpts
 return|;
 block|}
 specifier|const
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 operator|*
-name|getPreprocessingRecord
+name|getPPCondDirectiveRecord
 argument_list|()
 specifier|const
 block|{

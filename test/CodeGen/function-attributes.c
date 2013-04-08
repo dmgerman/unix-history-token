@@ -4,35 +4,35 @@ comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -Os -o - %s |
 end_comment
 
 begin_comment
-comment|// CHECK: define signext i8 @f0(i32 %x) nounwind
+comment|// CHECK: define signext i8 @f0(i32 %x) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK: define zeroext i8 @f1(i32 %x) nounwind
+comment|// CHECK: define zeroext i8 @f1(i32 %x) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f2(i8 signext %x) nounwind
+comment|// CHECK: define void @f2(i8 signext %x) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f3(i8 zeroext %x) nounwind
+comment|// CHECK: define void @f3(i8 zeroext %x) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: define signext i16 @f4(i32 %x) nounwind
+comment|// CHECK: define signext i16 @f4(i32 %x) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: define zeroext i16 @f5(i32 %x) nounwind
+comment|// CHECK: define zeroext i16 @f5(i32 %x) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f6(i16 signext %x) nounwind
+comment|// CHECK: define void @f6(i16 signext %x) [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f7(i16 zeroext %x) nounwind
+comment|// CHECK: define void @f7(i16 zeroext %x) [[NUW]]
 end_comment
 
 begin_function
@@ -144,11 +144,7 @@ comment|// CHECK: define void @f8()
 end_comment
 
 begin_comment
-comment|// CHECK: nounwind
-end_comment
-
-begin_comment
-comment|// CHECK: alwaysinline
+comment|// CHECK: [[AI:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -175,11 +171,11 @@ comment|// CHECK: call void @f9_t()
 end_comment
 
 begin_comment
-comment|// CHECK: noreturn
+comment|// CHECK: [[NR:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK: {
+comment|// CHECK: }
 end_comment
 
 begin_decl_stmt
@@ -211,6 +207,41 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK: call void @f9a()
+end_comment
+
+begin_comment
+comment|// CHECK: [[NR]]
+end_comment
+
+begin_comment
+comment|// CHECK: }
+end_comment
+
+begin_function_decl
+specifier|_Noreturn
+name|void
+name|f9a
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f9b
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|f9a
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// FIXME: We should be setting nounwind on calls.
 end_comment
 
@@ -219,7 +250,7 @@ comment|// CHECK: call i32 @f10_t()
 end_comment
 
 begin_comment
-comment|// CHECK: readnone
+comment|// CHECK: [[NUW_RN:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -291,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f13() nounwind readnone
+comment|// CHECK: define void @f13() [[NUW]]
 end_comment
 
 begin_function_decl
@@ -440,7 +471,7 @@ comment|// CHECK: define void @f15
 end_comment
 
 begin_comment
-comment|// CHECK: optsize
+comment|// CHECK: [[NUW]]
 end_comment
 
 begin_comment
@@ -465,7 +496,7 @@ comment|// CHECK: define void @f16
 end_comment
 
 begin_comment
-comment|// CHECK: alignstack(16)
+comment|// CHECK: [[ALIGN:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -496,7 +527,7 @@ comment|// CHECK: define void @f18()
 end_comment
 
 begin_comment
-comment|// CHECK: returns_twice
+comment|// CHECK: [[RT:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -508,7 +539,7 @@ comment|// CHECK: call void @f17()
 end_comment
 
 begin_comment
-comment|// CHECK: returns_twice
+comment|// CHECK: [[RT_CALL:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -564,7 +595,7 @@ comment|// CHECK: call i32 @setjmp(i32* null)
 end_comment
 
 begin_comment
-comment|// CHECK: returns_twice
+comment|// CHECK: [[RT_CALL]]
 end_comment
 
 begin_comment
@@ -614,6 +645,34 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: attributes [[NUW]] = { nounwind optsize readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[AI]] = { alwaysinline nounwind optsize readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[ALIGN]] = { nounwind optsize readnone alignstack=16{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[RT]] = { nounwind optsize returns_twice{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NR]] = { noreturn nounwind optsize }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NUW_RN]] = { nounwind optsize readnone }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[RT_CALL]] = { nounwind optsize returns_twice }
+end_comment
 
 end_unit
 

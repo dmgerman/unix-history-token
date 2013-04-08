@@ -22,6 +22,31 @@ asm|asm("foo" : "=r" (a));
 comment|// expected-error {{use of undeclared identifier 'a'}}
 asm|asm("foo" : : "r" (b));
 comment|// expected-error {{use of undeclared identifier 'b'}}
+name|asm
+specifier|const
+operator|(
+literal|""
+operator|)
+expr_stmt|;
+comment|// expected-warning {{ignored const qualifier on asm}}
+asm|asm
+specifier|volatile
+asm|("");
+name|asm
+specifier|restrict
+operator|(
+literal|""
+operator|)
+expr_stmt|;
+comment|// expected-warning {{ignored restrict qualifier on asm}}
+comment|// FIXME: Once GCC supports _Atomic, check whether it allows this.
+name|asm
+decl|_Atomic
+argument_list|(
+literal|""
+argument_list|)
+decl_stmt|;
+comment|// expected-warning {{ignored _Atomic qualifier on asm}}
 block|}
 end_function
 

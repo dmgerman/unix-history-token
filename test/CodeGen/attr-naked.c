@@ -26,7 +26,7 @@ comment|// (Note that naked needs to imply noinline to work properly.)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @t1() nounwind noinline naked {
+comment|// CHECK: define void @t1() [[NAKED:#[0-9]+]] {
 end_comment
 
 begin_function
@@ -45,7 +45,7 @@ comment|// (It doesn't really make sense, but it isn't invalid.)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @t2() nounwind noinline naked {
+comment|// CHECK: define void @t2() [[NAKED]] {
 end_comment
 
 begin_macro
@@ -61,6 +61,10 @@ name|t2
 parameter_list|()
 block|{ }
 end_function
+
+begin_comment
+comment|// CHECK: attributes [[NAKED]] = { naked noinline nounwind{{.*}} }
+end_comment
 
 end_unit
 

@@ -31,21 +31,19 @@ name|struct
 name|Foo
 name|foo
 decl_stmt|;
-operator|(
-operator|&
 name|foo
-operator|)
-name|â
-operator|>
+operator|.
 name|bar
 operator|=
-literal|42
-expr_stmt|;
+literal|42â
+comment|// CHECK: error: non-ASCII characters are not allowed outside of literals and identifiers
+comment|// CHECK: {{^              \^}}
 comment|// CHECK: error: expected ';' after expression
 comment|// Make sure we emit the fixit right in front of the snowman.
-comment|// CHECK: {{^        \^}}
-comment|// CHECK: {{^        ;}}
-comment|// CHECK-MACHINE: fix-it:"{{.*}}fixit-unicode.c":{11:9-11:9}:";"
+comment|// CHECK: {{^              \^}}
+comment|// CHECK: {{^              ;}}
+comment|// CHECK-MACHINE: fix-it:"{{.*}}fixit-unicode.c":{[[@LINE-8]]:15-[[@LINE-8]]:18}:""
+comment|// CHECK-MACHINE: fix-it:"{{.*}}fixit-unicode.c":{[[@LINE-9]]:15-[[@LINE-9]]:15}:";"
 block|}
 end_function
 
@@ -81,7 +79,7 @@ comment|// CHECK: : %d", 1L);
 comment|// Unfortunately, we can't actually check the location of the printed fixit,
 comment|// because different systems will render the delta differently (either as a
 comment|// character, or as<U+2206>.) The fixit should line up with the %d regardless.
-comment|// CHECK-MACHINE: fix-it:"{{.*}}fixit-unicode.c":{23:16-23:18}:"%ld"
+comment|// CHECK-MACHINE: fix-it:"{{.*}}fixit-unicode.c":{[[@LINE-9]]:16-[[@LINE-9]]:18}:"%ld"
 block|}
 end_function
 

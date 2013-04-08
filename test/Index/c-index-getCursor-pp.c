@@ -15,6 +15,16 @@ directive|define
 name|DECORATION
 end_define
 
+begin_define
+define|#
+directive|define
+name|FNM
+parameter_list|(
+name|X
+parameter_list|)
+value|OBSCURE(X)
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -96,6 +106,41 @@ directive|include
 file|<a.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBSCURE
+end_ifdef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OBSCURE
+argument_list|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|C
+parameter_list|(
+name|A
+parameter_list|)
+value|A
+end_define
+
 begin_comment
 comment|// RUN: c-index-test -cursor-at=%s:1:11 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-1 %s
 end_comment
@@ -169,6 +214,42 @@ comment|// CHECK-9: inclusion directive=a.h
 end_comment
 
 begin_comment
+comment|// RUN: c-index-test -cursor-at=%s:20:10 -cursor-at=%s:23:15 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-10 %s
+end_comment
+
+begin_comment
+comment|// CHECK-10: 20:8 macro expansion=OBSCURE
+end_comment
+
+begin_comment
+comment|// CHECK-10: 23:13 macro expansion=OBSCURE
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -cursor-at=%s:3:20 -cursor-at=%s:12:14 \
+end_comment
+
+begin_comment
+comment|// RUN:              -cursor-at=%s:26:11 -cursor-at=%s:26:14 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-IN-MACRODEF %s
+end_comment
+
+begin_comment
+comment|// CHECK-IN-MACRODEF: 3:16 macro expansion=OBSCURE
+end_comment
+
+begin_comment
+comment|// CHECK-IN-MACRODEF: 12:14 macro expansion=A
+end_comment
+
+begin_comment
+comment|// CHECK-IN-MACRODEF: 26:9 macro definition=C
+end_comment
+
+begin_comment
+comment|// CHECK-IN-MACRODEF: 26:9 macro definition=C
+end_comment
+
+begin_comment
 comment|// Same tests, but with "editing" optimizations
 end_comment
 
@@ -186,6 +267,14 @@ end_comment
 
 begin_comment
 comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -cursor-at=%s:9:10 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-6 %s
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -cursor-at=%s:3:20 -cursor-at=%s:12:14 \
+end_comment
+
+begin_comment
+comment|// RUN:              -cursor-at=%s:26:11 -cursor-at=%s:26:14 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-IN-MACRODEF %s
 end_comment
 
 end_unit
