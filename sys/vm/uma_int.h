@@ -72,14 +72,14 @@ comment|/* Pages allocated for startup */
 end_comment
 
 begin_comment
-comment|/* Max waste before going to off page slab management */
+comment|/* Max waste percentage before going to off page slab management */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMA_MAX_WASTE
-value|(UMA_SLAB_SIZE / 10)
+value|10
 end_define
 
 begin_comment
@@ -295,13 +295,6 @@ begin_struct
 struct|struct
 name|uma_keg
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|uma_keg
-argument_list|)
-name|uk_link
-expr_stmt|;
-comment|/* List of all kegs */
 name|struct
 name|mtx
 name|uk_lock
@@ -311,12 +304,6 @@ name|struct
 name|uma_hash
 name|uk_hash
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|uk_name
-decl_stmt|;
-comment|/* Name of creating zone. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -406,6 +393,10 @@ name|uk_slabzone
 decl_stmt|;
 comment|/* Slab zone backing us, if OFFPAGE */
 name|u_int16_t
+name|uk_slabsize
+decl_stmt|;
+comment|/* Slab size for this keg */
+name|u_int16_t
 name|uk_pgoff
 decl_stmt|;
 comment|/* Offset to uma_slab struct */
@@ -421,6 +412,20 @@ name|u_int32_t
 name|uk_flags
 decl_stmt|;
 comment|/* Internal flags */
+comment|/* Least used fields go to the last cache line. */
+specifier|const
+name|char
+modifier|*
+name|uk_name
+decl_stmt|;
+comment|/* Name of creating zone. */
+name|LIST_ENTRY
+argument_list|(
+argument|uma_keg
+argument_list|)
+name|uk_link
+expr_stmt|;
+comment|/* List of all kegs */
 block|}
 struct|;
 end_struct

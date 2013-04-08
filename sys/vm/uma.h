@@ -449,6 +449,17 @@ begin_comment
 comment|/* 					 * Zone's pages will not be included in 					 * mini-dumps. 					 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_PCPU
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 					 * Allocates mp_ncpus slabs sized to 					 * sizeof(struct pcpu). 					 */
+end_comment
+
 begin_comment
 comment|/*  * These flags are shared between the keg and zone.  In zones wishing to add  * new kegs these flags must be compatible.  Some are determined based on  * physical parameters of the request and may not be provided by the consumer.  */
 end_comment
@@ -458,7 +469,7 @@ define|#
 directive|define
 name|UMA_ZONE_INHERIT
 define|\
-value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB)
+value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB | UMA_ZONE_PCPU)
 end_define
 
 begin_comment
