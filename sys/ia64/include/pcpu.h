@@ -146,12 +146,10 @@ name|PCPU_MD_FIELDS
 define|\
 value|uint32_t	pc_acpi_id;
 comment|/* ACPI CPU id. */
-value|\ 	struct pcpu_md	pc_md
-end_define
-
-begin_comment
+value|\ 	struct pcpu_md	pc_md;
 comment|/* MD fields. */
-end_comment
+value|\ 	char		__pad[1265]
+end_define
 
 begin_ifdef
 ifdef|#
