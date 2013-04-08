@@ -6385,7 +6385,7 @@ operator|->
 name|nranges
 index|]
 operator|.
-name|min
+name|max
 operator|=
 name|max
 expr_stmt|;
