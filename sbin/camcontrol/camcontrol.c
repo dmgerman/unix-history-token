@@ -9138,7 +9138,6 @@ name|ATA_SECURITY_ACTION_ERASE_ENHANCED
 block|,
 name|ATA_SECURITY_ACTION_SET_PASSWORD
 block|}
-name|atasecurity_action
 enum|;
 end_enum
 
