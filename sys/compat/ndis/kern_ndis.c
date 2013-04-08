@@ -2336,7 +2336,7 @@ literal|5
 expr_stmt|;
 name|rl
 operator|->
-name|cprl_version
+name|cprl_revision
 operator|=
 literal|1
 expr_stmt|;
