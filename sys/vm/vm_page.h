@@ -198,7 +198,7 @@ comment|/* page PG_* flags (P) */
 name|u_char
 name|act_count
 decl_stmt|;
-comment|/* page usage count (O) */
+comment|/* page usage count (P) */
 name|u_char
 name|busy
 decl_stmt|;

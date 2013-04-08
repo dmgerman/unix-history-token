@@ -3981,9 +3981,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock
+name|VM_OBJECT_WUNLOCK
 argument_list|(
-name|m
+name|object
 argument_list|)
 expr_stmt|;
 name|m
@@ -3994,9 +3994,9 @@ name|actcount
 operator|+
 name|ACT_ADVANCE
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|vm_page_unlock
 argument_list|(
-name|object
+name|m
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4036,9 +4036,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock
+name|VM_OBJECT_WUNLOCK
 argument_list|(
-name|m
+name|object
 argument_list|)
 expr_stmt|;
 name|m
@@ -4051,9 +4051,9 @@ name|ACT_ADVANCE
 operator|+
 literal|1
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|vm_page_unlock
 argument_list|(
-name|object
+name|m
 argument_list|)
 expr_stmt|;
 goto|goto
