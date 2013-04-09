@@ -85,7 +85,9 @@ comment|/**  * Creates a new dnssec_chain structure  * \return ldns_dnssec_data_
 name|ldns_dnssec_data_chain
 modifier|*
 name|ldns_dnssec_data_chain_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Frees a dnssec_data_chain structure  *  * \param[in] *chain The chain to free  */
 name|void
@@ -214,7 +216,9 @@ comment|/**  * Creates a new (empty) dnssec_trust_tree structure  *  * \return l
 name|ldns_dnssec_trust_tree
 modifier|*
 name|ldns_dnssec_trust_tree_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Frees the dnssec_trust_tree recursively  *  * There is no deep free; all data in the trust tree  * consists of pointers to a data_chain  *  * \param[in] tree The tree to free  */
 name|void

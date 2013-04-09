@@ -2966,6 +2966,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|ldns_status
 name|ldns_dnssec_zone_create_nsec3s_mkmap
 parameter_list|(

@@ -1387,6 +1387,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|uint16_t
 name|ldns_pkt_section_count
 parameter_list|(
@@ -2788,7 +2789,9 @@ begin_function
 name|ldns_pkt
 modifier|*
 name|ldns_pkt_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ldns_pkt
 modifier|*

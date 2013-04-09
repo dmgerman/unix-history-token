@@ -5537,6 +5537,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ldns_rdf
 modifier|*
 name|ldns_b32_ext2dname

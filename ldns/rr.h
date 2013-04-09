@@ -996,7 +996,9 @@ comment|/**  * creates a new rr_list structure.  * \return a new rr_list structu
 name|ldns_rr_list
 modifier|*
 name|ldns_rr_list_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * frees an rr_list structure.  * \param[in] rr_list the list to free  */
 name|void

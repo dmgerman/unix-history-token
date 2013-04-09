@@ -1206,7 +1206,9 @@ comment|/**  * allocates and initializes a ldns_pkt structure.  * \return pointe
 name|ldns_pkt
 modifier|*
 name|ldns_pkt_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * frees the packet structure and all data that it contains.  * \param[in] packet The packet structure to free  * \return void  */
 name|void

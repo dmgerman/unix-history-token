@@ -1577,6 +1577,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ldns_resolver_set_searchlist_count
 parameter_list|(

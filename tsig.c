@@ -149,6 +149,7 @@ comment|/*  *  Makes an exact copy of the wire, but with the tsig rr removed  */
 end_comment
 
 begin_function
+specifier|static
 name|uint8_t
 modifier|*
 name|ldns_tsig_prepare_pkt_wire

@@ -153,7 +153,9 @@ comment|/**  * Creates a new entry for 1 pointer to an rr and 1 pointer to the n
 name|ldns_dnssec_rrs
 modifier|*
 name|ldns_dnssec_rrs_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Frees the list of rrs, but *not* the individual ldns_rr records  * contained in the list  *   * \param[in] rrs the data structure to free  */
 name|void
@@ -221,7 +223,9 @@ comment|/**  * Creates a new list (entry) of RRsets  * \return the newly allocat
 name|ldns_dnssec_rrsets
 modifier|*
 name|ldns_dnssec_rrsets_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Frees the list of rrsets and their rrs, but *not* the ldns_rr  * records in the sets  *  * \param[in] rrsets the data structure to free  */
 name|void
@@ -316,7 +320,9 @@ comment|/**  * Create a new data structure for a dnssec name  * \return the allo
 name|ldns_dnssec_name
 modifier|*
 name|ldns_dnssec_name_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Create a new data structure for a dnssec name for the given RR  *  * \param[in] rr the RR to derive properties from, and to add to the name  */
 name|ldns_dnssec_name
@@ -484,7 +490,9 @@ comment|/**  * Creates a new dnssec_zone structure  * \return the allocated stru
 name|ldns_dnssec_zone
 modifier|*
 name|ldns_dnssec_zone_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Create a new dnssec zone from a file.  * \param[out] z the new zone  * \param[in] *fp the filepointer to use  * \param[in] *origin the zones' origin  * \param[in] c default class to use (IN)  * \param[in] ttl default ttl to use  *  * \return ldns_status mesg with an error or LDNS_STATUS_OK  */
 name|ldns_status

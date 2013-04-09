@@ -160,7 +160,9 @@ begin_function
 name|ldns_key_list
 modifier|*
 name|ldns_key_list_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ldns_key_list
 modifier|*
@@ -206,7 +208,9 @@ begin_function
 name|ldns_key
 modifier|*
 name|ldns_key_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ldns_key
 modifier|*

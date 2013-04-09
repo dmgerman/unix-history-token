@@ -381,13 +381,17 @@ comment|/**  * Creates a new empty key list  * \return a new ldns_key_list struc
 name|ldns_key_list
 modifier|*
 name|ldns_key_list_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**   * Creates a new empty key structure  * \return a new ldns_key * structure  */
 name|ldns_key
 modifier|*
 name|ldns_key_new
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * Creates a new key based on the algorithm  *  * \param[in] a The algorithm to use  * \param[in] size the number of bytes for the keysize  * \return a new ldns_key structure with the key  */
 name|ldns_key
