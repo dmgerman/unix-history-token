@@ -200,6 +200,18 @@ modifier|*
 name|dname2
 parameter_list|)
 function_decl|;
+name|int
+name|ldns_dname_compare_v
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/**  * Checks whether the dname matches the given wildcard  * \param[in] dname The dname to check  * \param[in] wildcard The wildcard to check with  * \return 1 If the wildcard matches, OR if 'wildcard' is not a wildcard and  *           the names are *exactly* the same  *         0 If the wildcard does not match, or if it is not a wildcard and  *           the names are not the same  */
 name|int
 name|ldns_dname_match_wildcard

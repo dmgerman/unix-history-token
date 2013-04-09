@@ -2943,28 +2943,6 @@ directive|ifdef
 name|HAVE_SSL
 end_ifdef
 
-begin_comment
-comment|/* in dnssec_zone.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|ldns_dname_compare_v
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|a
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|b
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|ldns_status
