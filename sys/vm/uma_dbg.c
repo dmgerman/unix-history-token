@@ -108,7 +108,7 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_int32_t
+name|uint32_t
 name|uma_junk
 init|=
 literal|0xdeadc0de
@@ -141,7 +141,7 @@ block|{
 name|int
 name|cnt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
@@ -229,7 +229,7 @@ block|{
 name|int
 name|cnt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
@@ -360,7 +360,7 @@ modifier|*
 modifier|*
 name|ksp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 init|=
@@ -499,7 +499,7 @@ block|{
 name|int
 name|cnt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
@@ -669,14 +669,14 @@ decl_stmt|;
 name|uma_keg_t
 name|keg
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|mem
 decl_stmt|;
 name|mem
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(

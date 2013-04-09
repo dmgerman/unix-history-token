@@ -517,7 +517,7 @@ decl_stmt|;
 name|int
 name|align
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 block|}
@@ -543,7 +543,7 @@ decl_stmt|;
 name|int
 name|align
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 block|}
@@ -706,7 +706,7 @@ name|uma_zone_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|int
@@ -724,7 +724,7 @@ name|uma_zone_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|int
@@ -742,7 +742,7 @@ name|uma_zone_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|int
@@ -760,7 +760,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1179,7 +1179,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -2773,10 +2773,10 @@ decl_stmt|;
 name|uma_slab_t
 name|n
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|mem
 decl_stmt|;
@@ -3315,11 +3315,11 @@ decl_stmt|;
 name|uma_slab_t
 name|slab
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|mem
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags
 decl_stmt|;
 name|int
@@ -3973,7 +3973,7 @@ parameter_list|,
 name|int
 name|bytes
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|pflag
 parameter_list|,
@@ -4194,7 +4194,7 @@ parameter_list|,
 name|int
 name|bytes
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|pflag
 parameter_list|,
@@ -4251,7 +4251,7 @@ parameter_list|,
 name|int
 name|bytes
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|flags
 parameter_list|,
@@ -4471,7 +4471,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|flags
 parameter_list|)
 block|{
@@ -7289,7 +7289,7 @@ name|uma_slab_t
 call|)
 argument_list|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|bootmem
@@ -7306,7 +7306,7 @@ operator|->
 name|us_data
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|slab
@@ -7690,7 +7690,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 block|{
@@ -7814,7 +7814,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 block|{
@@ -9826,7 +9826,7 @@ name|void
 modifier|*
 name|item
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|freei
 decl_stmt|;
 name|keg
@@ -11375,11 +11375,11 @@ decl_stmt|;
 name|uma_keg_t
 name|keg
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|mem
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|freei
 decl_stmt|;
 name|int
@@ -11471,7 +11471,7 @@ block|{
 name|mem
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -12691,7 +12691,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* See uma.h */
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|uma_find_refcnt
 parameter_list|(
@@ -12709,7 +12709,7 @@ decl_stmt|;
 name|uma_keg_t
 name|keg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|refcnt
 decl_stmt|;
@@ -12909,7 +12909,7 @@ decl_stmt|;
 name|uma_slab_t
 name|slab
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags
 decl_stmt|;
 name|slab
@@ -13368,15 +13368,15 @@ name|int
 modifier|*
 name|cachefreep
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|allocsp
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|freesp
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|sleepsp
 parameter_list|)
@@ -13384,7 +13384,7 @@ block|{
 name|uma_cache_t
 name|cache
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|allocs
 decl_stmt|,
 name|frees
@@ -14164,7 +14164,7 @@ argument_list|,
 argument|db_show_uma
 argument_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|allocs
 decl_stmt|,
 name|frees
