@@ -559,10 +559,10 @@ condition|(
 name|error
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_cantforward
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 literal|1

@@ -179,10 +179,10 @@ operator|&
 name|IP6A_SWAP
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badoptions
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -280,10 +280,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|IPPROTO_DONE
@@ -325,10 +325,10 @@ expr_stmt|;
 break|break;
 comment|/* Final dst. Just ignore the header. */
 block|}
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badoptions
-operator|++
+argument_list|)
 expr_stmt|;
 name|icmp6_error
 argument_list|(

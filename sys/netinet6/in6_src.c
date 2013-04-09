@@ -574,7 +574,7 @@ name|r
 parameter_list|)
 value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
-value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \
+value|\ 		IP6STAT_INC(ip6s_sources_rule[(r)]); \
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: replace %s with %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto replace; \ } while(0)
 end_define
@@ -588,7 +588,7 @@ name|r
 parameter_list|)
 value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
-value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \
+value|\ 		IP6STAT_INC(ip6s_sources_rule[(r)]); \
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: keep %s against %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto next;
 comment|/* XXX: we can't use 'continue' here */
@@ -604,7 +604,7 @@ name|r
 parameter_list|)
 value|do { \ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
-value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \ 	goto out;
+value|\ 		IP6STAT_INC(ip6s_sources_rule[(r)]); \ 	goto out;
 comment|/* XXX: we can't use 'break' here */
 value|\ } while(0)
 end_define
@@ -2857,10 +2857,10 @@ name|error
 operator|==
 name|EHOSTUNREACH
 condition|)
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_noroute
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -392,10 +392,10 @@ name|dstoptlen
 operator|)
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
