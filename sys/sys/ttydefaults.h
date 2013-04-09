@@ -275,13 +275,24 @@ directive|ifdef
 name|TTYDEFCHARS
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_termios.h>
+end_include
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|cc_t
 name|ttydefchars
-index|[
-name|NCCS
-index|]
+index|[]
 init|=
 block|{
 name|CEOF
@@ -327,6 +338,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ttydefchars
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|cc_t
+argument_list|)
+operator|==
+name|NCCS
+argument_list|,
+literal|"Size of ttydefchars does not match NCCS"
+argument_list|)
+assert|;
+end_assert
+
 begin_undef
 undef|#
 directive|undef
@@ -337,6 +368,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* TTYDEFCHARS */
+end_comment
 
 end_unit
 
