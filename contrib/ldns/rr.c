@@ -5986,18 +5986,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int qsort_rr_compare(const void *a, const void *b) { 	const ldns_rr *rr1 = * (const ldns_rr **) a; 	const ldns_rr *rr2 = * (const ldns_rr **) b;  	if (rr1 == NULL&& rr2 == NULL) { 		return 0; 	} 	if (rr1 == NULL) { 		return -1; 	} 	if (rr2 == NULL) { 		return 1; 	} 	return ldns_rr_compare(rr1, rr2); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
