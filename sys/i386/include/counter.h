@@ -66,6 +66,17 @@ parameter_list|()
 value|do {				\ 	if ((cpu_feature& CPUID_CX8) == 0)		\ 		critical_exit();			\ } while (0)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+name|__pcpu
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|inline
@@ -94,7 +105,21 @@ operator|:
 operator|:
 literal|"S"
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|p
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|__pcpu
+index|[
+literal|0
+index|]
 operator|)
 operator|,
 literal|"D"
