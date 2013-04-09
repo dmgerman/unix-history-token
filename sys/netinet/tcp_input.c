@@ -1548,13 +1548,13 @@ end_function
 begin_expr_stmt
 name|VNET_SYSUNINIT
 argument_list|(
-name|vnet_tcpstatp_init
+name|vnet_tcpstatp_uninit
 argument_list|,
 name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|vnet_ipstatp_uninit
+name|vnet_tcpstatp_uninit
 argument_list|,
 name|NULL
 argument_list|)
