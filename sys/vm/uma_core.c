@@ -4804,7 +4804,7 @@ name|keg
 operator|->
 name|uk_ipers
 operator|<=
-literal|255
+literal|256
 argument_list|,
 operator|(
 literal|"%s: keg->uk_ipers %u"
@@ -4908,7 +4908,7 @@ name|keg
 operator|->
 name|uk_ipers
 operator|<=
-literal|255
+literal|256
 argument_list|,
 operator|(
 literal|"%s: keg->uk_ipers %u"
@@ -7146,13 +7146,13 @@ argument_list|(
 operator|(
 name|uma_max_ipers_ref
 operator|<=
-literal|255
+literal|256
 operator|)
 operator|&&
 operator|(
 name|uma_max_ipers
 operator|<=
-literal|255
+literal|256
 operator|)
 argument_list|,
 operator|(
