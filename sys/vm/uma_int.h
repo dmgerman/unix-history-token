@@ -484,14 +484,14 @@ modifier|*
 name|us_data
 decl_stmt|;
 comment|/* First item */
-name|u_int8_t
-name|us_flags
-decl_stmt|;
-comment|/* Page flags see uma.h */
 name|u_int16_t
 name|us_freecount
 decl_stmt|;
 comment|/* How many are free? */
+name|u_int8_t
+name|us_flags
+decl_stmt|;
+comment|/* Page flags see uma.h */
 name|u_int8_t
 name|us_firstfree
 decl_stmt|;
