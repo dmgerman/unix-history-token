@@ -790,7 +790,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|mtx
+name|mtx_padalign
 name|accept_mtx
 decl_stmt|;
 end_decl_stmt
@@ -817,7 +817,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|so_global_mtx
 name|so_global_mtx
 decl_stmt|;
 end_decl_stmt

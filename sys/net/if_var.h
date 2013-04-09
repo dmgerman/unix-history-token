@@ -670,16 +670,16 @@ name|int
 name|if_afdata_initialized
 decl_stmt|;
 name|struct
-name|rwlock
-name|if_afdata_lock
-decl_stmt|;
-name|struct
 name|task
 name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
 name|struct
-name|rwlock
+name|rwlock_padalign
+name|if_afdata_lock
+decl_stmt|;
+name|struct
+name|rwlock_padalign
 name|if_addr_lock
 decl_stmt|;
 comment|/* lock to protect address lists */

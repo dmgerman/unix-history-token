@@ -305,7 +305,7 @@ end_endif
 
 begin_decl_stmt
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|in_ifaddr_lock
 decl_stmt|;
 end_decl_stmt
@@ -728,7 +728,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|mtx_padalign
 name|ipqlock
 decl_stmt|;
 end_decl_stmt

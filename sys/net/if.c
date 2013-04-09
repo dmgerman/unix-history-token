@@ -1274,7 +1274,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|ifnet_rwlock
 decl_stmt|;
 end_decl_stmt

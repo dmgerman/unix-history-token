@@ -229,7 +229,7 @@ end_function_decl
 
 begin_decl_stmt
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|lltable_rwlock
 decl_stmt|;
 end_decl_stmt
