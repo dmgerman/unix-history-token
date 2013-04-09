@@ -102,8 +102,12 @@ name|ZFS_IOCVER_LZC
 value|2
 define|#
 directive|define
+name|ZFS_IOCVER_ZCMD
+value|3
+define|#
+directive|define
 name|ZFS_IOCVER_CURRENT
-value|ZFS_IOCVER_LZC
+value|ZFS_IOCVER_ZCMD
 comment|/* compatibility conversion flag */
 define|#
 directive|define
@@ -123,6 +127,10 @@ name|ZFS_CMD_COMPAT_DEADMAN
 value|3
 define|#
 directive|define
+name|ZFS_CMD_COMPAT_LZC
+value|4
+define|#
+directive|define
 name|ZFS_IOC_COMPAT_PASS
 value|254
 define|#
@@ -136,6 +144,22 @@ parameter_list|(
 name|ioreq
 parameter_list|)
 value|((ioreq)& 0xff)
+typedef|typedef
+struct|struct
+name|zfs_iocparm
+block|{
+name|uint32_t
+name|zfs_ioctl_version
+decl_stmt|;
+name|uint64_t
+name|zfs_cmd
+decl_stmt|;
+name|uint64_t
+name|zfs_cmd_size
+decl_stmt|;
+block|}
+name|zfs_iocparm_t
+typedef|;
 typedef|typedef
 struct|struct
 name|zinject_record_v15

@@ -174,6 +174,17 @@ if|if
 condition|(
 name|zfs_ioctl_version
 operator|==
+name|ZFS_IOCVER_LZC
+condition|)
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_LZC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|zfs_ioctl_version
+operator|==
 name|ZFS_IOCVER_DEADMAN
 condition|)
 name|cflag
