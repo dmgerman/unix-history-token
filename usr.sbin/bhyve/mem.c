@@ -155,7 +155,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|pthread_rwlock_t
-name|rwlock
+name|mmio_rwlock
 decl_stmt|;
 end_decl_stmt
 
@@ -376,7 +376,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void mmio_rb_dump(struct mmio_rb_tree *rbt) { 	struct mmio_rb_range *np;  	pthread_rwlock_rdlock(&rwlock); 	RB_FOREACH(np, mmio_rb_tree, rbt) { 		printf(" %lx:%lx, %s\n", np->mr_base, np->mr_end, 		       np->mr_param.name); 	} 	pthread_rwlock_unlock(&rwlock); }
+unit|static void mmio_rb_dump(struct mmio_rb_tree *rbt) { 	struct mmio_rb_range *np;  	pthread_rwlock_rdlock(&mmio_rwlock); 	RB_FOREACH(np, mmio_rb_tree, rbt) { 		printf(" %lx:%lx, %s\n", np->mr_base, np->mr_end, 		       np->mr_param.name); 	} 	pthread_rwlock_unlock(&mmio_rwlock); }
 endif|#
 directive|endif
 end_endif
@@ -577,7 +577,7 @@ decl_stmt|;
 name|pthread_rwlock_rdlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First check the per-vCPU cache 	 */
@@ -670,7 +670,7 @@ block|{
 name|pthread_rwlock_unlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -712,7 +712,7 @@ expr_stmt|;
 name|pthread_rwlock_unlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -804,7 +804,7 @@ expr_stmt|;
 name|pthread_rwlock_wrlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -835,7 +835,7 @@ expr_stmt|;
 name|pthread_rwlock_unlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -939,7 +939,7 @@ decl_stmt|;
 name|pthread_rwlock_wrlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 name|err
@@ -1047,7 +1047,7 @@ block|}
 name|pthread_rwlock_unlock
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1089,7 +1089,7 @@ expr_stmt|;
 name|pthread_rwlock_init
 argument_list|(
 operator|&
-name|rwlock
+name|mmio_rwlock
 argument_list|,
 name|NULL
 argument_list|)
