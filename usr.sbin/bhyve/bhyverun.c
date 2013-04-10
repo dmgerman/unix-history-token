@@ -3015,6 +3015,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|init_mem
+argument_list|()
+expr_stmt|;
 name|init_inout
 argument_list|()
 expr_stmt|;
