@@ -912,6 +912,9 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|bzero
 argument_list|(
 operator|&
@@ -948,6 +951,8 @@ operator|->
 name|ata_queue
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -2020,6 +2025,9 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -2028,6 +2036,8 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -6467,6 +6477,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 name|void
 name|ata_modify_if_48bit
@@ -6993,6 +7009,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -8472,6 +8493,7 @@ name|ATA_CAM
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|ata_cam_begin_transaction
 parameter_list|(
