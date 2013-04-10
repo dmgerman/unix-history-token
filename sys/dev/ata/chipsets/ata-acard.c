@@ -599,6 +599,22 @@ name|chipset_data
 operator|=
 name|serial
 expr_stmt|;
+else|#
+directive|else
+comment|/* Work around the lack of channel serialization in ATA_CAM. */
+name|ctlr
+operator|->
+name|channels
+operator|=
+literal|1
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"second channel ignored\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
