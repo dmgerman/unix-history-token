@@ -386,12 +386,6 @@ name|TLBSAVE_BOOKE_R31
 value|15
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPILING_LINT
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -426,24 +420,6 @@ directive|define
 name|PCPU_MD_FIELDS
 define|\
 value|PCPU_MD_COMMON_FIELDS	\ 	PCPU_MD_BOOKE_FIELDS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCPU_MD_FIELDS
-define|\
-value|PCPU_MD_COMMON_FIELDS	\ 	PCPU_MD_AIM_FIELDS	\ 	PCPU_MD_BOOKE_FIELDS
 end_define
 
 begin_endif
