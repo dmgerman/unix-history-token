@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -750,18 +750,6 @@ name|tx
 parameter_list|,
 name|zap_flags_t
 name|flags
-parameter_list|)
-function_decl|;
-name|int
-name|fzap_cursor_move_to_key
-parameter_list|(
-name|zap_cursor_t
-modifier|*
-name|zc
-parameter_list|,
-name|zap_name_t
-modifier|*
-name|zn
 parameter_list|)
 function_decl|;
 ifdef|#

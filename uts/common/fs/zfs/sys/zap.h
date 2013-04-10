@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1040,23 +1040,6 @@ parameter_list|(
 name|zap_cursor_t
 modifier|*
 name|zc
-parameter_list|)
-function_decl|;
-comment|/*  * Advance the cursor to the attribute having the given key.  */
-name|int
-name|zap_cursor_move_to_key
-parameter_list|(
-name|zap_cursor_t
-modifier|*
-name|zc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|matchtype_t
-name|mt
 parameter_list|)
 function_decl|;
 comment|/*  * Initialize a zap cursor pointing to the position recorded by  * zap_cursor_serialize (in the "serialized" argument).  You can also  * use a "serialized" argument of 0 to start at the beginning of the  * zapobj (ie.  zap_cursor_init_serialized(..., 0) is equivalent to  * zap_cursor_init(...).)  */
