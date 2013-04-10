@@ -817,7 +817,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|so_global_mtx
+name|mtx_padalign
 name|so_global_mtx
 decl_stmt|;
 end_decl_stmt
