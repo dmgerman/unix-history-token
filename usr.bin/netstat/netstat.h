@@ -281,6 +281,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kread_counters
+parameter_list|(
+name|u_long
+modifier|*
+name|addr
+parameter_list|,
+name|uint64_t
+modifier|*
+name|rval
+parameter_list|,
+name|size_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
