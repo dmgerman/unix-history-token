@@ -25088,6 +25088,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|zc_iocparm
 operator|->
 name|zfs_cmd
@@ -25796,6 +25799,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|zc_iocparm
 operator|->
