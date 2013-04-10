@@ -11592,15 +11592,6 @@ name|adapter
 operator|->
 name|queues
 decl_stmt|;
-name|struct
-name|tx_ring
-modifier|*
-name|txr
-init|=
-name|adapter
-operator|->
-name|tx_rings
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -11682,6 +11673,8 @@ name|IGB_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
+name|que
+operator|->
 name|txr
 operator|->
 name|txq_task
@@ -11690,6 +11683,8 @@ literal|0
 argument_list|,
 name|igb_deferred_mq_start
 argument_list|,
+name|que
+operator|->
 name|txr
 argument_list|)
 expr_stmt|;
