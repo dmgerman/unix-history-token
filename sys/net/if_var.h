@@ -3225,7 +3225,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|ifnet_rwlock
 decl_stmt|;
 end_decl_stmt

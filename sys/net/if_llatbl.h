@@ -90,7 +90,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|lltable_rwlock
 decl_stmt|;
 end_decl_stmt
