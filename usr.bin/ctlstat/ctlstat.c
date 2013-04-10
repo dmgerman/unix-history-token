@@ -2154,6 +2154,10 @@ operator|.
 name|tv_sec
 operator|+
 operator|(
+operator|(
+name|long
+name|double
+operator|)
 name|ctx
 operator|->
 name|cur_time
@@ -2172,6 +2176,10 @@ operator|.
 name|tv_sec
 operator|+
 operator|(
+operator|(
+name|long
+name|double
+operator|)
 name|ctx
 operator|->
 name|prev_time
