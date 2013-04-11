@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_if
@@ -790,9 +790,19 @@ name|DT_NF_SIGNED
 condition|)
 name|pfd
 operator|->
-name|pfd_flags
-operator||=
-name|DT_PFCONV_SIGNED
+name|pfd_fmt
+index|[
+name|strlen
+argument_list|(
+name|pfd
+operator|->
+name|pfd_fmt
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'i'
 expr_stmt|;
 else|else
 name|pfd
@@ -4165,9 +4175,9 @@ literal|"i"
 block|,
 name|pfproto_xint
 block|,
-name|pfcheck_dint
+name|pfcheck_xint
 block|,
-name|pfprint_dint
+name|pfprint_sint
 block|}
 block|,
 block|{

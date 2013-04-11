@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -169,6 +169,9 @@ file|<dt_dof.h>
 include|#
 directive|include
 file|<dt_pcb.h>
+include|#
+directive|include
+file|<dt_pq.h>
 struct_decl|struct
 name|dt_module
 struct_decl|;
@@ -916,6 +919,12 @@ modifier|*
 name|dt_procs
 decl_stmt|;
 comment|/* hash table of grabbed process handles */
+name|char
+modifier|*
+modifier|*
+name|dt_proc_env
+decl_stmt|;
+comment|/* additional environment variables */
 name|dt_intdesc_t
 name|dt_ints
 index|[
@@ -1001,10 +1010,11 @@ name|dt_aggregate_t
 name|dt_aggregate
 decl_stmt|;
 comment|/* aggregate */
-name|dtrace_bufdesc_t
-name|dt_buf
+name|dt_pq_t
+modifier|*
+name|dt_bufq
 decl_stmt|;
-comment|/* staging buffer */
+comment|/* CPU-specific data queue */
 name|struct
 name|dt_pfdict
 modifier|*
@@ -1305,6 +1315,28 @@ name|dt_list_t
 name|dt_lib_dep_sorted
 decl_stmt|;
 comment|/* dependency sorted library list */
+name|dtrace_flowkind_t
+name|dt_flow
+decl_stmt|;
+comment|/* flow kind */
+specifier|const
+name|char
+modifier|*
+name|dt_prefix
+decl_stmt|;
+comment|/* recommended flow prefix */
+name|int
+name|dt_indent
+decl_stmt|;
+comment|/* recommended flow indent */
+name|dtrace_epid_t
+name|dt_last_epid
+decl_stmt|;
+comment|/* most recently consumed EPID */
+name|uint64_t
+name|dt_last_timestamp
+decl_stmt|;
+comment|/* most recently consumed timestamp */
 block|}
 struct|;
 comment|/*  * Values for the user arg of the ECB.  */
@@ -1707,9 +1739,6 @@ comment|/* libctf called failed (dt_ctferr has more) */
 name|EDT_COMPILER
 block|,
 comment|/* error in D program compilation */
-name|EDT_NOREG
-block|,
-comment|/* register allocation failure */
 name|EDT_NOTUPREG
 block|,
 comment|/* tuple register allocation failure */
