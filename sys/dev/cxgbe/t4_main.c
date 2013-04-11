@@ -2802,7 +2802,127 @@ literal|0x5400
 block|,
 literal|"Chelsio T580-dbg"
 block|}
-block|, }
+block|,
+block|{
+literal|0x5401
+block|,
+literal|"Chelsio T520-CR"
+block|}
+block|,
+block|{
+literal|0x5407
+block|,
+literal|"Chelsio T520-SO"
+block|}
+block|,
+block|{
+literal|0x5408
+block|,
+literal|"Chelsio T520-CX"
+block|}
+block|,
+block|{
+literal|0x5411
+block|,
+literal|"Chelsio T520-LL-CR"
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|notyet
+block|{
+literal|0x5402
+block|,
+literal|"Chelsio T522-CR"
+block|}
+block|,
+block|{
+literal|0x5403
+block|,
+literal|"Chelsio T540-CR"
+block|}
+block|,
+block|{
+literal|0x5404
+block|,
+literal|"Chelsio T520-BCH"
+block|}
+block|,
+block|{
+literal|0x5405
+block|,
+literal|"Chelsio T540-BCH"
+block|}
+block|,
+block|{
+literal|0x5406
+block|,
+literal|"Chelsio T540-CH"
+block|}
+block|,
+block|{
+literal|0x5409
+block|,
+literal|"Chelsio T520-BT"
+block|}
+block|,
+block|{
+literal|0x540a
+block|,
+literal|"Chelsio T504-BT"
+block|}
+block|,
+block|{
+literal|0x540b
+block|,
+literal|"Chelsio B520-SR"
+block|}
+block|,
+block|{
+literal|0x540c
+block|,
+literal|"Chelsio B504-BT"
+block|}
+block|,
+block|{
+literal|0x540d
+block|,
+literal|"Chelsio T580-CR"
+block|}
+block|,
+block|{
+literal|0x540e
+block|,
+literal|"Chelsio T540-LP-CR"
+block|}
+block|,
+block|{
+literal|0x540f
+block|,
+literal|"Chelsio Amsterdam"
+block|}
+block|,
+block|{
+literal|0x5410
+block|,
+literal|"Chelsio T580-LP-CR"
+block|}
+block|,
+block|{
+literal|0x5412
+block|,
+literal|"Chelsio T560-CR"
+block|}
+block|,
+block|{
+literal|0x5413
+block|,
+literal|"Chelsio T580-CR"
+block|}
+block|,
+endif|#
+directive|endif
+block|}
 struct|;
 end_struct
 
