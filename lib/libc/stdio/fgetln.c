@@ -347,7 +347,7 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/* 	 * We have to copy the current buffered data to the line buffer. 	 * As a bonus, though, we can leave off the __SMOD. 	 * 	 * OPTIMISTIC is length that we (optimistically) expect will 	 * accomodate the `rest' of the string, on each trip through the 	 * loop below. 	 */
+comment|/* 	 * We have to copy the current buffered data to the line buffer. 	 * As a bonus, though, we can leave off the __SMOD. 	 * 	 * OPTIMISTIC is length that we (optimistically) expect will 	 * accommodate the `rest' of the string, on each trip through the 	 * loop below. 	 */
 define|#
 directive|define
 name|OPTIMISTIC
