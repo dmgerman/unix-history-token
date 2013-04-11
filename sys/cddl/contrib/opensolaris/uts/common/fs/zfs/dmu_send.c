@@ -9154,7 +9154,8 @@ name|kmem_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|guid_map_entry_t
+operator|*
+name|gmep
 argument_list|)
 argument_list|,
 name|KM_SLEEP
@@ -9219,7 +9220,8 @@ name|gmep
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|guid_map_entry_t
+operator|*
+name|gmep
 argument_list|)
 argument_list|)
 expr_stmt|;
