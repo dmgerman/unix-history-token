@@ -3569,13 +3569,7 @@ block|,
 block|{
 name|SSD_KEY_NOT_READY
 block|,
-name|SS_TUR
-operator||
-name|SSQ_MANY
-operator||
-name|SSQ_DECREMENT_COUNT
-operator||
-name|EBUSY
+name|SS_RDEF
 block|,
 literal|"NOT READY"
 block|}
@@ -4302,7 +4296,7 @@ literal|0x04
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EIO
+argument|SS_RDEF
 argument_list|,
 literal|"Logical unit not ready, cause not reportable"
 argument_list|)
