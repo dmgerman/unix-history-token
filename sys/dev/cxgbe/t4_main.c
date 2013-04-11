@@ -31672,7 +31672,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\ntotal %d, incomplete %d"
+literal|"total %d, incomplete %d"
 argument_list|,
 name|t4_read_reg
 argument_list|(
@@ -31705,7 +31705,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\ntotal %d, data overflow %d"
+literal|"total %d, data overflow %d"
 argument_list|,
 name|t4_read_reg
 argument_list|(
