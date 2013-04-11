@@ -2394,7 +2394,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|sysctl_wrwc_stats
+name|sysctl_wcwr_stats
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -7825,7 +7825,7 @@ name|sc
 operator|->
 name|doorbells
 argument_list|,
-name|DOORBELL_WRWC
+name|DOORBELL_WCWR
 argument_list|)
 expr_stmt|;
 name|setbit
@@ -20970,7 +20970,7 @@ modifier|*
 name|doorbells
 init|=
 block|{
-literal|"\20\1UDB\2WRWC\3UDBWC\4KDB"
+literal|"\20\1UDB\2WCWR\3UDBWC\4KDB"
 block|}
 decl_stmt|;
 name|ctx
@@ -22288,7 +22288,7 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"wrwc_stats"
+literal|"wcwr_stats"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
@@ -22298,11 +22298,11 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|sysctl_wrwc_stats
+name|sysctl_wcwr_stats
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"work request (WC) statistics"
+literal|"write combined work requests"
 argument_list|)
 expr_stmt|;
 block|}
@@ -31573,7 +31573,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|sysctl_wrwc_stats
+name|sysctl_wcwr_stats
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)

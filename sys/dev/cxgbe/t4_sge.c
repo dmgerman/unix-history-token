@@ -13057,7 +13057,7 @@ name|eq
 operator|->
 name|doorbells
 argument_list|,
-name|DOORBELL_WRWC
+name|DOORBELL_WCWR
 argument_list|)
 condition|)
 block|{
@@ -13135,7 +13135,7 @@ name|eq
 operator|->
 name|doorbells
 argument_list|,
-name|DOORBELL_WRWC
+name|DOORBELL_WCWR
 argument_list|)
 expr_stmt|;
 else|else
@@ -19332,7 +19332,7 @@ argument_list|(
 operator|&
 name|db
 argument_list|,
-name|DOORBELL_WRWC
+name|DOORBELL_WCWR
 argument_list|)
 expr_stmt|;
 name|eq
@@ -19379,7 +19379,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-name|DOORBELL_WRWC
+name|DOORBELL_WCWR
 case|:
 block|{
 specifier|volatile
@@ -19393,7 +19393,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 		 * Queues whose 128B doorbell segment fits in the page do not 		 * use relative qid (udb_qid is always 0).  Only queues with 		 * doorbell segments can do WRWC. 		 */
+comment|/* 		 * Queues whose 128B doorbell segment fits in the page do not 		 * use relative qid (udb_qid is always 0).  Only queues with 		 * doorbell segments can do WCWR. 		 */
 name|KASSERT
 argument_list|(
 name|eq

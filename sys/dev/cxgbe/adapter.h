@@ -1243,7 +1243,7 @@ enum|enum
 block|{
 name|DOORBELL_UDB
 block|,
-name|DOORBELL_WRWC
+name|DOORBELL_WCWR
 block|,
 name|DOORBELL_UDBWC
 block|,
