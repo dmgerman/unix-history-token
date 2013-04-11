@@ -2262,6 +2262,43 @@ value|0xfffff000
 end_define
 
 begin_comment
+comment|/* MSR_IA32_FEATURE_CONTROL related */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_FEATURE_CONTROL_LOCK
+value|0x01
+end_define
+
+begin_comment
+comment|/* lock bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_FEATURE_CONTROL_SMX_EN
+value|0x02
+end_define
+
+begin_comment
+comment|/* enable VMX inside SMX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_FEATURE_CONTROL_VMX_EN
+value|0x04
+end_define
+
+begin_comment
+comment|/* enable VMX outside SMX */
+end_comment
+
+begin_comment
 comment|/*  * PAT modes.  */
 end_comment
 
