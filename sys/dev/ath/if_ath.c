@@ -14551,6 +14551,21 @@ operator|=
 name|HAL_TXQ_USEDEFAULT
 expr_stmt|;
 comment|/* 	 * Enable interrupts only for EOL and DESC conditions. 	 * We mark tx descriptors to receive a DESC interrupt 	 * when a tx queue gets deep; otherwise waiting for the 	 * EOL to reap descriptors.  Note that this is done to 	 * reduce interrupt load and this only defers reaping 	 * descriptors, never transmitting frames.  Aside from 	 * reducing interrupts this also permits more concurrency. 	 * The only potential downside is if the tx queue backs 	 * up in which case the top half of the kernel may backup 	 * due to a lack of tx descriptors. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_isedma
+condition|)
+name|qi
+operator|.
+name|tqi_qflags
+operator|=
+name|HAL_TXQ_TXEOLINT_ENABLE
+operator||
+name|HAL_TXQ_TXOKINT_ENABLE
+expr_stmt|;
+else|else
 name|qi
 operator|.
 name|tqi_qflags
