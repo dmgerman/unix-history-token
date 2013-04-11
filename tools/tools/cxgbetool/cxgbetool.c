@@ -4056,6 +4056,17 @@ if|if
 condition|(
 name|mode
 operator|&
+name|T4_FILTER_IP_FRAGMENT
+condition|)
+name|printf
+argument_list|(
+literal|"frag "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
 name|T4_FILTER_MPS_HIT_TYPE
 condition|)
 name|printf
@@ -4126,7 +4137,7 @@ name|T4_FILTER_VNIC
 condition|)
 name|printf
 argument_list|(
-literal|"vnic "
+literal|"vnic/ovlan "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4196,6 +4207,23 @@ name|argv
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"frag"
+argument_list|)
+condition|)
+name|mode
+operator||=
+name|T4_FILTER_IP_FRAGMENT
+expr_stmt|;
 if|if
 condition|(
 operator|!
