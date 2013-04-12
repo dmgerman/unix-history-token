@@ -954,17 +954,14 @@ decl_stmt|;
 name|uint32_t
 name|cur_nseg
 decl_stmt|;
-name|KASSERT
-argument_list|(
+comment|/* 	 * If the mapping operation failed, return immediately.  The caller 	 *  is responsible for detecting the error status and failing the 	 *  tracker manually. 	 */
+if|if
+condition|(
 name|error
-operator|==
+operator|!=
 literal|0
-argument_list|,
-operator|(
-literal|"nvme_payload_map error != 0\n"
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* 	 * Note that we specified PAGE_SIZE for alignment and max 	 *  segment size when creating the bus dma tags.  So here 	 *  we can safely just transfer each segment to its 	 *  associated PRP entry. 	 */
 name|tr
 operator|->

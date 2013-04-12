@@ -3327,6 +3327,8 @@ name|tr
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -3482,9 +3484,15 @@ name|err
 operator|!=
 literal|0
 condition|)
-name|panic
+name|nvme_printf
 argument_list|(
-literal|"bus_dmamap_load returned non-zero!\n"
+name|qpair
+operator|->
+name|ctrlr
+argument_list|,
+literal|"bus_dmamap_load returned 0x%x!\n"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3537,9 +3545,15 @@ name|err
 operator|!=
 literal|0
 condition|)
-name|panic
+name|nvme_printf
 argument_list|(
-literal|"bus_dmamap_load_uio returned non-zero!\n"
+name|qpair
+operator|->
+name|ctrlr
+argument_list|,
+literal|"bus_dmamap_load_uio returned 0x%x!\n"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3582,9 +3596,15 @@ name|err
 operator|!=
 literal|0
 condition|)
-name|panic
+name|nvme_printf
 argument_list|(
-literal|"bus_dmamap_load_bio returned non-zero!\n"
+name|qpair
+operator|->
+name|ctrlr
+argument_list|,
+literal|"bus_dmamap_load_bio returned 0x%x!\n"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3601,6 +3621,47 @@ name|type
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * The dmamap operation failed, so we manually fail the 		 *  tracker here with DATA_TRANSFER_ERROR status. 		 * 		 * nvme_qpair_manual_complete_tracker must not be called 		 *  with the qpair lock held. 		 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|qpair
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|nvme_qpair_manual_complete_tracker
+argument_list|(
+name|qpair
+argument_list|,
+name|tr
+argument_list|,
+name|NVME_SCT_GENERIC
+argument_list|,
+name|NVME_SC_DATA_TRANSFER_ERROR
+argument_list|,
+literal|1
+comment|/* do not retry */
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|qpair
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
