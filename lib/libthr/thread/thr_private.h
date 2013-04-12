@@ -2403,16 +2403,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|_thr_rtld_fini
-argument_list|(
-name|void
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|_thr_rtld_postfork_child
 argument_list|(
 name|void
