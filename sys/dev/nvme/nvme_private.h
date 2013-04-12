@@ -750,6 +750,10 @@ index|[
 name|NVME_MAX_CONSUMERS
 index|]
 decl_stmt|;
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 block|}
 struct|;
 end_struct

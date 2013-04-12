@@ -1192,6 +1192,32 @@ name|id
 operator|=
 name|id
 expr_stmt|;
+comment|/* 	 * Namespaces are reconstructed after a controller reset, so check 	 *  to make sure we only call mtx_init once on each mtx. 	 * 	 * TODO: Move this somewhere where it gets called at controller 	 *  construction time, which is not invoked as part of each 	 *  controller reset. 	 */
+if|if
+condition|(
+operator|!
+name|mtx_initialized
+argument_list|(
+operator|&
+name|ns
+operator|->
+name|lock
+argument_list|)
+condition|)
+name|mtx_init
+argument_list|(
+operator|&
+name|ns
+operator|->
+name|lock
+argument_list|,
+literal|"nvme ns lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CHATHAM2
