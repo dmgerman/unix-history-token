@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSection.h"
+file|"llvm/IR/GlobalVariable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/GlobalVariable.h"
+file|"llvm/MC/MCSection.h"
 end_include
 
 begin_include
@@ -152,6 +152,30 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|string
+name|getLabelBeginName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|""
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|string
+name|getLabelEndName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|""
 return|;
 block|}
 expr|}

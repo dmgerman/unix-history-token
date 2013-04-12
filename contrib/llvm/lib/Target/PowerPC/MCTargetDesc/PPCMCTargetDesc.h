@@ -59,6 +59,16 @@ directive|define
 name|PPCMCTARGETDESC_H
 end_define
 
+begin_comment
+comment|// GCC #defines PPC on Linux but we use it as our namespace name
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPC
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -169,6 +179,20 @@ end_decl_stmt
 begin_comment
 comment|// End llvm namespace
 end_comment
+
+begin_comment
+comment|// Generated files will use "namespace PPC". To avoid symbol clash,
+end_comment
+
+begin_comment
+comment|// undefine PPC here. PPC may be predefined on some hosts.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPC
+end_undef
 
 begin_comment
 comment|// Defines symbolic names for PowerPC registers.  This defines a mapping from

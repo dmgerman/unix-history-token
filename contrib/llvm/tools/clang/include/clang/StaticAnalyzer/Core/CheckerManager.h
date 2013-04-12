@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/ProgramPoint.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/Store.h"
 end_include
 
 begin_include
@@ -86,13 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/Store.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Analysis/ProgramPoint.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -798,8 +798,39 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
+begin_comment
 unit|};
+comment|/// \brief Describes the different reasons a pointer escapes
+end_comment
+
+begin_comment
+comment|/// during analysis.
+end_comment
+
+begin_enum
+enum|enum
+name|PointerEscapeKind
+block|{
+comment|/// A pointer escapes due to binding its value to a location
+comment|/// that the analyzer cannot track.
+name|PSK_EscapeOnBind
+block|,
+comment|/// The pointer has been passed to a function call directly.
+name|PSK_DirectEscapeOnCall
+block|,
+comment|/// The pointer has been passed to a function indirectly.
+comment|/// For example, the pointer is accessible through an
+comment|/// argument to a function.
+name|PSK_IndirectEscapeOnCall
+block|,
+comment|/// The reason for pointer escape is unknown. For example,
+comment|/// a region containing this pointer is invalidated.
+name|PSK_EscapeOther
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
 name|class
 name|CheckerManager
 block|{
@@ -1570,12 +1601,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Run checkers for end of path.
+comment|/// \brief Run checkers on end of function.
 end_comment
 
 begin_function_decl
 name|void
-name|runCheckersForEndPath
+name|runCheckersForEndFunction
 parameter_list|(
 name|NodeBuilderContext
 modifier|&
@@ -1778,8 +1809,6 @@ name|ProgramStateRef
 name|state
 argument_list|,
 specifier|const
-name|StoreManager
-operator|::
 name|InvalidatedSymbols
 operator|*
 name|invalidated
@@ -1807,6 +1836,86 @@ name|Call
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Run checkers when pointers escape.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This notifies the checkers about pointer escape, which occurs whenever
+end_comment
+
+begin_comment
+comment|/// the analyzer cannot track the symbol any more. For example, as a
+end_comment
+
+begin_comment
+comment|/// result of assigning a pointer into a global or when it's passed to a
+end_comment
+
+begin_comment
+comment|/// function call the analyzer cannot model.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param State The state at the point of escape.
+end_comment
+
+begin_comment
+comment|/// \param Escaped The list of escaped symbols.
+end_comment
+
+begin_comment
+comment|/// \param Call The corresponding CallEvent, if the symbols escape as
+end_comment
+
+begin_comment
+comment|///        parameters to the given call.
+end_comment
+
+begin_comment
+comment|/// \param IsConst Specifies if the pointer is const.
+end_comment
+
+begin_comment
+comment|/// \returns Checkers can modify the state by returning a new one.
+end_comment
+
+begin_function_decl
+name|ProgramStateRef
+name|runCheckersForPointerEscape
+parameter_list|(
+name|ProgramStateRef
+name|State
+parameter_list|,
+specifier|const
+name|InvalidatedSymbols
+modifier|&
+name|Escaped
+parameter_list|,
+specifier|const
+name|CallEvent
+modifier|*
+name|Call
+parameter_list|,
+name|PointerEscapeKind
+name|Kind
+parameter_list|,
+name|bool
+name|IsConst
+init|=
+name|false
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Run checkers for handling assumptions on symbolic values.
@@ -2169,7 +2278,7 @@ name|CheckerContext
 operator|&
 argument_list|)
 operator|>
-name|CheckEndPathFunc
+name|CheckEndFunctionFunc
 expr_stmt|;
 end_typedef
 
@@ -2233,8 +2342,6 @@ argument_list|(
 name|ProgramStateRef
 argument_list|,
 specifier|const
-name|StoreManager
-operator|::
 name|InvalidatedSymbols
 operator|*
 name|symbols
@@ -2275,6 +2382,27 @@ name|ProgramStateRef
 argument_list|)
 operator|>
 name|WantsRegionChangeUpdateFunc
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|CheckerFn
+operator|<
+name|ProgramStateRef
+argument_list|(
+argument|ProgramStateRef
+argument_list|,
+argument|const InvalidatedSymbols&Escaped
+argument_list|,
+argument|const CallEvent *Call
+argument_list|,
+argument|PointerEscapeKind Kind
+argument_list|,
+argument|bool IsConst
+argument_list|)
+operator|>
+name|CheckPointerEscapeFunc
 expr_stmt|;
 end_typedef
 
@@ -2448,9 +2576,9 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_registerForEndPath
+name|_registerForEndFunction
 parameter_list|(
-name|CheckEndPathFunc
+name|CheckEndFunctionFunc
 name|checkfn
 parameter_list|)
 function_decl|;
@@ -2495,6 +2623,26 @@ name|checkfn
 parameter_list|,
 name|WantsRegionChangeUpdateFunc
 name|wantUpdateFn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_registerForPointerEscape
+parameter_list|(
+name|CheckPointerEscapeFunc
+name|checkfn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_registerForConstPointerEscape
+parameter_list|(
+name|CheckPointerEscapeFunc
+name|checkfn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3155,9 +3303,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|CheckEndPathFunc
+name|CheckEndFunctionFunc
 operator|>
-name|EndPathCheckers
+name|EndFunctionCheckers
 expr_stmt|;
 end_expr_stmt
 
@@ -3216,6 +3364,17 @@ operator|<
 name|RegionChangesCheckerInfo
 operator|>
 name|RegionChangesCheckers
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|CheckPointerEscapeFunc
+operator|>
+name|PointerEscapeCheckers
 expr_stmt|;
 end_expr_stmt
 

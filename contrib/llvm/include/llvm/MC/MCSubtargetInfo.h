@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/SubtargetFeature.h"
+file|"llvm/MC/MCInstrItineraries.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCInstrItineraries.h"
+file|"llvm/MC/SubtargetFeature.h"
 end_include
 
 begin_include

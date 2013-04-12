@@ -69,9 +69,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// StringSet - A wrapper for StringMap that provides set-like
-comment|/// functionality.  Only insert() and count() methods are used by my
-comment|/// code.
+comment|/// StringSet - A wrapper for StringMap that provides set-like functionality.
 name|template
 operator|<
 name|class
@@ -107,108 +105,69 @@ name|base
 expr_stmt|;
 name|public
 operator|:
+comment|/// insert - Insert the specified key into the set.  If the key already
+comment|/// exists in the set, return false and ignore the request, otherwise insert
+comment|/// it and return true.
 name|bool
 name|insert
 argument_list|(
-argument|StringRef InLang
+argument|StringRef Key
 argument_list|)
 block|{
+comment|// Get or create the map entry for the key; if it doesn't exist the value
+comment|// type will be default constructed which we use to detect insert.
+comment|//
+comment|// We use '+' as the sentinel value in the map.
 name|assert
 argument_list|(
 operator|!
-name|InLang
+name|Key
 operator|.
 name|empty
 argument_list|()
 argument_list|)
 block|;
-specifier|const
-name|char
-operator|*
-name|KeyStart
-operator|=
-name|InLang
-operator|.
-name|data
-argument_list|()
-block|;
-specifier|const
-name|char
-operator|*
-name|KeyEnd
-operator|=
-name|KeyStart
-operator|+
-name|InLang
-operator|.
-name|size
-argument_list|()
-block|;
-name|llvm
-operator|::
 name|StringMapEntry
 operator|<
 name|char
 operator|>
-operator|*
+operator|&
 name|Entry
 operator|=
-name|llvm
-operator|::
-name|StringMapEntry
-operator|<
-name|char
-operator|>
-operator|::
-name|Create
+name|this
+operator|->
+name|GetOrCreateValue
 argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
-argument_list|,
-name|base
-operator|::
-name|getAllocator
-argument_list|()
-argument_list|,
-literal|'+'
+name|Key
 argument_list|)
 block|;
 if|if
 condition|(
-operator|!
-name|base
-operator|::
-name|insert
-argument_list|(
 name|Entry
-argument_list|)
-condition|)
-block|{
-name|Entry
-operator|->
-name|Destroy
-argument_list|(
-name|base
-operator|::
-name|getAllocator
+operator|.
+name|getValue
 argument_list|()
-argument_list|)
-expr_stmt|;
+operator|==
+literal|'+'
+condition|)
 return|return
 name|false
 return|;
-block|}
+name|Entry
+operator|.
+name|setValue
+argument_list|(
+literal|'+'
+argument_list|)
+expr_stmt|;
 return|return
 name|true
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
 begin_endif
+unit|}; }
 endif|#
 directive|endif
 end_endif

@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -103,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
 end_include
 
 begin_include
@@ -481,6 +481,7 @@ block|}
 name|bool
 name|compare
 argument_list|(
+specifier|const
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -488,6 +489,7 @@ operator|>
 operator|*
 name|Other
 argument_list|)
+decl|const
 block|{
 if|if
 condition|(
@@ -504,6 +506,7 @@ name|true
 return|;
 name|SmallPtrSet
 operator|<
+specifier|const
 name|NodeT
 operator|*
 operator|,
@@ -513,7 +516,7 @@ name|OtherChildren
 expr_stmt|;
 for|for
 control|(
-name|iterator
+name|const_iterator
 name|I
 init|=
 name|Other
@@ -536,6 +539,7 @@ operator|++
 name|I
 control|)
 block|{
+specifier|const
 name|NodeT
 modifier|*
 name|Nd
@@ -558,7 +562,7 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|iterator
+name|const_iterator
 name|I
 init|=
 name|begin
@@ -577,6 +581,7 @@ operator|++
 name|I
 control|)
 block|{
+specifier|const
 name|NodeT
 modifier|*
 name|N
@@ -3734,26 +3739,19 @@ control|)
 block|{
 if|if
 condition|(
-name|std
-operator|::
-name|distance
-argument_list|(
 name|TraitsTy
 operator|::
 name|child_begin
 argument_list|(
 name|I
 argument_list|)
-argument_list|,
+operator|==
 name|TraitsTy
 operator|::
 name|child_end
 argument_list|(
 name|I
 argument_list|)
-argument_list|)
-operator|==
-literal|0
 condition|)
 name|addRoot
 argument_list|(

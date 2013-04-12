@@ -101,17 +101,13 @@ name|public
 label|:
 name|LibCallSimplifier
 argument_list|(
-specifier|const
-name|DataLayout
-operator|*
-name|TD
+argument|const DataLayout *TD
 argument_list|,
-specifier|const
-name|TargetLibraryInfo
-operator|*
-name|TLI
+argument|const TargetLibraryInfo *TLI
+argument_list|,
+argument|bool UnsafeFPShrink
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|virtual
 operator|~
 name|LibCallSimplifier

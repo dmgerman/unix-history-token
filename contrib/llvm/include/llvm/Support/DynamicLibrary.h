@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_DYNAMIC_LIBRARY_H
+name|LLVM_SYSTEM_DYNAMICLIBRARY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_DYNAMIC_LIBRARY_H
+name|LLVM_SYSTEM_DYNAMICLIBRARY_H
 end_define
 
 begin_include

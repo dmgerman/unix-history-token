@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Option.h"
+file|"clang/Driver/OptSpecifier.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Driver/OptSpecifier.h"
+file|"clang/Driver/Option.h"
 end_include
 
 begin_include
@@ -1228,6 +1228,10 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
+name|void
+name|dump
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 name|class

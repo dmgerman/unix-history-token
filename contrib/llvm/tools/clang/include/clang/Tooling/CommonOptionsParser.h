@@ -146,8 +146,8 @@ comment|/// ...
 comment|///
 comment|/// int main(int argc, const char **argv) {
 comment|///   CommonOptionsParser OptionsParser(argc, argv);
-comment|///   ClangTool Tool(OptionsParser.GetCompilations(),
-comment|///                  OptionsParser.GetSourcePathListi());
+comment|///   ClangTool Tool(OptionsParser.getCompilations(),
+comment|///                  OptionsParser.getSourcePathListi());
 comment|///   return Tool.run(newFrontendActionFactory<clang::SyntaxOnlyAction>());
 comment|/// }
 comment|/// \endcode
@@ -176,7 +176,7 @@ expr_stmt|;
 comment|/// Returns a reference to the loaded compilations database.
 name|CompilationDatabase
 modifier|&
-name|GetCompilations
+name|getCompilations
 parameter_list|()
 block|{
 return|return
@@ -193,7 +193,7 @@ name|std
 operator|::
 name|string
 operator|>
-name|GetSourcePathList
+name|getSourcePathList
 argument_list|()
 block|{
 return|return
@@ -209,8 +209,6 @@ name|HelpMessage
 decl_stmt|;
 name|private
 label|:
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|CompilationDatabase

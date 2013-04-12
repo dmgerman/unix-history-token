@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/FrontendAction.h"
+file|"clang/ARCMigrate/FileRemapper.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/ARCMigrate/FileRemapper.h"
+file|"clang/Frontend/FrontendAction.h"
 end_include
 
 begin_include

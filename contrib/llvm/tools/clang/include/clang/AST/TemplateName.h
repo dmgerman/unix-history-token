@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/OperatorKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerUnion.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/OperatorKinds.h"
 end_include
 
 begin_decl_stmt
@@ -146,9 +146,8 @@ block|,
 name|SubstTemplateTemplateParmPack
 block|}
 enum|;
-union|union
-block|{
 struct|struct
+name|BitsTag
 block|{
 comment|/// \brief A Kind.
 name|unsigned
@@ -164,8 +163,13 @@ range|:
 literal|30
 decl_stmt|;
 block|}
-name|Bits
 struct|;
+union|union
+block|{
+name|struct
+name|BitsTag
+name|Bits
+decl_stmt|;
 name|void
 modifier|*
 name|PointerAlignment
@@ -998,6 +1002,22 @@ name|bool
 name|SuppressNNS
 operator|=
 name|false
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Debugging aid that dumps the template name.
+end_comment
+
+begin_decl_stmt
+name|void
+name|dump
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;

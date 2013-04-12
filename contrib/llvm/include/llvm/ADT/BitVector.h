@@ -436,7 +436,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_expr_stmt
@@ -2731,7 +2731,7 @@ begin_if
 unit|}
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_decl_stmt

@@ -189,6 +189,10 @@ comment|/// Once all matchers are added, newASTConsumer() returns an ASTConsumer
 comment|/// that will trigger the callbacks specified via addMatcher(...) when a match
 comment|/// is found.
 comment|///
+comment|/// The order of matches is guaranteed to be equivalent to doing a pre-order
+comment|/// traversal on the AST, and applying the matchers in the order in which they
+comment|/// were added to the MatchFinder.
+comment|///
 comment|/// See ASTMatchers.h for more information about how to create matchers.
 comment|///
 comment|/// Not intended to be subclassed.
@@ -401,35 +405,58 @@ operator|*
 name|newASTConsumer
 argument_list|()
 expr_stmt|;
-comment|/// \brief Finds all matches on the given \c Node.
+comment|/// \brief Calls the registered callbacks on all matches on the given \p Node.
+comment|///
+comment|/// Note that there can be multiple matches on a single node, for
+comment|/// example when using decl(forEachDescendant(stmt())).
 comment|///
 comment|/// @{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|void
-name|findAll
-parameter_list|(
-specifier|const
-name|Decl
-modifier|&
+name|match
+argument_list|(
+argument|const T&Node
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+block|{
+name|match
+argument_list|(
+name|clang
+operator|::
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|::
+name|create
+argument_list|(
 name|Node
-parameter_list|,
-name|ASTContext
-modifier|&
+argument_list|)
+argument_list|,
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;   }
 name|void
-name|findAll
-parameter_list|(
+name|match
+argument_list|(
 specifier|const
-name|Stmt
-modifier|&
+name|clang
+operator|::
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|&
 name|Node
-parameter_list|,
+argument_list|,
 name|ASTContext
-modifier|&
+operator|&
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @}
 comment|/// \brief Registers a callback to notify the end of parsing.
 comment|///
@@ -475,6 +502,271 @@ name|ParsingDone
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// \brief Returns the results of matching \p Matcher on \p Node.
+comment|///
+comment|/// Collects the \c BoundNodes of all callback invocations when matching
+comment|/// \p Matcher on \p Node and returns the collected results.
+comment|///
+comment|/// Multiple results occur when using matchers like \c forEachDescendant,
+comment|/// which generate a result for each sub-match.
+comment|///
+comment|/// \see selectFirst
+comment|/// @{
+name|template
+operator|<
+name|typename
+name|MatcherT
+operator|,
+name|typename
+name|NodeT
+operator|>
+name|SmallVector
+operator|<
+name|BoundNodes
+operator|,
+literal|1
+operator|>
+name|match
+argument_list|(
+argument|MatcherT Matcher
+argument_list|,
+argument|const NodeT&Node
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|MatcherT
+operator|>
+name|SmallVector
+operator|<
+name|BoundNodes
+operator|,
+literal|1
+operator|>
+name|match
+argument_list|(
+argument|MatcherT Matcher
+argument_list|,
+argument|const ast_type_traits::DynTypedNode&Node
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+expr_stmt|;
+comment|/// @}
+comment|/// \brief Returns the first result of type \c NodeT bound to \p BoundTo.
+comment|///
+comment|/// Returns \c NULL if there is no match, or if the matching node cannot be
+comment|/// casted to \c NodeT.
+comment|///
+comment|/// This is useful in combanation with \c match():
+comment|/// \code
+comment|///   Decl *D = selectFirst<Decl>("id", match(Matcher.bind("id"),
+comment|///                                           Node, Context));
+comment|/// \endcode
+name|template
+operator|<
+name|typename
+name|NodeT
+operator|>
+name|NodeT
+operator|*
+name|selectFirst
+argument_list|(
+argument|StringRef BoundTo
+argument_list|,
+argument|const SmallVectorImpl<BoundNodes>&Results
+argument_list|)
+block|{
+for|for
+control|(
+name|SmallVectorImpl
+operator|<
+name|BoundNodes
+operator|>
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Results
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|Results
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+if|if
+condition|(
+name|NodeT
+modifier|*
+name|Node
+init|=
+name|I
+operator|->
+name|getNodeAs
+operator|<
+name|NodeT
+operator|>
+operator|(
+name|BoundTo
+operator|)
+condition|)
+return|return
+name|Node
+return|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+name|namespace
+name|internal
+block|{
+name|class
+name|CollectMatchesCallback
+range|:
+name|public
+name|MatchFinder
+operator|::
+name|MatchCallback
+block|{
+name|public
+operator|:
+name|virtual
+name|void
+name|run
+argument_list|(
+argument|const MatchFinder::MatchResult&Result
+argument_list|)
+block|{
+name|Nodes
+operator|.
+name|push_back
+argument_list|(
+name|Result
+operator|.
+name|Nodes
+argument_list|)
+block|;   }
+name|SmallVector
+operator|<
+name|BoundNodes
+block|,
+literal|1
+operator|>
+name|Nodes
+block|; }
+decl_stmt|;
+block|}
+name|template
+operator|<
+name|typename
+name|MatcherT
+operator|>
+name|SmallVector
+operator|<
+name|BoundNodes
+operator|,
+literal|1
+operator|>
+name|match
+argument_list|(
+argument|MatcherT Matcher
+argument_list|,
+argument|const ast_type_traits::DynTypedNode&Node
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+block|{
+name|internal
+operator|::
+name|CollectMatchesCallback
+name|Callback
+block|;
+name|MatchFinder
+name|Finder
+block|;
+name|Finder
+operator|.
+name|addMatcher
+argument_list|(
+name|Matcher
+argument_list|,
+operator|&
+name|Callback
+argument_list|)
+block|;
+name|Finder
+operator|.
+name|match
+argument_list|(
+name|Node
+argument_list|,
+name|Context
+argument_list|)
+block|;
+return|return
+name|Callback
+operator|.
+name|Nodes
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|MatcherT
+operator|,
+name|typename
+name|NodeT
+operator|>
+name|SmallVector
+operator|<
+name|BoundNodes
+operator|,
+literal|1
+operator|>
+name|match
+argument_list|(
+argument|MatcherT Matcher
+argument_list|,
+argument|const NodeT&Node
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+block|{
+return|return
+name|match
+argument_list|(
+name|Matcher
+argument_list|,
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|::
+name|create
+argument_list|(
+name|Node
+argument_list|)
+argument_list|,
+name|Context
+argument_list|)
+return|;
+block|}
 block|}
 comment|// end namespace ast_matchers
 block|}

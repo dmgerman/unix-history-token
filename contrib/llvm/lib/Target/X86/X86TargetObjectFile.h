@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Target/TargetLoweringObjectFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLoweringObjectFile.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -79,7 +79,7 @@ name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getExprForDwarfGlobalReference
+name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,

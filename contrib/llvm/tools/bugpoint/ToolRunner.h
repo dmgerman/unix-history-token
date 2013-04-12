@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SystemUtils.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
+file|"llvm/Support/SystemUtils.h"
 end_include
 
 begin_include

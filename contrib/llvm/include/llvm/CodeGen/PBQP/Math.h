@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<cassert>
 end_include
 
 begin_include

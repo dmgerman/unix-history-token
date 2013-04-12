@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"clang-c/Index.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/CanonicalType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang-c/Index.h"
 end_include
 
 begin_include
@@ -295,6 +295,7 @@ name|ASTContext
 modifier|&
 name|C
 parameter_list|,
+specifier|const
 name|NamedDecl
 modifier|*
 name|ND
@@ -331,6 +332,7 @@ comment|/// declaration.
 name|CXCursorKind
 name|getCursorKindForDecl
 parameter_list|(
+specifier|const
 name|Decl
 modifier|*
 name|D
@@ -488,7 +490,8 @@ comment|/// \brief Code completion in a parenthesized expression, which means th
 comment|/// we may also have types here in C and Objective-C (as well as in C++).
 name|CCC_ParenthesizedExpression
 block|,
-comment|/// \brief Code completion where an Objective-C instance message is expcted.
+comment|/// \brief Code completion where an Objective-C instance message is
+comment|/// expected.
 name|CCC_ObjCInstanceMessage
 block|,
 comment|/// \brief Code completion where an Objective-C class message is expected.
@@ -1228,6 +1231,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|DeclContext
 operator|*
 block|,
@@ -1289,6 +1293,7 @@ block|}
 name|StringRef
 name|getParentName
 argument_list|(
+specifier|const
 name|DeclContext
 operator|*
 name|DC
@@ -1578,11 +1583,23 @@ comment|/// \brief Add the parent context information to this code completion.
 name|void
 name|addParentContext
 argument_list|(
+specifier|const
 name|DeclContext
 operator|*
 name|DC
 argument_list|)
 block|;
+specifier|const
+name|char
+operator|*
+name|getBriefComment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BriefComment
+return|;
+block|}
 name|void
 name|addBriefComment
 argument_list|(
@@ -1627,6 +1644,7 @@ block|}
 block|;
 comment|/// \brief When Kind == RK_Declaration or RK_Pattern, the declaration we are
 comment|/// referring to. In the latter case, the declaration might be NULL.
+specifier|const
 name|NamedDecl
 operator|*
 name|Declaration
@@ -1647,6 +1665,7 @@ operator|*
 name|Pattern
 block|;
 comment|/// \brief When Kind == RK_Macro, the identifier that refers to a macro.
+specifier|const
 name|IdentifierInfo
 operator|*
 name|Macro
@@ -1716,7 +1735,9 @@ block|;
 comment|/// \brief Build a result that refers to a declaration.
 name|CodeCompletionResult
 argument_list|(
-argument|NamedDecl *Declaration
+argument|const NamedDecl *Declaration
+argument_list|,
+argument|unsigned Priority
 argument_list|,
 argument|NestedNameSpecifier *Qualifier =
 literal|0
@@ -1733,10 +1754,7 @@ argument_list|)
 block|,
 name|Priority
 argument_list|(
-name|getPriorityFromDecl
-argument_list|(
-name|Declaration
-argument_list|)
+name|Priority
 argument_list|)
 block|,
 name|StartParameter
@@ -1865,7 +1883,7 @@ block|{   }
 comment|/// \brief Build a result that refers to a macro.
 name|CodeCompletionResult
 argument_list|(
-argument|IdentifierInfo *Macro
+argument|const IdentifierInfo *Macro
 argument_list|,
 argument|unsigned Priority = CCP_Macro
 argument_list|)
@@ -1946,7 +1964,7 @@ argument|CXCursorKind CursorKind = CXCursor_NotImplemented
 argument_list|,
 argument|CXAvailabilityKind Availability = CXAvailability_Available
 argument_list|,
-argument|NamedDecl *D =
+argument|const NamedDecl *D =
 literal|0
 argument_list|)
 operator|:
@@ -2090,6 +2108,7 @@ name|computeCursorKindAndAvailability
 argument_list|()
 block|;   }
 comment|/// \brief Retrieve the declaration stored in this result.
+specifier|const
 name|NamedDecl
 operator|*
 name|getDeclaration
@@ -2163,16 +2182,6 @@ argument_list|,
 argument|CodeCompletionTUInfo&CCTUInfo
 argument_list|,
 argument|bool IncludeBriefComments
-argument_list|)
-block|;
-comment|/// \brief Determine a base priority for the given declaration.
-specifier|static
-name|unsigned
-name|getPriorityFromDecl
-argument_list|(
-name|NamedDecl
-operator|*
-name|ND
 argument_list|)
 block|;
 name|private

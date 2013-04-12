@@ -346,6 +346,9 @@ block|,
 comment|// Convert a builtin function to a function pointer; only allowed in the
 comment|// callee of a call expression.
 name|CK_BuiltinFnToFnPtr
+block|,
+comment|// Convert a zero value for OpenCL event_t initialization.
+name|CK_ZeroToOCLEvent
 block|}
 enum|;
 specifier|static

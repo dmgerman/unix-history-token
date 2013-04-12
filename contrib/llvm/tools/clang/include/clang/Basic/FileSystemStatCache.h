@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/types.h>
 end_include
 
 begin_decl_stmt
@@ -138,8 +138,8 @@ comment|/// to accelerate it if possible.
 comment|///
 comment|/// \returns \c true if the path does not exist or \c false if it exists.
 comment|///
-comment|/// If FileDescriptor is non-null, then this lookup should only return success
-comment|/// for files (not directories).  If it is null this lookup should only return
+comment|/// If isFile is true, then this lookup should only return success for files
+comment|/// (not directories).  If it is false this lookup should only return
 comment|/// success for directories (not files).  On a successful file lookup, the
 comment|/// implementation can optionally fill in FileDescriptor with a valid
 comment|/// descriptor and the client guarantees that it will close it.
@@ -156,6 +156,9 @@ name|struct
 name|stat
 modifier|&
 name|StatBuf
+parameter_list|,
+name|bool
+name|isFile
 parameter_list|,
 name|int
 modifier|*
@@ -228,6 +231,9 @@ name|stat
 modifier|&
 name|StatBuf
 parameter_list|,
+name|bool
+name|isFile
+parameter_list|,
 name|int
 modifier|*
 name|FileDescriptor
@@ -247,6 +253,9 @@ name|struct
 name|stat
 modifier|&
 name|StatBuf
+parameter_list|,
+name|bool
+name|isFile
 parameter_list|,
 name|int
 modifier|*
@@ -271,6 +280,8 @@ name|Path
 argument_list|,
 name|StatBuf
 argument_list|,
+name|isFile
+argument_list|,
 name|FileDescriptor
 argument_list|)
 return|;
@@ -282,6 +293,8 @@ argument_list|(
 name|Path
 argument_list|,
 name|StatBuf
+argument_list|,
+name|isFile
 argument_list|,
 name|FileDescriptor
 argument_list|,
@@ -364,19 +377,13 @@ name|virtual
 name|LookupResult
 name|getStat
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Path
+argument|const char *Path
 argument_list|,
-expr|struct
-name|stat
-operator|&
-name|StatBuf
+argument|struct stat&StatBuf
 argument_list|,
-name|int
-operator|*
-name|FileDescriptor
+argument|bool isFile
+argument_list|,
+argument|int *FileDescriptor
 argument_list|)
 decl_stmt|;
 block|}

@@ -357,12 +357,6 @@ modifier|*
 name|createInstCountPass
 parameter_list|()
 function_decl|;
-comment|// print debug info intrinsics in human readable form
-name|FunctionPass
-modifier|*
-name|createDbgInfoPrinterPass
-parameter_list|()
-function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
 comment|// createRegionInfoPass - This pass finds all single entry single exit regions

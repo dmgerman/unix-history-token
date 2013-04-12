@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Sema/Sema.h"
+file|"clang/AST/DeclCXX.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclCXX.h"
+file|"clang/Sema/Sema.h"
 end_include
 
 begin_decl_stmt
@@ -262,7 +262,16 @@ argument_list|)
 operator|,
 name|Diagnose
 argument_list|(
-argument|Redecl == Sema::NotForRedeclaration
+name|Redecl
+operator|==
+name|Sema
+operator|::
+name|NotForRedeclaration
+argument_list|)
+operator|,
+name|AllowHidden
+argument_list|(
+argument|Redecl == Sema::ForRedeclaration
 argument_list|)
 block|{
 name|configure
@@ -337,7 +346,16 @@ argument_list|)
 operator|,
 name|Diagnose
 argument_list|(
-argument|Redecl == Sema::NotForRedeclaration
+name|Redecl
+operator|==
+name|Sema
+operator|::
+name|NotForRedeclaration
+argument_list|)
+operator|,
+name|AllowHidden
+argument_list|(
+argument|Redecl == Sema::ForRedeclaration
 argument_list|)
 block|{
 name|configure
@@ -412,7 +430,12 @@ argument_list|)
 operator|,
 name|Diagnose
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|AllowHidden
+argument_list|(
+argument|Other.AllowHidden
 argument_list|)
 block|{}
 operator|~
@@ -516,6 +539,20 @@ return|return
 name|Redecl
 return|;
 block|}
+comment|/// \brief Specify whether hidden declarations are visible, e.g.,
+comment|/// for recovery reasons.
+name|void
+name|setAllowHidden
+parameter_list|(
+name|bool
+name|AH
+parameter_list|)
+block|{
+name|AllowHidden
+operator|=
+name|AH
+expr_stmt|;
+block|}
 comment|/// \brief Determine whether this lookup is permitted to see hidden
 comment|/// declarations, such as those in modules that have not yet been imported.
 name|bool
@@ -524,7 +561,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Redecl
+name|AllowHidden
 operator|||
 name|LookupKind
 operator|==
@@ -1391,6 +1428,16 @@ name|Redecl
 operator|=
 name|RK
 expr_stmt|;
+name|AllowHidden
+operator|=
+operator|(
+name|RK
+operator|==
+name|Sema
+operator|::
+name|ForRedeclaration
+operator|)
+expr_stmt|;
 name|configure
 argument_list|()
 expr_stmt|;
@@ -1935,8 +1982,13 @@ operator|<
 name|UnresolvedUsingValueDecl
 operator|>
 operator|(
+operator|(
 operator|*
 name|I
+operator|)
+operator|->
+name|getUnderlyingDecl
+argument_list|()
 operator|)
 condition|)
 return|return
@@ -2074,6 +2126,16 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|Diagnose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief True if we should allow hidden declarations to be 'visible'.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|AllowHidden
 decl_stmt|;
 end_decl_stmt
 

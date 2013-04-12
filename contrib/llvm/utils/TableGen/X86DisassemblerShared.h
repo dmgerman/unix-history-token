@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<string>
 end_include
 
 begin_define

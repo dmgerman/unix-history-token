@@ -78,19 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ExprCXX.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/ExprObjC.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_include
@@ -103,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/MemRegion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_decl_stmt
@@ -552,8 +546,18 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getContext
+name|Context
+operator|.
+name|getLangOpts
 argument_list|()
+operator|.
+name|CPlusPlus
+operator|?
+name|Context
+operator|.
+name|BoolTy
+operator|:
+name|Context
 operator|.
 name|IntTy
 return|;

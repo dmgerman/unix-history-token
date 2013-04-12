@@ -362,6 +362,62 @@ argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
+name|class
+name|PragmaNoOpenMPHandler
+range|:
+name|public
+name|PragmaHandler
+block|{
+name|public
+operator|:
+name|PragmaNoOpenMPHandler
+argument_list|()
+operator|:
+name|PragmaHandler
+argument_list|(
+literal|"omp"
+argument_list|)
+block|{ }
+name|virtual
+name|void
+name|HandlePragma
+argument_list|(
+argument|Preprocessor&PP
+argument_list|,
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
+argument_list|)
+block|; }
+decl_stmt|;
+name|class
+name|PragmaOpenMPHandler
+range|:
+name|public
+name|PragmaHandler
+block|{
+name|public
+operator|:
+name|PragmaOpenMPHandler
+argument_list|()
+operator|:
+name|PragmaHandler
+argument_list|(
+literal|"omp"
+argument_list|)
+block|{ }
+name|virtual
+name|void
+name|HandlePragma
+argument_list|(
+argument|Preprocessor&PP
+argument_list|,
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

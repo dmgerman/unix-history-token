@@ -68,13 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PPCSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"PPCJITInfo.h"
+file|"PPCISelLowering.h"
 end_include
 
 begin_include
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PPCISelLowering.h"
+file|"PPCJITInfo.h"
 end_include
 
 begin_include
@@ -98,19 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"PPCSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetTransformImpl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DataLayout.h"
 end_include
 
 begin_decl_stmt
@@ -150,12 +144,6 @@ name|TSInfo
 block|;
 name|InstrItineraryData
 name|InstrItins
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -298,32 +286,6 @@ operator|&
 name|InstrItins
 return|;
 block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
-return|;
-block|}
 comment|// Pass Pipeline Configuration
 name|virtual
 name|TargetPassConfig
@@ -346,6 +308,16 @@ argument_list|,
 name|JITCodeEmitter
 operator|&
 name|JCE
+argument_list|)
+block|;
+comment|/// \brief Register PPC analysis passes with a pass manager.
+name|virtual
+name|void
+name|addAnalysisPasses
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|; }
 decl_stmt|;

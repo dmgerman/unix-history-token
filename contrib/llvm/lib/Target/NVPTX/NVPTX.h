@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Value.h"
+file|"MCTargetDesc/NVPTXBaseInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
 end_include
 
 begin_include
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/NVPTXBaseInfo.h"
 end_include
 
 begin_include
@@ -227,14 +227,6 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-name|FunctionPass
-modifier|*
-name|createVectorElementizePass
-parameter_list|(
-name|NVPTXTargetMachine
-modifier|&
-parameter_list|)
-function_decl|;
 name|FunctionPass
 modifier|*
 name|createLowerStructArgsPass

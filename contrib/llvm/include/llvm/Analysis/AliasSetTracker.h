@@ -74,18 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -99,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include

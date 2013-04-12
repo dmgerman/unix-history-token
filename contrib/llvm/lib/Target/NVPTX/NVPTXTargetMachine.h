@@ -62,13 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"NVPTXInstrInfo.h"
+file|"ManagedStringPool.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"NVPTXFrameLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"NVPTXISelLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"NVPTXInstrInfo.h"
 end_include
 
 begin_include
@@ -86,19 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"NVPTXFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ManagedStringPool.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -117,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSelectionDAGInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetTransformImpl.h"
 end_include
 
 begin_decl_stmt
@@ -162,12 +156,6 @@ block|;
 comment|// Hold Strings that can be free'd all together with NVPTXTargetMachine
 name|ManagedStringPool
 name|ManagedStrPool
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 comment|//bool addCommonCodeGenPasses(PassManagerBase&, CodeGenOpt::Level,
 comment|//                            bool DisableVerify, MCContext *&OutCtx);
@@ -294,32 +282,6 @@ block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
 return|;
 block|}
 comment|//virtual bool addInstSelector(PassManagerBase&PM,
@@ -455,7 +417,7 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;   }
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringExtras.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include

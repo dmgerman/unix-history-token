@@ -116,6 +116,9 @@ decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
 comment|/// This class wraps up a PBQP instance representing a register allocation
 comment|/// problem, plus the structures necessary to map back from the PBQP solution
 comment|/// to a register allocation solution. (i.e. The PBQP-node<--> vreg map,

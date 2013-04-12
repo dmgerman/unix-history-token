@@ -78,7 +78,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/Support/type_traits.h"
 end_include
 
 begin_include

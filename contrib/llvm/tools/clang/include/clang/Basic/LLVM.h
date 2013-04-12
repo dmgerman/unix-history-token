@@ -68,17 +68,35 @@ name|CLANG_BASIC_LLVM_H
 end_define
 
 begin_comment
-comment|// This should be the only #include, force #includes of all the others on
+comment|// Do not proliferate #includes here, require clients to #include their
 end_comment
 
 begin_comment
-comment|// clients.
+comment|// dependencies.
+end_comment
+
+begin_comment
+comment|// Casting.h has complex templates that cannot be easily forward declared.
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
+end_include
+
+begin_comment
+comment|// None.h includes an enumerator that is desired& cannot be forward declared
+end_comment
+
+begin_comment
+comment|// without a definition of NoneType.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
 end_include
 
 begin_decl_stmt
@@ -102,7 +120,7 @@ name|ArrayRef
 expr_stmt|;
 name|template
 operator|<
-name|class
+name|typename
 name|T
 operator|>
 name|class
@@ -134,6 +152,14 @@ name|T
 operator|>
 name|class
 name|SmallVectorImpl
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|Optional
 expr_stmt|;
 name|template
 operator|<
@@ -209,6 +235,16 @@ operator|::
 name|cast_or_null
 expr_stmt|;
 comment|// ADT's.
+name|using
+name|llvm
+operator|::
+name|None
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|Optional
+expr_stmt|;
 name|using
 name|llvm
 operator|::

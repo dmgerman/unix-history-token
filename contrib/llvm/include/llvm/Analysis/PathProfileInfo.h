@@ -50,25 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PATHPROFILEINFO_H
+name|LLVM_ANALYSIS_PATHPROFILEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PATHPROFILEINFO_H
+name|LLVM_ANALYSIS_PATHPROFILEINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
+file|"llvm/Analysis/PathNumbering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/PathNumbering.h"
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_decl_stmt

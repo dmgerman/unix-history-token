@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APSInt.h"
+file|"llvm/ADT/APFloat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APFloat.h"
+file|"llvm/ADT/APSInt.h"
 end_include
 
 begin_include
@@ -393,6 +393,12 @@ name|lltok
 operator|::
 name|Kind
 name|Lex0x
+argument_list|()
+expr_stmt|;
+name|lltok
+operator|::
+name|Kind
+name|LexHash
 argument_list|()
 expr_stmt|;
 name|uint64_t

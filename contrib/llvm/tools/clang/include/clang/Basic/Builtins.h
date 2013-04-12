@@ -459,6 +459,32 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// \brief Returns true if this builtin does not perform the side-effects
+comment|/// of its arguments.
+name|bool
+name|isUnevaluated
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|GetRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Attributes
+argument_list|,
+literal|'u'
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// \brief Return true if this is a builtin for a libc/libm function,
 comment|/// with a "__builtin_" prefix (e.g. __builtin_abs).
 name|bool

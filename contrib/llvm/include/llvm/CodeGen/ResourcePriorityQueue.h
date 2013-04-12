@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RESOURCE_PRIORITY_QUEUE_H
+name|LLVM_CODEGEN_RESOURCEPRIORITYQUEUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|RESOURCE_PRIORITY_QUEUE_H
+name|LLVM_CODEGEN_RESOURCEPRIORITYQUEUE_H
 end_define
 
 begin_include
@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAGISel.h"
+file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ScheduleDAG.h"
+file|"llvm/CodeGen/SelectionDAGISel.h"
 end_include
 
 begin_include

@@ -71,6 +71,12 @@ directive|define
 name|LLVM_CLANG_GR_PROGRAMSTATETRAIT_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -809,14 +815,22 @@ name|D
 parameter_list|)
 block|{
 return|return
-operator|(
-name|void
+name|const_cast
+operator|<
+name|llvm
+operator|::
+name|ImmutableListImpl
+operator|<
+name|T
+operator|>
 operator|*
-operator|)
+operator|>
+operator|(
 name|D
 operator|.
 name|getInternalPointer
 argument_list|()
+operator|)
 return|;
 block|}
 end_function
@@ -1091,8 +1105,75 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|// Partial specialization for const void *.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|ProgramStatePartialTrait
+operator|<
+specifier|const
+name|void
+operator|*
+operator|>
+block|{
+typedef|typedef
+specifier|const
+name|void
+modifier|*
+name|data_type
+typedef|;
+specifier|static
+specifier|inline
+name|data_type
+name|MakeData
+argument_list|(
+argument|void * const *p
+argument_list|)
+block|{
+return|return
+name|p
+operator|?
+operator|*
+name|p
+operator|:
+name|data_type
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|void
+operator|*
+name|MakeVoidPtr
+argument_list|(
+argument|data_type d
+argument_list|)
+block|{
+return|return
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+name|d
+operator|)
+return|;
+block|}
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 unit|}
-comment|// end GR namespace
+comment|// end ento namespace
 end_comment
 
 begin_comment

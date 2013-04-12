@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_VARIADIC_FUNCTION_H
+name|LLVM_ADT_VARIADICFUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_VARIADIC_FUNCTION_H
+name|LLVM_ADT_VARIADICFUNCTION_H
 end_define
 
 begin_include
@@ -1258,7 +1258,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_ADT_VARIADIC_FUNCTION_H
+comment|// LLVM_ADT_VARIADICFUNCTION_H
 end_comment
 
 end_unit

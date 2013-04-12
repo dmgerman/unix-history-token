@@ -144,24 +144,11 @@ comment|/// FunctionMap owns all CallGraphNodes.
 name|FunctionMapTy
 name|FunctionMap
 decl_stmt|;
-comment|/// This is a virtual root node that has edges to all the global functions -
-comment|/// 'main' or functions accessible from other translation units.
+comment|/// This is a virtual root node that has edges to all the functions.
 name|CallGraphNode
 modifier|*
 name|Root
 decl_stmt|;
-comment|/// The list of nodes that have no parent. These are unreachable from Root.
-comment|/// Declarations can get to this list due to impressions in the graph, for
-comment|/// example, we do not track functions whose addresses were taken.
-name|llvm
-operator|::
-name|SetVector
-operator|<
-name|CallGraphNode
-operator|*
-operator|>
-name|ParentlessNodes
-expr_stmt|;
 name|public
 label|:
 name|CallGraph
@@ -333,52 +320,6 @@ operator|::
 name|const_iterator
 name|const_nodes_iterator
 expr_stmt|;
-name|nodes_iterator
-name|parentless_begin
-parameter_list|()
-block|{
-return|return
-name|ParentlessNodes
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|nodes_iterator
-name|parentless_end
-parameter_list|()
-block|{
-return|return
-name|ParentlessNodes
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|const_nodes_iterator
-name|parentless_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParentlessNodes
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_nodes_iterator
-name|parentless_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParentlessNodes
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
 name|void
 name|print
 argument_list|(
@@ -398,8 +339,16 @@ name|viewGraph
 argument_list|()
 specifier|const
 expr_stmt|;
+name|void
+name|addNodesForBlocks
+parameter_list|(
+name|DeclContext
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|/// Part of recursive declaration visitation. We recursively visit all the
-comment|/// Declarations to collect the root functions.
+comment|/// declarations to collect the root functions.
 name|bool
 name|VisitFunctionDecl
 parameter_list|(
@@ -417,6 +366,13 @@ argument_list|(
 name|FD
 argument_list|)
 condition|)
+block|{
+comment|// Add all blocks declared inside this function to the graph.
+name|addNodesForBlocks
+argument_list|(
+name|FD
+argument_list|)
+expr_stmt|;
 comment|// If this function has external linkage, anything could call it.
 comment|// Note, we are not precise here. For example, the function could have
 comment|// its address taken.
@@ -430,6 +386,7 @@ name|isGlobal
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|true
 return|;
@@ -450,6 +407,12 @@ argument_list|(
 name|MD
 argument_list|)
 condition|)
+block|{
+name|addNodesForBlocks
+argument_list|(
+name|MD
+argument_list|)
+expr_stmt|;
 name|addNodeForDecl
 argument_list|(
 name|MD
@@ -457,6 +420,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|true
 return|;
@@ -532,10 +496,6 @@ modifier|*
 name|FD
 decl_stmt|;
 comment|/// \brief The list of functions called from this node.
-comment|// Small vector might be more efficient since we are only tracking functions
-comment|// whose definition is in the current TU.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CallRecord
@@ -559,8 +519,6 @@ argument|D
 argument_list|)
 block|{}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CallRecord
@@ -572,8 +530,6 @@ name|iterator
 name|iterator
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CallRecord
@@ -680,15 +636,6 @@ argument_list|(
 name|N
 argument_list|)
 expr_stmt|;
-name|CG
-operator|->
-name|ParentlessNodes
-operator|.
-name|remove
-argument_list|(
-name|N
-argument_list|)
-expr_stmt|;
 block|}
 name|Decl
 operator|*
@@ -700,11 +647,6 @@ return|return
 name|FD
 return|;
 block|}
-name|StringRef
-name|getName
-argument_list|()
-specifier|const
-expr_stmt|;
 name|void
 name|print
 argument_list|(

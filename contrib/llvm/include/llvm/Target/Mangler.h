@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_MANGLER_H
+name|LLVM_TARGET_MANGLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_MANGLER_H
+name|LLVM_TARGET_MANGLER_H
 end_define
 
 begin_include
@@ -244,7 +244,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_SUPPORT_MANGLER_H
+comment|// LLVM_TARGET_MANGLER_H
 end_comment
 
 end_unit

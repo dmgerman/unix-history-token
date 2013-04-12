@@ -54,25 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|BITSTREAM_WRITER_H
+name|LLVM_BITCODE_BITSTREAMWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|BITSTREAM_WRITER_H
+name|LLVM_BITCODE_BITSTREAMWRITER_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include

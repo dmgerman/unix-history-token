@@ -90,21 +90,24 @@ operator|~
 name|CXXABI
 argument_list|()
 expr_stmt|;
-comment|/// Returns the size of a member pointer in multiples of the target
-comment|/// pointer size.
+comment|/// Returns the width and alignment of a member pointer in bits.
 name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|uint64_t
+operator|,
 name|unsigned
-name|getMemberPointerSize
+operator|>
+name|getMemberPointerWidthAndAlign
 argument_list|(
-specifier|const
-name|MemberPointerType
-operator|*
-name|MPT
+argument|const MemberPointerType *MPT
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 comment|/// Returns the default calling convention for C++ methods.
 name|virtual
 name|CallingConv

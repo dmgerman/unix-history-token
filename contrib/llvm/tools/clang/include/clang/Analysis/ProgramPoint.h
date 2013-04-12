@@ -78,19 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -102,7 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -114,19 +108,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -261,11 +267,11 @@ name|unsigned
 operator|>
 name|Tag
 expr_stmt|;
-name|ProgramPoint
-argument_list|()
-expr_stmt|;
 name|protected
 label|:
+name|ProgramPoint
+argument_list|()
+block|{}
 name|ProgramPoint
 argument_list|(
 argument|const void *P
@@ -493,6 +499,94 @@ argument_list|()
 argument_list|,
 name|tag
 argument_list|)
+return|;
+block|}
+comment|/// \brief Convert to the specified ProgramPoint type, asserting that this
+comment|/// ProgramPoint is of the desired type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|castAs
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|T
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|T
+name|t
+block|;
+name|ProgramPoint
+operator|&
+name|PP
+operator|=
+name|t
+block|;
+name|PP
+operator|=
+operator|*
+name|this
+block|;
+return|return
+name|t
+return|;
+block|}
+comment|/// \brief Convert to the specified ProgramPoint type, returning None if this
+comment|/// ProgramPoint is not of the desired type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|Optional
+operator|<
+name|T
+operator|>
+name|getAs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|T
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+condition|)
+return|return
+name|None
+return|;
+name|T
+name|t
+expr_stmt|;
+name|ProgramPoint
+modifier|&
+name|PP
+init|=
+name|t
+decl_stmt|;
+name|PP
+operator|=
+operator|*
+name|this
+expr_stmt|;
+return|return
+name|t
 return|;
 block|}
 name|Kind
@@ -767,7 +861,13 @@ name|tag
 argument_list|)
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|BlockEntrance
 range|:
@@ -834,8 +934,10 @@ argument_list|()
 operator|)
 return|;
 block|}
-specifier|const
+name|Optional
+operator|<
 name|CFGElement
+operator|>
 name|getFirstElement
 argument_list|()
 specifier|const
@@ -854,8 +956,12 @@ operator|->
 name|empty
 argument_list|()
 condition|?
+name|Optional
+operator|<
 name|CFGElement
-argument_list|()
+operator|>
+operator|(
+operator|)
 else|:
 name|B
 operator|->
@@ -863,16 +969,25 @@ name|front
 argument_list|()
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|BlockEntrance
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -946,16 +1061,25 @@ name|getTerminator
 argument_list|()
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|BlockExit
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1033,8 +1157,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|dyn_cast
 operator|<
 name|T
@@ -1045,18 +1167,29 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|protected
+operator|:
+name|StmtPoint
+argument_list|()
+block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 name|unsigned
 name|k
 operator|=
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 block|;
@@ -1135,16 +1268,25 @@ name|getData2
 argument_list|()
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PreStmt
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1161,6 +1303,9 @@ name|StmtPoint
 block|{
 name|protected
 operator|:
+name|PostStmt
+argument_list|()
+block|{}
 name|PostStmt
 argument_list|(
 argument|const Stmt *S
@@ -1250,18 +1395,24 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 name|unsigned
 name|k
 operator|=
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 block|;
@@ -1317,16 +1468,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostCondition
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1343,6 +1503,9 @@ name|StmtPoint
 block|{
 name|protected
 operator|:
+name|LocationCheck
+argument_list|()
+block|{}
 name|LocationCheck
 argument_list|(
 argument|const Stmt *S
@@ -1367,18 +1530,24 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *location
+argument|const ProgramPoint&location
 argument_list|)
 block|{
 name|unsigned
 name|k
 operator|=
 name|location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 block|;
@@ -1433,16 +1602,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PreLoad
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *location
+argument|const ProgramPoint&location
 argument_list|)
 block|{
 return|return
 name|location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1490,16 +1668,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PreStore
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *location
+argument|const ProgramPoint&location
 argument_list|)
 block|{
 return|return
 name|location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1547,16 +1734,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostLoad
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1626,22 +1822,6 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ProgramPoint* Location
-argument_list|)
-block|{
-return|return
-name|Location
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|PostStoreKind
-return|;
-block|}
 comment|/// \brief Returns the information about the location used in the store,
 comment|/// how it was uttered in the code.
 specifier|const
@@ -1654,6 +1834,31 @@ block|{
 return|return
 name|getData2
 argument_list|()
+return|;
+block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostStore
+argument_list|()
+block|{}
+specifier|static
+name|bool
+name|isKind
+argument_list|(
+argument|const ProgramPoint&Location
+argument_list|)
+block|{
+return|return
+name|Location
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|PostStoreKind
 return|;
 block|}
 expr|}
@@ -1697,16 +1902,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostLValue
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1758,16 +1972,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{ }
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PreStmtPurgeDeadSymbols
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1819,16 +2042,25 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{ }
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostStmtPurgeDeadSymbols
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1928,16 +2160,25 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|BlockEdge
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -1954,12 +2195,22 @@ name|ProgramPoint
 block|{
 name|public
 operator|:
+comment|/// \brief Construct a PostInitializer point that represents a location after
+comment|///   CXXCtorInitializer expression evaluation.
+comment|///
+comment|/// \param I The initializer.
+comment|/// \param Loc The location of the field being initialized.
 name|PostInitializer
 argument_list|(
 specifier|const
 name|CXXCtorInitializer
 operator|*
 name|I
+argument_list|,
+specifier|const
+name|void
+operator|*
+name|Loc
 argument_list|,
 specifier|const
 name|LocationContext
@@ -1971,21 +2222,65 @@ name|ProgramPoint
 argument_list|(
 argument|I
 argument_list|,
+argument|Loc
+argument_list|,
 argument|PostInitializerKind
 argument_list|,
 argument|L
 argument_list|)
 block|{}
+specifier|const
+name|CXXCtorInitializer
+operator|*
+name|getInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|CXXCtorInitializer
+operator|*
+operator|>
+operator|(
+name|getData1
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the location of the field.
+specifier|const
+name|void
+operator|*
+name|getLocationValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getData2
+argument_list|()
+return|;
+block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostInitializer
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2066,23 +2361,34 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|protected
+operator|:
+name|ImplicitCallPoint
+argument_list|()
+block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|>=
 name|MinImplicitCallKind
 operator|&&
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|<=
@@ -2127,16 +2433,25 @@ argument_list|,
 argument|Tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PreImplicitCall
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2181,16 +2496,25 @@ argument_list|,
 argument|Tag
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|PostImplicitCall
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2280,16 +2604,25 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|CallEnter
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2335,16 +2668,25 @@ argument_list|,
 literal|0
 argument_list|)
 block|{}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|CallExitBegin
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2408,16 +2750,25 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|CallExitEnd
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint *Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2488,16 +2839,25 @@ name|getData1
 argument_list|()
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|ProgramPoint
+block|;
+name|EpsilonPoint
+argument_list|()
+block|{}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const ProgramPoint* Location
+argument|const ProgramPoint&Location
 argument_list|)
 block|{
 return|return
 name|Location
-operator|->
+operator|.
 name|getKind
 argument_list|()
 operator|==
@@ -2543,7 +2903,7 @@ literal|0
 block|;
 name|protected
 operator|:
-comment|/// Used to implement 'classof' in subclasses.
+comment|/// Used to implement 'isKind' in subclasses.
 specifier|const
 name|void
 operator|*

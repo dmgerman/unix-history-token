@@ -110,31 +110,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Attributes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
+file|"llvm/IR/Attributes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Instructions.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_decl_stmt
@@ -811,7 +805,7 @@ block|;   }
 comment|/// getAttributes/setAttributes - get or set the parameter attributes of
 comment|/// the call.
 specifier|const
-name|AttrListPtr
+name|AttributeSet
 operator|&
 name|getAttributes
 argument_list|()
@@ -826,7 +820,7 @@ block|;   }
 name|void
 name|setAttributes
 argument_list|(
-argument|const AttrListPtr&PAL
+argument|const AttributeSet&PAL
 argument_list|)
 block|{
 name|CALLSITE_DELEGATE_SETTER
@@ -841,7 +835,7 @@ comment|/// \brief Return true if this function has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-argument|Attributes::AttrVal A
+argument|Attribute::AttrKind A
 argument_list|)
 specifier|const
 block|{
@@ -859,7 +853,7 @@ name|paramHasAttr
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attributes::AttrVal A
+argument|Attribute::AttrKind A
 argument_list|)
 specifier|const
 block|{
@@ -1024,7 +1018,7 @@ name|ArgNo
 operator|+
 literal|1
 argument_list|,
-name|Attributes
+name|Attribute
 operator|::
 name|NoCapture
 argument_list|)
@@ -1046,7 +1040,7 @@ name|ArgNo
 operator|+
 literal|1
 argument_list|,
-name|Attributes
+name|Attribute
 operator|::
 name|ByVal
 argument_list|)

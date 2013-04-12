@@ -1332,7 +1332,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// get_array_pad_sort_comparator - This is an internal helper function used to
+comment|/// get_array_pod_sort_comparator - This is an internal helper function used to
 end_comment
 
 begin_comment
@@ -1348,7 +1348,7 @@ operator|>
 specifier|inline
 name|int
 argument_list|(
-argument|*get_array_pad_sort_comparator(const T&)
+argument|*get_array_pod_sort_comparator(const T&)
 argument_list|)
 operator|(
 specifier|const
@@ -1464,7 +1464,7 @@ operator|*
 name|Start
 argument_list|)
 argument_list|,
-name|get_array_pad_sort_comparator
+name|get_array_pod_sort_comparator
 argument_list|(
 operator|*
 name|Start

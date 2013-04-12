@@ -111,12 +111,12 @@ name|ProtectedOperationKind
 block|{
 name|POK_VarDereference
 block|,
-comment|/// Dereferencing a variable (e.g. p in *p = 5;)
+comment|///< Dereferencing a variable (e.g. p in *p = 5;)
 name|POK_VarAccess
 block|,
-comment|/// Reading or writing a variable (e.g. x in x = 5;)
+comment|///< Reading or writing a variable (e.g. x in x = 5;)
 name|POK_FunctionCall
-comment|/// Making a function call (e.g. fool())
+comment|///< Making a function call (e.g. fool())
 block|}
 enum|;
 comment|/// This enum distinguishes between different kinds of lock actions. For
@@ -127,9 +127,9 @@ name|LockKind
 block|{
 name|LK_Shared
 block|,
-comment|/// Shared/reader lock of a mutex
+comment|///< Shared/reader lock of a mutex.
 name|LK_Exclusive
-comment|/// Exclusive/writer lock of a mutex
+comment|///< Exclusive/writer lock of a mutex.
 block|}
 enum|;
 comment|/// This enum distinguishes between different ways to access (read or write) a
@@ -139,9 +139,9 @@ name|AccessKind
 block|{
 name|AK_Read
 block|,
-comment|/// Reading a variable
+comment|///< Reading a variable.
 name|AK_Written
-comment|/// Writing a variable
+comment|///< Writing a variable.
 block|}
 enum|;
 comment|/// This enum distinguishes between different situations where we warn due to
@@ -171,11 +171,17 @@ block|{
 name|public
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|StringRef
 name|Name
-expr_stmt|;
+typedef|;
+name|ThreadSafetyHandler
+argument_list|()
+operator|:
+name|IssueBetaWarnings
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
 name|virtual
 operator|~
 name|ThreadSafetyHandler
@@ -352,6 +358,31 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 block|{}
+name|bool
+name|issueBetaWarnings
+parameter_list|()
+block|{
+return|return
+name|IssueBetaWarnings
+return|;
+block|}
+name|void
+name|setIssueBetaWarnings
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|IssueBetaWarnings
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|private
+label|:
+name|bool
+name|IssueBetaWarnings
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Check a function's CFG for thread-safety violations.

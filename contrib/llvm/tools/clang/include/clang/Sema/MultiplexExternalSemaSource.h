@@ -131,8 +131,6 @@ name|ExternalSemaSource
 block|{
 name|private
 operator|:
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ExternalSemaSource
@@ -183,11 +181,6 @@ comment|// ExternalASTSource.
 comment|//===--------------------------------------------------------------------===//
 comment|/// \brief Resolve a declaration ID into a declaration, potentially
 comment|/// building a new declaration.
-comment|///
-comment|/// This method only needs to be implemented if the AST source ever
-comment|/// passes back decl sets as VisibleDeclaration objects.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Decl
 operator|*
@@ -197,11 +190,6 @@ argument|uint32_t ID
 argument_list|)
 block|;
 comment|/// \brief Resolve a selector ID into a selector.
-comment|///
-comment|/// This operation only needs to be implemented if the AST source
-comment|/// returns non-zero for GetNumKnownSelectors().
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Selector
 name|GetExternalSelector
@@ -211,8 +199,6 @@ argument_list|)
 block|;
 comment|/// \brief Returns the number of selectors known to the external AST
 comment|/// source.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|uint32_t
 name|GetNumExternalSelectors
@@ -220,12 +206,6 @@ argument_list|()
 block|;
 comment|/// \brief Resolve the offset of a statement in the decl stream into
 comment|/// a statement.
-comment|///
-comment|/// This operation is meant to be used via a LazyOffsetPtr.  It only
-comment|/// needs to be implemented if the AST source uses methods like
-comment|/// FunctionDecl::setLazyBody when building decls.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Stmt
 operator|*
@@ -236,8 +216,6 @@ argument_list|)
 block|;
 comment|/// \brief Resolve the offset of a set of C++ base specifiers in the decl
 comment|/// stream into an array of specifiers.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|CXXBaseSpecifier
 operator|*
@@ -246,16 +224,10 @@ argument_list|(
 argument|uint64_t Offset
 argument_list|)
 block|;
-comment|/// \brief Finds all declarations with the given name in the
+comment|/// \brief Find all declarations with the given name in the
 comment|/// given context.
-comment|///
-comment|/// Generally the final step of this method is either to call
-comment|/// SetExternalVisibleDeclsForName or to recursively call lookup on
-comment|/// the DeclContext after calling SetExternalVisibleDecls.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
-name|DeclContextLookupResult
+name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
 argument|const DeclContext *DC
@@ -265,8 +237,6 @@ argument_list|)
 block|;
 comment|/// \brief Ensures that the table of all visible declarations inside this
 comment|/// context is up to date.
-comment|///
-comment|/// The default implementation of this functino is a no-op.
 name|virtual
 name|void
 name|completeVisibleDeclsMap
@@ -285,8 +255,6 @@ comment|/// declaration kind is one we are looking for. If NULL, all declaration
 comment|/// are returned.
 comment|///
 comment|/// \return an indication of whether the load succeeded or failed.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|ExternalLoadResult
 name|FindExternalLexicalDecls
@@ -416,8 +384,6 @@ block|;
 comment|/// \brief Notify ExternalASTSource that we started deserialization of
 comment|/// a decl or type so until FinishedDeserializing is called there may be
 comment|/// decls that are initializing. Must be paired with FinishedDeserializing.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|StartedDeserializing
@@ -425,8 +391,6 @@ argument_list|()
 block|;
 comment|/// \brief Notify ExternalASTSource that we finished the deserialization of
 comment|/// a decl or type. Must be paired with StartedDeserializing.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|FinishedDeserializing
@@ -434,8 +398,6 @@ argument_list|()
 block|;
 comment|/// \brief Function that will be invoked when we begin parsing a new
 comment|/// translation unit involving this external AST source.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|StartTranslationUnit
@@ -447,8 +409,6 @@ argument_list|)
 block|;
 comment|/// \brief Print any statistics that have been gathered regarding
 comment|/// the external AST source.
-comment|///
-comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|PrintStats
@@ -593,6 +553,25 @@ operator|&
 name|Namespaces
 argument_list|)
 block|;
+comment|/// \brief Load the set of used but not defined functions or variables with
+comment|/// internal linkage, or used but not defined inline functions.
+name|virtual
+name|void
+name|ReadUndefinedButUsed
+argument_list|(
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|NamedDecl
+operator|*
+argument_list|,
+name|SourceLocation
+operator|>
+operator|&
+name|Undefined
+argument_list|)
+block|;
 comment|/// \brief Do last resort, unqualified lookup on a LookupResult that
 comment|/// Sema cannot find.
 comment|///
@@ -714,7 +693,7 @@ operator|&
 name|Decls
 argument_list|)
 block|;
-comment|/// \brief Read the set of locally-scoped external declarations known to the
+comment|/// \brief Read the set of locally-scoped extern "C" declarations known to the
 comment|/// external Sema source.
 comment|///
 comment|/// The external source should append its own locally-scoped external
@@ -723,7 +702,7 @@ comment|/// may be invoked multiple times; the external source should take care 
 comment|/// to introduce the same declarations repeatedly.
 name|virtual
 name|void
-name|ReadLocallyScopedExternalDecls
+name|ReadLocallyScopedExternCDecls
 argument_list|(
 name|SmallVectorImpl
 operator|<

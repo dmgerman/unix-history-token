@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt

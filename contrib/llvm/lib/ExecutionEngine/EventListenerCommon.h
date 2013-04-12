@@ -62,31 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Metadata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Path.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt

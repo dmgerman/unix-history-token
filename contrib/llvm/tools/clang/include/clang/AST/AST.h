@@ -108,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"clang/AST/StmtVisitor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/StmtVisitor.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_endif

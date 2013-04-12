@@ -73,8 +73,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// formatted_raw_ostream - Formatted raw_fd_ostream to handle
-comment|/// asm-specific constructs.
+comment|/// formatted_raw_ostream - A raw_ostream that wraps another one and keeps track
+comment|/// of column position, allowing padding out to specific column boundaries.
 comment|///
 name|class
 name|formatted_raw_ostream
@@ -216,7 +216,7 @@ name|Stream
 argument_list|,
 name|Delete
 argument_list|)
-block|;     }
+block|;   }
 name|explicit
 name|formatted_raw_ostream
 argument_list|()
@@ -242,7 +242,7 @@ block|{
 name|Scanned
 operator|=
 literal|0
-block|;     }
+block|;   }
 operator|~
 name|formatted_raw_ostream
 argument_list|()
@@ -252,7 +252,7 @@ argument_list|()
 block|;
 name|releaseStream
 argument_list|()
-block|;     }
+block|;   }
 name|void
 name|setStream
 argument_list|(
@@ -304,7 +304,7 @@ block|;
 name|Scanned
 operator|=
 literal|0
-block|;     }
+block|;   }
 comment|/// PadToColumn - Align the output to some column number.  If the current
 comment|/// column is already equal to or more than NewCol, PadToColumn inserts one
 comment|/// space.

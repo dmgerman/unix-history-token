@@ -330,12 +330,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|unsigned
-name|getEFlags
-argument_list|()
-specifier|const
-expr_stmt|;
-name|virtual
 specifier|const
 name|MCSymbol
 modifier|*

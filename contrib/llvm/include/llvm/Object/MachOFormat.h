@@ -208,6 +208,18 @@ block|,
 name|CSARM_V7K
 init|=
 literal|12
+block|,
+name|CSARM_V6M
+init|=
+literal|14
+block|,
+name|CSARM_V7M
+init|=
+literal|15
+block|,
+name|CSARM_V7EM
+init|=
+literal|16
 block|}
 enum|;
 comment|/// \brief PowerPC Machine Subtypes.
@@ -408,6 +420,10 @@ block|,
 name|LCT_DataInCode
 init|=
 literal|0x29
+block|,
+name|LCT_LinkerOptions
+init|=
+literal|0x2D
 block|}
 enum|;
 comment|/// \brief Load command structure.
@@ -611,9 +627,33 @@ name|DataSize
 decl_stmt|;
 block|}
 struct|;
+struct|struct
+name|LinkerOptionsLoadCommand
+block|{
+name|uint32_t
+name|Type
+decl_stmt|;
+name|uint32_t
+name|Size
+decl_stmt|;
+name|uint32_t
+name|Count
+decl_stmt|;
+comment|// Load command is followed by Count number of zero-terminated UTF8 strings,
+comment|// and then zero-filled to be 4-byte aligned.
+block|}
+struct|;
 comment|/// @}
 comment|/// @name Section Data
 comment|/// @{
+enum|enum
+name|SectionFlags
+block|{
+name|SF_PureInstructions
+init|=
+literal|0x80000000
+block|}
+enum|;
 struct|struct
 name|Section
 block|{

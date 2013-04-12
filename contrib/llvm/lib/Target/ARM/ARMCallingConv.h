@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include

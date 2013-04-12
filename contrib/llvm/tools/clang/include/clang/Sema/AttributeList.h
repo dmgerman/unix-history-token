@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -91,6 +79,18 @@ begin_include
 include|#
 directive|include
 file|"clang/Sema/Ownership.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -146,8 +146,9 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// AttributeList - Represents GCC's __attribute__ declaration. There are
-comment|/// 4 forms of this construct...they are:
+comment|/// AttributeList - Represents a syntactic attribute.
+comment|///
+comment|/// For a GNU attribute, there are four forms of this construct:
 comment|///
 comment|/// 1: __attribute__(( const )). ParmName/Args/NumArgs will all be unused.
 comment|/// 2: __attribute__(( mode(byte) )). ParmName used, Args/NumArgs unused.
@@ -164,15 +165,17 @@ comment|/// The style used to specify an attribute.
 enum|enum
 name|Syntax
 block|{
+comment|/// __attribute__((...))
 name|AS_GNU
 block|,
+comment|/// [[...]]
 name|AS_CXX11
 block|,
+comment|/// __declspec(...)
 name|AS_Declspec
 block|,
-comment|// eg) __w64, __ptr32, etc.  It is implied that an MSTypespec is also
-comment|// a declspec.
-name|AS_MSTypespec
+comment|/// __ptr16, alignas(...), etc.
+name|AS_Keyword
 block|}
 enum|;
 name|private
@@ -197,6 +200,9 @@ name|ScopeLoc
 decl_stmt|;
 name|SourceLocation
 name|ParmLoc
+decl_stmt|;
+name|SourceLocation
+name|EllipsisLoc
 decl_stmt|;
 comment|/// The number of expression arguments this attribute has.
 comment|/// The expressions themselves are stored after the object.
@@ -432,6 +438,47 @@ literal|1
 operator|)
 return|;
 block|}
+name|ParsedType
+modifier|&
+name|getTypeBuffer
+parameter_list|()
+block|{
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+name|ParsedType
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+specifier|const
+name|ParsedType
+operator|&
+name|getTypeBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ParsedType
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
 name|AttributeList
 argument_list|(
 argument|const AttributeList&
@@ -487,6 +534,8 @@ argument_list|,
 argument|unsigned numArgs
 argument_list|,
 argument|Syntax syntaxUsed
+argument_list|,
+argument|SourceLocation ellipsisLoc
 argument_list|)
 block|:
 name|AttrName
@@ -517,6 +566,11 @@ operator|,
 name|ParmLoc
 argument_list|(
 name|parmLoc
+argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|(
+name|ellipsisLoc
 argument_list|)
 operator|,
 name|NumArgs
@@ -650,6 +704,9 @@ name|ParmLoc
 argument_list|(
 name|parmLoc
 argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|()
 operator|,
 name|NumArgs
 argument_list|(
@@ -795,6 +852,9 @@ argument_list|(
 name|argumentKindLoc
 argument_list|)
 operator|,
+name|EllipsisLoc
+argument_list|()
+operator|,
 name|NumArgs
 argument_list|(
 literal|0
@@ -862,6 +922,121 @@ operator|.
 name|MustBeNull
 operator|=
 name|mustBeNull
+block|;
+name|AttrKind
+operator|=
+name|getKind
+argument_list|(
+name|getName
+argument_list|()
+argument_list|,
+name|getScopeName
+argument_list|()
+argument_list|,
+name|syntaxUsed
+argument_list|)
+block|;   }
+comment|/// Constructor for attributes with a single type argument.
+name|AttributeList
+argument_list|(
+argument|IdentifierInfo *attrName
+argument_list|,
+argument|SourceRange attrRange
+argument_list|,
+argument|IdentifierInfo *scopeName
+argument_list|,
+argument|SourceLocation scopeLoc
+argument_list|,
+argument|IdentifierInfo *parmName
+argument_list|,
+argument|SourceLocation parmLoc
+argument_list|,
+argument|ParsedType typeArg
+argument_list|,
+argument|Syntax syntaxUsed
+argument_list|)
+operator|:
+name|AttrName
+argument_list|(
+name|attrName
+argument_list|)
+operator|,
+name|ScopeName
+argument_list|(
+name|scopeName
+argument_list|)
+operator|,
+name|ParmName
+argument_list|(
+name|parmName
+argument_list|)
+operator|,
+name|AttrRange
+argument_list|(
+name|attrRange
+argument_list|)
+operator|,
+name|ScopeLoc
+argument_list|(
+name|scopeLoc
+argument_list|)
+operator|,
+name|ParmLoc
+argument_list|(
+name|parmLoc
+argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|()
+operator|,
+name|NumArgs
+argument_list|(
+literal|1
+argument_list|)
+operator|,
+name|SyntaxUsed
+argument_list|(
+name|syntaxUsed
+argument_list|)
+operator|,
+name|Invalid
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UsedAsTypeAttr
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsAvailability
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsTypeTagForDatatype
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NextInPosition
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NextInPool
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|new
+argument_list|(
+argument|&getTypeBuffer()
+argument_list|)
+name|ParsedType
+argument_list|(
+name|typeArg
+argument_list|)
 block|;
 name|AttrKind
 operator|=
@@ -985,8 +1160,23 @@ return|return
 name|ParmLoc
 return|;
 block|}
-comment|/// Returns true if the attribute is a pure __declspec or a synthesized
-comment|/// declspec representing a type specification (like __w64 or __ptr32).
+name|bool
+name|isAlignasAttribute
+argument_list|()
+specifier|const
+block|{
+comment|// FIXME: Use a better mechanism to determine this.
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|AT_Aligned
+operator|&&
+name|SyntaxUsed
+operator|==
+name|AS_Keyword
+return|;
+block|}
 name|bool
 name|isDeclspecAttribute
 argument_list|()
@@ -996,14 +1186,10 @@ return|return
 name|SyntaxUsed
 operator|==
 name|AS_Declspec
-operator|||
-name|SyntaxUsed
-operator|==
-name|AS_MSTypespec
 return|;
 block|}
 name|bool
-name|isCXX0XAttribute
+name|isCXX11Attribute
 argument_list|()
 specifier|const
 block|{
@@ -1011,17 +1197,20 @@ return|return
 name|SyntaxUsed
 operator|==
 name|AS_CXX11
+operator|||
+name|isAlignasAttribute
+argument_list|()
 return|;
 block|}
 name|bool
-name|isMSTypespecAttribute
+name|isKeywordAttribute
 argument_list|()
 specifier|const
 block|{
 return|return
 name|SyntaxUsed
 operator|==
-name|AS_MSTypespec
+name|AS_Keyword
 return|;
 block|}
 name|bool
@@ -1065,6 +1254,27 @@ name|UsedAsTypeAttr
 operator|=
 name|true
 expr_stmt|;
+block|}
+name|bool
+name|isPackExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getEllipsisLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EllipsisLoc
+return|;
 block|}
 name|Kind
 name|getKind
@@ -1504,6 +1714,36 @@ operator|.
 name|MustBeNull
 return|;
 block|}
+specifier|const
+name|ParsedType
+operator|&
+name|getTypeArg
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|AT_VecTypeHint
+operator|&&
+literal|"Not a type attribute"
+argument_list|)
+block|;
+return|return
+name|getTypeBuffer
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get an index into the attribute spelling list
+comment|/// defined in Attr.td. This index is used by an attribute
+comment|/// to pretty print itself.
+name|unsigned
+name|getAttributeSpellingListIndex
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -1927,6 +2167,12 @@ name|AttributeList
 operator|::
 name|Syntax
 name|syntax
+argument_list|,
+name|SourceLocation
+name|ellipsisLoc
+operator|=
+name|SourceLocation
+argument_list|()
 argument_list|)
 block|{
 name|void
@@ -1975,6 +2221,8 @@ argument_list|,
 name|numArgs
 argument_list|,
 name|syntax
+argument_list|,
+name|ellipsisLoc
 argument_list|)
 argument_list|)
 return|;
@@ -2182,6 +2430,86 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+name|AttributeList
+modifier|*
+name|createTypeAttribute
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|attrName
+argument_list|,
+name|SourceRange
+name|attrRange
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|scopeName
+argument_list|,
+name|SourceLocation
+name|scopeLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|parmName
+argument_list|,
+name|SourceLocation
+name|parmLoc
+argument_list|,
+name|ParsedType
+name|typeArg
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|syntaxUsed
+argument_list|)
+block|{
+name|void
+modifier|*
+name|memory
+init|=
+name|allocate
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|AttributeList
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+return|return
+name|add
+argument_list|(
+name|new
+argument_list|(
+argument|memory
+argument_list|)
+name|AttributeList
+argument_list|(
+name|attrName
+argument_list|,
+name|attrRange
+argument_list|,
+name|scopeName
+argument_list|,
+name|scopeLoc
+argument_list|,
+name|parmName
+argument_list|,
+name|parmLoc
+argument_list|,
+name|typeArg
+argument_list|,
+name|syntaxUsed
+argument_list|)
+argument_list|)
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -2270,7 +2598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// CXX0XAttributeList - A wrapper around a C++0x attribute list.
+comment|/// CXX11AttributeList - A wrapper around a C++11 attribute list.
 end_comment
 
 begin_comment
@@ -2287,7 +2615,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|CXX0XAttributeList
+name|CXX11AttributeList
 block|{
 name|AttributeList
 modifier|*
@@ -2299,7 +2627,7 @@ decl_stmt|;
 name|bool
 name|HasAttr
 decl_stmt|;
-name|CXX0XAttributeList
+name|CXX11AttributeList
 argument_list|(
 argument|AttributeList *attrList
 argument_list|,
@@ -2323,7 +2651,7 @@ argument_list|(
 argument|hasAttr
 argument_list|)
 block|{   }
-name|CXX0XAttributeList
+name|CXX11AttributeList
 argument_list|()
 operator|:
 name|AttrList
@@ -2636,6 +2964,12 @@ name|AttributeList
 operator|::
 name|Syntax
 name|syntax
+argument_list|,
+name|SourceLocation
+name|ellipsisLoc
+operator|=
+name|SourceLocation
+argument_list|()
 argument_list|)
 block|{
 name|AttributeList
@@ -2663,6 +2997,8 @@ argument_list|,
 name|numArgs
 argument_list|,
 name|syntax
+argument_list|,
+name|ellipsisLoc
 argument_list|)
 decl_stmt|;
 name|add
@@ -2839,6 +3175,75 @@ argument_list|,
 name|mustBeNull
 argument_list|,
 name|syntax
+argument_list|)
+decl_stmt|;
+name|add
+argument_list|(
+name|attr
+argument_list|)
+expr_stmt|;
+return|return
+name|attr
+return|;
+block|}
+comment|/// Add an attribute with a single type argument.
+name|AttributeList
+modifier|*
+name|addNewTypeAttr
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|attrName
+argument_list|,
+name|SourceRange
+name|attrRange
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|scopeName
+argument_list|,
+name|SourceLocation
+name|scopeLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|parmName
+argument_list|,
+name|SourceLocation
+name|parmLoc
+argument_list|,
+name|ParsedType
+name|typeArg
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|syntaxUsed
+argument_list|)
+block|{
+name|AttributeList
+modifier|*
+name|attr
+init|=
+name|pool
+operator|.
+name|createTypeAttribute
+argument_list|(
+name|attrName
+argument_list|,
+name|attrRange
+argument_list|,
+name|scopeName
+argument_list|,
+name|scopeLoc
+argument_list|,
+name|parmName
+argument_list|,
+name|parmLoc
+argument_list|,
+name|typeArg
+argument_list|,
+name|syntaxUsed
 argument_list|)
 decl_stmt|;
 name|add

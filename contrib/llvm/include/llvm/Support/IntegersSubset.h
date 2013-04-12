@@ -66,37 +66,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CONSTANTRANGESSET_H_
+name|LLVM_SUPPORT_INTEGERSSUBSET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CONSTANTRANGESSET_H_
+name|LLVM_SUPPORT_INTEGERSSUBSET_H
 end_define
 
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Constants.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DerivedTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/LLVMContext.h"
 end_include
 
 begin_decl_stmt
@@ -2852,7 +2852,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CONSTANTRANGESSET_H_ */
+comment|/* CLLVM_SUPPORT_INTEGERSSUBSET_H */
 end_comment
 
 end_unit

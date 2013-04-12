@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Redeclarable.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/DeclarationName.h"
 end_include
 
@@ -87,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/ExternalASTSource.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Redeclarable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -117,8 +123,17 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+struct_decl|struct
+name|ASTTemplateArgumentListInfo
+struct_decl|;
 name|class
 name|CXXTemporary
+decl_stmt|;
+name|class
+name|CompoundStmt
+decl_stmt|;
+name|class
+name|DependentFunctionTemplateSpecializationInfo
 decl_stmt|;
 name|class
 name|Expr
@@ -127,46 +142,37 @@ name|class
 name|FunctionTemplateDecl
 decl_stmt|;
 name|class
-name|Stmt
+name|FunctionTemplateSpecializationInfo
 decl_stmt|;
 name|class
-name|CompoundStmt
+name|LabelStmt
 decl_stmt|;
 name|class
-name|StringLiteral
+name|MemberSpecializationInfo
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|NestedNameSpecifier
 decl_stmt|;
 name|class
-name|TemplateParameterList
+name|Stmt
+decl_stmt|;
+name|class
+name|StringLiteral
 decl_stmt|;
 name|class
 name|TemplateArgumentList
 decl_stmt|;
-struct_decl|struct
-name|ASTTemplateArgumentListInfo
-struct_decl|;
 name|class
-name|MemberSpecializationInfo
-decl_stmt|;
-name|class
-name|FunctionTemplateSpecializationInfo
-decl_stmt|;
-name|class
-name|DependentFunctionTemplateSpecializationInfo
+name|TemplateParameterList
 decl_stmt|;
 name|class
 name|TypeLoc
 decl_stmt|;
 name|class
 name|UnresolvedSetImpl
-decl_stmt|;
-name|class
-name|LabelStmt
-decl_stmt|;
-name|class
-name|Module
 decl_stmt|;
 comment|/// \brief A container of type source information.
 comment|///
@@ -444,6 +450,11 @@ operator|*
 name|getUnderlyingDeclImpl
 argument_list|()
 block|;
+name|void
+name|verifyLinkage
+argument_list|()
+specifier|const
+block|;
 name|protected
 operator|:
 name|NamedDecl
@@ -583,12 +594,29 @@ name|Name
 operator|=
 name|N
 block|; }
-comment|/// getQualifiedNameAsString - Returns human-readable qualified name for
+comment|/// printQualifiedName - Returns human-readable qualified name for
 comment|/// declaration, like A::B::i, for i being member of namespace A::B.
 comment|/// If declaration is not member of context which can be named (record,
-comment|/// namespace), it will return same result as getNameAsString().
+comment|/// namespace), it will return same result as printName().
 comment|/// Creating this name is expensive, so it should be called only when
 comment|/// performance doesn't matter.
+name|void
+name|printQualifiedName
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+name|void
+name|printQualifiedName
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+specifier|const
+block|;
+comment|// FIXME: Remove string versions.
 name|std
 operator|::
 name|string
@@ -606,44 +634,24 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getNameForDiagnostic - Appends a human-readable name for this
-comment|/// declaration into the given string.
+comment|/// declaration into the given stream.
 comment|///
 comment|/// This is the method invoked by Sema when displaying a NamedDecl
 comment|/// in a diagnostic.  It does not necessarily produce the same
-comment|/// result as getNameAsString(); for example, class template
+comment|/// result as printName(); for example, class template
 comment|/// specializations are printed with their template arguments.
-comment|///
-comment|/// TODO: use an API that doesn't require so many temporary strings
 name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
-argument|std::string&S
+argument|raw_ostream&OS
 argument_list|,
 argument|const PrintingPolicy&Policy
 argument_list|,
 argument|bool Qualified
 argument_list|)
 specifier|const
-block|{
-if|if
-condition|(
-name|Qualified
-condition|)
-name|S
-operator|+=
-name|getQualifiedNameAsString
-argument_list|(
-name|Policy
-argument_list|)
-expr_stmt|;
-else|else
-name|S
-operator|+=
-name|getNameAsString
-argument_list|()
-expr_stmt|;
-block|}
+block|;
 comment|/// declarationReplaces - Determine whether this declaration, if
 comment|/// known to be well-formed within its context, will replace the
 comment|/// declaration OldD if introduced into scope. A declaration will
@@ -730,418 +738,32 @@ comment|/// \brief Determine whether the given declaration is an instance member
 comment|/// a C++ class.
 name|bool
 name|isCXXInstanceMember
-parameter_list|()
-function|const;
-name|class
-name|LinkageInfo
-block|{
-name|uint8_t
-name|linkage_
-range|:
-literal|2
-decl_stmt|;
-name|uint8_t
-name|visibility_
-range|:
-literal|2
-decl_stmt|;
-name|uint8_t
-name|explicit_
-range|:
-literal|1
-decl_stmt|;
-name|void
-name|setVisibility
-parameter_list|(
-name|Visibility
-name|V
-parameter_list|,
-name|bool
-name|E
-parameter_list|)
-block|{
-name|visibility_
-operator|=
-name|V
-expr_stmt|;
-name|explicit_
-operator|=
-name|E
-expr_stmt|;
-block|}
-name|public
-label|:
-name|LinkageInfo
-argument_list|()
-operator|:
-name|linkage_
-argument_list|(
-name|ExternalLinkage
-argument_list|)
-operator|,
-name|visibility_
-argument_list|(
-name|DefaultVisibility
-argument_list|)
-operator|,
-name|explicit_
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|LinkageInfo
-argument_list|(
-argument|Linkage L
-argument_list|,
-argument|Visibility V
-argument_list|,
-argument|bool E
-argument_list|)
-operator|:
-name|linkage_
-argument_list|(
-name|L
-argument_list|)
-operator|,
-name|visibility_
-argument_list|(
-name|V
-argument_list|)
-operator|,
-name|explicit_
-argument_list|(
-argument|E
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|linkage
-argument_list|()
-operator|==
-name|L
-operator|&&
-name|visibility
-argument_list|()
-operator|==
-name|V
-operator|&&
-name|visibilityExplicit
-argument_list|()
-operator|==
-name|E
-operator|&&
-literal|"Enum truncated!"
-argument_list|)
-block|;     }
-specifier|static
-name|LinkageInfo
-name|external
-argument_list|()
-block|{
-return|return
-name|LinkageInfo
-argument_list|()
-return|;
-block|}
-specifier|static
-name|LinkageInfo
-name|internal
-parameter_list|()
-block|{
-return|return
-name|LinkageInfo
-argument_list|(
-name|InternalLinkage
-argument_list|,
-name|DefaultVisibility
-argument_list|,
-name|false
-argument_list|)
-return|;
-block|}
-specifier|static
-name|LinkageInfo
-name|uniqueExternal
-parameter_list|()
-block|{
-return|return
-name|LinkageInfo
-argument_list|(
-name|UniqueExternalLinkage
-argument_list|,
-name|DefaultVisibility
-argument_list|,
-name|false
-argument_list|)
-return|;
-block|}
-specifier|static
-name|LinkageInfo
-name|none
-parameter_list|()
-block|{
-return|return
-name|LinkageInfo
-argument_list|(
-name|NoLinkage
-argument_list|,
-name|DefaultVisibility
-argument_list|,
-name|false
-argument_list|)
-return|;
-block|}
-name|Linkage
-name|linkage
 argument_list|()
 specifier|const
-block|{
-return|return
-operator|(
-name|Linkage
-operator|)
-name|linkage_
-return|;
-block|}
-name|Visibility
-name|visibility
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|Visibility
-operator|)
-name|visibility_
-return|;
-block|}
-name|bool
-name|visibilityExplicit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|explicit_
-return|;
-block|}
-name|void
-name|setLinkage
-parameter_list|(
-name|Linkage
-name|L
-parameter_list|)
-block|{
-name|linkage_
-operator|=
-name|L
 expr_stmt|;
-block|}
-name|void
-name|mergeLinkage
-parameter_list|(
-name|Linkage
-name|L
-parameter_list|)
-block|{
-name|setLinkage
-argument_list|(
-name|minLinkage
-argument_list|(
-name|linkage
-argument_list|()
-argument_list|,
-name|L
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|mergeLinkage
-parameter_list|(
-name|LinkageInfo
-name|Other
-parameter_list|)
-block|{
-name|mergeLinkage
-argument_list|(
-name|Other
-operator|.
-name|linkage
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-comment|// Merge the visibility V giving preference to explicit ones.
-comment|// This is used, for example, when merging the visibility of a class
-comment|// down to one of its members. If the member has no explicit visibility,
-comment|// the class visibility wins.
-name|void
-name|mergeVisibility
-parameter_list|(
-name|Visibility
-name|V
-parameter_list|,
-name|bool
-name|E
-init|=
-name|false
-parameter_list|)
-block|{
-comment|// Never increase the visibility
-if|if
-condition|(
-name|visibility
-argument_list|()
-operator|<
-name|V
-condition|)
-return|return;
-comment|// If we have an explicit visibility, keep it
-if|if
-condition|(
-name|visibilityExplicit
-argument_list|()
-condition|)
-return|return;
-name|setVisibility
-argument_list|(
-name|V
-argument_list|,
-name|E
-argument_list|)
-expr_stmt|;
-block|}
-comment|// Merge the visibility V, keeping the most restrictive one.
-comment|// This is used for cases like merging the visibility of a template
-comment|// argument to an instantiation. If we already have a hidden class,
-comment|// no argument should give it default visibility.
-name|void
-name|mergeVisibilityWithMin
-parameter_list|(
-name|Visibility
-name|V
-parameter_list|,
-name|bool
-name|E
-init|=
-name|false
-parameter_list|)
-block|{
-comment|// Never increase the visibility
-if|if
-condition|(
-name|visibility
-argument_list|()
-operator|<
-name|V
-condition|)
-return|return;
-comment|// FIXME: this
-comment|// If this visibility is explicit, keep it.
-if|if
-condition|(
-name|visibilityExplicit
-argument_list|()
-operator|&&
-operator|!
-name|E
-condition|)
-return|return;
-comment|// should be replaced with this
-comment|// Don't lose the explicit bit for nothing
-comment|//      if (visibility() == V&& visibilityExplicit())
-comment|//        return;
-name|setVisibility
-argument_list|(
-name|V
-argument_list|,
-name|E
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|mergeVisibility
-parameter_list|(
-name|LinkageInfo
-name|Other
-parameter_list|)
-block|{
-name|mergeVisibility
-argument_list|(
-name|Other
-operator|.
-name|visibility
-argument_list|()
-argument_list|,
-name|Other
-operator|.
-name|visibilityExplicit
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|mergeVisibilityWithMin
-parameter_list|(
-name|LinkageInfo
-name|Other
-parameter_list|)
-block|{
-name|mergeVisibilityWithMin
-argument_list|(
-name|Other
-operator|.
-name|visibility
-argument_list|()
-argument_list|,
-name|Other
-operator|.
-name|visibilityExplicit
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|merge
-parameter_list|(
-name|LinkageInfo
-name|Other
-parameter_list|)
-block|{
-name|mergeLinkage
-argument_list|(
-name|Other
-argument_list|)
-expr_stmt|;
-name|mergeVisibility
-argument_list|(
-name|Other
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|mergeWithMin
-parameter_list|(
-name|LinkageInfo
-name|Other
-parameter_list|)
-block|{
-name|mergeLinkage
-argument_list|(
-name|Other
-argument_list|)
-expr_stmt|;
-name|mergeVisibilityWithMin
-argument_list|(
-name|Other
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 comment|/// \brief Determine what kind of linkage this entity has.
 name|Linkage
 name|getLinkage
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief True if this decl has external linkage.
+name|bool
+name|hasExternalLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLinkage
+argument_list|()
+operator|==
+name|ExternalLinkage
+return|;
+block|}
+comment|/// \brief True if this decl has external linkage. Don't cache the linkage,
+comment|/// because we are not finished setting up the redecl chain for the decl.
+name|bool
+name|hasExternalLinkageUncached
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1155,7 +777,7 @@ return|return
 name|getLinkageAndVisibility
 argument_list|()
 operator|.
-name|visibility
+name|getVisibility
 argument_list|()
 return|;
 block|}
@@ -1165,24 +787,34 @@ name|getLinkageAndVisibility
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Kinds of explicit visibility.
+enum|enum
+name|ExplicitVisibilityKind
+block|{
+name|VisibilityForType
+block|,
+name|VisibilityForValue
+block|}
+enum|;
 comment|/// \brief If visibility was explicitly specified for this
 comment|/// declaration, return that visibility.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|Visibility
 operator|>
 name|getExplicitVisibility
+argument_list|(
+argument|ExplicitVisibilityKind kind
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// \brief True if the computed linkage is valid. Used for consistency
+comment|/// checking. Should always return true.
+name|bool
+name|isLinkageValid
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Clear the linkage cache in response to a change
-comment|/// to the declaration.
-name|void
-name|ClearLinkageCache
-parameter_list|()
-function_decl|;
 comment|/// \brief Looks through UsingDecls and ObjCCompatibleAliasDecls for
 comment|/// the underlying named decl.
 name|NamedDecl
@@ -2234,26 +1866,7 @@ name|bool
 name|isWeak
 argument_list|()
 specifier|const
-block|{
-return|return
-name|hasAttr
-operator|<
-name|WeakAttr
-operator|>
-operator|(
-operator|)
-operator|||
-name|hasAttr
-operator|<
-name|WeakRefAttr
-operator|>
-operator|(
-operator|)
-operator|||
-name|isWeakImported
-argument_list|()
-return|;
-block|}
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -2936,11 +2549,6 @@ range|:
 literal|3
 decl_stmt|;
 name|unsigned
-name|SClassAsWritten
-range|:
-literal|3
-decl_stmt|;
-name|unsigned
 name|ThreadSpecified
 range|:
 literal|1
@@ -3123,8 +2731,6 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass SC
-argument_list|,
-argument|StorageClass SCAsWritten
 argument_list|)
 end_macro
 
@@ -3185,12 +2791,6 @@ operator|.
 name|SClass
 operator|=
 name|SC
-block|;
-name|VarDeclBits
-operator|.
-name|SClassAsWritten
-operator|=
-name|SCAsWritten
 block|;
 comment|// Everything else is implicitly initialized to false.
 block|}
@@ -3329,9 +2929,6 @@ name|TInfo
 parameter_list|,
 name|StorageClass
 name|S
-parameter_list|,
-name|StorageClass
-name|SCAsWritten
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3362,6 +2959,14 @@ name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Returns the storage class as written in the source. For the
+end_comment
+
+begin_comment
+comment|/// computed linkage of symbol, see getLinkage.
+end_comment
+
 begin_expr_stmt
 name|StorageClass
 name|getStorageClass
@@ -3379,23 +2984,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-name|StorageClass
-name|getStorageClassAsWritten
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|StorageClass
-operator|)
-name|VarDeclBits
-operator|.
-name|SClassAsWritten
-return|;
-block|}
-end_expr_stmt
-
 begin_function_decl
 name|void
 name|setStorageClass
@@ -3405,31 +2993,6 @@ name|SC
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-name|void
-name|setStorageClassAsWritten
-parameter_list|(
-name|StorageClass
-name|SC
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isLegalForVariable
-argument_list|(
-name|SC
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|VarDeclBits
-operator|.
-name|SClassAsWritten
-operator|=
-name|SC
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 name|void
@@ -3539,11 +3102,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasExternStorage - Returns true if a variable has extern or
+comment|/// \brief Returns true if a variable has extern or __private_extern__
 end_comment
 
 begin_comment
-comment|/// __private_extern__ storage.
+comment|/// storage.
 end_comment
 
 begin_expr_stmt
@@ -3590,6 +3153,18 @@ name|hasLocalStorage
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Compute the language linkage.
+end_comment
+
+begin_expr_stmt
+name|LanguageLinkage
+name|getLanguageLinkage
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -4598,8 +4173,6 @@ name|APValue
 modifier|*
 name|evaluateValue
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|PartialDiagnosticAt
@@ -5310,8 +4883,6 @@ comment|/*tinfo*/
 literal|0
 argument_list|,
 argument|SC_None
-argument_list|,
-argument|SC_None
 argument_list|)
 block|{
 name|setImplicit
@@ -5392,8 +4963,6 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
-argument|StorageClass SCAsWritten
-argument_list|,
 argument|Expr *DefArg
 argument_list|)
 operator|:
@@ -5414,8 +4983,6 @@ argument_list|,
 argument|TInfo
 argument_list|,
 argument|S
-argument_list|,
-argument|SCAsWritten
 argument_list|)
 block|{
 name|assert
@@ -5472,8 +5039,6 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
-argument_list|,
-argument|StorageClass SCAsWritten
 argument_list|,
 argument|Expr *DefArg
 argument_list|)
@@ -6354,8 +5919,6 @@ decl_stmt|;
 comment|/// DeclsInPrototypeScope - Array of pointers to NamedDecls for
 comment|/// decls defined in the function prototype that are not parameters. E.g.
 comment|/// 'enum Y' in 'void f(enum Y {AA} x) {}'.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|NamedDecl
@@ -6370,11 +5933,6 @@ comment|// FIXME: This can be packed into the bitfields in Decl.
 comment|// NOTE: VC++ treats enums as signed, avoid using the StorageClass enum
 name|unsigned
 name|SClass
-range|:
-literal|2
-decl_stmt|;
-name|unsigned
-name|SClassAsWritten
 range|:
 literal|2
 decl_stmt|;
@@ -6443,6 +6001,13 @@ literal|1
 decl_stmt|;
 name|bool
 name|IsConstexpr
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Indicates if the function was a definition but its body was
+comment|/// skipped.
+name|unsigned
+name|HasSkippedBody
 range|:
 literal|1
 decl_stmt|;
@@ -6568,8 +6133,6 @@ name|ASTContext
 operator|&
 name|C
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|ParmVarDecl
@@ -6595,8 +6158,6 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
-argument_list|,
-argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInlineSpecified
 argument_list|,
@@ -6642,11 +6203,6 @@ operator|,
 name|SClass
 argument_list|(
 name|S
-argument_list|)
-operator|,
-name|SClassAsWritten
-argument_list|(
-name|SCAsWritten
 argument_list|)
 operator|,
 name|IsInline
@@ -6712,6 +6268,11 @@ operator|,
 name|IsConstexpr
 argument_list|(
 name|isConstexprSpecified
+argument_list|)
+operator|,
+name|HasSkippedBody
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|EndRangeLoc
@@ -6831,13 +6392,6 @@ name|TInfo
 parameter_list|,
 name|StorageClass
 name|SC
-init|=
-name|SC_None
-parameter_list|,
-name|StorageClass
-name|SCAsWritten
-init|=
-name|SC_None
 parameter_list|,
 name|bool
 name|isInlineSpecified
@@ -6882,8 +6436,6 @@ name|TInfo
 argument_list|,
 name|SC
 argument_list|,
-name|SCAsWritten
-argument_list|,
 name|isInlineSpecified
 argument_list|,
 name|hasWrittenPrototype
@@ -6922,23 +6474,12 @@ name|TInfo
 parameter_list|,
 name|StorageClass
 name|SC
-init|=
-name|SC_None
-parameter_list|,
-name|StorageClass
-name|SCAsWritten
-init|=
-name|SC_None
 parameter_list|,
 name|bool
 name|isInlineSpecified
-init|=
-name|false
 parameter_list|,
 name|bool
 name|hasWrittenPrototype
-init|=
-name|true
 parameter_list|,
 name|bool
 name|isConstexprSpecified
@@ -6981,11 +6522,9 @@ name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
-name|std
-operator|::
-name|string
+name|raw_ostream
 operator|&
-name|S
+name|OS
 argument_list|,
 specifier|const
 name|PrintingPolicy
@@ -7416,7 +6955,12 @@ parameter_list|(
 name|bool
 name|IC
 parameter_list|)
-function_decl|;
+block|{
+name|IsConstexpr
+operator|=
+name|IC
+expr_stmt|;
+block|}
 comment|/// \brief Whether this function has been deleted.
 comment|///
 comment|/// A function that is "deleted" (via the C++0x "= delete" syntax)
@@ -7499,6 +7043,12 @@ name|isReservedGlobalPlacementOperator
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Compute the language linkage.
+name|LanguageLinkage
+name|getLanguageLinkage
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determines whether this function is a function with
 comment|/// external, C linkage.
 name|bool
@@ -7512,6 +7062,37 @@ name|isGlobal
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determines whether this function is known to be 'noreturn', through
+comment|/// an attribute on its declaration or its type.
+name|bool
+name|isNoReturn
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief True if the function was a definition but its body was skipped.
+name|bool
+name|hasSkippedBody
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSkippedBody
+return|;
+block|}
+name|void
+name|setHasSkippedBody
+parameter_list|(
+name|bool
+name|Skipped
+init|=
+name|true
+parameter_list|)
+block|{
+name|HasSkippedBody
+operator|=
+name|Skipped
+expr_stmt|;
+block|}
 name|void
 name|setPreviousDeclaration
 parameter_list|(
@@ -7666,8 +7247,6 @@ block|}
 name|void
 name|setParams
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|ParmVarDecl
@@ -7686,8 +7265,6 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|const
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|NamedDecl
@@ -7705,8 +7282,6 @@ block|}
 name|void
 name|setDeclsInPrototypeScope
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|NamedDecl
@@ -7768,6 +7343,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns the storage class as written in the source. For the
+comment|/// computed linkage of symbol, see getLinkage.
 name|StorageClass
 name|getStorageClass
 argument_list|()
@@ -7777,25 +7354,6 @@ return|return
 name|StorageClass
 argument_list|(
 name|SClass
-argument_list|)
-return|;
-block|}
-name|void
-name|setStorageClass
-parameter_list|(
-name|StorageClass
-name|SC
-parameter_list|)
-function_decl|;
-name|StorageClass
-name|getStorageClassAsWritten
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StorageClass
-argument_list|(
-name|SClassAsWritten
 argument_list|)
 return|;
 block|}
@@ -7844,7 +7402,11 @@ name|bool
 name|isInlined
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|IsInline
+return|;
+block|}
 name|bool
 name|isInlineDefinitionExternallyVisible
 argument_list|()
@@ -7922,7 +7484,19 @@ operator|*
 name|getMemberSpecializationInfo
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|TemplateOrSpecialization
+operator|.
+name|dyn_cast
+operator|<
+name|MemberSpecializationInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
 comment|/// \brief Specify that this record is an instantiation of the
 comment|/// member function FD.
 name|void
@@ -10065,6 +9639,15 @@ name|IsFixed
 operator|:
 literal|1
 block|;
+comment|/// \brief Indicates whether it is possible for declarations of this kind
+comment|/// to have an out-of-date definition.
+comment|///
+comment|/// This option is only enabled when modules are enabled.
+name|bool
+name|MayHaveOutOfDateDef
+operator|:
+literal|1
+block|;
 name|private
 operator|:
 name|SourceLocation
@@ -10779,6 +10362,84 @@ name|getTagKind
 argument_list|()
 operator|==
 name|TTK_Enum
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Is this tag type named, either directly or via being defined in
+end_comment
+
+begin_comment
+comment|/// a typedef of this type?
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// C++11 [basic.link]p8:
+end_comment
+
+begin_comment
+comment|///   A type is said to have linkage if and only if:
+end_comment
+
+begin_comment
+comment|///     - it is a class or enumeration type that is named (or has a
+end_comment
+
+begin_comment
+comment|///       name for linkage purposes) and the name has linkage; ...
+end_comment
+
+begin_comment
+comment|/// C++11 [dcl.typedef]p9:
+end_comment
+
+begin_comment
+comment|///   If the typedef declaration defines an unnamed class (or enum),
+end_comment
+
+begin_comment
+comment|///   the first typedef-name declared by the declaration to be that
+end_comment
+
+begin_comment
+comment|///   class type (or enum type) is used to denote the class type (or
+end_comment
+
+begin_comment
+comment|///   enum type) for linkage purposes only.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// C does not have an analogous rule, but the same concept is
+end_comment
+
+begin_comment
+comment|/// nonetheless useful in some places.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNameForLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getDeclName
+argument_list|()
+operator|||
+name|getTypedefNameForAnonDecl
+argument_list|()
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -12103,6 +11764,13 @@ name|HasObjectMember
 operator|:
 literal|1
 block|;
+comment|/// HasVolatileMember - This is true if struct has at least one member of
+comment|/// 'volatile' type.
+name|bool
+name|HasVolatileMember
+operator|:
+literal|1
+block|;
 comment|/// \brief Whether the field declarations of this record have been loaded
 comment|/// from external storage. To avoid unnecessary deserialization of
 comment|/// methods/nested types we allow deserialization of just the fields
@@ -12311,6 +11979,25 @@ argument|bool val
 argument_list|)
 block|{
 name|HasObjectMember
+operator|=
+name|val
+block|; }
+name|bool
+name|hasVolatileMember
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVolatileMember
+return|;
+block|}
+name|void
+name|setHasVolatileMember
+argument_list|(
+argument|bool val
+argument_list|)
+block|{
+name|HasVolatileMember
 operator|=
 name|val
 block|; }
@@ -13245,8 +12932,6 @@ block|}
 name|void
 name|setParams
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|ParmVarDecl
@@ -13591,7 +13276,7 @@ comment|/// \code
 end_comment
 
 begin_comment
-comment|///   @__experimental_modules_import std.vector;
+comment|///   @import std.vector;
 end_comment
 
 begin_comment
@@ -13807,6 +13492,90 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Represents an empty-declaration.
+name|class
+name|EmptyDecl
+operator|:
+name|public
+name|Decl
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|EmptyDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+argument|Empty
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|)
+block|{ }
+name|public
+operator|:
+specifier|static
+name|EmptyDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+block|;
+specifier|static
+name|EmptyDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Empty
+return|;
+block|}
+expr|}
+block|;
 comment|/// Insertion operator for diagnostics.  This allows sending NamedDecl's
 comment|/// into a diagnostic with<<.
 specifier|inline
@@ -13917,24 +13686,6 @@ block|{
 comment|// Point to previous. Make sure that this is actually the most recent
 comment|// redeclaration, or we can build invalid chains. If the most recent
 comment|// redeclaration is invalid, it won't be PrevDecl, but we want it anyway.
-name|RedeclLink
-operator|=
-name|PreviousDeclLink
-argument_list|(
-name|llvm
-operator|::
-name|cast
-operator|<
-name|decl_type
-operator|>
-operator|(
-name|PrevDecl
-operator|->
-name|getMostRecentDecl
-argument_list|()
-operator|)
-argument_list|)
-expr_stmt|;
 name|First
 operator|=
 name|PrevDecl
@@ -13952,6 +13703,30 @@ name|NextIsLatest
 argument_list|()
 operator|&&
 literal|"Expected first"
+argument_list|)
+expr_stmt|;
+name|decl_type
+modifier|*
+name|MostRecent
+init|=
+name|First
+operator|->
+name|RedeclLink
+operator|.
+name|getNext
+argument_list|()
+decl_stmt|;
+name|RedeclLink
+operator|=
+name|PreviousDeclLink
+argument_list|(
+name|cast
+operator|<
+name|decl_type
+operator|>
+operator|(
+name|MostRecent
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13987,13 +13762,10 @@ name|this
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NamedDecl
-modifier|*
-name|ND
-init|=
-name|dyn_cast
+name|assert
+argument_list|(
+operator|!
+name|isa
 operator|<
 name|NamedDecl
 operator|>
@@ -14007,44 +13779,37 @@ operator|(
 name|this
 operator|)
 operator|)
-condition|)
-name|ND
+operator|||
+name|cast
+operator|<
+name|NamedDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|decl_type
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|)
 operator|->
-name|ClearLinkageCache
+name|isLinkageValid
 argument_list|()
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
+argument_list|)
+block|; }
 comment|// Inline function definitions.
-end_comment
-
-begin_comment
 comment|/// \brief Check if the given decl is complete.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// We use this function to break a cycle between the inline definitions in
-end_comment
-
-begin_comment
 comment|/// Type.h and Decl.h.
-end_comment
-
-begin_function
 specifier|inline
 name|bool
 name|IsEnumDeclComplete
-parameter_list|(
-name|EnumDecl
-modifier|*
-name|ED
-parameter_list|)
+argument_list|(
+argument|EnumDecl *ED
+argument_list|)
 block|{
 return|return
 name|ED
@@ -14053,33 +13818,16 @@ name|isComplete
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Check if the given decl is scoped.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// We use this function to break a cycle between the inline definitions in
-end_comment
-
-begin_comment
 comment|/// Type.h and Decl.h.
-end_comment
-
-begin_function
 specifier|inline
 name|bool
 name|IsEnumDeclScoped
-parameter_list|(
-name|EnumDecl
-modifier|*
-name|ED
-parameter_list|)
+argument_list|(
+argument|EnumDecl *ED
+argument_list|)
 block|{
 return|return
 name|ED
@@ -14088,10 +13836,10 @@ name|isScoped
 argument_list|()
 return|;
 block|}
-end_function
+expr|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

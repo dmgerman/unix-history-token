@@ -48,6 +48,12 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCObjectWriter
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|MCWinCOFFObjectTargetWriter
 block|{
 specifier|const

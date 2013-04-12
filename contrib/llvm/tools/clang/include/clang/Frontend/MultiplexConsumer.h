@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 

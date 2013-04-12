@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_decl_stmt
@@ -275,6 +275,13 @@ return|return
 name|DL
 return|;
 block|}
+comment|/// LowerArguments - Do "fast" instruction selection for function arguments
+comment|/// and append machine instructions to the current block. Return true if
+comment|/// it is successful.
+name|bool
+name|LowerArguments
+parameter_list|()
+function_decl|;
 comment|/// SelectInstruction - Do "fast" instruction selection for the given
 comment|/// LLVM IR instruction, and append generated machine instructions to
 comment|/// the current block. Return true if selection was successful.
@@ -378,6 +385,21 @@ name|void
 name|recomputeInsertPt
 parameter_list|()
 function_decl|;
+comment|/// removeDeadCode - Remove all dead instructions between the I and E.
+name|void
+name|removeDeadCode
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|E
+argument_list|)
+decl_stmt|;
 struct|struct
 name|SavePoint
 block|{
@@ -441,6 +463,14 @@ name|I
 parameter_list|)
 init|=
 literal|0
+function_decl|;
+comment|/// FastLowerArguments - This method is called by target-independent code to
+comment|/// do target specific argument lowering. It returns true if it was
+comment|/// successful.
+name|virtual
+name|bool
+name|FastLowerArguments
+parameter_list|()
 function_decl|;
 comment|/// FastEmit_r - This method is called by target-independent code
 comment|/// to request that an instruction with the given type and opcode
@@ -1188,21 +1218,6 @@ operator|*
 name|V
 argument_list|)
 decl|const
-decl_stmt|;
-comment|/// removeDeadCode - Remove all dead instructions between the I and E.
-name|void
-name|removeDeadCode
-argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|E
-argument_list|)
 decl_stmt|;
 block|}
 empty_stmt|;

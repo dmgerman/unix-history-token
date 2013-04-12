@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Stmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -121,8 +127,6 @@ name|AlwaysUninit
 decl_stmt|;
 comment|/// This use is always uninitialized if it occurs after any of these branches
 comment|/// is taken.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Branch
@@ -210,8 +214,6 @@ name|Maybe
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|Branch

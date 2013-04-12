@@ -94,9 +94,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Attr
-decl_stmt|;
-name|class
 name|CXXCtorInitializer
 decl_stmt|;
 name|class
@@ -106,13 +103,7 @@ name|class
 name|Decl
 decl_stmt|;
 name|class
-name|DeclGroupRef
-decl_stmt|;
-name|class
 name|Expr
-decl_stmt|;
-name|class
-name|NestedNameSpecifier
 decl_stmt|;
 name|class
 name|ParsedTemplateArgument

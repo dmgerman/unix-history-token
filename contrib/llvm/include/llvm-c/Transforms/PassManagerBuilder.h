@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_C_PASSMANAGERBUILDER
+name|LLVM_C_TRANSFORMS_PASSMANAGERBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_C_PASSMANAGERBUILDER
+name|LLVM_C_TRANSFORMS_PASSMANAGERBUILDER_H
 end_define
 
 begin_include
@@ -161,10 +161,10 @@ parameter_list|,
 name|LLVMPassManagerRef
 name|PM
 parameter_list|,
-name|bool
+name|LLVMBool
 name|Internalize
 parameter_list|,
-name|bool
+name|LLVMBool
 name|RunInliner
 parameter_list|)
 function_decl|;

@@ -66,19 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/CommentOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -184,6 +190,12 @@ name|IsDeprecatedCommand
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if this is a \\headerfile-like command.
+name|unsigned
+name|IsHeaderfileCommand
+range|:
+literal|1
+decl_stmt|;
 comment|/// True if we don't want to warn about this command being passed an empty
 comment|/// paragraph.  Meaningful only for block commands.
 name|unsigned
@@ -227,6 +239,25 @@ name|IsDeclarationCommand
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if verbatim-like line command is a function declaration.
+name|unsigned
+name|IsFunctionDeclarationCommand
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if block command is further describing a container API; such
+comment|/// as \@coclass, \@classdesign, etc.
+name|unsigned
+name|IsRecordLikeDetailCommand
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if block command is a container API; such as \@interface.
+name|unsigned
+name|IsRecordLikeDeclarationCommand
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief True if this command is unknown.  This \c CommandInfo object was
 comment|/// created during parsing.
 name|unsigned
@@ -243,6 +274,25 @@ name|CommandTraits
 block|{
 name|public
 label|:
+enum|enum
+name|KnownCommandIDs
+block|{
+define|#
+directive|define
+name|COMMENT_COMMAND
+parameter_list|(
+name|NAME
+parameter_list|)
+value|KCI_##NAME,
+include|#
+directive|include
+file|"clang/AST/CommentCommandList.inc"
+undef|#
+directive|undef
+name|COMMENT_COMMAND
+name|KCI_Last
+block|}
+enum|;
 name|CommandTraits
 argument_list|(
 name|llvm
@@ -250,8 +300,22 @@ operator|::
 name|BumpPtrAllocator
 operator|&
 name|Allocator
+argument_list|,
+specifier|const
+name|CommentOptions
+operator|&
+name|CommentOptions
 argument_list|)
 expr_stmt|;
+name|void
+name|registerCommentOptions
+parameter_list|(
+specifier|const
+name|CommentOptions
+modifier|&
+name|CommentOptions
+parameter_list|)
+function_decl|;
 comment|/// \returns a CommandInfo object for a given command name or
 comment|/// NULL if no CommandInfo object exists for this command.
 specifier|const
@@ -309,6 +373,15 @@ specifier|const
 name|CommandInfo
 modifier|*
 name|registerUnknownCommand
+parameter_list|(
+name|StringRef
+name|CommandName
+parameter_list|)
+function_decl|;
+specifier|const
+name|CommandInfo
+modifier|*
+name|registerBlockCommand
 parameter_list|(
 name|StringRef
 name|CommandName
@@ -376,6 +449,14 @@ name|CommandID
 argument_list|)
 decl|const
 decl_stmt|;
+name|CommandInfo
+modifier|*
+name|createCommandInfoWithName
+parameter_list|(
+name|StringRef
+name|CommandName
+parameter_list|)
+function_decl|;
 name|unsigned
 name|NextID
 decl_stmt|;

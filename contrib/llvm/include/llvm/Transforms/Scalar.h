@@ -239,21 +239,12 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// LoopStrengthReduce - This pass is strength reduces GEP instructions that use
-comment|// a loop's canonical induction variable as one of their indices.  It takes an
-comment|// optional parameter used to consult the target machine whether certain
-comment|// transformations are profitable.
+comment|// a loop's canonical induction variable as one of their indices.
 comment|//
 name|Pass
 modifier|*
 name|createLoopStrengthReducePass
-parameter_list|(
-specifier|const
-name|TargetLowering
-modifier|*
-name|TLI
-init|=
-literal|0
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|Pass
 modifier|*
@@ -642,42 +633,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// ObjCARCAPElim - ObjC ARC autorelease pool elimination.
-comment|//
-name|Pass
-modifier|*
-name|createObjCARCAPElimPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// ObjCARCExpand - ObjC ARC preliminary simplifications.
-comment|//
-name|Pass
-modifier|*
-name|createObjCARCExpandPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// ObjCARCContract - Late ObjC ARC cleanups.
-comment|//
-name|Pass
-modifier|*
-name|createObjCARCContractPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// ObjCARCOpt - ObjC ARC optimization.
-comment|//
-name|Pass
-modifier|*
-name|createObjCARCOptPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// InstructionSimplifier - Remove redundant instructions.
 comment|//
 name|FunctionPass
@@ -692,7 +647,7 @@ name|InstructionSimplifierID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LowerExpectIntriniscs - Removes llvm.expect intrinsics and creates
+comment|// LowerExpectIntrinsics - Removes llvm.expect intrinsics and creates
 comment|// "block_weights" metadata.
 name|FunctionPass
 modifier|*

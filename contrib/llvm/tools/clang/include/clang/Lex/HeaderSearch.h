@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -164,6 +164,12 @@ decl_stmt|;
 comment|/// \brief Whether this header file info was supplied by an external source.
 name|unsigned
 name|External
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this header is part of a module.
+name|unsigned
+name|isModuleHeader
 range|:
 literal|1
 decl_stmt|;
@@ -238,6 +244,11 @@ name|C_User
 argument_list|)
 operator|,
 name|External
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isModuleHeader
 argument_list|(
 name|false
 argument_list|)
@@ -355,8 +366,6 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Header-search options used to initialize this header search.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|HeaderSearchOptions
@@ -515,6 +524,7 @@ expr|>
 name|HeaderMaps
 expr_stmt|;
 comment|/// \brief The mapping between modules and headers.
+name|mutable
 name|ModuleMap
 name|ModMap
 decl_stmt|;
@@ -591,8 +601,6 @@ name|public
 label|:
 name|HeaderSearch
 argument_list|(
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|HeaderSearchOptions
@@ -1093,6 +1101,11 @@ name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|Module
+operator|*
+operator|*
+name|SuggestedModule
 argument_list|)
 decl_stmt|;
 comment|/// \brief Look up the specified framework name in our framework cache.
@@ -1214,6 +1227,16 @@ operator|::
 name|C_System
 expr_stmt|;
 block|}
+comment|/// \brief Mark the specified file as part of a module.
+name|void
+name|MarkFileModuleHeader
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
 comment|/// \brief Increment the count for the number of times the specified
 comment|/// FileEntry has been entered.
 name|void
@@ -1376,13 +1399,14 @@ comment|/// \param File The header that we wish to map to a module.
 name|Module
 modifier|*
 name|findModuleForHeader
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|File
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Read the contents of the given module map file.
 comment|///
 comment|/// \param File The module map file.
@@ -1403,8 +1427,6 @@ comment|/// \param Modules Will be filled with the set of known, top-level modul
 name|void
 name|collectAllModules
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|Module
@@ -1441,6 +1463,16 @@ name|Dir
 parameter_list|,
 name|bool
 name|IsSystem
+parameter_list|)
+function_decl|;
+comment|/// \brief Load all of the module maps within the immediate subdirectories
+comment|/// of the given search directory.
+name|void
+name|loadSubdirectoryModuleMaps
+parameter_list|(
+name|DirectoryLookup
+modifier|&
+name|SearchDir
 parameter_list|)
 function_decl|;
 name|public

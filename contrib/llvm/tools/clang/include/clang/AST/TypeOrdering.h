@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"clang/AST/CanonicalType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/CanonicalType.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_include

@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/Analysis/Dominators.h"
 end_include
 
 begin_include
@@ -78,13 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/DominatorInternals.h"
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_decl_stmt
@@ -201,9 +195,9 @@ block|}
 name|bool
 name|dominates
 argument_list|(
-argument|MachineDomTreeNode *A
+argument|const MachineDomTreeNode *A
 argument_list|,
-argument|MachineDomTreeNode *B
+argument|const MachineDomTreeNode *B
 argument_list|)
 specifier|const
 block|{
@@ -221,9 +215,9 @@ block|}
 name|bool
 name|dominates
 argument_list|(
-argument|MachineBasicBlock *A
+argument|const MachineBasicBlock *A
 argument_list|,
-argument|MachineBasicBlock *B
+argument|const MachineBasicBlock *B
 argument_list|)
 specifier|const
 block|{
@@ -243,7 +237,7 @@ name|properlyDominates
 argument_list|(
 argument|const MachineDomTreeNode *A
 argument_list|,
-argument|MachineDomTreeNode *B
+argument|const MachineDomTreeNode *B
 argument_list|)
 specifier|const
 block|{
@@ -261,9 +255,9 @@ block|}
 name|bool
 name|properlyDominates
 argument_list|(
-argument|MachineBasicBlock *A
+argument|const MachineBasicBlock *A
 argument_list|,
-argument|MachineBasicBlock *B
+argument|const MachineBasicBlock *B
 argument_list|)
 specifier|const
 block|{

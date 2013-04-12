@@ -78,13 +78,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_INTRUSIVE_REF_CNT_PTR
+name|LLVM_ADT_INTRUSIVEREFCNTPTR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_INTRUSIVE_REF_CNT_PTR
+name|LLVM_ADT_INTRUSIVEREFCNTPTR_H
 end_define
 
 begin_include
@@ -409,7 +409,7 @@ argument_list|()
 block|;     }
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 name|IntrusiveRefCntPtr
 argument_list|(
 name|IntrusiveRefCntPtr
@@ -968,7 +968,7 @@ specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
-argument|const IntrusiveRefCntPtr<T>& Val
+argument|IntrusiveRefCntPtr<T>& Val
 argument_list|)
 block|{
 return|return
@@ -1002,6 +1002,7 @@ operator|>
 expr|>
 block|{
 typedef|typedef
+comment|/*const*/
 name|T
 modifier|*
 name|SimpleType
@@ -1038,7 +1039,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_ADT_INTRUSIVE_REF_CNT_PTR
+comment|// LLVM_ADT_INTRUSIVEREFCNTPTR_H
 end_comment
 
 end_unit

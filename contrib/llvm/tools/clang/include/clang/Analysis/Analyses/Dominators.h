@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
+file|"clang/Analysis/CFG.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/CFG.h"
+file|"llvm/Analysis/DominatorInternals.h"
 end_include
 
 begin_include
@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DominatorInternals.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_decl_stmt

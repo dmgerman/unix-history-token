@@ -110,13 +110,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
@@ -466,9 +466,7 @@ comment|// the target dependent packetizer.
 name|virtual
 name|void
 name|initPacketizerState
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 return|return;
 block|}

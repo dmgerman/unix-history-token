@@ -91,6 +91,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BumpPtrAllocator
+decl_stmt|;
 comment|/// PrintRecyclingAllocatorStats - Helper for RecyclingAllocator for
 comment|/// printing statistics.
 comment|///
@@ -375,6 +378,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/// Special case for BumpPtrAllocator which has an empty Deallocate()
+comment|/// function.
+comment|///
+comment|/// There is no need to traverse the free list, pulling all the objects into
+comment|/// cache.
+name|void
+name|clear
+argument_list|(
+argument|BumpPtrAllocator&
+argument_list|)
+block|{
+name|FreeList
+operator|.
+name|clearAndLeakNodesUnsafely
+argument_list|()
+block|;   }
 name|template
 operator|<
 name|class

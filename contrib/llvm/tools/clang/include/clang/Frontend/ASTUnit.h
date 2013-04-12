@@ -62,55 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Serialization/ASTBitCodes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/Sema.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/CodeCompleteConsumer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/ModuleLoader.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PreprocessingRecord.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/HeaderSearchOptions.h"
+file|"clang-c/Index.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/ASTContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/LangOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/SourceManager.h"
 end_include
 
 begin_include
@@ -128,13 +86,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/TargetOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang-c/Index.h"
+file|"clang/Lex/HeaderSearchOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/ModuleLoader.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PreprocessingRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/CodeCompleteConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Sema.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
 begin_include
@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -182,13 +188,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -200,7 +200,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -1938,6 +1938,18 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief If this ASTUnit came from an AST file, returns the filename for it.
+end_comment
+
+begin_expr_stmt
+name|StringRef
+name|getASTFileName
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 name|std
@@ -3652,8 +3664,7 @@ end_function_decl
 
 begin_decl_stmt
 name|virtual
-name|Module
-modifier|*
+name|ModuleLoadResult
 name|loadModule
 argument_list|(
 name|SourceLocation
@@ -3673,9 +3684,33 @@ argument_list|)
 block|{
 comment|// ASTUnit doesn't know how to load modules (not that this matters).
 return|return
-literal|0
+name|ModuleLoadResult
+argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+name|void
+name|makeModuleVisible
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|,
+name|Module
+operator|::
+name|NameVisibilityKind
+name|Visibility
+argument_list|,
+name|SourceLocation
+name|ImportLoc
+argument_list|,
+name|bool
+name|Complain
+argument_list|)
+block|{ }
 end_decl_stmt
 
 begin_comment

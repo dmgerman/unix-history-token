@@ -100,13 +100,13 @@ block|,
 comment|// Module sub-block id's.
 name|PARAMATTR_BLOCK_ID
 block|,
-name|UNUSED_ID1
+name|PARAMATTR_GROUP_BLOCK_ID
 block|,
 name|CONSTANTS_BLOCK_ID
 block|,
 name|FUNCTION_BLOCK_ID
 block|,
-name|UNUSED_ID2
+name|UNUSED_ID1
 block|,
 name|VALUE_SYMTAB_BLOCK_ID
 block|,
@@ -148,6 +148,7 @@ init|=
 literal|5
 block|,
 comment|// SECTIONNAME: [strchr x N]
+comment|// FIXME: Remove DEPLIB in 4.0.
 name|MODULE_CODE_DEPLIB
 init|=
 literal|6
@@ -170,7 +171,7 @@ name|MODULE_CODE_ALIAS
 init|=
 literal|9
 block|,
-comment|/// MODULE_CODE_PURGEVALS: [numvals]
+comment|// MODULE_CODE_PURGEVALS: [numvals]
 name|MODULE_CODE_PURGEVALS
 init|=
 literal|10
@@ -185,10 +186,23 @@ comment|/// PARAMATTR blocks have code for defining a parameter attribute set.
 enum|enum
 name|AttributeCodes
 block|{
-name|PARAMATTR_CODE_ENTRY
+comment|// FIXME: Remove `PARAMATTR_CODE_ENTRY_OLD' in 4.0
+name|PARAMATTR_CODE_ENTRY_OLD
 init|=
 literal|1
-comment|// ENTRY: [paramidx0, attr0, paramidx1, attr1...]
+block|,
+comment|// ENTRY: [paramidx0, attr0,
+comment|//         paramidx1, attr1...]
+name|PARAMATTR_CODE_ENTRY
+init|=
+literal|2
+block|,
+comment|// ENTRY: [paramidx0, attrgrp0,
+comment|//         paramidx1, attrgrp1, ...]
+name|PARAMATTR_GRP_CODE_ENTRY
+init|=
+literal|3
+comment|// ENTRY: [id, attr0, att1, ...]
 block|}
 enum|;
 comment|/// TYPE blocks have codes for each type primitive they use.

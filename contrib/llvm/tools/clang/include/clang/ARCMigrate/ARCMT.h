@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/CompilerInvocation.h"
+file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceLocation.h"
+file|"clang/Frontend/CompilerInvocation.h"
 end_include
 
 begin_decl_stmt

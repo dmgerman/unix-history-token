@@ -78,13 +78,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../HeuristicSolver.h"
+file|"../HeuristicBase.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../HeuristicBase.h"
+file|"../HeuristicSolver.h"
 end_include
 
 begin_include

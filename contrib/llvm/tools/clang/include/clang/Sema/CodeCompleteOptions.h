@@ -53,25 +53,25 @@ name|CodeCompleteOptions
 block|{
 name|public
 label|:
-comment|///< Show macros in code completion results.
+comment|/// Show macros in code completion results.
 name|unsigned
 name|IncludeMacros
 range|:
 literal|1
 decl_stmt|;
-comment|///< Show code patterns in code completion results.
+comment|/// Show code patterns in code completion results.
 name|unsigned
 name|IncludeCodePatterns
 range|:
 literal|1
 decl_stmt|;
-comment|///< Show top-level decls in code completion results.
+comment|/// Show top-level decls in code completion results.
 name|unsigned
 name|IncludeGlobals
 range|:
 literal|1
 decl_stmt|;
-comment|///< Show brief documentation comments in code completion results.
+comment|/// Show brief documentation comments in code completion results.
 name|unsigned
 name|IncludeBriefComments
 range|:

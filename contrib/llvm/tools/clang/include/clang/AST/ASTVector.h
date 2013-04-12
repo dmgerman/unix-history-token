@@ -74,13 +74,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Allocator.h"
+file|"clang/AST/AttrIterator.h"
 end_include
 
 begin_include
@@ -92,19 +86,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<cstring>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstring>
+file|<memory>
 end_include
 
 begin_ifdef
@@ -191,6 +197,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|ASTContext
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -224,13 +233,29 @@ block|; }
 name|public
 operator|:
 comment|// Default ctor - Initialize to empty.
-name|explicit
+name|ASTVector
+argument_list|()
+operator|:
+name|Begin
+argument_list|(
+name|NULL
+argument_list|)
+block|,
+name|End
+argument_list|(
+name|NULL
+argument_list|)
+block|,
+name|Capacity
+argument_list|(
+argument|NULL
+argument_list|)
+block|{ }
 name|ASTVector
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|unsigned N =
-literal|0
+argument|unsigned N
 argument_list|)
 operator|:
 name|Begin

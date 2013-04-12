@@ -62,31 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Sema/SemaInternal.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/Lookup.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/ParsedTemplate.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/SemaDiagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/ScopeInfo.h"
+file|"TypeLocBuilder.h"
 end_include
 
 begin_include
@@ -146,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Sema/Ownership.h"
+file|"clang/Lex/Preprocessor.h"
 end_include
 
 begin_include
@@ -158,7 +134,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Lex/Preprocessor.h"
+file|"clang/Sema/Lookup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Ownership.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/ParsedTemplate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/ScopeInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/SemaDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/SemaInternal.h"
 end_include
 
 begin_include
@@ -171,12 +177,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"TypeLocBuilder.h"
 end_include
 
 begin_include
@@ -637,13 +637,13 @@ argument|SourceLocation EllipsisLoc
 argument_list|,
 argument|SourceRange PatternRange
 argument_list|,
-argument|llvm::ArrayRef<UnexpandedParameterPack> Unexpanded
+argument|ArrayRef<UnexpandedParameterPack> Unexpanded
 argument_list|,
 argument|bool&ShouldExpand
 argument_list|,
 argument|bool&RetainExpansion
 argument_list|,
-argument|llvm::Optional<unsigned>&NumExpansions
+argument|Optional<unsigned>&NumExpansions
 argument_list|)
 block|{
 name|ShouldExpand
@@ -762,6 +762,21 @@ argument_list|(
 name|Expr
 operator|*
 name|E
+argument_list|)
+block|;
+comment|/// \brief Transform the given initializer.
+comment|///
+comment|/// By default, this routine transforms an initializer by stripping off the
+comment|/// semantic nodes added by initialization, then passing the result to
+comment|/// TransformExpr or TransformExprs.
+comment|///
+comment|/// \returns the transformed initializer.
+name|ExprResult
+name|TransformInitializer
+argument_list|(
+argument|Expr *Init
+argument_list|,
+argument|bool CXXDirectInit
 argument_list|)
 block|;
 comment|/// \brief Transform the given list of expressions.
@@ -1258,7 +1273,7 @@ argument|ParmVarDecl *OldParm
 argument_list|,
 argument|int indexAdjustment
 argument_list|,
-argument|llvm::Optional<unsigned> NumExpansions
+argument|Optional<unsigned> NumExpansions
 argument_list|,
 argument|bool ExpectParameterPack
 argument_list|)
@@ -1553,19 +1568,9 @@ name|RebuildFunctionProtoType
 argument_list|(
 argument|QualType T
 argument_list|,
-argument|QualType *ParamTypes
+argument|llvm::MutableArrayRef<QualType> ParamTypes
 argument_list|,
-argument|unsigned NumParamTypes
-argument_list|,
-argument|bool Variadic
-argument_list|,
-argument|bool HasTrailingReturn
-argument_list|,
-argument|unsigned Quals
-argument_list|,
-argument|RefQualifierKind RefQualifier
-argument_list|,
-argument|const FunctionType::ExtInfo&Info
+argument|const FunctionProtoType::ExtProtoInfo&EPI
 argument_list|)
 block|;
 comment|/// \brief Build a new unprototyped function type.
@@ -2471,8 +2476,6 @@ argument_list|,
 name|SourceLocation
 name|EllipsisLoc
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -7990,6 +7993,9 @@ name|bool
 name|HadMultipleCandidates
 argument_list|,
 name|bool
+name|ListInitialization
+argument_list|,
+name|bool
 name|RequiresZeroInit
 argument_list|,
 name|CXXConstructExpr
@@ -8047,6 +8053,8 @@ argument_list|,
 name|ConvertedArgs
 argument_list|,
 name|HadMultipleCandidates
+argument_list|,
+name|ListInitialization
 argument_list|,
 name|RequiresZeroInit
 argument_list|,
@@ -8413,8 +8421,6 @@ argument_list|,
 name|SourceLocation
 name|RParenLoc
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -9265,6 +9271,9 @@ parameter_list|,
 name|SourceLocation
 name|IsaLoc
 parameter_list|,
+name|SourceLocation
+name|OpLoc
+parameter_list|,
 name|bool
 name|IsArrow
 parameter_list|)
@@ -9323,8 +9332,7 @@ name|Base
 argument_list|,
 name|IsArrow
 argument_list|,
-comment|/*FIME:*/
-name|IsaLoc
+name|OpLoc
 argument_list|,
 name|SS
 argument_list|,
@@ -9378,8 +9386,7 @@ operator|->
 name|getType
 argument_list|()
 argument_list|,
-comment|/*FIXME:*/
-name|IsaLoc
+name|OpLoc
 argument_list|,
 name|IsArrow
 argument_list|,
@@ -9476,13 +9483,11 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|Lookup
 operator|.
-name|first
-operator|!=
-name|Lookup
-operator|.
-name|second
+name|empty
+argument_list|()
 operator|&&
 literal|"No __builtin_shufflevector?"
 argument_list|)
@@ -9497,10 +9502,10 @@ operator|<
 name|FunctionDecl
 operator|>
 operator|(
-operator|*
 name|Lookup
 operator|.
-name|first
+name|front
+argument_list|()
 operator|)
 decl_stmt|;
 name|Expr
@@ -9651,8 +9656,6 @@ argument_list|,
 name|SourceLocation
 name|EllipsisLoc
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -9870,8 +9873,6 @@ argument_list|,
 name|SourceLocation
 name|EllipsisLoc
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -10144,16 +10145,7 @@ argument_list|()
 operator|.
 name|ActOnExprStmt
 argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|MakeFullExpr
-argument_list|(
 name|E
-operator|.
-name|take
-argument_list|()
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -10256,6 +10248,413 @@ operator|.
 name|Owned
 argument_list|(
 name|E
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|ExprResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformInitializer
+argument_list|(
+argument|Expr *Init
+argument_list|,
+argument|bool CXXDirectInit
+argument_list|)
+block|{
+comment|// Initializers are instantiated like expressions, except that various outer
+comment|// layers are stripped.
+if|if
+condition|(
+operator|!
+name|Init
+condition|)
+return|return
+name|SemaRef
+operator|.
+name|Owned
+argument_list|(
+name|Init
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|ExprWithCleanups
+modifier|*
+name|ExprTemp
+init|=
+name|dyn_cast
+operator|<
+name|ExprWithCleanups
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+name|Init
+operator|=
+name|ExprTemp
+operator|->
+name|getSubExpr
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_while
+while|while
+condition|(
+name|CXXBindTemporaryExpr
+modifier|*
+name|Binder
+init|=
+name|dyn_cast
+operator|<
+name|CXXBindTemporaryExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+name|Init
+operator|=
+name|Binder
+operator|->
+name|getSubExpr
+argument_list|()
+expr_stmt|;
+end_while
+
+begin_if
+if|if
+condition|(
+name|ImplicitCastExpr
+modifier|*
+name|ICE
+init|=
+name|dyn_cast
+operator|<
+name|ImplicitCastExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+name|Init
+operator|=
+name|ICE
+operator|->
+name|getSubExprAsWritten
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_comment
+comment|// If this is not a direct-initializer, we only need to reconstruct
+end_comment
+
+begin_comment
+comment|// InitListExprs. Other forms of copy-initialization will be a no-op if
+end_comment
+
+begin_comment
+comment|// the initializer is already the right type.
+end_comment
+
+begin_decl_stmt
+name|CXXConstructExpr
+modifier|*
+name|Construct
+init|=
+name|dyn_cast
+operator|<
+name|CXXConstructExpr
+operator|>
+operator|(
+name|Init
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|CXXDirectInit
+operator|&&
+operator|!
+operator|(
+name|Construct
+operator|&&
+name|Construct
+operator|->
+name|isListInitialization
+argument_list|()
+operator|)
+condition|)
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|Init
+argument_list|)
+return|;
+end_if
+
+begin_comment
+comment|// Revert value-initialization back to empty parens.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|CXXScalarValueInitExpr
+modifier|*
+name|VIE
+init|=
+name|dyn_cast
+operator|<
+name|CXXScalarValueInitExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+block|{
+name|SourceRange
+name|Parens
+init|=
+name|VIE
+operator|->
+name|getSourceRange
+argument_list|()
+decl_stmt|;
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildParenListExpr
+argument_list|(
+name|Parens
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|MultiExprArg
+argument_list|()
+argument_list|,
+name|Parens
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_if
+
+begin_comment
+comment|// FIXME: We shouldn't build ImplicitValueInitExprs for direct-initialization.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|isa
+operator|<
+name|ImplicitValueInitExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildParenListExpr
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|MultiExprArg
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+return|;
+end_if
+
+begin_comment
+comment|// Revert initialization by constructor back to a parenthesized or braced list
+end_comment
+
+begin_comment
+comment|// of expressions. Any other form of initializer can just be reused directly.
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|Construct
+operator|||
+name|isa
+operator|<
+name|CXXTemporaryObjectExpr
+operator|>
+operator|(
+name|Construct
+operator|)
+condition|)
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|Init
+argument_list|)
+return|;
+end_if
+
+begin_expr_stmt
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+operator|,
+literal|8
+operator|>
+name|NewArgs
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|ArgChanged
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExprs
+argument_list|(
+name|Construct
+operator|->
+name|getArgs
+argument_list|()
+argument_list|,
+name|Construct
+operator|->
+name|getNumArgs
+argument_list|()
+argument_list|,
+comment|/*IsCall*/
+name|true
+argument_list|,
+name|NewArgs
+argument_list|,
+operator|&
+name|ArgChanged
+argument_list|)
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+end_if
+
+begin_comment
+comment|// If this was list initialization, revert to list form.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|Construct
+operator|->
+name|isListInitialization
+argument_list|()
+condition|)
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildInitList
+argument_list|(
+name|Construct
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|NewArgs
+argument_list|,
+name|Construct
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|,
+name|Construct
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+return|;
+end_if
+
+begin_comment
+comment|// Build a ParenListExpr to represent anything else.
+end_comment
+
+begin_decl_stmt
+name|SourceRange
+name|Parens
+init|=
+name|Construct
+operator|->
+name|getParenRange
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildParenListExpr
+argument_list|(
+name|Parens
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|NewArgs
+argument_list|,
+name|Parens
+operator|.
+name|getEnd
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -10399,8 +10798,6 @@ name|RetainExpansion
 init|=
 name|false
 decl_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -10412,8 +10809,6 @@ operator|->
 name|getNumExpansions
 argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -10664,6 +11059,22 @@ begin_decl_stmt
 name|ExprResult
 name|Result
 init|=
+name|IsCall
+condition|?
+name|getDerived
+argument_list|()
+operator|.
+name|TransformInitializer
+argument_list|(
+name|Inputs
+index|[
+name|I
+index|]
+argument_list|,
+comment|/*DirectInit*/
+name|false
+argument_list|)
+else|:
 name|getDerived
 argument_list|()
 operator|.
@@ -11062,7 +11473,7 @@ operator|.
 name|getLangOpts
 argument_list|()
 operator|.
-name|CPlusPlus0x
+name|CPlusPlus11
 operator|&&
 name|TL
 operator|.
@@ -11137,16 +11548,15 @@ block|}
 comment|// If the nested-name-specifier is an invalid type def, don't emit an
 comment|// error because a previous error should have already been emitted.
 name|TypedefTypeLoc
-modifier|*
 name|TTL
 init|=
-name|dyn_cast
+name|TL
+operator|.
+name|getAs
 operator|<
 name|TypedefTypeLoc
 operator|>
 operator|(
-operator|&
-name|TL
 operator|)
 decl_stmt|;
 if|if
@@ -11156,7 +11566,7 @@ name|TTL
 operator|||
 operator|!
 name|TTL
-operator|->
+operator|.
 name|getTypedefNameDecl
 argument_list|()
 operator|->
@@ -13058,8 +13468,6 @@ comment|// the pattern.
 name|SourceLocation
 name|Ellipsis
 decl_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -13124,8 +13532,6 @@ name|RetainExpansion
 init|=
 name|false
 decl_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -13708,7 +14114,7 @@ parameter_list|,
 name|PARENT
 parameter_list|)
 define|\
-value|case TypeLoc::CLASS: \     return getDerived().Transform##CLASS##Type(TLB, cast<CLASS##TypeLoc>(T));
+value|case TypeLoc::CLASS:                                                         \     return getDerived().Transform##CLASS##Type(TLB,                            \                                                T.castAs<CLASS##TypeLoc>());
 include|#
 directive|include
 file|"clang/AST/TypeLocNodes.def"
@@ -13878,6 +14284,11 @@ block|{
 comment|// Objective-C ARC:
 comment|//   A lifetime qualifier applied to a substituted template parameter
 comment|//   overrides the lifetime qualifier from the template argument.
+specifier|const
+name|AutoType
+modifier|*
+name|AutoTy
+decl_stmt|;
 if|if
 condition|(
 specifier|const
@@ -13945,6 +14356,84 @@ name|getReplacedParameter
 argument_list|()
 argument_list|,
 name|Replacement
+argument_list|)
+expr_stmt|;
+name|TLB
+operator|.
+name|TypeWasModifiedSafely
+argument_list|(
+name|Result
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|AutoTy
+operator|=
+name|dyn_cast
+operator|<
+name|AutoType
+operator|>
+operator|(
+name|Result
+operator|)
+operator|)
+operator|&&
+name|AutoTy
+operator|->
+name|isDeduced
+argument_list|()
+condition|)
+block|{
+comment|// 'auto' types behave the same way as template parameters.
+name|QualType
+name|Deduced
+init|=
+name|AutoTy
+operator|->
+name|getDeducedType
+argument_list|()
+decl_stmt|;
+name|Qualifiers
+name|Qs
+init|=
+name|Deduced
+operator|.
+name|getQualifiers
+argument_list|()
+decl_stmt|;
+name|Qs
+operator|.
+name|removeObjCLifetime
+argument_list|()
+expr_stmt|;
+name|Deduced
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getQualifiedType
+argument_list|(
+name|Deduced
+operator|.
+name|getUnqualifiedType
+argument_list|()
+argument_list|,
+name|Qs
+argument_list|)
+expr_stmt|;
+name|Result
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getAutoType
+argument_list|(
+name|Deduced
 argument_list|)
 expr_stmt|;
 name|TLB
@@ -14026,6 +14515,14 @@ argument_list|,
 name|Quals
 argument_list|)
 expr_stmt|;
+comment|// BuildQualifiedType might not add qualifiers if they are invalid.
+if|if
+condition|(
+name|Result
+operator|.
+name|hasLocalQualifiers
+argument_list|()
+condition|)
 name|TLB
 operator|.
 name|push
@@ -14116,12 +14613,13 @@ block|{
 name|TemplateSpecializationTypeLoc
 name|SpecTL
 init|=
-name|cast
+name|TL
+operator|.
+name|castAs
 operator|<
 name|TemplateSpecializationTypeLoc
 operator|>
 operator|(
-name|TL
 operator|)
 decl_stmt|;
 name|TemplateName
@@ -14193,12 +14691,13 @@ block|{
 name|DependentTemplateSpecializationTypeLoc
 name|SpecTL
 init|=
-name|cast
+name|TL
+operator|.
+name|castAs
 operator|<
 name|DependentTemplateSpecializationTypeLoc
 operator|>
 operator|(
-name|TL
 operator|)
 decl_stmt|;
 name|TemplateName
@@ -14391,12 +14890,13 @@ block|{
 name|TemplateSpecializationTypeLoc
 name|SpecTL
 init|=
-name|cast
+name|TL
+operator|.
+name|castAs
 operator|<
 name|TemplateSpecializationTypeLoc
 operator|>
 operator|(
-name|TL
 operator|)
 decl_stmt|;
 name|TemplateName
@@ -14467,12 +14967,13 @@ block|{
 name|DependentTemplateSpecializationTypeLoc
 name|SpecTL
 init|=
-name|cast
+name|TL
+operator|.
+name|castAs
 operator|<
 name|DependentTemplateSpecializationTypeLoc
 operator|>
 operator|(
-name|TL
 operator|)
 decl_stmt|;
 name|TemplateName
@@ -17195,7 +17696,7 @@ argument|ParmVarDecl *OldParm
 argument_list|,
 argument|int indexAdjustment
 argument_list|,
-argument|llvm::Optional<unsigned> NumExpansions
+argument|Optional<unsigned> NumExpansions
 argument_list|,
 argument|bool ExpectParameterPack
 argument_list|)
@@ -17244,12 +17745,13 @@ decl_stmt|;
 name|PackExpansionTypeLoc
 name|OldExpansionTL
 init|=
-name|cast
+name|OldTL
+operator|.
+name|castAs
 operator|<
 name|PackExpansionTypeLoc
 operator|>
 operator|(
-name|OldTL
 operator|)
 decl_stmt|;
 name|TypeLocBuilder
@@ -17456,11 +17958,6 @@ operator|->
 name|getStorageClass
 argument_list|()
 argument_list|,
-name|OldParm
-operator|->
-name|getStorageClassAsWritten
-argument_list|()
-argument_list|,
 comment|/* DefArg */
 name|NULL
 argument_list|)
@@ -17562,8 +18059,6 @@ operator|==
 name|i
 argument_list|)
 expr_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -17608,12 +18103,13 @@ decl_stmt|;
 name|PackExpansionTypeLoc
 name|ExpansionTL
 init|=
-name|cast
+name|TL
+operator|.
+name|castAs
 operator|<
 name|PackExpansionTypeLoc
 operator|>
 operator|(
-name|TL
 operator|)
 decl_stmt|;
 name|TypeLoc
@@ -17656,8 +18152,6 @@ name|RetainExpansion
 init|=
 name|false
 decl_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -17935,14 +18429,7 @@ name|OldParm
 argument_list|,
 name|indexAdjustment
 argument_list|,
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|,
 comment|/*ExpectParameterPack=*/
 name|false
@@ -18022,8 +18509,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -18769,38 +19254,10 @@ argument_list|(
 name|ResultType
 argument_list|,
 name|ParamTypes
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|ParamTypes
-operator|.
-name|size
-argument_list|()
 argument_list|,
 name|T
 operator|->
-name|isVariadic
-argument_list|()
-argument_list|,
-name|T
-operator|->
-name|hasTrailingReturn
-argument_list|()
-argument_list|,
-name|T
-operator|->
-name|getTypeQuals
-argument_list|()
-argument_list|,
-name|T
-operator|->
-name|getRefQualifier
-argument_list|()
-argument_list|,
-name|T
-operator|->
-name|getExtInfo
+name|getExtProtoInfo
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -21144,15 +21601,29 @@ name|Result
 return|;
 end_return
 
-begin_block
-unit|}  namespace
-block|{
+begin_comment
+unit|}
 comment|/// \brief Simple iterator that traverses the template arguments in a
+end_comment
+
+begin_comment
 comment|/// container that provides a \c getArgLoc() member function.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This iterator is intended to be used with the iterator form of
+end_comment
+
+begin_comment
 comment|/// \c TreeTransform<Derived>::TransformTemplateArguments().
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|ArgLocContainer
@@ -21173,20 +21644,32 @@ typedef|typedef
 name|TemplateArgumentLoc
 name|value_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|TemplateArgumentLoc
 name|reference
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|int
 name|difference_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|input_iterator_tag
 name|iterator_category
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|class
 name|pointer
 block|{
@@ -21220,14 +21703,10 @@ operator|&
 name|Arg
 return|;
 block|}
-block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_decl_stmt
 
 begin_macro
+unit|};
 name|TemplateArgumentLocContainerIterator
 argument_list|()
 end_macro
@@ -21412,7 +21891,8 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}; }   template
+unit|};
+name|template
 operator|<
 name|typename
 name|Derived
@@ -25993,7 +26473,7 @@ argument_list|(
 name|getSema
 argument_list|()
 operator|.
-name|MakeFullExpr
+name|MakeFullDiscardedValueExpr
 argument_list|(
 name|Inc
 operator|.
@@ -35478,45 +35958,6 @@ argument_list|)
 return|;
 end_if
 
-begin_comment
-comment|// FIXME: Poor source location information here.
-end_comment
-
-begin_decl_stmt
-name|SourceLocation
-name|FakeLAngleLoc
-init|=
-name|SemaRef
-operator|.
-name|PP
-operator|.
-name|getLocForEndOfToken
-argument_list|(
-name|E
-operator|->
-name|getOperatorLoc
-argument_list|()
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|SourceLocation
-name|FakeRAngleLoc
-init|=
-name|E
-operator|->
-name|getSubExpr
-argument_list|()
-operator|->
-name|getSourceRange
-argument_list|()
-operator|.
-name|getBegin
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_return
 return|return
 name|getDerived
@@ -35534,13 +35975,32 @@ operator|->
 name|getStmtClass
 argument_list|()
 argument_list|,
-name|FakeLAngleLoc
+name|E
+operator|->
+name|getAngleBrackets
+argument_list|()
+operator|.
+name|getBegin
+argument_list|()
 argument_list|,
 name|Type
 argument_list|,
-name|FakeRAngleLoc
+name|E
+operator|->
+name|getAngleBrackets
+argument_list|()
+operator|.
+name|getEnd
+argument_list|()
 argument_list|,
-name|FakeRAngleLoc
+comment|// FIXME. this should be '(' location
+name|E
+operator|->
+name|getAngleBrackets
+argument_list|()
+operator|.
+name|getEnd
+argument_list|()
 argument_list|,
 name|SubExpr
 operator|.
@@ -36332,7 +36792,22 @@ operator|.
 name|Context
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|CXXRecordDecl
+modifier|*
+name|Record
+init|=
+name|dyn_cast
+operator|<
+name|CXXRecordDecl
+operator|>
+operator|(
+name|DC
+operator|)
+condition|)
+block|{
 name|T
 operator|=
 name|getSema
@@ -36349,17 +36824,37 @@ name|Context
 operator|.
 name|getRecordType
 argument_list|(
-name|cast
-operator|<
-name|CXXRecordDecl
-operator|>
-operator|(
-name|DC
-operator|)
+name|Record
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 end_expr_stmt
+
+begin_else
+else|else
+block|{
+name|assert
+argument_list|(
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getDiagnostics
+argument_list|()
+operator|.
+name|hasErrorOccurred
+argument_list|()
+operator|&&
+literal|"this in the wrong scope?"
+argument_list|)
+expr_stmt|;
+return|return
+name|ExprError
+argument_list|()
+return|;
+block|}
+end_else
 
 begin_if
 if|if
@@ -38022,17 +38517,26 @@ name|getScopeTypeInfo
 argument_list|()
 condition|)
 block|{
+name|CXXScopeSpec
+name|EmptySS
+decl_stmt|;
 name|ScopeTypeInfo
 operator|=
 name|getDerived
 argument_list|()
 operator|.
-name|TransformType
+name|TransformTypeInObjectScope
 argument_list|(
 name|E
 operator|->
 name|getScopeTypeInfo
 argument_list|()
+argument_list|,
+name|ObjectType
+argument_list|,
+literal|0
+argument_list|,
+name|EmptySS
 argument_list|)
 expr_stmt|;
 if|if
@@ -38790,8 +39294,6 @@ name|ArgChanged
 operator|=
 name|false
 block|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|TypeSourceInfo
@@ -38845,12 +39347,13 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|isa
+name|FromTL
+operator|.
+name|getAs
 operator|<
 name|PackExpansionTypeLoc
 operator|>
 operator|(
-name|FromTL
 operator|)
 condition|)
 block|{
@@ -38951,12 +39454,13 @@ begin_decl_stmt
 name|PackExpansionTypeLoc
 name|ExpansionTL
 init|=
-name|cast
+name|FromTL
+operator|.
+name|castAs
 operator|<
 name|PackExpansionTypeLoc
 operator|>
 operator|(
-name|FromTL
 operator|)
 decl_stmt|;
 end_decl_stmt
@@ -39020,8 +39524,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -39039,8 +39541,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -40095,10 +40595,12 @@ argument_list|(
 argument|CXXConstructExpr *E
 argument_list|)
 block|{
-comment|// CXXConstructExprs are always implicit, so when we have a
-comment|// 1-argument construction we just transform that argument.
+comment|// CXXConstructExprs other than for list-initialization and
+comment|// CXXTemporaryObjectExpr are always implicit, so when we have
+comment|// a 1-argument construction we just transform that argument.
 if|if
 condition|(
+operator|(
 name|E
 operator|->
 name|getNumArgs
@@ -40127,6 +40629,29 @@ literal|1
 argument_list|)
 argument_list|)
 operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|getDerived
+argument_list|()
+operator|.
+name|DropCallArgument
+argument_list|(
+name|E
+operator|->
+name|getArg
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|E
+operator|->
+name|isListInitialization
+argument_list|()
 condition|)
 return|return
 name|getDerived
@@ -40364,6 +40889,11 @@ argument_list|,
 name|E
 operator|->
 name|hadMultipleCandidates
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|isListInitialization
 argument_list|()
 argument_list|,
 name|E
@@ -40680,6 +41210,10 @@ return|;
 block|}
 end_if
 
+begin_comment
+comment|// FIXME: Pass in E->isListInitialization().
+end_comment
+
 begin_return
 return|return
 name|getDerived
@@ -40795,8 +41329,6 @@ comment|// Transform lambda parameters.
 end_comment
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|QualType
@@ -40808,8 +41340,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ParmVarDecl
@@ -41175,8 +41705,6 @@ name|RetainExpansion
 init|=
 name|false
 decl_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -43043,8 +43571,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -43477,8 +44003,6 @@ argument|ObjCArrayLiteral *E
 argument_list|)
 block|{
 comment|// Transform each of the elements.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Expr
@@ -43591,8 +44115,6 @@ argument|ObjCDictionaryLiteral *E
 argument_list|)
 block|{
 comment|// Transform each of the elements.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ObjCDictionaryElement
@@ -43702,8 +44224,6 @@ name|RetainExpansion
 init|=
 name|false
 decl_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -43714,8 +44234,6 @@ name|OrigElement
 operator|.
 name|NumExpansions
 expr_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -44178,14 +44696,7 @@ block|,
 name|SourceLocation
 argument_list|()
 block|,
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -45531,6 +46042,11 @@ argument_list|()
 argument_list|,
 name|E
 operator|->
+name|getOpLoc
+argument_list|()
+argument_list|,
+name|E
+operator|->
 name|isArrow
 argument_list|()
 argument_list|)
@@ -45795,7 +46311,7 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|FunctionType
+name|FunctionProtoType
 operator|*
 name|exprFunctionType
 operator|=
@@ -45888,29 +46404,10 @@ argument_list|(
 name|exprResultType
 argument_list|,
 name|paramTypes
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|paramTypes
-operator|.
-name|size
-argument_list|()
-argument_list|,
-name|oldBlock
-operator|->
-name|isVariadic
-argument_list|()
-argument_list|,
-name|false
-argument_list|,
-literal|0
-argument_list|,
-name|RQ_None
 argument_list|,
 name|exprFunctionType
 operator|->
-name|getExtInfo
+name|getExtProtoInfo
 argument_list|()
 argument_list|)
 decl_stmt|;
@@ -47111,19 +47608,9 @@ name|RebuildFunctionProtoType
 argument_list|(
 argument|QualType T
 argument_list|,
-argument|QualType *ParamTypes
+argument|llvm::MutableArrayRef<QualType> ParamTypes
 argument_list|,
-argument|unsigned NumParamTypes
-argument_list|,
-argument|bool Variadic
-argument_list|,
-argument|bool HasTrailingReturn
-argument_list|,
-argument|unsigned Quals
-argument_list|,
-argument|RefQualifierKind RefQualifier
-argument_list|,
-argument|const FunctionType::ExtInfo&Info
+argument|const FunctionProtoType::ExtProtoInfo&EPI
 argument_list|)
 block|{
 return|return
@@ -47134,16 +47621,6 @@ argument_list|(
 name|T
 argument_list|,
 name|ParamTypes
-argument_list|,
-name|NumParamTypes
-argument_list|,
-name|Variadic
-argument_list|,
-name|HasTrailingReturn
-argument_list|,
-name|Quals
-argument_list|,
-name|RefQualifier
 argument_list|,
 name|getDerived
 argument_list|()
@@ -47157,7 +47634,7 @@ operator|.
 name|getBaseEntity
 argument_list|()
 argument_list|,
-name|Info
+name|EPI
 argument_list|)
 return|;
 block|}

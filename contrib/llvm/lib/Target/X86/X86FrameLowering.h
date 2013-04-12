@@ -189,6 +189,13 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|adjustForHiPEPrologue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
@@ -261,6 +268,17 @@ name|uint32_t
 name|getCompactUnwindEncoding
 argument_list|(
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 block|; }

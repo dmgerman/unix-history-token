@@ -82,9 +82,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-struct_decl|struct
-name|EDInstInfo
-struct_decl|;
 comment|/// MBlazeDisassembler - Disassembler for all MBlaze platforms.
 name|class
 name|MBlazeDisassembler
@@ -131,14 +128,6 @@ argument|raw_ostream&vStream
 argument_list|,
 argument|raw_ostream&cStream
 argument_list|)
-specifier|const
-block|;
-comment|/// getEDInfo - See MCDisassembler.
-specifier|const
-name|EDInstInfo
-operator|*
-name|getEDInfo
-argument_list|()
 specifier|const
 block|; }
 decl_stmt|;

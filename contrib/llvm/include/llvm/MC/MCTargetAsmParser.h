@@ -82,6 +82,9 @@ expr_stmt|;
 enum|enum
 name|AsmRewriteKind
 block|{
+name|AOK_Align
+block|,
+comment|// Rewrite align as .align.
 name|AOK_DotOperator
 block|,
 comment|// Rewrite a dot operator expression as an immediate.
@@ -416,6 +419,23 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// Allow a target to add special case operand matching for things that
+comment|/// tblgen doesn't/can't handle effectively. For example, literal
+comment|/// immediates on ARM. TableGen expects a token operand, but the parser
+comment|/// will recognize them as immediates.
+name|virtual
+name|unsigned
+name|validateTargetOperandClass
+argument_list|(
+argument|MCParsedAsmOperand *Op
+argument_list|,
+argument|unsigned Kind
+argument_list|)
+block|{
+return|return
+name|Match_InvalidOperand
+return|;
+block|}
 comment|/// checkTargetMatchPredicate - Validate the instruction match against
 comment|/// any complex target predicates not expressible via match classes.
 name|virtual

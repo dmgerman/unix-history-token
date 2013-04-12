@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|6
+value|15
 end_define
 
 begin_define
@@ -299,6 +299,34 @@ name|CXFile
 name|SFile
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Uniquely identifies a CXFile, that refers to the same underlying file,  * across an indexing session.  */
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|long
+name|long
+name|data
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|CXFileUniqueID
+typedef|;
+comment|/**  * \brief Retrieve the unique ID for the given \c file.  *  * \param file the file to get the ID for.  * \param outID stores the returned CXFileUniqueID.  * \returns If there was a failure getting the unique ID, returns non-zero,  * otherwise returns 0. */
+name|CINDEX_LINKAGE
+name|int
+name|clang_getFileUniqueID
+parameter_list|(
+name|CXFile
+name|file
+parameter_list|,
+name|CXFileUniqueID
+modifier|*
+name|outID
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine whether the given header is guarded against  * multiple inclusions, either with the conventional  * \#ifndef/\#define/\#endif macro guards or with \#pragma once.  */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -331,6 +359,7 @@ comment|/**  * \brief Identifies a specific source location within a translation
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|void
 modifier|*
 name|ptr_data
@@ -348,6 +377,7 @@ comment|/**  * \brief Identifies a half-open character range in the source code.
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|void
 modifier|*
 name|ptr_data
@@ -368,7 +398,9 @@ comment|/**  * \brief Retrieve a NULL (invalid) source location.  */
 name|CINDEX_LINKAGE
 name|CXSourceLocation
 name|clang_getNullLocation
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * \brief Determine whether two source locations, which must refer into  * the same translation unit, refer to exactly the same point in the source  * code.  *  * \returns non-zero if the source locations refer to the same location, zero  * if they refer to different locations.  */
 name|CINDEX_LINKAGE
@@ -419,7 +451,9 @@ comment|/**  * \brief Retrieve a NULL (invalid) source range.  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
 name|clang_getNullRange
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * \brief Retrieve a source range given the beginning and ending source  * locations.  */
 name|CINDEX_LINKAGE
@@ -529,6 +563,31 @@ comment|/**  * \brief Retrieve the file, line, column, and offset represented by
 name|CINDEX_LINKAGE
 name|void
 name|clang_getSpellingLocation
+parameter_list|(
+name|CXSourceLocation
+name|location
+parameter_list|,
+name|CXFile
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+modifier|*
+name|line
+parameter_list|,
+name|unsigned
+modifier|*
+name|column
+parameter_list|,
+name|unsigned
+modifier|*
+name|offset
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location.  *  * If the location refers into a macro expansion, return where the macro was  * expanded or where the macro argument was written, if the location points at  * a macro argument.  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param file [out] if non-NULL, will be set to the file to which the given  * source location points.  *  * \param line [out] if non-NULL, will be set to the line to which the given  * source location points.  *  * \param column [out] if non-NULL, will be set to the column to which the given  * source location points.  *  * \param offset [out] if non-NULL, will be set to the offset into the  * buffer to which the given source location points.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_getFileLocation
 parameter_list|(
 name|CXSourceLocation
 name|location
@@ -2110,6 +2169,7 @@ decl_stmt|;
 name|int
 name|xdata
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|data
@@ -2428,7 +2488,9 @@ comment|/**  * \brief Creates an empty CXCursorSet.  */
 name|CINDEX_LINKAGE
 name|CXCursorSet
 name|clang_createCXCursorSet
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * \brief Disposes a CXCursorSet and releases its associated memory.  */
 name|CINDEX_LINKAGE
@@ -2780,6 +2842,10 @@ name|CXCallingConv_PnaclCall
 init|=
 literal|8
 block|,
+name|CXCallingConv_IntelOclBicc
+init|=
+literal|9
+block|,
 name|CXCallingConv_Invalid
 init|=
 literal|100
@@ -2814,6 +2880,15 @@ name|clang_getCursorType
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Pretty-print the underlying type using the rules of the  * language of the translation unit from which it came.  *  * If the type is invalid, an empty string is returned.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getTypeSpelling
+parameter_list|(
+name|CXType
+name|CT
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Retrieve the underlying type of a typedef declaration.  *  * If the cursor does not reference a typedef declaration, an invalid type is  * returned.  */
@@ -2855,7 +2930,16 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the number of non-variadic arguments associated with a given  * cursor.  *  * If a cursor that is not a function or method is passed in, -1 is returned.  */
+comment|/**  * \brief Retrieve the bit width of a bit field declaration as an integer.  *  * If a cursor that is not a bit field declaration is passed in, -1 is returned.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_getFieldDeclBitWidth
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the number of non-variadic arguments associated with a given  * cursor.  *  * The number of arguments can be determined for calls as well as for  * declarations of functions or methods. For other cursors -1 is returned.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_Cursor_getNumArguments
@@ -2864,7 +2948,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the argument cursor of a function or method.  *  * If a cursor that is not a function or method is passed in or the index  * exceeds the number of arguments, an invalid cursor is returned.  */
+comment|/**  * \brief Retrieve the argument cursor of a function or method.  *  * The argument cursor can be determined for calls as well as for declarations  * of functions or methods. For other cursors and for invalid indices, an  * invalid cursor is returned.  */
 name|CINDEX_LINKAGE
 name|CXCursor
 name|clang_Cursor_getArgument
@@ -3482,6 +3566,8 @@ name|CINDEX_LINKAGE
 name|unsigned
 name|clang_Module_getNumTopLevelHeaders
 parameter_list|(
+name|CXTranslationUnit
+parameter_list|,
 name|CXModule
 name|Module
 parameter_list|)
@@ -3491,6 +3577,8 @@ name|CINDEX_LINKAGE
 name|CXFile
 name|clang_Module_getTopLevelHeader
 parameter_list|(
+name|CXTranslationUnit
+parameter_list|,
 name|CXModule
 name|Module
 parameter_list|,
@@ -4766,7 +4854,9 @@ comment|/**  * \brief Return a version string, suitable for showing to a user, b
 name|CINDEX_LINKAGE
 name|CXString
 name|clang_getClangVersion
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/**  * \brief Enable/disable crash recovery.  *  * \param isEnabled Flag to indicate if crash recovery is enabled.  A non-zero  *        value enables crash recovery, while 0 disables it.  */
 name|CINDEX_LINKAGE
@@ -4919,13 +5009,48 @@ function_decl|;
 block|}
 name|CXCursorAndRangeVisitor
 typedef|;
-comment|/**  * \brief Find references of a declaration in a specific file.  *   * \param cursor pointing to a declaration or a reference of one.  *  * \param file to search for references.  *  * \param visitor callback that will receive pairs of CXCursor/CXSourceRange for  * each reference found.  * The CXSourceRange will point inside the file; if the reference is inside  * a macro (and not a macro argument) the CXSourceRange will be invalid.  */
+typedef|typedef
+enum|enum
+block|{
+comment|/**    * \brief Function returned successfully.    */
+name|CXResult_Success
+init|=
+literal|0
+block|,
+comment|/**    * \brief One of the parameters was invalid for the function.    */
+name|CXResult_Invalid
+init|=
+literal|1
+block|,
+comment|/**    * \brief The function was terminated by a callback (e.g. it returned    * CXVisit_Break)    */
+name|CXResult_VisitBreak
+init|=
+literal|2
+block|}
+name|CXResult
+typedef|;
+comment|/**  * \brief Find references of a declaration in a specific file.  *   * \param cursor pointing to a declaration or a reference of one.  *  * \param file to search for references.  *  * \param visitor callback that will receive pairs of CXCursor/CXSourceRange for  * each reference found.  * The CXSourceRange will point inside the file; if the reference is inside  * a macro (and not a macro argument) the CXSourceRange will be invalid.  *  * \returns one of the CXResult enumerators.  */
 name|CINDEX_LINKAGE
-name|void
+name|CXResult
 name|clang_findReferencesInFile
 parameter_list|(
 name|CXCursor
 name|cursor
+parameter_list|,
+name|CXFile
+name|file
+parameter_list|,
+name|CXCursorAndRangeVisitor
+name|visitor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Find #import/#include directives in a specific file.  *  * \param TU translation unit containing the file to query.  *  * \param file to search for #import/#include directives.  *  * \param visitor callback that will receive pairs of CXCursor/CXSourceRange for  * each directive found.  *  * \returns one of the CXResult enumerators.  */
+name|CINDEX_LINKAGE
+name|CXResult
+name|clang_findIncludesInFile
+parameter_list|(
+name|CXTranslationUnit
+name|TU
 parameter_list|,
 name|CXFile
 name|file
@@ -4957,10 +5082,21 @@ name|CXSourceRange
 parameter_list|)
 function_decl|;
 name|CINDEX_LINKAGE
-name|void
+name|CXResult
 name|clang_findReferencesInFileWithBlock
 parameter_list|(
 name|CXCursor
+parameter_list|,
+name|CXFile
+parameter_list|,
+name|CXCursorAndRangeVisitorBlock
+parameter_list|)
+function_decl|;
+name|CINDEX_LINKAGE
+name|CXResult
+name|clang_findIncludesInFileWithBlock
+parameter_list|(
+name|CXTranslationUnit
 parameter_list|,
 name|CXFile
 parameter_list|,
@@ -5328,6 +5464,15 @@ block|}
 name|CXIdxIBOutletCollectionAttrInfo
 typedef|;
 typedef|typedef
+enum|enum
+block|{
+name|CXIdxDeclFlag_Skipped
+init|=
+literal|0x1
+block|}
+name|CXIdxDeclInfoFlags
+typedef|;
+typedef|typedef
 struct|struct
 block|{
 specifier|const
@@ -5379,6 +5524,9 @@ name|attributes
 decl_stmt|;
 name|unsigned
 name|numAttributes
+decl_stmt|;
+name|unsigned
+name|flags
 decl_stmt|;
 block|}
 name|CXIdxDeclInfo
@@ -5863,13 +6011,13 @@ parameter_list|,
 name|CXIdxClientEntity
 parameter_list|)
 function_decl|;
-comment|/**  * \brief An indexing action, to be applied to one or multiple translation units  * but not on concurrent threads. If there are threads doing indexing  * concurrently, they should use different CXIndexAction objects.  */
+comment|/**  * \brief An indexing action/session, to be applied to one or multiple  * translation units.  */
 typedef|typedef
 name|void
 modifier|*
 name|CXIndexAction
 typedef|;
-comment|/**  * \brief An indexing action, to be applied to one or multiple translation units  * but not on concurrent threads. If there are threads doing indexing  * concurrently, they should use different CXIndexAction objects.  *  * \param CIdx The index object with which the index action will be associated.  */
+comment|/**  * \brief An indexing action/session, to be applied to one or multiple  * translation units.  *  * \param CIdx The index object with which the index action will be associated.  */
 name|CINDEX_LINKAGE
 name|CXIndexAction
 name|clang_IndexAction_create
@@ -5913,6 +6061,11 @@ comment|/**    * \brief Suppress all compiler warnings when parsing for indexing
 name|CXIndexOpt_SuppressWarnings
 init|=
 literal|0x8
+block|,
+comment|/**    * \brief Skip a function/method body that was already parsed during an    * indexing session assosiated with a \c CXIndexAction object.    * Bodies in system headers are always skipped.    */
+name|CXIndexOpt_SkipParsedBodiesInSession
+init|=
+literal|0x10
 block|}
 name|CXIndexOptFlags
 typedef|;

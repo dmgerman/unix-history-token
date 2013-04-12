@@ -138,6 +138,9 @@ block|,
 comment|// Corresponds to MACCS instruction
 name|MACCS
 block|,
+comment|// Corresponds to CRC8 instruction
+name|CRC8
+block|,
 comment|// Jumptable branch.
 name|BR_JT
 block|,
@@ -173,7 +176,7 @@ specifier|const
 block|;
 name|virtual
 name|MVT
-name|getShiftAmountTy
+name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
@@ -471,6 +474,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerADJUST_TRAMPOLINE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 argument|SDValue Op
 argument_list|,

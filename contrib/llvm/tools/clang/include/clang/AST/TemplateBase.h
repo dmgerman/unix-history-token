@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"clang/AST/TemplateName.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/TemplateName.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -183,12 +183,8 @@ comment|/// \brief The kind of template argument we're storing.
 name|unsigned
 name|Kind
 decl_stmt|;
-union|union
-block|{
-name|uintptr_t
-name|TypeOrValue
-decl_stmt|;
 struct|struct
+name|DA
 block|{
 name|ValueDecl
 modifier|*
@@ -198,9 +194,9 @@ name|bool
 name|ForRefParam
 decl_stmt|;
 block|}
-name|DeclArg
 struct|;
 struct|struct
+name|I
 block|{
 comment|// We store a decomposed APSInt with the data allocated by ASTContext if
 comment|// BitWidth> 64. The memory may be shared between multiple
@@ -234,9 +230,9 @@ modifier|*
 name|Type
 decl_stmt|;
 block|}
-name|Integer
 struct|;
 struct|struct
+name|A
 block|{
 specifier|const
 name|TemplateArgument
@@ -247,9 +243,9 @@ name|unsigned
 name|NumArgs
 decl_stmt|;
 block|}
-name|Args
 struct|;
 struct|struct
+name|TA
 block|{
 name|void
 modifier|*
@@ -259,18 +255,38 @@ name|unsigned
 name|NumExpansions
 decl_stmt|;
 block|}
-name|TemplateArg
 struct|;
+union|union
+block|{
+name|struct
+name|DA
+name|DeclArg
+decl_stmt|;
+name|struct
+name|I
+name|Integer
+decl_stmt|;
+name|struct
+name|A
+name|Args
+decl_stmt|;
+name|struct
+name|TA
+name|TemplateArg
+decl_stmt|;
+name|uintptr_t
+name|TypeOrValue
+decl_stmt|;
 block|}
 union|;
 name|TemplateArgument
 argument_list|(
-name|TemplateName
+argument|TemplateName
 argument_list|,
-name|bool
+argument|bool
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// DO NOT USE
 name|public
 label|:
 comment|/// \brief Construct an empty, invalid template argument.
@@ -437,7 +453,7 @@ name|TemplateArgument
 argument_list|(
 argument|TemplateName Name
 argument_list|,
-argument|llvm::Optional<unsigned> NumExpansions
+argument|Optional<unsigned> NumExpansions
 argument_list|)
 block|:
 name|Kind
@@ -792,8 +808,6 @@ return|;
 block|}
 comment|/// \brief Retrieve the number of expansions that a template template argument
 comment|/// expansion will produce, if known.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -1038,6 +1052,42 @@ operator|.
 name|NumArgs
 return|;
 block|}
+comment|/// \brief Return the array of arguments in this template argument pack.
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getPackAsArray
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Pack
+argument_list|)
+block|;
+return|return
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+operator|(
+name|Args
+operator|.
+name|Args
+operator|,
+name|Args
+operator|.
+name|NumArgs
+operator|)
+return|;
+block|}
 comment|/// \brief Determines whether two template arguments are superficially the
 comment|/// same.
 name|bool
@@ -1106,17 +1156,8 @@ name|TemplateArgumentLocInfo
 block|{
 name|private
 label|:
-union|union
-block|{
-name|Expr
-modifier|*
-name|Expression
-decl_stmt|;
-name|TypeSourceInfo
-modifier|*
-name|Declarator
-decl_stmt|;
 struct|struct
+name|T
 block|{
 comment|// FIXME: We'd like to just use the qualifier in the TemplateName,
 comment|// but template arguments get canonicalized too quickly.
@@ -1135,8 +1176,21 @@ name|unsigned
 name|EllipsisLoc
 decl_stmt|;
 block|}
-name|Template
 struct|;
+union|union
+block|{
+name|struct
+name|T
+name|Template
+decl_stmt|;
+name|Expr
+modifier|*
+name|Expression
+decl_stmt|;
+name|TypeSourceInfo
+modifier|*
+name|Declarator
+decl_stmt|;
 block|}
 union|;
 name|public
@@ -1795,8 +1849,6 @@ name|SourceLocation
 operator|&
 name|Ellipsis
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned

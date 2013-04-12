@@ -36,7 +36,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements a POSIX regular expression matcher.
+comment|// This file implements a POSIX regular expression matcher.  Both Basic and
+end_comment
+
+begin_comment
+comment|// Extended POSIX regular expressions (ERE) are supported.  EREs were extended
+end_comment
+
+begin_comment
+comment|// to support backreferences in matches.
+end_comment
+
+begin_comment
+comment|// This implementation also supports matching strings with embedded NUL chars.
 end_comment
 
 begin_comment
@@ -110,11 +122,16 @@ comment|/// newline in the string in addition to its normal function.
 name|Newline
 init|=
 literal|2
+block|,
+comment|/// By default, the POSIX extended regular expression (ERE) syntax is
+comment|/// assumed. Pass this flag to turn on basic regular expressions (BRE)
+comment|/// instead.
+name|BasicRegex
+init|=
+literal|4
 block|}
 enum|;
-comment|/// Compiles the given POSIX Extended Regular Expression \p Regex.
-comment|/// This implementation supports regexes and matching strings with embedded
-comment|/// NUL characters.
+comment|/// Compiles the given regular expression \p Regex.
 name|Regex
 argument_list|(
 argument|StringRef Regex

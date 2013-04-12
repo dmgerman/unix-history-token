@@ -54,19 +54,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_EXECUTION_ENGINE_H
+name|LLVM_EXECUTIONENGINE_EXECUTIONENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_EXECUTION_ENGINE_H
+name|LLVM_EXECUTIONENGINE_EXECUTIONENGINE_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCCodeGenInfo.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/MC/MCCodeGenInfo.h"
 end_include
 
 begin_include
@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Mutex.h"
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
@@ -139,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt

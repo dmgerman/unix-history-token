@@ -437,8 +437,10 @@ comment|/// shift amount is known to be TLI.getShiftAmountTy().  Before legaliza
 comment|/// the shift amount can be any type, but care must be taken to ensure it is
 comment|/// large enough.  TLI.getShiftAmountTy() is i8 on some targets, but before
 comment|/// legalization, types like i1024 can occur and i8 doesn't have enough bits
-comment|/// to represent the shift amount.  By convention, DAGCombine and
-comment|/// SelectionDAGBuilder forces these shift amounts to i32 for simplicity.
+comment|/// to represent the shift amount.
+comment|/// When the 1st operand is a vector, the shift amount must be in the same
+comment|/// type. (TLI.getShiftAmountTy() will return the same type when the input
+comment|/// type is a vector.)
 name|SHL
 block|,
 name|SRA
@@ -634,6 +636,9 @@ block|,
 name|FNEARBYINT
 block|,
 name|FFLOOR
+block|,
+comment|/// FSINCOS - Compute both fsin and fcos as a single operation.
+name|FSINCOS
 block|,
 comment|/// LOAD and STORE have token chains as their first operand, then the same
 comment|/// operands as an LLVM load/store instruction, then an offset node that

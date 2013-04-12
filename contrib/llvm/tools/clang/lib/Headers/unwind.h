@@ -7,6 +7,18 @@ begin_comment
 comment|/* See "Data Definitions for libgcc_s" in the Linux Standard Base.*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__CLANG_UNWIND_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__CLANG_UNWIND_H
+end_define
+
 begin_if
 if|#
 directive|if
@@ -161,6 +173,9 @@ block|{
 endif|#
 directive|endif
 comment|/* It is a bit strange for a header to play with the visibility of the    symbols it declares, but this matches gcc's behavior and some programs    depend on it */
+ifndef|#
+directive|ifndef
+name|HIDE_EXPORTS
 pragma|#
 directive|pragma
 name|GCC
@@ -169,6 +184,8 @@ name|push
 name|(
 name|default
 name|)
+endif|#
+directive|endif
 struct_decl|struct
 name|_Unwind_Context
 struct_decl|;
@@ -289,20 +306,20 @@ parameter_list|(
 name|struct
 name|_Unwind_Context
 modifier|*
-name|context
+name|__context
 parameter_list|,
 name|_Unwind_VRS_RegClass
-name|regclass
+name|__regclass
 parameter_list|,
 name|uint32_t
-name|regno
+name|__regno
 parameter_list|,
 name|_Unwind_VRS_DataRepresentation
-name|representation
+name|__representation
 parameter_list|,
 name|void
 modifier|*
-name|valuep
+name|__valuep
 parameter_list|)
 function_decl|;
 else|#
@@ -313,7 +330,7 @@ parameter_list|(
 name|struct
 name|_Unwind_Context
 modifier|*
-name|context
+name|__context
 parameter_list|)
 function_decl|;
 endif|#
@@ -342,11 +359,16 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|HIDE_EXPORTS
 pragma|#
 directive|pragma
 name|GCC
 name|visibility
 name|pop
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus
@@ -362,6 +384,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __CLANG_UNWIND_H */
+end_comment
 
 end_unit
 

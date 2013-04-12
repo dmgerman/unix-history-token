@@ -163,8 +163,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return NSStringMethodKind if \param Sel is such a selector.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|NSStringMethodKind
@@ -261,8 +259,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return NSArrayMethodKind if \p Sel is such a selector.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|NSArrayMethodKind
@@ -292,6 +288,8 @@ name|NSDict_initWithDictionary
 block|,
 name|NSDict_initWithObjectsAndKeys
 block|,
+name|NSDict_initWithObjectsForKeys
+block|,
 name|NSDict_objectForKey
 block|,
 name|NSMutableDict_setObjectForKey
@@ -302,7 +300,7 @@ specifier|const
 name|unsigned
 name|NumNSDictionaryMethods
 init|=
-literal|10
+literal|11
 decl_stmt|;
 comment|/// \brief The Objective-C NSDictionary selectors.
 name|Selector
@@ -314,8 +312,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return NSDictionaryMethodKind if \p Sel is such a selector.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|NSDictionaryMethodKind
@@ -517,8 +513,6 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Return NSNumberLiteralMethodKind if \p Sel is such a selector.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|NSNumberLiteralMethodKind
@@ -531,8 +525,6 @@ specifier|const
 expr_stmt|;
 comment|/// \brief Determine the appropriate NSNumber factory method kind for a
 comment|/// literal of the given type.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|NSNumberLiteralMethodKind

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_SAVERESTORE
+name|LLVM_SUPPORT_SAVEANDRESTORE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_SAVERESTORE
+name|LLVM_SUPPORT_SAVEANDRESTORE_H
 end_define
 
 begin_decl_stmt

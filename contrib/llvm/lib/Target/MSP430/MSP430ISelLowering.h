@@ -168,7 +168,7 @@ argument_list|)
 block|;
 name|virtual
 name|MVT
-name|getShiftAmountTy
+name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
@@ -294,6 +294,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|getReturnAddressFrameIndex
 argument_list|(
 argument|SelectionDAG&DAG
@@ -373,6 +382,16 @@ name|bool
 name|isZExtFree
 argument_list|(
 argument|EVT VT1
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isZExtFree
+argument_list|(
+argument|SDValue Val
 argument_list|,
 argument|EVT VT2
 argument_list|)

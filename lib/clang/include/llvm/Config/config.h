@@ -241,7 +241,7 @@ comment|/* #undef HAVE_CRASHREPORTERCLIENT_H */
 end_comment
 
 begin_comment
-comment|/* Define if __crashreporter_info__ exists. */
+comment|/* can use __crashreporter_info__ */
 end_comment
 
 begin_define
@@ -259,6 +259,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_CTYPE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `FE_ALL_EXCEPT', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FE_ALL_EXCEPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `FE_INEXACT', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FE_INEXACT
 value|1
 end_define
 
@@ -391,6 +413,28 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_EXECINFO_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `exp' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `exp2' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXP2
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -727,6 +771,39 @@ begin_define
 define|#
 directive|define
 name|HAVE_LINK_R
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `log' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOG
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `log10' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOG10
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `log2' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOG2
 value|1
 end_define
 
@@ -2010,9 +2087,12 @@ begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
-begin_comment
-comment|/* #undef LLVM_PREFIX */
-end_comment
+begin_define
+define|#
+directive|define
+name|LLVM_PREFIX
+value|""
+end_define
 
 begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
@@ -2055,7 +2135,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|2
+value|3
 end_define
 
 begin_comment
@@ -2159,7 +2239,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.2svn"
+value|"LLVM 3.3svn"
 end_define
 
 begin_comment
@@ -2181,7 +2261,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.2svn"
+value|"3.3svn"
 end_define
 
 begin_comment

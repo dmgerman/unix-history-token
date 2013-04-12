@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/Sema.h"
 end_include
 
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Sema/SemaDiagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/ASTContext.h"
 end_include
 
 begin_decl_stmt

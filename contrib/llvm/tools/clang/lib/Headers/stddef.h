@@ -15,11 +15,34 @@ directive|define
 name|__STDDEF_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_PTRDIFF_T
-end_ifndef
+argument_list|)
+operator|||
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Always define ptrdiff_t when modules are available. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -27,18 +50,16 @@ directive|define
 name|_PTRDIFF_T
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
-name|__typeof__
-argument_list|(
-argument|((int*)
-literal|0
-argument|)-((int*)
-literal|0
-argument|)
-argument_list|)
+name|__PTRDIFF_TYPE__
 name|ptrdiff_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_endif
@@ -46,11 +67,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_SIZE_T
-end_ifndef
+argument_list|)
+operator|||
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Always define size_t when modules are available. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -58,14 +102,16 @@ directive|define
 name|_SIZE_T
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
-name|__typeof__
-argument_list|(
-argument|sizeof(int)
-argument_list|)
+name|__SIZE_TYPE__
 name|size_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_endif
@@ -79,17 +125,45 @@ directive|ifndef
 name|__cplusplus
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* Always define wchar_t when modules are available. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WCHAR_T
-end_ifndef
+argument_list|)
+operator|||
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|_WCHAR_T
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -264,6 +338,10 @@ name|__need_wint_t
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Always define wint_t when modules are available. */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -272,6 +350,21 @@ name|defined
 argument_list|(
 name|_WINT_T
 argument_list|)
+operator|||
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
 end_if
 
 begin_define
@@ -279,6 +372,11 @@ define|#
 directive|define
 name|_WINT_T
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -291,10 +389,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _WINT_T */
-end_comment
 
 begin_undef
 undef|#

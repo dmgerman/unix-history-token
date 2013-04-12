@@ -142,25 +142,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_ALIAS_ANALYSIS_H
+name|LLVM_ANALYSIS_ALIASANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_ALIAS_ANALYSIS_H
+name|LLVM_ANALYSIS_ALIASANALYSIS_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/Support/CallSite.h"
 end_include
 
 begin_decl_stmt
@@ -1340,7 +1340,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for call sites) - Return whether information about whether
+comment|/// getModRefInfo (for call sites) - Return information about whether
 comment|/// a particular call site modifies or reads the specified memory location.
 name|virtual
 name|ModRefResult
@@ -1385,7 +1385,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for calls) - Return whether information about whether
+comment|/// getModRefInfo (for calls) - Return information about whether
 comment|/// a particular call modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1445,7 +1445,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for invokes) - Return whether information about whether
+comment|/// getModRefInfo (for invokes) - Return information about whether
 comment|/// a particular invoke modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1505,7 +1505,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for loads) - Return whether information about whether
+comment|/// getModRefInfo (for loads) - Return information about whether
 comment|/// a particular load modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1553,7 +1553,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for stores) - Return whether information about whether
+comment|/// getModRefInfo (for stores) - Return information about whether
 comment|/// a particular store modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1601,7 +1601,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for fences) - Return whether information about whether
+comment|/// getModRefInfo (for fences) - Return information about whether
 comment|/// a particular store modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1655,7 +1655,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for cmpxchges) - Return whether information about whether
+comment|/// getModRefInfo (for cmpxchges) - Return information about whether
 comment|/// a particular cmpxchg modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1703,7 +1703,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for atomicrmws) - Return whether information about whether
+comment|/// getModRefInfo (for atomicrmws) - Return information about whether
 comment|/// a particular atomicrmw modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -1751,7 +1751,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getModRefInfo (for va_args) - Return whether information about whether
+comment|/// getModRefInfo (for va_args) - Return information about whether
 comment|/// a particular va_arg modifies or reads the specified memory location.
 name|ModRefResult
 name|getModRefInfo
@@ -2243,24 +2243,12 @@ block|;
 comment|/// isIdentifiedObject - Return true if this pointer refers to a distinct and
 comment|/// identifiable object.  This returns true for:
 comment|///    Global Variables and Functions (but not Global Aliases)
-comment|///    Allocas and Mallocs
+comment|///    Allocas
 comment|///    ByVal and NoAlias Arguments
-comment|///    NoAlias returns
+comment|///    NoAlias returns (e.g. calls to malloc)
 comment|///
 name|bool
 name|isIdentifiedObject
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
-block|;
-comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
-comment|/// its definition.  This returns true for allocas, non-extern-weak globals and
-comment|/// byval arguments.
-name|bool
-name|isKnownNonNull
 argument_list|(
 specifier|const
 name|Value

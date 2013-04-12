@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LATENCY_PRIORITY_QUEUE_H
+name|LLVM_CODEGEN_LATENCYPRIORITYQUEUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LATENCY_PRIORITY_QUEUE_H
+name|LLVM_CODEGEN_LATENCYPRIORITYQUEUE_H
 end_define
 
 begin_include

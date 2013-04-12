@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_decl_stmt
@@ -130,8 +136,6 @@ specifier|const
 name|Decl
 operator|*
 operator|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|Stmt

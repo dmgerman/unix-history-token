@@ -311,8 +311,10 @@ block|}
 enum|;
 comment|/// Tests whether a given value is losslessly representable using this type.
 comment|///
-comment|/// Note that signedness conversions will be rejected, even with the same bit
-comment|/// pattern. For example, -1s8 is not in range for 'unsigned char' (u8).
+comment|/// \param Val The value to test.
+comment|/// \param AllowMixedSign Whether or not to allow signedness conversions.
+comment|///                       This determines whether -1s8 is considered in range
+comment|///                       for 'unsigned char' (u8).
 name|RangeTestResultKind
 name|testInRange
 argument_list|(
@@ -322,6 +324,9 @@ operator|::
 name|APSInt
 operator|&
 name|Val
+argument_list|,
+name|bool
+name|AllowMixedSign
 argument_list|)
 decl|const
 name|LLVM_READONLY

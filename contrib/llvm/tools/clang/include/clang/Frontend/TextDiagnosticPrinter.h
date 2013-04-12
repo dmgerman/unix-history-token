@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_decl_stmt
@@ -110,8 +110,6 @@ name|raw_ostream
 operator|&
 name|OS
 block|;
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticOptions

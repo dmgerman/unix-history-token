@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Mutex.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -123,12 +129,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include

@@ -66,19 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFunctionAnalysis.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt

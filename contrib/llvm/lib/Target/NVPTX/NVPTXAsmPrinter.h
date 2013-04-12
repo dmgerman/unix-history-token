@@ -72,19 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"NVPTXTargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"NVPTXSubtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"NVPTXTargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
@@ -96,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -114,13 +120,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_include
@@ -138,13 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringExtras.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_include
@@ -301,7 +301,7 @@ name|fstr
 operator|.
 name|close
 argument_list|()
-block|;   }
+block|; }
 name|std
 operator|::
 name|string
@@ -433,7 +433,7 @@ block|{
 name|delete
 index|[]
 name|buffer
-block|;     }
+block|; }
 name|unsigned
 name|addBytes
 argument_list|(
@@ -945,7 +945,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier=
+argument|const char *Modifier =
 literal|0
 argument_list|)
 block|;
@@ -958,7 +958,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier=
+argument|const char *Modifier =
 literal|0
 argument_list|)
 block|;
@@ -989,7 +989,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier=
+argument|const char *Modifier =
 literal|0
 argument_list|)
 block|;
@@ -1065,7 +1065,7 @@ block|;
 name|void
 name|emitKernelFunctionDirectives
 argument_list|(
-argument|const Function& F
+argument|const Function&F
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -1334,7 +1334,7 @@ name|getPTXFundamentalTypeStr
 argument_list|(
 argument|const Type *Ty
 argument_list|,
-argument|bool=true
+argument|bool = true
 argument_list|)
 specifier|const
 block|;

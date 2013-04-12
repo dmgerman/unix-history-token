@@ -309,6 +309,63 @@ return|return
 name|NumParams
 return|;
 block|}
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+name|asArray
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|,
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|>
+name|asArray
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|,
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
 name|NamedDecl
 modifier|*
 name|getParam
@@ -679,6 +736,33 @@ name|get
 argument_list|(
 name|Idx
 argument_list|)
+return|;
+block|}
+comment|/// \brief Produce this as an array ref.
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|asArray
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+operator|(
+name|data
+argument_list|()
+operator|,
+name|size
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Retrieve the number of template arguments in this
@@ -1131,6 +1215,48 @@ operator|==
 name|TSK_ExplicitSpecialization
 return|;
 block|}
+comment|/// \brief True if this declaration is an explicit specialization,
+comment|/// explicit instantiation declaration, or explicit instantiation
+comment|/// definition.
+name|bool
+name|isExplicitInstantiationOrSpecialization
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getTemplateSpecializationKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|TSK_ExplicitSpecialization
+case|:
+case|case
+name|TSK_ExplicitInstantiationDeclaration
+case|:
+case|case
+name|TSK_ExplicitInstantiationDefinition
+case|:
+return|return
+name|true
+return|;
+case|case
+name|TSK_Undeclared
+case|:
+case|case
+name|TSK_ImplicitInstantiation
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad template specialization kind"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Set the template specialization kind.
 name|void
 name|setTemplateSpecializationKind
@@ -1350,6 +1476,18 @@ literal|1
 argument_list|)
 return|;
 block|}
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemplateSpecializationKind
+argument_list|()
+operator|==
+name|TSK_ExplicitSpecialization
+return|;
+block|}
 comment|/// \brief Set the template specialization kind.
 name|void
 name|setTemplateSpecializationKind
@@ -1416,15 +1554,8 @@ comment|///   };
 comment|/// \endcode
 name|class
 name|DependentFunctionTemplateSpecializationInfo
-block|{
-expr|union
-block|{
-comment|// Force sizeof to be a multiple of sizeof(void*) so that the
-comment|// trailing data is aligned.
-name|void
-operator|*
-name|Aligner
-block|;      struct
+block|{   struct
+name|CA
 block|{
 comment|/// The number of potential template candidates.
 name|unsigned
@@ -1433,7 +1564,17 @@ block|;
 comment|/// The number of template arguments.
 name|unsigned
 name|NumArgs
-block|;     }
+block|;   }
+block|;
+expr|union
+block|{
+comment|// Force sizeof to be a multiple of sizeof(void*) so that the
+comment|// trailing data is aligned.
+name|void
+operator|*
+name|Aligner
+block|;     struct
+name|CA
 name|d
 block|;   }
 block|;
@@ -1896,6 +2037,7 @@ operator|<
 name|typename
 name|EntryType
 operator|>
+specifier|static
 name|SpecIterator
 operator|<
 name|EntryType
@@ -1986,6 +2128,7 @@ block|}
 struct|;
 comment|/// \brief Pointer to the common data shared by all declarations of this
 comment|/// template.
+name|mutable
 name|CommonBase
 modifier|*
 name|Common
@@ -1994,22 +2137,24 @@ comment|/// \brief Retrieves the "common" pointer shared by all (re-)declaration
 comment|/// the same template. Calling this routine may implicitly allocate memory
 comment|/// for the common pointer.
 name|CommonBase
-modifier|*
+operator|*
 name|getCommonPtr
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|virtual
 name|CommonBase
 modifier|*
 name|newCommon
-parameter_list|(
+argument_list|(
 name|ASTContext
-modifier|&
+operator|&
 name|C
-parameter_list|)
+argument_list|)
+decl|const
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|// Construct a template decl with name, parameters, and templated element.
 name|RedeclarableTemplateDecl
 argument_list|(
@@ -2098,7 +2243,8 @@ comment|/// struct X<int>::Inner { /* ... */ };
 comment|/// \endcode
 name|bool
 name|isMemberSpecialization
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|getCommonPtr
@@ -2176,9 +2322,10 @@ comment|/// template<typename U>
 comment|/// void X<T>::f(T, U);
 comment|/// \endcode
 name|RedeclarableTemplateDecl
-modifier|*
+operator|*
 name|getInstantiatedFromMemberTemplate
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|getCommonPtr
@@ -2436,15 +2583,15 @@ name|CommonBase
 operator|*
 name|newCommon
 argument_list|(
-name|ASTContext
-operator|&
-name|C
+argument|ASTContext&C
 argument_list|)
+specifier|const
 block|;
 name|Common
 operator|*
 name|getCommonPtr
 argument_list|()
+specifier|const
 block|{
 return|return
 name|static_cast
@@ -2475,6 +2622,7 @@ operator|>
 operator|&
 name|getSpecializations
 argument_list|()
+specifier|const
 block|{
 return|return
 name|getCommonPtr
@@ -2655,6 +2803,7 @@ expr_stmt|;
 name|spec_iterator
 name|spec_begin
 argument_list|()
+specifier|const
 block|{
 return|return
 name|makeSpecIterator
@@ -2669,6 +2818,7 @@ block|}
 name|spec_iterator
 name|spec_end
 argument_list|()
+specifier|const
 block|{
 return|return
 name|makeSpecIterator
@@ -4018,7 +4168,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
-argument|llvm::ArrayRef<TemplateParameterList*> Expansions
+argument|ArrayRef<TemplateParameterList *> Expansions
 argument_list|)
 block|;
 specifier|static
@@ -4521,7 +4671,7 @@ name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
-argument|std::string&S
+argument|raw_ostream&OS
 argument_list|,
 argument|const PrintingPolicy&Policy
 argument_list|,
@@ -4643,6 +4793,48 @@ operator|==
 name|TSK_ExplicitSpecialization
 return|;
 block|}
+comment|/// \brief True if this declaration is an explicit specialization,
+comment|/// explicit instantiation declaration, or explicit instantiation
+comment|/// definition.
+name|bool
+name|isExplicitInstantiationOrSpecialization
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getTemplateSpecializationKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|TSK_ExplicitSpecialization
+case|:
+case|case
+name|TSK_ExplicitInstantiationDeclaration
+case|:
+case|case
+name|TSK_ExplicitInstantiationDefinition
+case|:
+return|return
+name|true
+return|;
+case|case
+name|TSK_Undeclared
+case|:
+case|case
+name|TSK_ImplicitInstantiation
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad template specialization kind"
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|setSpecializationKind
 argument_list|(
@@ -4754,12 +4946,6 @@ operator|->
 name|PartialSpecialization
 return|;
 return|return
-name|const_cast
-operator|<
-name|ClassTemplateDecl
-operator|*
-operator|>
-operator|(
 name|SpecializedTemplate
 operator|.
 name|get
@@ -4768,7 +4954,6 @@ name|ClassTemplateDecl
 operator|*
 operator|>
 operator|(
-operator|)
 operator|)
 return|;
 block|}
@@ -4822,12 +5007,6 @@ end_expr_stmt
 
 begin_return
 return|return
-name|const_cast
-operator|<
-name|ClassTemplateDecl
-operator|*
-operator|>
-operator|(
 name|SpecializedTemplate
 operator|.
 name|get
@@ -4836,7 +5015,6 @@ name|ClassTemplateDecl
 operator|*
 operator|>
 operator|(
-operator|)
 operator|)
 return|;
 end_return
@@ -5899,6 +6077,7 @@ comment|/// \brief Load any lazily-loaded specializations from the external sour
 name|void
 name|LoadLazySpecializations
 argument_list|()
+specifier|const
 block|;
 comment|/// \brief Retrieve the set of specializations of this class template.
 name|llvm
@@ -5910,6 +6089,7 @@ operator|>
 operator|&
 name|getSpecializations
 argument_list|()
+specifier|const
 block|;
 comment|/// \brief Retrieve the set of partial specializations of this class
 comment|/// template.
@@ -5975,15 +6155,15 @@ name|CommonBase
 operator|*
 name|newCommon
 argument_list|(
-name|ASTContext
-operator|&
-name|C
+argument|ASTContext&C
 argument_list|)
+specifier|const
 block|;
 name|Common
 operator|*
 name|getCommonPtr
 argument_list|()
+specifier|const
 block|{
 return|return
 name|static_cast
@@ -6304,6 +6484,7 @@ expr_stmt|;
 name|spec_iterator
 name|spec_begin
 argument_list|()
+specifier|const
 block|{
 return|return
 name|makeSpecIterator
@@ -6318,6 +6499,7 @@ block|}
 name|spec_iterator
 name|spec_end
 argument_list|()
+specifier|const
 block|{
 return|return
 name|makeSpecIterator
@@ -6919,10 +7101,9 @@ name|CommonBase
 operator|*
 name|newCommon
 argument_list|(
-name|ASTContext
-operator|&
-name|C
+argument|ASTContext&C
 argument_list|)
+specifier|const
 decl_stmt|;
 end_decl_stmt
 

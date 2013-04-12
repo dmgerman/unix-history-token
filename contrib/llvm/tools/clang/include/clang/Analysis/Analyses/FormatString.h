@@ -750,8 +750,6 @@ return|return
 name|IsPrintf
 return|;
 block|}
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|ConversionSpecifier
@@ -1443,8 +1441,6 @@ name|hasStandardLengthModifier
 argument_list|()
 specifier|const
 expr_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|LengthModifier

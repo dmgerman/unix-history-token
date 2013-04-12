@@ -159,18 +159,6 @@ argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
 block|;
-comment|/// Code Generation virtual methods...
-name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|)
-specifier|const
-block|;
 comment|// rewrite MI to access 'Offset' bytes from the FP. Update Offset to be
 comment|// however much remains to be handled. Return 'true' if no further
 comment|// work is required.
@@ -221,6 +209,8 @@ argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
+argument_list|,
+argument|unsigned FIOperandNum
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

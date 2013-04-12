@@ -78,13 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
@@ -102,7 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
+file|"llvm/Target/TargetLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
@@ -515,6 +515,14 @@ block|,
 name|ATOMSWAP64_DAG
 block|,
 name|ATOMCMPXCHG64_DAG
+block|,
+name|ATOMMIN64_DAG
+block|,
+name|ATOMUMIN64_DAG
+block|,
+name|ATOMMAX64_DAG
+block|,
+name|ATOMUMAX64_DAG
 block|}
 enum|;
 block|}
@@ -551,9 +559,7 @@ block|;
 name|virtual
 name|unsigned
 name|getJumpTableEncoding
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -667,12 +673,15 @@ argument_list|)
 specifier|const
 block|;
 comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
-comment|/// unaligned memory accesses. of the specified type.
+comment|/// unaligned memory accesses of the specified type. Returns whether it
+comment|/// is "fast" by reference in the second argument.
 name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
+argument_list|,
+argument|bool *Fast
 argument_list|)
 specifier|const
 block|;
@@ -686,11 +695,28 @@ argument|unsigned DstAlign
 argument_list|,
 argument|unsigned SrcAlign
 argument_list|,
-argument|bool IsZeroVal
+argument|bool IsMemset
+argument_list|,
+argument|bool ZeroMemset
 argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|using
+name|TargetLowering
+operator|::
+name|isZExtFree
+block|;
+name|virtual
+name|bool
+name|isZExtFree
+argument_list|(
+argument|SDValue Val
+argument_list|,
+argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
@@ -876,7 +902,7 @@ name|TargetRegisterClass
 operator|*
 name|getRegClassFor
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -965,7 +991,7 @@ name|uint8_t
 operator|>
 name|findRepresentativeClass
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1662,6 +1688,38 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
+name|bool
+name|CanLowerReturn
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -1860,6 +1918,20 @@ name|bool
 name|IsCmpxchg
 operator|=
 name|false
+argument_list|,
+name|bool
+name|IsMinMax
+operator|=
+name|false
+argument_list|,
+name|ARMCC
+operator|::
+name|CondCodes
+name|CC
+operator|=
+name|ARMCC
+operator|::
+name|AL
 argument_list|)
 decl|const
 decl_stmt|;

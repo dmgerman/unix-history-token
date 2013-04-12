@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include

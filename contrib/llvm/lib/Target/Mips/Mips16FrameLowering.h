@@ -89,6 +89,8 @@ operator|:
 name|MipsFrameLowering
 argument_list|(
 argument|STI
+argument_list|,
+literal|8
 argument_list|)
 block|{}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
@@ -106,6 +108,17 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;

@@ -94,19 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdlib>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstdio>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstring>
+file|<algorithm>
 end_include
 
 begin_include
@@ -118,13 +106,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|<cstdio>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_ifdef

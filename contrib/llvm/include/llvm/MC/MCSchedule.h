@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCSCHEDMODEL_H
+name|LLVM_MC_MCSCHEDULE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCSCHEDMODEL_H
+name|LLVM_MC_MCSCHEDULE_H
 end_define
 
 begin_include
@@ -423,7 +423,7 @@ name|MinLatency
 decl_stmt|;
 specifier|static
 specifier|const
-name|unsigned
+name|int
 name|DefaultMinLatency
 init|=
 operator|-
@@ -457,6 +457,23 @@ name|unsigned
 name|DefaultHighLatency
 init|=
 literal|10
+decl_stmt|;
+comment|// ILPWindow is the number of cycles that the scheduler effectively ignores
+comment|// before attempting to hide latency. This should be zero for in-order cpus to
+comment|// always hide expected latency. For out-of-order cpus, it may be tweaked as
+comment|// desired to roughly approximate instruction buffers. The actual threshold is
+comment|// not very important for an OOO processor, as long as it isn't too high. A
+comment|// nonzero value helps avoid rescheduling to hide latency when its is fairly
+comment|// obviously useless and makes register pressure heuristics more effective.
+name|unsigned
+name|ILPWindow
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|DefaultILPWindow
+init|=
+literal|0
 decl_stmt|;
 comment|// MispredictPenalty is the typical number of extra cycles the processor
 comment|// takes to recover from a branch misprediction.
@@ -530,6 +547,11 @@ argument_list|(
 name|DefaultHighLatency
 argument_list|)
 operator|,
+name|ILPWindow
+argument_list|(
+name|DefaultILPWindow
+argument_list|)
+operator|,
 name|MispredictPenalty
 argument_list|(
 name|DefaultMispredictPenalty
@@ -586,6 +608,8 @@ argument|unsigned ll
 argument_list|,
 argument|unsigned hl
 argument_list|,
+argument|unsigned ilp
+argument_list|,
 argument|unsigned mp
 argument_list|,
 argument|unsigned pi
@@ -619,6 +643,11 @@ operator|,
 name|HighLatency
 argument_list|(
 name|hl
+argument_list|)
+operator|,
+name|ILPWindow
+argument_list|(
+name|ilp
 argument_list|)
 operator|,
 name|MispredictPenalty

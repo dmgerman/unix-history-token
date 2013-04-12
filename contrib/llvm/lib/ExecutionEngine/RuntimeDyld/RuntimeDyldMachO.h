@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RuntimeDyldImpl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IndexedMap.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Format.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RuntimeDyldImpl.h"
 end_include
 
 begin_decl_stmt

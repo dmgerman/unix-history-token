@@ -113,6 +113,11 @@ operator|::
 name|linkOcamlGCPrinter
 argument_list|()
 expr_stmt|;
+name|llvm
+operator|::
+name|linkErlangGCPrinter
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 name|ForceAsmWriterLinking

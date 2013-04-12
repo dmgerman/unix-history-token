@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TRANSFORMS_UTILS_INTEGERDIVISION_H
+name|LLVM_TRANSFORMS_UTILS_INTEGERDIVISION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TRANSFORMS_UTILS_INTEGERDIVISION_H
+name|LLVM_TRANSFORMS_UTILS_INTEGERDIVISION_H
 end_define
 
 begin_decl_stmt
@@ -111,6 +111,32 @@ comment|///
 comment|/// @brief Replace Div with generated code.
 name|bool
 name|expandDivision
+parameter_list|(
+name|BinaryOperator
+modifier|*
+name|Div
+parameter_list|)
+function_decl|;
+comment|/// Generate code to calculate the remainder of two integers, replacing Rem
+comment|/// with the generated code. Uses the above 32bit routine, therefore adequate
+comment|/// for targets with little or no support for less than 32 bit arithmetic.
+comment|///
+comment|/// @brief Replace Rem with generated code.
+name|bool
+name|expandRemainderUpTo32Bits
+parameter_list|(
+name|BinaryOperator
+modifier|*
+name|Rem
+parameter_list|)
+function_decl|;
+comment|/// Generate code to divide two integers, replacing Div with the generated
+comment|/// code. Uses the above 32bit routine, therefore adequate for targets with
+comment|/// little or no support for less than 32 bit arithmetic.
+comment|///
+comment|/// @brief Replace Rem with generated code.
+name|bool
+name|expandDivisionUpTo32Bits
 parameter_list|(
 name|BinaryOperator
 modifier|*

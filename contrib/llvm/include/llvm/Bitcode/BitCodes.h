@@ -198,7 +198,8 @@ comment|// BLOCKNAME: [name]
 name|BLOCKINFO_CODE_SETRECORDNAME
 init|=
 literal|3
-comment|// BLOCKINFO_CODE_SETRECORDNAME: [id, name]
+comment|// BLOCKINFO_CODE_SETRECORDNAME:
+comment|//                             [id, name]
 block|}
 enum|;
 block|}

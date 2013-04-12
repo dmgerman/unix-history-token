@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -176,7 +182,7 @@ name|create
 argument_list|(
 argument|const MacroInfo *MI
 argument_list|,
-argument|llvm::ArrayRef<Token> UnexpArgTokens
+argument|ArrayRef<Token> UnexpArgTokens
 argument_list|,
 argument|bool VarargsElided
 argument_list|,

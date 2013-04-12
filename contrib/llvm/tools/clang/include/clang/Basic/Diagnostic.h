@@ -114,13 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<list>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<list>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -237,15 +237,12 @@ operator|.
 name|RemoveRange
 operator|=
 name|CharSourceRange
-argument_list|(
-name|SourceRange
+operator|::
+name|getCharRange
 argument_list|(
 name|InsertionLoc
 argument_list|,
 name|InsertionLoc
-argument_list|)
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 name|Hint
@@ -290,15 +287,12 @@ operator|.
 name|RemoveRange
 operator|=
 name|CharSourceRange
-argument_list|(
-name|SourceRange
+operator|::
+name|getCharRange
 argument_list|(
 name|InsertionLoc
 argument_list|,
 name|InsertionLoc
-argument_list|)
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 name|Hint
@@ -572,6 +566,10 @@ name|bool
 name|PrintTemplateTree
 decl_stmt|;
 comment|// Print a tree when comparing templates.
+name|bool
+name|WarnOnSpellCheck
+decl_stmt|;
+comment|// Emit warning when spellcheck is initiated.
 name|bool
 name|ShowColors
 decl_stmt|;
@@ -1018,6 +1016,20 @@ end_comment
 begin_decl_stmt
 name|bool
 name|ErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Sticky flag set to \c true when an "uncompilable error" occurs.
+end_comment
+
+begin_comment
+comment|/// I.e. an error that was not upgraded from a warning by -Werror.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UncompilableErrorOccurred
 decl_stmt|;
 end_decl_stmt
 
@@ -1746,7 +1758,7 @@ end_function
 
 begin_expr_stmt
 name|bool
-name|getEnableAllWarnngs
+name|getEnableAllWarnings
 argument_list|()
 specifier|const
 block|{
@@ -1958,6 +1970,38 @@ parameter_list|()
 block|{
 return|return
 name|PrintTemplateTree
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Warn when spellchecking is initated, for testing.
+end_comment
+
+begin_function
+name|void
+name|setWarnOnSpellCheck
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|false
+parameter_list|)
+block|{
+name|WarnOnSpellCheck
+operator|=
+name|Val
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|getWarnOnSpellCheck
+parameter_list|()
+block|{
+return|return
+name|WarnOnSpellCheck
 return|;
 block|}
 end_function
@@ -2448,6 +2492,26 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Errors that actually prevent compilation, not those that are
+end_comment
+
+begin_comment
+comment|/// upgraded from a warning by -Werror.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUncompilableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UncompilableErrorOccurred
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|bool
 name|hasFatalErrorOccurred
@@ -2516,7 +2580,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If this is the first request for this diagnosic, it is registered and
+comment|/// If this is the first request for this diagnostic, it is registered and
 end_comment
 
 begin_comment
@@ -2656,6 +2720,33 @@ expr_stmt|;
 name|ArgToStringCookie
 operator|=
 name|Cookie
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Note that the prior diagnostic was emitted by some other
+end_comment
+
+begin_comment
+comment|/// \c DiagnosticsEngine, and we may be attaching a note to that diagnostic.
+end_comment
+
+begin_function
+name|void
+name|notePriorDiagnosticFrom
+parameter_list|(
+specifier|const
+name|DiagnosticsEngine
+modifier|&
+name|Other
+parameter_list|)
+block|{
+name|LastDiagLevel
+operator|=
+name|Other
+operator|.
+name|LastDiagLevel
 expr_stmt|;
 block|}
 end_function

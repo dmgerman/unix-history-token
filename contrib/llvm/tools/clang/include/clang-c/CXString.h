@@ -38,6 +38,7 @@ comment|/**  * \brief A character string.  *  * The \c CXString type is used to 
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|void
 modifier|*
 name|data

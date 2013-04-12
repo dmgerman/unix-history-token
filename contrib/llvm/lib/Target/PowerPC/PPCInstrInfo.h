@@ -227,6 +227,10 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|SmallVectorImpl<MachineInstr*>&NewMIs
+argument_list|,
+argument|bool&NonRI
+argument_list|,
+argument|bool&SpillsVRS
 argument_list|)
 specifier|const
 block|;
@@ -244,6 +248,10 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|SmallVectorImpl<MachineInstr*>&NewMIs
+argument_list|,
+argument|bool&NonRI
+argument_list|,
+argument|bool&SpillsVRS
 argument_list|)
 specifier|const
 block|;

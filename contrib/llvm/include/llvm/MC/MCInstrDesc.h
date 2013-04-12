@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -344,7 +356,7 @@ modifier|*
 name|OpInfo
 decl_stmt|;
 comment|// 'NumOperands' entries about operands
-comment|/// getOperandConstraint - Returns the value of the specific constraint if
+comment|/// \brief Returns the value of the specific constraint if
 comment|/// it is set. Returns -1 if it is not set.
 name|int
 name|getOperandConstraint
@@ -413,7 +425,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// getOpcode - Return the opcode number for this descriptor.
+comment|/// \brief Return the opcode number for this descriptor.
 name|unsigned
 name|getOpcode
 argument_list|()
@@ -423,7 +435,7 @@ return|return
 name|Opcode
 return|;
 block|}
-comment|/// getNumOperands - Return the number of declared MachineOperands for this
+comment|/// \brief Return the number of declared MachineOperands for this
 comment|/// MachineInstruction.  Note that variadic (isVariadic() returns true)
 comment|/// instructions may have additional operands at the end of the list, and note
 comment|/// that the machine instruction may include implicit register def/uses as
@@ -437,7 +449,7 @@ return|return
 name|NumOperands
 return|;
 block|}
-comment|/// getNumDefs - Return the number of MachineOperands that are register
+comment|/// \brief Return the number of MachineOperands that are register
 comment|/// definitions.  Register definitions always occur at the start of the
 comment|/// machine operand list.  This is the number of "outs" in the .td file,
 comment|/// and does not include implicit defs.
@@ -450,8 +462,7 @@ return|return
 name|NumDefs
 return|;
 block|}
-comment|/// getFlags - Return flags of this instruction.
-comment|///
+comment|/// \brief Return flags of this instruction.
 name|unsigned
 name|getFlags
 argument_list|()
@@ -461,7 +472,7 @@ return|return
 name|Flags
 return|;
 block|}
-comment|/// isVariadic - Return true if this instruction can have a variable number of
+comment|/// \brief Return true if this instruction can have a variable number of
 comment|/// operands.  In this case, the variable operands will be after the normal
 comment|/// operands but before the implicit definitions and uses (if any are
 comment|/// present).
@@ -482,7 +493,7 @@ name|Variadic
 operator|)
 return|;
 block|}
-comment|/// hasOptionalDef - Set if this instruction has an optional definition, e.g.
+comment|/// \brief Set if this instruction has an optional definition, e.g.
 comment|/// ARM instructions which can set condition code if 's' bit is set.
 name|bool
 name|hasOptionalDef
@@ -501,7 +512,7 @@ name|HasOptionalDef
 operator|)
 return|;
 block|}
-comment|/// isPseudo - Return true if this is a pseudo instruction that doesn't
+comment|/// \brief Return true if this is a pseudo instruction that doesn't
 comment|/// correspond to a real machine instruction.
 comment|///
 name|bool
@@ -521,6 +532,7 @@ name|Pseudo
 operator|)
 return|;
 block|}
+comment|/// \brief Return true if the instruction is a return.
 name|bool
 name|isReturn
 argument_list|()
@@ -538,6 +550,7 @@ name|Return
 operator|)
 return|;
 block|}
+comment|/// \brief  Return true if the instruction is a call.
 name|bool
 name|isCall
 argument_list|()
@@ -555,7 +568,7 @@ name|Call
 operator|)
 return|;
 block|}
-comment|/// isBarrier - Returns true if the specified instruction stops control flow
+comment|/// \brief Returns true if the specified instruction stops control flow
 comment|/// from executing the instruction immediately following it.  Examples include
 comment|/// unconditional branches and return instructions.
 name|bool
@@ -575,7 +588,7 @@ name|Barrier
 operator|)
 return|;
 block|}
-comment|/// isTerminator - Returns true if this instruction part of the terminator for
+comment|/// \brief Returns true if this instruction part of the terminator for
 comment|/// a basic block.  Typically this is things like return and branch
 comment|/// instructions.
 comment|///
@@ -598,7 +611,7 @@ name|Terminator
 operator|)
 return|;
 block|}
-comment|/// isBranch - Returns true if this is a conditional, unconditional, or
+comment|/// \brief Returns true if this is a conditional, unconditional, or
 comment|/// indirect branch.  Predicates below can be used to discriminate between
 comment|/// these cases, and the TargetInstrInfo::AnalyzeBranch method can be used to
 comment|/// get more information.
@@ -619,7 +632,7 @@ name|Branch
 operator|)
 return|;
 block|}
-comment|/// isIndirectBranch - Return true if this is an indirect branch, such as a
+comment|/// \brief Return true if this is an indirect branch, such as a
 comment|/// branch through a register.
 name|bool
 name|isIndirectBranch
@@ -638,7 +651,7 @@ name|IndirectBranch
 operator|)
 return|;
 block|}
-comment|/// isConditionalBranch - Return true if this is a branch which may fall
+comment|/// \brief Return true if this is a branch which may fall
 comment|/// through to the next instruction or may transfer control flow to some other
 comment|/// block.  The TargetInstrInfo::AnalyzeBranch method can be used to get more
 comment|/// information about this branch.
@@ -660,7 +673,7 @@ name|isIndirectBranch
 argument_list|()
 return|;
 block|}
-comment|/// isUnconditionalBranch - Return true if this is a branch which always
+comment|/// \brief Return true if this is a branch which always
 comment|/// transfers control flow to some other block.  The
 comment|/// TargetInstrInfo::AnalyzeBranch method can be used to get more information
 comment|/// about this branch.
@@ -681,9 +694,72 @@ name|isIndirectBranch
 argument_list|()
 return|;
 block|}
-comment|// isPredicable - Return true if this instruction has a predicate operand that
-comment|// controls execution.  It may be set to 'always', or may be set to other
-comment|/// values.   There are various methods in TargetInstrInfo that can be used to
+comment|/// \brief Return true if this is a branch or an instruction which directly
+comment|/// writes to the program counter. Considered 'may' affect rather than
+comment|/// 'does' affect as things like predication are not taken into account.
+name|bool
+name|mayAffectControlFlow
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|MI
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|RI
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|isBranch
+argument_list|()
+operator|||
+name|isCall
+argument_list|()
+operator|||
+name|isReturn
+argument_list|()
+operator|||
+name|isIndirectBranch
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+name|unsigned
+name|PC
+init|=
+name|RI
+operator|.
+name|getProgramCounter
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|PC
+operator|==
+literal|0
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|hasDefOfPhysReg
+argument_list|(
+name|MI
+argument_list|,
+name|PC
+argument_list|,
+name|RI
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction has a predicate operand
+comment|/// that controls execution. It may be set to 'always', or may be set to other
+comment|/// values. There are various methods in TargetInstrInfo that can be used to
 comment|/// control and modify the predicate in this instruction.
 name|bool
 name|isPredicable
@@ -702,7 +778,7 @@ name|Predicable
 operator|)
 return|;
 block|}
-comment|/// isCompare - Return true if this instruction is a comparison.
+comment|/// \brief Return true if this instruction is a comparison.
 name|bool
 name|isCompare
 argument_list|()
@@ -720,7 +796,7 @@ name|Compare
 operator|)
 return|;
 block|}
-comment|/// isMoveImmediate - Return true if this instruction is a move immediate
+comment|/// \brief Return true if this instruction is a move immediate
 comment|/// (including conditional moves) instruction.
 name|bool
 name|isMoveImmediate
@@ -739,8 +815,7 @@ name|MoveImm
 operator|)
 return|;
 block|}
-comment|/// isBitcast - Return true if this instruction is a bitcast instruction.
-comment|///
+comment|/// \brief Return true if this instruction is a bitcast instruction.
 name|bool
 name|isBitcast
 argument_list|()
@@ -758,8 +833,7 @@ name|Bitcast
 operator|)
 return|;
 block|}
-comment|/// isSelect - Return true if this is a select instruction.
-comment|///
+comment|/// \brief Return true if this is a select instruction.
 name|bool
 name|isSelect
 argument_list|()
@@ -777,7 +851,7 @@ name|Select
 operator|)
 return|;
 block|}
-comment|/// isNotDuplicable - Return true if this instruction cannot be safely
+comment|/// \brief Return true if this instruction cannot be safely
 comment|/// duplicated.  For example, if the instruction has a unique labels attached
 comment|/// to it, duplicating it would cause multiple definition errors.
 name|bool
@@ -844,7 +918,7 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Side Effect Analysis
 comment|//===--------------------------------------------------------------------===//
-comment|/// mayLoad - Return true if this instruction could possibly read memory.
+comment|/// \brief Return true if this instruction could possibly read memory.
 comment|/// Instructions with this flag set are not necessarily simple load
 comment|/// instructions, they may load a value and modify it, for example.
 name|bool
@@ -864,7 +938,7 @@ name|MayLoad
 operator|)
 return|;
 block|}
-comment|/// mayStore - Return true if this instruction could possibly modify memory.
+comment|/// \brief Return true if this instruction could possibly modify memory.
 comment|/// Instructions with this flag set are not necessarily simple store
 comment|/// instructions, they may store a modified value based on their operands, or
 comment|/// may not actually modify anything, for example.
@@ -1132,8 +1206,7 @@ return|return
 name|ImplicitUses
 return|;
 block|}
-comment|/// getNumImplicitUses - Return the number of implicit uses this instruction
-comment|/// has.
+comment|/// \brief Return the number of implicit uses this instruction has.
 name|unsigned
 name|getNumImplicitUses
 argument_list|()
@@ -1191,8 +1264,7 @@ return|return
 name|ImplicitDefs
 return|;
 block|}
-comment|/// getNumImplicitDefs - Return the number of implicit defs this instruction
-comment|/// has.
+comment|/// \brief Return the number of implicit defs this instruct has.
 name|unsigned
 name|getNumImplicitDefs
 argument_list|()
@@ -1232,7 +1304,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// hasImplicitUseOfPhysReg - Return true if this instruction implicitly
+comment|/// \brief Return true if this instruction implicitly
 end_comment
 
 begin_comment
@@ -1283,7 +1355,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// hasImplicitDefOfPhysReg - Return true if this instruction implicitly
+comment|/// \brief Return true if this instruction implicitly
 end_comment
 
 begin_comment
@@ -1296,6 +1368,13 @@ name|hasImplicitDefOfPhysReg
 argument_list|(
 name|unsigned
 name|Reg
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|*
+name|MRI
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -1323,6 +1402,20 @@ operator|*
 name|ImpDefs
 operator|==
 name|Reg
+operator|||
+operator|(
+name|MRI
+operator|&&
+name|MRI
+operator|->
+name|isSubRegister
+argument_list|(
+name|Reg
+argument_list|,
+operator|*
+name|ImpDefs
+argument_list|)
+operator|)
 condition|)
 return|return
 name|true
@@ -1334,7 +1427,96 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getSchedClass - Return the scheduling class for this instruction.  The
+comment|/// \brief Return true if this instruction defines the specified physical
+end_comment
+
+begin_comment
+comment|/// register, either explicitly or implicitly.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasDefOfPhysReg
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|RI
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|NumDefs
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|i
+argument_list|)
+operator|.
+name|isReg
+argument_list|()
+operator|&&
+name|RI
+operator|.
+name|isSubRegisterEq
+argument_list|(
+name|Reg
+argument_list|,
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|i
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|hasImplicitDefOfPhysReg
+argument_list|(
+name|Reg
+argument_list|,
+operator|&
+name|RI
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return the scheduling class for this instruction.  The
 end_comment
 
 begin_comment
@@ -1347,10 +1529,6 @@ end_comment
 
 begin_comment
 comment|/// instruction.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_expr_stmt
@@ -1366,7 +1544,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getSize - Return the number of bytes in the encoding of this instruction,
+comment|/// \brief Return the number of bytes in the encoding of this instruction,
 end_comment
 
 begin_comment
@@ -1386,7 +1564,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// findFirstPredOperandIdx() - Find the index of the first operand in the
+comment|/// \brief Find the index of the first operand in the
 end_comment
 
 begin_comment

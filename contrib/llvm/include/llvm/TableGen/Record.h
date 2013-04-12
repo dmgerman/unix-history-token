@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SourceMgr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -103,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SourceMgr.h"
 end_include
 
 begin_include
@@ -584,114 +584,16 @@ return|;
 block|}
 name|public
 label|:
-comment|// These methods should only be called by subclasses of RecTy.
-comment|// baseClassOf - These virtual methods should be overloaded to return true iff
-comment|// all values of type 'RHS' can be converted to the 'this' type.
 name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
 specifier|const
-name|BitRecTy
+name|RecTy
 operator|*
-name|RHS
 argument_list|)
 decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
-name|BitsRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
-name|IntRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
-name|StringRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
-name|ListRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
-name|DagRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-specifier|const
-name|RecordRecTy
-operator|*
-name|RHS
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
+decl_stmt|;
 block|}
 empty_stmt|;
 specifier|inline
@@ -1014,90 +916,16 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const BitRecTy    *RHS
+argument|const RecTy*
 argument_list|)
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
-block|;
-comment|// BitsRecTy - 'bits<n>' - Represent a fixed number of bits
-comment|/// BitsRecTy - 'bits&lt;n&gt;' - Represent a fixed number of bits
+block|; }
+decl_stmt|;
+comment|/// BitsRecTy - 'bits<n>' - Represent a fixed number of bits
 comment|///
 name|class
 name|BitsRecTy
-operator|:
+range|:
 name|public
 name|RecTy
 block|{
@@ -1379,99 +1207,16 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const BitRecTy    *RHS
+argument|const RecTy*
 argument_list|)
 specifier|const
-block|{
-return|return
-name|Size
-operator|==
-literal|1
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|RHS
-operator|->
-name|Size
-operator|==
-name|Size
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
 comment|/// IntRecTy - 'int' - Represent an integer value of no particular size
 comment|///
 name|class
 name|IntRecTy
-operator|:
+range|:
 name|public
 name|RecTy
 block|{
@@ -1756,93 +1501,16 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const BitRecTy    *RHS
+argument|const RecTy*
 argument_list|)
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
 comment|/// StringRecTy - 'string' - Represent an string value
 comment|///
 name|class
 name|StringRecTy
-operator|:
+range|:
 name|public
 name|RecTy
 block|{
@@ -2113,96 +1781,10 @@ name|this
 argument_list|)
 return|;
 block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 expr|}
 block|;
-comment|// ListRecTy - 'list<Ty>' - Represent a list of values, all of which must be of
-comment|// the specified type.
-comment|/// ListRecTy - 'list&lt;Ty&gt;' - Represent a list of values, all of which must
-comment|/// be of the specified type.
+comment|/// ListRecTy - 'list<Ty>' - Represent a list of values, all of which must be of
+comment|/// the specified type.
 comment|///
 name|class
 name|ListRecTy
@@ -2517,95 +2099,10 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const BitRecTy    *RHS
+argument|const RecTy*
 argument_list|)
 specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|RHS
-operator|->
-name|getElementType
-argument_list|()
-operator|->
-name|typeIsConvertibleTo
-argument_list|(
-name|Ty
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
+block|; }
 block|;
 comment|/// DagRecTy - 'dag' - Represent a dag fragment
 comment|///
@@ -2880,90 +2377,6 @@ name|baseClassOf
 argument_list|(
 name|this
 argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
 return|;
 block|}
 expr|}
@@ -3275,79 +2688,7 @@ name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
-argument|const BitRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const BitsRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const IntRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const StringRecTy *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const ListRecTy   *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const DagRecTy    *RHS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|baseClassOf
-argument_list|(
-argument|const RecordRecTy *RHS
+argument|const RecTy*
 argument_list|)
 specifier|const
 block|; }
@@ -5540,6 +4881,8 @@ operator|:
 expr|enum
 name|BinaryOp
 block|{
+name|ADD
+block|,
 name|SHL
 block|,
 name|SRA
@@ -7992,6 +7335,14 @@ operator|*
 operator|>
 name|SuperClasses
 block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|SMRange
+operator|>
+name|SuperClassRanges
+block|;
 comment|// Tracks Record instances. Not owned by Record.
 name|RecordKeeper
 operator|&
@@ -8000,6 +7351,9 @@ block|;
 name|DefInit
 operator|*
 name|TheInit
+block|;
+name|bool
+name|IsAnonymous
 block|;
 name|void
 name|init
@@ -8015,22 +7369,13 @@ comment|// Constructs a record.
 name|explicit
 name|Record
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|N
+argument|const std::string&N
 argument_list|,
-name|ArrayRef
-operator|<
-name|SMLoc
-operator|>
-name|locs
+argument|ArrayRef<SMLoc> locs
 argument_list|,
-name|RecordKeeper
-operator|&
-name|records
+argument|RecordKeeper&records
+argument_list|,
+argument|bool Anonymous = false
 argument_list|)
 operator|:
 name|ID
@@ -8071,6 +7416,11 @@ name|TheInit
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|IsAnonymous
+argument_list|(
+argument|Anonymous
+argument_list|)
 block|{
 name|init
 argument_list|()
@@ -8078,19 +7428,13 @@ block|;   }
 name|explicit
 name|Record
 argument_list|(
-name|Init
-operator|*
-name|N
+argument|Init *N
 argument_list|,
-name|ArrayRef
-operator|<
-name|SMLoc
-operator|>
-name|locs
+argument|ArrayRef<SMLoc> locs
 argument_list|,
-name|RecordKeeper
-operator|&
-name|records
+argument|RecordKeeper&records
+argument_list|,
+argument|bool Anonymous = false
 argument_list|)
 operator|:
 name|ID
@@ -8125,6 +7469,11 @@ block|,
 name|TheInit
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|IsAnonymous
+argument_list|(
+argument|Anonymous
 argument_list|)
 block|{
 name|init
@@ -8181,6 +7530,13 @@ operator|.
 name|SuperClasses
 argument_list|)
 block|,
+name|SuperClassRanges
+argument_list|(
+name|O
+operator|.
+name|SuperClassRanges
+argument_list|)
+block|,
 name|TrackedRecords
 argument_list|(
 name|O
@@ -8190,7 +7546,14 @@ argument_list|)
 block|,
 name|TheInit
 argument_list|(
-argument|O.TheInit
+name|O
+operator|.
+name|TheInit
+argument_list|)
+block|,
+name|IsAnonymous
+argument_list|(
+argument|O.IsAnonymous
 argument_list|)
 block|{ }
 operator|~
@@ -8338,6 +7701,18 @@ specifier|const
 block|{
 return|return
 name|SuperClasses
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|getSuperClassRanges
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuperClassRanges
 return|;
 block|}
 name|bool
@@ -8835,6 +8210,8 @@ name|void
 name|addSuperClass
 argument_list|(
 argument|Record *R
+argument_list|,
+argument|SMRange Range
 argument_list|)
 block|{
 name|assert
@@ -8853,6 +8230,13 @@ operator|.
 name|push_back
 argument_list|(
 name|R
+argument_list|)
+block|;
+name|SuperClassRanges
+operator|.
+name|push_back
+argument_list|(
+name|Range
 argument_list|)
 block|;   }
 comment|/// resolveReferences - If there are any field references that refer to fields
@@ -8889,6 +8273,15 @@ return|return
 name|TrackedRecords
 return|;
 block|}
+name|bool
+name|isAnonymous
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsAnonymous
+return|;
+block|}
 name|void
 name|dump
 argument_list|()
@@ -8908,6 +8301,26 @@ argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
+comment|/// Return true if the named field is unset.
+name|bool
+name|isValueUnset
+argument_list|(
+argument|StringRef FieldName
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getValueInit
+argument_list|(
+name|FieldName
+argument_list|)
+operator|==
+name|UnsetInit
+operator|::
+name|get
+argument_list|()
+return|;
+block|}
 comment|/// getValueAsString - This method looks up the specified field and returns
 comment|/// its value as a string, throwing an exception if the field does not exist
 comment|/// or if the value is not a string.
@@ -9114,7 +8527,7 @@ argument|Records
 argument_list|)
 block|{}
 block|}
-block|;
+decl_stmt|;
 name|class
 name|RecordKeeper
 block|{
@@ -9125,16 +8538,16 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|Record
 operator|*
 operator|>
 name|Classes
-block|,
+operator|,
 name|Defs
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 operator|~
 name|RecordKeeper
 argument_list|()
@@ -9148,7 +8561,7 @@ operator|<
 name|std
 operator|::
 name|string
-init|,
+operator|,
 name|Record
 operator|*
 operator|>
@@ -9160,7 +8573,7 @@ name|Classes
 operator|.
 name|begin
 argument_list|()
-init|,
+operator|,
 name|E
 operator|=
 name|Classes
@@ -9189,7 +8602,7 @@ operator|<
 name|std
 operator|::
 name|string
-init|,
+operator|,
 name|Record
 operator|*
 operator|>
@@ -9201,7 +8614,7 @@ name|Defs
 operator|.
 name|begin
 argument_list|()
-init|,
+operator|,
 name|E
 operator|=
 name|Defs
@@ -9230,7 +8643,7 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|Record
 operator|*
 operator|>
@@ -9251,7 +8664,7 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|Record
 operator|*
 operator|>
@@ -9265,12 +8678,17 @@ name|Defs
 return|;
 block|}
 name|Record
-operator|*
+modifier|*
 name|getClass
 argument_list|(
-argument|const std::string&Name
-argument_list|)
 specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+decl|const
 block|{
 name|std
 operator|::
@@ -9279,7 +8697,7 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|Record
 operator|*
 operator|>
@@ -9293,7 +8711,7 @@ name|find
 argument_list|(
 name|Name
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|I
 operator|==
@@ -9310,12 +8728,17 @@ name|second
 return|;
 block|}
 name|Record
-operator|*
+modifier|*
 name|getDef
 argument_list|(
-argument|const std::string&Name
-argument_list|)
 specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+decl|const
 block|{
 name|std
 operator|::
@@ -9324,7 +8747,7 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|Record
 operator|*
 operator|>
@@ -9338,7 +8761,7 @@ name|find
 argument_list|(
 name|Name
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|I
 operator|==
@@ -9356,13 +8779,15 @@ return|;
 block|}
 name|void
 name|addClass
-argument_list|(
-argument|Record *R
-argument_list|)
+parameter_list|(
+name|Record
+modifier|*
+name|R
+parameter_list|)
 block|{
 name|bool
 name|Ins
-operator|=
+init|=
 name|Classes
 operator|.
 name|insert
@@ -9381,28 +8806,31 @@ argument_list|)
 argument_list|)
 operator|.
 name|second
-block|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|Ins
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|Ins
 operator|&&
 literal|"Class already exists"
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|addDef
-argument_list|(
-argument|Record *R
-argument_list|)
+parameter_list|(
+name|Record
+modifier|*
+name|R
+parameter_list|)
 block|{
 name|bool
 name|Ins
-operator|=
+init|=
 name|Defs
 operator|.
 name|insert
@@ -9421,25 +8849,31 @@ argument_list|)
 argument_list|)
 operator|.
 name|second
-block|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|Ins
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|Ins
 operator|&&
 literal|"Record already exists"
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// removeClass - Remove, but do not delete, the specified record.
 comment|///
 name|void
 name|removeClass
 argument_list|(
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|)
 block|{
 name|assert
@@ -9453,20 +8887,26 @@ argument_list|)
 operator|&&
 literal|"Class does not exist!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Classes
 operator|.
 name|erase
 argument_list|(
 name|Name
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// removeDef - Remove, but do not delete, the specified record.
 comment|///
 name|void
 name|removeDef
 argument_list|(
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|)
 block|{
 name|assert
@@ -9480,14 +8920,15 @@ argument_list|)
 operator|&&
 literal|"Def does not exist!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Defs
 operator|.
 name|erase
 argument_list|(
 name|Name
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// High-level helper methods, useful for tablegen backends...
 comment|/// getAllDerivedDefinitions - This method returns all concrete definitions
@@ -9505,16 +8946,29 @@ argument_list|(
 argument|const std::string&ClassName
 argument_list|)
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|; }
-block|;
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// LessRecord - Sorting predicate to sort record pointers by name.
+end_comment
+
+begin_comment
 comment|///
-block|struct
+end_comment
+
+begin_struct
+struct|struct
 name|LessRecord
 block|{
 name|bool
@@ -9525,7 +8979,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-expr|,
+operator|,
 specifier|const
 name|Record
 operator|*
@@ -9553,13 +9007,28 @@ operator|<
 literal|0
 return|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// LessRecordByID - Sorting predicate to sort record pointers by their
+end_comment
+
+begin_comment
 comment|/// unique ID. If you just need a deterministic order, use this, since it
+end_comment
+
+begin_comment
 comment|/// just compares two `unsigned`; the other sorting predicates require
+end_comment
+
+begin_comment
 comment|/// string manipulation.
-block|struct
+end_comment
+
+begin_struct
+struct|struct
 name|LessRecordByID
 block|{
 name|bool
@@ -9570,7 +9039,7 @@ specifier|const
 name|Record
 operator|*
 name|LHS
-expr|,
+operator|,
 specifier|const
 name|Record
 operator|*
@@ -9590,12 +9059,24 @@ name|getID
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// LessRecordFieldName - Sorting predicate to sort record pointers by their
+end_comment
+
+begin_comment
 comment|/// name field.
+end_comment
+
+begin_comment
 comment|///
-block|struct
+end_comment
+
+begin_struct
+struct|struct
 name|LessRecordFieldName
 block|{
 name|bool
@@ -9606,7 +9087,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-expr|,
+operator|,
 specifier|const
 name|Record
 operator|*
@@ -9630,8 +9111,11 @@ literal|"Name"
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
 name|raw_ostream
 operator|&
 name|operator
@@ -9640,17 +9124,26 @@ operator|(
 name|raw_ostream
 operator|&
 name|OS
-expr|,
+operator|,
 specifier|const
 name|RecordKeeper
 operator|&
 name|RK
 operator|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// QualifyName - Return an Init with a qualifier prefix referring
+end_comment
+
+begin_comment
 comment|/// to CurRec's name.
+end_comment
+
+begin_decl_stmt
 name|Init
-operator|*
+modifier|*
 name|QualifyName
 argument_list|(
 name|Record
@@ -9672,39 +9165,49 @@ name|string
 operator|&
 name|Scoper
 argument_list|)
-block|;
-comment|/// QualifyName - Return an Init with a qualifier prefix referring
-comment|/// to CurRec's name.
-name|Init
-operator|*
-name|QualifyName
-argument_list|(
-name|Record
-operator|&
-name|CurRec
-argument_list|,
-name|MultiClass
-operator|*
-name|CurMultiClass
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Scoper
-argument_list|)
-block|;  }
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// QualifyName - Return an Init with a qualifier prefix referring
+end_comment
+
+begin_comment
+comment|/// to CurRec's name.
+end_comment
+
+begin_decl_stmt
+name|Init
+modifier|*
+name|QualifyName
+argument_list|(
+name|Record
+operator|&
+name|CurRec
+argument_list|,
+name|MultiClass
+operator|*
+name|CurMultiClass
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Scoper
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

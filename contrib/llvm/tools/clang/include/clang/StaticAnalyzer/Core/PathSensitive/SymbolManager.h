@@ -96,13 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -114,7 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -378,8 +378,6 @@ modifier|*
 name|SymbolRef
 typedef|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|SymbolRef
