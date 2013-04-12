@@ -1186,7 +1186,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avgfpdir %d\tavgfilesize %d\n"
+literal|"metaspace %jd\tavgfpdir %d\tavgfilesize %d\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_metaspace
 argument_list|,
 name|afs
 operator|.

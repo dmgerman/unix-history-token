@@ -1458,6 +1458,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MNTK_UNMAPPED_BUFS
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define
@@ -2067,6 +2074,17 @@ end_define
 
 begin_comment
 comment|/* supports delegated administration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFCF_SBDRY
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* defer stop requests */
 end_comment
 
 begin_typedef
@@ -2925,11 +2943,32 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|VFS_PROLOGUE
+parameter_list|(
+name|MP
+parameter_list|)
+value|do {					\ 	int _enable_stops;						\ 									\ 	_enable_stops = ((MP) != NULL&&				\ 	    ((MP)->mnt_vfc->vfc_flags& VFCF_SBDRY)&& sigdeferstop())
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_EPILOGUE
+parameter_list|(
+name|MP
+parameter_list|)
+define|\
+value|if (_enable_stops)						\ 		sigallowstop();						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_MOUNT
 parameter_list|(
 name|MP
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_mount)(MP)
+value|({						\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_mount)(MP);				\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -2941,7 +2980,7 @@ name|MP
 parameter_list|,
 name|FORCE
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCE)
+value|({					\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_unmount)(MP, FORCE);			\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -2955,8 +2994,7 @@ name|FLAGS
 parameter_list|,
 name|VPP
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP)
+value|({					\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP);		\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -2972,8 +3010,7 @@ name|U
 parameter_list|,
 name|A
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A)
+value|({					\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A);		\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -2985,7 +3022,7 @@ name|MP
 parameter_list|,
 name|SBP
 parameter_list|)
-value|__vfs_statfs((MP), (SBP))
+value|({						\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = __vfs_statfs((MP), (SBP));				\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -2997,7 +3034,7 @@ name|MP
 parameter_list|,
 name|WAIT
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT)
+value|({						\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_sync)(MP, WAIT);			\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -3013,8 +3050,7 @@ name|FLAGS
 parameter_list|,
 name|VPP
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_vget)(MP, INO, FLAGS, VPP)
+value|({				\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_vget)(MP, INO, FLAGS, VPP);		\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -3030,8 +3066,7 @@ name|FLAGS
 parameter_list|,
 name|VPP
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, FLAGS, VPP)
+value|({				\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, FLAGS, VPP);	\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -3051,8 +3086,7 @@ name|NUMSEC
 parameter_list|,
 name|SEC
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_checkexp)(MP, NAM, EXFLG, CRED, NUMSEC, SEC)
+value|({		\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_checkexp)(MP, NAM, EXFLG, CRED, NUMSEC,\ 	    SEC);							\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -3070,8 +3104,7 @@ name|NS
 parameter_list|,
 name|N
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N)
+value|({				\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N);	\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -3085,8 +3118,7 @@ name|OP
 parameter_list|,
 name|REQ
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ)
+value|({					\ 	int _rc;							\ 									\ 	VFS_PROLOGUE(MP);						\ 	_rc = (*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ);			\ 	VFS_EPILOGUE(MP);						\ 	_rc; })
 end_define
 
 begin_define
@@ -3096,8 +3128,7 @@ name|VFS_SUSP_CLEAN
 parameter_list|(
 name|MP
 parameter_list|)
-define|\
-value|({if (*(MP)->mnt_op->vfs_susp_clean != NULL)		\ 	       (*(MP)->mnt_op->vfs_susp_clean)(MP); })
+value|do {						\ 	if (*(MP)->mnt_op->vfs_susp_clean != NULL) {			\ 		VFS_PROLOGUE(MP);					\ 		(*(MP)->mnt_op->vfs_susp_clean)(MP);			\ 		VFS_EPILOGUE(MP);					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -3109,8 +3140,7 @@ name|MP
 parameter_list|,
 name|VP
 parameter_list|)
-define|\
-value|({if (*(MP)->mnt_op->vfs_reclaim_lowervp != NULL)	\ 		(*(MP)->mnt_op->vfs_reclaim_lowervp)((MP), (VP)); })
+value|do {				\ 	if (*(MP)->mnt_op->vfs_reclaim_lowervp != NULL) {		\ 		VFS_PROLOGUE(MP);					\ 		(*(MP)->mnt_op->vfs_reclaim_lowervp)((MP), (VP));	\ 		VFS_EPILOGUE(MP);					\ 	}								\ } while (0)
 end_define
 
 begin_define

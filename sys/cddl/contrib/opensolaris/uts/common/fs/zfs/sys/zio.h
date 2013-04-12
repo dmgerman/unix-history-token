@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -215,9 +215,12 @@ name|ZIO_COMPRESS_GZIP_9
 block|,
 name|ZIO_COMPRESS_ZLE
 block|,
+name|ZIO_COMPRESS_LZ4
+block|,
 name|ZIO_COMPRESS_FUNCTIONS
 block|}
 enum|;
+comment|/* N.B. when altering this value, also change BOOTFS_COMPRESS_VALID below */
 define|#
 directive|define
 name|ZIO_COMPRESS_ON_VALUE
@@ -233,7 +236,7 @@ parameter_list|(
 name|compress
 parameter_list|)
 define|\
-value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	((compress) == ZIO_COMPRESS_ON&&		\ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) ||	\ 	(compress) == ZIO_COMPRESS_OFF)
+value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	((compress) == ZIO_COMPRESS_ON&&		\ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) ||	\ 	(compress) == ZIO_COMPRESS_OFF)
 define|#
 directive|define
 name|ZIO_FAILURE_MODE_WAIT
@@ -1107,6 +1110,9 @@ name|io_offset
 decl_stmt|;
 name|uint64_t
 name|io_deadline
+decl_stmt|;
+name|hrtime_t
+name|io_timestamp
 decl_stmt|;
 name|avl_node_t
 name|io_offset_node
@@ -2212,6 +2218,15 @@ function_decl|;
 specifier|extern
 name|void
 name|zio_handle_ignored_writes
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|zio_handle_io_delay
 parameter_list|(
 name|zio_t
 modifier|*

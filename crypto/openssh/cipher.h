@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.37 2009/01/26 09:58:15 markus Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.39 2013/01/08 18:49:04 markus Exp $ */
 end_comment
 
 begin_comment
@@ -188,6 +188,9 @@ block|{
 name|int
 name|plaintext
 decl_stmt|;
+name|int
+name|encrypt
+decl_stmt|;
 name|EVP_CIPHER_CTX
 name|evp
 decl_stmt|;
@@ -304,6 +307,10 @@ name|u_char
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -351,6 +358,28 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|cipher_keylen
+parameter_list|(
+specifier|const
+name|Cipher
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|cipher_authlen
+parameter_list|(
+specifier|const
+name|Cipher
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|cipher_ivlen
 parameter_list|(
 specifier|const
 name|Cipher

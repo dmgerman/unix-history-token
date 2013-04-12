@@ -1829,6 +1829,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return true if this platform can run the "bzip2" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canBzip2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this platform can run the "grzip" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canGrzip
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return true if this platform can run the "gzip" program. */
 end_comment
 
@@ -1842,12 +1868,79 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return true if this platform can run the "gunzip" program. */
+comment|/* Return true if this platform can run the specified command. */
 end_comment
 
 begin_function_decl
 name|int
-name|canGunzip
+name|canRunCommand
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this platform can run the "lrzip" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canLrzip
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this platform can run the "lzip" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canLzip
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this platform can run the "lzma" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canLzma
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this platform can run the "lzop" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canLzop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return true if this platform can run the "xz" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canXz
 parameter_list|(
 name|void
 parameter_list|)
@@ -1918,6 +2011,22 @@ name|extract_reference_file
 parameter_list|(
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Extracts a list of files to the current directory.  * List must be NULL terminated.  */
+end_comment
+
+begin_function_decl
+name|void
+name|extract_reference_files
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

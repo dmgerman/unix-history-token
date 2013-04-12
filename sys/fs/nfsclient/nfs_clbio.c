@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -558,7 +564,7 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the requested page is partially valid, just return it and 	 * allow the pager to zero-out the blanks.  Partially valid pages 	 * can only occur at the file EOF. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -626,7 +632,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -637,7 +643,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -798,7 +804,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -852,7 +858,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -872,7 +878,7 @@ name|uio
 operator|.
 name|uio_resid
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1006,7 +1012,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2346,11 +2352,11 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|&
-operator|(
-name|biosize
 operator|-
-literal|1
+operator|(
+name|lbn
+operator|*
+name|biosize
 operator|)
 expr_stmt|;
 comment|/* 		 * Start the read ahead(s), as required. 		 */
@@ -3485,7 +3491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The NFS write path cannot handle iovecs with len> 1. So we need to   * break up iovecs accordingly (restricting them to wsize).  * For the SYNC case, we can do this with 1 copy (user buffer -> mbuf).   * For the ASYNC case, 2 copies are needed. The first a copy from the   * user buffer to a staging buffer and then a second copy from the staging  * buffer to mbufs. This can be optimized by copying from the user buffer  * directly into mbufs and passing the chain down, but that requires a   * fair amount of re-working of the relevant codepaths (and can be done  * later).  */
+comment|/*  * The NFS write path cannot handle iovecs with len> 1. So we need to  * break up iovecs accordingly (restricting them to wsize).  * For the SYNC case, we can do this with 1 copy (user buffer -> mbuf).  * For the ASYNC case, 2 copies are needed. The first a copy from the  * user buffer to a staging buffer and then a second copy from the staging  * buffer to mbufs. This can be optimized by copying from the user buffer  * directly into mbufs and passing the chain down, but that requires a  * fair amount of re-working of the relevant codepaths (and can be done  * later).  */
 end_comment
 
 begin_function
@@ -3816,7 +3822,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* 		 * Break up the write into blocksize chunks and hand these 		 * over to nfsiod's for write back. 		 * Unfortunately, this incurs a copy of the data. Since  		 * the user could modify the buffer before the write is  		 * initiated. 		 *  		 * The obvious optimization here is that one of the 2 copies 		 * in the async write path can be eliminated by copying the 		 * data here directly into mbufs and passing the mbuf chain 		 * down. But that will require a fair amount of re-working 		 * of the code and can be done if there's enough interest 		 * in NFS directio access. 		 */
+comment|/* 		 * Break up the write into blocksize chunks and hand these 		 * over to nfsiod's for write back. 		 * Unfortunately, this incurs a copy of the data. Since 		 * the user could modify the buffer before the write is 		 * initiated. 		 * 		 * The obvious optimization here is that one of the 2 copies 		 * in the async write path can be eliminated by copying the 		 * data here directly into mbufs and passing the mbuf chain 		 * down. But that will require a fair amount of re-working 		 * of the code and can be done if there's enough interest 		 * in NFS directio access. 		 */
 while|while
 condition|(
 name|uiop
@@ -5021,11 +5027,11 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
-operator|&
-operator|(
-name|biosize
 operator|-
-literal|1
+operator|(
+name|lbn
+operator|*
+name|biosize
 operator|)
 expr_stmt|;
 name|n
@@ -6017,7 +6023,7 @@ name|bn
 argument_list|,
 name|size
 argument_list|,
-name|NFS_PCATCH
+name|PCATCH
 argument_list|,
 literal|0
 argument_list|,
@@ -6233,7 +6239,7 @@ condition|)
 block|{
 name|slpflag
 operator|=
-name|NFS_PCATCH
+name|PCATCH
 expr_stmt|;
 name|slptimeo
 operator|=
@@ -6303,7 +6309,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vp
 operator|->
@@ -6327,7 +6333,7 @@ argument_list|,
 name|OBJPC_SYNC
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vp
 operator|->
@@ -6336,7 +6342,7 @@ operator|.
 name|bo_object
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the page clean was interrupted, fail the invalidation. 		 * Not doing so, we run the risk of losing dirty pages in the  		 * vinvalbuf() call below. 		 */
+comment|/* 		 * If the page clean was interrupted, fail the invalidation. 		 * Not doing so, we run the risk of losing dirty pages in the 		 * vinvalbuf() call below. 		 */
 if|if
 condition|(
 name|intrflg
@@ -6574,7 +6580,7 @@ name|NFSMNT_INT
 condition|)
 name|slpflag
 operator|=
-name|NFS_PCATCH
+name|PCATCH
 expr_stmt|;
 name|gotiod
 operator|=
@@ -6794,7 +6800,7 @@ if|if
 condition|(
 name|slpflag
 operator|==
-name|NFS_PCATCH
+name|PCATCH
 condition|)
 block|{
 name|slpflag
@@ -8159,7 +8165,7 @@ name|B_CLUSTEROK
 operator|)
 expr_stmt|;
 block|}
-comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * EIO is returned by ncl_writerpc() to indicate a recoverable 		 * write error and is handled as above, except that 		 * B_EINTR isn't set. One cause of this is a stale stateid 		 * error for the RPC that indicates recovery is required, 		 * when called with called_from_strategy != 0. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 * 		 * The logic below breaks up errors into recoverable and  		 * unrecoverable. For the former, we clear B_INVAL|B_NOCACHE 		 * and keep the buffer around for potential write retries. 		 * For the latter (eg ESTALE), we toss the buffer away (B_INVAL) 		 * and save the error in the nfsnode. This is less than ideal  		 * but necessary. Keeping such buffers around could potentially 		 * cause buffer exhaustion eventually (they can never be written 		 * out, so will get constantly be re-dirtied). It also causes 		 * all sorts of vfs panics. For non-recoverable write errors,  		 * also invalidate the attrcache, so we'll be forced to go over 		 * the wire for this object, returning an error to user on next 		 * call (most of the time). 		 */
+comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * EIO is returned by ncl_writerpc() to indicate a recoverable 		 * write error and is handled as above, except that 		 * B_EINTR isn't set. One cause of this is a stale stateid 		 * error for the RPC that indicates recovery is required, 		 * when called with called_from_strategy != 0. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 * 		 * The logic below breaks up errors into recoverable and 		 * unrecoverable. For the former, we clear B_INVAL|B_NOCACHE 		 * and keep the buffer around for potential write retries. 		 * For the latter (eg ESTALE), we toss the buffer away (B_INVAL) 		 * and save the error in the nfsnode. This is less than ideal 		 * but necessary. Keeping such buffers around could potentially 		 * cause buffer exhaustion eventually (they can never be written 		 * out, so will get constantly be re-dirtied). It also causes 		 * all sorts of vfs panics. For non-recoverable write errors, 		 * also invalidate the attrcache, so we'll be forced to go over 		 * the wire for this object, returning an error to user on next 		 * call (most of the time). 		 */
 if|if
 condition|(
 name|error
@@ -8494,7 +8500,7 @@ decl_stmt|;
 name|int
 name|bufsize
 decl_stmt|;
-comment|/* 		 * vtruncbuf() doesn't get the buffer overlapping the  		 * truncation point.  We may have a B_DELWRI and/or B_CACHE 		 * buffer that now needs to be truncated. 		 */
+comment|/* 		 * vtruncbuf() doesn't get the buffer overlapping the 		 * truncation point.  We may have a B_DELWRI and/or B_CACHE 		 * buffer that now needs to be truncated. 		 */
 name|error
 operator|=
 name|vtruncbuf
@@ -8517,11 +8523,11 @@ expr_stmt|;
 name|bufsize
 operator|=
 name|nsize
-operator|&
-operator|(
-name|biosize
 operator|-
-literal|1
+operator|(
+name|lbn
+operator|*
+name|biosize
 operator|)
 expr_stmt|;
 name|bp

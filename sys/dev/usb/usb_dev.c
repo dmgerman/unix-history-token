@@ -1062,7 +1062,11 @@ operator|&
 name|usb_ref_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We need to grab the sx-lock before grabbing the 		 * FIFO refs to avoid deadlock at detach! 		 */
+comment|/* 		 * We need to grab the enumeration SX-lock before 		 * grabbing the FIFO refs to avoid deadlock at detach! 		 */
+name|crd
+operator|->
+name|do_unlock
+operator|=
 name|usbd_enum_lock
 argument_list|(
 name|cpd
@@ -1333,9 +1337,8 @@ if|if
 condition|(
 name|crd
 operator|->
-name|is_uref
+name|do_unlock
 condition|)
-block|{
 name|usbd_enum_unlock
 argument_list|(
 name|cpd
@@ -1343,6 +1346,13 @@ operator|->
 name|udev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|crd
+operator|->
+name|is_uref
+condition|)
+block|{
 if|if
 condition|(
 operator|--
@@ -1484,7 +1494,7 @@ if|if
 condition|(
 name|crd
 operator|->
-name|is_uref
+name|do_unlock
 condition|)
 name|usbd_enum_unlock
 argument_list|(

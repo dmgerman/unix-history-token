@@ -102,11 +102,21 @@ directive|include
 file|"archive_write_disk_private.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_POSIX_ACL
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|ACL_TYPE_NFS4
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Default empty function body to satisfy mainline code. */

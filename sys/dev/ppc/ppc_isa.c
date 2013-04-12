@@ -535,8 +535,6 @@ decl_stmt|,
 name|ctr_sav
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -716,12 +714,6 @@ argument_list|(
 name|ppc
 argument_list|)
 expr_stmt|;
-comment|/* enter splhigh() not to be preempted 	 * by the dma interrupt, we may miss 	 * the wakeup otherwise 	 */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|ppc
 operator|->
 name|ppc_dmastat
@@ -818,11 +810,6 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error

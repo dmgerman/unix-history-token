@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -2080,7 +2086,7 @@ block|{
 comment|/* 			 * Don't do readahead if this is the end of the file. 			 */
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -2089,6 +2095,8 @@ argument_list|,
 name|size
 argument_list|,
 name|NOCRED
+argument_list|,
+name|GB_UNMAPPED
 argument_list|,
 operator|&
 name|bp
@@ -2136,6 +2144,8 @@ name|uio_resid
 argument_list|,
 name|seqcount
 argument_list|,
+name|GB_UNMAPPED
+argument_list|,
 operator|&
 name|bp
 argument_list|)
@@ -2164,7 +2174,7 @@ argument_list|)
 decl_stmt|;
 name|error
 operator|=
-name|breadn
+name|breadn_flags
 argument_list|(
 name|vp
 argument_list|,
@@ -2182,6 +2192,8 @@ literal|1
 argument_list|,
 name|NOCRED
 argument_list|,
+name|GB_UNMAPPED
+argument_list|,
 operator|&
 name|bp
 argument_list|)
@@ -2192,7 +2204,7 @@ block|{
 comment|/* 			 * Failing all of the above, just read what the 			 * user asked for. Interestingly, the same as 			 * the first option above. 			 */
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -2201,6 +2213,8 @@ argument_list|,
 name|size
 argument_list|,
 name|NOCRED
+argument_list|,
+name|GB_UNMAPPED
 argument_list|,
 operator|&
 name|bp
@@ -2262,6 +2276,19 @@ operator|=
 name|size
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_UNMAPPED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|vn_io_fault_uiomove
@@ -2284,6 +2311,28 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|vn_io_fault_pgmove
+argument_list|(
+name|bp
+operator|->
+name|b_pages
+argument_list|,
+name|blkoffset
+argument_list|,
+operator|(
+name|int
+operator|)
+name|xfersize
+argument_list|,
+name|uio
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -2817,6 +2866,10 @@ name|flags
 operator||=
 name|IO_SYNC
 expr_stmt|;
+name|flags
+operator||=
+name|BA_UNMAPPED
+expr_stmt|;
 for|for
 control|(
 name|error
@@ -3054,6 +3107,19 @@ name|xfersize
 operator|=
 name|size
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_UNMAPPED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|vn_io_fault_uiomove
@@ -3076,6 +3142,28 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|vn_io_fault_pgmove
+argument_list|(
+name|bp
+operator|->
+name|b_pages
+argument_list|,
+name|blkoffset
+argument_list|,
+operator|(
+name|int
+operator|)
+name|xfersize
+argument_list|,
+name|uio
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * If the buffer is not already filled and we encounter an 		 * error while trying to fill it, we have to clear out any 		 * garbage data from the pages instantiated for the buffer. 		 * If we do not, a failed uiomove() during a write can leave 		 * the prior contents of the pages exposed to a userland mmap. 		 * 		 * Note that we need only clear buffers with a transfer size 		 * equal to the block size because buffers with a shorter 		 * transfer size were cleared above by the call to UFS_BALLOC() 		 * with the BA_CLRBUF flag set. 		 * 		 * If the source region for uiomove identically mmaps the 		 * buffer, uiomove() performed the NOP copy, and the buffer 		 * content remains valid because the page fault handler 		 * validated the pages. 		 */
 if|if
 condition|(
@@ -3223,6 +3311,8 @@ operator|->
 name|i_size
 argument_list|,
 name|seqcount
+argument_list|,
+name|GB_UNMAPPED
 argument_list|)
 expr_stmt|;
 block|}
@@ -3484,7 +3574,7 @@ name|a_reqpage
 index|]
 expr_stmt|;
 comment|/* 	 * if ANY DEV_BSIZE blocks are valid on a large filesystem block, 	 * then the entire page is valid.  Since the page may be mapped, 	 * user programs might reference data beyond the actual end of file 	 * occuring within the page.  We have to zero that data. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|mreq
 operator|->
@@ -3568,7 +3658,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mreq
 operator|->
@@ -3579,7 +3669,7 @@ return|return
 name|VM_PAGER_OK
 return|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|mreq
 operator|->

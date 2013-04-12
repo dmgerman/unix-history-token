@@ -598,6 +598,11 @@ name|dtsd_fmtdata
 decl_stmt|;
 comment|/* type-specific output data */
 name|void
+modifier|*
+name|dtsd_strdata
+decl_stmt|;
+comment|/* type-specific string data */
+name|void
 function_decl|(
 modifier|*
 name|dtsd_callback
@@ -1022,6 +1027,26 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+comment|/*  * Type-specific output printing  *  * The print() action will associate a string data record that is actually the  * fully-qualified type name of the data traced by the DIFEXPR action.  This is  * stored in the same 'format' record from the kernel, but we know by virtue of  * the fact that the action is still DIFEXPR that it is actually a reference to  * plain string data.  */
+specifier|extern
+name|int
+name|dtrace_print
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|caddr_t
 parameter_list|,
 name|size_t
 parameter_list|)

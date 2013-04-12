@@ -585,6 +585,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/_vm_radix.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1775,7 +1781,8 @@ decl_stmt|;
 comment|/* KVA of page director pointer 						   table */
 endif|#
 directive|endif
-name|vm_page_t
+name|struct
+name|vm_radix
 name|pm_root
 decl_stmt|;
 comment|/* spare page table pages */
@@ -1918,7 +1925,7 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|pv_entry
 argument_list|)
-name|pv_list
+name|pv_next
 expr_stmt|;
 block|}
 typedef|*

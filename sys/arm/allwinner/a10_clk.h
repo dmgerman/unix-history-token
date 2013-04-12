@@ -508,6 +508,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_AHB_GATING_EHCI0
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_AHB_GATING_EHCI1
 value|(1<< 3)
 end_define

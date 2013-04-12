@@ -67,6 +67,24 @@ name|tsc_perf_stat
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|smp_tsc
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|i8254_init

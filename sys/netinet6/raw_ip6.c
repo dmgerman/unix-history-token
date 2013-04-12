@@ -715,6 +715,11 @@ literal|0
 condition|)
 continue|continue;
 block|}
+name|INP_RLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|in6p
@@ -765,11 +770,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|INP_RLOCK
-argument_list|(
-name|in6p
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If this raw socket has multicast state, and we 		 * have received a multicast, check if this socket 		 * should receive it, as multicast filtering is now 		 * the responsibility of the transport layer. 		 */
 if|if
 condition|(
@@ -1098,10 +1098,10 @@ operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-name|V_ip6stat
-operator|.
+name|IP6STAT_DEC
+argument_list|(
 name|ip6s_delivered
-operator|--
+argument_list|)
 expr_stmt|;
 comment|/* Do not inject data into pcb. */
 name|INP_RUNLOCK
@@ -1283,10 +1283,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|V_ip6stat
-operator|.
+name|IP6STAT_DEC
+argument_list|(
 name|ip6s_delivered
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
 return|return

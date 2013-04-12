@@ -241,6 +241,9 @@ decl_stmt|;
 name|usb_error_t
 name|err
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
 if|if
 condition|(
 name|dev
@@ -319,6 +322,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Protect scratch area */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 name|temp_p
 operator|=
 operator|(
@@ -327,19 +338,15 @@ operator|*
 operator|)
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
-index|[
-literal|0
-index|]
 operator|.
 name|data
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|err
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* try to get the interface string ! */
@@ -357,9 +364,9 @@ sizeof|sizeof
 argument_list|(
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
+operator|.
+name|data
 argument_list|)
 argument_list|,
 name|iface
@@ -373,6 +380,8 @@ block|}
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* use default description */
@@ -386,13 +395,22 @@ sizeof|sizeof
 argument_list|(
 name|udev
 operator|->
-name|bus
-operator|->
 name|scratch
+operator|.
+name|data
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
+name|usbd_enum_unlock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 name|device_set_desc_copy
 argument_list|(
 name|dev

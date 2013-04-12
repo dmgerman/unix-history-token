@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2196,6 +2196,39 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
+name|dmu_object_info_t
+name|doi
+decl_stmt|;
+name|ASSERT0
+argument_list|(
+name|dmu_object_info
+argument_list|(
+name|bpo
+operator|->
+name|bpo_os
+argument_list|,
+name|bpo
+operator|->
+name|bpo_phys
+operator|->
+name|bpo_subobjs
+argument_list|,
+operator|&
+name|doi
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|doi
+operator|.
+name|doi_type
+argument_list|,
+operator|==
+argument_list|,
+name|DMU_OT_BPOBJ_SUBOBJ
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -2329,6 +2362,23 @@ operator|&
 name|subdb
 argument_list|,
 literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Make sure that we are not asking dmu_write() 			 * to write more data than we have in our buffer. 			 */
+name|VERIFY3U
+argument_list|(
+name|subdb
+operator|->
+name|db_size
+argument_list|,
+operator|>=
+argument_list|,
+name|numsubsub
+operator|*
+sizeof|sizeof
+argument_list|(
+name|subobj
 argument_list|)
 argument_list|)
 expr_stmt|;

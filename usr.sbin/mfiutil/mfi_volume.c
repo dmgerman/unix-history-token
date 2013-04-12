@@ -1666,7 +1666,7 @@ name|current_cache_policy
 condition|)
 name|printf
 argument_list|(
-literal|"Cache Disabled Due to Dead Battery\n"
+literal|"Cache disabled due to dead battery or ongoing battery relearn\n"
 argument_list|)
 expr_stmt|;
 name|error

@@ -301,6 +301,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|size_t
+name|vesa_vmem_max
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 modifier|*
 name|vesa_bios
@@ -4579,6 +4586,16 @@ endif|#
 directive|endif
 continue|continue;
 block|}
+if|if
+condition|(
+name|bsize
+operator|>
+name|vesa_vmem_max
+condition|)
+name|vesa_vmem_max
+operator|=
+name|bsize
+expr_stmt|;
 comment|/* expand the array if necessary */
 if|if
 condition|(
@@ -6494,13 +6511,7 @@ name|adp
 operator|->
 name|va_buffer
 argument_list|,
-name|vesa_adp_info
-operator|->
-name|v_memsize
-operator|*
-literal|64
-operator|*
-literal|1024
+name|vesa_vmem_max
 argument_list|)
 expr_stmt|;
 comment|/*  			 * Once (*prevvidsw->get_info)() succeeded,  			 * (*prevvidsw->set_mode)() below won't fail... 			 */
@@ -6673,13 +6684,7 @@ name|adp
 operator|->
 name|va_buffer
 argument_list|,
-name|vesa_adp_info
-operator|->
-name|v_memsize
-operator|*
-literal|64
-operator|*
-literal|1024
+name|vesa_vmem_max
 argument_list|)
 expr_stmt|;
 if|#
@@ -6868,13 +6873,7 @@ name|info
 operator|.
 name|vi_buffer
 argument_list|,
-name|vesa_adp_info
-operator|->
-name|v_memsize
-operator|*
-literal|64
-operator|*
-literal|1024
+name|vesa_vmem_max
 argument_list|,
 name|PAT_WRITE_COMBINING
 argument_list|)

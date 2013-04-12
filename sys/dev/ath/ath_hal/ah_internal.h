@@ -1466,6 +1466,10 @@ name|u_int
 name|ah_tpScale
 decl_stmt|;
 comment|/* tx power scale factor */
+name|u_int16_t
+name|ah_extraTxPow
+decl_stmt|;
+comment|/* low rates extra-txpower */
 name|uint32_t
 name|ah_11nCompat
 decl_stmt|;

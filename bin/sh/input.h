@@ -31,6 +31,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|parsenextc
@@ -146,6 +147,7 @@ begin_function_decl
 name|void
 name|setinputstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

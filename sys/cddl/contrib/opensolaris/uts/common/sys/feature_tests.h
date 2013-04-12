@@ -19,13 +19,6 @@ directive|define
 name|_SYS_FEATURE_TESTS_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -563,6 +556,12 @@ argument_list|(
 name|_STDC_C99
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 define|#
 directive|define
 name|_RESTRICT_KYWD

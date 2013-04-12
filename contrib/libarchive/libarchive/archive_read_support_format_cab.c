@@ -1641,6 +1641,8 @@ name|archive_read_format_cab_read_data
 argument_list|,
 name|archive_read_format_cab_read_data_skip
 argument_list|,
+name|NULL
+argument_list|,
 name|archive_read_format_cab_cleanup
 argument_list|)
 expr_stmt|;
@@ -2291,7 +2293,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|cab_strnlen
 parameter_list|(
 specifier|const
@@ -2347,6 +2349,9 @@ return|;
 comment|/* invalid */
 return|return
 operator|(
+operator|(
+name|ssize_t
+operator|)
 name|i
 operator|)
 return|;
@@ -2713,6 +2718,9 @@ name|bytes
 decl_stmt|,
 name|used
 decl_stmt|;
+name|ssize_t
+name|len
+decl_stmt|;
 name|int64_t
 name|skip
 decl_stmt|;
@@ -2720,8 +2728,6 @@ name|int
 name|err
 decl_stmt|,
 name|i
-decl_stmt|,
-name|len
 decl_stmt|;
 name|int
 name|cur_folder
@@ -5192,7 +5198,7 @@ name|char
 modifier|*
 name|b
 decl_stmt|;
-name|int
+name|unsigned
 name|u32num
 decl_stmt|;
 name|uint32_t
@@ -5200,6 +5206,9 @@ name|sum
 decl_stmt|;
 name|u32num
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|bytes
 operator|/
 literal|4
@@ -5212,13 +5221,16 @@ name|b
 operator|=
 name|p
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
+name|u32num
+operator|>
+literal|0
+condition|;
 operator|--
 name|u32num
-operator|>=
-literal|0
-condition|)
+control|)
 block|{
 name|sum
 operator|^=
@@ -7222,6 +7234,9 @@ name|stream
 operator|.
 name|avail_in
 operator|=
+operator|(
+name|uInt
+operator|)
 name|bytes_avail
 expr_stmt|;
 name|cab
@@ -7347,6 +7362,9 @@ return|;
 block|}
 name|mszip
 operator|-=
+operator|(
+name|int
+operator|)
 name|bytes_avail
 expr_stmt|;
 continue|continue;
@@ -9354,6 +9372,9 @@ block|}
 else|else
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|bytes_avail
 operator|)
 return|;
@@ -9663,6 +9684,12 @@ operator|->
 name|comptype
 operator|==
 name|COMPTYPE_NONE
+operator|&&
+name|cab
+operator|->
+name|entry_cfdata
+operator|!=
+name|NULL
 condition|)
 name|cab
 operator|->
@@ -10793,9 +10820,17 @@ name|value
 decl_stmt|;
 name|cp
 operator|=
+call|(
+name|int32_t
+call|)
+argument_list|(
 name|offset
 operator|+
+operator|(
+name|uint32_t
+operator|)
 name|i
+argument_list|)
 expr_stmt|;
 name|value
 operator|=
@@ -12824,6 +12859,9 @@ return|;
 block|}
 name|l
 operator|=
+operator|(
+name|int
+operator|)
 name|ds
 operator|->
 name|block_bytes_avail
@@ -13649,7 +13687,7 @@ decl_stmt|;
 name|unsigned
 name|char
 modifier|*
-name|outp
+name|noutp
 init|=
 name|strm
 operator|->
@@ -13660,7 +13698,7 @@ name|char
 modifier|*
 name|endp
 init|=
-name|outp
+name|noutp
 operator|+
 name|strm
 operator|->
@@ -13918,7 +13956,7 @@ name|avail_out
 operator|=
 name|endp
 operator|-
-name|outp
+name|noutp
 expr_stmt|;
 return|return
 operator|(
@@ -13928,7 +13966,7 @@ return|;
 block|}
 if|if
 condition|(
-name|outp
+name|noutp
 operator|>=
 name|endp
 condition|)
@@ -14058,7 +14096,7 @@ name|w_mask
 expr_stmt|;
 comment|/* Store the decoded code to output buffer. */
 operator|*
-name|outp
+name|noutp
 operator|++
 operator|=
 name|c
@@ -14642,7 +14680,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|outp
+name|noutp
 operator|+
 name|l
 operator|>=
@@ -14650,9 +14688,14 @@ name|endp
 condition|)
 name|l
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|endp
 operator|-
-name|outp
+name|noutp
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -14698,7 +14741,7 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|outp
+name|noutp
 argument_list|,
 name|s
 argument_list|,
@@ -14735,7 +14778,7 @@ condition|;
 name|li
 operator|++
 control|)
-name|outp
+name|noutp
 index|[
 name|li
 index|]
@@ -14751,7 +14794,7 @@ name|li
 index|]
 expr_stmt|;
 block|}
-name|outp
+name|noutp
 operator|+=
 name|l
 expr_stmt|;
@@ -14793,7 +14836,7 @@ name|l
 expr_stmt|;
 if|if
 condition|(
-name|outp
+name|noutp
 operator|>=
 name|endp
 condition|)
@@ -14906,7 +14949,7 @@ name|avail_out
 operator|=
 name|endp
 operator|-
-name|outp
+name|noutp
 expr_stmt|;
 return|return
 operator|(
@@ -15788,6 +15831,9 @@ name|hf
 operator|->
 name|len_size
 operator|=
+operator|(
+name|int
+operator|)
 name|len_size
 expr_stmt|;
 block|}
@@ -15844,6 +15890,9 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
+operator|(
+name|size_t
+operator|)
 literal|1
 operator|<<
 name|bits

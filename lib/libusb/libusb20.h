@@ -19,23 +19,11 @@ directive|define
 name|_LIBUSB20_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBUSB_GLOBAL_INCLUDE_FILE
+end_ifndef
 
 begin_include
 include|#
@@ -43,17 +31,10 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -975,6 +956,15 @@ parameter_list|)
 function_decl|;
 name|uint8_t
 name|libusb20_dev_get_power_mode
+parameter_list|(
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+parameter_list|)
+function_decl|;
+name|uint16_t
+name|libusb20_dev_get_power_usage
 parameter_list|(
 name|struct
 name|libusb20_device

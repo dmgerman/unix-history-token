@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -134,14 +140,14 @@ begin_define
 define|#
 directive|define
 name|RTC_LOCK
-value|mtx_lock_spin(&clock_lock)
+value|do { if (!kdb_active) mtx_lock_spin(&clock_lock); } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RTC_UNLOCK
-value|mtx_unlock_spin(&clock_lock)
+value|do { if (!kdb_active) mtx_unlock_spin(&clock_lock); } while (0)
 end_define
 
 begin_decl_stmt
@@ -525,14 +531,10 @@ name|eventtimer
 modifier|*
 name|et
 parameter_list|,
-name|struct
-name|bintime
-modifier|*
+name|sbintime_t
 name|first
 parameter_list|,
-name|struct
-name|bintime
-modifier|*
+name|sbintime_t
 name|period
 parameter_list|)
 block|{
@@ -542,21 +544,13 @@ name|max
 argument_list|(
 name|fls
 argument_list|(
-operator|(
 name|period
-operator|->
-name|frac
 operator|+
 operator|(
 name|period
-operator|->
-name|frac
 operator|>>
 literal|1
 operator|)
-operator|)
-operator|>>
-literal|32
 argument_list|)
 operator|-
 literal|17
@@ -1063,44 +1057,16 @@ operator|->
 name|et
 operator|.
 name|et_min_period
-operator|.
-name|sec
 operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|et
-operator|.
-name|et_min_period
-operator|.
-name|frac
-operator|=
-literal|0x0008LLU
-operator|<<
-literal|48
+literal|0x00080000
 expr_stmt|;
 name|sc
 operator|->
 name|et
 operator|.
 name|et_max_period
-operator|.
-name|sec
 operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|et
-operator|.
-name|et_max_period
-operator|.
-name|frac
-operator|=
-literal|0x8000LLU
-operator|<<
-literal|48
+literal|0x80000000
 expr_stmt|;
 name|sc
 operator|->
@@ -1351,9 +1317,6 @@ name|struct
 name|clocktime
 name|ct
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* Look if we have a RTC present and the time is valid */
 if|if
 condition|(
@@ -1381,13 +1344,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* wait for time update to complete */
-comment|/* If RTCSA_TUP is zero, we have at least 244us before next update */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
+comment|/* 	 * wait for time update to complete 	 * If RTCSA_TUP is zero, we have at least 244us before next update. 	 * This is fast enough on most hardware, but a refinement would be 	 * to make sure that no more than 240us pass after we start reading, 	 * and try again if so. 	 */
 while|while
 condition|(
 name|rtcin
@@ -1397,18 +1354,10 @@ argument_list|)
 operator|&
 name|RTCSA_TUP
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
+continue|continue;
+name|critical_enter
 argument_list|()
 expr_stmt|;
-block|}
 name|ct
 operator|.
 name|nsec
@@ -1504,6 +1453,9 @@ literal|2000
 expr_stmt|;
 endif|#
 directive|endif
+name|critical_exit
+argument_list|()
+expr_stmt|;
 comment|/* Set dow = -1 because some clocks don't set it correctly. */
 name|ct
 operator|.

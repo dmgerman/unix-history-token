@@ -533,7 +533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventDispatch  *  * PARAMETERS:  Event               - Event type  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Clears the status bit for the requested event, calls the  *              handler that previously registered for the event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFixedEventDispatch  *  * PARAMETERS:  Event               - Event type  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Clears the status bit for the requested event, calls the  *              handler that previously registered for the event.  *              NOTE: If there is no handler for the event, the event is  *              disabled to prevent further interrupts.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -564,11 +564,10 @@ argument_list|,
 name|ACPI_CLEAR_STATUS
 argument_list|)
 expr_stmt|;
-comment|/*      * Make sure we've got a handler. If not, report an error. The event is      * disabled to prevent further interrupts.      */
+comment|/*      * Make sure that a handler exists. If not, report an error      * and disable the event to prevent further interrupts.      */
 if|if
 condition|(
-name|NULL
-operator|==
+operator|!
 name|AcpiGbl_FixedEventHandlers
 index|[
 name|Event
@@ -597,7 +596,12 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No installed handler for fixed event [0x%08X]"
+literal|"No installed handler for fixed event - %s (%u), disabling"
+operator|,
+name|AcpiUtGetEventName
+argument_list|(
+name|Event
+argument_list|)
 operator|,
 name|Event
 operator|)

@@ -99,6 +99,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_FAT16
+value|0x06
+end_define
+
+begin_comment
+comment|/* FAT16 partition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_NTFS
 value|0x07
 end_define
@@ -160,6 +171,17 @@ end_define
 
 begin_comment
 comment|/* 386BSD partition type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_HFS
+value|0xaf
+end_define
+
+begin_comment
+comment|/* HFS/HFS+ partition type */
 end_comment
 
 begin_define

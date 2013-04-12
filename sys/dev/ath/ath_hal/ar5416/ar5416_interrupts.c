@@ -1210,6 +1210,16 @@ name|mask
 operator||=
 name|AR_IMR_TXEOL
 expr_stmt|;
+if|if
+condition|(
+name|ahp
+operator|->
+name|ah_txUrnInterruptMask
+condition|)
+name|mask
+operator||=
+name|AR_IMR_TXURN
+expr_stmt|;
 block|}
 if|if
 condition|(

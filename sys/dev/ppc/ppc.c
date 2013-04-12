@@ -252,6 +252,30 @@ parameter_list|)
 value|((struct ppc_data *)device_get_softc(dev))
 end_define
 
+begin_comment
+comment|/*  * We use critical enter/exit for the simple config locking needed to  * detect the devices. We just want to make sure that both of our writes  * happen without someone else also writing to those config registers. Since  * we just do this at startup, Giant keeps multiple threads from executing,  * and critical_enter() then is all that's needed to keep us from being preempted  * during the critical sequences with the hardware.  *  * Note: this doesn't prevent multiple threads from putting the chips into  * config mode, but since we only do that to detect the type at startup the  * extra overhead isn't needed since Giant protects us from multiple entry  * and no other code changes these registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_CONFIG_LOCK
+parameter_list|(
+name|ppc
+parameter_list|)
+value|critical_enter()
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_CONFIG_UNLOCK
+parameter_list|(
+name|ppc
+parameter_list|)
+value|critical_exit()
+end_define
+
 begin_decl_stmt
 name|devclass_t
 name|ppc_devclass
@@ -2844,8 +2868,6 @@ name|chipset_mode
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|i
 decl_stmt|;
 name|u_char
@@ -2885,16 +2907,9 @@ name|cio
 value|csr+1
 comment|/* config IO port is either 0x3F1 or 0x371 */
 comment|/* 	 * Detection: enter configuration mode and read CRD register. 	 */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|outb
+name|PPC_CONFIG_LOCK
 argument_list|(
-name|csr
-argument_list|,
-name|SMC665_iCODE
+name|ppc
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2904,9 +2919,16 @@ argument_list|,
 name|SMC665_iCODE
 argument_list|)
 expr_stmt|;
-name|splx
+name|outb
 argument_list|(
-name|s
+name|csr
+argument_list|,
+name|SMC665_iCODE
+argument_list|)
+expr_stmt|;
+name|PPC_CONFIG_UNLOCK
+argument_list|(
+name|ppc
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2948,16 +2970,9 @@ name|i
 operator|++
 control|)
 block|{
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|outb
+name|PPC_CONFIG_LOCK
 argument_list|(
-name|csr
-argument_list|,
-name|SMC666_iCODE
+name|ppc
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2967,9 +2982,16 @@ argument_list|,
 name|SMC666_iCODE
 argument_list|)
 expr_stmt|;
-name|splx
+name|outb
 argument_list|(
-name|s
+name|csr
+argument_list|,
+name|SMC666_iCODE
+argument_list|)
+expr_stmt|;
+name|PPC_CONFIG_UNLOCK
+argument_list|(
+name|ppc
 argument_list|)
 expr_stmt|;
 name|outb
@@ -3011,12 +3033,22 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|outb
+argument_list|(
+name|csr
+argument_list|,
+literal|0xaa
+argument_list|)
+expr_stmt|;
+comment|/* end config mode */
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* select CR1 */
 name|outb
 argument_list|(
@@ -3049,12 +3081,22 @@ name|ppc
 operator|->
 name|ppc_base
 condition|)
+block|{
+name|outb
+argument_list|(
+name|csr
+argument_list|,
+literal|0xaa
+argument_list|)
+expr_stmt|;
+comment|/* end config mode */
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|ppc
 operator|->
 name|ppc_model
@@ -3572,7 +3614,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end config mode */
 name|outb
 argument_list|(
 name|csr
@@ -3580,6 +3621,7 @@ argument_list|,
 literal|0xaa
 argument_list|)
 expr_stmt|;
+comment|/* end config mode */
 name|ppc
 operator|->
 name|ppc_type
@@ -3620,18 +3662,15 @@ name|chipset_mode
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|type
 init|=
 operator|-
 literal|1
 decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
+name|PPC_CONFIG_LOCK
+argument_list|(
+name|ppc
+argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -3648,9 +3687,9 @@ argument_list|,
 literal|0x55
 argument_list|)
 expr_stmt|;
-name|splx
+name|PPC_CONFIG_UNLOCK
 argument_list|(
-name|s
+name|ppc
 argument_list|)
 expr_stmt|;
 name|outb

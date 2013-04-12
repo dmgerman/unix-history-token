@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: create.c,v 1.68 2012/12/20 16:43:16 christos Exp $	*/
+comment|/*	$NetBSD: create.c,v 1.69 2013/02/03 19:15:17 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: create.c,v 1.68 2012/12/20 16:43:16 christos Exp $"
+literal|"$NetBSD: create.c,v 1.69 2013/02/03 19:15:17 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -618,6 +618,28 @@ name|p
 operator|->
 name|fts_name
 argument_list|,
+name|p
+operator|->
+name|fts_path
+argument_list|)
+condition|)
+block|{
+name|fts_set
+argument_list|(
+name|t
+argument_list|,
+name|p
+argument_list|,
+name|FTS_SKIP
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|find_only
+argument_list|(
 name|p
 operator|->
 name|fts_path

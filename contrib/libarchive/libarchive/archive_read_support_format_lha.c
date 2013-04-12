@@ -1364,7 +1364,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1719,6 +1719,8 @@ argument_list|,
 name|archive_read_format_lha_read_data
 argument_list|,
 name|archive_read_format_lha_read_data_skip
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_lha_cleanup
 argument_list|)
@@ -8111,7 +8113,7 @@ name|char
 modifier|*
 name|linkptr
 decl_stmt|;
-name|int
+name|size_t
 name|symlen
 decl_stmt|;
 name|linkptr
@@ -8435,7 +8437,7 @@ parameter_list|,
 name|int
 name|offset
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -8457,13 +8459,16 @@ name|p
 operator|+=
 name|offset
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
+name|size
+operator|>
+literal|0
+condition|;
 operator|--
 name|size
-operator|>=
-literal|0
-condition|)
+control|)
 name|sum
 operator|+=
 operator|*
@@ -10182,6 +10187,9 @@ name|ds
 operator|->
 name|copy_pos
 operator|+=
+operator|(
+name|int
+operator|)
 name|copy_bytes
 expr_stmt|;
 block|}
@@ -10238,6 +10246,9 @@ name|ds
 operator|->
 name|w_remaining
 operator|-=
+operator|(
+name|int
+operator|)
 name|copy_bytes
 expr_stmt|;
 block|}
@@ -12585,6 +12596,9 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
+operator|(
+name|size_t
+operator|)
 literal|1
 operator|<<
 name|bits
@@ -12681,6 +12695,9 @@ name|hf
 operator|->
 name|len_size
 operator|=
+operator|(
+name|int
+operator|)
 name|len_size
 expr_stmt|;
 name|hf

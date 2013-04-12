@@ -205,7 +205,6 @@ name|SMP
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|int
 name|smp_tsc
 decl_stmt|;

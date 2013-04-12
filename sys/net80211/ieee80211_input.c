@@ -1552,9 +1552,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|ALIGNED_POINTER
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
 if|if
 condition|(
 operator|!
@@ -1604,7 +1604,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* ALIGNED_POINTER */
+comment|/* !__NO_STRICT_ALIGNMENT */
 if|if
 condition|(
 name|llc

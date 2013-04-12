@@ -701,6 +701,17 @@ begin_comment
 comment|/* driver uses clone_create() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_UNMAPPED_IO
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* d_strategy can accept unmapped IO */
+end_comment
+
 begin_comment
 comment|/*  * Version numbers.  */
 end_comment
@@ -1217,6 +1228,28 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dev_strategy_csw
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|cdevsw
+modifier|*
+name|csw
 parameter_list|,
 name|struct
 name|buf

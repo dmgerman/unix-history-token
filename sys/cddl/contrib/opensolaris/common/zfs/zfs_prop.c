@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -333,6 +333,12 @@ block|{
 literal|"zle"
 block|,
 name|ZIO_COMPRESS_ZLE
+block|}
+block|,
+block|{
+literal|"lz4"
+block|,
+name|ZIO_COMPRESS_LZ4
 block|}
 block|,
 block|{
@@ -804,7 +810,7 @@ name|ZFS_TYPE_FILESYSTEM
 operator||
 name|ZFS_TYPE_VOLUME
 argument_list|,
-literal|"on | off | lzjb | gzip | gzip-[1-9] | zle"
+literal|"on | off | lzjb | gzip | gzip-[1-9] | zle | lz4"
 argument_list|,
 literal|"COMPRESS"
 argument_list|,
@@ -1620,6 +1626,40 @@ argument_list|,
 literal|"<size>"
 argument_list|,
 literal|"WRITTEN"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_LOGICALUSED
+argument_list|,
+literal|"logicalused"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_DATASET
+argument_list|,
+literal|"<size>"
+argument_list|,
+literal|"LUSED"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_LOGICALREFERENCED
+argument_list|,
+literal|"logicalreferenced"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_DATASET
+argument_list|,
+literal|"<size>"
+argument_list|,
+literal|"LREFER"
 argument_list|)
 expr_stmt|;
 comment|/* default number properties */

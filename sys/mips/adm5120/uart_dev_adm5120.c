@@ -907,18 +907,6 @@ else|else
 block|{
 comment|/* TODO: set parameters 115200, 8N1 */
 block|}
-name|sc
-operator|->
-name|sc_rxfifosz
-operator|=
-literal|16
-expr_stmt|;
-name|sc
-operator|->
-name|sc_txfifosz
-operator|=
-literal|16
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1533,6 +1521,18 @@ operator|(
 name|error
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_rxfifosz
+operator|=
+literal|16
+expr_stmt|;
+name|sc
+operator|->
+name|sc_txfifosz
+operator|=
+literal|16
+expr_stmt|;
 name|ch
 operator|=
 name|sc

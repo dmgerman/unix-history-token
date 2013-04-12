@@ -1402,13 +1402,9 @@ name|cpi
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We pass in 0 for a blocksize, since we don't  	 * know what the blocksize of this device is, if  	 * it even has a blocksize. 	 */
-name|mtx_unlock
+name|cam_periph_unlock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|no_tags
@@ -1538,13 +1534,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|cam_periph_lock
 argument_list|(
 name|periph
-operator|->
-name|sim
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|softc
@@ -2511,7 +2503,7 @@ name|cbfcnp
 operator|=
 name|passdone
 expr_stmt|;
-comment|/* 	 * We only attempt to map the user memory into kernel space 	 * if they haven't passed in a physical memory pointer, 	 * and if there is actually an I/O operation to perform. 	 * cam_periph_mapmem() supports SCSI, ATA, SMP, ADVINFO and device 	 * match CCBs.  For the SCSI, ATA and ADVINFO CCBs, we only pass the 	 * CCB in if there's actually data to map.  cam_periph_mapmem() will 	 * do the right thing, even if there isn't data to map, but since CCBs 	 * without data are a reasonably common occurance (e.g. test unit 	 * ready), it will save a few cycles if we check for it here. 	 */
+comment|/* 	 * We only attempt to map the user memory into kernel space 	 * if they haven't passed in a physical memory pointer, 	 * and if there is actually an I/O operation to perform. 	 * cam_periph_mapmem() supports SCSI, ATA, SMP, ADVINFO and device 	 * match CCBs.  For the SCSI, ATA and ADVINFO CCBs, we only pass the 	 * CCB in if there's actually data to map.  cam_periph_mapmem() will 	 * do the right thing, even if there isn't data to map, but since CCBs 	 * without data are a reasonably common occurance (e.g. test unit 	 * ready), it will save a few cycles if we check for it here. 	 * 	 * XXX What happens if a sg list is supplied?  We don't filter that 	 * out. 	 */
 if|if
 condition|(
 operator|(
@@ -2522,10 +2514,10 @@ name|ccb_h
 operator|.
 name|flags
 operator|&
-name|CAM_DATA_PHYS
+name|CAM_DATA_MASK
 operator|)
 operator|==
-literal|0
+name|CAM_DATA_VADDR
 operator|)
 operator|&&
 operator|(

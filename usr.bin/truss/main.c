@@ -210,6 +210,19 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
+name|__arm__
+block|{
+literal|"FreeBSD ELF32"
+block|,
+name|arm_syscall_entry
+block|,
+name|arm_syscall_exit
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__amd64__
 block|{
 literal|"FreeBSD ELF64"

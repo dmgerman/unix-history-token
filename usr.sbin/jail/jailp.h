@@ -173,6 +173,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PF_REV
+value|0x80
+end_define
+
+begin_comment
+comment|/* Run commands in reverse order on stopping */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|JF_START
 value|0x0001
 end_define

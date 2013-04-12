@@ -117,6 +117,12 @@ begin_comment
 comment|/*     * There were two reasons for implementing this template:     * - GNU C generates a call to a function (__udivdi3 to be exact)     *   in reply to ((((BN_ULLONG)n0)<<BN_BITS2)|n1)/d0 (I fail to     *   understand why...);     * - divl doesn't only calculate quotient, but also leaves     *   remainder in %edx which we can definitely use here:-)     *     *<appro@fy.chalmers.se>     */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|bn_div_words
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -155,6 +161,12 @@ end_elif
 begin_comment
 comment|/*     * Same story here, but it's 128-bit by 64-bit division. Wow!     *<appro@fy.chalmers.se>     */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|bn_div_words
+end_undef
 
 begin_define
 define|#

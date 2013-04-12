@@ -1624,18 +1624,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Report SER_INT_TXIDLE. */
-name|sc
-operator|->
-name|sc_rxfifosz
-operator|=
-literal|3
-expr_stmt|;
-name|sc
-operator|->
-name|sc_txfifosz
-operator|=
-literal|1
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2562,6 +2550,18 @@ operator|(
 name|error
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_rxfifosz
+operator|=
+literal|3
+expr_stmt|;
+name|sc
+operator|->
+name|sc_txfifosz
+operator|=
+literal|1
+expr_stmt|;
 name|ch
 operator|=
 name|sc

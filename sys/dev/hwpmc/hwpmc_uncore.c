@@ -105,7 +105,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x) == PMC_CPU_INTEL_SANDYBRIDGE) ? UCP_CB0_EVSEL0 : UCP_EVSEL0)
+value|(((x) == PMC_CPU_INTEL_SANDYBRIDGE || (x) == PMC_CPU_INTEL_HASWELL) ? \ 	UCP_CB0_EVSEL0 : UCP_EVSEL0)
 end_define
 
 begin_define
@@ -116,7 +116,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x) == PMC_CPU_INTEL_SANDYBRIDGE) ? UCF_OFFSET_SB : UCF_OFFSET)
+value|(((x) == PMC_CPU_INTEL_SANDYBRIDGE || (x) == PMC_CPU_INTEL_HASWELL) ? \ 	UCF_OFFSET_SB : UCF_OFFSET)
 end_define
 
 begin_decl_stmt
@@ -2318,8 +2318,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UCP_F_FM
+name|UCP_F_HW
 value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* CPU: Haswell */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UCP_F_FM
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -3455,6 +3466,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -3472,6 +3485,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -3489,6 +3504,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -3502,6 +3519,21 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
+argument_list|)
+block|,
+name|UCPDESCR
+argument_list|(
+literal|22H_10H
+argument_list|,
+literal|0x22
+argument_list|,
+literal|0x10
+argument_list|,
+name|UCP_F_FM
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -3515,6 +3547,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -3528,6 +3562,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -3541,6 +3577,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -4593,6 +4631,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -4627,6 +4667,19 @@ argument_list|)
 block|,
 name|UCPDESCR
 argument_list|(
+literal|34H_06H
+argument_list|,
+literal|0x34
+argument_list|,
+literal|0x06
+argument_list|,
+name|UCP_F_FM
+operator||
+name|UCP_F_HW
+argument_list|)
+block|,
+name|UCPDESCR
+argument_list|(
 literal|34H_08H
 argument_list|,
 literal|0x34
@@ -4638,6 +4691,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -4653,6 +4708,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -4668,6 +4725,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -4681,6 +4740,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -4694,6 +4755,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5492,6 +5555,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5546,6 +5611,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5598,6 +5665,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5611,6 +5680,8 @@ argument_list|,
 name|UCP_F_FM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5639,6 +5710,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5693,6 +5766,8 @@ operator||
 name|UCP_F_WM
 operator||
 name|UCP_F_SB
+operator||
+name|UCP_F_HW
 argument_list|)
 block|,
 name|UCPDESCR
@@ -5834,10 +5909,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Counter specific event information for Sandybridge and Haswell  */
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|ucp_event_sandybridge_ok_on_counter
+name|ucp_event_sb_hw_ok_on_counter
 parameter_list|(
 name|enum
 name|pmc_event
@@ -5855,7 +5934,7 @@ condition|(
 name|pe
 condition|)
 block|{
-comment|/*	 		 * Events valid only on counter 0. 		 */
+comment|/* 		 * Events valid only on counter 0. 		 */
 case|case
 name|PMC_EV_UCP_EVENT_80H_01H
 case|:
@@ -6010,11 +6089,14 @@ name|uncore_cputype
 condition|)
 block|{
 case|case
+name|PMC_CPU_INTEL_HASWELL
+case|:
+case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 if|if
 condition|(
-name|ucp_event_sandybridge_ok_on_counter
+name|ucp_event_sb_hw_ok_on_counter
 argument_list|(
 name|ev
 argument_list|,
@@ -6044,6 +6126,14 @@ case|:
 name|cpuflag
 operator|=
 name|UCP_F_I7
+expr_stmt|;
+break|break;
+case|case
+name|PMC_CPU_INTEL_HASWELL
+case|:
+name|cpuflag
+operator|=
+name|UCP_F_HW
 expr_stmt|;
 break|break;
 case|case

@@ -59,6 +59,9 @@ name|getf
 parameter_list|(
 name|int
 name|fd
+parameter_list|,
+name|cap_rights_t
+name|rights
 parameter_list|)
 block|{
 name|struct
@@ -66,7 +69,6 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* 	 * We wouldn't need all of these rights on every invocation 	 * if we had more information about intent. 	 */
 if|if
 condition|(
 name|fget
@@ -75,11 +77,7 @@ name|curthread
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_READ
-operator||
-name|CAP_WRITE
-operator||
-name|CAP_SEEK
+name|rights
 argument_list|,
 operator|&
 name|fp

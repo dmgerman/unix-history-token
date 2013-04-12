@@ -3780,10 +3780,10 @@ name|V_ip6_hdrnestlimit
 operator|)
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_toomanyhdr
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -3805,10 +3805,10 @@ operator|<
 name|skip
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(

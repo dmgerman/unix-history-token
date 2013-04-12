@@ -2035,10 +2035,6 @@ name|bus_dma_tag_t
 name|data_tag
 decl_stmt|;
 comment|/* data DMA tag */
-name|u_int64_t
-name|max_address
-decl_stmt|;
-comment|/* highest DMA'able address */
 block|}
 struct|;
 end_struct
@@ -2457,6 +2453,9 @@ name|ahci_controller
 block|{
 name|device_t
 name|dev
+decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag
 decl_stmt|;
 name|int
 name|r_rid

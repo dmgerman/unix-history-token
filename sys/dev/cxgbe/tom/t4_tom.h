@@ -998,7 +998,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
+name|uint64_t
 name|select_ntuple
 parameter_list|(
 name|struct

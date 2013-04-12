@@ -3780,6 +3780,18 @@ literal|1
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|dp
+index|[
+literal|1
+index|]
+operator|.
+name|dp_typ
+operator|!=
+name|DOSPTYP_HFS
+condition|)
+block|{
 name|table
 operator|->
 name|type
@@ -3788,12 +3800,19 @@ name|PTABLE_NONE
 expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"invalid values detected, ignore partition table"
+literal|"invalid values detected, ignore "
+literal|"partition table"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+name|DEBUG
+argument_list|(
+literal|"Bootcamp detected"
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef

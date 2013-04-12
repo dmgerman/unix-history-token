@@ -7344,6 +7344,9 @@ name|crlhours
 operator|=
 literal|0
 expr_stmt|;
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(

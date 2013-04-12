@@ -846,6 +846,8 @@ operator|=
 name|intel_sdvo
 operator|->
 name|slave_addr
+operator|<<
+literal|1
 block|,
 operator|.
 name|flags
@@ -871,6 +873,8 @@ operator|=
 name|intel_sdvo
 operator|->
 name|slave_addr
+operator|<<
+literal|1
 block|,
 operator|.
 name|flags
@@ -1790,6 +1794,8 @@ operator|=
 name|intel_sdvo
 operator|->
 name|slave_addr
+operator|<<
+literal|1
 expr_stmt|;
 name|msgs
 index|[
@@ -1867,6 +1873,8 @@ operator|=
 name|intel_sdvo
 operator|->
 name|slave_addr
+operator|<<
+literal|1
 expr_stmt|;
 name|msgs
 index|[
@@ -1938,6 +1946,8 @@ operator|=
 name|intel_sdvo
 operator|->
 name|slave_addr
+operator|<<
+literal|1
 expr_stmt|;
 name|msgs
 index|[
@@ -1985,6 +1995,8 @@ operator|=
 name|intel_sdvo
 operator|->
 name|slave_addr
+operator|<<
+literal|1
 expr_stmt|;
 name|msgs
 index|[

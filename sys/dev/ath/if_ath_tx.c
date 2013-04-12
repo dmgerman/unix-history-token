@@ -1236,7 +1236,7 @@ name|bf
 operator|->
 name|bf_nseg
 operator|=
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 operator|+
 literal|1
 expr_stmt|;
@@ -1272,7 +1272,7 @@ name|bf
 operator|->
 name|bf_nseg
 operator|>
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 condition|)
 block|{
 comment|/* too many desc's, linearize */
@@ -1291,7 +1291,7 @@ name|m0
 argument_list|,
 name|M_NOWAIT
 argument_list|,
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1376,7 +1376,7 @@ name|bf
 operator|->
 name|bf_nseg
 operator|<=
-name|ATH_TXDESC
+name|ATH_MAX_SCATTER
 argument_list|,
 operator|(
 literal|"too many segments after defrag; nseg %u"
@@ -1547,20 +1547,12 @@ operator|->
 name|sc_txdma
 decl_stmt|;
 comment|/* 	 * Fillin the remainder of the descriptor info. 	 */
-comment|/* 	 * For now the HAL doesn't implement halNumTxMaps for non-EDMA 	 * (ie it's 0.)  So just work around it. 	 * 	 * XXX TODO: populate halNumTxMaps for each HAL chip and 	 * then undo this hack. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_ah
-operator|->
-name|ah_magic
-operator|==
-literal|0x19741014
-condition|)
+comment|/* 	 * We need the number of TX data pointers in each descriptor. 	 * EDMA and later chips support 4 TX buffers per descriptor; 	 * previous chips just support one. 	 */
 name|numTxMaps
 operator|=
-literal|4
+name|sc
+operator|->
+name|sc_tx_nmaps
 expr_stmt|;
 comment|/* 	 * For EDMA and later chips ensure the TX map is fully populated 	 * before advancing to the next descriptor. 	 */
 name|ds
@@ -1845,36 +1837,6 @@ name|isFirstDesc
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_debug
-operator|&
-name|ATH_DEBUG_XMIT
-condition|)
-name|ath_printtxbuf
-argument_list|(
-name|sc
-argument_list|,
-name|bf
-argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_tx_queue
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|bf
 operator|->
 name|bf_lastds
@@ -2554,11 +2516,19 @@ name|bf_flags
 operator|)
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_LOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|ATH_TXQ_LAST
+argument_list|(
 name|txq
-operator|->
-name|axq_link
+argument_list|,
+name|axq_q_s
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -2566,7 +2536,7 @@ block|{
 name|struct
 name|ath_buf
 modifier|*
-name|last
+name|bf_last
 init|=
 name|ATH_TXQ_LAST
 argument_list|(
@@ -2585,7 +2555,7 @@ name|wh
 operator|=
 name|mtod
 argument_list|(
-name|last
+name|bf_last
 operator|->
 name|bf_m
 argument_list|,
@@ -2609,7 +2579,7 @@ name|sc
 operator|->
 name|sc_dmat
 argument_list|,
-name|last
+name|bf_last
 operator|->
 name|bf_dmamap
 argument_list|,
@@ -2617,14 +2587,20 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* link descriptor */
-operator|*
-name|txq
+name|ath_hal_settxdesclink
+argument_list|(
+name|sc
 operator|->
-name|axq_link
-operator|=
+name|sc_ah
+argument_list|,
+name|bf_last
+operator|->
+name|bf_lastds
+argument_list|,
 name|bf
 operator|->
 name|bf_daddr
+argument_list|)
 expr_stmt|;
 block|}
 name|ATH_TXQ_INSERT_TAIL
@@ -2636,20 +2612,9 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ath_hal_gettxdesclinkptr
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
-operator|->
-name|sc_ah
-argument_list|,
-name|bf
-operator|->
-name|bf_lastds
-argument_list|,
-operator|&
 name|txq
-operator|->
-name|axq_link
 argument_list|)
 expr_stmt|;
 block|}
@@ -2746,6 +2711,11 @@ condition|(
 literal|1
 condition|)
 block|{
+name|ATH_TXQ_LOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_TDMA
@@ -3348,6 +3318,11 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|ATH_KTR
 argument_list|(
 name|sc
@@ -3404,9 +3379,9 @@ decl_stmt|,
 modifier|*
 name|bf_last
 decl_stmt|;
-name|ATH_TX_LOCK_ASSERT
+name|ATH_TXQ_LOCK_ASSERT
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 comment|/* This is always going to be cleared, empty or not */
@@ -4203,29 +4178,21 @@ operator|+=
 name|dur
 expr_stmt|;
 comment|/* additional SIFS+ACK */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|bf
 operator|->
-name|bf_state
-operator|.
-name|bfs_nextpktlen
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
+name|bf_m
 operator|->
-name|sc_dev
+name|m_nextpkt
+operator|!=
+name|NULL
 argument_list|,
-literal|"%s: next txfrag len=0?\n"
-argument_list|,
-name|__func__
+operator|(
+literal|"no fragment"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 			 * Include the size of next fragment so NAV is 			 * updated properly.  The last fragment uses only 			 * the ACK duration 			 * 			 * XXX TODO: ensure that the rate lookup for each 			 * fragment is the same as the rate used by the 			 * first fragment! 			 */
 name|dur
 operator|+=
@@ -4237,9 +4204,13 @@ name|rt
 argument_list|,
 name|bf
 operator|->
-name|bf_state
+name|bf_m
+operator|->
+name|m_nextpkt
+operator|->
+name|m_pkthdr
 operator|.
-name|bfs_nextpktlen
+name|len
 argument_list|,
 name|rix
 argument_list|,
@@ -6178,6 +6149,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* XXX statistic */
+comment|/* XXX free tx dmamap */
 name|ath_freetx
 argument_list|(
 name|m0
@@ -6289,6 +6261,7 @@ operator|.
 name|ast_tdma_ack
 operator|++
 expr_stmt|;
+comment|/* XXX free tx dmamap */
 name|ath_freetx
 argument_list|(
 name|m0
@@ -6862,6 +6835,14 @@ operator|->
 name|sc_cabq
 operator|->
 name|axq_depth
+operator|+
+name|sc
+operator|->
+name|sc_cabq
+operator|->
+name|fifo
+operator|.
+name|axq_depth
 operator|>
 name|sc
 operator|->
@@ -6976,9 +6957,16 @@ name|bfs_pri
 operator|=
 name|pri
 expr_stmt|;
+if|#
+directive|if
+literal|1
 comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast frames 	 * must be bufferd until after the beacon. 	 * 	 * TODO: we should lock the mcastq before we check the length. 	 */
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_cabq_enable
+operator|&&
 name|ismcast
 operator|&&
 operator|(
@@ -7015,6 +7003,8 @@ operator|->
 name|axq_qnum
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Do the generic frame setup */
 comment|/* XXX should just bzero the bf_state? */
 name|bf
@@ -8664,6 +8654,14 @@ name|sc
 operator|->
 name|sc_cabq
 operator|->
+name|axq_depth
+operator|+
+name|sc
+operator|->
+name|sc_cabq
+operator|->
+name|fifo
+operator|.
 name|axq_depth
 operator|>
 name|sc
@@ -11056,6 +11054,12 @@ condition|(
 name|txq
 operator|->
 name|axq_depth
+operator|+
+name|txq
+operator|->
+name|fifo
+operator|.
+name|axq_depth
 operator|<
 name|sc
 operator|->
@@ -11146,6 +11150,12 @@ if|if
 condition|(
 name|txq
 operator|->
+name|axq_depth
+operator|+
+name|txq
+operator|->
+name|fifo
+operator|.
 name|axq_depth
 operator|<
 name|sc
@@ -12876,37 +12886,22 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
 comment|/* 		 * This has become a non-fatal error now 		 */
-if|if
-condition|(
-operator|!
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_addedbaw
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: wasn't added: seqno %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|SEQNO
-argument_list|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|if (! bf->bf_state.bfs_addedbaw) 			device_printf(sc->sc_dev, 			    "%s: wasn't added: seqno %d\n", 			    __func__, SEQNO(bf->bf_state.bfs_seqno));
+endif|#
+directive|endif
 block|}
+comment|/* Strip it out of an aggregate list if it was in one */
+name|bf
+operator|->
+name|bf_next
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Insert on the free queue to be freed by the caller */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|bf_cq
@@ -14266,11 +14261,6 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|atid
-operator|->
-name|axq_depth
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|bf
@@ -14565,6 +14555,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Clone the buffer.  This will handle the dma unmap and 	 * copy the node reference to the new buffer.  If this 	 * works out, 'bf' will have no DMA mapping, no mbuf 	 * pointer and no node reference. 	 */
 name|nbf
 operator|=
 name|ath_buf_clone
@@ -14679,19 +14670,7 @@ argument_list|,
 name|nbf
 argument_list|)
 expr_stmt|;
-comment|/* Free current buffer; return the older buffer */
-name|bf
-operator|->
-name|bf_m
-operator|=
-name|NULL
-expr_stmt|;
-name|bf
-operator|->
-name|bf_node
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* Free original buffer; return new buffer */
 name|ath_freebuf
 argument_list|(
 name|sc
@@ -15752,16 +15731,16 @@ index|[
 name|tid
 index|]
 decl_stmt|;
-name|bf
-operator|=
-name|bf_first
-expr_stmt|;
 name|ATH_TX_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* update incomp */
+name|bf
+operator|=
+name|bf_first
+expr_stmt|;
 while|while
 condition|(
 name|bf
@@ -15817,6 +15796,7 @@ expr_stmt|;
 block|}
 comment|/* Send BAR if required */
 comment|/* XXX why would we send a BAR when transitioning to non-aggregation? */
+comment|/* 	 * XXX TODO: we should likely just tear down the BAR state here, 	 * rather than sending a BAR. 	 */
 if|if
 condition|(
 name|ath_tx_tid_bar_tx_ready
@@ -15839,6 +15819,10 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Handle frame completion */
+name|bf
+operator|=
+name|bf_first
+expr_stmt|;
 while|while
 condition|(
 name|bf
@@ -15868,7 +15852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle completion of an set of aggregate frames.  *  * XXX for now, simply complete each sub-frame.  *  * Note: the completion handler is the last descriptor in the aggregate,  * not the last descriptor in the first frame.  */
+comment|/*  * Handle completion of an set of aggregate frames.  *  * Note: the completion handler is the last descriptor in the aggregate,  * not the last descriptor in the first frame.  */
 end_comment
 
 begin_function
@@ -16446,38 +16430,14 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Occasionally, the MAC sends a tx status for the wrong TID. */
-if|if
-condition|(
-name|tid
-operator|!=
-name|ts
-operator|.
-name|ts_tid
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: tid %d != hw tid %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|tid
-argument_list|,
-name|ts
-operator|.
-name|ts_tid
-argument_list|)
-expr_stmt|;
-name|tx_ok
-operator|=
+comment|/* 	 * The reference driver doesn't do this; it simply ignores 	 * this check in its entirety. 	 * 	 * I've seen this occur when using iperf to send traffic 	 * out tid 1 - the aggregate frames are all marked as TID 1, 	 * but the TXSTATUS has TID=0.  So, let's just ignore this 	 * check. 	 */
+if|#
+directive|if
 literal|0
-expr_stmt|;
-block|}
+comment|/* Occasionally, the MAC sends a tx status for the wrong TID. */
+block|if (tid != ts.ts_tid) { 		device_printf(sc->sc_dev, "%s: tid %d != hw tid %d\n", 		    __func__, tid, ts.ts_tid); 		tx_ok = 0; 	}
+endif|#
+directive|endif
 comment|/* AR5416 BA bug; this requires an interface reset */
 if|if
 condition|(

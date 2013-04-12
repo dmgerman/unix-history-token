@@ -612,6 +612,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -632,6 +634,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

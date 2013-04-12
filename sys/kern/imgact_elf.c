@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mman.h>
 end_include
 
@@ -141,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -3243,7 +3243,6 @@ name|fail
 goto|;
 block|}
 comment|/* Only support headers that fit within first page for now      */
-comment|/*    (multiplication of two Elf_Half fields will not overflow) */
 if|if
 condition|(
 operator|(
@@ -3255,6 +3254,8 @@ name|PAGE_SIZE
 operator|)
 operator|||
 operator|(
+name|u_int
+operator|)
 name|hdr
 operator|->
 name|e_phentsize
@@ -3262,7 +3263,6 @@ operator|*
 name|hdr
 operator|->
 name|e_phnum
-operator|)
 operator|>
 name|PAGE_SIZE
 operator|-
@@ -3696,10 +3696,8 @@ name|PAGE_SIZE
 operator|)
 operator|||
 operator|(
-name|hdr
-operator|->
-name|e_phoff
-operator|+
+name|u_int
+operator|)
 name|hdr
 operator|->
 name|e_phentsize
@@ -3707,9 +3705,12 @@ operator|*
 name|hdr
 operator|->
 name|e_phnum
-operator|)
 operator|>
 name|PAGE_SIZE
+operator|-
+name|hdr
+operator|->
+name|e_phoff
 condition|)
 block|{
 comment|/* Only support headers in first page for now */
@@ -3828,7 +3829,7 @@ name|i
 index|]
 operator|.
 name|p_offset
-operator|>=
+operator|>
 name|PAGE_SIZE
 operator|||
 name|phdr
@@ -3836,16 +3837,16 @@ index|[
 name|i
 index|]
 operator|.
-name|p_offset
-operator|+
+name|p_filesz
+operator|>
+name|PAGE_SIZE
+operator|-
 name|phdr
 index|[
 name|i
 index|]
 operator|.
-name|p_filesz
-operator|>=
-name|PAGE_SIZE
+name|p_offset
 condition|)
 return|return
 operator|(
@@ -4123,34 +4124,6 @@ operator|.
 name|p_flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|&&
-name|__ELF_WORD_SIZE
-operator|==
-literal|32
-operator|&&
-name|defined
-argument_list|(
-name|IA32_ME_HARDER
-argument_list|)
-comment|/* 			 * Some x86 binaries assume read == executable, 			 * notably the M3 runtime and therefore cvsup 			 */
-if|if
-condition|(
-name|prot
-operator|&
-name|VM_PROT_READ
-condition|)
-name|prot
-operator||=
-name|VM_PROT_EXECUTE
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|__elfN
@@ -6457,7 +6430,7 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* Ignore memory-mapped devices and such things. */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6475,12 +6448,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -6510,7 +6483,7 @@ name|type
 operator|!=
 name|OBJT_VNODE
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -7700,13 +7673,16 @@ name|phdr
 operator|->
 name|p_flags
 operator|=
-literal|0
+name|PF_R
 expr_stmt|;
 name|phdr
 operator|->
 name|p_align
 operator|=
-literal|0
+sizeof|sizeof
+argument_list|(
+name|Elf32_Size
+argument_list|)
 expr_stmt|;
 name|phdr
 operator|++
@@ -7863,7 +7839,7 @@ name|n_namesz
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Elf_Size
+name|Elf32_Size
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7902,7 +7878,7 @@ name|n_descsz
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Elf_Size
+name|Elf32_Size
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7964,7 +7940,7 @@ operator|||
 name|pnote
 operator|->
 name|p_offset
-operator|>=
+operator|>
 name|PAGE_SIZE
 operator|||
 name|pnote
@@ -7972,16 +7948,10 @@ operator|->
 name|p_filesz
 operator|>
 name|PAGE_SIZE
-operator|||
+operator|-
 name|pnote
 operator|->
 name|p_offset
-operator|+
-name|pnote
-operator|->
-name|p_filesz
-operator|>=
-name|PAGE_SIZE
 condition|)
 return|return
 operator|(

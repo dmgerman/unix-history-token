@@ -308,6 +308,13 @@ name|DISKFLAG_CANFLUSHCACHE
 value|0x8
 end_define
 
+begin_define
+define|#
+directive|define
+name|DISKFLAG_UNMAPPED_BIO
+value|0x10
+end_define
+
 begin_function_decl
 name|struct
 name|disk

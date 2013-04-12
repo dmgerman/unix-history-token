@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -239,7 +239,7 @@ value|{ DTRACE_STABILITY_EVOLVING, \ 	DTRACE_STABILITY_EVOLVING, DTRACE_CLASS_CO
 end_define
 
 begin_comment
-comment|/*  * The version number should be increased for every customer visible release  * of Solaris. The major number should be incremented when a fundamental  * change has been made that would affect all consumers, and would reflect  * sweeping changes to DTrace or the D language. The minor number should be  * incremented when a change is introduced that could break scripts that had  * previously worked; for example, adding a new built-in variable could break  * a script which was already using that identifier. The micro number should  * be changed when introducing functionality changes or major bug fixes that  * do not affect backward compatibility -- this is merely to make capabilities  * easily determined from the version number. Minor bugs do not require any  * modification to the version number.  */
+comment|/*  * The version number should be increased for every customer visible release  * of DTrace. The major number should be incremented when a fundamental  * change has been made that would affect all consumers, and would reflect  * sweeping changes to DTrace or the D language. The minor number should be  * incremented when a change is introduced that could break scripts that had  * previously worked; for example, adding a new built-in variable could break  * a script which was already using that identifier. The micro number should  * be changed when introducing functionality changes or major bug fixes that  * do not affect backward compatibility -- this is merely to make capabilities  * easily determined from the version number. Minor bugs do not require any  * modification to the version number.  */
 end_comment
 
 begin_define
@@ -343,15 +343,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_7_1
+value|DT_VERSION_NUMBER(1, 7, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8
+value|DT_VERSION_NUMBER(1, 8, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_8_1
+value|DT_VERSION_NUMBER(1, 8, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_9
+value|DT_VERSION_NUMBER(1, 9, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_9_1
+value|DT_VERSION_NUMBER(1, 9, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_7
+value|DT_VERS_1_9_1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.7"
+value|"Sun D 1.9.1"
 end_define
 
 begin_decl_stmt
@@ -403,6 +438,21 @@ comment|/* D API 1.6.3 */
 name|DT_VERS_1_7
 block|,
 comment|/* D API 1.7 */
+name|DT_VERS_1_7_1
+block|,
+comment|/* D API 1.7.1 */
+name|DT_VERS_1_8
+block|,
+comment|/* D API 1.8 */
+name|DT_VERS_1_8_1
+block|,
+comment|/* D API 1.8.1 */
+name|DT_VERS_1_9
+block|,
+comment|/* D API 1.9 */
+name|DT_VERS_1_9_1
+block|,
+comment|/* D API 1.9.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -1736,7 +1786,7 @@ operator|,
 operator|&
 name|dt_idops_func
 operator|,
-literal|"string(int64_t)"
+literal|"string(int64_t, [int])"
 block|}
 end_block
 
@@ -2331,6 +2381,31 @@ operator|&
 name|dt_idops_type
 operator|,
 literal|"pid_t"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"print"
+operator|,
+name|DT_IDENT_ACTFUNC
+operator|,
+literal|0
+operator|,
+name|DT_ACT_PRINT
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_9
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"void(@)"
 block|}
 end_block
 
@@ -3449,6 +3524,56 @@ end_operator
 
 begin_block
 block|{
+literal|"tolower"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_TOLOWER
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_8
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"toupper"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_TOUPPER
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_8
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 literal|"trace"
 operator|,
 name|DT_IDENT_ACTFUNC
@@ -3489,7 +3614,7 @@ operator|,
 operator|&
 name|dt_idops_func
 operator|,
-literal|"void(@, size_t)"
+literal|"void(@, size_t, ...)"
 block|}
 end_block
 
@@ -7501,7 +7626,7 @@ name|dtp
 operator|->
 name|dt_prcmode
 operator|=
-name|DT_PROC_STOP_MAIN
+name|DT_PROC_STOP_POSTINIT
 expr_stmt|;
 endif|#
 directive|endif
@@ -7636,7 +7761,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dt_proc_hash_create
+name|dt_proc_init
 argument_list|(
 name|dtp
 argument_list|)
@@ -7741,6 +7866,12 @@ operator|||
 name|dtp
 operator|->
 name|dt_procs
+operator|==
+name|NULL
+operator|||
+name|dtp
+operator|->
+name|dt_proc_env
 operator|==
 name|NULL
 operator|||
@@ -10061,7 +10192,7 @@ name|dt_procs
 operator|!=
 name|NULL
 condition|)
-name|dt_proc_hash_destroy
+name|dt_proc_fini
 argument_list|(
 name|dtp
 argument_list|)
@@ -10394,6 +10525,11 @@ argument_list|(
 name|dtp
 argument_list|)
 expr_stmt|;
+name|dt_strdata_destroy
+argument_list|(
+name|dtp
+argument_list|)
+expr_stmt|;
 name|dt_buffered_destroy
 argument_list|(
 name|dtp
@@ -10402,15 +10538,6 @@ expr_stmt|;
 name|dt_aggregate_destroy
 argument_list|(
 name|dtp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|dtp
-operator|->
-name|dt_buf
-operator|.
-name|dtbd_data
 argument_list|)
 expr_stmt|;
 name|dt_pfdict_destroy

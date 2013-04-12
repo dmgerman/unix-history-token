@@ -855,6 +855,30 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: rtadvd [-dDfRs] "
+literal|"[-c configfile] [-C ctlsock] [-M ifname] [-p pidfile]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -911,7 +935,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:C:dDfM:p:Rs"
+literal|"c:C:dDfhM:p:Rs"
 argument_list|)
 operator|)
 operator|!=
@@ -1003,6 +1027,10 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 name|argc
@@ -1013,28 +1041,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: rtadvd [-dDfRs] [-c conffile] "
-literal|"[-C ctrlsockname] [-M ifname] "
-literal|"[-p pidfile] interfaces...\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|logopt
 operator|=
 name|LOG_NDELAY
@@ -4457,6 +4463,15 @@ decl_stmt|,
 modifier|*
 name|rest
 decl_stmt|;
+if|if
+condition|(
+name|ifi
+operator|->
+name|ifi_ra_timer
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Compute a random delay. If the computed value 	 * corresponds to a time later than the time the next 	 * multicast RA is scheduled to be sent, ignore the random 	 * delay and send the advertisement at the 	 * already-scheduled time. RFC 4861 6.2.6 	 */
 ifdef|#
 directive|ifdef

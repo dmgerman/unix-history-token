@@ -979,6 +979,13 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|env_pos
+operator|>
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|cp
@@ -1069,6 +1076,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|kenvp
 index|[

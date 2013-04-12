@@ -1182,7 +1182,7 @@ operator|<
 name|ResourceEnd
 condition|)
 block|{
-comment|/* Sanity check the resource */
+comment|/* Sanity check the resource type */
 if|if
 condition|(
 name|Resource
@@ -1197,6 +1197,21 @@ operator|=
 name|AE_AML_INVALID_RESOURCE_TYPE
 expr_stmt|;
 break|break;
+block|}
+comment|/* Sanity check the length. It must not be zero, or we loop forever */
+if|if
+condition|(
+operator|!
+name|Resource
+operator|->
+name|Length
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_BAD_RESOURCE_LENGTH
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Invoke the user function, abort on any error returned */
 name|Status

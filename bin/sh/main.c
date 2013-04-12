@@ -280,6 +280,7 @@ specifier|static
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -734,7 +735,7 @@ control|)
 block|{
 if|if
 condition|(
-name|pendingsigs
+name|pendingsig
 condition|)
 name|dotrap
 argument_list|()
@@ -906,6 +907,7 @@ specifier|static
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

@@ -1813,6 +1813,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|IPMI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ok
 operator|=
 literal|0
@@ -1858,6 +1863,11 @@ operator|->
 name|ir_error
 operator|=
 name|EIO
+expr_stmt|;
+name|IPMI_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|ipmi_complete_request
 argument_list|(

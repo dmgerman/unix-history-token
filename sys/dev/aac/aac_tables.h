@@ -3,250 +3,18 @@ begin_comment
 comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Status codes for block read/write commands, etc.  *  * XXX many of these would not normally be returned, as they are  * relevant only to FSA operations.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|aac_code_lookup
-name|aac_command_status_table
-index|[]
-init|=
-block|{
-block|{
-literal|"OK"
-block|,
-name|ST_OK
-block|}
-block|,
-block|{
-literal|"operation not permitted"
-block|,
-name|ST_PERM
-block|}
-block|,
-block|{
-literal|"not found"
-block|,
-name|ST_NOENT
-block|}
-block|,
-block|{
-literal|"I/O error"
-block|,
-name|ST_IO
-block|}
-block|,
-block|{
-literal|"device not configured"
-block|,
-name|ST_NXIO
-block|}
-block|,
-block|{
-literal|"too big"
-block|,
-name|ST_E2BIG
-block|}
-block|,
-block|{
-literal|"permission denied"
-block|,
-name|ST_ACCES
-block|}
-block|,
-block|{
-literal|"file exists"
-block|,
-name|ST_EXIST
-block|}
-block|,
-block|{
-literal|"cross-device link"
-block|,
-name|ST_XDEV
-block|}
-block|,
-block|{
-literal|"operation not supported by device"
-block|,
-name|ST_NODEV
-block|}
-block|,
-block|{
-literal|"not a directory"
-block|,
-name|ST_NOTDIR
-block|}
-block|,
-block|{
-literal|"is a directory"
-block|,
-name|ST_ISDIR
-block|}
-block|,
-block|{
-literal|"invalid argument"
-block|,
-name|ST_INVAL
-block|}
-block|,
-block|{
-literal|"file too large"
-block|,
-name|ST_FBIG
-block|}
-block|,
-block|{
-literal|"no space on device"
-block|,
-name|ST_NOSPC
-block|}
-block|,
-block|{
-literal|"readonly filesystem"
-block|,
-name|ST_ROFS
-block|}
-block|,
-block|{
-literal|"too many links"
-block|,
-name|ST_MLINK
-block|}
-block|,
-block|{
-literal|"operation would block"
-block|,
-name|ST_WOULDBLOCK
-block|}
-block|,
-block|{
-literal|"file name too long"
-block|,
-name|ST_NAMETOOLONG
-block|}
-block|,
-block|{
-literal|"directory not empty"
-block|,
-name|ST_NOTEMPTY
-block|}
-block|,
-block|{
-literal|"quota exceeded"
-block|,
-name|ST_DQUOT
-block|}
-block|,
-block|{
-literal|"stale file handle"
-block|,
-name|ST_STALE
-block|}
-block|,
-block|{
-literal|"too many levels of remote in path"
-block|,
-name|ST_REMOTE
-block|}
-block|,
-block|{
-literal|"device busy (spinning up)"
-block|,
-name|ST_NOT_READY
-block|}
-block|,
-block|{
-literal|"bad file handle"
-block|,
-name|ST_BADHANDLE
-block|}
-block|,
-block|{
-literal|"not sync"
-block|,
-name|ST_NOT_SYNC
-block|}
-block|,
-block|{
-literal|"bad cookie"
-block|,
-name|ST_BAD_COOKIE
-block|}
-block|,
-block|{
-literal|"operation not supported"
-block|,
-name|ST_NOTSUPP
-block|}
-block|,
-block|{
-literal|"too small"
-block|,
-name|ST_TOOSMALL
-block|}
-block|,
-block|{
-literal|"server fault"
-block|,
-name|ST_SERVERFAULT
-block|}
-block|,
-block|{
-literal|"bad type"
-block|,
-name|ST_BADTYPE
-block|}
-block|,
-block|{
-literal|"jukebox"
-block|,
-name|ST_JUKEBOX
-block|}
-block|,
-block|{
-literal|"not mounted"
-block|,
-name|ST_NOTMOUNTED
-block|}
-block|,
-block|{
-literal|"in maintenance mode"
-block|,
-name|ST_MAINTMODE
-block|}
-block|,
-block|{
-literal|"stale ACL"
-block|,
-name|ST_STALEACL
-block|}
-block|,
-block|{
-literal|"bus reset - command aborted"
-block|,
-name|ST_BUS_RESET
-block|}
-block|,
-block|{
-name|NULL
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"unknown command status"
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_define
+unit|static const struct aac_code_lookup aac_command_status_table[] = { 	{"OK",					ST_OK}, 	{"operation not permitted",		ST_PERM}, 	{"not found",				ST_NOENT}, 	{"I/O error",				ST_IO}, 	{"device not configured",		ST_NXIO}, 	{"too big",				ST_E2BIG}, 	{"permission denied",			ST_ACCES}, 	{"file exists",				ST_EXIST}, 	{"cross-device link",			ST_XDEV}, 	{"operation not supported by device",	ST_NODEV}, 	{"not a directory",			ST_NOTDIR}, 	{"is a directory",			ST_ISDIR}, 	{"invalid argument",			ST_INVAL}, 	{"file too large",			ST_FBIG}, 	{"no space on device",			ST_NOSPC}, 	{"readonly filesystem",			ST_ROFS}, 	{"too many links",			ST_MLINK}, 	{"operation would block",		ST_WOULDBLOCK}, 	{"file name too long",			ST_NAMETOOLONG}, 	{"directory not empty",			ST_NOTEMPTY}, 	{"quota exceeded",			ST_DQUOT}, 	{"stale file handle",			ST_STALE}, 	{"too many levels of remote in path",	ST_REMOTE}, 	{"device busy (spinning up)",		ST_NOT_READY}, 	{"bad file handle",			ST_BADHANDLE}, 	{"not sync",				ST_NOT_SYNC}, 	{"bad cookie",				ST_BAD_COOKIE}, 	{"operation not supported",		ST_NOTSUPP}, 	{"too small",				ST_TOOSMALL}, 	{"server fault",			ST_SERVERFAULT}, 	{"bad type",				ST_BADTYPE}, 	{"jukebox",				ST_JUKEBOX}, 	{"not mounted",				ST_NOTMOUNTED}, 	{"in maintenance mode",			ST_MAINTMODE}, 	{"stale ACL",				ST_STALEACL}, 	{"bus reset - command aborted",		ST_BUS_RESET}, 	{NULL, 					0}, 	{"unknown command status",		0} };
 define|#
 directive|define
 name|AAC_COMMAND_STATUS
@@ -256,8 +24,14 @@ parameter_list|)
 value|aac_describe_code(aac_command_status_table, x)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|aac_code_lookup
 name|aac_cpu_variant
@@ -353,6 +127,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|aac_code_lookup
 name|aac_battery_platform
@@ -406,6 +181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|aac_code_lookup
 name|aac_container_types

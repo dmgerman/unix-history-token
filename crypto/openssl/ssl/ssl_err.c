@@ -1491,6 +1491,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_GET_SERVER_SEND_PKEY
+argument_list|)
+block|,
+literal|"SSL_GET_SERVER_SEND_PKEY"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_GET_SIGN_PKEY
 argument_list|)
 block|,

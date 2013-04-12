@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -54,13 +54,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
+end_ifndef
 
 begin_include
 include|#
@@ -340,7 +338,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 2.3.5"
+literal|"version - 2.3.10"
 decl_stmt|;
 end_decl_stmt
 
@@ -860,13 +858,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -2432,7 +2428,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* ** This will autoconfigure based on ** the number of CPUs if left at 0. */
+comment|/* ** This will autoconfigure based on the ** number of CPUs and max supported ** MSIX messages if left at 0. */
 end_comment
 
 begin_decl_stmt
@@ -4431,11 +4427,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -4511,13 +4505,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IGB_LEGACY_TX
+end_ifdef
 
 begin_comment
 comment|/*********************************************************************  *  Transmit entry point  *  *  igb_start is called by the stack to initiate a transmit.  *  The driver will remain in this routine as long as there are  *  packets to transmit and transmit resources are available.  *  In case resources are not available stack is notified and  *  the packet is requeued.  **********************************************************************/
@@ -4782,11 +4774,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __FreeBSD_version>= 800000 */
+comment|/* ~IGB_LEGACY_TX */
 end_comment
 
 begin_comment
-comment|/* ** Multiqueue Transmit driver ** */
+comment|/* ** Multiqueue Transmit Entry: **  quick turnaround to the stack ** */
 end_comment
 
 begin_function
@@ -4885,67 +4877,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|txr
-operator|->
-name|queue_status
-operator|&
-name|IGB_QUEUE_DEPLETED
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-name|IGB_TX_TRYLOCK
-argument_list|(
-name|txr
-argument_list|)
-condition|)
-block|{
-comment|/* 		** Try to queue first to avoid 		** out-of-order delivery, but  		** settle for it if that fails 		*/
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-name|drbr_enqueue
-argument_list|(
-name|ifp
-argument_list|,
-name|txr
-operator|->
-name|br
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|igb_mq_start_locked
-argument_list|(
-name|ifp
-argument_list|,
-name|txr
-argument_list|)
-expr_stmt|;
-name|IGB_TX_UNLOCK
-argument_list|(
-name|txr
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
 name|err
 operator|=
 name|drbr_enqueue
@@ -4971,7 +4902,6 @@ operator|->
 name|txq_task
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|err
@@ -5036,14 +4966,6 @@ operator|==
 literal|0
 operator|)
 operator|||
-operator|(
-name|txr
-operator|->
-name|queue_status
-operator|&
-name|IGB_QUEUE_DEPLETED
-operator|)
-operator|||
 name|adapter
 operator|->
 name|link_active
@@ -5052,7 +4974,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|err
+name|ENETDOWN
 operator|)
 return|;
 name|enq
@@ -5419,7 +5341,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FreeBSD_version>= 800000 */
+comment|/* ~IGB_LEGACY_TX */
 end_comment
 
 begin_comment
@@ -6730,11 +6652,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -6990,11 +6910,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -7431,11 +7349,9 @@ operator|&&
 name|more
 condition|)
 do|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 if|if
 condition|(
 operator|!
@@ -7595,11 +7511,9 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Process the stack queue only if not depleted */
 if|if
 condition|(
@@ -8078,11 +7992,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|u_char
-name|fiber_type
-init|=
-name|IFM_1000_SX
-decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"igb_media_status: begin"
@@ -8131,42 +8040,6 @@ name|ifm_status
 operator||=
 name|IFM_ACTIVE
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|phy
-operator|.
-name|media_type
-operator|==
-name|e1000_media_type_fiber
-operator|)
-operator|||
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|phy
-operator|.
-name|media_type
-operator|==
-name|e1000_media_type_internal_serdes
-operator|)
-condition|)
-name|ifmr
-operator|->
-name|ifm_active
-operator||=
-name|fiber_type
-operator||
-name|IFM_FDX
-expr_stmt|;
-else|else
-block|{
 switch|switch
 condition|(
 name|adapter
@@ -8187,6 +8060,26 @@ break|break;
 case|case
 literal|100
 case|:
+comment|/* 		** Support for 100Mb SFP - these are Fiber  		** but the media type appears as serdes 		*/
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|phy
+operator|.
+name|media_type
+operator|==
+name|e1000_media_type_internal_serdes
+condition|)
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_100_FX
+expr_stmt|;
+else|else
 name|ifmr
 operator|->
 name|ifm_active
@@ -8226,7 +8119,6 @@ name|ifm_active
 operator||=
 name|IFM_HDX
 expr_stmt|;
-block|}
 name|IGB_CORE_UNLOCK
 argument_list|(
 name|adapter
@@ -9945,8 +9837,22 @@ name|adapter
 operator|->
 name|hw
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
+decl_stmt|;
 name|u32
 name|reg
+decl_stmt|;
+name|int
+name|mcnt
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -9980,6 +9886,102 @@ operator|~
 name|E1000_RCTL_UPE
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_ALLMULTI
+condition|)
+name|mcnt
+operator|=
+name|MAX_NUM_MULTICAST_ADDRESSES
+expr_stmt|;
+else|else
+block|{
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
+decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|if_maddr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifma
+argument_list|,
+argument|&ifp->if_multiaddrs
+argument_list|,
+argument|ifma_link
+argument_list|)
+block|{
+if|if
+condition|(
+name|ifma
+operator|->
+name|ifma_addr
+operator|->
+name|sa_family
+operator|!=
+name|AF_LINK
+condition|)
+continue|continue;
+if|if
+condition|(
+name|mcnt
+operator|==
+name|MAX_NUM_MULTICAST_ADDRESSES
+condition|)
+break|break;
+name|mcnt
+operator|++
+expr_stmt|;
+block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|if_maddr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/* Don't disable if in MAX groups */
+if|if
+condition|(
+name|mcnt
+operator|<
+name|MAX_NUM_MULTICAST_ADDRESSES
+condition|)
 name|reg
 operator|&=
 operator|(
@@ -10581,6 +10583,16 @@ operator|->
 name|hw
 decl_stmt|;
 name|struct
+name|e1000_fc_info
+modifier|*
+name|fc
+init|=
+operator|&
+name|hw
+operator|->
+name|fc
+decl_stmt|;
+name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -10611,6 +10623,12 @@ decl_stmt|,
 name|thstat
 decl_stmt|,
 name|ctrl
+decl_stmt|;
+name|char
+modifier|*
+name|flowctl
+init|=
+name|NULL
 decl_stmt|;
 name|link_check
 operator|=
@@ -10758,6 +10776,48 @@ name|E1000_CTRL_EXT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get the flow control for display */
+switch|switch
+condition|(
+name|fc
+operator|->
+name|current_mode
+condition|)
+block|{
+case|case
+name|e1000_fc_rx_pause
+case|:
+name|flowctl
+operator|=
+literal|"RX"
+expr_stmt|;
+break|break;
+case|case
+name|e1000_fc_tx_pause
+case|:
+name|flowctl
+operator|=
+literal|"TX"
+expr_stmt|;
+break|break;
+case|case
+name|e1000_fc_full
+case|:
+name|flowctl
+operator|=
+literal|"Full"
+expr_stmt|;
+break|break;
+case|case
+name|e1000_fc_none
+case|:
+default|default:
+name|flowctl
+operator|=
+literal|"None"
+expr_stmt|;
+break|break;
+block|}
 comment|/* Now we check if a transition has happened */
 if|if
 condition|(
@@ -10798,7 +10858,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Link is up %d Mbps %s\n"
+literal|"Link is up %d Mbps %s,"
+literal|" Flow Control: %s\n"
 argument_list|,
 name|adapter
 operator|->
@@ -10817,6 +10878,8 @@ literal|"Full Duplex"
 else|:
 literal|"Half Duplex"
 operator|)
+argument_list|,
+name|flowctl
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -11529,15 +11592,6 @@ name|adapter
 operator|->
 name|queues
 decl_stmt|;
-name|struct
-name|tx_ring
-modifier|*
-name|txr
-init|=
-name|adapter
-operator|->
-name|tx_rings
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -11613,14 +11667,14 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
+name|que
+operator|->
 name|txr
 operator|->
 name|txq_task
@@ -11629,6 +11683,8 @@ literal|0
 argument_list|,
 name|igb_deferred_mq_start
 argument_list|,
+name|que
+operator|->
 name|txr
 argument_list|)
 expr_stmt|;
@@ -12065,11 +12121,9 @@ name|igb_last_bind_cpu
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -13331,11 +13385,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|taskqueue_drain
 argument_list|(
 name|que
@@ -14720,11 +14772,9 @@ name|if_ioctl
 operator|=
 name|igb_ioctl
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|ifp
 operator|->
 name|if_transmit
@@ -15946,11 +15996,9 @@ goto|goto
 name|err_tx_desc
 goto|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 comment|/* Allocate a buf ring */
 name|txr
 operator|->
@@ -16295,11 +16343,9 @@ argument_list|)
 expr_stmt|;
 name|rx_fail
 label|:
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|buf_ring_free
 argument_list|(
 name|txr
@@ -17465,11 +17511,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 if|if
 condition|(
 name|txr
@@ -23130,11 +23174,9 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|rxr
 operator|->
 name|fmp

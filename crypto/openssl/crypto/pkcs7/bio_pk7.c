@@ -29,11 +29,21 @@ directive|include
 file|<openssl/bio.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OPENSSL_SYSNAME_NETWARE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYSNAME_VXWORKS
+argument_list|)
+end_if
 
 begin_include
 include|#

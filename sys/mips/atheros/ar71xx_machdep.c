@@ -828,6 +828,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"CPU reference clock: %d MHz\n"
+argument_list|,
+name|u_ar71xx_refclk
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"arguments: \n"
 argument_list|)
 expr_stmt|;

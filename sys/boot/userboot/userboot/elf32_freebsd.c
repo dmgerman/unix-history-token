@@ -41,6 +41,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_MACHINE_ELF_WANT_32BIT
+end_define
+
 begin_include
 include|#
 directive|include

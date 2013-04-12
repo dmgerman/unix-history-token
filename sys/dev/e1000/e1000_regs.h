@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -242,12 +242,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_FEXT
-value|0x0002C
+name|E1000_FEXTNVM
+value|0x00028
 end_define
 
 begin_comment
-comment|/* Future Extended - RW */
+comment|/* Future Extended NVM - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM3
+value|0x0003C
+end_define
+
+begin_comment
+comment|/* Future Extended NVM 3 - RW */
 end_comment
 
 begin_define
@@ -264,12 +275,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_FEXTNVM
-value|0x00028
+name|E1000_FEXTNVM6
+value|0x00010
 end_define
 
 begin_comment
-comment|/* Future Extended NVM - RW */
+comment|/* Future Extended NVM 6 - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM7
+value|0x000E4
+end_define
+
+begin_comment
+comment|/* Future Extended NVM 7 - RW */
 end_comment
 
 begin_define
@@ -395,6 +417,17 @@ directive|define
 name|E1000_SVT
 value|0x000F4
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LPIC
+value|0x000FC
+end_define
+
+begin_comment
+comment|/* Low Power IDLE control */
+end_comment
 
 begin_define
 define|#
@@ -690,6 +723,17 @@ end_define
 
 begin_comment
 comment|/* Packet Buffer Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBECCSTS
+value|0x0100C
+end_define
+
+begin_comment
+comment|/* Packet Buffer ECC Status - RW */
 end_comment
 
 begin_define
@@ -1047,12 +1091,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RDFPCQ
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x02430 + (0x4 * (_n)))
+name|E1000_RDFH
+value|0x02410
 end_define
+
+begin_comment
+comment|/* Rx Data FIFO Head - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDFT
+value|0x02418
+end_define
+
+begin_comment
+comment|/* Rx Data FIFO Tail - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDFHS
+value|0x02420
+end_define
+
+begin_comment
+comment|/* Rx Data FIFO Head Saved - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDFTS
+value|0x02428
+end_define
+
+begin_comment
+comment|/* Rx Data FIFO Tail Saved - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RDFPC
+value|0x02430
+end_define
+
+begin_comment
+comment|/* Rx Data FIFO Packet Count - RW */
+end_comment
 
 begin_define
 define|#
@@ -1505,7 +1594,7 @@ value|((_s)<< (6 * _n))
 end_define
 
 begin_comment
-comment|/*  * Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  */
+comment|/* Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  */
 end_comment
 
 begin_define
@@ -3411,7 +3500,7 @@ comment|/* Rx SAs - RW */
 end_comment
 
 begin_comment
-comment|/*  * LinkSec Rx Keys  - where _n is the SA no. and _m the 4 dwords of the 128 bit  * key - RW.  */
+comment|/* LinkSec Rx Keys  - where _n is the SA no. and _m the 4 dwords of the 128 bit  * key - RW.  */
 end_comment
 
 begin_define
@@ -3790,17 +3879,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_1GSTAT_RCV
-value|0x04228
-end_define
-
-begin_comment
-comment|/* 1GSTAT Code Violation Pkt Cnt - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RXCSUM
 value|0x05000
 end_define
@@ -4137,17 +4215,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_MDPHYA
-value|0x0003C
-end_define
-
-begin_comment
-comment|/* PHY address - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_MANC2H
 value|0x05860
 end_define
@@ -4467,73 +4534,6 @@ end_define
 
 begin_comment
 comment|/* MSI-X Alloc Reg -RW */
-end_comment
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0C000 + ((_i) * 0x10))
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0C004 + ((_i) * 0x10))
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0C008 + ((_i) * 0x10))
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0C00C + ((_i) * 0x10))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXPBA
-value|0x0E000
-end_define
-
-begin_comment
-comment|/* MSI-X Pending bit array */
 end_comment
 
 begin_define
@@ -5062,6 +5062,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_TIMADJL
+value|0x0B60C
+end_define
+
+begin_comment
+comment|/* Time sync time adjustment offset Low - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TIMADJH
+value|0x0B610
+end_define
+
+begin_comment
+comment|/* Time sync time adjustment offset High - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_TSAUXC
 value|0x0B640
 end_define
@@ -5079,6 +5101,28 @@ end_define
 
 begin_comment
 comment|/* System time register Residue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSICR
+value|0x0B66C
+end_define
+
+begin_comment
+comment|/* Interrupt Cause Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSIM
+value|0x0B674
+end_define
+
+begin_comment
+comment|/* Interrupt Mask Register */
 end_comment
 
 begin_define
@@ -5857,28 +5901,6 @@ end_define
 
 begin_comment
 comment|/* OS2BMC packets transmitted by host */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMINV
-value|0x5BB0
-end_define
-
-begin_comment
-comment|/* LTR Minimum Value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LTRMAXV
-value|0x5BB4
-end_define
-
-begin_comment
-comment|/* LTR Maximum Value */
 end_comment
 
 begin_define

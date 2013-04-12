@@ -3549,10 +3549,10 @@ name|ccb_h
 operator|->
 name|flags
 operator|&
-name|CAM_DATA_PHYS
+name|CAM_DATA_MASK
 operator|)
 operator|==
-literal|0
+name|CAM_DATA_VADDR
 operator|)
 operator|&&
 operator|(

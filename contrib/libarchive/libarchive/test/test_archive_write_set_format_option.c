@@ -206,7 +206,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)

@@ -227,7 +227,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -449,6 +449,17 @@ begin_comment
 comment|/* 					 * Zone's pages will not be included in 					 * mini-dumps. 					 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_PCPU
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 					 * Allocates mp_ncpus slabs sized to 					 * sizeof(struct pcpu). 					 */
+end_comment
+
 begin_comment
 comment|/*  * These flags are shared between the keg and zone.  In zones wishing to add  * new kegs these flags must be compatible.  Some are determined based on  * physical parameters of the request and may not be provided by the consumer.  */
 end_comment
@@ -458,7 +469,7 @@ define|#
 directive|define
 name|UMA_ZONE_INHERIT
 define|\
-value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB)
+value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB | UMA_ZONE_PCPU)
 end_define
 
 begin_comment
@@ -705,7 +716,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|pflag
 parameter_list|,
@@ -734,7 +745,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|pflag
 parameter_list|)
 function_decl|;
@@ -799,29 +810,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Switches the backing object of a zone  *  * Arguments:  *	zone  The zone to update.  *	obj   The VM object to use for future allocations.  *	size  The size of the object to allocate.  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	A NULL object can be used and uma will allocate one for you.  Setting  *	the size will limit the amount of memory allocated to this zone.  *  */
+comment|/*  * Reserves the maximum KVA space required by the zone and configures the zone  * to use a VM_ALLOC_NOOBJ-based backend allocator.  *  * Arguments:  *	zone  The zone to update.  *	nitems  The upper limit on the number of items that can be allocated.  *  * Returns:  *	0  if KVA space can not be allocated  *	1  if successful  *  * Discussion:  *	When the machine supports a direct map and the zone's items are smaller  *	than a page, the zone will use the direct map instead of allocating KVA  *	space.  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|vm_object
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
-name|uma_zone_set_obj
+name|uma_zone_reserve_kva
 parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
 name|int
-name|size
+name|nitems
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -951,7 +951,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Replaces the standard page_alloc or obj_alloc functions for this zone  *  * Arguments:  *	zone   The zone whose backend allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
+comment|/*  * Replaces the standard backend allocator for this zone.  *  * Arguments:  *	zone   The zone whose backend allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
 end_comment
 
 begin_function_decl
@@ -1076,11 +1076,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  *	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  *	A pointer to a u_int32_t reference counter.  */
+comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  *	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  *	A pointer to a uint32_t reference counter.  */
 end_comment
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|uma_find_refcnt
 parameter_list|(
@@ -1133,19 +1133,19 @@ begin_struct
 struct|struct
 name|uma_stream_header
 block|{
-name|u_int32_t
+name|uint32_t
 name|ush_version
 decl_stmt|;
 comment|/* Stream format version. */
-name|u_int32_t
+name|uint32_t
 name|ush_maxcpus
 decl_stmt|;
 comment|/* Value of MAXCPU for stream. */
-name|u_int32_t
+name|uint32_t
 name|ush_count
 decl_stmt|;
 comment|/* Number of records. */
-name|u_int32_t
+name|uint32_t
 name|_ush_pad
 decl_stmt|;
 comment|/* Pad/reserved field. */
@@ -1178,64 +1178,64 @@ index|[
 name|UTH_MAX_NAME
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|uth_align
 decl_stmt|;
 comment|/* Keg: alignment. */
-name|u_int32_t
+name|uint32_t
 name|uth_size
 decl_stmt|;
 comment|/* Keg: requested size of item. */
-name|u_int32_t
+name|uint32_t
 name|uth_rsize
 decl_stmt|;
 comment|/* Keg: real size of item. */
-name|u_int32_t
+name|uint32_t
 name|uth_maxpages
 decl_stmt|;
 comment|/* Keg: maximum number of pages. */
-name|u_int32_t
+name|uint32_t
 name|uth_limit
 decl_stmt|;
 comment|/* Keg: max items to allocate. */
 comment|/* 	 * Current dynamic zone/keg-derived statistics. 	 */
-name|u_int32_t
+name|uint32_t
 name|uth_pages
 decl_stmt|;
 comment|/* Keg: pages allocated. */
-name|u_int32_t
+name|uint32_t
 name|uth_keg_free
 decl_stmt|;
 comment|/* Keg: items free. */
-name|u_int32_t
+name|uint32_t
 name|uth_zone_free
 decl_stmt|;
 comment|/* Zone: items free. */
-name|u_int32_t
+name|uint32_t
 name|uth_bucketsize
 decl_stmt|;
 comment|/* Zone: desired bucket size. */
-name|u_int32_t
+name|uint32_t
 name|uth_zone_flags
 decl_stmt|;
 comment|/* Zone: flags. */
-name|u_int64_t
+name|uint64_t
 name|uth_allocs
 decl_stmt|;
 comment|/* Zone: number of allocations. */
-name|u_int64_t
+name|uint64_t
 name|uth_frees
 decl_stmt|;
 comment|/* Zone: number of frees. */
-name|u_int64_t
+name|uint64_t
 name|uth_fails
 decl_stmt|;
 comment|/* Zone: number of alloc failures. */
-name|u_int64_t
+name|uint64_t
 name|uth_sleeps
 decl_stmt|;
 comment|/* Zone: number of alloc sleeps. */
-name|u_int64_t
+name|uint64_t
 name|_uth_reserved1
 index|[
 literal|2
@@ -1250,19 +1250,19 @@ begin_struct
 struct|struct
 name|uma_percpu_stat
 block|{
-name|u_int64_t
+name|uint64_t
 name|ups_allocs
 decl_stmt|;
 comment|/* Cache: number of allocations. */
-name|u_int64_t
+name|uint64_t
 name|ups_frees
 decl_stmt|;
 comment|/* Cache: number of frees. */
-name|u_int64_t
+name|uint64_t
 name|ups_cache_free
 decl_stmt|;
 comment|/* Cache: free items in cache. */
-name|u_int64_t
+name|uint64_t
 name|_ups_reserved
 index|[
 literal|5

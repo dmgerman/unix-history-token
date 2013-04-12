@@ -2578,6 +2578,8 @@ name|status
 decl_stmt|;
 name|uint64_t
 name|idx
+init|=
+literal|0
 decl_stmt|;
 name|zfs_fuid_t
 modifier|*
@@ -2588,6 +2590,8 @@ decl_stmt|;
 name|zfs_fuid_info_t
 modifier|*
 name|fuidp
+init|=
+name|NULL
 decl_stmt|;
 comment|/* 	 * If POSIX ID, or entry is already a FUID then 	 * just return the id 	 * 	 * We may also be handed an already FUID'ized id via 	 * chmod. 	 */
 if|if
@@ -2637,6 +2641,24 @@ operator|(
 name|UID_NOBODY
 operator|)
 return|;
+name|VERIFY3U
+argument_list|(
+name|type
+argument_list|,
+operator|>=
+argument_list|,
+name|ZFS_OWNER
+argument_list|)
+expr_stmt|;
+name|VERIFY3U
+argument_list|(
+name|type
+argument_list|,
+operator|<=
+argument_list|,
+name|ZFS_ACE_GROUP
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type

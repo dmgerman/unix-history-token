@@ -93,6 +93,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|crgetruid
+parameter_list|(
+name|cred
+parameter_list|)
+value|((cred)->cr_ruid)
+end_define
+
+begin_define
+define|#
+directive|define
 name|crgetgid
 parameter_list|(
 name|cred

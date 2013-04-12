@@ -192,11 +192,11 @@ init|=
 literal|0x00000008
 block|,
 comment|/* 					      * Perform transport negotiation 					      * with this command. 					      */
-name|CAM_SCATTER_VALID
+name|CAM_DATA_ISPHYS
 init|=
 literal|0x00000010
 block|,
-comment|/* Scatter/gather list is valid  */
+comment|/* Data type with physical addrs */
 name|CAM_DIS_AUTOSENSE
 init|=
 literal|0x00000020
@@ -227,6 +227,36 @@ init|=
 literal|0x000000C0
 block|,
 comment|/* Data direction Mask	      */
+name|CAM_DATA_VADDR
+init|=
+literal|0x00000000
+block|,
+comment|/* Data type (000:Virtual)       */
+name|CAM_DATA_PADDR
+init|=
+literal|0x00000010
+block|,
+comment|/* Data type (001:Physical)      */
+name|CAM_DATA_SG
+init|=
+literal|0x00040000
+block|,
+comment|/* Data type (010:sglist)        */
+name|CAM_DATA_SG_PADDR
+init|=
+literal|0x00040010
+block|,
+comment|/* Data type (011:sglist phys)   */
+name|CAM_DATA_BIO
+init|=
+literal|0x00200000
+block|,
+comment|/* Data type (100:bio)           */
+name|CAM_DATA_MASK
+init|=
+literal|0x00240010
+block|,
+comment|/* Data type mask                */
 name|CAM_SOFT_RST_OP
 init|=
 literal|0x00000100
@@ -277,11 +307,6 @@ init|=
 literal|0x00020000
 block|,
 comment|/* Disable disconnect	      */
-name|CAM_SG_LIST_PHYS
-init|=
-literal|0x00040000
-block|,
-comment|/* SG list has physical addrs.   */
 name|CAM_MSG_BUF_PHYS
 init|=
 literal|0x00080000
@@ -292,11 +317,6 @@ init|=
 literal|0x00100000
 block|,
 comment|/* Autosense data ptr is physical*/
-name|CAM_DATA_PHYS
-init|=
-literal|0x00200000
-block|,
-comment|/* SG/Buffer data ptrs are phys. */
 name|CAM_CDB_PHYS
 init|=
 literal|0x00400000
@@ -1877,8 +1897,12 @@ comment|/* Do not send 6-byte commands */
 name|PIM_SEQSCAN
 init|=
 literal|0x04
+block|,
 comment|/* Do bus scans sequentially, not in parallel */
-block|}
+name|PIM_UNMAPPED
+init|=
+literal|0x02
+block|, }
 name|pi_miscflag
 typedef|;
 end_typedef
@@ -2936,6 +2960,10 @@ define|#
 directive|define
 name|CTS_ATA_VALID_ATAPI
 value|0x20
+define|#
+directive|define
+name|CTS_ATA_VALID_CAPS
+value|0x40
 name|int
 name|mode
 decl_stmt|;
@@ -2948,6 +2976,23 @@ name|u_int
 name|atapi
 decl_stmt|;
 comment|/* Length of ATAPI CDB */
+name|u_int
+name|caps
+decl_stmt|;
+comment|/* Device and host SATA caps. */
+define|#
+directive|define
+name|CTS_ATA_CAPS_H
+value|0x0000ffff
+define|#
+directive|define
+name|CTS_ATA_CAPS_H_DMA48
+value|0x00000001
+comment|/* 48-bit DMA */
+define|#
+directive|define
+name|CTS_ATA_CAPS_D
+value|0xffff0000
 block|}
 struct|;
 end_struct

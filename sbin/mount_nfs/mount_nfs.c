@@ -505,9 +505,6 @@ name|iov
 parameter_list|,
 name|int
 name|iovlen
-parameter_list|,
-name|int
-name|mntflags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -709,8 +706,6 @@ modifier|*
 name|iov
 decl_stmt|;
 name|int
-name|mntflags
-decl_stmt|,
 name|num
 decl_stmt|,
 name|iovlen
@@ -760,10 +755,6 @@ operator|+
 literal|50
 index|]
 decl_stmt|;
-name|mntflags
-operator|=
-literal|0
-expr_stmt|;
 name|iov
 operator|=
 name|NULL
@@ -2262,7 +2253,7 @@ name|iov
 argument_list|,
 name|iovlen
 argument_list|,
-name|mntflags
+literal|0
 argument_list|)
 condition|)
 name|err
@@ -2286,8 +2277,6 @@ argument_list|(
 name|iov
 argument_list|,
 name|iovlen
-argument_list|,
-name|mntflags
 argument_list|)
 condition|)
 name|err
@@ -2508,9 +2497,6 @@ name|iov
 parameter_list|,
 name|int
 name|iovlen
-parameter_list|,
-name|int
-name|mntflags
 parameter_list|)
 block|{
 name|struct
@@ -4073,7 +4059,7 @@ name|newiov
 argument_list|,
 name|newiovlen
 argument_list|,
-name|mntflags
+literal|0
 argument_list|)
 return|;
 block|}

@@ -200,6 +200,10 @@ decl_stmt|;
 name|uint32_t
 name|div
 decl_stmt|;
+name|u_ar71xx_refclk
+operator|=
+name|AR724X_BASE_FREQ
+expr_stmt|;
 name|pll
 operator|=
 name|ATH_READ_REG

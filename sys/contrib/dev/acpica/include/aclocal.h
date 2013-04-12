@@ -993,6 +993,15 @@ name|ACPI_BTYPE_ALL_OBJECTS
 value|0x0000FFFF
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
 begin_comment
 comment|/*  * Information structure for ACPI predefined names.  * Each entry in the table contains the following items:  *  * Name                 - The ACPI reserved name  * ParamCount           - Number of arguments to the method  * ExpectedReturnBtypes - Allowed type(s) for the return value  */
 end_comment
@@ -1008,8 +1017,8 @@ index|[
 name|ACPI_NAME_SIZE
 index|]
 decl_stmt|;
-name|UINT8
-name|ParamCount
+name|UINT16
+name|ArgumentList
 decl_stmt|;
 name|UINT8
 name|ExpectedBtypes
@@ -1047,7 +1056,7 @@ decl_stmt|;
 name|UINT8
 name|Count2
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
@@ -1075,6 +1084,9 @@ name|ObjectType
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|UINT8
+name|Reserved
 decl_stmt|;
 block|}
 name|ACPI_PACKAGE_INFO2
@@ -1105,7 +1117,7 @@ decl_stmt|;
 name|UINT8
 name|TailObjectType
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
@@ -1134,6 +1146,18 @@ block|}
 name|ACPI_PREDEFINED_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Reset to default packing */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
 
 begin_comment
 comment|/* Data block used during object validation */
@@ -1165,6 +1189,9 @@ decl_stmt|;
 name|UINT32
 name|Flags
 decl_stmt|;
+name|UINT32
+name|ReturnBtype
+decl_stmt|;
 name|UINT8
 name|NodeFlags
 decl_stmt|;
@@ -1190,6 +1217,57 @@ directive|define
 name|ACPI_OBJECT_WRAPPED
 value|2
 end_define
+
+begin_comment
+comment|/* Return object auto-repair info */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_OBJECT_CONVERTER
+function_decl|)
+parameter_list|(
+name|union
+name|acpi_operand_object
+modifier|*
+name|OriginalObject
+parameter_list|,
+name|union
+name|acpi_operand_object
+modifier|*
+modifier|*
+name|ConvertedObject
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_simple_repair_info
+block|{
+name|char
+name|Name
+index|[
+name|ACPI_NAME_SIZE
+index|]
+decl_stmt|;
+name|UINT32
+name|UnexpectedBtypes
+decl_stmt|;
+name|UINT32
+name|PackageIndex
+decl_stmt|;
+name|ACPI_OBJECT_CONVERTER
+name|ObjectConverter
+decl_stmt|;
+block|}
+name|ACPI_SIMPLE_REPAIR_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Bitmapped return value types  * Note: the actual data types must be contiguous, a loop in nspredef.c  * depends on this.  */
@@ -3693,6 +3771,9 @@ name|Type
 decl_stmt|;
 name|UINT8
 name|Flags
+decl_stmt|;
+name|BOOLEAN
+name|Resolved
 decl_stmt|;
 block|}
 name|ACPI_EXTERNAL_LIST

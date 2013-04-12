@@ -76,14 +76,14 @@ file|"proto.h"
 end_include
 
 begin_comment
-comment|/*  * Version history:  * 0 - initial version  * 1 - HIO_KEEPALIVE added  */
+comment|/*  * Version history:  * 0 - initial version  * 1 - HIO_KEEPALIVE added  * 2 - "memsync" and "received" attributes added for memsync mode  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HAST_PROTO_VERSION
-value|1
+value|2
 end_define
 
 begin_define
@@ -484,9 +484,13 @@ index|[
 name|NAME_MAX
 index|]
 decl_stmt|;
-comment|/* Replication mode (HAST_REPLICATION_*). */
+comment|/* Negotiated replication mode (HAST_REPLICATION_*). */
 name|int
 name|hr_replication
+decl_stmt|;
+comment|/* Configured replication mode (HAST_REPLICATION_*). */
+name|int
+name|hr_original_replication
 decl_stmt|;
 comment|/* Provider name that will appear in /dev/hast/. */
 name|char
@@ -517,6 +521,10 @@ decl_stmt|;
 comment|/* Checksum algorithm. */
 name|int
 name|hr_checksum
+decl_stmt|;
+comment|/* Protocol version. */
+name|int
+name|hr_version
 decl_stmt|;
 comment|/* Path to local component. */
 name|char
@@ -683,6 +691,30 @@ decl_stmt|;
 comment|/* Number of activemap updates. */
 name|uint64_t
 name|hr_stat_activemap_update
+decl_stmt|;
+comment|/* Number of local read errors. */
+name|uint64_t
+name|hr_stat_read_error
+decl_stmt|;
+comment|/* Number of local write errors. */
+name|uint64_t
+name|hr_stat_write_error
+decl_stmt|;
+comment|/* Number of local delete errors. */
+name|uint64_t
+name|hr_stat_delete_error
+decl_stmt|;
+comment|/* Number of flush errors. */
+name|uint64_t
+name|hr_stat_flush_error
+decl_stmt|;
+comment|/* Number of activemap write errors. */
+name|uint64_t
+name|hr_stat_activemap_write_error
+decl_stmt|;
+comment|/* Number of activemap flush errors. */
+name|uint64_t
+name|hr_stat_activemap_flush_error
 decl_stmt|;
 comment|/* Next resource. */
 name|TAILQ_ENTRY

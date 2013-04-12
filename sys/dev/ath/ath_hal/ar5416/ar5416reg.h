@@ -3539,6 +3539,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_PCU_SEL_EVM
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* select EVM data or PLCP header */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_PCU_MISC_MODE2_MGMT_CRYPTO_ENABLE
 value|0x00000002
 end_define

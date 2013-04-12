@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -15,14 +15,13 @@ end_include
 
 begin_function_decl
 specifier|static
-name|u32
-name|e1000_get_phy_addr_for_bm_page
+name|s32
+name|e1000_wait_autoneg
 parameter_list|(
-name|u32
-name|page
-parameter_list|,
-name|u32
-name|reg
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1178,7 +1177,7 @@ operator|-
 name|E1000_ERR_PARAM
 return|;
 block|}
-comment|/* 	 * Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|mdic
 operator|=
 operator|(
@@ -1210,7 +1209,7 @@ argument_list|,
 name|mdic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
+comment|/* Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
 for|for
 control|(
 name|i
@@ -1288,6 +1287,41 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
+if|if
+condition|(
+operator|(
+operator|(
+name|mdic
+operator|&
+name|E1000_MDIC_REG_MASK
+operator|)
+operator|>>
+name|E1000_MDIC_REG_SHIFT
+operator|)
+operator|!=
+name|offset
+condition|)
+block|{
+name|DEBUGOUT2
+argument_list|(
+literal|"MDI Read offset error - requested %d, returned %d\n"
+argument_list|,
+name|offset
+argument_list|,
+operator|(
+name|mdic
+operator|&
+name|E1000_MDIC_REG_MASK
+operator|)
+operator|>>
+name|E1000_MDIC_REG_SHIFT
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|E1000_ERR_PHY
+return|;
+block|}
 operator|*
 name|data
 operator|=
@@ -1296,7 +1330,7 @@ name|u16
 operator|)
 name|mdic
 expr_stmt|;
-comment|/* 	 * Allow some time after each MDIC transaction to avoid 	 * reading duplicate data in the next MDIC transaction. 	 */
+comment|/* Allow some time after each MDIC transaction to avoid 	 * reading duplicate data in the next MDIC transaction. 	 */
 if|if
 condition|(
 name|hw
@@ -1379,7 +1413,7 @@ operator|-
 name|E1000_ERR_PARAM
 return|;
 block|}
-comment|/* 	 * Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|mdic
 operator|=
 operator|(
@@ -1418,7 +1452,7 @@ argument_list|,
 name|mdic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
+comment|/* Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
 for|for
 control|(
 name|i
@@ -1496,7 +1530,42 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
-comment|/* 	 * Allow some time after each MDIC transaction to avoid 	 * reading duplicate data in the next MDIC transaction. 	 */
+if|if
+condition|(
+operator|(
+operator|(
+name|mdic
+operator|&
+name|E1000_MDIC_REG_MASK
+operator|)
+operator|>>
+name|E1000_MDIC_REG_SHIFT
+operator|)
+operator|!=
+name|offset
+condition|)
+block|{
+name|DEBUGOUT2
+argument_list|(
+literal|"MDI Write offset error - requested %d, returned %d\n"
+argument_list|,
+name|offset
+argument_list|,
+operator|(
+name|mdic
+operator|&
+name|E1000_MDIC_REG_MASK
+operator|)
+operator|>>
+name|E1000_MDIC_REG_SHIFT
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|E1000_ERR_PHY
+return|;
+block|}
+comment|/* Allow some time after each MDIC transaction to avoid 	 * reading duplicate data in the next MDIC transaction. 	 */
 if|if
 condition|(
 name|hw
@@ -1561,7 +1630,7 @@ argument_list|(
 literal|"e1000_read_phy_reg_i2c"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|i2ccmd
 operator|=
 operator|(
@@ -1805,7 +1874,7 @@ operator|&
 literal|0xFF00
 operator|)
 expr_stmt|;
-comment|/* 	 * Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|i2ccmd
 operator|=
 operator|(
@@ -1978,7 +2047,7 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
-comment|/* 	 * Set up Op-code, EEPROM Address,in the I2CCMD 	 * register. The MAC will take care of interfacing with the 	 * EEPROM to retrieve the desired data. 	 */
+comment|/* Set up Op-code, EEPROM Address,in the I2CCMD 	 * register. The MAC will take care of interfacing with the 	 * EEPROM to retrieve the desired data. 	 */
 name|i2ccmd
 operator|=
 operator|(
@@ -2150,8 +2219,8 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
-comment|/* 	 * The programming interface is 16 bits wide 	 * so we need to read the whole word first 	 * then update appropriate byte lane and write 	 * the updated word back. 	 */
-comment|/* 	 * Set up Op-code, EEPROM Address,in the I2CCMD 	 * register. The MAC will take care of interfacing 	 * with an EEPROM to write the data given. 	 */
+comment|/* The programming interface is 16 bits wide 	 * so we need to read the whole word first 	 * then update appropriate byte lane and write 	 * the updated word back. 	 */
+comment|/* Set up Op-code, EEPROM Address,in the I2CCMD 	 * register. The MAC will take care of interfacing 	 * with an EEPROM to write the data given. 	 */
 name|i2ccmd
 operator|=
 operator|(
@@ -2193,7 +2262,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Poll the ready bit to see if lastly 		 * launched I2C operation completed 		 */
+comment|/* Poll the ready bit to see if lastly 		 * launched I2C operation completed 		 */
 name|i2ccmd
 operator|=
 name|E1000_READ_REG
@@ -2222,7 +2291,7 @@ operator|==
 name|E1000_I2CCMD_OPCODE_READ
 condition|)
 block|{
-comment|/* 				 * Write the selected byte 				 * lane and update whole word 				 */
+comment|/* Write the selected byte 				 * lane and update whole word 				 */
 name|data_local
 operator|=
 name|i2ccmd
@@ -3585,7 +3654,7 @@ name|ret_val
 return|;
 block|}
 block|}
-comment|/* Enable CRS on Tx. This must be set for half-duplex operation. */
+comment|/* Enable CRS on Tx. This must be set for half-duplex operation. 	 * Not required on some PHYs. 	 */
 name|ret_val
 operator|=
 name|hw
@@ -3611,6 +3680,28 @@ condition|)
 return|return
 name|ret_val
 return|;
+if|if
+condition|(
+operator|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+operator|!=
+name|e1000_phy_82579
+operator|)
+operator|&&
+operator|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+operator|!=
+name|e1000_phy_i217
+operator|)
+condition|)
 name|phy_data
 operator||=
 name|I82577_CFG_ASSERT_CRS_ON_TX
@@ -3675,7 +3766,7 @@ operator|&=
 operator|~
 name|I82577_PHY_CTRL2_MDIX_CFG_MASK
 expr_stmt|;
-comment|/* 	 * Options: 	 *   0 - Auto (default) 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 */
+comment|/* Options: 	 *   0 - Auto (default) 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 */
 switch|switch
 condition|(
 name|hw
@@ -3812,7 +3903,7 @@ name|phy_data
 operator||=
 name|M88E1000_PSCR_ASSERT_CRS_ON_TX
 expr_stmt|;
-comment|/* 	 * Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
+comment|/* Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -3859,7 +3950,7 @@ name|M88E1000_PSCR_AUTO_X_MODE
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
+comment|/* Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -4003,7 +4094,7 @@ name|BME1000_E_PHY_ID_R2
 operator|)
 condition|)
 block|{
-comment|/* 		 * Force TX_CLK in the Extended PHY Specific Control Register 		 * to 25MHz clock. 		 */
+comment|/* Force TX_CLK in the Extended PHY Specific Control Register 		 * to 25MHz clock. 		 */
 name|ret_val
 operator|=
 name|phy
@@ -4351,7 +4442,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 	 * Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
+comment|/* Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -4409,7 +4500,7 @@ name|M88E1000_PSCR_AUTO_X_MODE
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
+comment|/* Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -4555,13 +4646,13 @@ return|return
 name|ret_val
 return|;
 block|}
-comment|/* 	 * Wait 100ms for MAC to configure PHY from NVM settings, to avoid 	 * timeout issues when LFS is enabled. 	 */
+comment|/* Wait 100ms for MAC to configure PHY from NVM settings, to avoid 	 * timeout issues when LFS is enabled. 	 */
 name|msec_delay
 argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The NVM settings will configure LPLU in D3 for 	 * non-IGP1 PHYs. 	 */
+comment|/* The NVM settings will configure LPLU in D3 for 	 * non-IGP1 PHYs. 	 */
 if|if
 condition|(
 name|phy
@@ -4739,7 +4830,7 @@ operator|.
 name|autoneg
 condition|)
 block|{
-comment|/* 		 * when autonegotiation advertisement is only 1000Mbps then we 		 * should disable SmartSpeed and enable Auto MasterSlave 		 * resolution as hardware default. 		 */
+comment|/* when autonegotiation advertisement is only 1000Mbps then we 		 * should disable SmartSpeed and enable Auto MasterSlave 		 * resolution as hardware default. 		 */
 if|if
 condition|(
 name|phy
@@ -4972,8 +5063,8 @@ return|return
 name|ret_val
 return|;
 block|}
-comment|/* 	 * Need to parse both autoneg_advertised and fc and set up 	 * the appropriate PHY registers.  First we will parse for 	 * autoneg_advertised software override.  Since we can advertise 	 * a plethora of combinations, we need to check each bit 	 * individually. 	 */
-comment|/* 	 * First we clear all the 10/100 mb speed bits in the Auto-Neg 	 * Advertisement Register (Address 4) and the 1000 mb speed bits in 	 * the  1000Base-T Control Register (Address 9). 	 */
+comment|/* Need to parse both autoneg_advertised and fc and set up 	 * the appropriate PHY registers.  First we will parse for 	 * autoneg_advertised software override.  Since we can advertise 	 * a plethora of combinations, we need to check each bit 	 * individually. 	 */
+comment|/* First we clear all the 10/100 mb speed bits in the Auto-Neg 	 * Advertisement Register (Address 4) and the 1000 mb speed bits in 	 * the  1000Base-T Control Register (Address 9). 	 */
 name|mii_autoneg_adv_reg
 operator|&=
 operator|~
@@ -5119,7 +5210,7 @@ operator||=
 name|CR_1000T_FD_CAPS
 expr_stmt|;
 block|}
-comment|/* 	 * Check for a software override of the flow control settings, and 	 * setup the PHY advertisement registers accordingly.  If 	 * auto-negotiation is enabled, then software will have to set the 	 * "PAUSE" bits to the correct value in the Auto-Negotiation 	 * Advertisement Register (PHY_AUTONEG_ADV) and re-start auto- 	 * negotiation. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause frames 	 *          but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames 	 *          but we do not support receiving pause frames). 	 *      3:  Both Rx and Tx flow control (symmetric) are enabled. 	 *  other:  No software override.  The flow control configuration 	 *          in the EEPROM is used. 	 */
+comment|/* Check for a software override of the flow control settings, and 	 * setup the PHY advertisement registers accordingly.  If 	 * auto-negotiation is enabled, then software will have to set the 	 * "PAUSE" bits to the correct value in the Auto-Negotiation 	 * Advertisement Register (PHY_AUTONEG_ADV) and re-start auto- 	 * negotiation. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause frames 	 *          but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames 	 *          but we do not support receiving pause frames). 	 *      3:  Both Rx and Tx flow control (symmetric) are enabled. 	 *  other:  No software override.  The flow control configuration 	 *          in the EEPROM is used. 	 */
 switch|switch
 condition|(
 name|hw
@@ -5132,7 +5223,7 @@ block|{
 case|case
 name|e1000_fc_none
 case|:
-comment|/* 		 * Flow control (Rx& Tx) is completely disabled by a 		 * software over-ride. 		 */
+comment|/* Flow control (Rx& Tx) is completely disabled by a 		 * software over-ride. 		 */
 name|mii_autoneg_adv_reg
 operator|&=
 operator|~
@@ -5146,7 +5237,7 @@ break|break;
 case|case
 name|e1000_fc_rx_pause
 case|:
-comment|/* 		 * Rx Flow control is enabled, and Tx Flow control is 		 * disabled, by a software over-ride. 		 * 		 * Since there really isn't a way to advertise that we are 		 * capable of Rx Pause ONLY, we will advertise that we 		 * support both symmetric and asymmetric Rx PAUSE.  Later 		 * (in e1000_config_fc_after_link_up) we will disable the 		 * hw's ability to send PAUSE frames. 		 */
+comment|/* Rx Flow control is enabled, and Tx Flow control is 		 * disabled, by a software over-ride. 		 * 		 * Since there really isn't a way to advertise that we are 		 * capable of Rx Pause ONLY, we will advertise that we 		 * support both symmetric and asymmetric Rx PAUSE.  Later 		 * (in e1000_config_fc_after_link_up) we will disable the 		 * hw's ability to send PAUSE frames. 		 */
 name|mii_autoneg_adv_reg
 operator||=
 operator|(
@@ -5159,7 +5250,7 @@ break|break;
 case|case
 name|e1000_fc_tx_pause
 case|:
-comment|/* 		 * Tx Flow control is enabled, and Rx Flow control is 		 * disabled, by a software over-ride. 		 */
+comment|/* Tx Flow control is enabled, and Rx Flow control is 		 * disabled, by a software over-ride. 		 */
 name|mii_autoneg_adv_reg
 operator||=
 name|NWAY_AR_ASM_DIR
@@ -5173,7 +5264,7 @@ break|break;
 case|case
 name|e1000_fc_full
 case|:
-comment|/* 		 * Flow control (both Rx and Tx) is enabled by a software 		 * over-ride. 		 */
+comment|/* Flow control (both Rx and Tx) is enabled by a software 		 * over-ride. 		 */
 name|mii_autoneg_adv_reg
 operator||=
 operator|(
@@ -5287,7 +5378,7 @@ argument_list|(
 literal|"e1000_copper_link_autoneg"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Perform some bounds checking on the autoneg advertisement 	 * parameter. 	 */
+comment|/* Perform some bounds checking on the autoneg advertisement 	 * parameter. 	 */
 name|phy
 operator|->
 name|autoneg_advertised
@@ -5296,7 +5387,7 @@ name|phy
 operator|->
 name|autoneg_mask
 expr_stmt|;
-comment|/* 	 * If autoneg_advertised is zero, we assume it was not defaulted 	 * by the calling code so we set to advertise full capability. 	 */
+comment|/* If autoneg_advertised is zero, we assume it was not defaulted 	 * by the calling code so we set to advertise full capability. 	 */
 if|if
 condition|(
 operator|!
@@ -5343,7 +5434,7 @@ argument_list|(
 literal|"Restarting Auto-Neg\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Restart auto-negotiation by setting the Auto Neg Enable bit and 	 * the Auto Neg Restart bit in the PHY control register. 	 */
+comment|/* Restart auto-negotiation by setting the Auto Neg Enable bit and 	 * the Auto Neg Restart bit in the PHY control register. 	 */
 name|ret_val
 operator|=
 name|phy
@@ -5397,7 +5488,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 	 * Does the user want to wait for Auto-Neg to complete here, or 	 * check at a later time (for example, callback routine). 	 */
+comment|/* Does the user want to wait for Auto-Neg to complete here, or 	 * check at a later time (for example, callback routine). 	 */
 if|if
 condition|(
 name|phy
@@ -5407,13 +5498,7 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|wait_autoneg
+name|e1000_wait_autoneg
 argument_list|(
 name|hw
 argument_list|)
@@ -5481,7 +5566,7 @@ operator|.
 name|autoneg
 condition|)
 block|{
-comment|/* 		 * Setup autoneg and flow control advertisement and perform 		 * autonegotiation. 		 */
+comment|/* Setup autoneg and flow control advertisement and perform 		 * autonegotiation. 		 */
 name|ret_val
 operator|=
 name|e1000_copper_link_autoneg
@@ -5499,7 +5584,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 		 * PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. 		 */
+comment|/* PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"Forcing Speed and Duplex\n"
@@ -5533,7 +5618,7 @@ name|ret_val
 return|;
 block|}
 block|}
-comment|/* 	 * Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
+comment|/* Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -5689,7 +5774,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 	 * Clear Auto-Crossover to force MDI manually.  IGP requires MDI 	 * forced whenever speed and duplex are forced. 	 */
+comment|/* Clear Auto-Crossover to force MDI manually.  IGP requires MDI 	 * forced whenever speed and duplex are forced. 	 */
 name|ret_val
 operator|=
 name|phy
@@ -5860,7 +5945,17 @@ argument_list|(
 literal|"e1000_phy_force_speed_duplex_m88"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
+comment|/* I210 and I211 devices support Auto-Crossover in forced operation. */
+if|if
+condition|(
+name|phy
+operator|->
+name|type
+operator|!=
+name|e1000_phy_i210
+condition|)
+block|{
+comment|/* Clear Auto-Crossover to force MDI manually.  M88E1000 		 * requires MDI forced whenever speed and duplex are forced. 		 */
 name|ret_val
 operator|=
 name|phy
@@ -5911,6 +6006,7 @@ condition|)
 return|return
 name|ret_val
 return|;
+block|}
 name|DEBUGOUT1
 argument_list|(
 literal|"M88E1000 PSCR: %X\n"
@@ -6093,7 +6189,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * We didn't get link. 				 * Reset the DSP and cross our fingers. 				 */
+comment|/* We didn't get link. 				 * Reset the DSP and cross our fingers. 				 */
 name|ret_val
 operator|=
 name|phy
@@ -6233,7 +6329,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 	 * Resetting the phy means we need to re-force TX_CLK in the 	 * Extended PHY Specific Control Register to 25MHz clock from 	 * the reset value of 2.5MHz. 	 */
+comment|/* Resetting the phy means we need to re-force TX_CLK in the 	 * Extended PHY Specific Control Register to 25MHz clock from 	 * the reset value of 2.5MHz. 	 */
 name|phy_data
 operator||=
 name|M88E1000_EPSCR_TX_CLK_25
@@ -6260,7 +6356,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 	 * In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
+comment|/* In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
 name|ret_val
 operator|=
 name|phy
@@ -6688,11 +6784,7 @@ operator|*
 name|phy_ctrl
 operator|&=
 operator|~
-operator|(
 name|MII_CR_SPEED_1000
-operator||
-name|MII_CR_SPEED_10
-operator|)
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
@@ -6710,11 +6802,6 @@ name|E1000_CTRL_SPD_1000
 operator||
 name|E1000_CTRL_SPD_100
 operator|)
-expr_stmt|;
-operator|*
-name|phy_ctrl
-operator||=
-name|MII_CR_SPEED_10
 expr_stmt|;
 operator|*
 name|phy_ctrl
@@ -6863,7 +6950,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
+comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -7344,7 +7431,7 @@ argument_list|(
 literal|"e1000_check_polarity_igp"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Polarity is determined based on the speed of 	 * our connection. 	 */
+comment|/* Polarity is determined based on the speed of 	 * our connection. 	 */
 name|ret_val
 operator|=
 name|phy
@@ -7390,7 +7477,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * This really only applies to 10Mbps since 		 * there is no polarity for 100Mbps (always 0). 		 */
+comment|/* This really only applies to 10Mbps since 		 * there is no polarity for 100Mbps (always 0). 		 */
 name|offset
 operator|=
 name|IGP01E1000_PHY_PORT_STATUS
@@ -7480,7 +7567,7 @@ argument_list|(
 literal|"e1000_check_polarity_ife"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Polarity is determined based on the reversal feature being enabled. 	 */
+comment|/* Polarity is determined based on the reversal feature being enabled. 	 */
 if|if
 condition|(
 name|phy
@@ -7550,12 +7637,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_wait_autoneg_generic - Wait for auto-neg completion  *  @hw: pointer to the HW structure  *  *  Waits for auto-negotiation to complete or for the auto-negotiation time  *  limit to expire, which ever happens first.  **/
+comment|/**  *  e1000_wait_autoneg - Wait for auto-neg completion  *  @hw: pointer to the HW structure  *  *  Waits for auto-negotiation to complete or for the auto-negotiation time  *  limit to expire, which ever happens first.  **/
 end_comment
 
 begin_function
+specifier|static
 name|s32
-name|e1000_wait_autoneg_generic
+name|e1000_wait_autoneg
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -7575,7 +7663,7 @@ name|phy_status
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_wait_autoneg_generic"
+literal|"e1000_wait_autoneg"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7666,7 +7754,7 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * PHY_AUTO_NEG_TIME expiration doesn't guarantee auto-negotiation 	 * has completed. 	 */
+comment|/* PHY_AUTO_NEG_TIME expiration doesn't guarantee auto-negotiation 	 * has completed. 	 */
 return|return
 name|ret_val
 return|;
@@ -7740,7 +7828,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Some PHYs require the PHY_STATUS register to be read 		 * twice due to the link bit being sticky.  No harm doing 		 * it across the board. 		 */
+comment|/* Some PHYs require the PHY_STATUS register to be read 		 * twice due to the link bit being sticky.  No harm doing 		 * it across the board. 		 */
 name|ret_val
 operator|=
 name|hw
@@ -7763,7 +7851,7 @@ if|if
 condition|(
 name|ret_val
 condition|)
-comment|/* 			 * If the first read fails, another entity may have 			 * ownership of the resources, wait and try again to 			 * see if they have relinquished the resources yet. 			 */
+comment|/* If the first read fails, another entity may have 			 * ownership of the resources, wait and try again to 			 * see if they have relinquished the resources yet. 			 */
 name|usec_delay
 argument_list|(
 name|usec_interval
@@ -7986,11 +8074,12 @@ name|phy_data
 decl_stmt|,
 name|phy_data2
 decl_stmt|,
+name|is_cm
+decl_stmt|;
+name|u16
 name|index
 decl_stmt|,
 name|default_page
-decl_stmt|,
-name|is_cm
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -8590,7 +8679,7 @@ condition|)
 return|return
 name|ret_val
 return|;
-comment|/* 		 * Getting bits 15:9, which represent the combination of 		 * coarse and fine gain values.  The result is a number 		 * that can be put into the lookup table to obtain the 		 * approximate cable length. 		 */
+comment|/* Getting bits 15:9, which represent the combination of 		 * coarse and fine gain values.  The result is a number 		 * that can be put into the lookup table to obtain the 		 * approximate cable length. 		 */
 name|cur_agc_index
 operator|=
 operator|(
@@ -10195,7 +10284,7 @@ argument_list|,
 literal|0xD008
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Change cg_icount + enable integbp + change prop_factor_master 	 * to 8 for channel A 	 */
+comment|/* Change cg_icount + enable integbp + change prop_factor_master 	 * to 8 for channel A 	 */
 name|hw
 operator|->
 name|phy
@@ -10227,7 +10316,7 @@ argument_list|,
 literal|0x0800
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable LPLU and disable AN to 1000 in non-D0a states, 	 * Enable SPD+B2B 	 */
+comment|/* Enable LPLU and disable AN to 1000 in non-D0a states, 	 * Enable SPD+B2B 	 */
 name|hw
 operator|->
 name|phy
@@ -10422,6 +10511,14 @@ name|e1000_phy_82579
 expr_stmt|;
 break|break;
 case|case
+name|I217_E_PHY_ID
+case|:
+name|phy_type
+operator|=
+name|e1000_phy_i217
+expr_stmt|;
+break|break;
+case|case
 name|I82580_I_PHY_ID
 case|:
 name|phy_type
@@ -10530,7 +10627,7 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If phy_type is valid, break - we found our 			 * PHY address 			 */
+comment|/* If phy_type is valid, break - we found our 			 * PHY address 			 */
 if|if
 condition|(
 name|phy_type
@@ -10727,7 +10824,7 @@ name|page_shift
 decl_stmt|,
 name|page_select
 decl_stmt|;
-comment|/* 		 * Page select is register 31 for phy address 1 and 22 for 		 * phy address 2 and 3. Page select is shifted only for 		 * phy address 1. 		 */
+comment|/* Page select is register 31 for phy address 1 and 22 for 		 * phy address 2 and 3. Page select is shifted only for 		 * phy address 1. 		 */
 if|if
 condition|(
 name|hw
@@ -10923,7 +11020,7 @@ name|page_shift
 decl_stmt|,
 name|page_select
 decl_stmt|;
-comment|/* 		 * Page select is register 31 for phy address 1 and 22 for 		 * phy address 2 and 3. Page select is shifted only for 		 * phy address 1. 		 */
+comment|/* Page select is register 31 for phy address 1 and 22 for 		 * phy address 2 and 3. Page select is shifted only for 		 * phy address 1. 		 */
 if|if
 condition|(
 name|hw
@@ -11425,7 +11522,7 @@ return|return
 name|ret_val
 return|;
 block|}
-comment|/* 	 * Enable both PHY wakeup mode and Wakeup register page writes. 	 * Prevent a power state change by disabling ME and Host PHY wakeup. 	 */
+comment|/* Enable both PHY wakeup mode and Wakeup register page writes. 	 * Prevent a power state change by disabling ME and Host PHY wakeup. 	 */
 name|temp
 operator|=
 operator|*
@@ -11473,7 +11570,7 @@ return|return
 name|ret_val
 return|;
 block|}
-comment|/* 	 * Select Host Wakeup Registers page - caller now able to write 	 * registers on the Wakeup registers page 	 */
+comment|/* Select Host Wakeup Registers page - caller now able to write 	 * registers on the Wakeup registers page 	 */
 return|return
 name|e1000_set_page_igp
 argument_list|(
@@ -11509,8 +11606,6 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -11621,6 +11716,14 @@ name|u16
 name|reg
 init|=
 name|BM_PHY_REG_NUM
+argument_list|(
+name|offset
+argument_list|)
+decl_stmt|;
+name|u16
+name|page
+init|=
+name|BM_PHY_REG_PAGE
 argument_list|(
 name|offset
 argument_list|)
@@ -12570,7 +12673,7 @@ name|page
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Workaround MDIO accesses being disabled after entering IEEE 		 * Power Down (when bit 11 of the PHY Control register is set) 		 */
+comment|/* Workaround MDIO accesses being disabled after entering IEEE 		 * Power Down (when bit 11 of the PHY Control register is set) 		 */
 if|if
 condition|(
 operator|(
@@ -12917,13 +13020,9 @@ name|ret_val
 decl_stmt|;
 name|u32
 name|addr_reg
-init|=
-literal|0
 decl_stmt|;
 name|u32
 name|data_reg
-init|=
-literal|0
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -13172,9 +13271,11 @@ name|hw
 argument_list|,
 name|HV_MUX_DATA_CTRL
 argument_list|,
+operator|(
 name|HV_MUX_DATA_CTRL_GEN_TO_MAC
 operator||
 name|HV_MUX_DATA_CTRL_FORCE_SPEED
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -13756,11 +13857,10 @@ name|length
 operator|==
 name|E1000_CABLE_LENGTH_UNDEFINED
 condition|)
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
+return|;
 name|phy
 operator|->
 name|cable_length

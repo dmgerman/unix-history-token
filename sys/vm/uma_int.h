@@ -72,14 +72,14 @@ comment|/* Pages allocated for startup */
 end_comment
 
 begin_comment
-comment|/* Max waste before going to off page slab management */
+comment|/* Max waste percentage before going to off page slab management */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMA_MAX_WASTE
-value|(UMA_SLAB_SIZE / 10)
+value|10
 end_define
 
 begin_comment
@@ -265,11 +265,11 @@ name|uma_bucket_t
 name|uc_allocbucket
 decl_stmt|;
 comment|/* Bucket to allocate from */
-name|u_int64_t
+name|uint64_t
 name|uc_allocs
 decl_stmt|;
 comment|/* Count of allocations */
-name|u_int64_t
+name|uint64_t
 name|uc_frees
 decl_stmt|;
 comment|/* Count of frees */
@@ -295,13 +295,6 @@ begin_struct
 struct|struct
 name|uma_keg
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|uma_keg
-argument_list|)
-name|uk_link
-expr_stmt|;
-comment|/* List of all kegs */
 name|struct
 name|mtx
 name|uk_lock
@@ -311,12 +304,6 @@ name|struct
 name|uma_hash
 name|uk_hash
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|uk_name
-decl_stmt|;
-comment|/* Name of creating zone. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -349,31 +336,31 @@ argument_list|)
 name|uk_full_slab
 expr_stmt|;
 comment|/* full slabs */
-name|u_int32_t
+name|uint32_t
 name|uk_recurse
 decl_stmt|;
 comment|/* Allocation recursion count */
-name|u_int32_t
+name|uint32_t
 name|uk_align
 decl_stmt|;
 comment|/* Alignment mask */
-name|u_int32_t
+name|uint32_t
 name|uk_pages
 decl_stmt|;
 comment|/* Total page count */
-name|u_int32_t
+name|uint32_t
 name|uk_free
 decl_stmt|;
 comment|/* Count of items free in slabs */
-name|u_int32_t
+name|uint32_t
 name|uk_size
 decl_stmt|;
 comment|/* Requested size of each item */
-name|u_int32_t
+name|uint32_t
 name|uk_rsize
 decl_stmt|;
 comment|/* Real size of each item */
-name|u_int32_t
+name|uint32_t
 name|uk_maxpages
 decl_stmt|;
 comment|/* Maximum number of pages to alloc */
@@ -393,36 +380,52 @@ name|uma_free
 name|uk_freef
 decl_stmt|;
 comment|/* Free routine */
-name|struct
-name|vm_object
-modifier|*
-name|uk_obj
+name|u_long
+name|uk_offset
 decl_stmt|;
-comment|/* Zone specific object */
+comment|/* Next free offset from base KVA */
 name|vm_offset_t
 name|uk_kva
 decl_stmt|;
-comment|/* Base kva for zones with objs */
+comment|/* Zone base KVA */
 name|uma_zone_t
 name|uk_slabzone
 decl_stmt|;
 comment|/* Slab zone backing us, if OFFPAGE */
-name|u_int16_t
+name|uint16_t
+name|uk_slabsize
+decl_stmt|;
+comment|/* Slab size for this keg */
+name|uint16_t
 name|uk_pgoff
 decl_stmt|;
 comment|/* Offset to uma_slab struct */
-name|u_int16_t
+name|uint16_t
 name|uk_ppera
 decl_stmt|;
 comment|/* pages per allocation from backend */
-name|u_int16_t
+name|uint16_t
 name|uk_ipers
 decl_stmt|;
 comment|/* Items per slab */
-name|u_int32_t
+name|uint32_t
 name|uk_flags
 decl_stmt|;
 comment|/* Internal flags */
+comment|/* Least used fields go to the last cache line. */
+specifier|const
+name|char
+modifier|*
+name|uk_name
+decl_stmt|;
+comment|/* Name of creating zone. */
+name|LIST_ENTRY
+argument_list|(
+argument|uma_keg
+argument_list|)
+name|uk_link
+expr_stmt|;
+comment|/* List of all kegs */
 block|}
 struct|;
 end_struct
@@ -476,20 +479,20 @@ argument_list|)
 name|us_hlink
 expr_stmt|;
 comment|/* Link for hash table */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|us_data
 decl_stmt|;
 comment|/* First item */
-name|u_int8_t
-name|us_flags
-decl_stmt|;
-comment|/* Page flags see uma.h */
-name|u_int8_t
+name|uint16_t
 name|us_freecount
 decl_stmt|;
 comment|/* How many are free? */
-name|u_int8_t
+name|uint8_t
+name|us_flags
+decl_stmt|;
+comment|/* Page flags see uma.h */
+name|uint8_t
 name|us_firstfree
 decl_stmt|;
 comment|/* First free item index */
@@ -512,7 +515,7 @@ decl_stmt|;
 comment|/* slab header data */
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|us_item
 decl_stmt|;
 block|}
@@ -541,10 +544,10 @@ decl_stmt|;
 comment|/* slab header data */
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|us_item
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|us_refcnt
 decl_stmt|;
 block|}
@@ -769,28 +772,28 @@ name|uma_fini
 name|uz_fini
 decl_stmt|;
 comment|/* Discards memory */
-name|u_int32_t
+name|uint32_t
 name|uz_flags
 decl_stmt|;
 comment|/* Flags inherited from kegs */
-name|u_int32_t
+name|uint32_t
 name|uz_size
 decl_stmt|;
 comment|/* Size inherited from kegs */
-name|u_int64_t
+name|uint64_t
 name|uz_allocs
 name|UMA_ALIGN
 decl_stmt|;
 comment|/* Total number of allocations */
-name|u_int64_t
+name|uint64_t
 name|uz_frees
 decl_stmt|;
 comment|/* Total number of frees */
-name|u_int64_t
+name|uint64_t
 name|uz_fails
 decl_stmt|;
 comment|/* Total number of alloc failures */
-name|u_int64_t
+name|uint64_t
 name|uz_sleeps
 decl_stmt|;
 comment|/* Total number of alloc sleeps */
@@ -942,7 +945,7 @@ name|uma_hash
 modifier|*
 name|hash
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 parameter_list|)
@@ -1055,7 +1058,7 @@ name|uma_hash
 modifier|*
 name|hash
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 parameter_list|)
@@ -1087,7 +1090,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|slab
@@ -1268,7 +1271,7 @@ parameter_list|,
 name|int
 name|bytes
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|pflag
 parameter_list|,
@@ -1289,7 +1292,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|flags
 parameter_list|)
 function_decl|;

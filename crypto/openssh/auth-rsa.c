@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.80 2011/05/23 03:30:07 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.81 2012/10/30 21:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1117,6 +1117,23 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|authorized_keys_files
+index|[
+name|i
+index|]
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|file
 operator|=
 name|expand_authorized_keys

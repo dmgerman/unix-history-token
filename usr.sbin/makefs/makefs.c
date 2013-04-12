@@ -220,6 +220,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dupsok
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|timespec
 name|start_time
@@ -441,7 +447,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:d:f:F:M:m:N:o:ps:S:t:x"
+literal|"B:b:Dd:f:F:M:m:N:o:ps:S:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -623,6 +629,14 @@ name|LLONG_MAX
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'D'
+case|:
+name|dupsok
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'d'

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -95,24 +95,35 @@ block|{
 name|kmutex_t
 name|rc_mtx
 decl_stmt|;
+name|boolean_t
+name|rc_tracked
+decl_stmt|;
 name|list_t
 name|rc_list
 decl_stmt|;
 name|list_t
 name|rc_removed
 decl_stmt|;
-name|int64_t
+name|uint64_t
 name|rc_count
 decl_stmt|;
-name|int64_t
+name|uint64_t
 name|rc_removed_count
 decl_stmt|;
 block|}
 name|refcount_t
 typedef|;
-comment|/* Note: refcount_t must be initialized with refcount_create() */
+comment|/* Note: refcount_t must be initialized with refcount_create[_untracked]() */
 name|void
 name|refcount_create
+parameter_list|(
+name|refcount_t
+modifier|*
+name|rc
+parameter_list|)
+function_decl|;
+name|void
+name|refcount_create_untracked
 parameter_list|(
 name|refcount_t
 modifier|*
@@ -248,6 +259,13 @@ typedef|;
 define|#
 directive|define
 name|refcount_create
+parameter_list|(
+name|rc
+parameter_list|)
+value|((rc)->rc_count = 0)
+define|#
+directive|define
+name|refcount_create_untracked
 parameter_list|(
 name|rc
 parameter_list|)

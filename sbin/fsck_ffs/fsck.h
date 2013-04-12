@@ -33,6 +33,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -58,8 +64,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXBUFSPACE
-value|40*1024
+name|MINBUFS
+value|10
+end_define
+
+begin_comment
+comment|/* minimum number of buffers required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBUFS
+value|40
 end_define
 
 begin_comment
@@ -70,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|INOBUFSIZE
-value|56*1024
+value|64*1024
 end_define
 
 begin_comment
@@ -320,18 +337,13 @@ begin_struct
 struct|struct
 name|bufarea
 block|{
-name|struct
-name|bufarea
-modifier|*
-name|b_next
-decl_stmt|;
-comment|/* free list queue */
-name|struct
-name|bufarea
-modifier|*
-name|b_prev
-decl_stmt|;
-comment|/* free list queue */
+name|TAILQ_ENTRY
+argument_list|(
+argument|bufarea
+argument_list|)
+name|b_list
+expr_stmt|;
+comment|/* buffer list */
 name|ufs2_daddr_t
 name|b_bno
 decl_stmt|;
@@ -343,6 +355,9 @@ name|b_errs
 decl_stmt|;
 name|int
 name|b_flags
+decl_stmt|;
+name|int
+name|b_type
 decl_stmt|;
 union|union
 block|{
@@ -422,34 +437,193 @@ parameter_list|)
 value|do { \ 	if (sblock.fs_magic == FS_UFS1_MAGIC) \ 		(bp)->b_un.b_indir1[i] = (val); \ 	else \ 		(bp)->b_un.b_indir2[i] = (val); \ 	} while (0)
 end_define
 
+begin_comment
+comment|/*  * Buffer flags  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|B_INUSE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Buffer is in use */
+end_comment
+
+begin_comment
+comment|/*  * Type of data in buffer  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* Buffer holds a superblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_SUPERBLK
 value|1
+end_define
+
+begin_comment
+comment|/* Buffer holds a superblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_CYLGRP
+value|2
+end_define
+
+begin_comment
+comment|/* Buffer holds a cylinder group map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_LEVEL1
+value|3
+end_define
+
+begin_comment
+comment|/* Buffer holds single level indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_LEVEL2
+value|4
+end_define
+
+begin_comment
+comment|/* Buffer holds double level indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_LEVEL3
+value|5
+end_define
+
+begin_comment
+comment|/* Buffer holds triple level indirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_EXTATTR
+value|6
+end_define
+
+begin_comment
+comment|/* Buffer holds external attribute data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_INODES
+value|7
+end_define
+
+begin_comment
+comment|/* Buffer holds external attribute data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_DIRDATA
+value|8
+end_define
+
+begin_comment
+comment|/* Buffer holds directory data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_DATA
+value|9
+end_define
+
+begin_comment
+comment|/* Buffer holds user data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT_NUMBUFTYPES
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MINBUFS
-value|5
+name|BT_NAMES
+value|{			\ 	"unknown",			\ 	"Superblock",			\ 	"Cylinder Group",		\ 	"Single Level Indirect",	\ 	"Double Level Indirect",	\ 	"Triple Level Indirect",	\ 	"External Attribute",		\ 	"Inode Block",			\ 	"Directory Contents",		\ 	"User Data" }
 end_define
 
-begin_comment
-comment|/* minimum number of buffers required */
-end_comment
-
 begin_decl_stmt
-name|struct
-name|bufarea
-name|bufhead
+name|long
+name|readcnt
+index|[
+name|BT_NUMBUFTYPES
+index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* head of list of other blks in filesys */
-end_comment
+begin_decl_stmt
+name|long
+name|totalreadcnt
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timespec
+name|readtime
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timespec
+name|totalreadtime
+index|[
+name|BT_NUMBUFTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timespec
+name|startprog
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -460,17 +634,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* file system superblock */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|bufarea
-name|cgblk
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cylinder group blocks */
 end_comment
 
 begin_decl_stmt
@@ -513,8 +676,10 @@ directive|define
 name|initbarea
 parameter_list|(
 name|bp
+parameter_list|,
+name|type
 parameter_list|)
-value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs2_daddr_t)-1; \ 	(bp)->b_flags = 0; \ } while (0)
+value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs2_daddr_t)-1; \ 	(bp)->b_flags = 0; \ 	(bp)->b_type = type; \ } while (0)
 end_define
 
 begin_define
@@ -528,23 +693,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|cgdirty
-parameter_list|()
-value|dirty(&cgblk)
-end_define
-
-begin_define
-define|#
-directive|define
 name|sblock
 value|(*sblk.b_un.b_fs)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cgrp
-value|(*cgblk.b_un.b_cg)
 end_define
 
 begin_enum
@@ -1417,6 +1567,116 @@ begin_comment
 comment|/* Standard error exit. */
 end_comment
 
+begin_function_decl
+name|int
+name|flushentry
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Wrapper for malloc() that flushes the cylinder group cache to try   * to get space.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|Malloc
+parameter_list|(
+name|int
+name|size
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|retval
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|retval
+operator|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+if|if
+condition|(
+name|flushentry
+argument_list|()
+operator|==
+literal|0
+condition|)
+break|break;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Wrapper for calloc() that flushes the cylinder group cache to try   * to get space.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|Calloc
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|retval
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|retval
+operator|=
+name|calloc
+argument_list|(
+name|cnt
+argument_list|,
+name|size
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+if|if
+condition|(
+name|flushentry
+argument_list|()
+operator|==
+literal|0
+condition|)
+break|break;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
 begin_struct_decl
 struct_decl|struct
 name|fstab
@@ -1630,9 +1890,9 @@ name|int
 name|cg
 parameter_list|,
 name|struct
-name|cg
+name|bufarea
 modifier|*
-name|cgp
+name|cgbp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1783,6 +2043,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|finalIOstats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|findino
 parameter_list|(
@@ -1885,6 +2154,18 @@ begin_function_decl
 name|struct
 name|bufarea
 modifier|*
+name|cgget
+parameter_list|(
+name|int
+name|cg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bufarea
+modifier|*
 name|getdatablk
 parameter_list|(
 name|ufs2_daddr_t
@@ -1892,6 +2173,9 @@ name|blkno
 parameter_list|,
 name|long
 name|size
+parameter_list|,
+name|int
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1998,6 +2282,17 @@ name|inoinfo
 parameter_list|(
 name|ino_t
 name|inum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|IOstats
+parameter_list|(
+name|char
+modifier|*
+name|what
 parameter_list|)
 function_decl|;
 end_function_decl

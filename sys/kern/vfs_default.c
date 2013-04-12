@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -3413,6 +3413,31 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_namlen
+operator|==
+literal|1
+operator|&&
+name|dp
+operator|->
+name|d_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bcopy
 argument_list|(
 name|dp
@@ -3432,6 +3457,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+block|}
 goto|goto
 name|out
 goto|;
@@ -4257,7 +4283,7 @@ operator|->
 name|a_end
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vp
 operator|->
@@ -4281,7 +4307,7 @@ name|end
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vp
 operator|->

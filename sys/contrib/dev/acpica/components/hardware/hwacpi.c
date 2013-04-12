@@ -75,6 +75,18 @@ argument_list|(
 name|HwSetMode
 argument_list|)
 expr_stmt|;
+comment|/* If the Hardware Reduced flag is set, machine is always in acpi mode */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,      * system does not support mode transition.      */
 if|if
 condition|(
@@ -313,6 +325,18 @@ argument_list|(
 name|HwGetMode
 argument_list|)
 expr_stmt|;
+comment|/* If the Hardware Reduced flag is set, machine is always in acpi mode */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_UINT32
+argument_list|(
+name|ACPI_SYS_MODE_ACPI
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,      * system does not support mode transition.      */
 if|if
 condition|(
@@ -322,7 +346,7 @@ operator|.
 name|SmiCommand
 condition|)
 block|{
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|ACPI_SYS_MODE_ACPI
 argument_list|)
@@ -346,7 +370,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|ACPI_SYS_MODE_LEGACY
 argument_list|)
@@ -357,7 +381,7 @@ condition|(
 name|Value
 condition|)
 block|{
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|ACPI_SYS_MODE_ACPI
 argument_list|)
@@ -365,7 +389,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|return_VALUE
+name|return_UINT32
 argument_list|(
 name|ACPI_SYS_MODE_LEGACY
 argument_list|)

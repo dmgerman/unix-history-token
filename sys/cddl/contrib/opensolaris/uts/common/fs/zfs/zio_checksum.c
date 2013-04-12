@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -914,7 +914,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -989,7 +992,10 @@ expr_stmt|;
 else|else
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1000,7 +1006,10 @@ name|size
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 operator|)
 return|;
 name|size
@@ -1239,7 +1248,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 operator|)
 return|;
 if|if

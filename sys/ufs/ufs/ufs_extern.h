@@ -875,6 +875,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BA_UNMAPPED
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Do not mmap resulted buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BA_SEQMASK
 value|0x7F000000
 end_define

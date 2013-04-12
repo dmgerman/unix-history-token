@@ -2947,21 +2947,9 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|VERIFY_GLA
-end_define
-
 begin_comment
 comment|/*  * Verify that the 'guest linear address' provided as collateral of the nested  * page table fault matches with our instruction decoding.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VERIFY_GLA
-end_ifdef
 
 begin_function
 specifier|static
@@ -2993,6 +2981,18 @@ name|base
 decl_stmt|,
 name|idx
 decl_stmt|;
+comment|/* Skip 'gla' verification */
+if|if
+condition|(
+name|gla
+operator|==
+name|VIE_INVALID_GLA
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|base
 operator|=
 literal|0
@@ -3152,15 +3152,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VERIFY_GLA */
-end_comment
-
 begin_function
 name|int
 name|vmm_decode_instruction
@@ -3260,9 +3251,6 @@ operator|-
 literal|1
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|VERIFY_GLA
 if|if
 condition|(
 name|verify_gla
@@ -3282,8 +3270,6 @@ operator|-
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
 name|vie
 operator|->
 name|decoded

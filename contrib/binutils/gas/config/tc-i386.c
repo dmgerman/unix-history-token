@@ -19697,6 +19697,10 @@ operator|(
 name|CpuSSSE3
 operator||
 name|CpuSSE4
+operator||
+name|CpuAES
+operator||
+name|CpuPCLMUL
 operator|)
 operator|)
 operator|!=
@@ -19975,6 +19979,10 @@ operator|(
 name|CpuSSSE3
 operator||
 name|CpuSSE4
+operator||
+name|CpuAES
+operator||
+name|CpuPCLMUL
 operator|)
 operator|)
 operator|!=

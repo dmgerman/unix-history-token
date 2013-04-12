@@ -449,11 +449,11 @@ case|:
 case|case
 literal|0x1E
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x1F
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x2E
 case|:
@@ -533,6 +533,19 @@ expr_stmt|;
 name|nclasses
 operator|=
 literal|3
+expr_stmt|;
+break|break;
+case|case
+literal|0x3C
+case|:
+comment|/* Per Intel document 325462-045US 01/2013. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_HASWELL
+expr_stmt|;
+name|nclasses
+operator|=
+literal|5
 expr_stmt|;
 break|break;
 block|}
@@ -687,6 +700,9 @@ case|:
 case|case
 name|PMC_CPU_INTEL_IVYBRIDGE_XEON
 case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
+case|:
 name|error
 operator|=
 name|pmc_core_initialize
@@ -803,6 +819,9 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_HASWELL
+case|:
+case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
@@ -897,6 +916,9 @@ name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_IVYBRIDGE
@@ -1002,6 +1024,9 @@ condition|)
 block|{
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE

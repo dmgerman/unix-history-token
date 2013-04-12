@@ -636,7 +636,7 @@ operator|.
 name|ec
 argument_list|)
 expr_stmt|;
-comment|/* NB: unlike PKS#3 DH, if *outlen is less than maximum size this is 	 * not an error, the result is truncated. 	 */
+comment|/* NB: unlike PKCS#3 DH, if *outlen is less than maximum size this is 	 * not an error, the result is truncated. 	 */
 name|outlen
 operator|=
 operator|*

@@ -635,7 +635,7 @@ literal|"si"
 block|,
 literal|"dle"
 block|,
-literal|"dcl"
+literal|"dc1"
 block|,
 literal|"dc2"
 block|,

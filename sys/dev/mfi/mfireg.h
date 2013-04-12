@@ -187,6 +187,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MFI_RFPI
+value|0x48
+end_define
+
+begin_comment
+comment|/* reply_free_post_host_index */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MFI_RPI
 value|0x6c
 end_define
@@ -911,6 +922,18 @@ name|MFI_DCMD_BBU_GET_DESIGN_INFO
 init|=
 literal|0x05030000
 block|,
+name|MFI_DCMD_BBU_START_LEARN
+init|=
+literal|0x05040000
+block|,
+name|MFI_DCMD_BBU_GET_PROP
+init|=
+literal|0x05050100
+block|,
+name|MFI_DCMD_BBU_SET_PROP
+init|=
+literal|0x05050200
+block|,
 name|MFI_DCMD_CLUSTER
 init|=
 literal|0x08000000
@@ -1035,6 +1058,13 @@ define|#
 directive|define
 name|MFI_FRAME_IEEE_SGL
 value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MFI_FRAME_FMT
+value|"\20" \     "\1NOPOST" \     "\2SGL64" \     "\3SENSE64" \     "\4WRITE" \     "\5READ" \     "\6IEEESGL"
 end_define
 
 begin_comment
@@ -1672,14 +1702,14 @@ value|12
 end_define
 
 begin_comment
-comment|/* Firmware flashing can take 40s */
+comment|/* Firmware flashing can take 50+ seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MFI_POLL_TIMEOUT_SECS
-value|50
+value|60
 end_define
 
 begin_comment
@@ -4644,6 +4674,36 @@ name|full_charge_capacity
 decl_stmt|;
 name|uint8_t
 name|is_SOH_good
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|21
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mfi_bbu_properties
+block|{
+name|uint32_t
+name|auto_learn_period
+decl_stmt|;
+name|uint32_t
+name|next_learn_time
+decl_stmt|;
+name|uint8_t
+name|learn_delay_interval
+decl_stmt|;
+name|uint8_t
+name|auto_learn_mode
+decl_stmt|;
+name|uint8_t
+name|bbu_mode
 decl_stmt|;
 name|uint8_t
 name|reserved

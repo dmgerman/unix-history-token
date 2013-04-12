@@ -303,6 +303,16 @@ literal|"C Include:    "
 block|,
 literal|"C Header Output"
 block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Offset Table: "
+block|,
+literal|"C Offset Table Output"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -696,6 +706,18 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_C_OutputFlag
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_C_OffsetTableFlag
 parameter_list|,
 name|FALSE
 parameter_list|)

@@ -547,9 +547,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|int
-name|stop_allowed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2959,7 +2956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
+comment|/*  * Determine signal that should be delivered to thread td, the current  * thread, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
 end_comment
 
 begin_function
@@ -2970,9 +2967,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|int
-name|stop_allowed
 parameter_list|)
 block|{
 name|PROC_LOCK_ASSERT
@@ -2982,21 +2976,6 @@ operator|->
 name|td_proc
 argument_list|,
 name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|stop_allowed
-operator|==
-name|SIG_STOP_ALLOWED
-operator|||
-name|stop_allowed
-operator|==
-name|SIG_STOP_NOT_ALLOWED
-argument_list|,
-operator|(
-literal|"cursig: stop_allowed"
-operator|)
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -3030,8 +3009,6 @@ condition|?
 name|issignal
 argument_list|(
 name|td
-argument_list|,
-name|stop_allowed
 argument_list|)
 else|:
 literal|0
@@ -6395,8 +6372,6 @@ operator|=
 name|cursig
 argument_list|(
 name|td
-argument_list|,
-name|SIG_STOP_ALLOWED
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -7717,8 +7692,6 @@ operator|=
 name|cursig
 argument_list|(
 name|td
-argument_list|,
-name|SIG_STOP_ALLOWED
 argument_list|)
 operator|)
 operator|!=
@@ -11157,7 +11130,7 @@ name|p_step
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Some signals have a process-wide effect and a per-thread 	 * component.  Most processing occurs when the process next 	 * tries to cross the user boundary, however there are some 	 * times when processing needs to be done immediatly, such as 	 * waking up threads so that they can cross the user boundary. 	 * We try do the per-process part here. 	 */
+comment|/* 	 * Some signals have a process-wide effect and a per-thread 	 * component.  Most processing occurs when the process next 	 * tries to cross the user boundary, however there are some 	 * times when processing needs to be done immediately, such as 	 * waking up threads so that they can cross the user boundary. 	 * We try to do the per-process part here. 	 */
 if|if
 condition|(
 name|P_SHOULDSTOP
@@ -11935,9 +11908,6 @@ name|thread
 modifier|*
 name|td2
 decl_stmt|;
-name|int
-name|wakeup_swapper
-decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -11951,10 +11921,6 @@ name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|wakeup_swapper
-operator|=
-literal|0
 expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
@@ -12092,13 +12058,6 @@ name|td2
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|wakeup_swapper
-condition|)
-name|kick_proc0
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -12620,35 +12579,38 @@ block|}
 end_function
 
 begin_comment
-comment|/* Defer the delivery of SIGSTOP for the current thread. */
+comment|/*  * Defer the delivery of SIGSTOP for the current thread.  Returns true  * if stops were deferred and false if they were already deferred.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|sigdeferstop
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-operator|!
-operator|(
+decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+if|if
+condition|(
 name|td
 operator|->
 name|td_flags
 operator|&
 name|TDF_SBDRY
-operator|)
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"attempt to set TDF_SBDRY recursively"
+literal|0
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 name|thread_lock
 argument_list|(
 name|td
@@ -12665,6 +12627,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -12675,25 +12642,16 @@ end_comment
 begin_function
 name|void
 name|sigallowstop
-parameter_list|(
+parameter_list|()
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
+decl_stmt|;
 name|td
-operator|->
-name|td_flags
-operator|&
-name|TDF_SBDRY
-argument_list|,
-operator|(
-literal|"attempt to clear already-cleared TDF_SBDRY"
-operator|)
-argument_list|)
+operator|=
+name|curthread
 expr_stmt|;
 name|thread_lock
 argument_list|(
@@ -12728,9 +12686,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|int
-name|stop_allowed
 parameter_list|)
 block|{
 name|struct
@@ -15208,6 +15163,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 name|free
@@ -15956,6 +15912,13 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|free
+argument_list|(
+name|name
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 goto|goto
 name|restart
 goto|;

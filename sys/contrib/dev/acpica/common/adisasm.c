@@ -861,7 +861,7 @@ name|OemTableId
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Output:  ASL code. Redirect to a file if requested      */
+comment|/*      * Output: ASL code. Redirect to a file if requested      */
 if|if
 condition|(
 name|OutToFile
@@ -1330,17 +1330,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|DisasmFilename
-condition|)
-block|{
-name|ACPI_FREE
-argument_list|(
-name|DisasmFilename
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|OutToFile
 operator|&&
 name|File
@@ -1671,7 +1660,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" */\n\n"
+literal|" */\n"
 argument_list|)
 expr_stmt|;
 comment|/* Create AML output filename based on input filename */

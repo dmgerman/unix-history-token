@@ -329,11 +329,29 @@ name|initproc
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTHOWTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BOOTHOWTO
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|boothowto
 init|=
-literal|0
+name|BOOTHOWTO
 decl_stmt|;
 end_decl_stmt
 
@@ -362,9 +380,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTVERBOSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BOOTVERBOSE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|bootverbose
+init|=
+name|BOOTVERBOSE
 decl_stmt|;
 end_decl_stmt
 

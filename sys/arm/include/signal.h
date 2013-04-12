@@ -37,7 +37,11 @@ end_if
 begin_struct
 struct|struct
 name|sigcontext
-block|{ }
+block|{
+name|int
+name|_dummy
+decl_stmt|;
+block|}
 struct|;
 end_struct
 

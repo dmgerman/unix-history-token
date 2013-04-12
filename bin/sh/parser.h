@@ -362,6 +362,7 @@ name|char
 modifier|*
 name|expandstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

@@ -189,7 +189,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCI_DEV_82815BA
+name|PCI_DEV_82815_MC
 value|0x1130
 end_define
 
@@ -640,7 +640,7 @@ literal|1
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * ICH2/3/4-M I/O Controller Hub is at bus 0, slot 1F, function 0. 	 * E.g. see Section 6.1 "PCI Devices and Functions" and table 6.1 of 	 * Intel(r) 82801BA I/O Controller Hub 2 (ICH2) and Intel(r) 82801BAM 	 * I/O Controller Hub 2 Mobile (ICH2-M). 	 * 	 * TODO: add a quirk to disable if we see the 82815_MC along 	 * with the 82801BA and revision< 5. 	 */
+comment|/* 	 * ICH2/3/4-M I/O Controller Hub is at bus 0, slot 1F, function 0. 	 * E.g. see Section 6.1 "PCI Devices and Functions" and table 6.1 of 	 * Intel(r) 82801BA I/O Controller Hub 2 (ICH2) and Intel(r) 82801BAM 	 * I/O Controller Hub 2 Mobile (ICH2-M). 	 */
 name|ich_device
 operator|=
 name|pci_find_bsf
@@ -689,6 +689,60 @@ name|PCI_DEV_82801DB
 operator|)
 condition|)
 return|return;
+comment|/* 	 * Certain systems with ICH2 and an Intel 82815_MC host bridge 	 * where the host bridge's revision is< 5 lockup if SpeedStep 	 * is used. 	 */
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|ich_device
+argument_list|)
+operator|==
+name|PCI_DEV_82801BA
+condition|)
+block|{
+name|device_t
+name|hostb
+decl_stmt|;
+name|hostb
+operator|=
+name|pci_find_bsf
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hostb
+operator|!=
+name|NULL
+operator|&&
+name|pci_get_vendor
+argument_list|(
+name|hostb
+argument_list|)
+operator|==
+name|PCI_VENDOR_INTEL
+operator|&&
+name|pci_get_device
+argument_list|(
+name|hostb
+argument_list|)
+operator|==
+name|PCI_DEV_82815_MC
+operator|&&
+name|pci_get_revid
+argument_list|(
+name|hostb
+argument_list|)
+operator|<
+literal|5
+condition|)
+return|return;
+block|}
 comment|/* Find the PMBASE register from our PCI config header. */
 name|pmbase
 operator|=

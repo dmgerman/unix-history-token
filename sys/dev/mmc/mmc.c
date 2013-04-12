@@ -2296,6 +2296,13 @@ name|retries
 operator|=
 name|retries
 expr_stmt|;
+name|cmd
+operator|->
+name|mrq
+operator|=
+operator|&
+name|mreq
+expr_stmt|;
 name|mreq
 operator|.
 name|cmd

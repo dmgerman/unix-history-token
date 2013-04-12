@@ -904,9 +904,20 @@ decl_stmt|;
 name|uint8_t
 name|n
 decl_stmt|;
+name|unsigned
+name|int
+name|usage
+decl_stmt|;
+name|usage
+operator|=
+name|libusb20_dev_get_power_usage
+argument_list|(
+name|pdev
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s, cfg=%u md=%s spd=%s pwr=%s\n"
+literal|"%s, cfg=%u md=%s spd=%s pwr=%s (%umA)\n"
 argument_list|,
 name|libusb20_dev_get_desc
 argument_list|(
@@ -941,6 +952,8 @@ argument_list|(
 name|pdev
 argument_list|)
 argument_list|)
+argument_list|,
+name|usage
 argument_list|)
 expr_stmt|;
 if|if

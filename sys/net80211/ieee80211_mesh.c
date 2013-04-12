@@ -5007,15 +5007,6 @@ operator|->
 name|iv_ic
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|parent
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
-name|struct
 name|ieee80211_node
 modifier|*
 name|ni
@@ -5028,6 +5019,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|eh
 operator|=
 name|mtod
@@ -5325,6 +5321,11 @@ block|}
 endif|#
 directive|endif
 comment|/* IEEE80211_SUPPORT_SUPERG */
+name|IEEE80211_TX_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|__predict_true
@@ -5371,13 +5372,16 @@ block|}
 block|}
 name|error
 operator|=
-name|parent
-operator|->
-name|if_transmit
+name|ieee80211_parent_transmit
 argument_list|(
-name|parent
+name|ic
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|IEEE80211_TX_UNLOCK
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 if|if
@@ -5387,11 +5391,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni
@@ -5478,6 +5477,11 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|rt_dest
@@ -5826,15 +5830,6 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|parent
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
 specifier|const
 name|struct
 name|ieee80211_frame
@@ -5874,6 +5869,12 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+comment|/* This is called from the RX path - don't hold this lock */
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 comment|/* 	 * mesh ttl of 1 means we are the last one receving it, 	 * according to amendment we decrement and then check if 	 * 0, if so we dont forward. 	 */
 if|if
 condition|(
@@ -6243,15 +6244,24 @@ operator|*
 operator|)
 name|ni
 expr_stmt|;
+comment|/* 	 * XXX this bypasses all of the VAP TX handling; it passes frames 	 * directly to the parent interface. 	 * 	 * Because of this, there's no TX lock being held as there's no 	 * encaps state being used. 	 * 	 * Doing a direct parent transmit may not be the correct thing 	 * to do here; we'll have to re-think this soon. 	 */
+name|IEEE80211_TX_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
-name|parent
-operator|->
-name|if_transmit
+name|ieee80211_parent_transmit
 argument_list|(
-name|parent
+name|ic
 argument_list|,
 name|mcopy
+argument_list|)
+expr_stmt|;
+name|IEEE80211_TX_UNLOCK
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 if|if
@@ -6856,9 +6866,9 @@ name|NULL
 return|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|ALIGNED_POINTER
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
 if|if
 condition|(
 operator|!
@@ -6908,7 +6918,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* ALIGNED_POINTER */
+comment|/* !__NO_STRICT_ALIGNMENT */
 if|if
 condition|(
 name|llc
@@ -7170,6 +7180,14 @@ decl_stmt|,
 modifier|*
 name|rt_meshsa
 decl_stmt|;
+comment|/* This is called from the RX path - don't hold this lock */
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 name|qwh
 operator|=
 operator|(
@@ -7355,6 +7373,14 @@ decl_stmt|;
 name|int
 name|ae
 decl_stmt|;
+comment|/* This is called from the RX path - don't hold this lock */
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 name|qwh
 operator|=
 operator|(
@@ -7622,6 +7648,14 @@ name|vap
 operator|->
 name|iv_mesh
 decl_stmt|;
+comment|/* This is called from the RX path - don't hold this lock */
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 name|mesh_forward
 argument_list|(
 name|vap
@@ -7842,6 +7876,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* undefined */
+comment|/* This is called from the RX path - don't hold this lock */
+name|IEEE80211_TX_UNLOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -12331,6 +12371,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|ie
 argument_list|)
 argument_list|)
@@ -12981,6 +13022,9 @@ name|ieee80211_frame
 modifier|*
 name|wh
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|ni
@@ -13065,6 +13109,11 @@ return|return
 name|ENOMEM
 return|;
 block|}
+name|IEEE80211_TX_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -13170,11 +13219,12 @@ argument_list|,
 name|tx_mgmt
 argument_list|)
 expr_stmt|;
-return|return
-name|ic
-operator|->
-name|ic_raw_xmit
+name|ret
+operator|=
+name|ieee80211_raw_output
 argument_list|(
+name|vap
+argument_list|,
 name|ni
 argument_list|,
 name|m
@@ -13182,6 +13232,16 @@ argument_list|,
 operator|&
 name|params
 argument_list|)
+expr_stmt|;
+name|IEEE80211_TX_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
 return|;
 block|}
 end_function

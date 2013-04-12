@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_util.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_stat.h"
 end_include
 
@@ -115,6 +121,32 @@ operator|->
 name|desc
 operator|==
 name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|vst
+operator|->
+name|scope
+operator|==
+name|VMM_STAT_SCOPE_INTEL
+operator|&&
+operator|!
+name|vmm_is_intel
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|vst
+operator|->
+name|scope
+operator|==
+name|VMM_STAT_SCOPE_AMD
+operator|&&
+operator|!
+name|vmm_is_amd
+argument_list|()
 condition|)
 return|return;
 if|if
@@ -334,6 +366,180 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* global statistics */
+end_comment
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VCPU_MIGRATIONS
+argument_list|,
+literal|"vcpu migration across host cpus"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_COUNT
+argument_list|,
+literal|"total number of vm exits"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_EXTINT
+argument_list|,
+literal|"vm exits due to external interrupt"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_HLT
+argument_list|,
+literal|"number of times hlt was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_CR_ACCESS
+argument_list|,
+literal|"number of times %cr access was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_RDMSR
+argument_list|,
+literal|"number of times rdmsr was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_WRMSR
+argument_list|,
+literal|"number of times wrmsr was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_MTRAP
+argument_list|,
+literal|"number of monitor trap exits"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_PAUSE
+argument_list|,
+literal|"number of times pause was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_INTR_WINDOW
+argument_list|,
+literal|"vm exits due to interrupt window opening"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_NMI_WINDOW
+argument_list|,
+literal|"vm exits due to nmi window opening"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_INOUT
+argument_list|,
+literal|"number of times in/out was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_CPUID
+argument_list|,
+literal|"number of times cpuid was intercepted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_EPT_FAULT
+argument_list|,
+literal|"vm exits due to nested page fault"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_UNKNOWN
+argument_list|,
+literal|"number of vm exits for unknown reason"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_ASTPENDING
+argument_list|,
+literal|"number of times astpending at exit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_USERSPACE
+argument_list|,
+literal|"number of vm exits handled in userspace"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -2011,10 +2011,10 @@ operator|->
 name|cs_lock
 argument_list|)
 expr_stmt|;
-name|MGETHDR
-argument_list|(
 name|mreq
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_WAITOK
 argument_list|,
 name|MT_DATA

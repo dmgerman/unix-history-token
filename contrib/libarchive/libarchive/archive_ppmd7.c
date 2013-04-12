@@ -6455,6 +6455,7 @@ operator|->
 name|Low
 operator|=
 operator|(
+operator|(
 name|UInt32
 operator|)
 name|p
@@ -6462,6 +6463,9 @@ operator|->
 name|Low
 operator|<<
 literal|8
+operator|)
+operator|&
+literal|0xFFFFFFFF
 expr_stmt|;
 block|}
 end_function

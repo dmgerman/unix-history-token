@@ -147,14 +147,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Constants for the hash table of sleep queue chains.  These constants are  * the same ones that 4BSD (and possibly earlier versions of BSD) used.  * Basically, we ignore the lower 8 bits of the address since most wait  * channel pointers are aligned and only look at the next 7 bits for the  * hash.  SC_TABLESIZE must be a power of two for SC_MASK to work properly.  */
+comment|/*  * Constants for the hash table of sleep queue chains.  * SC_TABLESIZE must be a power of two for SC_MASK to work properly.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SC_TABLESIZE
-value|128
+value|256
 end_define
 
 begin_comment
@@ -182,7 +182,7 @@ name|SC_HASH
 parameter_list|(
 name|wc
 parameter_list|)
-value|(((uintptr_t)(wc)>> SC_SHIFT)& SC_MASK)
+value|((((uintptr_t)(wc)>> SC_SHIFT) ^ (uintptr_t)(wc))& \ 			    SC_MASK)
 end_define
 
 begin_define
@@ -1108,17 +1108,14 @@ expr_stmt|;
 comment|/* If this thread is not allowed to sleep, die a horrible death. */
 name|KASSERT
 argument_list|(
-operator|!
-operator|(
 name|td
 operator|->
-name|td_pflags
-operator|&
-name|TDP_NOSLEEPING
-operator|)
+name|td_no_sleeping
+operator|==
+literal|0
 argument_list|,
 operator|(
-literal|"%s: td %p to sleep on wchan %p with TDP_NOSLEEPING on"
+literal|"%s: td %p to sleep on wchan %p with sleeping prohibited"
 operator|,
 name|__func__
 operator|,
@@ -1457,14 +1454,20 @@ end_comment
 
 begin_function
 name|void
-name|sleepq_set_timeout
+name|sleepq_set_timeout_sbt
 parameter_list|(
 name|void
 modifier|*
 name|wchan
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1522,18 +1525,29 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|callout_reset_curcpu
+name|callout_reset_sbt_on
 argument_list|(
 operator|&
 name|td
 operator|->
 name|td_slpcallout
 argument_list|,
-name|timo
+name|sbt
+argument_list|,
+name|pr
 argument_list|,
 name|sleepq_timeout
 argument_list|,
 name|td
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+name|flags
+operator||
+name|C_DIRECT_EXEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -1665,8 +1679,6 @@ name|int
 name|sig
 decl_stmt|,
 name|ret
-decl_stmt|,
-name|stop_allowed
 decl_stmt|;
 name|td
 operator|=
@@ -1769,20 +1781,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|stop_allowed
-operator|=
-operator|(
-name|td
-operator|->
-name|td_flags
-operator|&
-name|TDF_SBDRY
-operator|)
-condition|?
-name|SIG_STOP_NOT_ALLOWED
-else|:
-name|SIG_STOP_ALLOWED
-expr_stmt|;
 name|thread_unlock
 argument_list|(
 name|td
@@ -1844,8 +1842,6 @@ operator|=
 name|cursig
 argument_list|(
 name|td
-argument_list|,
-name|stop_allowed
 argument_list|)
 expr_stmt|;
 if|if

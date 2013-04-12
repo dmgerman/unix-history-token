@@ -691,15 +691,8 @@ begin_comment
 comment|/* skip firewall processing */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_FREELIST
-value|0x00008000
-end_define
-
 begin_comment
-comment|/* mbuf is on the free list */
+comment|/*	0x00008000    free */
 end_comment
 
 begin_define
@@ -2754,7 +2747,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|m_extadd((m), (caddr_t)(buf), (size), (free),(arg1),(arg2),(flags), (type))
+value|(void )m_extadd((m), (caddr_t)(buf), (size), (free), (arg1), (arg2),\     (flags), (type), M_NOWAIT)
 end_define
 
 begin_define
@@ -2849,6 +2842,22 @@ parameter_list|,
 name|len
 parameter_list|)
 value|do {						\ 	KASSERT((m)->m_flags& M_PKTHDR&& !((m)->m_flags& M_EXT),	\ 		("%s: MH_ALIGN not PKTHDR mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_pktdat,				\ 		("%s: MH_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * As above, for mbuf with external storage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEXT_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|do {						\ 	KASSERT((m)->m_flags& M_EXT,					\ 		("%s: MEXT_ALIGN not an M_EXT mbuf", __func__));	\ 	KASSERT((m)->m_data == (m)->m_ext.ext_buf,			\ 		("%s: MEXT_ALIGN not a virgin mbuf", __func__));	\ 	(m)->m_data += ((m)->m_ext.ext_size - (len))&			\ 	    ~(sizeof(long) - 1); 					\ } while (0)
 end_define
 
 begin_comment
@@ -3106,7 +3115,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|m_extadd
 parameter_list|(
 name|struct
@@ -3134,6 +3143,8 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -3425,9 +3436,9 @@ name|m_get2
 parameter_list|(
 name|int
 parameter_list|,
-name|short
-parameter_list|,
 name|int
+parameter_list|,
+name|short
 parameter_list|,
 name|int
 parameter_list|)

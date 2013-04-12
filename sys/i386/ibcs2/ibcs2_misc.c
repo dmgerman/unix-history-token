@@ -1578,8 +1578,6 @@ operator|->
 name|fd
 argument_list|,
 name|CAP_READ
-operator||
-name|CAP_SEEK
 argument_list|,
 operator|&
 name|fp
@@ -2351,8 +2349,6 @@ operator|->
 name|fd
 argument_list|,
 name|CAP_READ
-operator||
-name|CAP_SEEK
 argument_list|,
 operator|&
 name|fp

@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|PFSYNC_MINPKT
-value|( \ 	sizeof(struct ip) + \ 	sizeof(struct pfsync_header) + \ 	sizeof(struct pfsync_subheader) + \ 	sizeof(struct pfsync_eof))
+value|( \ 	sizeof(struct ip) + \ 	sizeof(struct pfsync_header) + \ 	sizeof(struct pfsync_subheader) )
 end_define
 
 begin_struct
@@ -8177,17 +8177,17 @@ name|m
 operator|=
 name|m_get2
 argument_list|(
-name|M_NOWAIT
-argument_list|,
-name|MT_DATA
-argument_list|,
-name|M_PKTHDR
-argument_list|,
 name|max_linkhdr
 operator|+
 name|sc
 operator|->
 name|sc_len
+argument_list|,
+name|M_NOWAIT
+argument_list|,
+name|MT_DATA
+argument_list|,
+name|M_PKTHDR
 argument_list|)
 expr_stmt|;
 if|if

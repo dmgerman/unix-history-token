@@ -70,7 +70,7 @@ name|IGNORE
 parameter_list|(
 name|x
 parameter_list|)
-value|&x
+value|(void)(x)
 end_define
 
 begin_endif
@@ -1198,7 +1198,6 @@ name|ficlLockDictionary
 parameter_list|(
 name|x
 parameter_list|)
-value|0
 end_define
 
 begin_comment

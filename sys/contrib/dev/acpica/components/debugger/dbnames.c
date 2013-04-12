@@ -31,6 +31,12 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acpredef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1066,9 +1072,13 @@ name|Pathname
 decl_stmt|;
 name|Predefined
 operator|=
-name|AcpiNsCheckForPredefinedName
+name|AcpiUtMatchPredefinedMethod
 argument_list|(
 name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 if|if
@@ -1111,7 +1121,7 @@ name|Info
 operator|.
 name|ExpectedBtypes
 operator|&
-name|ACPI_BTYPE_PACKAGE
+name|ACPI_RTYPE_PACKAGE
 condition|)
 block|{
 name|Package
@@ -1127,11 +1137,15 @@ literal|"%-32s arg %X ret %2.2X"
 argument_list|,
 name|Pathname
 argument_list|,
+operator|(
 name|Predefined
 operator|->
 name|Info
 operator|.
-name|ParamCount
+name|ArgumentList
+operator|&
+name|METHOD_ARG_MASK
+operator|)
 argument_list|,
 name|Predefined
 operator|->

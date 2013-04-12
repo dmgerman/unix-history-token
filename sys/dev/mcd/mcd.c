@@ -1633,9 +1633,6 @@ name|mcd_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|sc
 operator|=
 operator|(
@@ -1749,11 +1746,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* queue it */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bioq_disksort
 argument_list|(
 operator|&
@@ -1764,11 +1756,6 @@ operator|.
 name|head
 argument_list|,
 name|bp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* now check whether we can perform processing */
@@ -1821,12 +1808,6 @@ name|bio
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -1838,11 +1819,6 @@ operator|&
 name|MCDMBXBSY
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|bp
@@ -1874,20 +1850,10 @@ name|flags
 operator||=
 name|MCDMBXBSY
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* nothing to do */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|sc

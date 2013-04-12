@@ -319,7 +319,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-afqvw] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
+literal|"usage: %s [-afqvw] [-b rate] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
 literal|"\t[kernel [core]]\n"
 argument_list|,
 name|getprogname
@@ -1562,10 +1562,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
-operator|==
-literal|0
-operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|||
 name|p
 operator|==
 name|optarg
@@ -1582,8 +1583,8 @@ name|baud_rate
 operator|=
 name|i
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 literal|'c'
 case|:

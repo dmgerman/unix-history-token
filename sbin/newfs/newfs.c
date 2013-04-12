@@ -428,6 +428,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|metaspace
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* space held for metadata blocks */
+end_comment
+
+begin_decl_stmt
+name|int
 name|opt
 init|=
 name|DEFAULTOPT
@@ -731,7 +741,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:jlm:no:p:r:s:t"
+literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:jk:lm:no:p:r:s:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1268,6 +1278,44 @@ literal|'l'
 case|:
 name|lflag
 operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+if|if
+condition|(
+operator|(
+name|metaspace
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: bad metadata space %%"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|metaspace
+operator|==
+literal|0
+condition|)
+comment|/* force to stay zero in mkfs */
+name|metaspace
+operator|=
+operator|-
 literal|1
 expr_stmt|;
 break|break;
@@ -2759,6 +2807,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-j enable soft updates journaling\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-k space to hold for metadata blocks\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

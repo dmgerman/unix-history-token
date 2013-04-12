@@ -3542,7 +3542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extend the gl_pathv member of a glob_t structure to accomodate a new item,  * add the new item, and update gl_pathc.  *  * This assumes the BSD realloc, which only copies the block when its size  * crosses a power-of-two boundary; for v7 realloc, this would cause quadratic  * behavior.  *  * Return 0 if new item added, error code if memory couldn't be allocated.  *  * Invariant of the glob_t structure:  *	Either gl_pathc is zero and gl_pathv is NULL; or gl_pathc> 0 and  *	gl_pathv points to (gl_offs + gl_pathc + 1) items.  */
+comment|/*  * Extend the gl_pathv member of a glob_t structure to accommodate a new item,  * add the new item, and update gl_pathc.  *  * This assumes the BSD realloc, which only copies the block when its size  * crosses a power-of-two boundary; for v7 realloc, this would cause quadratic  * behavior.  *  * Return 0 if new item added, error code if memory couldn't be allocated.  *  * Invariant of the glob_t structure:  *	Either gl_pathc is zero and gl_pathv is NULL; or gl_pathc> 0 and  *	gl_pathv points to (gl_offs + gl_pathc + 1) items.  */
 end_comment
 
 begin_function

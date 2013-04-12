@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -136,11 +142,6 @@ name|enum
 name|x2apic_state
 name|x2apic_state
 decl_stmt|;
-name|func
-operator|=
-operator|*
-name|eax
-expr_stmt|;
 comment|/* 	 * Requests for invalid CPUID levels should map to the highest 	 * available level instead. 	 */
 if|if
 condition|(
@@ -204,6 +205,11 @@ operator|=
 name|cpu_high
 expr_stmt|;
 block|}
+name|func
+operator|=
+operator|*
+name|eax
+expr_stmt|;
 comment|/* 	 * In general the approach used for CPU topology is to 	 * advertise a flat topology where all CPUs are packages with 	 * no multi-core or SMT. 	 */
 switch|switch
 condition|(
@@ -253,9 +259,6 @@ case|case
 name|CPUID_8000_0006
 case|:
 case|case
-name|CPUID_8000_0007
-case|:
-case|case
 name|CPUID_8000_0008
 case|:
 name|cpuid_count
@@ -268,6 +271,35 @@ name|ecx
 argument_list|,
 name|regs
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPUID_8000_0007
+case|:
+name|cpuid_count
+argument_list|(
+operator|*
+name|eax
+argument_list|,
+operator|*
+name|ecx
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If the host TSCs are not synchronized across 			 * physical cpus then we cannot advertise an 			 * invariant tsc to a vcpu. 			 * 			 * XXX This still falls short because the vcpu 			 * can observe the TSC moving backwards as it 			 * migrates across physical cpus. But at least 			 * it should discourage the guest from using the 			 * TSC to keep track of time. 			 */
+if|if
+condition|(
+operator|!
+name|smp_tsc
+condition|)
+name|regs
+index|[
+literal|3
+index|]
+operator|&=
+operator|~
+name|AMDPM_TSC_INVARIANT
 expr_stmt|;
 break|break;
 case|case

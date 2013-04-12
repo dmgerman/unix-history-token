@@ -413,7 +413,7 @@ name|wr
 operator|=
 name|alloc_wrqe
 argument_list|(
-name|roundup
+name|roundup2
 argument_list|(
 name|flowclen
 argument_list|,
@@ -3482,7 +3482,7 @@ name|wr
 operator|=
 name|alloc_wrqe
 argument_list|(
-name|roundup
+name|roundup2
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3623,7 +3623,7 @@ name|wr
 operator|=
 name|alloc_wrqe
 argument_list|(
-name|roundup
+name|roundup2
 argument_list|(
 name|wr_len
 argument_list|,

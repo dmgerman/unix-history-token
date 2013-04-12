@@ -4397,6 +4397,17 @@ define|\
 value|((((uint8_t *)&(a)->s_addr)[0] == 127)&& \      (((uint8_t *)&(a)->s_addr)[1] == 0)&& \      (((uint8_t *)&(a)->s_addr)[2] == 0)&& \      (((uint8_t *)&(a)->s_addr)[3] == 1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|IN4_ISLINKLOCAL_ADDRESS
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((((uint8_t *)&(a)->s_addr)[0] == 169)&& \      (((uint8_t *)&(a)->s_addr)[1] == 254))
+end_define
+
 begin_if
 if|#
 directive|if

@@ -4392,10 +4392,10 @@ name|ip6_src
 argument_list|)
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_cantforward
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6244,10 +6244,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badscope
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6362,10 +6362,10 @@ operator|!=
 name|odzone
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badscope
-operator|++
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -6962,14 +6962,14 @@ name|pim6stat
 operator|.
 name|pim6s_snd_registers
 expr_stmt|;
-comment|/* Make a copy of the packet to send to the user level process */
-name|MGETHDR
-argument_list|(
+comment|/* Make a copy of the packet to send to the user level process. */
 name|mm
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
-name|MT_HEADER
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -6983,14 +6983,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|mm
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
 name|mm
 operator|->
 name|m_data

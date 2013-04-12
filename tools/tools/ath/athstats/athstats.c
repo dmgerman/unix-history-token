@@ -307,7 +307,7 @@ directive|define
 name|S_BSTUCK
 value|AFTER(S_TX_LINEAR)
 block|{
-literal|5
+literal|6
 block|,
 literal|"bstuck"
 block|,
@@ -1698,7 +1698,7 @@ directive|define
 name|S_CABQ_XMIT
 value|AFTER(S_TX_AGGR_FAILALL)
 block|{
-literal|5
+literal|7
 block|,
 literal|"cabxmit"
 block|,
@@ -1712,7 +1712,7 @@ directive|define
 name|S_CABQ_BUSY
 value|AFTER(S_CABQ_XMIT)
 block|{
-literal|5
+literal|8
 block|,
 literal|"cabqbusy"
 block|,
@@ -1726,7 +1726,7 @@ directive|define
 name|S_TX_NODATA
 value|AFTER(S_CABQ_BUSY)
 block|{
-literal|5
+literal|8
 block|,
 literal|"txnodata"
 block|,
@@ -1740,7 +1740,7 @@ directive|define
 name|S_TX_BUSDMA
 value|AFTER(S_TX_NODATA)
 block|{
-literal|5
+literal|8
 block|,
 literal|"txbusdma"
 block|,
@@ -1754,7 +1754,7 @@ directive|define
 name|S_RX_BUSDMA
 value|AFTER(S_TX_BUSDMA)
 block|{
-literal|5
+literal|8
 block|,
 literal|"rxbusdma"
 block|,
@@ -2552,6 +2552,20 @@ literal|"sig"
 block|,
 literal|"avg recv signal (dBm)"
 block|}
+block|,
+define|#
+directive|define
+name|S_BMISSCOUNT
+value|AFTER(S_RX_SIGNAL)
+block|{
+literal|8
+block|,
+literal|"bmisscount"
+block|,
+literal|"bmisscnt"
+block|,
+literal|"beacon miss count"
+block|}
 block|,  }
 decl_stmt|;
 end_decl_stmt
@@ -2581,7 +2595,7 @@ begin_define
 define|#
 directive|define
 name|S_MAX
-value|S_ANT_RX7+1
+value|S_BMISSCOUNT+1
 end_define
 
 begin_comment
@@ -4721,6 +4735,14 @@ name|tx_qfull
 argument_list|)
 expr_stmt|;
 case|case
+name|S_BMISSCOUNT
+case|:
+name|STAT
+argument_list|(
+name|be_missed
+argument_list|)
+expr_stmt|;
+case|case
 name|S_RX_NOISE
 case|:
 name|snprintf
@@ -6411,6 +6433,14 @@ case|:
 name|STAT
 argument_list|(
 name|tx_qfull
+argument_list|)
+expr_stmt|;
+case|case
+name|S_BMISSCOUNT
+case|:
+name|STAT
+argument_list|(
+name|be_missed
 argument_list|)
 expr_stmt|;
 case|case

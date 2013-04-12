@@ -116,15 +116,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vfp_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vfp_restore
 parameter_list|(
 name|struct
@@ -155,7 +146,8 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|boolean_t
+specifier|extern
+name|int
 name|vfp_exists
 decl_stmt|;
 end_decl_stmt
@@ -228,9 +220,7 @@ name|val
 parameter_list|)
 block|{
 asm|__asm __volatile("mcr p15, 0, %0, c1, c0, 2\n\t"
-literal|"isb\n\t"
-operator|:
-operator|:
+block|: :
 literal|"r"
 operator|(
 name|val
@@ -240,6 +230,12 @@ literal|"cc"
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|isb
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
@@ -507,9 +503,10 @@ name|pcb_vfpcpu
 operator|==
 name|PCPU_GET
 argument_list|(
-name|vfpcpu
+name|cpu
 argument_list|)
 operator|)
+condition|)
 else|#
 directive|else
 comment|/* someone did not save their registers, */
@@ -608,7 +605,7 @@ directive|ifdef
 name|SMP
 name|curpcb
 operator|->
-name|pcb_cpu
+name|pcb_vfpcpu
 operator|=
 name|PCPU_GET
 argument_list|(

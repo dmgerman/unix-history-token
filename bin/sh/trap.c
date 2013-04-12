@@ -230,8 +230,9 @@ comment|/* current value of signal */
 end_comment
 
 begin_decl_stmt
-name|int
-name|pendingsigs
+specifier|volatile
+name|sig_atomic_t
+name|pendingsig
 decl_stmt|;
 end_decl_stmt
 
@@ -608,6 +609,7 @@ name|trapcmd
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -1539,25 +1541,6 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|signo
-operator|!=
-name|SIGCHLD
-operator|||
-operator|!
-name|ignore_sigchld
-condition|)
-name|gotsig
-index|[
-name|signo
-index|]
-operator|=
-literal|1
-expr_stmt|;
-name|pendingsigs
-operator|++
-expr_stmt|;
 comment|/* If we are currently in a wait builtin, prepare to break it */
 if|if
 condition|(
@@ -1575,15 +1558,18 @@ name|in_waitcmd
 operator|!=
 literal|0
 condition|)
+block|{
 name|breakwaitcmd
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * If a trap is set, not ignored and not the null command, we need 	 * to make sure traps are executed even when a child blocks signals. 	 */
+name|pendingsig
+operator|=
+name|signo
+expr_stmt|;
+block|}
 if|if
 condition|(
-name|Tflag
-operator|&&
 name|trap
 index|[
 name|signo
@@ -1591,8 +1577,6 @@ index|]
 operator|!=
 name|NULL
 operator|&&
-operator|!
-operator|(
 name|trap
 index|[
 name|signo
@@ -1600,9 +1584,34 @@ index|]
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'\0'
+operator|&&
+operator|(
+name|signo
+operator|!=
+name|SIGCHLD
+operator|||
+operator|!
+name|ignore_sigchld
 operator|)
+condition|)
+block|{
+name|gotsig
+index|[
+name|signo
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|pendingsig
+operator|=
+name|signo
+expr_stmt|;
+comment|/* 		 * If a trap is set, not ignored and not the null command, we 		 * need to make sure traps are executed even when a child 		 * blocks signals. 		 */
+if|if
+condition|(
+name|Tflag
 operator|&&
 operator|!
 operator|(
@@ -1631,6 +1640,7 @@ name|breakwaitcmd
 operator|=
 literal|1
 expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|NO_HISTORY
@@ -1679,7 +1689,7 @@ init|;
 condition|;
 control|)
 block|{
-name|pendingsigs
+name|pendingsig
 operator|=
 literal|0
 expr_stmt|;
@@ -1761,13 +1771,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|exitstatus
-operator|=
-name|savestatus
-expr_stmt|;
 comment|/* 					 * If such a command was not 					 * already in progress, allow a 					 * break/continue/return in the 					 * trap action to have an effect 					 * outside of it. 					 */
 if|if
 condition|(
+name|evalskip
+operator|==
+literal|0
+operator|||
 name|prev_evalskip
 operator|!=
 literal|0
@@ -1780,6 +1790,10 @@ expr_stmt|;
 name|skipcount
 operator|=
 name|prev_skipcount
+expr_stmt|;
+name|exitstatus
+operator|=
+name|savestatus
 expr_stmt|;
 block|}
 if|if

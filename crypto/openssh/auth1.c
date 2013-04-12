@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.75 2010/08/31 09:58:37 djm Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.77 2012/12/02 20:34:09 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1121,7 +1121,11 @@ name|authctxt
 argument_list|,
 literal|1
 argument_list|,
+literal|0
+argument_list|,
 literal|"without authentication"
+argument_list|,
+name|NULL
 argument_list|,
 literal|""
 argument_list|)
@@ -1508,10 +1512,14 @@ name|authctxt
 argument_list|,
 name|authenticated
 argument_list|,
+literal|0
+argument_list|,
 name|get_authname
 argument_list|(
 name|type
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|,
 name|info
 argument_list|)
@@ -1706,6 +1714,21 @@ name|fakepw
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Configuration may have changed as a result of Match */
+if|if
+condition|(
+name|options
+operator|.
+name|num_auth_methods
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"AuthenticationMethods is not supported with SSH "
+literal|"protocol 1"
+argument_list|)
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s%s"

@@ -2465,10 +2465,10 @@ operator|->
 name|m_pktdat
 condition|)
 block|{
-name|MGETHDR
-argument_list|(
 name|n
-argument_list|,
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -2492,7 +2492,7 @@ name|m
 operator|)
 return|;
 block|}
-name|M_MOVE_PKTHDR
+name|m_move_pkthdr
 argument_list|(
 name|n
 argument_list|,

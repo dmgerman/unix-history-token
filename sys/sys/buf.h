@@ -280,6 +280,10 @@ name|caddr_t
 name|b_kvabase
 decl_stmt|;
 comment|/* base kva for buffer */
+name|caddr_t
+name|b_kvaalloc
+decl_stmt|;
+comment|/* allocated kva for B_KVAALLOC */
 name|int
 name|b_kvasize
 decl_stmt|;
@@ -521,23 +525,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00000800
+name|B_UNMAPPED
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* KVA is not mapped. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|B_00001000
+name|B_KVAALLOC
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* But allocated. */
 end_comment
 
 begin_define
@@ -554,12 +558,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00004000
+name|B_BARRIER
 value|0x00004000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Write this and all preceeding first. */
 end_comment
 
 begin_define
@@ -1684,7 +1688,29 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Do not wait for bufdaemon */
+comment|/* Do not wait for bufdaemon. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GB_UNMAPPED
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Do not mmap buffer pages. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GB_KVAALLOC
+value|0x0010
+end_define
+
+begin_comment
+comment|/* But allocate KVA. */
 end_comment
 
 begin_ifdef
@@ -1827,6 +1853,13 @@ begin_comment
 comment|/* Number of pbufs for vnode pager */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|caddr_t
+name|unmapped_buf
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|runningbufwakeup
@@ -1865,6 +1898,23 @@ name|void
 name|bufinit
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bdata2bio
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bip
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1929,7 +1979,28 @@ parameter_list|,
 name|bpp
 parameter_list|)
 define|\
-value|breadn_flags(vp, blkno, size, 0, 0, 0, cred, 0, bpp)
+value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, 0, bpp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bread_gb
+parameter_list|(
+name|vp
+parameter_list|,
+name|blkno
+parameter_list|,
+name|size
+parameter_list|,
+name|cred
+parameter_list|,
+name|gbflags
+parameter_list|,
+name|bpp
+parameter_list|)
+define|\
+value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, \ 		gbflags, bpp)
 end_define
 
 begin_define
@@ -2028,6 +2099,28 @@ end_function_decl
 begin_function_decl
 name|void
 name|bawrite
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|babarrierwrite
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bbarrierwrite
 parameter_list|(
 name|struct
 name|buf
@@ -2259,6 +2352,8 @@ name|long
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|buf
 modifier|*
@@ -2280,6 +2375,8 @@ parameter_list|,
 name|daddr_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2299,6 +2396,26 @@ parameter_list|,
 name|u_quad_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_bio_bzero_buf
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2363,6 +2480,8 @@ parameter_list|(
 name|struct
 name|buf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

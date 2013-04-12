@@ -120,17 +120,6 @@ begin_comment
 comment|/* Sleep is interruptible. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SLEEPQ_STOP_ON_BDRY
-value|0x200
-end_define
-
-begin_comment
-comment|/* Stop sleeping thread on 						   user mode boundary */
-end_comment
-
 begin_function_decl
 name|void
 name|init_sleepqueues
@@ -298,17 +287,36 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_set_timeout
+name|sleepq_set_timeout_sbt
 parameter_list|(
 name|void
 modifier|*
 name|wchan
 parameter_list|,
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|pr
+parameter_list|,
 name|int
-name|timo
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|sleepq_set_timeout
+parameter_list|(
+name|wchan
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|sleepq_set_timeout_sbt((wchan), tick_sbt * (timo), 0, C_HARDCLOCK)
+end_define
 
 begin_function_decl
 name|u_int

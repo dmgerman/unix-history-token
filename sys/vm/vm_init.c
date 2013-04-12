@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -315,13 +315,6 @@ name|caddr_t
 operator|)
 name|firstaddr
 expr_stmt|;
-name|v
-operator|=
-name|kern_timeout_callwheel_alloc
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Discount the physical memory larger than the size of kernel_map 	 * to avoid eating up all of KVA space. 	 */
 name|physmem_est
 operator|=
@@ -444,6 +437,13 @@ operator|)
 name|nswbuf
 operator|*
 name|MAXPHYS
+operator|+
+operator|(
+name|long
+operator|)
+name|bio_transient_maxcnt
+operator|*
+name|MAXPHYS
 argument_list|,
 name|TRUE
 argument_list|)
@@ -480,6 +480,46 @@ name|system_map
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|bio_transient_maxcnt
+operator|!=
+literal|0
+condition|)
+block|{
+name|bio_transient_map
+operator|=
+name|kmem_suballoc
+argument_list|(
+name|clean_map
+argument_list|,
+operator|&
+name|kmi
+operator|->
+name|bio_transient_sva
+argument_list|,
+operator|&
+name|kmi
+operator|->
+name|bio_transient_eva
+argument_list|,
+operator|(
+name|long
+operator|)
+name|bio_transient_maxcnt
+operator|*
+name|MAXPHYS
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|bio_transient_map
+operator|->
+name|system_map
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|pager_map
 operator|=
 name|kmem_suballoc
@@ -554,10 +594,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */
-comment|/* 	 * Initialize the callouts we just allocated. 	 */
-name|kern_timeout_callwheel_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

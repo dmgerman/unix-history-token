@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.h,v 1.40 2010/09/13 15:36:57 sjg Exp $	*/
+comment|/*	$NetBSD: job.h,v 1.41 2013/03/05 22:01:44 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -643,6 +643,21 @@ name|void
 name|Job_SetPrefix
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
+name|Job_RunTarget
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

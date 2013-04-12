@@ -148,8 +148,12 @@ value|\ 	struct system_segment_descriptor *pc_ldt;			\
 comment|/* Pointer to the CPU TSS descriptor */
 value|\ 	struct system_segment_descriptor *pc_tss;			\ 	u_int	pc_cmci_mask
 comment|/* MCx banks for CMCI */
-value|\ 	PCPU_XEN_FIELDS
+value|\ 	PCPU_XEN_FIELDS;						\ 	char	__pad[293]
 end_define
+
+begin_comment
+comment|/* be divisor of PAGE_SIZE	\ 					   after cache alignment */
+end_comment
 
 begin_ifdef
 ifdef|#

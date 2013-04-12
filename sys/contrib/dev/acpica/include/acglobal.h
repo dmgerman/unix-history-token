@@ -494,6 +494,13 @@ begin_comment
 comment|/* For ACPI H/W except GPE registers */
 end_comment
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_SPINLOCK
+name|AcpiGbl_ReferenceCountLock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Mutex for _OSI support */
 end_comment
@@ -1294,6 +1301,20 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_DbOpt_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_NumExternalMethods
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_ResolvedExternalMethods
 decl_stmt|;
 end_decl_stmt
 

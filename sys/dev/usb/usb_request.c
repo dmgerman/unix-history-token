@@ -278,6 +278,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_full_ddesc
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|full_ddesc
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|usb_full_ddesc
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB always read complete device descriptor, if set"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1432,7 +1460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usbd_do_request_flags and usbd_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to  * "usbd_do_request_flags" will be serialised by the use of an  * internal "sx_lock".  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_do_request_flags and usbd_do_request  *  * Description of arguments passed to these functions:  *  * "udev" - this is the "usb_device" structure pointer on which the  * request should be performed. It is possible to call this function  * in both Host Side mode and Device Side mode.  *  * "mtx" - if this argument is non-NULL the mutex pointed to by it  * will get dropped and picked up during the execution of this  * function, hence this function sometimes needs to sleep. If this  * argument is NULL it has no effect.  *  * "req" - this argument must always be non-NULL and points to an  * 8-byte structure holding the USB request to be done. The USB  * request structure has a bit telling the direction of the USB  * request, if it is a read or a write.  *  * "data" - if the "wLength" part of the structure pointed to by "req"  * is non-zero this argument must point to a valid kernel buffer which  * can hold at least "wLength" bytes. If "wLength" is zero "data" can  * be NULL.  *  * "flags" - here is a list of valid flags:  *  *  o USB_SHORT_XFER_OK: allows the data transfer to be shorter than  *  specified  *  *  o USB_DELAY_STATUS_STAGE: allows the status stage to be performed  *  at a later point in time. This is tunable by the "hw.usb.ss_delay"  *  sysctl. This flag is mostly useful for debugging.  *  *  o USB_USER_DATA_PTR: treat the "data" pointer like a userland  *  pointer.  *  * "actlen" - if non-NULL the actual transfer length will be stored in  * the 16-bit unsigned integer pointed to by "actlen". This  * information is mostly useful when the "USB_SHORT_XFER_OK" flag is  * used.  *  * "timeout" - gives the timeout for the control transfer in  * milliseconds. A "timeout" value less than 50 milliseconds is  * treated like a 50 millisecond timeout. A "timeout" value greater  * than 30 seconds is treated like a 30 second timeout. This USB stack  * does not allow control requests without a timeout.  *  * NOTE: This function is thread safe. All calls to "usbd_do_request_flags"  * will be serialized by the use of the USB device enumeration lock.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1516,7 +1544,7 @@ name|uint16_t
 name|acttemp
 decl_stmt|;
 name|uint8_t
-name|enum_locked
+name|do_unlock
 decl_stmt|;
 if|if
 condition|(
@@ -1551,13 +1579,6 @@ argument_list|(
 name|req
 operator|->
 name|wLength
-argument_list|)
-expr_stmt|;
-name|enum_locked
-operator|=
-name|usbd_enum_is_locked
-argument_list|(
-name|udev
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -1700,23 +1721,18 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We need to allow suspend and resume at this point, else the 	 * control transfer will timeout if the device is suspended! 	 */
-if|if
-condition|(
-name|enum_locked
-condition|)
-name|usbd_sr_unlock
+comment|/* 	 * Grab the USB device enumeration SX-lock serialization is 	 * achieved when multiple threads are involved: 	 */
+name|do_unlock
+operator|=
+name|usbd_enum_lock
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Grab the default sx-lock so that serialisation 	 * is achieved when multiple threads are involved: 	 */
-name|sx_xlock
+comment|/* 	 * We need to allow suspend and resume at this point, else the 	 * control transfer will timeout if the device is suspended! 	 */
+name|usbd_sr_unlock
 argument_list|(
-operator|&
 name|udev
-operator|->
-name|ctrl_sx
 argument_list|)
 expr_stmt|;
 name|hr_func
@@ -2643,19 +2659,16 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|sx_xunlock
+name|usbd_sr_lock
 argument_list|(
-operator|&
 name|udev
-operator|->
-name|ctrl_sx
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|enum_locked
+name|do_unlock
 condition|)
-name|usbd_sr_lock
+name|usbd_enum_unlock
 argument_list|(
 name|udev
 argument_list|)
@@ -3584,7 +3597,8 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|1000
+literal|500
+comment|/* ms */
 argument_list|)
 expr_stmt|;
 if|if
@@ -7288,9 +7302,37 @@ block|{
 case|case
 name|USB_SPEED_FULL
 case|:
-case|case
-name|USB_SPEED_LOW
-case|:
+if|if
+condition|(
+name|usb_full_ddesc
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* get full device descriptor */
+name|err
+operator|=
+name|usbd_req_get_device_desc
+argument_list|(
+name|udev
+argument_list|,
+name|mtx
+argument_list|,
+operator|&
+name|udev
+operator|->
+name|ddesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+comment|/* get partial device descriptor, some devices crash on this */
 name|err
 operator|=
 name|usbd_req_get_desc
@@ -7325,40 +7367,31 @@ name|err
 operator|!=
 literal|0
 condition|)
-block|{
-name|DPRINTFN
+break|break;
+comment|/* get the full device descriptor */
+name|err
+operator|=
+name|usbd_req_get_device_desc
 argument_list|(
-literal|0
+name|udev
 argument_list|,
-literal|"getting device descriptor "
-literal|"at addr %d failed, %s\n"
+name|mtx
 argument_list|,
+operator|&
 name|udev
 operator|->
-name|address
-argument_list|,
-name|usbd_errstr
-argument_list|(
-name|err
-argument_list|)
+name|ddesc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
 break|break;
 default|default:
 name|DPRINTF
 argument_list|(
-literal|"Minimum MaxPacketSize is large enough "
-literal|"to hold the complete device descriptor\n"
+literal|"Minimum bMaxPacketSize is large enough "
+literal|"to hold the complete device descriptor or "
+literal|"only one bMaxPacketSize choice\n"
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 comment|/* get the full device descriptor */
 name|err
 operator|=
@@ -7378,6 +7411,8 @@ comment|/* try one more time, if error */
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 name|err
 operator|=
@@ -7393,18 +7428,30 @@ operator|->
 name|ddesc
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFN
 argument_list|(
-literal|"addr=%d, getting full desc failed\n"
+literal|0
+argument_list|,
+literal|"getting device descriptor "
+literal|"at addr %d failed, %s\n"
 argument_list|,
 name|udev
 operator|->
 name|address
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

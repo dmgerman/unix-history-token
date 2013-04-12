@@ -260,6 +260,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sched.h>
 end_include
 
@@ -6399,8 +6405,8 @@ specifier|static
 name|void
 name|cpu_idle_hlt
 parameter_list|(
-name|int
-name|busy
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|scheduler_running
@@ -6455,7 +6461,7 @@ modifier|*
 name|cpu_idle_hook
 function_decl|)
 parameter_list|(
-name|void
+name|sbintime_t
 parameter_list|)
 init|=
 name|NULL
@@ -6550,8 +6556,8 @@ specifier|static
 name|void
 name|cpu_idle_acpi
 parameter_list|(
-name|int
-name|busy
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|int
@@ -6592,7 +6598,9 @@ condition|(
 name|cpu_idle_hook
 condition|)
 name|cpu_idle_hook
-argument_list|()
+argument_list|(
+name|sbt
+argument_list|)
 expr_stmt|;
 else|else
 asm|__asm __volatile("sti; hlt");
@@ -6615,8 +6623,8 @@ specifier|static
 name|void
 name|cpu_idle_hlt
 parameter_list|(
-name|int
-name|busy
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|int
@@ -6710,8 +6718,8 @@ specifier|static
 name|void
 name|cpu_idle_mwait
 parameter_list|(
-name|int
-name|busy
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|int
@@ -6788,8 +6796,8 @@ specifier|static
 name|void
 name|cpu_idle_spin
 parameter_list|(
-name|int
-name|busy
+name|sbintime_t
+name|sbt
 parameter_list|)
 block|{
 name|int
@@ -6928,7 +6936,7 @@ modifier|*
 name|cpu_idle_fn
 function_decl|)
 parameter_list|(
-name|int
+name|sbintime_t
 parameter_list|)
 init|=
 name|cpu_idle_hlt
@@ -6947,7 +6955,7 @@ modifier|*
 name|cpu_idle_fn
 function_decl|)
 parameter_list|(
-name|int
+name|sbintime_t
 parameter_list|)
 init|=
 name|cpu_idle_acpi
@@ -6975,6 +6983,12 @@ name|msr
 decl_stmt|;
 endif|#
 directive|endif
+name|sbintime_t
+name|sbt
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_SPARE2
@@ -7050,6 +7064,8 @@ block|{
 name|critical_enter
 argument_list|()
 expr_stmt|;
+name|sbt
+operator|=
 name|cpu_idleclock
 argument_list|()
 expr_stmt|;
@@ -7094,7 +7110,7 @@ directive|endif
 comment|/* Call main idle method. */
 name|cpu_idle_fn
 argument_list|(
-name|busy
+name|sbt
 argument_list|)
 expr_stmt|;
 comment|/* Switch timers mack into active mode. */

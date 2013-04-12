@@ -156,13 +156,6 @@ name|control_softc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ctl_disable
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|ctl_backend_register
@@ -187,18 +180,6 @@ name|ctl_softc
 operator|=
 name|control_softc
 expr_stmt|;
-comment|/* Don't continue if CTL is disabled */
-if|if
-condition|(
-name|ctl_disable
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|mtx_lock
 argument_list|(
 operator|&

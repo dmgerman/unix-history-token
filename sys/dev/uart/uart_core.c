@@ -1906,11 +1906,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Ensure there is room for at least three full FIFOs of data in the 	 * receive buffer (handles the case of low-level drivers with huge 	 * FIFOs), and also ensure that there is no less than the historical 	 * size of 384 bytes (handles the typical small-FIFO case). 	 */
 name|sc
 operator|->
 name|sc_rxbufsz
 operator|=
+name|MAX
+argument_list|(
 literal|384
+argument_list|,
+name|sc
+operator|->
+name|sc_rxfifosz
+operator|*
+literal|3
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

@@ -231,31 +231,6 @@ directive|include
 file|<compat/linux/linux_file.h>
 end_include
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_function_decl
-name|int
-name|do_pipe
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|fildes
-index|[
-literal|2
-index|]
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|linux_creat
@@ -651,6 +626,7 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+comment|/* XXXPJD: Verify if TIOCSCTTY is allowed. */
 if|if
 condition|(
 name|fp
@@ -2401,10 +2377,6 @@ name|resid
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|cookies
-condition|)
 name|free
 argument_list|(
 name|cookies
@@ -5305,7 +5277,7 @@ name|uap
 operator|->
 name|fd
 argument_list|,
-name|CAP_READ
+name|CAP_PREAD
 argument_list|,
 operator|&
 name|vp
@@ -8204,7 +8176,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|do_pipe
+name|kern_pipe2
 argument_list|(
 name|td
 argument_list|,
@@ -8355,7 +8327,7 @@ name|O_CLOEXEC
 expr_stmt|;
 name|error
 operator|=
-name|do_pipe
+name|kern_pipe2
 argument_list|(
 name|td
 argument_list|,

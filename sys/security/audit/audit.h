@@ -434,6 +434,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|int
+name|dirfd
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
@@ -687,6 +690,16 @@ name|audit_arg_rights
 parameter_list|(
 name|cap_rights_t
 name|rights
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_arg_fcntl_rights
+parameter_list|(
+name|uint32_t
+name|fcntlrights
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1067,6 +1080,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_FCNTL_RIGHTS
+parameter_list|(
+name|fcntlrights
+parameter_list|)
+value|do {			\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_fcntl_rights((fcntlrights));			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_RUID
 parameter_list|(
 name|ruid
@@ -1115,9 +1138,11 @@ name|AUDIT_ARG_SOCKADDR
 parameter_list|(
 name|td
 parameter_list|,
+name|dirfd
+parameter_list|,
 name|sa
 parameter_list|)
-value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_sockaddr((td), (sa));				\ } while (0)
+value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_sockaddr((td), (dirfd), (sa));		\ } while (0)
 end_define
 
 begin_define
@@ -1478,6 +1503,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_FCNTL_RIGHTS
+parameter_list|(
+name|fcntlrights
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_RUID
 parameter_list|(
 name|ruid
@@ -1521,6 +1555,8 @@ directive|define
 name|AUDIT_ARG_SOCKADDR
 parameter_list|(
 name|td
+parameter_list|,
+name|dirfd
 parameter_list|,
 name|sa
 parameter_list|)

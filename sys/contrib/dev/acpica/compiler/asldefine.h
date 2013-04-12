@@ -417,6 +417,13 @@ name|FILE_SUFFIX_ASL_CODE
 value|"asl"
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_OFFSET
+value|"offset.h"
+end_define
+
 begin_comment
 comment|/* Types for input files */
 end_comment
@@ -431,15 +438,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_INPUT_TYPE_ASCII_ASL
+name|ASL_INPUT_TYPE_ACPI_TABLE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASL_INPUT_TYPE_ASCII_DATA
+name|ASL_INPUT_TYPE_ASCII_ASL
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_ASCII_DATA
+value|3
 end_define
 
 begin_comment
@@ -472,6 +486,17 @@ define|#
 directive|define
 name|ASL_EOF
 value|ACPI_UINT32_MAX
+end_define
+
+begin_comment
+comment|/* Listings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_LISTING_LINE_PREFIX
+value|":  "
 end_define
 
 begin_comment

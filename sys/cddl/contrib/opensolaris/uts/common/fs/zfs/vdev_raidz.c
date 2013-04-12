@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -6067,7 +6067,10 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|log
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
 name|val
 decl_stmt|;
 name|int
@@ -7458,7 +7461,10 @@ name|VDEV_AUX_BAD_LABEL
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8246,7 +8252,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 name|rc
 operator|->
@@ -8302,7 +8311,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESTALE
+argument_list|)
 expr_stmt|;
 name|rc
 operator|->
@@ -8765,7 +8777,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 name|ret
 operator|++
@@ -9316,7 +9331,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 block|}
 name|ret
@@ -10235,7 +10253,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

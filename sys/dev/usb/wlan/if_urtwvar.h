@@ -323,6 +323,10 @@ define|#
 directive|define
 name|URTW_RTL8187B_REV_E
 value|(1<< 5)
+define|#
+directive|define
+name|URTW_DETACHED
+value|(1<< 6)
 name|enum
 name|ieee80211_state
 name|sc_state

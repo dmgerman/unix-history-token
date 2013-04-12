@@ -480,6 +480,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* hardlink to above file. */
@@ -520,6 +522,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Symlink to above file. */
@@ -566,6 +570,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -609,6 +615,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Directory. */
@@ -649,6 +657,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|strncat
@@ -666,6 +676,8 @@ name|strlen
 argument_list|(
 name|result
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* All done. */

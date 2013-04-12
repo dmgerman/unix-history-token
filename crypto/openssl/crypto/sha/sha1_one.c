@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/sha.h>
+file|<openssl/crypto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/crypto.h>
+file|<openssl/sha.h>
 end_include
 
 begin_ifndef

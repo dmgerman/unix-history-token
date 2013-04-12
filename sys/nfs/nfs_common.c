@@ -882,10 +882,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|MGET
-argument_list|(
 name|mp2
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|how
 argument_list|,
 name|MT_DATA
@@ -1289,10 +1289,10 @@ name|mb
 argument_list|)
 condition|)
 block|{
-name|MGET
-argument_list|(
 name|mb2
-argument_list|,
+operator|=
+name|m_get
+argument_list|(
 name|M_WAITOK
 argument_list|,
 name|MT_DATA

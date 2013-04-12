@@ -25,6 +25,11 @@ name|defined
 argument_list|(
 name|HAVE_STRNVIS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BROKEN_STRNVIS
+argument_list|)
 end_if
 
 begin_include

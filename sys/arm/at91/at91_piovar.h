@@ -95,6 +95,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|at91_pio_gpio_high_z
+parameter_list|(
+name|uint32_t
+name|pio
+parameter_list|,
+name|uint32_t
+name|high_z_mask
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|at91_pio_gpio_set
 parameter_list|(
 name|uint32_t
@@ -120,7 +136,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
+name|uint32_t
 name|at91_pio_gpio_get
 parameter_list|(
 name|uint32_t

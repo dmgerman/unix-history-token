@@ -280,6 +280,12 @@ name|NULL
 expr_stmt|;
 name|bidder
 operator|->
+name|name
+operator|=
+literal|"rpm"
+expr_stmt|;
+name|bidder
+operator|->
 name|bid
 operator|=
 name|rpm_bidder_bid
@@ -492,7 +498,7 @@ name|self
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_RPM
+name|ARCHIVE_FILTER_RPM
 expr_stmt|;
 name|self
 operator|->

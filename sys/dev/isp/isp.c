@@ -8904,6 +8904,24 @@ block|}
 comment|/* 	 * Right now we just set extended options to prefer point-to-point 	 * over loop based upon some soft config options. 	 * 	 * NB: for the 2300, ICBOPT_EXTENDED is required. 	 */
 if|if
 condition|(
+name|IS_2100
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * We can't have Fast Posting any more- we now 		 * have 32 bit handles. 		 */
+name|icbp
+operator|->
+name|icb_fwoptions
+operator|&=
+operator|~
+name|ICBOPT_FAST_POST
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|IS_2200
 argument_list|(
 name|isp

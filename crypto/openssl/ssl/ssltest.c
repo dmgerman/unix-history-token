@@ -2164,8 +2164,6 @@ name|cm
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 name|STACK_OF
 argument_list|(
 name|SSL_COMP
@@ -2175,6 +2173,8 @@ name|ssl_comp_methods
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|int
 name|test_cipherlist
 init|=

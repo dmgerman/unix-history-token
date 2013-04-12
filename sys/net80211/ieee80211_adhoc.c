@@ -2942,11 +2942,12 @@ decl_stmt|,
 modifier|*
 name|xrates
 decl_stmt|;
-name|int
-name|ht_state_change
-init|=
+if|#
+directive|if
 literal|0
-decl_stmt|;
+block|int ht_state_change = 0;
+endif|#
+directive|endif
 name|wh
 operator|=
 name|mtod
@@ -3215,15 +3216,13 @@ operator|=
 name|nf
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ht_state_change
-condition|)
-name|ieee80211_update_chw
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Same here - the channel width change should 			 * be applied to the specific peer node, not 			 * to the ic.  Ie, the interface configuration 			 * should stay in its current channel width; 			 * but it should change the rate control and 			 * any queued frames for the given node only. 			 * 			 * Since there's no (current) way to inform 			 * the driver that a channel width change has 			 * occured for a single node, just stub this 			 * out. 			 */
+if|#
+directive|if
+literal|0
+block|if (ht_state_change) 				ieee80211_update_chw(ic);
+endif|#
+directive|endif
 block|}
 break|break;
 block|}

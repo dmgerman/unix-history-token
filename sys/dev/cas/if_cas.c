@@ -4688,6 +4688,10 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -4764,6 +4768,10 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -5589,7 +5597,7 @@ argument_list|,
 name|CAS_CAW_RR_DIS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable infinite bursts for revisions without PCI issues if 	 * applicable.  Doing so greatly improves the TX performance on 	 * !__sparc64__. 	 */
+comment|/* 	 * Enable infinite bursts for revisions without PCI issues if 	 * applicable.  Doing so greatly improves the TX performance on 	 * !__sparc64__ (on sparc64, setting CAS_INF_BURST improves TX 	 * performance only marginally but hurts RX throughput quite a bit). 	 */
 name|CAS_WRITE_4
 argument_list|(
 name|sc
@@ -13897,9 +13905,31 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|pci_enable_busmaster
+comment|/* PCI configuration */
+name|pci_write_config
 argument_list|(
 name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+literal|2
+argument_list|)
+operator||
+name|PCIM_CMD_BUSMASTEREN
+operator||
+name|PCIM_CMD_MWRICEN
+operator||
+name|PCIM_CMD_PERRESPEN
+operator||
+name|PCIM_CMD_SERRESPEN
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 name|sc

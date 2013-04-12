@@ -20,8 +20,144 @@ name|_MACHINE_VMPARAM_H_
 end_define
 
 begin_comment
-comment|/*#include<arm/arm32/vmparam.h> */
+comment|/*  * Machine dependent constants for ARM.  */
 end_comment
+
+begin_comment
+comment|/*  * Virtual memory related constants, all in bytes  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXTSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXTSIZ
+value|(64UL*1024*1024)
+end_define
+
+begin_comment
+comment|/* max text size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLDSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DFLDSIZ
+value|(128UL*1024*1024)
+end_define
+
+begin_comment
+comment|/* initial data size limit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXDSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXDSIZ
+value|(512UL*1024*1024)
+end_define
+
+begin_comment
+comment|/* max data size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLSSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DFLSSIZ
+value|(2UL*1024*1024)
+end_define
+
+begin_comment
+comment|/* initial stack size limit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXSSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXSSIZ
+value|(8UL*1024*1024)
+end_define
+
+begin_comment
+comment|/* max stack size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SGROWSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SGROWSIZ
+value|(128UL*1024)
+end_define
+
+begin_comment
+comment|/* amount to grow stack */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Address space constants  */
@@ -329,7 +465,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|0xffffffff
+value|(vm_max_kernel_address)
 end_define
 
 begin_comment
@@ -364,7 +500,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_SCALE
-value|(2)
+value|(3)
 end_define
 
 begin_endif
@@ -372,96 +508,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MAXTSIZ
-value|(16*1024*1024)
-end_define
+begin_comment
+comment|/*  * Ceiling on the size of the kmem submap: 40% of the kernel map.  */
+end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DFLDSIZ
+name|VM_KMEM_SIZE_MAX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DFLDSIZ
-value|(128*1024*1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXDSIZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXDSIZ
-value|(512*1024*1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DFLSSIZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DFLSSIZ
-value|(2*1024*1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXSSIZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXSSIZ
-value|(8*1024*1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SGROWSIZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SGROWSIZ
-value|(128*1024)
+name|VM_KMEM_SIZE_MAX
+value|((vm_max_kernel_address - \     VM_MIN_KERNEL_ADDRESS + 1) * 2 / 5)
 end_define
 
 begin_endif
@@ -490,6 +551,13 @@ begin_comment
 comment|/* ARM_USE_SMALL_ALLOC */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|vm_max_kernel_address
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -500,6 +568,24 @@ end_define
 begin_comment
 comment|/* 64KB */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_MAX_AUTOTUNE_MAXUSERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_AUTOTUNE_MAXUSERS
+value|384
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -191,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|g_wither_washer
 parameter_list|(
 name|void

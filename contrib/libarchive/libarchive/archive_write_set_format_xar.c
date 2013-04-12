@@ -1948,7 +1948,7 @@ operator|)
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Unkonwn checksum name: `%s'"
+literal|"Unknown checksum name: `%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2122,7 +2122,7 @@ operator|)
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Unkonwn compression name: `%s'"
+literal|"Unknown compression name: `%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2223,7 +2223,7 @@ operator|)
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Illeagal value `%s'"
+literal|"Illegal value `%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2324,7 +2324,7 @@ operator|)
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Unkonwn checksum name: `%s'"
+literal|"Unknown checksum name: `%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -15965,11 +15965,18 @@ argument_list|)
 operator|!=
 name|ARCHIVE_OK
 condition|)
+block|{
+name|free
+argument_list|(
+name|heap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 name|heap
 operator|->
 name|length

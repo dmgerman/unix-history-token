@@ -670,16 +670,16 @@ name|int
 name|if_afdata_initialized
 decl_stmt|;
 name|struct
-name|rwlock
-name|if_afdata_lock
-decl_stmt|;
-name|struct
 name|task
 name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
 name|struct
-name|rwlock
+name|rwlock_padalign
+name|if_afdata_lock
+decl_stmt|;
+name|struct
+name|rwlock_padalign
 name|if_addr_lock
 decl_stmt|;
 comment|/* lock to protect address lists */
@@ -3225,7 +3225,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|ifnet_rwlock
 decl_stmt|;
 end_decl_stmt
@@ -4036,6 +4036,21 @@ modifier|*
 parameter_list|,
 name|struct
 name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ifa_preferred
+parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|,
+name|struct
+name|ifaddr
 modifier|*
 parameter_list|)
 function_decl|;

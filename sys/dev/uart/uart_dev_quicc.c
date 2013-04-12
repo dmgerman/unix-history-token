@@ -1482,18 +1482,6 @@ name|UART_PARITY_NONE
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sc_rxfifosz
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
-name|sc_txfifosz
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Enable interrupts on the receive buffer. */
 name|rb
 operator|=
@@ -2085,6 +2073,18 @@ operator|(
 name|error
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_rxfifosz
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_txfifosz
+operator|=
+literal|1
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf

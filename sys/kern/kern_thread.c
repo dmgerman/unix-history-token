@@ -2816,7 +2816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called in from locations that can safely check to see  * whether we have to suspend or at least throttle for a  * single-thread event (e.g. fork).  *  * Such locations include userret().  * If the "return_instead" argument is non zero, the thread must be able to  * accept 0 (caller may continue), or 1 (caller must abort) as a result.  *  * The 'return_instead' argument tells the function if it may do a  * thread_exit() or suspend, or whether the caller must abort and back  * out instead.  *  * If the thread that set the single_threading request has set the  * P_SINGLE_EXIT bit in the process flags then this call will never return  * if 'return_instead' is false, but will exit.  *  * P_SINGLE_EXIT | return_instead == 0| return_instead != 0  *---------------+--------------------+---------------------  *       0       | returns 0          |   returns 0 or 1  *               | when ST ends       |   immediatly  *---------------+--------------------+---------------------  *       1       | thread exits       |   returns 1  *               |                    |  immediatly  * 0 = thread_exit() or suspension ok,  * other = return error instead of stopping the thread.  *  * While a full suspension is under effect, even a single threading  * thread would be suspended if it made this call (but it shouldn't).  * This call should only be made from places where  * thread_exit() would be safe as that may be the outcome unless  * return_instead is set.  */
+comment|/*  * Called in from locations that can safely check to see  * whether we have to suspend or at least throttle for a  * single-thread event (e.g. fork).  *  * Such locations include userret().  * If the "return_instead" argument is non zero, the thread must be able to  * accept 0 (caller may continue), or 1 (caller must abort) as a result.  *  * The 'return_instead' argument tells the function if it may do a  * thread_exit() or suspend, or whether the caller must abort and back  * out instead.  *  * If the thread that set the single_threading request has set the  * P_SINGLE_EXIT bit in the process flags then this call will never return  * if 'return_instead' is false, but will exit.  *  * P_SINGLE_EXIT | return_instead == 0| return_instead != 0  *---------------+--------------------+---------------------  *       0       | returns 0          |   returns 0 or 1  *               | when ST ends       |   immediately  *---------------+--------------------+---------------------  *       1       | thread exits       |   returns 1  *               |                    |  immediately  * 0 = thread_exit() or suspension ok,  * other = return error instead of stopping the thread.  *  * While a full suspension is under effect, even a single threading  * thread would be suspended if it made this call (but it shouldn't).  * This call should only be made from places where  * thread_exit() would be safe as that may be the outcome unless  * return_instead is set.  */
 end_comment
 
 begin_function
@@ -2972,6 +2972,38 @@ operator|(
 name|ERESTART
 operator|)
 return|;
+comment|/* 		 * Ignore suspend requests for stop signals if they 		 * are deferred. 		 */
+if|if
+condition|(
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+operator|==
+name|P_STOPPED_SIG
+operator|&&
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_SBDRY
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|return_instead
+argument_list|,
+operator|(
+literal|"TDF_SBDRY set for unsafe thread_suspend_check"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 		 * If the process is waiting for us to exit, 		 * this thread should just suicide. 		 * Assumes that P_SINGLE_EXIT implies P_STOPPED_SINGLE. 		 */
 if|if
 condition|(

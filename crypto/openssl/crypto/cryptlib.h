@@ -183,6 +183,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|fmta
 parameter_list|,
 modifier|...
 parameter_list|)

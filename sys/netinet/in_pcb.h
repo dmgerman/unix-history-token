@@ -843,7 +843,7 @@ decl_stmt|;
 comment|/* (c) */
 comment|/* 	 * Global lock protecting non-pcbgroup hash lookup tables. 	 */
 name|struct
-name|rwlock
+name|rwlock_padalign
 name|ipi_hash_lock
 decl_stmt|;
 comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */

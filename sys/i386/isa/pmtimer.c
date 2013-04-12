@@ -223,14 +223,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|pl
-decl_stmt|;
-name|pl
-operator|=
-name|splsoftclock
-argument_list|()
-expr_stmt|;
 name|microtime
 argument_list|(
 operator|&
@@ -257,11 +249,6 @@ operator|&
 name|suspend_time
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|pl
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -279,9 +266,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|pl
-decl_stmt|;
 name|u_int
 name|second
 decl_stmt|,
@@ -296,11 +280,6 @@ decl_stmt|,
 name|tmp_time
 decl_stmt|;
 comment|/* modified for adjkerntz */
-name|pl
-operator|=
-name|splsoftclock
-argument_list|()
-expr_stmt|;
 name|timer_restore
 argument_list|()
 expr_stmt|;
@@ -362,17 +341,16 @@ operator|&
 name|resume_time
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PMTIMER_FIXUP_CALLTODOK */
-name|splx
-argument_list|(
-name|pl
-argument_list|)
+comment|/*  	 * We've already calculated resume_time to be the delta between  	 * the suspend and the resume.  	 */
+name|second
+operator|=
+name|resume_time
+operator|.
+name|tv_sec
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PMTIMER_FIXUP_CALLTODO
+else|#
+directive|else
+comment|/* !PMTIMER_FIXUP_CALLTODO */
 name|second
 operator|=
 name|resume_time
@@ -380,16 +358,6 @@ operator|.
 name|tv_sec
 operator|-
 name|suspend_time
-operator|.
-name|tv_sec
-expr_stmt|;
-else|#
-directive|else
-comment|/* PMTIMER_FIXUP_CALLTODO */
-comment|/*  	 * We've already calculated resume_time to be the delta between  	 * the suspend and the resume.  	 */
-name|second
-operator|=
-name|resume_time
 operator|.
 name|tv_sec
 expr_stmt|;

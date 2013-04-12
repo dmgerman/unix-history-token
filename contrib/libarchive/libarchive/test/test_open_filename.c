@@ -72,7 +72,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -649,7 +649,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)

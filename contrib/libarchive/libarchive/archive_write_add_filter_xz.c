@@ -737,7 +737,7 @@ name|f
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_XZ
+name|ARCHIVE_FILTER_XZ
 expr_stmt|;
 name|f
 operator|->
@@ -812,7 +812,7 @@ name|f
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZMA
+name|ARCHIVE_FILTER_LZMA
 expr_stmt|;
 name|f
 operator|->
@@ -883,7 +883,7 @@ name|f
 operator|->
 name|code
 operator|=
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 expr_stmt|;
 name|f
 operator|->
@@ -958,7 +958,7 @@ name|f
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_XZ
+name|ARCHIVE_FILTER_XZ
 condition|)
 name|ret
 operator|=
@@ -985,7 +985,7 @@ name|f
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_LZMA
+name|ARCHIVE_FILTER_LZMA
 condition|)
 name|ret
 operator|=
@@ -1006,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* ARCHIVE_COMPRESSION_LZIP */
+comment|/* ARCHIVE_FILTER_LZIP */
 name|int
 name|dict_size
 init|=
@@ -1472,7 +1472,7 @@ name|f
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 condition|)
 block|{
 specifier|const
@@ -1903,7 +1903,7 @@ name|f
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 condition|)
 name|data
 operator|->
@@ -2062,7 +2062,7 @@ name|f
 operator|->
 name|code
 operator|==
-name|ARCHIVE_COMPRESSION_LZIP
+name|ARCHIVE_FILTER_LZIP
 operator|&&
 name|ret
 operator|==

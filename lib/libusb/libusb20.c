@@ -7,11 +7,22 @@ begin_comment
 comment|/*-  * Copyright (c) 2008-2009 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBUSB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+include|LIBUSB_GLOBAL_INCLUDE_FILE
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -42,6 +53,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -180,6 +208,13 @@ begin_define
 define|#
 directive|define
 name|dummy_get_power_mode
+value|(void *)dummy_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|dummy_get_power_usage
 value|(void *)dummy_int
 end_define
 
@@ -2775,6 +2810,52 @@ comment|/* fake power mode */
 return|return
 operator|(
 name|power_mode
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint16_t
+name|libusb20_dev_get_power_usage
+parameter_list|(
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|uint16_t
+name|power_usage
+decl_stmt|;
+name|error
+operator|=
+name|pdev
+operator|->
+name|methods
+operator|->
+name|get_power_usage
+argument_list|(
+name|pdev
+argument_list|,
+operator|&
+name|power_usage
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|power_usage
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|power_usage
 operator|)
 return|;
 block|}

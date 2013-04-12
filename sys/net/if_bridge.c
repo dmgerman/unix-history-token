@@ -8629,6 +8629,15 @@ name|bridge_iflist
 modifier|*
 name|bif
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
+condition|)
+return|return;
 comment|/* Check if the interface is a bridge member */
 if|if
 condition|(
@@ -10854,7 +10863,7 @@ value|if ((iface)->if_type == IFT_GIF) \ 		continue; \
 comment|/* It is destined for us. */
 value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\ 			iface->if_ibytes += m->m_pkthdr.len;		\
 comment|/* Filter on the physical interface. */
-value|\ 			if (pfil_local_phys&&				\ 			    (PFIL_HOOKED(&V_inet_pfil_hook)		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING) {			\ 			error = bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 			if (error&& bif->bif_addrmax) {		\ 				BRIDGE_UNLOCK(sc);			\ 				m_freem(m);				\ 				return (NULL);				\ 			}						\ 		}							\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
+value|\ 			if (pfil_local_phys&&				\ 			    (PFIL_HOOKED(&V_inet_pfil_hook)		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 				eh = mtod(m, struct ether_header *);	\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING) {			\ 			error = bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 			if (error&& bif->bif_addrmax) {		\ 				BRIDGE_UNLOCK(sc);			\ 				m_freem(m);				\ 				return (NULL);				\ 			}						\ 		}							\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
 comment|/* We just received a packet that we sent out. */
 value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_shost, ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_SRC((iface))			\ 	    ) {								\ 		BRIDGE_UNLOCK(sc);					\ 		m_freem(m);						\ 		return (NULL);						\ 	}
 comment|/* 	 * Unicast.  Make sure it's not for the bridge. 	 */
@@ -14836,10 +14845,10 @@ name|NULL
 condition|)
 block|{
 comment|/* XXXJRT new stat, please */
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -14901,10 +14910,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -14942,10 +14951,10 @@ operator|!=
 name|IPV6_VERSION
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badvers
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(

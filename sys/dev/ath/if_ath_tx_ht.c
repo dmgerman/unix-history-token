@@ -1223,9 +1223,17 @@ index|]
 operator|.
 name|rateCode
 expr_stmt|;
-comment|/* 		 * XXX only do this for legacy rates? 		 */
+comment|/* 		 * Only enable short preamble for legacy rates 		 */
 if|if
 condition|(
+operator|(
+operator|!
+name|IS_HT_RATE
+argument_list|(
+name|rate
+argument_list|)
+operator|)
+operator|&&
 name|bf
 operator|->
 name|bf_state
@@ -1374,6 +1382,47 @@ name|flags
 operator||=
 name|ATH_RC_SGI_FLAG
 expr_stmt|;
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_htcaps
+operator|&
+name|IEEE80211_HTCAP_TXSTBC
+operator|&&
+name|ni
+operator|->
+name|ni_htcap
+operator|&
+name|IEEE80211_HTCAP_RXSTBC_1STREAM
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_cur_txchainmask
+operator|>
+literal|1
+operator|)
+operator|&&
+name|HT_RC_2_STREAMS
+argument_list|(
+name|rate
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator||=
+name|ATH_RC_STBC_FLAG
+expr_stmt|;
+block|}
 comment|/* XXX dual stream? and 3-stream? */
 block|}
 comment|/* 		 * Calculate the maximum 4ms frame length based 		 * on the MCS rate, SGI and channel width flags. 		 */
@@ -1634,12 +1683,12 @@ argument_list|(
 name|pktlen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If encryption is enabled, add extra delimiters to let the 	 * crypto hardware catch up. This could be tuned per-MAC and 	 * per-rate, but for now we'll simply assume encryption is 	 * always enabled. 	 */
+comment|/* 	 * If encryption is enabled, add extra delimiters to let the 	 * crypto hardware catch up. This could be tuned per-MAC and 	 * per-rate, but for now we'll simply assume encryption is 	 * always enabled. 	 * 	 * Also note that the Atheros reference driver inserts two 	 * delimiters by default for pre-AR9380 peers.  This will 	 * include "that" required delimiter. 	 */
 name|ndelim
 operator|+=
 name|ATH_AGGR_ENCRYPTDELIM
 expr_stmt|;
-comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 */
+comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 * 	 * XXX TODO: this is only needed if (a) RTS/CTS is enabled, and 	 * XXX (b) this is the first sub-frame in the aggregate. 	 */
 if|if
 condition|(
 name|sc
@@ -1661,6 +1710,26 @@ condition|)
 name|ndelim
 operator|=
 name|AH_FIRST_DESC_NDELIMS
+expr_stmt|;
+comment|/* 	 * If sc_delim_min_pad is non-zero, enforce it as the minimum 	 * pad delimiter count. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_delim_min_pad
+operator|!=
+literal|0
+condition|)
+name|ndelim
+operator|=
+name|MAX
+argument_list|(
+name|ndelim
+argument_list|,
+name|sc
+operator|->
+name|sc_delim_min_pad
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1886,11 +1955,31 @@ block|{
 name|int
 name|amin
 init|=
-literal|65530
+name|ATH_AGGR_MAXSIZE
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_aggr_limit
+operator|>
+literal|0
+operator|&&
+name|sc
+operator|->
+name|sc_aggr_limit
+operator|<
+name|ATH_AGGR_MAXSIZE
+condition|)
+name|amin
+operator|=
+name|sc
+operator|->
+name|sc_aggr_limit
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1960,7 +2049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup a 11n rate series structure  *  * This should be called for both legacy and MCS rates.  *  * It, along with ath_buf_set_rate, must be called -after- a burst  * or aggregate is setup.  */
+comment|/*  * Setup a 11n rate series structure  *  * This should be called for both legacy and MCS rates.  *  * It, along with ath_buf_set_rate, must be called -after- a burst  * or aggregate is setup.  *  * XXX TODO: it should use the rate series information from the  * ath_buf, rather than recalculating it here!  */
 end_comment
 
 begin_function
@@ -2150,7 +2239,7 @@ index|]
 operator|.
 name|tries
 expr_stmt|;
-comment|/* 		 * XXX this isn't strictly correct - sc_txchainmask 		 * XXX isn't the currently active chainmask; 		 * XXX it's the interface chainmask at startup. 		 * XXX It's overridden in the HAL rate scenario function 		 * XXX for now. 		 */
+comment|/* 		 * XXX TODO: When the NIC is capable of three stream TX, 		 * transmit 1/2 stream rates on two streams. 		 * 		 * This reduces the power consumption of the NIC and 		 * keeps it within the PCIe slot power limits. 		 */
 name|series
 index|[
 name|i
@@ -2160,8 +2249,55 @@ name|ChSel
 operator|=
 name|sc
 operator|->
-name|sc_txchainmask
+name|sc_cur_txchainmask
 expr_stmt|;
+comment|/* 		 * Setup rate and TX power cap for this series. 		 */
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|Rate
+operator|=
+name|rt
+operator|->
+name|info
+index|[
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+index|]
+operator|.
+name|rateCode
+expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|RateIndex
+operator|=
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+expr_stmt|;
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|tx_power_cap
+operator|=
+literal|0x3f
+expr_stmt|;
+comment|/* XXX for now */
+comment|/* 		 * Enable RTS/CTS as appropriate. 		 */
 if|if
 condition|(
 name|flags
@@ -2181,7 +2317,27 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_RTS_CTS
 expr_stmt|;
-comment|/* 		 * Transmit 40MHz frames only if the node has negotiated 		 * it rather than whether the node is capable of it or not. 	 	 * It's subtly different in the hostap case. 	 	 */
+if|if
+condition|(
+name|IS_HT_RATE
+argument_list|(
+name|rt
+operator|->
+name|info
+index|[
+name|rc
+index|[
+name|i
+index|]
+operator|.
+name|rix
+index|]
+operator|.
+name|rateCode
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Transmit 40MHz frames only if the node has negotiated 			 * it rather than whether the node is capable of it or not. 			 * It's subtly different in the hostap case. 			 */
 if|if
 condition|(
 name|ni
@@ -2199,7 +2355,7 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_2040
 expr_stmt|;
-comment|/* 		 * Set short-GI only if the node has advertised it 		 * the channel width is suitable, and we support it. 		 * We don't currently have a "negotiated" set of bits - 		 * ni_htcap is what the remote end sends, not what this 		 * node is capable of. 		 */
+comment|/* 			 * Set short-GI only if the node has advertised it 			 * the channel width is suitable, and we support it. 			 * We don't currently have a "negotiated" set of bits - 			 * ni_htcap is what the remote end sends, not what this 			 * node is capable of. 			 */
 if|if
 condition|(
 name|ni
@@ -2258,51 +2414,54 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_HALFGI
 expr_stmt|;
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_htcaps
+operator|&
+name|IEEE80211_HTCAP_TXSTBC
+operator|&&
+name|ni
+operator|->
+name|ni_htcap
+operator|&
+name|IEEE80211_HTCAP_RXSTBC_1STREAM
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_cur_txchainmask
+operator|>
+literal|1
+operator|)
+operator|&&
+name|HT_RC_2_STREAMS
+argument_list|(
 name|series
 index|[
 name|i
 index|]
 operator|.
 name|Rate
-operator|=
-name|rt
-operator|->
-name|info
-index|[
-name|rc
-index|[
-name|i
-index|]
-operator|.
-name|rix
-index|]
-operator|.
-name|rateCode
-expr_stmt|;
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
 name|series
 index|[
 name|i
 index|]
 operator|.
-name|RateIndex
-operator|=
-name|rc
-index|[
-name|i
-index|]
-operator|.
-name|rix
+name|RateFlags
+operator||=
+name|HAL_RATESERIES_STBC
 expr_stmt|;
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|tx_power_cap
-operator|=
-literal|0x3f
-expr_stmt|;
-comment|/* XXX for now */
+block|}
+comment|/* 			 * XXX TODO: LDPC if it's possible 			 */
+block|}
 comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(

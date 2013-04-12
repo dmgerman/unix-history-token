@@ -151,6 +151,8 @@ decl_stmt|;
 name|zfs_ace_t
 modifier|*
 name|zacep
+init|=
+name|NULL
 decl_stmt|;
 name|ace_t
 modifier|*

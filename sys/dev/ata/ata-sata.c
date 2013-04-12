@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -749,9 +743,6 @@ name|val
 decl_stmt|,
 name|val1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|sata_rev
 operator|=
 name|ch
@@ -779,14 +770,6 @@ name|quick
 operator|=
 literal|0
 expr_stmt|;
-else|#
-directive|else
-name|sata_rev
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|quick

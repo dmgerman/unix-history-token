@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.h,v 1.18 2011/06/17 21:44:30 djm Exp $ */
+comment|/* $OpenBSD: log.h,v 1.19 2012/09/06 04:37:39 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -125,6 +125,24 @@ parameter_list|,
 name|SyslogFacility
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|log_change_level
+parameter_list|(
+name|LogLevel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|log_is_on_stderr
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

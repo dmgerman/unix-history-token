@@ -1395,9 +1395,6 @@ decl_stmt|;
 name|uint32_t
 name|addr
 decl_stmt|;
-name|uint8_t
-name|use
-decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|upgt_data
@@ -1660,6 +1657,10 @@ define|#
 directive|define
 name|UPGT_FLAG_INITDONE
 value|(1<< 1)
+define|#
+directive|define
+name|UPGT_FLAG_DETACHED
+value|(1<< 2)
 name|int
 name|sc_if_flags
 decl_stmt|;
@@ -1722,8 +1723,14 @@ comment|/* data which we found in the EEPROM */
 name|uint8_t
 name|sc_eeprom
 index|[
+literal|2
+operator|*
 name|UPGT_EEPROM_SIZE
 index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 decl_stmt|;
 name|uint16_t
 name|sc_eeprom_hwrx

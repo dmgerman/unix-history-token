@@ -32,12 +32,20 @@ name|BIO_READ
 value|0x01
 end_define
 
+begin_comment
+comment|/* Read I/O data */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_WRITE
 value|0x02
 end_define
+
+begin_comment
+comment|/* Write I/O data */
+end_comment
 
 begin_define
 define|#
@@ -46,6 +54,10 @@ name|BIO_DELETE
 value|0x04
 end_define
 
+begin_comment
+comment|/* TRIM or free blocks, i.e. mark as unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -53,12 +65,20 @@ name|BIO_GETATTR
 value|0x08
 end_define
 
+begin_comment
+comment|/* Get GEOM attributes of object */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_FLUSH
 value|0x10
 end_define
+
+begin_comment
+comment|/* Commit outstanding I/O now */
+end_comment
 
 begin_define
 define|#
@@ -104,12 +124,20 @@ name|BIO_ERROR
 value|0x01
 end_define
 
+begin_comment
+comment|/* An error occurred processing this bio. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_DONE
 value|0x02
 end_define
+
+begin_comment
+comment|/* This bio is finished. */
+end_comment
 
 begin_define
 define|#
@@ -118,11 +146,33 @@ name|BIO_ONQUEUE
 value|0x04
 end_define
 
+begin_comment
+comment|/* This bio is in a queue& not yet taken. */
+end_comment
+
+begin_comment
+comment|/*  * This bio must be executed after all previous bios in the queue have been  * executed, and before any successive bios can be executed.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BIO_ORDERED
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_UNMAPPED
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_TRANSIENT_MAPPING
+value|0x20
 end_define
 
 begin_ifdef
@@ -140,6 +190,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vm_map
 struct_decl|;
 end_struct_decl
 
@@ -213,6 +269,21 @@ name|caddr_t
 name|bio_data
 decl_stmt|;
 comment|/* Memory, superblocks, indirect etc. */
+name|struct
+name|vm_page
+modifier|*
+modifier|*
+name|bio_ma
+decl_stmt|;
+comment|/* Or unmapped. */
+name|int
+name|bio_ma_offset
+decl_stmt|;
+comment|/* Offset in the first page of bio_ma. */
+name|int
+name|bio_ma_n
+decl_stmt|;
+comment|/* Number of pages in bio_ma. */
 name|int
 name|bio_error
 decl_stmt|;
@@ -384,6 +455,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vm_map
+modifier|*
+name|bio_transient_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bio_transient_maxcnt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
