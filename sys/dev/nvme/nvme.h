@@ -35,43 +35,29 @@ end_endif
 begin_define
 define|#
 directive|define
-name|NVME_IDENTIFY_CONTROLLER
-value|_IOR('n', 0, struct nvme_controller_data)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVME_IDENTIFY_NAMESPACE
-value|_IOR('n', 1, struct nvme_namespace_data)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVME_IO_TEST
-value|_IOWR('n', 2, struct nvme_io_test)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVME_BIO_TEST
-value|_IOWR('n', 4, struct nvme_io_test)
+name|NVME_PASSTHROUGH_CMD
+value|_IOWR('n', 0, struct nvme_pt_command)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NVME_RESET_CONTROLLER
-value|_IO('n', 5)
+value|_IO('n', 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NVME_PASSTHROUGH_CMD
-value|_IOWR('n', 6, struct nvme_pt_command)
+name|NVME_IO_TEST
+value|_IOWR('n', 100, struct nvme_io_test)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_BIO_TEST
+value|_IOWR('n', 101, struct nvme_io_test)
 end_define
 
 begin_comment
