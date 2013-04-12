@@ -453,15 +453,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|struct
-name|vm
-modifier|*
+name|int
 name|vm_create
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|struct
+name|vm
+modifier|*
+modifier|*
+name|retvm
 parameter_list|)
 function_decl|;
 end_function_decl
