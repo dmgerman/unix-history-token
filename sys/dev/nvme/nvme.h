@@ -67,6 +67,13 @@ name|NVME_RESET_CONTROLLER
 value|_IO('n', 5)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NVME_PASSTHROUGH_CMD
+value|_IOWR('n', 6, struct nvme_pt_command)
+end_define
+
 begin_comment
 comment|/*  * Use to mark a command to apply to all namespaces, or to retrieve global  *  log pages.  */
 end_comment
@@ -1868,6 +1875,43 @@ block|, }
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|nvme_pt_command
+block|{
+comment|/* 	 * cmd is used to specify a passthrough command to a controller or 	 *  namespace. 	 * 	 * The following fields from cmd may be specified by the caller: 	 *	* opc  (opcode) 	 *	* nsid (namespace id) - for admin commands only 	 *	* cdw10-cdw15 	 * 	 * Remaining fields must be set to 0 by the caller. 	 */
+name|struct
+name|nvme_command
+name|cmd
+decl_stmt|;
+comment|/* 	 * cpl returns completion status for the passthrough command 	 *  specified by cmd. 	 * 	 * The following fields will be filled out by the driver, for 	 *  consumption by the caller: 	 *	* cdw0 	 *	* status (except for phase) 	 * 	 * Remaining fields will be set to 0 by the driver. 	 */
+name|struct
+name|nvme_completion
+name|cpl
+decl_stmt|;
+comment|/* buf is the data buffer associated with this passthrough command. */
+name|void
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* 	 * len is the length of the data buffer associated with this 	 *  passthrough command. 	 */
+name|uint32_t
+name|len
+decl_stmt|;
+comment|/* 	 * is_read = 1 if the passthrough command will read data into the 	 *  supplied buffer. 	 * 	 * is_read = 0 if the passthrough command will write data into the 	 *  supplied buffer. 	 */
+name|uint32_t
+name|is_read
+decl_stmt|;
+comment|/* 	 * driver_lock is used by the driver only.  It must be set to 0 	 *  by the caller. 	 */
+name|struct
+name|mtx
+modifier|*
+name|driver_lock
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -2017,6 +2061,32 @@ literal|0x2
 block|, }
 enum|;
 end_enum
+
+begin_function_decl
+name|int
+name|nvme_ctrlr_passthrough_cmd
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+name|struct
+name|nvme_pt_command
+modifier|*
+name|pt
+parameter_list|,
+name|uint32_t
+name|nsid
+parameter_list|,
+name|int
+name|is_user_buffer
+parameter_list|,
+name|int
+name|is_admin_cmd
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Admin functions */
