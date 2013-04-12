@@ -503,7 +503,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|counter_u64_subtract(V_ipstatp.name, (val))
+value|IPSTAT_ADD(name, -(val))
 end_define
 
 begin_define
@@ -523,7 +523,7 @@ name|IPSTAT_DEC
 parameter_list|(
 name|name
 parameter_list|)
-value|IPSTAT_ADD(name, -1)
+value|IPSTAT_SUB(name, 1)
 end_define
 
 begin_comment
