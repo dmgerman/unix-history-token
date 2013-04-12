@@ -2847,7 +2847,7 @@ value|(1<< 9)
 end_define
 
 begin_comment
-comment|/* CPU: Ivy Bridge */
+comment|/* CPU: Ivy Bridge Xeon */
 end_comment
 
 begin_define
