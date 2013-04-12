@@ -3856,6 +3856,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|getnewvnode_reserve
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|ZFS_OBJ_HOLD_ENTER
 argument_list|(
 name|zfsvfs
@@ -5024,6 +5029,9 @@ argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -5690,6 +5698,11 @@ name|zpp
 operator|=
 name|NULL
 expr_stmt|;
+name|getnewvnode_reserve
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|again
 label|:
 name|ZFS_OBJ_HOLD_ENTER
@@ -5726,6 +5739,9 @@ name|zfsvfs
 argument_list|,
 name|obj_num
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -5788,6 +5804,9 @@ name|zfsvfs
 argument_list|,
 name|obj_num
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -6017,6 +6036,9 @@ argument_list|,
 name|obj_num
 argument_list|)
 expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -6134,6 +6156,9 @@ name|zfsvfs
 argument_list|,
 name|obj_num
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
