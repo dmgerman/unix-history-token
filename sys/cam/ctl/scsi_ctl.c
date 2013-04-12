@@ -981,13 +981,6 @@ name|control_softc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ctl_disable
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|ctlfeshutdown
@@ -1009,14 +1002,6 @@ block|{
 name|cam_status
 name|status
 decl_stmt|;
-comment|/* Don't initialize if we're disabled */
-if|if
-condition|(
-name|ctl_disable
-operator|!=
-literal|0
-condition|)
-return|return;
 name|STAILQ_INIT
 argument_list|(
 operator|&

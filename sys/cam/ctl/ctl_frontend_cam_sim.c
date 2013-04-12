@@ -485,13 +485,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ctl_disable
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -653,18 +646,6 @@ directive|endif
 name|int
 name|retval
 decl_stmt|;
-comment|/* Don't continue if CTL is disabled */
-if|if
-condition|(
-name|ctl_disable
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|softc
 operator|=
 operator|&
