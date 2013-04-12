@@ -4415,6 +4415,13 @@ expr_stmt|;
 name|ADDRSEL_XUNLOCK
 argument_list|()
 expr_stmt|;
+name|free
+argument_list|(
+name|pol
+argument_list|,
+name|M_IFADDR
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
