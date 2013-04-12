@@ -765,6 +765,10 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 name|uint32_t
 name|ready_timeout_in_ms
 decl_stmt|;
@@ -937,10 +941,6 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|is_resetting
-decl_stmt|;
-name|struct
-name|mtx
-name|fail_req_lock
 decl_stmt|;
 name|boolean_t
 name|is_failed

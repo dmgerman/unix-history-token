@@ -1282,7 +1282,7 @@ argument_list|(
 operator|&
 name|ctrlr
 operator|->
-name|fail_req_lock
+name|lock
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
@@ -1302,7 +1302,7 @@ argument_list|(
 operator|&
 name|ctrlr
 operator|->
-name|fail_req_lock
+name|lock
 argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
@@ -1350,7 +1350,7 @@ argument_list|(
 operator|&
 name|ctrlr
 operator|->
-name|fail_req_lock
+name|lock
 argument_list|)
 expr_stmt|;
 while|while
@@ -1406,7 +1406,7 @@ argument_list|(
 operator|&
 name|ctrlr
 operator|->
-name|fail_req_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -3966,6 +3966,20 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ctrlr
+operator|->
+name|lock
+argument_list|,
+literal|"nvme ctrlr lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|nvme_ctrlr_allocate_bar
@@ -4432,20 +4446,6 @@ argument_list|,
 name|nvme_ctrlr_fail_req_task
 argument_list|,
 name|ctrlr
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|ctrlr
-operator|->
-name|fail_req_lock
-argument_list|,
-literal|"nvme ctrlr fail req lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
