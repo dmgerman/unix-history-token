@@ -63,7 +63,21 @@ name|bp
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\ 	if (g_nop_debug>= 2) {						\ 		printf("GEOM_NOP[2]: ");				\ 		printf(__VA_ARGS__);					\ 		printf(" ");						\ 		g_print_bio(bp);					\ 		printf("\n");						\ 	}								\ } while (0)
+value|G_NOP_LOGREQLVL(2, bp, __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_NOP_LOGREQLVL
+parameter_list|(
+name|lvl
+parameter_list|,
+name|bp
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {				\ 	if (g_nop_debug>= (lvl)) {					\ 		printf("GEOM_NOP[%d]: ", (lvl));			\ 		printf(__VA_ARGS__);					\ 		printf(" ");						\ 		g_print_bio(bp);					\ 		printf("\n");						\ 	}								\ } while (0)
 end_define
 
 begin_struct

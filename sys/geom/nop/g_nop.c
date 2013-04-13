@@ -536,8 +536,10 @@ operator|<
 name|failprob
 condition|)
 block|{
-name|G_NOP_LOGREQ
+name|G_NOP_LOGREQLVL
 argument_list|(
+literal|1
+argument_list|,
 name|bp
 argument_list|,
 literal|"Returning error=%d."
