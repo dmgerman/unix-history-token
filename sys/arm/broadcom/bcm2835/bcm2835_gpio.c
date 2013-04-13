@@ -1720,12 +1720,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Filter out unwanted flags. */
+comment|/* Check for unwanted flags. */
 if|if
 condition|(
 operator|(
 name|flags
-operator|&=
+operator|&
 name|sc
 operator|->
 name|sc_gpio_pins
