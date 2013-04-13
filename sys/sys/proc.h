@@ -2702,6 +2702,10 @@ argument_list|)
 name|p_orphans
 expr_stmt|;
 comment|/* (e) Pointer to list of orphans. */
+name|u_char
+name|p_throttled
+decl_stmt|;
+comment|/* (c) Flag for racct pcpu throttling */
 block|}
 struct|;
 end_struct
