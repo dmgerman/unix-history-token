@@ -13,6 +13,12 @@ directive|include
 file|<ldns/config.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_B32_NTOP
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -106,6 +112,12 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ldns/util.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -152,6 +164,7 @@ comment|/* (From RFC3548 and draft-josefsson-rfc3548bis-00.txt) 5.  Base 32 Enco
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ldns_b32_ntop_ar
 parameter_list|(
@@ -1690,6 +1703,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_B32_NTOP */
+end_comment
 
 end_unit
 
