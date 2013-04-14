@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2008 Joseph Koshy  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * Intel Core, Core 2 and Atom PMCs.  */
+comment|/*  * Intel Core PMCs.  */
 end_comment
 
 begin_include
