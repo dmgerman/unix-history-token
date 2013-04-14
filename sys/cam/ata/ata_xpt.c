@@ -1056,20 +1056,6 @@ literal|"Probe started\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ensure nobody slip in until probe finish. 	 */
-name|cam_freeze_devq_arg
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-name|RELSIM_RELEASE_RUNLEVEL
-argument_list|,
-name|CAM_RL_XPT
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|probeschedule
 argument_list|(
 name|periph
@@ -3231,6 +3217,14 @@ name|action
 argument_list|)
 expr_stmt|;
 block|}
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator||=
+name|CAM_DEV_QFREEZE
+expr_stmt|;
 name|xpt_action
 argument_list|(
 name|start_ccb
@@ -3528,7 +3522,25 @@ argument_list|)
 operator|==
 name|ERESTART
 condition|)
+block|{
+name|out
+label|:
+comment|/* Drop freeze taken due to CAM_DEV_QFREEZE flag set. */
+name|cam_release_devq
+argument_list|(
+name|path
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -3547,10 +3559,6 @@ block|{
 comment|/* Don't wedge the queue */
 name|xpt_release_devq
 argument_list|(
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 comment|/*count*/
@@ -3749,7 +3757,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* 		 * If we get to this point, we got an error status back 		 * from the inquiry and the error status doesn't require 		 * automatically retrying the command.  Therefore, the 		 * inquiry failed.  If we had inquiry information before 		 * for this device, but this latest inquiry command failed, 		 * the device has probably gone away.  If this device isn't 		 * already marked unconfigured, notify the peripheral 		 * drivers that this device is no more. 		 */
 name|device_fail
@@ -4085,7 +4095,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 case|case
 name|PROBE_IDENTIFY
@@ -4385,7 +4397,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|ident_buf
 operator|=
@@ -5030,7 +5044,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 case|case
 name|PROBE_SPINUP
@@ -5071,7 +5087,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 case|case
 name|PROBE_SETMODE
 case|:
@@ -5587,7 +5605,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -5651,7 +5671,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -5709,7 +5731,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -5767,7 +5791,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -5816,7 +5842,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 case|case
 name|PROBE_SET_MULTI
 case|:
@@ -5866,10 +5894,6 @@ name|xpt_async
 argument_list|(
 name|AC_FOUND_DEVICE
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|done_ccb
@@ -5967,7 +5991,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|ata_device_transport
 argument_list|(
@@ -6020,10 +6046,6 @@ name|xpt_async
 argument_list|(
 name|AC_FOUND_DEVICE
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|done_ccb
@@ -6169,7 +6191,9 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 case|case
 name|PROBE_PM_PRV
 case|:
@@ -6600,10 +6624,6 @@ name|xpt_async
 argument_list|(
 name|AC_FOUND_DEVICE
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|done_ccb
@@ -6629,10 +6649,6 @@ name|xpt_async
 argument_list|(
 name|AC_SCSI_AEN
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|done_ccb
@@ -6923,10 +6939,6 @@ name|xpt_async
 argument_list|(
 name|AC_FOUND_DEVICE
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|done_ccb
@@ -6977,7 +6989,9 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|xpt_release_ccb
 argument_list|(
@@ -7052,26 +7066,23 @@ name|done_ccb
 argument_list|)
 expr_stmt|;
 block|}
-name|cam_periph_invalidate
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
+comment|/* Drop freeze taken due to CAM_DEV_QFREEZE flag set. */
 name|cam_release_devq
 argument_list|(
-name|periph
-operator|->
 name|path
-argument_list|,
-name|RELSIM_RELEASE_RUNLEVEL
 argument_list|,
 literal|0
 argument_list|,
-name|CAM_RL_XPT
-operator|+
-literal|1
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|cam_periph_invalidate
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 name|cam_periph_release_locked
