@@ -2901,6 +2901,8 @@ name|dmatag
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
