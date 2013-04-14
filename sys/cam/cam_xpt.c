@@ -19663,12 +19663,6 @@ literal|0
 expr_stmt|;
 name|device
 operator|->
-name|owner
-operator|=
-name|NULL
-expr_stmt|;
-name|device
-operator|->
 name|flags
 operator|=
 name|CAM_DEV_UNCONFIGURED

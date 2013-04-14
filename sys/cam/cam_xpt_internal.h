@@ -243,12 +243,6 @@ name|u_int
 name|generation
 decl_stmt|;
 comment|/* Generation number */
-name|struct
-name|cam_periph
-modifier|*
-name|owner
-decl_stmt|;
-comment|/* Peripheral driver's ownership tag */
 name|void
 modifier|*
 name|quirk
