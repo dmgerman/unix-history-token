@@ -621,7 +621,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|path
 argument_list|,

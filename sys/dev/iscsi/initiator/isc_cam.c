@@ -686,7 +686,7 @@ name|sp
 operator|->
 name|cam_path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|cam_sim_path
 argument_list|(

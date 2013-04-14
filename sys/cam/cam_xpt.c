@@ -2263,7 +2263,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|inccb
 operator|->
@@ -2419,7 +2419,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|inccb
 operator|->
@@ -12631,7 +12631,7 @@ argument_list|(
 operator|&
 name|cam_dpath
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|start_ccb
 operator|->
@@ -20749,7 +20749,7 @@ argument_list|(
 operator|&
 name|cam_dpath
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|CAM_DEBUG_BUS
 argument_list|,
