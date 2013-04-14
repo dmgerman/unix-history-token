@@ -2251,6 +2251,23 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Detached PCBs can linger in the list if someone 			 * holds a reference. (e.g. udp_pcblist) 			 */
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_socket
+operator|==
+name|NULL
+condition|)
+block|{
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 			 * Handle socket delivery policy for any-source 			 * and source-specific multicast. [RFC3678] 			 */
 name|imo
 operator|=
@@ -2768,6 +2785,25 @@ operator|&
 name|V_udbinfo
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Detached PCBs can linger in the hash table if someone holds a 	 * reference. (e.g. udp_pcblist) 	 */
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_socket
+operator|==
+name|NULL
+condition|)
+block|{
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|badunlocked
+goto|;
+block|}
 if|if
 condition|(
 name|inp
