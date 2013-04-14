@@ -625,16 +625,15 @@ name|d_flags
 operator|=
 name|DISKFLAG_CANDELETE
 expr_stmt|;
-comment|/* 	 * Display in most natural units.  There's no cards< 1MB. 	 * The SD standard goes to 2GiB, but the data format supports 	 * up to 4GiB and some card makers push it up to this limit. 	 * The SDHC standard only goes to 32GiB (the data format in 	 * SDHC is good to 2TiB however, which isn't too ugly at 	 * 2048GiBm, so we note it in passing here and don't add the 	 * code to print TiB). 	 */
+comment|/* 	 * Display in most natural units.  There's no cards< 1MB.  The SD 	 * standard goes to 2GiB due to its reliance on FAT, but the data 	 * format supports up to 4GiB and some card makers push it up to this 	 * limit.  The SDHC standard only goes to 32GiB due to FAT32, but the 	 * data format supports up to 2TiB however. 2048GB isn't too ugly, so 	 * we note it in passing here and don't add the code to print 	 * TB). Since these cards are sold in terms of MB and GB not MiB and 	 * GiB, report them like that. 	 */
 name|mb
 operator|=
 name|d
 operator|->
 name|d_mediasize
-operator|>>
-literal|20
+operator|/
+literal|1000000
 expr_stmt|;
-comment|/* 1MiB == 1<< 20 */
 name|unit
 operator|=
 literal|'M'
@@ -643,17 +642,16 @@ if|if
 condition|(
 name|mb
 operator|>=
-literal|10240
+literal|1000
 condition|)
 block|{
-comment|/* 1GiB = 1024 MiB */
 name|unit
 operator|=
 literal|'G'
 expr_stmt|;
 name|mb
 operator|/=
-literal|1024
+literal|1000
 expr_stmt|;
 block|}
 comment|/* 	 * Report the clock speed of the underlying hardware, which might be 	 * different than what the card reports due to hardware limitations. 	 * Report how many blocks the hardware transfers at once. 	 */
@@ -1296,6 +1294,14 @@ name|disk
 operator|->
 name|d_sectorsize
 decl_stmt|;
+name|device_t
+name|mmcbr
+init|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|block
 operator|=
 name|bp
@@ -1587,10 +1593,7 @@ expr_stmt|;
 block|}
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|,
@@ -1697,6 +1700,14 @@ name|d_sectorsize
 decl_stmt|;
 name|int
 name|erase_sector
+decl_stmt|;
+name|device_t
+name|mmcbr
+init|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|block
 operator|=
@@ -1912,10 +1923,7 @@ name|MMC_CMD_AC
 expr_stmt|;
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|,
@@ -2042,10 +2050,7 @@ name|MMC_CMD_AC
 expr_stmt|;
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|,
@@ -2137,10 +2142,7 @@ name|MMC_CMD_AC
 expr_stmt|;
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|,
@@ -2290,6 +2292,14 @@ name|block
 decl_stmt|,
 name|end
 decl_stmt|;
+name|device_t
+name|mmcbr
+init|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 comment|/* length zero is special and really means flush buffers to media */
 if|if
 condition|(
@@ -2365,10 +2375,7 @@ name|d_sectorsize
 expr_stmt|;
 name|MMCBUS_ACQUIRE_BUS
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|)
@@ -2385,10 +2392,7 @@ argument_list|)
 expr_stmt|;
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|)
@@ -2446,13 +2450,21 @@ name|end
 decl_stmt|;
 name|device_t
 name|dev
-decl_stmt|;
-name|dev
-operator|=
+init|=
 name|sc
 operator|->
 name|dev
-expr_stmt|;
+decl_stmt|;
+name|device_t
+name|mmcbr
+init|=
+name|device_get_parent
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+decl_stmt|;
 while|while
 condition|(
 literal|1
@@ -2564,10 +2576,7 @@ continue|continue;
 block|}
 name|MMCBUS_ACQUIRE_BUS
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|)
@@ -2672,10 +2681,7 @@ expr_stmt|;
 block|}
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|mmcbr
 argument_list|,
 name|dev
 argument_list|)
