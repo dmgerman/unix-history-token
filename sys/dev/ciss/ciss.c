@@ -8764,6 +8764,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"bringing logical drive %d back online"
+argument_list|,
+name|ldrive
 argument_list|)
 expr_stmt|;
 comment|/*      * Build a CISS BMIC command to bring the drive back online.      */
@@ -19748,6 +19750,24 @@ directive|ifdef
 name|CISS_DEBUG
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
 begin_comment
 comment|/************************************************************************  * Print information about the controller/driver.  */
 end_comment
@@ -19946,13 +19966,16 @@ begin_comment
 comment|/* DDB hook */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|ciss_print0
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DB_COMMAND
+argument_list|(
+argument|ciss_prt
+argument_list|,
+argument|db_ciss_prt
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|ciss_softc
@@ -19993,7 +20016,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
