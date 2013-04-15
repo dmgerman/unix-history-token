@@ -544,6 +544,12 @@ operator|=
 name|turnstile_alloc
 argument_list|()
 expr_stmt|;
+name|td
+operator|->
+name|td_vp_reserv
+operator|=
+literal|0
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|thread_init

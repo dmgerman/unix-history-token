@@ -937,6 +937,10 @@ name|pid_t
 name|td_dbg_forked
 decl_stmt|;
 comment|/* (c) Child pid for debugger. */
+name|u_int
+name|td_vp_reserv
+decl_stmt|;
+comment|/* (k) Count of reserved vnodes. */
 block|}
 struct|;
 end_struct
