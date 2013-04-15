@@ -572,9 +572,7 @@ name|REPLACE
 parameter_list|(
 name|r
 parameter_list|)
-value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
-comment|/* check for safety */
-value|\ 		IP6STAT_INC(ip6s_sources_rule[(r)]); \
+value|do {\ 	rule = (r);	\
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: replace %s with %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto replace; \ } while(0)
 end_define
@@ -586,9 +584,7 @@ name|NEXT
 parameter_list|(
 name|r
 parameter_list|)
-value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
-comment|/* check for safety */
-value|\ 		IP6STAT_INC(ip6s_sources_rule[(r)]); \
+value|do {\
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: keep %s against %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto next;
 comment|/* XXX: we can't use 'continue' here */
@@ -602,9 +598,7 @@ name|BREAK
 parameter_list|(
 name|r
 parameter_list|)
-value|do { \ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
-comment|/* check for safety */
-value|\ 		IP6STAT_INC(ip6s_sources_rule[(r)]); \ 	goto out;
+value|do { \ 	rule = (r);	\ 	goto out;
 comment|/* XXX: we can't use 'break' here */
 value|\ } while(0)
 end_define
@@ -723,6 +717,8 @@ name|prefer_tempaddr
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|rule
 decl_stmt|;
 name|struct
 name|ip6_moptions
@@ -1271,6 +1267,10 @@ operator|(
 name|error
 operator|)
 return|;
+name|rule
+operator|=
+literal|0
+expr_stmt|;
 name|IN6_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
@@ -2038,6 +2038,11 @@ block|{
 name|IN6_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_none
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
@@ -2089,6 +2094,11 @@ block|{
 name|IN6_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_none
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
@@ -2120,6 +2130,14 @@ argument_list|)
 expr_stmt|;
 name|IN6_IFADDR_RUNLOCK
 argument_list|()
+expr_stmt|;
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_rule
+index|[
+name|rule
+index|]
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
