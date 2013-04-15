@@ -60,6 +60,10 @@ file|"vmcb.h"
 end_include
 
 begin_comment
+comment|/*  * The VMCB aka Virtual Machine Control Block is a 4KB aligned page  * in memory that describes the virtual machine.  *  * The VMCB contains:  * - instructions or events in the guest to intercept  * - control bits that modify execution environment of the guest  * - guest processor state (e.g. general purpose registers)  */
+end_comment
+
+begin_comment
 comment|/*  * Initialize SVM h/w context i.e. the VMCB control and saved state areas.  */
 end_comment
 
