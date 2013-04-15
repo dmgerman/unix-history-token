@@ -211,7 +211,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"DISK"
+name|G_DISK_CLASS_NAME
 block|,
 operator|.
 name|version

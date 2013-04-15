@@ -45,6 +45,13 @@ directive|include
 file|<sys/disk.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|G_DISK_CLASS_NAME
+value|"DISK"
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|disk

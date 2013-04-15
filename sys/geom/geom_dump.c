@@ -59,6 +59,12 @@ directive|include
 file|<geom/geom_int.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -621,7 +627,7 @@ name|mp
 operator|->
 name|name
 argument_list|,
-literal|"DISK"
+name|G_DISK_CLASS_NAME
 argument_list|)
 operator|||
 operator|!
