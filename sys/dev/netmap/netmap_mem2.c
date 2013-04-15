@@ -809,7 +809,7 @@ operator|<
 literal|0
 operator|||
 name|relofs
-operator|>
+operator|>=
 name|p
 operator|->
 name|_clustsize
