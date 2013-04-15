@@ -19,12 +19,6 @@ directive|define
 name|_NET_LAGG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_comment
 comment|/*  * Global definitions  */
 end_comment
@@ -530,6 +524,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_comment
 comment|/*  * Internal kernel part  */
 end_comment
@@ -768,6 +768,18 @@ comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
 decl_stmt|;
+name|counter_u64_t
+name|sc_ipackets
+decl_stmt|;
+name|counter_u64_t
+name|sc_opackets
+decl_stmt|;
+name|counter_u64_t
+name|sc_ibytes
+decl_stmt|;
+name|counter_u64_t
+name|sc_obytes
+decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument|__tplhd
@@ -941,6 +953,10 @@ name|vlan_attach
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
+decl_stmt|;
+name|struct
+name|callout
+name|sc_callout
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list
