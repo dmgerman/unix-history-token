@@ -343,6 +343,9 @@ block|,
 operator|&
 name|g_label_gpt_uuid
 block|,
+operator|&
+name|g_label_disk_ident
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -1671,7 +1674,7 @@ block|{
 name|char
 name|label
 index|[
-literal|64
+literal|128
 index|]
 decl_stmt|;
 if|if

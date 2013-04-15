@@ -233,6 +233,14 @@ name|g_label_gpt_uuid
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|g_label_desc
+name|g_label_disk_ident
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
