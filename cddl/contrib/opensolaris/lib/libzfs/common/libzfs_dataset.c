@@ -21434,7 +21434,7 @@ name|dgettext
 argument_list|(
 name|TEXT_DOMAIN
 argument_list|,
-literal|"cannot jail '%s'"
+literal|"cannot unjail '%s'"
 argument_list|)
 argument_list|,
 name|zhp
