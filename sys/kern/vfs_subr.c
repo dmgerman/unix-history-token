@@ -18596,6 +18596,16 @@ condition|(
 name|rc
 operator|==
 literal|0
+operator|&&
+operator|(
+name|a
+operator|->
+name|a_flags
+operator|&
+name|LK_EXCLOTHER
+operator|)
+operator|==
+literal|0
 condition|)
 name|ASSERT_VOP_LOCKED
 argument_list|(
