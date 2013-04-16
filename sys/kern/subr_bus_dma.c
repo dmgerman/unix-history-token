@@ -193,6 +193,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|list
 operator|->
 name|ds_addr
