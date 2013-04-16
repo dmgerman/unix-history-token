@@ -1818,10 +1818,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-define|#
-directive|define
-name|M2MMAX
-value|(sizeof(V_ip6stat.ip6s_m2m)/sizeof(V_ip6stat.ip6s_m2m[0]))
 if|if
 condition|(
 name|m
@@ -1860,7 +1856,7 @@ name|rcvif
 operator|->
 name|if_index
 operator|<
-name|M2MMAX
+name|IP6S_M2MMAX
 condition|)
 name|IP6STAT_INC
 argument_list|(
@@ -1892,9 +1888,6 @@ argument_list|(
 name|ip6s_m1
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|M2MMAX
 block|}
 comment|/* drop the packet if IPv6 operation is disabled on the IF */
 if|if
