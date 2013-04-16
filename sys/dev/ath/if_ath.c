@@ -3964,6 +3964,20 @@ operator|&
 name|sc
 operator|->
 name|sc_rx_rxlist
+index|[
+name|HAL_RX_QUEUE_HP
+index|]
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_rx_rxlist
+index|[
+name|HAL_RX_QUEUE_LP
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Indicate we need the 802.11 header padded to a 	 * 32-bit boundary for 4-address and QoS frames. 	 */

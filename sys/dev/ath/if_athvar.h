@@ -1914,6 +1914,13 @@ name|HAL_NUM_RX_QUEUES
 index|]
 decl_stmt|;
 comment|/* HP/LP queues */
+name|ath_bufhead
+name|sc_rx_rxlist
+index|[
+name|HAL_NUM_RX_QUEUES
+index|]
+decl_stmt|;
+comment|/* deferred RX completion */
 name|struct
 name|ath_tx_methods
 name|sc_tx
@@ -2468,10 +2475,6 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
-name|ath_bufhead
-name|sc_rx_rxlist
-decl_stmt|;
-comment|/* deferred RX completion */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
