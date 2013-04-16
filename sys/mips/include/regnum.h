@@ -512,7 +512,7 @@ value|40
 end_define
 
 begin_comment
-comment|/*  * Pseudo registers so we save a complete set of registers regardless of  * the ABI  */
+comment|/*  * Pseudo registers so we save a complete set of registers regardless of  * the ABI. See regdef.h for a more complete explanation.  */
 end_comment
 
 begin_if
