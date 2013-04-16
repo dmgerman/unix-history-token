@@ -1322,9 +1322,10 @@ argument_list|,
 name|HAL_PKT_TYPE_BEACON
 comment|/* Atheros packet type */
 argument_list|,
+name|ieee80211_get_node_txpower
+argument_list|(
 name|ni
-operator|->
-name|ni_txpower
+argument_list|)
 comment|/* txpower XXX */
 argument_list|,
 name|rate
