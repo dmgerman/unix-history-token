@@ -487,10 +487,15 @@ name|u_quad_t
 name|ip6s_notmember
 decl_stmt|;
 comment|/* don't join this multicast group */
+define|#
+directive|define
+name|IP6S_HDRCNT
+value|256
+comment|/* headers count */
 name|u_quad_t
 name|ip6s_nxthist
 index|[
-literal|256
+name|IP6S_HDRCNT
 index|]
 decl_stmt|;
 comment|/* next header history */
@@ -498,10 +503,14 @@ name|u_quad_t
 name|ip6s_m1
 decl_stmt|;
 comment|/* one mbuf */
+define|#
+directive|define
+name|IP6S_M2MMAX
+value|32
 name|u_quad_t
 name|ip6s_m2m
 index|[
-literal|32
+name|IP6S_M2MMAX
 index|]
 decl_stmt|;
 comment|/* two or more mbuf */
@@ -526,6 +535,14 @@ name|ip6s_toomanyhdr
 decl_stmt|;
 comment|/* discarded due to too many headers */
 comment|/* 	 * statistics for improvement of the source address selection 	 * algorithm: 	 * XXX: hardcoded 16 = # of ip6 multicast scope types + 1 	 */
+define|#
+directive|define
+name|IP6S_RULESMAX
+value|16
+define|#
+directive|define
+name|IP6S_SCOPECNT
+value|16
 comment|/* number of times that address selection fails */
 name|u_quad_t
 name|ip6s_sources_none
@@ -534,42 +551,42 @@ comment|/* number of times that an address on the outgoing I/F is chosen */
 name|u_quad_t
 name|ip6s_sources_sameif
 index|[
-literal|16
+name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* number of times that an address on a non-outgoing I/F is chosen */
 name|u_quad_t
 name|ip6s_sources_otherif
 index|[
-literal|16
+name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* 	 * number of times that an address that has the same scope 	 * from the destination is chosen. 	 */
 name|u_quad_t
 name|ip6s_sources_samescope
 index|[
-literal|16
+name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* 	 * number of times that an address that has a different scope 	 * from the destination is chosen. 	 */
 name|u_quad_t
 name|ip6s_sources_otherscope
 index|[
-literal|16
+name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* number of times that a deprecated address is chosen */
 name|u_quad_t
 name|ip6s_sources_deprecated
 index|[
-literal|16
+name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* number of times that each rule of source selection is applied. */
 name|u_quad_t
 name|ip6s_sources_rule
 index|[
-literal|16
+name|IP6S_MAXRULES
 index|]
 decl_stmt|;
 block|}
