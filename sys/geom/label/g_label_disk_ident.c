@@ -233,7 +233,7 @@ operator|!
 name|found
 condition|)
 return|return;
-comment|/* 		 * We can safely ignore the result of strncpy; the label will 		 * simply be truncated, which at most is only annoying. 		 */
+comment|/* 		 * We can safely ignore the result of snprintf(): the label 		 * will simply be truncated, which at most is only annoying. 		 */
 operator|(
 name|void
 operator|)
