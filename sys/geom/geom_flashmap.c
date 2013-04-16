@@ -826,7 +826,6 @@ name|flags
 operator|==
 name|G_TF_NORMAL
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|pp
@@ -837,8 +836,10 @@ name|class
 operator|->
 name|name
 argument_list|,
-name|FLASHMAP_CLASS_NAME
+name|G_DISK_CLASS_NAME
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
