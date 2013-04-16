@@ -981,6 +981,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|kern_envp
+operator|&&
 operator|*
 name|kern_envp
 operator|!=
