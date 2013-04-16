@@ -586,7 +586,7 @@ comment|/* number of times that each rule of source selection is applied. */
 name|u_quad_t
 name|ip6s_sources_rule
 index|[
-name|IP6S_MAXRULES
+name|IP6S_RULESMAX
 index|]
 decl_stmt|;
 block|}
