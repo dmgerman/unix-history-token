@@ -1958,7 +1958,7 @@ name|fun
 operator||
 literal|4
 expr_stmt|;
-comment|/* Enable SiS/VIA compatibility mode (usefull for                            OPTi chipset motherboards too */
+comment|/* Enable SiS/VIA compatibility mode (useful for                            OPTi chipset motherboards too */
 endif|#
 directive|endif
 name|pci_write_config

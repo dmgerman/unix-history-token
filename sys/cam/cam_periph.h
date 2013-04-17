@@ -171,7 +171,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Generically usefull offsets into the peripheral private area */
+comment|/* Generically useful offsets into the peripheral private area */
 end_comment
 
 begin_define

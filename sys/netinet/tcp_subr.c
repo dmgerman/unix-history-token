@@ -4626,7 +4626,7 @@ name|tcpcb
 modifier|*
 name|tcpb
 decl_stmt|;
-comment|/* 	 * Walk the tcpbs, if existing, and flush the reassembly queue, 	 * if there is one... 	 * XXX: The "Net/3" implementation doesn't imply that the TCP 	 *      reassembly queue should be flushed, but in a situation 	 *	where we're really low on mbufs, this is potentially 	 *	usefull. 	 */
+comment|/* 	 * Walk the tcpbs, if existing, and flush the reassembly queue, 	 * if there is one... 	 * XXX: The "Net/3" implementation doesn't imply that the TCP 	 *      reassembly queue should be flushed, but in a situation 	 *	where we're really low on mbufs, this is potentially 	 *	useful. 	 */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&

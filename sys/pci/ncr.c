@@ -15812,7 +15812,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* You can #if 1 if you think this optimization is usefull */
+comment|/* You can #if 1 if you think this optimization is useful */
 block|per = (fak * div_10M[div]) / clk;
 comment|/* 	**	Why not to try the immediate lower divisor and to choose  	**	the one that allows the fastest output speed ? 	**	We dont want input speed too much greater than output speed. 	*/
 block|if (div>= 1&& fak< 6) { 		u_long fak2, per2; 		fak2 = (kpc - 1) / div_10M[div-1] + 1; 		per2 = (fak2 * div_10M[div-1]) / clk; 		if (per2< per&& fak2<= 6) { 			fak = fak2; 			per = per2; 			--div; 		} 	}

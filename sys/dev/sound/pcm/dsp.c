@@ -9678,7 +9678,7 @@ break|break;
 case|case
 name|SNDCTL_DSP_GETERROR
 case|:
-comment|/* 	 * OSSv4 docs:  "All errors and counters will automatically be 	 * cleared to zeroes after the call so each call will return only 	 * the errors that occurred after the previous invocation. ... The 	 * play_underruns and rec_overrun fields are the only usefull fields 	 * returned by OSS 4.0." 	 */
+comment|/* 	 * OSSv4 docs:  "All errors and counters will automatically be 	 * cleared to zeroes after the call so each call will return only 	 * the errors that occurred after the previous invocation. ... The 	 * play_underruns and rec_overrun fields are the only useful fields 	 * returned by OSS 4.0." 	 */
 block|{
 name|audio_errinfo
 modifier|*
