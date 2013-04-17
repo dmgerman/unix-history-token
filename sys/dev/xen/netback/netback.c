@@ -6724,7 +6724,7 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-comment|/* 	 * if we got here, then 1 or more requests was consumed, but the packet 	 * is not necesarily valid. 	 */
+comment|/* 	 * if we got here, then 1 or more requests was consumed, but the packet 	 * is not necessarily valid. 	 */
 if|if
 condition|(
 name|xnb_pkt_is_valid

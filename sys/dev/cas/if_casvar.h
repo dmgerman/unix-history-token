@@ -76,7 +76,7 @@ value|((x + 1)& CAS_NTXDESC_MASK)
 end_define
 
 begin_comment
-comment|/*  * Receive completion ring size - we have one completion per  * incoming packet (though the opposite isn't necesarrily true),  * so this logic is a little simpler.  */
+comment|/*  * Receive completion ring size - we have one completion per  * incoming packet (though the opposite isn't necessarily true),  * so this logic is a little simpler.  */
 end_comment
 
 begin_define

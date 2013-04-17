@@ -307,7 +307,7 @@ comment|/* NETGRAPH_DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * DEAD versions of the structures.  * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is  * INVALID. Use these to avoid these races.  */
+comment|/*  * DEAD versions of the structures.  * In order to avoid races, it is sometimes necessary to point  * at SOMETHING even though theoretically, the current entity is  * INVALID. Use these to avoid these races.  */
 end_comment
 
 begin_decl_stmt
