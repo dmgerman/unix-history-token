@@ -7,10 +7,6 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2577,12 +2573,7 @@ name|d86_len
 operator|==
 literal|1
 operator|&&
-operator|(
-name|uchar_t
-operator|)
-name|x86dis
-operator|.
-name|d86_bytes
+name|instr
 index|[
 literal|0
 index|]

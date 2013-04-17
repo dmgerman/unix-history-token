@@ -7,10 +7,6 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -22,6 +18,13 @@ define|#
 directive|define
 name|_DT_PROC_H
 end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|ident
+literal|"%Z%%M%	%I%	%E% SMI"
+end_pragma
 
 begin_include
 include|#
@@ -407,7 +410,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|dt_proc_init
+name|dt_proc_hash_create
 parameter_list|(
 name|dtrace_hdl_t
 modifier|*
@@ -415,7 +418,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|dt_proc_fini
+name|dt_proc_hash_destroy
 parameter_list|(
 name|dtrace_hdl_t
 modifier|*
