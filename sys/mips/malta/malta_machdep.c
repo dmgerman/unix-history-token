@@ -300,6 +300,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Temporary boot environment used at startup.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|boot1_env
+index|[
+literal|4096
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Offsets to MALTA LCD characters.  */
 end_comment
 
@@ -1029,6 +1043,16 @@ expr_stmt|;
 name|mips_timer_early_init
 argument_list|(
 name|platform_counter_freq
+argument_list|)
+expr_stmt|;
+name|init_static_kenv
+argument_list|(
+name|boot1_env
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|boot1_env
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cninit
