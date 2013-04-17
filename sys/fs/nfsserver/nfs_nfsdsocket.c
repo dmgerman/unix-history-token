@@ -4727,6 +4727,12 @@ name|nd
 operator|->
 name|nd_procnum
 operator|==
+name|NFSPROC_WRITE
+operator|||
+name|nd
+operator|->
+name|nd_procnum
+operator|==
 name|NFSPROC_READDIR
 operator|||
 name|nd
