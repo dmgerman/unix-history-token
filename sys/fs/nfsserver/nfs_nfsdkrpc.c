@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsserver/nfs_fha.h>
+file|<nfs/nfs_fha.h>
 end_include
 
 begin_include

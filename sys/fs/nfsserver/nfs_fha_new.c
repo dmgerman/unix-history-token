@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<nfs/nfs_fha.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/nfs/xdr_subs.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<fs/nfs/nfsm_subs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfsserver/nfs_fha.h>
 end_include
 
 begin_include
