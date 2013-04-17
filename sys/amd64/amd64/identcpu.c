@@ -1202,11 +1202,24 @@ argument_list|,
 name|cpu_stdext_feature
 argument_list|,
 literal|"\020"
+comment|/* RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE */
 literal|"\001GSFSBASE"
 literal|"\002TSCADJ"
+comment|/* Bit Manipulation Instructions */
+literal|"\004BMI1"
+comment|/* Hardware Lock Elision */
+literal|"\005HLE"
+comment|/* Advanced Vector Instructions 2 */
+literal|"\006AVX2"
+comment|/* Supervisor Mode Execution Prot. */
 literal|"\010SMEP"
+comment|/* Bit Manipulation Instructions */
+literal|"\011BMI2"
 literal|"\012ENHMOVSB"
+comment|/* Invalidate Processor Context ID */
 literal|"\013INVPCID"
+comment|/* Restricted Transactional Memory */
+literal|"\014RTM"
 argument_list|)
 expr_stmt|;
 block|}
