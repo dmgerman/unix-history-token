@@ -6718,7 +6718,7 @@ return|return
 literal|0
 return|;
 comment|/* Nothing to receive */
-comment|/* update statistics indepdent of errors */
+comment|/* update statistics independent of errors */
 name|ifnet
 operator|->
 name|if_ipackets
